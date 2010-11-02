@@ -1,0 +1,7 @@
+*.project
+*.settings
+*.DS_Store?
+settings.xml
+ehthumbs.db
+Icon?
+Thumbs.db

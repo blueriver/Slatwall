@@ -1,0 +1,17 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	
+	<bean id="productDAO" class="[plugin]com.dao.[integration]productDAO" />
+	<bean id="skuDAO" class="[plugin]com.dao.[integration]skuDAO" />
+	<bean id="vendorDAO" class="[plugin]com.dao.[integration]vendorDAO" />
+	
+	<bean id="productService" class="[plugin]com.service.productService">
+		<constructor-arg name="DAO"><ref bean="productDAO" /></constructor-arg>
+		<constructor-arg name="skuDAO"><ref bean="skuDAO" /></constructor-arg>
+	</bean>
+
+	<bean id="vendorService" class="[plugin]com.service.vendorService">
+		
+	</bean>
+</beans>

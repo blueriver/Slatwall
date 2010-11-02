@@ -1,0 +1,120 @@
+
+
+.slatButton	{cursor:hand; cursor:pointer;}
+
+/* Small Add Button Default */
+button.btnAddCard,
+button.btnAddImage,
+button.btnApplyGiftCard,
+button.btnApply,
+button.btnRedeem,
+button.btnAddReview {
+	background: transparent url(../images/buttons/btnAdd.png) no-repeat bottom right;
+	border:none;
+	width:110px;
+	height:22px;
+	font-weight:bold;
+	font-size:10px;
+	text-align:center;
+	padding:0px 0px 3px 0px;
+	margin:0px;
+	color:#333333;
+}
+button.btnAddCard:hover,
+button.btnAddImage:hover,
+button.btnApplyGiftCard:hover,
+button.btnApply:hover,
+button.btnRedeem:hover,
+button.btnAddReview:hover {
+	background-image:url(../images/buttons/btnAdd_hover.png);
+}
+
+
+/* Small Gray Button Default */
+button.btnCancelSmall,
+button.btnCreateAccountSmall,
+button.btnLoginSmall,
+button.btnSubmitSmall,
+button.btnCheckGiftCardValue {
+	background: transparent url(../images/buttons/btnSmallGray.png) no-repeat bottom right;
+	border:none;
+	width:110px;
+	height:22px;
+	font-weight:bold;
+	font-size:10px;
+	text-align:center;
+	padding:0px 0px 3px 0px;
+	margin:0px;
+	color:#ffffff;
+}
+button.btnCancelSmall:hover,
+button.btnCreateAccountSmall:hover,
+button.btnLoginSmall:hover,
+button.btnSubmitSmall:hover,
+button.btnCheckGiftCardValue:hover {
+	background-image:url(../images/buttons/btnSmallGray_hover.png);
+}
+
+
+/* Big Green Button Default */
+button.btnGetShippingRates,
+button.btnContinue,
+button.btnProcessOrder,
+button.btnProceedToCheckout {
+	background: transparent url(../images/buttons/btnBigGreen.png) no-repeat bottom right;
+	border:none;
+	width:200px;
+	height:31px;
+	font-weight:bold;
+	font-size:14px;
+	text-align:center;
+	padding:0px 0px 2px 0px;
+	margin:0px;
+	color:#ffffff;
+}
+button.btnGetShippingRates:hover,
+button.btnContinue:hover,
+button.btnProcessOrder:hover,
+button.btnProceedToCheckout:hover {
+	background-image:url(../images/buttons/btnBigGreen_hover.png);
+}
+
+/* Big Gray Button Default */
+button.btnLogin,
+button.btnCreateAccount,
+button.btnGuestCheckout,
+button.btnContinueShopping {
+	background: transparent url(../images/buttons/btnBigGray.png) no-repeat bottom right;
+	border:none;
+	width:200px;
+	height:31px;
+	font-weight:bold;
+	font-size:14px;
+	text-align:center;
+	padding:0px 0px 2px 0px;
+	margin:0px;
+	color:#ffffff;
+}
+button.btnLogin:hover,
+button.btnCreateAccount:hover,
+button.btnGuestCheckout:hover,
+button.btnContinueShopping:hover {
+	background-image:url(../images/buttons/btnBigGray_hover.png);
+}
+
+/* Add To Cart Green Button Default */
+button.btnAddToCart {
+	background: transparent url(../images/buttons/btnAddToCart.png) no-repeat bottom right;
+	border:none;
+	width:200px;
+	height:31px;
+	font-weight:bold;
+	font-size:14px;
+	text-align:center;
+	padding:0px 20px 2px 0px;
+	margin:0px;
+	color:#ffffff;
+}
+button.btnAddToCart:hover {
+	background-image:url(../images/buttons/btnAddToCart_hover.png);
+}
