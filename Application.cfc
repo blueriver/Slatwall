@@ -6,7 +6,7 @@
 <cfinclude template="fw1Config.cfm">
 
 <!--- Get Mura Data Source for Mura Settings.ini --->
-<cffile action="read" variable="SettingsINI" file="#baseDir#\config\settings.ini.cfm" />
+<cffile action="read" variable="SettingsINI" file="#baseDir#/config/settings.ini.cfm" />
 <cfset MuraDatasource = "" />
 <cfloop list="#SettingsINI#" index="I" delimiters="#chr(13)##chr(10)#">
 	<cfif Left(I,10) eq 'datasource'>
@@ -18,7 +18,7 @@
 <cfset this.ormenabled = "true" />
 <cfset this.datasource = "#MuraDatasource#" />
 <cfset this.ormSettings.dbcreate = "update" />
-<cfset this.ormsettings.cfclocation = "com\entity" />
+<cfset this.ormsettings.cfclocation = "com/entity" />
 
 <cffunction name="setupApplication" output="false">
 	<cfset ormreload() />
