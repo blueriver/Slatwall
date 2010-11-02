@@ -5,6 +5,7 @@
 <cfinclude template="../mappings.cfm">
 <cfinclude template="fw1Config.cfm">
 
+<!--- Start: Setup ORM --->
 <!--- Get Mura Data Source for Mura Settings.ini --->
 <cffile action="read" variable="SettingsINI" file="#baseDir#/config/settings.ini.cfm" />
 <cfset MuraDatasource = "" />
@@ -19,16 +20,8 @@
 <cfset this.datasource = "#MuraDatasource#" />
 <cfset this.ormSettings.dbcreate = "update" />
 <cfset this.ormsettings.cfclocation = "com/entity" />
+<!--- End: Setup ORM --->
 
-<cffunction name="setupApplication" output="false">
-	<cfset ormreload() />
-	<cfif not structKeyExists(request,"pluginConfig")>
-		<cfinclude template="plugin/config.cfm" />
-	</cfif>
-	<cfset setPluginConfig(request.PluginConfig) />
-	
-	<cfset setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ))>
-</cffunction>
 
 <cffunction name="setPluginConfig" output="false">  
 	<cfargument name="pluginConfig" type="any" required="true">  
@@ -38,10 +31,47 @@
 	<cfreturn application[ variables.framework.applicationKey ].pluginConfig>  
 </cffunction> 
 
-<cffunction name="isAdminRequest">
-	<cfreturn not structKeyExists(request,"servletEvent")>
+<!--- Standard Application Functions,  These are also called from the fw1EventAdapter --->
+<cffunction name="setupApplication" output="false">
+	<cfset ormreload() />
+	<cfif not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey>
+		<cfinclude template="plugin/config.cfm" />
+	</cfif>
+	<cfset setPluginConfig(request.PluginConfig) />
+	
+	<cfset setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ))>
 </cffunction>
 
+<cffunction name="setupSession" output="false">
+	<!--- Add Session Variables Here --->
+</cffunction>
+
+<cffunction name="setupRequest" output="false">
+	<cfif isDefined('url.returnFormat')>
+		<cfif url.returnFormat neq 'json'>
+			<cfset secureRequest()>
+		</cfif>
+	<cfelse>
+		<cfset secureRequest()>
+	</cfif>
+
+	<cfset variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/">
+	
+	<cfif isAdminRequest()>
+		<cfset secureRequest()>
+	</cfif>
+	
+	<cfif not isAdminRequest()>
+		<cfsavecontent variable="HTMLHead">
+			<cfoutput>
+				<cfinclude template="layouts/inc/html_head.cfm" />
+			</cfoutput>
+		</cfsavecontent>
+		<cfhtmlhead text="#HTMLHead#">
+	</cfif>
+</cffunction>
+
+<!--- Misc Application Functions --->
 <cffunction name="secureRequest" output="false">
 	<cfset var ActionOK = 0 />
 	<cfif isAdminRequest()>
@@ -56,48 +86,10 @@
 	</cfif>
 </cffunction>
 
-<cffunction name="setupRequest" output="false">
-	<cfif isDefined('url.returnFormat')>
-		<cfif url.returnFormat neq 'json'>
-			<cfset secureRequest()>
-		</cfif>
-	<cfelse>
-		<cfset secureRequest()>
-	</cfif>
-
-	<cfset variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/">
+<cffunction name="isAdminRequest">
+	<cfreturn not structKeyExists(request,"servletEvent")>
 </cffunction>
 
-<cffunction name="SlatFERenderStart" output="false" returntype="any">
-	<cfset var I = 0 />
-	<cfset var ValuePair = "" />
-	<cfset var FilterProperty = "" />
-	<cfset var RangeProperty = "" />
-	<cfset var HTMLHead = "" />
-	
-	<cfif isAdminRequest()>
-		<cfset secureRequest()>
-	</cfif>
-	
-	<!--- Set Request.Slat.Product --->
-	<cfset request.Slat.Product = "">
-	<cfif isDefined('url.ProductID')>
-		<cfset request.Slat.Product = application.Slat.productManager.read('#url.ProductID#') />
-	</cfif>
-	
-	<cfif not isAdminRequest()>
-		<!--- Set HTML Head Elements --->
-		<cfsavecontent variable="HTMLHead">
-			<cfoutput>
-				<cfinclude template="layouts/inc/html_head.cfm" />
-			</cfoutput>
-		</cfsavecontent>
-		<cfhtmlhead text="#HTMLHead#">
-	</cfif>
-</cffunction>
-
-
-<!--- Misc Functions --->
 <cffunction name="getExternalSiteLink" output="false" returntype="String">
 	<cfargument name="Address" />
 	<cfreturn #buildURL(action='external.site', queryString='es=#arguments.Address#')# />

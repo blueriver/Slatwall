@@ -41,16 +41,8 @@
         
         <!--- put the plugin into the event --->
         <cfset $[variables.framework.applicationKey]= this />
+		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="setupRequest" />
     </cffunction>
-	
-	<cffunction name="onRenderStart">
-		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="SlatFERenderStart" />
-	</cffunction>
-	
-	<cffunction name="onRenderEnd">
-		<cfargument name="event">
-		<cfargument name="$">
-	</cffunction>
 		
 	<cffunction name="onGlobalSessionStart">
 		<cfargument name="$">

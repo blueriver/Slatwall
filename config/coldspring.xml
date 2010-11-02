@@ -2,16 +2,16 @@
 
 <beans>
 	
-	<bean id="productDAO" class="[plugin]com.dao.[integration]productDAO" />
-	<bean id="skuDAO" class="[plugin]com.dao.[integration]skuDAO" />
-	<bean id="vendorDAO" class="[plugin]com.dao.[integration]vendorDAO" />
+	<bean id="productDAO" class="slat.com.dao.[integration]productDAO" />
+	<bean id="skuDAO" class="slat.com.dao.[integration]skuDAO" />
+	<bean id="vendorDAO" class="slat.com.dao.[integration]vendorDAO" />
 	
-	<bean id="productService" class="[plugin]com.service.productService">
+	<bean id="productService" class="slat.com.service.productService">
 		<constructor-arg name="DAO"><ref bean="productDAO" /></constructor-arg>
 		<constructor-arg name="skuDAO"><ref bean="skuDAO" /></constructor-arg>
 	</bean>
 
-	<bean id="vendorService" class="[plugin]com.service.vendorService">
+	<bean id="vendorService" class="slat.com.service.vendorService">
 		
 	</bean>
 </beans>
