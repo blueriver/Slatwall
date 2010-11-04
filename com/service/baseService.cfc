@@ -22,6 +22,12 @@
 	<cffunction name="delete" access="public" returntype="void" output="false">
 		<cfargument name="entity" type="any" required="true" />
 		
-		<cfreturn getDAO().delete(arguments.entity, arguments.flush) />
+		<cfreturn getDAO().delete(entity=arguments.entity) />
+	</cffunction>
+	
+	<cffunction name="save" access="public" returntype="any" output="false">
+		<cfargument name="entity" type="any" required="true" />
+		
+		<cfreturn getDAO().save(entity=arguments.entity) />
 	</cffunction>
 </cfcomponent>

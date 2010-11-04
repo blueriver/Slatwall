@@ -29,6 +29,7 @@
 					<a href="#buildSecureURL(action='product.list')#">Products</a>
 					<div class="MenuSubOne">
 						<ul>
+							<li><a href="#buildSecureURL(action='product.edit')#">New Product</a></li>
 							<li><a href="#buildSecureURL(action='product.list')#">Product Listing</a></li>
 							<li><a href="#buildSecureURL(action='product.create')#">Create New Product</a></li>
 							<li><a href="#buildSecureURL(action='skus.list')#">Skus Listing</a></li>
@@ -106,6 +107,7 @@
 			<cfif isDefined('url.ProductID')>
 				<li><a href="#buildURL(action='product.detail', querystring='ProductID=#url.ProductID#')#">Product Detail</a></li>
 			</cfif>
+			<li><a href="?reload=true">Reload</a></li>
 		</ul>
 	</div>
 	

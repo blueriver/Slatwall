@@ -319,7 +319,7 @@
 			</cfoutput>
 		</cfsavecontent>
 				
-		<cfreturn WhereReturn />
+		<cfreturn "" />
 	</cffunction>
 	
 	<cffunction name="getHQLParams">

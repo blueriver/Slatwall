@@ -2,7 +2,7 @@
 
 	<cfproperty name="SkuDAO" type="any" />
 	
-	<cfset variables.entityName = "" />
+	<cfset variables.entityName = "product" />
 	
 	<cffunction name="init">
 		<cfargument name="DAO" type="any" />

@@ -28,16 +28,16 @@
 
 	<cffunction name="delete" output="false">
 		<cfargument name="target" type="any" required="true" />
-		<cfargument name="flush" type="boolean" default="false" />
 
-		<cfset EntitySave(arguments.target) />
+		<cfset EntityDelete(arguments.target) />
 	</cffunction>
 
 	<cffunction name="save" output="false">
-		<cfargument name="target" type="any" required="true" />
-		<cfargument name="flush" type="boolean" default="false" />
+		<cfargument name="entity" type="any" required="true" />
 		
-		<cfset entityDelete(arguments.target) />
+		<cfset EntitySave(arguments.entity, true) />
+		
+		<cfreturn arguments.entity />
 	</cffunction>
 	
 	<cffunction name="QueryToEntityArray">

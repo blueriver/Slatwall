@@ -15,6 +15,8 @@
 
 <cffunction name="before" output="false">
 	<cfargument name="rc">
+	<cfargument name="process" default=0 />
+	
 	<cfset request.pluginConfig=variables.pluginConfig>
 </cffunction>
 
