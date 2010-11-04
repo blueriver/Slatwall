@@ -1,4 +1,73 @@
 <cfcomponent>
+	<cffunction name="doEvent" output="false">
+		<cfargument name="$">
+		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
+		
+		<cfreturn doAction($,arguments.action)>
+	</cffunction>
+	
+	<cffunction name="doAction" output="false">
+		<cfargument name="$">
+		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
+		
+		<cfset var result = "" />
+		<cfset var savedEvent = "" />
+		<cfset var savedAction = "" />
+		<cfset var fw1 = createObject("component","#pluginConfig.getPackage()#.Application") />
+		<cfset var local=structNew()>
+		<cfset var state=structNew()>
+		<!--- Put the event url struct, to be used by FW/1 --->
+		<cfset url.$ = $ />
+	
+		<cfif not len( arguments.action )>
+			<cfif len(arguments.$.event(variables.framework.action))>
+				<cfset arguments.action=arguments.$.event(variables.framework.action)>
+			<cfelse>
+				<cfset arguments.action=variables.framework.home>
+			</cfif>
+		</cfif>
+		
+		<!--- put the action passed into the url scope, saving any pre-existing value --->
+		<cfif StructKeyExists(request, variables.framework.action)>
+			<cfset savedEvent = request[variables.framework.action] />
+		</cfif>
+		<cfif StructKeyExists(url,variables.framework.action)>
+			<cfset savedAction = url[variables.framework.action] />
+		</cfif>
+		
+		<cfset url[variables.framework.action] = arguments.action />
+		
+		<cfset state=preseveInternalState(request)>	
+		<!--- call the frameworks onRequestStart --->
+		<cfset fw1.onRequestStart(CGI.SCRIPT_NAME) />
+		
+		<!--- call the frameworks onRequest --->
+		<!--- we save the results via cfsavecontent so we can display it in mura --->
+		<cfsavecontent variable="result">
+			<cfset fw1.onRequest(CGI.SCRIPT_NAME) />
+		</cfsavecontent>
+		
+		<!--- restore the url scope --->
+		<cfif structKeyExists(url,variables.framework.action)>
+			<cfset structDelete(url,variables.framework.action) />
+		</cfif>
+		<!--- if there was a passed in action via the url then restore it --->
+		<cfif Len(savedAction)>
+			<cfset url[variables.framework.action] = savedAction />
+		</cfif>
+		<!--- if there was a passed in request event then restore it --->
+		<cfif Len(savedEvent)>
+			<cfset request[variables.framework.action] = savedEvent />
+		</cfif>
+	
+		<cfset restoreInternalState(request,state)>
+		
+		<!--- return the result --->
+		<cfreturn result>
+	</cffunction>
+	
+	
+	<!---
 	<cffunction name="doAction">
 		<cfargument name="$">
 		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
@@ -63,4 +132,5 @@
 		<!--- return the result --->
 		<cfreturn result>
 	</cffunction>
+	--->
 </cfcomponent>

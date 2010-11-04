@@ -5,24 +5,6 @@
 <cfinclude template="../mappings.cfm">
 <cfinclude template="fw1Config.cfm">
 
-<!--- Start: Setup ORM --->
-<!--- Get Mura Data Source for Mura Settings.ini --->
-<cffile action="read" variable="SettingsINI" file="#baseDir#/config/settings.ini.cfm" />
-<cfset MuraDatasource = "" />
-<cfloop list="#SettingsINI#" index="I" delimiters="#chr(13)##chr(10)#">
-	<cfif Left(I,10) eq 'datasource'>
-		<cfset MuraDatasource = Right(I,Len(I)-11) />
-	</cfif>
-</cfloop>
-
-<!--- Set ORM Settings --->
-<cfset this.ormenabled = "true" />
-<cfset this.datasource = "#MuraDatasource#" />
-<cfset this.ormSettings.dbcreate = "update" />
-<cfset this.ormsettings.cfclocation = "com/entity" />
-<!--- End: Setup ORM --->
-
-
 <cffunction name="setPluginConfig" output="false">  
 	<cfargument name="pluginConfig" type="any" required="true">  
 	<cfset application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig>  
@@ -31,13 +13,54 @@
 	<cfreturn application[ variables.framework.applicationKey ].pluginConfig>  
 </cffunction> 
 
-<!--- Standard Application Functions,  These are also called from the fw1EventAdapter --->
+<!--- Start: Standard Application Functions,  These are also called from the fw1EventAdapter --->
 <cffunction name="setupApplication" output="false">
+	<cfset var serviceFactory = "" />
+	<cfset var xml = "" />
+	<cfset var xmlPath = "" />
+
+	<!--- Start: Setup ORM --->
+	<!--- Get Mura Data Source for Mura Settings.ini --->
+	<cffile action="read" variable="SettingsINI" file="#baseDir#/config/settings.ini.cfm" />
+	<cfset MuraDatasource = "" />
+	<cfloop list="#SettingsINI#" index="I" delimiters="#chr(13)##chr(10)#">
+		<cfif Left(I,10) eq 'datasource'>
+			<cfset MuraDatasource = Right(I,Len(I)-11) />
+		</cfif>
+	</cfloop>
+	
+	<!--- Set ORM Settings --->
+	<cfset this.ormenabled = "true" />
+	<cfset this.datasource = "#MuraDatasource#" />
+	<cfset this.ormSettings.dbcreate = "update" />
+	<cfset this.ormsettings.cfclocation = "com/entity" />
+	<!--- End: Setup ORM --->
+
 	<cfset ormreload() />
+	
 	<cfif not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey>
 		<cfinclude template="plugin/config.cfm" />
 	</cfif>
 	<cfset setPluginConfig(request.PluginConfig) />
+	
+	<cfset xmlPath = "#expandPath( '/plugins' )#/#variables.pluginConfig.getDirectory()#/config/coldspring.xml" />
+	<cffile action="read" file="#xmlPath#" variable="xml" />
+	
+	<!--- parse the xml and replace all [plugin] with the actual plugin mapping path --->
+	<cfset xml = replaceNoCase( xml, "[plugin]", "plugins.#variables.pluginConfig.getDirectory()#.", "ALL") />
+	<cfif variables.pluginConfig.getSetting("Integration") eq "Internal">
+		<cfset variables.pluginConfig.setSetting("Integration", '') />
+	<cfelse>
+		<cfset variables.pluginConfig.setSetting("Integration", "#variables.pluginConfig.getSetting('Integration')#.") />
+	</cfif>
+	
+	<cfset xml = replaceNoCase( xml, "[integration]", "#variables.pluginConfig.getSetting('Integration')#", "ALL") />
+	
+	<!--- build Coldspring factory --->
+	<cfset serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init() />
+	<cfset serviceFactory.loadBeansFromXmlRaw( xml ) />
+	<cfset serviceFactory.setParent($.getServiceFactory()) />
+	<cfset variables.pluginConfig.getApplication().setValue( "serviceFactory", serviceFactory ) />
 	
 	<cfset setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ))>
 </cffunction>
@@ -70,8 +93,9 @@
 		<cfhtmlhead text="#HTMLHead#">
 	</cfif>
 </cffunction>
+<!--- End: Standard Application Functions,  These are also called from the fw1EventAdapter --->
 
-<!--- Misc Application Functions --->
+<!--- Start: Misc Application Functions --->
 <cffunction name="secureRequest" output="false">
 	<cfset var ActionOK = 0 />
 	<cfif isAdminRequest()>
@@ -141,5 +165,6 @@
 	
 	<cfreturn isOK />
 </cffunction>
+<!--- End: Misc Application Functions --->
 
 </cfcomponent>

@@ -1,54 +1,61 @@
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 	
+	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted">
+	
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
 	<cfinclude template="fw1Config.cfm">
 	
-	<cffunction name="onApplicationLoad">
-		<cfargument name="$">
-		
-		<cfset var serviceFactory = "" />
-		<cfset var xml = "" />
-		<cfset var xmlPath = "" />
-		
-		<cfset xmlPath = "#expandPath( '\plugins' )#/#variables.pluginConfig.getDirectory()#/config/coldspring.xml" />
-		<cffile action="read" file="#xmlPath#" variable="xml" />
-		
-		<!--- parse the xml and replace all [plugin] with the actual plugin mapping path --->
-		<cfset xml = replaceNoCase( xml, "[plugin]", "plugins.#variables.pluginConfig.getDirectory()#.", "ALL") />
-		<cfif variables.pluginConfig.getSetting("Integration") eq "Internal">
-			<cfset variables.pluginConfig.setSetting("Integration", '') />
-		<cfelse>
-			<cfset variables.pluginConfig.setSetting("Integration", "#variables.pluginConfig.getSetting('Integration')#.") />
-		</cfif>
-		
-		<cfset xml = replaceNoCase( xml, "[integration]", "#variables.pluginConfig.getSetting('Integration')#", "ALL") />
-		
-		<!--- build Coldspring factory --->
-		<cfset serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init() />
-		<cfset serviceFactory.loadBeansFromXmlRaw( xml ) />
-		<cfset serviceFactory.setParent($.getServiceFactory()) />
-		<cfset variables.pluginConfig.getApplication().setValue( "serviceFactory", serviceFactory ) />
-		
-		<!--- invoke onApplicationStart in the application.cfc so the framework can do its thing --->
-		<cfinvoke component="#variables.pluginConfig.getPackage()#.Application" method="onApplicationStart"  />
-		
-		<cfset variables.pluginConfig.addEventHandler(this)>
-	</cffunction>
-	
 	<!--- this is the plugin hook in for mura --->
-	<cffunction name="onSiteRequestStart">
+	<cffunction name="onSiteRequestStart" output="false">
         <cfargument name="$">
         
         <!--- put the plugin into the event --->
         <cfset $[variables.framework.applicationKey]= this />
-		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="setupRequest" />
     </cffunction>
-		
-	<cffunction name="onGlobalSessionStart">
+	
+	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
-
-		<!--- invoke onApplicationStart in the application.cfc so the framework can do its thing --->
+		<cfset var state=preseveInternalState(request)>
+		<cfset request.pluginConfig=variables.pluginConfig>
+		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onApplicationStart" />
+		<cfset restoreInternalState(request,state)>
+		<cfset variables.pluginConfig.addEventHandler(this)>
+	</cffunction>
+	
+	<cffunction name="onGlobalSessionStart" output="false">
+		<cfargument name="$">
+		<cfset var state=preseveInternalState(request)>
 		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onSessionStart" />
+		<cfset restoreInternalState(request,state)>
+	</cffunction>
+
+	<cffunction name="preseveInternalState" output="false">
+		<cfargument name="state">
+		<cfset var preserveKeys=structNew()>
+		<cfset var k="">
+		
+		<cfloop list="#variables.preserveKeyList#" index="k">
+			<cfif isDefined("arguments.state.#k#")>
+				<cfset preserveKeys[k]=arguments.state[k]>
+				<cfset structDelete(arguments.state,k)>
+			</cfif>
+		</cfloop>
+		
+		<cfset structDelete( arguments.state, "serviceExecutionComplete" )>
+		
+		<cfreturn preserveKeys>
+	</cffunction>
+	
+	<cffunction name="restoreInternalState" output="false">
+		<cfargument name="state">
+		<cfargument name="restore">
+		
+		<cfloop list="#variables.preserveKeyList#" index="k">
+				<cfset structDelete(arguments.state,k)>
+		</cfloop>
+		
+		<cfset structAppend(state,restore,true)>
+		<cfset structDelete( state, "serviceExecutionComplete" )>
 	</cffunction>
 	
 </cfcomponent>
