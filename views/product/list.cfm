@@ -18,6 +18,7 @@
 				<cfif not listFind(args.HiddenColumns,'ProductYear')><td>#Local.Product.getProductYear()#</td></cfif>
 				<cfif not listFind(args.HiddenColumns,'ProductName')><td><a href="#buildURL(action='product.detail', queryString='ProductID=#Local.Product.getProductID()#')#">#Local.Product.getProductName()#</a></td></cfif>
 				<cfif not listFind(args.HiddenColumns,'ProductCode')><td><a href="#buildURL(action='product.detail', queryString='ProductID=#Local.Product.getProductID()#')#">#Local.Product.getProductCode()#</a></td></cfif>
+				<td><a href="#buildURL(action='product.edit', queryString='ProductID=#Local.Product.getProductID()#')#">Edit</a></td>
 			</tr>
 		</cfloop>
 	</table>

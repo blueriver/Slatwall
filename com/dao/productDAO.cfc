@@ -4,7 +4,7 @@
 		<cfargument name="SmartList" type="any" required="true" />
 		
 		<cfset var EntityRecords = arrayNew(1) />
-		<cfset var HQL = " from product aproduct where #arguments.SmartList.getHQLWhere()#" />
+		<cfset var HQL = " from product aproduct #arguments.SmartList.getHQLWhere()#" />
 		<cfset EntityRecords = ormExecuteQuery(HQL, {}) />
 		<cfset arguments.SmartList.setEntityRecords(EntityRecords) />
 

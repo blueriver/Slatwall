@@ -35,7 +35,7 @@
 	<cffunction name="save" output="false">
 		<cfargument name="entity" type="any" required="true" />
 		
-		<cfset EntitySave(arguments.entity, true) />
+		<cfset EntitySave(arguments.entity) />
 		
 		<cfreturn arguments.entity />
 	</cffunction>
