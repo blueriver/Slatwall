@@ -2,16 +2,22 @@
 
 <beans>
 	
+	<bean id="brandDAO" class="slat.com.dao.[integration]brandDAO" />
 	<bean id="productDAO" class="slat.com.dao.[integration]productDAO" />
 	<bean id="skuDAO" class="slat.com.dao.[integration]skuDAO" />
 	<bean id="vendorDAO" class="slat.com.dao.[integration]vendorDAO" />
 	
+	<bean id="brandService" class="slat.com.service.brandService">
+		<constructor-arg name="DAO"><ref bean="brandDAO" /></constructor-arg>
+	</bean>
+	
 	<bean id="productService" class="slat.com.service.productService">
 		<constructor-arg name="DAO"><ref bean="productDAO" /></constructor-arg>
 		<constructor-arg name="skuDAO"><ref bean="skuDAO" /></constructor-arg>
+		<constructor-arg name="ContentManager"><ref bean="contentManager" /></constructor-arg>
 	</bean>
 
 	<bean id="vendorService" class="slat.com.service.vendorService">
-		
+				
 	</bean>
 </beans>

@@ -5,40 +5,20 @@
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
 			<li><a href="#buildURL(action='main.default')#">Dashboard</a></li>
-			<cfif SecureDisplay('creport')>
-				<li><a href="">Custom Reports</a>
-					<div class="MenuSubOne">
-						<ul>
-							<li><a href="#buildSecureURL(action='creport.atsbikes')#">Available Bikes</a></li>
-							<li><a href="#buildSecureURL(action='creport.bikeorders')#">Bike Build</a></li>
-							<li><a href="#buildSecureURL(action='creport.customerdiscounts')#">Customer Discounts</a></li>
-							<li><a href="#buildSecureURL(action='creport.invsuggestions')#">Inventory Suggestions</a></li>
-							<li><a href="#buildSecureURL(action='creport.lastreceivedonspecialorder')#">Last Received On Open Order</a></li>
-							<li><a href="#buildSecureURL(action='creport.addtoweb')#">Web Adds</a></li>
-							<li><a href="#buildSecureURL(action='creport.openpo')#">Open POs</a></li>
-							<li><a href="#buildSecureURL(action='creport.ordersshipping')#">Open Orders Shipping</a></li>
-							<li><a href="#buildSecureURL(action='creport.preordersales')#">Pre Order Sales</a></li>
-							<li><a href="#buildSecureURL(action='creport.qbreconcile')#">QB Reconcile</a></li>
-							<li><a href="#buildSecureURL(action='creport.rrsreconcile')#">RRS Reconcile</a></li>
-						</ul>
-					</div>
-				</li>
-			</cfif>
 			<cfif SecureDisplay('product')>
 				<li>
 					<a href="#buildSecureURL(action='product.list')#">Products</a>
 					<div class="MenuSubOne">
 						<ul>
-							<li><a href="#buildSecureURL(action='product.edit')#">New Product</a></li>
+							<li><a href="#buildSecureURL(action='product.edit')#">Create New Product</a></li>
 							<li><a href="#buildSecureURL(action='product.list')#">Product Listing</a></li>
-							<li><a href="#buildSecureURL(action='product.create')#">Create New Product</a></li>
-							<li><a href="#buildSecureURL(action='skus.list')#">Skus Listing</a></li>
-							<li><a href="#buildSecureURL(action='brand.list')#">Brands Listing</a></li>
-							<li><a href="#buildSecureURL(action='product.list', queryString='O_DateLastReceived=D')#">Order: Last Received</a></li>
+							<li><a href="#buildSecureURL(action='brand.edit')#">Create New Brand</a></li>
+							<li><a href="#buildSecureURL(action='brand.list')#">Brand Listing</a></li>
 						</ul>
 					</div>
 				</li>
 			</cfif>
+			<!---
 			<cfif SecureDisplay('order')>
 				<li>
 					<a href="#buildSecureURL(action='order.list', queryString='F_IsOpen=1')#">Orders</a>
@@ -51,6 +31,7 @@
 					</div>
 				</li>
 			</cfif>
+			
 			<cfif SecureDisplay('customer')>
 				<li>
 					<a href="#buildSecureURL(action='customer.list')#">Customers</a>
@@ -62,6 +43,7 @@
 					</div>
 				</li>
 			</cfif>
+			
 			<cfif SecureDisplay('po')>
 				<li><a href="#buildSecureURL(action='po.list')#">Purchase Orders</a></li>
 			</cfif>
@@ -82,6 +64,7 @@
 					</div>
 				</li>
 			</cfif>
+			--->
 			<cfif SecureDisplay('help')>
 				<li>
 					<a href="##">Help</a>

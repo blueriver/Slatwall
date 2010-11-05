@@ -1,19 +1,22 @@
 <cfoutput>
 	<div class="svoproductedit">
-		<form name="ProductEdit" action="?action=product.save" method="post">
+		<form name="ProductEdit" action="?action=product.update" method="post">
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
-		<dl>
-			<dt>Product Name</dt>
-			<dd><input type="text" name="ProductName" value="#rc.Product.getProductName()#" /></dd>
-		</dl>
-		<dl>
-			<dt>Active</dt>
-			<dd><input type="checkbox" name="Active" value="1" <cfif rc.Product.getActive()>checked="checked"</cfif></dd>
-		</dl>
-		<dl>
-			<dt>Manufacture Discontinued</dt>
-			<dd><input type="checkbox" name="ManufactureDiscontinued" value="1" <cfif rc.Product.getManufactureDiscontinued()>checked="checked"</cfif></dd>
-		</dl>
+		#rc.Product.getPropertyDisplay('Active', true)#
+		#rc.Product.getPropertyDisplay('ProductName', true)#
+		#rc.Product.getPropertyDisplay('ProductCode', true)#
+		#rc.Product.getPropertyDisplay('ProductYear', true)#
+		#rc.Product.getPropertyDisplay('ProductDescription', true)#
+		#rc.Product.getPropertyDisplay('ManufactureDiscontinued', true)#
+		#rc.Product.getPropertyDisplay('ShowOnWebRetail', true)#
+		#rc.Product.getPropertyDisplay('ShowOnWebWholesale', true)#
+		#rc.Product.getPropertyDisplay('NonInventoryItem', true)#
+		#rc.Product.getPropertyDisplay('CallToOrder', true)#
+		#rc.Product.getPropertyDisplay('AllowShipping', true)#
+		#rc.Product.getPropertyDisplay('AllowPreorder', true)#
+		#rc.Product.getPropertyDisplay('AllowDropship', true)#
+		#rc.Product.getPropertyDisplay('ShippingWeight', true)#
+		#rc.Product.getPropertyDisplay('PublishedWeight', true)#
 		<button type="submit">Save</button>
 		</form>
 	</div>

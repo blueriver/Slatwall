@@ -10,6 +10,7 @@
 		<cfif not isDefined('rc.Product')>
 			<cfset rc.Product = variables.productService.getNewEntity() />
 		</cfif>
+
 	</cffunction>
 
 	<cffunction name="setproductService">
@@ -30,7 +31,6 @@
 			</cfif>
 			<cfset variables.fw.redirect(action='product.detail', append='ProductId') />
 		</cfif>
-		
 	</cffunction>
 	
 	<cffunction name="list">
@@ -39,7 +39,7 @@
 		<cfset rc.ProductSmartList = variables.productService.getSmartList(arguments.rc) />
 	</cffunction>
 	
-	<cffunction name="save">
+	<cffunction name="update">
 		<cfargument name="rc" />
 		
 		<cfset rc.Product = variables.fw.populate(cfc=rc.Product, Keys=rc.Product.getUpdateKeys(), trim=true) />

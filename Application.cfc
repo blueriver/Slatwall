@@ -71,6 +71,14 @@
 </cffunction>
 
 <cffunction name="setupRequest" output="false">
+	<cfset var item = 0 />
+	
+	<cfloop collection="#request.context#" item="item">
+		<cfif request.context[item] eq '0,1' or request.context[item] eq '1,0'>
+			<cfset request.context[item] = 1 />
+		</cfif>
+	</cfloop>
+	
 	<cfif isDefined('url.returnFormat')>
 		<cfif url.returnFormat neq 'json'>
 			<cfset secureRequest()>
@@ -159,11 +167,7 @@
 	<cfif isUserInRole('S2')>
 		<cfset isOK = 1 />
 	<cfelse>
-		<cfset isOK = application.slatsettings.checkPermission(arguments.action, getUserRoles()) />
-	</cfif>
-	
-	<cfif not isOK and listFindNoCase(application.slatsettings.getSetting('AdminIPList'), '#cgi.remote_addr#')>
-		<cfset isOK = application.slatsettings.checkPermission(arguments.action, "SlatwallAdminIP") />
+		<cfset isOK = 0 />
 	</cfif>
 	
 	<cfreturn isOK />

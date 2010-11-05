@@ -1,15 +1,18 @@
 <cfcomponent extends="slat.com.service.baseService" accessors="true" >
 
 	<cfproperty name="SkuDAO" type="any" />
+	<cfproperty name="ContentManager" type="any" />
 	
 	<cfset variables.entityName = "product" />
 	
 	<cffunction name="init">
 		<cfargument name="DAO" type="any" />
 		<cfargument name="SkuDAO" type="any" />
+		<cfargument name="ContentManager" type="any" />
 		
 		<cfset setDAO(arguments.DAO) />
 		<cfset setSkuDAO(arguments.SkuDAO) />
+		<cfset setContentManager(arguments.ContentManager) />
 	</cffunction>
 	
 	<cffunction name="getSmartList">
