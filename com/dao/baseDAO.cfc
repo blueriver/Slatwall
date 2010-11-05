@@ -35,6 +35,19 @@
 	<cffunction name="save" output="false">
 		<cfargument name="entity" type="any" required="true" />
 		
+		<cfset var Property = 0 />
+		<cfset var MetaData = getMetadata(arguments.entity) />
+		
+		<cfloop array="#MetaData.Properties#" index="Property">
+			<cfif Property.Name eq 'DateCreated'>
+				<cfif arguments.entity.getDateCreated() eq ''>
+					<cfset arguments.entity.setDateCreated(now()) />
+				</cfif>
+			<cfelseif Property.Name eq 'DateUpdated'>
+				<cfset arguments.entity.setDateUpdated(now()) />
+			</cfif>
+		</cfloop>
+		
 		<cfset EntitySave(arguments.entity) />
 		
 		<cfreturn arguments.entity />

@@ -1,9 +1,9 @@
 <cfcomponent displayname="baseEntity" accessors="true">
 
 	<cfproperty name="SearchScore" persistent="false" default=0 />
+	<cfproperty name="UpdateKeys" persistent="false" default="" />
 	
 	<cffunction name="init">
-		
 		<cfreturn this />
 	</cffunction>
 	

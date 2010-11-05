@@ -6,10 +6,9 @@
 		<cfparam name="rc.ProductID" default="" />
 		<cfparam name="rc.ProductName" default="" />
 		
-		<cfif rc.ProductID eq "">
+		<cfset rc.Product = variables.productService.getByID(rc.ProductID) />
+		<cfif not isDefined('rc.Product')>
 			<cfset rc.Product = variables.productService.getNewEntity() />
-		<cfelse>
-			<cfset rc.Product = variables.productService.getByID(rc.ProductID) />
 		</cfif>
 	</cffunction>
 
@@ -43,7 +42,7 @@
 	<cffunction name="save">
 		<cfargument name="rc" />
 		
-		<cfset variables.fw.populate(cfc=rc.Product, trustKeys=true, trim=true) />
+		<cfset rc.Product = variables.fw.populate(cfc=rc.Product, Keys=rc.Product.getUpdateKeys(), trim=true) />
 		<cfset rc.Product = variables.productService.save(entity=rc.Product) />
 		<cfset variables.fw.redirect(action='product.detail',queryString='ProductID=#rc.Product.getProductID()#') />
 		

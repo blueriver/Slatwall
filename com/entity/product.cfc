@@ -1,5 +1,5 @@
 <cfcomponent displayname="Product" table="slatproduct" persistent="true" extends="slat.com.entity.baseEntity">
-	<cfproperty name="ProductID" fieldtype="id" generator="guid" />
+	<cfproperty name="ProductID" fieldtype="id" generator="uuid" />
 	
 	<cfproperty name="Active" type="boolean" default=true hint="As Products Get Old, They would be marked as Not Active" />
 	<cfproperty name="ManufactureDiscontinued" default=false type="boolean" hint="This property can determine if a product can still be ordered by a vendor or not" />
@@ -20,7 +20,6 @@
 	<cfproperty name="PublishedWeight" type="numeric" default=0 hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight" />
 	<cfproperty name="DateCreated" type="date" default="" />
 	<cfproperty name="DateLastUpdated" type="date" default="" />
-
 		
 	<!--- Related and Nested Objects --->
 	<cfproperty name="Brand" cfc="brand" fieldtype="many-to-one" fkcolumn="BrandID" cascade="all" inverse="true" fetch="join"  />
@@ -44,6 +43,15 @@
 	<cfproperty name="WebWholesaleQOH" persistent="false" type="numeric" />
 	<cfproperty name="WebWholesaleQC" persistent="false" type="numeric" />
 	<cfproperty name="WebWholesaleQOO" persistent="false" type="numeric" />
+	
+	<cfset variables.UpdateKeys = "Active,ManufactureDiscontinued,ShowOnWebRetail,ShowOnWebWholesale,NonInventoryItem,CallToOrder,InStoreOnly,AllowPreorder,AllowBackorder,AllowDropship,ProductName,ProductCode,ProductDescription,ProductYear,MadeInCountryCode,ShippingWeight,PublishedWeight" />
+	
+	<cffunction name="getProductID">
+		<cfif not isDefined('variables.ProductID')>
+			<cfset variables.ProductID = createUUID() />
+		</cfif>
+		<cfreturn variables.ProductID />
+	</cffunction>
 	
 	<!--- Nested Object Getters --->
 	<cffunction name="getBrand">
