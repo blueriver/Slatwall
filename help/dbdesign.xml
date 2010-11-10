@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sql>
+<datatypes db="mysql">
+	<group label="Numeric" color="rgb(238,238,170)">
+		<type label="Integer" length="0" sql="INTEGER" re="INT" quote=""/>
+		<type label="Decimal" length="1" sql="DECIMAL" re="DEC" quote=""/>
+		<type label="Single precision" length="0" sql="FLOAT" quote=""/>
+		<type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
+	</group>
+
+	<group label="Character" color="rgb(255,200,200)">
+		<type label="Char" length="1" sql="CHAR" quote="'"/>
+		<type label="Varchar" length="1" sql="VARCHAR" quote="'"/>
+		<type label="Text" length="0" sql="MEDIUMTEXT" re="TEXT" quote="'"/>
+		<type label="Binary" length="1" sql="BINARY" quote="'"/>
+		<type label="Varbinary" length="1" sql="VARBINARY" quote="'"/>
+		<type label="BLOB" length="0" sql="BLOB" re="BLOB" quote="'"/>
+	</group>
+
+	<group label="Date &amp; Time" color="rgb(200,255,200)">
+		<type label="Date" length="0" sql="DATE" quote="'"/>
+		<type label="Time" length="0" sql="TIME" quote="'"/>
+		<type label="Datetime" length="0" sql="DATETIME" quote="'"/>
+		<type label="Year" length="0" sql="YEAR" quote=""/>
+		<type label="Timestamp" length="0" sql="TIMESTAMP" quote="'"/>
+	</group>
+	
+	<group label="Miscellaneous" color="rgb(200,200,255)">
+		<type label="ENUM" length="1" sql="ENUM" quote=""/>
+		<type label="SET" length="1" sql="SET" quote=""/>
+		<type label="Bit" length="0" sql="bit" quote=""/>
+	</group>
+</datatypes><table x="61" y="333" name="slatProduct">
+<row name="ProductID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="ProductCode" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="ProductName" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>'NULL'</default></row>
+<row name="ProductDescription" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="BrandID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatBrand" row="BrandID" />
+</row>
+<key type="PRIMARY" name="">
+<part>ProductID</part>
+</key>
+</table>
+<table x="529" y="1619" name="slatSku">
+<row name="SkuID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ProductID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatProduct" row="ProductID" />
+</row>
+<row name="OriginalPrice" null="1" autoincrement="0">
+<datatype>DECIMAL</datatype>
+<default>NULL</default></row>
+<row name="ListPrice" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>SkuID</part>
+</key>
+</table>
+<table x="422" y="1132" name="slatOrder">
+<row name="orderID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="AccountID" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="OrderDate" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<row name="orderStatusID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatOrderStatus" row="orderStatusID" />
+</row>
+<row name="billingAddressID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="totalAmount" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="discountAmount" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="PaymentMethodID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatPaymentMethod" row="PaymentMethodID" />
+</row>
+<row name="ccLast4" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ccExpiration" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>orderID</part>
+</key>
+</table>
+<table x="411" y="177" name="slatAccount">
+<row name="AccountID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="UserID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="tuser (mura)" row="UserID" />
+</row>
+<row name="FirstName" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="LastName" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Company" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="AccountTypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="RemoteEmployeeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="RemoteCustomerID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="RemoteVendorContactID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>AccountID</part>
+</key>
+</table>
+<table x="707" y="1032" name="slatCart">
+<row name="CartID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="IsSaved" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>NULL</default></row>
+<row name="ExpirationDate" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<row name="BillingAddressID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>CartID</part>
+</key>
+</table>
+<table x="910" y="937" name="slatCartItem">
+<row name="cartItemID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="CartID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatCart" row="CartID" />
+</row>
+<row name="SkuID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatSku" row="SkuID" />
+</row>
+<row name="Quantity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ShippingMethodID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatShippingMethod" row="ShippingMethodID" />
+</row>
+<row name="ShippingAddressID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAddress" row="AddressID" />
+</row>
+<key type="PRIMARY" name="">
+<part>cartItemID</part>
+</key>
+</table>
+<table x="1322" y="1082" name="slatShippingMethod">
+<row name="ShippingMethodID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ShippingMethodTypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatShippingMethodType" row="ShippingMethodTypeID" />
+</row>
+<row name="ShippingProviderID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatShippingProvider" row="ShippingProviderID" />
+</row>
+<row name="ShippingProvicedMethodID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ShipMethod" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ShippingMethodID</part>
+</key>
+</table>
+<table x="1579" y="1162" name="slatShippingProvider">
+<row name="ShippingProviderID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="apiURL" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="apiLogin" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="apiPassword" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ShippingProviderID</part>
+</key>
+</table>
+<table x="186" y="1202" name="slatOrderStatus">
+<row name="orderStatusID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="orderStatus" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>orderStatusID</part>
+</key>
+</table>
+<table x="31" y="747" name="slatBrand">
+<row name="BrandID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="BrandName" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>BrandID</part>
+</key>
+</table>
+<table x="752" y="1836" name="slatStock">
+<row name="StockID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="SkuID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatSku" row="SkuID" />
+</row>
+<row name="LocationID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatLocation" row="LocationID" />
+</row>
+<row name="QuantityOnHand" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="QuantityCommited" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="QuantityOnOrder" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>StockID</part>
+</key>
+</table>
+<table x="61" y="535" name="slatRelatedProduct">
+<row name="ProductID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatProduct" row="ProductID" />
+</row>
+<row name="relatedProductID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatProduct" row="ProductID" />
+</row>
+<key type="PRIMARY" name="">
+<part>ProductID</part>
+</key>
+</table>
+<table x="63" y="19" name="tcontent (mura)">
+<row name="ContentID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ContentID</part>
+</key>
+</table>
+<table x="410" y="11" name="tuser (mura)">
+<row name="UserID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="FirstName" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="LastName" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Company" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Email" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>UserID</part>
+</key>
+</table>
+<table x="60" y="142" name="slatContentProduct">
+<row name="ContentProductID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ContentID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="tcontent (mura)" row="ContentID" />
+</row>
+<row name="ProductID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatProduct" row="ProductID" />
+</row>
+<key type="PRIMARY" name="">
+<part>ContentProductID</part>
+</key>
+</table>
+<table x="1513" y="7" name="slatVendor">
+<row name="VendorID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="VendorName" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>VendorID</part>
+</key>
+</table>
+<table x="993" y="10" name="slatVendorDirectory">
+<row name="VendorDirectoryID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<row name="RoleID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendorRole" row="VendorRoleID" />
+</row>
+<key type="PRIMARY" name="">
+<part>VendorDirectoryID</part>
+</key>
+</table>
+<table x="857" y="1199" name="slatOrderStockItem">
+<row name="OrderItemID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ShipmentID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatShipment" row="ShipmentID" />
+</row>
+<row name="Price" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Quantity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="StockID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatStock" row="StockID" />
+</row>
+<row name="TaxAmount" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>OrderItemID</part>
+</key>
+</table>
+<table x="1089" y="1211" name="slatShipmentItem">
+<row name="ShipmentItemID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="OrderItemID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatOrderStockItem" row="OrderItemID" />
+</row>
+<row name="QuatityShipped" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="DateShipped" null="1" autoincrement="0">
+<datatype>DATE</datatype>
+<default>NULL</default></row>
+<row name="ShipmentMethodID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TrackingNumber" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ShipmentItemID</part>
+</key>
+</table>
+<table x="699" y="11" name="slatSession">
+<row name="SessionID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="CartID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatCart" row="CartID" />
+</row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<key type="PRIMARY" name="">
+<part>SessionID</part>
+</key>
+</table>
+<table x="1556" y="1035" name="slatShippingMethodType">
+<row name="ShippingMethodTypeID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Type" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ShippingMethodTypeID</part>
+</key>
+</table>
+<table x="716" y="486" name="slatAccountAddress">
+<row name="AccountAddressID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<row name="AddressID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAddress" row="AddressID" />
+</row>
+<key type="PRIMARY" name="">
+<part>AccountAddressID</part>
+</key>
+</table>
+<table x="1001" y="575" name="slatAddress">
+<row name="AddressID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="StreetAddress" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Street2Address" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Locality" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="City" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="StateCode" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default><relation table="slatState" row="StateCode" />
+</row>
+<row name="PostalCode" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default><relation table="slatPostalCode" row="PostalCode" />
+</row>
+<row name="CountryCode" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default><relation table="slatCountry" row="CountryCode" />
+</row>
+<row name="Name" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Phone" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>AddressID</part>
+</key>
+</table>
+<table x="1021" y="169" name="slatType">
+<row name="TypeID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ParentTypeID" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Type" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>TypeID</part>
+</key>
+</table>
+<table x="720" y="320" name="slatAccountEmail">
+<row name="AccountEmailID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<row name="Email" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>AccountEmailID</part>
+</key>
+</table>
+<table x="737" y="175" name="slatAccountPhone">
+<row name="AccountPhoneID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<row name="Phone" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>AccountPhoneID</part>
+</key>
+</table>
+<table x="1662" y="157" name="slatPurchaseOrder">
+<row name="PurchaseOrderID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="PurchaseOrderCode" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="EstimatedArrivalDate" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>PurchaseOrderID</part>
+</key>
+</table>
+<table x="1224" y="472" name="slatVendorAddress">
+<row name="VendorAddressID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="AddressID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>VendorAddressID</part>
+</key>
+</table>
+<table x="1227" y="319" name="slatVendorEmail">
+<row name="VendorEmailID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="Email" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>VendorEmailID</part>
+</key>
+</table>
+<table x="1227" y="173" name="slatVendorPhone">
+<row name="VendorPhoneID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="TypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatType" row="TypeID" />
+</row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="Phone" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>VendorPhoneID</part>
+</key>
+</table>
+<table x="1664" y="311" name="slatPurcahseOrderItems">
+<row name="PurchaseOrderItemID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="PurchaseOrderID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatPurchaseOrder" row="PurchaseOrderID" />
+</row>
+<row name="StockID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatStock" row="StockID" />
+</row>
+<row name="QuantityOrdered" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="QuantityReceived" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>PurchaseOrderItemID</part>
+</key>
+</table>
+<table x="1030" y="1547" name="slatAttributes">
+<row name="AttributeID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="AttributeGroupID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAttributeGroup" row="AttributeGroupID" />
+</row>
+<row name="AttributeCode" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Attribute" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="AttributeSortOrder" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>AttributeID</part>
+</key>
+</table>
+<table x="1233" y="1545" name="slatAttributeGroup">
+<row name="AttributeGroupID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="GroupName" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>AttributeGroupID</part>
+</key>
+</table>
+<table x="1244" y="822" name="slatPostalCode">
+<row name="PostalCode" null="1" autoincrement="1">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="City" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Latitude" null="1" autoincrement="0">
+<datatype>DECIMAL</datatype>
+<default>NULL</default></row>
+<row name="Longatude" null="1" autoincrement="0">
+<datatype>DECIMAL</datatype>
+<default>NULL</default></row>
+<row name="StateCode" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatState" row="StateCode" />
+</row>
+<row name="CountryCode" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatCountry" row="CountryCode" />
+</row>
+<key type="PRIMARY" name="">
+<part>PostalCode</part>
+</key>
+</table>
+<table x="1291" y="732" name="slatState">
+<row name="StateCode" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="CountryCode" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatCountry" row="CountryCode" />
+</row>
+<key type="PRIMARY" name="">
+<part>StateCode</part>
+</key>
+</table>
+<table x="1245" y="641" name="slatCountry">
+<row name="CountryCode" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="CountryName" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>CountryCode</part>
+</key>
+</table>
+<table x="1666" y="481" name="slatReceiving">
+<row name="ReceivingID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="PurchaseOrderItemID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatPurcahseOrderItems" row="PurchaseOrderItemID" />
+</row>
+<row name="QuantityReceived" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="DateReceived" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ReceivingID</part>
+</key>
+</table>
+<table x="1102" y="1810" name="slatVendorSku">
+<row name="VendorSkuID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="SkuID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatSku" row="SkuID" />
+</row>
+<row name="Cost" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="QuantityAvailable" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="LastUpdated" null="1" autoincrement="0">
+<datatype>DATETIME</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>VendorSkuID</part>
+</key>
+</table>
+<table x="267" y="869" name="slatVendorBrand">
+<row name="VendorBrandID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="VendorID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatVendor" row="VendorID" />
+</row>
+<row name="BrandID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatBrand" row="BrandID" />
+</row>
+<key type="PRIMARY" name="">
+<part>VendorBrandID</part>
+</key>
+</table>
+<table x="619" y="1199" name="slatShipment">
+<row name="ShipmentID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="orderID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatOrder" row="orderID" />
+</row>
+<row name="AddressID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAddress" row="AddressID" />
+</row>
+<row name="ShippingMethodID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatShippingMethod" row="ShippingMethodID" />
+</row>
+<row name="TotalAmount" null="1" autoincrement="0">
+<datatype>DECIMAL</datatype>
+<default>NULL</default></row>
+<row name="Email" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="Cost" null="1" autoincrement="0">
+<datatype>DECIMAL</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ShipmentID</part>
+</key>
+</table>
+<table x="785" y="1547" name="slatSkuAttributes">
+<row name="SkuAttributeID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="SkuID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatSku" row="SkuID" />
+</row>
+<row name="AttributeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAttributes" row="AttributeID" />
+</row>
+<key type="PRIMARY" name="">
+<part>SkuAttributeID</part>
+</key>
+</table>
+<table x="201" y="1518" name="slatSkuWholesale">
+<row name="SkuWholesaleID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="SkuID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatSku" row="SkuID" />
+</row>
+<row name="MinQuantity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="MaxQuantity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Price" null="1" autoincrement="0">
+<datatype>DECIMAL</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>SkuWholesaleID</part>
+</key>
+</table>
+<table x="160" y="1312" name="slatPaymentMethod">
+<row name="PaymentMethodID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="PaymentMethod" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>PaymentMethodID</part>
+</key>
+</table>
+<table x="397" y="504" name="slatAccountRoles">
+<row name="AccountRoleID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="AccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<row name="RelatedAccountID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatAccount" row="AccountID" />
+</row>
+<row name="RoleID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatRole" row="RoleID" />
+</row>
+<key type="PRIMARY" name="">
+<part>AccountRoleID</part>
+</key>
+</table>
+<table x="1552" y="802" name="slatShippingRate">
+<row name="ShippingWeightRateID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="ShippingMethodID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatShippingMethod" row="ShippingMethodID" />
+</row>
+<row name="MinWeight" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="MaxWeight" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="MinPrice" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="MaxPrice" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Cost" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ShippingWeightRateID</part>
+</key>
+</table>
+<table x="406" y="695" name="slatRole">
+<row name="RoleID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Role" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>RoleID</part>
+</key>
+</table>
+<table x="1254" y="74" name="slatVendorRole">
+<row name="VendorRoleID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="Role" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>VendorRoleID</part>
+</key>
+</table>
+<table x="49" y="1062" name="slatServices">
+<row name="ServiceID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>ServiceID</part>
+</key>
+</table>
+<table x="623" y="1410" name="slatOrderServiceItem">
+<row name="ServiceItemID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="OrderID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatOrder" row="orderID" />
+</row>
+<row name="ServiceID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="slatServices" row="ServiceID" />
+</row>
+<key type="PRIMARY" name="">
+<part>ServiceItemID</part>
+</key>
+</table>
+<table x="414" y="1881" name="slatLocation">
+<row name="LocationID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="LocationName" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="SellStockOnWebRetail" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="SellStockOnWebWholesale" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>LocationID</part>
+</key>
+</table>
+</sql>
