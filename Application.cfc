@@ -60,7 +60,7 @@
 	<cfset serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init() />
 	<cfset serviceFactory.loadBeansFromXmlRaw( xml ) />
 	
-	<cfset serviceFactory.setParent(getBeanFactory().getBean("muraScope").init(session.siteid).getServiceFactory()) />
+	<cfset serviceFactory.setParent(application.servicefactory) />
 	<cfset getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory ) />
 	
 	<cfset setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ))>
