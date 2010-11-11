@@ -1,4 +1,4 @@
-<cfcomponent output="false">
+<cfcomponent extends="main" output="false">
 
 	<cffunction name="toolbar" output="false">
 		<cfset request.generateSES = false />
