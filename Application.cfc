@@ -5,22 +5,6 @@
 <cfinclude template="../mappings.cfm">
 <cfinclude template="fw1Config.cfm">
 
-<!--- Start: Setup ORM --->
-<!--- Get Mura Data Source for Mura Settings.ini --->
-<cffile action="read" variable="SettingsINI" file="#baseDir#/config/settings.ini.cfm" />
-<cfset MuraDatasource = "" />
-<cfloop list="#SettingsINI#" index="I" delimiters="#chr(13)##chr(10)#">
-	<cfif Left(I,10) eq 'datasource'>
-		<cfset MuraDatasource = Right(I,Len(I)-11) />
-	</cfif>
-</cfloop>
-<!--- Set ORM Settings --->
-<cfset this.ormenabled = "true" />
-<cfset this.datasource = "#MuraDatasource#" />
-<cfset this.ormSettings.dbcreate = "update" />
-<cfset this.ormsettings.cfclocation = "com/entity" />
-<!--- End: Setup ORM --->
-
 <cffunction name="setPluginConfig" output="false">  
 	<cfargument name="pluginConfig" type="any" required="true">  
 	<cfset application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig>  
@@ -74,8 +58,10 @@
 	<cfset var item = 0 />
 	
 	<cfloop collection="#request.context#" item="item">
-		<cfif request.context[item] eq '0,1' or request.context[item] eq '1,0'>
-			<cfset request.context[item] = 1 />
+		<cfif isSimpleValue(request.context[item])>
+			<cfif request.context[item] eq '0,1' or request.context[item] eq '1,0'>
+				<cfset request.context[item] = 1 />
+			</cfif>
 		</cfif>
 	</cfloop>
 	
