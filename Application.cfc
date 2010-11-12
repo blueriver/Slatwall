@@ -51,7 +51,8 @@
 </cffunction>
 
 <cffunction name="setupSession" output="false">
-	<!--- Add Session Variables Here --->
+	<cfset session.slat = structnew() />
+	<cfset session.slat.crumbdata = arraynew(1) />
 </cffunction>
 
 <cffunction name="setupRequest" output="false">

@@ -125,7 +125,7 @@
 		<cfreturn "#getBrand().getBrandName()# #getProductYear()# #getProductName()#" />
 	</cffunction>
 	
-	<cffunction name="getWebRetailLink">
-		<cfreturn "/index.cfm/product/?ProductID?=#getProductID()#" />
+	<cffunction name="getProductURL">
+		<cfreturn "/index.cfm/sp/#getFilename()#" />
 	</cffunction>
 </cfcomponent>

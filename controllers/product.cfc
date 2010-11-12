@@ -43,6 +43,9 @@
 		<cfargument name="rc" />
 		
 		<cfset rc.Product = variables.fw.populate(cfc=rc.Product, Keys=rc.Product.getUpdateKeys(), trim=true) />
+		<cfif rc.Product.getFilename() eq "">
+			<cfset rc.Product.setFilename(LCASE(Replace(rc.Product.getProductName()," ","-"))) />
+		</cfif>
 		<cfset rc.Product = variables.productService.save(entity=rc.Product) />
 		<cfset variables.fw.redirect(action='product.detail',queryString='ProductID=#rc.Product.getProductID()#') />
 		

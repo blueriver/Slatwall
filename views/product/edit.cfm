@@ -4,6 +4,7 @@
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 		#rc.Product.getPropertyDisplay('Active', true)#
 		#rc.Product.getPropertyDisplay('ProductName', true)#
+		#rc.Product.getPropertyDisplay('Filename', true)#
 		#rc.Product.getPropertyDisplay('ProductCode', true)#
 		#rc.Product.getPropertyDisplay('ProductYear', true)#
 		#rc.Product.getPropertyDisplay('ProductDescription', true)#

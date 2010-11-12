@@ -24,6 +24,11 @@
 			<cfset rc.Filename = Left(rc.Filename, len(rc.Filename)-1) />
 			<cfset request.slatProduct = variables.productService.getByFilename(rc.Filename) />
 			<cfset request.contentBean.setTitle(request.slatProduct.getProductName()) />
+			<cfset request.contentBean.setBody(request.slatProduct.getProductDescription()) />
+			<cfset request.crumbdata = duplicate(session.slat.crumbdata) />
+			<cfset request.contentrenderer.crumbdata = duplicate(session.slat.crumbdata) />
+		<cfelse>
+			<cfset session.slat.crumbdata = duplicate(request.crumbdata) />
 		</cfif>
 	</cffunction>
 	
