@@ -8,10 +8,19 @@
 	<!--- this is the plugin hook in for mura --->
 	<cffunction name="onSiteRequestStart" output="false">
         <cfargument name="$">
-        
         <!--- put the plugin into the event --->
-        <cfset $[variables.framework.applicationKey]= this />
+		<cfset $[variables.framework.applicationKey]= this />
+		
+		<!--- Call Slatwall Front End Controller /> --->
+		<cfset doAction($, 'frontend.onsiterequeststart') />
     </cffunction>
+	
+	<cffunction name="onRenderStart">
+		<cfargument name="$" />
+		
+		<!--- Call Slatwall Front End Controller /> --->
+		<cfset doAction($, 'frontend.onrenderstart') />
+	</cffunction>
 	
 	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
