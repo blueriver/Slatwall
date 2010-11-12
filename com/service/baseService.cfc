@@ -13,6 +13,12 @@
 		<cfreturn getDAO().read(arguments.ID,variables.entityName) />
 	</cffunction>
 	
+	<cffunction name="getByFilename" access="public" returntype="any" output="false">
+		<cfargument name="Filename" type="string" required="false" default="0" />
+		
+		<cfreturn getDAO().readByFilename(arguments.Filename,variables.entityName) />
+	</cffunction>
+	
 	<cffunction name="getNewEntity" access="public" returntype="any" output="false">
 		<cfset var entity = entityNew(variables.entityName) />
 		<cfset entity.init(argumentcollection=arguments) />

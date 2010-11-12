@@ -10,6 +10,14 @@
 		
 		<cfreturn entityLoad(arguments.entityName, arguments.id, true) />
 	</cffunction>
+	
+	<cffunction name="readByFilename" output="false">
+		<cfargument name="Filename" type="string" required="yes" />
+		<cfargument name="entityName" type="string" required="true" />
+		
+		<cfset var HQL = " from #arguments.entityName# where filename = '#arguments.Filename#'" />
+		<cfreturn ormExecuteQuery(HQL, true) />
+	</cffunction>
 
 	<cffunction name="list" output="false">
 		<cfargument name="entityName" type="string" required="true" />

@@ -19,9 +19,11 @@
 	<cffunction name="onrenderstart">
 		<cfargument name="rc" />
 		
-		<cfif Left(rc.path,12) eq '/default/sp/'>
-			<cfset request.slatProduct = variables.productService.getByHTMLTitle(rc.ProductID) />
-			<cfset request.contentBean.setTitle('THIS IS A TEST') />		
+		<cfif Left(rc.path,len(request.siteid) + 5) eq '/#request.siteid#/sp/'>
+			<cfset rc.Filename = Right( rc.path, len(rc.path)-(len(request.siteid) + 5) ) />
+			<cfset rc.Filename = Left(rc.Filename, len(rc.Filename)-1) />
+			<cfset request.slatProduct = variables.productService.getByFilename(rc.Filename) />
+			<cfset request.contentBean.setTitle(request.slatProduct.getProductName()) />
 		</cfif>
 	</cffunction>
 	
