@@ -43,12 +43,22 @@
 		<cfargument name="rc" />
 		
 		<cfset rc.Product = variables.fw.populate(cfc=rc.Product, Keys=rc.Product.getUpdateKeys(), trim=true) />
-		<cfif rc.Product.getFilename() eq "">
-			<cfset rc.Product.setFilename(LCASE(Replace(rc.Product.getProductName()," ","-"))) />
-		</cfif>
-		<cfset rc.Product = variables.productService.save(entity=rc.Product) />
-		<cfset variables.fw.redirect(action='product.detail',queryString='ProductID=#rc.Product.getProductID()#') />
 		
+		<!--- Setup Products Filename --->
+		<cfif rc.Product.getFilename() eq "">
+			<cfset rc.Product.setFilename(rc.Product.getProductName()) />
+		</cfif>
+		<cfset rc.Product.setFilename(LCASE(REReplaceNoCase(Replace(rc.Product.getFilename()," ","-","all"),"[^A-Z|\-]","","all"))) />
+		
+		<!--- Save Product --->
+		<cfset rc.Product = variables.productService.save(entity=rc.Product) />
+		
+		<cfset variables.fw.redirect(action='product.detail',queryString='ProductID=#rc.Product.getProductID()#') />
+	</cffunction>
+	
+	<cffunction name="edit">
+		<cfargument name="rc" />
+		<cfset rc.ProductTemplatesQuery = variables.productService.getProductTemplates() />
 	</cffunction>
 	
 </cfcomponent>

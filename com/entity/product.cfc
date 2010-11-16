@@ -1,9 +1,10 @@
 <cfcomponent displayname="Product" table="slatproduct" persistent="true" extends="slat.com.entity.baseEntity">
 	
 	<!--- Standard Persistant Properties --->
-	<cfproperty name="ProductID"				type="uuid" fieldtype="id" generator="uuid" />
+	<cfproperty name="ProductID"				type="string" fieldtype="id" generator="guid" />
 	<cfproperty name="Active" 					type="boolean" default=true displayname="Active" hint="As Products Get Old, They would be marked as Not Active" />
 	<cfproperty name="Filename"					type="string" default="" displayname="File Name" hint="This is the name that is used in the URL string" />
+	<cfproperty name="Template"					type="string" default="" displayname="Design Template" hint="This is the Template to use for product display" />
 	<cfproperty name="ProductName"				type="string" default="" displayname="Product Name" hint="Primary Notation for the Product to be Called By" />
 	<cfproperty name="ProductCode"				type="string" default="" displayname="Product Code" hint="Product Code, Typically used for Manufacturer Coded" />
 	<cfproperty name="ProductDescription"		type="string" default="" displayname="Product Description" hint="HTML Formated description of the Product" />

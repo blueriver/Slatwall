@@ -15,6 +15,7 @@
 		<constructor-arg name="DAO"><ref bean="productDAO" /></constructor-arg>
 		<constructor-arg name="skuDAO"><ref bean="skuDAO" /></constructor-arg>
 		<constructor-arg name="ContentManager"><ref bean="contentManager" /></constructor-arg>
+		<constructor-arg name="SettingsManager"><ref bean="settingsManager" /></constructor-arg>
 	</bean>
 
 	<bean id="vendorService" class="slat.com.service.vendorService">

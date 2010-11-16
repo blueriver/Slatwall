@@ -2,6 +2,7 @@
 
 	<cfproperty name="SkuDAO" type="any" />
 	<cfproperty name="ContentManager" type="any" />
+	<cfproperty name="SettingsManager" type="any" />
 	
 	<cfset variables.entityName = "product" />
 	
@@ -9,10 +10,12 @@
 		<cfargument name="DAO" type="any" />
 		<cfargument name="SkuDAO" type="any" />
 		<cfargument name="ContentManager" type="any" />
+		<cfargument name="SettingsManager" type="any" />
 		
 		<cfset setDAO(arguments.DAO) />
 		<cfset setSkuDAO(arguments.SkuDAO) />
 		<cfset setContentManager(arguments.ContentManager) />
+		<cfset setSettingsManager(arguments.SettingsManager) />
 	</cffunction>
 	
 	<cffunction name="getSmartList">
@@ -27,6 +30,10 @@
 		<cfset SmartList.addKeywordColumn('Brand_BrandName', 6) />
 		
 		<cfreturn getDAO().fillSmartList(SmartList) />
+	</cffunction>
+	
+	<cffunction name="getProductTemplates">
+		<cfreturn getSettingsManager().getSite(session.siteid).getTemplates() />
 	</cffunction>
 	
 </cfcomponent>

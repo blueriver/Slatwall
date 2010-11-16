@@ -5,6 +5,17 @@
 		#rc.Product.getPropertyDisplay('Active', true)#
 		#rc.Product.getPropertyDisplay('ProductName', true)#
 		#rc.Product.getPropertyDisplay('Filename', true)#
+		<dl>
+			<dt>Product Template</dt>
+			<dd>
+				<select name="Template">
+					<option value="" <cfif rc.Product.getTemplate() eq ''>selected="selected"</cfif>>Global</option>
+					<cfloop query="rc.ProductTemplatesQuery">
+						<option value="#rc.ProductTemplatesQuery.Name#" <cfif rc.Product.getTemplate() eq rc.ProductTemplatesQuery.Name>selected="selected"</cfif>>#rc.ProductTemplatesQuery.Name#</option>	
+					</cfloop>
+				</select>
+			</dd>
+		</dl>
 		#rc.Product.getPropertyDisplay('ProductCode', true)#
 		#rc.Product.getPropertyDisplay('ProductYear', true)#
 		#rc.Product.getPropertyDisplay('ProductDescription', true)#

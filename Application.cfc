@@ -91,10 +91,11 @@
 		<cfhtmlhead text="#HTMLHead#">
 	</cfif>
 </cffunction>
-
+<!---
 <cffunction name="onMissingView">
 	<cfreturn "" />
 </cffunction>
+--->
 <!--- End: Standard Application Functions,  These are also called from the fw1EventAdapter --->
 
 <!--- Start: Misc Application Functions --->

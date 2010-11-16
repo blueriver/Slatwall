@@ -22,11 +22,22 @@
 		<cfif Left(rc.path,len(request.siteid) + 5) eq '/#request.siteid#/sp/'>
 			<cfset rc.Filename = Right( rc.path, len(rc.path)-(len(request.siteid) + 5) ) />
 			<cfset rc.Filename = Left(rc.Filename, len(rc.Filename)-1) />
-			<cfset request.slatProduct = variables.productService.getByFilename(rc.Filename) />
-			<cfset request.contentBean.setTitle(request.slatProduct.getProductName()) />
-			<cfset request.contentBean.setBody(request.slatProduct.getProductDescription()) />
+			
+			<!--- Setup Product in Request Scope --->
+			<cfset request.muraScope.slatwall.Product = variables.productService.getByFilename(rc.Filename) />
+			
+			<!--- Force Product Information into Content Bean --->
+			<cfset request.contentBean.setTitle(request.muraScope.slatwall.Product.getProductName()) />
+			<cfset request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription()) />
+			
+			<!--- Overright crumbdata with the last page that was loaded --->
 			<cfset request.crumbdata = duplicate(session.slat.crumbdata) />
 			<cfset request.contentrenderer.crumbdata = duplicate(session.slat.crumbdata) />
+			
+			<!--- Set template based on Product Template --->
+			<cfif request.muraScope.slatwall.Product.getTemplate() neq ''>
+				<cfset request.contentBean.setTemplate(request.muraScope.slatwall.Product.getTemplate()) />
+			</cfif>
 		<cfelse>
 			<cfset session.slat.crumbdata = duplicate(request.crumbdata) />
 		</cfif>
