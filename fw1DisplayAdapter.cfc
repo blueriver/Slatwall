@@ -1,7 +1,8 @@
 <cfcomponent extends="fw1EventAdapter">
-	<cffunction name="contentproducts">
+
+	<cffunction name="contentproductlist">
 		<cfargument name="$" />
 		
-		<cfreturn doAction($,'frontend.contentproducts') />
+		<cfreturn doAction($,'frontend:content.productlist') />
 	</cffunction>
 </cfcomponent>

@@ -143,6 +143,7 @@
 <key type="PRIMARY" name="">
 <part>AccountID</part>
 </key>
+<comment>This table will hold all accounts including customers and tie them to a single mura user.  However some times there will be an account, but no user in mura.  If they do exist in both mura and slataccount, then the FirstName, LastName and Company will not be saved in this table</comment>
 </table>
 <table x="707" y="1032" name="slatCart">
 <row name="CartID" null="1" autoincrement="1">
@@ -513,7 +514,7 @@
 <part>TypeID</part>
 </key>
 </table>
-<table x="720" y="320" name="slatAccountEmail">
+<table x="739" y="321" name="slatAccountEmail">
 <row name="AccountEmailID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>

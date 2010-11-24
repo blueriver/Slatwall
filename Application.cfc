@@ -65,54 +65,16 @@
 			</cfif>
 		</cfif>
 	</cfloop>
-	
-	<cfif isDefined('url.returnFormat')>
-		<cfif url.returnFormat neq 'json'>
-			<cfset secureRequest()>
-		</cfif>
-	<cfelse>
-		<cfset secureRequest()>
-	</cfif>
+
 	<cfif not structKeyExists(request.context,"$")>
 		<cfset request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid)>
 	</cfif>
+	
 	<cfset variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/">
-	
-	<cfif isAdminRequest()>
-		<cfset secureRequest()>
-	</cfif>
-	
-	<cfif not isAdminRequest()>
-		<cfsavecontent variable="HTMLHead">
-			<cfoutput>
-				<cfinclude template="layouts/inc/html_head.cfm" />
-			</cfoutput>
-		</cfsavecontent>
-		<cfhtmlhead text="#HTMLHead#">
-	</cfif>
 </cffunction>
-<!---
-<cffunction name="onMissingView">
-	<cfreturn "" />
-</cffunction>
---->
 <!--- End: Standard Application Functions,  These are also called from the fw1EventAdapter --->
 
-<!--- Start: Misc Application Functions --->
-<cffunction name="secureRequest" output="false">
-	<cfset var ActionOK = 0 />
-	<cfif isAdminRequest()>
-		<cfif isDefined('url.action')>
-			<cfset ActionOK = SecureDisplay(url.action) />
-		<cfelse>
-			<cfset ActionOK = SecureDisplay('main.default') />
-		</cfif>
-		<cfif not ActionOK>	
-			<cflocation url="#application.configBean.getContext()#/admin/" addtoken="false">
-		</cfif>
-	</cfif>
-</cffunction>
-
+<!--- Helper Functions --->
 <cffunction name="isAdminRequest">
 	<cfreturn not structKeyExists(request,"servletEvent")>
 </cffunction>
@@ -122,49 +84,5 @@
 	<cfreturn #buildURL(action='external.site', queryString='es=#arguments.Address#')# />
 </cffunction>
 
-<cffunction name="buildSecureURL" output="false" returntype="string">
-	<cfargument name="action" />
-	<cfargument name="path" type="string" default="#variables.framework.baseURL#" />
-	<cfargument name="querystring" default="" />
-	
-	<cfset var returnLink = "" />
-	
-	<cfif SecureDisplay(arguments.action)>
-		<cfset returnLink = variables.BuildURL(arguments.action,arguments.path,arguments.querystring) />
-	<cfelse>
-		<cfset returnLink = "javascript:alert('You do not have access to this area');" />	
-	</cfif>
-	
-	<cfreturn returnLink />
-</cffunction>
-
-<cffunction name="viewSecure" output="false" returntype="String">
-	<cfargument name="view" required="true" />
-	<cfargument name="args" default="#structNew()#" />
-	
-	<cfset var returnView = "" />
-	
-	<cfif SecureDisplay(Replace(arguments.view,"/",".","all"))>
-		<cfset returnView = variables.view(arguments.view, arguments.args) />
-	</cfif>
-	
-	<cfreturn returnView />
-</cffunction>
-
-<cffunction name="SecureDisplay" output="false" returntype="Numeric">
-	<cfargument name="action" required="true" />
-	
-	<cfset var isOK = 0 />
-	
-	<cfif isUserInRole('S2')>
-		<cfset isOK = 1 />
-	<cfelse>
-		<cfset isOK = 0 />
-	</cfif>
-	
-	<cfreturn isOK />
-</cffunction>
-<!--- End: Misc Application Functions --->
-
-
+<!--- End: Helper Functions--->
 </cfcomponent>

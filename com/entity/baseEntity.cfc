@@ -12,7 +12,7 @@
 		<cfset var MetaData = 0 />
 		<cfset var Property = 0 />
 		
-		<cfif not isDefined(variables.UpdateKeys)>
+		<cfif not isDefined('variables.UpdateKeys')>
 			<cfset MetaData = getMetadata( this ) />
 			<cfset variables.UpdateKeys = "" />		
 			<cfloop array="#MetaData.Properties#" index="Property">

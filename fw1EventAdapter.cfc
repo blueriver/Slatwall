@@ -12,14 +12,25 @@
 		<cfset $[variables.framework.applicationKey]= this />
 		
 		<!--- Call Slatwall Front End Controller /> --->
-		<cfset doAction($, 'frontend.onsiterequeststart') />
+		<cfset doAction($, 'frontend:event.onsiterequeststart') />
     </cffunction>
 	
 	<cffunction name="onRenderStart">
 		<cfargument name="$" />
 		
-		<!--- Call Slatwall Front End Controller /> --->
-		<cfset doAction($, 'frontend.onrenderstart') />
+		<cfset doAction($, 'frontend:event.onrenderstart') />
+	</cffunction>
+	
+	<cffunction name="onSiteLogin">
+		<cfargument name="$" />
+		
+		<cfset doAction($, 'frontend:event.onsitelogin') />
+	</cffunction>
+	
+	<cffunction name="onUserCreate">
+		<cfargument name="$" />
+		
+		<cfset doAction($, 'frontend:event.onusercreate') />
 	</cffunction>
 	
 	<cffunction name="onApplicationLoad" output="false">
@@ -70,7 +81,7 @@
 	<cffunction name="doAction" output="false">
 		<cfargument name="$">
 		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
-		
+				
 		<cfset var result = "" />
 		<cfset var savedEvent = "" />
 		<cfset var savedAction = "" />

@@ -9,7 +9,7 @@
 	
 	<cfif not hasPluginConfig and not isUserInRole('S2')>
 		<cfif not structKeyExists(session,"siteID") or not application.permUtility.getModulePerm(request.pluginConfig.getValue('moduleID'),session.siteid)>
-			<cfif isDefined('variables.frameword')>
+			<cfif isDefined('variables.framework')>
 				<cfif not variables.framework.reloadapplicationoneveryrequest>
 					<cflocation url="#application.configBean.getContext()#/admin/" addtoken="false">
 				</cfif>

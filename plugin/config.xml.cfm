@@ -64,6 +64,6 @@
 	<eventHandler event="onApplicationLoad" component="fw1EventAdapter" persist="false"/>	
 </eventHandlers>
 <displayobjects location="global">
-	<displayobject name="Content Products" displaymethod="contentproducts" component="fw1DisplayAdapter" persist="false"/>
+	<displayobject name="Content Product List" displaymethod="contentproductlist" component="fw1DisplayAdapter" persist="false"/>
 </displayobjects>
 </plugin>
