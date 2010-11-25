@@ -63,4 +63,9 @@
 		</cfloop>
 	</cffunction>
 	
+	<cffunction name="getService">
+		<cfargument name="service">
+		<cfreturn application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#arguments.service#") />
+	</cffunction>
+	
 </cfcomponent>

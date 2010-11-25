@@ -52,7 +52,7 @@
 		<cfargument name="BrandID" />
 		<cfif not isDefined('variables.Brand')>
 			<cfif isDefined('arguments.BrandID')>
-				<cfset variables.Brand = variables.brandService.getByID(arguments.BrandID) />
+				<cfset variables.Brand = getService("brandService").getByID(arguments.BrandID) />
 			<cfelse>
 				<cfset variables.Brand = entityNew('brand') />
 			</cfif>
@@ -64,7 +64,7 @@
 		<cfargument name="GenderTypeID">
 		<cfif not isDefined('variables.GenderType')>
 			<cfif isDefined('arguments.GenderTypeID')>
-				<cfset variables.GenderType = variables.typeService.getByID(argumnets.GenderTypeID) />
+				<cfset variables.GenderType = getService("typeService").getByID(argumnets.GenderTypeID) />
 			<cfelse>
 				<cfset variables.GenderType = entityNew('type') />
 			</cfif>
@@ -74,7 +74,7 @@
 	
 	<cffunction name="getSkus">
 		<cfif not isDefined('variables.Skus')>
-			<cfset variables.Skus = variables.skuService.getByProductID(getProductID()) />
+			<cfset variables.Skus = getService("skuService").getByProductID(getProductID()) />
 		</cfif>
 		<cfreturn variables.Skus />
 	</cffunction>
