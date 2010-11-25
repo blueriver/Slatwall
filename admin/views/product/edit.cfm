@@ -2,6 +2,7 @@
 	<div class="svoproductedit">
 		<form name="ProductEdit" action="?action=product.update" method="post">
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
+		<dl class="oneColumn">
 		<cf_PropertyDisplay object="#rc.Product#" property="Active" edit="true">
 		<cf_PropertyDisplay object="#rc.Product#" property="ProductName" edit="true">
 		<cf_PropertyDisplay object="#rc.Product#" property="Filename" edit="true">
@@ -16,21 +17,20 @@
 				</select>
 			</dd>
 		</dl>
-		<!---
-		#rc.Product.getPropertyDisplay('ProductCode', true)#
-		#rc.Product.getPropertyDisplay('ProductYear', true)#
-		#rc.Product.getPropertyDisplay('ProductDescription', true)#
-		#rc.Product.getPropertyDisplay('ManufactureDiscontinued', true)#
-		#rc.Product.getPropertyDisplay('ShowOnWebRetail', true)#
-		#rc.Product.getPropertyDisplay('ShowOnWebWholesale', true)#
-		#rc.Product.getPropertyDisplay('NonInventoryItem', true)#
-		#rc.Product.getPropertyDisplay('CallToOrder', true)#
-		#rc.Product.getPropertyDisplay('AllowShipping', true)#
-		#rc.Product.getPropertyDisplay('AllowPreorder', true)#
-		#rc.Product.getPropertyDisplay('AllowDropship', true)#
-		#rc.Product.getPropertyDisplay('ShippingWeight', true)#
-		#rc.Product.getPropertyDisplay('PublishedWeight', true)#
-		--->
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductCode" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductYear" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="ManufactureDiscontinued" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="ShowOnWebRetail" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="ShowOnWebWholesale" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="NonInventoryItem" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="CallToOrder" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="AllowShipping" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="AllowPreorder" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="AllowDropship" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="ShippingWeight" edit="true">
+		<cf_PropertyDisplay object="#rc.Product#" property="PublishedWeight" edit="true">
+		</dl>
 		<button type="submit">Save</button>
 		</form>
 	</div>

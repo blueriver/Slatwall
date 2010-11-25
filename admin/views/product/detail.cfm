@@ -3,19 +3,19 @@
 <cfoutput>
 	<!--- <div class="ItemDetailImage"><img src="http://www.nytro.com/prodimages/#local.Product.getDefaultImageID()#-DEFAULT-s.jpg"></div> --->
 	<div class="ItemDetailMain">
-		#rc.Product.getPropertyDisplay('Active')#
-		#rc.Product.getPropertyDisplay('ProductName')#
-		#rc.Product.getPropertyDisplay('ProductCode')#
-		#rc.Product.getPropertyDisplay('ProductYear')#
-		#rc.Product.getPropertyDisplay('ShippingWeight')#
-		#rc.Product.getPropertyDisplay('PublishedWeight')#
+		<cf_PropertyDisplay object="#rc.Product#" property="Active">
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductName">
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductCode">
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductYear">
+		<cf_PropertyDisplay object="#rc.Product#" property="ShippingWeight">
+		<cf_PropertyDisplay object="#rc.Product#" property="PublishedWeight">
 	</div>
 	
 	<div class="ItemDetailBar">
-		#rc.Product.getPropertyDisplay('AllowPreorder')#
-		#rc.Product.getPropertyDisplay('AllowDropship')#
-		#rc.Product.getPropertyDisplay('NonInventoryItem')#
-		#rc.Product.getPropertyDisplay('CallToOrder')#
-		#rc.Product.getPropertyDisplay('AllowShipping')#
+		<cf_PropertyDisplay object="#rc.Product#" property="AllowPreorder">
+		<cf_PropertyDisplay object="#rc.Product#" property="AllowDropship">
+		<cf_PropertyDisplay object="#rc.Product#" property="NonInventoryItem">
+		<cf_PropertyDisplay object="#rc.Product#" property="CallToOrder">
+		<cf_PropertyDisplay object="#rc.Product#" property="AllowShipping">
 	</div>
 </cfoutput>
