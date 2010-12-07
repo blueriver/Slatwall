@@ -35,8 +35,8 @@
 			<cfif isDefined('request.contentBean')>
 				<li><a href="javascript:;" onClick="doSlatAction('utility.campaignlink',{'Show': 1, 'LandingPageContentID': '#request.contentBean.getContentID()#', 'QueryString': '#cgi.query_string#'})">Campaign Link</a></li>
 			</cfif>
-			<cfif isDefined('url.ProductID')>
-				<li><a href="#buildURL(action='product.detail', querystring='ProductID=#url.ProductID#')#">Product Detail</a></li>
+			<cfif isDefined('request.muraScope.slatwall.Product')>
+				<li><a href="#buildURL(action='admin:product.detail', querystring='ProductID=#request.muraScope.slatwall.Product.getProductID()#')#">Product Detail</a></li>
 			</cfif>
 		</ul>
 	</div>
