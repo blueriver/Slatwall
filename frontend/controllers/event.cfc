@@ -18,6 +18,25 @@
 	<cffunction name="onrenderstart">
 		<cfargument name="rc" />
 		
+		<cfset var SlatwallHead = "" />
+		
+		<!--- Add Core References to Header --->
+		<cfset rc.$.loadJSLib() />
+		<cfsavecontent variable="SlatwallHead">
+			<cfoutput>
+				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/jquery.js"></script>
+				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/slatwall.js"></script>
+				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/fw1AjaxAdapter.js"></script>
+				<link rel="stylesheet" type="text/css" href="/plugins/#application.slatwall.pluginConfig.getDirectory()#/css/slatwall.css" />
+				<cfif isUserInRole('S2')>
+					#variables.fw.view('admin:utility/toolbar')#
+				</cfif>
+			</cfoutput>
+		</cfsavecontent>
+		
+		<cfhtmlhead text="#SlatwallHead#" />
+
+		<!--- Create Product Page Layout when URL is a Product URL --->
 		<cfif Left(rc.path,len(request.siteid) + 5) eq '/#request.siteid#/sp/'>
 			<cfset rc.Filename = Right( rc.path, len(rc.path)-(len(request.siteid) + 5) ) />
 			<cfset rc.Filename = Left(rc.Filename, len(rc.Filename)-1) />
@@ -41,6 +60,8 @@
 		<cfelse>
 			<cfset session.slat.crumbdata = duplicate(request.crumbdata) />
 		</cfif>
+		
+		
 	</cffunction>
 	
 	<cffunction name="onusercreate">

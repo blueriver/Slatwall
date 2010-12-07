@@ -1,6 +1,5 @@
 *.project
 *.settings
-
 *.DS_Store
 *.zip
 settings.xml

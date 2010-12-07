@@ -1,6 +1,6 @@
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 	
-	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted">
+	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses">
 	
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
 	<cfinclude template="fw1Config.cfm">
@@ -90,7 +90,7 @@
 		<cfset var state=structNew()>
 		<!--- Put the event url struct, to be used by FW/1 --->
 		<cfset url.$ = $ />
-	
+		
 		<cfif not len( arguments.action )>
 			<cfif len(arguments.$.event(variables.framework.action))>
 				<cfset arguments.action=arguments.$.event(variables.framework.action)>
@@ -110,9 +110,12 @@
 		<cfset url[variables.framework.action] = arguments.action />
 		
 		<cfset state=preseveInternalState(request)>	
+		
+		
 		<!--- call the frameworks onRequestStart --->
 		<cfset fw1.onRequestStart(CGI.SCRIPT_NAME) />
 		
+		<cfset request.generateses = false />
 		<!--- call the frameworks onRequest --->
 		<!--- we save the results via cfsavecontent so we can display it in mura --->
 		<cfsavecontent variable="result">
