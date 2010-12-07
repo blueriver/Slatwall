@@ -1,7 +1,7 @@
 <cfoutput>
 	<div class="svoutilitytoolbar">
-		#view('utility/toolbarsearch', args)#
-		#view('utility/campaignlink', args)#
+		#view('admin:utility/toolbarsearch', args)#
+		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
 			<li><a href="#buildURL(action='admin:main.default')#">Dashboard</a></li>
@@ -32,15 +32,12 @@
 				<input type="text" name="AdminSearch" class="AdminSearch" />
 			</li>
 			<li><a href="http://#cgi.http_host#/">Website</a></li>
-			<li><a href="##">Company E-Mail</a></li>
 			<cfif isDefined('request.contentBean')>
 				<li><a href="javascript:;" onClick="doSlatAction('utility.campaignlink',{'Show': 1, 'LandingPageContentID': '#request.contentBean.getContentID()#', 'QueryString': '#cgi.query_string#'})">Campaign Link</a></li>
 			</cfif>
 			<cfif isDefined('url.ProductID')>
 				<li><a href="#buildURL(action='product.detail', querystring='ProductID=#url.ProductID#')#">Product Detail</a></li>
 			</cfif>
-			<li><a href="?reload=true">Reload</a></li>
 		</ul>
 	</div>
-	
 </cfoutput>

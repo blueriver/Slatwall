@@ -28,14 +28,9 @@
 				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/slatwall.js"></script>
 				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/fw1AjaxAdapter.js"></script>
 				<link rel="stylesheet" type="text/css" href="/plugins/#application.slatwall.pluginConfig.getDirectory()#/css/slatwall.css" />
-				
 				<cfif isUserInRole('S2')>
-					<!--- 
-					<cfset variables.fw.view('admin:utility.toolbar') />
-					return customizeViewOrLayoutPath( pathInfo, type, '#pathInfo.base##type#s/#pathInfo.path#.cfm' );
-					--->
+					#variables.fw.view('admin:utility/toolbar')#
 				</cfif>
-				
 			</cfoutput>
 		</cfsavecontent>
 		
