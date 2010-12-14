@@ -27,11 +27,13 @@
 		<cfset doAction($, 'frontend:event.onsitelogin') />
 	</cffunction>
 	
+	<!---
 	<cffunction name="onUserCreate">
 		<cfargument name="$" />
 		
 		<cfset doAction($, 'frontend:event.onusercreate') />
 	</cffunction>
+	--->
 	
 	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
