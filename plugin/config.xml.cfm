@@ -1,12 +1,12 @@
 <plugin>
 <name>Slatwall Plugin</name>
 <package>Slat</package>
-<version>2.0</version>
-<provider>Greg Moser</provider>
-<providerURL>http://www.gregmoser.com</providerURL>
+<version>0.4</version>
+<provider>Slatwall</provider>
+<providerURL>https://github.com/gregmoser/Slatwall/wiki/</providerURL>
 <category>Application</category>
 <settings>
-	<setting>  
+	<setting>
 		<name>Integration</name>  
 		<label>Integration Type</label>  
 		<hint>If you would like Slatwall to Integrate with another System, select it here</hint>  
