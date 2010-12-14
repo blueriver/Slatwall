@@ -20,8 +20,6 @@
 	<cfset var serviceFactory = "" />
 	<cfset var xml = "" />
 	<cfset var xmlPath = "" />
-
-	<cfset ormreload() />
 	
 	<cfif not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey>
 		<cfinclude template="plugin/config.cfm" />
