@@ -25,6 +25,8 @@ Installation
 	<cfset this.ormSettings.dbcreate = "update" />
 	<cfset this.ormsettings.cfclocation = "/plugins/Slat_#variables.slatwallpluginid#/com/entity" />
 	
+	<cfset ormReload() />
+	
 	<!--- Set Custom Tags Setting --->
 	<cfset this.customtagpaths = "#this.customtagpaths#,#baseDir#/plugins/Slat_#variables.slatwallpluginid#/tags" />
 	
