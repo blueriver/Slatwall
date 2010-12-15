@@ -1,8 +1,11 @@
 Installation
 ------------
 
-1. This source is designed to be Zipped up and installed as a plug-in into MuraCMS
-2. The below code block needs to be added to your MuraCMS cfapplication.cfm file located in (muraroot/config/cfapplication.cfm):
+1. Create a Zip file of the source code with this directory as your top level directory.
+2. Install Zip files as a plugin to Mura CMS
+3. Copy the code block below into you Mura CMS cfapplication.cfm file located here: muraroot/config/cfapplication.cfm
+4. Alter the 6th line of the code block 'variables.slatwallpluginid', and change it to the plugin id number of the slatwall plugin.
+
 <!--- Add Custom Application.cfc Vars Here --->
 
 <!--- Start: Setup Slatwall --->
