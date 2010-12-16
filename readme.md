@@ -6,6 +6,8 @@ Installation
 3. Copy the code block below into you Mura CMS cfapplication.cfm file located here: muraroot/config/cfapplication.cfm
 4. Alter the 6th line of the code block 'variables.slatwallpluginid', and change it to the plugin id number of the slatwall plugin.
 
+* Note: This custom setup should not be necessary in the production version of Slatwall
+
 <!--- Add Custom Application.cfc Vars Here --->
 
 <!--- Start: Setup Slatwall --->
