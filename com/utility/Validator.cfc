@@ -5,7 +5,7 @@ $Id: Validator.cfc 77 2010-03-05 05:06:12Z sumit.verma $
 
 Notes:
 */
-import appRoot.com.model.errorBean.*;
+import slat.com.entity.ErrorBean;
 component accessors="true"
 {
 
@@ -14,7 +14,7 @@ component accessors="true"
 	 */
 	property string resourceBundle;
 	property array validationMessages;
-	property errorBean errors;
+	property ErrorBean errors;
 
 	/**
 	 * @hint constructor for the validator class
@@ -22,7 +22,7 @@ component accessors="true"
 	public Validator function init(String rb="DefaultValidationMessages",Boolean isAbsolutePath=false){
 		this.setResourceBundle(arguments.rb);
 		this.setValidationMessages(arrayNew(1));
-		this.setErrors(new errorBean());
+		this.setErrors(new ErrorBean());
 		loadResourceBundle(arguments.isAbsolutePath);
 		return this;
 	}
