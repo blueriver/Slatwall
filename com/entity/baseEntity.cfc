@@ -1,10 +1,12 @@
+<cfimport path="slat.com.entity.ErrorBean" />
 <cfcomponent displayname="baseEntity" accessors="true">
 
+	<cfproperty name="errorBean" type="ErrorBean" />
 	<cfproperty name="SearchScore" persistent="false" default=0 />
 	<cfproperty name="UpdateKeys" persistent="false" default="" />
 	
 	<cffunction name="init">
-		
+		<cfset this.setErrorBean(new ErrorBean()) />
 		<cfreturn this />
 	</cffunction>
 	
@@ -67,5 +69,14 @@
 		<cfargument name="service">
 		<cfreturn application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#arguments.service#") />
 	</cffunction>
+	
+	<cfscript>
+	/**
+	 * @hint A way to see if the entity has any errors.
+	 */
+	public boolean function hasErrors(){
+		return this.getErrors().hasErrors();
+	}
+	</cfscript>
 	
 </cfcomponent>
