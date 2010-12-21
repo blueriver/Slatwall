@@ -50,25 +50,33 @@ component accessors="true"
 	/**
 	* @hint method to validate entity based on property definition 
 	*/
-	public void function validateObject(required any obj, struct objMD){
+	public function validateObject(required any obj, struct objMD){
 		var objMetadata = isNull(objMD) ? getMetadata(obj) : objMD ;
 		// get the object property array 
 		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
-		//writedump(var=props,abort=true);
+		//loop through each property;
 		for(var i=1; i <= arrayLen(props); i++) {
 			var prop = props[i] ;
-			//writedump(var=prop);
-			var validationRule = structKeyExists(prop,"validationRule") ? prop["validationRule"] : "" ;
-			if(len(validationRule)){
-				var name = prop["name"] ;
-				var message = structKeyExists(prop,"validationMessage") ? prop["validationMessage"] : "" ;
-				var displayName = structKeyExists(prop,"displayName") ? prop["displayName"] : "" ;
-				var val =  isNull(evaluate("obj." & "get#name#()")) ? "" : evaluate("obj." & "get#name#()") ;
-				validate(validationRule,val,name,displayName,message) ;
+			var name = prop["name"] ;
+			var val =  isNull(evaluate("obj." & "get#name#()")) ? "" : evaluate("obj." & "get#name#()") ;
+			var displayName = structKeyExists(prop,"displayName") ? prop["displayName"] : "" ;
+			var attrib = "";
+			//loop through each attribute to look for validation rule
+			for(attrib in prop){
+				if(attrib.toLowerCase().startsWith("validate")){
+					var validationRule = replaceNoCase(attrib,"validate","","one") ;
+					if(len(validationRule)){
+						var message = prop[attrib] ;
+						validate(validationRule,val,name,displayName,message) ;
+					}
+				}
 			}
 		}
-		//set errors in the object
-		obj.setErrorBean(this.geterrors()) ;
+		//if error bean exists in the object set it
+		if(arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'))){
+			obj.setErrorBean(this.geterrors()) ;
+		}
+		return this.getErrors();
 	}
 	
 	/**
