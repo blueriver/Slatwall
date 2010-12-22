@@ -1,8 +1,7 @@
 component extends="BaseController" output="false" {
 
-	public void function setProductService(required any productService) {
-		variables.productService = arguments.productService;
-	}
+	// fw1 Auto-Injected Service Properties
+	property name="productService" type="any";
 
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
