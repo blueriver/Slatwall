@@ -41,7 +41,7 @@ component output="false" {
 	private array function queryToEntityArray(required query resultsQuery, required string entityName) {
 		
 		var entityArray = arrayNew(1);
-		for(var i=1; i LTE arguments.resultsQuery; i++) {
+		for(var i=1; i <= arguments.resultsQuery; i++) {
 			var entity = EntityNew(arguments.entityName);
 			entity.set(arguments.resultsQuery[i]);
 			arrayAppend(entityArray, entity);
