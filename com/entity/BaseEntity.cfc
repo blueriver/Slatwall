@@ -1,10 +1,21 @@
-<cfimport path="slat.com.entity.ErrorBean" />
-<cfcomponent displayname="baseEntity" accessors="true">
-
-	<cfproperty name="errorBean" type="ErrorBean" />
-	<cfproperty name="SearchScore" persistent="false" default=0 />
-	<cfproperty name="UpdateKeys" persistent="false" default="" />
+import "slat.com.entity.ErrorBean";
+component displayname="baseEntity" accessors="true" {
 	
+	property name="errorBean" type="ErrorBean";
+	property name="searchScore" type="numeric";
+	property name="updateKeys" type="string";
+	
+	public any function init() {
+		this.setErrorBean(new errorBean());
+		this.setSearchScore(0);
+		
+		return this;
+	}
+	
+	
+	
+}
+/*
 	<cffunction name="init">
 		<cfset this.setErrorBean(new ErrorBean()) />
 		<cfreturn this />
@@ -80,3 +91,4 @@
 	</cfscript>
 	
 </cfcomponent>
+*/

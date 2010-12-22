@@ -1,49 +1,50 @@
-<cfcomponent displayname="Account" entityname="slataccount" table="slataccount" persistent="true" extends="slat.com.entity.baseEntity">
-	<cfproperty name="AccountID" 				type="string" fieldtype="id" generator="guid" />
-	<cfproperty name="MuraUserID"				type="string" default="" hint="This is the mura user id that ties an account to a login" />
-	<cfproperty name="FirstName"				type="string" default="" hint="This Value is only Set if a MuraID does not exist" />
-	<cfproperty name="LastName" 				type="string" default="" hint="This Value is only Set if a MuraID does not exist" />
-	<cfproperty name="Company" 					type="string" default="" hint="This Value is only Set if a MuraID does not exist" />
-	<cfproperty name="RemoteEmployeeID"			type="string" default="" hint="Only used when integrated with a remote system" />
-	<cfproperty name="RemoteCustomerID"			type="string" default="" hint="Only used when integrated with a remote system" />
-	<cfproperty name="RemoteContactID"			type="string" default="" hint="Only used when integrated with a remote system" />
+component displayname="Account" entityname="SlatAccount" table="SlatAccount" persistent="true" extends="slat.com.entity.BaseEntity" {
 	
-	<cfproperty name="MuraUser"					type="any" persistent="false" />
+	// Persistant Properties
+	property name="accountID" type="string" fieldtype="id" generator="guid";
+	property name="muraUserID" type="string" default="" hint="This is the mura user id that ties an account to a login";
+	property name="firstName" type="string" default="" hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" type="string" default="" hint="This Value is only Set if a MuraID does not exist";
+	property name="company" type="string" default="" hint="This Value is only Set if a MuraID does not exist";
+	property name="remoteEmployeeID" type="string" default="" hint="Only used when integrated with a remote system";
+	property name="remoteCustomerID" type="string" default="" hint="Only used when integrated with a remote system";
+	property name="remoteContactID" type="string" default="" hint="Only used when integrated with a remote system";
 	
-	<!--- Start: Override if MuraUserID exists --->
-	<cffunction name="getMuraUser">
-		<cfif not isDefined('variables.MuraUser')>
-			<cfif isDefined('variables.MuraUserID') and variables.MuraUserID neq ''>
-				<cfset variables.MuraUser = application.userManager.getByID(variables.MuraUserID) />
-			</cfif>
-		</cfif>
-		
-		<cfreturn variables.MuraUser />
-	</cffunction>
+	// Non-Persistant Properties
+	property name="muraUser" type="any" persistent="false";
 	
-	<cffunction name="getFirstName">
-		<cfif not isDefined('variables.FirstName') or variables.FirstName eq ''>
-			<cfset variables.FirstName = getMuraUser().getFirstName() />
-		</cfif>
-		
-		<cfreturn variables.FirstName />
-	</cffunction>
+	// Start: User Helpers
+	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
+	public mura.user.userBean function getMuraUser() {
+		if(!isDefined("variables.muraUser")) {
+			if(isDefined("variables.muraUserID") && variable.MuraUserID != ""){
+				variables.muraUser = variables.serviceFactory.getBean("userManager").getByID(ID=variables.muraUserID);
+			} else {
+				variables.muraUser = variables.serviceFactory.getBean("userManager").getBean();
+			}
+		}
+		return variables.muraUser; 
+	}
 	
-	<cffunction name="getLastName">
-		<cfif not isDefined('variables.LastName') or variables.LastName eq ''>
-			<cfset variables.LastName = getMuraUser().getLastName() />
-		</cfif>
-		
-		<cfreturn variables.LastName />
-	</cffunction>
+	public string function getFirstName() {
+		if(!isDefined("variables.firstName") or variables.firstName == "") {
+			variables.firstName = getMuraUser().getFname();
+		}
+		return variables.firstName;
+	}
 	
-	<cffunction name="getCompany">
-		<cfif not isDefined('variables.Company') or variables.Company eq ''>
-			<cfset variables.Company = getMuraUser().getCompany() />
-		</cfif>
-		
-		<cfreturn variables.Company />
-	</cffunction>
-	<!--- End: Override if MuraUserID exists --->
+	public string function getLastName() {
+		if(!isDefined("variables.lastName") or variables.lastName == "") {
+			variables.lastName = getMuraUser().getLname();
+		}
+		return variables.lastName;
+	}
 	
-</cfcomponent>
+	public string function getCompany() {
+		if(!isDefined("variables.company") or variables.company == "") {
+			variables.company = getMuraUser().getCompany();
+		}
+		return variables.lastName;
+	}
+	// End: User Helpers
+}
