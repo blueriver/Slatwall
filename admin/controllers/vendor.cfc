@@ -1,25 +1,19 @@
-<cfcomponent extends="baseController" output="false">
-
-	<cffunction name="before">
-		<cfargument name="rc" />
-		<cfparam name="rc.VendorID" default="" />
-		
-	</cffunction>
-
-	<cffunction name="setVendorService">
-		<cfargument name="VendorService" />
-		<cfset variables.VendorService = arguments.VendorService />
-	</cffunction>
+component extends="baseController" output="false" {
 	
-	<cffunction name="detail">
-		<cfargument name="rc" />
-		<cfset rc.Vendor = variables.VendorService.getByID(ID=rc.VendorID) />
-	</cffunction>
+	public void function setVendorService(required any vendorService) {
+		variables.vendorService = arguments.vendorService;
+	}
 	
-	<cffunction name="list">
-		<cfargument name="rc" />
-		
-		<cfset rc.VendorSmartList = variables.VendorService.getSmartList(arguments.rc) />
-	</cffunction>
+	public void function before(required struct rc) {
+		param name="rc.vendorID" default="";
+	}
 	
-</cfcomponent>
+	public void function detail(required struct rc) {
+		rc.vendor = variables.vendorService.getByID(ID=rc.vendorID);
+	}
+	
+	public void function list(required struct rc) {
+		rc.vendorSmartList = variables.vendorService.getSmartList(rc=arguments.rc);
+	}
+	
+}

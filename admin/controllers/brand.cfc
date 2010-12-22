@@ -1,35 +1,25 @@
-<cfcomponent extends="baseController" output="false">
+component extends="BaseController" output="false" {
 
-	<!--- Start: Injection Setters --->
-	<cffunction name="setBrandService">
-		<cfargument name="BrandService" />
-		<cfset variables.BrandService = arguments.BrandService />
-	</cffunction>
-	<!--- End: Injection Setters --->
+	public void function setBrandService(required any brandService) {
+		variables.brandService = arguments.brandService;
+	}
 	
-	<cffunction name="before">
-		<cfargument name="rc" />
+	public void function before(required struct rc) {
+		param name="rc.brandID" defualt="";
 		
-		<cfparam name="rc.BrandID" default="" />
-		
-		<cfset rc.Brand = variables.BrandService.getByID(rc.BrandID) />
-		<cfif not isDefined('rc.Brand')>
-			<cfset rc.Brand = variables.BrandService.getNewEntity() />
-		</cfif>
-	</cffunction>
+		rc.brand = variables.brandService.getByID(ID=rc.brandID);
+		if(!isDefined("rc.brand")) {
+			rc.brand = variables.brandService.getNewEntity();
+		}
+	}
+	
+	public void function list(required struct rc) {
+		rc.brandSmartList = variablse.brandService.getSmartList(rc=arguments.rc);
+	}
 
-	<cffunction name="list">
-		<cfargument name="rc" />
-	
-		<cfset rc.BrandSmartList = variables.BrandService.getSmartList(arguments.rc) />
-	</cffunction>
-	
-	<cffunction name="update">
-		<cfargument name="rc" />
-		
-		<cfset rc.Brand = variables.fw.populate(cfc=rc.Brand, Keys=rc.Brand.getUpdateKeys(), trim=true) />
-		<cfset rc.Brand = variables.BrandService.save(entity=rc.Brand) />
-		<cfset variables.fw.redirect(action='Brand.detail',queryString='BrandID=#rc.Brand.getBrandID()#') />
-	</cffunction>
-	
-</cfcomponent>
+	public void function update(required struct rc) {
+		rc.brand = variables.fw.populate(cfc=rc.brand, keys=rc.brand.getUpdateKeys(), trim=true);
+		rc.brand = variables.brandService.save(entity=rc.brand);
+		variables.fw.redirect(action="brand.detail", queryString="brandID=#rc.brand.getBrandID()#");
+	}
+}

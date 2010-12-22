@@ -1,7 +1,7 @@
-<cfcomponent extends="baseController" output="false">
+component extends="BaseController" output="false" {
 
-	<cffunction name="site" output="false">
-		<cfset request.layout = false />
-	</cffunction>
-
-</cfcomponent>
+	public void function site() {
+		request.layout = false;
+	}
+	
+}
