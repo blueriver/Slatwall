@@ -1,81 +1,52 @@
-<cfcomponent displayname="Base DAO" output="false">
-
-	<cffunction name="init">
-		<cfreturn this />
-	</cffunction>
-
-	<cffunction name="read" output="false">
-		<cfargument name="id" type="any" required="yes" />
-		<cfargument name="entityName" type="string" required="true" />
-		
-		<cfreturn entityLoad(arguments.entityName, arguments.id, true) />
-	</cffunction>
+component output="false" {
 	
-	<cffunction name="readByFilename" output="false">
-		<cfargument name="Filename" type="string" required="yes" />
-		<cfargument name="entityName" type="string" required="true" />
-		
-		<cfset var HQL = " from #arguments.entityName# where filename = '#arguments.Filename#'" />
-		<cfreturn ormExecuteQuery(HQL, true) />
-	</cffunction>
-
-	<cffunction name="list" output="false">
-		<cfargument name="entityName" type="string" required="true" />
-		<cfargument name="smartList" type="any" required="false" />
-		
-		<cfset ReturnList = arrayNew(1) />
-		<cfif isDefined('arguments.smartList')>
-			<cfset arguments.smartList.setEntityArray(entityLoad(arguments.entityName)) />
-			<cfset ReturnList = arguments.SmartList.getEntityArray() />
-		<cfelse>
-			<cfset ReturnList = entityLoad(arguments.entityName) />
-		</cfif>
-			 
-		<cfreturn entityLoad(arguments.EntityName) />
-	</cffunction>
-
-	<cffunction name="delete" output="false">
-		<cfargument name="target" type="any" required="true" />
-
-		<cfset EntityDelete(arguments.target) />
-	</cffunction>
-
-	<cffunction name="save" output="false">
-		<cfargument name="entity" type="any" required="true" />
-		
-		<cfset var Property = 0 />
-		<cfset var MetaData = getMetadata(arguments.entity) />
-		
-		<cfloop array="#MetaData.Properties#" index="Property">
-			<cfif Property.Name eq 'DateCreated'>
-				<cfif arguments.entity.getDateCreated() eq ''>
-					<cfset arguments.entity.setDateCreated(now()) />
-				</cfif>
-			<cfelseif Property.Name eq 'DateUpdated'>
-				<cfset arguments.entity.setDateUpdated(now()) />
-			</cfif>
-		</cfloop>
-		
-		<cfset EntitySave(arguments.entity) />
-		
-		<cfreturn arguments.entity />
-	</cffunction>
+	public void function init() {
+		return this;
+	}
 	
-	<cffunction name="QueryToEntityArray">
-		<cfargument name="ResultsQuery" />
-		<cfargument name="EntityName" />
-		
-		<cfset var CurrentRecord = 1 />
-		<cfset var Entity = "" />
-		<cfset var EntityArray = arrayNew(1) />
-		
-		<cfloop query="arguments.ResultsQuery">
-			<cfset Entity = EntityNew(arguments.EntityName) />
-			<cfset Entity.set(arguments.ResultsQuery) />
-			<cfset ArrayAppend(EntityArray, Entity) />
-		</cfloop>
-		
-		<cfreturn EntityArray />
-	</cffunction>
+	public any function read(required string ID, required string entityName) {
+		return entityLoad(arguments.entityName, arguments.ID, true);
+	}
 	
-</cfcomponent>
+	public any function readByFilename(required string filename, required string entityName){
+		var HQL = " from #arguments.entityName# where filename = '#arguments.Filename#'";
+		return ormExecuteQuery(HQL, true);
+	}
+	
+	public array function list(required string entityName) {
+		return entityLoad(arguments.entityName);
+	}
+	
+	public any function fillSmartList(required any smartList, required any entityName) {
+		var EntityRecords = arrayNew(1);
+		var HQL = " from #arguments.entityName# a#arguments.entityName# #arguemnts.SmartList.getHQLWhere()#";
+		
+		EntityRecords = ormExecuteQuery(HQL);
+		arguments.smartList.setEntityRecords(EntityRecords);
+		
+		return arguments.smartList;
+	}
+	
+	public void function delete(required any target) {
+		EntityDelete(arguments.target);
+	}
+	
+	public any function save(required any entity) {
+		EntitySave(arguments.entity);
+		
+		return arguments.entity;
+	}
+	
+	// @hint This is a helper function that is used by extended integration DAO's to convert SQL queries to an Array of that object by using the Set method in the BaseEntity
+	private array function queryToEntityArray(required query resultsQuery, required string entityName) {
+		
+		var entityArray = arrayNew(1);
+		for(var i=1; i LTE arguments.resultsQuery; i++) {
+			var entity = EntityNew(arguments.entityName);
+			entity.set(arguments.resultsQuery[i]);
+			arrayAppend(entityArray, entity);
+		}
+		
+		return entityArray;
+	}
+}

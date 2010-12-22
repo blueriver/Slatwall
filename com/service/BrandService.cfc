@@ -13,7 +13,7 @@
 				
 		<cfset var SmartList = createObject("component","slat.com.entity.smartlist").init("brand", arguments.rc) />
 		<cfset SmartList.addKeywordColumn('BrandName', 6) />
-		<cfreturn getDAO().fillSmartList(SmartList) />
+		<cfreturn getDAO().fillSmartList(smartList=SmartList, variables.entityName) />
 	</cffunction>
 	
 </cfcomponent>
