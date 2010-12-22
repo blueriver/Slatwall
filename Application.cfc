@@ -13,7 +13,6 @@
 	<cfreturn application[ variables.framework.applicationKey ].pluginConfig>  
 </cffunction>
 
-<!--- test --->
 <!--- Start: Standard Application Functions,  These are also called from the fw1EventAdapter --->
 <cffunction name="setupApplication" output="false">
 	<cfargument name="$">
