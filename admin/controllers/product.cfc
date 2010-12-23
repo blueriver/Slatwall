@@ -30,7 +30,7 @@ component extends="BaseController" output=false accessors=true {
 		
 		//Save Product
 		rc.product = getProductService().save(entity=rc.product);
-		variables.fw.redirect(action="product.detail", queryString="productID=#rc.product.getProductID()#");
+		variables.fw.redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
 		
 	}
 	

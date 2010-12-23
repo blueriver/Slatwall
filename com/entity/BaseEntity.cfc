@@ -20,8 +20,9 @@ component displayname="Base Entity" accessors="true" {
 			
 			// Loop over properties and any persitant properties to the updateKeys
 			for(i=1; i <= arrayLen(metaData.Properties); i++ ) {
-				if(isDefined("metaData.Properties[#i#].Persistant") && metaData.Properties[i].Persistant == true && !isDefined("metaData.Properties[#i#].FieldType")) {
-					variables.updateKeys = "#variables.updateKeys##metaData.Properties[i].Name#,";
+				var propertyStruct = metaData.Properties[i];
+				if(isDefined("propertyStruct.Persistant") && propertyStruct.Persistant == true && !isDefined("propertyStruct.FieldType")) {
+					variables.updateKeys = "#variables.updateKeys##propertyStruct.Name#,";
 				}
 			}
 			
