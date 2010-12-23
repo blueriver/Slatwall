@@ -1199,6 +1199,19 @@
 				</cfif>
 			</cfif>
 		</cfloop>
+		<!--- Custom Function Added By Greg Moser on 12/22/2010 --->
+		<cfset var meta = getMetaData(arguments.cfc) />
+		<cfset var i = 0 />
+		<cfif isDefined('meta.accessors') and meta.accessors eq true>
+			<cfloop from="1" to="#arrayLen(meta.properties)#" index="i">
+				<cfif arguments.beanFactory.containsBean(meta.properties[i].name)>
+					<cfset args = structNew() />
+					<cfset args[meta.properties[i].name] = arguments.beanFactory.getBean(meta.properties[i].name) />
+					<cfinvoke component="#arguments.cfc#" method="set#meta.properties[i].name#" argumentCollection="#args#" />
+				</cfif>
+			</cfloop>
+		</cfif>
+		<!--- End: Greg Moser Addition --->
 
 	</cffunction>
 	
