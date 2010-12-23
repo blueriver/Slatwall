@@ -27,8 +27,8 @@ component output="false" {
 		return arguments.smartList;
 	}
 	
-	public void function delete(required any target) {
-		EntityDelete(arguments.target);
+	public void function delete(required any entity) {
+		EntityDelete(arguments.entity);
 	}
 	
 	public any function save(required any entity) {

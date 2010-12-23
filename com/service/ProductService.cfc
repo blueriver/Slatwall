@@ -1,39 +1,32 @@
-<cfcomponent extends="slat.com.service.baseService" accessors="true" >
-
-	<cfproperty name="SkuDAO" type="any" />
-	<cfproperty name="ContentManager" type="any" />
-	<cfproperty name="SettingsManager" type="any" />
+component extends="slat.com.service.BaseService" accessors="true" {
 	
-	<cfset variables.entityName = "SlatProduct" />
+	property name="skuDAO" type="any";
+	property name="contentManager" type="any";
+	property name="settingsManager" type="any";
 	
-	<cffunction name="init">
-		<cfargument name="DAO" type="any" />
-		<cfargument name="SkuDAO" type="any" />
-		<cfargument name="ContentManager" type="any" />
-		<cfargument name="SettingsManager" type="any" />
+	public this function init(required any entityName, required any dao, required any skuDAO, required any contentManager, required any settingsManager) {
+		setEntityName(arguments.entityName);
+		setDAO(arguments.DAO);
+		setSkuDAO(arguments.skuDAO);
+		setContentManager(arguments.contentManager);
+		setSettingsManager(arguments.settingsManager);
 		
-		<cfset setDAO(arguments.DAO) />
-		<cfset setSkuDAO(arguments.SkuDAO) />
-		<cfset setContentManager(arguments.ContentManager) />
-		<cfset setSettingsManager(arguments.SettingsManager) />
-	</cffunction>
+		return this;
+	}
 	
-	<cffunction name="getSmartList">
-		<cfargument name="rc" />
-				
-		<cfset var SmartList = createObject("component","slat.com.entity.smartlist").init("product", arguments.rc) />
+	public slat.com.entity.SmartList function getSmartList(required struct rc){
+		var smartList = createObject("component","slat.com.entity.SmartList").init(entityName=getEntityName(), rc=arguments.rc);
 		
-		<cfset SmartList.addKeywordColumn('ProductCode', 9) />
-		<cfset SmartList.addKeywordColumn('ProductName', 4) />
-		<cfset SmartList.addKeywordColumn('ProductDescription', 1) />
-		<cfset SmartList.addKeywordColumn('Brand_BrandID', 6) />
-		<cfset SmartList.addKeywordColumn('Brand_BrandName', 6) />
+		smartList.addKeywordColumn("productCode", 1);
+		smartList.addKeywordColumn("productName", 1);
+		smartList.addKeywordColumn("productDescription", 1);
+		smartList.addKeywordColumn("brand_brandID", 1);
+		smartList.addKeywordColumn("brand_brandName", 1);
 		
-		<cfreturn getDAO().fillSmartList(SmartList, variables.entityName) />
-	</cffunction>
+		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
+	}
 	
-	<cffunction name="getProductTemplates">
-		<cfreturn getSettingsManager().getSite(session.siteid).getTemplates() />
-	</cffunction>
-	
-</cfcomponent>
+	public any function getProductTemplates() {
+		return getSettingsManager().getSite(session.siteid).getTemplates();
+	}
+}

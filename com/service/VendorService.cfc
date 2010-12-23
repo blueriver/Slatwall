@@ -1,19 +1,9 @@
-<cfcomponent extends="slat.com.service.baseService">
-	<cfset variables.entityname = 'SlatVendor' />
+component extends="slat.com.service.BaseService" {
 	
-	<cffunction name="getSmartList">
-		<cfargument name="rc" />
-		<cfset var SmartList = createObject("component","slat.com.entity.smartlist").init('vendor', arguments.rc) />
-		<cfset SmartList.addKeywordColumn('VendorName', 1) />
+	public slat.com.entity.SmartList function getSmartList(required struct rc){
+		var smartList = createObject("component","slat.com.entity.SmartList").init(entityName=getEntityName(), rc=arguments.rc);
+		smartList.addKeywordColumn("VendorName", 1);
 		
-		<cfset SmartList = getDAO().fillSmartList(SmartList) />
-		
-		<cfreturn SmartList />
-	</cffunction>
-	
-	<cffunction name="getVendorEmails">
-		<cfargument name="VendorID" />
-		<cfreturn getDAO().getVendorEmails(arguments.VendorID) />
-	</cffunction>
-	
-</cfcomponent>
+		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
+	}
+}

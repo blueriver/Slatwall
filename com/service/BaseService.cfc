@@ -1,39 +1,34 @@
-<cfcomponent displayname="BaseService" accessors="true" hint="This is a base service that all services will extend">
+component displayname="Base Service" persistent="false" accessors="true" output="false" hint="This is a base service that all services will extend" {
+
+	property name="entityName" type="string";
+	property name="DAO" type="any";
 	
-	<cfproperty name="DAO" type="any" />
-	
-	<cfset variables.entityName = "" />
-	
-	<cffunction name="init">
-		<cfreturn this />
-	</cffunction>
-	
-	<cffunction name="getByID" access="public" returntype="any" output="false">
-		<cfargument name="ID" type="string" required="false" default="0" />
-		<cfreturn getDAO().read(arguments.ID,variables.entityName) />
-	</cffunction>
-	
-	<cffunction name="getByFilename" access="public" returntype="any" output="false">
-		<cfargument name="Filename" type="string" required="false" default="0" />
+	public this function init(required any entityName, required any dao) {
+		setEntityName(arguments.entityName);
+		setDAO(argument.DAO);
 		
-		<cfreturn getDAO().readByFilename(arguments.Filename,variables.entityName) />
-	</cffunction>
+		return this;
+	}
 	
-	<cffunction name="getNewEntity" access="public" returntype="any" output="false">
-		<cfset var entity = entityNew(variables.entityName) />
-		<cfset entity.init(argumentcollection=arguments) />
-		<cfreturn entity />
-	</cffunction>
-		
-	<cffunction name="delete" access="public" returntype="void" output="false">
-		<cfargument name="entity" type="any" required="true" />
-		
-		<cfreturn getDAO().delete(entity=arguments.entity) />
-	</cffunction>
+	public any function getByID(required string ID) {
+		return getDAO().read(ID=arguments.ID, enitityName=getEntityName());
+	}
 	
-	<cffunction name="save" access="public" returntype="any" output="false">
-		<cfargument name="entity" type="any" required="true" />
-		
-		<cfreturn getDAO().save(entity=arguments.entity) />
-	</cffunction>
-</cfcomponent>
+	public any function getByFilename(required string filename) {
+		return getDAO.readByFilename(filename=arguments.filename, enityName=getEntityName());
+	}
+	
+	public any function getNewEntity() {
+		var entity = entityNew(getEntityName());
+		entity.init(argumentcollection=arguments);
+		return entity;
+	}
+	
+	public void function delete(required any entity){
+		getDAO.delete(entity=arguments.entity);
+	}
+	
+	public any function save(required any entity) {
+		return getDAO.save(entity=arguments.entity);
+	}
+}

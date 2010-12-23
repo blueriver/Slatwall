@@ -20,7 +20,7 @@
 	<cfproperty name="EntityArray" type="array" />
 		
 	<cffunction name="init" access="public" output="false" returntype="Any">
-		<cfargument name="EntityName" type="string" required="true" />
+		<cfargument name="entityName" type="string" required="true" />
 		<cfargument name="RC" type="struct" required="true" />
 		
 		<cfset setEntityName(arguments.EntityName) />

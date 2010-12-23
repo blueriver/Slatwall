@@ -6,8 +6,17 @@ component displayname="Base Entity" accessors="true" {
 	property name="updateKeys" type="string";
 	
 	public any function init() {
+		
+		// Create a new errorBean
 		this.setErrorBean(new errorBean());
+		
+		// Automatically set the default search score to 0
 		this.setSearchScore(0);
+		
+		// When called from getNewEntity() within base service a struct or query record can be passed to pre-populate;
+		if(!structIsEmpty(arguments)){
+			this.set(record=arguments);
+		}
 		
 		return this;
 	}
