@@ -2,26 +2,26 @@ component displayname="Product" entityname="SlatProduct" table="slatproduct" per
 	
 	// Persistant Properties
 	property name="productID" type="string" fieldtype="id" generator="guid";
-	property name="active" type="boolean" default=true displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
-	property name="filename" type="string" default="" displayname="File Name" hint="This is the name that is used in the URL string";
-	property name="template" type="string" default="" displayname="Design Template" hint="This is the Template to use for product display";
-	property name="productName" type="string" default="" displayname="Product Name" hint="Primary Notation for the Product to be Called By";
-	property name="productCode" type="string" default="" displayname="Product Code" hint="Product Code, Typically used for Manufacturer Coded";
-	property name="productDescription" type="string" default="" displayname="Product Description" hint="HTML Formated description of the Product";
-	property name="productYear" type="string" default="" displayname="Product Year" hint="Products specific model year if it has one";
-	property name="manufactureDiscontinued"	type="boolean" default=false displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="showOnWebRetail"	type="boolean" default=false displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
-	property name="showOnWebWholesale" type="boolean" default=false displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
-	property name="nonInventoryItem" type="boolean" default=false displayname="Non-Inventory Item";
-	property name="callToOrder" type="boolean" default=false displayname="Call To Order";
-	property name="allowShipping" type="boolean" default=true displayname="Allow Shipping";
-	property name="allowPreorder" type="boolean" default=true displayname="Allow Pre-Orders" hint="";
-	property name="allowBackorder" type="boolean" default=false displayname="Allow Backorders";
-	property name="allowDropship" type="boolean" default=false displayname="Allow Dropship";
-	property name="shippingWeight" type="numeric" default=0 hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
-	property name="publishedWeight" type="numeric" default=0 hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
-	property name="dateCreated" type="date" default="" displayname="Date Create";
-	property name="dateLastUpdated"	type="date" default="" displayname="Date Last Updated";
+	property name="active" type="boolean" default=true persistent=true displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
+	property name="filename" type="string" default="" persistent=true displayname="File Name" hint="This is the name that is used in the URL string";
+	property name="template" type="string" default="" persistent=true displayname="Design Template" hint="This is the Template to use for product display";
+	property name="productName" type="string" default="" persistent=true displayname="Product Name" hint="Primary Notation for the Product to be Called By";
+	property name="productCode" type="string" default="" persistent=true displayname="Product Code" hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productDescription" type="string" default="" persistent=true displayname="Product Description" hint="HTML Formated description of the Product";
+	property name="productYear" type="string" default="" persistent=true displayname="Product Year" hint="Products specific model year if it has one";
+	property name="manufactureDiscontinued"	type="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
+	property name="showOnWebRetail"	type="boolean" default=false persistent=true displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
+	property name="showOnWebWholesale" type="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
+	property name="nonInventoryItem" type="boolean" default=false persistent=true displayname="Non-Inventory Item";
+	property name="callToOrder" type="boolean" default=false persistent=true displayname="Call To Order";
+	property name="allowShipping" type="boolean" default=true persistent=true displayname="Allow Shipping";
+	property name="allowPreorder" type="boolean" default=true persistent=true displayname="Allow Pre-Orders" hint="";
+	property name="allowBackorder" type="boolean" default=false persistent=true displayname="Allow Backorders";
+	property name="allowDropship" type="boolean" default=false persistent=true displayname="Allow Dropship";
+	property name="shippingWeight" type="numeric" default=0 persistent=true hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
+	property name="publishedWeight" type="numeric" default=0 persistent=true hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
+	property name="dateCreated" type="date" default="" persistent=true displayname="Date Create";
+	property name="dateLastUpdated"	type="date" default="" persistent=true displayname="Date Last Updated";
 	
 	// Related Object Properties
 	property name="brand" type="array" cfc="brand" fieldtype="many-to-one" fkcolumn="BrandID" cascade="all" inverse=true;
@@ -38,9 +38,9 @@ component displayname="Product" entityname="SlatProduct" table="slatproduct" per
 	property name="livePrice" type="numeric" persistent=false;
 	property name="originalPrice" type="numeric" persistent=false;
 	property name="listPrice" type="numeric" persistent=false;
-	property name="qoh" type="numeric" persistent=false;
-	property name="qc" type="numeric" persistent=false;
-	property name="qoo" type="numeric" persistent=false;
+	property name="QOH" type="numeric" persistent=false;
+	property name="QC" type="numeric" persistent=false;
+	property name="QOO" type="numeric" persistent=false;
 	property name="webRetailQOH" type="numeric" persistent=false;
 	property name="webRetailQC" type="numeric" persistent=false;
 	property name="webRetailQOO" type="numeric" persistent=false;

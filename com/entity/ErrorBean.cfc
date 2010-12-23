@@ -1,13 +1,9 @@
-component accessors="true" displayName="ErrorBean" hint="Bean to manage validation errors" output="false" {
+component displayName="ErrorBean" persistent="false" accessors="true" hint="Bean to manage validation errors" output="false" {
 
-	/**
-	 * @hint stores any validation errors for the entity
-	 */
-	property struct errors;
+	// @hint stores any validation errors for the entity
+	property name="errors" type="struct";
 
-	/**
-	 * @hint Constructor for error bean. Initializes the error bean.
-	 */
+	// @hint Constructor for error bean. Initializes the error bean.
 	public function init() {
 		variables.errors = structNew();
 		return this;
@@ -18,7 +14,7 @@ component accessors="true" displayName="ErrorBean" hint="Bean to manage validati
 	 * @param name - best practice to use form field name if available
 	 */
 	public void function addError(required string name,required string message) {
-		variables.errors[name] = message;
+		variables.errors[arguments.name] = arguments.message;
 	}
 	
 	/**
@@ -26,8 +22,8 @@ component accessors="true" displayName="ErrorBean" hint="Bean to manage validati
 	 * @param name - Name of the error to return; if error doesn't exist, returns empty string
 	 */
 	public string function getError(required string name) {
-		if(hasError(name)){
-			return variables.errors[name];
+		if(hasError(name=arguments.name)){
+			return variables.errors[arguments.name];
 		} else {
 			return '';
 		}
@@ -38,12 +34,10 @@ component accessors="true" displayName="ErrorBean" hint="Bean to manage validati
 	 * @param name - Name of the error to check;
 	 */
 	public string function hasError(required string name) {
-		return structKeyExists(variables.errors, name) ;
+		return structKeyExists(variables.errors, arguments.name) ;
 	}
 	
-	/**
-	 * @hint Returns true if there is at least one error.
-	 */
+	// @hint Returns true if there is at least one error.
 	public boolean function hasErrors() {
 		return !structIsEmpty(variables.errors) ;
 	}

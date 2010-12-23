@@ -1,8 +1,7 @@
-<cfcomponent persistent="true" table="slatvendorphone" extends="slat.com.entity.baseEntity">
-	<cfproperty name="VendorPhoneID" fieldtype="id" generator="increment" />
-	<cfproperty name="PhoneNumber" type="string" />
+component displayname="Vendor Phone" entityname="SlatVendorPhone" table="SlatVendorPhone" persistent="true" extends="slat.com.entity.BaseEntity" {
+	property name="VendorPhoneID" fieldtype="id" generator="increment";
+	property name="PhoneNumber" type="string" persistent="true";
 	
-	<!--- Related and Nested Objects --->
-	<cfproperty name="Vendor" cfc="vendor" fieldtype="many-to-one" fkcolumn="VendorID" />
-	<cfproperty name="PhoneType" cfc="type" fieldtype="many-to-one" fkcolumn="TypeID" />
-</cfcomponent>
+	property name="Vendor" cfc="vendor" fieldtype="many-to-one" fkcolumn="VendorID";
+	property name="PhoneType" cfc="type" fieldtype="many-to-one" fkcolumn="TypeID";
+}

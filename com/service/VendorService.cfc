@@ -1,5 +1,5 @@
 <cfcomponent extends="slat.com.service.baseService">
-	<cfset variables.entityname = 'vendor' />
+	<cfset variables.entityname = 'SlatVendor' />
 	
 	<cffunction name="getSmartList">
 		<cfargument name="rc" />

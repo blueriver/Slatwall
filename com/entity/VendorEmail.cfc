@@ -1,15 +1,9 @@
-<cfcomponent persistent="true" table="slatvendoremail" extends="slat.com.entity.baseEntity">
-	<cfproperty name="VendorEmailID" fieldtype="id" generator="increment" />
-	<cfproperty name="EmailAddress" type="string" />
+component displayname="Vendor Email" entityname="SlatVendorEmail" table="SlatVendorEmail" persistent="true" accessors="true" output="false" extends="slat.com.entity.baseEntity" {
+
+	property name="vendorEmailID" fieldtype="id" generator="increment";
+	property name="emailAddress" type="string";
 	
-	<!--- Related and Nested Objects --->
-	<cfproperty name="Vendor" cfc="vendor" fieldtype="many-to-one" fkcolumn="VendorID" />
-	<cfproperty name="EmailType" cfc="type" fieldtype="many-to-one" fkcolumn="TypeID" />
+	property name="vendor" cfc="vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="emailType" cfc="type" fieldtype="many-to-one" fkcolumn="typeID";
 	
-	<cffunction name="getEmailType">
-		<cfif not isDefined('variables.GenderType')>
-			<cfset variables.EmailType = entityNew('type') />
-		</cfif>
-		<cfreturn variables.EmailType />
-	</cffunction>
-</cfcomponent>
+}

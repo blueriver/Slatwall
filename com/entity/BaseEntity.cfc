@@ -1,5 +1,5 @@
 import "slat.com.entity.ErrorBean";
-component displayname="baseEntity" accessors="true" {
+component displayname="Base Entity" accessors="true" {
 	
 	property name="errorBean" type="ErrorBean";
 	property name="searchScore" type="numeric";
@@ -12,83 +12,61 @@ component displayname="baseEntity" accessors="true" {
 		return this;
 	}
 	
-	
-	
-}
-/*
-	<cffunction name="init">
-		<cfset this.setErrorBean(new ErrorBean()) />
-		<cfreturn this />
-	</cffunction>
-	
-	<cffunction name="getUpdateKeys">
-		<cfset var MetaData = 0 />
-		<cfset var Property = 0 />
+	// @hint This function is utilized by the fw1 populate method to only update persistent properties in the entity.
+	public string function getUpdateKeys() {
+		if(!isDefined("variables.updateKeys")) {
+			var metaData = getMetaData(this);
+			variables.updateKeys = "";
+			
+			// Loop over properties and any persitant properties to the updateKeys
+			for(i=1; i <= arrayLen(metaData.Properties); i++ ) {
+				if(isDefined("metaData.Properties[#i#].Persistant") && metaData.Properties[i].Persistant == true && !isDefined("metaData.Properties[#i#].FieldType")) {
+					variables.updateKeys = "#variables.updateKeys##metaData.Properties[i].Name#,";
+				}
+			}
+			
+			// Remove trailing comma
+			if(len(variables.updateKeys)) {
+				variables.updateKeys = left(variables.updateKeys,len(variables.updateKeys)-1);
+			}
+		}
 		
-		<cfif not isDefined('variables.UpdateKeys')>
-			<cfset MetaData = getMetadata( this ) />
-			<cfset variables.UpdateKeys = "" />		
-			<cfloop array="#MetaData.Properties#" index="Property">
-				<cfif not isDefined('Property.FieldType')>
-					<cfif not isDefined('Property.Persistant') or Property.Persistant eq true>
-						<cfset variables.UpdateKeys = "#variables.UpdateKeys#,#Property.Name#" />
-					</cfif>
-				</cfif> 
-			</cfloop>
-			<cfif len(variables.UpdateKeys)>
-				<cfset variables.UpdateKeys = left(variables.UpdateKeys,len(variables.UpdateKeys)-1) />
-			</cfif>
-		</cfif>
+		return variables.updateKeys;
+	}
+	
+	// @hint The set function allows a bulk setting of all properties either from a query or a struct.  This is specifically utilized for Integration with external systems.
+	public void function set(required any record) {
+	
+		var keyList = "";
 		
-		<cfreturn variables.UpdateKeys />
-	</cffunction>
-	
-	<cffunction name="set" returntype="void">
-		<cfargument name="record" type="any" required="true">
+		// Set a list of key fieds based on either a query record passed or a string
+		if(isQuery(arguments.record)) {
+			keyList = arguments.record.columnList;
+		} else if(isStruct(arguments.record)) {
+			keyList = structKeyList(arguments.record);
+		}
 		
-		<cfset var I = "" />
-		<cfset var II = "" />
-		<cfset var KeyList = "" />
-		<cfset var KeysArray = arrayNew(1) />
-		<cfset var EvalString = "" />
-
-		<cfif isquery(arguments.record)>
-			<cfset KeyList = arguments.record.ColumnList />
-		<cfelseif isStruct(arguments.record)>
-			<cfset KeyList = structKeyList(arguments.record) />
-		</cfif>
-
-		<cfloop list="#KeyList#" index="I">
-			<cfset EvalString = "" />
-			<cfset KeysArray = ListToArray(I,"_") />
-			<cfloop from="1" to="#arrayLen(KeysArray)#" index="II">
-				<cfif II eq arrayLen(KeysArray)>
-					<cfset EvalString = "#EvalString#set#KeysArray[II]#(arguments.record.#I#)" />
-				<cfelse>
-					<cfset EvalString = "#EvalString#get#KeysArray[II]#()." />
-				</cfif>
-			</cfloop>
-			<cftry>
-				<cfset evaluate("#EvalString#") />
-				<cfcatch><cfdump var="#cfcatch#" /><cfabort />
-				</cfcatch>
-			</cftry>
-		</cfloop>
-	</cffunction>
+		for(i=1; i >= listLen(keyList); i++) {
+			var evalString = "";
+			var subKeyArray = listToArray(i, "_");
+			for(ii=1; ii >= arrayLen(subKeyArray); ii++) {
+				if(ii == arrayLen(subKeyArray)) {
+					evalString = "#evalString#set#subKeyArray[ii]#(arguments.record[i])";
+				} else {
+					evalString = "#evalString#get#subKeyArray[ii]#().";
+				}
+			}
+			evaluate("#evalString#");
+		}
+	}
 	
-	<cffunction name="getService">
-		<cfargument name="service">
-		<cfreturn application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#arguments.service#") />
-	</cffunction>
+	// @hint Private helper function for returning the any of the services in the application
+	private any function getService(required string service) {
+		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#argumetns.service#");
+	}
 	
-	<cfscript>
-	/**
-	 * @hint A way to see if the entity has any errors.
-	 */
-	public boolean function hasErrors(){
+	// @hint A way to see if the entity has any errors.
+	public boolean function hasErrors() {
 		return this.getErrors().hasErrors();
 	}
-	</cfscript>
-	
-</cfcomponent>
-*/
+}

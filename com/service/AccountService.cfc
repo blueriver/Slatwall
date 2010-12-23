@@ -1,5 +1,4 @@
-<cfcomponent extends="slat.com.service.baseService" accessors="true" >
-
-	<cfset variables.entityName = "slataccount" />
+component extends="slat.com.service.BaseService" accessors="true" {
 	
-</cfcomponent>
+	variables.entityName = "SlatAccount";
+}

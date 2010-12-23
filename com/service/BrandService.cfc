@@ -1,6 +1,6 @@
 <cfcomponent extends="slat.com.service.BaseService" accessors="true" >
 
-	<cfset variables.entityName = "brand" />
+	<cfset variables.entityName = "SlatBrand" />
 	
 	<cffunction name="init">
 		<cfargument name="DAO" type="any" />

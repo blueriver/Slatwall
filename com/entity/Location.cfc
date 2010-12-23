@@ -1,5 +1,6 @@
-<cfcomponent displayname="Location" table="slatlocation" persistent="true" extends="slat.com.entity.baseEntity">
-	<cfproperty name="LocationID" fieldtype="id" generator="guid" />
-	<cfproperty name="LocationName" />
+component displayname="Location" entityname="SlatLocation" table="SlatLocation" persistent=true accessors=true output=false extends="slat.com.entity.BaseEntity" {
 	
-</cfcomponent>
+	// Persistant Properties
+	property name="locationID" fieldtype="id" generator="guid" persistent=true;
+	property name="locationName" type="string" persistent=true;
+}

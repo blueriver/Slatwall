@@ -1,12 +1,15 @@
-<cfcomponent persistent="true" table="slataddress" extends="slat.com.entity.baseEntity">
-	<cfproperty name="AddressID" fieldtype="id" generator="guid" />
-	<cfproperty name="Name" type="string" />
-	<cfproperty name="Company" type="string" />
-	<cfproperty name="StreetAddress" type="string" />
-	<cfproperty name="Street2Address" type="string" />
-	<cfproperty name="Locality" type="string" />
-	<cfproperty name="City" type="string" />
-	<cfproperty name="StateCode" type="string" />
-	<cfproperty name="PostalCode" type="string" />
-	<cfproperty name="CountryCode" type="string" />
-</cfcomponent>
+component displayname="Address" entityname="SlatAddress" table="SlatAddress" persistent="true" output="false" accessors="true" extends="slat.com.entity.BaseEntity" {
+	
+	// Persistant Properties
+	property name="addressID" fieldtype="id" generator="guid";
+	property name="name" type="string" persistent=true;
+	property name="company" type="string" persistent=true;
+	property name="streetAddress" type="string" persistent=true;
+	property name="street2Address" type="string" persistent=true;
+	property name="locality" type="string" persistent=true;
+	property name="city" type="string" persistent=true;
+	property name="stateCode" type="string" persistent=true;
+	property name="postalCode" type="string" persistent=true;
+	property name="countryCode" type="string" persistent=true;
+	
+}

@@ -1,6 +1,6 @@
 component output="false" {
 	
-	public void function init() {
+	public any function init() {
 		return this;
 	}
 	

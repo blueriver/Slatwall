@@ -1,14 +1,14 @@
-component displayname="Account" entityname="SlatAccount" table="SlatAccount" persistent="true" extends="slat.com.entity.BaseEntity" {
+component displayname="Account" entityname="SlatAccount" table="SlatAccount" persistent="true" output="false" accessors="true" extends="slat.com.entity.BaseEntity" {
 	
 	// Persistant Properties
 	property name="accountID" type="string" fieldtype="id" generator="guid";
-	property name="muraUserID" type="string" default="" hint="This is the mura user id that ties an account to a login";
-	property name="firstName" type="string" default="" hint="This Value is only Set if a MuraID does not exist";
-	property name="lastName" type="string" default="" hint="This Value is only Set if a MuraID does not exist";
-	property name="company" type="string" default="" hint="This Value is only Set if a MuraID does not exist";
-	property name="remoteEmployeeID" type="string" default="" hint="Only used when integrated with a remote system";
-	property name="remoteCustomerID" type="string" default="" hint="Only used when integrated with a remote system";
-	property name="remoteContactID" type="string" default="" hint="Only used when integrated with a remote system";
+	property name="muraUserID" type="string" default="" persistent=true hint="This is the mura user id that ties an account to a login";
+	property name="firstName" type="string" default="" persistent=true hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" type="string" default="" persistent=true hint="This Value is only Set if a MuraID does not exist";
+	property name="company" type="string" default="" persistent=true hint="This Value is only Set if a MuraID does not exist";
+	property name="remoteEmployeeID" type="string" default="" persistent=true hint="Only used when integrated with a remote system";
+	property name="remoteCustomerID" type="string" default="" persistent=true hint="Only used when integrated with a remote system";
+	property name="remoteContactID" type="string" default="" persistent=true hint="Only used when integrated with a remote system";
 	
 	// Non-Persistant Properties
 	property name="muraUser" type="any" persistent="false";
@@ -18,9 +18,9 @@ component displayname="Account" entityname="SlatAccount" table="SlatAccount" per
 	public mura.user.userBean function getMuraUser() {
 		if(!isDefined("variables.muraUser")) {
 			if(isDefined("variables.muraUserID") && variable.MuraUserID != ""){
-				variables.muraUser = variables.serviceFactory.getBean("userManager").getByID(ID=variables.muraUserID);
+				variables.muraUser = getService("userManager").getByID(ID=variables.muraUserID);
 			} else {
-				variables.muraUser = variables.serviceFactory.getBean("userManager").getBean();
+				variables.muraUser = getService("userManager").getBean();
 			}
 		}
 		return variables.muraUser; 

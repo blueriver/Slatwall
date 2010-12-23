@@ -1,34 +1,14 @@
-<cfcomponent persistent="true" table="slatvendor" extends="slat.com.entity.baseEntity">
-	<cfproperty name="VendorID" fieldtype="id" generator="guid" />
-	<cfproperty name="VendorName" type="string" />
-	<cfproperty name="VendorWebsite" type="string" />
-	<cfproperty name="AccountNumber" type="string" />
+component displayname="Vendor" entityname="SlatVendor" table="SlatVendor" persistent="true" accessors="true" output="false" extends="slat.com.entity.BaseEntity" {
 	
-	<cfproperty name="PhoneNumbers" cfc="vendorphone" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true" />
-	<cfproperty name="EmailAddresses" cfc="vendoremail" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true" />
-	<cfproperty name="Brands" cfc="vendorbrand" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true" />
+	// Persistant Properties
+	property name="vendorID" fieldtype="id" generator="guid";
+	property name="vendorName" type="string" persistent="true";
+	property name="vendorWebsite" type="string" persistent="true";
+	property name="accountNumber" type="string" persistent="true";
 	
-	<cffunction name="getPhoneNumbers">
-		<cfif not isDefined('variables.PhoneNumbers')>
-			<cfif isDefined('variables.VendorID')>
-				<!--- <cfset variables.PhoneNumber = application.SlatwallApp.getValue('vendorService').getVendorPhone(variable.VendorID) /> --->
-			<cfelse>
-				<cfset variables.PhoneNumbers = arrayNew(1) />
-			</cfif>
-		</cfif>
-		
-		<cfreturn variables.PhoneNumbers />
-	</cffunction>
+	// Related Object Properties
+	property name="phoneNumbers" cfc="vendorphone" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true";
+	property name="emailAddresses" cfc="vendoremail" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true";
+	property name="brands" cfc="vendorbrand" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true";
 	
-	<cffunction name="getEmailAddresses">
-		<cfif not isDefined('variables.EmailAddresses')>
-			<cfif isDefined('variables.VendorID')>
-				<cfset variables.EmailAddresses = application.SlatwallApp.getValue('vendorService').getVendorEmails(variables.VendorID) />
-			<cfelse>
-				<cfset variables.EmailAddresses = arrayNew(1) />
-			</cfif>
-		</cfif>
-		
-		<cfreturn variables.EmailAddresses />
-	</cffunction>
-</cfcomponent>
+}

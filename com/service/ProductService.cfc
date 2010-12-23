@@ -4,7 +4,7 @@
 	<cfproperty name="ContentManager" type="any" />
 	<cfproperty name="SettingsManager" type="any" />
 	
-	<cfset variables.entityName = "product" />
+	<cfset variables.entityName = "SlatProduct" />
 	
 	<cffunction name="init">
 		<cfargument name="DAO" type="any" />
@@ -29,7 +29,7 @@
 		<cfset SmartList.addKeywordColumn('Brand_BrandID', 6) />
 		<cfset SmartList.addKeywordColumn('Brand_BrandName', 6) />
 		
-		<cfreturn getDAO().fillSmartList(SmartList) />
+		<cfreturn getDAO().fillSmartList(SmartList, variables.entityName) />
 	</cffunction>
 	
 	<cffunction name="getProductTemplates">

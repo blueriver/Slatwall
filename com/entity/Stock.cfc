@@ -1,9 +1,12 @@
-<cfcomponent displayname="Stock" table="slatstock" persistent="true" extends="slat.com.entity.baseEntity">
-	<cfproperty name="StockID" fieldtype="id" generator="guid" />
-	<cfproperty name="QOH" type="numeric" />
-	<cfproperty name="QC" type="numeric" />
-	<cfproperty name="QOO" type="numeric" />
+component displayname="Stock" entityname="SlatStock" table="SlatStock" persistent=true accessors=true output=false extends="slat.com.entity.BaseEntity" {
 	
-	<cfproperty name="Location" fieldtype="many-to-one" fkcolumn="LocationID" cfc="location">
-	<cfproperty name="Sku" fieldtype="many-to-one" fkcolumn="SkuID" cfc="sku">
-</cfcomponent>
+	// Persistant Properties
+	property name="stockID" fieldtype="id" generator="guid";
+	property name="QOH" type="numeric" persistent="true";
+	property name="QC" type="numeric" persistent="true";
+	property name="QOO" type="numeric" persistent="true";
+	
+	// Related Object Properties
+	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
+	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
+}

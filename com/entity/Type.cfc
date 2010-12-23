@@ -1,14 +1,15 @@
-<cfcomponent persistent="true" table="slattype" extends="slat.com.entity.baseEntity">
-	<cfproperty name="TypeID" fieldtype="id" generator="guid" />
-	<cfproperty name="Type" />
-	<cfproperty name="ParentType" cfc="Type" fieldtype="many-to-one" fkcolumn="ParentTypeID" />
-	<cfproperty name="ChildType" type="array" cfc="Type" fieldtype="one-to-many" fkcolumn="ParentTypeID" cascade="all" inverse="true" />
+component displayname="Type" entityname="SlatType" table="SlatType" persistent="true" accessors="true" output="true" extends="slat.com.entity.BaseEntity" {
 	
-	<cffunction name="getChildType">
-		<cfif not isDefined('variables.ChildType')>
-			<cfset variables.ChildType = arrayNew(1) />
-		</cfif>
-		
-		<cfreturn variables.ChildType />
-	</cffunction>
-</cfcomponent>
+	property name="typeID" fieldtype="id" generator="guid";
+	property name="type" type="string" persistent="true";
+	property name="parentType" cfc="Type" fieldtype="many-to-one" fkcolumn="ParentTypeID";
+	property name="childType" type="array" cfc="Type" fieldtype="one-to-many" fkcolumn="ParentTypeID" cascade="all" inverse="true";
+	
+	public slat.com.entity.type function getChildType() {
+		if(!isDefined('variables.childType')) {
+			variables.childType = arraynew(1);
+		}
+		return variables.childType;
+	}
+	
+}

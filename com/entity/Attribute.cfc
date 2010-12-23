@@ -1,5 +1,6 @@
-<cfcomponent displayname="Attribute" table="slatattribute" persistent="true" extends="slat.com.entity.baseEntity">
-	<cfproperty name="AttributeID" fieldtype="id" generator="increment" />
+component displayname="Attribute" entityname="SlatAttribute" table="SlatAttribute" persistent="true" output="false" accessors="true" extends="slat.com.entity.BaseEntity" {
 	
-
-</cfcomponent>
+	// Persistant Properties
+	property name="attributeID" fieldtype="id" generator="increment";
+	
+}
