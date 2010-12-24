@@ -1,14 +1,9 @@
-<cfcomponent extends="baseController">
+component persistent="false" accessors="true" output="false" extends="BaseController" {
 
-	<cffunction name="setproductService">
-		<cfargument name="productService" />
-		<cfset variables.productService = arguments.ProductService />
-	</cffunction>
+	property name="productService" type="any";
 	
-	<cffunction name="productlist">
-		<cfargument name="rc">
-		
-		<cfset rc.ProductSmartList = variables.productService.getSmartList(arguments.rc) />
-	</cffunction>
+	public void function productlist(required struct rc) {
+		rc.ProductSmartList = getProductService().getSmartList(rc=arguments.rc);	
+	}
 	
-</cfcomponent>
+}

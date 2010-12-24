@@ -1,62 +1,46 @@
-<cfcomponent extends="baseController" output="false">
+component extends="BaseController" output=false accessors=true {
 
-	<cffunction name="before">
-		<cfargument name="rc" />
-		
-		<cfparam name="rc.ProductID" default="" />
-		
-		<cfset rc.Product = variables.productService.getByID(rc.ProductID) />
-		<cfif not isDefined('rc.Product')>
-			<cfset rc.Product = variables.productService.getNewEntity() />
-		</cfif>
+	// fw1 Auto-Injected Service Properties
+	property name="productService" type="slat.com.service.ProductService";
 
-	</cffunction>
-
-	<cffunction name="setproductService">
-		<cfargument name="productService" />
-		<cfset variables.productService = arguments.ProductService />
-	</cffunction>
-	
-	<cffunction name="contentassignment">
-		<cfargument name="rc" />
+	public void function before(required struct rc) {
+		param name="rc.productID" default="";
 		
-		<cfset var I = "">
+		rc.product = getProductService().getByID(ID=rc.productID);
+		if(!isDefined("rc.product")) {
+			rc.product = getProductService().getNewEntity();
+		}
+	}
+	
+	public void function list(required struct rc) {
+		rc.productSmartList = getProductService().getSmartList(arguments.rc);
+	}
+	
+	public void function update(required struct rc) {
+	
+		rc.product = variables.fw.populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
 		
-		<cfif isDefined('rc.fieldnames')>
-			<cfif isDefined('rc.NewContentAssignmentID')>
-				<cfset application.slat.ProductManager.addProductToContent(ProductID=rc.ProductID,ContentID=rc.NewContentAssignmentID) />
-			<cfelseif isDefined('rc.RemoveContentID')>
-				<cfset application.slat.ProductManager.removeProductFromContent(ProductID=rc.ProductID,ContentID=rc.RemoveContentID) />
-			</cfif>
-			<cfset variables.fw.redirect(action='product.detail', append='ProductId') />
-		</cfif>
-	</cffunction>
-	
-	<cffunction name="list">
-		<cfargument name="rc" />
-	
-		<cfset rc.ProductSmartList = variables.productService.getSmartList(arguments.rc) />
-	</cffunction>
-	
-	<cffunction name="update">
-		<cfargument name="rc" />
+		//Set Filename for product if it isn't already defined.
+		if(rc.product.getFilename EQ "") {
+			rc.product.setFilename(rc.product.getProductName());
+		}
 		
-		<cfset rc.Product = variables.fw.populate(cfc=rc.Product, Keys=rc.Product.getUpdateKeys(), trim=true) />
+		//Simplify filename
+		rc.product.setFilename(LCASE(REReplace(Replace(rc.product.getFilename()," ","-","all"),"[^A-Z|\-]","","all")));
 		
-		<!--- Setup Products Filename --->
-		<cfif rc.Product.getFilename() eq "">
-			<cfset rc.Product.setFilename(rc.Product.getProductName()) />
-		</cfif>
-		<cfset rc.Product.setFilename(LCASE(REReplaceNoCase(Replace(rc.Product.getFilename()," ","-","all"),"[^A-Z|\-]","","all"))) />
+		//Save Product
+		rc.product = getProductService().save(entity=rc.product);
+		variables.fw.redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
 		
-		<!--- Save Product --->
-		<cfset rc.Product = variables.productService.save(entity=rc.Product) />
-		<cfset variables.fw.redirect(action='product.detail',queryString='ProductID=#rc.Product.getProductID()#') />
-	</cffunction>
+	}
 	
-	<cffunction name="edit">
-		<cfargument name="rc" />
-		<cfset rc.ProductTemplatesQuery = variables.productService.getProductTemplates() />
-	</cffunction>
+	public void function edit(required struct rc) {
+		rc.productTemplatesQuery = getProductService().getProductTemplates();
+	}
 	
-</cfcomponent>
+	public void function delete(required struct rc) {
+		getProductService().delete(entity=rc.product);
+		variables.fw.redirect(action="admin:product.list");
+	}
+		
+}

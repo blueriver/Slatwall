@@ -5,7 +5,7 @@ $Id: Validator.cfc 77 2010-03-05 05:06:12Z sumit.verma $
 
 Notes:
 */
-import appRoot.com.model.errorBean.*;
+import slat.com.entity.ErrorBean;
 component accessors="true"
 {
 
@@ -14,7 +14,7 @@ component accessors="true"
 	 */
 	property string resourceBundle;
 	property array validationMessages;
-	property errorBean errors;
+	property ErrorBean errors;
 
 	/**
 	 * @hint constructor for the validator class
@@ -22,7 +22,7 @@ component accessors="true"
 	public Validator function init(String rb="DefaultValidationMessages",Boolean isAbsolutePath=false){
 		this.setResourceBundle(arguments.rb);
 		this.setValidationMessages(arrayNew(1));
-		this.setErrors(new errorBean());
+		this.setErrors(new ErrorBean());
 		loadResourceBundle(arguments.isAbsolutePath);
 		return this;
 	}
@@ -50,25 +50,33 @@ component accessors="true"
 	/**
 	* @hint method to validate entity based on property definition 
 	*/
-	public void function validateObject(required any obj, struct objMD){
+	public function validateObject(required any obj, struct objMD){
 		var objMetadata = isNull(objMD) ? getMetadata(obj) : objMD ;
 		// get the object property array 
 		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
-		//writedump(var=props,abort=true);
+		//loop through each property;
 		for(var i=1; i <= arrayLen(props); i++) {
 			var prop = props[i] ;
-			//writedump(var=prop);
-			var validationRule = structKeyExists(prop,"validationRule") ? prop["validationRule"] : "" ;
-			if(len(validationRule)){
-				var name = prop["name"] ;
-				var message = structKeyExists(prop,"validationMessage") ? prop["validationMessage"] : "" ;
-				var displayName = structKeyExists(prop,"displayName") ? prop["displayName"] : "" ;
-				var val =  isNull(evaluate("obj." & "get#name#()")) ? "" : evaluate("obj." & "get#name#()") ;
-				validate(validationRule,val,name,displayName,message) ;
+			var name = prop["name"] ;
+			var val =  isNull(evaluate("obj." & "get#name#()")) ? "" : evaluate("obj." & "get#name#()") ;
+			var displayName = structKeyExists(prop,"displayName") ? prop["displayName"] : "" ;
+			var attrib = "";
+			//loop through each attribute to look for validation rule
+			for(attrib in prop){
+				if(attrib.toLowerCase().startsWith("validate")){
+					var validationRule = replaceNoCase(attrib,"validate","","one") ;
+					if(len(validationRule)){
+						var message = prop[attrib] ;
+						validate(validationRule,val,name,displayName,message) ;
+					}
+				}
 			}
 		}
-		//set errors in the object
-		obj.setErrorBean(this.geterrors()) ;
+		//if error bean exists in the object set it
+		if(arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'))){
+			obj.setErrorBean(this.geterrors()) ;
+		}
+		return this.getErrors();
 	}
 	
 	/**
