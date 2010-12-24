@@ -5,7 +5,7 @@ component displayname="Type" entityname="SlatType" table="SlatType" persistent="
 	property name="parentType" cfc="Type" fieldtype="many-to-one" fkcolumn="ParentTypeID";
 	property name="childType" type="array" cfc="Type" fieldtype="one-to-many" fkcolumn="ParentTypeID" cascade="all" inverse="true";
 	
-	public slat.com.entity.type function getChildType() {
+	public any function getChildType() {
 		if(!isDefined('variables.childType')) {
 			variables.childType = arraynew(1);
 		}

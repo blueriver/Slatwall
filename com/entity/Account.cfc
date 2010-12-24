@@ -15,7 +15,7 @@ component displayname="Account" entityname="SlatAccount" table="SlatAccount" per
 	
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
-	public mura.user.userBean function getMuraUser() {
+	public any function getMuraUser() {
 		if(!isDefined("variables.muraUser")) {
 			if(isDefined("variables.muraUserID") && variable.MuraUserID != ""){
 				variables.muraUser = getService("userManager").getByID(ID=variables.muraUserID);

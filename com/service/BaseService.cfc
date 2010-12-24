@@ -3,19 +3,19 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	property name="entityName" type="string";
 	property name="DAO" type="any";
 	
-	public this function init(required any entityName, required any dao) {
+	public any function init(required any entityName, required any dao) {
 		setEntityName(arguments.entityName);
-		setDAO(argument.DAO);
+		setDAO(arguments.DAO);
 		
 		return this;
 	}
 	
 	public any function getByID(required string ID) {
-		return getDAO().read(ID=arguments.ID, enitityName=getEntityName());
+		return getDAO().read(ID=arguments.ID, entityName=getEntityName());
 	}
 	
 	public any function getByFilename(required string filename) {
-		return getDAO.readByFilename(filename=arguments.filename, enityName=getEntityName());
+		return getDAO().readByFilename(filename=arguments.filename, entityName=getEntityName());
 	}
 	
 	public any function getNewEntity() {
@@ -29,6 +29,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function save(required any entity) {
-		return getDAO.save(entity=arguments.entity);
+		return getDAO().save(entity=arguments.entity);
 	}
 }

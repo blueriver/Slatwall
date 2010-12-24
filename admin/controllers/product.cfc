@@ -37,5 +37,10 @@ component extends="BaseController" output=false accessors=true {
 	public void function edit(required struct rc) {
 		rc.productTemplatesQuery = getProductService().getProductTemplates();
 	}
+	
+	public void function delete(required struct rc) {
+		getProductService().delete(entity=rc.product);
+		variables.fw.redirect(action="admin:product.list");
+	}
 		
 }

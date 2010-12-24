@@ -7,7 +7,7 @@ component displayname="Base Entity" accessors="true" {
 	
 	public any function init() {
 		
-		// Create a new errorBean
+		// Create a new errorBean for all entities
 		this.setErrorBean(new errorBean());
 		
 		// Automatically set the default search score to 0
@@ -23,14 +23,16 @@ component displayname="Base Entity" accessors="true" {
 	
 	// @hint This function is utilized by the fw1 populate method to only update persistent properties in the entity.
 	public string function getUpdateKeys() {
+		
 		if(!isDefined("variables.updateKeys")) {
+			
 			var metaData = getMetaData(this);
 			variables.updateKeys = "";
 			
 			// Loop over properties and any persitant properties to the updateKeys
 			for(i=1; i <= arrayLen(metaData.Properties); i++ ) {
 				var propertyStruct = metaData.Properties[i];
-				if(isDefined("propertyStruct.Persistant") && propertyStruct.Persistant == true && !isDefined("propertyStruct.FieldType")) {
+				if(isDefined("propertyStruct.Persistent") && propertyStruct.Persistent == true && !isDefined("propertyStruct.FieldType")) {
 					variables.updateKeys = "#variables.updateKeys##propertyStruct.Name#,";
 				}
 			}
@@ -72,11 +74,58 @@ component displayname="Base Entity" accessors="true" {
 	
 	// @hint Private helper function for returning the any of the services in the application
 	private any function getService(required string service) {
-		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#argumetns.service#");
+		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#arguments.service#");
 	}
 	
 	// @hint A way to see if the entity has any errors.
 	public boolean function hasErrors() {
 		return this.getErrors().hasErrors();
 	}
+	
+	// Start: ORM functions
+	public void function preInsert(){
+		var timestamp = now();
+		
+		if(structKeyExists(this,"setDateCreated")){
+			this.setDateCreated(timestamp);
+		}
+		if(structKeyExists(this,"setDateLastUpdated")){
+			this.setDateLastUpdated(timestamp);
+		}
+		
+	}
+	
+	public void function preUpdate(Struct oldData){
+		var timestamp = now();
+		
+		if(structKeyExists(this,"setDateLastUpdated")){
+			this.setDateLastUpdated(timestamp);
+		}
+	}
+	
+	public void function preDelete(any entity){
+
+	}
+	
+	public void function preLoad(any entity){
+
+	}
+	
+	public void function postInsert(any entity){
+
+	}
+	
+	public void function postUpdate(any entity){
+
+	}
+	
+	public void function postDelete(any entity){
+
+	}
+	
+	public void function postLoad(any entity){
+
+	}
+	// End: ORM Functions
+	
 }

@@ -9,17 +9,17 @@
 	<bean id="vendorDAO" class="slat.com.dao.[integration]vendorDAO" />
 	
 	<bean id="accountService" class="slat.com.service.accountService">
-		<constructor-arg name="entityName">SlatAccount</constructor-arg>
+		<constructor-arg name="entityName"><value>SlatAccount</value></constructor-arg>
 		<constructor-arg name="DAO"><ref bean="accountDAO" /></constructor-arg>
 	</bean>
 	
 	<bean id="brandService" class="slat.com.service.brandService">
-		<constructor-arg name="entityName">SlatBrand</constructor-arg>
+		<constructor-arg name="entityName"><value>SlatBrand</value></constructor-arg>
 		<constructor-arg name="DAO"><ref bean="brandDAO" /></constructor-arg>
 	</bean>
 	
 	<bean id="productService" class="slat.com.service.productService">
-		<constructor-arg name="entityName">SlatProduct</constructor-arg>
+		<constructor-arg name="entityName"><value>SlatProduct</value></constructor-arg>
 		<constructor-arg name="DAO"><ref bean="productDAO" /></constructor-arg>
 		<constructor-arg name="skuDAO"><ref bean="skuDAO" /></constructor-arg>
 		<constructor-arg name="ContentManager"><ref bean="contentManager" /></constructor-arg>
@@ -27,7 +27,7 @@
 	</bean>
 
 	<bean id="vendorService" class="slat.com.service.vendorService">
-		<constructor-arg name="entityName">SlatVendor</constructor-arg>
+		<constructor-arg name="entityName"><value>SlatVendor</value></constructor-arg>
 		<constructor-arg name="DAO"><ref bean="vendorDAO" /></constructor-arg>
 	</bean>
 

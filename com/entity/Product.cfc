@@ -24,13 +24,15 @@ component displayname="Product" entityname="SlatProduct" table="slatproduct" per
 	property name="dateLastUpdated"	type="date" default="" persistent=true displayname="Date Last Updated";
 	
 	// Related Object Properties
-	property name="brand" type="array" cfc="brand" fieldtype="many-to-one" fkcolumn="BrandID" cascade="all" inverse=true;
-	property name="skus" type="array" cfc="sku" fieldtype="one-to-many" fkcolumn="ProductID" cascade="all" inverse=true;
-	property name="genderType" type="array" cfc="type" fieldtype="many-to-one" fkcolumn="TypeID" cascade="all" inverse=true;
-	property name="madeInCountry" type="array" cfc="country" fieldtype="many-to-one" fkcolumn="CountryID" cascade="all" inverse=true;
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" cascade="all" inverse=true;
+	property name="skus" type="array" cfc="sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
+	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
+	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryID" cascade="all" inverse=true;
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent=false;
+	property name="title" type="string" persistent=false;
+	property name="productURL" type="string" persistent=false;
 	property name="onTermSale" type="boolean" persistent=false;
 	property name="onClearanceSale" type="boolean" persistent=false;
 	property name="dateFirstReceived" type="date" persistent=false;
@@ -48,97 +50,41 @@ component displayname="Product" entityname="SlatProduct" table="slatproduct" per
 	property name="webWholesaleQC" type="numeric" persistent=false;
 	property name="webWholesaleQOO" type="numeric" persistent=false;
 	
-	// Non-Persistant Accessors
+	// Related Object Helpers
+	public any function getBrand() {
+		if(!isDefined("variables.brand")) {
+			variables.brand = getService(service="BrandService").getNewEntity();
+		}
+		return variables.brand;
+	}
+	
+	public array function getSkus() {
+		if(!isDefined("variables.skus")) {
+			variables.skus = arrayNew(1);
+		}
+		return variables.skus;
+	}
+	
+	public any function getGenderType() {
+		if(!isDefined("variables.genderType")) {
+			variables.genderType = getService(service="TypeService").getNewEntity(); //get New Entity here should have a parent programing type ID set in the future.
+		}
+		return variables.skus;
+	}
+	
+	// Non-Persistant Helpers
 	public string function getGender() {
 		if(!isDefined(variables.gender)) {
 			variables.gender = getGenderType().getType();
 		}
 		return variables.gender;
 	}
+	
+	public string function getTitle() {
+		return "#getBrand().getBrandName()# #getProductYear()# #getProductName()#";
+	}
+	
+	public string function getProductURL() {
+		return "/index.cfm/sp/#getFilename()#";
+	}	
 }
-/*
-	
-	<!--- Nested Object Getters --->
-	<cffunction name="getBrand">
-		<cfargument name="BrandID" />
-		<cfif not isDefined('variables.Brand')>
-			<cfif isDefined('arguments.BrandID')>
-				<cfset variables.Brand = getService("brandService").getByID(arguments.BrandID) />
-			<cfelse>
-				<cfset variables.Brand = entityNew('brand') />
-			</cfif>
-		</cfif>
-		<cfreturn variables.Brand />
-	</cffunction>
-	
-	<cffunction name="getGenderType">
-		<cfargument name="GenderTypeID">
-		<cfif not isDefined('variables.GenderType')>
-			<cfif isDefined('arguments.GenderTypeID')>
-				<cfset variables.GenderType = getService("typeService").getByID(argumnets.GenderTypeID) />
-			<cfelse>
-				<cfset variables.GenderType = entityNew('type') />
-			</cfif>
-		</cfif>
-		<cfreturn variables.GenderType />
-	</cffunction>
-	
-	<cffunction name="getSkus">
-		<cfif not isDefined('variables.Skus')>
-			<cfset variables.Skus = getService("skuService").getByProductID(getProductID()) />
-		</cfif>
-		<cfreturn variables.Skus />
-	</cffunction>
-	
-	<!--- Non Persistant Getters / Setters --->
-	<cffunction name="getQOH" returntype="numeric" access="public" output="false" hint="">
-		<cfif not isDefined('variables.QOH')>
-			<cfset variables.QOH = 0 />
-		</cfif>
-    	<cfreturn variables.QOH />
-    </cffunction>
-    <cffunction name="setQOH" access="private" output="false" hint="">
-    	<cfargument name="QOH" type="numeric" required="true" />
-    	<cfset variables.QOH = arguments.QOH />
-    </cffunction>
-    
-	<!--- HELPER SET FUNCTIONS --->
-	<cffunction name="setAllQuantities">
-		<cfset var Skus = getSkus(getProductID()) />
-		<cfset var Sku = "" />
-		<cfset var TotalQOH = 0 />
-		<cfset var TotalQC = 0 />
-		<cfset var TotalQOO = 0 />
-		<cfset var TotalWebRetailQOH = 0 />
-		<cfset var TotalWebRetailQC = 0 />
-		<cfset var TotalWebRetailQOO = 0 />
-		<cfset var TotalWebWholesaleQOH = 0 />
-		<cfset var TotalWebWholesaleQC = 0 />
-		<cfset var TotalWebWholesaleQOO = 0 />
-		<cfloop array="Skus" index="Sku">
-			<cfset TotalQOH = TotalQOH + Skug.getQOH() />
-			<cfset TotalQC = TotalQC + Skug.getQC() />
-			<cfset TotalQOO = TotalQOO + Skug.getQOO() />
-			<cfset TotalWebRetailQOH = TotalWebRetailQOH + Skug.getQOH />
-			<cfset TotalWebRetailQC = TotalQOH + Skug.getQOH />
-			<cfset TotalWebRetailQOO = TotalQOH + Skug.getQOH />
-			<cfset TotalWebWholesaleQOH = TotalQOH + Skug.getQOH />
-			<cfset TotalWebWholesaleQC = TotalQOH + Skug.getQOH />
-			<cfset TotalWebWholesaleQOO = TotalQOH + Skug.getQOH />
-		</cfloop>
-	</cffunction>
-		
-	<!--- HELPER GET FUNCTIONS --->
-	<cffunction name="getGender">
-		<cfreturn getGenderType().getType() />
-	</cffunction>
-	
-	<cffunction name="getTitle">
-		<cfreturn "#getBrand().getBrandName()# #getProductYear()# #getProductName()#" />
-	</cffunction>
-	
-	<cffunction name="getProductURL">
-		<cfreturn "/index.cfm/sp/#getFilename()#" />
-	</cffunction>
-</cfcomponent>
-*/
