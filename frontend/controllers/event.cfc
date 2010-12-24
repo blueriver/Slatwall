@@ -1,83 +1,48 @@
-<cfcomponent extends="baseController" output="false">
+component persistent="false" accessors="true" output="false" extends="BaseController" {
 	
-	<cffunction name="setproductService">
-		<cfargument name="productService" />
-		<cfset variables.productService = arguments.ProductService />
-	</cffunction>
+	property name="productService" type="any";
+	property name="accountService" type="any";
 	
-	<cffunction name="setaccountService">
-		<cfargument name="accountService" />
-		<cfset variables.accountService = arguments.accountService />
-	</cffunction>
+	public void function onrenderstart(required any rc) {
+		
+		// Check if the page requested is a porduct page
+		if(left(rc.path,len(request.siteid) + 5) == '/#request.siteid#/sp/') {
+			
+			// Get Product Filename from path
+			rc.Filename = Right(rc.path, len(rc.path)-(len(request.siteid) + 5));
+			rc.Filename = Left(rc.Filename, len(rc.Filename)-1);
+			
+			// Setup Product in Request Scope
+			request.muraScope.slatwall.Product = variables.productService.getByFilename(rc.Filename);
+			
+			// Force Product Information into the contentBean
+			request.contentBean.setTitle(request.muraScope.slatwall.Product.getProductName());
+			request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription());
+			
+			// Override crumbdata with the last page that was loaded
+			if(isDefined("session.slat.crumData")) {
+				request.crumbdata = duplicate(session.slat.crumbdata);
+				request.contentrenderer.crumbdata = duplicate(session.slat.crumbdata);
+			}
+			
+			// Set template based on Product Template
+			request.contentBean.setIsNew(0);
+			if(request.muraScope.slatwall.Product.getTemplate() != "") {
+				request.contentBean.setTemplate(request.muraScope.slatwall.Product.getTemplate());
+			}
+		} else {
+			session.slat.crumbdata = duplicate(request.crumbdata);
+		}
+	}
 	
-	<cffunction name="onsiterequeststart">
-		<cfargument name="rc" />
+	public void function onrenderend(required any rc) {
 		
-	</cffunction>
-	
-	<cffunction name="onrenderstart">
-		<cfargument name="rc" />
-		
-		<cfset var SlatwallHead = "" />
-		
-		<!--- Add Core References to Header --->
-		<cfset rc.$.loadJSLib() />
-		<cfsavecontent variable="SlatwallHead">
-			<cfoutput>
-				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/jquery.js"></script>
-				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/slatwall.js"></script>
-				<script language="Javascript" type="text/javascript" src="/plugins/#application.Slatwall.pluginConfig.getDirectory()#/js/fw1AjaxAdapter.js"></script>
-				<link rel="stylesheet" type="text/css" href="/plugins/#application.slatwall.pluginConfig.getDirectory()#/css/slatwall.css" />
-				<cfif isUserInRole('S2')>
-					#variables.fw.view('admin:utility/toolbar')#
-				</cfif>
-			</cfoutput>
-		</cfsavecontent>
-		
-		<cfhtmlhead text="#SlatwallHead#" />
-
-		<!--- Create Product Page Layout when URL is a Product URL --->
-		<cfif Left(rc.path,len(request.siteid) + 5) eq '/#request.siteid#/sp/'>
-			<cfset rc.Filename = Right( rc.path, len(rc.path)-(len(request.siteid) + 5) ) />
-			<cfset rc.Filename = Left(rc.Filename, len(rc.Filename)-1) />
-			
-			<!--- Setup Product in Request Scope --->
-			<cfset request.muraScope.slatwall.Product = variables.productService.getByFilename(rc.Filename) />
-			
-			<!--- Force Product Information into Content Bean --->
-			<cfset request.contentBean.setTitle(request.muraScope.slatwall.Product.getProductName()) />
-			<cfset request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription()) />
-			
-			<!--- Overright crumbdata with the last page that was loaded --->
-			<cfset request.crumbdata = duplicate(session.slat.crumbdata) />
-			<cfset request.contentrenderer.crumbdata = duplicate(session.slat.crumbdata) />
-			
-			<!--- Set template based on Product Template --->
-			<cfset request.contentBean.setIsNew(0)>
-			<cfif request.muraScope.slatwall.Product.getTemplate() neq ''>
-				<cfset request.contentBean.setTemplate(request.muraScope.slatwall.Product.getTemplate()) />
-			</cfif>
-		<cfelse>
-			<cfset session.slat.crumbdata = duplicate(request.crumbdata) />
-		</cfif>
-		
-		
-	</cffunction>
-	
-	<cffunction name="onusercreate">
-		<cfargument name="rc" />
-		
-		<cfif 1 eq 0><!--- Check to See If Account Already Exists with this E-Mail Address --->
-			<!--- Send E-mail to Verify account connection --->
-		<cfelse>
-			<!--- Create Account --->
-			<cfset rc.Account = variables.accountService.getNewEntity() />
-			
-			<cfset rc.Account.setMuraUserID(rc.$.getAllValues().userid) />
-			
-			<cfset rc.Account = variables.accountService.save(entity=rc.Account) />
-			
-		</cfif>
-		
-	</cffunction>
-</cfcomponent>
+		// Add necessary html to the header
+		savecontent variable="html_head" {
+			include "/plugins/#application.Slatwall.pluginConfig.getDirectory()#/frontend/layouts/inc/html_head.cfm";
+		}
+		var oldContent = rc.$.getEvent().getValue( "__MuraResponse__" );
+		var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
+		rc.$.getEvent().setValue( "__MuraResponse__", newContent);
+	}
+}

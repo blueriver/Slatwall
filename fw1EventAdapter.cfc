@@ -18,22 +18,14 @@
 	<cffunction name="onRenderStart">
 		<cfargument name="$" />
 		
-		<cfset doAction($, 'frontend:event.onrenderstart') />
+		<cfset doAction($, "frontend:event.onrenderstart") />
 	</cffunction>
 	
-	<cffunction name="onSiteLogin">
+	<cffunction name="onRenderEnd">
 		<cfargument name="$" />
 		
-		<cfset doAction($, 'frontend:event.onsitelogin') />
+		<cfset doAction($, "frontend:event.onrenderend") />
 	</cffunction>
-	
-	<!---
-	<cffunction name="onUserCreate">
-		<cfargument name="$" />
-		
-		<cfset doAction($, 'frontend:event.onusercreate') />
-	</cffunction>
-	--->
 	
 	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
