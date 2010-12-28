@@ -86,5 +86,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getProductURL() {
 		return "/index.cfm/sp/#getFilename()#";
-	}	
+	}
+	
+	public numeric function getQIA() {
+		return getQOH() - getQC();
+	}
 }

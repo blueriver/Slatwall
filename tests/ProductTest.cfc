@@ -1,7 +1,6 @@
 component extends="mxunit.framework.TestCase" output="false" {
 	public void function SetUp() {
 		variables.productEntity = new Slatwall.com.entity.Product();
-		// Setup Code Here
 	}
 	
 	public void function testEntityMethodGetQIA() {
