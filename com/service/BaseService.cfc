@@ -35,6 +35,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function save(required any entity) {
-		return getDAO().save(entity=arguments.entity);
+		return validateSave(entity=arguments.entity);
+		// return getDAO().save(entity=arguments.entity);
 	}
 }

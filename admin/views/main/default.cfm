@@ -18,5 +18,9 @@
 	<cfif isDefined('rc.TestFormTwo')>
 		<strong>Test Form Result Two:</strong> #rc.TestFormTwo# 
 	</cfif>
+	<br />
+	<br />
+	<cfset test = entityNew("SlatProduct") />
+	<cfdump var="#test.isNew()#" />
 </div>
 </cfoutput>

@@ -180,13 +180,13 @@ component displayname="Smart List" accessors="true" persistent="false" {
 						if(filterValue neq "") {
 							currentFilterValue = currentFilterValue + 1;
 							if(currentFilter > 1 && currentFilterValue == 1) {
-								whereReturn = "#whereReturn# AND (";
+								whereReturn &= " AND (";
 							} else if (currentFilterValue == 1) {
-								whereReturn = "#whereReturn# (";
+								whereReturn &= " (";
 							} else if (currentFilterValue > 1) {
-								whereReturn = "#whereReturn# OR";
+								whereReturn &= " OR";
 							}
-							whereReturn = "#whereReturn# #filterProperty# = #filterValue#";
+							whereReturn &= " #filterProperty# = #filterValue#";
 						}
 					}
 					if(currentFilterValue > 0) {

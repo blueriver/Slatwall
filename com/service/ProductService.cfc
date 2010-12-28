@@ -1,3 +1,4 @@
+import slat.com.*;
 component extends="slat.com.service.BaseService" accessors="true" {
 	
 	property name="skuDAO" type="any";
@@ -15,7 +16,8 @@ component extends="slat.com.service.BaseService" accessors="true" {
 	}
 	
 	public any function getSmartList(required struct rc){
-		var smartList = createObject("component","slat.com.entity.SmartList").init(rc=arguments.rc, entityName=getEntityName());
+		
+		var smartList = new entity.SmartList(rc=arguments.rc, entityName=getEntityName());
 		
 		smartList.addKeywordProperty("productCode", 1);
 		smartList.addKeywordProperty("productName", 1);
@@ -28,5 +30,9 @@ component extends="slat.com.service.BaseService" accessors="true" {
 	
 	public any function getProductTemplates() {
 		return getSettingsManager().getSite(session.siteid).getTemplates();
+	}
+	
+	public any function validateSave(required any entity) {
+		
 	}
 }

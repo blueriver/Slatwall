@@ -2,6 +2,7 @@
 	<div class="svoadminproductlist">
 		<table class="listtable">
 			<tr>
+				<th>Search Score</th>
 				<th>Brand Name</th>
 				<th>Year</th>
 				<th>Product Name</th>
@@ -10,6 +11,7 @@
 			</tr>
 			<cfloop array="#rc.ProductSmartList.getEntityArray()#" index="Local.Product">
 				<tr>
+					<td>#Local.Product.getSearchScore()# #Local.Product.isNew()#</td>
 					<td>
 						<a href="#buildURL(action='admin:brand.detail', queryString='brandID=#Local.Product.getBrand().getBrandID()#')#">
 						#Local.Product.getBrand().getBrandName()#
