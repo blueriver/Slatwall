@@ -71,6 +71,11 @@ component displayname="Base Entity" accessors="true" {
 			evaluate("#evalString#");
 		}
 	}
+	/*
+	public any function setProperty(required string property, required any value) {
+		variables[arguments.property] = arguments.value;
+	}
+	*/
 	
 	// @hint Private helper function for returning the any of the services in the application
 	private any function getService(required string service) {

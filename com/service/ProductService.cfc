@@ -15,13 +15,13 @@ component extends="slat.com.service.BaseService" accessors="true" {
 	}
 	
 	public any function getSmartList(required struct rc){
-		var smartList = createObject("component","slat.com.entity.SmartList").init(entityName=getEntityName(), rc=arguments.rc);
+		var smartList = createObject("component","slat.com.entity.SmartList").init(rc=arguments.rc, entityName=getEntityName());
 		
-		smartList.addKeywordColumn("productCode", 1);
-		smartList.addKeywordColumn("productName", 1);
-		smartList.addKeywordColumn("productDescription", 1);
-		smartList.addKeywordColumn("brand_brandID", 1);
-		smartList.addKeywordColumn("brand_brandName", 1);
+		smartList.addKeywordProperty("productCode", 1);
+		smartList.addKeywordProperty("productName", 1);
+		smartList.addKeywordProperty("productDescription", 1);
+		smartList.addKeywordProperty("brand_brandID", 1);
+		smartList.addKeywordProperty("brand_brandName", 1);
 		
 		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
 	}
