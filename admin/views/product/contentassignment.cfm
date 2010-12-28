@@ -2,7 +2,7 @@
 <cfparam name="args.CurrentLocation" default="00000000000000000000000000000000001" />
 
 <cfset local.currentLocationArray = listToArray(args.CurrentLocation) />
-<cfset local.productCategories = application.slat.productManager.getContentByProductID(ProductID=args.ProductID) />
+<cfset local.productCategories = application.slatwall.productManager.getContentByProductID(ProductID=args.ProductID) />
 
 <cfoutput>
 	<div class="svoproductcontentassignment">

@@ -1,4 +1,4 @@
-<cfset local.CustomerIterator = application.Slat.customerManager.getCustomerIterator(request.slat.queryOrganizer.organizeQuery(application.Slat.customerManager.getAllCustomersQuery())) />
+<cfset local.CustomerIterator = application.Slatwall.customerManager.getCustomerIterator(request.slatwall.queryOrganizer.organizeQuery(application.Slatwall.customerManager.getAllCustomersQuery())) />
 
 <cfoutput>
 <div class="svoContactList">

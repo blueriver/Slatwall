@@ -1,4 +1,4 @@
-component displayname="Type" entityname="SlatType" table="SlatType" persistent="true" accessors="true" output="true" extends="slat.com.entity.BaseEntity" {
+component displayname="Type" entityname="SlatwallType" table="SlatwallType" persistent="true" accessors="true" output="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	property name="typeID" fieldtype="id" generator="guid";
 	property name="type" type="string" persistent="true";

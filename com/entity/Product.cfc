@@ -1,4 +1,4 @@
-component displayname="Product" entityname="SlatProduct" table="slatproduct" persistent="true" extends="slat.com.entity.baseEntity" {
+component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
 	// Persistant Properties
 	property name="productID" type="string" fieldtype="id" generator="guid";

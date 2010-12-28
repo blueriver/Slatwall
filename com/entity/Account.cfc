@@ -1,4 +1,4 @@
-component displayname="Account" entityname="SlatAccount" table="SlatAccount" persistent="true" output="false" accessors="true" extends="slat.com.entity.BaseEntity" {
+component displayname="Account" entityname="SlatwallAccount" table="SlatwallAccount" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
 	property name="accountID" type="string" fieldtype="id" generator="guid";

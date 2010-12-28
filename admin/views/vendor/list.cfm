@@ -22,9 +22,9 @@
 <cfif isDefined('args.Brand')>
 	<cfset local.VendorsIterator = args.Brand.getVendorsIterator() />
 <cfelse>
-	<cfset local.VendorOrganizer = application.slat.vendorManager.getQueryOrganizer() />
+	<cfset local.VendorOrganizer = application.slatwall.vendorManager.getQueryOrganizer() />
 	<cfset local.VendorOrganizer.setFromCollection(url) />
-	<cfset local.VendorsIterator = application.slat.vendorManager.getVendorIterator(local.VendorOrganizer.organizeQuery(application.Slat.vendorManager.getAllVendorsQuery())) />
+	<cfset local.VendorsIterator = application.slatwall.vendorManager.getVendorIterator(local.VendorOrganizer.organizeQuery(application.Slatwall.vendorManager.getAllVendorsQuery())) />
 </cfif>
 
 <cfoutput>

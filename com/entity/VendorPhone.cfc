@@ -1,4 +1,4 @@
-component displayname="Vendor Phone" entityname="SlatVendorPhone" table="SlatVendorPhone" persistent="true" extends="slat.com.entity.BaseEntity" {
+component displayname="Vendor Phone" entityname="SlatwallVendorPhone" table="SlatwallVendorPhone" persistent="true" extends="slatwall.com.entity.BaseEntity" {
 	property name="VendorPhoneID" fieldtype="id" generator="increment";
 	property name="PhoneNumber" type="string" persistent="true";
 	

@@ -1,4 +1,4 @@
-component displayname="Country" entityname="SlatCountry" table="SlatCountry" persistent="true" extends="slat.com.entity.baseEntity" {
+component displayname="Country" entityname="SlatwallCountry" table="SlatwallCountry" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
 	// Persistant Properties
 	property name="countryID" type="int" fieldtype="id" generator="increment";

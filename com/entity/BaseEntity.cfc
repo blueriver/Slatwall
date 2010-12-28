@@ -1,4 +1,4 @@
-import "slat.com.entity.ErrorBean";
+import "slatwall.com.entity.ErrorBean";
 component displayname="Base Entity" accessors="true" {
 	
 	property name="errorBean" type="ErrorBean";

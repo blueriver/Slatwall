@@ -20,7 +20,5 @@
 	</cfif>
 	<br />
 	<br />
-	<cfset test = entityNew("SlatProduct") />
-	<cfdump var="#test.isNew()#" />
 </div>
 </cfoutput>

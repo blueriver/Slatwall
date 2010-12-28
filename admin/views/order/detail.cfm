@@ -1,4 +1,4 @@
-<cfset local.Order = application.slat.orderManager.read(OrderID=rc.OrderID) />
+<cfset local.Order = application.slatwall.orderManager.read(OrderID=rc.OrderID) />
 <cfset local.OrderItemsIterator = local.Order.getOrderItemIterator() />
 <cfoutput>
 <div class="svoorderdetail">

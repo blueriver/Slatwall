@@ -1,3 +1,3 @@
-component extends="slat.com.service.BaseService" accessors="true" {
+component extends="slatwall.com.service.BaseService" accessors="true" {
 
 }

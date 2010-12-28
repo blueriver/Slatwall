@@ -1,4 +1,4 @@
-<cfcomponent extends="slat.com.dao.productDAO">
+<cfcomponent extends="slatwall.com.dao.productDAO">
 
 	<cffunction name="read">
 		<cfargument name="ID" type="string" />

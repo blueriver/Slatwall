@@ -1,4 +1,4 @@
-component displayname="Location" entityname="SlatLocation" table="SlatLocation" persistent=true accessors=true output=false extends="slat.com.entity.BaseEntity" {
+component displayname="Location" entityname="SlatwallLocation" table="SlatwallLocation" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
 	property name="locationID" fieldtype="id" generator="guid" persistent=true;

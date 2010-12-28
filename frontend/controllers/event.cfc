@@ -20,9 +20,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription());
 			
 			// Override crumbdata with the last page that was loaded
-			if(isDefined("session.slat.crumData")) {
-				request.crumbdata = duplicate(session.slat.crumbdata);
-				request.contentrenderer.crumbdata = duplicate(session.slat.crumbdata);
+			if(isDefined("session.slatwall.crumData")) {
+				request.crumbdata = duplicate(session.slatwall.crumbdata);
+				request.contentrenderer.crumbdata = duplicate(session.slatwall.crumbdata);
 			}
 			
 			// Set template based on Product Template
@@ -31,7 +31,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				request.contentBean.setTemplate(request.muraScope.slatwall.Product.getTemplate());
 			}
 		} else {
-			session.slat.crumbdata = duplicate(request.crumbdata);
+			session.slatwall.crumbdata = duplicate(request.crumbdata);
 		}
 	}
 	

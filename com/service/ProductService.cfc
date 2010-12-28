@@ -1,5 +1,5 @@
-import slat.com.*;
-component extends="slat.com.service.BaseService" accessors="true" {
+import slatwall.com.*;
+component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	property name="skuDAO" type="any";
 	property name="contentManager" type="any";

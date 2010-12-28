@@ -1,4 +1,4 @@
-<cfset local.Customer = application.slat.customerManager.read(CustomerID=rc.CustomerID) />
+<cfset local.Customer = application.slatwall.customerManager.read(CustomerID=rc.CustomerID) />
 <cfoutput>
 <div class="svoVendorDetail">
 	

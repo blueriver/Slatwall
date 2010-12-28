@@ -1,6 +1,6 @@
-<cfset local.OrderOrganizer = application.slat.orderManager.getQueryOrganizer() />
+<cfset local.OrderOrganizer = application.slatwall.orderManager.getQueryOrganizer() />
 <cfset local.OrderOrganizer.setFromCollection(url) />
-<cfset local.OrderIterator = application.slat.orderManager.getOrderIterator(local.OrderOrganizer.organizeQuery(application.Slat.orderManager.getAllOrdersQuery())) />
+<cfset local.OrderIterator = application.slatwall.orderManager.getOrderIterator(local.OrderOrganizer.organizeQuery(application.Slatwall.orderManager.getAllOrdersQuery())) />
 
 <cfoutput>
 <div class="svoorderlist">
