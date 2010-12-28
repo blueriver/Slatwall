@@ -1,7 +1,7 @@
 <cfif isDefined('args.Vendor')>
 	<cfset local.DirectoryIterator = addURLPaging(args.Vendor.getDirectoryIterator()) />
 <cfelse>
-	<cfset local.DirectoryIterator = addURLPaging(application.Slat.directoryManager.getDirectoryIterator(request.slat.queryOrganizer.organizeQuery(application.Slat.directoryManager.getEntireDirectoryQuery()))) />
+	<cfset local.DirectoryIterator = addURLPaging(application.Slatwall.directoryManager.getDirectoryIterator(request.slatwall.queryOrganizer.organizeQuery(application.Slatwall.directoryManager.getEntireDirectoryQuery()))) />
 </cfif>
 
 <cfoutput>

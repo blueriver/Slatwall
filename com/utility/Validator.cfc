@@ -5,7 +5,7 @@ $Id: Validator.cfc 77 2010-03-05 05:06:12Z sumit.verma $
 
 Notes:
 */
-import slat.com.entity.ErrorBean;
+import slatwall.com.entity.ErrorBean;
 component accessors="true"
 {
 

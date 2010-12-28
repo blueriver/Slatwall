@@ -1,6 +1,6 @@
 <cfset variables.framework=structNew()>
 <cfset variables.framework.applicationKey="Slatwall">
-<cfset variables.framework.base="/Slat">
+<cfset variables.framework.base="/Slatwall">
 <cfset variables.framework.usingsubsystems=true>
 <cfset variables.framework.action="action">
 <cfset variables.framework.home="admin:main.default">

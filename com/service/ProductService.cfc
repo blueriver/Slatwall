@@ -1,4 +1,5 @@
-component extends="slat.com.service.BaseService" accessors="true" {
+import slatwall.com.*;
+component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	property name="skuDAO" type="any";
 	property name="contentManager" type="any";
@@ -15,18 +16,23 @@ component extends="slat.com.service.BaseService" accessors="true" {
 	}
 	
 	public any function getSmartList(required struct rc){
-		var smartList = createObject("component","slat.com.entity.SmartList").init(entityName=getEntityName(), rc=arguments.rc);
 		
-		smartList.addKeywordColumn("productCode", 1);
-		smartList.addKeywordColumn("productName", 1);
-		smartList.addKeywordColumn("productDescription", 1);
-		smartList.addKeywordColumn("brand_brandID", 1);
-		smartList.addKeywordColumn("brand_brandName", 1);
+		var smartList = new entity.SmartList(rc=arguments.rc, entityName=getEntityName());
+		
+		smartList.addKeywordProperty("productCode", 1);
+		smartList.addKeywordProperty("productName", 1);
+		smartList.addKeywordProperty("productDescription", 1);
+		smartList.addKeywordProperty("brand_brandID", 1);
+		smartList.addKeywordProperty("brand_brandName", 1);
 		
 		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
 	}
 	
 	public any function getProductTemplates() {
 		return getSettingsManager().getSite(session.siteid).getTemplates();
+	}
+	
+	public any function validateSave(required any entity) {
+		
 	}
 }

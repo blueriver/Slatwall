@@ -50,7 +50,7 @@
 
 <cffunction name="setupSession" output="false">
 	<cfset session.slat = structnew() />
-	<cfset session.slat.crumbdata = arraynew(1) />
+	<cfset session.slatwall.crumbdata = arraynew(1) />
 </cffunction>
 
 <cffunction name="setupRequest" output="false">

@@ -1,7 +1,7 @@
 <cfif isDefined('args.Product')>
 	<cfset local.SkusIterator = args.Product.getSkusIterator() />
 <cfelse>
-	<cfset local.SkusIterator = application.slat.skuManger.getSkuIterator(request.slat.queryOrganizer.organizeQuery(application.Slat.skuManager.getAllSkusQuery())) />
+	<cfset local.SkusIterator = application.slatwall.skuManger.getSkuIterator(request.slatwall.queryOrganizer.organizeQuery(application.Slatwall.skuManager.getAllSkusQuery())) />
 </cfif>
 
 <cfoutput>

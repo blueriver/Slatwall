@@ -13,7 +13,7 @@
 			<h2>#Arguments.SigninText#</h2>
 			<div class="Sign-In">
 				<h3>Registed Users Sign-In:</h3>
-				#application.slat.messageManager.dspMessage(FormName='LoginUser')#
+				#application.slatwall.messageManager.dspMessage(FormName='LoginUser')#
 				<cfif NoLabels>
 					<input type="text" autocomplete="off" name="LoginUsername" onfocus="$(this).removeClass('BackgroundEmail');" required="email" message="You Must Enter A Valid E-Mail Address" class="BackgroundEmail"  />
 					<input type="password" autocomplete="off" name="LoginPassword" onfocus="$(this).removeClass('BackgroundPassword');" required="true" message="Please Enter Your Password" class="BackgroundPassword"  />

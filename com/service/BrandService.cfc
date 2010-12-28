@@ -1,3 +1,11 @@
-component extends="slat.com.service.BaseService" accessors="true" {
-	
+component extends="slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+
+	public any function getSmartList(required struct rc){
+		var smartList = createObject("component","slatwall.com.entity.SmartList").init(rc=arguments.rc, entityName=getEntityName());
+		
+		smartList.addKeywordColumn("brandName", 1);
+		
+		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
+	}
+
 }

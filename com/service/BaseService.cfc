@@ -24,11 +24,18 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return entity;
 	}
 	
+	public any function getSmartList(required struct rc){
+		var smartList = createObject("component","slatwall.com.entity.SmartList").init(rc=arguments.rc, entityName=getEntityName());
+		
+		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
+	}
+	
 	public void function delete(required any entity){
 		getDAO.delete(entity=arguments.entity);
 	}
 	
 	public any function save(required any entity) {
-		return getDAO().save(entity=arguments.entity);
+		return validateSave(entity=arguments.entity);
+		// return getDAO().save(entity=arguments.entity);
 	}
 }

@@ -48,7 +48,7 @@
 								<button type="submit" onClick="updateCampaign(0);">Add</button>
 							<cfelse>
 								<select name="CampaignName" onChange="updateCampaign(0);">
-									<cfset Local.CampaignNameOptions = application.Slat.campaignManager.getExistingCampaignNames() />
+									<cfset Local.CampaignNameOptions = application.Slatwall.campaignManager.getExistingCampaignNames() />
 									<option value="">Select</option>
 									<cfset Local.isSelected = 0 />
 									<cfloop query="Local.CampaignNameOptions">
@@ -71,7 +71,7 @@
 									<button type="submit" onClick="updateCampaign(0);">Add</button>
 								<cfelse>
 									<select name="CampaignSource" onChange="updateCampaign(0);">
-										<cfset Local.CampaignSourceOptions = application.Slat.campaignManager.getExistingCampaignSources() />
+										<cfset Local.CampaignSourceOptions = application.Slatwall.campaignManager.getExistingCampaignSources() />
 										<option value="">Select</option>
 										<cfset Local.isSelected = 0 />
 										<cfloop query="Local.CampaignSourceOptions">

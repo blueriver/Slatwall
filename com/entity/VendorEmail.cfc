@@ -1,4 +1,4 @@
-component displayname="Vendor Email" entityname="SlatVendorEmail" table="SlatVendorEmail" persistent="true" accessors="true" output="false" extends="slat.com.entity.baseEntity" {
+component displayname="Vendor Email" entityname="SlatwallVendorEmail" table="SlatwallVendorEmail" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.baseEntity" {
 
 	property name="vendorEmailID" fieldtype="id" generator="increment";
 	property name="emailAddress" type="string";

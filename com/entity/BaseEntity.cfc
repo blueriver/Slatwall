@@ -1,4 +1,4 @@
-import "slat.com.entity.ErrorBean";
+import "slatwall.com.entity.ErrorBean";
 component displayname="Base Entity" accessors="true" {
 	
 	property name="errorBean" type="ErrorBean";
@@ -70,6 +70,23 @@ component displayname="Base Entity" accessors="true" {
 			}
 			evaluate("#evalString#");
 		}
+	}
+
+	public any function isNew() {
+		var identifierColumns = ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
+		var returnNew = true;
+		for(var i=1; i <= arrayLen(identifierColumns); i++){
+			if(structKeyExists(variables, identifierColumns[i]) && !isNull(variables[identifierColumns[i]])) {
+				returnNew = false;
+			}
+		}
+		return returnNew;
+	}
+	
+	public string function getClassName(){
+		writeDump(getMetaData(this));
+		abort;
+		return ListLast(GetMetaData(this).entitynam, "." );
 	}
 	
 	// @hint Private helper function for returning the any of the services in the application

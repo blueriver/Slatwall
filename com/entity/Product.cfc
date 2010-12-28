@@ -1,4 +1,4 @@
-component displayname="Product" entityname="SlatProduct" table="slatproduct" persistent="true" extends="slat.com.entity.baseEntity" {
+component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
 	// Persistant Properties
 	property name="productID" type="string" fieldtype="id" generator="guid";
@@ -8,7 +8,7 @@ component displayname="Product" entityname="SlatProduct" table="slatproduct" per
 	property name="productName" type="string" default="" persistent=true displayname="Product Name" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" type="string" default="" persistent=true displayname="Product Code" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" type="string" default="" persistent=true displayname="Product Description" hint="HTML Formated description of the Product";
-	property name="productYear" type="string" default="" persistent=true displayname="Product Year" hint="Products specific model year if it has one";
+	property name="productYear" type="numeric" default=0 persistent=true displayname="Product Year" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinued"	type="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="showOnWebRetail"	type="boolean" default=false persistent=true displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
 	property name="showOnWebWholesale" type="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";

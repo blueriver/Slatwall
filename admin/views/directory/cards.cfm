@@ -1,7 +1,7 @@
 <cfif isDefined('args.Vendor')>
 	<cfset local.DirectoryIteratory = args.Vendor.getDirectoryIterator() />
 <cfelse>
-	<cfset local.DirectoryIteratory = application.Slat.directoryManager.getDirectoryIterator(request.slat.queryOrganizer.organizeQuery(application.Slat.directoryManager.getEntireDirectoryQuery())) />
+	<cfset local.DirectoryIteratory = application.Slatwall.directoryManager.getDirectoryIterator(request.slatwall.queryOrganizer.organizeQuery(application.Slatwall.directoryManager.getEntireDirectoryQuery())) />
 </cfif>
 <cfoutput>
 <div class="svoDirectoryCards">

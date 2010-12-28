@@ -1,7 +1,7 @@
 component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
-	property name="productService" type="slat.com.service.ProductService";
+	property name="productService" type="Slatwall.com.service.ProductService";
 
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";

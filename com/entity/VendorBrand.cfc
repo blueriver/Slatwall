@@ -1,4 +1,4 @@
-component displayname="Vendor Brand" entityname="SlatVendorBrand" table="SlatVendorBrand" persistent="true" accessors="true" output="false" extends="slat.com.entity.BaseEntity" {
+component displayname="Vendor Brand" entityname="SlatwallVendorBrand" table="SlatwallVendorBrand" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
 	property name="vendorBrandID" fieldtype="id" generator="increment";

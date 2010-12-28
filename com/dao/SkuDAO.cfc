@@ -1,3 +1,3 @@
-component extends="slat.com.dao.BaseDAO" {
+component extends="slatwall.com.dao.BaseDAO" {
 
 }

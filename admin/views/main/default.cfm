@@ -18,5 +18,7 @@
 	<cfif isDefined('rc.TestFormTwo')>
 		<strong>Test Form Result Two:</strong> #rc.TestFormTwo# 
 	</cfif>
+	<br />
+	<br />
 </div>
 </cfoutput>

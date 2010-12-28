@@ -1,4 +1,4 @@
-<cfcomponent extends="slat.com.dao.skuDAO">
+<cfcomponent extends="slatwall.com.dao.skuDAO">
 
 	<cffunction name="read">
 	</cffunction>

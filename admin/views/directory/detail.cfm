@@ -1,4 +1,4 @@
-<cfset local.Directory = application.slat.directoryManager.read(DirectoryID=rc.DirectoryID) />
+<cfset local.Directory = application.slatwall.directoryManager.read(DirectoryID=rc.DirectoryID) />
 <cfoutput>
 <div class="svoVendorDetail">
 	<div class="ItemDetailMain">
