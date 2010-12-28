@@ -28,12 +28,12 @@ Installation
 	<cfset this.ormenabled = "true" />
 	<cfset this.datasource = "#MuraDatasource#" />
 	<cfset this.ormSettings.dbcreate = "update" />
-	<cfset this.ormsettings.cfclocation = "/plugins/Slat_#variables.slatwallpluginid#/com/entity" />
+	<cfset this.ormsettings.cfclocation = "/plugins/Slatwall_#variables.slatwallpluginid#/com/entity" />
 	
 	<cfset ormReload() />
 	
 	<!--- Set Custom Tags Setting --->
-	<cfset this.customtagpaths = "#this.customtagpaths#,#baseDir#/plugins/Slat_#variables.slatwallpluginid#/tags" />
+	<cfset this.customtagpaths = "#this.customtagpaths#,#baseDir#/plugins/Slatwall_#variables.slatwallpluginid#/tags" />
 	
 <!--- End: Setup Slatwall --->
 
