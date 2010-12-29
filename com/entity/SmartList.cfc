@@ -5,7 +5,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 
 	property name="filters" type="struct" hint="This struct holds any filters that are set on the entities properties";
 	property name="ranges" type="struct" hint="This struct holds any ranges set on any of the entities properties";
-	property name="orders" type="struct" hint="This struct holds the display order specification based on property";
+	property name="orders" type="array" hint="This struct holds the display order specification based on property";
 	
 	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
 	property name="keywords" type="array" hint="This array holds all of the keywords that were searched for";
@@ -26,7 +26,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		// Set defaults for the main properties
 		setFilters(structNew());
 		setRanges(structNew());
-		setOrders(structNew());
+		setOrders(arrayNew(1));
 		setKeywordProperties(structNew());
 		setKeywords(arrayNew(1));
 		setEntityStart(1);
@@ -62,23 +62,61 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	}
 	
 	public void function addFilter(required string property, required string value) {
-		if(structKeyExists(variables.filters, arguments.property)) {
-			arguments.value = "#variables.Filter[arguments.property]#^#arguments.Value#";
+		var filterProperty = getValidHQLProperty(rawProperty=arguments.property);
+		if(filterProperty != "") {
+			for(var i=1; i <= listLen(arguments.value, "^"); i++) {
+				var filterValue = getValidHQLPropertyValue(rawProperty=arguments.property, value=listGetAt(arguments.value, i, "^"));
+				if(filterValue != "") {
+					if(structKeyExists(variables.filters, filterProperty)) {
+						variables.filters[filterProperty] = "#variables.filters[filterProperty]#^#filterValue#";
+					} else {
+						structInsert(variables.filters, filterProperty, filterValue);
+					}
+				}
+			}
 		}
-		structInsert(variables.filters, arguments.property, arguments.value);
 	}
 	
 	public void function addRange(required string property, required string value) {
-		structInsert(variables.ranges, arguments.property, arguments.value);
+		var rangeProperty = getValidHQLProperty(rawProperty=arguments.property);
+		if(rangeProperty != "") {
+			if(Find("^", arguments.value)) {
+				var lowerRange = getValidHQLPropertyValue(rawProperty=arguments.property, value=Left(arguments.value, Find("^", arguments.value)-1));
+				var upperRange = getValidHQLPropertyValue(rawProperty=arguments.property, value=Right(arguments.value, Len(arguments.value) - Find("^", arguments.value)));
+				if(isNumeric(lowerRange) && isNumeric(upperRange) && lowerRange <= upperRange) {
+					if(structKeyExists(variables.filters, rangeProperty)) {
+						variables.ranges[rangeProperty] = "#lowerRange#^#upperRange#";
+					} else {
+						structInsert(variables.ranges, rangeProperty, "#lowerRange#^#upperRange#");
+					}
+				}
+			}
+		}
 	}
 	
-	public void function addOrder(required string property, required string value) {
-		if(arguments.value == "A") {
-			arguments.value = "ASC";
-		} else if (arguments.value == "D") {
-			arguments.value = "DESC";
+	public void function addOrder(required string orderStatement, numeric position) {
+		var orderStruct = structNew();
+		var orderProperty = getValidHQLProperty(rawProperty=Left(arguments.orderStatement, Find("|", arguments.orderStatement)-1));
+		writeDump(orderProperty);
+		if(orderProperty != "") {
+			var orderDirection = Right(arguments.orderStatement, Len(arguments.orderStatement) - Find("|", arguments.orderStatement));
+			if(orderDirection == "A" || orderDirection == "ASC") {
+				orderDirection = "ASC";
+			} else if(orderDirection == "D" || orderDirection == "DESC") {
+				orderDirection = "DESC";
+			} else {
+				orderDirection = "";
+			}
+			if(orderDirection != "") {
+				ordertStruct.property = orderProperty;
+				ordertStruct.direction = orderDirection;
+				if(isDefined("arguments.position") && arguments.position < arrayLen(variables.orders)) {
+					arrayInsertAt(variables.orders, ordertStruct, arguments.propertyOrder);
+				} else {
+					arrayAppend(variables.orders, Duplicate(ordertStruct));
+				}
+			}
 		}
-		structInsert(variables.orders, arguments.property, arguments.value);
 	}
 	
 	public void function addKeywordProperty(required string property, required string value) {
@@ -91,13 +129,16 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				addFilter(property=Replace(i,"F_", ""), value=arguments.rc[i]);
 			} else if(find("R_",i)) {
 				addRange(property=Replace(i,"R_", ""), value=arguments.rc[i]);
-			} else if(find("O_",i)) {
-				addOrder(property=Replace(i,"O_", ""), value=arguments.rc[i]);
 			} else if(find("E_Show",i)) {
 				setEntityShow(arguments.rc[i]);
 			} else if(find("E_Start",i)) {
 				setEntityStart(arguments.rc[i]);
+			} else if(findNoCase("OrderBy",i)) {
+				for(var ii=1; ii <= listLen(arguments.rc[i], "^"); ii++ ) {
+					addOrder(orderStatement=listGetAt(arguments.rc[i], ii, "^"));
+				}
 			}
+			
 		}
 		if(isDefined("rc.Keyword")){
 			var KeywordList = Replace(arguments.rc.Keyword," ","^","all");
@@ -117,19 +158,21 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return variables.entityMetaData;
 	}
 	
-	private string function getValidWhereProperty(required string rawProperty) {
+	private string function getValidHQLProperty(required string rawProperty) {
 		var entityProperties = getEntityMetaData().properties;
 		var returnProperty = "";
+
 		for(var i=1; i <= arrayLen(entityProperties); i++){
 			if(entityProperties[i].name == arguments.rawProperty) {
 				returnProperty = "a#getEntityName()#.#entityProperties[i].name#";
-				break;	
+				break;
 			}
 		}
+		
 		return returnProperty;
 	}
 	
-	private string function getValidWherePropertyValue(required string rawProperty, required any value) {
+	private string function getValidHQLPropertyValue(required string rawProperty, required any value) {
 		var entityProperties = getEntityMetaData().properties;
 		var returnValue = "";
 		for(var i=1; i <= arrayLen(entityProperties); i++){
@@ -149,9 +192,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnValue;
 	}
 	
-	public string function getHQLWhere(boolean suppressWhere) {
-		
-		var whereReturn = "";
+	public string function getHQLWhereOrder(boolean suppressWhere) {
+		var returnWhereOrder = "";
 		
 		// Check to see if any Filters, Ranges or Keyword requirements exist.  If not, don't create a where
 		if(structCount(variables.Filters) || structCount(variables.Ranges) || arrayLen(variables.Keywords)) {
@@ -161,69 +203,66 @@ component displayname="Smart List" accessors="true" persistent="false" {
 			var CurrentRange = 0;
 			
 			if(isDefined("arguments.suppressWhere") && arguments.suppressWhere) {
-				whereReturn = "AND";
-			} else {
-				whereReturn = "WHERE";
+				returnWhereOrder = "AND";
+			} else if (structCount(variables.filters) > 0 || structCount(variables.ranges) > 0) {
+				returnWhereOrder = "WHERE";
 			}
 			
-			// Add any filters to the where statement
+			// Add any filters to the returnWhereOrder
 			for(filter in variables.filters) {
+				currentFilter = currentFilter + 1;
+				currentFilterValue = 0;
 				
-				var filterProperty = getValidWhereProperty(filter);
+				for(var i=1; i <= listLen(variables.filters[filter], "^"); i++) {
 				
-				if(filterProperty != "") {
-					currentFilter = currentFilter + 1;
+					var filterValue = listGetAt(variables.filters[filter], i, "^");
+					currentFilterValue = currentFilterValue + 1;
+				
+					if(currentFilter > 1 && currentFilterValue == 1) {
+						returnWhereOrder &= " AND (";
+					} else if (currentFilterValue == 1) {
+						returnWhereOrder &= " (";
+					} else if (currentFilterValue > 1) {
+						returnWhereOrder &= " OR";
+					}
+				
+					returnWhereOrder &= " #filter# = #filterValue#";
 					
-					currentFilterValue = 0;
-					for(var i=1; i <= listLen(variables.filters[filter], "^"); i++) {
-						var filterValue = getValidWherePropertyValue(filter, listGetAt(variables.filters[filter], i, "^"));
-						if(filterValue neq "") {
-							currentFilterValue = currentFilterValue + 1;
-							if(currentFilter > 1 && currentFilterValue == 1) {
-								whereReturn &= " AND (";
-							} else if (currentFilterValue == 1) {
-								whereReturn &= " (";
-							} else if (currentFilterValue > 1) {
-								whereReturn &= " OR";
-							}
-							whereReturn &= " #filterProperty# = #filterValue#";
-						}
-					}
-					if(currentFilterValue > 0) {
-						whereReturn = "#whereReturn# )";
-					} else {
-						currentFilter = currentFilter - 1;
+					if (currentFilterValue == listLen(variables.filters[filter], "^")) {
+						returnWhereOrder &= " )";
 					}
 				}
 			}
 			
-			// Add any ranges to the where statement
+			// Add any ranges to returnWhereOrder
 			for(range in variables.ranges) {
-				
-				var rangeProperty = getValidWhereProperty(range);
-				
-				if(rangeProperty != "") {
-					if(Find("^", variables.ranges[range])) {
-						var lowerRange = getValidWherePropertyValue(range, Left(variables.ranges[range], Find("^", variables.ranges[range])-1));
-						var upperRange = getValidWherePropertyValue(range, Right(variables.ranges[range], Len(variables.ranges[range]) - Find("^", variables.ranges[range])));
-						if(isNumeric(lowerRange) && isNumeric(upperRange) && lowerRange <= upperRange) {
-							currentRange = currentRange + 1;
-							if(currentRange > 1 || currentFilter > 0) {
-								whereReturn = "#whereReturn# AND";
-							}
-							whereReturn = "#whereReturn# (#rangeProperty# >= #lowerRange# and #rangeProperty# <= #upperRange#)";
-						}
+				if(Find("^", variables.ranges[range])) {
+					var lowerRange = Left(variables.ranges[range], Find("^", variables.ranges[range])-1);
+					var upperRange = Right(variables.ranges[range], Len(variables.ranges[range]) - Find("^", variables.ranges[range]));
+					currentRange = currentRange + 1;
+					if(currentRange > 1 || currentFilter > 0) {
+						returnWhereOrder &= " AND";
 					}
+					returnWhereOrder &= " (#range# >= #lowerRange# and #range# <= #upperRange#)";
 				}
 			}
 			
-			if(currentRange == 0 && currentFilter == 0) {
-				whereReturn = "";
-			}
+			// Add Keywords to returnWhereOrder
 			
 		}
-	
-		return whereReturn;
+		
+		// Add Order to returnWhereOrder
+		if(arrayLen(variables.orders)) {
+			returnWhereOrder &= " ORDER BY ";
+			for(var i=1; i <= arrayLen(variables.orders); i++) {
+				returnWhereOrder &= " #variables.orders[i].property# #variables.orders[i].direction#";
+				if(i < arrayLen(variables.orders)) {
+					returnWhereOrder &= ",";
+				}
+			}
+		}
+		
+		return returnWhereOrder;
 	}
 
 	public void function setRecords(required any records) {
@@ -267,6 +306,10 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	}
 	
 	public void function applyOrder() {
+		// Loop over the records array
+		for(var i=1; i <= arrayLen(variables.records); i++) {
+		}
+		
 		// Add Code to organize by Order & SearchScore.
 	}
 	
@@ -279,4 +322,5 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 		return variables.entityArray;
 	}
+	
 }

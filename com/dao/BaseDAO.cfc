@@ -19,7 +19,7 @@ component output="false" {
 	
 	public any function fillSmartList(required any smartList, required any entityName) {
 		var entityRecords = arrayNew(1);
-		var HQL = " from #arguments.entityName# a#arguments.entityName# #arguments.smartList.getHQLWhere()#";
+		var HQL = " from #arguments.entityName# a#arguments.entityName# #arguments.smartList.getHQLWhereOrder()#";
 		
 		entityRecords = ormExecuteQuery(HQL);
 		
