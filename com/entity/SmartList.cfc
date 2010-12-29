@@ -22,6 +22,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	property name="entityArray" type="array" hint="This is the completed array of entities after filter, range, order, keywords and paging.";	
 
+	property name="fillTime" type="numeric";
+	property name="searchTime" type="numeric";
+
 	public any function init(struct rc, required string entityName) {
 		// Set defaults for the main properties
 		setFilters(structNew());
@@ -61,11 +64,11 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	}
 	
-	public void function addFilter(required string property, required string value) {
-		var filterProperty = getValidHQLProperty(rawProperty=arguments.property);
+	public void function addFilter(required string rawProperty, required string value) {
+		var filterProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
 		if(filterProperty != "") {
 			for(var i=1; i <= listLen(arguments.value, "^"); i++) {
-				var filterValue = getValidHQLPropertyValue(rawProperty=arguments.property, value=listGetAt(arguments.value, i, "^"));
+				var filterValue = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=listGetAt(arguments.value, i, "^"));
 				if(filterValue != "") {
 					if(structKeyExists(variables.filters, filterProperty)) {
 						variables.filters[filterProperty] = "#variables.filters[filterProperty]#^#filterValue#";
@@ -77,14 +80,14 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	public void function addRange(required string property, required string value) {
-		var rangeProperty = getValidHQLProperty(rawProperty=arguments.property);
+	public void function addRange(required string rawProperty, required string value) {
+		var rangeProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
 		if(rangeProperty != "") {
 			if(Find("^", arguments.value)) {
-				var lowerRange = getValidHQLPropertyValue(rawProperty=arguments.property, value=Left(arguments.value, Find("^", arguments.value)-1));
-				var upperRange = getValidHQLPropertyValue(rawProperty=arguments.property, value=Right(arguments.value, Len(arguments.value) - Find("^", arguments.value)));
+				var lowerRange = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=Left(arguments.value, Find("^", arguments.value)-1));
+				var upperRange = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=Right(arguments.value, Len(arguments.value) - Find("^", arguments.value)));
 				if(isNumeric(lowerRange) && isNumeric(upperRange) && lowerRange <= upperRange) {
-					if(structKeyExists(variables.filters, rangeProperty)) {
+					if(structKeyExists(variables.ranges, rangeProperty)) {
 						variables.ranges[rangeProperty] = "#lowerRange#^#upperRange#";
 					} else {
 						structInsert(variables.ranges, rangeProperty, "#lowerRange#^#upperRange#");
@@ -97,7 +100,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	public void function addOrder(required string orderStatement, numeric position) {
 		var orderStruct = structNew();
 		var orderProperty = getValidHQLProperty(rawProperty=Left(arguments.orderStatement, Find("|", arguments.orderStatement)-1));
-		writeDump(orderProperty);
+		
 		if(orderProperty != "") {
 			var orderDirection = Right(arguments.orderStatement, Len(arguments.orderStatement) - Find("|", arguments.orderStatement));
 			if(orderDirection == "A" || orderDirection == "ASC") {
@@ -119,16 +122,23 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	public void function addKeywordProperty(required string property, required string value) {
-		structInsert(variables.keywordProperties, arguments.property, arguments.value);
+	public void function addKeywordProperty(required string rawProperty, required numeric weight) {
+		var keywordProperty = getValidHQLProperty(arguments.rawProperty);
+		if(keywordProperty != "" && isNumeric(arguments.weight)) {
+			if(structKeyExists(variables.keywordProperties, keywordProperty)) {
+				variables.keywordProperties[keywordProperty] = arguments.weight;
+			} else {
+				structInsert(variables.keywordProperties, keywordProperty, arguments.weight);
+			}
+		}
 	}
 	
 	public void function applyRC(required struct rc) {
 		for(i in arguments.rc) {
 			if(find("F_",i)) {
-				addFilter(property=Replace(i,"F_", ""), value=arguments.rc[i]);
+				addFilter(rawProperty=Replace(i,"F_", ""), value=arguments.rc[i]);
 			} else if(find("R_",i)) {
-				addRange(property=Replace(i,"R_", ""), value=arguments.rc[i]);
+				addRange(rawProperty=Replace(i,"R_", ""), value=arguments.rc[i]);
 			} else if(find("E_Show",i)) {
 				setEntityShow(arguments.rc[i]);
 			} else if(find("E_Start",i)) {
@@ -144,6 +154,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 			var KeywordList = Replace(arguments.rc.Keyword," ","^","all");
 			KeywordList = Replace(KeywordList,"%20","^","all");
 			KeywordList = Replace(KeywordList,"+","^","all");
+			KeywordList = Replace(KeywordList,"'","","all");
+			KeywordList = Replace(KeywordList,"-","","all");
 			for(var i=1; i <= listLen(KeywordList, "^"); i++) {
 				arrayAppend(variables.Keywords, listGetAt(KeywordList, i, "^"));
 			}
@@ -198,13 +210,15 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		// Check to see if any Filters, Ranges or Keyword requirements exist.  If not, don't create a where
 		if(structCount(variables.Filters) || structCount(variables.Ranges) || arrayLen(variables.Keywords)) {
 			
-			var CurrentFilter = 0;
-			var CurrentFilterValue = 0;
-			var CurrentRange = 0;
+			var currentFilter = 0;
+			var currentFilterValue = 0;
+			var currentRange = 0;
+			var currentKeywordProperty = 0;
+			var currentKeyword = 0;
 			
 			if(isDefined("arguments.suppressWhere") && arguments.suppressWhere) {
 				returnWhereOrder = "AND";
-			} else if (structCount(variables.filters) > 0 || structCount(variables.ranges) > 0) {
+			} else {
 				returnWhereOrder = "WHERE";
 			}
 			
@@ -223,13 +237,39 @@ component displayname="Smart List" accessors="true" persistent="false" {
 					} else if (currentFilterValue == 1) {
 						returnWhereOrder &= " (";
 					} else if (currentFilterValue > 1) {
-						returnWhereOrder &= " OR";
+						returnWhereOrder &= " OR ";
 					}
 				
-					returnWhereOrder &= " #filter# = #filterValue#";
+					returnWhereOrder &= "#filter# = #filterValue#";
 					
 					if (currentFilterValue == listLen(variables.filters[filter], "^")) {
-						returnWhereOrder &= " )";
+						returnWhereOrder &= ")";
+					}
+				}
+			}
+			
+			// Add Keywords to returnWhereOrder
+			if(arrayLen(variables.keywords)) {
+				for(keywordProperty in variables.keywordProperties) {
+					currentKeywordProperty = currentKeywordProperty + 1;
+					currentKeyword = 0;
+					
+					if(currentKeywordProperty == 1 && currentFilter > 0) {
+						returnWhereOrder &= " AND (";
+					} else if (currentKeywordProperty == 1 && currentFilter == 0) {
+						returnWhereOrder &= " (";
+					} 
+					
+					for(var i=1; i <= arrayLen(variables.keywords); i++) {
+						currentKeyword = currentKeyword + 1;
+						if (currentKeyword > 1 or currentKeywordProperty > 1) {
+							returnWhereOrder &= " OR ";
+						}
+						returnWhereOrder &= "#keywordProperty# LIKE '%#variables.keywords[i]#%'";
+					}
+					
+					if (currentKeywordProperty == structCount(variables.keywordProperties)) {
+						returnWhereOrder &= ")";
 					}
 				}
 			}
@@ -240,15 +280,12 @@ component displayname="Smart List" accessors="true" persistent="false" {
 					var lowerRange = Left(variables.ranges[range], Find("^", variables.ranges[range])-1);
 					var upperRange = Right(variables.ranges[range], Len(variables.ranges[range]) - Find("^", variables.ranges[range]));
 					currentRange = currentRange + 1;
-					if(currentRange > 1 || currentFilter > 0) {
+					if(currentRange > 1 || currentFilter > 0 || currentKeywordProperty > 0) {
 						returnWhereOrder &= " AND";
 					}
 					returnWhereOrder &= " (#range# >= #lowerRange# and #range# <= #upperRange#)";
 				}
 			}
-			
-			// Add Keywords to returnWhereOrder
-			
 		}
 		
 		// Add Order to returnWhereOrder
@@ -283,36 +320,48 @@ component displayname="Smart List" accessors="true" persistent="false" {
 			applySearchScore();
 		}
 		
-		applyOrder();
 	}
 	
 	public void function applySearchScore(){
+		var searchStart = getTickCount();
+		var structSort = structNew();
+		var randomID = 0;
+		
 		for(var i=1; i <= arrayLen(variables.records); i++) {
 			var score = 0;
 			for(property in keywordProperties) {
-				if(!find("_", property)) {
+				var propertyArray = listToArray(property, ".");
+				var evalString = "variables.records[i]";
+				for(var pi=2; pi <= arrayLen(propertyArray); pi++) {
+					evalString &= ".get#propertyArray[pi]#()";
+				}
+				var data = evaluate("#evalString#");
 				for(var ki=1; ki <= arrayLen(variables.keywords); ki++) {
-					var findValue = FindNoCase(variables.keywords[ki], evaluate("variables.records[i].get#property#()"), 0);
+					var findValue = FindNoCase(variables.keywords[ki], data, 0);
 					while(findValue > 0) {
 						var score = score + (len(variables.keywords[ki]) * variables.keywordProperties[property]);
-						findValue = FindNoCase(variables.keywords[ki],  evaluate("variables.records[i].get#property#()"), findValue+1);
+						findValue = FindNoCase(variables.keywords[ki],  data, findValue+1);
 					}
 				}
-				}
-				
 			}
 			variables.records[i].setSearchScore(score);
+			randomID = rand();
+			if(find(".", score)) {
+				randomID = right(randomID, len(randomID)-2);
+			}
+			structSort[ score & randomID ] = variables.records[i];
 		}
-	}
-	
-	public void function applyOrder() {
-		// Loop over the records array
-		for(var i=1; i <= arrayLen(variables.records); i++) {
+		var scoreArray = structKeyArray(structSort);
+		
+		arraySort(scoreArray, "numeric", "desc");
+		variables.records = arrayNew(1);
+		for(var i=1; i <= arrayLen(scoreArray); i++) {
+			arrayAppend(variables.records, structSort[scoreArray[i]]);
 		}
 		
-		// Add Code to organize by Order & SearchScore.
+		setSearchTime(getTickCount()-searchStart);
 	}
-	
+
 	public array function getEntityArray(boolean refresh) {
 		if(!isDefined("variables.entityArray") || arrayLen(variables.entityArray) == 0 || (isDefined("arguments.refresh") && arguments.refresh == true)) {
 			variables.entityArray = arrayNew(1);

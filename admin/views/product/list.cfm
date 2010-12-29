@@ -1,5 +1,8 @@
 <cfoutput>
 	<div class="svoadminproductlist">
+		<form method="post">
+			<input name="Keyword" value="#rc.Keyword#" /><button type="submit">Search</button>
+		</form>
 		<table class="listtable">
 			<tr>
 				<th>Search Score</th>
@@ -9,6 +12,7 @@
 				<th>Product Code</th>
 				<th>Administration</th>
 			</tr>
+			
 			<cfloop array="#rc.ProductSmartList.getEntityArray()#" index="Local.Product">
 				<tr>
 					<td>#Local.Product.getSearchScore()# #Local.Product.isNew()#</td>
@@ -24,5 +28,9 @@
 				</tr>
 			</cfloop>
 		</table>
+		<strong>List Fill Time:</strong> #rc.ProductSmartList.getFillTime()# ms <br />
+		<cfif arrayLen(rc.ProductSmartList.getKeywords())>
+			<strong>List Search Time:</strong> #rc.ProductSmartList.getSearchTime()# ms
+		</cfif>
 	</div>
 </cfoutput>

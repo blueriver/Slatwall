@@ -13,6 +13,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function list(required struct rc) {
+		param name="rc.keyword" default="";
+		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	

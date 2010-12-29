@@ -19,11 +19,11 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		
 		var smartList = new entity.SmartList(rc=arguments.rc, entityName=getEntityName());
 		
-		smartList.addKeywordProperty("productCode", 1);
-		smartList.addKeywordProperty("productName", 1);
-		smartList.addKeywordProperty("productDescription", 1);
-		smartList.addKeywordProperty("brand_brandID", 1);
-		smartList.addKeywordProperty("brand_brandName", 1);
+		smartList.addKeywordProperty(rawProperty="productCode", weight=1);
+		smartList.addKeywordProperty(rawProperty="productName", weight=1);
+		smartList.addKeywordProperty(rawProperty="productDescription", weight=1);
+		smartList.addKeywordProperty(rawProperty="brand_brandID", weight=1);
+		smartList.addKeywordProperty(rawProperty="brand_brandName", weight=1);
 		
 		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
 	}
