@@ -20,5 +20,7 @@
 	</cfif>
 	<br />
 	<br />
+	<cfset myTest = ormExecuteQuery(" from SlatwallProduct aSlatwallProduct where aSlatwallProduct.brand.brandName = 'YES MAN'") />
+	<cfdump var="#myTest#" />
 </div>
 </cfoutput>

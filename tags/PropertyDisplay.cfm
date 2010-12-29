@@ -40,7 +40,6 @@
 		<dd class="spd#LCASE(PropertyMD.Name)#">
 			<cfif attributes.edit>
 				<cfif PropertyMD.type eq 'boolean'>
-					<input type="hidden" name="#PropertyMD.Name#" value="0">
 					<input type="checkbox" name="#PropertyMD.Name#" value="1" <cfif attributes.Value>checked="checked"</cfif> />
 				<cfelseif PropertyMD.type eq 'string' or PropertyMD.type eq 'numeric'>
 					<input type="text" name="#PropertyMD.Name#" value="#attributes.Value#" />

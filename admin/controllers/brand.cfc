@@ -21,4 +21,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.brand = getBrandService().save(entity=rc.brand);
 		variables.fw.redirect(action="admin:brand.detail", queryString="brandID=#rc.brand.getBrandID()#");
 	}
+	
+	public void function delete(required struct rc) {
+		getBrandService().delete(entity=rc.brand);
+		variables.fw.redirect(action="admin:brand.list");
+	}
 }

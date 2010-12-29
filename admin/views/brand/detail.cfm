@@ -1,6 +1,6 @@
 <cfoutput>
 	<div class="ItemDetailMain">
-		#rc.Brand.getPropertyDisplay('BrandName')#
-		#rc.Brand.getPropertyDisplay('BrandWebsite')#
+		<cf_PropertyDisplay object="#rc.Brand#" property="BrandName">
+		<cf_PropertyDisplay object="#rc.Brand#" property="BrandWebsite">
 	</div>
 </cfoutput>

@@ -58,6 +58,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.brand;
 	}
 	
+	public any function getBrandOptions() {
+		if(!isDefined("variables.brandOptions")) {
+			variables.brandOptions = getService(service="BrandService").list();
+		}
+		return variables.brandOptions;
+	}
+	
 	public array function getSkus() {
 		if(!isDefined("variables.skus")) {
 			variables.skus = arrayNew(1);

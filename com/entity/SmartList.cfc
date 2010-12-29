@@ -34,6 +34,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		setKeywords(arrayNew(1));
 		setEntityStart(1);
 		setEntityShow(10);
+		setEntityMetaData(structNew());
 		
 		setQueryRecords(queryNew('empty'));
 		setEntityRecords(arrayNew(1));
@@ -163,32 +164,71 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	}
 	
 	
-	public struct function getEntityMetaData() {
-		if(!isDefined("variables.entityMetaData")) {
-			variables.entityMetaData = getMetadata(entityNew(getEntityName()));
+	public struct function getEntityMetaData(required string entityName) {
+		if(!structKeyExists(variables.entityMetaData, arguments.entityName)) {
+			variables.entityMetaData[arguments.entityName] = getMetadata(entityNew("#arguments.EntityName#"));
 		}
-		return variables.entityMetaData;
+		return variables.entityMetaData[arguments.entityName];
 	}
 	
 	private string function getValidHQLProperty(required string rawProperty) {
-		var entityProperties = getEntityMetaData().properties;
 		var returnProperty = "";
-
+		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
+		var currentEntityName = getEntityName();
+		
+		for(var i=1; i <= arrayLen(entityPropertyArray); i++){
+			var entityProperty = getValidEntityProperty(entityPropertyArray[i], currentEntityName);
+			if(entityProperty != ""){
+				if(i==1){
+					returnProperty &= "a#currentEntityName#.#entityProperty#";
+				} else {
+					returnProperty &= ".#entityProperty#";
+				}
+				currentEntityName = "Slatwall#entityProperty#";
+			} else {
+				returnProperty = "";
+			}
+		}
+		return returnProperty;
+	}
+			
+	private string function getValidHQLPropertyValue(required string rawProperty, required any value) {
+		var returnValue = "";
+		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
+		var currentEntityName = getEntityName();
+		
+		for(var i=1; i <= arrayLen(entityPropertyArray); i++){
+			var entityProperty = getValidEntityProperty(entityPropertyArray[i], currentEntityName);
+			if(entityProperty != ""){
+				if(i == arrayLen(entityPropertyArray)) {
+					returnValue = getValidEntityPropertyValue(entityProperty, arguments.value, currentEntityName);
+				} else {
+					currentEntityName = "Slatwall#entityProperty#";
+				}
+			}
+		}
+		return returnValue;
+	}
+	
+	private string function getValidEntityProperty(required string rawProperty, entityName) {
+		var returnProperty = "";
+		var entityProperties = getEntityMetaData(entityName=arguments.entityName).properties;
+		
 		for(var i=1; i <= arrayLen(entityProperties); i++){
-			if(entityProperties[i].name == arguments.rawProperty) {
-				returnProperty = "a#getEntityName()#.#entityProperties[i].name#";
+			if (entityProperties[i].name == arguments.rawProperty) {
+				returnProperty = entityProperties[i].name;
 				break;
 			}
 		}
-		
 		return returnProperty;
 	}
 	
-	private string function getValidHQLPropertyValue(required string rawProperty, required any value) {
-		var entityProperties = getEntityMetaData().properties;
+	private string function getValidEntityPropertyValue(required string rawProperty, required string value, entityName) {
 		var returnValue = "";
+		var entityProperties = getEntityMetaData(entityName=arguments.entityName).properties;
+		
 		for(var i=1; i <= arrayLen(entityProperties); i++){
-			if(entityProperties[i].name == arguments.rawProperty) {
+			if (entityProperties[i].name == arguments.rawProperty) {
 				if(entityProperties[i].type == "string") {
 					returnValue = "'#arguments.value#'";
 				} else if (entityProperties[i].type == "numeric" && isNumeric(arguments.value)) {

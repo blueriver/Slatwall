@@ -2,6 +2,7 @@ component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="Slatwall.com.service.ProductService";
+	property name="brandService" type="Slatwall.com.service.BrandService";
 
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -10,6 +11,7 @@ component extends="BaseController" output=false accessors=true {
 		if(!isDefined("rc.product")) {
 			rc.product = getProductService().getNewEntity();
 		}
+		
 	}
 	
 	public void function list(required struct rc) {
@@ -21,7 +23,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function update(required struct rc) {
 	
 		rc.product = variables.fw.populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
-		
+		rc.product.setBrand(getBrandService().getByID(ID=rc.Brand_BrandID));
 		//Set Filename for product if it isn't already defined.
 		if(rc.product.getFilename EQ "") {
 			rc.product.setFilename(rc.product.getProductName());
