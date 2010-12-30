@@ -1,6 +1,6 @@
 <cfoutput>
 	<div class="svoutilitytoolbar">
-		#view('admin:utility/toolbarsearch', args)#
+		#view('admin:utility/toolbarsearch')#
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
@@ -29,7 +29,10 @@
 		<ul class="MainToolbar">
 			<li class="LogoSearch">
 				<img src="/plugins/#getPluginConfig().getDirectory()#/images/toolbar/toolbar_logo.png" />
-				<input type="text" name="AdminSearch" class="AdminSearch" />
+				<form name="ToolbarSearch" method="post" onKeyup="toolbarSearchKeyup(this);" onSubmit="return slatwallAjaxFormSubmit(this);">
+					<input type="hidden" name="action" value="admin:utility.toolbarsearch" />
+					<input type="text" name="ToolbarKeyword" class="AdminSearch" />
+				</form>
 			</li>
 			<li><a href="http://#cgi.http_host#/">Website</a></li>
 			<cfif isDefined('request.contentBean')>

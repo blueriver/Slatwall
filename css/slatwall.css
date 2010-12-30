@@ -151,25 +151,25 @@ div.svoutilitytoolbar ul.MainMenu li div.MenuSubOne ul li			{background:none; wi
 div.svoutilitytoolbar ul.MainMenu li div.MenuSubOne ul li a			{color:#cdcdcd; width:auto; font-size:12px; padding:5px;}
 div.svoutilitytoolbar ul.MainMenu li div.MenuSubOne ul li a:hover	{background:none;color:#ffffff;}
 
-div.svoutilitytoolbarsearch													{height:auto; width:auto;}
-div.svoutilitytoolbarsearch ul.SearchMenu									{display:block;position:fixed; bottom:0px; width:270px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li								{display:block; float:none; background: transparent url(../images/toolbar/toolbar_menu_bg.png) repeat-y top left; height:auto;}
-div.svoutilitytoolbarsearch ul.SearchMenu li.MenuTop						{height:10px; background: transparent url(../images/toolbar/toolbar_menu_top.png) no-repeat top left;}
-div.svoutilitytoolbarsearch ul.SearchMenu li.MenuBottom						{height:70px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li a								{display:block; font-size:11px; font-weight:bold; color:#333;padding:2px 20px 2px 20px; border-bottom:1px solid #cdcdcd; width:217px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li a:hover						{background-color:#efefef;}
+div.svoadminutilitytoolbarsearch													{height:auto; width:auto;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu									{display:block;position:fixed; bottom:0px; width:270px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li								{display:block; float:none; background: transparent url(../images/toolbar/toolbar_menu_bg.png) repeat-y top left; height:auto;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.MenuTop						{height:10px; background: transparent url(../images/toolbar/toolbar_menu_top.png) no-repeat top left;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.MenuBottom						{height:70px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li a								{display:block; font-size:11px; font-weight:bold; color:#333;padding:2px 20px 2px 20px; border-bottom:1px solid #cdcdcd; width:217px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li a:hover						{background-color:#efefef;}
 
-div.svoutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne					{display:none; width:200px;padding:20px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li:hover div.MenuSubOne			{display:block;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne					{display:none; width:200px;padding:20px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li:hover div.MenuSubOne			{display:block;}
 
-div.svoutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne					{position:relative;left:258px;top:-40px;background-color:#333333;}
-div.svoutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul				{width:auto;height:1000px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li			{background:none; width:auto; height:auto;}
-div.svoutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li a			{color:#cdcdcd; width:auto; font-size:12px; padding:5px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li a:hover	{background:none;color:#ffffff;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne					{position:relative;left:258px;top:-40px;background-color:#333333;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul				{width:auto;height:1000px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li			{background:none; width:auto; height:auto;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li a			{color:#cdcdcd; width:auto; font-size:12px; padding:5px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li a:hover	{background:none;color:#ffffff;}
 
-div.svoutilitytoolbarsearch ul.SearchMenu li.SearchHeader a					{background-color:#f26521;font-size:12px;}
-div.svoutilitytoolbarsearch ul.SearchMenu li.Spacer							{height:10px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.SearchHeader a					{background-color:#f26521;font-size:12px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.Spacer							{height:10px;}
 
 div.svoutilitycampaignlink		{position:absolute; bottom:0px; left:0px; height:120px; background-color:#ffffff; width:100%;}
 

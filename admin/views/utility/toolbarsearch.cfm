@@ -1,3 +1,44 @@
+<cfoutput>
+	<cfif isDefined("rc.toolbarKeyword") and len(rc.toolbarKeyword) gte 2>
+		<div class="svoadminutilitytoolbarsearch">
+			<ul class="SearchMenu">
+				<li class="MenuTop">&nbsp;</li>
+				
+				<cfif arrayLen(rc.productSmartList.getEntityArray())>
+					<li class="SearchHeader top"><a href="#buildURL(action='product.list',querystring='Keyword=#rc.toolbarKeyword#')#">Products</a></li>
+					<cfloop array="#rc.productSmartList.getEntityArray()#" index="local.Product">
+						<li class="SearchResult"><a href="#buildURL(action='product.detail',querystring='ProductID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></li>
+					</cfloop>
+					<li class="Spacer">&nbsp;</li>
+				</cfif>
+				
+				<cfif arrayLen(rc.brandSmartList.getEntityArray())>
+					<li class="SearchHeader top"><a href="#buildURL(action='brand.list',querystring='Keyword=#rc.toolbarKeyword#')#">Brands</a></li>
+					<cfloop array="#rc.brandSmartList.getEntityArray()#" index="local.Brand">
+						<li class="SearchResult"><a href="#buildURL(action='brand.detail',querystring='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></li>
+					</cfloop>
+					<li class="Spacer">&nbsp;</li>
+				</cfif>
+				<!---
+				<cfif local.VendorsSearch.recordCount>
+					<li class="SearchHeader"><a href="#buildURL(action='vendor.list',querystring='Keyword=#args.keyword#')#">Vendors</a></li>
+					<cfloop query="local.VendorsSearch" endrow="5">
+						<li class="SearchResult"><a href="#buildURL(action='vendor.detail',querystring='VendorID=#local.VendorsSearch.VendorID#')#">#local.VendorsSearch.Company#</a></li>
+					</cfloop>
+					<li class="Spacer">&nbsp;</li>
+				</cfif>
+				--->
+				<li class="MenuBottom">&nbsp;</li>
+			</ul>
+		</div>
+	<cfelse>
+		<div class="svoadminutilitytoolbarsearch" style="display:none;"></div>
+	</cfif>
+</cfoutput>
+
+
+<!---
+
 <cfparam name="args.Keyword" default="" />
 <cfif len(args.Keyword)>
 	
@@ -76,3 +117,5 @@
 	</cfif>
 		
 </cfoutput>
+
+--->

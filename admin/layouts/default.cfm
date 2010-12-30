@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
-	#application.pluginManager.renderAdminToolBar()#
+	<!--- #application.pluginManager.renderAdminToolBar()# --->
+	<script type="text/javascript">
+		var slat_pluginid = #getPluginConfig().getPluginID()#;
+	</script>
 	<script language="Javascript" type="text/javascript" src="/plugins/#getPluginConfig().getDirectory()#/js/jquery.js"></script>
 	<script language="Javascript" type="text/javascript" src="/plugins/#getPluginConfig().getDirectory()#/js/slatwall.js"></script>
 	<script language="Javascript" type="text/javascript" src="/plugins/#getPluginConfig().getDirectory()#/js/fw1AjaxAdapter.js"></script>

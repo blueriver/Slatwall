@@ -1,7 +1,7 @@
 var search_delay = 0;
+var search_form = 0;
 var svo_request_id = 0;
 var ajax_request_id = 0;
-var slat_pluginid = 2;
 
 $(document).ready(function(){
 	$('li.LogoSearch img').click(function(e){
@@ -14,18 +14,20 @@ $(document).ready(function(){
 	});
 	
 	$("input.AdminSearch").val("");
-	
-	$("input.AdminSearch").keyup(function(){
-		clearTimeout(search_delay);
-		if($(this).val() != ''){
-			search_delay = setTimeout("adminSearch()",200);
-			$("div.svoutilitytoolbarsearch").css('display', 'block');
-		}else{
-			$("div.svoutilitytoolbarsearch").css('display', 'none');
-		}
-		
-	});
+
 });
+
+function toolbarSearchKeyup(form){
+	clearTimeout(search_delay);
+	search_form = form;
+	if($("input.AdminSearch").val() != ''){
+		search_delay = setTimeout("adminSearch()",200);
+	}
+}
+
+function adminSearch(){
+	slatwallAjaxFormSubmit(search_form);
+}
 
 $(document).click(function(e){
 	$('ul.MainMenu').hide('fast');
