@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
-	<!--- #application.pluginManager.renderAdminToolBar()# --->
+	#application.pluginManager.renderAdminToolBar()#
 	<script type="text/javascript">
 		var slat_pluginid = #getPluginConfig().getPluginID()#;
 	</script>
