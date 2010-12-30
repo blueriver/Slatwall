@@ -58,16 +58,24 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return variables.entityEnd;
 	}
 	
+	public numeric function getCurrentPage() {
+		return ceiling(getEntityStart() / getEntityShow());
+	}
+	
+	public numeric function getEntityStart() {
+		if(isDefined("variables.currentPage")) {
+			variables.entityStart = ((variables.currentPage - 1) * getEntityShow()) + 1;
+		}
+		return variables.entityStart;
+	}
+	
 	public numeric function getTotalEntities() {
 		return arrayLen(variables.records);
 	}
 	
-	public numeric function currentPage() {
-	
-	}
-	
-	public numeric function totalPages() {
-	
+	public numeric function getTotalPages() {
+		variables.totalPages = ceiling(getTotalEntities() / getEntityShow());
+		return variables.totalPages;
 	}
 	
 	public void function addFilter(required string rawProperty, required string value) {
@@ -145,10 +153,18 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				addFilter(rawProperty=Replace(i,"F_", ""), value=arguments.rc[i]);
 			} else if(findNoCase("R_",i)) {
 				addRange(rawProperty=Replace(i,"R_", ""), value=arguments.rc[i]);
-			} else if(findNoCase("E_Show",i)) {
-				setEntityShow(arguments.rc[i]);
+			} else if(findNoCase("E_Show",i) || findNoCase("P_Show",i)) {
+				if(isNumeric(arguments.rc[i])){
+					setEntityShow(arguments.rc[i]);
+				}
 			} else if(findNoCase("E_Start",i)) {
-				setEntityStart(arguments.rc[i]);
+				if(isNumeric(arguments.rc[i])){
+					setEntityStart(arguments.rc[i]);
+				}
+			} else if(findNoCase("P_Current", i)){
+				if(isNumeric(arguments.rc[i])){
+					setCurrentPage(arguments.rc[i]);
+				}
 			} else if(findNoCase("OrderBy",i)) {
 				for(var ii=1; ii <= listLen(arguments.rc[i], "^"); ii++ ) {
 					addOrder(orderStatement=listGetAt(arguments.rc[i], ii, "^"));
