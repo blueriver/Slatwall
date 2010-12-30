@@ -21,7 +21,7 @@ function toolbarSearchKeyup(form){
 	clearTimeout(search_delay);
 	search_form = form;
 	if($("input.AdminSearch").val() != ''){
-		search_delay = setTimeout("adminSearch()",200);
+		search_delay = setTimeout("adminSearch()",280);
 	}
 }
 

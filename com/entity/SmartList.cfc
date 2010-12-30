@@ -12,8 +12,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	property name="entityStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
 	property name="entityShow" type="numeric" hint="This is the total number of entities to display";
-	
 	property name="entityEnd" type="numeric" hint="This represents the last record to display and it is used in paging.";
+	property name="totalEntities" type="numeric";
+	
 	property name="currentPage" type="numeric" hint="This is the current page that the smart list is displaying worth of entities";
 	property name="totalPages" type="numeric" hint="This is the total number of pages worth of entities";
 		
@@ -55,6 +56,10 @@ component displayname="Smart List" accessors="true" persistent="false" {
 			variables.entityEnd = arrayLen(variables.records);
 		}
 		return variables.entityEnd;
+	}
+	
+	public numeric function getTotalEntities() {
+		return arrayLen(variables.records);
 	}
 	
 	public numeric function currentPage() {
@@ -136,13 +141,13 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	public void function applyRC(required struct rc) {
 		for(i in arguments.rc) {
-			if(find("F_",i)) {
+			if(findNoCase("F_",i)) {
 				addFilter(rawProperty=Replace(i,"F_", ""), value=arguments.rc[i]);
-			} else if(find("R_",i)) {
+			} else if(findNoCase("R_",i)) {
 				addRange(rawProperty=Replace(i,"R_", ""), value=arguments.rc[i]);
-			} else if(find("E_Show",i)) {
+			} else if(findNoCase("E_Show",i)) {
 				setEntityShow(arguments.rc[i]);
-			} else if(find("E_Start",i)) {
+			} else if(findNoCase("E_Start",i)) {
 				setEntityStart(arguments.rc[i]);
 			} else if(findNoCase("OrderBy",i)) {
 				for(var ii=1; ii <= listLen(arguments.rc[i], "^"); ii++ ) {

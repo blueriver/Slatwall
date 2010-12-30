@@ -11,7 +11,7 @@ component extends="BaseController" accessors="true" output="false" {
 	public void function toolbarsearch(required struct rc) {
 		if(isDefined("rc.toolbarKeyword") && len(rc.toolbarKeyword) >= 2) {
 			rc.keyword = rc.toolbarKeyword;
-			rc.p_show = 5; 
+			rc.e_show = 5; 
 			rc.productSmartList = getProductService().getSmartList(arguments.rc);
 			rc.brandSmartList = getBrandService().getSmartList(arguments.rc);
 		}
