@@ -36,7 +36,14 @@
 	</cfif>
 
  	<cfoutput>
- 		<dt class="spd#LCASE(PropertyMD.Name)#"><cfif attributes.edit><label for="#PropertyMD.Name#">#attributes.Title#</label><cfelse>#attributes.Title#</cfif></dt>
+ 		<dt class="spd#LCASE(PropertyMD.Name)#">
+ 			<cfif attributes.edit>
+				<label for="#PropertyMD.Name#">#attributes.Title#</label>
+			<cfelse>#attributes.Title#</cfif>
+			<cfif Len(attributes.Object.getErrorBean().getError(PropertyMD.name))>
+				<span class="error"> #attributes.Object.getErrorBean().getError(PropertyMD.name)#</span>
+			</cfif>
+		</dt>
 		<dd class="spd#LCASE(PropertyMD.Name)#">
 			<cfif attributes.edit>
 				<cfif PropertyMD.type eq 'boolean'>

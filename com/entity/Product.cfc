@@ -5,8 +5,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="active" type="boolean" default=true persistent=true displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
 	property name="filename" type="string" default="" persistent=true displayname="File Name" hint="This is the name that is used in the URL string";
 	property name="template" type="string" default="" persistent=true displayname="Design Template" hint="This is the Template to use for product display";
-	property name="productName" type="string" default="" persistent=true displayname="Product Name" hint="Primary Notation for the Product to be Called By";
-	property name="productCode" type="string" default="" persistent=true displayname="Product Code" hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productName" type="string" default="" persistent=true displayname="Product Name" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
+	property name="productCode" type="string" default="" persistent=true displayname="Product Code" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" type="string" default="" persistent=true displayname="Product Description" hint="HTML Formated description of the Product";
 	property name="productYear" type="numeric" default=0 persistent=true displayname="Product Year" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinued"	type="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
@@ -76,12 +76,19 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!isDefined("variables.genderType")) {
 			variables.genderType = getService(service="TypeService").getNewEntity(); //get New Entity here should have a parent programing type ID set in the future.
 		}
-		return variables.skus;
+		return variables.genderType;
+	}
+	
+	public any function getTemplateOptions() {
+		if(!isDefined("variables.templateOptions")){
+			variables.templateOptions = getService(service="ProductService").getProductTemplates();
+		}
+		return variables.templateOptions;
 	}
 	
 	// Non-Persistant Helpers
 	public string function getGender() {
-		if(!isDefined(variables.gender)) {
+		if(!isDefined("variables.gender")) {
 			variables.gender = getGenderType().getType();
 		}
 		return variables.gender;

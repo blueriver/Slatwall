@@ -34,12 +34,15 @@ component extends="BaseController" output=false accessors=true {
 		
 		//Save Product
 		rc.product = getProductService().save(entity=rc.product);
-		variables.fw.redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
-		
+		if(!rc.product.hasErrors()) {
+			variables.fw.redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
+		} else {
+			variables.fw.setView("admin:product.edit");
+		}
 	}
 	
 	public void function edit(required struct rc) {
-		rc.productTemplatesQuery = getProductService().getProductTemplates();
+		//rc.productTemplatesQuery = getProductService().getProductTemplates();
 	}
 	
 	public void function delete(required struct rc) {

@@ -32,7 +32,4 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		return getSettingsManager().getSite(session.siteid).getTemplates();
 	}
 	
-	public any function validateSave(required any entity) {
-		
-	}
 }

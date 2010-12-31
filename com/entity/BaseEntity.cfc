@@ -1,4 +1,4 @@
-import "slatwall.com.entity.ErrorBean";
+import Slatwall.com.entity.ErrorBean;
 component displayname="Base Entity" accessors="true" {
 	
 	property name="errorBean" type="ErrorBean";
@@ -87,8 +87,6 @@ component displayname="Base Entity" accessors="true" {
 	}
 	
 	public string function getClassName(){
-		writeDump(getMetaData(this));
-		abort;
 		return ListLast(GetMetaData(this).entitynam, "." );
 	}
 	
@@ -99,7 +97,7 @@ component displayname="Base Entity" accessors="true" {
 	
 	// @hint A way to see if the entity has any errors.
 	public boolean function hasErrors() {
-		return this.getErrors().hasErrors();
+		return this.getErrorBean().hasErrors();
 	}
 	
 	// Start: ORM functions

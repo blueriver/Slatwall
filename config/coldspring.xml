@@ -2,33 +2,39 @@
 
 <beans>
 	
-	<bean id="accountDAO" class="slatwall.com.dao.accountDAO" />
-	<bean id="brandDAO" class="slatwall.com.dao.[integration]brandDAO" />
-	<bean id="productDAO" class="slatwall.com.dao.[integration]productDAO" />
-	<bean id="skuDAO" class="slatwall.com.dao.[integration]skuDAO" />
-	<bean id="vendorDAO" class="slatwall.com.dao.[integration]vendorDAO" />
+	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
+	<bean id="brandDAO" class="slatwall.com.dao.[integration]BrandDAO" />
+	<bean id="productDAO" class="slatwall.com.dao.[integration]ProductDAO" />
+	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
+	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
+	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
 	
 	<bean id="accountService" class="slatwall.com.service.accountService">
 		<constructor-arg name="entityName"><value>SlatwallAccount</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="accountDAO" /></constructor-arg>
+		<constructor-arg name="DAO"><ref bean="AccountDAO" /></constructor-arg>
 	</bean>
 	
 	<bean id="brandService" class="slatwall.com.service.brandService">
 		<constructor-arg name="entityName"><value>SlatwallBrand</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="brandDAO" /></constructor-arg>
+		<constructor-arg name="DAO"><ref bean="BrandDAO" /></constructor-arg>
 	</bean>
 	
 	<bean id="productService" class="slatwall.com.service.productService">
 		<constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="productDAO" /></constructor-arg>
-		<constructor-arg name="skuDAO"><ref bean="skuDAO" /></constructor-arg>
-		<constructor-arg name="ContentManager"><ref bean="contentManager" /></constructor-arg>
-		<constructor-arg name="SettingsManager"><ref bean="settingsManager" /></constructor-arg>
+		<constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
+		<constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
+		<constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
+		<constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
+	</bean>
+	
+	<bean id="typeService" class="slatwall.com.service.typeService">
+		<constructor-arg name="entityName"><value>SlatwallType</value></constructor-arg>
+		<constructor-arg name="DAO"><ref bean="TypeDAO" /></constructor-arg>
 	</bean>
 
 	<bean id="vendorService" class="slatwall.com.service.vendorService">
 		<constructor-arg name="entityName"><value>SlatwallVendor</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="vendorDAO" /></constructor-arg>
+		<constructor-arg name="DAO"><ref bean="VendorDAO" /></constructor-arg>
 	</bean>
 
 </beans>

@@ -3,6 +3,7 @@
 		<form method="post">
 			<input name="Keyword" value="#rc.Keyword#" /><button type="submit">Search</button>
 		</form>
+		<div style="float:right;"><a href="#buildURL(action='admin:product.edit')#">Create Product</a></div>
 		<table class="listtable">
 			<tr>
 				<th>Search Score</th>

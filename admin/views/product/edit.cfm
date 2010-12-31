@@ -22,8 +22,9 @@
 				<dd>
 					<select name="Template">
 						<option value="" <cfif rc.Product.getTemplate() eq ''>selected="selected"</cfif>>Global</option>
-						<cfloop query="rc.ProductTemplatesQuery">
-							<option value="#rc.ProductTemplatesQuery.Name#" <cfif rc.Product.getTemplate() eq rc.ProductTemplatesQuery.Name>selected="selected"</cfif>>#rc.ProductTemplatesQuery.Name#</option>	
+						<cfset Local.TemplateOptions = rc.Product.getTemplateOptions() />
+						<cfloop query="Local.TemplateOptions">
+							<option value="#Local.TemplateOptions.Name#" <cfif rc.Product.getTemplate() eq Local.TemplateOptions.Name>selected="selected"</cfif>>#Local.TemplateOptions.Name#</option>	
 						</cfloop>
 					</select>
 				</dd>

@@ -39,7 +39,19 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function save(required any entity) {
-		//return validateSave(entity=arguments.entity);
-		return getDAO().save(entity=arguments.entity);
+		return validateSave(entity=arguments.entity);
 	}
+	
+	public any function validateSave(required any entity) {
+		var validator = new Slatwall.com.utility.Validator();
+		
+		validator.validateObject(entity=arguments.entity);
+		
+		if(!arguments.entity.hasErrors()) {
+			arguments.entity = getDAO().save(entity=arguments.entity);
+		}
+		
+		return arguments.entity;
+	}
+	
 }
