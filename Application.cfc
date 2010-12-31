@@ -30,13 +30,12 @@
 	
 	<!--- parse the xml and replace all [plugin] with the actual plugin mapping path --->
 	<cfset xml = replaceNoCase( xml, "[plugin]", "plugins.#getPluginConfig().getDirectory()#.", "ALL") />
-	<cfif getPluginConfig().getSetting("Integration") eq "Internal">
-		<cfset getPluginConfig().setSetting("Integration", '') />
-	<cfelse>
-		<cfset getPluginConfig().setSetting("Integration", "#getPluginConfig().getSetting('Integration')#.") />
-	</cfif>
 	
-	<cfset xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#", "ALL") />
+	<cfif getPluginConfig().getSetting("Integration") neq "Internal">
+		<cfset xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL") />
+	<cfelse>
+		<cfset xml = replaceNoCase( xml, "[integration]", "", "ALL") />
+	</cfif>
 	
 	<!--- build Coldspring factory --->
 	<cfset serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init() />

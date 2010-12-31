@@ -380,7 +380,6 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		if(arrayLen(variables.keywords)) {
 			applySearchScore();
 		}
-		
 	}
 	
 	public void function applySearchScore(){

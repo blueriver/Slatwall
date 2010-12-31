@@ -57,17 +57,20 @@ component displayname="Base Entity" accessors="true" {
 		} else if(isStruct(arguments.record)) {
 			keyList = structKeyList(arguments.record);
 		}
-		
-		for(i=1; i >= listLen(keyList); i++) {
+
+		for(var i=1; i <= listLen(keyList); i++) {
 			var evalString = "";
-			var subKeyArray = listToArray(i, "_");
-			for(ii=1; ii >= arrayLen(subKeyArray); ii++) {
+			var subKeyArray = listToArray(listGetAt(keyList, i), "_");
+			var data = arguments.record[listGetAt(keyList, i)];
+			
+			for(var ii=1; ii <= arrayLen(subKeyArray); ii++) {
 				if(ii == arrayLen(subKeyArray)) {
-					evalString = "#evalString#set#subKeyArray[ii]#(arguments.record[i])";
+					evalString &= "set#subKeyArray[ii]#( '#data#' )";
 				} else {
-					evalString = "#evalString#get#subKeyArray[ii]#().";
+					evalString &= "get#subKeyArray[ii]#().";
 				}
 			}
+			
 			evaluate("#evalString#");
 		}
 	}

@@ -1,13 +1,12 @@
-<cfcomponent extends="slatwall.com.dao.productDAO">
-
-	<cffunction name="read">
-		<cfargument name="ID" type="string" />
-		<cfargument name="EntityName" default="product" />
+component extends="Slatwall.com.dao.productDAO" output="false" {
+	
+	public any function read(required string ID, required string entityName) {
 		
-		<cfset var rs = querynew('empty') />
-		<cfset var Product = EntityNew('#arguments.entityname#') />
+		var productQuery = new query();
+		var product = EntityNew(arguments.entityName);
 		
-		<cfquery name="rs" datasource="#application.slatsettings.getSetting('IntegrationDSN')#">
+		productQuery.setDataSource(application.Slatwall.pluginConfig.getSetting("Integration"));
+		productQuery.setSQL("
 			SELECT
 				tb_styles.style_id as											'ProductID',
 				CASE
@@ -18,17 +17,12 @@
 					WHEN tb_styles.web_product = 'Y' THEN 1
 					ELSE 0
 				END as															'ShowOnWebWholesale',
-				0 as															'VendorDiscontinued',
 				tb_styles.style as 												'ProductCode',
 				CASE
 					WHEN LEN(tb_styles.web_desc) > 0 THEN tb_styles.web_desc
 					ELSE tb_styles.description
 				END	 as 														'ProductName',
 				tb_styles.web_long_desc as										'ProductDescription',
-				tb_styles.date_entered as										'DateCreated',
-				tb_styles.dlu as												'DateLastUpdated',
-				tb_Styles.first_rcvd as											'DateFirstReceived',
-				tb_Styles.last_rcvd as											'DateLastReceived',
 				CASE tb_styles.non_invt 
 					WHEN 'Y' THEN 1
 					ELSE 0 
@@ -38,10 +32,6 @@
 					ELSE 0
 				END as															'CallToOrder',
 				CASE tb_styles.of19
-					WHEN 'IN STORE ONLY' THEN 1
-					ELSE 0
-				END as															'InStoreOnly',
-				CASE tb_styles.of19
 					WHEN 'DROP SHIP' THEN 1
 					ELSE 0
 				END as															'AllowDropship',
@@ -50,12 +40,8 @@
 					ELSE 0
 				END as															'AllowBackorder',
 				1 as															'AllowPreorder',
-				tb_styles.weight as												'ShippingWeight',
-				tb_styles.of2 as												'ProductYear',
 				tb_styles.brand as												'Brand_BrandID',
-				brandtext.web_text as											'Brand_BrandName',
-				tb_styles.of1 as												'GenderType_TypeID',
-				gendertext.web_text as											'GenderType_Type'
+				brandtext.web_text as											'Brand_BrandName'
 			FROM
 				tb_styles
 			  inner join
@@ -65,20 +51,26 @@
 			  	tb_inet_names gendertext on tb_styles.of1 = gendertext.orig_text
 			  		and gendertext.field_name = 'OF1'
 			WHERE
-				tb_styles.style_id= <cfqueryparam cfsqltype="cf_sql_int" value="#arguments.ID#">
-		</cfquery>
+				tb_styles.style_id= '#arguments.ID#'
+		");
 		
-		<cfif rs.recordcount>
-			<cfset Product.set(rs) />
-		</cfif>
-
-		<cfreturn Product />
-	</cffunction>
+		var rs = productQuery.execute().getResult();
+		
+		if(rs.recordcount) {
+			product.set(rs);
+		}
+		
+		return product;
+	}
 	
-	<cffunction name="getListCache">
-		<cfset var rs = querynew('empty') />
-		<cfquery name="rs" datasource="#application.slatsettings.getSetting('IntegrationDSN')#" cachedwithin="#CreateTimeSpan(0,1,0,0)#">
-			SELECT
+	public any function fillSmartList(required any smartList, required any entityName) {
+		var fillTimeStart = getTickCount();
+		
+		var productQuery = new query();
+		
+		productQuery.setDataSource(application.Slatwall.pluginConfig.getSetting("Integration"));
+		productQuery.setSQL("
+			SELECT 
 				tb_styles.style_id as											'ProductID',
 				CASE
 					WHEN tb_styles.web_product = 'Y' THEN 1
@@ -88,17 +80,12 @@
 					WHEN tb_styles.web_product = 'Y' THEN 1
 					ELSE 0
 				END as															'ShowOnWebWholesale',
-				0 as															'VendorDiscontinued',
 				tb_styles.style as 												'ProductCode',
 				CASE
 					WHEN LEN(tb_styles.web_desc) > 0 THEN tb_styles.web_desc
 					ELSE tb_styles.description
 				END	 as 														'ProductName',
 				tb_styles.web_long_desc as										'ProductDescription',
-				tb_styles.date_entered as										'DateCreated',
-				tb_styles.dlu as												'DateLastUpdated',
-				tb_Styles.first_rcvd as											'DateFirstReceived',
-				tb_Styles.last_rcvd as											'DateLastReceived',
 				CASE tb_styles.non_invt 
 					WHEN 'Y' THEN 1
 					ELSE 0 
@@ -108,10 +95,6 @@
 					ELSE 0
 				END as															'CallToOrder',
 				CASE tb_styles.of19
-					WHEN 'IN STORE ONLY' THEN 1
-					ELSE 0
-				END as															'InStoreOnly',
-				CASE tb_styles.of19
 					WHEN 'DROP SHIP' THEN 1
 					ELSE 0
 				END as															'AllowDropship',
@@ -120,12 +103,8 @@
 					ELSE 0
 				END as															'AllowBackorder',
 				1 as															'AllowPreorder',
-				tb_styles.weight as												'ShippingWeight',
-				tb_styles.of2 as												'ProductYear',
 				tb_styles.brand as												'Brand_BrandID',
-				brandtext.web_text as											'Brand_BrandName',
-				tb_styles.of1 as												'GenderType_TypeID',
-				gendertext.web_text as											'GenderType_Type'
+				brandtext.web_text as											'Brand_BrandName'
 			FROM
 				tb_styles
 			  inner join
@@ -134,28 +113,12 @@
 			  left join
 			  	tb_inet_names gendertext on tb_styles.of1 = gendertext.orig_text
 			  		and gendertext.field_name = 'OF1'
-		</cfquery>
+		");
+		writeDump(arguments.smartList);
+		abort;
+		arguments.smartList.setRecords(records=productQuery.execute().getResult());
 		
-		<cfreturn rs />
-	</cffunction>
-
-	<cffunction name="fillSmartList">
-		<cfargument name="SmartList" type="any" required="true" />
-		
-		<cfset var rs = querynew('empty') />
-		<cfset var ListCache = getListCache() />
-		
-		<cfquery name="rs" dbtype="query">
-			SELECT
-				*
-			FROM
-				ListCache
-			  #arguments.SmartList.getSQLWhere(false)#
-		</cfquery>
-		
-		<cfset arguments.SmartList.setQueryRecords(rs) />
-
-		<cfreturn arguments.SmartList />
-	</cffunction>
-
-</cfcomponent>
+		arguments.smartList.setFillTime(getTickCount()-fillTimeStart);
+		return arguments.smartList;
+	}
+}
