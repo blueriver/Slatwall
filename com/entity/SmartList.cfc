@@ -36,6 +36,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		setEntityStart(1);
 		setEntityShow(10);
 		setEntityMetaData(structNew());
+		setRecords(arrayNew(1));
 		
 		setQueryRecords(queryNew('empty'));
 		setEntityRecords(arrayNew(1));
@@ -46,7 +47,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		if(isDefined("arguments.rc")) {
 			applyRC(rc=arguments.RC);
 		}
-		
+				
 		return this;
 	}
 	
@@ -55,7 +56,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		if(variables.entityEnd > arrayLen(variables.records)) {
 			variables.entityEnd = arrayLen(variables.records);
 		}
+		
 		return variables.entityEnd;
+		
 	}
 	
 	public numeric function getCurrentPage() {

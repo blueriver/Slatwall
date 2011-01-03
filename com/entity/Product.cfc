@@ -32,7 +32,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent=false;
 	property name="title" type="string" persistent=false;
-	property name="productURL" type="string" persistent=false;
 	property name="onTermSale" type="boolean" persistent=false;
 	property name="onClearanceSale" type="boolean" persistent=false;
 	property name="dateFirstReceived" type="date" persistent=false;
@@ -98,7 +97,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return "#getBrand().getBrandName()# #getProductYear()# #getProductName()#";
 	}
 	
-	public string function getProductURL() {
+	public string function getProductURL(boolean generateAdmin=false) {
 		return "/index.cfm/sp/#getFilename()#";
 	}
 	
