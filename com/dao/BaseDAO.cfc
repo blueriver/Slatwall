@@ -18,14 +18,7 @@ component output="false" {
 	}
 	
 	public any function fillSmartList(required any smartList, required any entityName) {
-		var fillTimeStart = getTickCount();
-		var entityRecords = arrayNew(1);
-		var HQL = " from #arguments.entityName# a#arguments.entityName# #arguments.smartList.getHQLWhereOrder()#";
-		
-		entityRecords = ormExecuteQuery(HQL);
-		
-		arguments.smartList.setRecords(EntityRecords);
-		arguments.smartList.setFillTime(getTickCount()-fillTimeStart);
+		// Left blank for extended integration to use.
 		return arguments.smartList;
 	}
 	

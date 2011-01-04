@@ -1,14 +1,13 @@
-import Slatwall.com.entity.ErrorBean;
 component displayname="Base Entity" accessors="true" {
 	
-	property name="errorBean" type="ErrorBean";
+	property name="errorBean" type="Slatwall.com.utility.ErrorBean";
 	property name="searchScore" type="numeric";
 	property name="updateKeys" type="string";
 	
 	public any function init() {
 		
 		// Create a new errorBean for all entities
-		this.setErrorBean(new errorBean());
+		this.setErrorBean(new Slatwall.com.utility.errorBean());
 		
 		// Automatically set the default search score to 0
 		this.setSearchScore(0);

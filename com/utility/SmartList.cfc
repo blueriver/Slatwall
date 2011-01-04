@@ -17,7 +17,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	property name="currentPage" type="numeric" hint="This is the current page that the smart list is displaying worth of entities";
 	property name="totalPages" type="numeric" hint="This is the total number of pages worth of entities";
-		
+
 	property name="queryRecords" type="query" hint="This is the raw query records.  Either this is used or the entityRecords is uesed";
 	property name="entityRecords" type="array" hint="This is the raw array of records.  Either this is used or the queryRecords is used";
 	
@@ -37,6 +37,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		setEntityShow(10);
 		setEntityMetaData(structNew());
 		setRecords(arrayNew(1));
+		setSearchTime(0);
 		
 		setQueryRecords(queryNew('empty'));
 		setEntityRecords(arrayNew(1));
@@ -47,6 +48,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		if(isDefined("arguments.rc")) {
 			applyRC(rc=arguments.RC);
 		}
+		
+		variables.HQLWhereParams = structNew();
 				
 		return this;
 	}
@@ -153,9 +156,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	public void function applyRC(required struct rc) {
 		for(i in arguments.rc) {
 			if(findNoCase("F_",i)) {
-				addFilter(rawProperty=Replace(i,"F_", ""), value=arguments.rc[i]);
+				addFilter(rawProperty=ReplaceNoCase(i,"F_", ""), value=arguments.rc[i]);
 			} else if(findNoCase("R_",i)) {
-				addRange(rawProperty=Replace(i,"R_", ""), value=arguments.rc[i]);
+				addRange(rawProperty=ReplaceNoCase(i,"R_", ""), value=arguments.rc[i]);
 			} else if(findNoCase("E_Show",i) || findNoCase("P_Show",i)) {
 				if(isNumeric(arguments.rc[i])){
 					setEntityShow(arguments.rc[i]);
@@ -253,14 +256,19 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		
 		for(var i=1; i <= arrayLen(entityProperties); i++){
 			if (entityProperties[i].name == arguments.rawProperty) {
-				if(entityProperties[i].type == "string") {
-					returnValue = "'#arguments.value#'";
-				} else if (entityProperties[i].type == "numeric" && isNumeric(arguments.value)) {
+				var thisProperty = entityProperties[i];
+				if(isDefined("thisProperty.type")) {
+					if(entityProperties[i].type == "string") {
+						returnValue = arguments.value;
+					} else if (entityProperties[i].type == "numeric" && isNumeric(arguments.value)) {
+						returnValue = arguments.value;
+					} else if (entityProperties[i].type == "boolean" && (arguments.value == 1 || arguments.value == true || arguments.value == "yes")) {
+						returnValue = 1;
+					} else if (entityProperties[i].type == "boolean" && (arguments.value == 0 || arguments.value == false || arguments.value == "no")) {
+						returnValue = 0;
+					}
+				} else {
 					returnValue = arguments.value;
-				} else if (entityProperties[i].type == "boolean" && (arguments.value == 1 || arguments.value == true || arguments.value == "yes")) {
-					returnValue = 1;
-				} else if (entityProperties[i].type == "boolean" && (arguments.value == 0 || arguments.value == false || arguments.value == "no")) {
-					returnValue = 0;
 				}
 				break;
 			}
@@ -268,11 +276,15 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnValue;
 	}
 	
+	public any function getHQLWhereParams() {
+		return variables.HQLWhereParams;
+	}
+	
 	public string function getHQLWhereOrder(boolean suppressWhere) {
 		var returnWhereOrder = "";
 		
 		// Check to see if any Filters, Ranges or Keyword requirements exist.  If not, don't create a where
-		if(structCount(variables.Filters) || structCount(variables.Ranges) || arrayLen(variables.Keywords)) {
+		if(structCount(variables.Filters) || structCount(variables.Ranges) || (arrayLen(variables.Keywords) && structCount(variables.keywordProperties))) {
 			
 			var currentFilter = 0;
 			var currentFilterValue = 0;
@@ -304,7 +316,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 						returnWhereOrder &= " OR ";
 					}
 				
-					returnWhereOrder &= "#filter# = #filterValue#";
+					returnWhereOrder &= "#filter# = :F_#currentFilter#_#i#";
+					variables.HQLWhereParams["F_#currentFilter#_#i#"] = filterValue;
 					
 					if (currentFilterValue == listLen(variables.filters[filter], "^")) {
 						returnWhereOrder &= ")";
@@ -329,7 +342,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 						if (currentKeyword > 1 or currentKeywordProperty > 1) {
 							returnWhereOrder &= " OR ";
 						}
-						returnWhereOrder &= "#keywordProperty# LIKE '%#variables.keywords[i]#%'";
+						returnWhereOrder &= "#keywordProperty# LIKE :K_#i#";
+						variables.HQLWhereParams["K_#i#"] = "%#variables.keywords[i]#%";
 					}
 					
 					if (currentKeywordProperty == structCount(variables.keywordProperties)) {
@@ -347,7 +361,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 					if(currentRange > 1 || currentFilter > 0 || currentKeywordProperty > 0) {
 						returnWhereOrder &= " AND";
 					}
-					returnWhereOrder &= " (#range# >= #lowerRange# and #range# <= #upperRange#)";
+					returnWhereOrder &= " (#range# >= :RL_#currentRange#_#i# and #range# <= :RU_#currentRange#_#i#)";
+					variables.HQLWhereParams["RL_#currentRange#_#i#"] = lowerRange;
+					variables.HQLWhereParams["RU_#currentRange#_#i#"] = upperRange;
 				}
 			}
 		}
@@ -424,9 +440,19 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		
 		setSearchTime(getTickCount()-searchStart);
 	}
+	
+	private void function fillFromDefaultHQL() {
+		var fillTimeStart = getTickCount();
+		var HQL = " from #getEntityName()# a#getEntityName()# #getHQLWhereOrder()#";
+		setRecords(ormExecuteQuery(HQL, getHQLWhereParams(), false, {ignoreCase="true"}));
+		setFillTime(getTickCount() - fillTimeStart);
+	}
 
 	public array function getEntityArray(boolean refresh) {
 		if(!isDefined("variables.entityArray") || arrayLen(variables.entityArray) == 0 || (isDefined("arguments.refresh") && arguments.refresh == true)) {
+			if(!isDefined("variables.records") || arrayLen(variables.records) == 0){
+				fillFromDefaultHQL();
+			}
 			variables.entityArray = arrayNew(1);
 			for(var i=getEntityStart(); i<=getEntityEnd(); i++) {
 				arrayAppend(variables.entityArray, variables.records[i]);
