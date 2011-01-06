@@ -9,7 +9,7 @@ component accessors="true" {
 	public Validator function init(string rb="DefaultValidationMessages",boolean isAbsolutePath=false){
 		this.setResourceBundle(arguments.rb);
 		this.setValidationMessages(arrayNew(1));
-		this.setErrors(new Slatwall.com.entity.ErrorBean());
+		this.setErrors(new Slatwall.com.utility.ErrorBean());
 		loadResourceBundle(arguments.isAbsolutePath);
 		return this;
 	}
