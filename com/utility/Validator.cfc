@@ -3,7 +3,7 @@ component accessors="true" {
 	// @hint name/path of properties file that contains default validation messages
 	property name="resourceBundle" type="string";
 	property name="validationMessages" type="array";
-	property name="errors" type="Slatwall.com.entity.ErrorBean";
+	property name="errors" type="Slatwall.com.utility.ErrorBean";
 
 	// @hint constructor for the validator class
 	public Validator function init(string rb="DefaultValidationMessages",boolean isAbsolutePath=false){

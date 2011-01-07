@@ -59,7 +59,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getBrandOptions() {
 		if(!isDefined("variables.brandOptions")) {
-			variables.brandOptions = getService(service="BrandService").list();
+			variables.brandOptions = getService(service="BrandService").getOptionList(idProperty="brandID", nameProperty="brandName");
 		}
 		return variables.brandOptions;
 	}
