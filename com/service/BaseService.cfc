@@ -28,6 +28,18 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().list(entityName=getEntityName());
 	}
 	
+	public array function getOptionList(required string idProperty, required string nameProperty) {
+		var entityList = list();
+		var optionsArray = arrayNew(1);
+		for(var i=1; i <= arrayLen(entityList); i++) {
+			var option = structNew();
+			option.id = evaluate("entityList[i].get#arguments.idProperty#()");
+			option.name = evaluate("entityList[i].get#arguments.nameProperty#()");
+			arrayAppend(optionsArray, option);
+		}
+		return optionsArray;
+	}
+	
 	public any function getSmartList(required struct rc){
 		var smartList = createObject("component","slatwall.com.utility.SmartList").init(rc=arguments.rc, entityName=getEntityName());
 		

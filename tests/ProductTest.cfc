@@ -3,10 +3,10 @@ component extends="mxunit.framework.TestCase" output="false" {
 		variables.productEntity = new Slatwall.com.entity.Product();
 	}
 	
-	public void function getQIA_should_Equal4_when_QOHis6andQCis2() {
-    	variables.productEntity.setQOH(6);
+	public void function testEntityMethodGetQIA() {
+		variables.productEntity.setQOH(6);
 		variables.productEntity.setQC(2);
+		variables.productEntity.setQOO(8);
 		assertEquals(4, variables.productEntity.getQIA());
-    }
-
+	}
 }
