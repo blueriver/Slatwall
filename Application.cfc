@@ -1,91 +1,83 @@
-<cfcomponent extends="framework">
+component extends="framework" output="false" {
 
-<cfinclude template="../../config/applicationSettings.cfm">
-<cfinclude template="../../config/mappings.cfm">
-<cfinclude template="../mappings.cfm">
-<cfinclude template="fw1Config.cfm">
+	include "../../config/applicationSettings.cfm";
+	include "../../config/mappings.cfm";
+	include "../mappings.cfm";
+	include "fw1Config.cfm";
 
-<cffunction name="setPluginConfig" output="false">  
-	<cfargument name="pluginConfig" type="any" required="true">  
-	<cfset application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig>  
-</cffunction>  
-<cffunction name="getPluginConfig" output="false">  
-	<cfreturn application[ variables.framework.applicationKey ].pluginConfig>  
-</cffunction>
-
-<!--- Start: Standard Application Functions,  These are also called from the fw1EventAdapter --->
-<cffunction name="setupApplication" output="false">
-	<cfargument name="$">
-	<cfset var serviceFactory = "" />
-	<cfset var xml = "" />
-	<cfset var xmlPath = "" />
+	public void function setPluginConfig(required any pluginConfig) {
+	  application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
+	}
 	
-	<cfif not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey>
-		<cfinclude template="plugin/config.cfm" />
-	</cfif>
-	<cfset setPluginConfig(request.PluginConfig) />
+	public function getPluginConfig() {
+	  return application[ variables.framework.applicationKey ].pluginConfig; 
+	}
 	
-	<cfset xmlPath = "#expandPath( '/plugins' )#/#getPluginConfig().getDirectory()#/config/coldspring.xml" />
-	<cffile action="read" file="#xmlPath#" variable="xml" />
+	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
+	public function setupApplication(any $) {
+		var serviceFactory = "";
+		var xml = "";
+		var xmlPath = "";
+	  
+	    if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
+		  	include "plugin/config.cfm";
+		}
+	    setPluginConfig(request.PluginConfig);
+		xmlPath = "#expandPath( '/plugins' )#/#getPluginConfig().getDirectory()#/config/coldspring.xml";
+		xml = FileRead("#xmlPath#"); 
+		
+		
+		// Parse the xml and replace all [plugin] with the actual plugin mapping path.
+	  	xml = replaceNoCase( xml, "[plugin]", "plugins.#getPluginConfig().getDirectory()#.", "ALL");
+		
+		if (getPluginConfig().getSetting("Integration") neq "Internal"){
+		 xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL");
+		}
+		else {
+		 xml = replaceNoCase( xml, "[integration]", "", "ALL");
+		}
+		
+		// Build Coldspring factory
+		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
+		serviceFactory.loadBeansFromXmlRaw( xml );
+		serviceFactory.setParent(application.servicefactory);
+		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
+		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
+	}
 	
-	<!--- parse the xml and replace all [plugin] with the actual plugin mapping path --->
-	<cfset xml = replaceNoCase( xml, "[plugin]", "plugins.#getPluginConfig().getDirectory()#.", "ALL") />
 	
-	<cfif getPluginConfig().getSetting("Integration") neq "Internal">
-		<cfset xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL") />
-	<cfelse>
-		<cfset xml = replaceNoCase( xml, "[integration]", "", "ALL") />
-	</cfif>
+	public function setupSession() {
+	  	 session.slat = structnew();
+		 session.slatwall.crumbdata = arraynew(1);
+	}
 	
-	<!--- build Coldspring factory --->
-	<cfset serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init() />
-	<cfset serviceFactory.loadBeansFromXmlRaw( xml ) />
+	public function setupRequest() {
+		var item = 0;
+		for (item in request.context) {
+		
+			if (isSimpleValue(request.context[item])){
+				if (request.context[item] eq '0,1' or request.context[item] eq '1,0'){
+					request.context[item] = 1;
+				}
+			}
+		
+		}
+		if (not structKeyExists(request.context,"$")){
+			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
+		}
+		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
+	}
+	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
+
+	// Helper Functions
+	public function isAdminRequest() {
+		return not structKeyExists(request,"servletEvent");
+		
+	}
 	
-	<cfset serviceFactory.setParent(application.servicefactory) />
-	<cfset getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory ) />
+	public function getExternalSiteLink(required String Address) {
+	 return #buildURL(action='external.site', queryString='es=#arguments.Address#')#;
+	}
 	
-	<cfset setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ))>
-</cffunction>
 
-<cffunction name="setupSession" output="false">
-	<cfset session.slat = structnew() />
-	<cfset session.slatwall.crumbdata = arraynew(1) />
-</cffunction>
-
-<cffunction name="setupRequest" output="false">
-	<cfset var item = 0 />
-	
-	<cfloop collection="#request.context#" item="item">
-		<cfif isSimpleValue(request.context[item])>
-			<cfif request.context[item] eq '0,1' or request.context[item] eq '1,0'>
-				<cfset request.context[item] = 1 />
-			</cfif>
-		</cfif>
-	</cfloop>
-
-	<cfif not structKeyExists(request.context,"$")>
-		<cfset request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid)>
-	</cfif>
-	
-	<cfset variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/">
-</cffunction>
-<!--- End: Standard Application Functions,  These are also called from the fw1EventAdapter --->
-
-<!--- Helper Functions --->
-<cffunction name="isAdminRequest">
-	<cfreturn not structKeyExists(request,"servletEvent")>
-</cffunction>
-
-<cffunction name="getExternalSiteLink" output="false" returntype="String">
-	<cfargument name="Address" />
-	<cfreturn #buildURL(action='external.site', queryString='es=#arguments.Address#')# />
-</cffunction>
-
-<!--- End: Helper Functions--->
-
-<!--- Override Functions --->
-
-
-<!--- End: Override Functions --->
-
-</cfcomponent>
+}
