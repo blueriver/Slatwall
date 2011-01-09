@@ -13,7 +13,7 @@ Installation
 <!--- Start: Setup Slatwall --->
 
 	<!--- Change This Setting Per Install --->
-	<cfset variables.slatwallpluginid = 2 />
+	<cfset variables.slatwallpluginid = [YOUR PLUGIN ID] />
 	
 	<!--- Get Mura Data Source from Mura's Settings.ini --->
 	<cffile action="read" variable="SettingsINI" file="#baseDir#/config/settings.ini.cfm" />
@@ -30,7 +30,6 @@ Installation
 	<cfset this.ormSettings.dbcreate = "update" />
 	<cfset this.ormsettings.cfclocation = "/plugins/Slatwall_#variables.slatwallpluginid#/com/entity" />
 	
-	<cfset ormReload() />
 	
 	<!--- Set Custom Tags Setting --->
 	<cfset this.customtagpaths = "#this.customtagpaths#,#baseDir#/plugins/Slatwall_#variables.slatwallpluginid#/tags" />

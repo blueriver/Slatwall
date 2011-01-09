@@ -1,11 +1,27 @@
-<cfcomponent output="false" extends="mura.plugin.plugincfc">
+component extends="mura.plugin.plugincfc" output="false" {
 
-	<cffunction name="install" returntype="void" access="public" output="false">
-		<cfset application.appInitialized=false />
-	</cffunction>
+	variables.config="";
+	variables.instance.extensionManager = application.classExtensionManager;
 	
-	<cffunction name="update" returntype="void" access="public" output="false">
-		<cfset application.appInitialized=false />
-	</cffunction>
+	public function init(any config) {
+	  variables.config = arguments.config;
+	}
+	
+	public void function install() {
+	  application.appInitialized=false;
+	  ormReload();
+	}
+	
+	public void function update() {
+	  application.appInitialized=false;
+	  ormReload();
+	}
+	
+	public void function delete() {
+	  ormReload();
+	}
+	
+	
 
-</cfcomponent>
+}
+
