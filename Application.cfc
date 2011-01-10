@@ -31,10 +31,10 @@ component extends="framework" output="false" {
 	  	xml = replaceNoCase( xml, "[plugin]", "plugins.#getPluginConfig().getDirectory()#.", "ALL");
 		
 		if (getPluginConfig().getSetting("Integration") neq "Internal"){
-		 xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL");
+			xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL");
 		}
 		else {
-		 xml = replaceNoCase( xml, "[integration]", "", "ALL");
+			xml = replaceNoCase( xml, "[integration]", "", "ALL");
 		}
 		
 		// Build Coldspring factory
@@ -76,7 +76,7 @@ component extends="framework" output="false" {
 	}
 	
 	public function getExternalSiteLink(required String Address) {
-	 return #buildURL(action='external.site', queryString='es=#arguments.Address#')#;
+		return #buildURL(action='external.site', queryString='es=#arguments.Address#')#;
 	}
 	
 
