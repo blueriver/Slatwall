@@ -12,8 +12,23 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 	}
 	
+	public void function detail(required struct rc) {
+		if(len(rc.brand.getBrandName()))
+			rc.section = "Brand Detail: " & rc.brand.getBrandName();
+		else
+			variables.fw.redirect("brand.list");
+	}
+	
 	public void function list(required struct rc) {
+		rc.section = "Brand List";
 		rc.brandSmartList = getBrandService().getSmartList(rc=arguments.rc);
+	}
+	
+	public void function edit(required struct rc) {
+		if(len(rc.brand.getBrandName()))
+			rc.section = "Edit Brand: " & rc.brand.getBrandName();
+		else
+			rc.section = "Add Brand";
 	}
 
 	public void function update(required struct rc) {
