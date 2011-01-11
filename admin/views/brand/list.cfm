@@ -7,7 +7,7 @@
 			<th>Brand Website</th>
 			<th>Administration</th>
 		</tr>
-		<cfloop array="#rc.BrandSmartList.getEntityArray()#" index="Local.Brand">
+		<cfloop array="#rc.BrandSmartList.getPageRecords()#" index="Local.Brand">
 			<tr>
 				<td><a href="#buildURL(action='admin:brand.detail', queryString='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></td>
 				<td>#local.Brand.getBrandWebsite()#</td>
