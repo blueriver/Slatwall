@@ -1,8 +1,27 @@
+/*
+	Copyright (c) 2010, Greg Moser
+	
+	Version: 1.1
+	Documentation: http://www.github.com/gregmoser/entitySmartList/wiki
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
 component displayname="Smart List" accessors="true" persistent="false" {
 	
 	property name="entityName" type="string" hint="This is the base entity that the list is based on.";
 	property name="entityMetaData" type="struct" hint="This is the meta data of the base entity.";
 
+	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
 	property name="filters" type="struct" hint="This struct holds any filters that are set on the entities properties";
 	property name="ranges" type="struct" hint="This struct holds any ranges set on any of the entities properties";
 	property name="orders" type="array" hint="This struct holds the display order specification based on property";
@@ -18,7 +37,6 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	property name="currentPage" type="numeric" hint="This is the current page that the smart list is displaying worth of entities";
 	property name="totalPages" type="numeric" hint="This is the total number of pages worth of entities";
 
-	property name="queryRecords" type="query" hint="This is the raw query records.  Either this is used or the entityRecords is uesed";
 	property name="entityRecords" type="array" hint="This is the raw array of records.  Either this is used or the queryRecords is used";
 	
 	property name="entityArray" type="array" hint="This is the completed array of entities after filter, range, order, keywords and paging.";	
@@ -28,6 +46,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 
 	public any function init(struct rc, required string entityName) {
 		// Set defaults for the main properties
+		setSelects(structNew());
 		setFilters(structNew());
 		setRanges(structNew());
 		setOrders(arrayNew(1));
@@ -39,7 +58,6 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		setRecords(arrayNew(1));
 		setSearchTime(0);
 		
-		setQueryRecords(queryNew('empty'));
 		setEntityRecords(arrayNew(1));
 		
 		// Set entity name based on whatever
@@ -82,6 +100,17 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	public numeric function getTotalPages() {
 		variables.totalPages = ceiling(getTotalEntities() / getEntityShow());
 		return variables.totalPages;
+	}
+	
+	public void function addSelect(required string rawProperty, required string aliase) {
+		var selectProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
+		if(selectProperty != "") {
+			if(structKeyExists(variables.selects, selectProperty)) {
+				variables.selects[selectProperty] = arguments.aliase;
+			} else {
+				structInsert(variables.selects, selectProperty, arguments.aliase);
+			}
+		}
 	}
 	
 	public void function addFilter(required string rawProperty, required string value) {
@@ -211,7 +240,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				} else {
 					returnProperty &= ".#entityProperty#";
 				}
-				currentEntityName = "Slatwall#entityProperty#";
+				currentEntityName = "#entityProperty#";
 			} else {
 				returnProperty = "";
 			}
@@ -230,7 +259,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				if(i == arrayLen(entityPropertyArray)) {
 					returnValue = getValidEntityPropertyValue(entityProperty, arguments.value, currentEntityName);
 				} else {
-					currentEntityName = "Slatwall#entityProperty#";
+					currentEntityName = "#entityProperty#";
 				}
 			}
 		}
@@ -280,8 +309,29 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return variables.HQLWhereParams;
 	}
 	
+	public string function getHQLSelect () {
+		var returnSelect = "";
+		var currentSelect = 0;
+		
+		if(structCount(variables.selects)) {
+			returnSelect = "SELECT new map(";
+			for(select in variables.selects) {
+				currentSelect = currentSelect + 1;
+				returnSelect &= "#select# as #variables.selects[select]#";
+				if(currentSelect < structCount(variables.selects)) {
+					returnSelect &= ", ";
+				}
+			}
+			returnSelect &= ")";
+		}
+		
+		return returnSelect;
+	}
+	
 	public string function getHQLWhereOrder(boolean suppressWhere) {
 		var returnWhereOrder = "";
+		
+		variables.HQLWhereParams = structNew();
 		
 		// Check to see if any Filters, Ranges or Keyword requirements exist.  If not, don't create a where
 		if(structCount(variables.Filters) || structCount(variables.Ranges) || (arrayLen(variables.Keywords) && structCount(variables.keywordProperties))) {
@@ -361,9 +411,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 					if(currentRange > 1 || currentFilter > 0 || currentKeywordProperty > 0) {
 						returnWhereOrder &= " AND";
 					}
-					returnWhereOrder &= " (#range# >= :RL_#currentRange#_#i# and #range# <= :RU_#currentRange#_#i#)";
-					variables.HQLWhereParams["RL_#currentRange#_#i#"] = lowerRange;
-					variables.HQLWhereParams["RU_#currentRange#_#i#"] = upperRange;
+					returnWhereOrder &= " (#range# >= :RL_#currentRange# and #range# <= :RU_#currentRange#)";
+					variables.HQLWhereParams["RL_#currentRange#"] = lowerRange;
+					variables.HQLWhereParams["RU_#currentRange#"] = upperRange;
 				}
 			}
 		}
@@ -382,25 +432,6 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnWhereOrder;
 	}
 
-	public void function setRecords(required any records) {
-		variables.records = arrayNew(1);
-		
-		if(isArray(arguments.records)) {
-			variables.records = arguments.records;
-		} else if (isQuery(arguments.records)) {
-			for(var i=1; i <= arguments.records.recordcount; i++) {
-				var entity = entityNew(getEntityName());
-				entity.set(arguments.records[i]);
-				arrayAppend(variables.records, entity);
-			}
-		}
-		
-		// Apply Search Score to Entites
-		if(arrayLen(variables.keywords)) {
-			applySearchScore();
-		}
-	}
-	
 	public void function applySearchScore(){
 		var searchStart = getTickCount();
 		var structSort = structNew();
@@ -441,24 +472,61 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		setSearchTime(getTickCount()-searchStart);
 	}
 	
-	private void function fillFromDefaultHQL() {
+	public void function setRecords(required any records) {
+		variables.records = arrayNew(1);
+		
+		if(isArray(arguments.records)) {
+			variables.records = arguments.records;
+		} else if (isQuery(arguments.records)) {
+			for(var i=1; i <= arguments.records.recordcount; i++) {
+				var entity = entityNew(getEntityName());
+				entity.set(arguments.records[i]);
+				arrayAppend(variables.records, entity);
+			}
+		}
+		
+		// Apply Search Score to Entites
+		if(arrayLen(variables.keywords)) {
+			applySearchScore();
+		}
+	}
+
+	public array function getAllRecords(boolean refresh=false) {
+		if(!isDefined("variables.allRecords") || arrayLen(variables.allRecords) == 0 || arguments.refresh == true) {
+			if(!isDefined("variables.records") || arrayLen(variables.records) == 0){
+				fillRecords();
+			}
+			variables.allRecords = duplicate(variables.records);
+		}
+		return variables.allRecords;
+	}
+	
+	public array function getPageRecords(boolean refresh=false) {
+		if(!isDefined("variables.pageRecords") || arrayLen(variables.pageRecords) == 0 || (isDefined("arguments.refresh") && arguments.refresh == true)) {
+			if(!isDefined("variables.pageRecords") || arrayLen(variables.pageRecords) == 0){
+				fillRecords();
+			}
+			variables.pageRecords = arrayNew(1);
+			for(var i=getEntityStart(); i<=getEntityEnd(); i++) {
+				arrayAppend(variables.pageRecords, variables.records[i]);
+			}
+		}
+		return variables.pageRecords;
+	}
+	
+	private void function fillRecords() {
 		var fillTimeStart = getTickCount();
-		var HQL = " from #getEntityName()# a#getEntityName()# #getHQLWhereOrder()#";
+		if(structCount(variables.selects)) {
+			var HQL = "#getHQLSelect()# from #getEntityName()# a#getEntityName()# #getHQLWhereOrder()#";
+		} else  {
+			var HQL = " from #getEntityName()# a#getEntityName()# #getHQLWhereOrder()#";
+		}
 		setRecords(ormExecuteQuery(HQL, getHQLWhereParams(), false, {ignoreCase="true"}));
 		setFillTime(getTickCount() - fillTimeStart);
 	}
-
-	public array function getEntityArray(boolean refresh) {
-		if(!isDefined("variables.entityArray") || arrayLen(variables.entityArray) == 0 || (isDefined("arguments.refresh") && arguments.refresh == true)) {
-			if(!isDefined("variables.records") || arrayLen(variables.records) == 0){
-				fillFromDefaultHQL();
-			}
-			variables.entityArray = arrayNew(1);
-			for(var i=getEntityStart(); i<=getEntityEnd(); i++) {
-				arrayAppend(variables.entityArray, variables.records[i]);
-			}
-		}
-		return variables.entityArray;
-	}
 	
+	public array function getEntityArray(boolean refresh=false) {
+		// This method is Depreciated in version 1.1, use getPageRecords() or getAllRecords()
+		return getPageRecords(refresh=arguments.refresh);
+	}
 }
