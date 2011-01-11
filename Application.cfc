@@ -9,12 +9,12 @@ component extends="framework" output="false" {
 	  application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
 	}
 	
-	public function getPluginConfig() {
+	public any function getPluginConfig() {
 	  return application[ variables.framework.applicationKey ].pluginConfig; 
 	}
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
-	public function setupApplication(any $) {
+	public void function setupApplication(any $) {
 		var serviceFactory = "";
 		var xml = "";
 		var xmlPath = "";
@@ -46,12 +46,12 @@ component extends="framework" output="false" {
 	}
 	
 	
-	public function setupSession() {
+	public void function setupSession() {
 	  	 session.slat = structnew();
 		 session.slatwall.crumbdata = arraynew(1);
 	}
 	
-	public function setupRequest() {
+	public void function setupRequest() {
 		var item = 0;
 		for (item in request.context) {
 		
@@ -70,14 +70,13 @@ component extends="framework" output="false" {
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
 	// Helper Functions
-	public function isAdminRequest() {
+	public boolean function isAdminRequest() {
 		return not structKeyExists(request,"servletEvent");
 		
 	}
 	
-	public function getExternalSiteLink(required String Address) {
-		return #buildURL(action='external.site', queryString='es=#arguments.Address#')#;
+	public string function getExternalSiteLink(required String Address) {
+		return buildURL(action='external.site', queryString='es=#arguments.Address#');
 	}
 	
-
 }
