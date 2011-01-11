@@ -240,7 +240,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				} else {
 					returnProperty &= ".#entityProperty#";
 				}
-				currentEntityName = "#entityProperty#";
+				currentEntityName = "Slatwall#entityProperty#";
 			} else {
 				returnProperty = "";
 			}
@@ -259,7 +259,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				if(i == arrayLen(entityPropertyArray)) {
 					returnValue = getValidEntityPropertyValue(entityProperty, arguments.value, currentEntityName);
 				} else {
-					currentEntityName = "#entityProperty#";
+					currentEntityName = "Slatwall#entityProperty#";
 				}
 			}
 		}
