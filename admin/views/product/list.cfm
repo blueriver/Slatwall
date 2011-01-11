@@ -14,7 +14,7 @@
 				<th>Administration</th>
 			</tr>
 			
-			<cfloop array="#rc.ProductSmartList.getEntityArray()#" index="Local.Product">
+			<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="Local.Product">
 				<tr>
 					<td>#Local.Product.getSearchScore()#</td>
 					<td>
