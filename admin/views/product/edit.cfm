@@ -6,6 +6,8 @@
 			<cf_PropertyDisplay object="#rc.Product#" property="Active" edit="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="ProductName" edit="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="Filename" edit="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="Brand" edit="true">
+			<!---
 			<dl>
 				<dt>Brand</dt>
 				<dd>
@@ -17,6 +19,7 @@
 					</select>
 				</dd>
 			</dl>
+			--->
 			<dl>
 				<dt>Product Template</dt>
 				<dd>

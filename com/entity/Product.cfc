@@ -59,7 +59,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getBrandOptions() {
 		if(!isDefined("variables.brandOptions")) {
-			variables.brandOptions = getService(service="BrandService").list();
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
+			smartList.addSelect(rawProperty="brandName", aliase="name");
+			smartList.addSelect(rawProperty="brandID", aliase="id"); 
+			variables.brandOptions = smartList.getAllRecords();
 		}
 		return variables.brandOptions;
 	}
