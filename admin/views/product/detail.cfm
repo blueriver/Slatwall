@@ -19,7 +19,7 @@
 		<cf_PropertyDisplay object="#rc.Product#" property="AllowShipping">
 	</div>
 	
-<div class="tabs initActiveTab">
+<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 	<ul>
 	<li><a href="##tabSkus" onclick="return false;"><span>SKUs</span></a></li>	
 	<li><a href="##tabDescription" onclick="return false;"><span>Web Description</span></a></li>
