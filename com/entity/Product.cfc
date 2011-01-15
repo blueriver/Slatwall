@@ -104,6 +104,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return "/index.cfm/sp/#getFilename()#";
 	}
 	
+	public string function getDefaultImagePath() {
+		//TODO: Add image path info and determine where Images should be stored.
+		return "";
+	}
+	
 	public numeric function getQIA() {
 		return getQOH() - getQC();
 	}

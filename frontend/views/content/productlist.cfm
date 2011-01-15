@@ -3,7 +3,9 @@
 		<cfloop array="#rc.ProductSmartList.getEntityArray()#" index="Local.Product">
 			<div class="product">
 				<a href="#Local.Product.getProductURL()#">
-				<h3 class="productname">#Local.Product.getProductName()#</h3>
+				<img src="#Local.Product.getDefaultImagePath()#" title="#Local.Product.getTitle()#" />
+				<h3 class="productName">#Local.Product.getTitle()#</h3>
+				<span class="livePrice">#Local.Product.getLivePrice()#</span>
 				</a>
 			</div>
 		</cfloop>

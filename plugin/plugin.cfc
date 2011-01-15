@@ -3,7 +3,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 	variables.config="";
 	variables.instance.extensionManager = application.classExtensionManager;
 
-	public function init(any config) {
+	public void function init(any config) {
 		variables.config = arguments.config;
 	}
 	
@@ -26,7 +26,6 @@ component extends="mura.plugin.plugincfc" output="false" {
 		var settings = getSlatwallSettings();
 		ClearOldAppContents(criteria=settings);
 	}
-
 
 
 	// Private Funtions
@@ -61,7 +60,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 	}
 	
 	// Slatwall ORM settings file
-	private  function getSlatwallSettings() {
+	private any function getSlatwallSettings() {
 		var settings = "";
 		savecontent variable="settings" {
 			include "ORMSettings.cfm";
@@ -70,7 +69,3 @@ component extends="mura.plugin.plugincfc" output="false" {
 	}
 // End cfc
 }
-
-
-
-
