@@ -1,4 +1,4 @@
-component extends="mura.plugin.plugincfc" output="false" {
+component extends="mura.plugin.plugincfc" output="false" { 
 
 	variables.config="";
 	variables.instance.extensionManager = application.classExtensionManager;
@@ -22,14 +22,12 @@ component extends="mura.plugin.plugincfc" output="false" {
 	}
 	// On delete
 	public void function delete() {
+		// Clear out cfapplication file
+	    ClearOldAppContents();
 		ormReload();
-		var settings = getSlatwallSettings();
-		ClearOldAppContents(criteria=settings);
 	}
-
-
-	// Private Funtions
 	
+	// Private Funtions
 	private void function installORMSettings() {
 		var settings = getSlatwallSettings();
 		// Unescape
@@ -37,27 +35,37 @@ component extends="mura.plugin.plugincfc" output="false" {
 		settings = reReplace( settings, "<%", "<", "all" );
 		settings = reReplace( settings, "%>", ">", "all" );
 		settings = reReplace( settings, "<~", "<!", "all" );
-		// Remove/Cleanup any Slatwall code in the cfapplication file before apending new ORM code
-		ClearOldAppContents(criteria=settings);
-		// Append to file new ORM code
-		var fileobj= fileOpen("#ExpandPath("/config/cfapplication.cfm")#", "append" );
-		fileWriteLine(fileObj,"#settings#" );
-		fileClose(fileobj);
 		
+		// Check if install/update needs to remove comments
+		if (#variables.config.getSetting( 'ORMpreference' )#){
+			settings = reReplace( settings, "<!--- Remove this line", " ", "all" );
+			settings = reReplace( settings, "Remove this line --->", " ", "all" );
+		}
+		
+		// Create ORM file that will be included
+		FileWrite("#ExpandPath("/plugins/Slatwall_#variables.config.getPluginID()#/cfapplication.cfm")#", "#settings#");
+		
+		// Clear out old Slatwall data
+		ClearOldAppContents();
+
+		var includeStr = "<cfinclude template='/plugins/Slatwall_#variables.config.getPluginID()#/cfapplication.cfm'>";
+	    // Append to file new ORM code
+		var fileobj= fileOpen("#ExpandPath("/config/cfapplication.cfm")#", "append" );
+		fileWriteLine(fileObj,"#includeStr#" );
+		fileClose(fileobj);
 	
 	}
 	
-	// Searches cfapplication for Slatwall code and rewrites the file back 
-	private void function ClearOldAppContents(required any criteria) {
-	    // Get current cfapplication
+	private void function ClearOldAppContents() {
+	    // Get current cfapplication file and all its settings
 		var FileData = FileRead("#ExpandPath("/config/cfapplication.cfm")#"); 
-		// See if we have any Slatwall code that needs removing by matching below
-		var data = REReplace(FileData, "\<!--- Slatwall Start ---\>.*?\<!--- Slatwall End ---\>", "", "ALL");
-		// Remove only Slatwall code from the cfapplication.cfc
+		// See if we have any Slatwall code that needs removing from this file
+		var data = REReplace(FileData, "<cfinclude template='/plugins/Slatwall_#variables.config.getPluginID()#/cfapplication.cfm'>", "", "ALL");
+		// Remove ONLY Slatwall code from the cfapplication.cfc file
 		var fileobj= fileOpen("#ExpandPath("/config/cfapplication.cfm")#", "write" );
 		fileWriteLine(fileObj,"#data#" );
 		fileClose(fileobj);
-	}
+	}	
 	
 	// Slatwall ORM settings file
 	private any function getSlatwallSettings() {
@@ -67,5 +75,22 @@ component extends="mura.plugin.plugincfc" output="false" {
 		}	
 		return settings; 
 	}
+	
+
+
+	
 // End cfc
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
