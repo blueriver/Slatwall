@@ -58,6 +58,19 @@
 		<optionlist></optionlist>  
 		<optionlabellist></optionlabellist>  
 	</setting>
+	<setting>  
+		<name>ORMpreference</name>  
+		<label>Automatically Install ORM Setting?</label>  
+		<hint>Allow Slatwall to automatically install ORM settings for you?</hint>  
+		<type>select</type>
+		<required>true</required>
+		<validation></validation>  
+		<regex></regex>
+		<message></message>
+		<defaultvalue></defaultvalue>  
+		<optionlist>true^false</optionlist>  
+		<optionlabellist>Yes^No</optionlabellist>  
+	</setting>
 </settings>
 
 <eventHandlers>
