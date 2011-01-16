@@ -1,9 +1,20 @@
 Installation
 ------------
 
+Install Option 1: Have ORM settings auto Installed for you.
+
 1. Create a Zip file of the source code with this directory as your top level directory.
-2. Install Zip files as a plugin to Mura CMS
-3. Open your Mura CMS cfapplication.cfm file located here: muraroot/config/cfapplication.cfm, and remove the two comment lines that say "remove this line" both at the top and the bottom of the slatwall code block.
+2. Install Zip files as a plugin to Mura CMS and Deploy.
+3. In configuring the Plug-In settings choose to 'Automatically Install ORM Settings'
+4. Click update.
+
+Install Option 2: ORM Manual setup.
+
+1. Create a Zip file of the source code with this directory as your top level directory.
+2. Install Zip files as a plugin to Mura CMS and Deploy.
+3. In configuring the Plug-In settings choose NOT to 'Automatically Install ORM Settings'
+4. Click Update.
+5. Open your the cfapplication.cfm file located here: muraroot/plugins/Slatwall_[ID]/cfapplication.cfm, and remove the two comment lines that say "remove this line" both at the top and the bottom of the slatwall code block.
 
 
 Documentation
