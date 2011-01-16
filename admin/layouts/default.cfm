@@ -49,7 +49,7 @@
 	#application.pluginManager.renderAdminToolBar("jquery",true)#
 	#view('utility/toolbar')#
 	<div class="admincontainer">
-		<img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="33" width="200" alt="Slatwall Ecommerce" />
+		<img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="32" width="200" alt="Slatwall Ecommerce" />
 		<h2>#getPluginConfig().getPackage()#<cfif len(rc.section)> - #rc.Section#</cfif></h2>
 		#body#
 	</div>
