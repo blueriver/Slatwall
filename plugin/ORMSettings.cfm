@@ -1,5 +1,4 @@
 <~--- Slatwall Start --->
-<~--- Only uncomment the 2 lines starting "remove this line" do not remove the Slatwall start/end tags --->
 <~--- Remove this line
   <%cfset variables.slatwallpluginid = <cfoutput>#variables.config.getPluginID()#</cfoutput> /%>
   <~--- Get Mura Data Source from Mura's Settings.ini file --->
