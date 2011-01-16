@@ -16,6 +16,16 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
+		rc.section = "Product List";
+		
+		rc.productSmartList = getProductService().getSmartList(arguments.rc);
+	}
+	
+	public void function detail(required struct rc) {
+		var productName = rc.product.getProductName();
+		rc.section = "Product Details";
+		if(len(productName))
+			rc.section &= ": " & productName;
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}

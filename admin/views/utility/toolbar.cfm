@@ -4,7 +4,7 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<li><a href="#buildURL(action='admin:main.default')#">Dashboard</a></li>
+			<li><a href="#buildURL(action='admin:main.dashboard')#">Dashboard</a></li>
 			<li>
 				<a href="#buildURL(action='admin:product.list')#">Products</a>
 				<div class="MenuSubOne">

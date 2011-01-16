@@ -1,6 +1,5 @@
 <cfoutput>
 <div class="svohelpabout">
-	<h1>About</h1>
 	<dl>
 		<dt>User Roles</dt>
 		<dd>#getUserRoles()#</dd>
