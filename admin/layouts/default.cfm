@@ -8,10 +8,13 @@
 	<script type="text/javascript">
 		var slat_pluginid = #getPluginConfig().getPluginID()#;
 	</script>
-	<script language="Javascript" type="text/javascript" src="/admin/js/jquery/jquery.js"></script>
-	<script language="Javascript" type="text/javascript" src="/admin/js/jquery/jquery-ui.js"></script>
-	<script language="Javascript" type="text/javascript" src="/plugins/#getPluginConfig().getDirectory()#/js/slatwall.js"></script>
-	<script language="Javascript" type="text/javascript" src="/plugins/#getPluginConfig().getDirectory()#/js/fw1AjaxAdapter.js"></script>
+	<script language="Javascript" type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery.js"></script>
+	<script language="Javascript" type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js"></script>
+	<script language="Javascript" type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/slatwall.js"></script>
+	<script language="Javascript" type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/fw1AjaxAdapter.js"></script>
+	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckfinder/ckfinder.js"></script>
 	<link rel="stylesheet" type="text/css" href="/admin/css/admin.css" />
 	<link rel="stylesheet" type="text/css" href="/admin/css/jquery/default/jquery.ui.all.css" />
 	<link rel="stylesheet" type="text/css" href="/plugins/#getPluginConfig().getDirectory()#/css/slatwall_admin.css" />

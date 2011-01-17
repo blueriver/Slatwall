@@ -24,10 +24,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="lastUpdatedDateTime"	ormtype="date" default="" displayname="Date Last Updated";
 	
 	// Related Object Properties
-	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="skus" singularname="sku" type="array" cfc="sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse="true";
-	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID";
-	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
+	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" cascade="all" inverse=true;
+	property name="skus" type="array" cfc="sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
+	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
+	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" cascade="all" inverse=true;
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";

@@ -39,6 +39,7 @@
 	<cfloop array="#local.metadata.properties#" index="i">
 		<cfif UCASE(i.name) eq UCASE(attributes.property)>
 			<cfset local.propertyMetadata = i />
+			<cfbreak />
 		</cfif>
 	</cfloop>
 	
@@ -63,6 +64,7 @@
 				<cfloop array="#local.subEntityMetadata.properties#" index="i">
 					<cfif structKeyExists(i, "fieldtype") and i.fieldtype eq "id">
 						<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
+						<cfbreak />
 					</cfif>
 				</cfloop>
 			<cfelse>
@@ -76,7 +78,7 @@
 			<cfset attributes.value = "">
 		</cfif>
 		
-		<!--- In in edit mode, and that editType attribute is not set then figure out what to use --->
+		<!--- If in edit mode, and that editType attribute is not set then figure out what to use --->
 		<cfif attributes.edit>
 			<cfif attributes.editType eq "">
 				<!--- Check to see if this is a many-to-one type property.  Otherwise check the propertyMetadata.type for the most suitible form type, if nothing is set then use the default of text --->
@@ -111,6 +113,7 @@
 				<cfloop array="#attributes.editOptions#" index="i">
 					<cfif not isDefined("i.id") or not isDefined("i.name")>
 						<cfset attributes.editType = "none" />
+						<cfbreak />
 					</cfif>
 				</cfloop>
 			</cfif>
@@ -119,8 +122,8 @@
 		<cfoutput>
 	 		<dt class="spd#LCASE(local.propertyMetadata.name)#">
 	 			
-	 			<!--- If in edit mode, then wrap title in a label tag --->
-	 			<cfif attributes.edit>
+	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
+	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup">
 					<label for="#local.propertyMetadata.name#">
 						#attributes.title#
 						<!--- If this is a required field the add an asterisk --->
@@ -128,6 +131,14 @@
 							*
 						</cfif>
 					</label>
+				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
+					<div class="label">
+						#attributes.title#
+						<!--- If this is a required field the add an asterisk --->
+						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
+							*
+						</cfif>
+					</div>
 				<cfelse>
 					#attributes.title#
 				</cfif>
@@ -145,21 +156,32 @@
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
 					<cfif attributes.editType eq "text">
-						<input type="text" name="#local.propertyMetadata.name#" value="#attributes.value#" />
+						<input type="text" name="#local.propertyMetadata.name#" id="#local.propertyMetadata.name#" value="#attributes.value#" />
 					<cfelseif attributes.editType eq "textarea">
-						<textarea name="#local.propertyMetadata.name#">#attributes.Value#</textarea>
+						<textarea name="#local.propertyMetadata.name#" id="#local.propertyMetadata.name#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "checkbox">
-						<input type="checkbox" name="#local.propertyMetadata.Name#" value="1" <cfif attributes.value>checked="checked"</cfif> />
+						<input type="checkbox" name="#local.propertyMetadata.Name#" id="#local.propertyMetadata.Name#" value="1" <cfif attributes.value>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
-						<select name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID">
+						<select name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID">
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i.id#" <cfif attributes.value eq i.id>selected="selected"</cfif>>#i.name#</option>	
 							</cfloop>
 						</select>
 					<cfelseif attributes.editType eq "radiogroup">
-						<!--- TODO: Add radio group display --->
+						<ul class="radiogroup">
+						<cfloop array="#attributes.editOptions#" index="i">
+							<li><input type="radio" name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.id> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
+						</cfloop>
+						</ul>
 					<cfelseif attributes.editType eq "wysiwyg">
-						<!--- TODO: Add wysiwyg display --->
+						<textarea name="#local.propertyMetadata.name#" id="#local.propertyMetadata.name#">#attributes.Value#</textarea>
+						<script type="text/javascript" language="Javascript">
+							var loadEditorCount = 0;
+							jQuery('###local.propertyMetadata.name#').ckeditor(
+								{ toolbar:'Default',
+								height:'300',
+								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
+							</script>
 					</cfif>
 				<cfelseif attributes.edit eq true and attributes.editType eq "none">
 					<!-- A Default Edit Type Could not be created -->

@@ -35,7 +35,7 @@
 	</div>
 	
 	<div id="tabDescription">
-	
+	<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="true" editType="wysiwyg">
 	</div>
 	<div id="tabCategories">
 	
