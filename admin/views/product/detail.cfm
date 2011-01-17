@@ -1,22 +1,33 @@
 <cfset local.Product = rc.Product />
+<cfparam name="rc.edit" default="false" />
 
 <cfoutput>
+<cfif not rc.edit>
+	<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>
+</cfif>
+
 	<!--- <div class="ItemDetailImage"><img src="http://www.nytro.com/prodimages/#local.Product.getDefaultImageID()#-DEFAULT-s.jpg"></div> --->
 	<div class="ItemDetailMain">
-		<cf_PropertyDisplay object="#rc.Product#" property="Active">
-		<cf_PropertyDisplay object="#rc.Product#" property="ProductName">
-		<cf_PropertyDisplay object="#rc.Product#" property="ProductCode">
-		<cf_PropertyDisplay object="#rc.Product#" property="ProductYear">
-		<cf_PropertyDisplay object="#rc.Product#" property="ShippingWeight">
-		<cf_PropertyDisplay object="#rc.Product#" property="PublishedWeight">
+		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#">
 	</div>
 	
 	<div class="ItemDetailBar">
-		<cf_PropertyDisplay object="#rc.Product#" property="AllowPreorder">
-		<cf_PropertyDisplay object="#rc.Product#" property="AllowDropship">
-		<cf_PropertyDisplay object="#rc.Product#" property="NonInventoryItem">
-		<cf_PropertyDisplay object="#rc.Product#" property="CallToOrder">
-		<cf_PropertyDisplay object="#rc.Product#" property="AllowShipping">
+		<cf_PropertyDisplay object="#rc.Product#" property="showonWebRetail" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="showonWebWholesale" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="allowPreorder" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="allowBackorder" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="allowDropship" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="nonInventoryItem" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="callToOrder" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="allowShipping" edit="#rc.edit#">
 	</div>
 	
 <div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -35,7 +46,7 @@
 	</div>
 	
 	<div id="tabDescription">
-	<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="true" editType="wysiwyg">
+		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
 	</div>
 	<div id="tabCategories">
 	

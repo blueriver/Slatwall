@@ -30,6 +30,12 @@ component extends="BaseController" output=false accessors=true {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
+	public void function edit(required struct rc) {
+		//rc.productTemplatesQuery = getProductService().getProductTemplates();
+		//rc.edit = true;
+		//variables.fw.setView("admin:product.detail");
+	}
+	
 	public void function update(required struct rc) {
 		param name="rc.brand_brandID" default="";
 		rc.product = variables.fw.populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
@@ -50,10 +56,6 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			variables.fw.setView("admin:product.edit");
 		}
-	}
-	
-	public void function edit(required struct rc) {
-		//rc.productTemplatesQuery = getProductService().getProductTemplates();
 	}
 	
 	public void function delete(required struct rc) {
