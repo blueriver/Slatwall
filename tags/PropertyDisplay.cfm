@@ -62,7 +62,7 @@
 				<cfset local.subEntityMetadata = getMetadata(attributes.value) />
 				<cfset attributes.value = "">
 				<cfloop array="#local.subEntityMetadata.properties#" index="i">
-					<cfif structKeyExists(i, "fieldtype") and i.fieldtype eq "id">
+					<cfif i.name EQ attributes.property & 'name'>
 						<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
 						<cfbreak />
 					</cfif>

@@ -66,6 +66,17 @@ component extends="framework" output="false" {
 		if (not structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
+		
+		if( not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 )
+			param name="session.dashboardSpan" default="30";
+		else
+			param name="session.dashboardSpan" default="#application.configBean.getSessionHistory()#";
+		
+		if(not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 )
+			session.dashboardSpan=30;
+		else
+			session.dashboardSpan=application.configBean.getSessionHistory();
+
 		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
 	}
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.

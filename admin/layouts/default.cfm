@@ -30,6 +30,7 @@
 	<script type="text/javascript">
 		jQuery(document).ready(function(){setDatePickers(".datepicker",dtLocale);setTabs(".tabs",#rc.activeTab#);setHTMLEditors();setAccordions(".accordion",#rc.activePanel#)});
 	</script>
+	#view( "product/head/productForm.js" )#
 </head>
 <body>
 	#application.pluginManager.renderAdminToolBar("jquery",true)#

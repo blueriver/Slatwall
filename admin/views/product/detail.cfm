@@ -2,7 +2,10 @@
 <cfparam name="rc.edit" default="false" />
 
 <cfoutput>
-<cfif not rc.edit>
+<cfif rc.edit>
+<form name="ProductEdit" action="?action=admin:product.update" method="post">
+	<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
+<cfelse>
 	<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>
 </cfif>
 
@@ -42,7 +45,66 @@
 	</ul>
 
 	<div id="tabSkus">
-	
+		<cfset local.skus = rc.Product.getSkus() />
+		<cfif rc.edit>
+			<input type="button" class="button" id="addSKU" value="Add SKU" />
+		</cfif>
+<!---		<cfif arrayLen(local.skus)>--->
+			<table id="skuTable">
+				<thead>
+				<tr>
+					<th>Company SKU</th>
+					<th>Original Price</th>
+					<th>List Price</th>
+					<th>QOH</th>
+					<th>QOO</th>
+					<th>QC</th>
+					<th>QIA</th>
+					<th>QEA</th>
+					<th>Image Path</th>
+					<th>Admin</th>
+				</tr>
+				</thead>
+				<tbody>
+			<cfset local.arrayIndex = 1 />
+			<cfif not rc.edit>	
+				<cfloop array="#local.skus#" index="local.thisItem">
+				<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>			
+					<td>#local.thisItem.getSkuID#</td>
+					<td>#local.thisItem.getOriginalPrice()#</td>
+					<td>#local.thisItem.getListPrice()#</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<cfset local.arrayIndex++ />
+				</cfloop>
+			<cfelse>
+				<cfloop array="#local.skus#" index="local.thisItem">
+				<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>			
+					<td><input type="text" name="SKU#local.arrayIndex#_SKUID" id="SKU#local.arrayIndex#_SKUID" value="#local.thisItem.getSkuID()#" /></td>
+					<td><input type="text" name="SKU#local.arrayIndex#_originalPrice" id="SKU#local.arrayIndex#_originalPrice" value="#local.thisItem.getOriginalPrice()#" /></td>
+					<td><input type="text" name="SKU#local.arrayIndex#_listPrice" id="SKU#local.arrayIndex#_listPrice" value="#local.thisItem.getListPrice()#" /></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<cfset local.arrayIndex++ />
+				</cfloop>
+			</cfif>
+			</tbody>
+			</table>
+<!---		<cfelse>
+			<p>There are no SKU's for this product.</p>
+		</cfif>--->
 	</div>
 	
 	<div id="tabDescription">
@@ -65,4 +127,21 @@
 	</div>
 
 </div>
+<cfif rc.edit>
+<button type="submit">Save</button>
+</form>
+</cfif>
 </cfoutput>
+<table id="tableTemplate" class="hideElement">
+<tbody>
+<tr>
+	<td><input type="text" name="" id="" value="" /></td>
+	<td><input type="text" name="" id="" value="" /></td>
+	<td><input type="text" name="" id="" value="" /></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+</tbody>
+</table>
