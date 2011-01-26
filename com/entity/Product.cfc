@@ -10,9 +10,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productDescription" type="string" default="" persistent=true displayname="Product Description" hint="HTML Formated description of the Product";
 	property name="productYear" type="numeric" default=0 persistent=true displayname="Product Year" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinued"	type="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="showOnWebRetail"	type="boolean" default=false persistent=true displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
+	property name="showOnWeb"	type="boolean" default=false persistent=true displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
 	property name="showOnWebWholesale" type="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
-	property name="nonInventoryItem" type="boolean" default=false persistent=true displayname="Non-Inventory Item";
+	property name="nonInventory" type="boolean" default=false persistent=true displayname="Non-Inventory Item";
 	property name="callToOrder" type="boolean" default=false persistent=true displayname="Call To Order";
 	property name="allowShipping" type="boolean" default=true persistent=true displayname="Allow Shipping";
 	property name="allowPreorder" type="boolean" default=true persistent=true displayname="Allow Pre-Orders" hint="";
@@ -20,8 +20,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowDropship" type="boolean" default=false persistent=true displayname="Allow Dropship";
 	property name="shippingWeight" type="numeric" default=0 persistent=true hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	property name="publishedWeight" type="numeric" default=0 persistent=true hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
-	property name="dateCreated" type="date" default="" persistent=true displayname="Date Create";
-	property name="dateLastUpdated"	type="date" default="" persistent=true displayname="Date Last Updated";
+	property name="createdDateTime" type="date" default="" persistent=true displayname="Date Create";
+	property name="lastUpdatedDateTime"	type="date" default="" persistent=true displayname="Date Last Updated";
 	
 	// Related Object Properties
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" cascade="all" inverse=true;

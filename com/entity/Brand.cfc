@@ -6,6 +6,6 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandWebsite" type="string" default="" displayname="Brand Website" persistent="true" hint="This is the Website of the brand";
 	
 	// Related Object Properties
-	property name="brandVendors" cfc="vendorbrand" fieldtype="one-to-many" fkcolumn="BrandID";
+	property name="brandVendors" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID";
 
 }

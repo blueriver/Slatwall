@@ -103,10 +103,10 @@ component displayname="Base Entity" accessors="true" {
 	public void function preInsert(){
 		var timestamp = now();
 		
-		if(structKeyExists(this,"setDateCreated")){
+		if(structKeyExists(this,"setCreatedDateTime")){
 			this.setDateCreated(timestamp);
 		}
-		if(structKeyExists(this,"setDateLastUpdated")){
+		if(structKeyExists(this,"setLastUpdatedDateTime")){
 			this.setDateLastUpdated(timestamp);
 		}
 		
@@ -115,7 +115,7 @@ component displayname="Base Entity" accessors="true" {
 	public void function preUpdate(Struct oldData){
 		var timestamp = now();
 		
-		if(structKeyExists(this,"setDateLastUpdated")){
+		if(structKeyExists(this,"setLastUpdatedDateTime")){
 			this.setDateLastUpdated(timestamp);
 		}
 	}

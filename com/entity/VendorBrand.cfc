@@ -1,10 +1,10 @@
 component displayname="Vendor Brand" entityname="SlatwallVendorBrand" table="SlatwallVendorBrand" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="vendorBrandID" fieldtype="id" generator="increment";
+	property name="vendorBrandID" type="string" fieldtype="id" generator="guid";
 	
 	// Related Object Properties
-	property name="vendor" cfc="vendor" fieldtype="many-to-one" fkcolumn="VendorID";
-	property name="brand" cfc="brand" fieldtype="many-to-one" fkcolumn="BrandID";
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	
 }
