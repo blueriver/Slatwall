@@ -20,7 +20,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription());
 			
 			// Override crumbdata with the last page that was loaded
-			if(isDefined("session.slatwall.crumData")) {
+			if(isDefined("session.slatwall.crumbData")) {
 				request.crumbdata = duplicate(session.slatwall.crumbdata);
 				request.contentrenderer.crumbdata = duplicate(session.slatwall.crumbdata);
 			}
