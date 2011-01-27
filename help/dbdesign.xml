@@ -185,22 +185,14 @@
 </key>
 <comment>This table will hold all accounts including customers and tie them to a single mura user.  However some times there will be an account, but no user in mura.  If they do exist in both mura and slataccount, then the FirstName, LastName and Company will not be saved in this table</comment>
 </table>
-<table x="782" y="577" name="SlatwallCart">
+<table x="783" y="577" name="SlatwallCart">
 <row name="CartID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="AccountID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="IsSaved" null="1" autoincrement="0">
-<datatype>bit</datatype>
-<default>NULL</default></row>
-<row name="ExpirationDate" null="1" autoincrement="0">
-<datatype>DATETIME</datatype>
-<default>NULL</default></row>
-<row name="BillingAddressID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
+<default>NULL</default><relation table="SlatwallAccount" row="AccountID" />
+</row>
 <key type="PRIMARY" name="">
 <part>CartID</part>
 </key>
@@ -297,13 +289,13 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallLocation" row="locationID" />
 </row>
-<row name="quantityOnHand" null="1" autoincrement="0">
+<row name="qoh" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="quantityCommited" null="1" autoincrement="0">
+<row name="qc" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="quantityOnPurchaseOrder" null="1" autoincrement="0">
+<row name="qexp" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -580,11 +572,11 @@
 <part>AccountEmailID</part>
 </key>
 </table>
-<table x="772" y="175" name="SlatwallAccountPhone">
+<table x="772" y="181" name="SlatwallAccountPhone">
 <row name="AccountPhoneID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="typeID" null="1" autoincrement="0">
+<row name="phoneTypeID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallType" row="typeID" />
 </row>
@@ -848,12 +840,6 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallShippingMethod" row="ShippingMethodID" />
 </row>
-<row name="totalAmount" null="1" autoincrement="0">
-<datatype>DECIMAL</datatype>
-<default>NULL</default></row>
-<row name="email" null="1" autoincrement="0">
-<datatype>VARCHAR</datatype>
-<default>NULL</default></row>
 <row name="cost" null="1" autoincrement="0">
 <datatype>DECIMAL</datatype>
 <default>NULL</default></row>
