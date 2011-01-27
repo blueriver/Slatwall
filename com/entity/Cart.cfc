@@ -4,7 +4,7 @@ component displayname="Cart" entityname="SlatwallCart" table="SlatwallCart" pers
 	property name="cartID" type="string" fieldtype="id" generator="guid";
 	
 	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="one-to-many" fkcolumn="accountID";
-	property name="cartItems" cfc="CartItem" fieldtype="many-to-one" fkcolumn="cartID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="cartItems" type="array" cfc="CartItem" fieldtype="one-to-many" fkcolumn="cartID" cascade="all" inverse="true";
 
 }

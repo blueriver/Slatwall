@@ -212,14 +212,6 @@
 <row name="Quantity" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="ShippingMethodID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallShippingMethod" row="ShippingMethodID" />
-</row>
-<row name="ShippingAddressID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallAddress" row="AddressID" />
-</row>
 <key type="PRIMARY" name="">
 <part>cartItemID</part>
 </key>

@@ -1,4 +1,4 @@
-component displayname="History Sku" entityname="SlatwallHistorySku" table="SlatwallHistorySku" persistent="true" extends="slatwall.com.entity.baseEntity" {
+component displayname="History Sku" entityname="SlatwallHistoryOrder" table="SlatwallHistoryOrder" persistent="true" extends="slatwall.com.entity.baseEntity" {
 			
 	// Persistant Properties
 	property name="historyOrderID" type="string" fieldtype="id" generator="guid";
@@ -6,6 +6,6 @@ component displayname="History Sku" entityname="SlatwallHistorySku" table="Slatw
 	
 	// Related Object Properties
 	property name="order" cfc="Sku" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderStatus" cfc="OrderStatus" fieldtype="many-to-one" fkcolumn="orderStatusID";
+	property name="orderStatus" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusID";
 	
 }

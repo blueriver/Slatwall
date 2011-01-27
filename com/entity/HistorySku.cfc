@@ -3,7 +3,7 @@ component displayname="History Sku" entityname="SlatwallHistorySku" table="Slatw
 	// Persistant Properties
 	property name="historySkuID" type="string" fieldtype="id" generator="guid";
 	property name="historyDateTime" type="date";
-	property name="price" type="";
+	property name="price" type="numeric";
 	property name="listPrice" type="string";
 	
 	// Related Object Properties

@@ -1,7 +1,7 @@
 component displayname="Attribute Value" entityname="SlatwallAttributeValue" table="SlatwallAttributeValue" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="attributeValueID" fieldtype="id" generator="increment";
+	property name="attributeValueID" type="string" fieldtype="id" generator="guid";
 	property name="attributeValue" type="string";
 	
 	// Related Object Properties
