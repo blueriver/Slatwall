@@ -1192,11 +1192,11 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallSku" row="SkuID" />
 </row>
-<row name="sku" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
 <row name="skuTypeID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="SkuValue" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>skuAlternateID</part>
