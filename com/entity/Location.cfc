@@ -3,4 +3,7 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	// Persistant Properties
 	property name="locationID" fieldtype="id" generator="guid" persistent=true;
 	property name="locationName" type="string" persistent=true;
+	property name="sellStockOnWeb" type="boolean";
+	property name="sellStockOnWebWholesale" type="boolean";
+	
 }

@@ -2,8 +2,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Persistant Properties
 	property name="skuID" fieldtype="id" generator="guid";
-	property name="originalPrice" persistent=true type="numeric";
-	property name="listPrice" persistent=true type="numeric";
+	property name="listPrice" type="numeric";
+	property name="price" type="numeric";
 	
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="ProductID" cfc="product";

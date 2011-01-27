@@ -8,4 +8,6 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	// Related Object Properties
 	property name="attributeType" cfc="Type" fieldtyp="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
 	property name="attributeClassType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeClassTypeID"  hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	property name="attrinuteOptions" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID";
+	
 }
