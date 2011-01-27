@@ -39,15 +39,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent=false;
 	property name="originalPrice" type="numeric" persistent=false;
 	property name="listPrice" type="numeric" persistent=false;
-	property name="QOH" type="numeric" persistent=false;
-	property name="QC" type="numeric" persistent=false;
-	property name="QOO" type="numeric" persistent=false;
-	property name="webRetailQOH" type="numeric" persistent=false;
-	property name="webRetailQC" type="numeric" persistent=false;
-	property name="webRetailQOO" type="numeric" persistent=false;
+	property name="qoh" type="numeric" persistent=false;
+	property name="qc" type="numeric" persistent=false;
+	property name="qexp" type="numeric" persistent=false;
+	property name="webQOH" type="numeric" persistent=false;
+	property name="webQC" type="numeric" persistent=false;
+	property name="webQEXP" type="numeric" persistent=false;
 	property name="webWholesaleQOH" type="numeric" persistent=false;
 	property name="webWholesaleQC" type="numeric" persistent=false;
-	property name="webWholesaleQOO" type="numeric" persistent=false;
+	property name="webWholesaleQEXP" type="numeric" persistent=false;
 	
 	// Related Object Helpers
 	public any function getBrand() {

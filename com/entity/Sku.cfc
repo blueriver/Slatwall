@@ -11,14 +11,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Non-Persistant Properties
 	property name="livePrice" persistent=false;
-	property name="QOH" persistent=false type="numeric";
-	property name="QC" persistent=false type="numeric";
-	property name="QOO" persistent=false type="numeric";
-	property name="webRetailQOH" persistent=false type="numeric";
-	property name="webRetailQC" persistent=false type="numeric";
-	property name="webRetailQOO" persistent=false type="numeric";
+	property name="qoh" persistent=false type="numeric";
+	property name="qc" persistent=false type="numeric";
+	property name="qexp" persistent=false type="numeric";
+	property name="webQOH" persistent=false type="numeric";
+	property name="webQC" persistent=false type="numeric";
+	property name="webQEXP" persistent=false type="numeric";
 	property name="webWholesaleQOH" persistent=false type="numeric";
 	property name="webWholesaleQC" persistent=false type="numeric";
-	property name="webWholesaleQOO" persistent=false type="numeric";
+	property name="webWholesaleQEXP" persistent=false type="numeric";
 	
 }
