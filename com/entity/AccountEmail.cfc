@@ -2,7 +2,7 @@ component displayname="Account Email" entityname="SlatwallAccountEmail" table="S
 	
 	// Persistant Properties
 	property name="accountPhoneID" type="string" fieldtype="id" generator="guid";
-	property name="phone" type="string";
+	property name="email" type="string";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";

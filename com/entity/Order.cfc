@@ -9,7 +9,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
-	
+	property name="orderShipments" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID";
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();

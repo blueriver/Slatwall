@@ -5,7 +5,7 @@ component displayname="Cart Item" entityname="SlatwallCartItem" table="SlatwallC
 	property name="quantity" type="numeric";
 	
 	// Related Object Properties
-	property name="cart" cfc="Cart" fieldtype="one-to-many" fkcolumn="cartID";
-	property name="sku" cfc="Sku" fieldtype="one-to-many" fkcolumn="skuID";
+	property name="cart" cfc="Cart" fieldtype="many-to-one" fkcolumn="cartID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 
 }
