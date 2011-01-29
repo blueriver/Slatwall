@@ -4,7 +4,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="brandService" type="any";
 	
 	public void function before(required struct rc) {
-		param name="rc.brandID" default="";
+		param name="rc.brandID" default="0";
 		
 		rc.brand = getBrandService().getByID(ID=rc.brandID);
 		if(!isDefined("rc.brand")) {
