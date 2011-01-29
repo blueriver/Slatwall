@@ -1,7 +1,7 @@
 component displayname="Account" entityname="SlatwallAccount" table="SlatwallAccount" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="accountID" type="string" fieldtype="id" generator="guid";
+	property name="accountID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
 	property name="muraUserID" type="string" default="" persistent=true hint="This is the mura user id that ties an account to a login";
 	property name="firstName" type="string" default="" persistent=true hint="This Value is only Set if a MuraID does not exist";
 	property name="lastName" type="string" default="" persistent=true hint="This Value is only Set if a MuraID does not exist";

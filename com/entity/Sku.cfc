@@ -1,7 +1,7 @@
 component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="skuID" fieldtype="id" generator="guid";
+	property name="skuID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
 	property name="listPrice" type="numeric";
 	property name="price" type="numeric";
 	

@@ -1,7 +1,7 @@
 component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
 	// Persistant Properties
-	property name="productID" type="string" fieldtype="id" generator="guid";
+	property name="productID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
 	property name="active" type="boolean" default=true persistent=true displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
 	property name="filename" type="string" default="" persistent=true displayname="File Name" hint="This is the name that is used in the URL string";
 	property name="template" type="string" default="" persistent=true displayname="Design Template" hint="This is the Template to use for product display";

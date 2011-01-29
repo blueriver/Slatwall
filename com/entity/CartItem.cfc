@@ -1,7 +1,7 @@
 component displayname="Cart Item" entityname="SlatwallCartItem" table="SlatwallCartItem" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="cartItemID" type="string" fieldtype="id" generator="guid";
+	property name="cartItemID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
 	property name="quantity" type="numeric";
 	
 	// Related Object Properties

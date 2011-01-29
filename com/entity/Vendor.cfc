@@ -1,7 +1,7 @@
 component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="vendorID" fieldtype="id" generator="guid";
+	property name="vendorID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
 	property name="vendorName" type="string" persistent="true";
 	property name="vendorWebsite" type="string" persistent="true";
 	property name="accountNumber" type="string" persistent="true";
