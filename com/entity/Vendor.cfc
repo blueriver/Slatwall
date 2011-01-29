@@ -7,8 +7,8 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="accountNumber" type="string" persistent="true";
 	
 	// Related Object Properties
-	property name="phoneNumbers" cfc="vendorphone" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true";
-	property name="emailAddresses" cfc="vendoremail" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true";
-	property name="brands" cfc="vendorbrand" fieldtype="one-to-many" fkcolumn="VendorID" type="array" cascade="all" inverse="true";
+	property name="phoneNumbers" type="array" cfc="VendorPhone" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	property name="emailAddresses" type="array" cfc="VendorEmail" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	property name="brands" type="array" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	
 }
