@@ -7,15 +7,15 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="statusType" cfc="Type" fieldtype="many-to-one" fkcolumn="statusTypeID";
+	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
 	
 	
 	public string function getStatus() {
-		return getStatusType().getType();
+		return getOrderStatusType().getType();
 	}
 	
 	public string function getStatusCode() {
-		return getStatusType().getSystemCode();
+		return getOrderStatusType().getSystemCode();
 	}
 }

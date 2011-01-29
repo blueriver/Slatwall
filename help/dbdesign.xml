@@ -138,7 +138,7 @@
 <row name="orderDate" null="1" autoincrement="0">
 <datatype>DATETIME</datatype>
 <default>NULL</default></row>
-<row name="statusTypeID" null="1" autoincrement="0">
+<row name="orderStatusTypeID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallType" row="typeID" />
 </row>
@@ -389,13 +389,29 @@
 <part>VendorDirectoryID</part>
 </key>
 </table>
-<table x="790" y="1020" name="SlatwallOrderShipmentItem">
-<row name="orderShipmentItemID" null="1" autoincrement="1">
+<table x="804" y="911" name="SlatwallOrderItem">
+<row name="orderItemID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="shipmentID" null="1" autoincrement="0">
+<row name="orderID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallOrderShipment" row="shipmentID" />
+<default>NULL</default><relation table="SlatwallOrder" row="orderID" />
+</row>
+<row name="orderShippingID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="SlatwallOrderShipping" row="orderShippingID" />
+</row>
+<row name="orderItemStatusTypeID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="SlatwallType" row="typeID" />
+</row>
+<row name="stockID" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="SlatwallStock" row="stockID" />
+</row>
+<row name="profileID (optional)" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="SlatwallProfile" row="profileID" />
 </row>
 <row name="price" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -403,28 +419,20 @@
 <row name="quantity" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="stockID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallStock" row="stockID" />
-</row>
 <row name="taxAmount" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="profileID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallProfile" row="profileID" />
-</row>
 <key type="PRIMARY" name="">
-<part>orderShipmentItemID</part>
+<part>orderItemID</part>
 </key>
 </table>
 <table x="1070" y="1230" name="SlatwallShipmentItem">
 <row name="shipmentItemID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="orderShipmentItemID" null="1" autoincrement="0">
+<row name="orderItemID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallOrderShipmentItem" row="orderShipmentItemID" />
+<default>NULL</default><relation table="SlatwallOrderItem" row="orderItemID" />
 </row>
 <row name="quatityShipped" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
@@ -816,8 +824,8 @@
 <part>vendorBrandID</part>
 </key>
 </table>
-<table x="790" y="810" name="SlatwallOrderShipment">
-<row name="shipmentID" null="1" autoincrement="1">
+<table x="802" y="752" name="SlatwallOrderShipping">
+<row name="orderShippingID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="orderID" null="1" autoincrement="0">
@@ -836,7 +844,7 @@
 <datatype>DECIMAL</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>shipmentID</part>
+<part>orderShippingID</part>
 </key>
 </table>
 <table x="571" y="1470" name="SlatwallSkuOption">
@@ -961,7 +969,10 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallStock" row="stockID" />
 </row>
-<row name="quantity" null="1" autoincrement="0">
+<row name="adjustmentQuantity" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="newQuantity" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
