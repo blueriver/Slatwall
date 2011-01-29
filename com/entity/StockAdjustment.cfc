@@ -7,6 +7,6 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	// Related Object Properties
 	property name="adjustmentType" cfc="Type" fieldtype="many-to-one" fkcolumn="adjustmentTypeID";
 	property name="purchaseOrder" cfc="PurchaseOrder" fieldtype="many-to-one" fkcolumn="purchaseOrderID";
-	property name="stockAdjustmentItems" type="Array" cfc="StockAdjustmentItems" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" cascade="all" inverse="true" ;
+	property name="stockAdjustmentItem" type="Array" cfc="StockAdjustmentItem" fieldtype="one-to-many" fkcolumn="stockAdjustmentID" cascade="all" inverse="true" ;
 	
 }

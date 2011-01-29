@@ -7,6 +7,6 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 	// Related Object Properties
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="orderShippingItems" cfc="OrderItems" fieldtype="one-to-many" fkcolumn="orderShippingID";
+	property name="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID";
 	
 }

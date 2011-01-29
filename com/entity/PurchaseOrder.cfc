@@ -9,5 +9,5 @@ component displayname="Purchase Order" entityname="SlatwallPurchaseOrder" table=
 	
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="purchaseOrderItem" type="array" cfc="PurchaseOrderItem" filedtype="one-to-many" fkcolumn="purchaseOrderID";
+	property name="purchaseOrderItem"  cfc="PurchaseOrderItem" filedtype="one-to-many" fkcolumn="purchaseOrderID";
 }
