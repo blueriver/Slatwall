@@ -1,7 +1,7 @@
 component displayname="Sku Option" entityname="SlatwallSkuOption" table="SlatwallSkuOption" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="skuOptionID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
+	property name="skuOptionID" type="string" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";

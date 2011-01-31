@@ -1,7 +1,7 @@
 component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddress" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="addressID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
+	property name="addressID" type="string" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="name" type="string" persistent="true";
 	property name="company" type="string" persistent="true";
 	property name="phone" type="string" persistent="true";

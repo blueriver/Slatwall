@@ -1,7 +1,7 @@
 component displayname="Product Type" entityname="SlatwallProductType" table="SlatwallProductType" persistent="true" extends="slatwall.com.entity.baseEntity" {
 			
 	// Persistant Properties
-	property name="productTypeID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
+	property name="productTypeID" type="string" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productType" type="string";
 	
 	// Related Object Properties

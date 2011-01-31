@@ -1,7 +1,7 @@
 component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="orderID" type="numeric" ormtype="integer" fieldtype="id" generator="identity" unsavedvalue="0" default="0";
+	property name="orderID" type="string" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="orderOpenDate" type="date";
 	property name="orderCloseDate" type="date";
 	

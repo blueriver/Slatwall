@@ -5,7 +5,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="brandService" type="Slatwall.com.service.BrandService";
 
 	public void function before(required struct rc) {
-		param name="rc.productID" default="0";
+		param name="rc.productID" default="";
 		
 		rc.product = getProductService().getByID(ID=rc.productID);
 		if(!isDefined("rc.product")) {
