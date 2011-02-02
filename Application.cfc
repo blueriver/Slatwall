@@ -19,6 +19,7 @@ component extends="framework" output="false" {
 		
 		var serviceFactory = "";
 		var rbFactory = "";
+		var defaultSiteRBFactory = "";
 		var xml = "";
 		var xmlPath = "";
 	  
@@ -46,14 +47,12 @@ component extends="framework" output="false" {
 		serviceFactory.setParent(application.servicefactory);
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
-		
-		
+				
 		// Build RB Factory
-		rbFactory=serviceFactory.getBean("resourceBundleFactory");
-		rbFactory.init(parentFactory=application.rbFactory, resourceDirectory="#getDirectoryFromPath(getCurrentTemplatePath())#/resourceBundles");
+		defaultSiteRBFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(application.rbFactory,"#expandPath('/#application.configBean.getWebRootMap()#')#/default/includes/resourceBundles/", session.rb);
+		rbFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(defaultSiteRBFactory,"#getDirectoryFromPath(getCurrentTemplatePath())#/resourceBundles", session.rb);
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 	}
-	
 	
 	public void function setupSession() {
 	  	 session.slat = structnew();
@@ -62,29 +61,33 @@ component extends="framework" output="false" {
 	
 	public void function setupRequest() {
 		var item = 0;
-		for (item in request.context) {
 		
+		for (item in request.context) {
 			if (isSimpleValue(request.context[item])){
 				if (request.context[item] eq '0,1' or request.context[item] eq '1,0'){
 					request.context[item] = 1;
 				}
 			}
-		
 		}
+		
 		if (not structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
 		
-		if( not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 )
+		if( not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
 			param name="session.dashboardSpan" default="30";
-		else
+		} else {
 			param name="session.dashboardSpan" default="#application.configBean.getSessionHistory()#";
+		}
 		
-		if(not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 )
+		if(not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
 			session.dashboardSpan=30;
-		else
+		} else {
 			session.dashboardSpan=application.configBean.getSessionHistory();
-
+		}
+		
+		getpluginConfig().getApplication().getValue("rbFactory").resetSessionLocale();
+		
 		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
 	}
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
