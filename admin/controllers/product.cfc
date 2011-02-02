@@ -31,7 +31,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function update(required struct rc) {
-	
+		param name="rc.brand_brandID" default="";
 		rc.product = variables.fw.populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
 		rc.product.setBrand(getBrandService().getByID(ID=rc.Brand_BrandID));
 		//Set Filename for product if it isn't already defined.
@@ -44,6 +44,7 @@ component extends="BaseController" output=false accessors=true {
 		
 		//Save Product
 		rc.product = getProductService().save(entity=rc.product);
+		
 		if(!rc.product.hasErrors()) {
 			variables.fw.redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
 		} else {

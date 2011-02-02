@@ -1,11 +1,11 @@
 component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" table="SlatwallVendorSkuStock" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="vendorSkuStockID" type="string" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="cost" type="numeric";
-	property name="quantity" type="numeric";
-	property name="availableDateTime" type="date";
-	property name="lastUpdatedDateTime" type="date";
+	property name="vendorSkuStockID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="cost" ormtype="float";
+	property name="quantity" ormtype="integer";
+	property name="availableDateTime" ormtype="date";
+	property name="lastUpdatedDateTime" ormtype="date";
 	
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";

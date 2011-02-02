@@ -82,11 +82,9 @@
 				<!--- Check to see if this is a many-to-one type property.  Otherwise check the propertyMetadata.type for the most suitible form type, if nothing is set then use the default of text --->
 				<cfif structKeyExists(local.propertyMetadata, "fieldtype") and local.propertyMetadata.fieldtype eq "many-to-one">
 					<cfset attributes.editType = "select" />
-				<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "string">
+				<cfelseif (structKeyExists(local.propertyMetadata, "type") and (local.propertyMetadata.type eq "string" or local.propertyMetadata.type eq "numeric")) or (structKeyExists(local.propertyMetadata, "ormtype") and (local.propertyMetadata.ormtype eq "string" or local.propertyMetadata.ormtype eq "float" or local.propertyMetadata.ormtype eq "integer" or local.propertyMetadata.ormtype eq "int"))>
 					<cfset attributes.editType = "text" />
-				<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "numeric">
-					<cfset attributes.editType = "text" />
-				<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean">
+				<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean" or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
 					<cfset attributes.editType = "checkbox" />
 				<cfelse>
 					<cfset attributes.editType = "text" />
