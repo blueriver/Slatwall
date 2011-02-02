@@ -16,7 +16,9 @@ component extends="framework" output="false" {
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
 		ormReload();
+		
 		var serviceFactory = "";
+		var rbFactory = "";
 		var xml = "";
 		var xmlPath = "";
 	  
@@ -38,12 +40,18 @@ component extends="framework" output="false" {
 			xml = replaceNoCase( xml, "[integration]", "", "ALL");
 		}
 		
-		// Build Coldspring factory
+		// Build Coldspring factory & Set in FW/1
 		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
 		serviceFactory.loadBeansFromXmlRaw( xml );
 		serviceFactory.setParent(application.servicefactory);
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
+		
+		
+		// Build RB Factory
+		rbFactory=serviceFactory.getBean("resourceBundleFactory");
+		rbFactory.init(parentFactory=application.rbFactory, resourceDirectory="#getDirectoryFromPath(getCurrentTemplatePath())#/resourceBundles");
+		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 	}
 	
 	
