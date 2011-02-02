@@ -164,13 +164,13 @@
 					<cfelseif attributes.editType eq "select">
 						<select name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID">
 							<cfloop array="#attributes.editOptions#" index="i" >
-								<option value="#i.id#" <cfif attributes.value eq i.id>selected="selected"</cfif>>#i.name#</option>	
+								<option value="#i.id#" <cfif attributes.value eq i.name>selected="selected"</cfif>>#i.name#</option>	
 							</cfloop>
 						</select>
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfloop array="#attributes.editOptions#" index="i">
-							<li><input type="radio" name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.id> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
+							<li><input type="radio" name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
 						</cfloop>
 						</ul>
 					<cfelseif attributes.editType eq "wysiwyg">
