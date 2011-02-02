@@ -34,7 +34,7 @@
 			</dl>
 			<cf_PropertyDisplay object="#rc.Product#" property="ProductCode" edit="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="ProductYear" edit="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="true" editType="wysiwyg">
 			<cf_PropertyDisplay object="#rc.Product#" property="ManufactureDiscontinued" edit="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="ShowOnWebRetail" edit="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="ShowOnWebWholesale" edit="true">

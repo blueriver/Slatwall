@@ -30,17 +30,27 @@ component extends="BaseController" output=false accessors=true {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
+	public void function edit(required struct rc) {
+		//rc.productTemplatesQuery = getProductService().getProductTemplates();
+		var productName = rc.product.getProductName();
+		rc.edit = true;
+		rc.section = "Edit Product";
+		if(len(productName))
+			rc.section &= ": " & productName;
+		variables.fw.setView("admin:product.detail");
+	}
+	
 	public void function update(required struct rc) {
 		param name="rc.brand_brandID" default="";
 		rc.product = variables.fw.populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
 		rc.product.setBrand(getBrandService().getByID(ID=rc.Brand_BrandID));
 		//Set Filename for product if it isn't already defined.
-		if(rc.product.getFilename EQ "") {
+		if(trim(rc.product.getFilename()) EQ "") {
 			rc.product.setFilename(rc.product.getProductName());
 		}
 		
 		//Simplify filename
-		rc.product.setFilename(LCASE(REReplace(Replace(rc.product.getFilename()," ","-","all"),"[^A-Z|\-]","","all")));
+		rc.product.setFilename(LCASE(Replace(rc.product.getFilename()," ","-","all")));
 		
 		//Save Product
 		rc.product = getProductService().save(entity=rc.product);
@@ -52,13 +62,13 @@ component extends="BaseController" output=false accessors=true {
 		}
 	}
 	
-	public void function edit(required struct rc) {
-		//rc.productTemplatesQuery = getProductService().getProductTemplates();
-	}
-	
 	public void function delete(required struct rc) {
 		getProductService().delete(entity=rc.product);
 		variables.fw.redirect(action="admin:product.list");
+	}
+	
+	public void function types(required struct rc) {
+	   rc.productTypes = getProductService().listProductTypes();
 	}
 		
 }

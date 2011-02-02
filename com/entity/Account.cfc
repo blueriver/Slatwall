@@ -12,6 +12,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Non-Persistant Properties
 	property name="muraUser" type="any" persistent="false";
 	
+	// Related Object Properties
+	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
+	
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
 	public any function getMuraUser() {
