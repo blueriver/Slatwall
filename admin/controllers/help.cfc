@@ -6,7 +6,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function about(required struct rc) {
 		rc.section = "About Slatwall";
-		rc.rbFactory = getRBFactory();
+		
 	}
 		
 }

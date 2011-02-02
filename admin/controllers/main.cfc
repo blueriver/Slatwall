@@ -6,7 +6,5 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function dashboard(required struct rc) {
 		rc.section = "Dashboard";
-		rc.rbFactory = getRBFactory();
 	}
-		
 }

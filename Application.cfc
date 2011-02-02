@@ -86,7 +86,7 @@ component extends="framework" output="false" {
 			session.dashboardSpan=application.configBean.getSessionHistory();
 		}
 		
-		getpluginConfig().getApplication().getValue("rbFactory").resetSessionLocale();
+		request.context.rbFactory = getpluginConfig().getApplication().getValue("rbFactory").resetSessionLocale();
 		
 		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
 	}
