@@ -4,9 +4,9 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<li><a href="#buildURL(action='admin:main.dashboard')#">Dashboard</a></li>
+			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.rbFactory("dashboard.dashboard")#</a></li>
 			<li>
-				<a href="#buildURL(action='admin:product.list')#">Products</a>
+				<a href="#buildURL(action='admin:product.list')#">#rc.rbFactory("products.product")#</a>
 				<div class="MenuSubOne">
 					<ul>
 						<li><a href="#buildURL(action='admin:product.edit')#">Create New Product</a></li>
