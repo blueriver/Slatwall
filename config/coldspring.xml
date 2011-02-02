@@ -5,36 +5,86 @@
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
 	<bean id="brandDAO" class="slatwall.com.dao.[integration]BrandDAO" />
 	<bean id="productDAO" class="slatwall.com.dao.[integration]ProductDAO" />
+	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO" />
 	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
 	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
 	
-	<bean id="accountService" class="slatwall.com.service.accountService">
-		<constructor-arg name="entityName"><value>SlatwallAccount</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="AccountDAO" /></constructor-arg>
-	</bean>
+	<!-- transaction advice -->
+    <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />
 	
-	<bean id="brandService" class="slatwall.com.service.brandService">
-		<constructor-arg name="entityName"><value>SlatwallBrand</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="BrandDAO" /></constructor-arg>
-	</bean>
+    <bean id="accountService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.accountService">
+		        <constructor-arg name="entityName"><value>SlatwallAccount</value></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="AccountDAO" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
 	
-	<bean id="productService" class="slatwall.com.service.productService">
-		<constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
-		<constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
-		<constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
-		<constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
-	</bean>
+    <bean id="brandService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.brandService">
+		        <constructor-arg name="entityName"><value>SlatwallBrand</value></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="BrandDAO" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
 	
-	<bean id="typeService" class="slatwall.com.service.typeService">
-		<constructor-arg name="entityName"><value>SlatwallType</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="TypeDAO" /></constructor-arg>
-	</bean>
+    <bean id="productService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.productService">
+		        <constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
+		        <constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
+		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
+		        <constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
+		        <constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
+	
+	<bean id="typeService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.typeService">
+                <constructor-arg name="entityName"><value>SlatwallType</value></constructor-arg>
+                <constructor-arg name="DAO"><ref bean="TypeDAO" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
 
-	<bean id="vendorService" class="slatwall.com.service.vendorService">
-		<constructor-arg name="entityName"><value>SlatwallVendor</value></constructor-arg>
-		<constructor-arg name="DAO"><ref bean="VendorDAO" /></constructor-arg>
-	</bean>
+    <bean id="vendorService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.vendorService">
+		        <constructor-arg name="entityName"><value>SlatwallVendor</value></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="VendorDAO" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
 
 </beans>

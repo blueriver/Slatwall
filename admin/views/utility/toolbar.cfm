@@ -10,6 +10,7 @@
 				<div class="MenuSubOne">
 					<ul>
 						<li><a href="#buildURL(action='admin:product.edit')#">Create New Product</a></li>
+						<li><a href="#buildURL(action='admin:product.types')#">Product Types</a></li>
 						<li><a href="#buildURL(action='admin:product.list')#">Product Listing</a></li>
 						<li><a href="#buildURL(action='admin:brand.edit')#">Create New Brand</a></li>
 						<li><a href="#buildURL(action='admin:brand.list')#">Brand Listing</a></li>

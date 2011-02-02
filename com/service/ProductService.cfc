@@ -4,7 +4,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	property name="contentManager" type="any";
 	property name="settingsManager" type="any";
 	
-	public any function init(required any entityName, required any dao, required any skuDAO, required any contentManager, required any settingsManager) {
+	public any function init(required any entityName, required any dao, required any skuDAO, required any productTypeDAO, required any contentManager, required any settingsManager) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
 		setSkuDAO(arguments.skuDAO);

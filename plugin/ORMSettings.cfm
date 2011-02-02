@@ -13,6 +13,7 @@
   <%cfset this.ormenabled = "true" /%>
   <%cfset this.datasource = "#MuraDatasource#" /%>
   <%cfset this.ormSettings.dbcreate = "update" /%>
+   <%cfset this.ormSettings.flushAtRequestEnd = false /%>
   <%cfset this.ormsettings.cfclocation = "/plugins/Slatwall_#variables.slatwallpluginid#/com/entity" /%>
   <~--- Set Custom Tags Setting --->
   <%cfset this.customtagpaths = "#this.customtagpaths#,#baseDir#/plugins/Slatwall_#variables.slatwallpluginid#/tags" /%>
