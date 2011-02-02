@@ -1,6 +1,7 @@
 component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	property name="skuDAO" type="any";
+	property name="ProductTypeDAO" type="any";
 	property name="contentManager" type="any";
 	property name="settingsManager" type="any";
 	
@@ -8,6 +9,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
 		setSkuDAO(arguments.skuDAO);
+		setProductTypeDAO(arguments.productTypeDAO);
 		setContentManager(arguments.contentManager);
 		setSettingsManager(arguments.settingsManager);
 		
@@ -25,6 +27,10 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		smartList.addKeywordProperty(rawProperty="brand_brandName", weight=3);
 		
 		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
+	}
+	
+	public any function listProductTypes() {
+	   return getProductTypeDAO().list("SlatwallProductType");
 	}
 	
 	public any function getProductTemplates() {

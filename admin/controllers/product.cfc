@@ -66,5 +66,9 @@ component extends="BaseController" output=false accessors=true {
 		getProductService().delete(entity=rc.product);
 		variables.fw.redirect(action="admin:product.list");
 	}
+	
+	public void function types(required struct rc) {
+	   rc.productTypes = getProductService().listProductTypes();
+	}
 		
 }
