@@ -5,4 +5,3 @@
 <cfset variables.framework.action="action">
 <cfset variables.framework.home="admin:main.dashboard">
 <cfset variables.framework.generateses=false>
-<cfset variables.framework.reloadApplicationOnEveryRequest=true>

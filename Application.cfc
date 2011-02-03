@@ -19,7 +19,6 @@ component extends="framework" output="false" {
 		
 		var serviceFactory = "";
 		var rbFactory = "";
-		var defaultSiteRBFactory = "";
 		var xml = "";
 		var xmlPath = "";
 	  
@@ -49,8 +48,7 @@ component extends="framework" output="false" {
 		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
 				
 		// Build RB Factory
-		defaultSiteRBFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(application.rbFactory,"#expandPath('/#application.configBean.getWebRootMap()#')#/default/includes/resourceBundles/", session.rb);
-		rbFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(defaultSiteRBFactory,"#getDirectoryFromPath(getCurrentTemplatePath())#/resourceBundles", session.rb);
+		rbFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 	}
 	
@@ -60,6 +58,8 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
+		param name="session.rb" default="en";
+		
 		var item = 0;
 		
 		for (item in request.context) {
@@ -86,7 +86,8 @@ component extends="framework" output="false" {
 			session.dashboardSpan=application.configBean.getSessionHistory();
 		}
 		
-		request.context.rbFactory = getpluginConfig().getApplication().getValue("rbFactory").resetSessionLocale();
+		request.context.rbFactory = getPluginConfig().getApplication().getValue("rbFactory");
+		request.context.rbFactory.resetSessionLocale();
 		
 		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
 	}
