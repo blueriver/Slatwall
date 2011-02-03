@@ -10,7 +10,7 @@
 				<div class="MenuSubOne">
 					<ul>
 						<li><a href="#buildURL(action='admin:product.edit')#">#rc.rbFactory.getKey("toolbar.products.createnewproduct")#</a></li>
-						<li><a href="#buildURL(action='admin:product.types')#">Product Types</a></li>
+						<li><a href="#buildURL(action='admin:product.types')#">#rc.rbFactory.getKey("toolbar.products.producttypes")#</a></li>
 						<li><a href="#buildURL(action='admin:product.list')#">Product Listing</a></li>
 						<li><a href="#buildURL(action='admin:brand.edit')#">Create New Brand</a></li>
 						<li><a href="#buildURL(action='admin:brand.list')#">Brand Listing</a></li>

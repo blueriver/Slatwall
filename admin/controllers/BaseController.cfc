@@ -7,5 +7,8 @@ component persistent="false" accessors="true" output="false" extends="mura.cfobj
 		
 		return this;
 	}
-	
+
+	public any function getPluginConfig() {
+	   return application.slatwall.pluginConfig;
+	}
 }
