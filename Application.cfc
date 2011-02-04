@@ -87,7 +87,6 @@ component extends="framework" output="false" {
 		}
 		
 		request.context.rbFactory = getPluginConfig().getApplication().getValue("rbFactory");
-		request.context.rbFactory.resetSessionLocale();
 		
 		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
 	}
