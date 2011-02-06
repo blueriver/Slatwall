@@ -5,10 +5,18 @@
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
 	<bean id="brandDAO" class="slatwall.com.dao.[integration]BrandDAO" />
 	<bean id="productDAO" class="slatwall.com.dao.[integration]ProductDAO" />
-	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO" />
+	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO">
+		 <constructor-arg name="productTypeTreeSorter"><ref bean="ProductTypeTreeSorter" /></constructor-arg>
+	</bean>
 	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
 	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
+	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
+		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>
+		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
+		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
+		<constructor-arg name="pathColumn"><value>productType</value></constructor-arg>
+	</bean>
 	
 	<!-- transaction advice -->
     <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />

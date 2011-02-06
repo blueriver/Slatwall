@@ -50,6 +50,9 @@ component extends="framework" output="false" {
 		// Build RB Factory
 		rbFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
+
+		// Set Product Type tree in the Application Scope so we don't have to tree-sort the query on every request
+		getPluginConfig().getApplication().setValue("ProductTypeTree",getBeanFactory().getBean("ProductService").getProductTypeTree());
 	}
 	
 	public void function setupSession() {

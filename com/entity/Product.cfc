@@ -1,7 +1,7 @@
 component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
 	// Persistant Properties
-	property name="productID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="active" ormtype="boolean" default="true" displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
 	property name="filename" ormtype="string" default="" displayname="File Name" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" default="" displayname="Design Template" hint="This is the Template to use for product display";
@@ -25,7 +25,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Related Object Properties
 	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" cascade="all" inverse=true;
-	property name="skus" type="array" cfc="sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
+	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
+	property name="productType" displayname="Product Type" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID" cascade="all" inverse=true;
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" cascade="all" inverse=true;
 	
@@ -66,6 +67,17 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		return variables.brandOptions;
 	}
+	
+    public any function getProductTypeOptions() {
+        if(!structKeyExists(variables,"propertyTypeOptions")) {
+            var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductType");
+            smartList.addSelect(rawProperty="productType", aliase="name");
+            smartList.addSelect(rawProperty="productTypeID", aliase="id");
+			smartList.addOrder("productType|ASC");
+            variables.propertyTypeOptions = smartList.getAllRecords();
+        }
+        return variables.propertyTypeOptions;
+    }
 	
 	public array function getSkus() {
 		if(!isDefined("variables.skus")) {
@@ -112,4 +124,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public numeric function getQIA() {
 		return getQOH() - getQC();
 	}
+	
+	// Association management methods for bidirectional relationships
+	
+	public void function setProductType(required ProductType ProductType) {
+	   variables.productType = arguments.ProductType;
+	   if(!arguments.ProductType.hasProduct(this)) {
+	       arrayAppend(arguments.ProductType.getProducts(),this);
+	   }
+	}
+	
+	public void function removeProductType(required ProductType ProductType) {
+       var index = arrayFind(arguments.ProductType.getProducts(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.ProductType.getProducts(),index);
+       }
+       
+       structDelete(variables,"productType");
+    }
 }

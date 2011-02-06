@@ -156,5 +156,4 @@ limitations under the License.
 		</cfif>
 	</cffunction>
 
-<cfoutput></cfoutput>
 </cfcomponent>

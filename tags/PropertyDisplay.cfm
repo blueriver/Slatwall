@@ -55,27 +55,27 @@
 		</cfif>
 		
 		<!--- If the value attribute was not set, then try to determine the value from the object, and if that isn't set, then use the objects default. --->
-		<cfif attributes.Value eq "">
+		<cfif attributes.value eq "">
 			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
-			
-			<cfif isObject(attributes.value)>
-				<cfset local.subEntityMetadata = getMetadata(attributes.value) />
-				<cfset attributes.value = "">
-				<cfloop array="#local.subEntityMetadata.properties#" index="i">
-					<cfif i.name EQ attributes.property & 'name'>
-						<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
-						<cfbreak />
-					</cfif>
-				</cfloop>
-			<cfelse>
-				<cfif attributes.value eq "" and structKeyExists(local.propertyMetadata, "default")>
+	
+			<cfif structKeyExists(attributes,"value")>
+				<cfif isObject("#attributes.value#")>
+					<cfset local.subEntityMetadata = getMetadata(attributes.value) />
+					<cfset attributes.value = "">
+					<cfloop array="#local.subEntityMetadata.properties#" index="i">
+						<cfif i.name EQ attributes.property & 'name'>
+							<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
+							<cfbreak />
+						</cfif>
+					</cfloop>
+				<cfelseif attributes.value eq "" and structKeyExists(local.propertyMetadata, "default")>
 					<cfset attributes.value = local.propertyMetadata.default />
+				<cfelseif attributes.value eq "" and not structKeyExists(local.propertyMetadata,"default")>
+					<cfset attributes.value = "" />
 				</cfif>
+			<cfelse>
+			     <cfset attributes.value = "" />
 			</cfif>
-		</cfif>
-		
-		<cfif not structKeyExists(attributes, "value") or not isDefined("attributes.value")>
-			<cfset attributes.value = "">
 		</cfif>
 		
 		<!--- If in edit mode, and that editType attribute is not set then figure out what to use --->
