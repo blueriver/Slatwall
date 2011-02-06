@@ -1,5 +1,5 @@
-<cfset local.Product = rc.Product />
 <cfparam name="rc.edit" default="false" />
+<cfset local.Product = rc.Product />
 
 <cfoutput>
 <cfif rc.edit>
@@ -16,6 +16,35 @@
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#">
+		<!---<cf_PropertyDisplay object="#rc.Product#" property="productType" edit="#rc.edit#">--->
+        <dl>
+            <dt>
+                <cfif rc.edit>
+                <label for="productType_productTypeID">Product Type:</label></dt>
+				<cfelse>
+				    Product Type:
+				</cfif>
+            <dd>
+                <cfif rc.edit and structKeyExists(rc,"productTypes")>
+		            <select name="productType_productTypeID" id="productType_productTypeID">
+		                <option value="">None</option>
+		            <cfloop query="rc.productTypes">
+		                <cfset ThisDepth = rc.productTypes.TreeDepth />
+		                <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
+		                <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
+		                    #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##rc.productTypes.productType#
+		                </option>
+		            </cfloop>
+		            </select>
+				<cfelse>
+				    <cfif isNull(rc.Product.getProductType())>
+					None
+					<cfelse>
+					  #rc.Product.getProductType().getProductType()#
+					 </cfif>
+				</cfif>
+            </dd>
+        </dl>
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#">
@@ -111,7 +140,7 @@
 		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
 	</div>
 	<div id="tabCategories">
-	
+	   
 	</div>
 	<div id="tabDiscounts">
 	
