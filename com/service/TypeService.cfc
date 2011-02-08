@@ -1,3 +1,3 @@
-component extends="Slatwall.com.service.BaseService" output="false" {
+component extends="BaseService" output="false" {
 
 }

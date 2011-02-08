@@ -1,4 +1,4 @@
-component extends="slatwall.com.service.BaseService" accessors="true" {
+component extends="BaseService" accessors="true" {
 	
 	public any function loginMuraUser(required any muraUser) {
 		
@@ -22,15 +22,14 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 			} else {
 				// If account does exist with that e-mail, check if the account has a muraUserID already tied to it
 				if(isnull(account.getMuraUser())) {
-					// If no muraUserID already assigend to this account, Assign this muraUserID but set the verified = 0
+					// TODO: If no muraUserID already assigend to this account, Assign this muraUserID but set the verified = 0
 				} else {
-					// If a muraUserID is already assigned, Offer to merge Accounts.
-					// TODO: Merge Accounts
+					// TODO: If a muraUserID is already assigned, Offer to merge Accounts.
 				}
 			}
 		} else {
 		}
 		
-		// Login Slatwall Account in Session
+		// TODO: Login Slatwall Account in Session
 	}
 }

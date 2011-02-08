@@ -1,4 +1,4 @@
-component extends="slatwall.com.service.BaseService" accessors="true" {
+component extends="BaseService" accessors="true" {
 	
 	property name="skuDAO" type="any";
 	property name="ProductTypeDAO" type="any";
