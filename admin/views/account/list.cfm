@@ -1,6 +1,23 @@
 <cfoutput>
-<div class="svoadminbrandlist">
-	<h3 class="tableheader">Brands</h3>
+<div class="svoadminaccountlist">
+	<h3 class="tableheader">Accounts</h3>
+	<table class="listtable stripe">
+		<tr>
+			<th>Name</th>
+			<th>Primary Email</th>
+			<th>Administration</th>
+		</tr>
+		<cfset local.rowcounter = 1 />
+		<cfloop array="#rc.accountSmartList.getPageRecords()#" index="local.account">
+			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
+				<td><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<cfset local.rowcounter++ />
+		</cfloop>
+	</table>
+	<!---
 	<table class="listtable stripe">
 		<tr>
 			<th>Brand</th>
@@ -19,5 +36,6 @@
 		</cfloop>
 	</table>
 	<div style="float:right;"><a href="#buildURL(action='admin:brand.edit')#">Add Brand</a></div>
+	--->
 </div>
 </cfoutput>

@@ -4,18 +4,21 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.rbFactory.getKey("toolbar.dashboard")#</a></li>
+			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.dashboard")#</a></li>
 			<li>
-				<a href="#buildURL(action='admin:product.list')#">#rc.rbFactory.getKey("toolbar.products")#</a>
+				<a href="#buildURL(action='admin:product.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products")#</a>
 				<div class="MenuSubOne">
 					<ul>
-						<li><a href="#buildURL(action='admin:product.edit')#">#rc.rbFactory.getKey("toolbar.products.createnewproduct")#</a></li>
-						<li><a href="#buildURL(action='admin:product.types')#">#rc.rbFactory.getKey("toolbar.products.producttypes")#</a></li>
-						<li><a href="#buildURL(action='admin:product.list')#">Product Listing</a></li>
-						<li><a href="#buildURL(action='admin:brand.edit')#">Create New Brand</a></li>
-						<li><a href="#buildURL(action='admin:brand.list')#">Brand Listing</a></li>
+						<li><a href="#buildURL(action='admin:product.edit')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.createnewproduct")#</a></li>
+						<li><a href="#buildURL(action='admin:product.types')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.producttypes")#</a></li>
+						<li><a href="#buildURL(action='admin:product.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.productlisting")#</a></li>
+						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.createnewbrand")#</a></li>
+						<li><a href="#buildURL(action='admin:brand.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.brandlisting")#</a></li>
 					</ul>
 				</div>
+			</li>
+			<li>
+				<a href="#buildURL(action='admin:account.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.accounts")#</a>
 			</li>
 			<li>
 				<a href="##">Help</a>

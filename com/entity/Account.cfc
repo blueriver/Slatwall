@@ -14,40 +14,43 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="muraUser" fieldtype="many-to-one" fkcolumn="muraUserID" cfc="User";
 	property name="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
 	
-	/*
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
-	public any function getMuraUser() {
-		if(!isDefined("variables.muraUser")) {
-			if(isDefined("variables.muraUserID") && variable.MuraUserID != ""){
-				variables.muraUser = getService("userManager").getByID(ID=variables.muraUserID);
-			} else {
-				variables.muraUser = getService("userManager").getBean();
-			}
-		}
-		return variables.muraUser; 
-	}
-	
 	public string function getFirstName() {
-		if(!isDefined("variables.firstName") or variables.firstName == "") {
-			variables.firstName = getMuraUser().getFname();
+		if(isNull(getMuraUser())) {
+			if(!isDefined("variables.firstName")) {
+				variables.firstName = "";
+			}
+		} else {
+			variables.firstName = getMuraUser().getFirstName();
 		}
+		
 		return variables.firstName;
 	}
 	
 	public string function getLastName() {
-		if(!isDefined("variables.lastName") or variables.lastName == "") {
-			variables.lastName = getMuraUser().getLname();
+		if(isNull(getMuraUser())) {
+			if(!isDefined("variables.lastName")) {
+				variables.lastName = "";
+			}
+		} else {
+			variables.lastName = getMuraUser().getLastName();
 		}
+		
 		return variables.lastName;
 	}
 	
 	public string function getCompany() {
-		if(!isDefined("variables.company") or variables.company == "") {
+		if(isNull(getMuraUser())) {
+			if(!isDefined("variables.company")) {
+				variables.company = "";
+			}
+		} else {
 			variables.company = getMuraUser().getCompany();
 		}
-		return variables.lastName;
+		
+		return variables.company;
 	}
 	// End: User Helpers
-	*/
+	
 }
