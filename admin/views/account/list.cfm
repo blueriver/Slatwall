@@ -10,32 +10,21 @@
 		<cfset local.rowcounter = 1 />
 		<cfloop array="#rc.accountSmartList.getPageRecords()#" index="local.account">
 			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
-				<td><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
-				<td></td>
-				<td></td>
+				<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
+				<td class="varWidth"></td>
+				<td class="administration">
+					<ul class="two">
+						<li class="edit">
+							<a href="#buildURL(action='admin:account.edit', queryString='accountID=#local.account.getAccountID()#')#" title="Edit">Edit</a>
+						</li>
+						<li class="preview">
+							<a href="#buildURL(action='admin:account.detail', queryString='accountID=#local.account.getAccountID()#')#" title="Edit">View</a>
+						</li>
+					</ul>
+				</td>
 			</tr>
 			<cfset local.rowcounter++ />
 		</cfloop>
 	</table>
-	<!---
-	<table class="listtable stripe">
-		<tr>
-			<th>Brand</th>
-			<th>Brand Website</th>
-			<th>Administration</th>
-		</tr>
-		<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->
-		<cfset local.rowcounter = 1 />
-		<cfloop array="#rc.BrandSmartList.getPageRecords()#" index="Local.Brand">
-			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
-				<td><a href="#buildURL(action='admin:brand.detail', queryString='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></td>
-				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
-				<td><a href="#buildURL(action='admin:brand.edit', queryString='BrandID=#local.Brand.getBrandID()#')#">Edit</a></td>
-			</tr>
-			<cfset local.rowcounter++ />
-		</cfloop>
-	</table>
-	<div style="float:right;"><a href="#buildURL(action='admin:brand.edit')#">Add Brand</a></div>
-	--->
 </div>
 </cfoutput>
