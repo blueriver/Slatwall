@@ -52,8 +52,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function ongloballoginsuccess(required any rc) {
-		
-		//getAccountService().loginMuraUser(muraUser = arguments.rc.$.currentUser().getUserBean());
+		getAccountService().loginMuraUser(muraUser = arguments.rc.$.currentUser().getUserBean());
 	}
 	
 }

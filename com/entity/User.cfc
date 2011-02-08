@@ -4,5 +4,4 @@ component entityname="SlatwallUser" displayname="Slatwall User" table="tusers" r
 	property name="firstName" column="Fname" ormType="string";
 	property name="lastName" column="Lname" ormType="string"; 
 	property name="company" column="Company" ormType="string";
-	
 }

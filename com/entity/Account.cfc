@@ -12,6 +12,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Related Object Properties
 	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
 	property name="muraUser" fieldtype="many-to-one" fkcolumn="muraUserID" cfc="User";
+	property name="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
 	
 	/*
 	// Start: User Helpers

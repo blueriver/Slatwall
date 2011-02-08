@@ -18,8 +18,13 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().readByFilename(filename=arguments.filename, entityName=getEntityName());
 	}
 	
-	public any function getNewEntity() {
-		var entity = entityNew(getEntityName());
+	public any function getNewEntity(string entityName) {
+		if(isDefined("arguments.entityName")) {
+			var entity = entityNew(arguments.entityName);
+			structDelete(arguments, "entityName");
+		} else {
+			var entity = entityNew(getEntityName());
+		}
 		entity.init(argumentcollection=arguments);
 		return entity;
 	}
