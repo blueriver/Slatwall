@@ -1,6 +1,7 @@
 <plugin>
 <name>Slatwall Plugin</name>
 <package>Slatwall</package>
+<directoryFormat>packageOnly</directoryFormat>
 <version>0.4</version>
 <provider>Slatwall</provider>
 <providerURL>https://github.com/gregmoser/Slatwall/wiki/</providerURL>

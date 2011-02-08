@@ -16,7 +16,7 @@
 
 // This variable should be changed if you opt to locate the cfc in a different directory
 // MODIFIED FOR SLATWALL
-var fw1al = "/plugins/Slatwall_" + slat_pluginid + "/fw1AjaxAdapter.cfc";
+var fw1al = "/plugins/Slatwall/fw1AjaxAdapter.cfc";
 
 var fw1ar = 0;
 function slatwallAjaxFormSubmit(oForm){
