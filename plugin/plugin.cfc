@@ -10,6 +10,10 @@ component extends="mura.plugin.plugincfc" output="false" {
 	// On install
 	public void function install() {
 		application.appInitialized=false;
+		
+		//Temp
+		temporaryORMBugFix();
+		
 		installORMSettings();
 		ormReload();
 	}
@@ -17,6 +21,10 @@ component extends="mura.plugin.plugincfc" output="false" {
 	// On update
 	public void function update() {
 		application.appInitialized=false;
+		
+		//Temp
+		temporaryORMBugFix();
+		
 		installORMSettings();
 		ormReload();
 	}
@@ -57,7 +65,25 @@ component extends="mura.plugin.plugincfc" output="false" {
 		fileWriteLine(fileObj,"#data#" );
 		fileClose(fileobj);
 	}
-
 	
-// End cfc
+	// This is a temporary function to fix the bug that ORM has where it can't setup char(35) as a datatype
+	private void function temporaryORMBugFix() {
+		var fixQuery = new Query();
+		fixQuery.setDataSource(application.configBean.getDatasource());
+		fixQuery.setUsername(application.configBean.getUsername());
+		fixQuery.setPassword(application.configBean.getPassword());
+		fixQuery.setSql("
+			ALTER TABLE tusers DROP CONSTRAINT PK_tusers;
+		");
+		fixQuery.execute();
+		fixQuery.setSql("
+			ALTER TABLE tusers ALTER COLUMN UserID varchar(35) NOT NULL;
+		");
+		fixQuery.execute();
+		fixQuery.setSql("
+			ALTER TABLE tusers ADD CONSTRAINT PK_tusers PRIMARY KEY (UserID);
+		");
+		fixQuery.execute();
+	}
+	
 }
