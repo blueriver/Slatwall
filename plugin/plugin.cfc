@@ -51,8 +51,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 	    // Get current cfapplication file and all its settings
 		var FileData = FileRead("#ExpandPath("/config/cfapplication.cfm")#"); 
 		// See if we have any Slatwall code that needs removing from this file
-		var data = REReplace(FileData, "<!--- <cfinclude template='/plugins/Slatwall/config/cfapplication.cfm'> --->", "", "ALL");
-		data = REReplace(FileData, "<cfinclude template='/plugins/Slatwall/config/cfapplication.cfm'>", "", "ALL");
+		var	data = REReplace(FileData, "<cfinclude template='/plugins/Slatwall/config/cfapplication.cfm'>", "", "ALL");
 		// Remove ONLY Slatwall code from the cfapplication.cfc file
 		var fileobj= fileOpen("#ExpandPath("/config/cfapplication.cfm")#", "write" );
 		fileWriteLine(fileObj,"#data#" );
