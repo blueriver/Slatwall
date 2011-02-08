@@ -9,8 +9,7 @@ component output="false" {
 	}
 	
 	public any function readByFilename(required string filename, required string entityName){
-		var HQL = " from #arguments.entityName# where filename = '#arguments.Filename#'";
-		return ormExecuteQuery(HQL, true);
+		return ormExecuteQuery(" from #arguments.entityName# where filename = :filename", {filename=arguments.filename}, true);
 	}
 	
 	public array function list(required string entityName) {

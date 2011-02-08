@@ -30,6 +30,8 @@ component extends="mura.plugin.plugincfc" output="false" {
 	// Private Funtions
 	private void function installORMSettings() {
 		var settings = getSlatwallSettings();
+		
+		
 		// Unescape
 		settings = reReplace( settings, "<%=|=%>", "##", "all" );
 		settings = reReplace( settings, "<%", "<", "all" );

@@ -9,12 +9,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="remoteCustomerID" ormtype="string" default="" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" default="" hint="Only used when integrated with a remote system";
 	
-	// Non-Persistant Properties
-	property name="muraUser" type="any" persistent="false";
-	
 	// Related Object Properties
 	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
+	//property name="muraUser" fieldtype="many-to-one" fkcolumn="muraUserID" cfc="User";
 	
+	/*
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
 	public any function getMuraUser() {
@@ -49,4 +48,5 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return variables.lastName;
 	}
 	// End: User Helpers
+	*/
 }

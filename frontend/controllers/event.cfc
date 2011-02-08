@@ -3,6 +3,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="productService" type="any";
 	property name="accountService" type="any";
 	
+	public void function before(required any rc) {
+		// Because these are all just mura events we set the view to Blank;
+		variables.fw.setView("frontend:event.blank");
+	}
+	
 	public void function onrenderstart(required any rc) {
 		
 		// Check if the page requested is a porduct page
@@ -45,4 +50,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
 		rc.$.getEvent().setValue( "__MuraResponse__", newContent);
 	}
+	
+	public void function ongloballoginsuccess(required any rc) {
+		
+		//getAccountService().loginMuraUser(muraUser = arguments.rc.$.currentUser().getUserBean());
+	}
+	
 }

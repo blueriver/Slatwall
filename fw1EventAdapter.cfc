@@ -5,6 +5,20 @@
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
 	<cfinclude template="fw1Config.cfm">
 	
+	<cffunction name="onMissingMethod">
+		<cfargument name="missingMethodName" />
+		<cfargument name="missingMethodArguments" />
+		
+		<cfset doAction(missingMethodArguments.$, "frontend:event.#lcase(missingMethodName)#") />
+	</cffunction>
+	
+	<cffunction name="onGlobalSessionStart" output="false">
+		<cfargument name="$">
+		<cfset var state=preseveInternalState(request)>
+		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onSessionStart" />
+		<cfset restoreInternalState(request,state)>
+	</cffunction>
+
 	<!--- this is the plugin hook in for mura --->
 	<cffunction name="onSiteRequestStart" output="false">
         <cfargument name="$">
@@ -15,32 +29,13 @@
 		<cfset doAction($, 'frontend:event.onsiterequeststart') />
     </cffunction>
 	
-	<cffunction name="onRenderStart">
-		<cfargument name="$" />
-		
-		<cfset doAction($, "frontend:event.onrenderstart") />
-	</cffunction>
-	
-	<cffunction name="onRenderEnd">
-		<cfargument name="$" />
-		
-		<cfset doAction($, "frontend:event.onrenderend") />
-	</cffunction>
-	
 	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
 		<cfset var state=preseveInternalState(request)>
 		<cfset request.pluginConfig=variables.pluginConfig>
 		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onApplicationStart" />
 		<cfset restoreInternalState(request,state)>
-		<cfset variables.pluginConfig.addEventHandler(this)>
-	</cffunction>
-	
-	<cffunction name="onGlobalSessionStart" output="false">
-		<cfargument name="$">
-		<cfset var state=preseveInternalState(request)>
-		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onSessionStart" />
-		<cfset restoreInternalState(request,state)>
+		<!--- <cfset variables.pluginConfig.addEventHandler(this)> --->
 	</cffunction>
 
 	<cffunction name="preseveInternalState" output="false">
