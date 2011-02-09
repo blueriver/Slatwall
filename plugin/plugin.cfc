@@ -15,6 +15,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 		temporaryORMBugFix();
 		
 		installORMSettings();
+		updateData();
 		ormReload();
 	}
 	
@@ -22,12 +23,11 @@ component extends="mura.plugin.plugincfc" output="false" {
 	public void function update() {
 		application.appInitialized=false;
 		
-		//Temp
-		temporaryORMBugFix();
-		
 		installORMSettings();
+		updateData();
 		ormReload();
 	}
+	
 	// On delete
 	public void function delete() {
 		// Clear out cfapplication file
@@ -84,6 +84,12 @@ component extends="mura.plugin.plugincfc" output="false" {
 			ALTER TABLE tusers ADD CONSTRAINT PK_tusers PRIMARY KEY (UserID);
 		");
 		fixQuery.execute();
+	}
+	
+	private boolean function updateData() {
+		var dataPopulator = new Slatwall.com.utility.DataPopulator();
+		
+		return dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData")); 
 	}
 	
 }

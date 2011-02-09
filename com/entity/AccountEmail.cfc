@@ -3,12 +3,9 @@ component displayname="Account Email" entityname="SlatwallAccountEmail" table="S
 	// Persistant Properties
 	property name="accountEmailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="email" ormtype="string";
+	property name="isPrimary" default="false" ormtype="boolean"; 
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountEmailType" cfc="Account" fieldtype="many-to-one" fkcolumn="accountEmailTypeID";
 	
-	public string function getEmailType() {
-		return getAccountEmailType().getType();
-	}
 }

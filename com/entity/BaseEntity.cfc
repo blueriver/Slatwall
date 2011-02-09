@@ -14,6 +14,7 @@ component displayname="Base Entity" accessors="true" {
 		
 		// When called from getNewEntity() within base service a struct or query record can be passed to pre-populate;
 		if(!structIsEmpty(arguments)){
+			// TODO: Debug this
 			//this.set(record=arguments);
 		}
 		
