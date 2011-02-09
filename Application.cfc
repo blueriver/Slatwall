@@ -15,8 +15,6 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		ormReload();
-		
 		var serviceFactory = "";
 		var rbFactory = "";
 		var xml = "";
