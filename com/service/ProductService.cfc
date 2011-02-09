@@ -4,6 +4,7 @@ component extends="BaseService" accessors="true" {
 	property name="ProductTypeDAO" type="any";
 	property name="contentManager" type="any";
 	property name="settingsManager" type="any";
+	property name="ProductTypeTree" type="any";
 	
 	public any function init(required any entityName, required any dao, required any skuDAO, required any productTypeDAO, required any contentManager, required any settingsManager) {
 		setEntityName(arguments.entityName);
@@ -12,6 +13,7 @@ component extends="BaseService" accessors="true" {
 		setProductTypeDAO(arguments.productTypeDAO);
 		setContentManager(arguments.contentManager);
 		setSettingsManager(arguments.settingsManager);
+		setProductTypeTree();
 		
 		return this;
 	}
@@ -54,9 +56,9 @@ component extends="BaseService" accessors="true" {
        return getProductTypeDAO().list("SlatwallProductType");
     }
 	
-	public any function getProductTypeTree() {
-	   return getProductTypeDAO().getProductTypeTree();
-	}
+    public void function setProductTypeTree() {
+        variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
+    }
 	
 	public any function saveProductType(required any productType) {
 	   return getProductTypeDAO().save(arguments.productType);
