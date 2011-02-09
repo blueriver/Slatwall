@@ -11,4 +11,20 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	// Related Object Properties
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
 
+    // Association management methods for bidirectional relationships
+    public void function setOptionGroup(required OptionGroup OptionGroup) {
+       variables.OptionGroup = arguments.OptionGroup;
+       if(!arguments.OptionGroup.hasOption(this)) {
+           arrayAppend(arguments.OptionGroup.getOptions(),this);
+       }
+    }
+    
+    public void function removeOptionGroup(required OptionGroup OptionGroup) {
+       var index = arrayFind(arguments.OptionGroup.getOptions(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.OptionGroup.getOptions(),index);
+       }
+       
+       structDelete(variables,"OptionGroup");
+    }
 }

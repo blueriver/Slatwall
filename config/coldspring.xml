@@ -8,17 +8,19 @@
 	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO">
 		 <constructor-arg name="productTypeTreeSorter"><ref bean="productTypeTreeSorter" /></constructor-arg>
 	</bean>
-	<bean id="productTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
+	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
+	<bean id="settingDAO" class="slatwall.com.dao.[integration]SkuDAO" />
+	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
+    <bean id="optionDAO" class="slatwall.com.dao.[integration]OptionDAO" />
+    <bean id="optionGroupDAO" class="slatwall.com.dao.[integration]OptionGroupDAO" />
+	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
+	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
+	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
 		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>
 		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
 		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
 		<constructor-arg name="pathColumn"><value>productTypeID</value></constructor-arg>
 	</bean>
-	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
-	<bean id="settingDAO" class="slatwall.com.dao.[integration]SkuDAO" />
-	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
-	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
-	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
 	
 	<!-- transaction advice -->
     <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />
@@ -69,7 +71,22 @@
             </list>
         </property>
     </bean>
-	
+
+    <bean id="optionService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.OptionService">
+                <constructor-arg name="entityName"><value>SlatwallOption</value></constructor-arg>
+                <constructor-arg name="DAO"><ref bean="OptionDAO" /></constructor-arg>
+                <constructor-arg name="OptionGroupDAO"><ref bean="OptionGroupDAO" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
+
 	<bean id="typeService" class="coldspring.aop.framework.ProxyFactoryBean">
         <property name="target">
             <bean class="slatwall.com.service.typeService">
