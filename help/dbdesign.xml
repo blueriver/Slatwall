@@ -510,7 +510,7 @@
 <part>addressID</part>
 </key>
 </table>
-<table x="768" y="22" name="SlatwallType">
+<table x="800" y="17" name="SlatwallType">
 <row name="typeID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -528,14 +528,10 @@
 </key>
 <comment>If a type has a system code, then it can not be deleted</comment>
 </table>
-<table x="997" y="314" name="SlatwallAccountEmail">
+<table x="1002" y="309" name="SlatwallAccountEmail">
 <row name="AccountEmailID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
-<row name="accountEmailTypeID" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="SlatwallType" row="typeID" />
-</row>
 <row name="accountID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallAccount" row="AccountID" />
@@ -543,11 +539,14 @@
 <row name="email" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
+<row name="isPrimary" null="1" autoincrement="0">
+<datatype>bit</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
 <part>AccountEmailID</part>
 </key>
 </table>
-<table x="772" y="181" name="SlatwallAccountPhone">
+<table x="781" y="181" name="SlatwallAccountPhone">
 <row name="AccountPhoneID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
