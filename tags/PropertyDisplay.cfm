@@ -19,6 +19,15 @@
 <!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
 <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
 
+<!--- hint: This attribute contains the content of a mouseover tooltip message that will appear next to the title --->
+<cfparam name="attributes.tooltipmessage" default="" type="string" />
+
+<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
+<cfparam name="attributes.toggle" default="no" type="string" />
+
+<!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
+<cfparam name="attributes.toggletext" default="Show,Hide" />
+
 <!---
 	attributes.editType have the following options:
 	text
@@ -121,7 +130,9 @@
 
 		<cfoutput>
 	 		<dt class="spd#LCASE(local.propertyMetadata.name)#">
-	 			
+	            <cfif len(trim(attributes.tooltipmessage))>
+                    <a href="##" class="tooltip">
+                </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup">
 					<label for="#local.propertyMetadata.name#">
@@ -142,7 +153,13 @@
 				<cfelse>
 					#attributes.title#
 				</cfif>
-				
+	            <cfif len(trim(attributes.tooltipmessage))>
+                    <span>#attributes.tooltipmessage#</span></a>
+                </cfif>
+                <cfif listFindNoCase("show,hide",attributes.toggle)>
+                    <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
+                    <a  href="##" id="spd#LCASE(local.propertyMetadata.name)#Link" onclick="javascript: toggleDisplay('spd#LCASE(local.propertyMetadata.name)#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+                </cfif>	
 				<!--- If the object has an error Bean, check for errors on this property --->
 				<cftry>
 					<cfif Len(attributes.object.getErrorBean().getError(local.propertyMetadata.name))>
@@ -151,7 +168,7 @@
 					<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
 				</cftry>
 			</dt>
-	 		<dd class="spd#LCASE(local.propertyMetadata.name)#">
+	 		<dd id="spd#LCASE(local.propertyMetadata.name)#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
 				
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">

@@ -1,5 +1,5 @@
 <cfparam name="rc.edit" default="false" />
-<cfset local.Product = rc.Product />
+<cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
 
 <cfoutput>
 <cfif rc.edit>
@@ -9,7 +9,7 @@
 	<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>
 </cfif>
 
-	<!--- <div class="ItemDetailImage"><img src="http://www.nytro.com/prodimages/#local.Product.getDefaultImageID()#-DEFAULT-s.jpg"></div> --->
+	<!--- <div class="ItemDetailImage"><img src="http://www.nytro.com/prodimages/#rc.Product.getDefaultImageID()#-DEFAULT-s.jpg"></div> --->
 	<div class="ItemDetailMain">
 		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
