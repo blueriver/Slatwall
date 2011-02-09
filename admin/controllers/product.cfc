@@ -11,19 +11,18 @@ component extends="BaseController" output=false accessors=true {
 		if(!isDefined("rc.product")) {
 			rc.product = getProductService().getNewEntity();
 		}
-		
 	}
 	
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
-		rc.section = "Product List";
+		rc.section = rc.rbFactory.getKey("product.productlist");
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
 	public void function detail(required struct rc) {
 		var productName = rc.product.getProductName();
-		rc.section = "Product Details";
+		rc.section = rc.rbFactory.getKey("product.productdetails");
 		if(len(productName))
 			rc.section &= ": " & productName;
 		
@@ -34,11 +33,9 @@ component extends="BaseController" output=false accessors=true {
 		//rc.productTemplatesQuery = getProductService().getProductTemplates();
 		var productName = rc.product.getProductName();
 		rc.edit = true;
-		rc.section = "Edit Product";
+		rc.section = rc.rbFactory.getKey("product.editproduct");
 		if(len(productName))
 			rc.section &= ": " & productName;
-		// Put product type tree in rc for parent type drop-down selector
-        rc.productTypes = getPluginConfig().getApplication().getValue("ProductTypeTree");
 		variables.fw.setView("admin:product.detail");
 	}
 	
@@ -72,8 +69,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function types(required struct rc) {
-	   rc.productTypes = getPluginConfig().getApplication().getValue("ProductTypeTree");
-	   rc.section = "Product Types";
+       rc.productTypes = getProductService().getProductTypeTree();
+       rc.section = rc.rbFactory.getKey("product.products.producttypes");
 	}
 	
 	public void function productTypeForm(required struct rc) {
@@ -93,7 +90,7 @@ component extends="BaseController" output=false accessors=true {
 	   }
 	   rc.section = rc.action & " #rc.rbFactory.getKey('product.producttype')#";
 	   // Put product type tree in rc for parent type drop-down selector
-	   rc.productTypes = getPluginConfig().getApplication().getValue("ProductTypeTree");
+	   rc.productTypes = getProductService().getProductTypeTree();
 	}
 	
 	
@@ -109,7 +106,7 @@ component extends="BaseController" output=false accessors=true {
 		productType = getProductService().saveProductType(productType);
 		if(!productType.hasErrors()) {
 		  // cache the updated product type tree
-		  getPluginConfig().getApplication().setValue("ProductTypeTree",getProductService().getProductTypeTree());
+		  getProductService().setProductTypeTree();
 		  variables.fw.redirect(action="admin:product.types",queryString="saved=true");
 		} else {
 		  variables.fw.redirect(action="admin:product.productTypeForm", queryString="productTypeID=#productType.getProductTypeID()#");
