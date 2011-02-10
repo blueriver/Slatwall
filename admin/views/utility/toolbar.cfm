@@ -12,6 +12,7 @@
 						<li><a href="#buildURL(action='admin:product.edit')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.createnewproduct")#</a></li>
 						<li><a href="#buildURL(action='admin:product.types')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.producttypes")#</a></li>
 						<li><a href="#buildURL(action='admin:product.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.productlisting")#</a></li>
+                        <li><a href="#buildURL(action='admin:option.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.optionlist")#</a></li>
 						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.createnewbrand")#</a></li>
 						<li><a href="#buildURL(action='admin:brand.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.brandlisting")#</a></li>
 					</ul>

@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
+    <title>#rc.section# &##124; Slatwall</title>
 	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery.js?coreversion=#application.coreversion#"></script>
 	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js?coreversion=#application.coreversion#"></script>
 	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui-i18n.js?coreversion=#application.coreversion#"></script>

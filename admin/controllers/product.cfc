@@ -70,7 +70,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function types(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
-       rc.section = rc.rbFactory.getKey("product.products.producttypes");
+       rc.section = rc.rbFactory.getKey("product.producttype.producttypes");
 	}
 	
 	public void function productTypeForm(required struct rc) {
@@ -96,7 +96,6 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function processProductTypeForm(required struct rc) {
         var productType = getProductService().getProductType();
-		// variables.fw.redirect(action="admin:product.types",preserve="productType");
 		productType = variables.fw.populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
 		
 		// set parent product type, if specified

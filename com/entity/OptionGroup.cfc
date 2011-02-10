@@ -24,4 +24,8 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
     public void function removeOption(required Option Option) {
        arguments.Option.removeOptionGroup(this);
     }
+	
+    public string function getImagePath() {
+        return getClassName() & "/" & getOptionGroupImage();
+    }   
 }

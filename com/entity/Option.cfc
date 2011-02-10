@@ -27,4 +27,8 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
        
        structDelete(variables,"OptionGroup");
     }
+	
+	public string function getImagePath() {
+        return getClassName() & "/" & getOptionImage();
+    }   
 }
