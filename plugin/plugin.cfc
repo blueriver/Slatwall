@@ -15,8 +15,8 @@ component extends="mura.plugin.plugincfc" output="false" {
 		temporaryORMBugFix();
 		
 		installORMSettings();
-		updateData();
 		ormReload();
+		updateData();
 	}
 	
 	// On update
@@ -24,8 +24,8 @@ component extends="mura.plugin.plugincfc" output="false" {
 		application.appInitialized=false;
 		
 		installORMSettings();
-		updateData();
 		ormReload();
+		updateData();
 	}
 	
 	// On delete

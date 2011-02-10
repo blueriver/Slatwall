@@ -29,8 +29,12 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return entity;
 	}
 	
-	public any function list() {
-		return getDAO().list(entityName=getEntityName());
+	public any function list(string entityName) {
+		if(isDefined(arguments.entityName)) {
+			return getDAO().list(entityName=arguments.entityName());
+		} else {
+			return getDAO().list(entityName=getEntityName());
+		}
 	}
 	
 	public any function getSmartList(required struct rc){

@@ -13,7 +13,6 @@ component extends="framework" output="false" {
 	  return application[ variables.framework.applicationKey ].pluginConfig; 
 	}
 	
-	// Test Line XXXX
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
 		var serviceFactory = "";
