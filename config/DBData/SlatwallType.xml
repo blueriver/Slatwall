@@ -1,9 +1,9 @@
 <Table tableName="SlatwallType">
 	<Columns>
-		<column name="typeID" process="id" />
-		<column name="parentTypeID" process="update" />
-		<column name="type" process="create" />
-		<column name="systemCode" process="update" />
+		<column name="typeID" fieldtype="id" />
+		<column name="parentTypeID" />
+		<column name="type" update="false" />
+		<column name="systemCode" />
 	</Columns>
 	<Records>
 		<Record typeID="444df29db643e69a26c071dabe619e8a" type="Account Phone Types" systemCode="accountPhoneType" />
