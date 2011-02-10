@@ -7,6 +7,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
 		
+		rc.sectionTitle = rc.rbFactory.getKeyValue(session.rb,"product.products");
 		rc.product = getProductService().getByID(ID=rc.productID);
 		if(!isDefined("rc.product")) {
 			rc.product = getProductService().getNewEntity();
@@ -15,16 +16,16 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
-		rc.section = rc.rbFactory.getKeyValue(session.rb,"product.productlist");
+		rc.itemTitle = rc.rbFactory.getKeyValue(session.rb,"product.productlist");
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
 	public void function detail(required struct rc) {
 		var productName = rc.product.getProductName();
-		rc.section = rc.rbFactory.getKeyValue(session.rb,"product.productdetails");
+		rc.itemTitle = rc.rbFactory.getKeyValue(session.rb,"product.productdetails");
 		if(len(productName))
-			rc.section &= ": " & productName;
+			rc.itemTitle &= ": " & productName;
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
@@ -33,9 +34,9 @@ component extends="BaseController" output=false accessors=true {
 		//rc.productTemplatesQuery = getProductService().getProductTemplates();
 		var productName = rc.product.getProductName();
 		rc.edit = true;
-		rc.section = rc.rbFactory.getKeyValue(session.rb,"product.editproduct");
+		rc.itemTitle = rc.rbFactory.getKeyValue(session.rb,"product.editproduct");
 		if(len(productName))
-			rc.section &= ": " & productName;
+			rc.itemTitle &= ": " & productName;
 		variables.fw.setView("admin:product.detail");
 	}
 	
@@ -70,10 +71,10 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function types(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
-       rc.section = rc.rbFactory.getKeyValue(session.rb,"product.producttype.producttypes");
+       rc.itemTitle = rc.rbFactory.getKeyValue(session.rb,"product.producttype.producttypes");
 	}
 	
-	public void function productTypeForm(required struct rc) {
+	public void function producttypeform(required struct rc) {
 	   param name="rc.productTypeID" default="";
 	   if(len(rc.productTypeID)) {
            rc.action=rc.rbFactory.getKeyValue(session.rb,'product.producttype.edit');
@@ -88,7 +89,7 @@ component extends="BaseController" output=false accessors=true {
 		   rc.productType = getProductService().getProductType();
 		   rc.parentProductTypeID=0;
 	   }
-	   rc.section = rc.action & " #rc.rbFactory.getKeyValue(session.rb,'product.producttype')#";
+	   rc.itemTitle = rc.action & " #rc.rbFactory.getKeyValue(session.rb,'product.producttype')#";
 	   // Put product type tree in rc for parent type drop-down selector
 	   rc.productTypes = getProductService().getProductTypeTree();
 	}

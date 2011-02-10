@@ -42,7 +42,8 @@
 	</div>
 	#view('utility/toolbar')#
 	<div class="admincontainer">
-		<h2>#rc.Section#</h2>
+		<h2>#rc.sectionTitle#</h2>
+		<h3>#rc.itemTitle#</h3>
 		#body#
 	</div>
 </body>
