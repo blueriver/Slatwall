@@ -1,5 +1,5 @@
 <plugin>
-<name>Slatwall Plugin</name>
+<name>Slatwall</name>
 <package>Slatwall</package>
 <directoryFormat>packageOnly</directoryFormat>
 <version>0.4</version>
