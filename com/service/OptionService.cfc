@@ -17,31 +17,25 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	public any function getOptionGroup(ID="") {
 	   if(len(arguments.ID))
 	   	   var OptionGroup = getOptionGroupDAO().read(arguments.ID,"SlatwallOptionGroup");
-	   else if(!len(arguments.ID))
-           var OptionGroup = getNewOptionGroup();
-       return OptionGroup;  
-	}
-	
-	public any function getNewOptionGroup() {
-		var OptionGroup = entityNew("SlatwallOptionGroup");
-	    OptionGroup.init(argumentcollection=arguments);   
-        return OptionGroup;
+	   else if(!len(arguments.ID) or !isDefined("OptionGroup"))
+           var OptionGroup = getNewEntity("SlatwallOptionGroup");
+		return OptionGroup;
 	}
 	
 	public any function listOptionGroups() {
-       return getOptionGroupDAO().list("SlatwallOptionGroup");
+       return list("SlatwallOptionGroup");
     }
 
 	public any function saveOptionGroup(required any OptionGroup) {
-	   return getOptionGroupDAO().save(arguments.OptionGroup);
+	   return save(arguments.OptionGroup);
 	}
 	
 	public void function deleteOptionGroup(required any OptionGroup) {
 	   if(isObject(arguments.OptionGroup))
-	       getOptionGroupDAO().delete(arguments.OptionGroup);
+	       delete(arguments.OptionGroup);
 	   else if(isSimpleValue(arguments.OptionGroup)) {
 	       local.OptionGroup = getOptionGroup(arguments.OptionGroup);
-		   getOptionGroupDAO().delete(local.OptionGroup);
+		   delete(local.OptionGroup);
 	   }
 	}
 	

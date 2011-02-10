@@ -5,7 +5,7 @@ There are options.
 <cfelse>
 <p>#rc.rbFactory.getKeyValue(session.rb,"option.nooptionsdefined")#</p>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:option.optionGroupForm')#">#rc.rbFactory.getKeyValue(session.rb,"option.addoptiongroup")#</a></li>
+    <li><a href="#buildURL(action='admin:option.optiongroupform')#">#rc.rbFactory.getKeyValue(session.rb,"option.addoptiongroup")#</a></li>
 </ul>
 </cfif>
 

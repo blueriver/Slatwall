@@ -28,6 +28,11 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
        structDelete(variables,"OptionGroup");
     }
 	
+	public boolean function hasImage() {
+		return len(getOptionImage());
+	}
+	
+	
 	public string function getImagePath() {
         return getClassName() & "/" & getOptionImage();
     }   

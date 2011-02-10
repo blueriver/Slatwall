@@ -25,6 +25,10 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
        arguments.Option.removeOptionGroup(this);
     }
 	
+	public boolean function hasImage() {
+		return len(getOptionGroupImage());
+	}
+	
     public string function getImagePath() {
         return getClassName() & "/" & getOptionGroupImage();
     }   

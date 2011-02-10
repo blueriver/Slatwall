@@ -28,7 +28,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function update(required struct rc) {
 		rc.option = variables.fw.populate(cfc=rc.option, keys=rc.option.getUpdateKeys(), trim=true);
-		rc.option = getBrandService().save(entity=rc.option);
+		rc.option = getOptionService().save(entity=rc.option);
 		variables.fw.redirect(action="admin:option.detail", queryString="optionID=#rc.option.getOptionID()#");
 	}
 	
@@ -43,8 +43,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		if(isDefined("rc.optionGroup") and len(rc.optionGroup.getOptionGroupName()))
 			rc.itemTitle=rc.rbFactory.getKeyValue(session.rb,"option.optiongroupdetail") & ": " & rc.optionGroup.getOptionGroupName();
-		else
-			variables.fw.redirect("admin:option.list");
+		//else
+			//variables.fw.redirect("admin:option.list");
 	}
 	
 	public void function optiongroupform(required struct rc) {
@@ -63,11 +63,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function processoptiongroupform(required struct rc) {
 		var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+		var imageDir = rc.$.siteConfig("assetPath") & "/images/Slatwall";
 		optionGroup = variables.fw.populate(cfc=optionGroup, keys=optionGroup.getUpdateKeys(), trim=true);
+		if(structKeyExists(rc,"removeImage") and optionGroup.hasImage() and rc.optionGroupImageFile == ""){
+			filedelete(expandPath("#imageDir#/#optionGroup.getImagePath()#"));
+			optionGroup.setOptionGroupImage("");
+		}
 		optionGroup = getOptionService().save(entity=optionGroup);
 		if(!optionGroup.hasErrors()) {
 			if(rc.optionGroupImageFile != "") {
-			    var imageDir = rc.$.siteConfig("assetPath") & "/images/Slatwall/" & optionGroup.getClassName();
 				saveImage(optionGroup,"optionGroupImageFile",imageDir);
 			}
 			variables.fw.redirect(action="admin:option.list");
@@ -85,6 +89,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				var img = imageRead(thefile);
 				// image size should probably be configured somewhere
 				imageScaleToFit(img, 150, 150);
+				if(arguments.entity.hasImage()){
+					// if entity currently has an image, delete it
+					fileDelete(expandPath("#arguments.imageDir#/#arguments.entity.getImagePath()#"));
+				}
 				if(arguments.entity.getClassName() == "SlatwallOption") {
 				   var imageName = filterFileName(arguments.entity.getOptionGroup().getOptionGroupName() & "_" & arguments.entity.getOptionName()) & "." & result.serverFileExt;
 				   arguments.entity.setOptionImage(imageName);
@@ -95,7 +103,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				}
 				entitySave(arguments.entity);
 				ORMFlush(); // not sure why I need this here ,but if I don't he filename doesn't get persisted to the db
-				var destination = expandPath(arguments.imageDir);
+				var destination = expandPath(arguments.imageDir & "/#arguments.entity.getClassName()#");
 				if(!directoryExists(destination))
 					directoryCreate(destination);
 				imageWrite(img,"#destination#/#imageName#");
