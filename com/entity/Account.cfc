@@ -1,4 +1,4 @@
-component displayname="Account" entityname="SlatwallAccount" table="SlatwallAccount" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Account" entityname="SlatwallAccount" table="SlatwallAccount" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -13,6 +13,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
 	property name="muraUser" fieldtype="many-to-one" fkcolumn="muraUserID" cfc="User";
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
+	
+	// Non-Persistant Properties
+	property name="primaryEmail" type="string" persistent="false" ;
 	
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
@@ -52,5 +55,33 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return variables.company;
 	}
 	// End: User Helpers
+	
+	public string function getPrimaryEmail() {
+		if(!isDefined(variables.primaryEmail)) {
+			
+			// Look through all account emails for the primary one
+			var emails = getAccountEmails();
+			for(var i = 1; i <= arrayLen(emails); i++) {
+				if(emails[i].isPrimary) {
+					variables.primaryEmail = emails[i].email;
+					break;
+				}
+			}
+			
+			// If one wasn't found, but there were 1 or more emails, set the first one as primary.  Otherwise set as blank
+			if(!isDefined(variables.primaryEmail) && arrayLen(emails) > 0) {
+				emails[1].setIsPrimary(true);
+				getService("accountService").save(entity = emails[1]);
+				variables.primaryEmail = emails[1];
+			} else {
+				variables.primaryEmail = "";	
+			}
+		}
+		return variables.primaryEmail;
+	}
+	
+	public any function setPrimaryEmail() {
+		throw("Setting the primary email for an account should be done to an accountEmail entity, and should be done by using the method 'setIsPrimary'");
+	}
 	
 }
