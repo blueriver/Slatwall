@@ -1,11 +1,11 @@
 ﻿<cfparam name="rc.productTypes" type="query" />
 <cfoutput>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:product.producttypeform')#">#rc.rbFactory.getKey("product.producttype.addnewproducttype")#</a></li>
+    <li><a href="#buildURL(action='admin:product.producttypeform')#">#rc.rbFactory.getKeyValue(session.rb,"product.producttype.addnewproducttype")#</a></li>
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
-        <th class="varWidth">#rc.rbFactory.getKey("product.producttype")#</th>
+        <th class="varWidth">#rc.rbFactory.getKeyValue(session.rb,"product.producttype")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfif rc.productTypes.recordCount gt 0>
@@ -34,7 +34,7 @@
 </cfloop>
     <cfelse>
 	   <tr>
-	       <td colspan="3">#rc.rbFactory.getKey("product.producttype.noproducttypes")#</td>
+	       <td colspan="3">#rc.rbFactory.getKeyValue(session.rb,"product.producttype.noproducttypes")#</td>
 	   </tr>
     </cfif>
 </table>

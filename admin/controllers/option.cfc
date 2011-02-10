@@ -14,13 +14,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function detail(required struct rc) {
 		if(len(rc.option.getOptionName()))
-			rc.section = rc.rbFactory.getKey("option.optiondetail") & ": " & rc.option.getOptionName();
+			rc.section = rc.rbFactory.getKeyValue(session.rb,"option.optiondetail") & ": " & rc.option.getOptionName();
 		else
 			variables.fw.redirect("option.list");
 	}
 	
 	public void function list(required struct rc) {
-		rc.section = rc.rbFactory.getKey("option.optionlist");
+		rc.section = rc.rbFactory.getKeyValue(session.rb,"option.optionlist");
 		rc.options = getOptionService().list();
 		//rc.OptionSmartList = getOptionService().getSmartList(rc=arguments.rc);
 	}
@@ -41,7 +41,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		}
 		if(isDefined("rc.optionGroup") and len(rc.optionGroup.getOptionGroupName()))
-			rc.section=rc.rbfactory.getKey("option.optiongroupdetail") & ": " & rc.optionGroup.getOptionGroupName();
+			rc.section=rc.rbFactory.getKeyValue(session.rb,"option.optiongroupdetail") & ": " & rc.optionGroup.getOptionGroupName();
 		else
 			variables.fw.redirect("admin:option.list");
 	}
@@ -54,9 +54,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!isDefined("rc.optionGroup"))
 			rc.optionGroup = getOptionService().getOptionGroup();
 		if(len(rc.optionGroup.getOptionGroupName()))
-			rc.section = rc.rbFactory.getKey("option.editoptiongroup")& ": " & rc.optionGroup.getOptionGroupName();
+			rc.section = rc.rbFactory.getKeyValue(session.rb,"option.editoptiongroup")& ": " & rc.optionGroup.getOptionGroupName();
 		else
-			rc.section = rc.rbFactory.getKey("option.addoptiongroup");
+			rc.section = rc.rbFactory.getKeyValue(session.rb,"option.addoptiongroup");
 		variables.fw.setView("admin:option.optiongroupdetail");
 	}
 	

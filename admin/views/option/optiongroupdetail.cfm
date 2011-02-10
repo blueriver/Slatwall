@@ -6,16 +6,16 @@
 <input type="hidden" id="optionGroupID" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 <cfelse>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:option.optionGroupForm',querystring='optionGroupID=#rc.OptionGroup.getOptionGroupID()#')#">#rc.rbFactory.getKey("option.editoptiongroup")#</a></li>
+    <li><a href="#buildURL(action='admin:option.optionGroupForm',querystring='optionGroupID=#rc.OptionGroup.getOptionGroupID()#')#">#rc.rbFactory.getKeyValue(session.rb,"option.editoptiongroup")#</a></li>
 </ul>
  </cfif>
     <dl class="oneColumn">
-    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.rbFactory.getKey('option.optiongroupname')#" />
+    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.rbFactory.getKeyValue(session.rb,'option.optiongroupname')#" />
 		<dt>
 		<cfif rc.edit>
-			<a href="##" class="tooltip"><label for="optionGroupImageFile">#rc.rbFactory.getKey("option.selectoptiongroupimage")#</label><span>Associate an image for this option Group. Supported Formats: JPG,PNG.</span></a>	
+			<a href="##" class="tooltip"><label for="optionGroupImageFile">#rc.rbFactory.getKeyValue(session.rb,"option.selectoptiongroupimage")#</label><span>Associate an image for this option Group. Supported Formats: JPG,PNG.</span></a>	
 		<cfelse>
-			#rc.rbFactory.getKey("option.optiongroupimage")#
+			#rc.rbFactory.getKeyValue(session.rb,"option.optiongroupimage")#
 		</cfif>
 		</dt>
 		<cfif rc.edit>
@@ -31,7 +31,7 @@
 		</cfif>
 		</dd>
 		</cfif>
-		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" title="#rc.rbFactory.getKey('option.optiongroupdescription')#" toggle="show" toggletext="#rc.rbfactory.getKey('sitemanager.content.fields.expand')#,#rc.rbfactory.getKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
+		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" title="#rc.rbFactory.getKeyValue(session.rb,'option.optiongroupdescription')#" toggle="show" toggletext="#rc.rbFactory.getKeyValue(session.rb,'sitemanager.content.fields.expand')#,#rc.rbFactory.getKeyValue(session.rb,'sitemanager.content.fields.close')#" editType="wysiwyg" />
 	</dl>
 <cfif rc.edit>
 <input type="submit" value="Save" />
