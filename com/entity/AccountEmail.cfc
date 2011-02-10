@@ -11,7 +11,7 @@ component displayname="Account Email" entityname="SlatwallAccountEmail" table="S
 	public void function setIsPrimary(required boolean isPrimary) {
 		if(isPrimary == true) {
 			var emails = getAccount().getAccountEmails();
-			for(var i = 0; i <= arrayLen(emails); i++) {
+			for(var i = 1; i <= arrayLen(emails); i++) {
 				if(emails[i].getIsPrimary() == true) {
 					emails[i].setIsPrimary(false);
 					getService("accountService").save(entity=emails[i]);

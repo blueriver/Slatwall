@@ -11,7 +11,9 @@
 		<cfloop array="#rc.accountSmartList.getPageRecords()#" index="local.account">
 			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
 				<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
-				<td class="varWidth"></td>
+				<td class="varWidth">
+					<a href="mailto:#local.account.getPrimaryEmail()#" title="Email #local.account.getFirstName()# #local.account.getLastName()# (#local.account.getPrimaryEmail()#)">#local.account.getPrimaryEmail()#</a>
+				</td>
 				<td class="administration">
 					<ul class="two">
 						<li class="edit">

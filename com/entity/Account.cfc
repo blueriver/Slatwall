@@ -17,6 +17,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Non-Persistant Properties
 	property name="primaryEmail" type="string" persistent="false" ;
 	
+	public array function getAccountEmails() {
+		if(!isDefined("variables.accountEmails")) {
+			variables.accountEmails = arrayNew(1);
+		}
+		return variables.accountEmails;
+	}
+	
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
 	public string function getFirstName() {
@@ -57,26 +64,27 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// End: User Helpers
 	
 	public string function getPrimaryEmail() {
-		if(!isDefined(variables.primaryEmail)) {
+		if(!isDefined("variables.primaryEmail")) {
 			
 			// Look through all account emails for the primary one
 			var emails = getAccountEmails();
+			
 			for(var i = 1; i <= arrayLen(emails); i++) {
-				if(emails[i].isPrimary) {
-					variables.primaryEmail = emails[i].email;
-					break;
+				if(emails[i].getIsPrimary() == true) {
+					variables.primaryEmail = emails[i].getEmail();
 				}
 			}
 			
 			// If one wasn't found, but there were 1 or more emails, set the first one as primary.  Otherwise set as blank
-			if(!isDefined(variables.primaryEmail) && arrayLen(emails) > 0) {
+			if(!isDefined("variables.primaryEmail") && arrayLen(emails) > 0) {
 				emails[1].setIsPrimary(true);
 				getService("accountService").save(entity = emails[1]);
-				variables.primaryEmail = emails[1];
-			} else {
-				variables.primaryEmail = "";	
+				variables.primaryEmail = emails[1].getEmail();
+			} else if(!isDefined("variables.primaryEmail")) {
+				variables.primaryEmail = "";
 			}
 		}
+
 		return variables.primaryEmail;
 	}
 	
