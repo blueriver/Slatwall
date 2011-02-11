@@ -1,7 +1,6 @@
-component persistent="false" accessors="true" output="false" extends="mura.cfobject" {
+component persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="fw" type="any";
-	property name="sessionService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);

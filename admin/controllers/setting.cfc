@@ -1,7 +1,10 @@
-component extends="BaseController" output="false" {
+component extends="BaseController" output="false" accessors="true" {
+			
+	property name="settingService" type="any";
 	
-	public void function before(required struct rc) {
-		
+	public void function detail(required struct rc) {
+		param name="rc.edit" default="false";
+		rc.settingService = getSettingService();
 	}
 	
 }

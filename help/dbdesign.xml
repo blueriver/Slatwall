@@ -1270,4 +1270,18 @@
 <part>orderShipmentID</part>
 </key>
 </table>
+<table x="302" y="23" name="SlatwallSetting">
+<row name="settingID" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="settingName" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="settingValue" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<key type="PRIMARY" name="">
+<part>settingID</part>
+</key>
+</table>
 </sql>
