@@ -7,7 +7,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	public any function init() {
 		
 		// Create a new errorBean for all entities
-		this.setErrorBean(new Slatwall.com.utility.errorBean());
+		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
 		
 		// Automatically set the default search score to 0
 		this.setSearchScore(0);
