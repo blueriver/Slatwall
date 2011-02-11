@@ -5,6 +5,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function before(required struct rc) {
 		param name="rc.optionID" default="";
+		param name="rc.itemTitle" default="";
 		
 		rc.sectionTitle = rc.rbFactory.getKeyValue(session.rb,"option.productoptions");
 		rc.option = getOptionService().getByID(ID=rc.optionID);
@@ -23,6 +24,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function list(required struct rc) {
 		rc.itemTitle = rc.rbFactory.getKeyValue(session.rb,"option.optionlist");
 		rc.options = getOptionService().list();
+		rc.optionGroups = getOptionService().listOptionGroups();
 		//rc.OptionSmartList = getOptionService().getSmartList(rc=arguments.rc);
 	}
 
@@ -62,9 +64,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function processoptiongroupform(required struct rc) {
+		var fu = variables.fw.getBeanFactory().getBean("formUtilities");
 		var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		var imageDir = rc.$.siteConfig("assetPath") & "/images/Slatwall";
 		optionGroup = variables.fw.populate(cfc=optionGroup, keys=optionGroup.getUpdateKeys(), trim=true);
+		var optionsArray = fu.buildFormCollections(rc)["options"];
+		if(arrayLen(optionsArray)){
+			for(var i=1; i<=arraylen(optionsArray);i++) {
+				var option = getOptionService().getByID(optionsArray[1].optionID);
+				option.setOptionName(optionsArray[i].optionName);
+				option.setOptionID(optionsArray[i].optionID);
+				option.setOptionCode(optionsArray[i].optionCode);
+				option.setOptionDescription(optionsArray[i].optionDescription);
+				optionGroup.addOption(option);
+			}
+		}
 		if(structKeyExists(rc,"removeImage") and optionGroup.hasImage() and rc.optionGroupImageFile == ""){
 			filedelete(expandPath("#imageDir#/#optionGroup.getImagePath()#"));
 			optionGroup.setOptionGroupImage("");

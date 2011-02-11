@@ -40,20 +40,14 @@ component extends="BaseService" accessors="true" {
 	
 	public any function getProductType(ID="") {
 	   if(len(arguments.ID))
-	   	   var productType = getProductTypeDAO().read(arguments.ID,"SlatwallProductType");
-	   else if(!len(arguments.ID))
-           var productType = getNewProductType();
+	   	   var productType = getByID(arguments.ID,"SlatwallProductType");
+	   else if(!len(arguments.ID) or !isDefined(productType))
+           var productType = getNewEntity("SlatwallProductType");
        return productType;  
 	}
 	
-	public any function getNewProductType() {
-		var productType = entityNew("SlatwallProductType");
-	    productType.init(argumentcollection=arguments);   
-        return productType;
-	}
-	
 	public any function listProductTypes() {
-       return getProductTypeDAO().list("SlatwallProductType");
+       return list("SlatwallProductType");
     }
 	
     public void function setProductTypeTree() {
@@ -61,15 +55,14 @@ component extends="BaseService" accessors="true" {
     }
 	
 	public any function saveProductType(required any productType) {
-	   return getProductTypeDAO().save(arguments.productType);
+	   return save(arguments.productType);
 	}
 	
 	public void function deleteProductType(required any productType) {
 	   if(isObject(arguments.productType))
-	       getProductTypeDAO().delete(arguments.productType);
+	       delete(arguments.productType);
 	   else if(isSimpleValue(arguments.productType)) {
-	       local.productType = getProductType(arguments.productType);
-		   getProductTypeDAO().delete(local.productType);
+		   delete(getProductType(arguments.productType));
 	   }
 	}
 	

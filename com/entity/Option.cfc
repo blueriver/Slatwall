@@ -14,11 +14,11 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     // Association management methods for bidirectional relationships
     public void function setOptionGroup(required OptionGroup OptionGroup) {
        variables.OptionGroup = arguments.OptionGroup;
-       if(!arguments.OptionGroup.hasOption(this)) {
+       if(isNew() or !arguments.OptionGroup.hasOption(this)) {
            arrayAppend(arguments.OptionGroup.getOptions(),this);
        }
     }
-    
+
     public void function removeOptionGroup(required OptionGroup OptionGroup) {
        var index = arrayFind(arguments.OptionGroup.getOptions(),this);
        if(index > 0) {

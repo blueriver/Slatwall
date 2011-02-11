@@ -33,8 +33,12 @@
 		</cfif>
 		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" title="#rc.rbFactory.getKeyValue(session.rb,'option.optiongroupdescription')#" toggle="show" toggletext="#rc.rbFactory.getKeyValue(session.rb,'sitemanager.content.fields.expand')#,#rc.rbFactory.getKeyValue(session.rb,'sitemanager.content.fields.close')#" editType="wysiwyg" />
 	</dl>
+	#view("option/optionlist")#
 <cfif rc.edit>
+<fieldset id="buttons">
 <input type="submit" value="Save" />
+<input type="button" class="button" id="addOption" value="Add Option" />
+</fieldset>
 </form>
 </cfif>
 </cfoutput>

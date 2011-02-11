@@ -8,6 +8,16 @@ img.slatwallLogo	{
 	left: 20px;
 }
 
+.admincontainer fieldset {
+	background-color: #fff;
+}
+
+.admincontainer legend {
+	font-size: 1.2em;
+	font-weight: bold;
+	color: #FF3A00;
+}
+
 table#productTypes {
 	width: 850px;
 }
@@ -163,6 +173,7 @@ table#productTypes ul.neston {
 	list-style: none !important;
 	line-height: 1 !important;
 	background-image: none !important;
+	color:#fff !important;
 	position: absolute !important;
 	border-top: 1px solid #4a4a4a !important;
 	background: #505050 !important;

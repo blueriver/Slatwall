@@ -36,7 +36,7 @@ function slatwallAjaxFormSubmit(oForm){
 		},
 		dataType: "json",
 		success: function(results){
-			if (fw1tr = fw1ar) {
+			if (fw1tr == fw1ar) {
 				$(rds).replaceWith(results);
 			}
 	}});

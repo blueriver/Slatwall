@@ -16,7 +16,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	public any function getOptionGroup(ID="") {
 	   if(len(arguments.ID))
-	   	   var OptionGroup = getOptionGroupDAO().read(arguments.ID,"SlatwallOptionGroup");
+	   	   var OptionGroup = getByID(arguments.ID,"SlatwallOptionGroup");
 	   else if(!len(arguments.ID) or !isDefined("OptionGroup"))
            var OptionGroup = getNewEntity("SlatwallOptionGroup");
 		return OptionGroup;
@@ -34,8 +34,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	   if(isObject(arguments.OptionGroup))
 	       delete(arguments.OptionGroup);
 	   else if(isSimpleValue(arguments.OptionGroup)) {
-	       local.OptionGroup = getOptionGroup(arguments.OptionGroup);
-		   delete(local.OptionGroup);
+	       delete(getOptionGroup(arguments.OptionGroup));
 	   }
 	}
 	

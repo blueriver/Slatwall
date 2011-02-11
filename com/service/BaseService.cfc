@@ -12,11 +12,14 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	
 	public any function getByID(required string ID, string entityName) {
 		if(isDefined("arguments.entityName")) {
-			return getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
+			var entity = getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
 		} else {
-			return getDAO().read(ID=arguments.ID, entityName=getEntityName());
+			var entity = getDAO().read(ID=arguments.ID, entityName=getEntityName());
 		}
-		
+		if(!isNull(entity))
+		  return entity;
+		else
+		  return getNewEntity();
 	}
 	
 	public any function getByFilename(required string filename, string entityName) {
