@@ -1,4 +1,4 @@
-component displayname="Base Entity" accessors="true" {
+component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="errorBean" type="Slatwall.com.utility.ErrorBean";
 	property name="searchScore" type="numeric";
@@ -88,11 +88,6 @@ component displayname="Base Entity" accessors="true" {
 	
 	public string function getClassName(){
 		return ListLast(GetMetaData(this).entitynam, "." );
-	}
-	
-	// @hint Private helper function for returning the any of the services in the application
-	private any function getService(required string service) {
-		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#arguments.service#");
 	}
 	
 	// @hint A way to see if the entity has any errors.

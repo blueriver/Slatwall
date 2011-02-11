@@ -1,4 +1,4 @@
-component accessors="true" {
+component accessors="true" extends="BaseObject" {
 
 	property name="lastCrumbData" type="array";
 	property name="accountID" type="string" default="";
@@ -20,15 +20,5 @@ component accessors="true" {
 	
 	public any function setAccount(required any account) {
 		setAccountID(arguments.account.getAccountID());
-	}
-	
-	// Helper functions
-	private any function getService(required string service) {
-		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("#arguments.service#");
-	}
-	
-	public any function debug() {
-		writeDump(variables);
-		abort;
 	}
 }

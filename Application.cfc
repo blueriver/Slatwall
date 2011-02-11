@@ -61,6 +61,7 @@ component extends="framework" output="false" {
 		
 		var item = 0;
 		
+		// Look for values in the request content that are from checkboxes
 		for (item in request.context) {
 			if (isSimpleValue(request.context[item])){
 				if (request.context[item] eq '0,1' or request.context[item] eq '1,0'){
@@ -69,16 +70,23 @@ component extends="framework" output="false" {
 			}
 		}
 		
+		// Create Slatwall Scope and place in request content
+		if (not structKeyExists(request.context,"$w")) {
+			request.context.$w = new Slatwall.com.utility.SlatwallScope(); 
+		}
+		
+		// Look for mura Scope.  If it doens't exist add it.
 		if (not structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
 		
+		// Set default mura session variables when needed
+		param name="session.rb" default="en";
 		if( not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
 			param name="session.dashboardSpan" default="30";
 		} else {
 			param name="session.dashboardSpan" default="#application.configBean.getSessionHistory()#";
 		}
-		
 		if(not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
 			session.dashboardSpan=30;
 		} else {
@@ -94,7 +102,6 @@ component extends="framework" output="false" {
 	// Helper Functions
 	public boolean function isAdminRequest() {
 		return not structKeyExists(request,"servletEvent");
-		
 	}
 	
 	public string function getExternalSiteLink(required String Address) {
