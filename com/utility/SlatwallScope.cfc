@@ -58,4 +58,8 @@ component accessors="true" extends="BaseObject" {
 			return getRBFactory().getKeyValue(session.rb, arguments.key);
 		}
 	}
+	
+	public string function setting(required string settingName) {
+		return getService("settingService").getBySettingName(arguments.settingName);		
+	}
 }
