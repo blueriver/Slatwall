@@ -1,5 +1,7 @@
 component accessors="true" extends="BaseObject" {
-	
+			
+	property name="product" type="any";
+			
 	public any function init() {
 		return this;
 	}
@@ -32,11 +34,30 @@ component accessors="true" extends="BaseObject" {
 		}
 	}
 	
-	public string function rb(required string key, string local) {
+	public any function product(string property, string value) {
+		if(isDefined("arguments.property") && isDefined("arguments.value")) {
+			return evaluate("getProduct().set#arguments.property#(#arguments.value#)");
+		} else if (isDefined("arguments.property")) {
+			return evaluate("getProduct().get#arguments.property#()");
+		} else {
+			return getProduct();	
+		}
+	}
+	
+	public string function rbKey(required string key, string local) {
 		if(isDefined("arguments.local")) {
 			return getRBFactory().getKeyValue(arguments.local, arguments.key);
 		} else {
 			return getRBFactory().getKeyValue(session.rb, arguments.key);
 		}
 	}
+	
+	public any function getProduct() {
+		if(!isDefined("variables.product")) {
+			variables.product = getService("productService").getNewEntity();
+		}
+		return variables.product;
+	}
+	
+	
 }

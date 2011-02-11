@@ -59,6 +59,11 @@ component extends="framework" output="false" {
 			setupSession();
 		}
 		
+		// Setup Slatwall Specific request scope
+		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
+		request.context.$w = request.slatwallScope;
+		variables.$w = request.slatwallScope;
+		
 		var item = 0;
 		
 		// Look for values in the request content that are from checkboxes
@@ -68,11 +73,6 @@ component extends="framework" output="false" {
 					request.context[item] = 1;
 				}
 			}
-		}
-		
-		// Create Slatwall Scope and place in request content
-		if (not structKeyExists(request.context,"$w")) {
-			request.context.$w = new Slatwall.com.utility.SlatwallScope(); 
 		}
 		
 		// Look for mura Scope.  If it doens't exist add it.

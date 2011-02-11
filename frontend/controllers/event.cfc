@@ -9,21 +9,24 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		variables.fw.setView("frontend:event.blank");
 	}
 	
-	public void function onrenderstart(required any rc) {
-		
+	public void function onsiterequeststart(required any rc) {
 		// Check if the page requested is a porduct page
 		if(left(rc.path,len(request.siteid) + 5) == '/#request.siteid#/sp/') {
 			
 			// Get Product Filename from path
-			rc.Filename = Right(rc.path, len(rc.path)-(len(request.siteid) + 5));
-			rc.Filename = Left(rc.Filename, len(rc.Filename)-1);
+			var productFilename = Right(rc.path, len(rc.path)-(len(request.siteid) + 5));
+			productFilename = Left(productFilename, len(productFilename)-1);
 			
-			// Setup Product in Request Scope
-			request.muraScope.slatwall.Product = variables.productService.getByFilename(rc.Filename);
-			
+			// Setup Product in Slatwall Scope
+			request.slatwallScope.setProduct(variables.productService.getByFilename(productFilename));
+		}
+	}
+	
+	public void function onrenderstart(required any rc) {
+		if(request.slatwallScope.getProduct().isNew() == false) {
 			// Force Product Information into the contentBean
-			request.contentBean.setTitle(request.muraScope.slatwall.Product.getProductName());
-			request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription());
+			request.contentBean.setTitle(request.slatwallScope.getProduct().getProductName());
+			request.contentBean.setBody(request.slatwallScope.getProduct().getProductDescription());
 			
 			// Override crumbdata with the last page that was loaded
 			request.crumbdata = getSessionService().getCurrent().getLastCrumbData();
@@ -31,8 +34,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			
 			// Set template based on Product Template
 			request.contentBean.setIsNew(0);
-			if(request.muraScope.slatwall.Product.getTemplate() != "") {
-				request.contentBean.setTemplate(request.muraScope.slatwall.Product.getTemplate());
+			if(request.slatwallScope.getProduct().getTemplate() != "") {
+				request.contentBean.setTemplate(request.slatwallScope.getProduct().getTemplate());
 			}
 		} else {
 			getSessionService().getCurrent().setLastCrumbData(duplicate(request.crumbdata));
