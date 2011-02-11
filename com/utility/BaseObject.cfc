@@ -9,11 +9,16 @@ component displayname="Base Object" {
 		return application.slatwall.pluginConfig.getApplication().getValue("rbFactory");
 	}
 
-	private any function getValue(required string property) {
-		return variables[ arguments.property ];
-	}
-	
-	private any function setValue(required string property, required any value) {
+	private any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}
+	
+	private any function injectRemove(required string property) {
+		structDelete(variables, arguments.property);
+	}
+	
+	private any function getVariables() {
+		return variables;
+	}
+	
 }
