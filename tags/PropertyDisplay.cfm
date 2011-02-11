@@ -10,6 +10,9 @@
 <!--- hint: This can be used to override the default value of a property" --->
 <cfparam name="attributes.value" default="" />
 
+<!--- hint: This can be used to override the default filed name" --->
+<cfparam name="attributes.fieldName" default="" />
+
 <!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 <cfparam name="attributes.edit" default=false type="boolean" />
 
@@ -127,15 +130,19 @@
 				</cfloop>
 			</cfif>
 		</cfif>
+		
+		<cfif attributes.fieldName eq "">
+			<cfset attributes.fieldName = local.propertyMetadata.name />
+		</cfif>
 
 		<cfoutput>
-	 		<dt class="spd#LCASE(local.propertyMetadata.name)#">
+	 		<dt class="spd#LCASE(attributes.fieldName)#">
 	            <cfif len(trim(attributes.tooltipmessage))>
                     <a href="##" class="tooltip">
                 </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup">
-					<label for="#local.propertyMetadata.name#">
+					<label for="#attributes.fieldName#">
 						#attributes.title#
 						<!--- If this is a required field the add an asterisk --->
 						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
@@ -158,28 +165,29 @@
                 </cfif>
                 <cfif listFindNoCase("show,hide",attributes.toggle)>
                     <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-                    <a  href="##" id="spd#LCASE(local.propertyMetadata.name)#Link" onclick="javascript: toggleDisplay('spd#LCASE(local.propertyMetadata.name)#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+                    <a  href="##" id="spd#LCASE(attributes.fieldName)#Link" onclick="javascript: toggleDisplay('spd#LCASE(attributes.fieldName)#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
                 </cfif>	
 				<!--- If the object has an error Bean, check for errors on this property --->
 				<cftry>
-					<cfif Len(attributes.object.getErrorBean().getError(local.propertyMetadata.name))>
+					<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
 						<span class="error">#attributes.Object.getErrorBean().getError(PropertyMD.name)#</span>
 					</cfif>
 					<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
 				</cftry>
 			</dt>
-	 		<dd id="spd#LCASE(local.propertyMetadata.name)#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+			
+	 		<dd id="spd#LCASE(attributes.fieldName)#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
 				
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
 					<cfif attributes.editType eq "text">
-						<input type="text" name="#local.propertyMetadata.name#" id="#local.propertyMetadata.name#" value="#attributes.value#" />
+						<input type="text" name="#attributes.fieldName#" id="#attributes.fieldName#" value="#attributes.value#" />
 					<cfelseif attributes.editType eq "textarea">
-						<textarea name="#local.propertyMetadata.name#" id="#local.propertyMetadata.name#">#attributes.Value#</textarea>
+						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "checkbox">
-						<input type="checkbox" name="#local.propertyMetadata.Name#" id="#local.propertyMetadata.Name#" value="1" <cfif attributes.value>checked="checked"</cfif> />
+						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
-						<select name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID">
+						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i.id#" <cfif attributes.value eq i.name>selected="selected"</cfif>>#i.name#</option>	
 							</cfloop>
@@ -187,14 +195,14 @@
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfloop array="#attributes.editOptions#" index="i">
-							<li><input type="radio" name="#local.propertyMetadata.name#_#local.propertyMetadata.name#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
 						</cfloop>
 						</ul>
 					<cfelseif attributes.editType eq "wysiwyg">
-						<textarea name="#local.propertyMetadata.name#" id="#local.propertyMetadata.name#">#attributes.Value#</textarea>
+						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
 						<script type="text/javascript" language="Javascript">
 							var loadEditorCount = 0;
-							jQuery('###local.propertyMetadata.name#').ckeditor(
+							jQuery('###attributes.fieldName#').ckeditor(
 								{ toolbar:'Default',
 								height:'300',
 								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
