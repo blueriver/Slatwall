@@ -1,7 +1,7 @@
 component accessors="true" extends="BaseObject" {
-			
-	property name="product" type="any";
-			
+	
+	property name="currentProduct" type="any";
+	
 	public any function init() {
 		return this;
 	}
@@ -14,6 +14,13 @@ component accessors="true" extends="BaseObject" {
 		return getService("sessionService").getCurrent().getCart();
 	}
 
+	public any function getCurrentProduct() {
+		if(!isDefined("variables.currentProduct")) {
+			variables.currentProduct = getService("productService").getNewEntity();
+		}
+		return variables.currentProduct;
+	}
+	
 	public any function account(string property, string value) {
 		if(isDefined("arguments.property") && isDefined("arguments.value")) {
 			return evaluate("getCurrentAccount().set#arguments.property#(#arguments.value#)");
@@ -36,11 +43,11 @@ component accessors="true" extends="BaseObject" {
 	
 	public any function product(string property, string value) {
 		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getProduct().set#arguments.property#(#arguments.value#)");
+			return evaluate("getCurrentProduct().set#arguments.property#(#arguments.value#)");
 		} else if (isDefined("arguments.property")) {
-			return evaluate("getProduct().get#arguments.property#()");
+			return evaluate("getCurrentProduct().get#arguments.property#()");
 		} else {
-			return getProduct();	
+			return getCurrentProduct();	
 		}
 	}
 	
@@ -51,13 +58,4 @@ component accessors="true" extends="BaseObject" {
 			return getRBFactory().getKeyValue(session.rb, arguments.key);
 		}
 	}
-	
-	public any function getProduct() {
-		if(!isDefined("variables.product")) {
-			variables.product = getService("productService").getNewEntity();
-		}
-		return variables.product;
-	}
-	
-	
 }

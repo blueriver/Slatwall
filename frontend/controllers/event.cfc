@@ -18,15 +18,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			productFilename = Left(productFilename, len(productFilename)-1);
 			
 			// Setup Product in Slatwall Scope
-			request.slatwallScope.setProduct(variables.productService.getByFilename(productFilename));
+			request.slatwallScope.setCurrentProduct(variables.productService.getByFilename(productFilename));
 		}
 	}
 	
 	public void function onrenderstart(required any rc) {
-		if(request.slatwallScope.getProduct().isNew() == false) {
+		if(request.slatwallScope.getCurrentProduct().isNew() == false) {
 			// Force Product Information into the contentBean
-			request.contentBean.setTitle(request.slatwallScope.getProduct().getProductName());
-			request.contentBean.setBody(request.slatwallScope.getProduct().getProductDescription());
+			request.contentBean.setTitle(request.slatwallScope.getCurrentProduct().getProductName());
+			request.contentBean.setBody(request.slatwallScope.getCurrentProduct().getProductDescription());
 			
 			// Override crumbdata with the last page that was loaded
 			request.crumbdata = getSessionService().getCurrent().getLastCrumbData();
@@ -34,8 +34,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			
 			// Set template based on Product Template
 			request.contentBean.setIsNew(0);
-			if(request.slatwallScope.getProduct().getTemplate() != "") {
-				request.contentBean.setTemplate(request.slatwallScope.getProduct().getTemplate());
+			if(request.slatwallScope.getCurrentProduct().getTemplate() != "") {
+				request.contentBean.setTemplate(request.slatwallScope.getCurrentProduct().getTemplate());
 			}
 		} else {
 			getSessionService().getCurrent().setLastCrumbData(duplicate(request.crumbdata));

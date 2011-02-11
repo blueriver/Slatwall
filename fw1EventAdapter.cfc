@@ -25,6 +25,8 @@
 		
 		<!--- Call Slatwall Front End Controller /> --->
 		<cfset doAction($, 'frontend:event.onsiterequeststart') />
+		<cfset $.getThemeRenderer().injectMethod("$w", request.slatwallScope) />
+		<cfset $.getContentRenderer(). injectMethod("$w", request.slatwallScope) />
     </cffunction>
 	
 	<cffunction name="onApplicationLoad" output="false">

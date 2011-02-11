@@ -62,12 +62,9 @@ component extends="framework" output="false" {
 		// Setup Slatwall Specific request scope
 		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
 		request.context.$w = request.slatwallScope;
-		variables.$w = request.slatwallScope;
-		
-		var item = 0;
 		
 		// Look for values in the request content that are from checkboxes
-		for (item in request.context) {
+		for (var item in request.context) {
 			if (isSimpleValue(request.context[item])){
 				if (request.context[item] eq '0,1' or request.context[item] eq '1,0'){
 					request.context[item] = 1;
