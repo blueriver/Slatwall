@@ -79,7 +79,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		var identifierColumns = ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
 		var returnNew = true;
 		for(var i=1; i <= arrayLen(identifierColumns); i++){
-			if(structKeyExists(variables, identifierColumns[i]) && !isNull(variables[identifierColumns[i]])) {
+			if(structKeyExists(variables, identifierColumns[i]) && (!isNull(variables[identifierColumns[i]]) && variables[identifierColumns[i]] != "" )) {
 				returnNew = false;
 			}
 		}

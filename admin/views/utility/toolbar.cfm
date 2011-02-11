@@ -21,6 +21,9 @@
 				<a href="#buildURL(action='admin:account.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.accounts")#</a>
 			</li>
 			<li>
+				<a href="#buildURL(action='admin:setting.detail')#">#rc.$w.rbKey("toolbar.settings")#</a>
+			</li>
+			<li>
 				<a href="##">Help</a>
 				<div class="MenuSubOne">
 					<ul>
