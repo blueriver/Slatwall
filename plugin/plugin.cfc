@@ -73,9 +73,15 @@ component extends="mura.plugin.plugincfc" output="false" {
 		fixQuery.setDataSource(application.configBean.getDatasource());
 		fixQuery.setUsername(application.configBean.getUsername());
 		fixQuery.setPassword(application.configBean.getPassword());
-		fixQuery.setSql("
-			ALTER TABLE tusers DROP CONSTRAINT PK_tusers;
-		");
+		if(application.configBean.getDbType() == "mysql") {
+			fixQuery.setSql("
+				ALTER TABLE tusers DROP PRIMARY KEY;
+			");
+		} else {
+			fixQuery.setSql("
+				ALTER TABLE tusers DROP CONSTRAINT PK_tusers;
+			");
+		}
 		fixQuery.execute();
 		fixQuery.setSql("
 			ALTER TABLE tusers ALTER COLUMN UserID varchar(35) NOT NULL;
