@@ -13,6 +13,9 @@
 <!--- hint: This can be used to override the default filed name" --->
 <cfparam name="attributes.fieldName" default="" />
 
+<!--- hint: This can be used to override the default data type" --->
+<cfparam name="attributes.dataType" default="" />
+
 <!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 <cfparam name="attributes.edit" default=false type="boolean" />
 
@@ -90,6 +93,18 @@
 			</cfif>
 		</cfif>
 		
+		<cfif attributes.fieldName eq "">
+			<cfset attributes.fieldName = local.propertyMetadata.name />
+		</cfif>
+		
+		<cfif attributes.dataType eq "">
+			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
+				<cfset attributes.dataType = "boolean" />
+			<cfelse>
+				<cfset attributes.dataType = "string" />
+			</cfif>
+		</cfif>
+		
 		<!--- If in edit mode, and that editType attribute is not set then figure out what to use --->
 		<cfif attributes.edit>
 			<cfif attributes.editType eq "">
@@ -131,10 +146,6 @@
 			</cfif>
 		</cfif>
 		
-		<cfif attributes.fieldName eq "">
-			<cfset attributes.fieldName = local.propertyMetadata.name />
-		</cfif>
-
 		<cfoutput>
 	 		<dt class="spd#LCASE(attributes.fieldName)#">
 	            <cfif len(trim(attributes.tooltipmessage))>
@@ -185,6 +196,7 @@
 					<cfelseif attributes.editType eq "textarea">
 						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "checkbox">
+						<input type="hidden" name="#attributes.fieldName#" id="#attributes.fieldName#" value="0" />
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
@@ -211,9 +223,9 @@
 				<cfelseif attributes.edit eq true and attributes.editType eq "none">
 					<!-- A Default Edit Type Could not be created -->
 				<cfelse>
-					<cfif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean" and attributes.value eq true>
+					<cfif attributes.dataType eq "boolean" and attributes.value eq true>
 						YES
-					<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean" and attributes.value eq false>
+					<cfelseif attributes.dataType eq "boolean" and attributes.value eq false>
 						NO
 					<cfelse>
 						#attributes.Value#
