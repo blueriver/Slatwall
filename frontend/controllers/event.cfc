@@ -2,6 +2,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	property name="productService" type="any";
 	property name="accountService" type="any";
+	property name="sessionService" type="any";
 	
 	public void function before(required any rc) {
 		// Because these are all just mura events we set the view to Blank;
@@ -25,10 +26,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			request.contentBean.setBody(request.muraScope.slatwall.Product.getProductDescription());
 			
 			// Override crumbdata with the last page that was loaded
-			if(isDefined("session.slatwall.crumbData")) {
-				request.crumbdata = duplicate(session.slatwall.crumbdata);
-				request.contentrenderer.crumbdata = duplicate(session.slatwall.crumbdata);
-			}
+			request.crumbdata = getSessionService().getCurrent().getLastCrumbData();
+			request.contentrenderer.crumbdata = getSessionService().getCurrent().getLastCrumbData();
 			
 			// Set template based on Product Template
 			request.contentBean.setIsNew(0);
@@ -36,7 +35,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				request.contentBean.setTemplate(request.muraScope.slatwall.Product.getTemplate());
 			}
 		} else {
-			session.slatwall.crumbdata = duplicate(request.crumbdata);
+			getSessionService().getCurrent().setLastCrumbData(duplicate(request.crumbdata));
 		}
 	}
 	

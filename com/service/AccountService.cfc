@@ -1,4 +1,14 @@
 component extends="BaseService" accessors="true" {
+			
+	property name="sessionService" type="any";
+	
+	public any function init(required string entityName, required any dao, required any sessionService) {
+		setEntityName(arguments.entityName);
+		setDAO(arguments.DAO);
+		setSessionService(arguments.sessionService);
+		
+		return this;
+	}
 	
 	public any function loginMuraUser(required any muraUser) {
 		
@@ -30,6 +40,7 @@ component extends="BaseService" accessors="true" {
 		} else {
 		}
 		
-		// TODO: Login Slatwall Account in Session
+		// Login Slatwall Account in Session
+		getSessionService().getCurrent().setAccount(account);
 	}
 }

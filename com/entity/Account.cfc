@@ -63,6 +63,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	// End: User Helpers
 	
+	public string function getFullName() {
+		return "#getFirstName()# #getLastName()#";
+	}
+	
 	public string function getPrimaryEmail() {
 		if(!isDefined("variables.primaryEmail")) {
 			

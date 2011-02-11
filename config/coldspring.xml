@@ -8,6 +8,7 @@
 	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO">
 		 <constructor-arg name="productTypeTreeSorter"><ref bean="ProductTypeTreeSorter" /></constructor-arg>
 	</bean>
+	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
 	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
 	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
@@ -25,7 +26,8 @@
         <property name="target">
             <bean class="slatwall.com.service.accountService">
 		        <constructor-arg name="entityName"><value>SlatwallAccount</value></constructor-arg>
-		        <constructor-arg name="DAO"><ref bean="AccountDAO" /></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="accountDAO" /></constructor-arg>
+				<constructor-arg name="sessionService"><ref bean="sessionService" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">
@@ -72,6 +74,20 @@
             <bean class="slatwall.com.service.typeService">
                 <constructor-arg name="entityName"><value>SlatwallType</value></constructor-arg>
                 <constructor-arg name="DAO"><ref bean="TypeDAO" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
+	
+	<bean id="sessionService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.sessionService">
+		        <constructor-arg name="entityName"><value>SlatwallSession</value></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="SessionDAO" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">

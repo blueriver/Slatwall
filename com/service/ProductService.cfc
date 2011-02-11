@@ -20,7 +20,7 @@ component extends="BaseService" accessors="true" {
 	
 	public any function getSmartList(required struct rc){
 		
-		var smartList = new slatwall.com.utility.SmartList(rc=arguments.rc, entityName=getEntityName());
+		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName=getEntityName());
 		
 		smartList.addKeywordProperty(rawProperty="productCode", weight=9);
 		smartList.addKeywordProperty(rawProperty="productName", weight=3);

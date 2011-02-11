@@ -30,6 +30,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 	
 	// On delete
 	public void function delete() {
+		structDelete(session, "slatwallSession");
 		// Clear out cfapplication file
 	    ClearOldAppContents();
 		ormReload();

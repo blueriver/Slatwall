@@ -19,7 +19,7 @@ component extends="framework" output="false" {
 		var rbFactory = "";
 		var xml = "";
 		var xmlPath = "";
-	  
+
 	    if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
 		  	include "plugin/config.cfm";
 		}
@@ -46,17 +46,18 @@ component extends="framework" output="false" {
 		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
 				
 		// Build RB Factory
-		rbFactory=createObject("component","mura.resourceBundle.resourceBundleFactory").init(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
+		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 	}
 	
 	public void function setupSession() {
-	  	 session.slat = structnew();
-		 session.slatwall.crumbdata = arraynew(1);
+		session.slatwallSession = new Slatwall.com.utility.SlatwallSession();
 	}
 	
 	public void function setupRequest() {
-		param name="session.rb" default="en";
+		if(!isDefined("session.SlatwallSession")) {
+			setupSession();
+		}
 		
 		var item = 0;
 		
