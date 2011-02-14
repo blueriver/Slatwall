@@ -20,13 +20,13 @@
 		<td class="administration">
 		  <ul class="three">
 		      <li class="edit">
-		          <a href="#buildURL(action='admin:product.productTypeForm', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Edit">Edit</a>
+		          <a href="#buildURL(action='admin:product.producttypeform', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Edit">Edit</a>
 			  </li>
               <li class="add">
-                 <a href="#buildURL(action='admin:product.productTypeForm', queryString='parentTypeID=#rc.productTypes.productTypeID#')#" title="Add Subtype">Add Subtype</a>
+                 <a href="#buildURL(action='admin:product.producttypeform', queryString='parentTypeID=#rc.productTypes.productTypeID#')#" title="Add Subtype">Add Subtype</a>
               </li>
 			  <li class="delete">
-			     <a href="#buildURL(action='admin:product.deleteProductType', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Delete">Delete</a>
+			     <a href="#buildURL(action='admin:product.deleteproducttype', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Delete">Delete</a>
 			  </li>
 		  </ul>
 		</td>

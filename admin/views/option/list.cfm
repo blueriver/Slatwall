@@ -1,25 +1,31 @@
 ﻿<cfoutput>
-
-<cfif arrayLen(rc.options) GT 0>
+<ul id="navTask">
+    <li><a href="#buildURL(action='admin:option.optiongroupform')#">#rc.$w.rbKey("option.addoptiongroup")#</a></li>
+	<cfif rc.listby EQ "optiongroups">
+	<li><a href="#buildURL(action='admin:option.list', querystring='listby=options')#">#rc.$w.rbKey("option.listbyoptions")#</a></li>
+	<cfelseif rc.listby EQ "options">
+	<li><a href="#buildURL(action='admin:option.list', querystring='listby=optiongroups')#">#rc.$w.rbKey("option.listbyoptiongroups")#</a></li>
+	</cfif>
+</ul>
+<cfif arrayLen(rc.options.getPageRecords()) GT 0>
+<!---<form name="addOptionToGroup" method="get">
+	
+	 #rc.rbFactory.getKeyValue(session.rb,"option.addoptiontogroup")#:
+	<input type="hidden" name="action" value="admin:option.optionform" />
+	<select name="optiongroupid">
+	<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
+		<option name="optiongroupid" value="#local.thisOptionGroup.getOptionGroupID()#">#local.thisOptionGroup.getOptionGroupName()#</option>
+	</cfloop>
+	</select>
+	<input type="submit" value="Add" />
+</form>--->
+<cfif rc.listby eq "options">
 #view("option/inc/optiontable")#
 <cfelse>
-<p>#rc.rbFactory.getKeyValue(session.rb,"option.nooptionsdefined")#</p>
-	<cfif arrayLen(rc.optionGroups) gt 0>
-	<form name="addOptionToGroup" method="get">
-		
-		 #rc.rbFactory.getKeyValue(session.rb,"option.addoptiontogroup")#:
-		<input type="hidden" name="action" value="admin:option.optionform" />
-		<select name="optiongroupid">
-		<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-			<option name="optiongroupid" value="#local.thisOptionGroup.getOptionGroupID()#">#local.thisOptionGroup.getOptionGroupName()#</option>
-		</cfloop>
-		</select>
-		<input type="submit" value="Add" />
-	</form>
-	</cfif>
+#view("option/inc/optiongrouptable")#
 </cfif>
-<ul id="navTask">
-    <li><a href="#buildURL(action='admin:option.optiongroupform')#">#rc.rbFactory.getKeyValue(session.rb,"option.addoptiongroup")#</a></li>
-</ul>
+<cfelse>
+<p>#rc.rbFactory.getKeyValue(session.rb,"option.nooptionsdefined")#</p>
+</cfif>
 
 </cfoutput>

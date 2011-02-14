@@ -7,7 +7,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupDescription" ormtype="string";
 	
 	// Related Object Properties
-	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all" ;
+	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" ;
 
     public OptionGroup function init(){
        // set default collections for association management methods

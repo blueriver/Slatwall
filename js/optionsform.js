@@ -1,4 +1,5 @@
 $(document).ready(function() {
+var optionCount = $('.optionFieldSet').length;
 	$("#addOption").click(function() {
 		var current= $('.optionFieldSet').length;
 		current++;
@@ -30,19 +31,20 @@ $(document).ready(function() {
 		$('textarea.richtext').ckeditor({ toolbar:'Default',
 						  height:'150',
 					      customConfig : 'config.js.cfm' },
-						  htmlEditorOnComplete);	
+						  htmlEditorOnComplete);
 
 	});
 	
 	$('#remOption').click(function() {
 		var num	= $('.optionFieldSet').length;
+		$('#OptionDescription'+num).remove();
 		$('#Option' + num).remove();		// remove the last element
 	
 		// enable the "add" button
 		$('#addOption').attr('disabled','');
 	
-		// if only one element remains, disable the "remove" button
-		if (num-1 == 1)
+		// can't remove more elements than were originally present
+		if (num-1 == optionCount)
 			$('#remOption').attr('disabled','disabled');
 	});
 

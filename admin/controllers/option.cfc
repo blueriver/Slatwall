@@ -22,9 +22,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function list(required struct rc) {
+		param name="rc.listby" default="optiongroups";
 		rc.itemTitle = rc.rbFactory.getKeyValue(session.rb,"option.optionlist");
-		rc.options = getOptionService().list();
-		rc.optionGroups = getOptionService().listOptionGroups();
+		rc.orderby="optiongroup_optiongroupname|A^optionname|A";
+		rc.options = getOptionService().getSmartList(rc=arguments.rc);
+		rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
 		//rc.OptionSmartList = getOptionService().getSmartList(rc=arguments.rc);
 	}
 
@@ -34,8 +36,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		variables.fw.redirect(action="admin:option.detail", queryString="optionID=#rc.option.getOptionID()#");
 	}
 	
-	public void function delete(required struct rc) {
-		getOptionService().delete(entity=rc.option);
+	public void function deleteoptiongroup(required struct rc) {
+		getOptionService().deleteOptionGroup(rc.optiongroupid);
 		variables.fw.redirect(action="admin:option.list");
 	}
 	
@@ -73,14 +75,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			for(var i=1; i<=arraylen(optionsArray);i++) {
 				if(len(trim(optionsArray[i].optionName))) {
 					var option = getOptionService().getByID(optionsArray[i].optionID);
-					option.setOptionName(optionsArray[i].optionName);
-					option.setOptionID(optionsArray[i].optionID);
-					option.setOptionCode(optionsArray[i].optionCode);
-					option.setOptionDescription(optionsArray[i].optionDescription);
-					if(optionsArray[i].optionImageFile != "") 
-						saveImage(option,"options[#i#].optionImageFile",imageDir);
-					if(option.isNew()){
-						optionGroup.addOption(option);
+					if(structKeyExists(optionsArray[i],"deleteOption") and !option.isNew()) {
+						fileDelete(expandPath("#imageDir#/#option.getImagePath()#"));
+						getOptionService().delete(option);
+					} else {
+						option.setOptionName(optionsArray[i].optionName);
+						option.setOptionID(optionsArray[i].optionID);
+						option.setOptionCode(optionsArray[i].optionCode);
+						option.setOptionDescription(optionsArray[i].optionDescription);
+						if(structKeyExists(optionsArray[i],"removeOptionImage") and option.hasImage() and optionsArray[i].optionImageFile == "") {
+							fileDelete(expandPath("#imageDir#/#option.getImagePath()#"));
+							option.setOptionImage("");
+						}
+						if(option.isNew())
+							optionGroup.addOption(option);
+						if(optionsArray[i].optionImageFile != "") 
+							saveImage(option,"options[#i#].optionImageFile",imageDir);
 					}
 				}
 			}
@@ -94,10 +104,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(rc.optionGroupImageFile != "") {
 			saveImage(optionGroup,"optionGroupImageFile",imageDir);
 		}
-		//writeDump(var=optiongroup,abort=true );
 		optionGroup = getOptionService().save(entity=optionGroup);
 		if(!optionGroup.hasErrors()) {
-			variables.fw.redirect(action="admin:option.list");
+			variables.fw.redirect(action="admin:option.optiongroupdetail",querystring="optiongroupID=#optionGroup.getOptionGroupID()#");
 		} else {
 			rc.optionGroup=optionGroup;
 			variables.fw.redirect("admin:option.optiongroupform","optionGroup");
@@ -127,7 +136,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				var destination = expandPath(arguments.imageDir & "/#arguments.entity.getClassName()#");
 				if(!directoryExists(destination))
 					directoryCreate(destination);
-				imageWrite(img,"#destination#/#imageName#");
+				imageWrite(img,"#destination#/#imageName#",true);
 				return true;
 			} else { // file was not an image
 				fileDelete(theFile);

@@ -32,8 +32,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 		return len(getOptionImage());
 	}
 	
-	
 	public string function getImagePath() {
         return getClassName() & "/" & getOptionImage();
-    }   
+    }  
 }
