@@ -71,23 +71,32 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var optionsArray = fu.buildFormCollections(rc)["options"];
 		if(arrayLen(optionsArray)){
 			for(var i=1; i<=arraylen(optionsArray);i++) {
-				var option = getOptionService().getByID(optionsArray[1].optionID);
-				option.setOptionName(optionsArray[i].optionName);
-				option.setOptionID(optionsArray[i].optionID);
-				option.setOptionCode(optionsArray[i].optionCode);
-				option.setOptionDescription(optionsArray[i].optionDescription);
-				optionGroup.addOption(option);
+				if(len(trim(optionsArray[i].optionName))) {
+					var option = getOptionService().getByID(optionsArray[i].optionID);
+					option.setOptionName(optionsArray[i].optionName);
+					option.setOptionID(optionsArray[i].optionID);
+					option.setOptionCode(optionsArray[i].optionCode);
+					option.setOptionDescription(optionsArray[i].optionDescription);
+					if(optionsArray[i].optionImageFile != "") 
+						saveImage(option,"options[#i#].optionImageFile",imageDir);
+					if(option.isNew()){
+						optionGroup.addOption(option);
+					}
+				}
 			}
 		}
+		// remove image if option is checked (unless a new image is set, in which case the old image is removed by saveimage())
 		if(structKeyExists(rc,"removeImage") and optionGroup.hasImage() and rc.optionGroupImageFile == ""){
 			filedelete(expandPath("#imageDir#/#optionGroup.getImagePath()#"));
 			optionGroup.setOptionGroupImage("");
 		}
+		// save image file and set the image name is a property
+		if(rc.optionGroupImageFile != "") {
+			saveImage(optionGroup,"optionGroupImageFile",imageDir);
+		}
+		//writeDump(var=optiongroup,abort=true );
 		optionGroup = getOptionService().save(entity=optionGroup);
 		if(!optionGroup.hasErrors()) {
-			if(rc.optionGroupImageFile != "") {
-				saveImage(optionGroup,"optionGroupImageFile",imageDir);
-			}
 			variables.fw.redirect(action="admin:option.list");
 		} else {
 			rc.optionGroup=optionGroup;
@@ -115,8 +124,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				   var imageName = filterFileName(arguments.entity.getOptionGroupName()) & "." & result.serverFileExt;
 				   arguments.entity.setOptionGroupImage(imageName);
 				}
-				entitySave(arguments.entity);
-				ORMFlush(); // not sure why I need this here ,but if I don't he filename doesn't get persisted to the db
 				var destination = expandPath(arguments.imageDir & "/#arguments.entity.getClassName()#");
 				if(!directoryExists(destination))
 					directoryCreate(destination);

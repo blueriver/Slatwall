@@ -36,9 +36,11 @@
 	#view("option/optionlist")#
 <cfif rc.edit>
 <fieldset id="buttons">
-<input type="submit" value="Save" />
-<input type="button" class="button" id="addOption" value="Add Option" />
+<p><input type="button" class="button" id="addOption" value="#rc.$w.rbKey('option.addoption')#" />
+<input type="button" class="button" id="remOption" value="#rc.$w.rbKey('option.removeoption')#" /></p>
+<p><input type="submit" value="#rc.$w.rbKey('option.save')#" /></p>
 </fieldset>
 </form>
+#view("option/inc/optionformtemplate")#
 </cfif>
 </cfoutput>
