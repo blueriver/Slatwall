@@ -7,4 +7,4 @@
 <cfset variables.framework.defaultSection="main">
 <cfset variables.framework.defaultItem="dashboard">
 <cfset variables.framework.generateses=false>
-<cfset variables.framework.reloadApplicationOnEveryRequest=false>
+<cfset variables.framework.reloadApplicationOnEveryRequest=true>

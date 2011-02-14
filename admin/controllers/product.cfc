@@ -7,36 +7,39 @@ component extends="BaseController" output=false accessors=true {
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
 		
-		rc.sectionTitle = rc.$w.rbKey("product.products");
 		rc.product = getProductService().getByID(ID=rc.productID);
-		if(!isDefined("rc.product")) {
+		
+		if(isNull(rc.product)) {
 			rc.product = getProductService().getNewEntity();
 		}
 	}
 	
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
-		rc.itemTitle = rc.$w.rbKey("product.productlist");
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
 	public void function detail(required struct rc) {
-		var productName = rc.product.getProductName();
-		rc.itemTitle = rc.$w.rbKey("product.productdetails");
-		if(len(productName))
-			rc.itemTitle &= ": " & productName;
+		if(len(rc.product.getProductName())) {
+			rc.itemTitle &= ": #rc.product.getProductName()#";
+		}
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
-	public void function edit(required struct rc) {
-		//rc.productTemplatesQuery = getProductService().getProductTemplates();
-		var productName = rc.product.getProductName();
+	public void function create() {
 		rc.edit = true;
-		rc.itemTitle = rc.$w.rbKey("product.editproduct");
-		if(len(productName))
-			rc.itemTitle &= ": " & productName;
+		variables.fw.setView("admin:product.detail");
+	}
+	
+	public void function edit(required struct rc) {
+		if(len(rc.product.getProductName())) {
+			rc.itemTitle &= ": #rc.product.getProductName()#";
+		}
+		
+		rc.edit = true;
+		
 		variables.fw.setView("admin:product.detail");
 	}
 	
@@ -71,7 +74,6 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function types(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
-       rc.itemTitle = rc.$w.rbKey("product.producttype.producttypes");
 	}
 	
 	public void function producttypeform(required struct rc) {

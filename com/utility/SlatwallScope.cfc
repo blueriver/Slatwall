@@ -52,11 +52,10 @@ component accessors="true" extends="BaseObject" {
 	}
 	
 	public string function rbKey(required string key, string local) {
-		if(isDefined("arguments.local")) {
-			return getRBFactory().getKeyValue(arguments.local, arguments.key);
-		} else {
-			return getRBFactory().getKeyValue(session.rb, arguments.key);
+		if(!isDefined("arguments.local")) {
+			arguments.local = session.rb;
 		}
+		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 	
 	public string function setting(required string settingName) {

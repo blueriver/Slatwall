@@ -5,7 +5,7 @@
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
-        <th class="varWidth">#rc.$w.rbKey("product.producttype")#</th>
+        <th class="varWidth">#rc.$w.rbKey("entity.product.producttype")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfif rc.productTypes.recordCount gt 0>

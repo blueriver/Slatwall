@@ -1,10 +1,10 @@
 ﻿<cfoutput>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:option.optiongroupform')#">#rc.$w.rbKey("option.addoptiongroup")#</a></li>
+    <li><a href="#buildURL(action='admin:option.optiongroupform')#">#rc.$w.rbKey("admin:option.addoptiongroup")#</a></li>
 	<cfif rc.listby EQ "optiongroups">
-	<li><a href="#buildURL(action='admin:option.list', querystring='listby=options')#">#rc.$w.rbKey("option.listbyoptions")#</a></li>
+	<li><a href="#buildURL(action='admin:option.list', querystring='listby=options')#">#rc.$w.rbKey("admin:option.listbyoptions")#</a></li>
 	<cfelseif rc.listby EQ "options">
-	<li><a href="#buildURL(action='admin:option.list', querystring='listby=optiongroups')#">#rc.$w.rbKey("option.listbyoptiongroups")#</a></li>
+	<li><a href="#buildURL(action='admin:option.list', querystring='listby=optiongroups')#">#rc.$w.rbKey("admin:option.listbyoptiongroups")#</a></li>
 	</cfif>
 </ul>
 <cfif arrayLen(rc.options.getPageRecords()) GT 0>

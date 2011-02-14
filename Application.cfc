@@ -136,4 +136,8 @@ component extends="framework" output="false" {
 			}
 		}
 	}
+	
+	public boolean function secureDisplay() {
+		return true;
+	}
 }

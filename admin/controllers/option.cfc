@@ -5,9 +5,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function before(required struct rc) {
 		param name="rc.optionID" default="";
-		param name="rc.itemTitle" default="";
 		
-		rc.sectionTitle = rc.$w.rbKey("option.productoptions");
 		rc.option = getOptionService().getByID(ID=rc.optionID);
 		if(!isDefined("rc.option")) {
 			rc.option = getOptionService().getNewEntity();
@@ -15,15 +13,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function detail(required struct rc) {
-		if(len(rc.option.getOptionName()))
-			rc.itemTitle = rc.$w.rbKey("option.optiondetail") & ": " & rc.option.getOptionName();
-		else
-			variables.fw.redirect("option.list");
+		if(len(rc.option.getOptionName())) {
+			rc.itemTitle &= ": #rc.option.getOptionName()#";
+		} else {
+			variables.fw.redirect("admin:option.list");
+		}
 	}
 	
 	public void function list(required struct rc) {
 		param name="rc.listby" default="optiongroups";
-		rc.itemTitle = rc.$w.rbKey("option.optionlist");
 		rc.orderby="optiongroup_optiongroupname|A^optionname|A";
 		rc.options = getOptionService().getSmartList(rc=arguments.rc);
 		rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
@@ -45,8 +43,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(structKeyExists(rc,"optionGroupID") and isSimpleValue(rc.optionGroupID)) {
 			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		}
-		if(isDefined("rc.optionGroup") and len(rc.optionGroup.getOptionGroupName()))
-			rc.itemTitle=rc.$w.rbKey("option.optiongroupdetail") & ": " & rc.optionGroup.getOptionGroupName();
+		if(isDefined("rc.optionGroup") and len(rc.optionGroup.getOptionGroupName())) {
+			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
+		}		
 		//else
 			//variables.fw.redirect("admin:option.list");
 	}
@@ -56,12 +55,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(structKeyExists(rc,"optionGroupID") and isSimpleValue(rc.optionGroupID)) {
 			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		}
-		if(!isDefined("rc.optionGroup"))
+		if(!isDefined("rc.optionGroup")) {
 			rc.optionGroup = getOptionService().getOptionGroup();
-		if(len(rc.optionGroup.getOptionGroupName()))
-			rc.itemTitle = rc.$w.rbKey("option.editoptiongroup")& ": " & rc.optionGroup.getOptionGroupName();
-		else
-			rc.itemTitle = rc.$w.rbKey("option.addoptiongroup");
+		}
+		if(len(rc.optionGroup.getOptionGroupName())) {
+			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
+		}
+			
 		variables.fw.setView("admin:option.optiongroupdetail");
 	}
 	
