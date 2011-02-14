@@ -1,4 +1,4 @@
-<cfcomponent><cfscript>
+<cfcomponent output="false"><cfscript>
 /*
 	Copyright (c) 2009-2010, Sean Corfield, Ryan Cogswell
 
@@ -15,7 +15,14 @@
 	limitations under the License.
 */
 
-	this.name = hash( getCurrentTemplatePath() );
+	this.name = hash( getBaseTemplatePath() );
+	if ( len( getContextRoot() ) ) {
+		variables.cgiScriptName = replace( CGI.SCRIPT_NAME, getContextRoot(), '' );
+		variables.cgiPathInfo = replace( CGI.PATH_INFO, getContextRoot(), '' );
+	} else {
+		variables.cgiScriptName = CGI.SCRIPT_NAME;
+		variables.cgiPathInfo = CGI.PATH_INFO;
+	}
 
 	function actionSpecifiesSubsystem( action ) {
 
@@ -39,15 +46,25 @@
 		<cfset var initialDelim = '?' />
 		<cfset var varDelim = '&' />
 		<cfset var equalDelim = '=' />
+		<cfset var curDelim = '' />
 		<cfset var basePath = '' />
 		<cfset var extraArgs = '' />
 		<cfset var queryPart = '' />
 		<cfset var anchor = '' />
 		<cfset var ses = false />
 		<cfset var omitIndex = false />
+		<cfset var cosmeticAction = '' />
+		<cfset var isHomeAction = false />
+		<cfset var isDefaultItem = false />
 
 		<cfif arguments.path eq "useCgiScriptName">
 			<cfset arguments.path = CGI.SCRIPT_NAME />
+			<cfif variables.framework.SESOmitIndex>
+				<cfset arguments.path = getDirectoryFromPath( arguments.path ) />
+				<cfset omitIndex = true />
+			</cfif>
+		<cfelseif arguments.path eq "useRequestURI">
+			<cfset arguments.path = getPageContext().getRequest().getRequestURI() />
 			<cfif variables.framework.SESOmitIndex>
 				<cfset arguments.path = getDirectoryFromPath( arguments.path ) />
 				<cfset omitIndex = true />
@@ -56,9 +73,12 @@
 		
 		<cfif find( '?', arguments.action ) and arguments.queryString is ''>
 			<!--- shorthand for action/queryString pairing --->
-			<cfset arguments.queryString = REReplace( arguments.action, '[^\?]*\?', '') />
-			<cfset arguments.action = REReplace( arguments.action, '([^\?\##]*).*', '\1') />
+			<cfset arguments.queryString = listRest( arguments.action, '?' ) />
+			<cfset arguments.action = listFirst( arguments.action, '?##' ) />
 		</cfif>
+		<cfset cosmeticAction = getFullyQualifiedAction( arguments.action ) />
+		<cfset isHomeAction = cosmeticAction is getFullyQualifiedAction( variables.framework.home ) />
+		<cfset isDefaultItem = getItem( cosmeticAction ) is variables.framework.defaultItem />
 
 		<cfif find( '?', arguments.path ) gt 0>
 			<cfif right( arguments.path, 1 ) eq '?' or right( arguments.path, 1 ) eq '&'>
@@ -76,37 +96,57 @@
 			<cfset equalDelim = '/' />
 			<cfset ses = true />
 		</cfif>
+		<cfset curDelim = varDelim />
 
-		<cfif ses>
-			<cfset basePath = arguments.path & initialDelim & replace( getFullyQualifiedAction( arguments.action ), '.', '/' ) />
-		<cfelse>
-			<cfset basePath = arguments.path & initialDelim & variables.framework.action & equalDelim & getFullyQualifiedAction(arguments.action) />
+		<cfif usingSubsystems() and getSubsystem( cosmeticAction ) is variables.framework.defaultSubsystem>
+			<cfset cosmeticAction = getSectionAndItem( cosmeticAction ) />
 		</cfif>
-		
+
 		<cfif len( arguments.queryString )>
-			<cfset extraArgs = REReplace( arguments.queryString, '([^\?\##]*).*', '\1') />
+			<cfset extraArgs = listFirst( arguments.queryString, '?##' ) />
 			<cfif find( '?', arguments.queryString )>
-				<cfset queryPart = REReplace( arguments.queryString, '[^\?]*\?([^\##]*).*', '\1') />
+				<cfset queryPart = listRest( arguments.queryString, '?' ) />
 			</cfif>
 			<cfif find( '##', arguments.queryString )>
-				<cfset anchor = REReplace( arguments.queryString, '[^\##]*\##(.*)', '\1' ) />
+				<cfset anchor = listRest( arguments.queryString, '##' ) />
 			</cfif>
 			<cfif ses>
 				<cfset extraArgs = listChangeDelims( extraArgs, '/', '&=' ) />
 			</cfif>
-			<cfif extraArgs is not ''>
-				<cfset basePath = basePath & varDelim & extraArgs />
+		</cfif>
+		
+		<cfif ses>
+			<cfif isHomeAction and extraArgs is ''>
+				<cfset basePath = arguments.path />
+			<cfelseif isDefaultItem and extraArgs is ''>
+				<cfset basePath = arguments.path & initialDelim & listFirst( cosmeticAction, '.' ) />
+			<cfelse>
+				<cfset basePath = arguments.path & initialDelim & replace( cosmeticAction, '.', '/' ) />
 			</cfif>
-			<cfif queryPart is not ''>
-				<cfif ses>
-					<cfset basePath = basePath & '?' & queryPart />
-				<cfelse>
-					<cfset basePath = basePath & '&' & queryPart />
-				</cfif>
+		<cfelse>
+			<cfif isHomeAction>
+				<cfset basePath = arguments.path />
+				<cfset curDelim = '?' />
+			<cfelseif isDefaultItem>
+				<cfset basePath = arguments.path & initialDelim & variables.framework.action & equalDelim & listFirst( cosmeticAction, '.' ) />
+			<cfelse>
+				<cfset basePath = arguments.path & initialDelim & variables.framework.action & equalDelim & cosmeticAction />
 			</cfif>
-			<cfif anchor is not ''>
-				<cfset basePath = basePath & '##' & anchor />
+		</cfif>
+		
+		<cfif extraArgs is not ''>
+			<cfset basePath = basePath & curDelim & extraArgs />
+			<cfset curDelim = varDelim />
+		</cfif>
+		<cfif queryPart is not ''>
+			<cfif ses>
+				<cfset basePath = basePath & '?' & queryPart />
+			<cfelse>
+				<cfset basePath = basePath & curDelim & queryPart />
 			</cfif>
+		</cfif>
+		<cfif anchor is not ''>
+			<cfset basePath = basePath & '##' & anchor />
 		</cfif>
 		
 		<cfreturn basePath />
@@ -526,7 +566,7 @@
 	 */
 	function onRequestStart(targetPath) {
 
-		var pathInfo = CGI.PATH_INFO;
+		var pathInfo = variables.cgiPathInfo;
 		var sesIx = 0;
 		var sesN = 0;
 
@@ -541,10 +581,10 @@
 			request.context = structNew();
 		}
 		// SES URLs by popular request :)
-		if ( len( pathInfo ) gt len( CGI.SCRIPT_NAME ) and left( pathInfo, len( CGI.SCRIPT_NAME ) ) is CGI.SCRIPT_NAME ) {
+		if ( len( pathInfo ) gt len( variables.cgiScriptName ) and left( pathInfo, len( variables.cgiScriptName ) ) is variables.cgiScriptName ) {
 			// canonicalize for IIS:
-			pathInfo = right( pathInfo, len( pathInfo ) - len( CGI.SCRIPT_NAME ) );
-		} else if ( len( pathInfo ) gt 0 and pathInfo is left( CGI.SCRIPT_NAME, len( pathInfo ) ) ) {
+			pathInfo = right( pathInfo, len( pathInfo ) - len( variables.cgiScriptName ) );
+		} else if ( len( pathInfo ) gt 0 and pathInfo is left( variables.cgiScriptName, len( pathInfo ) ) ) {
 			// pathInfo is bogus so ignore it:
 			pathInfo = '';
 		}
@@ -560,7 +600,7 @@
 			pathInfo = listToArray( pathInfo, '/' );
 		}
 		sesN = arrayLen( pathInfo );
-		if ( sesN gt 0 or variables.framework.generateSES ) {
+		if ( ( sesN gt 0 or variables.framework.generateSES ) and variables.framework.baseURL is not 'useRequestURI' ) {
 			request.generateSES = true;
 		}
 		for ( sesIx = 1; sesIx lte sesN; sesIx = sesIx + 1 ) {
@@ -577,24 +617,28 @@
 		// certain remote calls do not have URL or form scope:
 		if ( isDefined('URL') ) structAppend(request.context,URL);
 		if ( isDefined('form') ) structAppend(request.context,form);
-		restoreFlashContext();
-
+		// figure out the request action before restoring flash context:
 		if ( not structKeyExists(request.context, variables.framework.action) ) {
 			request.context[variables.framework.action] = variables.framework.home;
 		} else {
 			request.context[variables.framework.action] = getFullyQualifiedAction( request.context[variables.framework.action] );
 		}
-		request.action = lCase(request.context[variables.framework.action]);
+		request.action = validateAction( lCase(request.context[variables.framework.action]) );
 
-		setupRequestWrapper( true );
+		restoreFlashContext();
+		// ensure flash context cannot override request action:
+		request.context[variables.framework.action] = request.action;
 
 		// allow configured extensions and paths to pass through to the requested template.
-		// NOTE: for unhandledPaths, we make the list into an escaped regular expression so we match on subdirectories.  Meaning /myexcludepath will match "/myexcludepath" and all subdirectories  
+		// NOTE: for unhandledPaths, we make the list into an escaped regular expression so we match on subdirectories.  
+		// Meaning /myexcludepath will match "/myexcludepath" and all subdirectories  
 		if ( listFindNoCase( framework.unhandledExtensions, listLast( arguments.targetPath, "." ) ) or 
 				REFindNoCase( "^(" & framework.unhandledPathRegex & ")", arguments.targetPath ) ) {		
 			structDelete(this, 'onRequest');
 			structDelete(variables, 'onRequest');
 		}
+
+		setupRequestWrapper( true );
 	}
 
 	/*
@@ -687,12 +731,10 @@
 		<cfset var baseQueryString = "" />
 		<cfset var key = "" />
 		<cfset var preserveKey = "" />
+		<cfset var targetURL = "" />
 
 		<cfif arguments.preserve is not "none">
 			<cfset preserveKey = saveFlashContext( arguments.preserve ) />
-			<cfif variables.framework.maxNumContextsPreserved gt 1>
-				<cfset baseQueryString = "#variables.framework.preserveKeyURLKey#=#preserveKey#">
-			</cfif>
 		</cfif>
 
 		<cfif arguments.append is not "none">
@@ -723,7 +765,20 @@
 			<cfset baseQueryString = arguments.queryString />
 		</cfif>
 
-		<cflocation url="#buildURL( arguments.action, arguments.path, baseQueryString )#" addtoken="false" />
+		<cfset targetURL = buildURL( arguments.action, arguments.path, baseQueryString ) />
+		<cfif preserveKey is not "" and variables.framework.maxNumContextsPreserved gt 1>
+			<cfif find( '?', targetURL )>
+				<cfset preserveKey = '&#variables.framework.preserveKeyURLKey#=#preserveKey#' />
+			<cfelse>
+				<cfset preserveKey = '?#variables.framework.preserveKeyURLKey#=#preserveKey#' />
+			</cfif>
+			<cfif find( '##', targetURL )>
+				<cfset targetURL = listFirst( targetURL, '##' ) & preserveKey & '##' & listRest( targetURL, '##' ) />
+			<cfelse>
+				<cfset targetURL = targetURL & preserveKey />
+			</cfif>
+		</cfif>
+		<cflocation url="#targetURL#" addtoken="false" />
 
 	</cffunction>
 
@@ -821,7 +876,7 @@
 	 * use this to override the default view
 	 */
 	function setView( action ) {
-		request.overrideViewAction = action;
+		request.overrideViewAction = validateAction( action );
 	}
 
 	/*
@@ -870,6 +925,7 @@
 		request.view = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter &
 													section & '/' & item, 'view' );
 		if ( not cachedFileExists( expandPath( request.view ) ) ) {
+			request.missingView = request.view;
 			// ensures original view not re-invoked for onError() case:
 			structDelete( request, 'view' );
 		}
@@ -970,6 +1026,7 @@
 		// allow for :section/action to simplify logic in setupRequestWrapper():
 		pathInfo.path = listLast( arguments.path, variables.framework.subsystemDelimiter );
 		pathInfo.base = request.base;
+		pathInfo.subsystem = subsystem;
 		if ( usingSubsystems() ) {
 			pathInfo.base = pathInfo.base & getSubsystemDirPrefix( subsystem );
 		}
@@ -988,7 +1045,7 @@
 		request.failedMethod = arguments.method;
 	}
 
-</cfscript>
+</cfscript><cfsilent>
 
 	<cffunction name="setupApplicationWrapper" returntype="void" access="private" output="false">
 	
@@ -1040,7 +1097,7 @@
 	
 	</cffunction>
 
-<cfscript>
+</cfsilent><cfscript>
 
 	function setupFrameworkDefaults() { // "private"
 
@@ -1052,7 +1109,7 @@
 			variables.framework.action = 'action';
 		}
 		if ( not structKeyExists(variables.framework, 'base') ) {
-			variables.framework.base = getDirectoryFromPath( CGI.SCRIPT_NAME );
+			variables.framework.base = getDirectoryFromPath( variables.cgiScriptName );
 		} else if ( right( variables.framework.base, 1 ) is not '/' ) {
 			variables.framework.base = variables.framework.base & '/';
 		}
@@ -1141,7 +1198,7 @@
 		if ( not structKeyExists( variables.framework, 'cacheFileExists' ) ) {
 			variables.framework.cacheFileExists = false;
 		}
-		variables.framework.version = '1.1_1.2_009';
+		variables.framework.version = '1.2';
 	}
 
 	function setupRequestDefaults() { // "private"
@@ -1158,6 +1215,7 @@
 		request.services = arrayNew(1);
 		
 		if ( runSetup ) {
+			rc = request.context;
 			setupSubsystemWrapper( request.subsystem );
 			setupRequest();
 		}
@@ -1172,9 +1230,17 @@
 		setupSession();
 	}
 
+	function validateAction( action ) { // "private"
+		if ( findOneOf( '/\', action ) gt 0 ) {
+			raiseException( type="FW1.actionContainsSlash", message="Found a slash in the action: '#action#'.",
+					detail="Actions are not allowed to embed sub-directory paths.");
+		}
+		return action;
+	}
+
 	function viewNotFound() { // "private"
 		raiseException( type="FW1.viewNotFound", message="Unable to find a view for '#request.action#' action.",
-				detail="Either '#request.subsystembase#views/#request.section#/#request.item#.cfm' does not exist or variables.framework.base is not set correctly." );
+				detail="'#request.missingView#' does not exist." );
 	}
 
 </cfscript><cfsilent>
@@ -1199,19 +1265,6 @@
 				</cfif>
 			</cfif>
 		</cfloop>
-		<!--- Custom Function Added By Greg Moser on 12/22/2010 --->
-		<cfset var meta = getMetaData(arguments.cfc) />
-		<cfset var i = 0 />
-		<cfif isDefined('meta.accessors') and meta.accessors eq true>
-			<cfloop from="1" to="#arrayLen(meta.properties)#" index="i">
-				<cfif arguments.beanFactory.containsBean(meta.properties[i].name)>
-					<cfset args = structNew() />
-					<cfset args[meta.properties[i].name] = arguments.beanFactory.getBean(meta.properties[i].name) />
-					<cfinvoke component="#arguments.cfc#" method="set#meta.properties[i].name#" argumentCollection="#args#" />
-				</cfif>
-			</cfloop>
-		</cfif>
-		<!--- End: Greg Moser Addition --->
 
 	</cffunction>
 	
@@ -1248,7 +1301,7 @@
 		<cfargument name="method" />
 
 		<cfset var meta = 0 />
-		
+
 		<cfif structKeyExists(arguments.cfc,arguments.method) or structKeyExists(arguments.cfc,"onMissingMethod")>
 			<cftry>
 				<cfinvoke component="#arguments.cfc#" method="#arguments.method#" rc="#request.context#" />
@@ -1442,6 +1495,12 @@
 		<cfset var rc = request.context />
 		<cfset var response = '' />
 		<cfset var local = structNew() />
+		<cfset var $ = structNew() />
+		
+		<!--- integration point with Mura --->
+		<cfif structKeyExists( rc, '$' )>
+			<cfset $ = rc.$ />
+		</cfif>
 
 		<cfif not structKeyExists( request, "controllerExecutionComplete" ) >
 			<cfset raiseException( type="FW1.layoutExecutionFromController", message="Invalid to call the layout method at this point.",
@@ -1460,6 +1519,12 @@
 		<cfset var rc = request.context />
 		<cfset var response = '' />
 		<cfset var local = structNew() />
+		<cfset var $ = structNew() />
+		
+		<!--- integration point with Mura --->
+		<cfif structKeyExists( rc, '$' )>
+			<cfset $ = rc.$ />
+		</cfif>
 		
 		<cfset structAppend( local, arguments.args ) />
 
@@ -1483,15 +1548,15 @@
 
 	</cffunction>
 
-	<cffunction name="restoreFlashContext" access="private" hint="Restore request context from session scope if present.">
+	<cffunction name="restoreFlashContext" access="private" output="false" hint="Restore request context from session scope if present.">
 		<cfset var preserveKey = '' />
 		<cfset var preserveKeySessionKey = '' />
 
 		<cfif variables.framework.maxNumContextsPreserved gt 1>
-			<cfif not structKeyExists( request.context, variables.framework.preserveKeyURLKey )>
+			<cfif not structKeyExists( URL, variables.framework.preserveKeyURLKey )>
 				<cfreturn />
 			</cfif>
-			<cfset preserveKey = request.context[ variables.framework.preserveKeyURLKey ] />
+			<cfset preserveKey = URL[ variables.framework.preserveKeyURLKey ] />
 			<cfset preserveKeySessionKey = getPreserveKeySessionKey( preserveKey ) />
 		<cfelse>
 			<cfset preserveKeySessionKey = getPreserveKeySessionKey( '' ) />
@@ -1499,6 +1564,13 @@
 		<cftry>
 			<cfif structKeyExists( session, preserveKeySessionKey )>
 				<cfset structAppend( request.context, session[ preserveKeySessionKey ], false ) />
+				<cfif variables.framework.maxNumContextsPreserved eq 1>
+					<!--- When multiple contexts are preserved, the oldest context is purged
+					 		within getNextPreserveKeyAndPurgeOld once the maximum is reached.
+					 		This allows for a browser refresh after the redirect to still receive
+					 		the same context. --->
+					<cfset structDelete( session, preserveKeySessionKey ) />
+				</cfif>
 			</cfif>
 		<cfcatch type="any">
 			<!--- session scope not enabled, do nothing --->
@@ -1507,7 +1579,7 @@
 
 	</cffunction>
 
-	<cffunction name="saveFlashContext" returntype="string" access="private" hint="Save request context to session scope if present.">
+	<cffunction name="saveFlashContext" returntype="string" output="false" access="private" hint="Save request context to session scope if present.">
 		<cfargument name="keys" type="string" />
 
 		<cfset var currPreserveKey = getNextPreserveKeyAndPurgeOld() />
