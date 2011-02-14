@@ -1,6 +1,6 @@
 ﻿<cfoutput>
 <form name="filterOptions" method="get">
-	 #rc.rbFactory.getKeyValue(session.rb,"option.showoptiongroup")#:
+	 #rc.$w.rbKey("option.showoptiongroup")#:
 	<input type="hidden" name="action" value="admin:option.list" />
 	<input type="hidden" name="listby" value="options" />
 	<select name="F_optiongroup_optiongroupname">

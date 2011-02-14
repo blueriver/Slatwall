@@ -10,7 +10,7 @@
 <cfif arrayLen(rc.options.getPageRecords()) GT 0>
 <!---<form name="addOptionToGroup" method="get">
 	
-	 #rc.rbFactory.getKeyValue(session.rb,"option.addoptiontogroup")#:
+	 #rc.$w.rbKey("option.addoptiontogroup")#:
 	<input type="hidden" name="action" value="admin:option.optionform" />
 	<select name="optiongroupid">
 	<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
@@ -25,7 +25,7 @@
 #view("option/inc/optiongrouptable")#
 </cfif>
 <cfelse>
-<p>#rc.rbFactory.getKeyValue(session.rb,"option.nooptionsdefined")#</p>
+<p>#rc.$w.rbKey("option.nooptionsdefined")#</p>
 </cfif>
 
 </cfoutput>
