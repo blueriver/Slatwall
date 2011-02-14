@@ -87,7 +87,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public string function getClassName(){
-		return ListLast(GetMetaData(this).entitynam, "." );
+		return ListLast(GetMetaData(this).entityname, "." );
 	}
 	
 	// @hint A way to see if the entity has any errors.

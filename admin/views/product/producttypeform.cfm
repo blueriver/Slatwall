@@ -7,13 +7,13 @@
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
     <dl class="oneColumn">
         <dt class="first">
-            <label for="productType">#rc.rbFactory.getKey("product.producttype.producttypename")#</label>
+            <label for="productType">#rc.$w.rbKey("product.producttype.producttypename")#</label>
 		</dt>
 		<dd>
 		  <input type="text" id="productType" name="productType" value="#rc.productType.getProductType()#" />
 		</dd>
 		<dt>
-            <label for="parentProductType">#rc.rbFactory.getKey("product.producttype.parentproducttype")#</label>
+            <label for="parentProductType">#rc.$w.rbKey("product.producttype.parentproducttype")#</label>
         </dt>
 		<dd>
 		<select name="parentProductType_productTypeID" id="parentProductType_productTypeID">

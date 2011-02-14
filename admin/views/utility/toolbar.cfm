@@ -4,21 +4,22 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.dashboard")#</a></li>
+			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.$w.rbKey("toolbar.dashboard")#</a></li>
 			<li>
-				<a href="#buildURL(action='admin:product.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products")#</a>
+				<a href="#buildURL(action='admin:product.list')#">#rc.$w.rbKey("toolbar.products")#</a>
 				<div class="MenuSubOne">
 					<ul>
-						<li><a href="#buildURL(action='admin:product.edit')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.createnewproduct")#</a></li>
-						<li><a href="#buildURL(action='admin:product.types')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.producttypes")#</a></li>
-						<li><a href="#buildURL(action='admin:product.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.productlisting")#</a></li>
-						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.createnewbrand")#</a></li>
-						<li><a href="#buildURL(action='admin:brand.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.products.brandlisting")#</a></li>
+						<li><a href="#buildURL(action='admin:product.edit')#">#rc.$w.rbKey("toolbar.products.createnewproduct")#</a></li>
+						<li><a href="#buildURL(action='admin:product.types')#">#rc.$w.rbKey("toolbar.products.producttypes")#</a></li>
+						<li><a href="#buildURL(action='admin:product.list')#">#rc.$w.rbKey("toolbar.products.productlisting")#</a></li>
+                        <li><a href="#buildURL(action='admin:option.list')#">#rc.$w.rbKey("toolbar.products.optionlist")#</a></li>
+						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.$w.rbKey("toolbar.products.createnewbrand")#</a></li>
+						<li><a href="#buildURL(action='admin:brand.list')#">#rc.$w.rbKey("toolbar.products.brandlisting")#</a></li>
 					</ul>
 				</div>
 			</li>
 			<li>
-				<a href="#buildURL(action='admin:account.list')#">#rc.rbFactory.getKeyValue(session.rb,"toolbar.accounts")#</a>
+				<a href="#buildURL(action='admin:account.list')#">#rc.$w.rbKey("toolbar.accounts")#</a>
 			</li>
 			<li>
 				<a href="#buildURL(action='admin:setting.detail')#">#rc.$w.rbKey("toolbar.settings")#</a>

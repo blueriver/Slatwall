@@ -7,6 +7,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
 		
+		rc.sectionTitle = rc.$w.rbKey("product.products");
 		rc.product = getProductService().getByID(ID=rc.productID);
 		if(!isDefined("rc.product")) {
 			rc.product = getProductService().getNewEntity();
@@ -15,16 +16,16 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
-		rc.section = rc.rbFactory.getKey("product.productlist");
+		rc.itemTitle = rc.$w.rbKey("product.productlist");
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
 	public void function detail(required struct rc) {
 		var productName = rc.product.getProductName();
-		rc.section = rc.rbFactory.getKey("product.productdetails");
+		rc.itemTitle = rc.$w.rbKey("product.productdetails");
 		if(len(productName))
-			rc.section &= ": " & productName;
+			rc.itemTitle &= ": " & productName;
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
@@ -33,9 +34,9 @@ component extends="BaseController" output=false accessors=true {
 		//rc.productTemplatesQuery = getProductService().getProductTemplates();
 		var productName = rc.product.getProductName();
 		rc.edit = true;
-		rc.section = rc.rbFactory.getKey("product.editproduct");
+		rc.itemTitle = rc.$w.rbKey("product.editproduct");
 		if(len(productName))
-			rc.section &= ": " & productName;
+			rc.itemTitle &= ": " & productName;
 		variables.fw.setView("admin:product.detail");
 	}
 	
@@ -70,13 +71,13 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function types(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
-       rc.section = rc.rbFactory.getKey("product.products.producttypes");
+       rc.itemTitle = rc.$w.rbKey("product.producttype.producttypes");
 	}
 	
-	public void function productTypeForm(required struct rc) {
+	public void function producttypeform(required struct rc) {
 	   param name="rc.productTypeID" default="";
 	   if(len(rc.productTypeID)) {
-           rc.action=rc.rbFactory.getKey('product.producttype.edit');
+           rc.action=rc.$w.rbKey('product.producttype.edit');
 		   rc.productType = getProductService().getproductType(rc.productTypeID);
 		   if(!rc.productType.hasParentProductType())
 		      rc.parentProductTypeID=0;
@@ -84,11 +85,11 @@ component extends="BaseController" output=false accessors=true {
 		      rc.parentProductTypeID=rc.productType.getParentProductType().getProductTypeID();	   
 	   }
 	   else {
-	       rc.action=rc.rbFactory.getKey('product.producttype.add');
+	       rc.action=rc.$w.rbKey('product.producttype.add');
 		   rc.productType = getProductService().getProductType();
 		   rc.parentProductTypeID=0;
 	   }
-	   rc.section = rc.action & " #rc.rbFactory.getKey('product.producttype')#";
+	   rc.itemTitle = rc.action & " #rc.$w.rbKey('product.producttype')#";
 	   // Put product type tree in rc for parent type drop-down selector
 	   rc.productTypes = getProductService().getProductTypeTree();
 	}
@@ -96,7 +97,6 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function processProductTypeForm(required struct rc) {
         var productType = getProductService().getProductType();
-		// variables.fw.redirect(action="admin:product.types",preserve="productType");
 		productType = variables.fw.populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
 		
 		// set parent product type, if specified

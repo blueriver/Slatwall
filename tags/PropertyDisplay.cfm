@@ -216,7 +216,7 @@
 							var loadEditorCount = 0;
 							jQuery('###attributes.fieldName#').ckeditor(
 								{ toolbar:'Default',
-								height:'300',
+								height:'150',
 								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
 							</script>
 					</cfif>

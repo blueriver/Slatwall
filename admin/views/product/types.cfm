@@ -1,11 +1,11 @@
 ﻿<cfparam name="rc.productTypes" type="query" />
 <cfoutput>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:product.producttypeform')#">#rc.rbFactory.getKey("product.producttype.addnewproducttype")#</a></li>
+    <li><a href="#buildURL(action='admin:product.producttypeform')#">#rc.$w.rbKey("product.producttype.addnewproducttype")#</a></li>
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
-        <th class="varWidth">#rc.rbFactory.getKey("product.producttype")#</th>
+        <th class="varWidth">#rc.$w.rbKey("product.producttype")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfif rc.productTypes.recordCount gt 0>
@@ -20,13 +20,13 @@
 		<td class="administration">
 		  <ul class="three">
 		      <li class="edit">
-		          <a href="#buildURL(action='admin:product.productTypeForm', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Edit">Edit</a>
+		          <a href="#buildURL(action='admin:product.producttypeform', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Edit">Edit</a>
 			  </li>
               <li class="add">
-                 <a href="#buildURL(action='admin:product.productTypeForm', queryString='parentTypeID=#rc.productTypes.productTypeID#')#" title="Add Subtype">Add Subtype</a>
+                 <a href="#buildURL(action='admin:product.producttypeform', queryString='parentTypeID=#rc.productTypes.productTypeID#')#" title="Add Subtype">Add Subtype</a>
               </li>
 			  <li class="delete">
-			     <a href="#buildURL(action='admin:product.deleteProductType', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Delete">Delete</a>
+			     <a href="#buildURL(action='admin:product.deleteproducttype', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Delete">Delete</a>
 			  </li>
 		  </ul>
 		</td>
@@ -34,7 +34,7 @@
 </cfloop>
     <cfelse>
 	   <tr>
-	       <td colspan="3">#rc.rbFactory.getKey("product.producttype.noproducttypes")#</td>
+	       <td colspan="3">#rc.$w.rbKey("product.producttype.noproducttypes")#</td>
 	   </tr>
     </cfif>
 </table>

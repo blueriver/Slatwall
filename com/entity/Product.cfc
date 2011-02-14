@@ -129,7 +129,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function setProductType(required ProductType ProductType) {
 	   variables.productType = arguments.ProductType;
-	   if(!arguments.ProductType.hasProduct(this)) {
+	   if(isNew() or !arguments.ProductType.hasProduct(this)) {
 	       arrayAppend(arguments.ProductType.getProducts(),this);
 	   }
 	}
