@@ -17,7 +17,7 @@
 		          <a href="#buildURL(action='admin:option.optiongroupform', queryString='optiongroupid=#local.thisOptionGroup.getOptionGroupID()#')#" title="Edit">Edit</a>
 			  </li>
               <li class="viewDetails">
-                 <a href="#buildURL(action='admin:option.optiongroupdetail', queryString='optiongroupid=#local.thisOptionGroup.getOptionGroupID()#')#" title="View">Add Subtype</a>
+                 <a href="#buildURL(action='admin:option.optiongroupdetail', queryString='optiongroupid=#local.thisOptionGroup.getOptionGroupID()#')#" title="View">View Detail</a>
               </li>
 			  <li class="delete">
 			     <a href="#buildURL(action='admin:option.deleteoptiongroup', queryString='optiongroupid=#local.thisOptionGroup.getOptionGroupID()#')#" title="Delete">Delete</a>

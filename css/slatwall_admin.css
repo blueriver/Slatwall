@@ -30,6 +30,14 @@ table#productTypes ul.neston {
 	font-weight: bold;
 }
 
+table#Options {
+	width: 800px;
+}
+
+table#ProductBrands {
+	width: 800px;
+}
+
 #shadowbox_container {
 	z-index: 499997;
 }

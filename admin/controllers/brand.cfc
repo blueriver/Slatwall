@@ -6,6 +6,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function before(required struct rc) {
 		param name="rc.brandID" default="";
 		
+		rc.sectionTitle = rc.$w.rbKey("brand.brands");
 		rc.brand = getBrandService().getByID(ID=rc.brandID);
 		if(!isDefined("rc.brand")) {
 			rc.brand = getBrandService().getNewEntity();
@@ -14,21 +15,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function detail(required struct rc) {
 		if(len(rc.brand.getBrandName()))
-			rc.section = "Brand Detail: " & rc.brand.getBrandName();
+			rc.itemTitle = "Brand Detail: " & rc.brand.getBrandName();
 		else
 			variables.fw.redirect("brand.list");
 	}
 	
 	public void function list(required struct rc) {
-		rc.section = "Brand List";
+		rc.itemTitle = "Brand List";
 		rc.brandSmartList = getBrandService().getSmartList(rc=arguments.rc);
 	}
 	
 	public void function edit(required struct rc) {
 		if(len(rc.brand.getBrandName()))
-			rc.section = "Edit Brand: " & rc.brand.getBrandName();
+			rc.itemTitle = "Edit Brand: " & rc.brand.getBrandName();
 		else
-			rc.section = "Add Brand";
+			rc.itemTitle = "Add Brand";
 	}
 
 	public void function update(required struct rc) {
