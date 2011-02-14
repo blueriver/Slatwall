@@ -7,9 +7,11 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		return this;
 	}
-
-	public any function getPluginConfig() {
-	   return application.slatwall.pluginConfig;
+	
+	public void function subSystemBefore() {
+		// Place any functionality that you would like applied on every request of this subsystem.
+		rc.sectionTitle = rc.$w.rbKey("#request.subsystem#:#request.section#_title");
+		rc.itemTitle = rc.$w.rbKey("#request.subsystem#:#request.section#.#request.item#_title");
 	}
 	
 }

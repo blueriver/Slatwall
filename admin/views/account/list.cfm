@@ -1,6 +1,5 @@
 <cfoutput>
 <div class="svoadminaccountlist">
-	<h3 class="tableheader">Accounts</h3>
 	<table class="listtable stripe">
 		<tr>
 			<th>Name</th>

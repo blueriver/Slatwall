@@ -4,5 +4,7 @@
 <cfset variables.framework.usingsubsystems=true>
 <cfset variables.framework.action="action">
 <cfset variables.framework.home="admin:main.dashboard">
+<cfset variables.framework.defaultSection="main">
+<cfset variables.framework.defaultItem="dashboard">
 <cfset variables.framework.generateses=false>
-<cfset variables.framework.reloadApplicationOnEveryRequest=true>
+<cfset variables.framework.reloadApplicationOnEveryRequest=false>

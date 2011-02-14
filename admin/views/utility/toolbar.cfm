@@ -4,31 +4,31 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.$w.rbKey("toolbar.dashboard")#</a></li>
+			<li><a href="#buildURL(action='admin:main.dashboard')#">#rc.$w.rbKey("admin:main.dashboard_nav")#</a></li>
 			<li>
-				<a href="#buildURL(action='admin:product.list')#">#rc.$w.rbKey("toolbar.products")#</a>
+				<a href="#buildURL(action='admin:product')#">#rc.$w.rbKey("admin:product_nav")#</a>
 				<div class="MenuSubOne">
 					<ul>
-						<li><a href="#buildURL(action='admin:product.edit')#">#rc.$w.rbKey("toolbar.products.createnewproduct")#</a></li>
-						<li><a href="#buildURL(action='admin:product.types')#">#rc.$w.rbKey("toolbar.products.producttypes")#</a></li>
-						<li><a href="#buildURL(action='admin:product.list')#">#rc.$w.rbKey("toolbar.products.productlisting")#</a></li>
-                        <li><a href="#buildURL(action='admin:option.list')#">#rc.$w.rbKey("toolbar.products.optionlist")#</a></li>
-						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.$w.rbKey("toolbar.products.createnewbrand")#</a></li>
-						<li><a href="#buildURL(action='admin:brand.list')#">#rc.$w.rbKey("toolbar.products.brandlisting")#</a></li>
+						<li><a href="#buildURL(action='admin:product.edit')#">#rc.$w.rbKey("admin:product.edit_nav")#</a></li>
+						<li><a href="#buildURL(action='admin:product.types')#">#rc.$w.rbKey("admin:product.types_nav")#</a></li>
+						<li><a href="#buildURL(action='admin:product.list')#">#rc.$w.rbKey("admin:product.list_nav")#</a></li>
+                        <li><a href="#buildURL(action='admin:option.list')#">#rc.$w.rbKey("admin:option.list_nav")#</a></li>
+						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.$w.rbKey("admin:brand.edit_nav")#</a></li>
+						<li><a href="#buildURL(action='admin:brand.list')#">#rc.$w.rbKey("admin:brand.list_nav")#</a></li>
 					</ul>
 				</div>
 			</li>
 			<li>
-				<a href="#buildURL(action='admin:account.list')#">#rc.$w.rbKey("toolbar.accounts")#</a>
+				<a href="#buildURL(action='admin:account')#">#rc.$w.rbKey("admin:account_nav")#</a>
 			</li>
 			<li>
-				<a href="#buildURL(action='admin:setting.detail')#">#rc.$w.rbKey("toolbar.settings")#</a>
+				<a href="#buildURL(action='admin:setting')#">#rc.$w.rbKey("admin:setting_nav")#</a>
 			</li>
 			<li>
 				<a href="##">Help</a>
 				<div class="MenuSubOne">
 					<ul>
-						<li><a href="#buildURL(action='admin:help.about')#">About</a></li>
+						<li><a href="#buildURL(action='admin:help.about')#">#rc.$w.rbKey("admin:help.about_nav")#</a></li>
 					</ul>
 				</div>
 			</li>

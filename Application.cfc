@@ -92,11 +92,13 @@ component extends="framework" output="false" {
 		
 		request.context.rbFactory = getPluginConfig().getApplication().getValue("rbFactory");
 		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
-
+		
+		
+		// Run subsytem specific logic.
 		if(isAdminRequest()) {
-			controller("admin:BaseController.adminBefore");
+			controller("admin:BaseController.subSystemBefore");
 		} else {
-			controller("admin:BaseController.adminBefore");
+			controller("frontend:BaseController.subSystemBefore");
 		}
 		
 	}

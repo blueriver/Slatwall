@@ -6,4 +6,8 @@ component persistent="false" accessors="true" output="false" extends="mura.cfobj
 		setFW(arguments.fw);
 		return this;
 	}
+	
+	public void function subSystemBefore() {
+		// Place any functionality that you would like applied on every request of this subsystem.
+	}
 }
