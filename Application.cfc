@@ -113,6 +113,11 @@ component extends="framework" output="false" {
 		return buildURL(action='external.site', queryString='es=#arguments.Address#');
 	}
 	
+	public boolean function secureDisplay(required string action) {
+		// TODO: Add code to verify permisions
+		return true;
+	}
+	
 	// Override autowire function from fw/1 so that properties work
 	private void function autowire(cfc, beanFactory) {
 		var key = 0;
@@ -135,9 +140,5 @@ component extends="framework" output="false" {
 				}
 			}
 		}
-	}
-	
-	public boolean function secureDisplay() {
-		return true;
 	}
 }

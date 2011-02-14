@@ -4,32 +4,27 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<li><a href="#buildURL(action='admin:main')#">#rc.$w.rbKey("admin:main")#</a></li>
+			<cf_ActionLink action="admin:main" listitem="true">
 			<li>
-				<a href="#buildURL(action='admin:product')#">#rc.$w.rbKey("admin:product")#</a>
+				<cf_ActionLink action="admin:product">
 				<div class="MenuSubOne">
 					<ul>
 						<cf_ActionLink action="admin:product.create" listitem="true">
-						<li><a href="#buildURL(action='admin:product.create')#">#rc.$w.rbKey("admin:product.create")#</a></li>
-						<li><a href="#buildURL(action='admin:product.types')#">#rc.$w.rbKey("admin:product.types")#</a></li>
-						<li><a href="#buildURL(action='admin:product.list')#">#rc.$w.rbKey("admin:product.list")#</a></li>
-                        <li><a href="#buildURL(action='admin:option.list')#">#rc.$w.rbKey("admin:option.list")#</a></li>
-						<li><a href="#buildURL(action='admin:brand.edit')#">#rc.$w.rbKey("admin:brand.edit")#</a></li>
-						<li><a href="#buildURL(action='admin:brand.list')#">#rc.$w.rbKey("admin:brand.list")#</a></li>
+						<cf_ActionLink action="admin:product.types" listitem="true">
+						<cf_ActionLink action="admin:product.list" listitem="true">
+						<cf_ActionLink action="admin:option.list" listitem="true">
+						<cf_ActionLink action="admin:brand.edit" listitem="true">
+						<cf_ActionLink action="admin:brand.list" listitem="true">
 					</ul>
 				</div>
 			</li>
+			<cf_ActionLink action="admin:account" listitem="true">
+			<cf_ActionLink action="admin:setting" listitem="true">
 			<li>
-				<a href="#buildURL(action='admin:account')#">#rc.$w.rbKey("admin:account")#</a>
-			</li>
-			<li>
-				<a href="#buildURL(action='admin:setting')#">#rc.$w.rbKey("admin:setting")#</a>
-			</li>
-			<li>
-				<a href="#buildURL(action='admin:help')#">#rc.$w.rbKey("admin:help")#</a>
+				<cf_ActionLink action="admin:help">
 				<div class="MenuSubOne">
 					<ul>
-						<li><a href="#buildURL(action='admin:help.about')#">#rc.$w.rbKey("admin:help.about")#</a></li>
+						<cf_ActionLink action="admin:help.about" listitem="true">
 					</ul>
 				</div>
 			</li>

@@ -61,4 +61,12 @@ component accessors="true" extends="BaseObject" {
 	public string function setting(required string settingName) {
 		return getService("settingService").getBySettingName(arguments.settingName);		
 	}
+
+	public boolean function secureDisplay(required string action) {
+		return secureDisplay(arguments.action);
+	}
+	
+	public string function buildURL(required string action) {
+		return buildURL(action=arguments.action);
+	}
 }
