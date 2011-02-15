@@ -25,6 +25,7 @@
 		
 		<!--- Call Slatwall Front End Controller /> --->
 		<cfset doAction($, 'frontend:event.onsiterequeststart') />
+
     </cffunction>
     
     <cffunction name="onRenderStart" output="false">
@@ -34,6 +35,7 @@
 		<cfset doAction($, 'frontend:event.onrenderstart') />
 		
 		<!--- Place Slatwall Scope into Content & Theme renderer --->
+		
 		<cfset $.getThemeRenderer().injectMethod("$w", request.slatwallScope) />
 		<cfset $.getContentRenderer(). injectMethod("$w", request.slatwallScope) />
     </cffunction>

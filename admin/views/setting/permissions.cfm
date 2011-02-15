@@ -1,3 +1,6 @@
+
+
+<!---
 <cfset local.ViewsPath = "#expandPath(application.slatsettings.getSetting('PluginPath'))#\views" />
 <cfset local.UserGroups = application.userManager.getPrivateGroups(siteid=application.slatsettings.getSetting('siteid')) />
 
@@ -45,3 +48,4 @@
 		</form>
 	</div>
 </cfoutput>
+--->

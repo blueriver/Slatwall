@@ -24,5 +24,9 @@ component extends="BaseController" output="false" accessors="true" {
 			}
 		}
 		location(url="#application.configBean.getContext()#/admin/index.cfm?#urlEncodedFormat(application.appreloadkey)#&reload=#urlEncodedFormat(application.appreloadkey)#", addtoken="false");
-	}	
+	}
+	
+	public void function permission() {
+		getSettingService().getAdminActionsStruct();
+	}
 }
