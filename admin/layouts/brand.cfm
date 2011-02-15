@@ -1,10 +1,10 @@
 ﻿<cfoutput>
 <ul id="navTask">
     <cfif rc.action NEQ "admin:brand.list">
-    <li><a href="#buildURL(action='admin:brand.list')#">#rc.$w.rbKey("brand.brandlist")#</a></li>
+    <cf_ActionLink action="admin:brand.list" listitem="true">
 	</cfif>
 	<cfif rc.action NEQ "admin:brand.edit">
-    <li><a href="#buildURL(action='admin:brand.edit')#">#rc.$w.rbKey("brand.addbrand")#</a></li>
+    <cf_ActionLink action="admin:brand.add" listitem="true">
 	</cfif>
 </ul>
 #body#

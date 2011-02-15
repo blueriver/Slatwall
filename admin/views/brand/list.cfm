@@ -2,8 +2,8 @@
 <div class="svoadminbrandlist">
 	<table id="ProductBrands" class="listtable stripe">
 		<tr>
-			<th class="varWidth">#rc.$w.rbKey("brand")#</th>
-			<th>#rc.$w.rbKey("brand.brandwebsite")#</th>
+			<th class="varWidth">#rc.$w.rbKey("entity.brand.brandName")#</th>
+			<th>#rc.$w.rbKey("entity.brand.brandWebsite")#</th>
 			<th>&nbsp;</th>
 		</tr>
 		<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->

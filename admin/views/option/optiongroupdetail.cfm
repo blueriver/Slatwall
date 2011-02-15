@@ -2,18 +2,18 @@
 
 <cfoutput>
 <ul id="navTask">
-    <cfif !rc.edit><li><a href="#buildURL(action='admin:option.optionGroupForm',querystring='optionGroupID=#rc.OptionGroup.getOptionGroupID()#')#">#rc.$w.rbKey("option.editoptiongroup")#</a></li></cfif>
-	<li><a href="#buildURL(action='admin:option.list')#">#rc.$w.rbKey("option.optionlist")#</a></li>
+    <cfif !rc.edit><cf_ActionLink action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" listitem="true"></cfif>
+	<cf_ActionLink action="admin:option.list" listitem="true">
 </ul>
 <cfif rc.edit>
 <form name="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" action="?action=admin:option.processOptionGroupForm" method="post">
 <input type="hidden" id="optionGroupID" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 </cfif>
     <dl class="oneColumn">
-    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.$w.rbKey('option.optiongroupname')#" />
+    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.$w.rbKey('entity.optiongroup.optiongroupname')#" />
 		<cfif rc.edit>
 		<dt>
-			<a href="##" class="tooltip"><label for="optionGroupImageFile">#rc.$w.rbKey("option.selectoptiongroupimage")#</label><span>#rc.$w.rbKey("option.formimagehint")#</span></a>	
+			<a href="##" class="tooltip"><label for="optionGroupImageFile">#rc.$w.rbKey("admin.option.selectoptiongroupimage")#</label><span>#rc.$w.rbKey("option.formimagehint")#</span></a>	
 		</dt>
 		<dd id="editImage">
 			<input type="file" id="optionGroupImageFile" name="optionGroupImageFile" class="text">
@@ -30,7 +30,7 @@
 		</cfif>
 		</dd>
 		</cfif>
-		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" title="#rc.$w.rbKey('option.optiongroupdescription')#" toggle="show" toggletext="#rc.$w.rbKey('sitemanager.content.fields.expand')#,#rc.$w.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
+		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" title="#rc.$w.rbKey('entity.optiongroup.optiongroupdescription')#" toggle="show" toggletext="#rc.$w.rbKey('sitemanager.content.fields.expand')#,#rc.$w.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
 	</dl>
 	#view("option/optionlist")#
 <cfif rc.edit>

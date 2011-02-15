@@ -10,10 +10,10 @@
 				<div class="MenuSubOne">
 					<ul>
 						<cf_ActionLink action="admin:product.create" listitem="true">
-						<cf_ActionLink action="admin:product.types" listitem="true">
+						<cf_ActionLink action="admin:product.listproducttypes" listitem="true">
 						<cf_ActionLink action="admin:product.list" listitem="true">
 						<cf_ActionLink action="admin:option.list" listitem="true">
-						<cf_ActionLink action="admin:brand.edit" listitem="true">
+						<cf_ActionLink action="admin:brand.add" listitem="true">
 						<cf_ActionLink action="admin:brand.list" listitem="true">
 					</ul>
 				</div>

@@ -6,29 +6,33 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function before(required struct rc) {
 		param name="rc.brandID" default="";
 		
-		rc.sectionTitle = rc.$w.rbKey("brand.brands");
+		rc.sectionTitle = rc.$w.rbKey("admin.brand");
 		rc.brand = getBrandService().getByID(ID=rc.brandID);
 		if(!isDefined("rc.brand")) {
 			rc.brand = getBrandService().getNewEntity();
 		}
 	}
+
+    public void function add(required struct rc) {
+       variables.fw.setView("admin:brand.edit");
+    }
+	 
+    public void function list(required struct rc) {
+        rc.brandSmartList = getBrandService().getSmartList(rc=arguments.rc);
+    }
 	
 	public void function detail(required struct rc) {
 		if(len(rc.brand.getBrandName()))
-			rc.itemTitle = "Brand Detail: " & rc.brand.getBrandName();
+			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		else
 			variables.fw.redirect("brand.list");
 	}
 	
-	public void function list(required struct rc) {
-		rc.brandSmartList = getBrandService().getSmartList(rc=arguments.rc);
-	}
-	
 	public void function edit(required struct rc) {
 		if(len(rc.brand.getBrandName()))
-			rc.itemTitle = "Edit Brand: " & rc.brand.getBrandName();
+			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		else
-			rc.itemTitle = "Add Brand";
+		  variables.fw.redirect("admin:brand.add");
 	}
 
 	public void function update(required struct rc) {

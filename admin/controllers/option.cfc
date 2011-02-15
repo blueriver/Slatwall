@@ -11,6 +11,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.option = getOptionService().getNewEntity();
 		}
 	}
+    
+    public void function list(required struct rc) {
+        param name="rc.listby" default="optiongroups";
+        rc.orderby="optiongroup_optiongroupname|A^optionname|A";
+        rc.options = getOptionService().getSmartList(rc=arguments.rc);
+        rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
+        //rc.OptionSmartList = getOptionService().getSmartList(rc=arguments.rc);
+    }
 	
 	public void function detail(required struct rc) {
 		if(len(rc.option.getOptionName())) {
@@ -19,19 +27,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			variables.fw.redirect("admin:option.list");
 		}
 	}
-	
-	public void function list(required struct rc) {
-		param name="rc.listby" default="optiongroups";
-		rc.orderby="optiongroup_optiongroupname|A^optionname|A";
-		rc.options = getOptionService().getSmartList(rc=arguments.rc);
-		rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
-		//rc.OptionSmartList = getOptionService().getSmartList(rc=arguments.rc);
-	}
 
 	public void function update(required struct rc) {
 		rc.option = variables.fw.populate(cfc=rc.option, keys=rc.option.getUpdateKeys(), trim=true);
 		rc.option = getOptionService().save(entity=rc.option);
 		variables.fw.redirect(action="admin:option.detail", queryString="optionID=#rc.option.getOptionID()#");
+	}
+	
+	public void function addoptiongroup(required struct rc) {
+	   rc.edit=true;
+	   rc.optionGroup = getOptionService().getOptionGroup();
+	   variables.fw.setView("admin:option.optiongroupdetail");
 	}
 	
 	public void function deleteoptiongroup(required struct rc) {
@@ -48,21 +54,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}		
 		//else
 			//variables.fw.redirect("admin:option.list");
-	}
+	}	
 	
-	public void function optiongroupform(required struct rc) {
+	public void function editoptiongroup(required struct rc) {
 		rc.edit=true;
 		if(structKeyExists(rc,"optionGroupID") and isSimpleValue(rc.optionGroupID)) {
 			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		}
-		if(!isDefined("rc.optionGroup")) {
-			rc.optionGroup = getOptionService().getOptionGroup();
-		}
-		if(len(rc.optionGroup.getOptionGroupName())) {
+		if(!rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
-		}
-			
-		variables.fw.setView("admin:option.optiongroupdetail");
+			variables.fw.setView("admin:option.optiongroupdetail");
+		} else
+		  variables.fw.redirect("admin:option.addoptiongroup");
 	}
 	
 	public void function processoptiongroupform(required struct rc) {
