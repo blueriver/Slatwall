@@ -10,13 +10,13 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	
 	public void function subSystemBefore() {
 		// Place any functionality that you would like applied on every request of this subsystem.
-		rc.sectionTitle = rc.$w.rbKey("#request.subsystem#:#request.section#_title");
+		rc.sectionTitle = rc.$w.rbKey("#request.subsystem#.#request.section#_title");
 		if(right(rc.sectionTitle, 8) == "_missing") {
-			rc.sectionTitle = rc.$w.rbKey("#request.subsystem#:#request.section#");
+			rc.sectionTitle = rc.$w.rbKey("#request.subsystem#.#request.section#");
 		}
-		rc.itemTitle = rc.$w.rbKey("#request.subsystem#:#request.section#.#request.item#_title");
+		rc.itemTitle = rc.$w.rbKey("#request.subsystem#.#request.section#.#request.item#_title");
 		if(right(rc.itemTitle, 8) == "_missing") {
-			rc.itemTitle = rc.$w.rbKey("#request.subsystem#:#request.section#.#request.item#");	
+			rc.itemTitle = rc.$w.rbKey("#request.subsystem#.#request.section#.#request.item#");	
 		}
 	}
 	

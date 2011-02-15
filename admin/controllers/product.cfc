@@ -27,6 +27,12 @@ component extends="BaseController" output=false accessors=true {
 		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
+
+    public void function create(required struct rc) {
+        //rc.productTemplatesQuery = getProductService().getProductTemplates();
+        rc.itemTitle = rc.$w.rbKey("product.createproduct");
+		rc.productTypes = getProductService().getProductTypeTree();
+    }
 	
 	public void function create() {
 		rc.edit = true;

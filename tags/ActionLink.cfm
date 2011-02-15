@@ -12,16 +12,16 @@
 </cfif>
 
 <cfif attributes.text eq "">
-	<cfset attributes.text = request.slatwallScope.rbKey("#attributes.action#_nav") />
+	<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
 	<cfif right(attributes.text, 8) eq "_missing" >
-		<cfset attributes.text = request.slatwallScope.rbKey("#attributes.action#") />
+		<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
 	</cfif>
 </cfif>
 
 <cfif attributes.atitle eq "">
-	<cfset attributes.text = request.slatwallScope.rbKey("#attributes.action#_title") />
+	<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
 	<cfif right(attributes.text, 8) eq "_missing" >
-		<cfset attributes.text = request.slatwallScope.rbKey("#attributes.action#") />
+		<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
 	</cfif>
 </cfif>
 
