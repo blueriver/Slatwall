@@ -2,8 +2,8 @@
 
 <cfoutput>
 <ul id="navTask">
-    <cfif !rc.edit><cf_ActionLink action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" listitem="true"></cfif>
-	<cf_ActionLink action="admin:option.list" listitem="true">
+    <cfif !rc.edit><cf_ActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list"></cfif>
+	<cf_ActionCaller action="admin:option.list" type="list">
 </ul>
 <cfif rc.edit>
 <form name="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" action="?action=admin:option.processOptionGroupForm" method="post">

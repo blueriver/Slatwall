@@ -4,7 +4,7 @@
 
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionLink action="admin:product.listproducttypes" listitem="true">
+    <cf_ActionCaller action="admin:product.listproducttypes" type="list">
 </ul>
 <form name="ProductTypeForm" id="ProductTypeForm" action="?action=admin:product.processProductTypeForm" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />

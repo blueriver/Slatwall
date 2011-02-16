@@ -1,7 +1,7 @@
 ﻿<cfparam name="rc.productTypes" type="query" />
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionLink action="admin:product.addproducttype" listitem="true">
+    <cf_ActionCaller action="admin:product.addproducttype" type="list">
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
@@ -20,13 +20,13 @@
 		<td class="administration">
 		  <ul class="three">
 		      <li class="edit">
-		          <cf_ActionLink action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" listitem="false">
+		          <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" type="list">
 			  </li>
               <li class="add">
-                 <cf_ActionLink action="admin:product.addproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" listitem="false">
+                 <cf_ActionCaller action="admin:product.addproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" type="list">
               </li>
 			  <li class="delete">
-			     <cf_ActionLink action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" listitem="false">
+			     <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" type="list">
 			  </li>
 		  </ul>
 		</td>

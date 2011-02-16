@@ -4,27 +4,27 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<cf_ActionLink action="admin:main" listitem="true">
+			<cf_ActionCaller action="admin:main" type="list">
 			<li>
-				<cf_ActionLink action="admin:product">
+				<cf_ActionCaller action="admin:product">
 				<div class="MenuSubOne">
 					<ul>
-						<cf_ActionLink action="admin:product.create" listitem="true">
-						<cf_ActionLink action="admin:product.listproducttypes" listitem="true">
-						<cf_ActionLink action="admin:product.list" listitem="true">
-						<cf_ActionLink action="admin:option.list" listitem="true">
-						<cf_ActionLink action="admin:brand.add" listitem="true">
-						<cf_ActionLink action="admin:brand.list" listitem="true">
+						<cf_ActionCaller action="admin:product.create" type="list">
+						<cf_ActionCaller action="admin:product.listproducttypes" type="list">
+						<cf_ActionCaller action="admin:product.list" type="list">
+						<cf_ActionCaller action="admin:option.list" type="list">
+						<cf_ActionCaller action="admin:brand.add" type="list">
+						<cf_ActionCaller action="admin:brand.list" type="list">
 					</ul>
 				</div>
 			</li>
-			<cf_ActionLink action="admin:account" listitem="true">
-			<cf_ActionLink action="admin:setting" listitem="true">
+			<cf_ActionCaller action="admin:account" type="list">
+			<cf_ActionCaller action="admin:setting" type="list">
 			<li>
-				<cf_ActionLink action="admin:help">
+				<cf_ActionCaller action="admin:help">
 				<div class="MenuSubOne">
 					<ul>
-						<cf_ActionLink action="admin:help.about" listitem="true">
+						<cf_ActionCaller action="admin:help.about" type="list">
 					</ul>
 				</div>
 			</li>

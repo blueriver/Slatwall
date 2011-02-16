@@ -13,9 +13,9 @@
 		<td>#arrayLen(local.thisOptionGroup.getOptions())#</td>
 		<td class="administration">
 		  <ul class="three">
-		      <cf_ActionLink action="admin:option.editoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" liclass="edit" listitem="true">
-              <cf_ActionLink action="admin:option.optiongroupdetail" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" liclass="viewDetails" listitem="true">
-			  <cf_ActionLink action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" liclass="delete" listitem="true">
+		      <cf_ActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
+              <cf_ActionCaller action="admin:option.optiongroupdetail" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="viewDetails" type="list">
+			  <cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list">
 		  </ul>		
 		
 		</td>
