@@ -196,16 +196,18 @@
 					<cfelseif attributes.editType eq "textarea">
 						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "checkbox">
-						<input type="hidden" name="#attributes.fieldName#" id="#attributes.fieldName#" value="0" />
+						<input type="hidden" name="#attributes.fieldName#" id="#attributes.fieldName#" value="" />
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
+							<option value=""></option>
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i.id#" <cfif attributes.value eq i.name>selected="selected"</cfif>>#i.name#</option>	
 							</cfloop>
 						</select>
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
+						<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
 						<cfloop array="#attributes.editOptions#" index="i">
 							<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
 						</cfloop>

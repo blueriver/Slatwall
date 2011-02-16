@@ -29,6 +29,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function edit(required struct rc) {
+		if(isNull(rc.Brand)){
+			variables.fw.redirect("brand.list");
+		}
 		if(len(rc.brand.getBrandName()))
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		else
