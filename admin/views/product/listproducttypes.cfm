@@ -1,7 +1,7 @@
 ﻿<cfparam name="rc.productTypes" type="query" />
 <cfoutput>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:product.producttypeform')#">#rc.$w.rbKey("product.producttype.addnewproducttype")#</a></li>
+    <cf_ActionCaller action="admin:product.addproducttype" type="list">
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
@@ -20,13 +20,13 @@
 		<td class="administration">
 		  <ul class="three">
 		      <li class="edit">
-		          <a href="#buildURL(action='admin:product.producttypeform', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Edit">Edit</a>
+		          <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" type="list">
 			  </li>
               <li class="add">
-                 <a href="#buildURL(action='admin:product.producttypeform', queryString='parentTypeID=#rc.productTypes.productTypeID#')#" title="Add Subtype">Add Subtype</a>
+                 <cf_ActionCaller action="admin:product.addproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" type="list">
               </li>
 			  <li class="delete">
-			     <a href="#buildURL(action='admin:product.deleteproducttype', queryString='productTypeID=#rc.productTypes.productTypeID#')#" title="Delete">Delete</a>
+			     <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" type="list">
 			  </li>
 		  </ul>
 		</td>

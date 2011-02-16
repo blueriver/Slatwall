@@ -13,6 +13,10 @@ component extends="BaseController" output=false accessors=true {
 			rc.product = getProductService().getNewEntity();
 		}
 	}
+
+    public void function create(required struct rc) {
+        rc.productTypes = getProductService().getProductTypeTree();
+    }
 	
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
@@ -24,23 +28,14 @@ component extends="BaseController" output=false accessors=true {
 		if(len(rc.product.getProductName())) {
 			rc.itemTitle &= ": #rc.product.getProductName()#";
 		}
-		
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
-	}
-	
-	public void function create(required struct rc) {
-		rc.edit = true;
-		rc.productTypes = getProductService().getProductTypeTree();
-		variables.fw.setView("admin:product.detail");
 	}
 	
 	public void function edit(required struct rc) {
 		if(len(rc.product.getProductName())) {
 			rc.itemTitle &= ": #rc.product.getProductName()#";
 		}
-		
 		rc.edit = true;
-		
 		variables.fw.setView("admin:product.detail");
 	}
 	
@@ -73,30 +68,26 @@ component extends="BaseController" output=false accessors=true {
 		variables.fw.redirect(action="admin:product.list");
 	}
 	
-	public void function types(required struct rc) {
+	public void function listproducttypes(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
 	}
 	
-	public void function producttypeform(required struct rc) {
-	   param name="rc.productTypeID" default="";
-	   if(len(rc.productTypeID)) {
-           rc.action=rc.$w.rbKey('product.producttype.edit');
-		   rc.productType = getProductService().getproductType(rc.productTypeID);
-		   if(!rc.productType.hasParentProductType())
-		      rc.parentProductTypeID=0;
-		   else
-		      rc.parentProductTypeID=rc.productType.getParentProductType().getProductTypeID();	   
-	   }
-	   else {
-	       rc.action=rc.$w.rbKey('product.producttype.add');
-		   rc.productType = getProductService().getProductType();
-		   rc.parentProductTypeID=0;
-	   }
-	   rc.itemTitle = rc.action & " #rc.$w.rbKey('product.producttype')#";
-	   // Put product type tree in rc for parent type drop-down selector
-	   rc.productTypes = getProductService().getProductTypeTree();
+	public void function addproducttype(required struct rc) {
+	   rc.productType = getProductService().getProductType();
+	   rc.productTypeTree = getProductService().getProductTypeTree();
+	   variables.fw.setView("admin:product.editproducttype");
 	}
 	
+	public void function editproducttype(required struct rc) {
+	   param name="rc.productTypeID" default="";
+	   rc.productType = getProductService().getProductType(rc.productTypeID);
+	   if(!rc.productType.isNew()) {
+	       rc.productTypeTree = getProductService().getProductTypeTree();
+		   rc.itemTitle &= ": " & rc.productType.getProductType();
+	   }
+        else
+            variables.fw.redirect("product.addproducttype");
+	}
 	
 	public void function processProductTypeForm(required struct rc) {
         var productType = getProductService().getProductType();

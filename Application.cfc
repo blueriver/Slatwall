@@ -63,15 +63,6 @@ component extends="framework" output="false" {
 		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
 		request.context.$w = request.slatwallScope;
 		
-		// Look for values in the request content that are from checkboxes
-		for (var item in request.context) {
-			if (isSimpleValue(request.context[item])){
-				if (request.context[item] eq '0,1' or request.context[item] eq '1,0'){
-					request.context[item] = 1;
-				}
-			}
-		}
-		
 		// Look for mura Scope.  If it doens't exist add it.
 		if (not structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);

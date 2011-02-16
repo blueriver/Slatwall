@@ -1,31 +1,23 @@
 ﻿<cfoutput>
 <ul id="navTask">
-    <li><a href="#buildURL(action='admin:option.optiongroupform')#">#rc.$w.rbKey("admin:option.addoptiongroup")#</a></li>
+    <cf_ActionCaller action="admin:option.addoptiongroup" type="list">
 	<cfif rc.listby EQ "optiongroups">
-	<li><a href="#buildURL(action='admin:option.list', querystring='listby=options')#">#rc.$w.rbKey("admin:option.listbyoptions")#</a></li>
+	<li><a href="#buildURL(action='admin:option.list',querystring='listby=options')#">#rc.$w.rbKey('admin.option.listbyoptions')#</a></li>
+<!---	<cf_ActionCaller action="admin:option.list" text="#rc.$w.rbKey('admin.option.listybyoptions')#" querystring="listby=options" listitem="true">--->
 	<cfelseif rc.listby EQ "options">
-	<li><a href="#buildURL(action='admin:option.list', querystring='listby=optiongroups')#">#rc.$w.rbKey("admin:option.listbyoptiongroups")#</a></li>
+	<li><a href="#buildURL(action='admin:option.list',querystring='listby=optiongroups')#">#rc.$w.rbKey('admin.option.listbyoptiongroups')#</a></li>
+<!---	<cf_ActionCaller action="admin:option.list" text="#rc.$w.rbKey('admin.option.listybyoptiongroups')#" querystring="listby=optiongroups" listitem="true">--->
 	</cfif>
 </ul>
 <cfif arrayLen(rc.options.getPageRecords()) GT 0>
-<!---<form name="addOptionToGroup" method="get">
-	
-	 #rc.$w.rbKey("option.addoptiontogroup")#:
-	<input type="hidden" name="action" value="admin:option.optionform" />
-	<select name="optiongroupid">
-	<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-		<option name="optiongroupid" value="#local.thisOptionGroup.getOptionGroupID()#">#local.thisOptionGroup.getOptionGroupName()#</option>
-	</cfloop>
-	</select>
-	<input type="submit" value="Add" />
-</form>--->
+
 <cfif rc.listby eq "options">
 #view("option/inc/optiontable")#
 <cfelse>
 #view("option/inc/optiongrouptable")#
 </cfif>
 <cfelse>
-<p>#rc.$w.rbKey("option.nooptionsdefined")#</p>
+<p>#rc.$w.rbKey("admin.option.nooptionsdefined")#</p>
 </cfif>
 
 </cfoutput>

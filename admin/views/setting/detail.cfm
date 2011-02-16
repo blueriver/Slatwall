@@ -1,3 +1,5 @@
+<cfparam name="rc.product" type="any" />
+
 <cfoutput>
 	<div class="svoadminsettingdetail">
 		<cfif rc.edit eq false>
@@ -14,10 +16,11 @@
 				<li><a href="##tabAccount" onclick="return false;"><span>Account</span></a></li>
 			</ul>
 			<div id="tabProduct">
+				<cf_PropertyDisplay object="#rc.producttrackInventory#" title="Track Inventory" property="settingValue" fieldName="product_trackInventory" edit="#rc.edit#" dataType="boolean" editType="checkbox">
 				<cf_PropertyDisplay object="#rc.settingService.getBySettingName('product.trackInventory')#" title="Track Inventory" property="settingValue" fieldName="product_trackInventory" edit="#rc.edit#" dataType="boolean" editType="checkbox">
 			</div>
 			<div id="tabOrder">
-				
+				#rc.action#
 			</div>
 			<div id="tabAccount">
 				
