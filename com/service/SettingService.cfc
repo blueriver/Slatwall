@@ -1,31 +1,30 @@
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+component extends="Slatwall.com.service.BaseService" persistent="false" output="false" {
 	
-	property name="allSettings" type="array";
+	public any function init(required string entityName, required any dao) {
+		setEntityName(arguments.entityName);
+		setDAO(arguments.DAO);
+		
+		reloadSettings();
+		
+		return this;
+	}
 	
-	public any function getAllSettings(boolean reload=false) {
+	public struct function getAllSettings(boolean reload=false) {
 		if(!structKeyExists(variables, "allSettings") || arguments.reload == true) {
-			variables.allSettings = list();
+			var settingsList = list();
+			for(var i = 1; i <= arrayLen(settingsList); i++) {
+				variables.allSettings[ settingsList[i].getSettingName() ] = settingsList[i];
+			}			
 		}
 		return variables.allSettings;
 	}
 	
 	public any function getSettingValue(required string settingName) {
-		var allSettings = getAllSettings();
-		for(var i = 1; i <= arrayLen(allSettings); i++) {
-			if(allSettings[i].getSettingName() == arguments.settingName) {
-				return 	allSettings[i].getSettingValue();
-			}
-		}
+		return variables.allSettings[ arguments.settingName ].getSettingValue();
 	}
 	
 	public any function getBySettingName(required string settingName) {
-		var allSettings = getAllSettings();
-		for(var i = 1; i <= arrayLen(allSettings); i++) {
-			if(allSettings[i].getSettingName() == arguments.settingName) {
-				return 	allSettings[i];
-			}
-		}
-		return getNewEntity();
+		return variables.allSettings[ arguments.settingName ];
 	}
 	
 	public void function reloadSettings() {
