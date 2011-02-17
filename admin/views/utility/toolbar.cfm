@@ -18,8 +18,23 @@
 					</ul>
 				</div>
 			</li>
-			<cf_ActionCaller action="admin:account" type="list">
-			<cf_ActionCaller action="admin:setting" type="list">
+			<li>
+				<cf_ActionCaller action="admin:account">
+				<div class="MenuSubOne">
+					<ul>
+						<cf_ActionCaller action="admin:account.list" type="list">
+					</ul>
+				</div>
+			</li>
+			<li>
+				<cf_ActionCaller action="admin:setting">
+				<div class="MenuSubOne">
+					<ul>
+						<cf_ActionCaller action="admin:setting.detail" type="list">
+						<cf_ActionCaller action="admin:setting.detailpermissions" type="list">
+					</ul>
+				</div>
+			</li>
 			<li>
 				<cf_ActionCaller action="admin:help">
 				<div class="MenuSubOne">

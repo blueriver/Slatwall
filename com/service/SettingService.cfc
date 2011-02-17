@@ -24,7 +24,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 	}
 	
 	public any function getBySettingName(required string settingName) {
-		return variables.allSettings[ arguments.settingName ];
+		if(structKeyExists(variables.allSettings, arguments.settingName)) {
+			return variables.allSettings[ arguments.settingName ];
+		} else {
+			return getNewEntity();	
+		}
 	}
 	
 	public void function reloadSettings() {

@@ -1,12 +1,12 @@
-<cfparam name="rc.product" type="any" />
+<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.allSettings" type="struct" />
 
 <cfoutput>
 	<div class="svoadminsettingdetail">
 		<cfif rc.edit eq false>
-			<a href="#buildURL(action='admin:setting.edit')#">Edit Settings</a>
+			<cf_ActionCaller action="admin:setting.edit">
 		<cfelse>
 			<form action="?action=admin:setting.save" method="post">
-				<input type="hidden" name="Test" value="Yest" />
 		</cfif>
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -16,11 +16,23 @@
 				<li><a href="##tabAccount" onclick="return false;"><span>Account</span></a></li>
 			</ul>
 			<div id="tabProduct">
-				<cf_PropertyDisplay object="#rc.producttrackInventory#" title="Track Inventory" property="settingValue" fieldName="product_trackInventory" edit="#rc.edit#" dataType="boolean" editType="checkbox">
-				<cf_PropertyDisplay object="#rc.settingService.getBySettingName('product.trackInventory')#" title="Track Inventory" property="settingValue" fieldName="product_trackInventory" edit="#rc.edit#" dataType="boolean" editType="checkbox">
+				<table id="ProductSettings" class="listtable stripe">
+					<tr>
+						<th class="varWidth">Setting</th>
+						<th>Value</th>	
+					</tr>
+					<cf_PropertyDisplay object="#rc.allSettings.product_trackInventory#" title="Track Inventory" property="settingValue" fieldName="product_trackInventory" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
+				</table>
 			</div>
 			<div id="tabOrder">
-				#rc.action#
+				<table id="OrderSettings" class="listtable stripe">
+					<tr>
+						<th class="varWidth">Setting</th>
+						<th>Value</th>	
+					</tr>
+					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailTo#" title="New Order Notification E-Mail To" property="settingValue" fieldName="order_notificationEmailTo" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
+					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailFrom#" title="New Order Notification E-Mail From" property="settingValue" fieldName="order_notificationEmailFrom" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
+				</table>
 			</div>
 			<div id="tabAccount">
 				

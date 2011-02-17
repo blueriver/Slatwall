@@ -34,6 +34,9 @@
 <!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
 <cfparam name="attributes.toggletext" default="Show,Hide" />
 
+<!--- hint: This attribute is used to specify if the information comes back as a dl item or table row --->
+<cfparam name="attributes.displaytype" default="dl" />
+
 <!---
 	attributes.editType have the following options:
 	text
@@ -42,6 +45,12 @@
 	select
 	radiogroup
 	wysiwyg
+--->
+
+<!---
+	attributes.displaytype have the following options:
+	dl
+	table
 --->
 
 <cfif thisTag.executionMode is "start">
@@ -147,8 +156,14 @@
 		</cfif>
 		
 		<cfoutput>
-	 		<dt class="spd#LCASE(attributes.fieldName)#">
-	            <cfif len(trim(attributes.tooltipmessage))>
+			<cfif attributes.displaytype eq "dl">
+				<dt class="spd#LCASE(attributes.fieldName)#">
+			<cfelseif attributes.displaytype eq "table">
+				<tr class="spd#LCASE(attributes.fieldName)#">
+				<td class="property varWidth">
+			</cfif>
+	        
+	        	<cfif len(trim(attributes.tooltipmessage))>
                     <a href="##" class="tooltip">
                 </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
@@ -185,10 +200,14 @@
 					</cfif>
 					<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
 				</cftry>
-			</dt>
-			
-	 		<dd id="spd#LCASE(attributes.fieldName)#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
-				
+
+			<cfif attributes.displaytype eq "dl">
+				</dt>
+		 		<dd id="spd#LCASE(attributes.fieldName)#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+			<cfelseif attributes.displaytype eq "table">
+				</td>
+				<td class="value">
+			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
 					<cfif attributes.editType eq "text">
@@ -233,7 +252,12 @@
 						#attributes.Value#
 					</cfif>
 				</cfif>
-			</dd>
+			<cfif attributes.displaytype eq "dl">
+				</dd>
+			<cfelseif attributes.displaytype eq "table">
+				</td>
+				</tr>
+			</cfif>
 	 	</cfoutput>
 	<cfelse>
 		<cfoutput>

@@ -5,15 +5,14 @@
 		<column name="settingValue" update="false" />
 	</Columns>
 	<Records>
-		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product.trackInventory" settingValue="1" />
+		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventory" settingValue="1" />
+		<Record settingID="dbb32786b330315f7869d11b78bd7222" settingName="order_notificationEmailTo" settingValue="info@mySlatwallStore.com" />
+		<Record settingID="dbb32787e840bb61c8fde17a08a0ea9a" settingName="order_notificationEmailFrom" settingValue="info@mySlatwallStore.com" />
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
-
 	
-	dbb32786b330315f7869d11b78bd7222
-	dbb32787e840bb61c8fde17a08a0ea9a
 	dbb32788a645d6870850ea4cad6d2d90
 	dbb32789cd09d59cf4422d3a64e9e595
 	dbb3278adf50ec43022fcfcac1111f4b
