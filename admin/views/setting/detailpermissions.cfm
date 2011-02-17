@@ -1,4 +1,16 @@
-
+<cfdirectory action="list" directory="C:\inetpub\wwwroot\Slatwall\com\entity" name="entityList" >
+<cfdump var="#entityList#" />
+<cfloop query="entityList" >
+	<cfset thisEntity = createObject("component", "Slatwall.com.entity.#Replace(entityList.name, '.cfc', '', 'all')#") />
+	<cfset meta = getMetaData(thisEntity) />
+	<cfloop array="#meta.properties#" index="prop" >
+		<cfif structKeyExists(prop, "DisplayName")>
+			<cfoutput>entity.#LCASE(Replace(entityList.name, '.cfc', '', 'all'))#.#prop.name#=#prop.displayname#<br /></cfoutput>
+		<cfelse>
+			<cfoutput>entity.#LCASE(Replace(entityList.name, '.cfc', '', 'all'))#.#prop.name#=#prop.name#<br /></cfoutput>
+		</cfif>
+	</cfloop>
+</cfloop>
 
 <!---
 <cfset local.ViewsPath = "#expandPath(application.slatsettings.getSetting('PluginPath'))#\views" />
