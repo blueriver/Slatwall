@@ -6,7 +6,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function before(required struct rc) {
 		param name="rc.brandID" default="";
 		
-		rc.sectionTitle = rc.$w.rbKey("admin.brand");
 		rc.brand = getBrandService().getByID(ID=rc.brandID);
 		if(!isDefined("rc.brand")) {
 			rc.brand = getBrandService().getNewEntity();

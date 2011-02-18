@@ -59,14 +59,13 @@ component extends="framework" output="false" {
 			setupSession();
 		}
 		
-		// Setup Slatwall Specific request scope
-		request.slatwallScope = new Slatwall.com.utility.SlatwallScope();
-		request.context.$w = request.slatwallScope;
-		
 		// Look for mura Scope.  If it doens't exist add it.
 		if (not structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
+
+    // Setup SlatwallScope in the muraScope
+    request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
 		
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";

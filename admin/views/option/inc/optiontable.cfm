@@ -1,20 +1,20 @@
 ﻿<cfoutput>
 <form name="filterOptions" method="get">
-	 #rc.$w.rbKey("admin.option.showoptiongroup")#:
+	 #rc.$.Slatwall.rbKey("admin.option.showoptiongroup")#:
 	<input type="hidden" name="action" value="admin:option.list" />
 	<input type="hidden" name="listby" value="options" />
 	<select name="F_optiongroup_optiongroupname">
-		<option value="">#rc.$w.rbKey('admin.option.showall')#</option>
+		<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
 	<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
 		<option value="#local.thisOptionGroup.getOptionGroupName()#">#local.thisOptionGroup.getOptionGroupName()#</option>
 	</cfloop>
 	</select>
-	<input type="submit" value="#rc.$w.rbKey('admin.option.show')#" />
+	<input type="submit" value="#rc.$.Slatwall.rbKey('admin.option.show')#" />
 </form>
 <table class="stripe" id="Options">
 	<tr>
-		<th class="varWidth">#rc.$w.rbKey("entity.option.optionname")#</th>
-		<th>#rc.$w.rbKey("entity.option.optiongroup")#</th>
+		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.option.optionname")#</th>
+		<th>#rc.$.Slatwall.rbKey("entity.option.optiongroup")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfset local.rowCount = 0 />

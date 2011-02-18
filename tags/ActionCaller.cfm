@@ -10,16 +10,16 @@
 <cfset attributes.class &= " " & Replace(Replace(attributes.action, ":", "", "all"), ".", "", "all") />
 
 <cfif attributes.text eq "">
-	<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
+	<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
 	<cfif right(attributes.text, 8) eq "_missing" >
-		<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
+		<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
 	</cfif>
 </cfif>
 
 <cfif attributes.title eq "">
-	<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
+	<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
 	<cfif right(attributes.text, 8) eq "_missing" >
-		<cfset attributes.text = request.slatwallScope.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
+		<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
 	</cfif>
 	<cfset attributes.atitle = attributes.text />
 </cfif>

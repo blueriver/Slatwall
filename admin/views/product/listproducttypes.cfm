@@ -5,7 +5,7 @@
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
-        <th class="varWidth">#rc.$w.rbKey("entity.product.producttype")#</th>
+        <th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.producttype")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfif rc.productTypes.recordCount gt 0>
@@ -34,7 +34,7 @@
 </cfloop>
     <cfelse>
 	   <tr>
-	       <td colspan="3">#rc.$w.rbKey("product.producttype.noproducttypes")#</td>
+	       <td colspan="3">#rc.$.Slatwall.rbKey("product.producttype.noproducttypes")#</td>
 	   </tr>
     </cfif>
 </table>

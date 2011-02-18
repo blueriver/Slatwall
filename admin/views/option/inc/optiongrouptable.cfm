@@ -1,8 +1,8 @@
 ﻿<cfoutput>
 <table class="stripe" id="Options">
 	<tr>
-		<th class="varWidth">#rc.$w.rbKey("entity.optiongroup.optiongroupname")#</th>
-		<th>#rc.$w.rbKey("entity.optiongroup.options")#</th>
+		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupname")#</th>
+		<th>#rc.$.Slatwall.rbKey("entity.optiongroup.options")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfset local.rowCount = 0 />

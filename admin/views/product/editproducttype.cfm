@@ -10,13 +10,13 @@
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
     <dl class="oneColumn">
         <dt class="first">
-            <label for="productType">#rc.$w.rbKey("entity.producttype.producttype")#</label>
+            <label for="productType">#rc.$.Slatwall.rbKey("entity.producttype.producttype")#</label>
 		</dt>
 		<dd>
 		  <input type="text" id="productType" name="productType" value="#rc.productType.getProductType()#" />
 		</dd>
 		<dt>
-            <label for="parentProductType">#rc.$w.rbKey("entity.producttype.parentproducttype")#</label>
+            <label for="parentProductType">#rc.$.Slatwall.rbKey("entity.producttype.parentproducttype")#</label>
         </dt>
 		<dd>
 		<select name="parentProductType_productTypeID" id="parentProductType_productTypeID">
