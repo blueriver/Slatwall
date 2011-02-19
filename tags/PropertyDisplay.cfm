@@ -40,6 +40,9 @@
 <!--- Add Custom class --->
 <cfparam name="attributes.class" default="" />
 
+<!--- if this is a dl displaytype this attribute can be used to designate if this is the first property to be displayed for proper <dt> styling --->
+<cfparam name="attributes.first" default="false" />
+
 <!---
 	attributes.editType have the following options:
 	text
@@ -160,7 +163,7 @@
 		
 		<cfoutput>
 			<cfif attributes.displaytype eq "dl">
-				<dt class="spd#LCASE(attributes.fieldName)#">
+				<dt class="spd#LCASE(attributes.fieldName)#<cfif attributes.first> first</cfif>">
 			<cfelseif attributes.displaytype eq "table">
 				<tr class="spd#LCASE(attributes.fieldName)# #attributes.class#">
 				<td class="property varWidth">
