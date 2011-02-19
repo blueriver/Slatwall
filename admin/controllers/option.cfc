@@ -68,7 +68,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		  variables.fw.redirect("admin:option.addoptiongroup");
 	}
 	
-	public void function processoptiongroupform(required struct rc) {
+	public void function saveoptiongroup(required struct rc) {
 		var fu = variables.fw.getBeanFactory().getBean("formUtilities");
 		var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		var imageDir = rc.$.siteConfig("assetPath") & "/images/Slatwall";

@@ -29,6 +29,26 @@ function adminSearch(){
 	slatwallAjaxFormSubmit(search_form);
 }
 
+function btnConfirmDialog(message,btn){
+    
+    jQuery("#alertDialogMessage").html(message);
+    jQuery("#alertDialog").dialog({
+            resizable: false,
+            modal: true,
+            buttons: {
+                'YES': function() {
+                    jQuery(this).dialog('close');
+                    btn.form.submit();        
+                    },
+                'NO': function() {
+                    jQuery(this).dialog('close');
+                }
+            }
+        });
+
+    return false;   
+}
+
 $(document).click(function(e){
 	$('ul.MainMenu').hide('fast');
 });

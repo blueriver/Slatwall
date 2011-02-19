@@ -1,5 +1,7 @@
 ﻿<cfoutput>
 <div id="toolBar" style="display: ">
+    <img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="24" width="150" alt="Slatwall Ecommerce" />
+
     <ul>
         <li id="adminPlugIns"><a href="/admin/index.cfm?fuseaction=cPlugins.list&siteid=default">Plugins</a></li>
 
