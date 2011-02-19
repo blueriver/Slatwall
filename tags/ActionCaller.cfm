@@ -17,11 +17,10 @@
 </cfif>
 
 <cfif attributes.title eq "">
-	<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
-	<cfif right(attributes.text, 8) eq "_missing" >
-		<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
+	<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_title") />
+	<cfif right(attributes.title, 8) eq "_missing" >
+		<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
 	</cfif>
-	<cfset attributes.atitle = attributes.text />
 </cfif>
 
 

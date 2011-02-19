@@ -35,10 +35,9 @@
 <body>
 	<!---#application.pluginManager.renderAdminToolBar("jquery",true)#--->
 	<div id="header">
-		<a id="blueRiverLink" title="mura by blueRiver" target="_blank" href="http://blueriver.com"></a>
+		<!---<a id="blueRiverLink" title="mura by blueRiver" target="_blank" href="http://blueriver.com"></a>--->
 		<h1>Mura CMS</h1>
 		#view("utility/header")#
-		<img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="24" width="150" alt="Slatwall Ecommerce" />
 	</div>
 	#view('utility/toolbar')#
 	<div class="admincontainer">

@@ -2,18 +2,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="brandService" type="any";
-	
-	public void function before(required struct rc) {
-		param name="rc.brandID" default="";
-		
-		rc.brand = getBrandService().getByID(ID=rc.brandID);
-		if(!isDefined("rc.brand")) {
-			rc.brand = getBrandService().getNewEntity();
-		}
-	}
 
     public void function add(required struct rc) {
-       variables.fw.setView("admin:brand.edit");
+	   rc.brand = getBrandService().getNewEntity();
+       variables.fw.setView("brand.edit");
     }
 	 
     public void function list(required struct rc) {
@@ -21,30 +13,36 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 	
 	public void function detail(required struct rc) {
-		if(len(rc.brand.getBrandName()))
-			rc.itemTitle &= ": " & rc.brand.getBrandName();
-		else
-			variables.fw.redirect("brand.list");
+	   rc.brand = getBrandService().getByID(ID=rc.brandID);
+	   if(!isNull(rc.brand)) {
+	       rc.itemTitle &= ": " & rc.brand.getBrandName();
+	   } else {
+	       variables.fw.redirect("brand.list");
+	   }
 	}
 	
 	public void function edit(required struct rc) {
-		if(isNull(rc.Brand)){
-			variables.fw.redirect("brand.list");
-		}
-		if(len(rc.brand.getBrandName()))
+	   rc.brand = getBrandService().getByID(ID=rc.brandID);
+	   if(!isNull(rc.Brand)){	
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
-		else
-		  variables.fw.redirect("admin:brand.add");
+		} else {
+		  variables.fw.redirect("brand.list");
+		}
 	}
 
 	public void function save(required struct rc) {
-		rc.brand = variables.fw.populate(cfc=rc.brand, keys=rc.brand.getUpdateKeys(), trim=true);
-		rc.brand = getBrandService().save(entity=rc.brand);
-		variables.fw.redirect(action="admin:brand.detail", queryString="brandID=#rc.brand.getBrandID()#");
+	   var brand = getBrandService().getByID(rc.brandID);
+	   if(isNull(brand)) {
+	       var brand = getBrandService().getNewEntity();
+	   }
+	   rc.brand = variables.fw.populate(cfc=brand, keys=brand.getUpdateKeys(), trim=true);
+	   rc.brand = getBrandService().save(entity=brand);
+	   variables.fw.redirect(action="admin:brand.detail", queryString="brandID=#rc.brand.getBrandID()#");
 	}
 	
 	public void function delete(required struct rc) {
-		getBrandService().delete(entity=rc.brand);
-		variables.fw.redirect(action="admin:brand.list");
+	   var brand = getBrandService().getByID(rc.brandID);
+	   getBrandService().delete(brand);
+	   variables.fw.redirect(action="admin:brand.list");
 	}
 }

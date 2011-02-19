@@ -3,9 +3,22 @@ body	{background-image:none;}
 div.admincontainer		{margin: 5px 20px 60px;}
 div.admincontainer h1	{position:relative; background:none; color:#000000; text-indent: 0px; clear:both; float:none;}
 img.slatwallLogo	{
-	position: absolute;
-	top: 67px;
-	left: 20px;
+	float: left;
+ 	margin: 4px 100px 0 50px;
+}
+
+button {
+	background-color: #69c;
+	vertical-align: middle;
+	/*padding: 0;*/
+	width: auto;
+	border: 0 solid #fff;
+	cursor: pointer;
+	color: #fff;
+	padding: .4em .6em;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
 }
 
 .admincontainer fieldset {

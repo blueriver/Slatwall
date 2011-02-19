@@ -1,7 +1,6 @@
 <cfoutput>
-	<div class="ItemDetailMain">
+	<dl class="ItemDetailMain twoColumn">
 		<cf_PropertyDisplay object="#rc.Brand#" property="BrandName">
 		<cf_PropertyDisplay object="#rc.Brand#" property="BrandWebsite">
-	</div>
-	<p><a href="#buildURL(action='admin:brand.edit', queryString='BrandID=#rc.Brand.getBrandID()#')#">Edit Brand</a></p>
+	</dl>
 </cfoutput>
