@@ -37,6 +37,9 @@
 <!--- hint: This attribute is used to specify if the information comes back as a dl item or table row --->
 <cfparam name="attributes.displaytype" default="dl" />
 
+<!--- Add Custom class --->
+<cfparam name="attributes.class" default="" />
+
 <!---
 	attributes.editType have the following options:
 	text
@@ -159,7 +162,7 @@
 			<cfif attributes.displaytype eq "dl">
 				<dt class="spd#LCASE(attributes.fieldName)#">
 			<cfelseif attributes.displaytype eq "table">
-				<tr class="spd#LCASE(attributes.fieldName)#">
+				<tr class="spd#LCASE(attributes.fieldName)# #attributes.class#">
 				<td class="property varWidth">
 			</cfif>
 	        

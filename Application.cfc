@@ -55,6 +55,12 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
+		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
+		
+		// Set default mura session variables when needed
+		param name="session.rb" default="en";
+		
+		// Setup Slatwall Session when needed
 		if(!isDefined("session.SlatwallSession")) {
 			setupSession();
 		}
@@ -64,25 +70,14 @@ component extends="framework" output="false" {
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
 
-    // Setup SlatwallScope in the muraScope
-    request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+		// Setup SlatwallScope in the muraScope
+		request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
 		
-		// Set default mura session variables when needed
-		param name="session.rb" default="en";
-		if( not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
-			param name="session.dashboardSpan" default="30";
-		} else {
-			param name="session.dashboardSpan" default="#application.configBean.getSessionHistory()#";
-		}
 		if(not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
 			session.dashboardSpan=30;
 		} else {
 			session.dashboardSpan=application.configBean.getSessionHistory();
 		}
-		
-		request.context.rbFactory = getPluginConfig().getApplication().getValue("rbFactory");
-		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#";
-		
 		
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {
@@ -90,7 +85,6 @@ component extends="framework" output="false" {
 		} else {
 			controller("frontend:BaseController.subSystemBefore");
 		}
-		
 	}
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 

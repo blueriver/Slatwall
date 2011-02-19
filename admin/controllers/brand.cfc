@@ -37,7 +37,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		  variables.fw.redirect("admin:brand.add");
 	}
 
-	public void function update(required struct rc) {
+	public void function save(required struct rc) {
 		rc.brand = variables.fw.populate(cfc=rc.brand, keys=rc.brand.getUpdateKeys(), trim=true);
 		rc.brand = getBrandService().save(entity=rc.brand);
 		variables.fw.redirect(action="admin:brand.detail", queryString="brandID=#rc.brand.getBrandID()#");

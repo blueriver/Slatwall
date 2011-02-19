@@ -31,7 +31,7 @@
 				<div class="MenuSubOne">
 					<ul>
 						<cf_ActionCaller action="admin:setting.detail" type="list">
-						<cf_ActionCaller action="admin:setting.detailpermissions" type="list">
+						<cf_ActionCaller action="admin:setting.editpermissions" type="list">
 					</ul>
 				</div>
 			</li>

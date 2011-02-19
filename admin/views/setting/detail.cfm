@@ -31,7 +31,7 @@
 						<th>Value</th>	
 					</tr>
 					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailTo#" title="New Order Notification E-Mail To" property="settingValue" fieldName="order_notificationEmailTo" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailFrom#" title="New Order Notification E-Mail From" property="settingValue" fieldName="order_notificationEmailFrom" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
+					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailFrom#" class="alt" title="New Order Notification E-Mail From" property="settingValue" fieldName="order_notificationEmailFrom" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
 				</table>
 			</div>
 			<div id="tabAccount">
