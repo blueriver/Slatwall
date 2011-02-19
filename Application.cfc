@@ -79,13 +79,6 @@ component extends="framework" output="false" {
 			session.dashboardSpan=application.configBean.getSessionHistory();
 		}
 		
-<<<<<<< HEAD
-=======
-		request.context.rbFactory = getPluginConfig().getApplication().getValue("rbFactory");
-		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
-		
-		
->>>>>>> Controller refactoring and changed location of logo.
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {
 			controller("admin:BaseController.subSystemBefore");
