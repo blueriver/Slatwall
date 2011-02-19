@@ -23,7 +23,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onrenderstart(required any rc) {
-		if(request.slatwallScope.getCurrentProduct().isNew() == false) {
+		if(rc.$.Slatwall.getCurrentProduct().isNew() == false) {
 			// Force Product Information into the contentBean
 			request.contentBean.setTitle(request.slatwallScope.getCurrentProduct().getProductName());
 			request.contentBean.setBody(request.slatwallScope.getCurrentProduct().getProductDescription());
