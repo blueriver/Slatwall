@@ -7,18 +7,27 @@ img.slatwallLogo	{
  	margin: 4px 100px 0 50px;
 }
 
-button {
-	background-color: #69c;
+a.button, button {
+	background-color: #78A8D4;
 	vertical-align: middle;
 	/*padding: 0;*/
 	width: auto;
 	border: 0 solid #fff;
 	cursor: pointer;
 	color: #fff;
-	padding: .4em .6em;
+	padding: 3px 6px;
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+}
+
+a.button {
+	padding: 4px 6px 3px;
+	margin-right: 10px;
+}
+
+a.button:hover {
+	text-decoration: none;
 }
 
 .admincontainer fieldset {
@@ -58,6 +67,28 @@ table#ProductBrands {
 #shadowbox_overlay {
 	z-index: 499996;
 }
+
+/********************** messagebox Styles *******************/
+
+p.messagebox {
+	border: 1px solid #2580B2;
+	margin: 0.3em;
+	font-size: 1.2em;
+	padding: 0.5em 1em 0.5em 3.5em;
+}
+
+p.info_message {
+	background: #D1E6EF url(../images/icons/cmsg.gif) no-repeat scroll .5em 50%;
+}
+
+p.warning_message {
+	background: #FFF2CF url(../images/icons/wmsg.gif) no-repeat scroll .5em 50%;
+}
+
+p.error_message {
+	background: #FFFFE0 url(../images/icons/emsg.gif) no-repeat scroll .5em 50%;
+}
+
 
 /* @group Toolbar */
 
