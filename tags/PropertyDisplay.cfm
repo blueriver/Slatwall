@@ -75,11 +75,12 @@
 	
 	<cfif structCount(local.propertyMetadata)>
 		
-		<!--- If the title attribute was not set, then set it as the the properties displayName ---> 
+		<!--- If the title attribute was not set, then set it as the the value in the resource bundle ---> 
 		<cfif attributes.title eq "">
-			<cfif structKeyExists(local.propertyMetadata, "displayName")>
-				<cfset attributes.title = local.propertyMetadata.displayName />
-			<cfelse>
+			<!--- remove "Slatwall" prefix from entityname --->
+			<cfset local.entityName = right(attributes.object.getClassName(),len(attributes.object.getClassName()) - 8) />
+			<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("entity." & local.entityName & "." & attributes.property) />
+			<cfif right(attributes.title, 8) eq "_missing" >
 				<cfset attributes.title = local.propertyMetadata.name />
 			</cfif>
 		</cfif>
@@ -202,7 +203,7 @@
 				<!--- If the object has an error Bean, check for errors on this property --->
 				<cftry>
 					<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
-						<span class="error">#attributes.Object.getErrorBean().getError(PropertyMD.name)#</span>
+						<span class="error">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
 					</cfif>
 					<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
 				</cftry>
