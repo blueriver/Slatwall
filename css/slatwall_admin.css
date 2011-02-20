@@ -68,6 +68,28 @@ table#ProductBrands {
 	z-index: 499996;
 }
 
+/********************** messagebox Styles *******************/
+
+p.messagebox {
+	border: 1px solid #2580B2;
+	margin: 0.3em;
+	font-size: 1.2em;
+	padding: 0.5em 1em 0.5em 3.5em;
+}
+
+p.info_message {
+	background: #D1E6EF url(../images/icons/cmsg.gif) no-repeat scroll .5em 50%;
+}
+
+p.warning_message {
+	background: #FFF2CF url(../images/icons/wmsg.gif) no-repeat scroll .5em 50%;
+}
+
+p.error_message {
+	background: #FFFFE0 url(../images/icons/emsg.gif) no-repeat scroll .5em 50%;
+}
+
+
 /* @group Toolbar */
 
 #toolBar {

@@ -43,6 +43,7 @@
 	<div class="admincontainer">
 		<h2>#rc.sectionTitle#</h2>
 		<h3>#rc.itemTitle#</h3>
+		#view("utility/messageBox")#
 		#body#
 	</div>
 <div id="alertDialog" title="Alert" style="display:none">
