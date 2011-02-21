@@ -13,8 +13,7 @@
 						<cf_ActionCaller action="admin:product.listproducttypes" type="list">
 						<cf_ActionCaller action="admin:product.list" type="list">
 						<cf_ActionCaller action="admin:option.list" type="list">
-						<cf_ActionCaller action="admin:brand.add" type="list">
-						<cf_ActionCaller action="admin:brand.list" type="list">
+						<cf_ActionCaller action="admin:brand" type="list">
 					</ul>
 				</div>
 			</li>

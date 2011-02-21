@@ -1,5 +1,8 @@
+<cfparam name="rc.BrandSmartList" type="any" />
+
 <cfoutput>
 <div class="svoadminbrandlist">
+<cfif rc.BrandSmartList.getTotalEntities() gt 0>
 	<table id="ProductBrands" class="listtable stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.brand.brandName")#</th>
@@ -13,15 +16,19 @@
 				<td class="varWidth"><a href="#buildURL(action='admin:brand.detail', queryString='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></td>
 				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
 				<td class="administration">
-		          <ul class="three">
+		          <ul class="two">
                       <cf_ActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
-					  <cf_ActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">
-					  <cf_ActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" >
+					 <!--- <cf_ActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">--->
+					  <cf_ActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.getIsAssigned()#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
 			<cfset local.rowcounter++ />
 		</cfloop>
 	</table>
+<cfelse>
+#rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#
+</cfif>
 </div>
+Records: #rc.BrandSmartList.getTotalEntities()#
 </cfoutput>
