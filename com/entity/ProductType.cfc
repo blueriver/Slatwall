@@ -20,6 +20,16 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	
 	// Association management methods for bidirectional relationships (delegates both sides to Product.cfc)
+	
+	public void function setProducts(required array Products) {
+		for( var i=1; i<= arraylen(arguments.Products); i++ ) {
+			var thisProduct = arguments.Products[i];
+			if(thisProduct.getClassName() == "SlatwallProduct") {
+				addProduct(thisProduct);
+			}
+		}
+	}
+	
 	public void function addProduct(required Product Product) {
 	   arguments.Product.setProductType(this);
 	}

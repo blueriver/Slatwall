@@ -34,6 +34,7 @@
 <cfif !rc.productType.isNew() and !rc.productType.getIsAssigned() and !arrayLen(rc.productType.getSubProductTypes())>
 <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 </cfif>
-<cf_ActionCaller action="admin:product.saveproducttype" type="submit">
+<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
 </form>
+Products: #arraylen(rc.productType.getProducts())#
 </cfoutput>
