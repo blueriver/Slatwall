@@ -2,8 +2,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// Persistant Properties
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="brandName" ormtype="string" default="" displayname="Brand Name" persistent="true" hint="This is the common name that the brand goes by.";
-	property name="brandWebsite" ormtype="string" default="" displayname="Brand Website" persistent="true" hint="This is the Website of the brand";
+	property name="brandName" ormtype="string" default="" displayname="Brand Name" validateRequired persistent="true" hint="This is the common name that the brand goes by.";
+	property name="brandWebsite" ormtype="string" default="" displayname="Brand Website" validateURL persistent="true" hint="This is the Website of the brand";
 	
 	// Related Object Properties
 	property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";
