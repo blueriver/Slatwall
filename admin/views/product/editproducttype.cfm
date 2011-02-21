@@ -36,5 +36,4 @@
 </cfif>
 <cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
 </form>
-Products: #arraylen(rc.productType.getProducts())#
 </cfoutput>
