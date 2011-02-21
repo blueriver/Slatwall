@@ -2,13 +2,13 @@ component accessors="true" {
 
 	// @hint name/path of properties file that contains default validation messages
 	property name="resourceBundle" type="string";
-	property name="validationMessages" type="array";
+	property name="validationMessages" type="struct";
 	property name="errors" type="Slatwall.com.utility.ErrorBean";
 
 	// @hint constructor for the validator class
 	public Validator function init(string rb="DefaultValidationMessages",boolean isAbsolutePath=false){
 		this.setResourceBundle(arguments.rb);
-		this.setValidationMessages(arrayNew(1));
+		this.setValidationMessages({});
 		this.setErrors(new Slatwall.com.utility.ErrorBean());
 		loadResourceBundle(arguments.isAbsolutePath);
 		return this;
@@ -86,17 +86,9 @@ component accessors="true" {
 	
 	// @hint returns default error message by validation rule
 	private string function getMessageByRule(String rule){
-		var message = "";
 		var messages = this.getValidationMessages();
 
-		for(i=1; i <= arrayLen(messages); ++i){
-			if(messages[i].rule == arguments.rule){
-				message = messages[i].message;
-				break;
-			}
-		}
-
-		return message;
+		return messages[arguments.rule];
 	}
 
 	// @hint Loads the default error messages from the properties file
@@ -119,8 +111,7 @@ component accessors="true" {
 	        var x = fileReadLine(file);
 			var rule = listFirst(x,"=");
 			var message = listLast(x,"=");
-			var messageStruct = {rule=rule,message=message};
-			arrayAppend(this.getValidationMessages(),messageStruct);
+			getValidationMessages()[rule] = message;
 	    }
 		fileClose(file);
 	}
