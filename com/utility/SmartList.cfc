@@ -94,7 +94,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	}
 	
 	public numeric function getTotalEntities() {
-		return arrayLen(variables.records);
+		return arrayLen(getAllRecords());
 	}
 	
 	public numeric function getTotalPages() {
