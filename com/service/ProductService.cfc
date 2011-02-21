@@ -39,11 +39,11 @@ component extends="BaseService" accessors="true" {
 	//   Product Type Methods
 	
 	public any function getProductType(ID="") {
-	   if(len(arguments.ID))
-	   	   var productType = getByID(arguments.ID,"SlatwallProductType");
-	   else if(!len(arguments.ID) or !isDefined(productType))
-           var productType = getNewEntity("SlatwallProductType");
-       return productType;  
+		return getByID(arguments.ID,"SlatwallProductType");
+	}
+	
+	public any function getNewProductType() {
+		return getNewEntity("SlatwallProductType");
 	}
 	
 	public any function listProductTypes() {
@@ -55,15 +55,20 @@ component extends="BaseService" accessors="true" {
     }
 	
 	public any function saveProductType(required any productType) {
-	   return save(arguments.productType);
+	   var entity = save(arguments.productType);
+	   if(!entity.hasErrors()) {
+	   		setProductTypeTree();
+	   }
+	   return entity;
 	}
 	
 	public void function deleteProductType(required any productType) {
-	   if(isObject(arguments.productType))
+	   if(isObject(arguments.productType)) {
 	       delete(arguments.productType);
-	   else if(isSimpleValue(arguments.productType)) {
+		} else if(isSimpleValue(arguments.productType)) {
 		   delete(getProductType(arguments.productType));
 	   }
+	   setProductTypeTree();
 	}
 	
 }

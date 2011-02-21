@@ -1,7 +1,8 @@
 ﻿<cfparam name="rc.productTypes" type="query" />
+
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionCaller action="admin:product.addproducttype" type="list">
+    <cf_ActionCaller action="admin:product.createproducttype" type="list">
 </ul>
 <table class="stripe" id="productTypes" width="400">
     <tr>
@@ -19,15 +20,10 @@
         </td>
 		<td class="administration">
 		  <ul class="three">
-		      <li class="edit">
-		          <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" type="list">
-			  </li>
-              <li class="add">
-                 <cf_ActionCaller action="admin:product.addproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" type="list">
-              </li>
-			  <li class="delete">
-			     <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" type="list">
-			  </li>
+		  	  <cfset local.deleteDisabled = rc.productTypes.isAssigned or rc.productTypes.childCount />
+		      <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
+              <cf_ActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" class="add" type="list">
+			  <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
 		  </ul>
 		</td>
     </tr>

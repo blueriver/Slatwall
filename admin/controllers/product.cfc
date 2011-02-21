@@ -6,9 +6,7 @@ component extends="BaseController" output=false accessors=true {
 
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
-		
 		rc.product = getProductService().getByID(ID=rc.productID);
-		
 		if(isNull(rc.product)) {
 			rc.product = getProductService().getNewEntity();
 		}
@@ -18,11 +16,6 @@ component extends="BaseController" output=false accessors=true {
         rc.productTypes = getProductService().getProductTypeTree();
     }
 	
-	public void function list(required struct rc) {
-		param name="rc.keyword" default="";
-		
-		rc.productSmartList = getProductService().getSmartList(arguments.rc);
-	}
 	
 	public void function detail(required struct rc) {
 		if(len(rc.product.getProductName())) {
@@ -37,6 +30,12 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.edit = true;
 		variables.fw.setView("admin:product.detail");
+	}
+	
+	public void function list(required struct rc) {
+		param name="rc.keyword" default="";
+		
+		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
 	public void function update(required struct rc) {
@@ -68,50 +67,60 @@ component extends="BaseController" output=false accessors=true {
 		variables.fw.redirect(action="admin:product.list");
 	}
 	
-	public void function listproducttypes(required struct rc) {
-       rc.productTypes = getProductService().getProductTypeTree();
-	}
 	
-	public void function addproducttype(required struct rc) {
-	   rc.productType = getProductService().getProductType();
+	//   Product Type actions      
+		
+	public void function createproducttype(required struct rc) {
+	   rc.productType = getProductService().getNewProductType();
+	   // put type tree into the rc for parent dropdown
 	   rc.productTypeTree = getProductService().getProductTypeTree();
 	   variables.fw.setView("admin:product.editproducttype");
 	}
-	
+		
 	public void function editproducttype(required struct rc) {
-	   param name="rc.productTypeID" default="";
-	   rc.productType = getProductService().getProductType(rc.productTypeID);
-	   if(!rc.productType.isNew()) {
-	       rc.productTypeTree = getProductService().getProductTypeTree();
-		   rc.itemTitle &= ": " & rc.productType.getProductType();
-	   }
-        else
-            variables.fw.redirect("product.addproducttype");
+	   	if(!structKeyExists(rc,"productType") or !isObject(rc.productType)) {
+	   		rc.productType = getProductService().getProductType(rc.productTypeID);
+		}
+	   	if(!isNull(rc.productType)) {
+	       	rc.productTypeTree = getProductService().getProductTypeTree();
+		   	rc.itemTitle &= ": " & rc.productType.getProductType();
+	   	} else {
+           	variables.fw.redirect("product.listproducttypes");
+		}
 	}
 	
-	public void function processProductTypeForm(required struct rc) {
-        var productType = getProductService().getProductType();
-		productType = variables.fw.populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
+	public void function listproducttypes(required struct rc) {
+       rc.productTypes = getProductService().getProductTypeTree();
+	}
+
+	
+	public void function saveproducttype(required struct rc) {
+        var productType = getProductService().getNewProductType();
+		rc.productType = variables.fw.populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
 		
 		// set parent product type, if specified
-		if(len(trim(rc.parentProductType_productTypeID)))
-		  productType.setParentProductType(getProductService().getProductType(ID=rc.parentProductType_productTypeID));
-	
-		productType = getProductService().saveProductType(productType);
-		if(!productType.hasErrors()) {
-		  // cache the updated product type tree
-		  getProductService().setProductTypeTree();
-		  variables.fw.redirect(action="admin:product.types",queryString="saved=true");
+		if(len(trim(rc.parentProductType_productTypeID))) {
+			rc.productType.setParentProductType(getProductService().getProductType(ID=rc.parentProductType_productTypeID));
+		} 
+		rc.productType = getProductService().saveProductType(productType);
+		if(!rc.productType.hasErrors()) {
+			rc.message = "admin.product.saveproducttype_success";
+		  	variables.fw.redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {
-		  variables.fw.redirect(action="admin:product.productTypeForm", queryString="productTypeID=#productType.getProductTypeID()#");
+		  variables.fw.redirect(action="admin:product.editproducttype", preserve="productType");
         }
 	}
 	
-	public void function deleteProductType(required struct rc) {
-	   getProductService().deleteProductType(rc.productTypeID);
-	   // cache the updated product type tree
-       getPluginConfig().getApplication().setValue("ProductTypeTree",getProductService().getProductTypeTree());
-	   variables.fw.redirect(action="admin:product.types",queryString="deleted=#rc.productTypeID#");
+	public void function deleteproducttype(required struct rc) {
+		var productType = getProductService().getProductType(rc.productTypeID);
+		if(!productType.getIsAssigned() and !arrayLen(productType.getSubProductTypes())) {
+			getProductService().deleteProductType(rc.productTypeID);
+			rc.message = "admin.product.deleteproducttype_success";		
+		} else {
+			rc.message="admin.product.deleteproducttype_disabled";
+			rc.messagetype="warning";
+		}
+		variables.fw.redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
 	}
 		
 }

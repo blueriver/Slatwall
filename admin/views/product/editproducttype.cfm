@@ -1,23 +1,20 @@
-﻿<cfparam name="rc.productTypeTree" type="query" />
-<cfparam name="rc.parentProductTypeID" default="" />
+﻿<cfparam name="rc.productType" type="any" />
+<cfparam name="rc.productTypeTree" type="query" />
+<cfparam name="rc.parentProductTypeID" type="string" default="" />
+
 <cfset local.tree = rc.productTypeTree />
 
 <cfoutput>
 <ul id="navTask">
     <cf_ActionCaller action="admin:product.listproducttypes" type="list">
 </ul>
-<form name="ProductTypeForm" id="ProductTypeForm" action="?action=admin:product.processProductTypeForm" method="post">
+<form name="ProductTypeForm" id="ProductTypeForm" action="?action=admin:product.saveproducttype" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
     <dl class="oneColumn">
-        <dt class="first">
-            <label for="productType">#rc.$.Slatwall.rbKey("entity.producttype.producttype")#</label>
-		</dt>
-		<dd>
-		  <input type="text" id="productType" name="productType" value="#rc.productType.getProductType()#" />
-		</dd>
+    	<cf_PropertyDisplay object="#rc.productType#" property="productType" edit="true" first="true">
 		<dt>
-            <label for="parentProductType">#rc.$.Slatwall.rbKey("entity.producttype.parentproducttype")#</label>
-        </dt>
+			<label for="parentProductType_productTypeID">Parent Product Type</label>
+		</dt>
 		<dd>
 		<select name="parentProductType_productTypeID" id="parentProductType_productTypeID">
             <option value=""<cfif isNull(rc.productType.getParentProductType())> selected</cfif>>None</option>
@@ -30,10 +27,13 @@
             </option>
 			</cfif>
         </cfloop>
-        </select>
-		
+        </select>	
 		</dd>
 	</dl>
-<input type="submit" value="Save" />
+<a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("admin.nav.back")#</a>
+<cfif !rc.productType.isNew() and !rc.productType.getIsAssigned() and !arrayLen(rc.productType.getSubProductTypes())>
+<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
+</cfif>
+<cf_ActionCaller action="admin:product.saveproducttype" type="submit">
 </form>
 </cfoutput>
