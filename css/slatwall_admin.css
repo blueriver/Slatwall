@@ -30,6 +30,25 @@ a.button:hover {
 	text-decoration: none;
 }
 
+a.buttonOff {
+	background-color: #cccccc;
+	vertical-align: middle;
+	/*padding: 0;*/
+	width: auto;
+	border: 0 solid #fff;
+	cursor: pointer;
+	color: #fff;
+	padding: 4px 6px 3px;
+	margin-right: 10px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+a.buttonOff:hover {
+	text-decoration: none;
+}
+
 .admincontainer fieldset {
 	background-color: #fff;
 }

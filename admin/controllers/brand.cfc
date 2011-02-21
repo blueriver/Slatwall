@@ -52,9 +52,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
-	   var brand = getBrandService().getByID(rc.brandID);
-	   getBrandService().delete(brand);
-	   rc.message="admin.brand.delete_success";
-	   variables.fw.redirect(action="admin:brand.list",preserve="message");
+		var brand = getBrandService().getByID(rc.brandID);
+		if(!brand.getIsAssigned()) {
+			getBrandService().delete(brand);
+			rc.message="admin.brand.delete_success";
+		} else {
+			rc.message="admin.brand.delete_isassigned";
+			rc.messagetype="warning";
+		}	   
+		variables.fw.redirect(action="admin:brand.list",preserve="message,messagetype");
 	}
 }

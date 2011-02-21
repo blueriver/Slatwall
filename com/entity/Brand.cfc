@@ -6,6 +6,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandWebsite" ormtype="string" default="" displayname="Brand Website" validateURL persistent="true" hint="This is the Website of the brand";
 	
 	// Related Object Properties
-	property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";
-
+	property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
+	
+	// Calculated Properties
+	property name="isAssigned" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallBrand sb on sp.brandID = sb.brandID where sp.brandID=brandID";
 }
