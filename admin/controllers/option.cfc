@@ -5,6 +5,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function create(required struct rc) {
 		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+		rc.newOption = getOptionService().getNewEntity();
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 			variables.fw.setView("option.edit");
