@@ -30,5 +30,4 @@
 #rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#
 </cfif>
 </div>
-Records: #rc.BrandSmartList.getTotalEntities()#
 </cfoutput>

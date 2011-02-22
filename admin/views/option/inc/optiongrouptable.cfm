@@ -1,4 +1,6 @@
-﻿<cfoutput>
+﻿<cfparam name="rc.optiongroups" type="any" />
+
+<cfoutput>
 <table class="stripe" id="Options">
 	<tr>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupname")#</th>

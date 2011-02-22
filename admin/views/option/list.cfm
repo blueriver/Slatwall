@@ -1,23 +1,40 @@
-﻿<cfoutput>
+﻿<cfparam name="rc.options" type="any" />
+
+<cfoutput>
 <ul id="navTask">
-    <cf_ActionCaller action="admin:option.addoptiongroup" type="list">
+    <cf_ActionCaller action="admin:option.createoptiongroup" type="list">
 	<cfif rc.listby EQ "optiongroups">
-	<li><a href="#buildURL(action='admin:option.list',querystring='listby=options')#">#rc.$.Slatwall.rbKey('admin.option.listbyoptions')#</a></li>
-<!---	<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listybyoptions')#" querystring="listby=options" listitem="true">--->
+		<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptions')#" querystring="listby=options" type="list">
 	<cfelseif rc.listby EQ "options">
-	<li><a href="#buildURL(action='admin:option.list',querystring='listby=optiongroups')#">#rc.$.Slatwall.rbKey('admin.option.listbyoptiongroups')#</a></li>
-<!---	<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listybyoptiongroups')#" querystring="listby=optiongroups" listitem="true">--->
+		<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptiongroups')#" querystring="listby=optiongroups" type="list">
 	</cfif>
 </ul>
-<cfif arrayLen(rc.options.getPageRecords()) GT 0>
 
 <cfif rc.listby eq "options">
-#view("option/inc/optiontable")#
-<cfelse>
-#view("option/inc/optiongrouptable")#
+<form name="filterOptions" method="get">
+	 #rc.$.Slatwall.rbKey("admin.option.optiongroupfilter")#:
+	<input type="hidden" name="action" value="admin:option.list" />
+	<input type="hidden" name="listby" value="options" />
+	<select name="F_optiongroup_optiongroupname">
+		<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
+	<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
+		<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F_optiongroup_optiongroupname") and rc.F_optiongroup_optiongroupname eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
+	</cfloop>
+	</select>
+	<cf_ActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#">
+</form>
 </cfif>
+
+<cfif arrayLen(rc.options.getPageRecords()) GT 0>
+
+	<cfif rc.listby eq "options">
+	#view("option/inc/optiontable")#
+	<cfelse>
+	#view("option/inc/optiongrouptable")#
+	</cfif>
+	
 <cfelse>
-<p>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</p>
+	<p>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</p>
 </cfif>
 
 </cfoutput>

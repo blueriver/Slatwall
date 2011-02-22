@@ -1,16 +1,7 @@
-﻿<cfoutput>
-<form name="filterOptions" method="get">
-	 #rc.$.Slatwall.rbKey("admin.option.showoptiongroup")#:
-	<input type="hidden" name="action" value="admin:option.list" />
-	<input type="hidden" name="listby" value="options" />
-	<select name="F_optiongroup_optiongroupname">
-		<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
-	<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-		<option value="#local.thisOptionGroup.getOptionGroupName()#">#local.thisOptionGroup.getOptionGroupName()#</option>
-	</cfloop>
-	</select>
-	<input type="submit" value="#rc.$.Slatwall.rbKey('admin.option.show')#" />
-</form>
+﻿<cfparam name="rc.options" type="any" />
+<cfparam name="rc.optiongroups" type="any" />
+
+<cfoutput>
 <table class="stripe" id="Options">
 	<tr>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.option.optionname")#</th>

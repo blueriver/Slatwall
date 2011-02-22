@@ -101,3 +101,7 @@
 <p>#rc.$.Slatwall.rbKey("option.nooptions")#</p>
 </cfif>
 </cfoutput>
+
+<!--- Add/remove buttons from old include
+<p><input type="button" class="button" id="addOption" value="#rc.$.Slatwall.rbKey('option.addoption')#" />
+<input type="button" class="button" id="remOption" value="#rc.$.Slatwall.rbKey('option.removeoption')#" disabled="true" /></p>--->

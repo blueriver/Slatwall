@@ -14,7 +14,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function detail(required struct rc) {
 	   rc.brand = getBrandService().getByID(ID=rc.brandID);
-	   if(!isNull(rc.brand)) {
+	   if(!isNull(rc.brand) and !rc.brand.isNew()) {
 	       rc.itemTitle &= ": " & rc.brand.getBrandName();
 	   } else {
 	       variables.fw.redirect("brand.list");
@@ -25,7 +25,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!structKeyExists(rc,"brand") or !isObject(rc.brand)) {
 			rc.brand = getBrandService().getByID(ID=rc.brandID);
 		}
-	   if(!isNull(rc.Brand)){	
+	   if(!isNull(rc.Brand)) {	
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		} else {
 		  variables.fw.redirect("brand.list");

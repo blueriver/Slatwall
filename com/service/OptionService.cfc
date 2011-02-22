@@ -26,11 +26,11 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	//   Option Group Methods
 	
 	public any function getOptionGroup(ID="") {
-	   if(len(arguments.ID))
-	   	   var OptionGroup = getByID(arguments.ID,"SlatwallOptionGroup");
-	   else if(!len(arguments.ID) or !isDefined("OptionGroup"))
-           var OptionGroup = getNewEntity("SlatwallOptionGroup");
-		return OptionGroup;
+	   return getByID(arguments.ID,"SlatwallOptionGroup");
+	}
+	
+	public any function getNewOptionGroup() {
+		return getNewEntity("SlatwallOptionGroup");
 	}
 	
 	public any function listOptionGroups() {
