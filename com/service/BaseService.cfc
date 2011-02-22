@@ -58,20 +58,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	public void function delete(required any entity){
 		getDAO().delete(entity=arguments.entity);
 	}
-
-	public any function validate(required any entity) {
-		var validator = new Slatwall.com.utility.Validator();
-		
-		validator.validateObject(entity=arguments.entity);
-		return arguments.entity;
-	}
-
-	public any function save(required any entity) {
-		return validateSave(entity=arguments.entity);
-	}
 	
-	public any function validateSave(required any entity) {
-		arguments.entity = validate(arguments.entity);
+	public any function save(required any entity) {
+		var validator = new Slatwall.com.utility.Validator();
+        validator.validateObject(entity=arguments.entity);
 		
 		if(!arguments.entity.hasErrors()) {
 			arguments.entity = getDAO().save(entity=arguments.entity);
