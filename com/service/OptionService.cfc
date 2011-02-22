@@ -1,11 +1,8 @@
 component extends="slatwall.com.service.BaseService" accessors="true" {
 	
-	property name="OptionGroupDAO" type="any";
-	
-	public any function init(required any entityName, required any dao, required any OptionGroupDAO) {
+	public any function init(required any entityName, required any dao) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
-		setOptionGroupDAO(arguments.OptionGroupDAO);
 		
 		return this;
 	}
@@ -20,33 +17,6 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		smartList.addKeywordProperty(rawProperty="optionDescription", weight=1);
 		
 		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
-	}
-	
-	
-	//   Option Group Methods
-	
-	public any function getOptionGroup(ID="") {
-	   return getByID(arguments.ID,"SlatwallOptionGroup");
-	}
-	
-	public any function getNewOptionGroup() {
-		return getNewEntity("SlatwallOptionGroup");
-	}
-	
-	public any function listOptionGroups() {
-       return list("SlatwallOptionGroup");
-    }
-
-	public any function saveOptionGroup(required any OptionGroup) {
-	   return save(arguments.OptionGroup);
-	}
-	
-	public void function deleteOptionGroup(required any OptionGroup) {
-	   if(isObject(arguments.OptionGroup))
-	       delete(arguments.OptionGroup);
-	   else if(isSimpleValue(arguments.OptionGroup)) {
-	       delete(getOptionGroup(arguments.OptionGroup));
-	   }
 	}
 	
 }

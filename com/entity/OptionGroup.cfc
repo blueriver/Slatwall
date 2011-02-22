@@ -25,7 +25,8 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
        arguments.Option.removeOptionGroup(this);
     }
 	
-	// End Association Management methods
+	
+	// Image Management methods
 	
 	public void function setImage() {
 		// TODO: implement method -- update entity and delegate to service the image file upload and placement

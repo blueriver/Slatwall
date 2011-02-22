@@ -3,6 +3,7 @@
  
 <cfoutput>
 <ul id="navTask">
+	<cf_ActionCaller action="admin:option.create" querystring="optiongroupid=#rc.optiongroup.getoptiongroupid()#" type="list">
     <cfif !rc.edit><cf_ActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list"></cfif>
 	<cf_ActionCaller action="admin:option.list" type="list">
 </ul>
@@ -10,7 +11,7 @@
 <form name="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" action="#buildURL(action='admin:option.saveoptiongroup')#" method="post">
 <input type="hidden" id="optionGroupID" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 </cfif>
-    <dl class="oneColumn">
+    <dl class="oneColumn optionDetail">
     	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.$.Slatwall.rbKey('entity.optiongroup.optiongroupname')#" />
 		<cfif rc.edit>
 		<!--- if editing, display field for image uploading --->
@@ -39,5 +40,12 @@
 <cf_actionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 <cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
 </form>
+<cfelse>
+<h4>#rc.$.Slatwall.rbKey('entity.optiongroup.options')#</h4>
+<ul id="optionList">
+<cfloop array="#rc.optionGroup.getOptions()#" index="local.thisOption">
+	<li>#local.thisOption.getOptionName()#</li>
+</cfloop>
+</ul>
 </cfif>
 </cfoutput>

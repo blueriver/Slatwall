@@ -28,6 +28,18 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
        structDelete(variables,"OptionGroup");
     }
 	
+	// Image Management methods
+	
+	public void function setImage() {
+		// TODO: implement method -- update entity and delegate to service the image file upload and placement
+		return true;
+	} 
+	
+	public void function removeImage() {
+		// TODO: implement method -- update entity and delegate to service the image file deletion
+		return true;
+	} 
+	
 	public boolean function hasImage() {
 		return len(getOptionImage());
 	}

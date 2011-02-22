@@ -2,9 +2,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="optionService" type="any";
+
+	public void function dashboard(required struct rc) {
+		variables.fw.redirect(action="option.list");
+	}
 	
 	public void function create(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		rc.newOption = getOptionService().getNewEntity();
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
@@ -13,15 +17,80 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			variables.fw.redirect("option.list");
 		}
 	}
+
+	public void function edit(required struct rc) {
+		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.newOption = getOptionService().getNewEntity();
+		if(!isNull(rc.optionGroup)) {
+			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
+		} else {
+			variables.fw.redirect("option.list");
+		}
+	}
+	
+	public void function detail(required struct rc) {
+		if(len(rc.option.getOptionName())) {
+			rc.itemTitle &= ": #rc.option.getOptionName()#";
+		} else {
+			variables.fw.redirect("admin:option.list");
+		}
+	}
+	
+    
+    public void function list(required struct rc) {
+        param name="rc.listby" default="optiongroups";
+        rc.orderby="optiongroup_optiongroupname|A^optionname|A";
+        rc.options = getOptionService().getSmartList(rc=arguments.rc);
+        rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
+    }
+	
+	public void function save(required struct rc) {
+		if(structKeyExists(rc,"optionid")) {
+			var option = getOptionService().getByID(rc.optionID);
+		} else {
+			var option = getOptionService().getNewEntity();
+		}
+		rc.option = variables.fw.populate(cfc=option, keys=option.getUpdateKeys(),trim=true);
+		
+		// set the option group to which this option belongs to
+		rc.option.setOptionGroup(getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup"));
+		
+		// validate the form first before proceeding with image file operations
+		rc.option = getOptionService().validate(rc.option);
+			
+		if(!rc.option.hasErrors()) {			
+			// remove image if option is checked (unless a new image is set, in which case the old image is removed by saveimage())
+			if(structKeyExists(rc,"removeImage") and rc.option.hasImage() and rc.optionImageFile == ""){
+				rc.option.removeImage();
+			}
+			// save image file and set the image name is a property
+			if(rc.optionImageFile != "") {
+				rc.optionGroup.setImage("optionGroupImageFile");
+			}
+			rc.option = getOptionService().save(entity=rc.option);
+			// go to the 'manage option group' form to add options
+			variables.fw.redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#");
+		} else {
+			variables.fw.redirect(action="option.edit",preserve="option");
+		}
+		
+	}
+	
+	public void function delete(required struct rc) {
+		var option = getOptionService().getByID(rc.optionid);
+		var optiongroupID = option.getOptionGroup().getOptionGroupID();
+		getOptionService().delete(option);
+		variables.fw.redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#");
+	}
 	
 	public void function createoptiongroup(required struct rc) {
 	   rc.edit=true;
-	   rc.optionGroup = getOptionService().getNewOptionGroup();
+	   rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
 	   variables.fw.setView("admin:option.optiongroupdetail");
 	}
 	
-	public void function optiongroupdetail(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+	public void function detailoptiongroup(required struct rc) {
+		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
 		} else {
@@ -32,36 +101,37 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function editoptiongroup(required struct rc) {
 		rc.edit=true;
 		if(!structKeyExists(rc,"optionGroup") or !isObject(rc.optionGroup)) {
-			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		}
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
-			variables.fw.setView("admin:option.optiongroupdetail");
+			variables.fw.setView("admin:option.detailoptiongroup");
 		} else
 		  variables.fw.redirect("admin:option.list");
 	}
-    
-    public void function list(required struct rc) {
-        param name="rc.listby" default="optiongroups";
-        rc.orderby="optiongroup_optiongroupname|A^optionname|A";
-        rc.options = getOptionService().getSmartList(rc=arguments.rc);
-        rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
-    }
 
 	public void function saveoptiongroup(required struct rc) {
-		var optionGroup = getOptionService().getNewOptionGroup();
+		if(len(trim(rc.optiongroupID))) {
+			var optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+		} else {
+			var optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
+		}
 		rc.optionGroup = variables.fw.populate(cfc=optionGroup, keys=optionGroup.getUpdateKeys(), trim=true);
+		
+		// validate the form first before proceeding with image file operations
+		rc.optionGroup = getOptionService().validate(rc.optionGroup);
 
-		// remove image if option is checked (unless a new image is set, in which case the old image is removed by saveimage())
-		if(structKeyExists(rc,"removeImage") and rc.optionGroup.hasImage() and rc.optionGroupImageFile == ""){
-			rc.optionGroup.removeImage();
-		}
-		// save image file and set the image name is a property
-		if(rc.optionGroupImageFile != "") {
-			rc.optionGroup.setImage("optionGroupImageFile");
-		}
-		rc.optionGroup = getOptionService().save(entity=rc.optionGroup);
 		if(!rc.optionGroup.hasErrors()) {
+			// remove image if option is checked (unless a new image is set, in which case the old image is removed by saveimage())
+			if(structKeyExists(rc,"removeImage") and rc.optionGroup.hasImage() and rc.optionGroupImageFile == ""){
+				rc.optionGroup.removeImage();
+			}
+			// save image file and set the image name is a property
+			if(rc.optionGroupImageFile != "") {
+				rc.optionGroup.setImage("optionGroupImageFile");
+			}
+			rc.optionGroup = getOptionService().save(entity=rc.optionGroup);
+			// go to the 'manage option group' form to add options
 			variables.fw.redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#");
 		} else {
 			variables.fw.redirect(action="admin:option.editoptiongroup",preserve="optionGroup");
@@ -69,17 +139,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteoptiongroup(required struct rc) {
-		getOptionService().deleteOptionGroup(rc.optiongroupid);
+		getOptionService().delete(getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup"));
 		variables.fw.redirect(action="admin:option.list");
 	}	
-	
-	public void function detail(required struct rc) {
-		if(len(rc.option.getOptionName())) {
-			rc.itemTitle &= ": #rc.option.getOptionName()#";
-		} else {
-			variables.fw.redirect("admin:option.list");
-		}
-	}
 	
 	/*public void function saveoptiongroup(required struct rc) {
 		var fu = variables.fw.getBeanFactory().getBean("formUtilities");

@@ -16,7 +16,7 @@
 		<td>#local.thisOption.getOptionGroup().getOptionGroupName()#</td>
 		<td class="administration">
 		  <ul class="three">
-              <cf_ActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#" class="edit" type="list">
+              <cf_ActionCaller action="admin:option.edit" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">
               <cf_ActionCaller action="admin:option.optiongroupdetail" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#" class="viewDetails" type="list">
               <cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#" class="delete" type="list">
 		  </ul>		
