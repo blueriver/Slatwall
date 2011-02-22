@@ -22,7 +22,7 @@ a.button, button {
 }
 
 a.button {
-	padding: 4px 6px 3px;
+	padding: 4px 6px;
 	margin-right: 10px;
 }
 
@@ -78,6 +78,19 @@ table#Options {
 table#ProductBrands {
 	width: 800px;
 }
+
+dl.optionDetail {
+	margin-bottom: 20px;
+}
+
+ul#optionList {
+	margin: 20px 0 0 10px;
+}
+
+ul#optionList li {
+	margin-bottom: 5px;
+}
+
 
 #shadowbox_container {
 	z-index: 499997;

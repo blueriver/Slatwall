@@ -55,6 +55,10 @@ component extends="BaseService" accessors="true" {
     }
 	
 	public any function saveProductType(required any productType) {
+		// if this type has a parent, inherit all products that were assigned to that parent
+		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(rc.productType.getParentProductType().getProducts())) {
+			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
+		}
 	   var entity = save(arguments.productType);
 	   if(!entity.hasErrors()) {
 	   		setProductTypeTree();

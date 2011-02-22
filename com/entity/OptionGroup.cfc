@@ -2,7 +2,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
 	// Persistant Properties
 	property name="optionGroupID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="optionGroupName" ormtype="string";
+	property name="optionGroupName" validateRequired DisplayName="Option Group Name" ormtype="string";
 	property name="optionGroupImage" ormtype="string";
 	property name="optionGroupDescription" ormtype="string";
 	
@@ -25,11 +25,24 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
        arguments.Option.removeOptionGroup(this);
     }
 	
+	
+	// Image Management methods
+	
+	public void function setImage() {
+		// TODO: implement method -- update entity and delegate to service the image file upload and placement
+		return true;
+	} 
+	
+	public void function removeImage() {
+		// TODO: implement method -- update entity and delegate to service the image file deletion
+		return true;
+	} 
+	
 	public boolean function hasImage() {
 		return len(getOptionGroupImage());
 	}
 	
     public string function getImagePath() {
         return getClassName() & "/" & getOptionGroupImage();
-    }   
+    }  
 }

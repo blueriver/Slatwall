@@ -102,10 +102,6 @@ component extends="BaseController" output=false accessors=true {
 		if(len(trim(rc.parentProductType_productTypeID))) {
 			rc.productType.setParentProductType(getProductService().getProductType(ID=rc.parentProductType_productTypeID));
 		}
-		// if this type has a parent, inherit all products that were assigned to that parent
-		if(!isNull(rc.productType.getParentProductType()) and arrayLen(rc.productType.getParentProductType().getProducts())) {
-			rc.productType.setProducts(rc.productType.getParentProductType().getProducts());
-		}
 		rc.productType = getProductService().saveProductType(rc.productType);
 		if(!rc.productType.hasErrors()) {
 			rc.message = "admin.product.saveproducttype_success";

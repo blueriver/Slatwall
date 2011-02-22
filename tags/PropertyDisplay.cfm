@@ -40,6 +40,9 @@
 <!--- Add Custom class --->
 <cfparam name="attributes.class" default="" />
 
+<!--- overwrite the generated id for the property element (dd or td) --->
+<cfparam name="attributes.id" default="" />
+
 <!--- if this is a dl displaytype this attribute can be used to designate if this is the first property to be displayed for proper <dt> styling --->
 <cfparam name="attributes.first" default="false" />
 
@@ -113,6 +116,10 @@
 			<cfset attributes.fieldName = local.propertyMetadata.name />
 		</cfif>
 		
+		<cfif trim(attributes.id) eq "">
+		  <cfset attributes.id = "spd" & LCASE(attributes.fieldName) />
+		</cfif>
+		
 		<cfif attributes.dataType eq "">
 			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
 				<cfset attributes.dataType = "boolean" />
@@ -164,9 +171,9 @@
 		
 		<cfoutput>
 			<cfif attributes.displaytype eq "dl">
-				<dt class="spd#LCASE(attributes.fieldName)#<cfif attributes.first> first</cfif>">
+				<dt class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
 			<cfelseif attributes.displaytype eq "table">
-				<tr class="spd#LCASE(attributes.fieldName)# #attributes.class#">
+				<tr class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
 				<td class="property varWidth">
 			</cfif>
 	        
@@ -198,7 +205,7 @@
                 </cfif>
                 <cfif listFindNoCase("show,hide",attributes.toggle)>
                     <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-                    <a  href="##" id="spd#LCASE(attributes.fieldName)#Link" onclick="javascript: toggleDisplay('spd#LCASE(attributes.fieldName)#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+                    <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
                 </cfif>	
 				<!--- If the object has an error Bean, check for errors on this property --->
 				<cftry>
@@ -210,10 +217,10 @@
 
 			<cfif attributes.displaytype eq "dl">
 				</dt>
-		 		<dd id="spd#LCASE(attributes.fieldName)#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+		 		<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
 			<cfelseif attributes.displaytype eq "table">
 				</td>
-				<td class="value">
+				<td id="#attributes.id#" class="value">
 			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">

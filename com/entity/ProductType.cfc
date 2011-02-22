@@ -24,7 +24,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public void function setProducts(required array Products) {
 		for( var i=1; i<= arraylen(arguments.Products); i++ ) {
 			var thisProduct = arguments.Products[i];
-			if(thisProduct.getClassName() == "SlatwallProduct") {
+			if(isObject(thisProduct) && thisProduct.getClassName() == "SlatwallProduct") {
 				addProduct(thisProduct);
 			}
 		}
