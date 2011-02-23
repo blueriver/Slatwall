@@ -25,7 +25,10 @@
 <!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
 <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
 
-<!--- hint: This attribute contains the content of a mouseover tooltip message that will appear next to the title --->
+<!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
+<cfparam name="attributes.tooltip" default="false" type="boolean" />
+
+<!--- hint: This attribute contains the content of a mouseover tooltip message to override the value in the rB (entity.entityname.propertyname_hint) --->
 <cfparam name="attributes.tooltipmessage" default="" type="string" />
 
 <!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
@@ -54,6 +57,7 @@
 	select
 	radiogroup
 	wysiwyg
+	file
 --->
 
 <!---
@@ -177,12 +181,20 @@
 				<td class="property varWidth">
 			</cfif>
 	        
-	        	<cfif len(trim(attributes.tooltipmessage))>
+	        	<cfif attributes.tooltip>
                     <a href="##" class="tooltip">
                 </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
-	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup">
+	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
 					<label for="#attributes.fieldName#">
+						#attributes.title#
+						<!--- If this is a required field the add an asterisk --->
+						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
+							*
+						</cfif>
+					</label>
+	 			<cfelseif attributes.edit and attributes.editType EQ "file">
+					<label for="#attributes.fieldName#File">
 						#attributes.title#
 						<!--- If this is a required field the add an asterisk --->
 						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
@@ -200,8 +212,12 @@
 				<cfelse>
 					#attributes.title#
 				</cfif>
-	            <cfif len(trim(attributes.tooltipmessage))>
-                    <span>#attributes.tooltipmessage#</span></a>
+	            <cfif attributes.tooltip>
+					<cfif len(trim(attributes.tooltipmessage))>
+                    	<span>#attributes.tooltipmessage#</span></a>
+					<cfelse>
+						<span>#request.customMuraScopeKeys.slatwall.rbKey("entity.#local.entityName#.#attributes.property#_hint")#</span></a>
+					</cfif>
                 </cfif>
                 <cfif listFindNoCase("show,hide",attributes.toggle)>
                     <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
@@ -254,6 +270,9 @@
 								height:'150',
 								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
 							</script>
+					<cfelseif attributes.editType eq "file">
+					<!--- ouptut a file upload field --->
+						<input type="file" name="#attributes.fieldName#File" id="#attributes.fieldName#File" class="file">
 					</cfif>
 				<cfelseif attributes.edit eq true and attributes.editType eq "none">
 					<!-- A Default Edit Type Could not be created -->

@@ -3,11 +3,15 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	property name="entityName" type="string";
 	property name="DAO" type="any";
 	property name="Validator" table="Slatwall.com.utility.Validator";
+	property name="fileService" type="any";
 	
-	public any function init(required string entityName, required any dao, required any validator) {
+	public any function init(required string entityName, required any dao, required any validator, any fileService) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
 		setValidator(arguments.validator);
+		if(structKeyExists(arguments,"fileService")) {
+			setfileService(arguments.fileService);
+		}
 		
 		return this;
 	}

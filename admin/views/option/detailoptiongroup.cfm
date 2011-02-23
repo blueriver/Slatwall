@@ -15,12 +15,7 @@
     	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.$.Slatwall.rbKey('entity.optiongroup.optiongroupname')#" />
 		<cfif rc.edit>
 		<!--- if editing, display field for image uploading --->
-		<dt>
-			<a href="##" class="tooltip"><label for="optionGroupImageFile">#rc.$.Slatwall.rbKey("admin.option.selectoptiongroupimage")#</label><span>#rc.$.Slatwall.rbKey("admin.option.optiongroupimagehint")#</span></a>	
-		</dt>
-		<dd id="editImage">
-			<input type="file" id="optionGroupImageFile" name="optionGroupImageFile" class="text">
-		</dd>
+		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" editType="file" tooltip=true>
 		</cfif>
 		<cfif len(rc.OptionGroup.getOptionGroupImage())>
 		<!--- if editing, and optiongroup has an image, display it  --->
@@ -28,9 +23,9 @@
 			#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupimage")#
 		</dt>
 		<dd>
-			<img src="#rc.$.siteConfig('assetPath')#/images/Slatwall/#rc.OptionGroup.getImagePath()#" alt="#rc.OptionGroup.getOptionGroupName()#" />
+			#rc.OptionGroup.displayImage("40")#
 		<cfif rc.edit>
-			<input type="checkbox" name="removeImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
+			<input type="checkbox" name="removeOptionGroupImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		</cfif>
 		</dd>
 		</cfif>
