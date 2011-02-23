@@ -4,44 +4,52 @@
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">
 			<li class="MenuTop"></li>
-			<cf_ActionCaller action="admin:main" type="list">
-			<li>
-				<cf_ActionCaller action="admin:product">
-				<div class="MenuSubOne">
-					<ul>
-						<cf_ActionCaller action="admin:product.create" type="list">
-						<cf_ActionCaller action="admin:product.listproducttypes" type="list">
-						<cf_ActionCaller action="admin:product.list" type="list">
-						<cf_ActionCaller action="admin:option" type="list">
-						<cf_ActionCaller action="admin:brand" type="list">
-					</ul>
-				</div>
-			</li>
-			<li>
-				<cf_ActionCaller action="admin:account">
-				<div class="MenuSubOne">
-					<ul>
-						<cf_ActionCaller action="admin:account.list" type="list">
-					</ul>
-				</div>
-			</li>
-			<li>
-				<cf_ActionCaller action="admin:setting">
-				<div class="MenuSubOne">
-					<ul>
-						<cf_ActionCaller action="admin:setting.detail" type="list">
-						<cf_ActionCaller action="admin:setting.editpermissions" type="list">
-					</ul>
-				</div>
-			</li>
-			<li>
-				<cf_ActionCaller action="admin:help">
-				<div class="MenuSubOne">
-					<ul>
-						<cf_ActionCaller action="admin:help.about" type="list">
-					</ul>
-				</div>
-			</li>
+			<cfif secureDisplay("admin:main")>
+				<cf_ActionCaller action="admin:main" type="list">
+				<li>
+					<cf_ActionCaller action="admin:product">
+					<div class="MenuSubOne">
+						<ul>
+							<cf_ActionCaller action="admin:product.create" type="list">
+							<cf_ActionCaller action="admin:product.listproducttypes" type="list">
+							<cf_ActionCaller action="admin:product.list" type="list">
+							<cf_ActionCaller action="admin:option" type="list">
+							<cf_ActionCaller action="admin:brand" type="list">
+						</ul>
+					</div>
+				</li>
+			</cfif>
+			<cfif secureDisplay("admin:account")>
+				<li>
+					<cf_ActionCaller action="admin:account">
+					<div class="MenuSubOne">
+						<ul>
+							<cf_ActionCaller action="admin:account.list" type="list">
+						</ul>
+					</div>
+				</li>
+			</cfif>
+			<cfif secureDisplay("admin:setting")>
+				<li>
+					<cf_ActionCaller action="admin:setting">
+					<div class="MenuSubOne">
+						<ul>
+							<cf_ActionCaller action="admin:setting.detail" type="list">
+							<cf_ActionCaller action="admin:setting.editpermissions" type="list">
+						</ul>
+					</div>
+				</li>
+			</cfif>
+			<cfif secureDisplay("admin:help")>
+				<li>
+					<cf_ActionCaller action="admin:help">
+					<div class="MenuSubOne">
+						<ul>
+							<cf_ActionCaller action="admin:help.about" type="list">
+						</ul>
+					</div>
+				</li>
+			</cfif>
 			<li class="MenuBottom"></li>
 		</ul>
 		<ul class="MainToolbar">

@@ -30,8 +30,16 @@
 								<strong>#local.thisControllerName#</strong>
 							</cfif>
 						</td>
+						
+						<input type="hidden" value="" name="permission_admin_#local.controller#_#variables.framework.defaultItem#" />
 						<cfloop query="local.rc.muraUserGroups">
-							<td style="background-color:##adceee;">&nbsp;</td>
+							<td style="background-color:##adceee;">
+								<cfset local.accessList = "" />
+								<cfif structKeyExists(local.rc.permissionSettings, "permission_admin_#local.controller#_#variables.framework.defaultItem#")>
+									<cfset local.accessList = local.rc.permissionSettings["permission_admin_#local.controller#_#variables.framework.defaultItem#"].getSettingValue() />
+								</cfif>
+								<input type="checkbox" value="#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#" name="permission_admin_#local.controller#_#variables.framework.defaultItem#" <cfif listFind(local.accessList, "#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#")>checked="checked"</cfif> />
+							</td>
 						</cfloop>
 					</tr>
 					<cfset local.rowcounter = 1 />
@@ -50,13 +58,14 @@
 									#local.thisControllerActionName#
 								</cfif>
 							</td>
+							<input type="hidden" value="" name="permission_admin_#local.controller#_#local.controllerAction#" />
 							<cfloop query="local.rc.muraUserGroups">
 								<td>
 									<cfset local.accessList = "" />
-									<cfif structKeyExists(local.rc.permissionSettings, "permission_#local.controller#_#local.controllerAction#")>
-										<cfset local.accessList = local.rc.permissionSettings["permission_#local.controller#_#local.controllerAction#"].getSettingValue() />
+									<cfif structKeyExists(local.rc.permissionSettings, "permission_admin_#local.controller#_#local.controllerAction#")>
+										<cfset local.accessList = local.rc.permissionSettings["permission_admin_#local.controller#_#local.controllerAction#"].getSettingValue() />
 									</cfif>
-									<input type="checkbox" value="#local.rc.muraUserGroups.userID#" name="permission_#local.controller#_#local.controllerAction#" <cfif listFind(local.accessList, "#local.rc.muraUserGroups.userID#")>checked="checked"</cfif> />
+									<input type="checkbox" value="#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#" name="permission_admin_#local.controller#_#local.controllerAction#" <cfif listFind(local.accessList, "#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#")>checked="checked"</cfif> />
 								</td>
 							</cfloop>
 						</tr>

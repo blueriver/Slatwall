@@ -27,36 +27,31 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
 	public string function getFirstName() {
-		if(isNull(getMuraUser())) {
-			if(!isDefined("variables.firstName")) {
-				variables.firstName = "";
-			}
-		} else {
+		if(!isNull(getMuraUser())) {
 			variables.firstName = getMuraUser().getFirstName();
 		}
-		
+		if(!structKeyExists(variables, "firstName")) {
+			variables.firstName = "";
+		}
 		return variables.firstName;
 	}
 	
 	public string function getLastName() {
-		if(isNull(getMuraUser())) {
-			if(!isDefined("variables.lastName")) {
-				variables.lastName = "";
-			}
-		} else {
+		if(!isNull(getMuraUser())) {
 			variables.lastName = getMuraUser().getLastName();
 		}
-		
+		if(!structKeyExists(variables, "lastName")) {
+			variables.lastName = "";
+		}
 		return variables.lastName;
 	}
 	
 	public string function getCompany() {
-		if(isNull(getMuraUser())) {
-			if(!isDefined("variables.company")) {
-				variables.company = "";
-			}
-		} else {
+		if(!isNull(getMuraUser())) {
 			variables.company = getMuraUser().getCompany();
+		}
+		if(!structKeyExists(variables, "company")) {
+			variables.company = "";
 		}
 		
 		return variables.company;

@@ -29,7 +29,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 	
 	public any function getPermissionValue(required string permissionName) {
 		if(structKeyExists(variables.permissions, arguments.permissionName)) {
-			return variables.permissions[ arguments.permissionName ];
+			return variables.permissions[ arguments.permissionName ].getSettingValue();
 		} else {
 			return "";
 		}
@@ -75,7 +75,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 				if(controllerName != "BaseController") {
 					variables.permissionActions[ "#controllerName#" ] = arrayNew(1);
 					for(var ii=1; ii <= arrayLen(controllerMetaData.functions); ii++) {
-						if(FindNoCase("before", controllerMetaData.functions[ii].name) == 0 && FindNoCase("service", controllerMetaData.functions[ii].name) == 0 && FindNoCase("get", controllerMetaData.functions[ii].name) == 0 && FindNoCase("set", controllerMetaData.functions[ii].name) == 0 && FindNoCase("init", controllerMetaData.functions[ii].name) == 0) {
+						if(FindNoCase("before", controllerMetaData.functions[ii].name) == 0 && FindNoCase("service", controllerMetaData.functions[ii].name) == 0 && FindNoCase("get", controllerMetaData.functions[ii].name) == 0 && FindNoCase("set", controllerMetaData.functions[ii].name) == 0 && FindNoCase("init", controllerMetaData.functions[ii].name) == 0 && FindNoCase("dashboard", controllerMetaData.functions[ii].name) == 0) {
 							arrayAppend(variables.permissionActions[ "#controllerName#" ], controllerMetaData.functions[ii].name);
 						}
 					}
@@ -84,6 +84,5 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 			}
 		}
 		return variables.permissionActions;
-	}
-	
+	}	
 }

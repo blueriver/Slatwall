@@ -97,9 +97,30 @@ component extends="framework" output="false" {
 		return buildURL(action='external.site', queryString='es=#arguments.Address#');
 	}
 	
-	public boolean function secureDisplay(required string action) {
-		// TODO: Add code to verify permisions
-		return true;
+	public boolean function secureDisplay(required string action, boolean testing=false) {
+		var hasAccess = false;
+		
+		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
+		
+		if(isUserInRole('S2')) {
+			hasAccess = true;
+		} else if (listLen(getUserRoles()) >= 1) {
+			var rolesWithAccess = "";
+			if(find("save", permissionName)) {
+				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
+				listAppend(rolesWithAccess, application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "update")));
+			} else {
+				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=permissionName);
+			}
+			
+			for(var i=1; i<= listLen(rolesWithAccess); i++) {
+				if(isUserInRole(listGetAt(rolesWithAccess, i))) {
+					hasAccess=true;
+					break;
+				}
+			}
+		}
+		return hasAccess;
 	}
 	
 	// Override autowire function from fw/1 so that properties work
