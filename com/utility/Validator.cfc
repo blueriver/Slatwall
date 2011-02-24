@@ -1,33 +1,27 @@
-component accessors="true" {
-
-	// @hint name/path of properties file that contains default validation messages
-	property name="resourceBundle" type="string";
-	property name="validationMessages" type="struct";
-	property name="errors" type="Slatwall.com.utility.ErrorBean";
+component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 
 	// @hint constructor for the validator class
-	public Validator function init(string rb="DefaultValidationMessages",boolean isAbsolutePath=false){
-		this.setResourceBundle(arguments.rb);
-		this.setValidationMessages({});
-		this.setErrors(new Slatwall.com.utility.ErrorBean());
-		loadResourceBundle(arguments.isAbsolutePath);
+	public Validator function init(){
 		return this;
 	}
 	
 	// @hint main validation method that calls the individual validator class
-	public void function validate(
+	public struct function validate(
 		String rule,
 		Any objectValue,
 		String objectName,
 		String objectLabel,
-		String message=""
+		String message
 		 ){
 		
 		var validatorClass = getClassNameByRule(arguments.rule);
 		var isValid = createObject("component",validatorClass).init(argumentCollection=arguments);
 		
 		if(!isValid){
-			addError(argumentCollection=arguments);
+			var error = getError(argumentCollection=arguments);
+			return error;
+		} else {
+			return {};
 		}
 	}
 	
@@ -41,25 +35,32 @@ component accessors="true" {
 			var prop = props[i] ;
 			var name = prop["name"] ;
 			var val =  isNull(evaluate("arguments.entity." & "get#name#()")) ? "" : evaluate("arguments.entity." & "get#name#()") ;
-			var displayName = structKeyExists(prop,"displayName") ? prop["displayName"] : "" ;
+			var displayName = getPropertyLabel(entity=arguments.entity, propertyName=name);
 			var attrib = "";
 			//loop through each attribute to look for validation rule
 			for(attrib in prop){
 				if(attrib.toLowerCase().startsWith("validate")){
-					var validationRule = replaceNoCase(attrib,"validate","","one") ;
+					var validationRule = replaceNoCase(attrib,"validate","","one");
+					var message = getMessageByRule(validationRule,name,arguments.entity);
 					if(len(validationRule)){
-						var message = prop[attrib] ;
-						validate(validationRule,val,name,displayName,message) ;
+						var error = validate(validationRule,val,name,displayName,message);
+						if(!structIsEmpty(error) and hasErrorBean(arguments.entity)){
+							arguments.entity.addError(argumentCollection=error);
+						}
 					}
 				}
 			}
 		}
-		//if error bean exists in the object set it
-		if(arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'))){
-			arguments.entity.setErrorBean(this.geterrors()) ;
-		}
 		return arguments.entity;
 	}
+	
+	// @hint Checks if entity has an error bean
+	private boolean function hasErrorBean(required any entity) {
+		var objMetadata = getMetadata(arguments.entity);
+		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;	
+		return arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'));
+	}
+	
 	
 	// @hint returns the validator class name by validation rule.
 	private string function getClassNameByRule(String rule){
@@ -69,51 +70,42 @@ component accessors="true" {
 	}
 	
 	// @hint A way to see if the validate method produced any errors.
-	public boolean function hasErrors(){
+	/*public boolean function hasErrors(){
 		return this.getErrors().hasErrors();
-	}
+	}*/
 
-	// @hint adds an error to the errors errorBean
-	public void function addError(Any objectValue="",String objectName="",String objectLabel="",String Message=""){
+	// @hint returns an error name/message struct
+	public struct function getError(Any objectValue="",String objectName="",String objectLabel="",String Message=""){
 		//if lable is not defined, default it to name
 		var displayName = arguments.objectLabel != "" ? arguments.objectLabel : arguments.objectName; 
-		var msg = arguments.message != "" ? arguments.message : getMessageByRule(arguments.rule);
+		var msg = arguments.message;
 		msg = replaceNoCase(msg,"{objectLabel}",displayName,"all");
 		msg = replaceNoCase(msg,"{objectValue}",arguments.objectValue,"all");
 		var errorName = arguments.objectName != "" ? arguments.objectName : arguments.rule;
-		this.getErrors().addError(errorName,msg);
+		return {name=errorName, message=msg};
 	}
 	
-	// @hint returns default error message by validation rule
-	private string function getMessageByRule(String rule){
-		var messages = this.getValidationMessages();
-
-		return messages[arguments.rule];
+	
+	//@hint gets the entitie's property label from the rb
+	private string function getPropertyLabel(required any entity, required string propertyName) {
+		//first remove the "Slatwall" prefix from the entity name
+		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+		return rbKey("entity." & entityName & "." & arguments.propertyName);
+	}
+	
+	// @hint returns error message by validation rule from the resource bundle
+	private string function getMessageByRule(required string rule, required string propertyName, required any entity){
+		//first remove the "Slatwall" prefix from the entity name
+		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+		var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+		if(right(message,8) == "_missing") {
+			message = rbKey("validator.#arguments.rule#");
+		}
+		return message;
 	}
 
-	// @hint Loads the default error messages from the properties file
-	private void function loadResourceBundle(Boolean isAbsolutePath=false){
-		if(arguments.isAbsolutePath){
-			var rbpath = this.getResourceBundle();
-		} else {
-			var dir = getDirectoryFromPath(getCurrentTemplatePath());
-			var rbPath = dir & "validator/resources/" & this.getResourceBundle();
-		}
-
-		// read in the properties for the resource bundle
-		if(findNoCase(".properties",this.getResourceBundle())){
-			var file = fileOpen(rbPath);
-		} else {
-			var file = fileOpen(rbPath & ".properties");
-		}
-
-	    while (! fileIsEOF(file)) {
-	        var x = fileReadLine(file);
-			var rule = listFirst(x,"=");
-			var message = listLast(x,"=");
-			getValidationMessages()[rule] = message;
-	    }
-		fileClose(file);
+	private string function rbKey(required string key) {
+		return getRBFactory().getKeyValue(session.rb,arguments.key);
 	}
 
 }

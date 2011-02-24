@@ -16,6 +16,7 @@
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
 	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
 	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
+	<bean id="Validator" class="slatwall.com.utility.Validator" />
 	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
 		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>
 		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
@@ -31,6 +32,7 @@
             <bean class="slatwall.com.service.accountService">
 		        <constructor-arg name="entityName"><value>SlatwallAccount</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="accountDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
 				<constructor-arg name="sessionService"><ref bean="sessionService" /></constructor-arg>
             </bean>
         </property>
@@ -46,24 +48,7 @@
             <bean class="slatwall.com.service.brandService">
 		        <constructor-arg name="entityName"><value>SlatwallBrand</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="BrandDAO" /></constructor-arg>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvice</value>
-            </list>
-        </property>
-    </bean>
-	
-    <bean id="productService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.productService">
-		        <constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
-		        <constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
-		        <constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
-		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
-		        <constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
-		        <constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">
@@ -78,7 +63,26 @@
             <bean class="slatwall.com.service.OptionService">
                 <constructor-arg name="entityName"><value>SlatwallOption</value></constructor-arg>
                 <constructor-arg name="DAO"><ref bean="OptionDAO" /></constructor-arg>
-                <constructor-arg name="OptionGroupDAO"><ref bean="OptionGroupDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="productService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.productService">
+		        <constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
+		        <constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
+		        <constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
+		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
+		        <constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
+		        <constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">
@@ -93,6 +97,7 @@
             <bean class="slatwall.com.service.typeService">
                 <constructor-arg name="entityName"><value>SlatwallType</value></constructor-arg>
                 <constructor-arg name="DAO"><ref bean="TypeDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">
@@ -107,6 +112,7 @@
             <bean class="slatwall.com.service.sessionService">
 		        <constructor-arg name="entityName"><value>SlatwallSession</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="SessionDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">
@@ -121,6 +127,7 @@
             <bean class="slatwall.com.service.settingService">
 		        <constructor-arg name="entityName"><value>SlatwallSetting</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="settingDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">
@@ -135,6 +142,7 @@
             <bean class="slatwall.com.service.vendorService">
 		        <constructor-arg name="entityName"><value>SlatwallVendor</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="VendorDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">

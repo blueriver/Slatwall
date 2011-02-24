@@ -1,8 +1,9 @@
 component extends="Slatwall.com.service.BaseService" persistent="false" output="false" {
 	
-	public any function init(required string entityName, required any dao) {
+	public any function init(required string entityName, required any dao, required any validator) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
+		setValidator(arguments.validator);
 		
 		reloadConfiguration();
 		

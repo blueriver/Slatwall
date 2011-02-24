@@ -90,6 +90,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return ListLast(GetMetaData(this).entityname, "." );
 	}
 	
+	public void function addError(required string name, required string message) {
+		getErrorBean().addError(argumentCollection=arguments);
+	}
+	
+	public void function clearErrors() {
+		structClear(getErrorBean().getErrors());
+	}
+	
 	// @hint A way to see if the entity has any errors.
 	public boolean function hasErrors() {
 		return this.getErrorBean().hasErrors();
