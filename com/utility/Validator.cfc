@@ -56,7 +56,12 @@ component accessors="true" {
 		}
 		//if error bean exists in the object set it
 		if(arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'))){
-			arguments.entity.setErrorBean(this.geterrors()) ;
+			// if there are errors from a prior validation, append these
+			if(arguments.entity.hasErrors()) {
+				structAppend(arguments.entity.getErrorBean().getErrors(),this.getErrors().getErrors());
+			} else {
+			arguments.entity.setErrorBean(this.geterrors());
+			}
 		}
 		return arguments.entity;
 	}
