@@ -53,7 +53,14 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		}
 		return arguments.entity;
 	}
-	
+
+
+	//@hint method for setting errors in the entity that come from outside the property value (i.e. file uploads)
+	public void function setError(required any entity, string errorName, string rule) {
+		var message=getMessageByRule(entity=arguments.entity,propertyName=arguments.errorName,rule=arguments.rule);
+		arguments.entity.addError(name=arguments.errorName,message=message);
+	}
+		
 	// @hint Checks if entity has an error bean
 	private boolean function hasErrorBean(required any entity) {
 		var objMetadata = getMetadata(arguments.entity);
@@ -68,11 +75,6 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		
 		return className;
 	}
-	
-	// @hint A way to see if the validate method produced any errors.
-	/*public boolean function hasErrors(){
-		return this.getErrors().hasErrors();
-	}*/
 
 	// @hint returns an error name/message struct
 	public struct function getError(Any objectValue="",String objectName="",String objectLabel="",String Message=""){
