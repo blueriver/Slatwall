@@ -2,10 +2,12 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 	property name="entityName" type="string";
 	property name="DAO" type="any";
+	property name="Validator" table="Slatwall.com.utility.Validator";
 	
-	public any function init(required string entityName, required any dao) {
+	public any function init(required string entityName, required any dao, required any validator) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
+		setValidator(arguments.validator);
 		
 		return this;
 	}
@@ -59,9 +61,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		getDAO().delete(entity=arguments.entity);
 	}
 	
-	public any function save(required any entity) {
-		var validator = new Slatwall.com.utility.Validator();
-        validator.validateObject(entity=arguments.entity);
+	public any function save(required any entity) {;
+        getValidator().validateObject(entity=arguments.entity);
 		
 		if(!arguments.entity.hasErrors()) {
 			arguments.entity = getDAO().save(entity=arguments.entity);

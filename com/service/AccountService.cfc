@@ -2,9 +2,10 @@ component extends="BaseService" accessors="true" {
 			
 	property name="sessionService" type="any";
 	
-	public any function init(required string entityName, required any dao, required any sessionService) {
+	public any function init(required string entityName, required any dao, required any validator, required any sessionService) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
+		setValidator(arguments.validator);
 		setSessionService(arguments.sessionService);
 		
 		return this;

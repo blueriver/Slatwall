@@ -1,12 +1,5 @@
 component extends="slatwall.com.service.BaseService" accessors="true" {
 	
-	public any function init(required any entityName, required any dao) {
-		setEntityName(arguments.entityName);
-		setDAO(arguments.DAO);
-		
-		return this;
-	}
-	
 	public any function getSmartList(required struct rc){
 		
 		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName=getEntityName());
