@@ -6,6 +6,7 @@
 	<tr>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.option.optionname")#</th>
 		<th>#rc.$.Slatwall.rbKey("entity.option.optiongroup")#</th>
+		<th>#rc.$.Slatwall.rbKey("entity.option.sortorder")#</th>
 		<th>&nbsp;</th>
 	</tr>
 	<cfset local.rowCount = 0 />
@@ -14,6 +15,7 @@
 	<tr<cfif local.rowCount mod 2 eq 1> class="alt"</cfif>>
 		<td class="varWidth">#local.thisOption.getOptionName()#</td>
 		<td>#local.thisOption.getOptionGroup().getOptionGroupName()#</td>
+		<td>#local.thisOption.getSortOrder()#</td>
 		<td class="administration">
 		  <ul class="three">
               <cf_ActionCaller action="admin:option.edit" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">

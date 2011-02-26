@@ -30,6 +30,11 @@ a.button:hover {
 	text-decoration: none;
 }
 
+
+div#buttons {
+	margin-bottom: 10px;	
+}
+
 a.buttonOff {
 	background-color: #cccccc;
 	vertical-align: middle;
