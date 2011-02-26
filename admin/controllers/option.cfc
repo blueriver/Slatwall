@@ -98,8 +98,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function delete(required struct rc) {
 		var option = getOptionService().getByID(rc.optionid);
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
-		getOptionService().delete(option);
-		variables.fw.redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#");
+		if(!option.getIsAssigned()) {
+			getOptionService().delete(option);
+			rc.message="admin.option.delete_success";
+		} else {
+			rc.message="admin.option.delete_disabled";
+			rc.messagetype="warning";
+		}
+		variables.fw.redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
 	}
 	
 	public void function createoptiongroup(required struct rc) {
@@ -157,8 +163,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteoptiongroup(required struct rc) {
-		getOptionService().delete(getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup"));
-		variables.fw.redirect(action="admin:option.list");
+		var optionGroup = getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup");
+		if(optionGroup.getOptionsCount() eq 0) {
+			getOptionService().delete(getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup"));
+			rc.message = "admin.option.deleteoptiongroup_success";
+		} else {
+			rc.message = "admin.option.deleteoptiongroup_disabled";
+			rc.messagetype = "warning";
+		}
+		variables.fw.redirect(action="admin:option.list",preserve="message,messagetype");
 	}
 	
 }

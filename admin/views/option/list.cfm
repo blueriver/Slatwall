@@ -1,4 +1,5 @@
 ﻿<cfparam name="rc.options" type="any" />
+<cfparam name="rc.optionGroups" type="any" />
 
 <cfoutput>
 <ul id="navTask">
@@ -9,6 +10,8 @@
 		<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptiongroups')#" querystring="listby=optiongroups" type="list">
 	</cfif>
 </ul>
+
+<cfif arrayLen(rc.optionGroups) GT 0>
 
 <cfif rc.listby eq "options">
 <form name="filterOptions" method="get">
@@ -25,7 +28,6 @@
 </form>
 </cfif>
 
-<cfif arrayLen(rc.options.getPageRecords()) GT 0>
 
 	<cfif rc.listby eq "options">
 	#view("option/inc/optiontable")#
@@ -34,7 +36,7 @@
 	</cfif>
 	
 <cfelse>
-	<p>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</p>
+	<p>#rc.$.Slatwall.rbKey("admin.option.nooptiongroupsdefined")#</p>
 </cfif>
 
 </cfoutput>

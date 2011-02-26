@@ -262,10 +262,10 @@
 						</cfloop>
 						</ul>
 					<cfelseif attributes.editType eq "wysiwyg">
-						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
+						<textarea name="#attributes.fieldName#" id="#attributes.id#txt">#attributes.Value#</textarea>
 						<script type="text/javascript" language="Javascript">
 							var loadEditorCount = 0;
-							jQuery('###attributes.fieldName#').ckeditor(
+							jQuery('###attributes.id#txt').ckeditor(
 								{ toolbar:'Default',
 								height:'150',
 								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
