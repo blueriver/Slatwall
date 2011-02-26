@@ -45,9 +45,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	
 	public any function list(string entityName) {
 		if(isDefined("arguments.entityName")) {
-			return getDAO().list(entityName=arguments.entityName);
+			return getDAO().list(argumentCollection=arguments);
 		} else {
-			return getDAO().list(entityName=getEntityName());
+			arguments.entityName = getEntityName();
+			return getDAO().list(argumentCollection=arguments);
 		}
 	}
 	
