@@ -44,12 +44,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function list(string entityName) {
-		if(isDefined("arguments.entityName")) {
-			return getDAO().list(argumentCollection=arguments);
-		} else {
+		if(!isDefined("arguments.entityName")) {
 			arguments.entityName = getEntityName();
-			return getDAO().list(argumentCollection=arguments);
 		}
+		return getDAO().list(argumentCollection=arguments);
 	}
 	
 	public any function getSmartList(required struct rc, string entityName){
