@@ -7,14 +7,14 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupDescription" ormtype="string";
 	
 	// Related Object Properties
-	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" ;
+	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" lazy="extra" ;
 
 	// Non-persistent Properties
-	property name="imageDirectory" type="string" hint="Base directory for optionGroup images";
+	property name="imageDirectory" type="string" hint="Base directory for optionGroup images" persistent="false";
 	
     public OptionGroup function init(){
        // set default collections for association management methods
-	   setImageDirectory("#getSiteConfig().getAssetPath()#/images/Slatwall/meta/");
+	   this.setImageDirectory("#getSiteConfig().getAssetPath()#/images/Slatwall/meta/");
        if(isNull(variables.Options))
            variables.Options = [];
        return Super.init();
@@ -37,10 +37,14 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
        arguments.Option.removeOptionGroup(this);
     }
 	
+	public numeric function getOptionsCount() {
+		return arrayLen(this.getOptions());
+	}
+	
 	
 	// Image Management methods
 	public string function displayImage(string width="", string height="") {
-		imageDisplay = "";
+		var imageDisplay = "";
 		if(this.hasImage()) {
 			var fileService = getService("FileService");
 			imageDisplay = fileService.displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=getOptionGroupName());

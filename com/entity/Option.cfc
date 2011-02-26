@@ -10,9 +10,12 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Related Object Properties
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
+	
+	// Calculated Properties
+	property name="isAssigned" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
 
 	// Non-persistent Properties
-	property name="imageDirectory" type="string" hint="Base directory for option images";
+	property name="imageDirectory" type="string" hint="Base directory for option images" persistent="false";
 
     public Option function init(){
 	   setImageDirectory("#getSiteConfig().getAssetPath()#/images/Slatwall/meta/");
@@ -39,7 +42,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	// Image Management methods
 	
 	public string function displayImage(string width="", string height="") {
-		imageDisplay = "";
+		var imageDisplay = "";
 		if(this.hasImage()) {
 			var fileService = getService("FileService");
 			imageDisplay = fileService.displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=getOptionName());

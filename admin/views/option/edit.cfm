@@ -39,11 +39,12 @@
 </div>
 </cfif>
 
+<cfif arrayLen(local.options) gt 0>
+
 <p>
 <a href="javascript:;" style="display:none;" id="saveSort" onclick="saveOptionSort('optionList');return false;">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
 <a href="javascript:;"  id="showSort" onclick="showSaveSort('optionList');return false;">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
 </p>
-<cfif arrayLen(local.options) gt 0>
 
 <ul id="optionList">
 <cfloop from="1" to="#arraylen(local.options)#" index="local.i">
@@ -58,9 +59,9 @@
 		#local.thisOption.getOptionName()# 
 		<a title="#rc.$.Slatwall.rbKey('sitemanager.edit')#" href="javascript:;" id="editFrm#local.i#open" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##editFrm#local.i#container').slideDown();this.style.display='none';jQuery('##editFrm#local.i#close').show();return false;">[#rc.$.Slatwall.rbKey("sitemanager.edit")#]</a> 
 		<a title="#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" href="javascript:;" id="editFrm#local.i#close" <cfif !local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##editFrm#local.i#container').slideUp();this.style.display='none';jQuery('##editFrm#local.i#open').show();return false;">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
-		<cf_ActionCaller type="link" action="admin:option.delete" querystring="optionid=#local.thisOption.getOptionID()#" text="[#rc.$.Slatwall.rbKey("sitemanager.delete")#]" confirmrequired="true">
+		<cf_ActionCaller type="link" action="admin:option.delete" querystring="optionid=#local.thisOption.getOptionID()#" text="[#rc.$.Slatwall.rbKey("sitemanager.delete")#]" disabled="#local.thisOption.getIsAssigned()#" confirmrequired="true">
 		<div<cfif !local.thisOpen> style="display:none;"</cfif> id="editFrm#local.i#container">
-		
+
 		<form name="editFrm#local.i#" enctype="multipart/form-data" action="#buildURL('admin:option.save')#" method="post">
 		    <input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 			<input type="hidden" name="optionID" value="#local.thisOption.getOptionID()#" />
