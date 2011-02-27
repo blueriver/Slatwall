@@ -1,3 +1,0 @@
-﻿<cfoutput>
-#rc.optionID#
-</cfoutput>
