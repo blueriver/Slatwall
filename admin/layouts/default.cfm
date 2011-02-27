@@ -33,16 +33,13 @@
 	#view( "product/head/productForm.js" )#
 </head>
 <body>
-	<!---#application.pluginManager.renderAdminToolBar("jquery",true)#--->
 	<div id="header">
-		<!---<a id="blueRiverLink" title="mura by blueRiver" target="_blank" href="http://blueriver.com"></a>--->
 		<h1>Mura CMS</h1>
 		#view("utility/header")#
+		<p id="currentSite"><cf_ActionCaller text="#rc.sectionTitle#" action="#request.subsystem#:#request.section#" type="link"> &rarr; #rc.itemTitle#</p>
 	</div>
 	#view('utility/toolbar')#
 	<div class="admincontainer">
-		<h2>#rc.sectionTitle#</h2>
-		<h3>#rc.itemTitle#</h3>
 		#view("utility/messageBox")#
 		#body#
 	</div>

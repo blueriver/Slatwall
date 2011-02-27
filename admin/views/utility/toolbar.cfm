@@ -10,9 +10,8 @@
 					<cf_ActionCaller action="admin:product">
 					<div class="MenuSubOne">
 						<ul>
-							<cf_ActionCaller action="admin:product.create" type="list">
+							<cf_ActionCaller action="admin:product" type="list">
 							<cf_ActionCaller action="admin:product.listproducttypes" type="list">
-							<cf_ActionCaller action="admin:product.list" type="list">
 							<cf_ActionCaller action="admin:option" type="list">
 							<cf_ActionCaller action="admin:brand" type="list">
 						</ul>
