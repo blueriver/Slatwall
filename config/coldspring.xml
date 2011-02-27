@@ -81,6 +81,7 @@
 		        <constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
 				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
+				<constructor-arg name="fileService"><ref bean="FileService" /></constructor-arg>  
 		        <constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
 		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
 		        <constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>

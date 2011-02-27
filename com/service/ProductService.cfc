@@ -6,10 +6,11 @@ component extends="BaseService" accessors="true" {
 	property name="settingsManager" type="any";
 	property name="ProductTypeTree" type="any";
 	
-	public any function init(required any entityName, required any dao, required any validator, required any skuDAO, required any productTypeDAO, required any contentManager, required any settingsManager) {
+	public any function init(required any entityName, required any dao, required any validator, required any fileService, required any skuDAO, required any productTypeDAO, required any contentManager, required any settingsManager) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
 		setValidator(arguments.validator);
+		setfileService(arguments.fileService);
 		setSkuDAO(arguments.skuDAO);
 		setProductTypeDAO(arguments.productTypeDAO);
 		setContentManager(arguments.contentManager);
@@ -38,18 +39,6 @@ component extends="BaseService" accessors="true" {
 	
 	
 	//   Product Type Methods
-	
-	public any function getProductType(ID="") {
-		return getByID(arguments.ID,"SlatwallProductType");
-	}
-	
-	public any function getNewProductType() {
-		return getNewEntity("SlatwallProductType");
-	}
-	
-	public any function listProductTypes() {
-       return list("SlatwallProductType");
-    }
 	
     public void function setProductTypeTree() {
         variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
