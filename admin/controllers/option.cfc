@@ -52,7 +52,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
         param name="rc.listby" default="optiongroups";
         rc.orderby="optiongroup_optiongroupname|A^sortOrder|A";
         rc.options = getOptionService().getSmartList(rc=arguments.rc);
-        rc.optionGroups = entityLoad("SlatwallOptionGroup",{},"OptionGroupName Asc");
+        rc.optionGroups = getOptionService().list(entityName="SlatwallOptionGroup",sortOrder="OptionGroupName Asc");
     }
 	
 	public void function save(required struct rc) {

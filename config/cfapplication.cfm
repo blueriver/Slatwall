@@ -6,6 +6,7 @@
 	<cfset this.ormSettings.dbcreate = "update" />
 	<cfset this.ormSettings.flushAtRequestEnd = false />
 	<cfset this.ormSettings.automanageSession = false />
+	<cfset this.ormSettings.logSQL = true />
 	<cfset this.ormsettings.cfclocation = "/plugins/Slatwall/com/entity" />
 	<!--- Set Custom Tags Setting --->
 	<cfset this.customtagpaths = "#this.customtagpaths#,#baseDir#/plugins/Slatwall/tags" />

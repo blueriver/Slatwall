@@ -12,8 +12,12 @@ component output="false" {
 		return ormExecuteQuery(" from #arguments.entityName# where filename = :filename", {filename=arguments.filename}, true);
 	}
 	
-	public array function list(required string entityName) {
-		return entityLoad(arguments.entityName);
+	public array function list(required string entityName,struct filterCriteria=structNew(),string sortOrder="") {
+		if(!structIsEmpty(arguments.filterCriteria) and !len("arguments.sortOrder")) {
+			return entityLoad(arguments.entityName);
+		} else {
+			return entityLoad(arguments.entityName,arguments.filterCriteria,arguments.sortOrder);
+		}	
 	}
 	
 	public any function fillSmartList(required any smartList, required any entityName) {
