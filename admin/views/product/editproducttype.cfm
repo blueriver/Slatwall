@@ -19,7 +19,7 @@
 		<select name="parentProductType_productTypeID" id="parentProductType_productTypeID">
             <option value=""<cfif isNull(rc.productType.getParentProductType())> selected</cfif>>None</option>
         <cfloop query="local.tree">
-		    <cfif not listFind(local.tree.path,rc.productType.getProductTypeID())><!--- can't be child of itself or any of its children --->
+		    <cfif not listFind(local.tree.path,rc.productType.getProductType())><!--- can't be child of itself or any of its children --->
             <cfset ThisDepth = local.tree.TreeDepth />
             <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
             <option value="#local.tree.productTypeID#"<cfif (!isNull(rc.productType.getParentProductType()) and rc.productType.getParentProductType().getProductTypeID() eq local.tree.productTypeID) or rc.parentProductTypeID eq local.tree.productTypeID> selected="selected"</cfif>>

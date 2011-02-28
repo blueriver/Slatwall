@@ -7,6 +7,11 @@ img.slatwallLogo	{
  	margin: 4px 100px 0 50px;
 }
 
+.ui-widget-content a  {
+	color: #FF3A00;
+	text-decoration: none;
+}
+
 a.button, button {
 	background-color: #78A8D4;
 	vertical-align: middle;
@@ -33,6 +38,10 @@ a.button:hover {
 
 div#buttons {
 	margin-bottom: 10px;	
+}
+
+div#createProductButtons {
+	margin: 20px 0 10px;
 }
 
 a.buttonOff {
@@ -84,8 +93,21 @@ table#ProductBrands {
 	width: 800px;
 }
 
+table#ProductList {
+	width: 900px;
+}
+
 dl.optionDetail {
 	margin-bottom: 20px;
+}
+
+dl#newProductForm dt {
+	text-align: right;
+	width: 150px;
+}
+
+dl#newProductForm dd {
+	margin-left: 160px;
 }
 
 ul#optionList {

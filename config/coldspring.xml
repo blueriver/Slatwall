@@ -22,7 +22,7 @@
 		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>
 		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
 		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
-		<constructor-arg name="pathColumn"><value>productTypeID</value></constructor-arg>
+		<constructor-arg name="pathColumn"><value>productType</value></constructor-arg>
 	</bean>
 	
 	<!-- transaction advice -->

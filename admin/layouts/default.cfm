@@ -6,6 +6,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
+	<link rel="icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
+	<link rel="shortcut icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
 	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery.js?coreversion=#application.coreversion#"></script>
 	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js?coreversion=#application.coreversion#"></script>
 	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui-i18n.js?coreversion=#application.coreversion#"></script>

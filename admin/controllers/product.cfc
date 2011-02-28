@@ -10,9 +10,9 @@ component extends="BaseController" output=false accessors=true {
 
     public void function create(required struct rc) {
 		rc.product = getProductService().getNewEntity();
-        rc.productTypes = getProductService().getProductTypeTree();
+		rc.productTypes = getProductService().getProductTypeTree();
+		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
     }
-	
 	
 	public void function detail(required struct rc) {
 		rc.product = getProductService().getByID(rc.productID);
@@ -28,7 +28,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function edit(required struct rc) {
 	// we could be redirected here from a failed form submission, so check rc for product object first
-		if(!structKeyExists(rc,"product") and !isObject(rc.product)) {
+		if(!structKeyExists(rc,"product") or !isObject(rc.product)) {
 			rc.product = getProductService().getByID(rc.productID);
 		}
 		if(!isNull(rc.product)) {
@@ -49,10 +49,14 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function save(required struct rc) {
 		param name="rc.brand_brandID" default="";
-		rc.product = variables.fw.populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
-		rc.product.setBrand(getBrandService().getByID(ID=rc.Brand_BrandID));
-		// TODO: validate that this product type is a leaf node of tree
-		rc.product.setProductType(getProductService().getByID(ID=rc.productType_productTypeID));
+		rc.product = getFW().populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
+		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true);
+		if(structKeyExists(rc,"brand_brandID") && len(rc.brand_brandID)) {
+			rc.product.setBrand(getProductService().getByID(rc.brand_brandID,"SlatwallBrand"));
+		} 
+		if(structKeyExists(rc,"productType_productTypeID") && len(rc.productType_productTypeID)) {
+			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
+		}
 		//Set Filename for product if it isn't already defined.
 		if(trim(rc.product.getFilename()) EQ "") {
 			rc.product.setFilename(rc.product.getProductName());
@@ -65,15 +69,15 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().save(entity=rc.product);
 		
 		if(!rc.product.hasErrors()) {
-			variables.fw.redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
+			getFW().redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
 		} else {
-			variables.fw.setView("admin:product.edit");
+			getFW().setView("admin:product.edit");
 		}
 	}
 	
 	public void function delete(required struct rc) {
 		getProductService().delete(entity=rc.product);
-		variables.fw.redirect(action="admin:product.list");
+		getFW().redirect(action="admin:product.list");
 	}
 	
 	
@@ -83,7 +87,7 @@ component extends="BaseController" output=false accessors=true {
 	   rc.productType = getProductService().getNewEntity("SlatwallProductType");
 	   // put type tree into the rc for parent dropdown
 	   rc.productTypeTree = getProductService().getProductTypeTree();
-	   variables.fw.setView("admin:product.editproducttype");
+	   getFW().setView("admin:product.editproducttype");
 	}
 		
 	public void function editproducttype(required struct rc) {
@@ -94,7 +98,7 @@ component extends="BaseController" output=false accessors=true {
 	       	rc.productTypeTree = getProductService().getProductTypeTree();
 		   	rc.itemTitle &= ": " & rc.productType.getProductType();
 	   	} else {
-           	variables.fw.redirect("product.listproducttypes");
+           	getFW().redirect("product.listproducttypes");
 		}
 	}
 	
@@ -105,7 +109,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function saveproducttype(required struct rc) {
         var productType = getProductService().getNewEntity("SlatwallProductType");
-		rc.productType = variables.fw.populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
+		rc.productType = getFW().populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
 		
 		// set parent product type, if specified
 		if(len(trim(rc.parentProductType_productTypeID))) {
@@ -115,9 +119,9 @@ component extends="BaseController" output=false accessors=true {
 		if(!rc.productType.hasErrors()) {
 			getProductService().setProductTypeTree();
 			rc.message = "admin.product.saveproducttype_success";
-		  	variables.fw.redirect(action="admin:product.listproducttypes",preserve="message");
+		  	getFW().redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {
-		  variables.fw.redirect(action="admin:product.editproducttype", preserve="productType");
+		  getFW().redirect(action="admin:product.editproducttype", preserve="productType");
         }
 	}
 	
@@ -130,7 +134,7 @@ component extends="BaseController" output=false accessors=true {
 			rc.message="admin.product.deleteproducttype_disabled";
 			rc.messagetype="warning";
 		}
-		variables.fw.redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
+		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
 	}
 		
 }

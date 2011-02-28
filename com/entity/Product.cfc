@@ -24,9 +24,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="lastUpdatedDateTime"	ormtype="date" default="" displayname="Date Last Updated";
 	
 	// Related Object Properties
-	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID" cascade="all" inverse=true;
+	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
-	property name="productType" displayname="Product Type" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID" cascade="all" inverse=true;
+	property name="productType" displayname="Product Type" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" cascade="all" inverse=true;
 	
@@ -138,8 +138,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
        var index = arrayFind(arguments.ProductType.getProducts(),this);
        if(index > 0) {
            arrayDeleteAt(arguments.ProductType.getProducts(),index);
-       }
-       
+       }    
        structDelete(variables,"productType");
     }
 	
