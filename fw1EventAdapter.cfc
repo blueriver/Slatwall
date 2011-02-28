@@ -12,6 +12,16 @@
 		<cfset doAction(missingMethodArguments.$, "frontend:event.#lcase(missingMethodName)#") />
 	</cffunction>
 	
+	<cffunction name="onRenderStart">
+		<cfargument name="$" />
+		
+		<cfset doAction($, "frontend:event.onrenderstart") />
+
+		<cfif $.event('#variables.framework.action#') neq "">
+			<cfset $.content('body', doAction($, $.event('slatAction'), true)) />
+		</cfif>
+	</cffunction>
+	
 	<cffunction name="onGlobalSessionStart" output="false">
 		<cfargument name="$">
 		<cfset var state=preseveInternalState(request)>
@@ -60,7 +70,7 @@
 	<cffunction name="doAction" output="false">
 		<cfargument name="$">
 		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
-		<cfargument name="debug" default="false" />
+		<cfargument name="isContent" type="boolean" default="false" />
 		
 		<cfset var result = "" />
 		<cfset var savedEvent = "" />
@@ -68,9 +78,12 @@
 		<cfset var fw1 = createObject("component","#pluginConfig.getPackage()#.Application") />
 		<cfset var local=structNew()>
 		<cfset var state=structNew()>
+		
 		<!--- Put the event url struct, to be used by FW/1 --->
 		<cfset url.$ = $ />
+		<cfset url.isContent = arguments.isContent />
 		
+		<!--- Check to see if the action is the page request action --->
 		<cfif not len( arguments.action )>
 			<cfif len(arguments.$.event(variables.framework.action))>
 				<cfset arguments.action=arguments.$.event(variables.framework.action)>

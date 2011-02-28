@@ -2,9 +2,9 @@
 <cfset variables.framework.applicationKey="Slatwall">
 <cfset variables.framework.base="/Slatwall">
 <cfset variables.framework.usingsubsystems=true>
-<cfset variables.framework.action="action">
+<cfset variables.framework.action="slatAction">
 <cfset variables.framework.home="admin:main.dashboard">
+<cfset variables.framework.defaultSubsystem = "frontend">
 <cfset variables.framework.defaultSection="main">
 <cfset variables.framework.defaultItem="dashboard">
-<cfset variables.framework.generateses=true>
 <cfset variables.framework.subsystemdelimiter=":">

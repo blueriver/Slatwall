@@ -14,7 +14,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if (getUserRoles() == "") {
 			// TODO: Set this location as something more dynamic
 			location("http://#cgi.http_host#/#session.siteid#/index.cfm?display=login&returnURL=http://#cgi.http_host#/plugins/Slatwall/?action=#rc.action#", false);
-		} else if( getFW().secureDisplay(rc.action) == false ) {
+		} else if( getFW().secureDisplay(rc.slatAction) == false ) {
 			getFW().setView("admin:main.noaccess");
 		}
 		
