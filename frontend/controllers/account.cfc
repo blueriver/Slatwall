@@ -10,9 +10,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function edit(required struct rc) {
 		rc.edit = true;
-		setView("frontend:account.detail");
+		getFW().setView("frontend:account.detail");
 		detail(rc);
-
+	}
+	
+	public void function save(required struct rc) {
+		
 	}
 	
 }

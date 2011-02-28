@@ -19,22 +19,6 @@
 		<cfset restoreInternalState(request,state)>
 	</cffunction>
 
-	<!--- this is the plugin hook in for mura --->
-	<cffunction name="onSiteRequestStart" output="false">
-        <cfargument name="$">
-		
-			<!--- Call Slatwall Front End Controller /> --->
-			<cfset doAction($, 'frontend:event.onsiterequeststart') />
-	
-	    </cffunction>
-	    
-	    <cffunction name="onRenderStart" output="false">
-	        <cfargument name="$">
-			
-					<!--- Call Slatwall Front End Controller /> --->
-					<cfset doAction($, 'frontend:event.onrenderstart') />
-	    </cffunction>
-	
 	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
 		<cfset var state=preseveInternalState(request)>
@@ -77,7 +61,7 @@
 		<cfargument name="$">
 		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
 		<cfargument name="debug" default="false" />
-				
+		
 		<cfset var result = "" />
 		<cfset var savedEvent = "" />
 		<cfset var savedAction = "" />
@@ -121,14 +105,17 @@
 			<cfset fw1.onRequest(CGI.SCRIPT_NAME) />
 		</cfsavecontent>
 		
-		<cfif fw1.getSection(arguments.action) eq "event">
+		<!--- Remove anything custom set in the request scope from this action call --->
+		<cfif structKeyExists(request, "overrideviewaction")>
 			<cfset structDelete(request, "overrideviewaction") />
-		<cfelse>
-			<cfdump var="#request#" />
-			<cfabort />
+		</cfif>
+		<cfif structKeyExists(request, "view")>
+			<cfset structDelete(request, "view") />
+		</cfif>
+		<cfif structKeyExists(request, "controllers")>
+			<cfset structDelete(request, "controllers") />
 		</cfif>
 	
-		
 		<!--- restore the url scope --->
 		<cfif structKeyExists(url,variables.framework.action)>
 			<cfset structDelete(url,variables.framework.action) />
@@ -143,7 +130,7 @@
 		</cfif>
 		
 		<cfset restoreInternalState(request,state)>
-		
+
 		<!--- return the result --->
 		<cfreturn result>
 	</cffunction>

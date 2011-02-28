@@ -5,10 +5,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="sessionService" type="any";
 	
 	public void function before(required any rc) {
-		// Because these are all just mura events we set the view to Blank;
-		//param name="request.gregstest" default="";
-		//request.gregstest &= "#request.gregstest#,#rc.action#";
-		//variables.fw.setView("frontend:event.blank");
+		variables.fw.setView("frontend:event.blank");
 	}
 	
 	public void function onsiterequeststart(required any rc) {
@@ -45,7 +42,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onrenderend(required any rc) {
-		
 		// Add necessary html to the header
 		savecontent variable="html_head" {
 			include "/plugins/#application.Slatwall.pluginConfig.getDirectory()#/frontend/layouts/inc/html_head.cfm";
