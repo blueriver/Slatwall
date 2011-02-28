@@ -1,8 +1,8 @@
-<cfparam name="rc.BrandSmartList" type="any" />
+<cfparam name="rc.brands" type="any" />
 
 <cfoutput>
 <div class="svoadminbrandlist">
-<cfif rc.BrandSmartList.getTotalEntities() gt 0>
+<cfif arrayLen(rc.brands) gt 0>
 	<table id="ProductBrands" class="listtable stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.brand.brandName")#</th>
@@ -11,7 +11,7 @@
 		</tr>
 		<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->
 		<cfset local.rowcounter = 1 />
-		<cfloop array="#rc.BrandSmartList.getPageRecords()#" index="Local.Brand">
+		<cfloop array="#rc.brands#" index="Local.Brand">
 			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
 				<td class="varWidth"><a href="#buildURL(action='admin:brand.detail', queryString='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></td>
 				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>

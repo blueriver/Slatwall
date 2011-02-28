@@ -3,13 +3,24 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	// Persistant Properties
 	property name="optionID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="optionCode" ormtype="string";
-	property name="optionName" ormtype="string";
+	property name="optionName" validateRequired ormtype="string";
 	property name="optionImage" ormtype="string";
 	property name="optionDescription" ormtype="string";
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
+	
+	// Calculated Properties
+	property name="isAssigned" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
+
+	// Non-persistent Properties
+	property name="imageDirectory" type="string" hint="Base directory for option images" persistent="false";
+
+    public Option function init(){
+	   setImageDirectory("#getSiteConfig().getAssetPath()#/images/Slatwall/meta/");
+       return Super.init();
+    }
 
     // Association management methods for bidirectional relationships
     public void function setOptionGroup(required OptionGroup OptionGroup) {
@@ -30,21 +41,20 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Image Management methods
 	
-	public void function setImage() {
-		// TODO: implement method -- update entity and delegate to service the image file upload and placement
-		return true;
-	} 
-	
-	public void function removeImage() {
-		// TODO: implement method -- update entity and delegate to service the image file deletion
-		return true;
-	} 
+	public string function displayImage(string width="", string height="") {
+		var imageDisplay = "";
+		if(this.hasImage()) {
+			var fileService = getService("FileService");
+			imageDisplay = fileService.displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=getOptionName());
+		}
+		return imageDisplay;
+	}
 	
 	public boolean function hasImage() {
 		return len(getOptionImage());
 	}
 	
-	public string function getImagePath() {
-        return getClassName() & "/" & getOptionImage();
-    }  
+    public string function getImagePath() {
+        return getImageDirectory() & getOptionImage();
+    }
 }

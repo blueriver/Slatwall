@@ -1,5 +1,5 @@
 component displayname="Option Group" entityname="SlatwallOptionGroup" table="SlatwallOptionGroup" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
-	
+
 	// Persistant Properties
 	property name="optionGroupID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="optionGroupName" validateRequired DisplayName="Option Group Name" ormtype="string";
@@ -7,14 +7,26 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupDescription" ormtype="string";
 	
 	// Related Object Properties
-	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" ;
+	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" lazy="extra" ;
 
+	// Non-persistent Properties
+	property name="imageDirectory" type="string" hint="Base directory for optionGroup images" persistent="false";
+	
     public OptionGroup function init(){
        // set default collections for association management methods
+	   this.setImageDirectory("#getSiteConfig().getAssetPath()#/images/Slatwall/meta/");
        if(isNull(variables.Options))
            variables.Options = [];
        return Super.init();
     }
+	
+	public array function getOptions(sortby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"sortby")) {
+			return variables.Options;
+		} else {
+			return sortObjectArray(variables.Options,arguments.sortby,arguments.sortType,arguments.direction);
+		}
+	}
     
     // Association management methods for bidirectional relationships (delegates both sides to Option.cfc)
     public void function addOption(required Option Option) {
@@ -25,24 +37,26 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
        arguments.Option.removeOptionGroup(this);
     }
 	
+	public numeric function getOptionsCount() {
+		return arrayLen(this.getOptions());
+	}
+	
 	
 	// Image Management methods
-	
-	public void function setImage() {
-		// TODO: implement method -- update entity and delegate to service the image file upload and placement
-		return true;
-	} 
-	
-	public void function removeImage() {
-		// TODO: implement method -- update entity and delegate to service the image file deletion
-		return true;
-	} 
+	public string function displayImage(string width="", string height="") {
+		var imageDisplay = "";
+		if(this.hasImage()) {
+			var fileService = getService("FileService");
+			imageDisplay = fileService.displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=getOptionGroupName());
+		}
+		return imageDisplay;
+	}
 	
 	public boolean function hasImage() {
 		return len(getOptionGroupImage());
 	}
 	
     public string function getImagePath() {
-        return getClassName() & "/" & getOptionGroupImage();
+        return getImageDirectory() & getOptionGroupImage();
     }  
 }

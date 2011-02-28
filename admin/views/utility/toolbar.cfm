@@ -10,9 +10,8 @@
 					<cf_ActionCaller action="admin:product">
 					<div class="MenuSubOne">
 						<ul>
-							<cf_ActionCaller action="admin:product.create" type="list">
+							<cf_ActionCaller action="admin:product" type="list">
 							<cf_ActionCaller action="admin:product.listproducttypes" type="list">
-							<cf_ActionCaller action="admin:product.list" type="list">
 							<cf_ActionCaller action="admin:option" type="list">
 							<cf_ActionCaller action="admin:brand" type="list">
 						</ul>
@@ -64,9 +63,10 @@
 			<cfif isDefined('request.contentBean')>
 				<li><a href="javascript:;" onClick="doSlatAction('utility.campaignlink',{'Show': 1, 'LandingPageContentID': '#request.contentBean.getContentID()#', 'QueryString': '#cgi.query_string#'})">Campaign Link</a></li>
 			</cfif>
-<!---			<cfif isDefined('request.muraScope.slatwall.Product')>
-				<li><a href="#buildURL(action='admin:product.detail', querystring='ProductID=#request.muraScope.slatwall.Product.getProductID()#')#">Product Detail</a></li>
-			</cfif>--->
+			<cfset local.currentProductID = rc.$.Slatwall.getCurrentProduct().getProductID() />
+			<cfif len(local.currentProductID)>
+				<li><a href="#buildURL(action='admin:product.detail', querystring='ProductID=#local.currentProductID#')#">Product Detail</a></li>
+			</cfif>
 		</ul>
 	</div>
 </cfoutput>

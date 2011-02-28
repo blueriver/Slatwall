@@ -30,6 +30,11 @@ a.button:hover {
 	text-decoration: none;
 }
 
+
+div#buttons {
+	margin-bottom: 10px;	
+}
+
 a.buttonOff {
 	background-color: #cccccc;
 	vertical-align: middle;
@@ -121,235 +126,39 @@ p.error_message {
 	background: #FFFFE0 url(../images/icons/emsg.gif) no-repeat scroll .5em 50%;
 }
 
+/**************************************************************/
 
-/* @group Toolbar */
-
-#toolBar {
-	height: 36px !important;
-	left: 0px !important;
-	top: 0px !important;
-	width: 100% !important;
-	z-index: 499999 !important;
-	text-align: left !important;
-	font-weight: normal !important;
-	font-family: "Lucida Grande", Arial, Helvetica, sans-serif !important;
+#navUtility li#navDashboard {
+	background: none repeat scroll 0 0 transparent;
 }
 
-#toolBar ul {
-	height: 36px !important;
-	list-style: none !important;
-	margin: 0 0 0 200px !important;
-	padding: 0 !important;
+#navUtility li#navDashboard>a {
+	background: url("/admin/images/icons/dashboard_14.png") no-repeat scroll left center transparent !important;
+	padding-left: 16px;
 }
 
-#toolBar ul li {
-	color: #f0f0f0 !important;
-	color: rgba(255,255,255,.8) !important;
-	float: left !important;
-	font-size: 11px !important;
-	line-height: 26px !important;
-	margin:0 18px 0 0 !important;
-	list-style: none !important;
-	font-weight: normal !important;
-	font-family: "Lucida Grande", Arial, Helvetica, sans-serif !important;
-	font-style: normal !important;
-	text-shadow: rgba(0,0,0,.8) 0px -1px 0px !important;
+#navUtility li#navProducts>a {
+	background: url("/admin/images/icons/smicn_24.png") no-repeat scroll left center transparent !important;
+	padding-left: 16px;
 }
 
-#toolBar ul li a {
-	color: #f0f0f0 !important;
-	background: transparent !important;
-	font-size: 11px !important;
-	line-height: 30px !important;
-	padding: 2px 0 2px 18px !important;
-	text-decoration: none !important;font-weight: normal !important;
-	font-family: "Lucida Grande", Arial, Helvetica, sans-serif !important;
-	font-style: normal !important;
+#navUtility li#navAccounts>a {
+	background: url("/admin/images/icons/permissions_on.png") no-repeat scroll left center transparent !important;
+	padding-left: 16px;
 }
 
-#toolBar ul li a:hover {
-	color:#bbb !important;
+#navUtility li#navSettings>a {
+	background: url("/admin/images/icons/confg_24.png") no-repeat scroll left center transparent !important;
+	padding-left: 16px;
 }
 
-#toolBar ul#addMenuDropDown li a {
-	color:#bbb !important;
+#navUtility li#navSiteManager>a {
+	background: url("/admin/images/icons/ntwrk_24.png") no-repeat scroll left center transparent !important;
+	padding-left: 16px;
 }
 
-#toolBar ul#addMenuDropDown li a:hover {
-	color:#f0f0f0 !important;
+#header #currentSite {
+	left: 20px;	
 }
-
-#toolBar ul li#adminEditPage a {
-	background: url(/admin/images/icons/edit_24.png) no-repeat scroll left center !important;
 }
-
-#toolBar ul li#adminAddContent a {
-	background: url(/admin/images/icons/add_24.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminDelete a {
-	background: url(/admin/images/icons/remov_24.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminVersionHistory a {
-	background: url(/admin/images/icons/hist_24.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminDashboard a {
-	background: url(/admin/images/icons/dashboard_14.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminPlugIns a {
-	background: url(/admin/images/icons/apps_24.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminSiteManager {
-	background: url(/admin/images/bg_fetools_site_manager.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminSiteManager a {
-	background: url(/admin/images/icons/ntwrk_24.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminSiteManager404 a {
-	background: url(/admin/images/icons/ntwrk_24.png) no-repeat scroll left center !important;
-}
-
-#toolBar ul li#adminWelcome {
-	color: #f0f0f0 !important;
-	float: right !important;
-	margin-right: 10px !important;
-	padding: 2px 0 !important;
-}
-
-#toolBar ul li#adminLogOut {
-	float: right !important;
-	margin-right: 14px !important;
-	padding: 6px 0 0 0 !important;
-	text-align: center !important;
-}
-
-#toolBar ul li#adminLogOut a {
-	display: block !important;
-	font-size: 9px !important;
-	color: #555 !important;
-	padding: 1px 10px !important;
-	line-height: 16px !important;
-	text-shadow: none !important;
-	border-radius: 8px !important;
-	-webkit-border-radius: 8px !important;
-	-moz-border-radius: 8px !important;
-	background: #898989 !important;
-	-webkit-box-shadow: 0px -1px 2px rgba(255,255,255,.15) inset !important;
-	-moz-box-shadow: 0px -1px 2px rgba(255,255,255,.15) inset !important;
-	box-shadow: 0px -1px 2px rgba(255,255,255,.15) inset !important;
-}
-
-#toolBar ul li#adminLogOut a:hover {
-	
-}
-
-/* @group Add Content Nav */
-
-#toolBar li ul { /* all lists */
-	padding: .75em 1em .75em !important;
-	margin: -1px 0 0 -16px !important;
-	list-style: none !important;
-	line-height: 1 !important;
-	background-image: none !important;
-	color:#fff !important;
-	position: absolute !important;
-	border-top: 1px solid #4a4a4a !important;
-	background: #505050 !important;
-	width: 12em !important;
-	left: -999em !important; /* using left instead of display to hide menus because display: none isn't read by screen readers */
-	height: auto !important;
-	opacity: .98;
-	-moz-opacity: .98;
-	filter: alpha(opacity=98); /* Move to ie.css? */
-	-moz-border-radius-bottomleft: 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	-moz-border-radius-bottomright: 5px;
-	-webkit-border-bottom-right-radius: 5px;
-	-webkit-box-shadow: 3px 3px 5px #555 !important;
-	-moz-box-shadow: 3px 3px 5px #555 !important;
-	filter: progid:DXImageTransform.Microsoft.dropShadow( offX=5, offY=5, positive=true);
-	box-shadow: 3px 3px 3px #555 !important;
-	/*z-index: 4999 !important;*/
-}
-
-#toolBar li li { /* all list items */
-	float: left !important;
-	width: 100% !important; /* width needed or else Opera goes nuts */
-	padding: 0 !important;
-	margin: 0 !important;
-	border-bottom: 1px dotted #666 !important;
-}
-
-#toolBar li li a {
-	display: block !important;
-	width: 10em !important;
-	padding: 0 0 0 2em !important;
-	margin: 1px 0 !important;
-	line-height: 2.25 !important;
-	color: #fff !important;
-}
-
-#toolBar li li a:hover {
-	background-color: #999 !important;
-	color: #fff !important;
-}
-
-#toolBar li:hover ul, #toolBar li.sfhover ul { /* lists nested under hovered list items */
-	left: auto !important;
-}
-
-#toolBar li:hover ul a, #toolBar li.sfhover ul a { /* lists nested under hovered list items */
-	color: #000 !important;
-}
-
-#toolBar li li#adminNewPage a {
-	background: url(/admin/images/icons/docs_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li#adminNewLink a {
-	background: url(/admin/images/icons/web_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li#adminNewFile a {
-	background: url(/admin/images/icons/cms_file.png) no-repeat 3px center !important;
-}
-
-#toolBar li li#adminNewPortal a {
-	background: url(/admin/images/icons/foldr_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li#adminNewCalendar a {
-	background: url(/admin/images/icons/cal_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li#adminNewGallery a {
-	background: url(/admin/images/icons/smicn_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li#adminNewGalleryItem a {
-	background: url(/admin/images/icons/image_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li#adminNewGalleryItemMulti a {
-	background: url(/admin/images/icons/image_24.png) no-repeat 4px center !important;
-}
-
-#toolBar li li:last-child {
-	border: 0 !important;
-}
-
-/* @end */
-
-/* @group IE7 Fixes */
-
-*:first-child+html #toolBar li ul { /* http://thatnorwegianguy.wordpress.com/2007/03/20/ie7-css-filter-hack/ */
-	margin: 24px 0 0 -70px !important;
-}
-
 /* @end */

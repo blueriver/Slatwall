@@ -14,6 +14,11 @@ component displayname="Base Object" {
 	private any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
 	}
+	
+	// @hint Private helper function for returning the site config inside of any component in the application
+	private any function getSiteConfig() {
+		return application.settingsManager.getSite(session.siteid);
+	}
 
 	private any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
