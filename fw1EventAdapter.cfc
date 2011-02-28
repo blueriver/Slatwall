@@ -1,6 +1,6 @@
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 	
-	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses,gregstest">
+	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses">
 	
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
 	<cfinclude template="fw1Config.cfm">
@@ -107,7 +107,9 @@
 		
 		<cfset state=preseveInternalState(request)>	
 		
-		<cfset fw1.setView(arguments.action) />
+		<cfif fw1.getSection(arguments.action) eq "event">
+			<cfset fw1.setView("frontend:event.blank") />
+		</cfif>
 		
 		<!--- call the frameworks onRequestStart --->
 		<cfset fw1.onRequestStart(CGI.SCRIPT_NAME) />
@@ -118,6 +120,14 @@
 		<cfsavecontent variable="result">
 			<cfset fw1.onRequest(CGI.SCRIPT_NAME) />
 		</cfsavecontent>
+		
+		<cfif fw1.getSection(arguments.action) eq "event">
+			<cfset structDelete(request, "overrideviewaction") />
+		<cfelse>
+			<cfdump var="#request#" />
+			<cfabort />
+		</cfif>
+	
 		
 		<!--- restore the url scope --->
 		<cfif structKeyExists(url,variables.framework.action)>

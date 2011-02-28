@@ -7,3 +7,4 @@
 <cfset variables.framework.defaultSection="main">
 <cfset variables.framework.defaultItem="dashboard">
 <cfset variables.framework.generateses=true>
+<cfset variables.framework.subsystemdelimiter=":">

@@ -6,9 +6,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function before(required any rc) {
 		// Because these are all just mura events we set the view to Blank;
-		param name="request.gregstest" default="";
-		request.gregstest &= "#request.gregstest#,#rc.action#";
-		variables.fw.setView("frontend:event.blank");
+		//param name="request.gregstest" default="";
+		//request.gregstest &= "#request.gregstest#,#rc.action#";
+		//variables.fw.setView("frontend:event.blank");
 	}
 	
 	public void function onsiterequeststart(required any rc) {
