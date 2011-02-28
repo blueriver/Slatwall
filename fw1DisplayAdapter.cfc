@@ -1,8 +1,12 @@
 <cfcomponent extends="fw1EventAdapter">
 
-	<cffunction name="contentproductlist">
-		<cfargument name="$" />
-		
-		<cfreturn doAction($,'frontend:content.productlist') />
+	<cffunction name="onMissingMethod">
+		<cfargument name="missingMethodName" />
+		<cfargument name="missingMethodArguments" />
+		<cfset var action = "frontend:#lcase(Replace(missingMethodName,"_","."))#" />
+		<cfset var return = doAction(missingMethodArguments.$, action, true) />
+
+		<cfreturn return />
 	</cffunction>
+
 </cfcomponent>

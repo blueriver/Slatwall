@@ -1,6 +1,6 @@
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 	
-	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses">
+	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses,gregstest">
 	
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
 	<cfinclude template="fw1Config.cfm">
@@ -76,6 +76,7 @@
 	<cffunction name="doAction" output="false">
 		<cfargument name="$">
 		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
+		<cfargument name="debug" default="false" />
 				
 		<cfset var result = "" />
 		<cfset var savedEvent = "" />
@@ -106,6 +107,7 @@
 		
 		<cfset state=preseveInternalState(request)>	
 		
+		<cfset fw1.setView(arguments.action) />
 		
 		<!--- call the frameworks onRequestStart --->
 		<cfset fw1.onRequestStart(CGI.SCRIPT_NAME) />
@@ -129,7 +131,7 @@
 		<cfif Len(savedEvent)>
 			<cfset request[variables.framework.action] = savedEvent />
 		</cfif>
-	
+		
 		<cfset restoreInternalState(request,state)>
 		
 		<!--- return the result --->

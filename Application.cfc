@@ -86,6 +86,8 @@ component extends="framework" output="false" {
 			controller("frontend:BaseController.subSystemBefore");
 		}
 	}
+
+	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
 	// Helper Functions
