@@ -95,8 +95,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 	
 	private boolean function updateData() {
 		var dataPopulator = new Slatwall.com.utility.DataPopulator();
-		
-		return dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData")); 
+		return dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 	}
 	
 }
