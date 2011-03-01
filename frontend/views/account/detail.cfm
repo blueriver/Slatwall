@@ -7,10 +7,10 @@
 		<dl>
 			<cf_PropertyDisplay object="#rc.Account#" property="primaryEmail" edit="#rc.edit#">
 		</dl>
-		<form method="post" action="#buildURL(action='frontend:account.save')#">
-			<input type="hidden" name="GT" value="Yes" />
-			<input type="text" name="GTT" />
-			<button type="submit">Submit</button>
-		</form>
+		<ul>
+			<cf_ActionCaller type="list" action="frontend:account.edit" />
+			<cf_ActionCaller type="list" action="frontend:account.editpassword" />
+			<cf_ActionCaller type="list" action="frontend:account.listorders" />
+		</ul>
 	</div>
 </cfoutput>
