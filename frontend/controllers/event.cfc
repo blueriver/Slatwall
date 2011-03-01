@@ -9,36 +9,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onsiterequeststart(required any rc) {
-		// Check if the page requested is a porduct page
+		// This enables SEO friendly product URL's
 		if(left(rc.path,len(request.siteid) + 5) == '/#request.siteid#/sp/') {
-			
-			// Get Product Filename from path
-			var productFilename = Right(rc.path, len(rc.path)-(len(request.siteid) + 5));
-			productFilename = Left(productFilename, len(productFilename)-1);
-			
-			// Setup Product in Slatwall Scope
-			request.slatwallScope.setCurrentProduct(variables.productService.getByFilename(productFilename));
+			if(rc.$.event('slatAction') != "") {
+				var productFilename = Right(rc.path, len(rc.path)-(len(request.siteid) + 5));
+				productFilename = Left(productFilename, len(productFilename)-1);
+				url.filename = productFilename;
+				rc.$.event('slatAction', 'frontend:product.detail');
+			}
 		}
 	}
 	
 	public void function onrenderstart(required any rc) {
-		if(rc.$.Slatwall.getCurrentProduct().isNew() == false) {
-			// Force Product Information into the contentBean
-			request.contentBean.setTitle(request.slatwallScope.getCurrentProduct().getProductName());
-			request.contentBean.setBody(request.slatwallScope.getCurrentProduct().getProductDescription());
-			
-			// Override crumbdata with the last page that was loaded
-			request.crumbdata = getSessionService().getCurrent().getLastCrumbData();
-			request.contentrenderer.crumbdata = getSessionService().getCurrent().getLastCrumbData();
-			
-			// Set template based on Product Template
-			request.contentBean.setIsNew(0);
-			if(request.slatwallScope.getCurrentProduct().getTemplate() != "") {
-				request.contentBean.setTemplate(request.slatwallScope.getCurrentProduct().getTemplate());
-			}
-		} else {
-			getSessionService().getCurrent().setLastCrumbData(duplicate(request.crumbdata));
-		}
+
 	}
 	
 	public void function onrenderend(required any rc) {

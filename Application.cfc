@@ -55,7 +55,7 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
-		variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
+		//variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
 		
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
@@ -148,4 +148,17 @@ component extends="framework" output="false" {
 			}
 		}
 	}
+	
+	/*
+	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
+		var url = "";
+		if(isAdminRequest()) {
+			
+		} else {
+			
+		}
+		url = super.buildURL(action=arguments.action, path=arguments.path, queryString=arguments.queryString);
+		return url;
+	}
+	*/
 }

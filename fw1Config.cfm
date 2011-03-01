@@ -1,10 +1,13 @@
 <cfset variables.framework=structNew()>
 <cfset variables.framework.applicationKey="Slatwall">
 <cfset variables.framework.base="/Slatwall">
-<cfset variables.framework.usingsubsystems=true>
 <cfset variables.framework.action="slatAction">
 <cfset variables.framework.home="admin:main.dashboard">
-<cfset variables.framework.defaultSubsystem = "frontend">
 <cfset variables.framework.defaultSection="main">
 <cfset variables.framework.defaultItem="dashboard">
+<cfset variables.framework.usingsubsystems=true>
+<cfset variables.framework.defaultSubsystem = "frontend">
 <cfset variables.framework.subsystemdelimiter=":">
+<cfset variables.framework.generateSES = false>
+<cfset variables.framework.SESOmitIndex = true>
+<cfset variables.framework.baseURL = "useRequestURI" >

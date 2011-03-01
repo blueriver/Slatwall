@@ -1,3 +1,4 @@
+<cfset variables.framework.baseURL = "http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/" />
 <cfoutput>
 	<div class="svoutilitytoolbar">
 		#view('admin:utility/toolbarsearch')#
@@ -70,3 +71,4 @@
 		</ul>
 	</div>
 </cfoutput>
+<cfset variables.framework.baseURL = "useRequestURI" />
