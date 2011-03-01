@@ -11,7 +11,7 @@
 	<table id="ProductList" class="listtable">
 		<tr>
 			<!---<th>Search Score</th>--->
-			<th>#rc.$.Slatwall.rbKey("entity.brand.brandName_title")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.productYear_title")#</th>
 			<!---<th>Product Code</th>--->
