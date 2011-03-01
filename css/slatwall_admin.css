@@ -40,9 +40,14 @@ div#buttons {
 	margin-bottom: 10px;	
 }
 
+div#createProductForm {
+	width: 930px;
+}
+
 div.createProductButtons {
 	margin: 20px 0 10px;
 	text-align: right;
+	clear: left;
 }
 
 a.buttonOff {
@@ -102,13 +107,12 @@ dl.optionDetail {
 	margin-bottom: 20px;
 }
 
-dl#newProductForm dt {
-	text-align: right;
-	width: 150px;
+dl.productPrice dt {
+	width: 100px;
 }
 
-dl#newProductForm dd {
-	margin-left: 160px;
+dl.productPrice dd {
+	margin-left: 120px;
 }
 
 ul#optionList {
@@ -119,6 +123,9 @@ ul#optionList li {
 	margin-bottom: 5px;
 }
 
+ul.radiogroup li {
+	float: left;
+}
 
 #shadowbox_container {
 	z-index: 499997;
