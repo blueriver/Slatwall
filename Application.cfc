@@ -56,7 +56,7 @@ component extends="framework" output="false" {
 	
 	public void function setupRequest() {
 		//variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
-		
+		//ORMReload();
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		

@@ -85,7 +85,9 @@
 		        <constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
 		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
 		        <constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
+				<constructor-arg name="feedManager"><ref bean="feedManager" /></constructor-arg>
 		        <constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
+				<constructor-arg name="FileService"><ref bean="FileService" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">

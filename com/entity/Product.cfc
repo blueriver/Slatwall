@@ -28,7 +28,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
 	property name="productType" displayname="Product Type" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
-	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" cascade="all" inverse=true;
+	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
+	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
@@ -63,6 +64,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(rawProperty="brandName", aliase="name");
 			smartList.addSelect(rawProperty="brandID", aliase="id"); 
+			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getAllRecords();
 		}
 		return variables.brandOptions;
@@ -98,6 +100,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.templateOptions = getService(service="ProductService").getProductTemplates();
 		}
 		return variables.templateOptions;
+	}
+	
+	/**
+	/* @hint associates this product with categories (Mura Content objects)
+	*/
+	public void function assignCategories(required string categoryID) {
+		getService(service="ProductService").assignCategories(this,arguments.categoryID);
 	}
 	
 	// Non-Persistant Helpers

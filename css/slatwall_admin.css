@@ -40,8 +40,9 @@ div#buttons {
 	margin-bottom: 10px;	
 }
 
-div#createProductButtons {
+div.createProductButtons {
 	margin: 20px 0 10px;
+	text-align: right;
 }
 
 a.buttonOff {
@@ -182,5 +183,9 @@ p.error_message {
 #header #currentSite {
 	left: 20px;	
 }
+
+.tabs div {
+	margin-left: 20px;
 }
+
 /* @end */

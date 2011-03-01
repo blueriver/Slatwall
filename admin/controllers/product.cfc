@@ -12,6 +12,8 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().getNewEntity();
 		rc.productTypes = getProductService().getProductTypeTree();
 		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
+		//rc.categories = rc.$.getBean("feed").set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
+		rc.categories = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
     }
 	
 	public void function detail(required struct rc) {
@@ -48,28 +50,35 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function save(required struct rc) {
-		param name="rc.brand_brandID" default="";
-		rc.product = getFW().populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true);
+		var product = getProductService().getNewEntity();
+		var productKeys = product.getUpdateKeys();
+		// hack to remove empty strings from rc to get around ORM validation issue for booleans
+		for(var i=1; i<=listLen(productKeys);i++) {
+			if(structKeyExists(rc,listGetAt(productKeys,i)) && rc[listGetAt(productKeys,i)] == "") {
+				structDelete(rc,listGetAt(productKeys,i));
+			}
+		}
 		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true);
-		if(structKeyExists(rc,"brand_brandID") && len(rc.brand_brandID)) {
+		
+		//set brand and product type into the bean
+		if(structKeyExists(rc,"brand_brandID")) {
 			rc.product.setBrand(getProductService().getByID(rc.brand_brandID,"SlatwallBrand"));
 		} 
-		if(structKeyExists(rc,"productType_productTypeID") && len(rc.productType_productTypeID)) {
+		if(structKeyExists(rc,"productType_productTypeID")) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
-		//Set Filename for product if it isn't already defined.
-		if(trim(rc.product.getFilename()) EQ "") {
-			rc.product.setFilename(rc.product.getProductName());
+		// set categories (content ID's)
+		if(structKeyExists(rc,"categoryID")) {
+			getProductService().assignCategories(rc.product,rc.categoryID);
 		}
-		
-		//Simplify filename
-		rc.product.setFilename(LCASE(Replace(rc.product.getFilename()," ","-","all")));
 		
 		//Save Product
 		rc.product = getProductService().save(entity=rc.product);
 		
 		if(!rc.product.hasErrors()) {
-			getFW().redirect(action="admin:product.detail", queryString="productID=#rc.product.getProductID()#");
+			// set up sku(s).
+			// getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
+			getFW().redirect(action="admin:product.list");
 		} else {
 			getFW().setView("admin:product.edit");
 		}
@@ -129,6 +138,7 @@ component extends="BaseController" output=false accessors=true {
 		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		if(!productType.getIsAssigned() and !arrayLen(productType.getSubProductTypes())) {
 			getProductService().deleteProductType(rc.productTypeID);
+			getProductService().setProductTypeTree();
 			rc.message = "admin.product.deleteproducttype_success";		
 		} else {
 			rc.message="admin.product.deleteproducttype_disabled";
