@@ -64,10 +64,10 @@
 			<cfif isDefined('request.contentBean')>
 				<li><a href="javascript:;" onClick="doSlatAction('utility.campaignlink',{'Show': 1, 'LandingPageContentID': '#request.contentBean.getContentID()#', 'QueryString': '#cgi.query_string#'})">Campaign Link</a></li>
 			</cfif>
-			<cfset local.currentProductID = rc.$.Slatwall.getCurrentProduct().getProductID() />
+	<!---		<cfset local.currentProductID = rc.$.Slatwall.getCurrentProduct().getProductID() />
 			<cfif len(local.currentProductID)>
 				<li><a href="#buildURL(action='admin:product.detail', querystring='ProductID=#local.currentProductID#')#">Product Detail</a></li>
-			</cfif>
+			</cfif>--->
 		</ul>
 	</div>
 </cfoutput>

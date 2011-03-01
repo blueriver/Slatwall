@@ -22,7 +22,7 @@
 		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>
 		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
 		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
-		<constructor-arg name="pathColumn"><value>productTypeID</value></constructor-arg>
+		<constructor-arg name="pathColumn"><value>productType</value></constructor-arg>
 	</bean>
 	
 	<!-- transaction advice -->
@@ -81,10 +81,13 @@
 		        <constructor-arg name="entityName"><value>SlatwallProduct</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="ProductDAO" /></constructor-arg>
 				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
+				<constructor-arg name="fileService"><ref bean="FileService" /></constructor-arg>  
 		        <constructor-arg name="skuDAO"><ref bean="SkuDAO" /></constructor-arg>
 		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
 		        <constructor-arg name="ContentManager"><ref bean="ContentManager" /></constructor-arg>
+				<constructor-arg name="feedManager"><ref bean="feedManager" /></constructor-arg>
 		        <constructor-arg name="SettingsManager"><ref bean="SettingsManager" /></constructor-arg>
+				<constructor-arg name="FileService"><ref bean="FileService" /></constructor-arg>
             </bean>
         </property>
         <property name="interceptorNames">

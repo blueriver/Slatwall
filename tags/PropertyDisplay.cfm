@@ -85,7 +85,7 @@
 		<!--- If the title attribute was not set, then set it as the the value in the resource bundle ---> 
 		<cfif attributes.title eq "">
 			<!--- remove "Slatwall" prefix from entityname --->
-			<cfset local.entityName = right(attributes.object.getClassName(),len(attributes.object.getClassName()) - 8) />
+			<cfset local.entityName = replaceNocase(attributes.object.getClassName(),"Slatwall","","one") />
 			<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("entity." & local.entityName & "." & attributes.property) />
 			<cfif right(attributes.title, 8) eq "_missing" >
 				<cfset attributes.title = local.propertyMetadata.name />
@@ -249,7 +249,7 @@
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
-							<option value=""></option>
+							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i.id#" <cfif attributes.value eq i.name>selected="selected"</cfif>>#i.name#</option>	
 							</cfloop>

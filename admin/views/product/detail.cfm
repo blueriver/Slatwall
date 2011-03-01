@@ -1,9 +1,10 @@
-<cfparam name="rc.edit" default="false" />
-<cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
+<cfparam name="rc.edit" type="boolean" default="false" />
+<cfparam name="rc.product" type="any" />
 
 <cfoutput>
 <cfif rc.edit>
-<form name="ProductEdit" action="?action=admin:product.update" method="post">
+<cfset local.productTypes = rc.product.getProductTypeTree() />
+<form name="ProductEdit" action="?action=admin:product.save" method="post">
 	<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 <cfelse>
 	<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>
@@ -28,11 +29,11 @@
                 <cfif rc.edit and structKeyExists(rc,"productTypes")>
 		            <select name="productType_productTypeID" id="productType_productTypeID">
 		                <option value="">None</option>
-		            <cfloop query="rc.productTypes">
-		                <cfset ThisDepth = rc.productTypes.TreeDepth />
+		            <cfloop query="local.productTypes">
+		                <cfset ThisDepth = local.productTypes.TreeDepth />
 		                <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
-		                <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
-		                    #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##rc.productTypes.productType#
+		                <option value="#local.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ local.productTypes.productTypeID> selected="selected"</cfif>>
+		                    #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##local.productTypes.productType#
 		                </option>
 		            </cfloop>
 		            </select>
