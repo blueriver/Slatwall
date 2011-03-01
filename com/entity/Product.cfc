@@ -113,7 +113,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL(boolean generateAdmin=false) {
-		return "/index.cfm/sp/#getFilename()#";
+		return "/index.cfm/#setting('product_urlKey')#/#getFilename()#";
 	}
 	
 	public string function getDefaultImagePath() {
@@ -123,6 +123,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public numeric function getQIA() {
 		return getQOH() - getQC();
+	}
+	
+	public string function getTemplate() {
+		if(!structKeyExists(variables, "template") || variables.template == "") {
+			return setting('product_defaultTemplate');
+		} else {
+			return variables.template;
+		}
 	}
 	
 	// Association management methods for bidirectional relationships

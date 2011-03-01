@@ -2,10 +2,16 @@ component extends="BaseController" output="false" accessors="true" {
 			
 	property name="settingService" type="any";
 	property name="userManager" type="any";
+	property name="productService" type="any";  
+	
+	public void function dashboard() {
+		getFW().redirect(action="admin:setting.detail");
+	}
 	
 	public void function detail(required struct rc) {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getAllSettings();
+		rc.productTemplateOptions = getProductService().getProductTemplates();
 	}
 	
 	public void function edit(required struct rc) {

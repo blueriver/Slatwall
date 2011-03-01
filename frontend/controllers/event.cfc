@@ -10,11 +10,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function onsiterequeststart(required any rc) {
 		// This enables SEO friendly product URL's
-		if(left(rc.path,len(request.siteid) + 5) == '/#request.siteid#/sp/') {
-			if(rc.$.event('slatAction') != "") {
-				var productFilename = Right(rc.path, len(rc.path)-(len(request.siteid) + 5));
-				productFilename = Left(productFilename, len(productFilename)-1);
-				url.filename = productFilename;
+		if( listGetAt(rc.path, 2, "/") == setting('product_urlKey') ) {
+			if(rc.$.event('slatAction') == "") {
+				url.filename = listGetAt(rc.path, 3, "/");
 				rc.$.event('slatAction', 'frontend:product.detail');
 			}
 		}

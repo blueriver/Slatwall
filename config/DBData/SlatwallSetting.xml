@@ -6,6 +6,8 @@
 	</Columns>
 	<Records>
 		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventory" settingValue="1" />
+		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="product_urlKey" settingValue="sp" />
+		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="default.cfm" />
 		<Record settingID="dbb32786b330315f7869d11b78bd7222" settingName="order_notificationEmailTo" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb32787e840bb61c8fde17a08a0ea9a" settingName="order_notificationEmailFrom" settingValue="info@mySlatwallStore.com" />
 	</Records>
@@ -13,9 +15,7 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	dbb32788a645d6870850ea4cad6d2d90
-	dbb32789cd09d59cf4422d3a64e9e595
-	dbb3278adf50ec43022fcfcac1111f4b
+	
 	dbb3278bb4c7e07d14b19d9eafa99a28
 	dbb3278cd959dc151f36ae48ce579b47
 	dbb3278dde43a5711cd8ea043d4bba1c

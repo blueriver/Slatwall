@@ -1,4 +1,4 @@
-component persistent="false" accessors="true" output="false" extends="mura.cfobject" {
+component persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="fw" type="any";
 	
@@ -15,7 +15,9 @@ component persistent="false" accessors="true" output="false" extends="mura.cfobj
 			if(right(rc.itemTitle, 8) == "_missing") {
 				rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
 			}
-			rc.$.content("title", rc.itemTitle);
+			rc.$.content().setIsNew(0);
+			rc.$.content().setTitle(rc.itemTitle);
+			rc.$.content().setHTMLTitle(rc.itemTitle);
 		}
 
 	}

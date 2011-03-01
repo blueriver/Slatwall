@@ -1,6 +1,6 @@
 <cfoutput>
 	<div class="svoproductedit">
-		<form name="ProductEdit" action="?action=admin:product.update" method="post">
+		<form name="ProductEdit" action="#buildURL(action='admin:product.update')#" method="post">
 			<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 			<dl class="oneColumn">
 			<cf_PropertyDisplay object="#rc.Product#" property="Active" edit="true">

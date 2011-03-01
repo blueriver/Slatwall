@@ -4,7 +4,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="brandService" type="any";
 	
 	public void function dashboard(required struct rc) {
-		variables.fw.redirect("admin:brand.list");
+		getFW().redirect("admin:brand.list");
 	}
 
     public void function create(required struct rc) {

@@ -3,7 +3,7 @@
 
 <cfoutput>
 <cfif rc.edit>
-<form name="ProductEdit" action="?action=admin:product.update" method="post">
+<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
 	<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 <cfelse>
 	<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>

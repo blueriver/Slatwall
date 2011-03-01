@@ -10,6 +10,11 @@ component displayname="Base Object" {
 		return application.slatwall.pluginConfig.getApplication().getValue("rbFactory");
 	}
 	
+	// @hint Private helper function to return a Setting
+	private any function setting(required string settingName) {
+		return getService("settingService").getSettingValue(arguments.settingName);
+	}
+	
 	// @hint Private helper function for returning the plugin config inside of any component in the application
 	private any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
@@ -20,15 +25,15 @@ component displayname="Base Object" {
 		return application.settingsManager.getSite(session.siteid);
 	}
 
-	private any function inject(required string property, required any value) {
+	public any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}
 	
-	private any function injectRemove(required string property) {
+	public any function injectRemove(required string property) {
 		structDelete(variables, arguments.property);
 	}
 	
-	private any function getVariables() {
+	public any function getVariables() {
 		return variables;
 	}
 	

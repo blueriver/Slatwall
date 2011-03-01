@@ -11,6 +11,10 @@ component extends="BaseController" output=false accessors=true {
 			rc.product = getProductService().getNewEntity();
 		}
 	}
+	
+	public void function dashboard() {
+		getFW().redirect(action="admin:product.list");
+	}
 
     public void function create(required struct rc) {
         rc.productTypes = getProductService().getProductTypeTree();

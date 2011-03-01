@@ -57,10 +57,6 @@ component accessors="true" extends="BaseObject" {
 		}
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
-	
-	public string function setting(required string settingName) {
-		return getService("settingService").getBySettingName(arguments.settingName);		
-	}
 
 	public boolean function secureDisplay(required string action) {
 		return secureDisplay(arguments.action);

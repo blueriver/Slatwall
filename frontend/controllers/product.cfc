@@ -15,6 +15,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.product = getProductService().getNewEntity();
 		}
 		
-		rc.$.content('title', rc.product.getTitle());
+		rc.$.slatwall.setCurrentProduct(rc.product);
+		
+		rc.$.content().setTitle(rc.product.getTitle());
+		rc.$.content().setTemplate(rc.product.getTemplate());
+		rc.$.content().setHTMLTitle(rc.product.getTitle());
 	}
 }
