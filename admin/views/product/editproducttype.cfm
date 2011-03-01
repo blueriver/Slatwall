@@ -8,7 +8,7 @@
 <ul id="navTask">
     <cf_ActionCaller action="admin:product.listproducttypes" type="list">
 </ul>
-<form name="ProductTypeForm" id="ProductTypeForm" action="?action=admin:product.saveproducttype" method="post">
+<form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
     <dl class="oneColumn">
     	<cf_PropertyDisplay object="#rc.productType#" property="productType" edit="true" first="true">
