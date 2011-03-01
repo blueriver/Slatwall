@@ -68,16 +68,16 @@ component extends="BaseController" output=false accessors=true {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
 		// set categories (content ID's)
-		if(structKeyExists(rc,"categoryID")) {
-			getProductService().assignCategories(rc.product,rc.categoryID);
+		if(!structKeyExists(rc,"categoryID")) {
+			rc.categoryID = "";
 		}
 		
 		//Save Product
-		rc.product = getProductService().save(entity=rc.product);
+		rc.product = getProductService().save(entity=rc.product,categoryID=rc.categoryID);
 		
 		if(!rc.product.hasErrors()) {
-			// set up sku(s).
-			// getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
+			set up sku(s).
+			getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
 			getFW().redirect(action="admin:product.list");
 		} else {
 			getFW().setView("admin:product.edit");

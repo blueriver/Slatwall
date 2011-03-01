@@ -159,6 +159,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
        structDelete(variables,"productType");
     }
 	
+	
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();
     }

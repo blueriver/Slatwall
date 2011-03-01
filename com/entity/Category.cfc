@@ -1,7 +1,6 @@
-component persistent="true" table="tcontent" output="false" readonly="true"
-{
-	/* properties */
+component persistent="true" table="tcontent" output="false" readonly="true" hint="maps to the Mura tcontent table" {
 	
+	/* Persistent properties */
 	property name="ContentHistID" column="ContentHistID" type="string" ormtype="string" fieldtype="id"; 
 	property name="contentID" column="ContentID" type="string" ormtype="string"; 
 	property name="SiteID" column="SiteID" type="string" ormtype="string" ; 
@@ -65,5 +64,5 @@ component persistent="true" table="tcontent" output="false" readonly="true"
 	property name="htmltitle" column="htmltitle" type="string" ormtype="string" ; 
 	property name="created" column="created" type="date" ormtype="timestamp" ; 
 	property name="mobileExclude" column="mobileExclude" type="numeric" ormtype="byte" ; 
-	property name="changesetID" column="changesetID" type="string" ormtype="string" ; 	
+	property name="changesetID" column="changesetID" type="string" ormtype="string" ;	
 } 

@@ -58,10 +58,21 @@ component extends="BaseService" accessors="true" {
 		product.setCategories(categoryArray);
 	}
 	
-	public any function save(required any entity) {
+	/**
+	/* @hint sets up initial skus when products are created
+	*/
+	public boolean function createSkus(required any entity, required string options, required price, required listprice) {
+		// TODO delegeate this to SKUService
+		return true;
+	}
+	
+	public any function save(required any entity,string categoryID="") {
 		// if filename wasn't set, in bean, default it to the product's name.
 		if(arguments.entity.getFileName() == "") {
 			arguments.entity.setFileName(getFileService().filterFileName(arguments.entity.getProductName()));
+		}
+		if(len(arguments.categoryID)) {
+			assignCategories(arguments.entity,arguments.categoryID);
 		}
 		return Super.save(arguments.entity);
 	}
