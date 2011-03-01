@@ -47,9 +47,9 @@
 		<cfelseif attributes.type eq "list">
 			<cfoutput><li class="#attributes.class#"><a href="#variables.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.text#</a></li></cfoutput> 
 		<cfelseif attributes.type eq "button">
-			<cfoutput><button type="button" class="#attributes.class#" name="action" value="#attributes.action#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif>>#attributes.text#</button></cfoutput>
+			<cfoutput><button type="button" class="#attributes.class#" name="slatAction" value="#attributes.action#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif>>#attributes.text#</button></cfoutput>
 		<cfelseif attributes.type eq "submit">
-			<cfoutput><button type="submit" class="#attributes.class#" name="action" value="#attributes.action#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif>>#attributes.text#</button></cfoutput>
+			<cfoutput><button type="submit" class="#attributes.class#" name="slatAction" value="#attributes.action#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif>>#attributes.text#</button></cfoutput>
 		</cfif>
 	</cfif>
 </cfif>

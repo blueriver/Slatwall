@@ -104,6 +104,7 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productType = getProductService().saveProductType(rc.productType);
 		if(!rc.productType.hasErrors()) {
+			getProductService().setProductTypeTree();
 			rc.message = "admin.product.saveproducttype_success";
 		  	variables.fw.redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {
