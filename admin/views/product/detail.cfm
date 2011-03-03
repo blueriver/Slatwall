@@ -1,4 +1,5 @@
 <cfparam name="rc.edit" default="false" />
+<cfparam name="rc.product" type="any" />
 <cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
 
 <cfoutput>

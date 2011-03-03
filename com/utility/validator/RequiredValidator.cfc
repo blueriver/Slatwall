@@ -10,12 +10,12 @@ Notes:
  */
 component extends="BaseValidator" {
 	
-	private boolean function validate(String objectValue){
+	private boolean function validate(any objectValue){
 		var valid = true;
-		
-		if(isNull(arguments.objectValue) || len(arguments.objectValue) EQ 0){
+		if((isSimpleValue(arguments.objectValue) and len(arguments.objectValue) == 0) || isNull(arguments.objectValue)) {
 			valid = false;
 		}
+		
 		return valid;
 	}
 
