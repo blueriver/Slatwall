@@ -8,17 +8,17 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function subSystemBefore(required struct rc) {
-		// Place any functionality that you would like applied on every request of this subsystem.
+		param name="rc.overrideContent" default="false";
 		
-		if(rc.isContent) {
-			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#_title");
-			if(right(rc.itemTitle, 8) == "_missing") {
-				rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
-			}
-			rc.$.content().setIsNew(0);
-			rc.$.content().setTitle(rc.itemTitle);
-			rc.$.content().setHTMLTitle(rc.itemTitle);
+		// Place any functionality that you would like applied on every request of this subsystem.
+		rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#_title");
+		if(right(rc.itemTitle, 8) == "_missing") {
+			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
 		}
-
+		var eventAction = getFW().getSubsystem(rc.$.event("slatAction")) & ":" & getFW().getSectionAndItem(rc.$.event("slatAction"));
+		if(rc.overrideContent == true && rc.slatAction == eventAction) {
+			rc.$.content().setTitle(rc.itemTitle);
+			rc.$.content().setHTMLTitle(rc.itemTitle);	
+		}
 	}
 }

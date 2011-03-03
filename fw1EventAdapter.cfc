@@ -18,7 +18,11 @@
 		<cfset doAction($, "frontend:event.onrenderstart") />
 
 		<cfif $.event('#variables.framework.action#') neq "">
-			<cfset $.content('body', doAction($, $.event('slatAction'), true)) />
+			<cfif $.event('overrideContent') eq true>
+				<cfset $.content('body', doAction($, $.event(variables.framework.action))) />
+			<cfelse>
+				<cfset $.content('body', $.content('body') & doAction($, $.event(variables.framework.action))) />
+			</cfif> 
 		</cfif>
 	</cffunction>
 	
@@ -70,7 +74,6 @@
 	<cffunction name="doAction" output="false">
 		<cfargument name="$">
 		<cfargument name="action" type="string" required="false" default="" hint="Optional: If not passed it looks into the event for a defined action, else it uses the default"/>
-		<cfargument name="isContent" type="boolean" default="false" />
 		
 		<cfset var result = "" />
 		<cfset var savedEvent = "" />
@@ -81,7 +84,6 @@
 		
 		<!--- Put the event url struct, to be used by FW/1 --->
 		<cfset url.$ = $ />
-		<cfset url.isContent = arguments.isContent />
 		
 		<!--- Check to see if the action is the page request action --->
 		<cfif not len( arguments.action )>
