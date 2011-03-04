@@ -29,7 +29,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productType" displayname="Product Type" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
+	/* property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID"; */
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
@@ -122,7 +122,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL(boolean generateAdmin=false) {
-		return "/index.cfm/#setting('product_urlKey')#/#getFilename()#";
+		return "#setting('product_urlKey')#/#getFilename()#";
 	}
 	
 	public string function getDefaultImagePath() {

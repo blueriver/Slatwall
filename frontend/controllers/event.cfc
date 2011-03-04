@@ -9,21 +9,22 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onsiterequeststart(required any rc) {
-		
+
+	}
+	
+	public void function onrenderstart(required any rc) {
 		// This enables SEO friendly product URL's
 		if( listLen(rc.path, "/") >= 3) {
 			if( listGetAt(rc.path, 2, "/") == setting('product_urlKey') ) {
 				if(rc.$.event('slatAction') == "") {
-					rc.$.content().setIsNew(0);
+					
 					url.filename = listGetAt(rc.path, 3, "/");
 					rc.$.event('slatAction', 'frontend:product.detail');
+					rc.$.content().setIsNew(0);
+					rc.$.event('overrideContent', 1);
 				}
 			}
 		}
-	}
-	
-	public void function onrenderstart(required any rc) {
-
 	}
 	
 	public void function onrenderend(required any rc) {

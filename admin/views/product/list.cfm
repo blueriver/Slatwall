@@ -1,3 +1,6 @@
+<cfparam name="rc.$" type="any" />
+<cfparam name="rc.productSmartList" type="any" />
+
 <cfoutput>
 <ul id="navTask">
     <cf_ActionCaller action="admin:product.create" type="list">
@@ -37,9 +40,10 @@
 				<td></td>
 				<td class="administration">
 					<cfset local.productID = Local.Product.getProductID() />
-		          <ul class="three">
+		          <ul class="four">
                       <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.productID#" class="edit" type="list">            
 					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.productID#" class="viewDetails" type="list">
+					  <li class="preview"><a href="#rc.$.createHREF(filename='#local.product.getProductURL()#')#">Preview Product</a></li>
 					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.productID#" class="delete" type="list" disabled="false" confirmrequired="true">
 		          </ul>     						
 				</td>
