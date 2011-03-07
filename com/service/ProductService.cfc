@@ -88,7 +88,7 @@ component extends="BaseService" accessors="true" {
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
-	   var entity = save(arguments.productType);
+	   var entity = Super.save(arguments.productType);
 	   return entity;
 	}
 	
