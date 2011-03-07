@@ -209,7 +209,7 @@ component extends="framework" output="false" {
 						if(arguments.trim && isSimpleValue( args[trimProperty] )) {
 							args[trimProperty] = trim( args[trimProperty] );
 						}
-						if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
+						if(len(args[trimproperty]) > 0 || arguments.acceptEmptyValues) {
 							evaluate("arguments.cfc.#key#(argumentCollection=args)");
 						}
 					}
