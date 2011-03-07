@@ -59,8 +59,9 @@ component extends="BaseService" accessors="true" {
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any entity, required string options, required price, required listprice) {
+	public boolean function createSkus(required any product, required string options, required price, required listprice) {
 		// TODO delegeate this to SKUService
+		getService("SkuService").createSkus(argumentCollection=arguments);
 		return true;
 	}
 	

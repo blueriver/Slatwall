@@ -21,4 +21,26 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	
+
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Product (many-to-one)
+	
+	public void function setProduct(required Product Product) {
+	   variables.product = arguments.Product;
+	   if(isNew() or !arguments.Product.hasSku(this)) {
+	       arrayAppend(arguments.Product.getSkus(),this);
+	   }
+	}
+	
+	public void function removeProduct(required Product Product) {
+       var index = arrayFind(arguments.Product.getSkus(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.Product.getSkus(),index);
+       }    
+       structDelete(variables,"Product");
+    }
+    
+	/************   END Association Management Methods   *******************/
+	
 }

@@ -61,7 +61,7 @@
 				<input type="hidden" name="options" value="" />
 				<ul>
 				<cfloop array="#local.options#" index="local.thisOption">
-					<li><input type="checkbox" name="options" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
+					<li><input type="checkbox" name="options" id="option#local.thisOption.getOptionID()#" value="#local.thisOptionGroup.getOptionGroupID()#_#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
 				</cfloop>
 				</ul>
 			<cfelse>

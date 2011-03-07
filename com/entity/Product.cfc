@@ -195,6 +195,26 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.ProductContent.removeProduct(this);
 	}
 	
+	// Skus (one-to-many)
+	
+	public void function setSkus(required array Skus) {
+		// first, clear existing collection
+		variables.Skus = [];
+		for( var i=1; i<= arraylen(arguments.Skus); i++ ) {
+			var thisSku = arguments.Skus[i];
+			if(isObject(thisSku) && thisSku.getClassName() == "SlatwallSku") {
+				addSku(thisSku);
+			}
+		}
+	}
+	
+	public void function addSku(required any Sku) {
+	   arguments.Sku.setProduct(this);
+	}
+	
+	public void function removeSku(required any Sku) {
+	   arguments.Sku.removeProduct(this);
+	
 	
 <<<<<<< HEAD
 	// ProductContent (one-to-many)
