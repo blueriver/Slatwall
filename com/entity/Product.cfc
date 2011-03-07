@@ -144,6 +144,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getQOH() - getQC();
 	}
 	
+<<<<<<< HEAD
 	public string function getTemplate() {
 		if(!structKeyExists(variables, "template") || variables.template == "") {
 			return setting('product_defaultTemplate');
@@ -152,6 +153,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
+=======
+>>>>>>> Product-Content associations set up through linking table. Override of
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Product Types (many-to-one)
@@ -171,7 +174,29 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
        structDelete(variables,"productType");
     }
 	
+	// ProductContent (one-to-many)
 	
+	public void function setProductContent(required array ProductContent) {
+		// first, clear existing collection
+		variables.ProductContent = [];
+		for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
+			var thisProductContent = arguments.ProductContent[i];
+			if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
+				addProductContent(thisProductContent);
+			}
+		}
+	}
+	
+	public void function addProductContent(required ProductContent ProductContent) {
+	   arguments.ProductContent.setProduct(this);
+	}
+	
+	public void function removeProductContent(required ProductContent ProductContent) {
+	   arguments.ProductContent.removeProduct(this);
+	}
+	
+	
+<<<<<<< HEAD
 	// ProductContent (one-to-many)
 	
 	public void function setProductContent(required array ProductContent) {
@@ -215,6 +240,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.Sku.removeProduct(this);
 	
 	
+=======
+>>>>>>> Product-Content associations set up through linking table. Override of
 	/************   END Association Management Methods   *******************/
 
     public any function getProductTypeTree() {

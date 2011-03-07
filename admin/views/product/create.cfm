@@ -1,7 +1,7 @@
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
 <cfparam name="rc.optionGroups" type="any" />
-<cfparam name="rc.categories" type="any" />
+<cfparam name="rc.productPages" type="any" />
 
 <cfoutput>
 <div id="createProductForm">
@@ -11,7 +11,7 @@
 	<li><a href="##tabOptions" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.productoptions")#</span></a></li>
 	<li><a href="##tabProductDetails" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.productdetails")#</span></a></li>
 	<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.productsettings")#</span></a></li>
-	<li><a href="##tabCategories" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.categories")#</span></a></li>
+	<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.productpages")#</span></a></li>
 	<li><a href="##tabExtendedAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.attributes")#</span></a></li>
 	<li><a href="##tabAltImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.altimages")#</span></a></li>
 	</ul>
@@ -53,18 +53,28 @@
 		<h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
 		<cfif arrayLen(rc.optionGroups) gt 0>
 			<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-			<cfset local.options = thisOptionGroup.getOptions(sortby="optionName") />
-			<h5>#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</h5>
-			<input type="hidden" name="options" value="" />
+			<cfset local.options = local.thisOptionGroup.getOptions(sortby="sortOrder") />
+			<p><a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideDown();">#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</a></p>
+			<div class="optionsSelector" id="selectOptions#local.thisOptionGroup.getOptionGroupID()#" style="display:none;">
+				<a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideUp();">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
+			<cfif arrayLen(local.options)>
+				<input type="hidden" name="options" value="" />
 				<ul>
 				<cfloop array="#local.options#" index="local.thisOption">
 					<li><input type="checkbox" name="options" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
 				</cfloop>
 				</ul>
+			<cfelse>
+				<!--- no options in this optiongroup defined --->
+				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsingroup")#</em></p>
+				<cf_ActionCaller action="admin:option.create" queryString="optionGroupID=#local.thisOptionGroup.getOptionGroupID()#">
+			</cfif>
+			</div>
 			</cfloop>
 		<cfelse>
+			 <!--- no options defined --->
 			<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
-			<cf_ActionCaller action="admin:option.create" type="link">
+			<cf_ActionCaller action="admin:option.createoptiongroup" type="link">
 		</cfif>
 	</div>
 	
@@ -92,18 +102,22 @@
 	</dl>
 	</div>
 
-	<div id="tabCategories">
-	<h4>#rc.$.Slatwall.rbKey("admin.product.selectproductcategories")#</h4>
-		<input type="hidden" name="categoryID" value="" />
-		<ul>
-		<cfloop condition="rc.categories.hasNext()">
-		<li>
-			<cfset local.thisCategory = rc.categories.next() />
-			<input type="checkbox" id="category#local.thisCategory.getContentID()#" name="categoryID" value="#local.thisCategory.getContentHistID()#" /> 
-			<label for="category#local.thisCategory.getContentID()#">#local.thisCategory.getTitle()#</label>
-		</li>	
-		</cfloop>
-		</ul>
+	<div id="tabProductPages">
+	<h4>#rc.$.Slatwall.rbKey("admin.product.selectproductpages")#</h4>
+		<cfif rc.productPages.getRecordCount() gt 0>
+			<input type="hidden" name="categoryID" value="" />
+			<ul>
+			<cfloop condition="rc.productPages.hasNext()">
+			<li>
+				<cfset local.thisProductPage = rc.productPages.next() />
+				<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#" /> 
+				<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
+			</li>	
+			</cfloop>
+			</ul>
+		<cfelse>
+			<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
+		</cfif>
 	</div>
 	<div id="tabExtendedAttributes">
 	

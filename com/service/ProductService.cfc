@@ -44,18 +44,16 @@ component extends="BaseService" accessors="true" {
 	}
 
 	/**
-	/* @hint associates this product with categories (Mura Content objects)
+	/* @hint associates this product with Mura content objects
 	*/
-	public void function assignCategories(required any product,required string categoryID) {
-		var categoryArray = [];
-		for(var i=1;i<=listLen(arguments.categoryID);i++) {
-			var thisCategoryID = listGetAt(arguments.categoryID,i);
-			var thisCategory = entityLoadByPK("Category",thisCategoryID);
-			if(!arguments.product.hasCategory(thisCategory)) {
-				arrayAppend(categoryArray,thisCategory);
-			}
+	public void function assignProductContent(required any product,required string contentID) {
+		var productContentArray = [];
+		for(var i=1;i<=listLen(arguments.contentID);i++) {
+			var thisContentID = listGetAt(arguments.contentID,i);
+			var thisProductContent = entityNew("SlatwallProductContent",{contentID=thisContentID});
+			arrayAppend(productContentArray,thisProductContent);
 		}
-		product.setCategories(categoryArray);
+		arguments.product.setProductContent(productContentArray);
 	}
 	
 	/**
@@ -66,15 +64,16 @@ component extends="BaseService" accessors="true" {
 		return true;
 	}
 	
-	public any function save(required any entity,string categoryID="") {
-		// if filename wasn't set, in bean, default it to the product's name.
-		if(arguments.entity.getFileName() == "") {
-			arguments.entity.setFileName(getFileService().filterFileName(arguments.entity.getProductName()));
+	public any function save(required any product,string contentID="") {
+		// if filename wasn't set in bean, default it to the product's name.
+		if(arguments.product.getFileName() == "") {
+			arguments.product.setFileName(getFileService().filterFileName(arguments.product.getProductName()));
 		}
-		if(len(arguments.categoryID)) {
-			assignCategories(arguments.entity,arguments.categoryID);
+		if(len(arguments.contentID)) {
+			assignProductContent(arguments.product,arguments.contentID);
 		}
-		return Super.save(arguments.entity);
+		arguments.product = Super.save(arguments.product);
+		return Super.save(arguments.product);
 	}
 	
 	
