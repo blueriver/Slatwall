@@ -9,7 +9,9 @@ component extends="BaseController" output=false accessors=true {
 	}
 
     public void function create(required struct rc) {
-		rc.product = getProductService().getNewEntity();
+		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
+			rc.product = getProductService().getNewEntity();
+		}
 		rc.productTypes = getProductService().getProductTypeTree();
 		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		//rc.categories = rc.$.getBean("feed").set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
@@ -75,7 +77,11 @@ component extends="BaseController" output=false accessors=true {
 			getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
 			getFW().redirect(action="admin:product.list");
 		} else {
-			getFW().setView("admin:product.edit");
+			if(rc.product.isNew()) {
+				getFW().redirect(action="admin:product.create",preserve="product");
+			} else {
+				getFW().redirect(action="admin:product.edit",preserve="product");
+			}
 		}
 	}
 	
