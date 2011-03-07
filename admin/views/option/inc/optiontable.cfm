@@ -11,10 +11,8 @@
 		<th>#rc.$.Slatwall.rbKey("entity.option.sortorder")#</th>
 		<th>&nbsp;</th>
 	</tr>
-	<cfset local.rowCount = 0 />
 <cfloop array="#rc.options.getPageRecords()#" index="local.thisOption">
-<cfset local.rowCount++ />
-	<tr<cfif local.rowCount mod 2 eq 1> class="alt"</cfif>>
+	<tr>
 		<td class="varWidth">#local.thisOption.getOptionName()#</td>
 		<td>#local.thisOption.getOptionCode()#</td>
 		<td>#local.thisOption.getOptionGroup().getOptionGroupName()#</td>

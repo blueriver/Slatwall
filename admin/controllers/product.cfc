@@ -13,7 +13,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.productTypes = getProductService().getProductTypeTree();
 		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		//rc.categories = rc.$.getBean("feed").set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
-		rc.categories = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
+		rc.productPages = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
     }
 	
 	public void function detail(required struct rc) {
@@ -51,14 +51,8 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function save(required struct rc) {
 		var product = getProductService().getNewEntity();
-		var productKeys = product.getUpdateKeys();
-		// hack to remove empty strings from rc to get around ORM validation issue for booleans
-		for(var i=1; i<=listLen(productKeys);i++) {
-			if(structKeyExists(rc,listGetAt(productKeys,i)) && rc[listGetAt(productKeys,i)] == "") {
-				structDelete(rc,listGetAt(productKeys,i));
-			}
-		}
-		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true);
+		
+		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
 		
 		//set brand and product type into the bean
 		if(structKeyExists(rc,"brand_brandID")) {
@@ -67,17 +61,18 @@ component extends="BaseController" output=false accessors=true {
 		if(structKeyExists(rc,"productType_productTypeID")) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
-		// set categories (content ID's)
-		if(structKeyExists(rc,"categoryID")) {
-			getProductService().assignCategories(rc.product,rc.categoryID);
-		}
 		
+		// set content IDs
+		if(!structKeyExists(rc,"contentID")) {
+			rc.contentID = "";
+		}
+
 		//Save Product
-		rc.product = getProductService().save(entity=rc.product);
+		rc.product = getProductService().save(product=rc.product,contentID=rc.contentID);
 		
 		if(!rc.product.hasErrors()) {
-			// set up sku(s).
-			// getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
+			// set up sku(s)
+			getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
 			getFW().redirect(action="admin:product.list");
 		} else {
 			getFW().setView("admin:product.edit");
@@ -85,7 +80,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function delete(required struct rc) {
-		getProductService().delete(entity=rc.product);
+		var product = getProductService().getByID(rc.productID);
+		getProductService().delete(product);
 		getFW().redirect(action="admin:product.list");
 	}
 	

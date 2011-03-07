@@ -141,14 +141,14 @@
 				<cfelseif (structKeyExists(local.propertyMetadata, "type") and (local.propertyMetadata.type eq "string" or local.propertyMetadata.type eq "numeric")) or (structKeyExists(local.propertyMetadata, "ormtype") and (local.propertyMetadata.ormtype eq "string" or local.propertyMetadata.ormtype eq "float" or local.propertyMetadata.ormtype eq "integer" or local.propertyMetadata.ormtype eq "int"))>
 					<cfset attributes.editType = "text" />
 				<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean" or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
-					<cfset attributes.editType = "checkbox" />
+					<cfset attributes.editType = "radiogroup" />
 				<cfelse>
 					<cfset attributes.editType = "text" />
 				</cfif>
 			</cfif>
 		</cfif>
 		
-		<cfif attributes.editType eq "select" or attributes.editType eq "radiogroup">
+		<cfif attributes.editType eq "select">
 		
 			<!--- Use the "getPropertyOptions" function to populate the attributes.editOptions if none are set --->
 			<cfif arrayLen(attributes.editOptions) eq 0>
@@ -256,10 +256,15 @@
 						</select>
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
-						<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
-						<cfloop array="#attributes.editOptions#" index="i">
-							<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
-						</cfloop>
+						<cfif attributes.dataType eq "boolean">
+							<li><input type="radio" name="#attributes.fieldName#" id="yes" value="1"<cfif yesnoformat(attributes.value)> checked</cfif>> <label for="yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" id="no" value="0"<cfif not yesnoformat(attributes.value)> checked</cfif>> <label for="no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+						<cfelse>
+							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
+							<cfloop array="#attributes.editOptions#" index="i">
+								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
+							</cfloop>
+						</cfif>
 						</ul>
 					<cfelseif attributes.editType eq "wysiwyg">
 						<textarea name="#attributes.fieldName#" id="#attributes.id#txt">#attributes.Value#</textarea>

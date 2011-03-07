@@ -29,7 +29,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productType" displayname="Product Type" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	/* property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID"; */
+	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan";
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
@@ -51,6 +51,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="webWholesaleQC" type="numeric" persistent="false";
 	property name="webWholesaleQEXP" type="numeric" persistent="false";
 	
+
+	public Product function init(){
+	   // set default collections for association management methods
+	   if(isNull(variables.ProductContent))
+	       variables.ProductContent = [];
+	   if(isNull(variables.Skus))
+	       variables.Skus = [];
+	   return Super.init();
+	}
+
 	// Related Object Helpers
 	public any function getBrand() {
 		if(!isDefined("variables.brand")) {
@@ -134,6 +144,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getQOH() - getQC();
 	}
 	
+<<<<<<< HEAD
 	public string function getTemplate() {
 		if(!structKeyExists(variables, "template") || variables.template == "") {
 			return setting('product_defaultTemplate');
@@ -142,7 +153,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	// Association management methods for bidirectional relationships
+=======
+>>>>>>> Product-Content associations set up through linking table. Override of
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Product Types (many-to-one)
 	
 	public void function setProductType(required ProductType ProductType) {
 	   variables.productType = arguments.ProductType;
@@ -159,6 +174,96 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
        structDelete(variables,"productType");
     }
 	
+	// ProductContent (one-to-many)
+	
+	public void function setProductContent(required array ProductContent) {
+		// first, clear existing collection
+		variables.ProductContent = [];
+		for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
+			var thisProductContent = arguments.ProductContent[i];
+			if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
+				addProductContent(thisProductContent);
+			}
+		}
+	}
+	
+	public void function addProductContent(required ProductContent ProductContent) {
+	   arguments.ProductContent.setProduct(this);
+	}
+	
+	public void function removeProductContent(required ProductContent ProductContent) {
+	   arguments.ProductContent.removeProduct(this);
+	}
+	
+	// Skus (one-to-many)
+	
+	public void function setSkus(required array Skus) {
+		// first, clear existing collection
+		variables.Skus = [];
+		for( var i=1; i<= arraylen(arguments.Skus); i++ ) {
+			var thisSku = arguments.Skus[i];
+			if(isObject(thisSku) && thisSku.getClassName() == "SlatwallSku") {
+				addSku(thisSku);
+			}
+		}
+	}
+	
+	public void function addSku(required any Sku) {
+	   arguments.Sku.setProduct(this);
+	}
+	
+	public void function removeSku(required any Sku) {
+	   arguments.Sku.removeProduct(this);
+	
+	
+<<<<<<< HEAD
+	// ProductContent (one-to-many)
+	
+	public void function setProductContent(required array ProductContent) {
+		// first, clear existing collection
+		variables.ProductContent = [];
+		for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
+			var thisProductContent = arguments.ProductContent[i];
+			if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
+				addProductContent(thisProductContent);
+			}
+		}
+	}
+	
+	public void function addProductContent(required ProductContent ProductContent) {
+	   arguments.ProductContent.setProduct(this);
+	}
+	
+	public void function removeProductContent(required ProductContent ProductContent) {
+	   arguments.ProductContent.removeProduct(this);
+	}
+	
+	
+	// Skus (one-to-many)
+	
+	public void function setSkus(required array Skus) {
+		// first, clear existing collection
+		variables.Skus = [];
+		for( var i=1; i<= arraylen(arguments.Skus); i++ ) {
+			var thisSku = arguments.Skus[i];
+			if(isObject(thisSku) && thisSku.getClassName() == "SlatwallSku") {
+				addSku(thisSku);
+			}
+		}
+	}
+	
+	public void function addSku(required any Sku) {
+	   arguments.Sku.setProduct(this);
+	}
+	
+	public void function removeSku(required any Sku) {
+	   arguments.Sku.removeProduct(this);
+	
+	
+=======
+>>>>>>> Product-Content associations set up through linking table. Override of
+	/************   END Association Management Methods   *******************/
+
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();
     }

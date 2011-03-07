@@ -16,6 +16,7 @@ a.button, button {
 	background-color: #78A8D4;
 	vertical-align: middle;
 	/*padding: 0;*/
+	margin-left: 3px;
 	width: auto;
 	border: 0 solid #fff;
 	cursor: pointer;
@@ -28,7 +29,7 @@ a.button, button {
 
 a.button {
 	padding: 4px 6px;
-	margin-right: 10px;
+	margin-left: 3px;
 }
 
 a.button:hover {
@@ -40,9 +41,12 @@ div#buttons {
 	margin-bottom: 10px;	
 }
 
-div.createProductButtons {
-	margin: 20px 0 10px;
-	text-align: right;
+div#createProductForm {
+	width: 930px;
+}
+
+div.optionsSelector {
+	margin-bottom: 10px;
 }
 
 a.buttonOff {
@@ -102,13 +106,12 @@ dl.optionDetail {
 	margin-bottom: 20px;
 }
 
-dl#newProductForm dt {
-	text-align: right;
-	width: 150px;
+dl.productPrice dt {
+	width: 100px;
 }
 
-dl#newProductForm dd {
-	margin-left: 160px;
+dl.productPrice dd {
+	margin-left: 120px;
 }
 
 ul#optionList {
@@ -119,6 +122,9 @@ ul#optionList li {
 	margin-bottom: 5px;
 }
 
+ul.radiogroup li {
+	float: left;
+}
 
 #shadowbox_container {
 	z-index: 499997;

@@ -97,6 +97,21 @@
         </property>
     </bean>
 
+	<bean id="skuService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.skuService">
+                <constructor-arg name="entityName"><value>SlatwallSku</value></constructor-arg>
+                <constructor-arg name="DAO"><ref bean="SkuDAO" /></constructor-arg>
+				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvice</value>
+            </list>
+        </property>
+    </bean>
+
 	<bean id="typeService" class="coldspring.aop.framework.ProxyFactoryBean">
         <property name="target">
             <bean class="slatwall.com.service.typeService">

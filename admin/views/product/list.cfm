@@ -11,7 +11,7 @@
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
 	</form>
 
-	<table id="ProductList" class="listtable">
+	<table id="ProductList" class="stripe">
 		<tr>
 			<!---<th>Search Score</th>--->
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
@@ -25,10 +25,9 @@
 			<th>#rc.$.Slatwall.rbKey("entity.product.qea")#</th>
 			<th>&nbsp</th>
 		</tr>
-	<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->
-	<cfset local.rowcounter = 1 />			
+	<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->		
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="Local.Product">
-			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
+			<tr>
 				<!---<td>#Local.Product.getSearchScore()#</td>--->
 				<td>#Local.Product.getBrand().getBrandName()#</td>
 				<td class="varWidth">#Local.Product.getProductName()#</td>
@@ -48,7 +47,6 @@
 		          </ul>     						
 				</td>
 			</tr>
-			<cfset local.rowcounter++ />
 		</cfloop>
 	</table>
 	

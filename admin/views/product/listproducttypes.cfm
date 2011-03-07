@@ -12,7 +12,7 @@
 	<cfif rc.productTypes.recordCount gt 0>
 <cfloop query="rc.productTypes">
     <cfset local.thisNest = rc.productTypes.treedepth eq 0 ? "neston" : "nest" & rc.productTypes.treedepth & "on" />
-    <tr<cfif rc.productTypes.currentRow mod 2 eq 1> class="alt"</cfif>>
+    <tr>
         <td class="varWidth">
             <ul class="#local.thisNest#">
                 <li class="Category">#rc.productTypes.productType#</li>

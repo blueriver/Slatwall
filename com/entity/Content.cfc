@@ -1,12 +1,12 @@
-component persistent="true" table="tcontent" output="false" readonly="true"
-{
-	/* properties */
+component persistent="true" table="tcontent" readonly="true" output="false" {
 	
-	property name="ContentHistID" column="ContentHistID" type="string" ormtype="string" fieldtype="id"; 
-	property name="contentID" column="ContentID" type="string" ormtype="string"; 
+	/* Presistent properties */
+	property name="TContent_ID" column="TContent_ID" type="numeric" ormtype="int" fieldtype="id"; 
 	property name="SiteID" column="SiteID" type="string" ormtype="string" ; 
 	property name="ModuleID" column="ModuleID" type="string" ormtype="string" ; 
 	property name="ParentID" column="ParentID" type="string" ormtype="string" ; 
+	property name="ContentID" column="ContentID" type="string" ormtype="string" ; 
+	property name="ContentHistID" column="ContentHistID" type="string" ormtype="string" ; 
 	property name="RemoteID" column="RemoteID" type="string" ormtype="string" ; 
 	property name="RemoteURL" column="RemoteURL" type="string" ormtype="string" ; 
 	property name="RemotePubDate" column="RemotePubDate" type="string" ormtype="string" ; 
@@ -65,5 +65,8 @@ component persistent="true" table="tcontent" output="false" readonly="true"
 	property name="htmltitle" column="htmltitle" type="string" ormtype="string" ; 
 	property name="created" column="created" type="date" ormtype="timestamp" ; 
 	property name="mobileExclude" column="mobileExclude" type="numeric" ormtype="byte" ; 
-	property name="changesetID" column="changesetID" type="string" ormtype="string" ; 	
+	property name="changesetID" column="changesetID" type="string" ormtype="string" ; 
+	
+	// Related properties
+	//property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="contentID" mappedby="ContentID" inverse="true" cascade="all"; 
 } 

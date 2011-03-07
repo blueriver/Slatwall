@@ -32,8 +32,13 @@
 		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
 	</dl>
 <cfif rc.edit>
-<cf_actionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
+<div id="actionButtons" class="clearfix">
+	<cf_actionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
+	<cfif rc.optiongroup.getOptionsCount() eq 0>
+	<cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
+	</cfif>
+</div>
 </form>
 <cfelse>
 <h4>#rc.$.Slatwall.rbKey('entity.optiongroup.options')#</h4>

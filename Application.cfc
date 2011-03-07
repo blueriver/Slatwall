@@ -62,7 +62,6 @@ component extends="framework" output="false" {
 	
 	public void function setupRequest() {
 		//variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
-		//ORMReload();
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		
@@ -154,6 +153,72 @@ component extends="framework" output="false" {
 			}
 		}
 	}
+	
+	/**
+	/*@hint used to populate beans from the request context. FW1 method overriden to set empty values to null
+	*/
+	public any function populate(required any cfc, string keys="", boolean trustKeys=false, boolean trim=false, boolean acceptEmptyValues=true) {
+		var key = 0;
+		var property = 0;
+		var trimproperty = 0;
+		var args = 0;
+		
+		if(arguments.keys == "") {
+			if(arguments.trustKeys) {
+				// assume everything in the request context can be set into the CFC
+				for(property in request.context) {
+					key = "set" & property;
+					try {
+						args = {};
+						args[property] = request.context[ property ];
+						if(arguments.trim && isSimpleValue(args[property])) {
+							args[property] = trim( args[property] );
+						}
+						if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
+							evaluate("arguments.cfc.#key#(argumentCollection=args)");
+						}
+					} catch(any e) {
+						onPopulateError( arguments.cfc, property, request.context );
+					}
+				}
+			} else {
+				for(key in arguments.cfc) {
+					if(len(key) > 3 and left(key,3) == "set") {
+						property = right( key, len( key ) - 3 );
+						if(structKeyExists( request.context, property )) {
+							args = structNew();
+							args[ property ] = request.context[ property ];
+							if(arguments.trim and isSimpleValue( args[property] )) {
+								args[property] = trim( args[property] );
+							}
+							if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
+								evaluate("arguments.cfc.#key#(argumentCollection=args)");
+							}
+						}
+					}
+				}	
+			}
+		} else {
+			for(var i=1; i<=listLen(arguments.keys); i++) {
+				trimProperty = trim(listGetAt(arguments.keys,i));
+				key = "set" & trimProperty;
+				if(structKeyExists( arguments.cfc, key ) || arguments.trustKeys) {
+					if(structKeyExists( request.context, trimProperty )) {
+						args = {};
+						args[ trimProperty ] = request.context[ trimProperty ];
+						if(arguments.trim && isSimpleValue( args[trimProperty] )) {
+							args[trimProperty] = trim( args[trimProperty] );
+						}
+						if(len(args[trimproperty]) > 0 || arguments.acceptEmptyValues) {
+							evaluate("arguments.cfc.#key#(argumentCollection=args)");
+						}
+					}
+				}
+			}
+		}
+		return arguments.cfc;
+	}
+
 	
 	/*
 	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {

@@ -7,10 +7,8 @@
 		<th>#rc.$.Slatwall.rbKey("entity.optiongroup.options")#</th>
 		<th>&nbsp;</th>
 	</tr>
-	<cfset local.rowCount = 0 />
 <cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-<cfset local.rowCount++ />
-	<tr<cfif local.rowCount mod 2 eq 1> class="alt"</cfif>>
+	<tr>
 		<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
 		<td>#local.thisOptionGroup.getOptionsCount()#</td>
 		<td class="administration">

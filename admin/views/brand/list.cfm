@@ -3,16 +3,15 @@
 <cfoutput>
 <div class="svoadminbrandlist">
 <cfif arrayLen(rc.brands) gt 0>
-	<table id="ProductBrands" class="listtable stripe">
+	<table id="ProductBrands" class="stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.brand.brandName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.brand.brandWebsite")#</th>
 			<th>&nbsp;</th>
 		</tr>
 		<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->
-		<cfset local.rowcounter = 1 />
 		<cfloop array="#rc.brands#" index="Local.Brand">
-			<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>
+			<tr>
 				<td class="varWidth"><a href="#buildURL(action='admin:brand.detail', queryString='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></td>
 				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
 				<td class="administration">
@@ -23,7 +22,6 @@
 		          </ul>     						
 				</td>
 			</tr>
-			<cfset local.rowcounter++ />
 		</cfloop>
 	</table>
 <cfelse>
