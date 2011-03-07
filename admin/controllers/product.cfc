@@ -55,10 +55,10 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
 		
 		//set brand and product type into the bean
-		if(structKeyExists(rc,"brand_brandID")) {
+		if(len(rc.brand_brandID)) {
 			rc.product.setBrand(getProductService().getByID(rc.brand_brandID,"SlatwallBrand"));
 		} 
-		if(structKeyExists(rc,"productType_productTypeID")) {
+		if(len(rc.productType_productTypeID)) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
 		

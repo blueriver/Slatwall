@@ -8,7 +8,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productName" ormtype="string" default="" displayname="Product Name" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" default="" displayname="Product Code" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" default="" displayname="Product Description" hint="HTML Formated description of the Product";
-	property name="productYear" ormtype="int" default="" displayname="Product Year" hint="Products specific model year if it has one";
+	property name="productYear" ormtype="int" displayname="Product Year" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinued"	ormtype="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="showOnWeb" ormtype="boolean" default=false displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
 	property name="showOnWebWholesale" ormtype="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
@@ -144,7 +144,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getQOH() - getQC();
 	}
 	
-<<<<<<< HEAD
 	public string function getTemplate() {
 		if(!structKeyExists(variables, "template") || variables.template == "") {
 			return setting('product_defaultTemplate');
@@ -153,8 +152,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-=======
->>>>>>> Product-Content associations set up through linking table. Override of
+
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Product Types (many-to-one)
@@ -214,57 +212,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removeSku(required any Sku) {
 	   arguments.Sku.removeProduct(this);
-	
-	
-<<<<<<< HEAD
-	// ProductContent (one-to-many)
-	
-	public void function setProductContent(required array ProductContent) {
-		// first, clear existing collection
-		variables.ProductContent = [];
-		for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
-			var thisProductContent = arguments.ProductContent[i];
-			if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
-				addProductContent(thisProductContent);
-			}
-		}
 	}
 	
-	public void function addProductContent(required ProductContent ProductContent) {
-	   arguments.ProductContent.setProduct(this);
-	}
-	
-	public void function removeProductContent(required ProductContent ProductContent) {
-	   arguments.ProductContent.removeProduct(this);
-	}
-	
-	
-	// Skus (one-to-many)
-	
-	public void function setSkus(required array Skus) {
-		// first, clear existing collection
-		variables.Skus = [];
-		for( var i=1; i<= arraylen(arguments.Skus); i++ ) {
-			var thisSku = arguments.Skus[i];
-			if(isObject(thisSku) && thisSku.getClassName() == "SlatwallSku") {
-				addSku(thisSku);
-			}
-		}
-	}
-	
-	public void function addSku(required any Sku) {
-	   arguments.Sku.setProduct(this);
-	}
-	
-	public void function removeSku(required any Sku) {
-	   arguments.Sku.removeProduct(this);
-	
-	
-=======
->>>>>>> Product-Content associations set up through linking table. Override of
 	/************   END Association Management Methods   *******************/
 
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();
     }
 }
+

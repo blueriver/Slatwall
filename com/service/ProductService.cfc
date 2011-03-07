@@ -61,7 +61,6 @@ component extends="BaseService" accessors="true" {
 	*/
 	public boolean function createSkus(required any product, required string options, required price, required listprice) {
 		// TODO delegeate this to SKUService
-		getService("SkuService").createSkus(argumentCollection=arguments);
 		return true;
 	}
 	
