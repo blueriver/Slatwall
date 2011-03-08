@@ -8,6 +8,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="ProductID" cfc="product";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
 	// Non-Persistant Properties
 	property name="livePrice" persistent="false";
@@ -21,14 +22,32 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	
+	
+    public Sku function init() {
+       // set default collections for association management methods
+       if(isNull(variables.Options)) {
+       	    variables.options=[];
+       }
+       return Super.init();
+    }
+    
+    public string function displayOptions() {
+    	var options = getOptions();
+    	var dspOptions = "";
+    	for(var i=1;i<=arrayLen(options);i++) {
+    		var thisOption = options[i];
+    		dspOptions = listAppend(dspOptions,thisOption.getOptionName()," ");
+    	}
+		return dspOptions;
+    }
 
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Product (many-to-one)
 	
 	public void function setProduct(required Product Product) {
-	   variables.product = arguments.Product;
 	   if(isNew() or !arguments.Product.hasSku(this)) {
+	   	   variables.product = arguments.Product;
 	       arrayAppend(arguments.Product.getSkus(),this);
 	   }
 	}
@@ -40,6 +59,33 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        }    
        structDelete(variables,"Product");
     }
+    
+    // Option (many-to-many)
+    
+    public void function addOption(required Option Option) {
+        if(!hasOption(arguments.option)) {
+        	// first add option to this Sku
+        	arrayAppend(this.getOptions(),arguments.option);
+        	// add this Sku to the option
+        	arrayAppend(arguments.Option.getSkus(),this);
+        }	
+    }
+    
+    public void function removeOption(required Option Option) {
+       // first remove the option from this Sku    
+       if(hasOption(arguments.option)) {
+	       var index = arrayFind(this.getOptions(),arguments.option);
+	       if(index>0) {
+	           arrayDeleteAt(this.getOptions(),index);
+	       }
+	      // then remove this Sku from the Option
+	       var index = arrayFind(arguments.Option.getSkus(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.Option.getSkus(),index);
+	       }
+	   }
+    } 
+    
     
 	/************   END Association Management Methods   *******************/
 	

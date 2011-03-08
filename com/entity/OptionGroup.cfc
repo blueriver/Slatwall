@@ -28,7 +28,10 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 		}
 	}
     
-    // Association management methods for bidirectional relationships (delegates both sides to Option.cfc)
+   /******* Association management methods for bidirectional relationships **************/
+    
+    // Option (one-to-many)
+    
     public void function addOption(required Option Option) {
        arguments.Option.setOptionGroup(this);
     }
@@ -36,6 +39,8 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
     public void function removeOption(required Option Option) {
        arguments.Option.removeOptionGroup(this);
     }
+
+    /************   END Association Management Methods   *******************/
 	
 	public numeric function getOptionsCount() {
 		return arrayLen(this.getOptions());

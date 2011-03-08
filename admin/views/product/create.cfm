@@ -51,17 +51,19 @@
 
 	<div id="tabOptions">
 		<h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
-		<input type="hidden" name="options" value="" />
+		<!---<input type="hidden" name="options" value="" />--->
 		<cfif arrayLen(rc.optionGroups) gt 0>
 			<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
 			<cfset local.options = local.thisOptionGroup.getOptions(sortby="sortOrder") />
 			<p><a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideDown();">#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</a></p>
 			<div class="optionsSelector" id="selectOptions#local.thisOptionGroup.getOptionGroupID()#" style="display:none;">
 				<a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideUp();">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
-			<cfif arrayLen(local.options)>	
+			<cfif arrayLen(local.options)>
+				<cfset local.optionIndex = 1 />	
 				<ul>
 				<cfloop array="#local.options#" index="local.thisOption">
-					<li><input type="checkbox" name="options" id="option#local.thisOption.getOptionID()#" value="#local.thisOptionGroup.getOptionGroupID()#_#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
+					<li><input type="checkbox" name="options.#local.thisOptionGroup.getOptionGroupName()#" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
+	            <cfset local.optionIndex++ />
 				</cfloop>
 				</ul>
 			<cfelse>
