@@ -80,10 +80,11 @@
 			<input type="button" class="button" id="addSKU" value="Add SKU" />
 		</cfif>
 <!---		<cfif arrayLen(local.skus)>--->
-			<table id="skuTable">
+			<table id="skuTable" class="stripe">
 				<thead>
 				<tr>
 					<th>Company SKU</th>
+					<th>Options</th>
 					<th>Original Price</th>
 					<th>List Price</th>
 					<th>QOH</th>
@@ -99,9 +100,10 @@
 			<cfset local.arrayIndex = 1 />
 			<cfif not rc.edit>	
 				<cfloop array="#local.skus#" index="local.thisItem">
-				<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>			
-					<td>#local.thisItem.getSkuID#</td>
-					<td>#local.thisItem.getOriginalPrice()#</td>
+				<tr>			
+					<td>#local.thisItem.getSkuID()#</td>
+					<td>#local.thisItem.displayOptions()#</td>
+					<td>#local.thisItem.getPrice()#</td>
 					<td>#local.thisItem.getListPrice()#</td>
 					<td></td>
 					<td></td>
@@ -115,7 +117,7 @@
 				</cfloop>
 			<cfelse>
 				<cfloop array="#local.skus#" index="local.thisItem">
-				<tr<cfif local.rowcounter mod 2 eq 1> class="alt"</cfif>>			
+				<tr>			
 					<td><input type="text" name="SKU#local.arrayIndex#_SKUID" id="SKU#local.arrayIndex#_SKUID" value="#local.thisItem.getSkuID()#" /></td>
 					<td><input type="text" name="SKU#local.arrayIndex#_originalPrice" id="SKU#local.arrayIndex#_originalPrice" value="#local.thisItem.getOriginalPrice()#" /></td>
 					<td><input type="text" name="SKU#local.arrayIndex#_listPrice" id="SKU#local.arrayIndex#_listPrice" value="#local.thisItem.getListPrice()#" /></td>

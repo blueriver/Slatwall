@@ -52,6 +52,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function save(required struct rc) {
+		
 		var product = getProductService().getNewEntity();
 		
 		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
@@ -64,6 +65,9 @@ component extends="BaseController" output=false accessors=true {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
 		
+		// get struct with optionGroup/option selections
+		rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+		
 		// set content IDs
 		if(!structKeyExists(rc,"contentID")) {
 			rc.contentID = "";
@@ -74,7 +78,7 @@ component extends="BaseController" output=false accessors=true {
 		
 		if(!rc.product.hasErrors()) {
 			// set up sku(s)
-			getProductService().createSkus(rc.product,rc.options,rc.price,rc.listPrice);
+			getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
 			getFW().redirect(action="admin:product.list");
 		} else {
 			if(rc.product.isNew()) {

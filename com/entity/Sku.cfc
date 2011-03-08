@@ -8,6 +8,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="ProductID" cfc="product";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
 	// Non-Persistant Properties
 	property name="livePrice" persistent="false";
@@ -21,8 +22,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	
-	// Related Object Properties
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
     public Sku function init() {
        // set default collections for association management methods
@@ -30,6 +29,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        	    variables.options=[];
        }
        return Super.init();
+    }
+    
+    public string function displayOptions() {
+    	var options = getOptions();
+    	var dspOptions = "";
+    	for(var i=1;i<=arrayLen(options);i++) {
+    		var thisOption = options[i];
+    		dspOptions = listAppend(dspOptions,thisOption.getOptionName()," ");
+    	}
+		return dspOptions;
     }
 
 	/******* Association management methods for bidirectional relationships **************/

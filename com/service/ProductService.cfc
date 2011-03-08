@@ -2,18 +2,20 @@ component extends="BaseService" accessors="true" {
 	
 	property name="skuDAO" type="any";
 	property name="ProductTypeDAO" type="any";
+	property name="SkuService" type="any";  
 	property name="contentManager" type="any";
 	property name="settingsManager" type="any";
 	property name="feedManager" type="any";
 	property name="ProductTypeTree" type="any";
 	
-	public any function init(required any entityName, required any dao, required any validator, required any fileService, required any skuDAO, required any productTypeDAO, required any contentManager, required any feedManager, required any settingsManager) {
+	public any function init(required any entityName, required any dao, required any validator, required any fileService, required any skuDAO, required any productTypeDAO, required any skuService, required any contentManager, required any feedManager, required any settingsManager) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
 		setValidator(arguments.validator);
 		setfileService(arguments.fileService);
 		setSkuDAO(arguments.skuDAO);
 		setProductTypeDAO(arguments.productTypeDAO);
+		setSkuService(arguments.skuService);
 		setContentManager(arguments.contentManager);
 		setFeedManager(arguments.feedManager);
 		setSettingsManager(arguments.settingsManager);
@@ -59,8 +61,8 @@ component extends="BaseService" accessors="true" {
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required string options, required price, required listprice) {
-		// TODO delegeate this to SKUService
+	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
+		getSkuService().createSkus(argumentCollection=arguments);
 		return true;
 	}
 	
