@@ -52,21 +52,25 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function save(required struct rc) {
+		rc.product = getProductService().getByID(rc.productID);
+		if(isNull(rc.product)) {
+			rc.product = getProductService().getNewEntity();	
+		}
 		
-		var product = getProductService().getNewEntity();
-		
-		rc.product = getFW().populate(cfc=product, keys=product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
+		rc.product = getFW().populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
 		
 		//set brand and product type into the bean
 		if(len(rc.brand_brandID)) {
-			rc.product.setBrand(getProductService().getByID(rc.brand_brandID,"SlatwallBrand"));
-		} 
+			rc.product.setBrand(getBrandService().getByID(rc.brand_brandID));
+		}
 		if(len(rc.productType_productTypeID)) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
 		
-		// get struct with optionGroup/option selections
-		rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+		if(rc.product.isNew()) {
+			// get struct with optionGroup/option selections
+			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+		}
 		
 		// set content IDs
 		if(!structKeyExists(rc,"contentID")) {
@@ -77,8 +81,10 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().save(product=rc.product,contentID=rc.contentID);
 		
 		if(!rc.product.hasErrors()) {
-			// set up sku(s)
-			getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
+			// set up sku(s) if this is a new product
+			if(rc.product.isNew()) {
+				getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
+			}
 			getFW().redirect(action="admin:product.list");
 		} else {
 			if(rc.product.isNew()) {

@@ -12,7 +12,7 @@ component extends="mura.plugin.plugincfc" output="false" {
 		application.appInitialized=false;
 		
 		//Temp
-		temporaryORMBugFix();
+		//temporaryORMBugFix();
 		
 		installORMSettings();
 		ormReload();
