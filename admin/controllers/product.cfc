@@ -4,6 +4,12 @@ component extends="BaseController" output=false accessors=true {
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	
+	public void function before(required struct rc) {
+		param name="rc.productID" default="";
+		param name="rc.keyword" default="";
+		param name="rc.edit" default="false";
+	}
+	
 	public void function dashboard(required struct rc) {
 		getFW().redirect(action="admin:product.list");
 	}
@@ -15,23 +21,10 @@ component extends="BaseController" output=false accessors=true {
 		rc.productTypes = getProductService().getProductTypeTree();
 		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		//rc.categories = rc.$.getBean("feed").set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
-		rc.productPages = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
     }
 	
 	public void function detail(required struct rc) {
-		rc.product = getProductService().getByID(rc.productID);
-		if(!isNull(rc.product)) {
-			if(len(rc.product.getProductName())) {
-				rc.itemTitle &= ": #rc.product.getProductName()#";
-			}
-			rc.productSmartList = getProductService().getSmartList(arguments.rc);
-		} else {
-			getFW().redirect("admin:product.list");
-		}
-	}
-	
-	public void function edit(required struct rc) {
-	// we could be redirected here from a failed form submission, so check rc for product object first
+		// we could be redirected here from a failed form submission, so check rc for product object first
 		if(!structKeyExists(rc,"product") or !isObject(rc.product)) {
 			rc.product = getProductService().getByID(rc.productID);
 		}
@@ -39,37 +32,45 @@ component extends="BaseController" output=false accessors=true {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
-			rc.edit = true;
-			getFW().setView("admin:product.detail");
+			//rc.productSmartList = getProductService().getSmartList(arguments.rc);
 		} else {
 			getFW().redirect("admin:product.list");
 		}
+		rc.productPages = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
+	}
+	
+	public void function edit(required struct rc) {
+		detail(rc);
+		rc.edit = true;
+		getFW().setView("admin:product.detail");
 	}
 	
 	public void function list(required struct rc) {
-		param name="rc.keyword" default="";	
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
 	public void function save(required struct rc) {
+		var isNew = 0;
+		
 		rc.product = getProductService().getByID(rc.productID);
 		if(isNull(rc.product)) {
 			rc.product = getProductService().getNewEntity();	
 		}
 		
+		if(rc.product.isNew()) {
+			isNew = 1;
+		}
+		
+		// populate product with form data
 		rc.product = getFW().populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
 		
-		//set brand and product type into the bean
+		// set brand into the bean
 		if(len(rc.brand_brandID)) {
 			rc.product.setBrand(getBrandService().getByID(rc.brand_brandID));
 		}
+		// set product type into the bean
 		if(len(rc.productType_productTypeID)) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
-		}
-		
-		if(rc.product.isNew()) {
-			// get struct with optionGroup/option selections
-			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 		}
 		
 		// set content IDs
@@ -77,17 +78,21 @@ component extends="BaseController" output=false accessors=true {
 			rc.contentID = "";
 		}
 
-		//Save Product
+		// Attempt to Save Product
 		rc.product = getProductService().save(product=rc.product,contentID=rc.contentID);
 		
+		// Redirect & Error Handle
 		if(!rc.product.hasErrors()) {
 			// set up sku(s) if this is a new product
-			if(rc.product.isNew()) {
+			if(isNew) {
+				rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 				getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
+				getFW().redirect(action="admin:product.edit",preserve="product");
+			} else {
+				getFW().redirect(action="admin:product.list");
 			}
-			getFW().redirect(action="admin:product.list");
 		} else {
-			if(rc.product.isNew()) {
+			if(isNew) {
 				getFW().redirect(action="admin:product.create",preserve="product");
 			} else {
 				getFW().redirect(action="admin:product.edit",preserve="product");

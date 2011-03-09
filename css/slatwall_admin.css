@@ -123,7 +123,7 @@ ul#optionList li {
 }
 
 ul.radiogroup li {
-	float: left;
+	display:inline;
 }
 
 #shadowbox_container {

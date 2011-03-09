@@ -26,7 +26,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						}
 						tempList = listAppend(tempList,newCombo);
 					}
-				comboList = tempList;
+					comboList = tempList;
 				}
 			}
 			for(  i=1; i<=listLen(comboList);i++ ) {
