@@ -96,7 +96,7 @@ component extends="BaseController" output=false accessors=true {
 			if(isNew) {
 				rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 				getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
-				getFW().redirect(action="admin:product.edit",preserve="product");
+				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
 			} else {
 				getFW().redirect(action="admin:product.list");
 			}
