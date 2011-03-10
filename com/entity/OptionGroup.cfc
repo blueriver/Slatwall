@@ -5,6 +5,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupName" validateRequired DisplayName="Option Group Name" ormtype="string";
 	property name="optionGroupImage" ormtype="string";
 	property name="optionGroupDescription" ormtype="string";
+	property name="isImageGroup" ormtype="boolean";
 	
 	// Related Object Properties
 	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" lazy="extra" ;

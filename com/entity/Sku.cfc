@@ -4,14 +4,15 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="listPrice" ormtype="float";
 	property name="price" ormtype="float";
+	property name="isDefault" default="false" ormtype="boolean";  
 	
 	// Related Object Properties
-	property name="product" fieldtype="many-to-one" fkcolumn="ProductID" cfc="product";
+	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="product";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
 	// Non-Persistant Properties
-	property name="livePrice" persistent="false";
+	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
 	property name="qoh" persistent="false" type="numeric";
 	property name="qc" persistent="false" type="numeric";
 	property name="qexp" persistent="false" type="numeric";
@@ -21,7 +22,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQOH" persistent="false" type="numeric";
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
-	
 	
     public Sku function init() {
        // set default collections for association management methods
@@ -61,7 +61,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     
     // Option (many-to-many)
-    
     public void function addOption(required Option Option) {
         if(!hasOption(arguments.option)) {
         	// first add option to this Sku
@@ -84,9 +83,92 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	           arrayDeleteAt(arguments.Option.getSkus(),index);
 	       }
 	   }
-    } 
+    }
+    /************   END Association Management Methods   *******************/
     
+    public void function setIsDefault(required boolean isDefault) {
+		if(arguments.isDefault == true) {
+			var skus = getProduct().getSkus();
+			for(var i = 1; i <= arrayLen(skus); i++) {
+				if(skus[i].getIsDefault() == true) {
+					skus[i].setIsDefault(false);
+					getService("skuService").save(entity=skus[i]);
+				}
+			}
+		}
+		variables.isDefault = arguments.isDefault;
+	}
     
-	/************   END Association Management Methods   *******************/
+    public numeric function getQOH() {
+    	if(isNull(variables.qoh)) {
+    		variables.qoh = 0;
+    		var stocks = getStocks();
+    		for(var i = 1; i<= arrayLen(stocks); i++) {
+    			variables.qoh += stocks[i].getQOH();
+    		}
+    	}
+    	return variables.qoh;
+    }
+    
+    public numeric function getQC() {
+    	if(isNull(variables.qc)) {
+    		variables.qc = 0;
+    		var stocks = getStocks();
+    		for(var i = 1; i<= arrayLen(stocks); i++) {
+    			variables.qc += stocks[i].getQC();
+    		}
+    	}
+    	return variables.qc;
+    }
+    
+    public numeric function getQEXP() {
+       	if(isNull(variables.qexp)) {
+    		variables.qc = 0;
+    		var stocks = getStocks();
+    		for(var i = 1; i<= arrayLen(stocks); i++) {
+    			variables.qexp += stocks[i].getQEXP();
+    		}
+    	}
+    	return variables.qc;
+    }
 	
+	public numeric function getQIA() {
+		return getQOH() - getQC();
+	}
+	
+	public numeric function getQEA() {
+		return (getQOH() - getQC()) + getQEXP();
+	}
+	
+	public string function getImagePath() {
+		if(!structKeyExists(variables, "imagePath") or isNull(variables.imagePath)) {
+			var options = getOptions();
+			var optionString = "";
+			for(var i=1; i<=arrayLen(options); i++){
+				if(options[i].getOptionGroup().getIsImageGroup()){
+					optionString &= "_#options[i].getOptionCode()#";
+				}
+			}
+			variables.imagePath = "/default/assets/images/Slatwall/#getProduct().getProductCode()##optionString#.jpg";
+		}
+		return variables.imagePath;
+	}
+	
+	public any function getOptionsByGroupIDStruct() {
+		if(!structKeyExists(variables, "OptionsByGroupIDStruct")) {
+			variables.OptionsByGroupIDStruct = structNew();
+			var options = getOptions();
+			for(var i=1; i<=arrayLen(options); i++) {
+				if( !structKeyExists(variables.OptionsByGroupIDStruct, options[i].getOptionGroup().getOptionGroupID())){
+					variables.OptionsByGroupIDStruct[options[i].getOptionGroup().getOptionGroupID()] = options[i];
+				}
+			}
+		}
+		return variables.OptionsByGroupIDStruct;
+	}
+	
+	public any function getOptionByOptionGroupID(required string optionGroupID) {
+		var optionsStruct = getOptionsByGroupIDStruct();
+		return optionsStruct[arguments.optionGroupID];
+	}
 }

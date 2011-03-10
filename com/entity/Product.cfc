@@ -34,6 +34,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
 	property name="title" type="string" persistent="false";
+	property name="defaultSku" persistent="false";
 	property name="onTermSale" type="boolean" persistent="false";
 	property name="onClearanceSale" type="boolean" persistent="false";
 	property name="dateFirstReceived" type="date" persistent="false";
@@ -44,14 +45,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="qoh" type="numeric" persistent="false";
 	property name="qc" type="numeric" persistent="false";
 	property name="qexp" type="numeric" persistent="false";
-	property name="webQOH" type="numeric" persistent="false";
-	property name="webQC" type="numeric" persistent="false";
-	property name="webQEXP" type="numeric" persistent="false";
-	property name="webWholesaleQOH" type="numeric" persistent="false";
-	property name="webWholesaleQC" type="numeric" persistent="false";
-	property name="webWholesaleQEXP" type="numeric" persistent="false";
 	
-
 	public Product function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.ProductContent))
@@ -96,6 +90,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.skus = arrayNew(1);
 		}
 		return variables.skus;
+	}
+	
+	public any function getSkuByID(required string skuID) {
+		var skus = getSkus();
+		for(var i = 1; i <= arrayLen(skus); i++) {
+			if(skus[i].getSkuID() == arguments.skuID) {
+				return skus[i];
+			}
+		}
 	}
 	
 	public any function getGenderType() {
@@ -219,5 +222,42 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();
     }
+    	
+	public struct function getOptionGroupsStruct() {
+		if(isNull(variables.optionGroups)) {
+			variables.optionGroups = structNew();
+			var skus = getSkus();
+			for(var i=1; i <= arrayLen(skus); i++){
+				var options = skus[i].getOptions();
+				for(var ii=1; ii <= arrayLen(options); ii++) {
+					if( !structKeyExists( variables.optionGroups, options[ii].getOptionGroup().getOptionGroupID() ) ){
+						variables.optionGroups[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
+					}
+				}
+			}
+		}
+		return variables.optionGroups;
+	}
+	
+	public any function getDefaultSku() {
+		if( !structKeyExists(variables, "defaultSku")) {
+			var skus = getSkus();
+			for(var i = 1; i<= arrayLen(skus); i++) {
+				if(skus[i].getIsDefault()) {
+					variables.defaultSku = skus[i];
+				}
+			}
+			if( !structKeyExists(variables, "defaultSku")) {
+				skus[1].setIsDefault(true);
+				getService("skuService").save(entity=skus[1]);
+				variables.defaultSku = skus[1];
+			}
+		}
+		return variables.defaultSku;
+	}
+	
+	public string function getImagePath() {
+		return getDefaultSku().getImagePath();
+	}
 }
 

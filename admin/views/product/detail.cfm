@@ -4,6 +4,7 @@
 <cfparam name="rc.productPages" type="any" />
 
 <cfoutput>
+	<img src="#rc.product.getImagePath()#" style="float:right;" />
 <cfif rc.edit>
 <form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
 	<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
@@ -56,62 +57,55 @@
 	</ul>
 
 	<div id="tabSkus">
-		<cfset local.skus = rc.Product.getSkus() />
 		<cfif rc.edit>
 			<input type="button" class="button" id="addSKU" value="Add SKU" />
+			<input type="button" class="button" id="addOption" value="Add Option" />
 		</cfif>
 			<table id="skuTable" class="stripe">
 				<thead>
-				<tr>
-					<th>Company SKU</th>
-					<th>Options</th>
-					<th>Original Price</th>
-					<th>List Price</th>
-					<th>QOH</th>
-					<th>QOO</th>
-					<th>QC</th>
-					<th>QIA</th>
-					<th>QEA</th>
-					<th>Image Path</th>
-					<th>Admin</th>
-				</tr>
+					<tr>
+						<th>Default</th>
+						<cfset local.optionGroups = rc.Product.getOptionGroupsStruct() />
+						<cfloop collection="#local.optionGroups#" item="local.i">
+							<th>#local.optionGroups[local.i].getOptionGroupName()#</th>
+						</cfloop>
+						<th class="varWidth">Image Path</th>
+						<th>Original Price</th>
+						<th>List Price</th>
+						<th>QOH</th>
+						<th>QEXP</th>
+						<th>QC</th>
+						<th>QIA</th>
+						<th>QEA</th>
+						<th class="administration">&nbsp;</th>
+					</tr>
 				</thead>
 				<tbody>
-			<cfset local.arrayIndex = 1 />
-			<cfif not rc.edit>	
-				<cfloop array="#local.skus#" index="local.thisItem">
-				<tr>			
-					<td>#local.thisItem.getSkuID()#</td>
-					<td>#local.thisItem.displayOptions()#</td>
-					<td>#local.thisItem.getPrice()#</td>
-					<td>#local.thisItem.getListPrice()#</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<cfset local.arrayIndex++ />
+				<cfloop array="#rc.Product.getSkus()#" index="local.sku">
+					<tr>
+						<cfif rc.edit>
+							<td><input type="radio" name="defaultSku" value="#local.sku.getSkuID()#"<cfif local.sku.getIsDefault()> checked="checked"</cfif> /></td>
+						<cfelse>
+							<td><cfif local.sku.getIsDefault()>Yes</cfif></td>
+						</cfif>
+						<cfloop collection="#local.optionGroups#" item="local.i">
+							<td>#local.sku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
+						</cfloop>
+						<td class="varWidth">#local.sku.getImagePath()#</td>
+						<td>#DollarFormat(local.sku.getPrice())#</td>
+						<td>#DollarFormat(local.sku.getListPrice())#</td>
+						<td>#local.sku.getQOH()#</td>
+						<td>#local.sku.getQEXP()#</td>
+						<td>#local.sku.getQC()#</td>
+						<td>#local.sku.getQIA()#</td>
+						<td>#local.sku.getQEA()#</td>
+						<td class="administration">
+							<ul class="one">
+								<li class="edit"><a href="##">Edit</a></li>
+							</ul>
+						</td>
+					</tr>
 				</cfloop>
-			<cfelse>
-				<cfloop array="#local.skus#" index="local.thisItem">
-				<tr>			
-					<td><input type="text" name="SKU#local.arrayIndex#_SKUID" id="SKU#local.arrayIndex#_SKUID" value="#local.thisItem.getSkuID()#" /></td>
-					<td><input type="text" name="SKU#local.arrayIndex#_originalPrice" id="SKU#local.arrayIndex#_Price" value="#local.thisItem.getPrice()#" /></td>
-					<td><input type="text" name="SKU#local.arrayIndex#_listPrice" id="SKU#local.arrayIndex#_listPrice" value="#local.thisItem.getListPrice()#" /></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<cfset local.arrayIndex++ />
-				</cfloop>
-			</cfif>
 			</tbody>
 		</table>
 	</div>

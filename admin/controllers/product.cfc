@@ -3,6 +3,7 @@ component extends="BaseController" output=false accessors=true {
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
+	property name="skuService" type="Slatwall.com.service.SkuService";
 	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -71,6 +72,14 @@ component extends="BaseController" output=false accessors=true {
 		// set product type into the bean
 		if(len(rc.productType_productTypeID)) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
+		}
+		
+		// set Default sku
+		if(structKeyExists(rc, "defaultSku")) {
+			var defaultSku = rc.product.getSkuByID(rc.defaultSku);
+			if(!defaultSku.getIsDefault()) {
+				defaultSku.setIsDefault(true);
+			}
 		}
 		
 		// set content IDs
