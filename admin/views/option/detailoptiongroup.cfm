@@ -12,7 +12,8 @@
 <input type="hidden" id="optionGroupID" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 </cfif>
     <dl class="oneColumn optionDetail">
-    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupName" edit="#rc.edit#" title="#rc.$.Slatwall.rbKey('entity.optiongroup.optiongroupname')#" />
+    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
+		<cf_PropertyDisplay object="#rc.OptionGroup#" property="isImageGroup" edit="#rc.edit#" tooltip=true />
 		<cfif rc.edit>
 		<!--- if editing, display field for image uploading --->
 		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" editType="file" tooltip=true>
