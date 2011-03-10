@@ -21,4 +21,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.$.content().setTemplate(rc.product.getTemplate());
 		rc.$.content().setHTMLTitle(rc.product.getTitle());
 	}
+	
+	public void function addtocart(required struct rc) {
+		param name="rc.productID" default="";
+		param name="rc.selectedOptions" default="";
+		
+		rc.product = getProductService().getByID(rc.productID);
+		
+		var skuToAdd = rc.product.getSkuBySelectedOptions(rc.selectedOptions);
+		writeDump(skuToAdd);
+		abort;
+	}
 }
