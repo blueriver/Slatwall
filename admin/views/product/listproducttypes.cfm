@@ -30,7 +30,7 @@
 </cfloop>
     <cfelse>
 	   <tr>
-	       <td colspan="3">#rc.$.Slatwall.rbKey("product.producttype.noproducttypes")#</td>
+	       <td colspan="3">#rc.$.Slatwall.rbKey("admin.product.noproducttypesdefined")#</td>
 	   </tr>
     </cfif>
 </table>

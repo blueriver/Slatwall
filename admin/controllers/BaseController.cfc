@@ -13,7 +13,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
 		if (getUserRoles() == "") {
 			// TODO: Set this location as something more dynamic
-			location("http://#cgi.http_host#/#session.siteid#/index.cfm?display=login&returnURL=http://#cgi.http_host#/plugins/Slatwall/?action=#rc.action#", false);
+			location("http://#cgi.http_host#/#session.siteid#/index.cfm?display=login&returnURL=http://#cgi.http_host#/plugins/Slatwall/?slatAction=#rc.slatAction#", false);
 		} else if( getFW().secureDisplay(rc.slatAction) == false ) {
 			getFW().setView("admin:main.noaccess");
 		}
