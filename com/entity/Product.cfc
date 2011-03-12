@@ -29,7 +29,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productType" displayname="Product Type" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan";
+	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
