@@ -28,6 +28,17 @@
 	<!-- transaction advice -->
     <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />
 	
+	<!-- transaction advisor -->
+	<bean id="transactionAdvisor" class="coldspring.aop.support.RegexMethodPointcutAdvisor">
+		<property name="advice">
+			<ref bean="transactionAdvice" />
+		</property>
+		<property name="pattern">
+			<!-- only wrap writes/deletes to db in transactional context -->
+			<value>^(save|update|delete).*</value>
+		</property>
+	</bean>
+	
     <bean id="accountService" class="coldspring.aop.framework.ProxyFactoryBean">
         <property name="target">
             <bean class="slatwall.com.service.accountService">
@@ -39,7 +50,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -54,7 +65,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -70,7 +81,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -93,7 +104,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -108,7 +119,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -123,7 +134,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -138,7 +149,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -153,7 +164,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>
@@ -168,7 +179,7 @@
         </property>
         <property name="interceptorNames">
             <list>
-                <value>transactionAdvice</value>
+                <value>transactionAdvisor</value>
             </list>
         </property>
     </bean>

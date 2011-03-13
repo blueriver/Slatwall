@@ -60,11 +60,12 @@
 				</cfif>
 				</div>
 				</cfloop>
+				<cf_ActionCaller action="admin:option.createoptiongroup" type="link">
 			<cfelse>
 				 <!--- no options defined --->
 				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
-				<cf_ActionCaller action="admin:option.createoptiongroup" type="link">
 			</cfif>
+			<input type="hidden" name="contentID" value="" /> 
 		<div id="actionButtons" class="clearfix">
 			<cf_actionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_ActionCaller action="admin:product.save" type="submit" />

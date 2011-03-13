@@ -74,6 +74,12 @@ component extends="BaseController" output=false accessors=true {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
 		}
 		
+		// set up sku(s) if this is a new product
+		if(isNew) {
+			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+			getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
+		}
+		
 		// set Default sku
 		if(structKeyExists(rc, "defaultSku")) {
 			var defaultSku = rc.product.getSkuByID(rc.defaultSku);
@@ -81,21 +87,14 @@ component extends="BaseController" output=false accessors=true {
 				defaultSku.setIsDefault(true);
 			}
 		}
-		
-		// set content IDs
-		if(!structKeyExists(rc,"contentID")) {
-			rc.contentID = "";
-		}
 
 		// Attempt to Save Product
 		rc.product = getProductService().save(product=rc.product,contentID=rc.contentID);
 		
 		// Redirect & Error Handle
 		if(!rc.product.hasErrors()) {
-			// set up sku(s) if this is a new product
+			// add product details if this is a new product
 			if(isNew) {
-				rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
-				getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
 				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
 			} else {
 				getFW().redirect(action="admin:product.list");

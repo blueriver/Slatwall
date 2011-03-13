@@ -49,8 +49,7 @@ component extends="BaseService" accessors="true" {
 	/* @hint sets up initial skus when products are created
 	*/
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
-		getSkuService().createSkus(argumentCollection=arguments);
-		return true;
+		return getSkuService().createSkus(argumentCollection=arguments);
 	}
 	
 	public any function save(required any product,string contentID="") {
@@ -61,7 +60,6 @@ component extends="BaseService" accessors="true" {
 		if(len(arguments.contentID)) {
 			assignProductContent(arguments.product,arguments.contentID);
 		}
-		arguments.product = Super.save(arguments.product);
 		return Super.save(arguments.product);
 	}
 	

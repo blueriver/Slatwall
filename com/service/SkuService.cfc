@@ -48,7 +48,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
 		}
-		getDAO().save(arguments.product);
 		return true;
 	}
 	

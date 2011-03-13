@@ -242,7 +242,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 					variables.defaultSku = skus[i];
 				}
 			}
-			if( !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
+			if( !isNew() && !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
 				skus[1].setIsDefault(true);
 				getService("skuService").save(entity=skus[1]);
 				variables.defaultSku = skus[1];

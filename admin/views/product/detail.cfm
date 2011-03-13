@@ -136,7 +136,7 @@
 	</div>
 	<div id="tabProductPages">
 		<cfif rc.productPages.getRecordCount() gt 0>
-			<input type="hidden" name="categoryID" value="" />
+			<input type="hidden" name="contentID" value="" />
 			<ul>
 				<cfloop condition="rc.productPages.hasNext()">
 					<li>
