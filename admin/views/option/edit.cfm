@@ -2,7 +2,7 @@
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.optionID" type="string" default="" />
 
-<cfhtmlhead text="#rc.htmlheadscripts#" />
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/sorter.js"></script>' />
 
 <cfset local.options = rc.optionGroup.getOptions(sortby="sortOrder",sortType="numeric") />
 

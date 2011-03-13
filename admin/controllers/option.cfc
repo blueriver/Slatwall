@@ -10,7 +10,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function create(required struct rc) {
 		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		rc.newOption = getOptionService().getNewEntity();
-		rc.htmlheadscripts = '<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/sorter.js"></script>';
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 			getFW().setView("option.edit");
@@ -20,7 +19,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function edit(required struct rc) {
-		rc.htmlheadscripts = '<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/sorter.js"></script>';
 		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		// if we're coming back from a new option submission with errors set that one as the new option
 		if(!isNull(rc.optionGroup) && structKeyExists(rc,"option") && isObject(rc.option)) {
@@ -108,13 +106,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
 	}
 	
-	public void function createoptiongroup(required struct rc) {
+	public void function createOptionGroup(required struct rc) {
 	   rc.edit=true;
 	   rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
 	   getFW().setView("admin:option.detailoptiongroup");
 	}
 	
-	public void function detailoptiongroup(required struct rc) {
+	public void function detailOptionGroup(required struct rc) {
 		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
@@ -123,7 +121,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public void function editoptiongroup(required struct rc) {
+	public void function editOptionGroup(required struct rc) {
 		rc.edit=true;
 		if(!structKeyExists(rc,"optionGroup") or !isObject(rc.optionGroup)) {
 			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
@@ -135,7 +133,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		  getFW().redirect("admin:option.list");
 	}
 
-	public void function saveoptiongroup(required struct rc) {
+	public void function saveOptionGroup(required struct rc) {
 		if(len(trim(rc.optiongroupID))) {
 			var optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		} else {
@@ -162,7 +160,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public void function deleteoptiongroup(required struct rc) {
+	public void function deleteOptionGroup(required struct rc) {
 		var optionGroup = getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup");
 		if(optionGroup.getOptionsCount() eq 0) {
 			getOptionService().delete(getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup"));

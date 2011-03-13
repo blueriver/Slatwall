@@ -118,14 +118,14 @@ component extends="BaseController" output=false accessors=true {
 	
 	//   Product Type actions      
 		
-	public void function createproducttype(required struct rc) {
+	public void function createProductType(required struct rc) {
 	   rc.productType = getProductService().getNewEntity("SlatwallProductType");
 	   // put type tree into the rc for parent dropdown
 	   rc.productTypeTree = getProductService().getProductTypeTree();
 	   getFW().setView("admin:product.editproducttype");
 	}
 		
-	public void function editproducttype(required struct rc) {
+	public void function editProductType(required struct rc) {
 	   	if(!structKeyExists(rc,"productType") or !isObject(rc.productType)) {
 	   		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		}
@@ -137,12 +137,12 @@ component extends="BaseController" output=false accessors=true {
 		}
 	}
 	
-	public void function listproducttypes(required struct rc) {
+	public void function listProductTypes(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
 	}
 
 	
-	public void function saveproducttype(required struct rc) {
+	public void function saveProductType(required struct rc) {
         var productType = getProductService().getNewEntity("SlatwallProductType");
 		rc.productType = getFW().populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
 		
@@ -160,7 +160,7 @@ component extends="BaseController" output=false accessors=true {
         }
 	}
 	
-	public void function deleteproducttype(required struct rc) {
+	public void function deleteProductType(required struct rc) {
 		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		if(!productType.getIsAssigned() and !arrayLen(productType.getSubProductTypes())) {
 			getProductService().deleteProductType(rc.productTypeID);
