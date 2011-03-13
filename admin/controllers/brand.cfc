@@ -9,7 +9,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function create(required struct rc) {
 	   rc.brand = getBrandService().getNewEntity();
-       variables.fw.setView("brand.edit");
+       getFW().setView("brand.edit");
     }
 
 	public void function detail(required struct rc) {
@@ -17,7 +17,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   if(!isNull(rc.brand) and !rc.brand.isNew()) {
 	       rc.itemTitle &= ": " & rc.brand.getBrandName();
 	   } else {
-	       variables.fw.redirect("brand.list");
+	       getFW().redirect("brand.list");
 	   }
 	}
 
@@ -28,7 +28,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   if(!isNull(rc.Brand)) {	
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		} else {
-		  variables.fw.redirect("brand.list");
+		  getFW().redirect("brand.list");
 		}
 	}
 	 
@@ -43,12 +43,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   if(isNull(brand)) {
 	       var brand = getBrandService().getNewEntity();
 	   }
-	   rc.brand = variables.fw.populate(cfc=brand, keys=brand.getUpdateKeys(), trim=true);
+	   rc.brand = getFW().populate(cfc=brand, keys=brand.getUpdateKeys(), trim=true);
 	   rc.brand = getBrandService().save(entity=brand);
 	   if(!rc.brand.hasErrors()) {
-	   		variables.fw.redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
+	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {
-	   		variables.fw.redirect(action="admin:brand.edit", preserve="brand");
+	   		getFW().redirect(action="admin:brand.edit", preserve="brand");
 		}
 	}
 	
@@ -61,6 +61,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.message="admin.brand.delete_isassigned";
 			rc.messagetype="warning";
 		}	   
-		variables.fw.redirect(action="admin:brand.list",preserve="message,messagetype");
+		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
 	}
 }

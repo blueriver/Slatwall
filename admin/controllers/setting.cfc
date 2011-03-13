@@ -16,7 +16,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function edit(required struct rc) {
 		detail(rc);
-		variables.fw.setView("admin:setting.detail");
+		getFW().setView("admin:setting.detail");
 		rc.edit = true;
 	}
 	
@@ -31,7 +31,7 @@ component extends="BaseController" output="false" accessors="true" {
 			}
 		}
 		getSettingService().reloadConfiguration();
-		variables.fw.redirect(action="admin:setting.detail");
+		getFW().redirect(action="admin:setting.detail");
 	}
 	
 	public void function editpermissions(required struct rc) {
@@ -56,6 +56,6 @@ component extends="BaseController" output="false" accessors="true" {
 			}
 		}
 		getSettingService().reloadConfiguration();
-		variables.fw.redirect(action="admin:main.dashboard");
+		getFW().redirect(action="admin:main.dashboard");
 	}
 }

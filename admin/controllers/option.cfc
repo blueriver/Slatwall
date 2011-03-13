@@ -4,7 +4,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="optionService" type="any";
 
 	public void function dashboard(required struct rc) {
-		variables.fw.redirect(action="option.list");
+		getFW().redirect(action="option.list");
 	}
 	
 	public void function create(required struct rc) {
@@ -13,9 +13,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.htmlheadscripts = '<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/sorter.js"></script>';
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
-			variables.fw.setView("option.edit");
+			getFW().setView("option.edit");
 		} else {
-			variables.fw.redirect("option.list");
+			getFW().redirect("option.list");
 		}
 	}
 
@@ -35,7 +35,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 		} else {
-			variables.fw.redirect("option.list");
+			getFW().redirect("option.list");
 		}
 	}
 	
@@ -43,7 +43,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(len(rc.option.getOptionName())) {
 			rc.itemTitle &= ": #rc.option.getOptionName()#";
 		} else {
-			variables.fw.redirect("admin:option.list");
+			getFW().redirect("admin:option.list");
 		}
 	}
 	
@@ -61,7 +61,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		} else {
 			var option = getOptionService().getNewEntity();
 		}
-		rc.option = variables.fw.populate(cfc=option, keys=option.getUpdateKeys(),trim=true);
+		rc.option = getFW().populate(cfc=option, keys=option.getUpdateKeys(),trim=true);
 		
 		// set the option group to which this option belongs to
 		if(rc.option.isNew()) {
@@ -83,16 +83,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		if(!rc.option.hasErrors()) {
 			// go to the 'manage option group' form to add/edit more options
-			variables.fw.redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#");
+			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#");
 		} else {
-			variables.fw.redirect(action="option.edit",querystring="optiongroupid=#rc.optionGroupID#&optionID=rc.option.getOptionID()" ,preserve="option");
+			getFW().redirect(action="option.edit",querystring="optiongroupid=#rc.optionGroupID#&optionID=rc.option.getOptionID()" ,preserve="option");
 		}
 		
 	}
 	
 	public void function saveOptionSort(required struct rc) {
 		getOptionService().saveOptionSort(rc.optionID);
-		variables.fw.redirect("admin:option.list");
+		getFW().redirect("admin:option.list");
 	}
 	
 	public void function delete(required struct rc) {
@@ -105,13 +105,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.message="admin.option.delete_disabled";
 			rc.messagetype="warning";
 		}
-		variables.fw.redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
+		getFW().redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
 	}
 	
 	public void function createoptiongroup(required struct rc) {
 	   rc.edit=true;
 	   rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
-	   variables.fw.setView("admin:option.detailoptiongroup");
+	   getFW().setView("admin:option.detailoptiongroup");
 	}
 	
 	public void function detailoptiongroup(required struct rc) {
@@ -119,7 +119,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
 		} else {
-			variables.fw.redirect("admin:option.list");
+			getFW().redirect("admin:option.list");
 		}
 	}
 	
@@ -130,9 +130,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
-			variables.fw.setView("admin:option.detailoptiongroup");
+			getFW().setView("admin:option.detailoptiongroup");
 		} else
-		  variables.fw.redirect("admin:option.list");
+		  getFW().redirect("admin:option.list");
 	}
 
 	public void function saveoptiongroup(required struct rc) {
@@ -141,7 +141,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		} else {
 			var optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
 		}
-		rc.optionGroup = variables.fw.populate(cfc=optionGroup, keys=optionGroup.getUpdateKeys(), trim=true);
+		rc.optionGroup = getFW().populate(cfc=optionGroup, keys=optionGroup.getUpdateKeys(), trim=true);
 		
 		// remove image if option is checked (unless a new image is set, in which case the old image is removed by saveimage())
 		if(structKeyExists(rc,"removeOptionGroupImage") and rc.optionGroup.hasImage() and rc.optionGroupImageFile == ""){
@@ -156,9 +156,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.optionGroup = getOptionService().save(entity=rc.optionGroup, imageUploadResult=uploadResult);
 		if(!rc.optionGroup.hasErrors()) {
 			// go to the 'manage option group' form to add options
-			variables.fw.redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#");
+			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#");
 		} else {
-			variables.fw.redirect(action="admin:option.editoptiongroup",preserve="optionGroup",querystring=rc.optionGroup.getOptionGroupID());
+			getFW().redirect(action="admin:option.editoptiongroup",preserve="optionGroup",querystring=rc.optionGroup.getOptionGroupID());
 		}
 	}
 	
@@ -171,7 +171,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.message = "admin.option.deleteoptiongroup_disabled";
 			rc.messagetype = "warning";
 		}
-		variables.fw.redirect(action="admin:option.list",preserve="message,messagetype");
+		getFW().redirect(action="admin:option.list",preserve="message,messagetype");
 	}
 	
 }
