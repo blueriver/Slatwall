@@ -11,22 +11,12 @@
 </ul>
 
 <cfoutput>
-<<<<<<< HEAD
 <div class="svoadminproductdetail">
 	#rc.product.getImage("s")#
 	<cfif rc.edit>
 	<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
-	<cfelse>
-		<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>
 	</cfif>
-=======
-	<img src="#rc.product.getImagePath()#" style="float:right;" />
-<cfif rc.edit>
-<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
-	<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
-</cfif>
->>>>>>> Updates to product.create/edit and server-side validation.
 	<dl class="twoColumn">
 		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
