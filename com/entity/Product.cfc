@@ -134,13 +134,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return "#getBrand().getBrandName()# #getProductYear()# #getProductName()#";
 	}
 	
-	public string function getProductURL(boolean generateAdmin=false) {
-		return "#setting('product_urlKey')#/#getFilename()#";
-	}
-	
-	public string function getDefaultImagePath() {
-		//TODO: Add image path info and determine where Images should be stored.
-		return "";
+	public string function getProductURL() {
+		return getMuraScope().createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
 	
 	public numeric function getQIA() {
@@ -258,10 +253,26 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.defaultSku;
 	}
 	
+	// Start: Functions that deligate to the default sku
+	public string function getImage(string size, numeric width, numeric height, string class) {
+		return getDefaultSku().getImage(argumentCollection = arguments);
+	}
+	
 	public string function getImagePath() {
 		return getDefaultSku().getImagePath();
 	}
 	
+	public numeric function getPrice() {
+		return getDefaultSku().getPrice();
+	}
+	
+	public numeric function getListPrice() {
+		return getDefaultSku().getListPrice();
+	}
+	
+	public numeric function getLivePrice() {
+		return getDefaultSku().getLivePrice();
+	}
 	
 	// Start Functions for determining different option combinations
 	public array function getAvaiableSkusBySelectedOptions(required string selectedOptions) {

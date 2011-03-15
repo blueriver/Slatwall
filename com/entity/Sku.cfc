@@ -140,6 +140,29 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return (getQOH() - getQC()) + getQEXP();
 	}
 	
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="") {
+		if(isDefined("arguments.size")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l" || arguments.size eq "large") {
+				arguments.size = "large";
+			} else if (arguments.size eq "m" || arguments.size eq "medium") {
+				arguments.size = "medium";
+			} else {
+				arguments.size = "small";
+			}
+			arguments.width = setting("product_imagewidth#arguments.size#");
+			arguments.height = setting("product_imageheight#arguments.size#");
+		}
+		if(arguments.alt == "") {
+			arguments.alt = "#getProduct().getTitle()# #displayOptions()#";
+		}
+		if(arguments.class == "") {
+			arguments.class = "skuImage";	
+		}
+		
+		return getService("FileService").displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=arguments.alt, class=arguments.class);
+	}
+	
 	public string function getImagePath() {
 		if(!structKeyExists(variables, "imagePath") or isNull(variables.imagePath)) {
 			var options = getOptions();
@@ -170,5 +193,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public any function getOptionByOptionGroupID(required string optionGroupID) {
 		var optionsStruct = getOptionsByGroupIDStruct();
 		return optionsStruct[arguments.optionGroupID];
+	}
+	
+	public numeric function getLivePrice() {
+		return getPrice();
 	}
 }

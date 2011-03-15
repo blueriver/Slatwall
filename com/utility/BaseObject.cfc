@@ -24,7 +24,18 @@ component displayname="Base Object" {
 	private any function getSiteConfig() {
 		return application.settingsManager.getSite(session.siteid);
 	}
-
+	
+	// @hint Private helper function for returning the current Mura Scope
+	private any function getMuraScope() {
+		if(structKeyExists(request, "muraScope")) {
+			return request.muraScope;
+		} else if(structKeyExists(request.context, "$")) {
+			return request.context.$;
+		} else {
+			return getService("muraScope").init(session.siteid);
+		}
+	}
+	
 	public any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}

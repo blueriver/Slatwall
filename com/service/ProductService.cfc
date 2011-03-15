@@ -23,20 +23,7 @@ component extends="BaseService" accessors="true" {
 		
 		return this;
 	}
-	
-	public any function getSmartList(required struct rc){
 		
-		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName=getEntityName());
-		
-		smartList.addKeywordProperty(rawProperty="productCode", weight=9);
-		smartList.addKeywordProperty(rawProperty="productName", weight=3);
-		smartList.addKeywordProperty(rawProperty="productYear", weight=6);
-		smartList.addKeywordProperty(rawProperty="productDescription", weight=1);
-		smartList.addKeywordProperty(rawProperty="brand_brandName", weight=3);
-		
-		return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());	
-	}
-	
 	public any function getProductTemplates() {
 		return getSettingsManager().getSite(session.siteid).getTemplates();
 	}
@@ -78,6 +65,9 @@ component extends="BaseService" accessors="true" {
 		return Super.save(arguments.product);
 	}
 	
+	public any function getProductContentSmartList(required struct rc, required string contentID) {
+		return getDAO().getProductContentSmartList(rc=arguments.rc, entityName=getEntityName(), contentID=arguments.contentID);
+	}
 	
 	//   Product Type Methods
 	

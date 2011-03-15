@@ -19,7 +19,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="imageDirectory" type="string" hint="Base directory for option images" persistent="false";
 
     public Option function init(){
-	   setImageDirectory("#getSiteConfig().getAssetPath()#/images/Slatwall/meta/");
+	   setImageDirectory("#getMuraScope().siteConfig().getAssetPath()#/images/Slatwall/meta/");
        return Super.init();
     }
 

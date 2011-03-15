@@ -52,11 +52,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	
 	public any function getSmartList(required struct rc, string entityName){
 		if(isDefined("arguments.entityName")) {
-			var smartList = createObject("component","Slatwall.com.utility.SmartList").init(rc=arguments.rc, entityName=arguments.entityName);
-			return getDAO().fillSmartList(smartList=smartList, entityName=arguments.entityName);
+			return getDAO().getSmartList(rc=arguments.rc, entityName=arguments.entityName);
 		} else {
-			var smartList = createObject("component","Slatwall.com.utility.SmartList").init(rc=arguments.rc, entityName=getEntityName());
-			return getDAO().fillSmartList(smartList=smartList, entityName=getEntityName());
+			return getDAO().getSmartList(rc=arguments.rc, entityName=getEntityName());
 		}
 	}
 	

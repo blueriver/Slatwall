@@ -22,6 +22,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.$.content().setHTMLTitle(rc.product.getTitle());
 	}
 	
+	public void function listcontentproducts(required struct rc) {
+		rc.productContentSmartList = getProductService().getProductContentSmartList(rc=arguments.rc, contentID=$.content("contentID"));
+		
+	}
+	
 	public void function addtocart(required struct rc) {
 		param name="rc.productID" default="";
 		param name="rc.selectedOptions" default="";

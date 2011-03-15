@@ -4,15 +4,15 @@
 		return this;
 	}
 
-
 	// Image File Methods
-	
-	public string function displayImage(required string imagePath, string width="", string height="",string alt="") {
+	public string function displayImage(required string imagePath, string width="", string height="",string alt="",string class="") {
 		var imageDisplay = "";
-		var absImagePath = expandPath(arguments.imagePath);
+		if(!fileExists(expandPath(arguments.imagePath))) {
+			arguments.imagePath = "/plugins/Slatwall/images/misc/ImageNotAvailable.jpg";
+		}
 		if(!len(arguments.width) && !len(arguments.height)) {
 			// if no width and height is passed in, display the original image
-			var img = imageRead(absImagePath);
+			var img = imageRead(expandPath(arguments.imagePath));
 			imageDisplay = '<img src="#arguments.imagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" />';
 		} else {
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
@@ -22,7 +22,7 @@
 			if(fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(resizedImagePath));
 			} else {
-				var img = imageRead(absImagePath);
+				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
 				if(len(arguments.width) and len(arguments.height)) {
 					imageScaleToFit(img,arguments.width,arguments.height);
@@ -31,7 +31,7 @@
 				}
 				imageWrite(img,expandPath(resizedImagePath));
 			}
-			imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" />';	
+			imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';	
 		}
 		return imageDisplay;
 	}
@@ -62,7 +62,6 @@
 			return false;
 		}
 	}
-	
 	
 	public boolean function removeImage(required string filePath) {
 		var fileName = right(arguments.filePath,len(arguments.filePath)-len(getDirectoryFromPath(arguments.filePath)));

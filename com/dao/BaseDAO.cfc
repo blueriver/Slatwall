@@ -20,9 +20,10 @@ component output="false" {
 		}	
 	}
 	
-	public any function fillSmartList(required any smartList, required any entityName) {
-		// Left blank for extended integration to use.
-		return arguments.smartList;
+	public any function getSmartList(required struct rc, required string entityName){
+		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName=arguments.entityName);
+	
+		return smartList;
 	}
 	
 	public void function delete(required any entity) {

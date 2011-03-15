@@ -64,6 +64,7 @@ component extends="framework" output="false" {
 		//variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
+		param name="session.locale" default="en";
 		
 		// Setup Slatwall Session when needed
 		if(!isDefined("session.SlatwallSession")) {
@@ -111,7 +112,7 @@ component extends="framework" output="false" {
 		
 		if(isUserInRole('S2')) {
 			hasAccess = true;
-		} else if (listLen(getUserRoles()) >= 1) {
+		} else if (listLen( getUserRoles() ) >= 1) {
 			var rolesWithAccess = "";
 			if(find("save", permissionName)) {
 				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 

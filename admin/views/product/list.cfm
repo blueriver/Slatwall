@@ -42,7 +42,7 @@
 		          <ul class="four">
                       <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.productID#" class="edit" type="list">            
 					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.productID#" class="viewDetails" type="list">
-					  <li class="preview"><a href="#rc.$.createHREF(filename='#local.product.getProductURL()#')#">Preview Product</a></li>
+					  <li class="preview"><a href="#local.product.getProductURL()#">Preview Product</a></li>
 					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.productID#" class="delete" type="list" disabled="false" confirmrequired="true">
 		          </ul>     						
 				</td>
