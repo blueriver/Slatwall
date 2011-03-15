@@ -2,8 +2,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Persistant Properties
 	property name="skuID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="listPrice" ormtype="float";
-	property name="price" ormtype="float";
+	property name="listPrice" default="0" ormtype="float";
+	property name="price" default="0" ormtype="float";
 	property name="isDefault" default="false" ormtype="boolean";  
 	
 	// Related Object Properties
@@ -88,11 +88,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     
     public void function setIsDefault(required boolean isDefault) {
 		if(arguments.isDefault == true) {
+			getProduct().setDefaultSku(this);
 			var skus = getProduct().getSkus();
 			for(var i = 1; i <= arrayLen(skus); i++) {
 				if(skus[i].getIsDefault() == true) {
 					skus[i].setIsDefault(false);
-					getService("skuService").save(entity=skus[i]);
 				}
 			}
 		}

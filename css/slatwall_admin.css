@@ -107,11 +107,11 @@ dl.optionDetail {
 }
 
 dl.productPrice dt {
-	width: 100px;
+	width: 110px;
 }
 
 dl.productPrice dd {
-	margin-left: 120px;
+	margin-left: 130px;
 }
 
 ul#optionList {
@@ -192,6 +192,10 @@ p.error_message {
 
 .tabs div {
 	margin-left: 20px;
+}
+
+.formError {
+	color: #8a1f11;
 }
 
 div.svoadminproductdetail img.skuImage {float:right;}

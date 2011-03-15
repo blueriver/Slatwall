@@ -3,7 +3,15 @@
 <cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
 <cfparam name="rc.productPages" type="any" />
 
+<ul id="navTask">
+	<cf_ActionCaller action="admin:product.list" type="list">
+	<cfif !rc.edit>
+	<cf_ActionCaller action="admin:product.edit" queryString="productID=#rc.product.getProductID()#" type="list">
+	</cfif>
+</ul>
+
 <cfoutput>
+<<<<<<< HEAD
 <div class="svoadminproductdetail">
 	#rc.product.getImage("s")#
 	<cfif rc.edit>
@@ -12,6 +20,13 @@
 	<cfelse>
 		<a href="#buildURL(action='product.edit',queryString='productID=#rc.Product.getProductID()#')#">Edit Product</a>
 	</cfif>
+=======
+	<img src="#rc.product.getImagePath()#" style="float:right;" />
+<cfif rc.edit>
+<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
+	<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
+</cfif>
+>>>>>>> Updates to product.create/edit and server-side validation.
 	<dl class="twoColumn">
 		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
@@ -25,16 +40,17 @@
 			</cfif>
         <dd>
             <cfif rc.edit and structKeyExists(rc,"productTypes")>
-	            <select name="productType_productTypeID" id="productType_productTypeID">
-	                <option value="">None</option>
-	            <cfloop query="rc.productTypes">
-	                <cfset ThisDepth = rc.productTypes.TreeDepth />
-	                <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
-	                <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
-	                    #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##rc.productTypes.productType#
-	                </option>
-	            </cfloop>
-	            </select>
+		        <select name="productType_productTypeID" id="productType_productTypeID">
+		            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
+		        <cfloop query="rc.productTypes">
+		            <cfif rc.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
+		            <cfset local.label = listChangeDelims(rc.productTypes.path, " &raquo; ") />
+		            <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
+		                #local.label#
+		            </option>
+		            </cfif>
+		        </cfloop>
+		        </select>
 			<cfelse>
 			    <cfif isNull(rc.Product.getProductType())>
 				None
@@ -158,7 +174,11 @@
 	</div>
 </div>
 <cfif rc.edit>
-<button type="submit">Save</button>
+<div id="actionButtons" class="clearfix">
+	<cf_actionCaller action="admin:product.detail" querystring="productID=#rc.product.getProductID()#" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+	<cf_ActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
+	<cf_ActionCaller action="admin:product.save" type="submit">
+</div>
 </form>
 </cfif>
 </div>

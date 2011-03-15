@@ -13,7 +13,7 @@ component extends="BaseValidator" {
 	private boolean function validate(String objectValue){
 		var valid = false;
 		
-		if(isNumeric(arguments.objectValue)){
+		if(isNumeric(arguments.objectValue) || trim(arguments.objectValue)==""){
 			valid = true;
 		}
 		return valid;

@@ -51,6 +51,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function save(required struct rc) {
+		//writeDump(rc);
+		//abort;
 		var isNew = 0;
 		
 		rc.product = getProductService().getByID(rc.productID);
@@ -69,6 +71,7 @@ component extends="BaseController" output=false accessors=true {
 		if(len(rc.brand_brandID)) {
 			rc.product.setBrand(getBrandService().getByID(rc.brand_brandID));
 		}
+		
 		// set product type into the bean
 		if(len(rc.productType_productTypeID)) {
 			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
@@ -93,6 +96,7 @@ component extends="BaseController" output=false accessors=true {
 		
 		// Redirect & Error Handle
 		if(!rc.product.hasErrors()) {
+			getProductService().setProductTypeTree();
 			// add product details if this is a new product
 			if(isNew) {
 				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
@@ -111,6 +115,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function delete(required struct rc) {
 		var product = getProductService().getByID(rc.productID);
 		getProductService().delete(product);
+		getProductService().setProductTypeTree();
 		getFW().redirect(action="admin:product.list");
 	}
 	

@@ -4,7 +4,7 @@
 <ul id="navTask">
     <cf_ActionCaller action="admin:product.createproducttype" type="list">
 </ul>
-<table class="stripe" id="productTypes" width="400">
+<table class="stripe" id="productTypes">
     <tr>
         <th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.producttype")#</th>
 		<th>&nbsp;</th>
@@ -20,7 +20,7 @@
         </td>
 		<td class="administration">
 		  <ul class="three">
-		  	  <cfset local.deleteDisabled = rc.productTypes.isAssigned or (rc.productTypes.childCount gt 0) />
+		  	  <cfset local.deleteDisabled = (rc.productTypes.isAssigned gt 0) or (rc.productTypes.childCount gt 0) />
 		      <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
               <cf_ActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" class="add" type="list">
 			  <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">

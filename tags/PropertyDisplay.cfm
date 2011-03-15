@@ -160,7 +160,7 @@
 				</cftry>
 			</cfif>
 			
-			<!--- If none are still set, then change the editType to none, otherwise verify that there is an ID & Name for each option --->
+			<!--- If none are still set, then change the editType to none, otherwise verify that there is an ID & Name for each option 
 			<cfif arrayLen(attributes.editOptions) eq 0>
 				<cfset attributes.editType = "none" />
 			<cfelse>
@@ -170,7 +170,7 @@
 						<cfbreak />
 					</cfif>
 				</cfloop>
-			</cfif>
+			</cfif>--->
 		</cfif>
 		
 		<cfoutput>
@@ -223,13 +223,6 @@
                     <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
                     <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
                 </cfif>	
-				<!--- If the object has an error Bean, check for errors on this property --->
-				<cftry>
-					<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
-						<span class="error">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
-					</cfif>
-					<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
-				</cftry>
 
 			<cfif attributes.displaytype eq "dl">
 				</dt>
@@ -248,12 +241,17 @@
 						<input type="hidden" name="#attributes.fieldName#" id="#attributes.fieldName#" value="" />
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
+						<cfif arrayLen(attributes.editOptions) gt 0>
 						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
 							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i.id#" <cfif attributes.value eq i.name>selected="selected"</cfif>>#i.name#</option>	
 							</cfloop>
 						</select>
+						<cfelse>
+							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
+							<p><em>#request.customMuraScopeKeys.slatwall.rbKey("admin.#attributes.fieldName#.no#attributes.fieldName#sdefined")#</em></p>
+						</cfif>
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
@@ -290,6 +288,13 @@
 						#attributes.Value#
 					</cfif>
 				</cfif>
+			<!--- If the object has an error Bean, check for errors on this property --->
+			<cftry>
+				<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
+					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
+				</cfif>
+				<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
+			</cftry>
 			<cfif attributes.displaytype eq "dl">
 				</dd>
 			<cfelseif attributes.displaytype eq "table">
