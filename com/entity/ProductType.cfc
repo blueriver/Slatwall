@@ -28,7 +28,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	   return Super.init();
 	}
 	
-	// Association management methods for bidirectional relationships (delegates both sides to Product.cfc)
+    /******* Association management methods for bidirectional relationships **************/
+	
+	// Products (one-to-many)
 	
 	public void function setProducts(required array Products) {
 		// first, clear existing collection
@@ -48,4 +50,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public void function removeProduct(required Product Product) {
 	   arguments.Product.removeProductType(this);
 	}
+	
+    /************   END Association Management Methods   *******************/
 }

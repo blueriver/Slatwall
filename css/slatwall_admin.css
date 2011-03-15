@@ -90,11 +90,7 @@ table#productTypes ul.neston {
 	font-weight: bold;
 }
 
-table#Options {
-	width: 800px;
-}
-
-table#ProductBrands {
+table#Options, table#ProductSettings, table#ProductBrands {
 	width: 800px;
 }
 
@@ -190,7 +186,7 @@ p.error_message {
 	left: 20px;	
 }
 
-.tabs div {
+.tabs > div {
 	margin-left: 20px;
 }
 
