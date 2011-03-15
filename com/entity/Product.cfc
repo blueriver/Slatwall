@@ -137,14 +137,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return "#getBrandName()# #getProductYear()# #getProductName()#";
 	}
 	
-	public function getPrice() {
-		return getDefaultSku().getPrice();
-	}
-	
-	public function getListPrice() {
-		return getDefaultSku().getListPrice();
-	}
-	
 	public string function getProductURL() {
 		return getMuraScope().createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
