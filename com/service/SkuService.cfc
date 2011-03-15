@@ -6,15 +6,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
 		// check to see if any options were selected
 		if(len(arguments.optionsStruct.formCollectionsList)) {
-			// get how many option groups we're dealing with and their names
+			// get list of option group names
 			var options = arguments.optionsStruct.options;
-			var optionGroupCount = structCount(options);
 			var optionGroupList = structKeyList(options);
 			
 			// first get list of options from first option group
 			var comboList = options[listFirst(optionGroupList)];
 			
-			// pars options struct to build list of possible option combinations
+			// parse options struct to build list of possible option combinations
 			for( var optionGroup in options ) {
 				if(optionGroup != listFirst(optionGroupList)) {
 					var tempList = "";
@@ -36,6 +35,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				thisSku.setProduct(arguments.product);
 				thisSku.setPrice(arguments.price);
 				thisSku.setListPrice(arguments.listprice);
+				if(i==1) { 			// set the first sku as the default one
+					thisSku.setIsDefault(true);
+				}
 				// loop through optionID's within the option combination and set them into the sku
 				for( j=1;j<=listLen(thisCombo," ");j++ ) {
 					var thisOptionID = listGetAt(thisCombo,j," ");
@@ -47,8 +49,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
+			thisSku.setIsDefault(true);
 		}
-		getDAO().save(arguments.product);
 		return true;
 	}
 	

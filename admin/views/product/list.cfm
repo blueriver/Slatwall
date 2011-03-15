@@ -29,7 +29,7 @@
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="Local.Product">
 			<tr>
 				<!---<td>#Local.Product.getSearchScore()#</td>--->
-				<td>#Local.Product.getBrand().getBrandName()#</td>
+				<td>#Local.Product.getBrandName()#</td>
 				<td class="varWidth">#Local.Product.getProductName()#</td>
 				<td>#Local.Product.getProductYear()#</td>
 				<td></td>

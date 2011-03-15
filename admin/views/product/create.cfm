@@ -9,36 +9,44 @@
 		    <cf_PropertyDisplay object="#rc.Product#" first="true" property="productName" edit="true">
 		    <cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="true">
 		    <cf_PropertyDisplay object="#rc.Product#" property="brand" edit="true">
+			     <cf_ActionCaller action="admin:brand.create" type="link">
 		    <dt>
-		        <label for="productType_productTypeID">Product Type</label>
+		        <label for="productType_productTypeID">#rc.$.Slatwall.rbKey("entity.product.producttype")# *</label>
 		    </dt>
 		    <dd>
-		        <select name="productType_productTypeID" id="productType_productTypeID">
-		            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
-		        <cfloop query="rc.productTypes">
-		            <cfif rc.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
-		            <cfset local.label = listChangeDelims(rc.productTypes.path, " &raquo; ") />
-		            <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
-		                #local.label#
-		            </option>
-		            </cfif>
-		        </cfloop>
-		        </select>
+		    	<cfif rc.productTypes.recordCount gt 0>
+			        <select name="productType_productTypeID" id="productType_productTypeID">
+			            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
+			        <cfloop query="rc.productTypes">
+			            <cfif rc.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
+			            <cfset local.label = listChangeDelims(rc.productTypes.path, " &raquo; ") />
+			            <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
+			                #local.label#
+			            </option>
+			            </cfif>
+			        </cfloop>
+			        </select>
+				<cfelse>
+				 <!--- no product types defined --->
+				<em>#rc.$.Slatwall.rbKey("admin.product.noproducttypesdefined")#</em>
+				<input type="hidden" name="productType_productTypeID" value="" />
+				</cfif>
+				<cfif Len(rc.product.getErrorBean().getError("productType"))>
+                    <span class="formError">#rc.product.getErrorBean().getError("productType")#</span>
+                </cfif>
 		    </dd>
+		      <cf_ActionCaller action="admin:product.createproducttype" type="link">
 		</dl>
 		<br />
 		<dl class="twoColumn productPrice">
-			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true">
-			<dt><label for="price">Base #rc.$.Slatwall.rbKey('entity.sku.price')#</label></dt>
-			<dd><input type="text" name="price" /></dd>
-			<dt><label for="listPrice">Base #rc.$.Slatwall.rbKey('entity.sku.listprice')#</label></dt>
-			<dd><input type="text" name="listPrice" /></dd>
+			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="true" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
 		</dl>
 		<br />
 		<br />
 	    <h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
-			<!---<input type="hidden" name="options" value="" />--->
 			<cfif arrayLen(rc.optionGroups) gt 0>
 				<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
 				<cfset local.options = local.thisOptionGroup.getOptions(sortby="sortOrder") />
@@ -60,11 +68,12 @@
 				</cfif>
 				</div>
 				</cfloop>
+				<cf_ActionCaller action="admin:option.createoptiongroup" type="link">
 			<cfelse>
 				 <!--- no options defined --->
 				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
-				<cf_ActionCaller action="admin:option.createoptiongroup" type="link">
 			</cfif>
+			<input type="hidden" name="contentID" value="" /> 
 		<div id="actionButtons" class="clearfix">
 			<cf_actionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_ActionCaller action="admin:product.save" type="submit" />
@@ -72,3 +81,5 @@
 	</form>
 </div>
 </cfoutput>
+
+<cfdump var="#rc.product.getErrorBean().getErrors()#" label="errors" />

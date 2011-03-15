@@ -24,7 +24,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="lastUpdatedDateTime"	ormtype="date" default="" displayname="Date Last Updated";
 	
 	// Related Object Properties
-	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="brand" displayname="Brand" validateRequired cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
 	property name="productType" displayname="Product Type" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
@@ -40,8 +40,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="dateFirstReceived" type="date" persistent="false";
 	property name="dateLastReceived" type="date" persistent="false";
 	property name="livePrice" type="numeric" persistent="false";
-	property name="originalPrice" type="numeric" persistent="false";
-	property name="listPrice" type="numeric" persistent="false";
+	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
+	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
 	property name="qoh" type="numeric" persistent="false";
 	property name="qc" type="numeric" persistent="false";
 	property name="qexp" type="numeric" persistent="false";
@@ -56,11 +56,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 
 	// Related Object Helpers
-	public any function getBrand() {
-		if(!isDefined("variables.brand")) {
-			variables.brand = getService(service="BrandService").getNewEntity();
+	
+	public string function getBrandName() {
+		if( structKeyExists(variables,"brand") ) {
+			return getBrand().getBrandName();
 		}
-		return variables.brand;
+		else {	
+			return "";
+		}
 	}
 	
 	public any function getBrandOptions() {
@@ -131,7 +134,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getTitle() {
-		return "#getBrand().getBrandName()# #getProductYear()# #getProductName()#";
+		return "#getBrandName()# #getProductYear()# #getProductName()#";
+	}
+	
+	public function getPrice() {
+		return getDefaultSku().getPrice();
+	}
+	
+	public function getListPrice() {
+		return getDefaultSku().getListPrice();
 	}
 	
 	public string function getProductURL() {
@@ -242,7 +253,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 					variables.defaultSku = skus[i];
 				}
 			}
-			if( !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
+			if( !isNew() && !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
 				skus[1].setIsDefault(true);
 				getService("skuService").save(entity=skus[1]);
 				variables.defaultSku = skus[1];
