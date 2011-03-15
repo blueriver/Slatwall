@@ -3,6 +3,15 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Persistant Properties
 	property name="productTypeID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productType" ormtype="string" validateRequired displayname="Product Type" default="";
+    property name="manufactureDiscontinued" ormtype="boolean" persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
+    property name="showOnWeb" ormtype="boolean" displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
+    property name="showOnWebWholesale" ormtype="boolean" persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
+    property name="nonInventory" ormtype="boolean" displayname="Non-Inventory Item";
+    property name="callToOrder" ormtype="boolean" displayname="Call To Order";
+    property name="allowShipping" ormtype="boolean" displayname="Allow Shipping";
+    property name="allowPreorder" ormtype="boolean" displayname="Allow Pre-Orders" hint="";
+    property name="allowBackorder" ormtype="boolean" displayname="Allow Backorders";
+    property name="allowDropship" ormtype="boolean" displayname="Allow Dropship";
 	
 	// Related Object Properties
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
