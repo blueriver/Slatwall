@@ -245,12 +245,12 @@
 						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
 							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
 							<cfloop array="#attributes.editOptions#" index="i" >
-								<option value="#i.id#" <cfif attributes.value eq i.name>selected="selected"</cfif>>#i.name#</option>	
+								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#i['name']#</option>	
 							</cfloop>
 						</select>
-						<cfelse>
+<!---						<cfelse>
 							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
-							<p><em>#request.customMuraScopeKeys.slatwall.rbKey("admin.#attributes.fieldName#.no#attributes.fieldName#sdefined")#</em></p>
+							<p><em>#request.customMuraScopeKeys.slatwall.rbKey("admin.#attributes.fieldName#.no#attributes.fieldName#sdefined")#</em></p>--->
 						</cfif>
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">

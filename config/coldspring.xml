@@ -16,7 +16,7 @@
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
 	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
 	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
-	<bean id="FileService" class="slatwall.com.utility.FileService" />
+	<bean id="FileService" class="slatwall.com.service.FileService" />
 	<bean id="Validator" class="slatwall.com.utility.Validator" />
 	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
 		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>

@@ -81,5 +81,3 @@
 	</form>
 </div>
 </cfoutput>
-
-<cfdump var="#rc.product.getErrorBean().getErrors()#" label="errors" />

@@ -51,8 +51,6 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function save(required struct rc) {
-		//writeDump(rc);
-		//abort;
 		var isNew = 0;
 		
 		rc.product = getProductService().getByID(rc.productID);
