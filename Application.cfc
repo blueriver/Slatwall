@@ -65,25 +65,21 @@ component extends="framework" output="false" {
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		param name="session.locale" default="en";
-		
-		// Setup Slatwall Session when needed
-		if(!isDefined("session.SlatwallSession")) {
-			setupSession();
-		}
+		param name="session.siteid" default="default";
+		param name="session.dashboardSpan" default="30";
 		
 		// Look for mura Scope.  If it doens't exist add it.
 		if (not structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
-
-		// Setup SlatwallScope in the muraScope
-		request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
 		
-		if(not application.configBean.getSessionHistory()  or application.configBean.getSessionHistory() >= 30 ) {
-			session.dashboardSpan=30;
-		} else {
-			session.dashboardSpan=application.configBean.getSessionHistory();
+		// Setup Slatwall Session when needed, Because the session object needs the muraScope we do this after
+		if(not structKeyExists(session, "SlatwallSession")) {
+			setupSession();
 		}
+
+		// Create SlatwallScope and add it to the muraScope
+		request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
 		
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {

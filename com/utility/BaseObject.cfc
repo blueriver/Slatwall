@@ -26,10 +26,10 @@ component displayname="Base Object" {
 	private any function getMuraScope() {
 		if(structKeyExists(request, "muraScope")) {
 			return request.muraScope;
-		} else if(structKeyExists(request.context, "$")) {
+		} else if(structKeyExists(request, "context") && structKeyExists(request.context, "$")) {
 			return request.context.$;
 		} else {
-			return getService("muraScope").init(session.siteid);
+			return getService("muraScope").init(session.siteid);	
 		}
 	}
 	
