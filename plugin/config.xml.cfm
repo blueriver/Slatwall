@@ -17,8 +17,8 @@
 		<regex></regex>
 		<message></message>
 		<defaultvalue></defaultvalue>  
-		<optionlist>Internal^Celerant</optionlist>  
-		<optionlabellist>None (Internal)^Celerant</optionlabellist>  
+		<optionlist>Internal^Custom^Quickbooks</optionlist>  
+		<optionlabellist>None (Internal)^Custom^Quickbooks</optionlabellist>  
 	</setting>
 	<setting>  
 		<name>IntegrationDSN</name>  
