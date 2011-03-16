@@ -1,5 +1,7 @@
 component displayname="Base Object" {
 	
+	variables.$ = getMuraScope();
+	
 	// @hint Private helper function for returning the any of the services in the application
 	private any function getService(required string service) {
 		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean(arguments.service);
@@ -18,11 +20,6 @@ component displayname="Base Object" {
 	// @hint Private helper function for returning the plugin config inside of any component in the application
 	private any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
-	}
-	
-	// @hint Private helper function for returning the site config inside of any component in the application
-	private any function getSiteConfig() {
-		return application.settingsManager.getSite(session.siteid);
 	}
 	
 	// @hint Private helper function for returning the current Mura Scope

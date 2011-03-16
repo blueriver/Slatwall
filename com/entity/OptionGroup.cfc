@@ -15,7 +15,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
     public OptionGroup function init(){
        // set default collections for association management methods
-	   this.setImageDirectory("#getMuraScope().siteConfig().getAssetPath()#/images/Slatwall/meta/");
+	   this.setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
        if(isNull(variables.Options))
            variables.Options = [];
        return Super.init();
