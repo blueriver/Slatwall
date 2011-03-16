@@ -5,13 +5,12 @@
 		<column name="settingValue" update="false" />
 	</Columns>
 	<Records>
-		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventory" settingValue="1" />
+		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventory" settingValue="0" />
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="product_urlKey" settingValue="sp" />
 		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="default.cfm" />
 		<Record settingID="dbb3279190c8e5effb0f7912d40bda2a" settingName="product_manufactureDiscontinued" settingValue="0" />
 		<Record settingID="dbb32792dd9f3d6b1a3d51409d560f13" settingName="product_showOnWeb" settingValue="0" />
 		<Record settingID="dbb32793980c43b340e1ff12080dd71a" settingName="product_showOnWebWholesale" settingValue="0" />
-		<Record settingID="dbb327949ab6dc5bd3613a26d648d17d" settingName="product_nonInventory" settingValue="0" />
 		<Record settingID="dbb32795f0ad81a6996c60a8e05702a7" settingName="product_callToOrder" settingValue="0" />
 		<Record settingID="dbb32796ef3280029afcc1def271b558" settingName="product_allowShipping" settingValue="1" />
 		<Record settingID="dbb3279708f5d43e0e5a45a1918b0e2b" settingName="product_allowPreorder" settingValue="1" />

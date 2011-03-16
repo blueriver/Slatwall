@@ -12,7 +12,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="manufactureDiscontinued"	ormtype="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="showOnWeb" ormtype="boolean" default=false displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
 	property name="showOnWebWholesale" ormtype="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
-	property name="nonInventory" ormtype="boolean" default=false displayname="Non-Inventory Item";
+	property name="trackInventory" ormtype="boolean" default=false displayname="Non-Inventory Item";
 	property name="callToOrder" ormtype="boolean" default=false displayname="Call To Order";
 	property name="allowShipping" ormtype="boolean" default=true displayname="Allow Shipping";
 	property name="allowPreorder" ormtype="boolean" default=true displayname="Allow Pre-Orders" hint="";
