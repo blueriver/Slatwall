@@ -61,36 +61,4 @@ component extends="mura.plugin.plugincfc" output="false" {
 		fileWriteLine(fileObj,"#data#" );
 		fileClose(fileobj);
 	}
-	
-	// This is a temporary function to fix the bug that ORM has where it can't setup char(35) as a datatype
-	private void function temporaryORMBugFix() {
-		var fixQuery = new Query();
-		fixQuery.setDataSource(application.configBean.getDatasource());
-		fixQuery.setUsername(application.configBean.getUsername());
-		fixQuery.setPassword(application.configBean.getPassword());
-		if(application.configBean.getDbType() == "mysql") {
-			fixQuery.setSql("
-				ALTER TABLE tusers DROP PRIMARY KEY;
-			");
-		} else {
-			fixQuery.setSql("
-				ALTER TABLE tusers DROP CONSTRAINT PK_tusers;
-			");
-		}
-		fixQuery.execute();
-		fixQuery.setSql("
-			ALTER TABLE tusers ALTER COLUMN UserID varchar(35) NOT NULL;
-		");
-		fixQuery.execute();
-		fixQuery.setSql("
-			ALTER TABLE tusers ADD CONSTRAINT PK_tusers PRIMARY KEY (UserID);
-		");
-		fixQuery.execute();
-	}
-	
-	private boolean function updateData() {
-		var dataPopulator = new Slatwall.com.utility.DataPopulator();
-		return dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-	}
-	
 }
