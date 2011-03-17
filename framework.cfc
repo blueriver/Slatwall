@@ -69,8 +69,14 @@
 				<cfset arguments.path = getDirectoryFromPath( arguments.path ) />
 				<cfset omitIndex = true />
 			</cfif>
+		<cfelseif arguments.path eq "useSubsystemBaseURL">
+			<cfset arguments.path = variables.framework.subsystem[ getSubsystem( arguments.action ) ].baseURL />
+			<cfif variables.framework.SESOmitIndex>
+				<cfset arguments.path = getDirectoryFromPath( arguments.path ) />
+				<cfset omitIndex = true />
+			</cfif>
 		</cfif>
-		
+
 		<cfif find( '?', arguments.action ) and arguments.queryString is ''>
 			<!--- shorthand for action/queryString pairing --->
 			<cfset arguments.queryString = listRest( arguments.action, '?' ) />
@@ -114,7 +120,7 @@
 				<cfset extraArgs = listChangeDelims( extraArgs, '/', '&=' ) />
 			</cfif>
 		</cfif>
-		
+
 		<cfif ses>
 			<cfif isHomeAction and extraArgs is ''>
 				<cfset basePath = arguments.path />
@@ -133,7 +139,7 @@
 				<cfset basePath = arguments.path & initialDelim & variables.framework.action & equalDelim & cosmeticAction />
 			</cfif>
 		</cfif>
-		
+
 		<cfif extraArgs is not ''>
 			<cfset basePath = basePath & curDelim & extraArgs />
 			<cfset curDelim = varDelim />
@@ -148,7 +154,7 @@
 		<cfif anchor is not ''>
 			<cfset basePath = basePath & '##' & anchor />
 		</cfif>
-		
+
 		<cfreturn basePath />
 
 	</cffunction>

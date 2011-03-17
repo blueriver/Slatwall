@@ -62,7 +62,31 @@ component accessors="true" extends="BaseObject" {
 		return secureDisplay(arguments.action);
 	}
 	
-	public string function buildURL(required string action) {
-		return buildURL(action=arguments.action);
+	public string function getLoginURL(string returnURL="", string returnAction="") {
+		var loginURL = "";
+		
+		if($.siteConfig().getExtranetSSL()) {
+			loginURL &= "https://";
+		} else {
+			loginURL &= "http://";
+		}
+		
+		loginURL &= "#$.siteConfig().getDomain()#/";
+		
+		if(application.configBean.getSiteIDInURLS()) {
+			loginURL &= "#$.siteConfig('siteid')#/";
+		}
+		if(application.configBean.getIndexFileInURLS()) {
+			loginURL &= "index.cfm";
+		}
+		if(find("?",loginURL)) {
+			loginURL &= "&";
+		} else {
+			loginURL &= "?";
+		}
+		
+		loginURL &= "##returnURL=" & URLEncodedFormat("http://#$.siteConfig().getDomain()#/plugins/Slatwall/?slatAction=#slatAction#");
+		
+		return loginURL;
 	}
 }

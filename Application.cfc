@@ -4,22 +4,35 @@ component extends="framework" output="false" {
 	include "../../config/mappings.cfm";
 	include "../mappings.cfm";
 	include "fw1Config.cfm";
+	
+	variables.subsystems = {};
+	variables.subsystems.admin = {};
+	variables.subsystems.admin.baseURL = "";
+	variables.subsystems.frontend = {};
+	variables.subsystems.frontend.baseURL = "";
 
 	public void function setPluginConfig(required any pluginConfig) {
-	  application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
+		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
 	}
 	
 	public any function getPluginConfig() {
-	  return application[ variables.framework.applicationKey ].pluginConfig; 
+		return application[ variables.framework.applicationKey ].pluginConfig; 
+	}
+	
+	public any function getSubsystemBaseURL( string subsystem="admin") {
+		return variables.subsystems[ arguments.subsystem ].baseURL; 
 	}
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
+		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
+		if( !structKeyExists(application, "appinitialized") || application.appinitialized == false) {
+			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
+		}
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		var dataPopulator = new Slatwall.com.utility.DataPopulator();
 		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-		
 		
 		var serviceFactory = "";
 		var rbFactory = "";
@@ -56,12 +69,7 @@ component extends="framework" output="false" {
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 	}
 	
-	public void function setupSession() {
-		session.slatwallSession = new Slatwall.com.utility.SlatwallSession();
-	}
-	
 	public void function setupRequest() {
-		//variables.framework.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		param name="session.locale" default="en";
@@ -73,9 +81,24 @@ component extends="framework" output="false" {
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
 		
+		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
+		if(request.context.$.event('siteid') == "") {
+			request.context.$.event('siteid', session.siteid);
+		}
+		
+		// Setup Base URL's for each subsystem
+		variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig().getDomain()#/plugins/#getPluginConfig().getDirectory()#/";
+		variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
+		if(request.context.$.globalConfig().getSiteIDInURLS()) {
+			variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
+		}
+		if(request.context.$.globalConfig().getIndexFileInURLS()) {
+			variables.subsystems.frontend.baseURL &= "index.cfm";
+		}
+		
 		// Setup Slatwall Session when needed, Because the session object needs the muraScope we do this after
-		if(not structKeyExists(session, "SlatwallSession")) {
-			setupSession();
+		if(! structKeyExists(session, "SlatwallSession")) {
+			session.slatwallSession = new Slatwall.com.utility.SlatwallSession();
 		}
 
 		// Create SlatwallScope and add it to the muraScope
@@ -216,17 +239,8 @@ component extends="framework" output="false" {
 		return arguments.cfc;
 	}
 
-	
-	/*
 	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
-		var url = "";
-		if(isAdminRequest()) {
-			
-		} else {
-			
-		}
-		url = super.buildURL(action=arguments.action, path=arguments.path, queryString=arguments.queryString);
-		return url;
+		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
+		return super.buildURL(action=arguments.action, path=arguments.path, queryString=arguments.queryString);
 	}
-	*/
 }
