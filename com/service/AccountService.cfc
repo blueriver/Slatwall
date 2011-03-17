@@ -1,12 +1,14 @@
 component extends="BaseService" accessors="true" {
 			
 	property name="sessionService" type="any";
+	property name="userManager" type="any";
 	
 	public any function init(required string entityName, required any dao, required any validator, required any sessionService) {
 		setEntityName(arguments.entityName);
 		setDAO(arguments.DAO);
 		setValidator(arguments.validator);
 		setSessionService(arguments.sessionService);
+		setUserManager(arguments.userManager);
 		
 		return this;
 	}
@@ -23,11 +25,10 @@ component extends="BaseService" accessors="true" {
 			if(isnull(account)) {
 				// If no account exists, create a new one and save it linked to the user that just logged in.
 				account = getNewEntity();
+				account.setMuraUserID(arguments.muraUser.getUserID());
 				var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
 				accountEmail.setEmail(arguments.muraUser.getEmail());
 				accountEmail.setAccount(account);
-				var user = getDAO().readUserByMuraUserID(arguments.muraUser.getUserID());
-				account.setMuraUser(user);
 				account.addAccountEmail(accountEmail);
 				save(entity=account);
 			} else {

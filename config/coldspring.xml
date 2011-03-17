@@ -45,6 +45,7 @@
 		        <constructor-arg name="entityName"><value>SlatwallAccount</value></constructor-arg>
 		        <constructor-arg name="DAO"><ref bean="accountDAO" /></constructor-arg>
 				<constructor-arg name="validator"><ref bean="Validator" /></constructor-arg>
+				<constructor-arg name="userManager"><ref bean="userManager" /></constructor-arg>
 				<constructor-arg name="sessionService"><ref bean="sessionService" /></constructor-arg>
             </bean>
         </property>

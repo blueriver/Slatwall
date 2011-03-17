@@ -8,14 +8,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="remoteEmployeeID" ormtype="string" default="" hint="Only used when integrated with a remote system";
 	property name="remoteCustomerID" ormtype="string" default="" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" default="" hint="Only used when integrated with a remote system";
+	property name="muraUserID" ormtype="string" default="";
 	
 	// Related Object Properties
 	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
-	property name="muraUser" fieldtype="many-to-one" fkcolumn="muraUserID" cfc="User";
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
 	
 	// Non-Persistant Properties
-	property name="primaryEmail" type="string" persistent="false" ;
+	property name="primaryEmail" type="string" persistent="false";
+	property name="muraUser" type="any" persistent="false";
 	
 	public array function getAccountEmails() {
 		if(!isDefined("variables.accountEmails")) {
@@ -23,12 +24,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 		return variables.accountEmails;
 	}
-	
+
 	// Start: User Helpers
 	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
 	public string function getFirstName() {
-		if(!isNull(getMuraUser())) {
-			variables.firstName = getMuraUser().getFirstName();
+		if(!getMuraUser().getIsNew()) {
+			variables.firstName = getMuraUser().getFname();
 		}
 		if(!structKeyExists(variables, "firstName")) {
 			variables.firstName = "";
@@ -37,8 +38,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public string function getLastName() {
-		if(!isNull(getMuraUser())) {
-			variables.lastName = getMuraUser().getLastName();
+		if(!getMuraUser().getIsNew()) {
+			variables.lastName = getMuraUser().getLname();
 		}
 		if(!structKeyExists(variables, "lastName")) {
 			variables.lastName = "";
@@ -47,7 +48,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public string function getCompany() {
-		if(!isNull(getMuraUser())) {
+		if(!getMuraUser().getIsNew()) {
 			variables.company = getMuraUser().getCompany();
 		}
 		if(!structKeyExists(variables, "company")) {
@@ -60,6 +61,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	public string function getFullName() {
 		return "#getFirstName()# #getLastName()#";
+	}
+		
+	public any function getMuraUser() {
+		if(!structKeyExists(variables, "muraUser")) {
+			variables.muraUser = getService("userManager").read(userID=getMuraUserID());
+		}
+		return variables.muraUser;
 	}
 	
 	public string function getPrimaryEmail() {
