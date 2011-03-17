@@ -35,7 +35,7 @@
 		</property>
 		<property name="pattern">
 			<!-- only wrap writes/deletes to db in transactional context -->
-			<value>^(save|update|delete).*</value>
+			<value>(?!prep)\b\w+</value>
 		</property>
 	</bean>
 	
