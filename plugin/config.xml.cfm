@@ -4,7 +4,7 @@
 <directoryFormat>packageOnly</directoryFormat>
 <version>0.4</version>
 <provider>Slatwall</provider>
-<providerURL>https://github.com/gregmoser/Slatwall/wiki/</providerURL>
+<providerURL>http://www.getslatwall.com/</providerURL>
 <category>Application</category>
 <settings>
 	<setting>
