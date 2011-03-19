@@ -50,3 +50,5 @@
 </ul>
 </cfif>
 </cfoutput>
+
+<cfdump var="#rc.optiongroup.getErrorBean().getErrors()#" />

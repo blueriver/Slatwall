@@ -1,7 +1,6 @@
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
-<cfparam name="rc.productPages" type="any" />
 
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">
@@ -22,12 +21,13 @@
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#">
-        <dt>
+		<dt>
             <cfif rc.edit>
-            <label for="productType_productTypeID">Product Type:</label></dt>
+            <label for="productType_productTypeID">Product Type:</label>
 			<cfelse>
 			    Product Type:
 			</cfif>
+		</dt>
         <dd>
             <cfif rc.edit and structKeyExists(rc,"productTypes")>
 		        <select name="productType_productTypeID" id="productType_productTypeID">
@@ -141,19 +141,23 @@
 		</dl>
 	</div>
 	<div id="tabProductPages">
-		<cfif rc.productPages.getRecordCount() gt 0>
-			<input type="hidden" name="contentID" value="" />
-			<ul>
-				<cfloop condition="rc.productPages.hasNext()">
-					<li>
-						<cfset local.thisProductPage = rc.productPages.next() />
-						<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#" /> 
-						<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
-					</li>	
-				</cfloop>
-			</ul>
+		<cfif rc.edit>
+			<cfif rc.productPages.getRecordCount() gt 0>
+				<input type="hidden" name="contentID" value="" />
+				<ul>
+					<cfloop condition="rc.productPages.hasNext()">
+						<li>
+							<cfset local.thisProductPage = rc.productPages.next() />
+							<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#" /> 
+							<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
+						</li>	
+					</cfloop>
+				</ul>
+			<cfelse>
+				<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
+			</cfif>
 		<cfelse>
-			<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
+			<cfdump var="#rc.product.getProductContent()#" />
 		</cfif>
 	</div>
 	<div id="tabCustomAttributes">

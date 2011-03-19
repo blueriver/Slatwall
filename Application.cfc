@@ -176,7 +176,7 @@ component extends="framework" output="false" {
 	
 	/**
 	/*@hint used to populate beans from the request context. FW1 method overriden to set empty values to null
-	*/
+	
 	public any function populate(required any cfc, string keys="", boolean trustKeys=false, boolean trim=false, boolean acceptEmptyValues=true) {
 		var key = 0;
 		var property = 0;
@@ -196,6 +196,8 @@ component extends="framework" output="false" {
 						}
 						if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
 							evaluate("arguments.cfc.#key#(argumentCollection=args)");
+						} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
+							evaluate("arguments.cfc.#key#(javacast('null',''))");
 						}
 					} catch(any e) {
 						onPopulateError( arguments.cfc, property, request.context );
@@ -213,6 +215,8 @@ component extends="framework" output="false" {
 							}
 							if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
 								evaluate("arguments.cfc.#key#(argumentCollection=args)");
+							} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
+								evaluate("arguments.cfc.#key#(javacast('null',''))");
 							}
 						}
 					}
@@ -231,13 +235,15 @@ component extends="framework" output="false" {
 						}
 						if(len(args[trimproperty]) > 0 || arguments.acceptEmptyValues) {
 							evaluate("arguments.cfc.#key#(argumentCollection=args)");
+						} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
+							evaluate("arguments.cfc.#key#(javacast('null',''))");
 						}
 					}
 				}
 			}
 		}
 		return arguments.cfc;
-	}
+	}*/
 
 	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
 		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));

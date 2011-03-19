@@ -21,30 +21,37 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productTypes = getProductService().getProductTypeTree();
 		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
-		//rc.categories = rc.$.getBean("feed").set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
     }
 	
 	public void function detail(required struct rc) {
+		param name="rc.edit" default="false";
 		// we could be redirected here from a failed form submission, so check rc for product object first
-		if(!structKeyExists(rc,"product") or !isObject(rc.product)) {
+		if(structKeyExists(rc,"product") && isObject(rc.product)) {
+			// merge it with the new session and transfer over the error bean
+            var errors = rc.product.getErrorBean();
+            rc.product = entityMerge(rc.product);
+            rc.product.setErrorBean(errors);
+		} else {
 			rc.product = getProductService().getByID(rc.productID);
 		}
 		if(!isNull(rc.product)) {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
-			//rc.productSmartList = getProductService().getSmartList(arguments.rc);
+			if(rc.edit) {
+				rc.productPages = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
+			}
 		} else {
 			getFW().redirect("admin:product.list");
 		}
-		rc.productPages = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
 	}
 	
 	public void function edit(required struct rc) {
-		detail(rc);
 		rc.edit = true;
+		detail(rc);
 		getFW().setView("admin:product.detail");
 	}
+
 	
 	public void function list(required struct rc) {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
@@ -53,8 +60,9 @@ component extends="BaseController" output=false accessors=true {
 	public void function save(required struct rc) {
 		var isNew = 0;
 		
-		rc.product = getProductService().getByID(rc.productID);
-		if(isNull(rc.product)) {
+		if(len(rc.productID)) {
+			rc.product = getProductService().getByID(rc.productID);
+		} else {
 			rc.product = getProductService().getNewEntity();	
 		}
 		
@@ -62,45 +70,23 @@ component extends="BaseController" output=false accessors=true {
 			isNew = 1;
 		}
 		
-		// populate product with form data
-		rc.product = getFW().populate(cfc=rc.product, keys=rc.product.getUpdateKeys(), trim=true, acceptEmptyValues=false);
-		
-		// set brand into the bean
-		if(len(rc.brand_brandID)) {
-			rc.product.setBrand(getBrandService().getByID(rc.brand_brandID));
-		}
-		
-		// set product type into the bean
-		if(len(rc.productType_productTypeID)) {
-			rc.product.setProductType(getProductService().getByID(rc.productType_productTypeID,"SlatwallProductType"));
-		}
-		
-		// set up sku(s) if this is a new product
+		// set up options struct for generating skus if this is a new product
 		if(isNew) {
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
-			getProductService().createSkus(rc.product,rc.optionsStruct,rc.price,rc.listPrice);
-		}
-		
-		// set Default sku
-		if(structKeyExists(rc, "defaultSku")) {
-			var defaultSku = rc.product.getSkuByID(rc.defaultSku);
-			if(!defaultSku.getIsDefault()) {
-				defaultSku.setIsDefault(true);
-			}
 		}
 
 		// Attempt to Save Product
-		rc.product = getProductService().save(product=rc.product,contentID=rc.contentID);
+		rc.product = getProductService().save( rc.product,rc );
 		
 		// Redirect & Error Handle
 		if(!rc.product.hasErrors()) {
 			getProductService().setProductTypeTree();
 			// add product details if this is a new product
 			if(isNew) {
-				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
-			} else {
-				getFW().redirect(action="admin:product.list");
-			}
+			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
+            } else {
+            	getFW().redirect(action="admin:product.list");
+            }
 		} else {
 			if(isNew) {
 				getFW().redirect(action="admin:product.create",preserve="product");

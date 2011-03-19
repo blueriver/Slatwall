@@ -39,12 +39,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-	   var brand = getBrandService().getByID(rc.brandID);
-	   if(isNull(brand)) {
-	       var brand = getBrandService().getNewEntity();
+	   rc.brand = getBrandService().getByID(rc.brandID);
+	   if(isNull(rc.brand)) {
+	       rc.brand = getBrandService().getNewEntity();
 	   }
-	   rc.brand = getFW().populate(cfc=brand, keys=brand.getUpdateKeys(), trim=true);
-	   rc.brand = getBrandService().save(entity=brand);
+	   rc.brand = getFW().populate(cfc=rc.brand, keys=rc.brand.getUpdateKeys(), trim=true);
+	   rc.brand = getBrandService().save(entity=rc.brand);
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {

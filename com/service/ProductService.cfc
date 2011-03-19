@@ -52,15 +52,46 @@ component extends="BaseService" accessors="true" {
 		return getSkuService().createSkus(argumentCollection=arguments);
 	}
 	
-	public any function save(required any product,string contentID="") {
+	public any function populate(required any productEntity,required struct data) {
+		arguments.productEntity.populate(arguments.data);
+		return arguments.productEntity;
+	}
+	
+	public any function save(required any productEntity,required struct data) {
+		// populate bean from values in the data Struct
+		arguments.productEntity.populate(arguments.data);
+		
 		// if filename wasn't set in bean, default it to the product's name.
-		if(arguments.product.getFileName() == "") {
-			arguments.product.setFileName(getFileService().filterFileName(arguments.product.getProductName()));
+		if(arguments.productEntity.getFileName() == "") {
+			arguments.productEntity.setFileName(getFileService().filterFileName(arguments.productEntity.getProductName()));
 		}
-		if(len(arguments.contentID)) {
-			assignProductContent(arguments.product,arguments.contentID);
+		
+		// set up sku(s) if this is a new product
+		if(arguments.productEntity.isNew()) {
+			createSkus(arguments.productEntity,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
 		}
-		return Super.save(arguments.product);
+		
+		// set Default sku
+		if( structKeyExists(arguments.data,"defaultSku") && len(arguments.data.defaultSku) ) {
+			var dSku = arguments.productEntity.getSkuByID(arguments.data.defaultSku);
+			if(!dSku.getIsDefault()) {
+				dSku.setIsDefault(true);
+			}
+		}
+		
+		// set up associations between product and content
+		if(len(arguments.data.contentID)) {
+			assignProductContent(arguments.productEntity,arguments.data.contentID);
+		}
+		
+		arguments.productEntity = Super.save(arguments.productEntity);
+		
+		if(arguments.productEntity.hasErrors()) {
+			transactionRollback();
+			trace( text="rolled back save within product service");
+		}
+		
+		return arguments.productEntity;
 	}
 	
 	public any function getProductContentSmartList(required struct rc, required string contentID) {

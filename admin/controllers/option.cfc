@@ -123,11 +123,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function editOptionGroup(required struct rc) {
 		rc.edit=true;
-		if(!structKeyExists(rc,"optionGroup") or !isObject(rc.optionGroup)) {
+		if(structKeyExists(rc,"optionGroup") && isObject(rc.optionGroup)) {
+			// entity came back from a failed validation, so merge it with the new session and transfer over the error bean
+			var errors = rc.optionGroup.getErrorBean();
+			rc.optionGroup = entityMerge(rc.optionGroup);
+			rc.optionGroup.setErrorBean(errors);
+		} else { 
 			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		}
 		if(!isNull(rc.optionGroup)) {
-			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
+			if( len(rc.optionGroup.getOptionGroupName()) ) {
+				rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
+			}
 			getFW().setView("admin:option.detailoptiongroup");
 		} else
 		  getFW().redirect("admin:option.list");
@@ -135,11 +142,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function saveOptionGroup(required struct rc) {
 		if(len(trim(rc.optiongroupID))) {
-			var optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		} else {
-			var optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
+			rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
 		}
-		rc.optionGroup = getFW().populate(cfc=optionGroup, keys=optionGroup.getUpdateKeys(), trim=true);
+		rc.optionGroup = getFW().populate(cfc=rc.optionGroup, keys=rc.optionGroup.getUpdateKeys(), trim=true);
 		
 		// remove image if option is checked (unless a new image is set, in which case the old image is removed by saveimage())
 		if(structKeyExists(rc,"removeOptionGroupImage") and rc.optionGroup.hasImage() and rc.optionGroupImageFile == ""){

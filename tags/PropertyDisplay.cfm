@@ -242,7 +242,7 @@
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID">
+						<select name="#attributes.fieldName#" id="#attributes.fieldName#_#attributes.fieldName#ID">
 							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#i['name']#</option>	
