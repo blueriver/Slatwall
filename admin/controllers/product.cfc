@@ -100,7 +100,8 @@ component extends="BaseController" output=false accessors=true {
 		var product = getProductService().getByID(rc.productID);
 		getProductService().delete(product);
 		getProductService().setProductTypeTree();
-		getFW().redirect(action="admin:product.list");
+		rc.message = "admin.product.delete_success";		
+		getFW().redirect(action="admin:product.list",preserve="message");
 	}
 	
 	

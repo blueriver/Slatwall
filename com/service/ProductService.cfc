@@ -118,7 +118,7 @@ component extends="BaseService" accessors="true" {
 	public boolean function deleteProductType(required any productType) {
 		var deleted = false;
 		if( !arguments.productType.hasProducts() && !arguments.productType.hasSubProductTypes() ) {
-			getDAO().delete(entity=productType);
+			Super.delete(arguments.productType);
 			deleted = true;
 		} else {
 			transactionRollback();

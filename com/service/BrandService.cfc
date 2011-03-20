@@ -8,7 +8,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public boolean function delete(required any Brand){
 		var deleted = false;
 		if( !arguments.Brand.hasProducts() ) {
-			getDAO().delete(entity=arguments.Brand);
+			Super.delete(arguments.Brand);
 			deleted = true;
 		} else {
 			transactionRollback();

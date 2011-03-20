@@ -86,12 +86,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 					// the property has a matching argument 
 					if(structKeyExists(arguments.data,local.theProperty.name)) {
 						local.varValue = arguments.data[local.theProperty.name];
-					// if data struct doesn't contain the key, set it to the default value of the property
-					} else if( !structKeyExists(arguments.data,local.theProperty.name) && structKeyExists(local.theProperty,"default") ) {
-						local.varValue = local.theProperty.default;
-					// if there's no default value and no data, set it to blank (which will subsequently be set to null if it's a nullable field)
+					// if data struct doesn't contain the key, set it to the default value of the property or the existing value
 					} else {
-						local.varValue = "";
+						continue;
 					}
 					// for nullable fields that are blank, set them to null
 					if( (!structKeyExists(local.theProperty,"notNull") || !local.theProperty.notNull) && !len(local.varValue) ) {
