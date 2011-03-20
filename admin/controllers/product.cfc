@@ -114,12 +114,20 @@ component extends="BaseController" output=false accessors=true {
 	}
 		
 	public void function editProductType(required struct rc) {
-	   	if(!structKeyExists(rc,"productType") or !isObject(rc.productType)) {
+		// we could be redirected here from a failed form submission, so check rc for productType object first
+	   	if(structKeyExists(rc,"productType") && isObject(rc.productType)) {
+	   		if(!rc.productType.isNew()) {
+				// merge it with the new session and transfer over the error bean
+	            var errors = rc.productType.getErrorBean();
+	            rc.productType = entityMerge(rc.productType);
+	            rc.productType.setErrorBean(errors);
+	        }
+	   	} else {	
 	   		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		}
 	   	if(!isNull(rc.productType)) {
 	       	rc.productTypeTree = getProductService().getProductTypeTree();
-		   	rc.itemTitle &= ": " & rc.productType.getProductType();
+		   	rc.itemTitle &= ": " & rc.productType.getProductTypeName();
 	   	} else {
            	getFW().redirect("product.listproducttypes");
 		}
@@ -131,14 +139,14 @@ component extends="BaseController" output=false accessors=true {
 
 	
 	public void function saveProductType(required struct rc) {
-        var productType = getProductService().getNewEntity("SlatwallProductType");
-		rc.productType = getFW().populate(cfc=productType, keys=productType.getUpdateKeys(), trim=true);
-		
-		// set parent product type, if specified
-		if(len(trim(rc.parentProductType_productTypeID))) {
-			rc.productType.setParentProductType(getProductService().getByID(rc.parentProductType_productTypeID,"SlatwallProductType"));
+		if(len(rc.productTypeID)) {
+			rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		} else {
+			rc.productType = getProductService().getNewEntity("SlatwallProductType");	
 		}
-		rc.productType = getProductService().saveProductType(rc.productType);
+		
+		rc.productType = getProductService().saveProductType(rc.productType,rc);
+		
 		if(!rc.productType.hasErrors()) {
 			getProductService().setProductTypeTree();
 			rc.message = "admin.product.saveproducttype_success";

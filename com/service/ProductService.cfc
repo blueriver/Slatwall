@@ -103,7 +103,10 @@ component extends="BaseService" accessors="true" {
         variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
     }
 	
-	public any function saveProductType(required any productType) {
+	public any function saveProductType(required any productType, required struct data) {
+		
+		arguments.productType.populate(data=arguments.data,propList="productTypeID,productTypeName,parentProductType");
+		
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());

@@ -45,7 +45,7 @@
 			    <cfif isNull(rc.Product.getProductType())>
 				None
 				<cfelse>
-				  #rc.Product.getProductType().getProductType()#
+				  #rc.Product.getProductType().getProductTypeName()#
 				 </cfif>
 			</cfif>
         </dd>

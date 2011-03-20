@@ -15,7 +15,7 @@
     <tr>
         <td class="varWidth">
             <ul class="#local.thisNest#">
-                <li class="Category">#rc.productTypes.productType#</li>
+                <li class="Category">#rc.productTypes.productTypeName#</li>
 			</ul>     
         </td>
 		<td class="administration">

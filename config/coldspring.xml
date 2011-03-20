@@ -19,10 +19,10 @@
 	<bean id="FileService" class="slatwall.com.service.FileService" />
 	<bean id="Validator" class="slatwall.com.utility.Validator" />
 	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
-		<constructor-arg name="TitleColumn"><value>productType</value></constructor-arg>
+		<constructor-arg name="TitleColumn"><value>productTypeName</value></constructor-arg>
 		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
 		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
-		<constructor-arg name="pathColumn"><value>productType</value></constructor-arg>
+		<constructor-arg name="pathColumn"><value>productTypeName</value></constructor-arg>
 	</bean>
 	
 	<!-- transaction advice -->
