@@ -4,6 +4,12 @@
 <!--- hint: This is a required attribute as the property that you want to display" --->
 <cfparam name="attributes.property" type="string" />
 
+<!--- hint: This is used in case a sub object property has a different name than the property --->
+<cfparam name="attributes.propertyObject" type="string" default="" />
+
+<!--- hint: Indicates whether values that return null should be displayed as "none" --->
+<cfparam name="attributes.displayNull" type="boolean" default="false" />
+
 <!--- hint: This can be used to override the displayName of a property" --->
 <cfparam name="attributes.title" default="" />
 
@@ -97,11 +103,11 @@
 			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
 	
 			<cfif structKeyExists(attributes,"value")>
-				<cfif isObject("#attributes.value#")>
+				<cfif isObject(attributes.value)>
 					<cfset local.subEntityMetadata = getMetadata(attributes.value) />
 					<cfset attributes.value = "">
 					<cfloop array="#local.subEntityMetadata.properties#" index="i">
-						<cfif i.name EQ attributes.property & 'name'>
+						<cfif i.name EQ attributes.property & 'name' or i.name EQ attributes.propertyObject & 'name'>
 							<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
 							<cfbreak />
 						</cfif>
@@ -111,6 +117,8 @@
 				<cfelseif attributes.value eq "" and not structKeyExists(local.propertyMetadata,"default")>
 					<cfset attributes.value = "" />
 				</cfif>
+			<cfelseif isNull(attributes.value) and attributes.displayNull>
+				<cfset attributes.value = request.customMuraScopeKeys.slatwall.rbKey("admin.none") />
 			<cfelse>
 			     <cfset attributes.value = "" />
 			</cfif>
