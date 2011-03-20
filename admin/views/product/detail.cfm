@@ -157,7 +157,7 @@
 				<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
 			</cfif>
 		<cfelse>
-			#rc.product.getProductContent()[1].getContentID()#
+			<!---#rc.product.getProductContent()[1].getContentID()#--->
 		</cfif>
 	</div>
 	<div id="tabCustomAttributes">
