@@ -43,8 +43,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   if(isNull(rc.brand)) {
 	       rc.brand = getBrandService().getNewEntity();
 	   }
-	   rc.brand = getFW().populate(cfc=rc.brand, keys=rc.brand.getUpdateKeys(), trim=true);
-	   rc.brand = getBrandService().save(entity=rc.brand);
+	   rc.brand = getBrandService().save(rc.brand,rc);
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {

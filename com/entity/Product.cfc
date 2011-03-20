@@ -160,7 +160,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 
 	/******* Association management methods for bidirectional relationships **************/
 	
-	// Product Types (many-to-one)
+	// Product Type (many-to-one)
 	
 	public void function setProductType(required ProductType ProductType) {
 	   variables.productType = arguments.ProductType;
@@ -175,6 +175,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
            arrayDeleteAt(arguments.ProductType.getProducts(),index);
        }    
        structDelete(variables,"productType");
+    }
+    
+    // Brand (many-to-one)
+	
+	public void function setBrand(required Brand Brand) {
+	   variables.Brand = arguments.Brand;
+	   if(isNew() or !arguments.Brand.hasProduct(this)) {
+	       arrayAppend(arguments.Brand.getProducts(),this);
+	   }
+	}
+	
+	public void function removeBrand(required Brand Brand) {
+       var index = arrayFind(arguments.Brand.getProducts(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.Brand.getProducts(),index);
+       }    
+       structDelete(variables,"Brand");
     }
 	
 	// ProductContent (one-to-many)

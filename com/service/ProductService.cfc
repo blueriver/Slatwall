@@ -58,39 +58,39 @@ component extends="BaseService" accessors="true" {
 		return arguments.productEntity;
 	}
 	
-	public any function save(required any productEntity,required struct data) {
+	public any function save(required any Product,required struct data) {
 		// populate bean from values in the data Struct
-		arguments.productEntity.populate(arguments.data);
+		arguments.Product.populate(arguments.data);
 		
 		// if filename wasn't set in bean, default it to the product's name.
-		if(arguments.productEntity.getFileName() == "") {
-			arguments.productEntity.setFileName(getFileService().filterFileName(arguments.productEntity.getProductName()));
+		if(arguments.Product.getFileName() == "") {
+			arguments.Product.setFileName(getFileService().filterFileName(arguments.Product.getProductName()));
 		}
 		
 		// set up sku(s) if this is a new product
-		if(arguments.productEntity.isNew()) {
-			createSkus(arguments.productEntity,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
+		if(arguments.Product.isNew()) {
+			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
 		}
 		
 		// set Default sku
 		if( structKeyExists(arguments.data,"defaultSku") && len(arguments.data.defaultSku) ) {
-			var dSku = arguments.productEntity.getSkuByID(arguments.data.defaultSku);
+			var dSku = arguments.Product.getSkuByID(arguments.data.defaultSku);
 			if(!dSku.getIsDefault()) {
 				dSku.setIsDefault(true);
 			}
 		}
 		
 		// set up associations between product and content
-		assignProductContent(arguments.productEntity,arguments.data.contentID);
+		assignProductContent(arguments.Product,arguments.data.contentID);
 		
-		arguments.productEntity = Super.save(arguments.productEntity);
+		arguments.Product = Super.save(arguments.Product);
 		
-		if(arguments.productEntity.hasErrors()) {
+		if(arguments.Product.hasErrors()) {
 			transactionRollback();
 			trace( text="rolled back save within product service");
 		}
 		
-		return arguments.productEntity;
+		return arguments.Product;
 	}
 	
 	public any function getProductContentSmartList(required struct rc, required string contentID) {
