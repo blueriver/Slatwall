@@ -67,6 +67,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		
 		if(!arguments.entity.hasErrors()) {
 			arguments.entity = getDAO().save(entity=arguments.entity);
+		} else {
+			transactionRollback();
+			trace( text="rolled back save within base service");
 		}
 		
 		return arguments.entity;

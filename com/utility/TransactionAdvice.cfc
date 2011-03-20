@@ -115,9 +115,7 @@ limitations under the License.
 		<cftry>
 			<cfif request[this.REQUEST_KEY] EQ 1>
 				<!--- first entry of a transactional method --->
-				<!---
 				<cftrace text="beginning transaction for method #name# (depth #request[this.REQUEST_KEY]#)" />
-				--->
 				<cfif structKeyExists(variables.my, "isolation")>
 					<cftransaction isolation="#variables.my.isolation#">
 						<cfset local.result = methodInvocation.proceed() />
@@ -127,25 +125,18 @@ limitations under the License.
 						<cfset local.result = methodInvocation.proceed() />
 					</cftransaction>
 				</cfif>
-				<!---
 				<cftrace text="comitted transaction for method #name# (depth #request[this.REQUEST_KEY]#)" />
-				--->
 			<cfelse>
 				<!--- nested/reentrant call to a transactional method --->
-				<!---
+
 				<cftrace text="propogating transaction for method #name# (depth #request[this.REQUEST_KEY]#)" />
-				--->
 				<cfset local.result = methodInvocation.proceed() />
-				<!---
 				<cftrace text="unpropogating transaction for method #name# (depth #request[this.REQUEST_KEY]#)" />
-				--->
 			</cfif>
 			<cfset request[this.REQUEST_KEY] = request[this.REQUEST_KEY] - 1 />
 			<cfcatch type="any">
 				<cfset request[this.REQUEST_KEY] = request[this.REQUEST_KEY] - 1 />
-				<!---
 				<cftrace text="rolled back transaction for method #name# (depth #request[this.REQUEST_KEY]#)" />
-				--->
 				<cfrethrow />
 			</cfcatch>
 		</cftry>

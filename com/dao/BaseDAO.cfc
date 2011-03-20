@@ -32,7 +32,6 @@ component output="false" {
 	
 	public any function save(required any entity) {
 		EntitySave(arguments.entity);
-		//writeDump("THIS WORKED");
 		return arguments.entity;
 	}
 }
