@@ -37,10 +37,11 @@ component extends="BaseService" accessors="true" {
 	*/
 	public void function assignProductContent(required any product,required string contentID) {
 		var productContentArray = [];
+		getDAO().clearProductContent(arguments.product);
 		for(var i=1;i<=listLen(arguments.contentID);i++) {
-			var thisContentID = listGetAt(arguments.contentID,i);
-			var thisProductContent = entityNew("SlatwallProductContent",{contentID=thisContentID});
-			arrayAppend(productContentArray,thisProductContent);
+			local.thisContentID = listGetAt(arguments.contentID,i);
+			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=local.thisContentID});
+			arrayAppend(productContentArray,local.thisProductContent);
 		}
 		arguments.product.setProductContent(productContentArray);
 	}
@@ -80,9 +81,7 @@ component extends="BaseService" accessors="true" {
 		}
 		
 		// set up associations between product and content
-		if(len(arguments.data.contentID)) {
-			assignProductContent(arguments.productEntity,arguments.data.contentID);
-		}
+		assignProductContent(arguments.productEntity,arguments.data.contentID);
 		
 		arguments.productEntity = Super.save(arguments.productEntity);
 		

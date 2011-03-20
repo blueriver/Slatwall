@@ -148,7 +148,7 @@
 					<cfloop condition="rc.productPages.hasNext()">
 						<li>
 							<cfset local.thisProductPage = rc.productPages.next() />
-							<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#" /> 
+							<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
 							<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
 						</li>	
 					</cfloop>
@@ -157,7 +157,7 @@
 				<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
 			</cfif>
 		<cfelse>
-			<cfdump var="#rc.product.getProductContent()#" />
+			#rc.product.getProductContent()[1].getContentID()#
 		</cfif>
 	</div>
 	<div id="tabCustomAttributes">

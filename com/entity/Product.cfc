@@ -48,10 +48,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public Product function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.ProductContent))
+	   if(isNull(variables.ProductContent)) {
 	       variables.ProductContent = [];
-	   if(isNull(variables.Skus))
+	   }
+	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
+	   }
 	   return Super.init();
 	}
 
@@ -119,6 +121,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// Non-Persistant Helpers
+	
+	public string function getContentIDs() { 
+		var contentIDs = "";
+		for( var i=1; i<= arrayLen(getProductContent()); i++ ) {
+			contentIDs = listAppend(contentIDs,getProductContent()[i].getContentID());
+		}
+		return contentIDs;
+	}
+	
 	public string function getGender() {
 		if(!isDefined("variables.gender")) {
 			variables.gender = getGenderType().getType();
@@ -169,13 +180,19 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// ProductContent (one-to-many)
 	
 	public void function setProductContent(required array ProductContent) {
-		// first, clear existing collection
-		variables.ProductContent = [];
-		for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
-			var thisProductContent = arguments.ProductContent[i];
-			if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
-				addProductContent(thisProductContent);
+		if( !arrayIsEmpty(arguments.ProductContent) ) {
+			for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
+				var thisProductContent = arguments.ProductContent[i];
+				if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
+					addProductContent(thisProductContent);
+				}
 			}
+		} 
+	}
+	
+	public void function clearProductContent() {
+		for( var i=1; i<= arraylen(getProductContent()); i++ ) {
+			removeProductContent(getProductContent()[i]);
 		}
 	}
 	
