@@ -43,6 +43,14 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 
     /************   END Association Management Methods   *******************/
 	
+	public boolean function hasOptions() {
+		if(this.getOptionsCount() gt 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public numeric function getOptionsCount() {
 		return arrayLen(this.getOptions());
 	}

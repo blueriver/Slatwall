@@ -24,9 +24,30 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		return Super.save(arguments.entity);
 	}
 	
-	public void function delete(required any entity) {
-		removeImage(arguments.entity);
-		Super.delete(arguments.entity);
+	public boolean function delete(required any option) {
+		var deleted = false;
+		if(!arguments.option.hasSkus()) {
+			removeImage(arguments.option);
+			Super.delete(arguments.option);
+			deleted = true;
+		} else {
+			transactionRollback();
+			getValidator().setError(entity=arguments.option,errorName="delete",rule="hasSkus");
+		}
+		return deleted;
+	}
+	
+	public boolean function deleteOptionGroup(required any optionGroup) {
+		var deleted = false;
+		if(!arguments.optionGroup.hasOptions()) {
+			removeImage(arguments.optionGroup);
+			Super.delete(arguments.optionGroup);
+			deleted = true;
+		} else {
+			transactionRollback();
+			getValidator().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
+		}
+		return deleted;
 	}
 	
 	public any function removeImage(required any entity) {

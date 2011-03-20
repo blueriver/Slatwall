@@ -105,7 +105,7 @@ component extends="BaseService" accessors="true" {
 	
 	public any function saveProductType(required any productType, required struct data) {
 		
-		arguments.productType.populate(data=arguments.data,propList="productTypeID,productTypeName,parentProductType");
+		arguments.productType.populate(data=arguments.data);
 		
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
@@ -115,12 +115,16 @@ component extends="BaseService" accessors="true" {
 	   return entity;
 	}
 	
-	public void function deleteProductType(required any productType) {
-	   if(isObject(arguments.productType)) {
-	       delete(arguments.productType);
-		} else if(isSimpleValue(arguments.productType)) {
-		   delete(getByID(arguments.productType,"SlatwallProductType"));
-	   }
+	public boolean function deleteProductType(required any productType) {
+		var deleted = false;
+		if( !arguments.productType.hasProducts() && !arguments.productType.hasSubProductTypes() ) {
+			getDAO().delete(entity=productType);
+			deleted = true;
+		} else {
+			transactionRollback();
+			getValidator().setError(entity=arguments.productType,errorName="delete",rule="assignedToProducts");
+		}
+		return deleted;
 	}
 	
 }

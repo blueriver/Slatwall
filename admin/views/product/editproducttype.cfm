@@ -31,10 +31,9 @@
 		</dd>
 	</dl>
 <a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("admin.nav.back")#</a>
-<cfif !rc.productType.isNew() and !rc.productType.getIsAssigned() and !arrayLen(rc.productType.getSubProductTypes())>
+<cfif !rc.productType.isNew() and !rc.productType.hasProducts() and !rc.productType.hasSubProductTypes()>
 <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 </cfif>
 <cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
 </form>
-Update Keys : #rc.productType.getUpdateKeys()#
 </cfoutput>

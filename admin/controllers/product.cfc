@@ -158,8 +158,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function deleteProductType(required struct rc) {
 		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
-		if(!productType.getIsAssigned() and !arrayLen(productType.getSubProductTypes())) {
-			getProductService().deleteProductType(rc.productTypeID);
+		if(getProductService().deleteProductType(productType)) {
 			getProductService().setProductTypeTree();
 			rc.message = "admin.product.deleteproducttype_success";		
 		} else {

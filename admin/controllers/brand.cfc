@@ -53,11 +53,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function delete(required struct rc) {
 		var brand = getBrandService().getByID(rc.brandID);
-		if(!brand.getIsAssigned()) {
-			getBrandService().delete(brand);
+		if(getBrandService().delete(brand)) {
 			rc.message="admin.brand.delete_success";
 		} else {
-			rc.message="admin.brand.delete_isassigned";
+			rc.message="admin.brand.delete_disabled";
 			rc.messagetype="warning";
 		}	   
 		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");

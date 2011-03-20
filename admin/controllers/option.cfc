@@ -96,8 +96,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function delete(required struct rc) {
 		var option = getOptionService().getByID(rc.optionid);
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
-		if(!option.getIsAssigned()) {
-			getOptionService().delete(option);
+		if(getOptionService().delete(option)) {
 			rc.message="admin.option.delete_success";
 		} else {
 			rc.message="admin.option.delete_disabled";
@@ -169,8 +168,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function deleteOptionGroup(required struct rc) {
 		var optionGroup = getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup");
-		if(optionGroup.getOptionsCount() eq 0) {
-			getOptionService().delete(getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup"));
+		if(getOptionService().deleteOptionGroup(optionGroup)) {
 			rc.message = "admin.option.deleteoptiongroup_success";
 		} else {
 			rc.message = "admin.option.deleteoptiongroup_disabled";
