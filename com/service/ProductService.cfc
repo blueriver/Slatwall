@@ -8,7 +8,9 @@ component extends="BaseService" accessors="true" {
 	property name="feedManager" type="any";
 	property name="ProductTypeTree" type="any";
 	
-	public any function init() {
+	public any function init(required any productTypeDAO) {
+		//TODO: look at changing it to property injection through coldspring
+		setproductTypeDAO(arguments.productTypeDAO);
 		setProductTypeTree();
 		
 		return this;

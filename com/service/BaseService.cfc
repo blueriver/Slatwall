@@ -5,14 +5,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	property name="Validator" table="Slatwall.com.utility.Validator";
 	property name="fileService" type="any";
 	
-	public any function init(required string entityName, required any dao, required any validator, any fileService) {
-		setEntityName(arguments.entityName);
-		setDAO(arguments.DAO);
-		setValidator(arguments.validator);
-		if(structKeyExists(arguments,"fileService")) {
-			setfileService(arguments.fileService);
-		}
-		
+	public any function init() {
 		return this;
 	}
 	
