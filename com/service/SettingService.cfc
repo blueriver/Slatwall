@@ -1,10 +1,5 @@
 component extends="Slatwall.com.service.BaseService" persistent="false" output="false" {
-	
-	public any function init() {
-		reloadConfiguration();
-		return this;
-	}
-	
+
 	public struct function getAllSettings(boolean reload=false) {
 		if(!structKeyExists(variables, "settings") || arguments.reload == true) {
 			reloadConfiguration();

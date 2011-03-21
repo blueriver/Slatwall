@@ -9,7 +9,7 @@
 		 <property name="productTypeTreeSorter"><ref bean="productTypeTreeSorter" /></property>
 	</bean>
 	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
-	<bean id="settingDAO" class="slatwall.com.dao.[integration]SkuDAO" />
+	<bean id="settingDAO" class="slatwall.com.dao.[integration]SettingDAO" />
 	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
     <bean id="optionDAO" class="slatwall.com.dao.[integration]OptionDAO" />
     <bean id="optionGroupDAO" class="slatwall.com.dao.[integration]OptionGroupDAO" />
