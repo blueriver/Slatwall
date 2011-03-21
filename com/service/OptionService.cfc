@@ -26,29 +26,21 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 	
 	public boolean function delete(required any option) {
-		var deleted = false;
-		if(!arguments.option.hasSkus()) {
-			removeImage(arguments.option);
-			Super.delete(arguments.option);
-			deleted = true;
-		} else {
-			transactionRollback();
+		if(arguments.option.hasSkus()) {
 			getValidator().setError(entity=arguments.option,errorName="delete",rule="hasSkus");
+		} else {
+			removeImage(arguments.option);
 		}
-		return deleted;
+		return Super.delete(arguments.option);
 	}
 	
 	public boolean function deleteOptionGroup(required any optionGroup) {
-		var deleted = false;
-		if(!arguments.optionGroup.hasOptions()) {
-			removeImage(arguments.optionGroup);
-			Super.delete(arguments.optionGroup);
-			deleted = true;
-		} else {
-			transactionRollback();
+		if(arguments.optionGroup.hasOptions()) {
 			getValidator().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
+		} else {
+			removeImage(arguments.optionGroup);
 		}
-		return deleted;
+		return Super.delete(arguments.optionGroup);
 	}
 	
 	public any function removeImage(required any entity) {

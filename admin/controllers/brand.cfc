@@ -60,6 +60,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(getBrandService().delete(brand)) {
 			rc.message="admin.brand.delete_success";
 		} else {
+			//TODO: Check for error in the bean and display from there
 			rc.message="admin.brand.delete_disabled";
 			rc.messagetype="warning";
 		}	   
