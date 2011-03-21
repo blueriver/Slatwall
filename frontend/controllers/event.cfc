@@ -8,11 +8,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		variables.fw.setView("frontend:event.blank");
 	}
 	
-	public void function onsiterequeststart(required any rc) {
+	public void function onSiteRequestStart(required any rc) {
 
 	}
 	
-	public void function onrenderstart(required any rc) {
+	public void function onRenderStart(required any rc) {
 		// This enables SEO friendly product URL's
 		if( listLen(rc.path, "/") >= 3) {
 			if( listGetAt(rc.path, 2, "/") == setting('product_urlKey') ) {
@@ -27,7 +27,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 	}
 	
-	public void function onrenderend(required any rc) {
+	public void function onRenderEnd(required any rc) {
 		// Add necessary html to the header
 		savecontent variable="html_head" {
 			include "/plugins/#application.Slatwall.pluginConfig.getDirectory()#/frontend/layouts/inc/html_head.cfm";
@@ -37,8 +37,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.$.getEvent().setValue( "__MuraResponse__", newContent);
 	}
 	
-	public void function ongloballoginsuccess(required any rc) {
+	public void function onGlobalLoginSuccess(required any rc) {
 		getAccountService().loginMuraUser(muraUser = arguments.rc.$.currentUser().getUserBean());
+	}
+	
+	public void function onSiteLoginSuccess(required any rc) {
+		onGlobalLoginSuccess(arguments.rc);
 	}
 	
 }

@@ -75,9 +75,13 @@ component extends="framework" output="false" {
 		param name="session.locale" default="en";
 		param name="session.siteid" default="default";
 		param name="session.dashboardSpan" default="30";
-		
+		if(!structKeyExists(session, "datekey")) {
+			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
+			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
+		}
+				
 		// Look for mura Scope.  If it doens't exist add it.
-		if (not structKeyExists(request.context,"$")){
+		if (!structKeyExists(request.context,"$")){
 			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
 		}
 		
