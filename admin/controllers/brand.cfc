@@ -22,7 +22,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function edit(required struct rc) {
-		if(!structKeyExists(rc,"brand") or !isObject(rc.brand)) {
+		if(structKeyExists(rc,"brand") && isObject(rc.brand)) {
+			var errors = rc.brand.getErrorBean();
+			rc.brand = entityMerge(rc.brand);
+			rc.brand.setErrorBean(errors);
+		} else {
 			rc.brand = getBrandService().getByID(ID=rc.brandID);
 		}
 	   if(!isNull(rc.Brand)) {	
