@@ -63,7 +63,10 @@ component extends="framework" output="false" {
 		serviceFactory.setParent(application.servicefactory);
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
-				
+		
+		// Setup run Setting Service reload config
+		getBeanFactory().getBean("settingService").reloadConfiguration();
+		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
