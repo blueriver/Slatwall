@@ -79,6 +79,9 @@ component extends="framework" output="false" {
 			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
 			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
 		}
+		
+		// Setup Request Scope Slatwall Session holder
+		request.slatwallSession = {};
 				
 		// Look for mura Scope.  If it doens't exist add it.
 		if (!structKeyExists(request.context,"$")){
@@ -88,6 +91,11 @@ component extends="framework" output="false" {
 		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
 		if(request.context.$.event('siteid') == "") {
 			request.context.$.event('siteid', session.siteid);
+		}
+		
+		// Setup Slatwall Session when needed, Because the session object needs the muraScope we do this after the muraScope Setup
+		if(! structKeyExists(session, "slatwallSession")) {
+			session.slatwallSession = new Slatwall.com.utility.SlatwallSession();
 		}
 		
 		// Setup Base URL's for each subsystem
@@ -100,11 +108,6 @@ component extends="framework" output="false" {
 			variables.subsystems.frontend.baseURL &= "index.cfm";
 		}
 		
-		// Setup Slatwall Session when needed, Because the session object needs the muraScope we do this after
-		if(! structKeyExists(session, "SlatwallSession")) {
-			session.slatwallSession = new Slatwall.com.utility.SlatwallSession();
-		}
-
 		// Create SlatwallScope and add it to the muraScope
 		request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
 		
