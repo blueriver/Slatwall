@@ -29,13 +29,12 @@
     <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />
 	
 	<!-- transaction advisor -->
-	<bean id="transactionAdvisor" class="coldspring.aop.support.RegexMethodPointcutAdvisor">
+	<bean id="transactionAdvisor" class="slatwall.com.utility.coldspring.NamedMethodExclusionPointcutAdvisor">
 		<property name="advice">
 			<ref bean="transactionAdvice" />
 		</property>
-		<property name="pattern">
-			<!-- only wrap writes/deletes to db in transactional context -->
-			<value>(?!prep)\b\w+</value>
+		<property name="MappedNames">
+			<value>populate,getnewentity</value>
 		</property>
 	</bean>
 		
