@@ -6,7 +6,7 @@
 			
 	<cfset variables.mappedNames = 0 />
 	
-	<cffunction name="init" access="public" returntype="coldspring.aop.support.NamedMethodExclusionPointcut" output="false">
+	<cffunction name="init" access="public" returntype="any" output="false">
 		<cfreturn this />
 	</cffunction>
 	
