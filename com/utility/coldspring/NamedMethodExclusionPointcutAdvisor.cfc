@@ -4,7 +4,7 @@
 			hint="Pointcut Advisor to exclude matched method names (with wildcard)" 
 			output="false">
 	
-	<cffunction name="init" access="public" returntype="coldspring.aop.support.NamedMethodExclusionPointcutAdvisor" output="false">
+	<cffunction name="init" access="public" returntype="any" output="false">
 		<cfset setPointcut(CreateObject('component','NamedMethodExclusionPointcut').init()) />
 		<cfreturn this />
 	</cffunction>
