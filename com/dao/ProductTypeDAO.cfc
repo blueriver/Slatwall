@@ -2,8 +2,7 @@ component extends="slatwall.com.dao.BaseDAO" accessors="true" {
 
     property name="ProductTypeTreeSorter" type="any";
 	
-	public any function init(required any productTypeTreeSorter) {
-	   setProductTypeTreeSorter(arguments.productTypeTreeSorter);
+	public any function init() {
        return this;
     }
 

@@ -3,13 +3,7 @@ component extends="BaseService" accessors="true" {
 	property name="sessionService" type="any";
 	property name="userManager" type="any";
 	
-	public any function init(required string entityName, required any dao, required any validator, required any sessionService) {
-		setEntityName(arguments.entityName);
-		setDAO(arguments.DAO);
-		setValidator(arguments.validator);
-		setSessionService(arguments.sessionService);
-		setUserManager(arguments.userManager);
-		
+	public any function init() {
 		return this;
 	}
 	
