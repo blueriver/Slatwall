@@ -9,7 +9,7 @@ component extends="slatwall.com.dao.BaseDAO" accessors="true" {
 
     public any function getProductTypeTree() {
 	   var qs = new query();
-	   qs.setSQL("SELECT productTypeID, productType, parentProductTypeID,
+	   qs.setSQL("SELECT productTypeID, productTypeName, parentProductTypeID,
 	   					(SELECT count(SlatwallProduct.productID)
 						 FROM SlatwallProduct
 						 WHERE SlatwallProduct.productTypeID = SlatwallProductType.productTypeID) as isAssigned,
@@ -17,7 +17,7 @@ component extends="slatwall.com.dao.BaseDAO" accessors="true" {
 						  FROM SlatwallProductType spt
 						  WHERE spt.parentProductTypeID = SlatwallProductType.productTypeID) as childCount
 	               FROM SlatwallProductType
-				   ORDER BY productType ASC");
+				   ORDER BY productTypeName ASC");
 	   // return query sorted Product Type tree 
 	   return getProductTypeTreeSorter().sortQuery(qs.execute().getResult());
 	}

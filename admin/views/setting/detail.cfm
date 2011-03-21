@@ -23,10 +23,9 @@
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
-					<cf_PropertyDisplay object="#rc.allSettings.product_trackInventory#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventory')#" property="settingValue" fieldName="product_trackInventory" edit="#rc.edit#" dataType="boolean" editType="checkbox" displaytype="table">
 					<cf_PropertyDisplay object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" property="settingValue" fieldName="product_urlKey" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<tr class="spdproduct_defaulttemplate">
-						<td class="property varWidth">#rc.$.Slatwall.rbKey('setting.defaultProductTemplate')#</td>
+						<td class="property varWidth">#rc.$.Slatwall.rbKey('setting.product.defaultProductTemplate')#</td>
 						<cfif rc.edit>
 							<td id="spdproduct_defaulttemplate" class="value">
 								<select name="product_defaulttemplate">
@@ -43,7 +42,7 @@
 				    <cf_PropertyDisplay object="#rc.allSettings.product_manufactureDiscontinued#" title="#rc.$.Slatwall.rbKey('setting.product.manufactureDiscontinued')#" property="settingValue" fieldName="product_manufactureDiscontinued" edit="#rc.edit#" dataType="boolean" editType="radioGroup" displaytype="table">
 					<cf_PropertyDisplay object="#rc.allSettings.product_showOnWeb#" title="#rc.$.Slatwall.rbKey('setting.product.showOnWeb')#" property="settingValue" fieldName="product_showOnWeb" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 					<cf_PropertyDisplay object="#rc.allSettings.product_showOnWebWholesale#" title="#rc.$.Slatwall.rbKey('setting.product.showOnWebWholeSale')#" property="settingValue" fieldName="product_showOnWebWholeSale" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_nonInventory#" title="#rc.$.Slatwall.rbKey('setting.product.nonInventory')#" property="settingValue" fieldName="product_nonInventory" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_PropertyDisplay object="#rc.allSettings.product_trackInventory#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventory')#" property="settingValue" fieldName="product_nonInventory" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 				    <cf_PropertyDisplay object="#rc.allSettings.product_callToOrder#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrder')#" property="settingValue" fieldName="product_callToOrder" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 				    <cf_PropertyDisplay object="#rc.allSettings.product_allowShipping#" title="#rc.$.Slatwall.rbKey('setting.product.allowShipping')#" property="settingValue" fieldName="product_allowShipping" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 				    <cf_PropertyDisplay object="#rc.allSettings.product_allowPreorder#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorder')#" property="settingValue" fieldName="product_allowPreorder" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">

@@ -1,4 +1,5 @@
-﻿<cfparam name="rc.newOption" type="any" />
+﻿<cfparam name="rc.newOption" type="any" default="" />
+<cfparam name="rc.activeOption" type="any" default="" >
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.optionID" type="string" default="" />
 
@@ -17,12 +18,17 @@
 <cfoutput>
 
 <cfif request.action eq "admin:option.create">
+<cfif rc.optionID eq "new">
+	<cfset local.thisOpen = true />
+<cfelse>
+	<cfset local.thisOpen = false />
+</cfif>
 <div id="buttons">
-<a class="button" id="newFrmopen" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideDown();this.style.display='none';jQuery('##newFrmclose').show();return false;">#rc.$.Slatwall.rbKey('admin.option.addoption')#</a>
-<a class="button" href="javascript:;" style="display:none;" id="newFrmclose" onclick="jQuery('##newFrmcontainer').slideUp();this.style.display='none';jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('admin.option.closeform')#</a>
+<a class="button" id="newFrmopen" href="javascript:;" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##newFrmcontainer').slideDown();this.style.display='none';jQuery('##newFrmclose').show();return false;">#rc.$.Slatwall.rbKey('admin.option.addoption')#</a>
+<a class="button" href="javascript:;" <cfif !local.thisOpen>style="display:none;"</cfif> id="newFrmclose" onclick="jQuery('##newFrmcontainer').slideUp();this.style.display='none';jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('admin.option.closeform')#</a>
 </div>
 
-<div style="display:none;" id="newFrmcontainer">
+<div<cfif !local.thisOpen> style="display:none;"</cfif> id="newFrmcontainer">
 
 <form id="newOptionForm" enctype="multipart/form-data" action="#buildURL('admin:option.save')#" method="post">
     <input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
@@ -35,7 +41,7 @@
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
 	<cf_ActionCaller action="admin:option.save" type="submit">
-</form>  
+</form>
 </div>
 </cfif>
 
@@ -49,6 +55,10 @@
 <ul id="optionList">
 <cfloop from="1" to="#arraylen(local.options)#" index="local.i">
 <cfset local.thisOption = local.options[local.i] />
+<!--- see if this is the option to be actively edited --->
+<cfif isObject(rc.activeOption) and local.thisOption.getOptionID() eq rc.activeOption.getOptionID()>
+	<cfset local.thisOption = rc.activeOption />
+</cfif>
 <cfif local.thisOption.getOptionID() eq rc.optionID>
 	<cfset local.thisOpen = true />
 <cfelse>
@@ -65,6 +75,7 @@
 		<form name="editFrm#local.i#" enctype="multipart/form-data" action="#buildURL('admin:option.save')#" method="post">
 		    <input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 			<input type="hidden" name="optionID" value="#local.thisOption.getOptionID()#" />
+			<input type="hidden" name="sortOrder" value="#local.thisOption.getSortOrder()#" />
 		    <dl class="oneColumn">
 		        <cf_PropertyDisplay id="optionname#local.i#" object="#local.thisOption#" property="optionname" edit="true">
 				<cf_PropertyDisplay id="optioncode#local.i#" object="#local.thisOption#" property="optioncode" edit="true">
@@ -72,7 +83,7 @@
 		        <cfif local.thisOption.hasImage()>
 		        <dd>
 		            #local.thisOption.displayImage("40")#
-		            <input type="checkbox" name="removeOptionImage" value="1" id="removeOptionImage#local.i#" /> <label for="removeOptionImage#local.i#">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
+		            <input type="checkbox" name="removeImage" value="1" id="removeOptionImage#local.i#" /> <label for="removeOptionImage#local.i#">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		        </dd>
 		        </cfif>
 				<cf_PropertyDisplay id="optiondescription#local.i#" object="#local.thisOption#" property="optionDescription" edit="true" editType="wysiwyg" toggle="show">

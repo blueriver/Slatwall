@@ -22,7 +22,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function edit(required struct rc) {
-		if(!structKeyExists(rc,"brand") or !isObject(rc.brand)) {
+		if(structKeyExists(rc,"brand") && isObject(rc.brand)) {
+			var errors = rc.brand.getErrorBean();
+			rc.brand = entityMerge(rc.brand);
+			rc.brand.setErrorBean(errors);
+		} else {
 			rc.brand = getBrandService().getByID(ID=rc.brandID);
 		}
 	   if(!isNull(rc.Brand)) {	
@@ -39,12 +43,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-	   var brand = getBrandService().getByID(rc.brandID);
-	   if(isNull(brand)) {
-	       var brand = getBrandService().getNewEntity();
+	   rc.brand = getBrandService().getByID(rc.brandID);
+	   if(isNull(rc.brand)) {
+	       rc.brand = getBrandService().getNewEntity();
 	   }
-	   rc.brand = getFW().populate(cfc=brand, keys=brand.getUpdateKeys(), trim=true);
-	   rc.brand = getBrandService().save(entity=brand);
+	   rc.brand = getBrandService().save(rc.brand,rc);
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {
@@ -54,11 +57,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function delete(required struct rc) {
 		var brand = getBrandService().getByID(rc.brandID);
-		if(!brand.getIsAssigned()) {
-			getBrandService().delete(brand);
+		if(getBrandService().delete(brand)) {
 			rc.message="admin.brand.delete_success";
 		} else {
-			rc.message="admin.brand.delete_isassigned";
+			rc.message="admin.brand.delete_disabled";
 			rc.messagetype="warning";
 		}	   
 		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");

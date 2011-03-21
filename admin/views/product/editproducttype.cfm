@@ -11,19 +11,19 @@
 <form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
     <dl class="oneColumn">
-    	<cf_PropertyDisplay object="#rc.productType#" property="productType" edit="true" first="true">
+    	<cf_PropertyDisplay object="#rc.productType#" property="productTypeName" edit="true" first="true">
 		<dt>
 			<label for="parentProductType_productTypeID">Parent Product Type</label>
 		</dt>
 		<dd>
-		<select name="parentProductType_productTypeID" id="parentProductType_productTypeID">
+		<select name="parentProductType" id="parentProductType_productTypeID">
             <option value=""<cfif isNull(rc.productType.getParentProductType())> selected</cfif>>None</option>
         <cfloop query="local.tree">
-		    <cfif not listFind(local.tree.path,rc.productType.getProductType())><!--- can't be child of itself or any of its children --->
+		    <cfif not listFind(local.tree.path,rc.productType.getProductTypeName())><!--- can't be child of itself or any of its children --->
             <cfset ThisDepth = local.tree.TreeDepth />
             <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
             <option value="#local.tree.productTypeID#"<cfif (!isNull(rc.productType.getParentProductType()) and rc.productType.getParentProductType().getProductTypeID() eq local.tree.productTypeID) or rc.parentProductTypeID eq local.tree.productTypeID> selected="selected"</cfif>>
-                #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##local.tree.productType#
+                #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##bullet##local.tree.productTypeName#
             </option>
 			</cfif>
         </cfloop>
@@ -31,7 +31,7 @@
 		</dd>
 	</dl>
 <a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("admin.nav.back")#</a>
-<cfif !rc.productType.isNew() and !rc.productType.getIsAssigned() and !arrayLen(rc.productType.getSubProductTypes())>
+<cfif !rc.productType.isNew() and !rc.productType.hasProducts() and !rc.productType.hasSubProductTypes()>
 <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 </cfif>
 <cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">

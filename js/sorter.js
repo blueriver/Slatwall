@@ -75,7 +75,7 @@ function saveOptionSort(id){
 	);
 	
 	var url = "index.cfm";
-	var pars = 'action=admin:option.saveoptionsort&optionID=' + attArray.toString() + '&cacheID=' + Math.random();	
+	var pars = 'slatAction=admin:option.saveoptionsort&optionID=' + attArray.toString() + '&cacheID=' + Math.random();	
 	
 	//location.href=url + "?" + pars;
 	jQuery.post(url + "?" + pars); 

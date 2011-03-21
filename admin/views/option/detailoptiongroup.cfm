@@ -3,7 +3,7 @@
  
 <cfoutput>
 <ul id="navTask">
-	<cf_ActionCaller action="admin:option.create" querystring="optiongroupid=#rc.optiongroup.getoptiongroupid()#" type="list">
+	<cfif !rc.optionGroup.isNew()><cf_ActionCaller action="admin:option.create" querystring="optiongroupid=#rc.optiongroup.getoptiongroupid()#" type="list"></cfif>
     <cfif !rc.edit><cf_ActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list"></cfif>
 	<cf_ActionCaller action="admin:option.list" type="list">
 </ul>
@@ -24,9 +24,9 @@
 			#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupimage")#
 		</dt>
 		<dd>
-			#rc.OptionGroup.displayImage("40")#
+			<a href="#rc.OptionGroup.getImagePath()#" rel="shadowbox[body]">#rc.OptionGroup.displayImage("40")#</a>
 		<cfif rc.edit>
-			<input type="checkbox" name="removeOptionGroupImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
+			<input type="checkbox" name="removeImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		</cfif>
 		</dd>
 		</cfif>
@@ -35,10 +35,10 @@
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
 	<cf_actionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
 	<cfif rc.optiongroup.getOptionsCount() eq 0 and !rc.optionGroup.isNew()>
 	<cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
 	</cfif>
+	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
 </div>
 </form>
 <cfelse>

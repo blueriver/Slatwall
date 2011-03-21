@@ -25,7 +25,7 @@ component displayname="Product Content" entityname="SlatwallProductContent" tabl
        if(index > 0) {
            arrayDeleteAt(arguments.Product.getProductContent(),index);
        }    
-       structDelete(variables,"Product");
+       entityDelete(this);
     }
     
 	/************   END Association Management Methods   *******************/

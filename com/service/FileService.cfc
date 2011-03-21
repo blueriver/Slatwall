@@ -103,10 +103,13 @@
 	*  @version 1, January 19, 2006 (transposed to cfscript for Slatwall Mura plugin by Tony Garcia Feb 2011)
 	*/
 	
-	public string function filterFilename(required string filename) {
-	    var filenameRE = "[" & "'" & '"' & "##" & "/\\%&`@~!,:;=<>\+\*\?\[\]\^\$\(\)\{\}\|]";
-	    var newfilename = reReplace(arguments.filename,filenameRE,"","all");
-	    newfilename = replace(newfilename," ","-","all");
+	public string function filterFilename(string filename) {
+		var newFileName = "";
+		if( structKeyExists(arguments,"filename") && len(arguments.fileName) ) {
+		    var filenameRE = "[" & "'" & '"' & "##" & "/\\%&`@~!,:;=<>\+\*\?\[\]\^\$\(\)\{\}\|]";
+		    var newfilename = reReplace(arguments.filename,filenameRE,"","all");
+		    newfilename = replace(newfilename," ","-","all");
+		}
 	    
 	    return lcase(newfilename);
 	}

@@ -2,11 +2,11 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			
 	// Persistant Properties
 	property name="productTypeID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="productType" ormtype="string" validateRequired displayname="Product Type" default="";
+	property name="productTypeName" ormtype="string" validateRequired displayname="Product Type" default="";
     property name="manufactureDiscontinued" ormtype="boolean" persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
     property name="showOnWeb" ormtype="boolean" displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
     property name="showOnWebWholesale" ormtype="boolean" persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
-    property name="nonInventory" ormtype="boolean" displayname="Non-Inventory Item";
+    property name="trackInventory" ormtype="boolean" displayname="Non-Inventory Item";
     property name="callToOrder" ormtype="boolean" displayname="Call To Order";
     property name="allowShipping" ormtype="boolean" displayname="Allow Shipping";
     property name="allowPreorder" ormtype="boolean" displayname="Allow Pre-Orders" hint="";
@@ -16,7 +16,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
-	property name="Products" cfc="Product" singularname="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra";
+	property name="Products" cfc="Product" singularname="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
 	
 	// Calculated Properties
 	property name="isAssigned" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
@@ -27,6 +27,22 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	       variables.Products = [];
 	   return Super.init();
 	}
+	
+	public boolean function hasProducts() {
+		if(arrayLen(this.getProducts()) gt 0) {
+			return true;
+		} else {
+			return false;
+		}
+	} 
+	
+	public boolean function hasSubProductTypes() {
+		if(isNull(variables.subProductTypes) || arrayLen(this.getSubProductTypes()) == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	} 
 	
     /******* Association management methods for bidirectional relationships **************/
 	

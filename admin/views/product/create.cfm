@@ -15,7 +15,7 @@
 		    </dt>
 		    <dd>
 		    	<cfif rc.productTypes.recordCount gt 0>
-			        <select name="productType_productTypeID" id="productType_productTypeID">
+			        <select name="productType" id="productType_productTypeID">
 			            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
 			        <cfloop query="rc.productTypes">
 			            <cfif rc.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
