@@ -2,6 +2,11 @@
 <cfparam name="rc.productType" type="any" />
 <cfparam name="rc.parentProductTypeID" type="string" default="" />
 
+<!--- set up options for setting select boxes --->
+<cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
+<cfset local.defaultOption = {id="",name=rc.$.Slatwall.rbKey('setting.inherit')} />
+
+
 <cfoutput>
 <ul id="navTask">
     <cf_ActionCaller action="admin:product.listproducttypes" type="list">
@@ -12,7 +17,7 @@
 <form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
 </cfif>
-    <dl class="oneColumn">
+    <dl class="twoColumn">
     	<cf_PropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
 		<cfif rc.edit>
 		<cfset local.tree = rc.productTypeTree />
@@ -34,18 +39,24 @@
         </select>	
 		</dd>
 		<cfelse>
-			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" displaynull="true" edit="false">
+			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" nullValue="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
 		</cfif>
-		<cf_PropertyDisplay object="#rc.productType#" property="trackInventory" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="showOnWeb" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="showOnWebWholesale" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="callToOrder" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowShipping" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowPreorder" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowBackorder" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowDropShip" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.productType#" property="manufactureDiscontinued" edit="#rc.edit#">
 	</dl>
+	<table class="stripe" id="productTypeSettings">
+		<tr>
+			<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.producttypesettings')#</th>
+			<th></th>
+		</tr>
+		<cf_PropertyDisplay object="#rc.productType#" property="trackInventory" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="showOnWeb" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="showOnWebWholesale" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="callToOrder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowShipping" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowPreorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowBackorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowDropShip" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="manufactureDiscontinued" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+	</table>
 <cfif rc.edit>
 	<div id="actionButtons" class="clearfix">
 		<a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("sitemanager.cancel")#</a>

@@ -7,8 +7,8 @@
 <!--- hint: This is used in case a sub object property has a different name than the property --->
 <cfparam name="attributes.propertyObject" type="string" default="" />
 
-<!--- hint: Indicates whether values that return null should be displayed as "none" --->
-<cfparam name="attributes.displayNull" type="boolean" default="false" />
+<!--- hint: Value that is displayed when the property value is null --->
+<cfparam name="attributes.nullValue" type="string" default="" />
 
 <!--- hint: This can be used to override the displayName of a property" --->
 <cfparam name="attributes.title" default="" />
@@ -30,6 +30,9 @@
 
 <!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
 <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
+
+<!--- hint:i id-name struct to use as the default for select boxes --->
+<cfparam name="attributes.defaultOption" default="#structNew()#" type="struct" />
 
 <!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
 <cfparam name="attributes.tooltip" default="false" type="boolean" />
@@ -117,8 +120,8 @@
 				<cfelseif attributes.value eq "" and not structKeyExists(local.propertyMetadata,"default")>
 					<cfset attributes.value = "" />
 				</cfif>
-			<cfelseif isNull(attributes.value) and attributes.displayNull>
-				<cfset attributes.value = request.customMuraScopeKeys.slatwall.rbKey("admin.none") />
+			<cfelseif isNull(attributes.value) and len(attributes.nullValue)>
+				<cfset attributes.value = attributes.nullValue />
 			<cfelse>
 			     <cfset attributes.value = "" />
 			</cfif>
@@ -251,7 +254,11 @@
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
 						<select name="#attributes.fieldName#" id="#attributes.fieldName#_#attributes.fieldName#ID">
+							<cfif structIsEmpty(attributes.defaultOption)>
 							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
+							<cfelse>
+								<option value="#attributes.defaultOption['id']#">#attributes.defaultOption['name']#</option>
+							</cfif>
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#i['name']#</option>	
 							</cfloop>
