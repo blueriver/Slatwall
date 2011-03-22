@@ -59,7 +59,6 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 			var optionID = listGetAt(arguments.optionIDs,i);
 			var thisOption = getByID(optionID);
 			thisOption.setSortOrder(i);
-			//save(thisOption);
 		}
 	}
 	

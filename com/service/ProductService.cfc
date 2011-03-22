@@ -119,4 +119,30 @@ component extends="BaseService" accessors="true" {
 		return deleted;
 	}
 	
+	/**
+	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty string if it wasn't set
+	*/
+	public any function getProductTypeSetting( required string productType,required string setting ) {
+		var ptTree = getProductTypeTree();
+		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
+		var qoq = new Query();
+		qoq.setAttributes(ptTable = ptTree);
+		qoq.setSQL("select #arguments.setting#, path from ptTable where lower(productTypeName) = :ptype");
+		qoq.addParam(name="ptype", value=lcase(arguments.productType), cfsqlType="cf_sql_varchar");
+		var qGetSetting = qoq.execute(dbtype="query").getResult();
+		if(qGetSetting.recordCount == 1) {
+			local.theValue = evaluate("qGetSetting.#arguments.setting#");
+			if(local.theValue != "") {
+				return local.theValue;
+			} else if(local.theValue == "" && lcase(qGetSetting.path) != lcase(arguments.productType)) {
+				// gets the next product type up in the lineage and calls this function recursively
+				local.parentProductType = listGetAt(qGetSetting.path,listLen(qGetSetting.path)-1);
+				return getProductTypeSetting( productType=local.parentProductType,setting=arguments.setting );
+			} else {
+				return "";
+			}
+		}
+		else return "";
+	}
+	
 }

@@ -8,7 +8,7 @@ component extends="slatwall.com.dao.BaseDAO" accessors="true" {
 
     public any function getProductTypeTree() {
 	   var qs = new query();
-	   qs.setSQL("SELECT productTypeID, productTypeName, parentProductTypeID,
+	   qs.setSQL("SELECT *,
 	   					(SELECT count(SlatwallProduct.productID)
 						 FROM SlatwallProduct
 						 WHERE SlatwallProduct.productTypeID = SlatwallProductType.productTypeID) as isAssigned,

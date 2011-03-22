@@ -157,6 +157,25 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
+	/******* Generic setting accessor **************/
+	
+	public boolean function getSetting( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return variables[arguments.settingName];
+		} else {
+			var settingValue = getService("ProductService").getProductTypeSetting( getProductType().getProductTypeName(),arguments.settingName );
+			if(len(settingValue) > 0) {
+				return settingValue;
+			} else {
+				return setting("product_#arguments.settingName#");
+			}
+		}
+		
+	}
+	
+	
+	/***************************************************/
+	
 
 	/******* Association management methods for bidirectional relationships **************/
 	

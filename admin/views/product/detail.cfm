@@ -2,6 +2,10 @@
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
 
+<!--- set up options for setting select boxes --->
+<cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
+<cfset local.defaultOption = {id="",name=rc.$.Slatwall.rbKey('setting.inherit')} />
+
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">
 	<cfif !rc.edit>
@@ -128,17 +132,21 @@
 		</dl>
 	</div>
 	<div id="tabProductSettings">
-		<dl class="twoColumn">
-			<cf_PropertyDisplay object="#rc.Product#" property="showonWebRetail" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="showonWebWholesale" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowPreorder" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowBackorder" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowDropship" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="nonInventoryItem" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="callToOrder" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowShipping" edit="#rc.edit#">
-		</dl>
+		<table class="stripe" id="productTypeSettings">
+			<tr>
+				<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.productsettings')#</th>
+				<th></th>
+			</tr>
+			<cf_PropertyDisplay object="#rc.Product#" property="trackInventory" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="showOnWeb" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="showOnWebWholesale" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="callToOrder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowShipping" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowPreorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowBackorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowDropShip" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		</table>
 	</div>
 	<div id="tabProductPages">
 		<cfif rc.edit>
@@ -176,6 +184,7 @@
 </form>
 </cfif>
 </div>
+
 </cfoutput>
 <table id="tableTemplate" class="hideElement">
 <tbody>

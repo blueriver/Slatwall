@@ -19,9 +19,10 @@
 			</ul>     
         </td>
 		<td class="administration">
-		  <ul class="three">
+		  <ul class="four">
 		  	  <cfset local.deleteDisabled = (rc.productTypes.isAssigned gt 0) or (rc.productTypes.childCount gt 0) />
 		      <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
+			  <cf_ActionCaller action="admin:product.detailproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="viewDetails" type="list">
               <cf_ActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" class="add" type="list">
 			  <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
 		  </ul>
