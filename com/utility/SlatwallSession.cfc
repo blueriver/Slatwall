@@ -4,6 +4,8 @@ component accessors="true" extends="BaseObject" {
 	property name="accountID" type="string" default="";
 	property name="cartID" type="string" default="";
 	
+	request.slatwallSession = {};
+	
 	public any function init() {
 		setLastCrumbData(arrayNew(1));
 	}
@@ -33,8 +35,10 @@ component accessors="true" extends="BaseObject" {
 				request.slatwallSession.cart = getService("cartService").getByID(getCartID());
 			} else {
 				request.slatwallSession.cart = getService("cartService").getNewEntity();
-				request.slatwallSession.cart.setAccount(getAccount());
-				getService("cartService").save(request.slatwallSession.cart);
+				if(!getAccount().isNew()) {
+					request.slatwallSession.cart.setAccount(getAccount());	
+				}
+				request.slatwallSession.cart = getService("cartService").save(request.slatwallSession.cart);
 			}
 			setCartID(request.slatwallSession.cart.getCartID());
 		}

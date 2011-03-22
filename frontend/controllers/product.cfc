@@ -1,6 +1,7 @@
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 	
 	property name="productService" type="any";
+	property name="cartService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.filename" default="";
@@ -30,11 +31,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function addtocart(required struct rc) {
 		param name="rc.productID" default="";
 		param name="rc.selectedOptions" default="";
+		param name="rc.quantity" default="1";
 		
 		rc.product = getProductService().getByID(rc.productID);
 		
-		var skuToAdd = rc.product.getSkuBySelectedOptions(rc.selectedOptions);
-		writeDump(skuToAdd);
-		abort;
+		getCartService().addCartItem(sku=rc.product.getSkuBySelectedOptions(rc.selectedOptions), quantity=rc.quantity);
+		location(rc.product.getProductURL(), false);
 	}
 }

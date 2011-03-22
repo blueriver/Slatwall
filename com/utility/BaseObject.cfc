@@ -1,4 +1,4 @@
-component displayname="Base Object" {
+component displayname="Base Object" output="false" {
 	
 	variables.$ = getMuraScope();
 	
@@ -45,4 +45,11 @@ component displayname="Base Object" {
 		return variables;
 	}
 	
+	public string function buildURL() {
+		return application.slatwall.fw.buildURL(argumentCollection = arguments);
+	}
+	
+	public string function secureDisplay() {
+		return application.slatwall.fw.secureDisplay(argumentCollection = arguments);
+	}
 }

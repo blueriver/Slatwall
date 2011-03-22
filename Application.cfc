@@ -70,6 +70,9 @@ component extends="framework" output="false" {
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
+		
+		// Set this in the application scope to be used later
+		application[ variables.framework.applicationKey ].fw = this;
 	}
 	
 	public void function setupRequest() {
@@ -257,6 +260,6 @@ component extends="framework" output="false" {
 
 	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
 		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
-		return super.buildURL(action=arguments.action, path=arguments.path, queryString=arguments.queryString);
+		return super.buildURL(argumentCollection=arguments);
 	}
 }

@@ -91,7 +91,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     }
 	
 	public array function getSkus() {
-		if(!isDefined("variables.skus")) {
+		if(!structKeyExists(variables, "skus")) {
 			variables.skus = arrayNew(1);
 		}
 		return variables.skus;
