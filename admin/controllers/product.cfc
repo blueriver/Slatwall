@@ -105,13 +105,14 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	
+	
 	//   Product Type actions      
 		
 	public void function createProductType(required struct rc) {
 	   rc.productType = getProductService().getNewEntity("SlatwallProductType");
 	   // put type tree into the rc for parent dropdown
 	   rc.productTypeTree = getProductService().getProductTypeTree();
-	   getFW().setView("admin:product.editproducttype");
+	   getFW().setView("admin:product.detailproducttype");
 	}
 		
 	public void function editProductType(required struct rc) {
@@ -127,15 +128,26 @@ component extends="BaseController" output=false accessors=true {
 	   		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		}
 	   	if(!isNull(rc.productType)) {
+	   		rc.edit = true;
 	       	rc.productTypeTree = getProductService().getProductTypeTree();
 		   	rc.itemTitle &= ": " & rc.productType.getProductTypeName();
+		   	getFW().setView("admin:product.detailproducttype");
 	   	} else {
-           	getFW().redirect("product.listproducttypes");
+           	getFW().redirect("admin:product.listproducttypes");
 		}
 	}
 	
 	public void function listProductTypes(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
+	}
+	
+	public void function detailProductType(required struct rc) {
+		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		if(isNull(rc.productType)) {
+			getFW().redirect("admin:product.listProductTypes");
+		} else {
+			rc.itemTitle &= ": " & rc.productType.getProductTypeName();
+		}
 	}
 
 	

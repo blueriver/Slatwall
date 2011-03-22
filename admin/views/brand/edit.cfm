@@ -8,11 +8,13 @@
 				<cf_PropertyDisplay object="#rc.Brand#" property="BrandName" edit="true" first="true">
 				<cf_PropertyDisplay object="#rc.Brand#" property="BrandWebsite" edit="true">
 			</dl>
+			<div id="actionButtons" class="clearfix">
 				<a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("admin.nav.back")#</a>
 				<cfif !rc.brand.isNew() and !rc.brand.hasProducts()>
 				<cf_ActionCaller action="admin.brand.delete" querystring="brandid=#rc.brand.getBrandID()#" class="button" type="link" confirmrequired="true">
 				</cfif>
 				<cf_ActionCaller action="admin:brand.save" type="submit">
+			</div>
 		</form>
 	</div>
 </cfoutput>

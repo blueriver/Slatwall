@@ -42,6 +42,19 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		} else {
 			return true;
 		}
+	}
+	
+	public boolean function isCustomSettings() {
+		var isCustom = false;
+		var props = getMetaData(this).properties;
+		for(var i=1; i<=arrayLen(props);i++) {
+			local.thisProp = props[i];
+			if( structKeyExists(local.thisProp,"ormType") && local.thisProp.ormType == "boolean" && structKeyExists(variables,local.thisProp.name) ) {
+				isCustom = true;
+				break;
+			}
+		}
+		return isCustom;
 	} 
 	
     /******* Association management methods for bidirectional relationships **************/
