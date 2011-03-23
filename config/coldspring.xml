@@ -18,6 +18,7 @@
 	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
 	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
 	<bean id="FileService" class="slatwall.com.service.FileService" />
+	<bean id="TagProxyService" class="slatwall.com.service.TagProxyService" />
 	<bean id="Validator" class="slatwall.com.utility.Validator" />
 	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
 		<constructor-arg name="TitleColumn"><value>productTypeName</value></constructor-arg>
@@ -161,6 +162,7 @@
 		        <property name="entityName"><value>SlatwallSession</value></property>
 		        <property name="DAO"><ref bean="SessionDAO" /></property>
 				<property name="validator"><ref bean="Validator" /></property>
+				<property name="TagProxyService"><ref bean="TagProxyService" /></property>
             </bean>
         </property>
         <property name="interceptorNames">

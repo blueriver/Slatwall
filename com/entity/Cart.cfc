@@ -2,6 +2,8 @@ component displayname="Cart" entityname="SlatwallCart" table="SlatwallCart" pers
 	
 	// Persistant Properties
 	property name="cartID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="createdDateTime" ormtype="date";
+	property name="lastUpdatedDateTime"	ormtype="date";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";

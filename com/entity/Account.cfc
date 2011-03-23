@@ -9,6 +9,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="remoteCustomerID" ormtype="string" default="" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" default="" hint="Only used when integrated with a remote system";
 	property name="muraUserID" ormtype="string" default="";
+	property name="createdDateTime" ormtype="date";
+	property name="lastUpdatedDateTime"	ormtype="date";
 	
 	// Related Object Properties
 	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
@@ -68,6 +70,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 			variables.muraUser = getService("userManager").read(userID=getMuraUserID());
 		}
 		return variables.muraUser;
+	}
+	
+	public any function setMuraUser(required any muraUser) {
+		variables.muraUser = arguments.muraUser;
+		setMuraUserID(arguments.muraUser.getUserID());
 	}
 	
 	public string function getPrimaryEmail() {

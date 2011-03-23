@@ -36,13 +36,5 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
 		rc.$.getEvent().setValue( "__MuraResponse__", newContent);
 	}
-	
-	public void function onGlobalLoginSuccess(required any rc) {
-		getAccountService().loginMuraUser(muraUser = arguments.rc.$.currentUser().getUserBean());
-	}
-	
-	public void function onSiteLoginSuccess(required any rc) {
-		onGlobalLoginSuccess(arguments.rc);
-	}
-	
+
 }

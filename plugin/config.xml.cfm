@@ -77,8 +77,6 @@
 <eventHandlers>
 	<eventHandler event="onApplicationLoad" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onGlobalSessionStart" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onGlobalLoginSuccess" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onSiteLoginSuccess" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onSiteRequestStart" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>	
