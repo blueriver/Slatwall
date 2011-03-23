@@ -3,11 +3,7 @@ component extends="BaseService" accessors="true" {
 	property name="sessionService" type="any";
 	property name="userManager" type="any";
 	
-	public any function init() {
-		return this;
-	}
-	
-	public any function loginMuraUser(required any muraUser) {
+	public any function getAccountByMuraUser(required any muraUser) {
 		
 		// Load Account based upon the logged in muraUserID
 		var account = getDAO().readByMuraUserID(muraUserID = arguments.muraUser.getUserID());
@@ -19,7 +15,7 @@ component extends="BaseService" accessors="true" {
 			if(isnull(account)) {
 				// If no account exists, create a new one and save it linked to the user that just logged in.
 				account = getNewEntity();
-				account.setMuraUserID(arguments.muraUser.getUserID());
+				account.setMuraUser(arguments.muraUser);
 				var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
 				accountEmail.setEmail(arguments.muraUser.getEmail());
 				accountEmail.setAccount(account);
@@ -33,10 +29,8 @@ component extends="BaseService" accessors="true" {
 					// TODO: If a muraUserID is already assigned, Offer to merge Accounts.
 				}
 			}
-		} else {
 		}
 		
-		// Login Slatwall Account in Session
-		getSessionService().getCurrent().setAccount(account);
+		return account;
 	}
 }

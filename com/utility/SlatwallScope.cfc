@@ -1,10 +1,6 @@
-component accessors="true" extends="BaseObject" {
+component accessors="true" output="false" extends="BaseObject" {
 	
 	property name="currentProduct" type="any";
-	
-	public any function init() {
-		return this;
-	}
 	
 	public any function getCurrentAccount() {
 		return getService("sessionService").getCurrent().getAccount();
@@ -56,37 +52,5 @@ component accessors="true" extends="BaseObject" {
 			arguments.local = session.rb;
 		}
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
-	}
-
-	public boolean function secureDisplay(required string action) {
-		return secureDisplay(arguments.action);
-	}
-	
-	public string function getLoginURL(string returnURL="", string returnAction="") {
-		var loginURL = "";
-		
-		if($.siteConfig().getExtranetSSL()) {
-			loginURL &= "https://";
-		} else {
-			loginURL &= "http://";
-		}
-		
-		loginURL &= "#$.siteConfig().getDomain()#/";
-		
-		if(application.configBean.getSiteIDInURLS()) {
-			loginURL &= "#$.siteConfig('siteid')#/";
-		}
-		if(application.configBean.getIndexFileInURLS()) {
-			loginURL &= "index.cfm";
-		}
-		if(find("?",loginURL)) {
-			loginURL &= "&";
-		} else {
-			loginURL &= "?";
-		}
-		
-		loginURL &= "##returnURL=" & URLEncodedFormat("http://#$.siteConfig().getDomain()#/plugins/Slatwall/?slatAction=#slatAction#");
-		
-		return loginURL;
 	}
 }
