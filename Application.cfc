@@ -25,6 +25,12 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
+		// Set default mura session variables when needed
+		param name="session.rb" default="en";
+		param name="session.locale" default="en";
+		param name="session.siteid" default="default";
+		param name="session.dashboardSpan" default="30";
+		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( !structKeyExists(application, "appinitialized") || application.appinitialized == false) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);

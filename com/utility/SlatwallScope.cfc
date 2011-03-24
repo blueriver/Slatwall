@@ -27,7 +27,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
-	public any function cart(string property, string value) {
+	public any function cart (string property, string value) {
 		if(isDefined("arguments.property") && isDefined("arguments.value")) {
 			return evaluate("getCurrentCart().set#arguments.property#(#arguments.value#)");
 		} else if (isDefined("arguments.property")) {

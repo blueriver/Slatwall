@@ -1,4 +1,4 @@
-component displayname="Cart" entityname="SlatwallCart" table="SlatwallCart" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Cart" entityname="SlatwallCart" table="SlatwallCart" persistent=true output="false" accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
 	property name="cartID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
