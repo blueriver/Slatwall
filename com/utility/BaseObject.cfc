@@ -62,6 +62,7 @@ component displayname="Base Object" output="false" {
 	
 	// @hint Private helper function for returning the current Mura Scope
 	private any function getMuraScope() {
+		param name="session.siteid" default="default";
 		if(structKeyExists(request, "muraScope")) {
 			return request.muraScope;
 		} else if(structKeyExists(request, "context") && structKeyExists(request.context, "$")) {

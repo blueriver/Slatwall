@@ -120,51 +120,51 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
-		// Set default mura session variables when needed
-		param name="session.rb" default="en";
-		param name="session.locale" default="en";
-		param name="session.siteid" default="default";
-		param name="session.dashboardSpan" default="30";
-		if(!structKeyExists(session, "datekey")) {
-			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
-			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
-		}
-		
-		// Setup Slatwall Session
-		getBeanFactory().getBean("sessionService").setupSessionRequest();
-		
-		// Look for mura Scope.  If it doens't exist add it.
-		if (!structKeyExists(request.context,"$")){
-			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
-		}
-		
-		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
-		if(request.context.$.event('siteid') == "") {
-			request.context.$.event('siteid', session.siteid);
-		}
-		
-		// Setup Base URL's for each subsystem
-		variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
-		variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
-		if(request.context.$.globalConfig().getSiteIDInURLS()) {
-			variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
-		}
-		if(request.context.$.globalConfig().getIndexFileInURLS()) {
-			variables.subsystems.frontend.baseURL &= "index.cfm";
-		}
-		
-		// Create SlatwallScope and add it to the muraScope
-		request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
-		
-		// Run subsytem specific logic.
-		if(isAdminRequest()) {
-			controller("admin:BaseController.subSystemBefore");
-		} else {
-			controller("frontend:BaseController.subSystemBefore");
+		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
+			// Set default mura session variables when needed
+			param name="session.rb" default="en";
+			param name="session.locale" default="en";
+			param name="session.siteid" default="default";
+			param name="session.dashboardSpan" default="30";
+			if(!structKeyExists(session, "datekey")) {
+				getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
+				session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
+			}
+			
+			// Setup Slatwall Session
+			getBeanFactory().getBean("sessionService").setupSessionRequest();
+			
+			// Look for mura Scope.  If it doens't exist add it.
+			if (!structKeyExists(request.context,"$")){
+				request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
+			}
+			
+			// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
+			if(request.context.$.event('siteid') == "") {
+				request.context.$.event('siteid', session.siteid);
+			}
+			
+			// Setup Base URL's for each subsystem
+			variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
+			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
+			if(request.context.$.globalConfig().getSiteIDInURLS()) {
+				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
+			}
+			if(request.context.$.globalConfig().getIndexFileInURLS()) {
+				variables.subsystems.frontend.baseURL &= "index.cfm";
+			}
+			
+			// Create SlatwallScope and add it to the muraScope
+			request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			
+			// Run subsytem specific logic.
+			if(isAdminRequest()) {
+				controller("admin:BaseController.subSystemBefore");
+			} else {
+				controller("frontend:BaseController.subSystemBefore");
+			}
 		}
 	}
-
-	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
 	// Helper Functions
