@@ -62,9 +62,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="lastUpdatedDateTime"	ormtype="date" default="" displayname="Date Last Updated";
 	
 	// Related Object Properties
-	property name="brand" displayname="Brand" validateRequired cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
-	property name="productType" displayname="Product Type" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="productType" validateRequired displayname="Product Type" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
@@ -127,6 +127,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
         }
         return variables.propertyTypeOptions;
     }
+    
+    public any function getProductTypeTree() {
+        return getService("ProductService").getProductTypeTree();
+    }
+    	
 	
 	public array function getSkus() {
 		if(!structKeyExists(variables, "skus")) {
@@ -301,10 +306,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	/************   END Association Management Methods   *******************/
 
-    public any function getProductTypeTree() {
-        return getService("ProductService").getProductTypeTree();
-    }
-    	
 	public struct function getOptionGroupsStruct() {
 		if(isNull(variables.optionGroups)) {
 			variables.optionGroups = structNew();

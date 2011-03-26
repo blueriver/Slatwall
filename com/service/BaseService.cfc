@@ -36,11 +36,11 @@
 Notes:
 
 */
-component displayname="Base Service" persistent="false" accessors="true" output="false" hint="This is a base service that all services will extend" {
+component displayname="Base Service" persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" hint="This is a base service that all services will extend" {
 
 	property name="entityName" type="string";
 	property name="DAO" type="any";
-	property name="Validator" table="Slatwall.com.utility.Validator";
+	property name="Validator" type="Slatwall.com.utility.Validator";
 	property name="fileService" type="any";
 	
 	public any function init() {
@@ -100,19 +100,25 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return deleted;
 	}
 	
-	public any function save(required any entity, struct data) {
-		if(structKeyExists(arguments,"data")){
-			arguments.entity.populate(arguments.data);
-		}
-        getValidator().validateObject(entity=arguments.entity);
-		
-		if(!arguments.entity.hasErrors()) {
-			arguments.entity = getDAO().save(entity=arguments.entity);
-		} else {
-			transactionRollback();
-			//trace( text="rolled back save within base service");
-		}
+	public any function populate(required any entity, required struct data) {
+		arguments.entity.populate(arguments.data);
 		return arguments.entity;
 	}	
+	
+
+    public any function save(required any entity, struct data) {
+        if(structKeyExists(arguments,"data")){
+            populate(arguments.entity,arguments.data);
+        }
+        getValidator().validateObject(entity=arguments.entity);
+        
+        if(!arguments.entity.hasErrors()) {
+            arguments.entity = getDAO().save(entity=arguments.entity);
+        } else {
+            transaction action="rollback";  
+            trace( text="rolled back save within base service");
+        }
+        return arguments.entity;
+    }   
 
 }
