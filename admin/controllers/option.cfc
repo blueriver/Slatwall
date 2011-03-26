@@ -48,12 +48,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function create(required struct rc) {
 		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		if(!isNull(rc.optionGroup)) {
-			// if we're coming back from a new option submission with errors set that one as the new option
-			if(structKeyExists(rc,"option") && isObject(rc.option) && rc.optionID=="new") {
-				rc.newOption = rc.option;
-			} else {
-				rc.newOption = getOptionService().getNewEntity();
-			}
+			rc.newOption = getOptionService().getNewEntity();
+			rc.create = true;
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 			getFW().setView("option.edit");
 		} else {
@@ -64,13 +60,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function edit(required struct rc) {
 		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		if(!isNull(rc.optionGroup)) {
-			// if we're coming back from an option update submission with errors set that one as the active option
-			if(structKeyExists(rc,"option") && isObject(rc.option) && rc.optionID==rc.option.getOptionID()) {
-				// merge entity with current session and transfer error bean
-				var errors = rc.option.getErrorBean();
-				rc.activeOption = entityMerge(rc.option);
-				rc.activeOption.setErrorBean(errors);
-			} 
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 		} else {
 			getFW().redirect("option.list");
@@ -99,6 +88,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		} else {
 			rc.option = getOptionService().getNewEntity();
 		}
+		
+		//put optionGroup in rc in case we have to show the edit screen again
+		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 					
 		// upload the image and return the result struct
 		if(rc.optionImageFile != "") {
@@ -113,9 +105,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
 		} else {
 			if(rc.option.isNew()) {
-				getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#&optionID=new" ,preserve="option");
+				rc.newOption = rc.option;
+				rc.create = true;
+				rc.optionID = "new";
+				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create");
+				getFW().setView("admin:option.edit");
 			} else {
-				getFW().redirect(action="admin:option.edit",querystring="optiongroupid=#rc.optionGroupID#&optionID=#rc.option.getOptionID()#" ,preserve="option");
+				rc.activeOption = rc.option;
+				rc.optionID = rc.option.getOptionID();
+				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.edit");
+				getFW().setView("admin:option.edit");
 			}		
 		}
 		
@@ -155,14 +154,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function editOptionGroup(required struct rc) {
 		rc.edit=true;
-		if(structKeyExists(rc,"optionGroup") && isObject(rc.optionGroup)) {
-			// entity came back from a failed validation, so merge it with the new session and transfer over the error bean
-			var errors = rc.optionGroup.getErrorBean();
-			rc.optionGroup = entityMerge(rc.optionGroup);
-			rc.optionGroup.setErrorBean(errors);
-		} else { 
-			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
-		}
+		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 		if(!isNull(rc.optionGroup)) {
 			if( len(rc.optionGroup.getOptionGroupName()) ) {
 				rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
@@ -191,7 +183,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.message="admin.option.saveoptiongroup_success";
 			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
 		} else {
-			getFW().redirect(action="admin:option.editoptiongroup",preserve="optionGroup",querystring=rc.optionGroup.getOptionGroupID());
+			rc.edit = true;
+			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
+			getFW().setView(action="admin:option.detailOptionGroup");
 		}
 	}
 	

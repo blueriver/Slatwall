@@ -61,6 +61,10 @@ component extends="BaseService" accessors="true" {
 	public any function getContentFeed() {
 		return getFeedManager().getBean();
 	}
+	
+	public any function getProductPages() {
+		return getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" }).getIterator();
+	}
 
 	/**
 	/* @hint associates this product with Mura content objects
@@ -81,11 +85,6 @@ component extends="BaseService" accessors="true" {
 	*/
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
 		return getSkuService().createSkus(argumentCollection=arguments);
-	}
-	
-	public any function populate(required any productEntity,required struct data) {
-		arguments.productEntity.populate(arguments.data);
-		return arguments.productEntity;
 	}
 	
 	public any function save(required any Product,required struct data) {
@@ -115,11 +114,6 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.Product = Super.save(arguments.Product);
 		
-		if(arguments.Product.hasErrors()) {
-			transactionRollback();
-			trace( text="rolled back save within product service");
-		}
-		
 		return arguments.Product;
 	}
 	
@@ -146,14 +140,10 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public boolean function deleteProductType(required any productType) {
-		var deleted = false;
 		if( !arguments.productType.hasProducts() && !arguments.productType.hasSubProductTypes() ) {
-			Super.delete(arguments.productType);
-			deleted = true;
-		} else {
-			transactionRollback();
 			getValidator().setError(entity=arguments.productType,errorName="delete",rule="assignedToProducts");
 		}
+		var deleted = Super.delete(arguments.productType);
 		return deleted;
 	}
 	

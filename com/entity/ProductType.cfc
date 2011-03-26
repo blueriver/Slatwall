@@ -95,6 +95,10 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return isCustom;
 	} 
 	
+	public any function getProductTypeTree() {
+		return getService("ProductService").getProductTypeTree();
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Products (one-to-many)
