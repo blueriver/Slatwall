@@ -105,12 +105,12 @@ component extends="BaseController" output=false accessors=true {
 		// set up options struct for generating skus if this is a new product
 		if(isNew) {
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
+		} else {
+			rc.productPages = getProductService().getProductPages();
+            rc.productImage = rc.product.getImage("s");
 		}
-		
-		// put optionGroups, product pages and image into the rc in case validation fails and we need it for create/edit view
-		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
-		rc.productPages = getProductService().getProductPages();
-		rc.productImage = rc.product.getImage("s");
+
 
 		// Attempt to Save Product
 		rc.product = getProductService().save( rc.product,rc );
