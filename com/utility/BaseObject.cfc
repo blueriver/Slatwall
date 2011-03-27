@@ -50,6 +50,11 @@ component displayname="Base Object" output="false" {
 		return application.slatwall.pluginConfig.getApplication().getValue("rbFactory");
 	}
 	
+	// @hint Private helper function to return the RB Key from RB Factory in any component
+	private string function rbKey(required string key) {
+		return getRBFactory().getKeyValue(session.rb,arguments.key);
+	}
+	
 	// @hint Private helper function to return a Setting
 	private any function setting(required string settingName) {
 		return getService("settingService").getSettingValue(arguments.settingName);

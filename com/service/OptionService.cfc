@@ -63,7 +63,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		return arguments.entity;
 	}
 	
-	public boolean function delete(required any option) {
+	public any function delete(required any option) {
 		if(arguments.option.hasSkus()) {
 			getValidator().setError(entity=arguments.option,errorName="delete",rule="hasSkus");
 		} else {
@@ -72,7 +72,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		return Super.delete(arguments.option);
 	}
 	
-	public boolean function deleteOptionGroup(required any optionGroup) {
+	public any function deleteOptionGroup(required any optionGroup) {
 		if(arguments.optionGroup.hasOptions()) {
 			getValidator().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
 		} else {

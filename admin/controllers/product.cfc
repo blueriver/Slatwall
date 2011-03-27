@@ -105,8 +105,10 @@ component extends="BaseController" output=false accessors=true {
 		// set up options struct for generating skus if this is a new product
 		if(isNew) {
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+			// option groups in rc in case validation fails and we come back to the create view
 			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		} else {
+			// these are for the edit view in case of failed validation
 			rc.productPages = getProductService().getProductPages();
             rc.productImage = rc.product.getImage("s");
 		}
@@ -139,9 +141,14 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function delete(required struct rc) {
 		var product = getProductService().getByID(rc.productID);
-		getProductService().delete(product);
-		getProductService().setProductTypeTree();
-		rc.message = "admin.product.delete_success";		
+		var deleteResponse = getProductService().delete(product);
+		if(deleteResponse.getStatusCode()) {
+			getProductService().setProductTypeTree();
+			rc.message = deleteResponse.getMessage();		
+		} else {
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
+		}
 		getFW().redirect(action="admin:product.list",preserve="message");
 	}
 	
@@ -206,12 +213,13 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function deleteProductType(required struct rc) {
 		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
-		if(getProductService().deleteProductType(productType)) {
+		var deleteResponse = getProductService().deleteProductType(productType);
+		if(deleteResponse.getStatusCode()) {
 			getProductService().setProductTypeTree();
-			rc.message = "admin.product.deleteproducttype_success";		
+			rc.message = deleteResponse.getMessage();		
 		} else {
-			rc.message="admin.product.deleteproducttype_disabled";
-			rc.messagetype="warning";
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
 		}
 		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
 	}

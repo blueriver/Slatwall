@@ -90,12 +90,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function delete(required struct rc) {
 		var brand = getBrandService().getByID(rc.brandID);
-		if(getBrandService().delete(brand)) {
-			rc.message="admin.brand.delete_success";
+		var deleteResponse = getBrandService().delete(brand);
+		if(deleteResponse.getStatusCode()) {
+			rc.message=deleteResponse.getMessage();
 		} else {
-			//TODO: Check for error in the bean and display from there
-			rc.message="admin.brand.delete_disabled";
-			rc.messagetype="warning";
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
 		}	   
 		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
 	}
