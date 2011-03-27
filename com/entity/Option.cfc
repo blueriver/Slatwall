@@ -40,7 +40,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Persistant Properties
 	property name="optionID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="optionCode" ormtype="string";
+	property name="optionCode" validateRequired ormtype="string";
 	property name="optionName" validateRequired ormtype="string";
 	property name="optionImage" ormtype="string";
 	property name="optionDescription" ormtype="string";

@@ -87,6 +87,13 @@ component extends="BaseService" accessors="true" {
 		return getSkuService().createSkus(argumentCollection=arguments);
 	}
 	
+    /**
+    /* @hint updates Sku data on product edit
+    */
+    public boolean function updateSkus(required any product, required struct skuStruct) {
+        return getSkuService().updateSkus(argumentCollection=arguments);
+    }
+	
 	public any function save(required any Product,required struct data) {
 		// populate bean from values in the data Struct
 		arguments.Product.populate(arguments.data);
@@ -99,6 +106,8 @@ component extends="BaseService" accessors="true" {
 		// set up sku(s) if this is a new product
 		if(arguments.Product.isNew()) {
 			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
+		} else {
+			updateSkus(arguments.Product,arguments.data.skuStruct);
 		}
 		
 		// set Default sku

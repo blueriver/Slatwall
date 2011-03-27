@@ -89,6 +89,10 @@ component extends="BaseController" output=false accessors=true {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
+/*	public void function save(required struct rc) {
+		rc.skuStruct = getService("formUtilities").buildFormCollections(rc).skuStruct;
+	}*/
+	
 	public void function save(required struct rc) {
 		var isNew = 0;
 		
@@ -102,17 +106,18 @@ component extends="BaseController" output=false accessors=true {
 			isNew = 1;
 		}
 		
-		// set up options struct for generating skus if this is a new product
 		if(isNew) {
+			// set up options struct for generating skus if this is a new product
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 			// option groups in rc in case validation fails and we come back to the create view
 			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		} else {
+			// set up sku struct to ahdnle any skus that were edited
+			rc.skuStruct = getService("formUtilities").buildFormCollections(rc).skuStruct;
 			// these are for the edit view in case of failed validation
 			rc.productPages = getProductService().getProductPages();
             rc.productImage = rc.product.getImage("s");
 		}
-
 
 		// Attempt to Save Product
 		rc.product = getProductService().save( rc.product,rc );
@@ -125,7 +130,7 @@ component extends="BaseController" output=false accessors=true {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
             } else {
             	rc.message = "admin.product.save_success";
-            	getFW().redirect(action="admin:product.list",preserve="message");
+            	getFW().redirect(action="admin:product.detail",querystring="productID=#rc.product.getProductID()#",preserve="message");
             }
 		} else {
 			if(isNew) {
@@ -152,7 +157,20 @@ component extends="BaseController" output=false accessors=true {
 		getFW().redirect(action="admin:product.list",preserve="message");
 	}
 	
+	// SKU actions
 	
+	public void function deleteSku(required struct rc) {
+		var sku = getSkuService().getByID(rc.skuID);
+		var productID = sku.getProduct().getProductID();
+		var deleteResponse = getSkuService().delete(sku);
+		if(deleteResponse.getStatusCode()) {
+			rc.message = deleteResponse.getMessage();
+		} else {
+			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype = "error";
+		}
+		getFW().redirect(action="admin:product.detail",querystring="productID=#productID#",preserve="message,messagetype");
+	}
 	
 	//   Product Type actions      
 		
