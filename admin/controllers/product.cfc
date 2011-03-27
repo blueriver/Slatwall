@@ -64,21 +64,14 @@ component extends="BaseController" output=false accessors=true {
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="false";
 		// we could be redirected here from a failed form submission, so check rc for product object first
-		if(structKeyExists(rc,"product") && isObject(rc.product)) {
-			// merge it with the new session and transfer over the error bean
-            var errors = rc.product.getErrorBean();
-            rc.product = entityMerge(rc.product);
-            rc.product.setErrorBean(errors);
-		} else {
+		if( !(structKeyExists(rc,"product") && isObject(rc.product)) ) {
 			rc.product = getProductService().getByID(rc.productID);
 		}
-		if(!isNull(rc.product)) {
+		if(!isNull(rc.product) ) {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
-			if(rc.edit) {
-				rc.productPages = getProductService().getContentFeed().set({ siteID=session.siteID,sortBy="title",sortDirection="asc" }).getIterator();
-			}
+			rc.productImage = rc.product.getImage("s");
 		} else {
 			getFW().redirect("admin:product.list");
 		}
@@ -87,6 +80,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function edit(required struct rc) {
 		rc.edit = true;
 		detail(rc);
+		rc.productPages = getProductService().getProductPages();
 		getFW().setView("admin:product.detail");
 	}
 
@@ -111,7 +105,12 @@ component extends="BaseController" output=false accessors=true {
 		// set up options struct for generating skus if this is a new product
 		if(isNew) {
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
+		} else {
+			rc.productPages = getProductService().getProductPages();
+            rc.productImage = rc.product.getImage("s");
 		}
+
 
 		// Attempt to Save Product
 		rc.product = getProductService().save( rc.product,rc );
@@ -123,13 +122,17 @@ component extends="BaseController" output=false accessors=true {
 			if(isNew) {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
             } else {
-            	getFW().redirect(action="admin:product.list");
+            	rc.message = "admin.product.save_success";
+            	getFW().redirect(action="admin:product.list",preserve="message");
             }
 		} else {
 			if(isNew) {
-				getFW().redirect(action="admin:product.create",preserve="product");
+				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
+				getFW().setView(action="admin:product.create");
 			} else {
-				getFW().redirect(action="admin:product.edit",preserve="product");
+				rc.edit = true;
+				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
+				getFW().setView(action="admin:product.detail");
 			}
 		}
 	}
@@ -147,27 +150,17 @@ component extends="BaseController" output=false accessors=true {
 	//   Product Type actions      
 		
 	public void function createProductType(required struct rc) {
+	   rc.edit=true;
 	   rc.productType = getProductService().getNewEntity("SlatwallProductType");
 	   // put type tree into the rc for parent dropdown
 	   rc.productTypeTree = getProductService().getProductTypeTree();
 	   getFW().setView("admin:product.detailproducttype");
 	}
 		
-	public void function editProductType(required struct rc) {
-		// we could be redirected here from a failed form submission, so check rc for productType object first
-	   	if(structKeyExists(rc,"productType") && isObject(rc.productType)) {
-	   		if(!rc.productType.isNew()) {
-				// merge it with the new session and transfer over the error bean
-	            var errors = rc.productType.getErrorBean();
-	            rc.productType = entityMerge(rc.productType);
-	            rc.productType.setErrorBean(errors);
-	        }
-	   	} else {	
-	   		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
-		}
+	public void function editProductType(required struct rc) {	
+	   	rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 	   	if(!isNull(rc.productType)) {
 	   		rc.edit = true;
-	       	rc.productTypeTree = getProductService().getProductTypeTree();
 		   	rc.itemTitle &= ": " & rc.productType.getProductTypeName();
 		   	getFW().setView("admin:product.detailproducttype");
 	   	} else {
@@ -199,11 +192,15 @@ component extends="BaseController" output=false accessors=true {
 		rc.productType = getProductService().saveProductType(rc.productType,rc);
 		
 		if(!rc.productType.hasErrors()) {
+			// no errors, so refresh the cached product type tree and redirect to list with success message
 			getProductService().setProductTypeTree();
 			rc.message = "admin.product.saveproducttype_success";
 		  	getFW().redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {
-		  getFW().redirect(action="admin:product.editproducttype", preserve="productType");
+			// errors, so show edit view again
+		  rc.edit = true;
+		  rc.itemTitle = rc.productType.isNew() ? rc.$.Slatwall.rbKey("admin.product.createProductType") : rc.$.Slatwall.rbKey("admin.product.editProductType") & ": #rc.productType.getProductTypeName()#";
+		  getFW().setView(action="admin:product.detailproducttype");
         }
 	}
 	

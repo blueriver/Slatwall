@@ -40,6 +40,10 @@ Notes:
 <cfparam name="rc.productTypes" type="any" default="#rc.Product.getProductTypeTree()#" />
 <cfparam name="rc.optionGroups" type="any" />
 
+<ul id="navTask">
+	<cf_ActionCaller action="admin:product.list" type="list">
+</ul>
+
 <cfoutput>
 <div id="createProductForm">
 	<form name="CreateProduct" method="post">

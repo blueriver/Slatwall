@@ -36,6 +36,7 @@
 Notes:
 
 --->
+<cfparam name="rc.create" type="boolean" default="false" >
 <cfparam name="rc.newOption" type="any" default="" />
 <cfparam name="rc.activeOption" type="any" default="" >
 <cfparam name="rc.optionGroup" type="any" />
@@ -55,7 +56,7 @@ Notes:
 
 <cfoutput>
 
-<cfif request.action eq "admin:option.create">
+<cfif rc.create>
 <cfif rc.optionID eq "new">
 	<cfset local.thisOpen = true />
 <cfelse>

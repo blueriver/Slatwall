@@ -38,7 +38,6 @@ Notes:
 --->
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.product" type="any" />
-<cfparam name="rc.productTypes" default="#rc.Product.getProductTypeTree()#" />
 
 <!--- set up options for setting select boxes --->
 <cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
@@ -53,7 +52,7 @@ Notes:
 
 <cfoutput>
 <div class="svoadminproductdetail">
-	#rc.product.getImage("s")#
+	#rc.productImage#
 	<cfif rc.edit>
 	<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
@@ -65,19 +64,20 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#">
 		<dt>
             <cfif rc.edit>
-            <label for="productType_productTypeID">Product Type:</label>
+            <label for="productType_productTypeID">Product Type*:</label>
 			<cfelse>
 			    Product Type:
 			</cfif>
 		</dt>
         <dd>
-            <cfif rc.edit and structKeyExists(rc,"productTypes")>
+            <cfif rc.edit>
+				<cfset local.productTypes = rc.product.getProductTypeTree() />
 		        <select name="productType_productTypeID" id="productType_productTypeID">
 		            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
-		        <cfloop query="rc.productTypes">
-		            <cfif rc.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
-		            <cfset local.label = listChangeDelims(rc.productTypes.path, " &raquo; ") />
-		            <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
+		        <cfloop query="local.productTypes">
+		            <cfif local.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
+		            <cfset local.label = listChangeDelims(local.productTypes.path, " &raquo; ") />
+		            <option value="#local.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ local.productTypes.productTypeID> selected="selected"</cfif>>
 		                #local.label#
 		            </option>
 		            </cfif>
@@ -215,7 +215,7 @@ Notes:
 </div>
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
-	<cf_actionCaller action="admin:product.detail" querystring="productID=#rc.product.getProductID()#" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+	<cf_ActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 	<cf_ActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
 	<cf_ActionCaller action="admin:product.save" type="submit">
 </div>

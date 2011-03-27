@@ -58,7 +58,7 @@ Notes:
     <dl class="twoColumn">
     	<cf_PropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
 		<cfif rc.edit>
-		<cfset local.tree = rc.productTypeTree />
+		<cfset local.tree = rc.productType.getProductTypeTree() />
 		<dt>
 			<label for="parentProductType_productTypeID">Parent Product Type</label>
 		</dt>
@@ -97,7 +97,7 @@ Notes:
 	</table>
 <cfif rc.edit>
 	<div id="actionButtons" class="clearfix">
-		<a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("sitemanager.cancel")#</a>
+		<cf_ActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 		<cfif !rc.productType.isNew() and !rc.productType.hasProducts() and !rc.productType.hasSubProductTypes()>
 		<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 		</cfif>
