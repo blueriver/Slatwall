@@ -56,7 +56,7 @@ Notes:
 		          <ul class="two">
                       <cf_ActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
 					 <!--- <cf_ActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">--->
-					  <cf_ActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.getIsAssigned()#" confirmrequired="true">
+					  <cf_ActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.getIsAssigned()#" disabledText="#rc.$.Slatwall.rbKey('entity.brand.delete_validateisassigned')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>

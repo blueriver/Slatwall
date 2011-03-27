@@ -128,11 +128,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function delete(required struct rc) {
 		var option = getOptionService().getByID(rc.optionid);
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
-		if(getOptionService().delete(option)) {
-			rc.message="admin.option.delete_success";
+		var deleteResponse = getOptionService().delete(option);
+		if(deleteResponse.getStatusCode()) {
+			rc.message=deleteResponse.getMessage();
 		} else {
-			rc.message="admin.option.delete_disabled";
-			rc.messagetype="warning";
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
 		}
 		getFW().redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
 	}
@@ -191,11 +192,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function deleteOptionGroup(required struct rc) {
 		var optionGroup = getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup");
-		if(getOptionService().deleteOptionGroup(optionGroup)) {
-			rc.message = "admin.option.deleteoptiongroup_success";
+		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
+		if(deleteResponse.getStatusCode()) {
+			rc.message = deleteResponse.getMessage();
 		} else {
-			rc.message = "admin.option.deleteoptiongroup_disabled";
-			rc.messagetype = "warning";
+			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype = "error";
 		}
 		getFW().redirect(action="admin:option.list",preserve="message,messagetype");
 	}

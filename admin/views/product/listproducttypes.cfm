@@ -62,7 +62,7 @@ Notes:
 		      <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
 			  <cf_ActionCaller action="admin:product.detailproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="viewDetails" type="list">
               <cf_ActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" class="add" type="list">
-			  <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
+			  <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#rc.$.Slatwall.rbKey('entity.producttype.delete_validateisassigned')#" confirmrequired="true">
 		  </ul>
 		</td>
     </tr>
