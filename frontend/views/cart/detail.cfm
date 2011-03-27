@@ -40,8 +40,10 @@ Notes:
 
 <cfoutput>
 	<div class="svofrontendcartdetail">
+		<form name="updateCart" action="#buildURL(action='frontend:cart.update')#" method="post">
 		<cfif not arrayLen(rc.cart.getCartItems())>
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
+			<button type="submit">Continue Shopping</button>
 		<cfelse>
 			<cfloop array="#rc.cart.getCartItems()#" index="local.cartItem">
 				<dl class="cartItem">
@@ -51,6 +53,8 @@ Notes:
 					<dd class="quantity">#local.cartItem.getQuantity()#</dd>
 				</dl>
 			</cfloop>
+			<cf_ActionCaller action="frontend:checkout.detail" type="submit">
 		</cfif>
+		</form>
 	</div>
 </cfoutput>
