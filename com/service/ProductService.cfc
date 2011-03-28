@@ -139,9 +139,9 @@ component extends="BaseService" accessors="true" {
 	   return entity;
 	}
 	
-	public boolean function deleteProductType(required any productType) {
-		if( !arguments.productType.hasProducts() && !arguments.productType.hasSubProductTypes() ) {
-			getValidator().setError(entity=arguments.productType,errorName="delete",rule="assignedToProducts");
+	public any function deleteProductType(required any productType) {
+		if( arguments.productType.hasProducts() || arguments.productType.hasSubProductTypes() ) {
+			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
 		var deleted = Super.delete(arguments.productType);
 		return deleted;

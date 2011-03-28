@@ -89,15 +89,19 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 	
-	public boolean function delete(required any entity){
-		var deleted = false;
+	public any function delete(required any entity){
+		var response = new com.utility.ResponseBean();
+		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(entity=arguments.entity);
-			deleted = true;
+			response.setMessage(rbKey("entity.#entityName#.delete_success"));
+			response.setStatusCode(1);
 		} else {
+			response.setStatusCode(0);
+			response.setData(arguments.entity);
 			transactionRollback();
 		}
-		return deleted;
+		return response;
 	}
 	
 	public any function populate(required any entity, required struct data) {
