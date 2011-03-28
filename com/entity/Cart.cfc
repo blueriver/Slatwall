@@ -46,6 +46,8 @@ component displayname="Cart" entityname="SlatwallCart" table="SlatwallCart" pers
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="cartItems" singularname="cartItem" type="array" cfc="CartItem" fieldtype="one-to-many" fkcolumn="cartID" cascade="all" inverse="true";
+	//property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
+	//property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	
 	public array function getCartItems() {
 		if(!structKeyExists(variables, "cartItems")) {

@@ -203,24 +203,27 @@ component extends="framework" output="false" {
 	
 	public boolean function secureDisplay(required string action, boolean testing=false) {
 		var hasAccess = false;
-		
 		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
 		
-		if(request.context.$.currentUser().getS2()) {
+		if(getSubsystem(arguments.action) eq "frontend") {
 			hasAccess = true;
-		} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
-			var rolesWithAccess = "";
-			if(find("save", permissionName)) {
-				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
-				listAppend(rolesWithAccess, application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "update")));
-			} else {
-				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=permissionName);
-			}
-			
-			for(var i=1; i<= listLen(rolesWithAccess); i++) {
-				if( find( listGetAt(rolesWithAccess, i), request.context.$.currentUser().getMemberships() ) ) {
-					hasAccess=true;
-					break;
+		} else {
+			if(request.context.$.currentUser().getS2()) {
+				hasAccess = true;
+			} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
+				var rolesWithAccess = "";
+				if(find("save", permissionName)) {
+					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
+					listAppend(rolesWithAccess, application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "update")));
+				} else {
+					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=permissionName);
+				}
+				
+				for(var i=1; i<= listLen(rolesWithAccess); i++) {
+					if( find( listGetAt(rolesWithAccess, i), request.context.$.currentUser().getMemberships() ) ) {
+						hasAccess=true;
+						break;
+					}
 				}
 			}
 		}
