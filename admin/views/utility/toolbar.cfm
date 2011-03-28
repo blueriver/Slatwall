@@ -100,7 +100,7 @@ Notes:
 			</li>
 			<li><a href="http://#cgi.http_host#/">Website</a></li>
 			<cfif getSubsystem(rc.slatAction) eq "frontend" and not $.slatwall.product().isNew()>
-				<cf_ActionCaller action="admin:product.detail" queryString="productID=#$.slatwall.product().getProductID()#" type="link">
+				<cf_ActionCaller action="admin:product.detail" queryString="productID=#$.slatwall.product().getProductID()#" type="list">
 			</cfif>
 		</ul>
 	</div>
