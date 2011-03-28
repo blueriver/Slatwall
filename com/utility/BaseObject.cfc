@@ -38,7 +38,13 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
-	variables.$ = getMuraScope();
+	param name="session.siteid" default="default";
+	
+	if(!structKeyExists(request, "muraScope")) {
+		request.muraScope = getService("muraScope").init(session.siteid);
+	}
+	
+	variables.$ = request.muraScope;
 	
 	// @hint Private helper function for returning the any of the services in the application
 	private any function getService(required string service) {
@@ -67,14 +73,7 @@ component displayname="Base Object" output="false" {
 	
 	// @hint Private helper function for returning the current Mura Scope
 	private any function getMuraScope() {
-		param name="session.siteid" default="default";
-		if(structKeyExists(request, "muraScope")) {
-			return request.muraScope;
-		} else if(structKeyExists(request, "context") && structKeyExists(request.context, "$")) {
-			return request.context.$;
-		} else {
-			return getService("muraScope").init(session.siteid);	
-		}
+		
 	}
 	
 	public any function inject(required string property, required any value) {

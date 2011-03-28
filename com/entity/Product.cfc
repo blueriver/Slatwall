@@ -185,7 +185,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL() {
-		return getMuraScope().createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
+		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
 	
 	public numeric function getQIA() {

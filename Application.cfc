@@ -38,9 +38,13 @@ Notes:
 */
 component extends="framework" output="false" {
 
-	include "../../config/applicationSettings.cfm";
-	include "../../config/mappings.cfm";
-	include "../mappings.cfm";
+	// If the page request was an admin request then we need to setup all of the defaults from mura
+	if(isAdminRequest()) {
+		include "../../config/applicationSettings.cfm";
+		include "../../config/mappings.cfm";
+		include "../mappings.cfm";
+	}
+	
 	include "fw1Config.cfm";
 	
 	variables.subsystems = {};
@@ -136,7 +140,10 @@ component extends="framework" output="false" {
 			
 			// Look for mura Scope.  If it doens't exist add it.
 			if (!structKeyExists(request.context,"$")){
-				request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
+				if (!structKeyExists(request, "muraScope")) {
+					request.muraScope = getBeanFactory().getBean("muraScope").init(session.siteid);
+				}
+				request.context.$ = request.muraScope;
 			}
 			
 			// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
@@ -154,8 +161,26 @@ component extends="framework" output="false" {
 				variables.subsystems.frontend.baseURL &= "index.cfm";
 			}
 			
+			param name="request.runcount" default="0";
+			param name="request.setcount" default="0";
+			
+			request.runcount = request.runcount + 1;
+			
 			// Create SlatwallScope and add it to the muraScope
-			request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
+				request.setcount = request.setcount + 1;
+				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			}
+			
+			/*
+			if(request.runcount > 3) {
+				writeDump(request.context.slatAction);
+				writeDump(request);
+				throw("STOP HERE");
+			}
+			*/
+			
+			
 			
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
@@ -226,77 +251,6 @@ component extends="framework" output="false" {
 		}
 	}
 	
-	/**
-	/*@hint used to populate beans from the request context. FW1 method overriden to set empty values to null
-	
-	public any function populate(required any cfc, string keys="", boolean trustKeys=false, boolean trim=false, boolean acceptEmptyValues=true) {
-		var key = 0;
-		var property = 0;
-		var trimproperty = 0;
-		var args = 0;
-		
-		if(arguments.keys == "") {
-			if(arguments.trustKeys) {
-				// assume everything in the request context can be set into the CFC
-				for(property in request.context) {
-					key = "set" & property;
-					try {
-						args = {};
-						args[property] = request.context[ property ];
-						if(arguments.trim && isSimpleValue(args[property])) {
-							args[property] = trim( args[property] );
-						}
-						if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
-							evaluate("arguments.cfc.#key#(argumentCollection=args)");
-						} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
-							evaluate("arguments.cfc.#key#(javacast('null',''))");
-						}
-					} catch(any e) {
-						onPopulateError( arguments.cfc, property, request.context );
-					}
-				}
-			} else {
-				for(key in arguments.cfc) {
-					if(len(key) > 3 and left(key,3) == "set") {
-						property = right( key, len( key ) - 3 );
-						if(structKeyExists( request.context, property )) {
-							args = structNew();
-							args[ property ] = request.context[ property ];
-							if(arguments.trim and isSimpleValue( args[property] )) {
-								args[property] = trim( args[property] );
-							}
-							if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
-								evaluate("arguments.cfc.#key#(argumentCollection=args)");
-							} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
-								evaluate("arguments.cfc.#key#(javacast('null',''))");
-							}
-						}
-					}
-				}	
-			}
-		} else {
-			for(var i=1; i<=listLen(arguments.keys); i++) {
-				trimProperty = trim(listGetAt(arguments.keys,i));
-				key = "set" & trimProperty;
-				if(structKeyExists( arguments.cfc, key ) || arguments.trustKeys) {
-					if(structKeyExists( request.context, trimProperty )) {
-						args = {};
-						args[ trimProperty ] = request.context[ trimProperty ];
-						if(arguments.trim && isSimpleValue( args[trimProperty] )) {
-							args[trimProperty] = trim( args[trimProperty] );
-						}
-						if(len(args[trimproperty]) > 0 || arguments.acceptEmptyValues) {
-							evaluate("arguments.cfc.#key#(argumentCollection=args)");
-						} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
-							evaluate("arguments.cfc.#key#(javacast('null',''))");
-						}
-					}
-				}
-			}
-		}
-		return arguments.cfc;
-	}*/
-
 	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
 		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
 		return super.buildURL(argumentCollection=arguments);

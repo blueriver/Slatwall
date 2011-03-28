@@ -57,12 +57,13 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="imageDirectory" type="string" hint="Base directory for option images" persistent="false";
 
     public Option function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.skus))
-	       variables.skus = [];
-    	getMuraScope().event('siteid');
-	   setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
-       return Super.init();
+		// set default collections for association management methods
+		if(isNull(variables.skus)) {
+			variables.skus = [];
+		}
+	    
+		setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
+		return Super.init();
     }
     
     public boolean function hasSkus() {
