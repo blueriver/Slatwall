@@ -91,19 +91,8 @@ component extends="framework" output="false" {
 		  	include "plugin/config.cfm";
 		}
 	    setPluginConfig(request.PluginConfig);
-		xmlPath = "#expandPath( '/plugins' )#/#getPluginConfig().getDirectory()#/config/coldspring.xml";
+		xmlPath = "#expandPath( '/plugins/Slatwall/config/coldspring.xml' )#";
 		xml = FileRead("#xmlPath#"); 
-		
-		
-		// Parse the xml and replace all [plugin] with the actual plugin mapping path.
-	  	xml = replaceNoCase( xml, "[plugin]", "plugins.#getPluginConfig().getDirectory()#.", "ALL");
-		
-		if (getPluginConfig().getSetting("Integration") neq "Internal"){
-			xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL");
-		}
-		else {
-			xml = replaceNoCase( xml, "[integration]", "", "ALL");
-		}
 		
 		// Build Coldspring factory & Set in FW/1
 		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();

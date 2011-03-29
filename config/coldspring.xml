@@ -3,19 +3,19 @@
 <beans default-autowire="byName">
 	
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
-	<bean id="brandDAO" class="slatwall.com.dao.[integration]BrandDAO" />
-	<bean id="productDAO" class="slatwall.com.dao.[integration]ProductDAO" />
-	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO">
+	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />
+	<bean id="productDAO" class="slatwall.com.dao.ProductDAO" />
+	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO">
 		 <property name="productTypeTreeSorter"><ref bean="productTypeTreeSorter" /></property>
 	</bean>
 	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
 	<bean id="cartDAO" class="slatwall.com.dao.cartDAO" />
-	<bean id="settingDAO" class="slatwall.com.dao.[integration]SettingDAO" />
-	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
-    <bean id="optionDAO" class="slatwall.com.dao.[integration]OptionDAO" />
-    <bean id="optionGroupDAO" class="slatwall.com.dao.[integration]OptionGroupDAO" />
+	<bean id="settingDAO" class="slatwall.com.dao.SettingDAO" />
+	<bean id="skuDAO" class="slatwall.com.dao.SkuDAO" />
+    <bean id="optionDAO" class="slatwall.com.dao.OptionDAO" />
+    <bean id="optionGroupDAO" class="slatwall.com.dao.OptionGroupDAO" />
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
-	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
+	<bean id="vendorDAO" class="slatwall.com.dao.VendorDAO" />
 	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
 	<bean id="FileService" class="slatwall.com.service.FileService" />
 	<bean id="TagProxyService" class="slatwall.com.service.TagProxyService" />
