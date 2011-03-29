@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="active" ormtype="boolean" default="true" displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
 	property name="filename" ormtype="string" default="" displayname="File Name" hint="This is the name that is used in the URL string";
@@ -47,15 +47,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productCode" ormtype="string" default="" displayname="Product Code" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" default="" displayname="Product Description" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="int" displayname="Product Year" hint="Products specific model year if it has one";
-	property name="manufactureDiscontinued"	ormtype="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="showOnWeb" ormtype="boolean" default=false displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
-	property name="showOnWebWholesale" ormtype="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
-	property name="trackInventory" ormtype="boolean" default=false displayname="Non-Inventory Item";
-	property name="callToOrder" ormtype="boolean" default=false displayname="Call To Order";
-	property name="allowShipping" ormtype="boolean" default=true displayname="Allow Shipping";
-	property name="allowPreorder" ormtype="boolean" default=true displayname="Allow Pre-Orders" hint="";
-	property name="allowBackorder" ormtype="boolean" default=false displayname="Allow Backorders";
-	property name="allowDropship" ormtype="boolean" default="false" displayname="Allow Dropship";
+	property name="manufactureDiscontinued"	ormtype="boolean" persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
+	property name="showOnWeb" ormtype="boolean" displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
+	property name="showOnWebWholesale" ormtype="boolean" persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
+	property name="trackInventory" ormtype="boolean" displayname="Non-Inventory Item";
+	property name="callToOrder" ormtype="boolean" displayname="Call To Order";
+	property name="allowShipping" ormtype="boolean" displayname="Allow Shipping";
+	property name="allowPreorder" ormtype="boolean" displayname="Allow Pre-Orders" hint="";
+	property name="allowBackorder" ormtype="boolean" displayname="Allow Backorders";
+	property name="allowDropship" ormtype="boolean" displayname="Allow Dropship";
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	property name="publishedWeight" ormtype="float" default="0" hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
 	property name="createdDateTime" ormtype="date" default="" displayname="Date Create";
@@ -133,12 +133,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     }
     	
 	
-	public array function getSkus() {
-		if(!structKeyExists(variables, "skus")) {
-			variables.skus = arrayNew(1);
-		}
-		return variables.skus;
-	}
+    public array function getSkus(sortby, sortType="text", direction="asc") {
+        if(!structKeyExists(arguments,"sortby")) {
+            return variables.Skus;
+        } else {
+            return sortObjectArray(variables.Skus,arguments.sortby,arguments.sortType,arguments.direction);
+        }
+    }
 	
 	public any function getSkuByID(required string skuID) {
 		var skus = getSkus();

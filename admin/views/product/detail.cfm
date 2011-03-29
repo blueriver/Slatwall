@@ -61,10 +61,10 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
 		<dt>
             <cfif rc.edit>
-            <label for="productType_productTypeID">Product Type*:</label>
+            <label for="productType_productTypeID">#rc.$.Slatwall.rbKey("entity.product.productType")#*:</label>
 			<cfelse>
 			    Product Type:
 			</cfif>
@@ -72,7 +72,7 @@ Notes:
         <dd>
             <cfif rc.edit>
 				<cfset local.productTypes = rc.product.getProductTypeTree() />
-		        <select name="productType_productTypeID" id="productType_productTypeID">
+		        <select name="productType" id="productType_productTypeID">
 		            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
 		        <cfloop query="local.productTypes">
 		            <cfif local.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
@@ -96,67 +96,17 @@ Notes:
 	
 <div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 	<ul>
-		<li><a href="##tabSkus" onclick="return false;"><span>SKUs</span></a></li>	
-		<li><a href="##tabDescription" onclick="return false;"><span>Web Description</span></a></li>
-		<li><a href="##tabProductDetails" onclick="return false;"><span>Product Details</span></a></li>
-		<li><a href="##tabProductSettings" onclick="return false;"><span>Product Settings</span></a></li>
-		<li><a href="##tabProductPages" onclick="return false;"><span>Product Pages</span></a></li>
-		<li><a href="##tabCustomAttributes" onclick="return false;"><span>Custom Attributes</span></a></li>
-		<li><a href="##tabAlternateImages" onclick="return false;"><span>Alternate Images</span></a></li>
+		<li><a href="##tabSkus" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.skus")#</span></a></li>	
+		<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.webdescription")#</span></a></li>
+		<li><a href="##tabProductDetails" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productdetails")#</span></a></li>
+		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
+		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
+		<li><a href="##tabCustomAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.customattributes")#</span></a></li>
+		<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>
 	</ul>
 
 	<div id="tabSkus">
-		<cfif rc.edit>
-			<input type="button" class="button" id="addSKU" value="Add SKU" />
-			<input type="button" class="button" id="addOption" value="Add Option" />
-		</cfif>
-			<table id="skuTable" class="stripe">
-				<thead>
-					<tr>
-						<th>Default</th>
-						<cfset local.optionGroups = rc.Product.getOptionGroupsStruct() />
-						<cfloop collection="#local.optionGroups#" item="local.i">
-							<th>#local.optionGroups[local.i].getOptionGroupName()#</th>
-						</cfloop>
-						<th class="varWidth">Image Path</th>
-						<th>Original Price</th>
-						<th>List Price</th>
-						<th>QOH</th>
-						<th>QEXP</th>
-						<th>QC</th>
-						<th>QIA</th>
-						<th>QEA</th>
-						<th class="administration">&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-				<cfloop array="#rc.Product.getSkus()#" index="local.sku">
-					<tr>
-						<cfif rc.edit>
-							<td><input type="radio" name="defaultSku" value="#local.sku.getSkuID()#"<cfif local.sku.getIsDefault()> checked="checked"</cfif> /></td>
-						<cfelse>
-							<td><cfif local.sku.getIsDefault()>Yes</cfif></td>
-						</cfif>
-						<cfloop collection="#local.optionGroups#" item="local.i">
-							<td>#local.sku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
-						</cfloop>
-						<td class="varWidth">#local.sku.getImagePath()#</td>
-						<td>#DollarFormat(local.sku.getPrice())#</td>
-						<td>#DollarFormat(local.sku.getListPrice())#</td>
-						<td>#local.sku.getQOH()#</td>
-						<td>#local.sku.getQEXP()#</td>
-						<td>#local.sku.getQC()#</td>
-						<td>#local.sku.getQIA()#</td>
-						<td>#local.sku.getQEA()#</td>
-						<td class="administration">
-							<ul class="one">
-								<li class="edit"><a href="##">Edit</a></li>
-							</ul>
-						</td>
-					</tr>
-				</cfloop>
-			</tbody>
-		</table>
+		#view("product/productTabs/skuTab")#
 	</div>
 	
 	<div id="tabDescription">
@@ -175,15 +125,15 @@ Notes:
 				<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.productsettings')#</th>
 				<th></th>
 			</tr>
-			<cf_PropertyDisplay object="#rc.Product#" property="trackInventory" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="showOnWeb" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="showOnWebWholesale" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="callToOrder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowShipping" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowPreorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowBackorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowDropShip" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="trackInventory" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.product.getSetting('trackInventory'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="showOnWeb" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('showOnWeb'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="showOnWebWholesale" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('showOnWebWholesale'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="callToOrder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('callToOrder'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowShipping" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowShipping'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowPreorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowPreorder'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowBackorder" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowBackorder'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="allowDropShip" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowDropShip'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('manufactureDiscontinued'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
 		</table>
 	</div>
 	<div id="tabProductPages">

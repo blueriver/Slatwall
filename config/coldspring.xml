@@ -28,7 +28,7 @@
 	</bean>
 	
 	<!-- transaction advice -->
-    <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />
+    <bean id="transactionAdvice" class="slatwall.com.utility.coldspring.transactionAdvice" />
 	
 	<!-- transaction advisor -->
 	<bean id="transactionAdvisor" class="slatwall.com.utility.coldspring.NamedMethodExclusionPointcutAdvisor">

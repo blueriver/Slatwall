@@ -38,12 +38,22 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+
+	public any function delete(required any sku) {
+		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
+			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
+		}
+		var deleted = Super.delete(arguments.sku);
+		return deleted;
+	}
+
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
 		// check to see if any options were selected
 		if(len(arguments.optionsStruct.formCollectionsList)) {
+			var skuCodeIndex = 1000;
 			// get list of option group names
 			var options = arguments.optionsStruct.options;
 			var optionGroupList = structKeyList(options);
@@ -73,6 +83,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				thisSku.setProduct(arguments.product);
 				thisSku.setPrice(arguments.price);
 				thisSku.setListPrice(arguments.listprice);
+				thisSku.setSkuCode(arguments.product.getProductCode() & "_" & skuCodeIndex);
 				if(i==1) { 			// set the first sku as the default one
 					thisSku.setIsDefault(true);
 				}
@@ -81,17 +92,39 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					var thisOptionID = listGetAt(thisCombo,j," ");
 					thisSku.addOption(getByID(thisOptionID,"SlatwallOption"));
 				}
+				skuCodeIndex++;
 			}
 		} else {  // no options were selected so create a default sku
 			var thisSku = getNewEntity();
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
+			thisSku.setSkuCode(rc.product.getProductCode() & "_" & skuCodeIndex);
 			thisSku.setIsDefault(true);
 		}
 		return true;
 	}
-	
+
+    /**
+    /* @hint bulk update of skus from product edit page
+    */	
+	public any function updateSkus(required any product,required any skuStruct) {
+		for(local.thisID in arguments.skuStruct) {
+			local.thisSku = getByID(local.thisID);
+			// set the new sku Code if one was entered
+			if(len(trim(arguments.skuStruct[local.thisID].skuCode)) > 0) {
+				local.thisSku.setSkuCode(arguments.skuStruct[local.thisID].skuCode);
+			}
+			// set new sku prices if they were numeric
+			if(isNumeric(arguments.skuStruct[local.thisID].price)) {
+				local.thisSku.setPrice(arguments.skuStruct[local.thisID].price);
+			}
+            if(isNumeric(arguments.skuStruct[local.thisID].listPrice)) {
+                local.thisSku.setListPrice(arguments.skuStruct[local.thisID].listPrice);
+            }
+		}
+		return true;
+	}
 	
 
 }

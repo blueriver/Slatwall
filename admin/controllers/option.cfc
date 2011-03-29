@@ -113,7 +113,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			} else {
 				rc.activeOption = rc.option;
 				rc.optionID = rc.option.getOptionID();
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.edit");
+				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
 				getFW().setView("admin:option.edit");
 			}		
 		}
