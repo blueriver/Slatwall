@@ -89,10 +89,6 @@ component extends="BaseController" output=false accessors=true {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
 	
-/*	public void function save(required struct rc) {
-		rc.skuStruct = getService("formUtilities").buildFormCollections(rc).skuStruct;
-	}*/
-	
 	public void function save(required struct rc) {
 		var isNew = 0;
 		
