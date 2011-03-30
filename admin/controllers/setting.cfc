@@ -40,7 +40,7 @@ component extends="BaseController" output="false" accessors="true" {
 			
 	property name="settingService" type="any";
 	property name="userManager" type="any";
-	property name="productService" type="any";  
+	property name="productService" type="any";
 	
 	public void function dashboard() {
 		getFW().redirect(action="admin:setting.detail");
@@ -48,7 +48,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function detail(required struct rc) {
 		rc.edit = false;
-		rc.allSettings = getSettingService().getAllSettings();
+		rc.allSettings = getSettingService().getSettings();
 		rc.productTemplateOptions = getProductService().getProductTemplates();
 	}
 	
@@ -75,7 +75,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function editpermissions(required struct rc) {
 		rc.muraUserGroups = getUserManager().getUserGroups();
 		rc.permissionActions = getSettingService().getPermissionActions();
-		rc.permissionSettings = getSettingService().getAllPermissions();
+		rc.permissionSettings = getSettingService().getPermissions();
 	}
 	
 	public void function savepermissions(required struct rc) {
@@ -95,5 +95,57 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		getSettingService().reloadConfiguration();
 		getFW().redirect(action="admin:main.dashboard");
+	}
+	
+	public void function listShippingMethods(required struct rc) {
+		rc.shippingMethods = getSettingService().getShippingMethods();
+	}
+	
+	public void function detailShippingMethod(required struct rc) {
+		param name="rc.shippingMethodID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.shippingMethod = getSettingService().getByID(rc.shippingMethodID, "SlatwallShippingMethod");
+		if(isNull(rc.shippingMethod)) {
+			rc.shippingMethod = getSettingService().getNewEntity("SlatwallShippingMethod");
+		}
+	}
+	
+	public void function deleteShippingMethod(required struct rc) {
+		detailShippingMethod(rc);
+		var deleteResponse = getSettingService().delete(rc.shippingMethod);
+		
+		if(deleteResponse.getStatusCode()) {
+			rc.message=deleteResponse.getMessage();
+		} else {
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
+		}
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.listshippingmethods", preserve="message,messagetype");
+	}
+	
+	public void function createShippingMethod(required struct rc) {
+		detailShippingMethod(rc);
+		getFW().setView("admin:setting.detailshippingmethod");
+		rc.edit = true;
+	}
+	
+	public void function editShippingMethod(required struct rc) {
+		detailShippingMethod(rc);
+		getFW().setView("admin:setting.detailshippingmethod");
+		rc.edit = true;
+	}
+	
+	public void function saveShippingMethod(required struct rc) {
+		detailShippingMethod(rc);
+		rc.shippingMethod = getSettingService().save(rc.shippingMethod, rc);
+		if(!rc.shippingMethod.hasErrors()) {
+			getSettingService().reloadConfiguration();
+	   		getFW().redirect(action="admin:setting.listshippingmethods", querystring="message=admin.setting.saveshippingmethod_success");
+		} else {
+			rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
+	   		getFW().setView(action="admin:setting.editshippingmethod");
+		}
 	}
 }

@@ -37,19 +37,67 @@ Notes:
 
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" output="false" {
-
-	public struct function getAllSettings(boolean reload=false) {
+	
+	property name="variables.settings" type="struct";
+	property name="variables.permissions" type="struct";
+	property name="variables.shippingMethods" type="struct";
+	property name="variables.permissionActions" type="struct";
+	
+	public void function reloadConfiguration() {
+		var settingsList = list();
+		var shippingMethodsList = list(entityName="SlatwallShippingMethod");
+		var paymentMethodsList = list(entityName="SlatwallPaymentMethod");
+		variables.permissions = {};
+		variables.settings = {};
+		variables.shippingMethods = {};
+		variables.paymentMethods = {};
+		
+		// Load Settings & Permissions
+		for(var i = 1; i <= arrayLen(settingsList); i++) {
+			if(left(settingsList[i].getSettingName(), 10) == "permission") {
+				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
+			} else {
+				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
+			}
+		}
+		
+		// Load Shipping Methods
+		for(var i = 1; i <= arrayLen(shippingMethodsList); i++) {
+			variables.shippingMethods[ shippingMethodsList[i].getShippingMethodID() ] = shippingMethodsList[i];
+		}
+		
+		// Load Payment Methods
+		for(var i = 1; i <= arrayLen(paymentMethodsList); i++) {
+			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodsID() ] = paymentMethodsList[i];
+		}
+	}
+	
+	public struct function getSettings(boolean reload=false) {
 		if(!structKeyExists(variables, "settings") || arguments.reload == true) {
 			reloadConfiguration();
 		}
 		return variables.settings;
 	}
 	
-	public struct function getAllPermissions(boolean reload=false) {
+	public struct function getPermissions(boolean reload=false) {
 		if(!structKeyExists(variables, "permissions") || arguments.reload == true) {
 			reloadConfiguration();
 		}
 		return variables.permissions;
+	}
+	
+	public struct function getShippingMethods(boolean reload=false) {
+		if(!structKeyExists(variables, "shippingMethods") || arguments.reload == true) {
+			reloadConfiguration();
+		}
+		return variables.shippingMethods;
+	}
+	
+	public struct function getPaymentMethods(boolean reload=false) {
+		if(!structKeyExists(variables, "paymentMethods") || arguments.reload == true) {
+			reloadConfiguration();
+		}
+		return variables.paymentMethods;
 	}
 	
 	public any function getSettingValue(required string settingName) {
@@ -80,21 +128,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 		}
 	}
 	
-	public void function reloadConfiguration() {
-		var settingsList = list();
-		variables.permissions = {};
-		variables.settings = {};
-		for(var i = 1; i <= arrayLen(settingsList); i++) {
-			if(left(settingsList[i].getSettingName(), 10) == "permission") {
-				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
-			} else {
-				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
-			}
-		}
-	}
-	
 	public struct function getPermissionActions() {
-		if(!structKeyExists(variables, "adminActions")) {
+		if(!structKeyExists(variables, "permissionActions")) {
 			var dirLocation = ExpandPath("/plugins/Slatwall/admin/controllers");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
@@ -113,5 +148,5 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 			}
 		}
 		return variables.permissionActions;
-	}	
+	}
 }

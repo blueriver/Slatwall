@@ -37,5 +37,9 @@ Notes:
 
 */
 component extends="BaseDAO" {
-
+	public any function getShippingMethodSmartList(required struct data) {
+		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName="SlatwallShippingMethod");
+	
+		return smartList;
+	}
 }
