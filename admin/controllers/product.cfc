@@ -88,6 +88,10 @@ component extends="BaseController" output=false accessors=true {
 	public void function list(required struct rc) {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
+
+/*	public void function save(required struct rc) {
+		rc.options = getService("formUtilities").buildFormCollections(rc).options;
+	}*/
 	
 	public void function save(required struct rc) {
 		var isNew = 0;
@@ -108,8 +112,8 @@ component extends="BaseController" output=false accessors=true {
 			// option groups in rc in case validation fails and we come back to the create view
 			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		} else {
-			// set up sku struct to ahdnle any skus that were edited
-			rc.skuStruct = getService("formUtilities").buildFormCollections(rc).skuStruct;
+			// set up sku array to handle any skus that were edited
+			rc.skuArray = getService("formUtilities").buildFormCollections(rc).skus;
 			// these are for the edit view in case of failed validation
 			rc.productPages = getProductService().getProductPages();
             rc.productImage = rc.product.getImage("s");

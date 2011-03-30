@@ -51,80 +51,107 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/* @hint sets up initial skus when products are created
 	*/
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
-		var skuCodeIndex = 1000;
-		
 		// check to see if any options were selected
 		if(len(arguments.optionsStruct.formCollectionsList)) {
-			// get list of option group names
 			var options = arguments.optionsStruct.options;
-			var optionGroupList = structKeyList(options);
-			
-			// first get list of options from first option group
-			var comboList = options[listFirst(optionGroupList)];
-			
-			// parse options struct to build list of possible option combinations
-			for( var optionGroup in options ) {
-				if(optionGroup != listFirst(optionGroupList)) {
-					var tempList = "";
-					for(var i=1;i<=listLen(comboList);i++) {
-						local.thisCombo = listGetAt(comboList,i);
-						local.newCombo = "";
-						for(var j=1; j<=listLen(options[optionGroup]);j++) {
-							newCombo = listAppend(newCombo,thisCombo & " " & listGetAt(options[optionGroup],j));
-						}
-						tempList = listAppend(tempList,newCombo);
-					}
-					comboList = tempList;
-				}
-			}
-			for(  i=1; i<=listLen(comboList);i++ ) {
-				//every option combination represents 1 Sku, so we create it
-				var thisCombo = listGetAt(comboList,i);
-				var thisSku = getNewEntity();
-				thisSku.setProduct(arguments.product);
-				thisSku.setPrice(arguments.price);
-				thisSku.setListPrice(arguments.listprice);
-				thisSku.setSkuCode(arguments.product.getProductCode() & "_" & skuCodeIndex);
-				if(i==1) { 			// set the first sku as the default one
-					thisSku.setIsDefault(true);
-				}
-				// loop through optionID's within the option combination and set them into the sku
-				for( j=1;j<=listLen(thisCombo," ");j++ ) {
-					var thisOptionID = listGetAt(thisCombo,j," ");
-					thisSku.addOption(getByID(thisOptionID,"SlatwallOption"));
-				}
-				skuCodeIndex++;
-			}
+			var comboList = getOptionCombinations(options);
+			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice);
 		} else {  // no options were selected so create a default sku
 			var thisSku = getNewEntity();
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
-			thisSku.setSkuCode(arguments.product.getProductCode() & "_" & skuCodeIndex);
+			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
 			thisSku.setIsDefault(true);
 		}
 		return true;
 	}
 
+	/**
+	/* @hint takes a list of optionID combinations and generates skus
+	*/
+	public void function createSkusFromOptions (required string comboList, required any product, required price, required listPrice) {
+		for(  i=1; i<=listLen(arguments.comboList,";");i++ ) {
+			//every option combination represents 1 Sku, so we create it
+			var thisCombo = listGetAt(arguments.comboList,i,";");
+			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice},arguments.product);
+			// set the first sku as the default one
+			if(i==1) {
+				thisSku.setIsDefault(true);
+			}
+		}
+	}
+
+	public any function createSkuFromStruct (required struct data, required any product) {
+		var thisSku = getNewEntity();
+		thisSku.setProduct(arguments.product);
+		thisSku.setPrice(arguments.data.price);
+		thisSku.setListPrice(arguments.data.listprice);
+		if( structKeyExists(arguments.data,"skuCode") && len(arguments.data.skuCode) ) {
+			thisSku.setSkuCode(arguments.data.skuCode);
+		} else {
+			thisSku.setSkuCode(createUUID());
+		}
+		// loop through optionID's within the option combination and set them into the sku
+		for( j=1;j<=listLen(arguments.data.options);j++ ) {
+			var thisOptionID = listGetAt(arguments.data.options,j);
+			thisSku.addOption(getByID(thisOptionID,"SlatwallOption"));
+		}
+		return thisSku;
+	}
+
     /**
     /* @hint bulk update of skus from product edit page
     */	
-	public any function updateSkus(required any product,required any skuStruct) {
-		for(local.thisID in arguments.skuStruct) {
-			local.thisSku = getByID(local.thisID);
-			// set the new sku Code if one was entered
-			if(len(trim(arguments.skuStruct[local.thisID].skuCode)) > 0) {
-				local.thisSku.setSkuCode(arguments.skuStruct[local.thisID].skuCode);
-			}
-			// set new sku prices if they were numeric
-			if(isNumeric(arguments.skuStruct[local.thisID].price)) {
-				local.thisSku.setPrice(arguments.skuStruct[local.thisID].price);
-			}
-            if(isNumeric(arguments.skuStruct[local.thisID].listPrice)) {
-                local.thisSku.setListPrice(arguments.skuStruct[local.thisID].listPrice);
-            }
+	public any function updateSkus(required any product,required array skus) {
+		for(var i=1;i<=arrayLen(arguments.skus);i++) {
+			local.skuStruct = arguments.skus[i];
+			if( len(local.skuStruct.skuID) > 0 ) {
+				local.thisSku = getByID(local.skuStruct.skuID);
+				// set the new sku Code if one was entered
+				if(len(trim(local.skuStruct.skuCode)) > 0) {
+					local.thisSku.setSkuCode(local.skuStruct.skuCode);
+				}
+				// set new sku prices if they were numeric
+				if(isNumeric(local.skuStruct.price)) {
+					local.thisSku.setPrice(local.skuStruct.price);
+				}
+	            if(isNumeric(local.skuStruct.listPrice)) {
+	                local.thisSku.setListPrice(local.skuStruct.listPrice);
+	            }
+	         } else {
+	         	// this is a new sku added from product.edit form (no skuID yet)
+	         	createSkuFromStruct( local.skuStruct, arguments.product );
+	         }
 		}
 		return true;
+	}
+	
+	/**
+	/* @hint takes a struct of optionGroup (keys) and lists of optionID's (values) and returns a list of all possible optionID combinations 
+	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
+	*/
+	public string function getOptionCombinations (required struct options) {
+		var optionGroupList = structKeyList(arguments.options);
+		// get list of options from first option group
+		var comboList = arguments.options[listFirst(optionGroupList)];
+		
+		// parse options struct to build list of possible option combinations
+		for( var optionGroup in arguments.options ) {
+			if(optionGroup != listFirst(optionGroupList)) {
+				var tempList = "";
+				for(var i=1;i<=listLen(comboList);i++) {
+					local.thisCombo = listGetAt(comboList,i);
+					local.newCombo = "";
+					for(var j=1; j<=listLen(arguments.options[optionGroup]);j++) {
+						newCombo = listAppend(newCombo,thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
+					}
+					tempList = listAppend(tempList,newCombo,";");
+				}
+				comboList = tempList;
+			}
+		}
+		return comboList;
 	}
 	
 
