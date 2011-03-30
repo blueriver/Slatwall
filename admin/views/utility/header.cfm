@@ -65,6 +65,8 @@ Notes:
 			<cf_ActionCaller action="admin:setting.detail" type="list">
 			<cf_ActionCaller action="admin:setting.editpermissions" type="list" class="last">
 			<cf_ActionCaller action="admin:setting.listshippingmethods" type="list" class="last">
+			<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list" class="last">
+			<cf_ActionCaller action="admin:setting.detailintegration" type="list" class="last">
 		</ul>
 	</li>
 	<li id="navHelp">
