@@ -36,16 +36,10 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingMethods" type="any" />
+<cfparam name="rc.shippingServices" type="any" />
 
 <cfoutput>
 	<div class="svoadminlistshippingmethods">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.createshippingmethod" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
-		
 		<table id="shippingMethodList" class="stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>

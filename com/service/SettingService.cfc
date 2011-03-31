@@ -36,27 +36,46 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" output="false" {
+component extends="BaseService" persistent="false" output="false" {
 	
 	property name="variables.settings" type="struct";
 	property name="variables.permissions" type="struct";
 	property name="variables.shippingMethods" type="struct";
+	property name="variables.shippingServices" type="struct";
+	property name="variables.paymentMethods" type="struct";
+	property name="variables.paymentServices" type="struct";
 	property name="variables.permissionActions" type="struct";
 	
 	public void function reloadConfiguration() {
 		var settingsList = list();
 		var shippingMethodsList = list(entityName="SlatwallShippingMethod");
 		var paymentMethodsList = list(entityName="SlatwallPaymentMethod");
+		
 		variables.permissions = {};
 		variables.settings = {};
 		variables.shippingMethods = {};
+		variables.shippingServices = {};
 		variables.paymentMethods = {};
+		variables.paymentServices = {};
+		
+		getPermissionActions();
+		getShippingServices();
 		
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
-			if(left(settingsList[i].getSettingName(), 10) == "permission") {
+			if( listGetAt( settingsList[i].getSettingName(), 1, "_") == "permission") {
+				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
+			} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "shippingservice") {
+				// Inject the value into the shipping service
+				var shippingServiceName = listGetAt( settingsList[i].getSettingName(), 2, "_");
+				if( structKeyExists(variables.shippingServices, shippingServiceName) ) {
+					// This is where you stopped greg
+				}
+			} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "paymentservice") {
+				// Inject the value into the payment service
 			} else {
+				// Set the global setting value in the settings scope
 				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
 			}
 		}
@@ -128,8 +147,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 		}
 	}
 	
-	public struct function getPermissionActions() {
-		if(!structKeyExists(variables, "permissionActions")) {
+	public struct function getPermissionActions(boolean reload=false) {
+		if(!structKeyExists(variables, "permissionActions") || arguments.reload) {
+			variables.permissionActions = structNew();
 			var dirLocation = ExpandPath("/plugins/Slatwall/admin/controllers");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
@@ -149,4 +169,33 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 		}
 		return variables.permissionActions;
 	}
+	
+	public struct function getShippingServices(boolean reload=false) {
+		if(!structKeyExists(variables, "shippingServices") || arguments.reload) {
+			variables.shippingServices = arrayNew(1);
+			var dirLocation = ExpandPath("/plugins/Slatwall/shippingServices");
+			var dirList = directoryList( dirLocation );
+			for(var i=1; i<= arrayLen(dirList); i++) {
+				var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+				var service = createObject("component", "Slatwall.shippingServices.#serviceName#.Service");
+				variables.shippingServices[ "#serviceName#" ] = service;
+			}
+		}
+		return variables.shippingServices;
+	}
+	
+	public struct function getPaymentServices(boolean reload=false) {
+		if(!structKeyExists(variables, "paymentServices") || arguments.reload) {
+			variables.paymentServices = arrayNew(1);
+			var dirLocation = ExpandPath("/plugins/Slatwall/paymentServices");
+			var dirList = directoryList( dirLocation );
+			for(var i=1; i<= arrayLen(dirList); i++) {
+				var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+				var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service");
+				variables.paymentServices[ "#serviceName#" ] = service;
+			}
+		}
+		return variables.paymentServices;
+	}
+	
 }

@@ -37,3 +37,46 @@ Notes:
 
 */
 
+component accessors="true" output="false" displayname="FedEx Integration Service"  {
+
+	// Custom Properties that need to be set by the end user
+	property name="myKey" type="string";
+	property name="myPassword" type="string";
+	property name="myAccountNo" type="string";
+	property name="myMeterNo" type="string";
+	property name="sandbox" type="boolean" default="false";
+	
+	// Variables Saved in this application scope, but not set by end user
+	variables.fedExRatesV7 = "";
+
+	public any function init() {
+		// Insert Custom Logic Here 
+		variables.fedExRatesV7 = new FedexRates_v7();
+		
+		return this;
+	}
+	
+	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
+		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
+		
+		// Insert Custom Logic Here
+		
+		return ratesResponseBean;
+	}
+	
+	public Slatwall.com.utility.shipping.TrackingResponseBean function getTracking(required string trackingNumber) {
+		var trackingResponseBean = new Slatwall.com.utility.shipping.TrackingResponseBean();
+		
+		// Insert Custom Logic Here
+		
+		return trackingResponseBean;
+	}
+	
+	public Slatwall.com.utility.shipping.ShipmentResponseBean function createShipment(required any orderShipment) {
+		var shipmentResponseBean = new Slatwall.com.utility.shipping.ShipmentResponseBean();
+		
+		// Insert Custom Logic Here
+		
+		return shipmentResponseBean;
+	}
+}
