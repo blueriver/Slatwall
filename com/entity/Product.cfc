@@ -308,7 +308,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	/************   END Association Management Methods   *******************/
 
 	public struct function getOptionGroupsStruct() {
-		if(isNull(variables.optionGroups)) {
+		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = structNew();
 			var skus = getSkus();
 			for(var i=1; i <= arrayLen(skus); i++){
