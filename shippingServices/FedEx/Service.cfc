@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="FedEx Integration Service"  {
+component accessors="true" output="false" displayname="FedEx Integration Service" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
 	property name="myKey" type="string";
