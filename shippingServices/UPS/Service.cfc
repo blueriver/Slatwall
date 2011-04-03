@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,35 +35,47 @@
 
 Notes:
 
---->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingMethods" type="any" />
+*/
 
-<cfoutput>
-	<div class="svoadminlistshippingmethods">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.createshippingmethod" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
+component accessors="true" output="false" displayname="UPS" implements="Slatwall.shippingServices.ShippingInterface" {
+
+	// Custom Properties that need to be set by the end user
+
+	
+	// Variables Saved in this application scope, but not set by end user
+	
+
+	public any function init() {
+		// Insert Custom Logic Here 
 		
-		<table id="shippingMethodList" class="stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
-				<th>&nbsp</th>
-			</tr>
-				
-			<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
-				<tr>
-					<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
-					<td class="administration">
-						<ul class="three">
-							<cf_ActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
-							<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
-</cfoutput>
+		return this;
+	}
+	
+	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
+		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
+		
+		// Insert Custom Logic Here
+		
+		return ratesResponseBean;
+	}
+	
+	public Slatwall.com.utility.shipping.TrackingResponseBean function getTracking(required string trackingNumber) {
+		var trackingResponseBean = new Slatwall.com.utility.shipping.TrackingResponseBean();
+		
+		// Insert Custom Logic Here
+		
+		return trackingResponseBean;
+	}
+	
+	public Slatwall.com.utility.shipping.ShipmentResponseBean function createShipment(required any orderShipment) {
+		var shipmentResponseBean = new Slatwall.com.utility.shipping.ShipmentResponseBean();
+		
+		// Insert Custom Logic Here
+		
+		return shipmentResponseBean;
+	}
+	
+	public struct function getShippingMethods() {
+		return {};
+	}
+}

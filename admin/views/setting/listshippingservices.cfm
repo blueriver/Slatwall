@@ -37,29 +37,25 @@ Notes:
 
 --->
 <cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingMethods" type="any" />
+<cfparam name="rc.shippingServices" type="any" />
 
 <cfoutput>
 	<div class="svoadminlistshippingmethods">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.createshippingmethod" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
-		
 		<table id="shippingMethodList" class="stripe">
 			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
 				<th>&nbsp</th>
 			</tr>
 				
-			<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
+			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
 				<tr>
-					<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
+					<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
+					<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
+					<td class="varWidth">#local.shippingServiceMetaData.displayName#</td>
 					<td class="administration">
-						<ul class="three">
-							<cf_ActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
-							<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
+						<ul class="two">
+							<cf_ActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">
+							<cf_ActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="edit" type="list">
 						</ul>     						
 					</td>
 				</tr>

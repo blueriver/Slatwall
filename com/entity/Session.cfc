@@ -44,7 +44,7 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="lastUpdatedDateTime"	ormtype="date";
 	
 	// Related Object Properties
-	property name="cart" cfc="Cart" fieldtype="many-to-one" fkcolumn="cartID" cascade="all" inverse="true";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascade="all" inverse="true";
 	
 	// Non-Related & Non-Persistent entities
 	property name="account" type="any" persistent="false";  
@@ -61,9 +61,13 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	}
 	
 	public any function getCart() {
-		if(!structKeyExists(variables, "cart")) {
-			variables.cart = getService("CartService").getNewEntity();
+		return getOrder();
+	}
+	
+	public any function getOrder() {
+		if(!structKeyExists(variables, "order")) {
+			variables.order = getService("OrderService").getNewEntity();
 		}
-		return variables.cart;
+		return variables.order;
 	}
 }

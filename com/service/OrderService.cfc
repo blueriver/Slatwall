@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,35 +35,41 @@
 
 Notes:
 
---->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingMethods" type="any" />
-
-<cfoutput>
-	<div class="svoadminlistshippingmethods">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.createshippingmethod" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
+*/
+component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+	
+	property name="sessionService";
+	
+	public void function addOrderItem(required any sku, numeric quantity=1, any order) {
 		
-		<table id="shippingMethodList" class="stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
-				<th>&nbsp</th>
-			</tr>
-				
-			<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
-				<tr>
-					<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
-					<td class="administration">
-						<ul class="three">
-							<cf_ActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
-							<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
-</cfoutput>
+		// Check to see if a order was passed into the method call	
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = getSessionService().getCurrent().getCart();
+		}
+		
+		// TODO: Check the status of the order to make sure it isn't closed
+		
+		var orderItems = arguments.order.getOrderItems();
+		var exists = false;
+		
+		// Check the existing order items and just add quantity if sku exists
+		for(var i = 1; i <= arrayLen(orderItems); i++) {
+			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID()) {
+				exists = true;
+				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+			}
+		}
+		
+		// If the sku doesn't exist in the order, then create a new order item and add it
+		if(!exists) {
+			var newOrderItem = getNewEntity(entityName="SlatwallOrderItem");
+			newOrderItem.setQuantity(arguments.quantity);
+			newOrderItem.setOrder(arguments.order);
+			newOrderItem.setSku(arguments.sku);
+			arguments.order.addOrderItem(newOrderItem);
+		}
+		
+		save(arguments.order);
+	}
+	
+}

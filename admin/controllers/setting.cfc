@@ -46,6 +46,7 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detail");
 	}
 	
+	// Global Settings
 	public void function detail(required struct rc) {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
@@ -62,7 +63,7 @@ component extends="BaseController" output="false" accessors="true" {
 		for(var item in rc) {
 			if(!isObject(item)) {
 				var setting = getSettingService().getBySettingName(item);
-				if(setting.isNew() == false) {
+				if(!setting.isNew()) {
 					setting.setSettingValue(rc[item]);
 					getSettingService().save(entity=setting);
 				}
@@ -72,10 +73,19 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detail");
 	}
 	
-	public void function editpermissions(required struct rc) {
+	// User Permissions
+	public void function detailpermissions(required struct rc) {
+		param name="rc.edit" default="false";
+		
 		rc.muraUserGroups = getUserManager().getUserGroups();
 		rc.permissionActions = getSettingService().getPermissionActions();
 		rc.permissionSettings = getSettingService().getPermissions();
+	}
+	
+	public void function editpermissions(required struct rc) {
+		detailpermissions(arguments.rc);
+		getFW().setView("admin:setting.detailpermissions");
+		rc.edit = true;
 	}
 	
 	public void function savepermissions(required struct rc) {
@@ -97,6 +107,35 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:main.dashboard");
 	}
 	
+	// Shipping Methods & Services
+	public void function listShippingServices(required struct rc) {
+		rc.shippingServices = getSettingService().getShippingServices();	
+	}
+	
+	public void function detailShippingService(required struct rc) {
+		param name="rc.edit" default="false";
+		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
+	}
+	
+	public void function editShippingService(required struct rc) {
+		detailShippingService(rc);
+		getFW().setView("admin:setting.detailshippingservice");
+		rc.edit = true;
+	}
+	
+	public void function saveShippingService(required struct rc) {
+		for(var item in rc) {
+			if(!isObject(item) && listGetAt(item,1,"_") == "shippingservice") {
+				var setting = getSettingService().getBySettingName(item);
+				setting.setSettingName(item);
+				setting.setSettingValue(rc[item]);
+				getSettingService().save(entity=setting);
+			}
+		}
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.listshippingservices");
+	}
+	
 	public void function listShippingMethods(required struct rc) {
 		rc.shippingMethods = getSettingService().getShippingMethods();
 	}
@@ -109,6 +148,7 @@ component extends="BaseController" output="false" accessors="true" {
 		if(isNull(rc.shippingMethod)) {
 			rc.shippingMethod = getSettingService().getNewEntity("SlatwallShippingMethod");
 		}
+		rc.shippingServices = getSettingService().getShippingServices();
 	}
 	
 	public void function deleteShippingMethod(required struct rc) {
@@ -148,4 +188,10 @@ component extends="BaseController" output="false" accessors="true" {
 	   		getFW().setView(action="admin:setting.editshippingmethod");
 		}
 	}
+	
+	// Payment Methods & Services
+	
+	
+	
+	// Integrations Services
 }

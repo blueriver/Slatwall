@@ -36,27 +36,54 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" output="false" {
+component extends="BaseService" persistent="false" output="false" {
 	
-	property name="variables.settings" type="struct";
-	property name="variables.permissions" type="struct";
-	property name="variables.shippingMethods" type="struct";
-	property name="variables.permissionActions" type="struct";
+	property name="settings" type="struct";
+	property name="permissions" type="struct";
+	property name="shippingMethods" type="struct";
+	property name="shippingServices" type="struct";
+	property name="paymentMethods" type="struct";
+	property name="paymentServices" type="struct";
+	property name="permissionActions" type="struct";
 	
 	public void function reloadConfiguration() {
 		var settingsList = list();
 		var shippingMethodsList = list(entityName="SlatwallShippingMethod");
 		var paymentMethodsList = list(entityName="SlatwallPaymentMethod");
+		
 		variables.permissions = {};
 		variables.settings = {};
 		variables.shippingMethods = {};
+		variables.shippingServices = {};
 		variables.paymentMethods = {};
+		variables.paymentServices = {};
+		
+		getPermissionActions();
+		getShippingServices();
 		
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
-			if(left(settingsList[i].getSettingName(), 10) == "permission") {
+			if( listGetAt( settingsList[i].getSettingName(), 1, "_") == "permission") {
+				
+				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
+				
 			} else {
+				
+				// Inject Service Specific Values
+				if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "shippingservice") {
+					// Inject Shipping Service Setting Values
+					var shippingServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
+					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
+						var shippingService = getByShippingServicePackage(shippingServicePackage);
+						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
+						evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");
+					}
+				} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "paymentservice") {
+					// Inject Payment Service Setting Values
+				}
+				
+				// Set the global setting value in the settings scope
 				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
 			}
 		}
@@ -128,8 +155,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 		}
 	}
 	
-	public struct function getPermissionActions() {
-		if(!structKeyExists(variables, "permissionActions")) {
+	public any function getByShippingServicePackage(required string shippingServicePackage) {
+		if(structKeyExists(variables.shippingServices, arguments.shippingServicePackage)) {
+			return variables.shippingServices[ arguments.shippingServicePackage ];
+		}
+	}
+	
+	public struct function getPermissionActions(boolean reload=false) {
+		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
+			variables.permissionActions = structNew();
 			var dirLocation = ExpandPath("/plugins/Slatwall/admin/controllers");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
@@ -149,4 +183,40 @@ component extends="Slatwall.com.service.BaseService" persistent="false" output="
 		}
 		return variables.permissionActions;
 	}
+	
+	public struct function getShippingServices(boolean reload=false) {
+		if(!structKeyExists(variables, "shippingServices") || !structCount(variables.shippingServices) || arguments.reload) {
+			variables.shippingServices = structNew();
+			var dirLocation = ExpandPath("/plugins/Slatwall/shippingServices");
+			var dirList = directoryList( dirLocation );
+			for(var i=1; i<= arrayLen(dirList); i++) {
+				var fileInfo = getFileInfo(dirList[i]);
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
+					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+					var service = createObject("component", "Slatwall.shippingServices.#serviceName#.Service").init();
+					var serviceMeta = getMetaData(service);
+					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.shippingServices.ShippingInterface")) {
+						variables.shippingServices[ "#serviceName#" ] = service;	
+					}
+					
+				}
+			}
+		}
+		return variables.shippingServices;
+	}
+	
+	public struct function getPaymentServices(boolean reload=false) {
+		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.shippingServices) || arguments.reload) {
+			variables.paymentServices = structNew();
+			var dirLocation = ExpandPath("/plugins/Slatwall/paymentServices");
+			var dirList = directoryList( dirLocation );
+			for(var i=1; i<= arrayLen(dirList); i++) {
+				var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+				var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
+				variables.paymentServices[ "#serviceName#" ] = service;
+			}
+		}
+		return variables.paymentServices;
+	}
+	
 }

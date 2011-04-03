@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,35 +35,7 @@
 
 Notes:
 
---->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingMethods" type="any" />
+*/
 
-<cfoutput>
-	<div class="svoadminlistshippingmethods">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.createshippingmethod" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
-		
-		<table id="shippingMethodList" class="stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
-				<th>&nbsp</th>
-			</tr>
-				
-			<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
-				<tr>
-					<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
-					<td class="administration">
-						<ul class="three">
-							<cf_ActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
-							<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
-</cfoutput>
+component accessors="true" output="false" {
+}
