@@ -45,19 +45,23 @@ Notes:
 <cfoutput>
 	<div class="svoadminsettingdetailshippingservice">
 		<cfif rc.edit>
-			<form name="saveShippingService" action="buildURL(action='admin:setting.saveshippingservice')">
+			<form name="saveShippingService" action="#buildURL(action='admin:setting.saveshippingservice')#">
+				<input type="hidden" name="shippingServicePackage" value="#rc.shippingServicePackage#" />
 		</cfif>
 		<cfif structKeyExists(local.serviceMeta, "properties")>
 			<dl>
-			<cfloop array="#local.serviceMeta.properties#" index="local.property">
-				<cfset local.propertyTitle = "" />
-				<cfif structKeyExists(local.property, "displayName")>
-					<cfset local.propertyTitle = local.property.displayName />
-				<cfelse>
-					<cfset local.propertyTitle = local.property.name />
-				</cfif>
-				<cf_PropertyDisplay object="#rc.shippingService#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
-			</cfloop>
+				<cfloop array="#local.serviceMeta.properties#" index="local.property">
+					
+					<!--- Get The Property Title --->
+					<cfset local.propertyTitle = "" />
+					<cfif structKeyExists(local.property, "displayName")>
+						<cfset local.propertyTitle = local.property.displayName />
+					<cfelse>
+						<cfset local.propertyTitle = local.property.name />
+					</cfif>
+					
+					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="shippingservice_#rc.shippingServicePackage#_#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+				</cfloop>
 			</dl>
 		</cfif>
 		<cfif rc.edit>

@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.shippingMethod" type="any" />
+<cfparam name="rc.shippingServices" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
@@ -45,7 +46,20 @@ Notes:
 			<input type="hidden" name="shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />
 			<dl class="oneColumn">
 				<cf_PropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#" first="true">
-				
+				<dt class="spdshippingprovider">
+					#rc.$.rbKey('entity.shippingmethod.shippingprovider')#
+				</dt>
+				<dd id="spdshippingprovider">
+					<select name="shippingProvider">
+						<option value="none">None</option>
+						<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
+							<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
+							<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
+							<option value="#local.shippingServicePackage#">#local.shippingServiceMetaData.displayName#</option>
+						</cfloop>
+					</select>
+				</dd>
+				<div class="methodHolder"></div>
 			</dl>
 			<div id="actionButtons" class="clearfix">
 				<cf_ActionCaller action="admin:setting.listshippingmethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
@@ -55,8 +69,24 @@ Notes:
 				<cf_ActionCaller action="admin:setting.saveshippingmethod" type="submit">
 			</div>
 		</form>
-	</div>
 		
+		<div style="display:none;">
+			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
+				<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
+				<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
+				<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
+				<div id="spm#local.shippingServicePackage#">
+					<dt>#rc.$.rbKey('entity.shippingmethod.shippingprovidermethod')#</dt>
+					<dd>
+					<select name="shippingProviderMethod">
+						<cfloop collection="#local.shippingServiceMethods#" item="shippingMethodID">
+							<option value="#shippingMethodID#">#local.shippingServiceMethods[shippingMethodID]#</option>
+						</cfloop>
+					</select>
+					</dd>
+				</div>
+			</cfloop>
+		</div>
 		
 	</div>
 </cfoutput>

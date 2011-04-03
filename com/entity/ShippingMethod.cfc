@@ -41,7 +41,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	// Persistant Properties
 	property name="shippingMethodID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="shippingMethodName" ormtype="string";
-	property name="shippingProviderGateway" ormtype="string";
+	property name="shippingProvider" ormtype="string";
 	property name="shippingProviderMethod" ormtype="string";
 	
 	// Related Object Properties

@@ -37,14 +37,14 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="FedEx Integration Service" implements="Slatwall.shippingServices.ShippingInterface" {
+component accessors="true" output="false" displayname="FedEx" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
-	property name="myKey" type="string";
-	property name="myPassword" type="string";
-	property name="myAccountNo" type="string";
-	property name="myMeterNo" type="string";
-	property name="sandbox" type="boolean" default="false";
+	property name="accountNo" displayname="FedEx Account Number" type="string";
+	property name="password" displayname="FedEx Password" type="string";
+	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
+	property name="meterNo" displayname="FedEx Meter Number" type="string";
+	property name="sandbox" displayname="Use Sandbox?" type="boolean" default="false";
 	
 	// Variables Saved in this application scope, but not set by end user
 	variables.fedExRatesV7 = "";
@@ -52,7 +52,16 @@ component accessors="true" output="false" displayname="FedEx Integration Service
 	public any function init() {
 		// Insert Custom Logic Here 
 		variables.fedExRatesV7 = new FedexRates_v7();
-		
+		variables.shippingMethods = {
+			FIRST_OVERNIGHT="First Overnight",
+			PRIORITY_OVERNIGHT="Priority Overnight",
+			STANDARD_OVERNIGHT="Standard Overnight",
+			FEDEX_2_DAY="2 Day",
+			FEDEX_EXPRESS_SAVER="Express Saver",
+			FEDEX_GROUND="Ground",
+			INTERNATIONAL_ECONOMY="International Economy",
+			INTERNATIONAL_PRIORITY="International Priority"
+		};
 		return this;
 	}
 	
@@ -78,5 +87,9 @@ component accessors="true" output="false" displayname="FedEx Integration Service
 		// Insert Custom Logic Here
 		
 		return shipmentResponseBean;
+	}
+	
+	public struct function getShippingMethods() {
+		return variables.shippingMethods;
 	}
 }

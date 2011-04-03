@@ -50,8 +50,8 @@ Notes:
 			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
 				<tr>
 					<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
-					<cfset local.shippingService = getMetaData(local.shippingService) />
-					<td class="varWidth">#local.shippingService.displayName#</td>
+					<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
+					<td class="varWidth">#local.shippingServiceMetaData.displayName#</td>
 					<td class="administration">
 						<ul class="two">
 							<cf_ActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">

@@ -4,7 +4,7 @@
 	</cffunction>
 	
 	<cffunction name="getRates" access="public" returntype="Slatwall.com.utility.shipping.RatesResponseBean">
-		<cfargument name="orderShipping" required="true" />
+		<cfargument name="orderShipping" type="any" required="true" />
 		
 		<!---
 			This method should take in a given order shipment and based
@@ -15,7 +15,7 @@
 	</cffunction>
 	
 	<cffunction name="getTracking" access="public" returntype="Slatwall.com.utility.shipping.TrackingResponseBean">
-		<cfargument name="trackingNumber" required="true" />
+		<cfargument name="trackingNumber" type="string" required="true" />
 		
 		<!---
 			This method takes a tracking number and passes back a
@@ -24,8 +24,8 @@
 		--->
 	</cffunction>
 	
-	<cffunction name="createShipment" access="public" returntype="" >
-		<cfargument name="orderShipment" required="true" />
+	<cffunction name="createShipment" access="public" returntype="Slatwall.com.utility.shipping.ShipmentResponseBean">
+		<cfargument name="orderShipment" type="any" required="true" />
 		
 		<!---
 			This method should take an order shipment object, and pass

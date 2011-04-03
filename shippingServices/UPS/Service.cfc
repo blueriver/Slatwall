@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="UPS Integration Service" implements="Slatwall.shippingServices.ShippingInterface" {
+component accessors="true" output="false" displayname="UPS" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
 
@@ -73,5 +73,9 @@ component accessors="true" output="false" displayname="UPS Integration Service" 
 		// Insert Custom Logic Here
 		
 		return shipmentResponseBean;
+	}
+	
+	public struct function getShippingMethods() {
+		return {};
 	}
 }

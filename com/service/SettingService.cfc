@@ -64,17 +64,25 @@ component extends="BaseService" persistent="false" output="false" {
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
 			if( listGetAt( settingsList[i].getSettingName(), 1, "_") == "permission") {
+				
 				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
-			} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "shippingservice") {
-				// Inject the value into the shipping service
-				var shippingServiceName = listGetAt( settingsList[i].getSettingName(), 2, "_");
-				if( structKeyExists(variables.shippingServices, shippingServiceName) ) {
-					// This is where you stopped greg
-				}
-			} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "paymentservice") {
-				// Inject the value into the payment service
+				
 			} else {
+				
+				// Inject Service Specific Values
+				if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "shippingservice") {
+					// Inject Shipping Service Setting Values
+					var shippingServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
+					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
+						var shippingService = getByShippingServicePackage(shippingServicePackage);
+						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
+						evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");
+					}
+				} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "paymentservice") {
+					// Inject Payment Service Setting Values
+				}
+				
 				// Set the global setting value in the settings scope
 				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
 			}
@@ -185,7 +193,7 @@ component extends="BaseService" persistent="false" output="false" {
 				var fileInfo = getFileInfo(dirList[i]);
 				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
 					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-					var service = createObject("component", "Slatwall.shippingServices.#serviceName#.Service");
+					var service = createObject("component", "Slatwall.shippingServices.#serviceName#.Service").init();
 					var serviceMeta = getMetaData(service);
 					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.shippingServices.ShippingInterface")) {
 						variables.shippingServices[ "#serviceName#" ] = service;	
@@ -204,7 +212,7 @@ component extends="BaseService" persistent="false" output="false" {
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-				var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service");
+				var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
 				variables.paymentServices[ "#serviceName#" ] = service;
 			}
 		}
