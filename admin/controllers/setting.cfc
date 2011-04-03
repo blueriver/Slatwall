@@ -108,6 +108,21 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	// Shipping Methods & Services
+	public void function listShippingServices(required struct rc) {
+		rc.shippingServices = getSettingService().getShippingServices();	
+	}
+	
+	public void function detailShippingService(required struct rc) {
+		param name="rc.edit" default="false";
+		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
+	}
+	
+	public void function editShippingService(required struct rc) {
+		detailShippingService(rc);
+		getFW().setView("admin:setting.detailshippingservice");
+		rc.edit = true;
+	}
+	
 	public void function listShippingMethods(required struct rc) {
 		rc.shippingMethods = getSettingService().getShippingMethods();
 	}

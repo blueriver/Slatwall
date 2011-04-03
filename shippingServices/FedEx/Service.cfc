@@ -57,7 +57,7 @@ component accessors="true" output="false" displayname="FedEx Integration Service
 	}
 	
 	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
-		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
+		var ratesResponseBean = new com.utility.shipping.RatesResponseBean();
 		
 		// Insert Custom Logic Here
 		
@@ -65,7 +65,7 @@ component accessors="true" output="false" displayname="FedEx Integration Service
 	}
 	
 	public Slatwall.com.utility.shipping.TrackingResponseBean function getTracking(required string trackingNumber) {
-		var trackingResponseBean = new Slatwall.com.utility.shipping.TrackingResponseBean();
+		var trackingResponseBean = new com.utility.shipping.TrackingResponseBean();
 		
 		// Insert Custom Logic Here
 		
@@ -73,7 +73,7 @@ component accessors="true" output="false" displayname="FedEx Integration Service
 	}
 	
 	public Slatwall.com.utility.shipping.ShipmentResponseBean function createShipment(required any orderShipment) {
-		var shipmentResponseBean = new Slatwall.com.utility.shipping.ShipmentResponseBean();
+		var shipmentResponseBean = new com.utility.shipping.ShipmentResponseBean();
 		
 		// Insert Custom Logic Here
 		

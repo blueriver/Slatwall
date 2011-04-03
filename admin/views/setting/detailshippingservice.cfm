@@ -36,4 +36,34 @@
 Notes:
 
 --->
+<cfparam name="rc.shippingServicePackage" />
+<cfparam name="rc.shippingService" />
+<cfparam name="rc.edit" />
 
+<cfset local.serviceMeta = getMetaData(rc.shippingService) />
+
+<cfoutput>
+	<div class="svoadminsettingdetailshippingservice">
+		<cfif rc.edit>
+			<form name="saveShippingService" action="buildURL(action='admin:setting.saveshippingservice')">
+		</cfif>
+		<cfif structKeyExists(local.serviceMeta, "properties")>
+			<dl>
+			<cfloop array="#local.serviceMeta.properties#" index="local.property">
+				<cfset local.propertyTitle = "" />
+				<cfif structKeyExists(local.property, "displayName")>
+					<cfset local.propertyTitle = local.property.displayName />
+				<cfelse>
+					<cfset local.propertyTitle = local.property.name />
+				</cfif>
+				<cf_PropertyDisplay object="#rc.shippingService#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+			</cfloop>
+			</dl>
+		</cfif>
+		<cfif rc.edit>
+			<cf_ActionCaller action="admin:setting.listshippingservices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit">
+			</form>
+		</cfif>
+	</div>
+</cfoutput>
