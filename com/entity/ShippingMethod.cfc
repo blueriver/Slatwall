@@ -46,9 +46,17 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	// Related Object Properties
 	property name="shippingMethodType" cfc="Type" fieldtype="many-to-one" fkcolumn="shippingMethodTypeID";
+	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" filedtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all";  
 	
 	public string function getMethodType() {
 		return getShippingMethodType().getType();
+	}
+	
+	public array function getShippingRates() {
+		if(isNull(variables.shippingRates)) {
+			variables.shippingRates = arrayNew(1);
+		}
+		return variables.shippingRates;
 	}
 
 }

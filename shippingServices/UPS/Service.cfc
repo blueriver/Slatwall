@@ -40,14 +40,29 @@ Notes:
 component accessors="true" output="false" displayname="UPS" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
-
+	property name="key" displayname="Transaction Key" type="sting";
+	property name="username" displayname="Username" type="sting";
+	property name="password" displayname="Password" type="sting";
+	property name="developmentmode" displayname="Development Mode" type="boolean";
 	
 	// Variables Saved in this application scope, but not set by end user
-	
+	variables.shippingMethods = {};
 
 	public any function init() {
-		// Insert Custom Logic Here 
-		
+		variables.shippingMethods = {
+			01="UPS Next Day Air",
+			02="UPS 2nd Day Air",
+			03="UPS Ground",
+			07="UPS Worldwide Express",
+			08="UPS Worldwide Express Expedited",
+			11="UPS Standard",
+			12="UPS 3 Day Select",
+			13="UPS Next Day Air Saver",
+			14="UPS Next Day Air Early A.M.",
+			54="UPS Worldwide Express Plus",
+			59="UPS 2nd Day Air A.M.",
+			65="UPS Saver"
+		};
 		return this;
 	}
 	
@@ -76,6 +91,6 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 	}
 	
 	public struct function getShippingMethods() {
-		return {};
+		return variables.shippingMethods;
 	}
 }

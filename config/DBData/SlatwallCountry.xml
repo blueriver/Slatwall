@@ -1,0 +1,208 @@
+<Table tableName="SlatwallCountry">
+	<Columns>
+		<column name="countryCode" fieldtype="id" />
+		<column name="countryName" />
+	</Columns>
+	<Records>
+		<Record countryCode="AD" countryName="Andorra" />
+		<Record countryCode="AE" countryName="United Arab Emirates" />
+		<Record countryCode="AF" countryName="Afghanistan" />
+		<Record countryCode="AG" countryName="Antigua and Barbuda" />
+		<Record countryCode="AI" countryName="Anguilla" />
+		<Record countryCode="AL" countryName="Albania" />
+		<Record countryCode="AM" countryName="Armenia" />
+		<Record countryCode="AN" countryName="Netherlands Antilles" />
+		<Record countryCode="AO" countryName="Angola" />
+		<Record countryCode="AR" countryName="Argentina" />
+		<Record countryCode="AT" countryName="Austria" />
+		<Record countryCode="AU" countryName="Australia" />
+		<Record countryCode="AW" countryName="Aruba" />
+		<Record countryCode="AZ" countryName="Azerbaijan" />
+		<Record countryCode="BB" countryName="Barbados" />
+		<Record countryCode="BD" countryName="Bangladesh" />
+		<Record countryCode="BE" countryName="Belgium" />
+		<Record countryCode="BF" countryName="Burkina Faso" />
+		<Record countryCode="BG" countryName="Bulgaria" />
+		<Record countryCode="BH" countryName="Bahrain" />
+		<Record countryCode="BI" countryName="Burundi" />
+		<Record countryCode="BJ" countryName="Benin" />
+		<Record countryCode="BM" countryName="Bermuda" />
+		<Record countryCode="BN" countryName="Brunei Darussalam" />
+		<Record countryCode="BO" countryName="Bolivia" />
+		<Record countryCode="BR" countryName="Brazil" />
+		<Record countryCode="BS" countryName="Bahamas" />
+		<Record countryCode="BT" countryName="Bhutan" />
+		<Record countryCode="BW" countryName="Botswana" />
+		<Record countryCode="BY" countryName="Belarus" />
+		<Record countryCode="BZ" countryName="Belize" />
+		<Record countryCode="CA" countryName="Canada" />
+		<Record countryCode="CF" countryName="Central African Republic" /> 
+		<Record countryCode="CG" countryName="Congo, Republic" />
+		<Record countryCode="CH" countryName="Switzerland" />
+		<Record countryCode="CI" countryName="Ivory Coast" />
+		<Record countryCode="CL" countryName="Chile" />
+		<Record countryCode="CM" countryName="Cameroon" />
+		<Record countryCode="CN" countryName="China" />
+		<Record countryCode="CO" countryName="Colombia" />
+		<Record countryCode="CR" countryName="Costa Rica" />
+		<Record countryCode="CV" countryName="Cape Verde" />
+		<Record countryCode="CY" countryName="Cyprus" />
+		<Record countryCode="CZ" countryName="Czech Republic" />
+		<Record countryCode="DE" countryName="Germany" />
+		<Record countryCode="DJ" countryName="Djibouti" />
+		<Record countryCode="DK" countryName="Denmark" />
+		<Record countryCode="DM" countryName="Dominica" />
+		<Record countryCode="DO" countryName="Dominican Republic" />
+		<Record countryCode="DZ" countryName="Algeria" />
+		<Record countryCode="EC" countryName="Ecuador" />
+		<Record countryCode="EE" countryName="Estonia" />
+		<Record countryCode="EG" countryName="Egypt" />
+		<Record countryCode="ER" countryName="Eritrea" />
+		<Record countryCode="ES" countryName="Spain" />
+		<Record countryCode="ET" countryName="Ethiopia" />
+		<Record countryCode="FI" countryName="Finland" />
+		<Record countryCode="FJ" countryName="Fiji" />
+		<Record countryCode="FO" countryName="Faroe Islands" />
+		<Record countryCode="FR" countryName="France" />
+		<Record countryCode="GA" countryName="Gabon" />
+		<Record countryCode="GB" countryName="United Kingdom" />
+		<Record countryCode="GD" countryName="Grenada" />
+		<Record countryCode="GF" countryName="French Guiana" /> 
+		<Record countryCode="GI" countryName="Gibraltar" />
+		<Record countryCode="GL" countryName="Greenland" />
+		<Record countryCode="GM" countryName="Gambia" />
+		<Record countryCode="GN" countryName="Guinea" />
+		<Record countryCode="GP" countryName="Guadeloupe" />
+		<Record countryCode="GQ" countryName="Equatorial Guinea" />
+		<Record countryCode="GR" countryName="Greece" />
+		<Record countryCode="GT" countryName="Guatemala" />
+		<Record countryCode="GU" countryName="Guam" />
+		<Record countryCode="GW" countryName="Guinea-Bissau" />
+		<Record countryCode="GY" countryName="Guyana" />
+		<Record countryCode="HK" countryName="Hong Kong" />
+		<Record countryCode="HN" countryName="Honduras" />
+		<Record countryCode="HR" countryName="Croatia" />
+		<Record countryCode="HT" countryName="Haiti" />
+		<Record countryCode="HU" countryName="Hungary" />
+		<Record countryCode="IE" countryName="Ireland" />
+		<Record countryCode="IL" countryName="Israel" />
+		<Record countryCode="IN" countryName="India" />
+		<Record countryCode="IQ" countryName="Iraq" />
+		<Record countryCode="IR" countryName="Iran" />
+		<Record countryCode="IS" countryName="Iceland" />
+		<Record countryCode="IT" countryName="Italy" />
+		<Record countryCode="JM" countryName="Jamaica" />
+		<Record countryCode="JO" countryName="Jordan" />
+		<Record countryCode="JP" countryName="Japan" />
+		<Record countryCode="KE" countryName="Kenya" />
+		<Record countryCode="KG" countryName="Kyrgyzstan" />
+		<Record countryCode="KH" countryName="Cambodia" />
+		<Record countryCode="KI" countryName="Kiribati" />
+		<Record countryCode="KM" countryName="Comoros" />
+		<Record countryCode="KN" countryName="St. Christopher" />
+		<Record countryCode="KR" countryName="South Korea" />
+		<Record countryCode="KW" countryName="Kuwait" />
+		<Record countryCode="KY" countryName="Cayman Islands" />
+		<Record countryCode="KZ" countryName="Kazakhstan" />
+		<Record countryCode="LA" countryName="Laos" />
+		<Record countryCode="LB" countryName="Lebanon" />
+		<Record countryCode="LC" countryName="Saint Lucia" />
+		<Record countryCode="LI" countryName="Liechtenstein" />
+		<Record countryCode="LK" countryName="Sri Lanka" />
+		<Record countryCode="LR" countryName="Liberia" />
+		<Record countryCode="LS" countryName="Lesotho" />
+		<Record countryCode="LT" countryName="Lithuania" />
+		<Record countryCode="LU" countryName="Luxembourg" />
+		<Record countryCode="LV" countryName="Latvia" />
+		<Record countryCode="LY" countryName="Libya" />
+		<Record countryCode="MA" countryName="Morocco" />
+		<Record countryCode="MD" countryName="Moldova" />
+		<Record countryCode="MG" countryName="Madagascar" />
+		<Record countryCode="MK" countryName="Macedonia" />
+		<Record countryCode="ML" countryName="Mali" />
+		<Record countryCode="MM" countryName="Burma (Myanmar)" />
+		<Record countryCode="MN" countryName="Mongolia" />
+		<Record countryCode="MQ" countryName="Martinique" />
+		<Record countryCode="MR" countryName="Mauritania" />
+		<Record countryCode="MS" countryName="Montserrat" />
+		<Record countryCode="MT" countryName="Malta" />
+		<Record countryCode="MU" countryName="Mauritius" />
+		<Record countryCode="MV" countryName="Maldives" />
+		<Record countryCode="MW" countryName="Malawi" />
+		<Record countryCode="MX" countryName="Mexico" />
+		<Record countryCode="MY" countryName="Malaysia" />
+		<Record countryCode="MZ" countryName="Mozambique" />
+		<Record countryCode="NA" countryName="Namibia" />
+		<Record countryCode="NC" countryName="New Caledonia" />
+		<Record countryCode="NE" countryName="Niger" />
+		<Record countryCode="NI" countryName="Nicaragua" />
+		<Record countryCode="NL" countryName="Netherlands" />
+		<Record countryCode="NO" countryName="Norway" />
+		<Record countryCode="NP" countryName="Nepal" />
+		<Record countryCode="NR" countryName="Nauru" />
+		<Record countryCode="NZ" countryName="New Zealand" />
+		<Record countryCode="OM" countryName="Oman" />
+		<Record countryCode="PA" countryName="Panama" />
+		<Record countryCode="PE" countryName="Peru" />
+		<Record countryCode="PF" countryName="French Polynesia" />
+		<Record countryCode="PG" countryName="Papua New Guinea" />
+		<Record countryCode="PH" countryName="Philippines" />
+		<Record countryCode="PK" countryName="Pakistan" />
+		<Record countryCode="PL" countryName="Poland" />
+		<Record countryCode="PM" countryName="Saint Pierre and Miquelon" />
+		<Record countryCode="PN" countryName="Pitcairn Island" />
+		<Record countryCode="PR" countryName="Puerto Rico" />
+		<Record countryCode="PT" countryName="Portugal" />
+		<Record countryCode="PY" countryName="Paraguay" />
+		<Record countryCode="RO" countryName="Romania" />
+		<Record countryCode="RW" countryName="Rwanda" />
+		<Record countryCode="SA" countryName="Saudi Arabia" />
+		<Record countryCode="SB" countryName="Solomon Islands" />
+		<Record countryCode="SC" countryName="Seychelles" />
+		<Record countryCode="SD" countryName="Sudan" />
+		<Record countryCode="SE" countryName="Sweden" />
+		<Record countryCode="SG" countryName="Singapore" />
+		<Record countryCode="SH" countryName="Saint Helena" />
+		<Record countryCode="SI" countryName="Slovenia" />
+		<Record countryCode="SK" countryName="Slovakia" />
+		<Record countryCode="SL" countryName="Sierra Leone" />
+		<Record countryCode="SM" countryName="San Marino" />
+		<Record countryCode="SN" countryName="Senegal" />
+		<Record countryCode="SR" countryName="Suriname" />
+		<Record countryCode="ST" countryName="Sao Tome and Principe" />
+		<Record countryCode="SV" countryName="El Salvador" />
+		<Record countryCode="SY" countryName="Syria" />
+		<Record countryCode="SZ" countryName="Swaziland" />
+		<Record countryCode="TC" countryName="Turks and Caicos Islands" />
+		<Record countryCode="TD" countryName="Chad" />
+		<Record countryCode="TG" countryName="Togo" />
+		<Record countryCode="TH" countryName="Thailand" />
+		<Record countryCode="TJ" countryName="Tajikistan" />
+		<Record countryCode="TM" countryName="Turkmenistan" />
+		<Record countryCode="TN" countryName="Tunisia" />
+		<Record countryCode="TO" countryName="Tonga" />
+		<Record countryCode="TR" countryName="Turkey" />
+		<Record countryCode="TT" countryName="Trinidad and Tobago" />
+		<Record countryCode="TV" countryName="Tuvalu" />
+		<Record countryCode="TW" countryName="Taiwan" />
+		<Record countryCode="TZ" countryName="Tanzania" />
+		<Record countryCode="UA" countryName="Ukraine" />
+		<Record countryCode="UG" countryName="Uganda" />
+		<Record countryCode="US" countryName="United States" />
+		<Record countryCode="UY" countryName="Uruguay" />
+		<Record countryCode="UZ" countryName="Uzbekistan" />
+		<Record countryCode="VA" countryName="Vatican City" />
+		<Record countryCode="VC" countryName="Saint Vincent and Grenadi" />
+		<Record countryCode="VE" countryName="Venezuela" />
+		<Record countryCode="VG" countryName="British Virgin Islands" />
+		<Record countryCode="VN" countryName="Vietnam" />
+		<Record countryCode="VU" countryName="Vanuatu" />
+		<Record countryCode="WF" countryName="Futuna Islands" />
+		<Record countryCode="WS" countryName="Western Samoa" />
+		<Record countryCode="YE" countryName="Yemen" />
+		<Record countryCode="YU" countryName="Montenegro (Yugoslavia)" />
+		<Record countryCode="ZA" countryName="South Africa" />
+		<Record countryCode="ZM" countryName="Zambia" />
+		<Record countryCode="ZW" countryName="Zimbabwe" />
+	</Records>
+</Table>

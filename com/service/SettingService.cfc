@@ -219,4 +219,25 @@ component extends="BaseService" persistent="false" output="false" {
 		return variables.paymentServices;
 	}
 	
+	public any function saveAddressZone(required any entity, struct data) {
+		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"addressZoneLocations") ) {
+			for(var i in arguments.data.addressZoneLocations) {
+				if(left(i,3) == "new" && len(i) >= 4) {
+					var addressZoneLocation = getNewEntity("SlatwallAddressZoneLocation");
+					addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
+					addressZoneLocation.setAddressZone(arguments.entity);
+					arguments.entity.addAddressZoneLocation(addressZoneLocation);
+				} else {
+					var addressZoneLocation = getByID(i,"SlatwallAddressZoneLocation");
+					if(!isNull(addressZoneLocation)) {
+						addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
+						addressZoneLocation.setAddressZone(arguments.entity);
+						arguments.entity.addAddressZoneLocation(addressZoneLocation);	
+					}
+				}
+			}
+		}
+		return save(argumentcollection=arguments);
+	}
+	
 }
