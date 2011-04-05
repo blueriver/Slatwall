@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,44 +35,33 @@
 
 Notes:
 
---->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.orderSmartList" type="any" />
+*/
+component extends="BaseController" persistent="false" accessors="true" output="false" {
 
-<cfoutput>
-<ul id="navTask">
-    
-</ul>
+	// fw1 Auto-Injected Service Properties
+	property name="orderService" type="any";
+	
+	public void function before(required struct rc) {
+		param name="rc.orderID" default="";
+		param name="rc.keyword" default="";
+	}
+	
+	public void function dashboard(required struct rc) {
+		getFW().redirect("admin:order.list");
+	}
 
-<div class="svoadminorderlist">
-	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
-	</form>
+    public void function list(required struct rc) {
+		param name="rc.orderby" default="orderCloseDate|D";
+		rc.orderSmartList = getOrderService().getSmartList(rc=arguments.rc);
+    }
 
-	<table id="OrderList" class="stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderCloseDate")#</th>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.type.orderStatusType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderTotal")#</th>
-			<th>&nbsp</th>
-		</tr>
-		<cfloop array="#rc.OrderSmartList.getPageRecords()#" index="Local.Order">
-			<tr>
-				<td>#Local.Order.getOrderID()#</td>
-				<td>#Local.Order.getOrderCloseDate()#</td>
-				<td class="varWidth">#Local.Order.getAccount().getFullName()#</td>
-				<td>#Local.Order.getOrderStatusType().getType()#</td>
-				<td>#local.Order.getOrderTotal()#</td>
-				<td class="administration">
-					<cfset local.orderID = Local.Order.getOrderID() />
-					<ul class="four">
-					  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.orderID#" class="viewDetails" type="list">
-					</ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-</div>
-</cfoutput>
+	public void function detail(required struct rc) {
+	   rc.brand = getOrderService().getByID(ID=rc.orderID);
+	   if(!isNull(rc.order) and !rc.order.isNew()) {
+	       rc.itemTitle &= ": Order No. " & rc.order.getOrderID();
+	   } else {
+	       getFW().redirect("admin:order.list");
+	   }
+	}
+
+}

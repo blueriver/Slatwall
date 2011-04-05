@@ -9,6 +9,7 @@
 		 <property name="productTypeTreeSorter"><ref bean="productTypeTreeSorter" /></property>
 	</bean>
 	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
+	<bean id="orderDAO" class="slatwall.com.dao.orderDAO" />
 	<bean id="cartDAO" class="slatwall.com.dao.cartDAO" />
 	<bean id="settingDAO" class="slatwall.com.dao.[integration]SettingDAO" />
 	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
@@ -72,6 +73,21 @@
         </property>
     </bean>
 	
+	<bean id="orderService" class="coldspring.aop.framework.ProxyFactoryBean">
+        <property name="target">
+            <bean class="slatwall.com.service.orderService">
+		        <property name="entityName"><value>SlatwallOrder</value></property>
+		        <property name="DAO"><ref bean="OrderDAO" /></property>
+				<property name="validator"><ref bean="Validator" /></property>
+            </bean>
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>transactionAdvisor</value>
+            </list>
+        </property>
+    </bean>
+
 	<bean id="cartService" class="coldspring.aop.framework.ProxyFactoryBean">
         <property name="target">
             <bean class="slatwall.com.service.cartService">

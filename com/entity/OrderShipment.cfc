@@ -47,5 +47,6 @@ component displayname="Order Shipment" entityname="SlatwallOrderShipment" table=
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderShipmentItems" singularname="orderShipmentItem" cfc="OrderShipmentItem" fieldtype="one-to-many" fkcolumn="orderShipmentID" cascade="all";
 	
 }
