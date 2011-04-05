@@ -36,35 +36,19 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingServices" type="any" />
+<cfparam name="attributes.countriesArray" type="array" />
+<cfparam name="attributes.selectName" type="string" default="country" />
+<cfparam name="attributes.selectID" type="string" default="" />
+<cfparam name="attributes.selectedCountryCode" type="string" default="US" />
 
-<cfoutput>
-	<div class="svoadminlistshippingmethods">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
-		
-		<table id="shippingMethodList" class="stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
-				<th>&nbsp</th>
-			</tr>
-				
-			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
-				<tr>
-					<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
-					<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
-					<td class="varWidth">#local.shippingServiceMetaData.displayName#</td>
-					<td class="administration">
-						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="edit" type="list">
-						</ul>     						
-					</td>
-				</tr>
+<cfset variables.fw = caller.this />
+
+<cfif thisTag.executionMode is "start">
+	<cfoutput>
+		<select <cfif len(attributes.selectID)>id="#attributes.selectID#"</cfif> name="#attributes.selectName#">
+			<cfloop array="#attributes.countriesArray#" index="country">
+				<option value="#country.getCountryCode()#" <cfif country.getCountryCode() eq attributes.selectedCountryCode>selected="selected"</cfif>>#country.getCountryName()#</option>
 			</cfloop>
-		</table>
-	</div>
-</cfoutput>
+		</select>
+	</cfoutput>
+</cfif>

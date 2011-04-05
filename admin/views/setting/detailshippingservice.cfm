@@ -44,6 +44,11 @@ Notes:
 
 <cfoutput>
 	<div class="svoadminsettingdetailshippingservice">
+		<ul id="navTask">
+	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
+			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
+		</ul>
+		
 		<cfif rc.edit>
 			<form name="saveShippingService" action="#buildURL(action='admin:setting.saveshippingservice')#">
 				<input type="hidden" name="shippingServicePackage" value="#rc.shippingServicePackage#" />
