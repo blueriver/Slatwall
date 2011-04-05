@@ -36,36 +36,42 @@
 Notes:
 
 */
-component displayname="Attribute Option" entityname="SlatwallAttributeOption" table="SlatwallAttributeOption" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
+component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="SlatwallAttributeSet" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="attributeOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeOptionValue" ormtype="string";
-	property name="attributeOptionLabel" ormtype="string";
+	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="attributeSetName" ormtype="string";
+	property name="attributeSetDescription" ormtype="string" length="2000" ;
+	property name="isGlobal" ormtype="boolean";
 	
 	// Related Object Properties
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
+	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all";
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
+    /******* Association management methods for bidirectional relationships **************/
 	
-	// Attribute (many-to-one)
+	// Attribute (one-to-many)
 	
-	public void function setAttribute(required Attribute attribute) {
-		variables.attribute = arguments.attribute;
-		if(isNew() or !arguments.attribute.hasAttributeOption(this)) {
-		   arrayAppend(arguments.attribute.getAttributeOptions(),this);
-		}
+	public void function addAttribute(required Attribute attribute) {
+	   arguments.attribute.setAttributeSet(this);
 	}
 	
 	public void function removeAttribute(required Attribute attribute) {
-		var index = arrayFind(arguments.attribute.getAttributeOptions(),this);
-		if(index > 0) {
-		   arrayDeleteAt(arguments.attribute.getAttributeOptions(),index);
-		}    
-		structDelete(variables,"attribute");
-    }
+	   arguments.attribute.removeAttributeSet(this);
+	}
 	
-	/************   END Association Management Methods   *******************/
+	// Attribute Set Assignment (one-to-many)
+	
+	public void function addAttributeSetAssignment(required AttributeSetAssignment attributeSetAssignment) {
+	   arguments.attributeSetAssignment.setAttributeSet(this);
+	}
+	
+	public void function removeAttributeSetAssignment(required AttributeSetAssignment attributeSetAssignment) {
+	   arguments.attributeSetAssignment.removeAttributeSet(this);
+	}
+	
+    /************   END Association Management Methods   *******************/
 
 }

@@ -36,13 +36,36 @@
 Notes:
 
 */
-component displayname="Profile Template Attribute" entityname="SlatwallProfileTemplateAttribute" table="SlatwallProfileTemplateAttribute" persistent="true" extends="slatwall.com.entity.baseEntity" {
-			
+component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+	
 	// Persistant Properties
-	property name="profileTemplateAttributeID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="exclude" ormtype="boolean";
+	property name="baseItemID" ormtype="string" hint="This is where the assignment is made, e.g. productID,productTypeID,accountID,accountTypeID" ;  
 	
 	// Related Object Properties
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
-	property name="profileTemplate" cfc="ProfileTemplate" fieldtype="many-to-one" fkcolumn="profileTemplateID";
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
+
+
+	/******* Association management methods for bidirectional relationships **************/
 	
+	// Attribute Set (many-to-one)
+	
+	public void function setAttributeSet(required AttributeSet attributeSet) {
+		variables.attributeSet = arguments.attributeSet;
+		if(isNew() or !arguments.attributeSet.hasAttributeSetAssignment(this)) {
+		   arrayAppend(arguments.attributeSet.getAttributeSetAssignments(),this);
+		}
+	}
+	
+	public void function removeAttributeSet(required AttributeSet attributeSet) {
+		var index = arrayFind(arguments.attributeSet.getAttributeSetAssignments(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.attributeSet.getAttributeSetAssignments(),index);
+		}    
+		structDelete(variables,"attributeSet");
+    }
+    
+	/************   END Association Management Methods   *******************/
+
 }

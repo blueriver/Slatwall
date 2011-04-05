@@ -41,10 +41,9 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Persistant Properties
 	property name="attributeValueID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValue" ormtype="string";
-	
+	property name="baseID" ormtype="string" hint="where the value is associated, e.g. productID,accountID,accountProfileID" ;
+
 	// Related Object Properties
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
+	
 }
