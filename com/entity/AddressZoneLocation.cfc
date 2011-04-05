@@ -36,13 +36,17 @@
 Notes:
 
 */
-component displayname="Shipping Zone" entityname="SlatwallShippingZone" table="SlatwallShippingZone" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Address Zone Location" entityname="SlatwallAddressZoneLocation" table="SlatwallAddressZoneLocation" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="shippingZoneID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingZoneName" ormtype="string";
-	
+	property name="addressZoneLocationID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="countryCode" ormtype="string";
+	property name="stateCode" ormtype="string";
+	property name="postalCode" ormtype="string";
+
 	// Related Object Properties
-	property name="shippingZoneLocations" singularname="shippingZoneLocation" type="array" cfc="ShippingZoneLocation" fieldtype="one-to-many" fkcolumn="shippingZoneID" inverse="true" cascade="all";
+	property name="addressZone" cfc="addressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
-}
+}	
+
+

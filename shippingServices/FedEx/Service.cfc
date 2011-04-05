@@ -53,14 +53,14 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		// Insert Custom Logic Here 
 		variables.fedExRatesV7 = new FedexRates_v7();
 		variables.shippingMethods = {
-			FIRST_OVERNIGHT="First Overnight",
-			PRIORITY_OVERNIGHT="Priority Overnight",
-			STANDARD_OVERNIGHT="Standard Overnight",
-			FEDEX_2_DAY="2 Day",
-			FEDEX_EXPRESS_SAVER="Express Saver",
-			FEDEX_GROUND="Ground",
-			INTERNATIONAL_ECONOMY="International Economy",
-			INTERNATIONAL_PRIORITY="International Priority"
+			FIRST_OVERNIGHT="FedEx First Overnight",
+			PRIORITY_OVERNIGHT="FedEx Priority Overnight",
+			STANDARD_OVERNIGHT="FedEx Standard Overnight",
+			FEDEX_2_DAY="FedEx 2 Day",
+			FEDEX_EXPRESS_SAVER="FedEx Express Saver",
+			FEDEX_GROUND="FedEx Ground",
+			INTERNATIONAL_ECONOMY="FedEx International Economy",
+			INTERNATIONAL_PRIORITY="FedEx International Priority"
 		};
 		return this;
 	}

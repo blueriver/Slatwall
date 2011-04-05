@@ -36,32 +36,29 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingServices" type="any" />
+<cfparam name="rc.addressZones" type="array" />
+
 
 <cfoutput>
-	<div class="svoadminlistshippingmethods">
+	<div class="svoadminsettinglistshippingzones">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
+	    	<cf_ActionCaller action="admin:setting.createaddresszone" type="list">
 		</ul>
 		
-		<table id="shippingMethodList" class="stripe">
+		<table class="stripe">
 			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
-				<th>&nbsp</th>
+				<th class="varWidth">#rc.$.slatwall.rbKey("entity.addresszone.addresszonename")#</th>
+				<th class="administration">&nbsp;</th>
 			</tr>
-				
-			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
+			<cfloop array="#rc.addressZones#" index="local.addressZone">
 				<tr>
-					<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
-					<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
-					<td class="varWidth">#local.shippingServiceMetaData.displayName#</td>
+					<td class="varWidth">#local.addressZone.getAddressZoneName()#</td>
 					<td class="administration">
-						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="edit" type="list">
-						</ul>     						
+						<ul class="three">
+							<cf_ActionCaller action="admin:setting.detailaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="viewDetails" type="list">
+							<cf_ActionCaller action="admin:setting.editaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="edit" type="list">
+							<cf_ActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="delete" type="list" confirmRequired="true">
+						</ul>
 					</td>
 				</tr>
 			</cfloop>

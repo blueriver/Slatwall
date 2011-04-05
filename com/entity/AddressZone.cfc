@@ -36,17 +36,19 @@
 Notes:
 
 */
-component displayname="Shipping Zone Location" entityname="SlatwallShippingZoneLocation" table="SlatwallShippingZoneLocation" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Address Zone" entityname="SlatwallAddressZone" table="SlatwallAddressZone" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="shippingZoneLocationID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
-	// Related Object Properties
-	property name="shippingZone" cfc="ShippingZone" fieldtype="many-to-one" fkcolumn="shippingZoneID";
-	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	property name="state" cfc="State" filedtype="many-to-one" fkcolumn="stateCode";
-	property name="postalCode" cfc="PostalCode" fieldtype="many-to-one" fkcolumn="postalCode";
+	property name="addressZoneID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="addressZoneName" ormtype="string";
 	
-}	
-
-
+	// Related Object Properties
+	property name="addressZoneLocations" singularname="addressZoneLocation" type="array" cfc="AddressZoneLocation" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all";
+	
+	public array function getAddressZoneLocations() {
+		if(isNull(variables.addressZoneLocations)) {
+			variables.addressZoneLocations = arrayNew(1);
+		}
+		return variables.addressZoneLocations;
+	}
+}
