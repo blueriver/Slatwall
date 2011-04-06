@@ -39,7 +39,7 @@ Notes:
 component displayname="Product Type" entityname="SlatwallProductType" table="SlatwallProductType" persistent="true" extends="slatwall.com.entity.baseEntity" {
 			
 	// Persistant Properties
-	property name="productTypeID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productTypeName" ormtype="string" validateRequired displayname="Product Type" default="";
     property name="manufactureDiscontinued" ormtype="boolean" persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
     property name="showOnWeb" ormtype="boolean" displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";

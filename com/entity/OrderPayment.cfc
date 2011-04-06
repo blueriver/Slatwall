@@ -39,7 +39,7 @@ Notes:
 component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="orderPaymentID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="float";
 	property name="amountAuthorized" ormtype="float";
 	property name="amountCharged" ormtype="float";

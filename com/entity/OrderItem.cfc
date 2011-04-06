@@ -39,7 +39,7 @@ Notes:
 component displayname="Order Item" entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="orderItemID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="float";
 	property name="quantity" ormtype="float";
 	property name="taxAmount" ormtype="float";
