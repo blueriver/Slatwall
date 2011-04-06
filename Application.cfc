@@ -259,18 +259,19 @@ component extends="framework" output="false" {
 	private void function startSlatwallORM() {
 		// Setup global request variable that will be used at the end of the request for persistence.
 		request.slatwall.ormHasErrors = false;
-			
-		// These actually don't do anything right now
-		request.slatwall.ormSessionFactory = ormGetSessionFactory();
-		request.slatwall.ormSession = request.slatwall.ormSessionFactory.openSession();
+		ormGetSession().clear();
+		request.customMuraScopeKeys.slatwall.setPersistence(true);
 	}
 	
 	private void function endSlatwallORM() {
 		if(!request.slatwall.ormHasErrors) {
-			ORMflush();
+			transaction {
+				ORMflush();
+			}
 		}
-		
-		// This actually doesn't do anything yet.
-		request.slatwall.ormSession.close();
+		ormGetSession().clear();
+
+		request.customMuraScopeKeys.slatwall.setPersistence(false);
+		// reload entities in slatwall scope as readonly.
 	}
 }

@@ -39,20 +39,28 @@ Notes:
 component accessors="true" output="false" extends="BaseObject" {
 	
 	property name="currentProduct" type="any";
+	property name="currentSession" type="any" ;
 	
-	public any function getCurrentAccount() {
-		return getService("sessionService").getCurrent().getAccount();
-	}
-	
-	public any function getCurrentCart() {
-		return getService("sessionService").getCurrent().getCart();
-	}
-
-	public any function getCurrentProduct() {
+	private any function getCurrentProduct() {
 		if(!isDefined("variables.currentProduct")) {
 			variables.currentProduct = getService("productService").getNewEntity();
 		}
 		return variables.currentProduct;
+	}
+	
+	private any function getCurrentSession() {
+		if(!structKeyExists(variables, "currentSession")) {
+			variables.currentSession = getService("sessionService").getCurrent();
+		}
+		return variables.currentSession;
+	}	
+	
+	private any function getCurrentAccount() {
+		return getCurrentSession().getAccount();
+	}
+	
+	private any function getCurrentCart() {
+		return getCurrentSession().getCart();
 	}
 	
 	public any function account(string property, string value) {
@@ -65,7 +73,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
-	public any function cart (string property, string value) {
+	public any function cart(string property, string value) {
 		if(isDefined("arguments.property") && isDefined("arguments.value")) {
 			return evaluate("getCurrentCart().set#arguments.property#(#arguments.value#)");
 		} else if (isDefined("arguments.property")) {
@@ -91,5 +99,14 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
+	
+	public void function setPersistance(required boolean enabledFlag) {
+		entityMerge(getCurrentProduct());
+		entityMerge(getCurrentSession());
+		if(!arguments.enabledFlag) {
+			// Set Read Only
+			ormGetSession().setReadOnly(getCurrentProduct(), true);
+			ormGetSession().setReadOnly(getCurrentSession(), true);
+		}
+	}
 }
-
