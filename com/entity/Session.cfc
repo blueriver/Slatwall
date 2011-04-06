@@ -39,7 +39,7 @@ Notes:
 component displayname="Session" entityname="SlatwallSession" table="SlatwallSession" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="sessionID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="createdDateTime" ormtype="date";
 	property name="lastUpdatedDateTime"	ormtype="date";
 	

@@ -52,6 +52,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var orderItems = arguments.order.getOrderItems();
 		var exists = false;
 		
+		writeDump(arguments.order);
+		
 		// Check the existing order items and just add quantity if sku exists
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
 			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID()) {
@@ -68,6 +70,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			newOrderItem.setSku(arguments.sku);
 			arguments.order.addOrderItem(newOrderItem);
 		}
+		
+		writeDump(arguments.order);
 		
 		save(arguments.order);
 	}

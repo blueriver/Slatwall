@@ -39,7 +39,7 @@ Notes:
 component displayname="Attribute Value" entityname="SlatwallAttributeValue" table="SlatwallAttributeValue" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="attributeValueID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValue" ormtype="string";
 	
 	// Related Object Properties

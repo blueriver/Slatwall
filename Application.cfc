@@ -53,9 +53,6 @@ component extends="framework" output="false" {
 	variables.subsystems.frontend = {};
 	variables.subsystems.frontend.baseURL = "";
 	
-	// Setup global request variable that will be used at the end of the request for persistence.
-	request.slatwall.ormHasErrors = false;
-
 	public void function setPluginConfig(required any pluginConfig) {
 		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
 	}
@@ -75,6 +72,8 @@ component extends="framework" output="false" {
 		param name="session.locale" default="en";
 		param name="session.siteid" default="default";
 		param name="session.dashboardSpan" default="30";
+		
+		ormReload();
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( !structKeyExists(application, "appinitialized") || application.appinitialized == false) {
@@ -122,6 +121,9 @@ component extends="framework" output="false" {
 			param name="session.locale" default="en";
 			param name="session.siteid" default="default";
 			param name="session.dashboardSpan" default="30";
+			
+			startSlatwallORM();
+			
 			if(!structKeyExists(session, "datekey")) {
 				getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
 				session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
@@ -153,26 +155,10 @@ component extends="framework" output="false" {
 				variables.subsystems.frontend.baseURL &= "index.cfm";
 			}
 			
-			param name="request.runcount" default="0";
-			param name="request.setcount" default="0";
-			
-			request.runcount = request.runcount + 1;
-			
 			// Create SlatwallScope and add it to the muraScope
 			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-				request.setcount = request.setcount + 1;
 				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
 			}
-			
-			/*
-			if(request.runcount > 3) {
-				writeDump(request.context.slatAction);
-				writeDump(request);
-				throw("STOP HERE");
-			}
-			*/
-			
-			
 			
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
@@ -255,20 +241,36 @@ component extends="framework" output="false" {
 	// Override onRequest function to add some custom logic to the end of the request
 	public any function onRequest() {
 		super.onRequest(argumentCollection=arguments);
-		persistORMSession();
+		endSlatwallORM();
 	}
 	
 	// Override redirect function to flush the ORM when needed
 	public void function redirect() {
-		persistORMSession();
+		endSlatwallORM();
 		super.redirect(argumentCollection=arguments);
 	}
 	
-	// This method persists all object to the DB if their aren't errors.
-	private void function persistORMSession() {
-		if(structKeyExists(request.slatwall, "ormHasErrors") && !request.slatwall.ormHasErrors) {
-			ormFlush();
+	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
+	public void function redirectExact(required string location, boolean addToken=false) {
+		endSlatwallORM();
+		location(arguments.location, arguments.addToken);
+	}
+	
+	private void function startSlatwallORM() {
+		// Setup global request variable that will be used at the end of the request for persistence.
+		request.slatwall.ormHasErrors = false;
+			
+		// These actually don't do anything right now
+		request.slatwall.ormSessionFactory = ormGetSessionFactory();
+		request.slatwall.ormSession = request.slatwall.ormSessionFactory.openSession();
+	}
+	
+	private void function endSlatwallORM() {
+		if(!request.slatwall.ormHasErrors) {
+			ORMflush();
 		}
-		ormClearSession();
+		
+		// This actually doesn't do anything yet.
+		request.slatwall.ormSession.close();
 	}
 }
