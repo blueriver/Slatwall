@@ -37,9 +37,10 @@ Notes:
 
 --->
 <cfparam name="rc.shippingMethod" type="any" />
-<cfparam name="rc.blankShippingRate" type="any" />
 <cfparam name="rc.shippingServices" type="any" />
+<cfparam name="rc.addressZones" type="array" />
 <cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.blankShippingRate" type="any" />
 
 <cfoutput>
 	<div class="svoadmindetailshippingmethod">
@@ -58,7 +59,7 @@ Notes:
 				<dd id="spdshippingprovider">
 					<cfif rc.edit>
 						<select id="shippingProvider" name="shippingProvider">
-							<option value="None">None</option>
+							<option value="Rate">Rate Table</option>
 							<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
 								<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
 								<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
@@ -101,9 +102,9 @@ Notes:
 					</select>
 				</dd>
 			</cfloop>
-			<dd class="spmNone">
-				<table class="stripe" id="ratesTable">
-					<tbody>
+			<dd class="spmRate">
+				<table class="stripe" id="shippingRates">
+					<thead>
 					<tr>
 						<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.shippingZone')#</th>
 						<th>#rc.$.slatwall.rbKey('entity.shippingrate.minWeight')#</th>
@@ -113,36 +114,42 @@ Notes:
 						<th>#rc.$.slatwall.rbKey('entity.shippingrate.cost')#</th>
 						<th class="administration">&nbsp;</th>
 					</tr>
+					</thead>
+					<tbody>
 					<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
 					<cfloop array="#local.shippingRates#" index="local.shippingRate">
 						<tr>
 							<td class="varWidth">&nbsp;</td>
-							<td><cfif rc.edit><input name="rateStruct.#local.shippingRate.getShippingRateID()#.minWeight" value="#local.shippingRate.getMinWeight()#"><cfelse>#local.shippingRate.getMinWeight()#</cfif></td>
-							<td><cfif rc.edit><input name="rateStruct.#local.shippingRate.getShippingRateID()#.maxWeight" value="#local.shippingRate.getMaxWeight()#"><cfelse>#local.shippingRate.getMaxWeight()#</cfif></td>
-							<td><cfif rc.edit><input name="rateStruct.#local.shippingRate.getShippingRateID()#.minPrice" value="#local.shippingRate.getMinPrice()#"><cfelse>#local.shippingRate.getMinPrice()#</cfif></td>
-							<td><cfif rc.edit><input name="rateStruct.#local.shippingRate.getShippingRateID()#.maxPrice" value="#local.shippingRate.getMaxPrice()#"><cfelse>#local.shippingRate.getMaxPrice()#</cfif></td>
-							<td><cfif rc.edit><input name="rateStruct.#local.shippingRate.getShippingRateID()#.cost" value="#local.shippingRate.getCost()#"><cfelse>#local.shippingRate.getCost()#</cfif></td>
+							<td><cfif rc.edit><input name="shippingRates.#local.shippingRate.getShippingRateID()#.minWeight" value="#local.shippingRate.getMinWeight()#"><cfelse>#local.shippingRate.getMinWeight()#</cfif></td>
+							<td><cfif rc.edit><input name="shippingRates.#local.shippingRate.getShippingRateID()#.maxWeight" value="#local.shippingRate.getMaxWeight()#"><cfelse>#local.shippingRate.getMaxWeight()#</cfif></td>
+							<td><cfif rc.edit><input name="shippingRates.#local.shippingRate.getShippingRateID()#.minPrice" value="#local.shippingRate.getMinPrice()#"><cfelse>#local.shippingRate.getMinPrice()#</cfif></td>
+							<td><cfif rc.edit><input name="shippingRates.#local.shippingRate.getShippingRateID()#.maxPrice" value="#local.shippingRate.getMaxPrice()#"><cfelse>#local.shippingRate.getMaxPrice()#</cfif></td>
+							<td><cfif rc.edit><input name="shippingRates.#local.shippingRate.getShippingRateID()#.cost" value="#local.shippingRate.getCost()#"><cfelse>#local.shippingRate.getCost()#</cfif></td>
 							<td class="administration">&nbsp;</td>
 						</tr>
 					</cfloop>
-					<cfif rc.edit>
-						<tr class="newRate">
-							<td class="varWidth">&nbsp;</td>
-							<td><input name="rateStruct.new.minWeight"></td>
-							<td><input name="rateStruct.new.maxWeight"></td>
-							<td><input name="rateStruct.new.minPrice"></td>
-							<td><input name="rateStruct.new.maxPrice"></td>
-							<td><input name="rateStruct.new.cost"></td>
-							<td><a class="button" id="addRate">Save</a></td>
-						</tr>
-					</cfif>
 					</tbody>
 				</table>
-				
+				<a class="button" id="addRate">Add Rate</a>
 			</dd>
 		</div>
 		
+		<table style="display:none;">
+			<tbody class="template">
+				<tr>
+					<td class="varWidth"><cf_propertyDisplay object="#rc.blankShippingRate#" property="shippingZone" edit="true" /></td>
+					<td><input type="text" name="shippingRates.new.minWeight"></td>
+					<td><input type="text" name="shippingRates.new.maxWeight"></td>
+					<td><input type="text" name="shippingRates.new.minPrice"></td>
+					<td><input type="text" name="shippingRates.new.maxPrice"></td>
+					<td><input type="text" name="shippingRates.new.cost"></td>
+					<td class="administration">&nbsp;</td>
+				</tr>
+			</tbody>
+		</table>
+		
 		<script type="text/javascript">
+			var currentNewRate = 1;
 			$(document).ready(function(){
 				swapShippingMethods( '#rc.shippingMethod.getShippingProvider()#' );
 				
@@ -151,11 +158,17 @@ Notes:
 				});
 				
 				$("##addRate").click(function(){
-					addRateRow();
+					var appendContent = $(".template").html();
+					appendContent = appendContent.replace(/.new./g, ".new" + currentNewRate + ".")
+					$("##shippingRates > tbody:last").append(appendContent);
+					currentNewRate++;
 				});
 			});
 			
 			function swapShippingMethods( selectionName ) {
+				if(selectionName == "") {
+					selectionName = "Rate";
+				}
 				var selector = ".spm" + selectionName;
 				$("##spdshippingprovidermethod").html($(selector).html());
 			}
