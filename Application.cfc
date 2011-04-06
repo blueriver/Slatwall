@@ -250,18 +250,27 @@ component extends="framework" output="false" {
 		super.redirect(argumentCollection=arguments);
 	}
 	
+	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
+	public void function redirectExact(required string location, boolean addToken=false) {
+		endSlatwallORM();
+		location(arguments.location, arguments.addToken);
+	}
+	
 	private void function startSlatwallORM() {
-		request.slatwall.ormSessionFactory = ormGetSessionFactory();
-		request.slatwall.ormSessionFactory.openSession();
-		
 		// Setup global request variable that will be used at the end of the request for persistence.
 		request.slatwall.ormHasErrors = false;
+			
+		// These actually don't do anything right now
+		request.slatwall.ormSessionFactory = ormGetSessionFactory();
+		request.slatwall.ormSession = request.slatwall.ormSessionFactory.openSession();
 	}
 	
 	private void function endSlatwallORM() {
 		if(!request.slatwall.ormHasErrors) {
-			ormFlush();
+			ORMflush();
 		}
-		request.slatwall.ormSessionFactory.close();
+		
+		// This actually doesn't do anything yet.
+		request.slatwall.ormSession.close();
 	}
 }
