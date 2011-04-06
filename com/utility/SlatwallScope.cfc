@@ -37,29 +37,45 @@ Notes:
 
 */
 component accessors="true" output="false" extends="BaseObject" {
+
+	property name="currentProductID" type="string";
+	property name="readOnlyFlag" type="boolean";
 	
-	property name="currentProduct" type="any";
-	property name="currentSession" type="any" ;
-	
-	private any function getCurrentProduct() {
-		if(!isDefined("variables.currentProduct")) {
-			variables.currentProduct = getService("productService").getNewEntity();
-		}
-		return variables.currentProduct;
+	public any function init() {
+		setCurrentProductID("");
+		setReadOnlyFlag(true);
+		
+		return this;	
 	}
 	
-	private any function getCurrentSession() {
-		if(!structKeyExists(variables, "currentSession")) {
-			variables.currentSession = getService("sessionService").getCurrent();
+	public any function getCurrentProduct() {
+		if(!structKeyExists(request.slatwall, "currentProduct")) {
+			request.slatwall.currentProduct = getService("productService").getByID(getCurrentProductID());	
+			
+			if(isNull(request.slatwall.currentProduct)) {
+				request.slatwall.currentProduct = getService("productService").getNewEntity();
+			}
+			if(getReadOnlyFlag()) {
+				//ormGetSession().setReadOnly(request.slatwall.currentProduct, true);
+			}
 		}
-		return variables.currentSession;
-	}	
+		
+		return request.slatwall.currentProduct;
+	}
 	
-	private any function getCurrentAccount() {
+	public any function getCurrentSession() {
+		var session = getService("sessionService").getCurrent();
+		if(getReadOnlyFlag()) {
+			//ormGetSession().setReadOnly(session, true);
+		}
+		return session;
+	}
+	
+	public any function getCurrentAccount() {
 		return getCurrentSession().getAccount();
 	}
 	
-	private any function getCurrentCart() {
+	public any function getCurrentCart() {
 		return getCurrentSession().getCart();
 	}
 	
@@ -98,15 +114,5 @@ component accessors="true" output="false" extends="BaseObject" {
 			arguments.local = session.rb;
 		}
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
-	}
-	
-	public void function setPersistance(required boolean enabledFlag) {
-		entityMerge(getCurrentProduct());
-		entityMerge(getCurrentSession());
-		if(!arguments.enabledFlag) {
-			// Set Read Only
-			ormGetSession().setReadOnly(getCurrentProduct(), true);
-			ormGetSession().setReadOnly(getCurrentSession(), true);
-		}
 	}
 }

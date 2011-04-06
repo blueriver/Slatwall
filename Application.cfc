@@ -67,11 +67,7 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		// Set default mura session variables when needed
-		param name="session.rb" default="en";
-		param name="session.locale" default="en";
-		param name="session.siteid" default="default";
-		param name="session.dashboardSpan" default="30";
+		setupMuraRequirements();
 		
 		ormReload();
 		
@@ -116,21 +112,13 @@ component extends="framework" output="false" {
 	
 	public void function setupRequest() {
 		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
-			// Set default mura session variables when needed
-			param name="session.rb" default="en";
-			param name="session.locale" default="en";
-			param name="session.siteid" default="default";
-			param name="session.dashboardSpan" default="30";
+			setupMuraRequirements();
 			
-			startSlatwallORM();
+			param name="request.slatwall" default="#structNew()#";
+			param name="request.slatwall.ormHasErrors" default="false";
 			
-			if(!structKeyExists(session, "datekey")) {
-				getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
-				session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
-			}
-			
-			// Setup Slatwall Session
-			getBeanFactory().getBean("sessionService").setupSessionRequest();
+			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.
+			ormGetSession().clear();
 			
 			// Look for mura Scope.  If it doens't exist add it.
 			if (!structKeyExists(request.context,"$")){
@@ -145,6 +133,16 @@ component extends="framework" output="false" {
 				request.context.$.event('siteid', session.siteid);
 			}
 			
+			// Create SlatwallScope and add it to the muraScope if it doesn't already exist
+			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
+				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			}
+			
+			// Setup Slatwall Session If it doesn't already exist
+			if( !structKeyExists(request.slatwall, "session") ) {
+				request.slatwall.session = getBeanFactory().getBean("sessionService").getPropperSession();
+			}
+			
 			// Setup Base URL's for each subsystem
 			variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
 			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
@@ -154,12 +152,7 @@ component extends="framework" output="false" {
 			if(request.context.$.globalConfig().getIndexFileInURLS()) {
 				variables.subsystems.frontend.baseURL &= "index.cfm";
 			}
-			
-			// Create SlatwallScope and add it to the muraScope
-			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
-			}
-			
+						
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
 				controller("admin:BaseController.subSystemBefore");
@@ -208,6 +201,19 @@ component extends="framework" output="false" {
 		return hasAccess;
 	}
 	
+	private void function setupMuraRequirements() {
+		// Set default mura session variables when needed
+		param name="session.rb" default="en";
+		param name="session.locale" default="en";
+		param name="session.siteid" default="default";
+		param name="session.dashboardSpan" default="30";
+		
+		if(!structKeyExists(session, "datekey")) {
+			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
+			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
+		}
+	}
+	
 	// Override autowire function from fw/1 so that properties work
 	private void function autowire(cfc, beanFactory) {
 		var key = 0;
@@ -241,37 +247,29 @@ component extends="framework" output="false" {
 	// Override onRequest function to add some custom logic to the end of the request
 	public any function onRequest() {
 		super.onRequest(argumentCollection=arguments);
-		endSlatwallORM();
+		endSlatwallLifecycle();
 	}
 	
 	// Override redirect function to flush the ORM when needed
 	public void function redirect() {
-		endSlatwallORM();
+		endSlatwallLifecycle();
 		super.redirect(argumentCollection=arguments);
 	}
 	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
 	public void function redirectExact(required string location, boolean addToken=false) {
-		endSlatwallORM();
+		endSlatwallLifecycle();
 		location(arguments.location, arguments.addToken);
 	}
 	
-	private void function startSlatwallORM() {
-		// Setup global request variable that will be used at the end of the request for persistence.
-		request.slatwall.ormHasErrors = false;
-		ormGetSession().clear();
-		request.customMuraScopeKeys.slatwall.setPersistence(true);
-	}
-	
-	private void function endSlatwallORM() {
+	private void function endSlatwallLifecycle() {
 		if(!request.slatwall.ormHasErrors) {
 			transaction {
 				ORMflush();
 			}
 		}
+		structDelete(request.slatwall, "currentProduct");
+		structDelete(request.slatwall, "currentSession");
 		ormGetSession().clear();
-
-		request.customMuraScopeKeys.slatwall.setPersistence(false);
-		// reload entities in slatwall scope as readonly.
 	}
 }
