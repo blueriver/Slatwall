@@ -58,8 +58,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowDropship" ormtype="boolean" displayname="Allow Dropship";
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	property name="publishedWeight" ormtype="float" default="0" hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
-	property name="createdDateTime" ormtype="date" displayname="Date Create";
-	property name="lastUpdatedDateTime"	ormtype="date" displayname="Date Last Updated";
+	property name="createdDateTime" ormtype="timestamp" displayname="Date Create";
+	property name="lastUpdatedDateTime"	ormtype="timestamp" displayname="Date Last Updated";
 	
 	// Related Object Properties
 	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";

@@ -39,7 +39,7 @@ Notes:
 component displayname="Address Zone Location" entityname="SlatwallAddressZoneLocation" table="SlatwallAddressZoneLocation" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="addressZoneLocationID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="addressZoneLocationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="countryCode" ormtype="string";
 	property name="stateCode" ormtype="string";
 	property name="postalCode" ormtype="string";

@@ -39,11 +39,11 @@ Notes:
 component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="orderID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="orderOpenDate" ormtype="date";
 	property name="orderCloseDate" ormtype="date";
-	property name="createdDateTime" ormtype="date" displayname="Date Create";
-	property name="lastUpdatedDateTime"	ormtype="date" displayname="Date Last Updated";
+	property name="createdDateTime" ormtype="timestamp" displayname="Date Create";
+	property name="lastUpdatedDateTime"	ormtype="timestamp" displayname="Date Last Updated";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
