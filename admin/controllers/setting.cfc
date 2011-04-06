@@ -149,7 +149,9 @@ component extends="BaseController" output="false" accessors="true" {
 		if(isNull(rc.shippingMethod)) {
 			rc.shippingMethod = getSettingService().getNewEntity("SlatwallShippingMethod");
 		}
+		
 		rc.shippingServices = getSettingService().getShippingServices();
+		rc.addressZones = getSettingService().list("SlatwallAddressZone");
 		rc.blankShippingRate = getSettingService().getNewEntity("SlatwallShippingRate");
 	}
 	

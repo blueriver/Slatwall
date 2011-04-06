@@ -52,6 +52,9 @@ component extends="framework" output="false" {
 	variables.subsystems.admin.baseURL = "";
 	variables.subsystems.frontend = {};
 	variables.subsystems.frontend.baseURL = "";
+	
+	// Setup global request variable that will be used at the end of the request for persistence.
+	request.slatwall.ormHasErrors = false;
 
 	public void function setPluginConfig(required any pluginConfig) {
 		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
@@ -243,8 +246,29 @@ component extends="framework" output="false" {
 		}
 	}
 	
-	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
+	// Override buildURL function to add some custom logic, but still call the Super
+	public string function buildURL(required string action) {
 		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
 		return super.buildURL(argumentCollection=arguments);
+	}
+	
+	// Override onRequest function to add some custom logic to the end of the request
+	public any function onRequest() {
+		super.onRequest(argumentCollection=arguments);
+		persistORMSession();
+	}
+	
+	// Override redirect function to flush the ORM when needed
+	public void function redirect() {
+		persistORMSession();
+		super.redirect(argumentCollection=arguments);
+	}
+	
+	// This method persists all object to the DB if their aren't errors.
+	private void function persistORMSession() {
+		if(structKeyExists(request.slatwall, "ormHasErrors") && !request.slatwall.ormHasErrors) {
+			ormFlush();
+		}
+		ormClearSession();
 	}
 }

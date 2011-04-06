@@ -99,7 +99,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		} else {
 			response.setStatusCode(0);
 			response.setData(arguments.entity);
-			transactionRollback();
+			request.slatwall.ormHasErrors = true;
 		}
 		return response;
 	}
@@ -119,8 +119,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(entity=arguments.entity);
         } else {
-            transaction action="rollback";  
-            trace( text="rolled back save within base service");
+            request.slatwall.ormHasErrors = true;
         }
         return arguments.entity;
     }   
