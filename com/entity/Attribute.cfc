@@ -43,11 +43,11 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="attributeName" ormtype="string";
 	property name="attributeHint" ormtype="string";
 	property name="defaultValue" ormtype="string";
-	property name="isRequired" ormtype="string";
-	property name="displayOrder" ormtype="int";
-	property name="validationRegex" ormtype="string";
+	property name="requiredFlag" ormtype="string";
+	property name="sortOrder" ormtype="int";
 	property name="validationMessage" ormtype="string";
-	property name="isActive" ormtype="boolean";
+	property name="validationRegex" ormtype="string";
+	property name="activeFlag" ormtype="boolean";
 	
 	// Related Object Properties
 	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
@@ -71,7 +71,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	
 	public void function setAttributeSet(required AttributeSet attributeSet) {
 		variables.attributeSet = arguments.attributeSet;
-		if(isNew() or !arguments.AttributeSet.hasAttribute(this)) {
+		if(!arguments.AttributeSet.hasAttribute(this)) {
 		   arrayAppend(arguments.AttributeSet.getAttributes(),this);
 		}
 	}

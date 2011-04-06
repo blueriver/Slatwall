@@ -42,7 +42,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeSetName" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
-	property name="isGlobal" ormtype="boolean";
+	property name="globalFlag" ormtype="boolean";
 	
 	// Related Object Properties
 	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";

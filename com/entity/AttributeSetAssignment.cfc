@@ -40,7 +40,7 @@ component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSe
 	
 	// Persistant Properties
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="exclude" ormtype="boolean";
+	property name="excludeFlag" ormtype="boolean";
 	property name="baseItemID" ormtype="string" hint="This is where the assignment is made, e.g. productID,productTypeID,accountID,accountTypeID" ;  
 	
 	// Related Object Properties
@@ -53,7 +53,7 @@ component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSe
 	
 	public void function setAttributeSet(required AttributeSet attributeSet) {
 		variables.attributeSet = arguments.attributeSet;
-		if(isNew() or !arguments.attributeSet.hasAttributeSetAssignment(this)) {
+		if(!arguments.attributeSet.hasAttributeSetAssignment(this)) {
 		   arrayAppend(arguments.attributeSet.getAttributeSetAssignments(),this);
 		}
 	}

@@ -53,6 +53,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Related Object Properties
 	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all";
 	
 	// Non-Persistant Properties
 	property name="primaryEmail" type="string" persistent="false";
