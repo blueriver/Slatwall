@@ -51,9 +51,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/* @hint sets up initial skus when products are created
 	*/
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
+		var skuCodeIndex = 1000;
+		
 		// check to see if any options were selected
 		if(len(arguments.optionsStruct.formCollectionsList)) {
-			var skuCodeIndex = 1000;
 			// get list of option group names
 			var options = arguments.optionsStruct.options;
 			var optionGroupList = structKeyList(options);
@@ -99,7 +100,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
-			thisSku.setSkuCode(rc.product.getProductCode() & "_" & skuCodeIndex);
+			thisSku.setSkuCode(arguments.product.getProductCode() & "_" & skuCodeIndex);
 			thisSku.setIsDefault(true);
 		}
 		return true;
