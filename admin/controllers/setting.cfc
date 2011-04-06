@@ -195,7 +195,6 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	
 	// Payment Services
-<<<<<<< HEAD
 	
 	// Payment Methods
 		
@@ -218,30 +217,6 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.countriesArray = getSettingService().list("SlatwallCountry");
 	}
 	
-=======
-	
-	// Payment Methods
-		
-	// Integrations Services
-	
-	// Address Zones
-	public void function listAddressZones(required struct rc) {
-		rc.addressZones = getSettingService().list("SlatwallAddressZone");
-	}
-	
-	public void function detailAddressZone(required struct rc) {
-		param name="rc.addressZoneID" default="";
-		param name="rc.edit" default="false";
-		
-		rc.addressZone = getSettingService().getByID(rc.addressZoneID, "SlatwallAddressZone");
-		if(isNull(rc.addressZone)) {
-			rc.addressZone = getSettingService().getNewEntity("SlatwallAddressZone");
-		}
-		
-		rc.countriesArray = getSettingService().list("SlatwallCountry");
-	}
-	
->>>>>>> feature
 	public void function editAddressZone(required struct rc) {
 		detailAddressZone(rc);
 		getFW().setView("admin:setting.detailaddresszone");
