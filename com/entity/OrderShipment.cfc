@@ -41,7 +41,7 @@ component displayname="Order Shipment" entityname="SlatwallOrderShipment" table=
 	// Persistant Properties
 	property name="orderShipmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="trackingNumber" ormtype="string";
-	property name="shippedDateTime" ormtype="date";
+	property name="shippedDateTime" ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";

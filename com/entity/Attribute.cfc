@@ -43,8 +43,8 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="attributeName" ormtype="string";
 	property name="attributeHint" ormtype="string";
 	property name="defaultValue" ormtype="string";
-	property name="requiredFlag" ormtype="string";
-	property name="sortOrder" ormtype="int";
+	property name="requiredFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer";
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
 	property name="activeFlag" ormtype="boolean";

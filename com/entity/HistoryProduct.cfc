@@ -40,9 +40,9 @@ component displayname="History Product" entityname="SlatwallHistoryProduct" tabl
 			
 	// Persistant Properties
 	property name="historyProductID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="historyDateTime" ormtype="date";
+	property name="historyDateTime" ormtype="timestamp";
 	property name="productName" ormtype="string";
-	property name="productDescription" ormtype="long";
+	property name="productDescription" ormtype="string" length="4000" ;
 	
 	// Related Object Properties
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";

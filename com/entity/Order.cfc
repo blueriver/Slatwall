@@ -40,10 +40,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Persistant Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="orderOpenDate" ormtype="date";
-	property name="orderCloseDate" ormtype="date";
-	property name="createdDateTime" ormtype="timestamp" displayname="Date Create";
-	property name="lastUpdatedDateTime"	ormtype="timestamp" displayname="Date Last Updated";
+	property name="orderOpenDate" ormtype="timestamp";
+	property name="orderCloseDate" ormtype="timestamp";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";

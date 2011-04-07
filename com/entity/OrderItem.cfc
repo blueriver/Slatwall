@@ -43,8 +43,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="price" ormtype="float";
 	property name="quantity" ormtype="float";
 	property name="taxAmount" ormtype="float";
-	property name="createdDateTime" ormtype="date" displayname="Date Create";
-	property name="lastUpdatedDateTime"	ormtype="date" displayname="Date Last Updated";
+	property name="createdDateTime" ormtype="date";
+	property name="lastUpdatedDateTime"	ormtype="date";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";

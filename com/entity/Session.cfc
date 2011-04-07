@@ -40,8 +40,8 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	
 	// Persistant Properties
 	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="createdDateTime" ormtype="date";
-	property name="lastUpdatedDateTime"	ormtype="date";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascade="all" inverse="true";

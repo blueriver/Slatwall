@@ -40,9 +40,9 @@ component displayname="Purchase Order Item" entityname="SlatwallPurchaseOrderIte
 	
 	// Persistant Properties
 	property name="purchaseOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityOrdered" ormtype="integer" persistent="true";
-	property name="quantityReceived" ormtype="integer" persistent="true";
-	property name="estimatedArrivalDateTime" ormtype="date" persistent="true";
+	property name="quantityOrdered" ormtype="integer";
+	property name="quantityReceived" ormtype="integer";
+	property name="estimatedArrivalDateTime" ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="purchaseOrder" cfc="PurchaseOrder" fieldtype="many-to-one" fkcolumn="purchaseOrderID";

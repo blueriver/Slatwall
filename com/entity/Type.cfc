@@ -40,8 +40,8 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 	
 	// Persistant Properties
 	property name="typeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="type" ormtype="string" default="";
-	property name="systemCode" ormtype="string" default="";
+	property name="type" ormtype="string";
+	property name="systemCode" ormtype="string";
 	
 	// Related Object Properties
 	property name="parentType" cfc="Type" fieldtype="many-to-one" fkcolumn="parentTypeID";
