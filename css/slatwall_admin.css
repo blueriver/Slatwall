@@ -241,5 +241,9 @@ p.error_message {
 	color: #8a1f11;
 }
 
+.hideElement {
+	display:none;
+}
+
 div.svoadminproductdetail img.skuImage {float:right;}
 /* @end */

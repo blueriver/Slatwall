@@ -48,7 +48,7 @@ Notes:
 			</dl>
 			<div id="actionButtons" class="clearfix">
 				<cf_ActionCaller action="admin:brand.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.brand.isNew() and !rc.brand.hasProducts()>
+				<cfif !rc.brand.isNew() and !rc.brand.hasProduct()>
 				<cf_ActionCaller action="admin:brand.delete" querystring="brandid=#rc.brand.getBrandID()#" class="button" type="link" confirmrequired="true">
 				</cfif>
 				<cf_ActionCaller action="admin:brand.save" type="submit">
