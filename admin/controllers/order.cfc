@@ -36,5 +36,32 @@
 Notes:
 
 */
-component {
+component extends="BaseController" persistent="false" accessors="true" output="false" {
+
+	// fw1 Auto-Injected Service Properties
+	property name="orderService" type="any";
+	
+	public void function before(required struct rc) {
+		param name="rc.orderID" default="";
+		param name="rc.keyword" default="";
+	}
+	
+	public void function dashboard(required struct rc) {
+		getFW().redirect("admin:order.list");
+	}
+
+    public void function list(required struct rc) {
+		param name="rc.orderby" default="orderCloseDate|D";
+		rc.orderSmartList = getOrderService().getSmartList(rc=arguments.rc);
+    }
+
+	public void function detail(required struct rc) {
+	   rc.brand = getOrderService().getByID(ID=rc.orderID);
+	   if(!isNull(rc.order) and !rc.order.isNew()) {
+	       rc.itemTitle &= ": Order No. " & rc.order.getOrderID();
+	   } else {
+	       getFW().redirect("admin:order.list");
+	   }
+	}
+
 }

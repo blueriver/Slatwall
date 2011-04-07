@@ -46,8 +46,10 @@ component displayname="Data Populator" {
 		var dirList = directoryList(arguments.xmlDirectory);
 		
 		for(var i=1; i<= arrayLen(dirList); i++) {
-			var xmlRaw = FileRead(dirList[i]);
-			loadDataFromXMLRaw(xmlRaw);
+			if(listLast(dirList[i],".") == "xml"){
+				var xmlRaw = FileRead(dirList[i]);
+				loadDataFromXMLRaw(xmlRaw);
+			}
 		}
 		return true;
 	}

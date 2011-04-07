@@ -36,46 +36,43 @@
 Notes:
 
 --->
-<cfset local.OrderOrganizer = application.slatwall.orderManager.getQueryOrganizer() />
-<cfset local.OrderOrganizer.setFromCollection(url) />
-<cfset local.OrderIterator = application.slatwall.orderManager.getOrderIterator(local.OrderOrganizer.organizeQuery(application.Slatwall.orderManager.getAllOrdersQuery())) />
+<cfparam name="rc.$" type="any" />
+<cfparam name="rc.orderSmartList" type="any" />
 
 <cfoutput>
-<div class="svoorderlist">
-	<h3 class="tableheader">Orders</h3>
-	<table class="listtable">
+<ul id="navTask">
+    
+</ul>
+
+<div class="svoadminorderlist">
+	<form method="post">
+		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
+	</form>
+
+	<table id="OrderList" class="stripe">
 		<tr>
-			<th>Order ID</th>
-			<th>Date Placed</th>
-			<th>Customer Name</th>
-			<th>Order Type</th>
-			<th>Order Status</th>
-			<th>Order Total</th>
-			<th>Alerts</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderCloseDate")#</th>
+			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.type.orderStatusType")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderTotal")#</th>
+			<th>&nbsp</th>
 		</tr>
-		<cfloop condition="#Local.OrderIterator.hasNext()#">
-			<cfset local.Order = Local.OrderIterator.Next() />
-			<cfset local.OrderAlertsQuery = Local.Order.getOrderAlertsQuery() />
+		<cfloop array="#rc.OrderSmartList.getPageRecords()#" index="Local.Order">
 			<tr>
-				<td><a href="#buildURL(action='order.detail', queryString='OrderID=#local.Order.getOrderID()#')#">#local.Order.getOrderID()#</a></td>
-				<td>#local.Order.getDatePlaced()#</td>
-				<td><a href="#buildURL(action='customer.detail', queryString='CustomerID=#local.Order.getCustomerID()#')#">#local.Order.getCustomerName()#</a></td>
-				<td>#local.Order.getOrderType()#</td>
-				<td>#local.Order.getOrderStatus()#</td>
+				<td>#Local.Order.getOrderID()#</td>
+				<td>#Local.Order.getOrderCloseDate()#</td>
+				<td class="varWidth">#Local.Order.getAccount().getFullName()#</td>
+				<td>#Local.Order.getOrderStatusType().getType()#</td>
 				<td>#local.Order.getOrderTotal()#</td>
-				<cfif local.OrderAlertsQuery.recordcount gt 1>
-					<td class="red">
-						<cfloop query="local.OrderAlertsQuery">
-							#local.OrderAlertsQuery.AlertCount# Item(s) #local.OrderAlertsQuery.Alert#<br />
-						</cfloop>
-					</td>
-				<cfelse>
-					<td>&nbsp;</td>
-				</cfif>
-					
+				<td class="administration">
+					<cfset local.orderID = Local.Order.getOrderID() />
+					<ul class="four">
+					  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.orderID#" class="viewDetails" type="list">
+					</ul>     						
+				</td>
 			</tr>
 		</cfloop>
 	</table>
 </div>
 </cfoutput>
-

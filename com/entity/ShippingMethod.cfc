@@ -44,6 +44,12 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="shippingProvider" ormtype="string";
 	property name="shippingProviderMethod" ormtype="string";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	// Related Object Properties
 	property name="shippingMethodType" cfc="Type" fieldtype="many-to-one" fkcolumn="shippingMethodTypeID";
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" filedtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all";  

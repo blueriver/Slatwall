@@ -48,8 +48,12 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
 	property name="activeFlag" ormtype="boolean";
+
+	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="lastUpdatedDateTime"	ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
 	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";

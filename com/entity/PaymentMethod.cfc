@@ -43,4 +43,10 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="paymentMethodName" ormtype="string";
 	property name="providerGateway" ormtype="string";
 
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 }

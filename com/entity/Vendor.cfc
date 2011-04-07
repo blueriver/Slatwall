@@ -44,6 +44,12 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="vendorWebsite" ormtype="string";
 	property name="accountNumber" ormtype="string";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	// Related Object Properties
 	property name="phoneNumbers" singularname="phoneNumber" type="array" cfc="VendorPhone" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	property name="emailAddresses" singularname="emailAddress" type="array" cfc="VendorEmail" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";

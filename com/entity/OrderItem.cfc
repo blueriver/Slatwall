@@ -43,8 +43,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="price" ormtype="float";
 	property name="quantity" ormtype="float";
 	property name="taxAmount" ormtype="float";
-	property name="createdDateTime" ormtype="date";
-	property name="lastUpdatedDateTime"	ormtype="date";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";

@@ -44,4 +44,10 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	property name="sellStockOnWebFlag" ormtype="boolean";
 	property name="sellStockOnWebWholesaleFlag" ormtype="boolean";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 }

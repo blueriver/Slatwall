@@ -233,8 +233,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(structKeyExists(this,"setCreatedDateTime")){
 			this.setCreatedDateTime(timestamp);
 		}
-		if(structKeyExists(this,"setLastUpdatedDateTime")){
-			this.setLastUpdatedDateTime(timestamp);
+		if(structKeyExists(this,"setModifiedDateTime")){
+			this.setModifiedDateTime(timestamp);
 		}
 		
 	}
@@ -242,8 +242,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	public void function preUpdate(Struct oldData){
 		var timestamp = now();
 		
-		if(structKeyExists(this,"setLastUpdatedDateTime")){
-			this.setLastUpdatedDateTime(timestamp);
+		if(structKeyExists(this,"setModifiedDateTime")){
+			this.setModifiedDateTime(timestamp);
 		}
 	}
 	

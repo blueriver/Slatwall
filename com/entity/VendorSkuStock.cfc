@@ -43,7 +43,12 @@ component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" tab
 	property name="cost" ormtype="float";
 	property name="quantity" ormtype="integer";
 	property name="availableDateTime" ormtype="timestamp";
-	property name="lastUpdatedDateTime" ormtype="timestamp";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";

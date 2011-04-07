@@ -45,6 +45,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="price" ormtype="float" default="0";
 	property name="defaultFlag" ormtype="boolean";  
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="product";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";

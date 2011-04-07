@@ -42,8 +42,12 @@ component displayname="Purchase Order" entityname="SlatwallPurchaseOrder" table=
 	property name="purchaseOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="purchaseOrderCode" ormtype="string";
 	property name="estimatedArrivalDateTime" ormtype="timestamp";
+	
+	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="lastUpdatedDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";

@@ -45,6 +45,12 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupDescription" ormtype="string" length="4000";
 	property name="imageGroupFlag" ormtype="boolean";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	// Related Object Properties
 	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" lazy="extra" cascade="delete";
 
