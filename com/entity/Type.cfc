@@ -54,4 +54,11 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 		return variables.childTypes;
 	}
 	
+	public any function getType() {
+		if(!structKeyExists(variables, "type")) {
+			variables.type = "";
+		}
+		return variables.type;
+	}
+	
 }

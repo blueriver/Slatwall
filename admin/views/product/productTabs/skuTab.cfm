@@ -19,7 +19,7 @@
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imagePath")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
-				<cfif rc.product.getSetting("trackInventory")>
+				<cfif rc.product.getSetting("trackInventoryFlag")>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QC")#</th>
@@ -37,9 +37,9 @@
 			<tr id="Sku#local.skuCount#" class="skuRow">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<cfif rc.edit>
-					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif local.thisSku.getIsDefault()> checked="checked"</cfif> /></td>
+					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif local.thisSku.getDefaultFlag()> checked="checked"</cfif> /></td>
 				<cfelse>
-					<td><cfif local.thisSku.getIsDefault()>#rc.$.Slatwall.rbKey("sitemanager.yes")#</cfif></td>
+					<td><cfif local.thisSku.getDefaultFlag()>#rc.$.Slatwall.rbKey("sitemanager.yes")#</cfif></td>
 				</cfif>
 				<cfloop collection="#local.optionGroups#" item="local.i">
 					<td>#local.thisSku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
@@ -66,7 +66,7 @@
 						#DollarFormat(local.thisSku.getListPrice())#
 					</cfif>
 				</td>
-				<cfif rc.product.getSetting("trackInventory")>
+				<cfif rc.product.getSetting("trackInventoryFlag")>
 				<td>#local.thisSku.getQOH()#</td>
 				<td>#local.thisSku.getQEXP()#</td>
 				<td>#local.thisSku.getQC()#</td>
@@ -113,7 +113,7 @@
         <td>
             $<input type="text" size="6" name="listPrice" value="#rc.product.getDefaultSku().getListPrice()#" />         
         </td>
-        <cfif rc.product.getSetting("trackInventory")>
+        <cfif rc.product.getSetting("trackInventoryFlag")>
         <td></td>
         <td></td>
         <td></td>

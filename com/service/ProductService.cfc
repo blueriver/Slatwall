@@ -113,8 +113,8 @@ component extends="BaseService" accessors="true" {
 		// set Default sku
 		if( structKeyExists(arguments.data,"defaultSku") && len(arguments.data.defaultSku) ) {
 			var dSku = arguments.Product.getSkuByID(arguments.data.defaultSku);
-			if(!dSku.getIsDefault()) {
-				dSku.setIsDefault(true);
+			if(!dSku.getDefaultFlag()) {
+				dSku.setDefaultFlag(true);
 			}
 		}
 		

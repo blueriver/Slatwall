@@ -62,7 +62,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
-			thisSku.setIsDefault(true);
+			thisSku.setDefaultFlag(true);
 		}
 		return true;
 	}
@@ -77,7 +77,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice},arguments.product);
 			// set the first sku as the default one
 			if(i==1) {
-				thisSku.setIsDefault(true);
+				thisSku.setDefaultFlag(true);
 			}
 		}
 	}

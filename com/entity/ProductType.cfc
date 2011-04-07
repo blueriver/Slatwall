@@ -41,9 +41,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Persistant Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productTypeName" ormtype="string" validateRequired;
-    property name="manufactureDiscontinuedFlag" ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
-    property name="showOnWebFlag" ormtype="boolean" hint="Should this product be sold on the web retail Site";
-    property name="showOnWebWholesaleFlag" ormtype="boolean" hint="Should this product be sold on the web wholesale Site";
     property name="trackInventoryFlag" ormtype="boolean";
     property name="callToOrderFlag" ormtype="boolean";
     property name="allowShippingFlag" ormtype="boolean";

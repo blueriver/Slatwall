@@ -51,7 +51,7 @@ Notes:
 </cfif>
     <dl class="oneColumn optionDetail">
     	<cf_PropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
-		<cf_PropertyDisplay object="#rc.OptionGroup#" property="isImageGroup" edit="#rc.edit#" tooltip=true />
+		<cf_PropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" tooltip=true />
 		<cfif rc.edit>
 		<!--- if editing, display field for image uploading --->
 		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" editType="file" tooltip=true>

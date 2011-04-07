@@ -77,15 +77,12 @@ Notes:
 						</cfif>
 					</tr>
 					<!--- Next Setting Here --->
-				    <cf_PropertyDisplay object="#rc.allSettings.product_manufactureDiscontinued#" title="#rc.$.Slatwall.rbKey('setting.product.manufactureDiscontinued')#" property="settingValue" fieldName="product_manufactureDiscontinued" edit="#rc.edit#" dataType="boolean" editType="radioGroup" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_showOnWeb#" title="#rc.$.Slatwall.rbKey('setting.product.showOnWeb')#" property="settingValue" fieldName="product_showOnWeb" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_showOnWebWholesale#" title="#rc.$.Slatwall.rbKey('setting.product.showOnWebWholeSale')#" property="settingValue" fieldName="product_showOnWebWholeSale" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_trackInventory#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventory')#" property="settingValue" fieldName="product_nonInventory" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_callToOrder#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrder')#" property="settingValue" fieldName="product_callToOrder" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_allowShipping#" title="#rc.$.Slatwall.rbKey('setting.product.allowShipping')#" property="settingValue" fieldName="product_allowShipping" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_allowPreorder#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorder')#" property="settingValue" fieldName="product_allowPreorder" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_allowBackorder#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorder')#" property="settingValue" fieldName="product_allowBackorder" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_allowDropship#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropship')#" property="settingValue" fieldName="product_allowDropship" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_PropertyDisplay object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" property="settingValue" fieldName="product_trackInventoryFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_PropertyDisplay object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" property="settingValue" fieldName="product_callToOrderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_PropertyDisplay object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" property="settingValue" fieldName="product_allowShippingFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_PropertyDisplay object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" property="settingValue" fieldName="product_allowPreorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_PropertyDisplay object="#rc.allSettings.product_allowBackorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorderFlag')#" property="settingValue" fieldName="product_allowBackorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_PropertyDisplay object="#rc.allSettings.product_allowDropshipFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropshipFlag')#" property="settingValue" fieldName="product_allowDropshipFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 				</table>
 			</div>
 			<div id="tabOrder">

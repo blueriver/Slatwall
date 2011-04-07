@@ -48,8 +48,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinuedFlag"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="showOnWebFlag" ormtype="boolean" hint="Should this product be sold on the web retail Site";
-	property name="showOnWebWholesaleFlag" ormtype="boolean" hint="Should this product be sold on the web wholesale Site";
+	property name="publishedFlag" ormtype="boolean" hint="Should this product be sold on the web retail Site";
 	property name="trackInventoryFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
 	property name="allowShippingFlag" ormtype="boolean";
@@ -144,7 +143,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public any function getGenderType() {
-		if(!isDefined("variables.genderType")) {
+		if(! structKeyExists(variables, "genderType")) {
 			variables.genderType = getService(service="TypeService").getNewEntity(); //get New Entity here should have a parent programing type ID set in the future.
 		}
 		return variables.genderType;
@@ -168,7 +167,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getGender() {
-		if(!isDefined("variables.gender")) {
+		if(!structKeyExists(variables, "gender")) {
 			variables.gender = getGenderType().getType();
 		}
 		return variables.gender;
@@ -320,12 +319,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if( !structKeyExists(variables, "defaultSku")) {
 			var skus = getSkus();
 			for(var i = 1; i<= arrayLen(skus); i++) {
-				if(skus[i].getIsDefault()) {
+				if(skus[i].getDefaultFlag()) {
 					variables.defaultSku = skus[i];
 				}
 			}
 			if( !isNew() && !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
-				skus[1].setIsDefault(true);
+				skus[1].setDefaultFlag(true);
 				getService("skuService").save(entity=skus[1]);
 				variables.defaultSku = skus[1];
 			} else if ( !structKeyExists(variables, "defaultSku") ) {

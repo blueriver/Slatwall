@@ -117,20 +117,20 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public string function getPrimaryEmail() {
-		if(!isDefined("variables.primaryEmail")) {
+		if(!structKeyExists(variables, "primaryEmail")) {
 			
 			// Look through all account emails for the primary one
 			var emails = getAccountEmails();
 			
 			for(var i = 1; i <= arrayLen(emails); i++) {
-				if(emails[i].getIsPrimary() == true) {
+				if(emails[i].getPrimaryFlag() == true) {
 					variables.primaryEmail = emails[i].getEmail();
 				}
 			}
 			
 			// If one wasn't found, but there were 1 or more emails, set the first one as primary.  Otherwise set as blank
 			if(!isDefined("variables.primaryEmail") && arrayLen(emails) > 0) {
-				emails[1].setIsPrimary(true);
+				emails[1].setPrimaryFlag(true);
 				getService("accountService").save(entity = emails[1]);
 				variables.primaryEmail = emails[1].getEmail();
 			} else if(!isDefined("variables.primaryEmail")) {
