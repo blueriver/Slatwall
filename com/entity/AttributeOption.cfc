@@ -43,6 +43,12 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	property name="attributeOptionValue" ormtype="string";
 	property name="attributeOptionLabel" ormtype="string";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	// Related Object Properties
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
 	

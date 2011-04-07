@@ -43,9 +43,13 @@ component displayname="Address Zone Location" entityname="SlatwallAddressZoneLoc
 	property name="countryCode" ormtype="string";
 	property name="stateCode" ormtype="string";
 	property name="postalCode" ormtype="string";
-	property name="createdDateTime" ormtype="timestamp";
-	property name="lastUpdatedDateTime"	ormtype="timestamp";
 
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	// Related Object Properties
 	property name="addressZone" cfc="addressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	

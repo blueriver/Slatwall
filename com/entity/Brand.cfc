@@ -42,8 +42,12 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="brandName" ormtype="string" validateRequired persistent="true" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" validateURL persistent="true" hint="This is the Website of the brand";
+	
+	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="lastUpdatedDateTime"	ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";    

@@ -47,8 +47,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="muraUserID" ormtype="string";
+	
+	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="lastUpdatedDateTime"	ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
 	property name="type" cfc="Type" fieldtype="many-to-one" fkcolumn="accountTypeID";

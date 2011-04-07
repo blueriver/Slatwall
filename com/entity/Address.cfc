@@ -51,4 +51,10 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="postalCode" ormtype="string";
 	property name="countryCode" ormtype="string";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 }
