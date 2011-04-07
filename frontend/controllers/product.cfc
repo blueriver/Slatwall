@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	property name="productService" type="any";
 	property name="orderService" type="any";
+	property name="requestCacheService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.filename" default="";
@@ -54,7 +55,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.product = getProductService().getNewEntity();
 		}
 		
-		rc.$.slatwall.setCurrentProduct(rc.product);
+		getRequestCacheService().setValue(key="currentProduct", value=rc.product);
 		
 		rc.$.content().setTitle(rc.product.getTitle());
 		rc.$.content().setTemplate(rc.product.getTemplate());

@@ -99,7 +99,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		} else {
 			response.setStatusCode(0);
 			response.setData(arguments.entity);
-			request.slatwall.ormHasErrors = true;
+			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
 		return response;
 	}
@@ -119,7 +119,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(entity=arguments.entity);
         } else {
-            request.slatwall.ormHasErrors = true;
+            getService("requestCacheService").setValue("ormHasErrors", true);
         }
         return arguments.entity;
     }   
