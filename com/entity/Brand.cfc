@@ -42,6 +42,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="brandName" ormtype="string" default="" displayname="Brand Name" validateRequired persistent="true" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" default="" displayname="Brand Website" validateURL persistent="true" hint="This is the Website of the brand";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";    
@@ -56,15 +58,6 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	       variables.Products = [];
 	   return Super.init();
 	}
-	
-	public boolean function hasProducts() {
-		if(arrayLen(this.getProducts()) gt 0) {
-			return true;
-		} else {
-			return false;
-		}
-	} 
- 
  
  /******* Association management methods for bidirectional relationships **************/
 	

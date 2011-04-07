@@ -39,7 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	public any function delete(required any Brand){
-		if( arguments.Brand.hasProducts() ) {
+		if( arguments.Brand.hasProduct() ) {
 			getValidator().setError(entity=arguments.Brand,errorName="delete",rule="isAssigned");
 		}
 		return Super.delete(arguments.Brand);

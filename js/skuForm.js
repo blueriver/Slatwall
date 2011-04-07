@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,40 +35,40 @@
 
 Notes:
 
---->
-<cfoutput>
-<script type="text/javascript">
-var current= 1;
+*/
 
 jQuery(document).ready(function() {
-	jQuery("##addSKU").click(function() {
+	var skuCount = jQuery('tr[id^="Sku"]').length;
+	jQuery("#addSKU").click(function() {
+		var current = jQuery('tr[id^="Sku"]').length;
 		current++;
-		$newSKU= jQuery( "##tableTemplate tbody>tr:last" ).clone(true);
-		
-		/*$newSKU.children("ol").children("li").children("label").each(function(i) {
+		var $newSKU= jQuery( "#tableTemplate tbody>tr:last" ).clone(true);
+		$newSKU.children("td").children("input").each(function(i) {
 			var $currentElem= $(this);
-			$currentElem.attr("for","shirt["+current+"]."+$currentElem.attr("for"));
+			if ($currentElem.attr("type") != "radio") {
+				$currentElem.attr("name", "skus[" + current + "]." + $currentElem.attr("name"));
+			}
 		});
-		$newSKU.children("ol").children("li").children("input").each(function(i) {
+		$newSKU.children("td").children("select").each(function(i) {
 			var $currentElem= $(this);
-			$currentElem.attr("name","shirt["+current+"]."+$currentElem.attr("name"));
-			$currentElem.attr("id","shirt["+current+"]."+$currentElem.attr("id"));
+			$currentElem.attr("name","skus["+current+"]."+$currentElem.attr("name"));
 		});
-		$newSKU.children("ol").children("li").children("select").each(function(i) {
-			var $currentElem= $(this);
-			$currentElem.attr("name","shirt["+current+"]."+$currentElem.attr("name"));
-			$currentElem.attr("id","shirt["+current+"]."+$currentElem.attr("id"));
-		});*/
-		
-		
-		jQuery('##skuTable > tbody:last').append($newSKU);
+		jQuery('#remSKU').attr('style','');
+		jQuery('#skuTable > tbody:last').append($newSKU);
+		$newSKU.attr("id","Sku" + current);
+		// add stripe to row
+		if(current % 2 == 1) {
+			$newSKU.addClass("alt");
+		}
 	});
-});
 	
-</script>
-
-
-<style type="text/css">
-.hideElement {display:none;}
-</style>
-</cfoutput>
+	jQuery('#remSKU').click(function() {
+		var num = jQuery('tr[id^="Sku"]').length;
+		jQuery('#Sku' + num).remove();
+		// can't remove more skus than were originally present
+		if(num-1 == skuCount) {
+			jQuery('#remSKU').attr('style','display:none;');
+		}
+	});
+	
+});

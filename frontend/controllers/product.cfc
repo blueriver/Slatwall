@@ -75,6 +75,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
 		
 		getOrderService().addOrderItem(sku=sku, quantity=rc.quantity);
-		location(product.getProductURL(), false);
+		getFW().redirectExact(product.getProductURL(), false);
 	}
 }

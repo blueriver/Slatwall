@@ -41,13 +41,13 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
 
 	public any function getCurrent() {
-		return request.slatwallSession;
+		if(!structKeyExists(request.slatwall, "currentSession")) {
+			request.slatwall.currentSession = getPropperSession();
+		}
+		return request.slatwall.currentSession;
 	}
 	
-	public string function setupSessionRequest() {
-		// Setup Request Scope Slatwall Session holder
-		request.slatwallSession = "";
-		
+	public any function getPropperSession() {
 		// Figure out the appropriate session ID and create a new one if necessary
 		if(!structKeyExists(session, "slatwallSessionID")) {
 			if(structKeyExists(cookie, "slatwallSessionID")) {
@@ -57,16 +57,18 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
-		// Load Session into request
-		request.slatwallSession = getByID(session.slatwallSessionID);
+		// Load Session
+		var session = getByID(session.slatwallSessionID);
 		
-		if(isNull(request.slatwallSession)) {
-			request.slatwallSession = getNewEntity();
-			save(request.slatwallSession);
+		if(isNull(session)) {
+			session = getNewEntity();
+			save(session);
 		}
 		
-		session.slatwallSessionID = request.slatwallSession.getSessionID();
+		session.slatwallSessionID = session.getSessionID();
 		getTagProxyService().cfcookie(name="slatwallSessionID", value=session.slatwallSessionID, expires="never");
+		
+		return session;
 	}
 	
 }

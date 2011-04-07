@@ -90,7 +90,7 @@ component extends="BaseService" accessors="true" {
     /**
     /* @hint updates Sku data on product edit
     */
-    public boolean function updateSkus(required any product, required struct skuStruct) {
+    public boolean function updateSkus(required any product, required array skus) {
         return getSkuService().updateSkus(argumentCollection=arguments);
     }
 	
@@ -107,7 +107,7 @@ component extends="BaseService" accessors="true" {
 		if(arguments.Product.isNew()) {
 			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
 		} else {
-			updateSkus(arguments.Product,arguments.data.skuStruct);
+			updateSkus(arguments.Product,arguments.data.skuArray);
 		}
 		
 		// set Default sku
@@ -149,7 +149,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function deleteProductType(required any productType) {
-		if( arguments.productType.hasProducts() || arguments.productType.hasSubProductTypes() ) {
+		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
 			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
 		var deleted = Super.delete(arguments.productType);

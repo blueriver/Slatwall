@@ -85,8 +85,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Product (many-to-one)
 	
 	public void function setProduct(required Product Product) {
+	   variables.product = arguments.Product;
 	   if(isNew() or !arguments.Product.hasSku(this)) {
-	   	   variables.product = arguments.Product;
 	       arrayAppend(arguments.Product.getSkus(),this);
 	   }
 	}

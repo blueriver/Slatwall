@@ -58,8 +58,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowDropship" ormtype="boolean" displayname="Allow Dropship";
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	property name="publishedWeight" ormtype="float" default="0" hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
-	property name="createdDateTime" ormtype="date" displayname="Date Create";
-	property name="lastUpdatedDateTime"	ormtype="date" displayname="Date Last Updated";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
@@ -113,24 +113,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public any function getBrandOptions() {
 		if(!isDefined("variables.brandOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(rawProperty="brandName", aliase="name");
-			smartList.addSelect(rawProperty="brandID", aliase="id"); 
+			smartList.addSelect(rawProperty="brandName", alias="name");
+			smartList.addSelect(rawProperty="brandID", alias="id"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
 		}
 		return variables.brandOptions;
 	}
-	
-    public any function getProductTypeOptions() {
-        if(!structKeyExists(variables,"propertyTypeOptions")) {
-            var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductType");
-            smartList.addSelect(rawProperty="productType", aliase="name");
-            smartList.addSelect(rawProperty="productTypeID", aliase="id");
-			smartList.addOrder("productType|ASC");
-            variables.propertyTypeOptions = smartList.getRecords();
-        }
-        return variables.propertyTypeOptions;
-    }
     
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();

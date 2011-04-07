@@ -39,6 +39,10 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.product" type="any" />
 
+<cfif rc.edit>
+	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/skuForm.js"></script>' />
+</cfif>
+
 <!--- set up options for setting select boxes --->
 <cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
 <cfset local.defaultOption = {id="",name=rc.$.Slatwall.rbKey('setting.inherit')} />
@@ -172,18 +176,4 @@ Notes:
 </form>
 </cfif>
 </div>
-
 </cfoutput>
-<table id="tableTemplate" class="hideElement">
-<tbody>
-<tr>
-	<td><input type="text" name="" id="" value="" /></td>
-	<td><input type="text" name="" id="" value="" /></td>
-	<td><input type="text" name="" id="" value="" /></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-</tbody>
-</table>
