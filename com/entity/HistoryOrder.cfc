@@ -36,14 +36,14 @@
 Notes:
 
 */
-component displayname="History Sku" entityname="SlatwallHistoryOrder" table="SlatwallHistoryOrder" persistent="true" extends="slatwall.com.entity.baseEntity" {
+component displayname="History Order" entityname="SlatwallHistoryOrder" table="SlatwallHistoryOrder" persistent="true" extends="slatwall.com.entity.baseEntity" {
 			
 	// Persistant Properties
 	property name="historyOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="historyDateTime" ormtype="date";
+	property name="historyDateTime" ormtype="timestamp";
 	
 	// Related Object Properties
-	property name="order" cfc="Sku" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderStatus" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusID";
 	
 }

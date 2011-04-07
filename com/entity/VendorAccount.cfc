@@ -44,5 +44,5 @@ component displayname="Vendor Account" entityname="SlatwallVendorAccount" table=
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="roleType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID";
+	property name="roleType" cfc="Type" fieldtype="many-to-one" fkcolumn="roleTypeID";
 }

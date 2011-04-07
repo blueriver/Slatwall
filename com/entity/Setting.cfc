@@ -40,7 +40,7 @@ component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSett
 	
 	// Persistant Properties
 	property name="settingID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="settingName" ormtype="string" persistent="true";
-	property name="settingValue" ormtype="string" persistent="true";
+	property name="settingName" ormtype="string";
+	property name="settingValue" ormtype="string";
 	
 }

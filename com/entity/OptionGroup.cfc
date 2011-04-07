@@ -40,10 +40,10 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 
 	// Persistant Properties
 	property name="optionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="optionGroupName" validateRequired DisplayName="Option Group Name" ormtype="string";
+	property name="optionGroupName" ormtype="string" validateRequired;
 	property name="optionGroupImage" ormtype="string";
-	property name="optionGroupDescription" ormtype="string";
-	property name="isImageGroup" ormtype="boolean";
+	property name="optionGroupDescription" ormtype="string" length="4000";
+	property name="imageGroupFlag" ormtype="boolean";
 	
 	// Related Object Properties
 	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" lazy="extra" cascade="delete";

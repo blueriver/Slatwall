@@ -40,7 +40,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	// Persistant Properties
 	property name="stockAdjustmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="adjustmentDateTime" ormtype="date";
+	property name="adjustmentDateTime" ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="adjustmentType" cfc="Type" fieldtype="many-to-one" fkcolumn="adjustmentTypeID";

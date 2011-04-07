@@ -40,19 +40,20 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Persistant Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="firstName" ormtype="string" default="" hint="This Value is only Set if a MuraID does not exist";
-	property name="lastName" ormtype="string" default="" hint="This Value is only Set if a MuraID does not exist";
-	property name="company" ormtype="string" default="" hint="This Value is only Set if a MuraID does not exist";
-	property name="remoteEmployeeID" ormtype="string" default="" hint="Only used when integrated with a remote system";
-	property name="remoteCustomerID" ormtype="string" default="" hint="Only used when integrated with a remote system";
-	property name="remoteContactID" ormtype="string" default="" hint="Only used when integrated with a remote system";
-	property name="muraUserID" ormtype="string" default="";
+	property name="firstName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
+	property name="muraUserID" ormtype="string";
 	property name="createdDateTime" ormtype="timestamp";
 	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
-	property name="type" fieldtype="many-to-one" fkcolumn="accountTypeID" cfc="Type";
+	property name="type" cfc="Type" fieldtype="many-to-one" fkcolumn="accountTypeID";
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all";
 	
 	// Non-Persistant Properties
 	property name="primaryEmail" type="string" persistent="false";

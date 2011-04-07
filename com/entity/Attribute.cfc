@@ -42,12 +42,60 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeName" ormtype="string";
 	property name="attributeHint" ormtype="string";
+	property name="defaultValue" ormtype="string";
+	property name="requiredFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer";
+	property name="validationMessage" ormtype="string";
+	property name="validationRegex" ormtype="string";
+	property name="activeFlag" ormtype="boolean";
 	property name="createdDateTime" ormtype="timestamp";
 	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
-	property name="attributeType" cfc="Type" fieldtyp="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
-	property name="attributeClassType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeClassTypeID"  hint="This is used to define if this attribute is applied to a profile, account, product, ext";
-	property name="attrinuteOptions" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all";
+	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
+	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all";
+	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
+
+
+	public Attribute function init(){
+	   // set default collections for association management methods
+	   if(isNull(variables.attributeOptions)) {
+	       variables.attributeOptions = [];
+	   }
+	   return Super.init();
+	}
+
 	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Attribute Set (many-to-one)
+	
+	public void function setAttributeSet(required AttributeSet attributeSet) {
+		variables.attributeSet = arguments.attributeSet;
+		if(!arguments.AttributeSet.hasAttribute(this)) {
+		   arrayAppend(arguments.AttributeSet.getAttributes(),this);
+		}
+	}
+	
+	public void function removeAttributeSet(required AttributeSet attributeSet) {
+		var index = arrayFind(arguments.attributeSet.getAttributes(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.attributeSet.getAttributes(),index);
+		}    
+		structDelete(variables,"attributeSet");
+    }
+    
+	// Attribute Options (one-to-many)
+	
+	public void function addAttributeOption(required any attributeOption) {
+	   arguments.AttributeOption.setAttribute(this);
+	}
+	
+	public void function removeAttributeOption(required any attributeOption) {
+	   arguments.attributeOption.removeAttribute(this);
+	}
+	
+	/************   END Association Management Methods   *******************/
+
 }

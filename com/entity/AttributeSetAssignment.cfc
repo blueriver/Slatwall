@@ -36,11 +36,36 @@
 Notes:
 
 */
-component displayname="Profile Template" entityname="SlatwallProfileTemplate" table="SlatwallProfileTemplate" persistent="true" extends="slatwall.com.entity.baseEntity" {
+component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="profileTemplateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="profileTemplateName" ormtype="string";
-	property name="profileTemplateDescription" ormtype="string";
+	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="excludeFlag" ormtype="boolean";
+	property name="baseItemID" length="32" ormtype="string" hint="This is where the assignment is made, e.g. productID,productTypeID,accountID,accountTypeID" ;  
 	
+	// Related Object Properties
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
+
+
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Attribute Set (many-to-one)
+	
+	public void function setAttributeSet(required AttributeSet attributeSet) {
+		variables.attributeSet = arguments.attributeSet;
+		if(!arguments.attributeSet.hasAttributeSetAssignment(this)) {
+		   arrayAppend(arguments.attributeSet.getAttributeSetAssignments(),this);
+		}
+	}
+	
+	public void function removeAttributeSet(required AttributeSet attributeSet) {
+		var index = arrayFind(arguments.attributeSet.getAttributeSetAssignments(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.attributeSet.getAttributeSetAssignments(),index);
+		}    
+		structDelete(variables,"attributeSet");
+    }
+    
+	/************   END Association Management Methods   *******************/
+
 }
