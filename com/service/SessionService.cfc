@@ -39,12 +39,13 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 
 	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
+	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 
 	public any function getCurrent() {
-		if(!structKeyExists(request.slatwall, "currentSession")) {
-			request.slatwall.currentSession = getPropperSession();
+		if(!getRequestCacheService().keyExists("currentSession")) {
+			getRequestCacheService().setValue("currentSession", getPropperSession());
 		}
-		return request.slatwall.currentSession;
+		return getRequestCacheService().getValue("currentSession");
 	}
 	
 	public any function getPropperSession() {

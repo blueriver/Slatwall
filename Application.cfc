@@ -114,8 +114,12 @@ component extends="framework" output="false" {
 		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
 			setupMuraRequirements();
 			
-			param name="request.slatwall" default="#structNew()#";
-			param name="request.slatwall.ormHasErrors" default="false";
+			// Enable the request cache service
+			getBeanFactory().getBean("requestCacheService").enableRequestCache();
+			
+			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
+				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false, onlyIfNew=true);
+			}
 			
 			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.
 			ormGetSession().clear();
@@ -133,14 +137,14 @@ component extends="framework" output="false" {
 				request.context.$.event('siteid', session.siteid);
 			}
 			
-			// Create SlatwallScope and add it to the muraScope if it doesn't already exist
-			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			// Setup slatwall scope in request cache If it doesn't already exist
+			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
+				getBeanFactory().getBean("requestCacheService").setValue(key="slatwallScope", value= new Slatwall.com.utility.SlatwallScope());	
 			}
 			
-			// Setup Slatwall Session If it doesn't already exist
-			if( !structKeyExists(request.slatwall, "session") ) {
-				request.slatwall.session = getBeanFactory().getBean("sessionService").getPropperSession();
+			// Inject slatwall scope into the mura scope
+			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
+				request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
 			}
 			
 			// Setup Base URL's for each subsystem
@@ -263,13 +267,12 @@ component extends="framework" output="false" {
 	}
 	
 	private void function endSlatwallLifecycle() {
-		if(!request.slatwall.ormHasErrors) {
+		if(!getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			transaction {
 				ORMflush();
 			}
 		}
-		structDelete(request.slatwall, "currentProduct");
-		structDelete(request.slatwall, "currentSession");
+		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
 		ormGetSession().clear();
 	}
 }

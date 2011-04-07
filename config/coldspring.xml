@@ -26,6 +26,7 @@
 		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
 		<constructor-arg name="pathColumn"><value>productTypeName</value></constructor-arg>
 	</bean>
+	<bean id="requestCacheService" class="slatwall.com.service.requestCacheService" />
 		
     <bean id="accountService" class="slatwall.com.service.accountService">
         <property name="entityName"><value>SlatwallAccount</value></property>
@@ -85,7 +86,8 @@
         <property name="entityName"><value>SlatwallSession</value></property>
         <property name="DAO"><ref bean="SessionDAO" /></property>
 		<property name="validator"><ref bean="Validator" /></property>
-		<property name="TagProxyService"><ref bean="TagProxyService" /></property>
+		<property name="tagProxyService"><ref bean="TagProxyService" /></property>
+		<property name="requestCacheService"><ref bean="requestCacheService" /></property>
     </bean>
 
     <bean id="settingService" class="slatwall.com.service.settingService">

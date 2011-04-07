@@ -38,36 +38,20 @@ Notes:
 */
 component accessors="true" output="false" extends="BaseObject" {
 
-	property name="currentProductID" type="string";
-	property name="readOnlyFlag" type="boolean";
-	
 	public any function init() {
-		setCurrentProductID("");
-		setReadOnlyFlag(true);
-		
 		return this;	
 	}
 	
 	public any function getCurrentProduct() {
-		if(!structKeyExists(request.slatwall, "currentProduct")) {
-			request.slatwall.currentProduct = getService("productService").getByID(getCurrentProductID());	
-			
-			if(isNull(request.slatwall.currentProduct)) {
-				request.slatwall.currentProduct = getService("productService").getNewEntity();
-			}
-			if(getReadOnlyFlag()) {
-				//ormGetSession().setReadOnly(request.slatwall.currentProduct, true);
-			}
+		if(!getService("requestCacheService").keyExists("currentProduct")) {
+			getService("requestCacheService").setValue("currentProduct", getService("productService").getNewEntity());
 		}
-		
-		return request.slatwall.currentProduct;
+		return getService("requestCacheService").getValue("currentProduct");
 	}
 	
 	public any function getCurrentSession() {
 		var session = getService("sessionService").getCurrent();
-		if(getReadOnlyFlag()) {
-			//ormGetSession().setReadOnly(session, true);
-		}
+		
 		return session;
 	}
 	
