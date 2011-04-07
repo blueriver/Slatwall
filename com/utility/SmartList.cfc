@@ -87,13 +87,13 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return ceiling(getTotalRecords() / setRecordShow());
 	}
 	
-	public void function addSelect(required string rawProperty, required string aliase) {
+	public void function addSelect(required string rawProperty, required string alias) {
 		var selectProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
 		if(selectProperty != "") {
 			if(structKeyExists(variables.selects, selectProperty)) {
-				variables.selects[selectProperty] = arguments.aliase;
+				variables.selects[selectProperty] = arguments.alias;
 			} else {
-				structInsert(variables.selects, selectProperty, arguments.aliase);
+				structInsert(variables.selects, selectProperty, arguments.alias);
 			}
 		}
 	}

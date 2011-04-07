@@ -51,7 +51,7 @@ component output="false" {
 	}
 	
 	public array function list(required string entityName,struct filterCriteria=structNew(),string sortOrder="") {
-		if(!structIsEmpty(arguments.filterCriteria) and !len("arguments.sortOrder")) {
+		if(structIsEmpty(arguments.filterCriteria) and !len("arguments.sortOrder")) {
 			return entityLoad(arguments.entityName);
 		} else {
 			return entityLoad(arguments.entityName,arguments.filterCriteria,arguments.sortOrder);

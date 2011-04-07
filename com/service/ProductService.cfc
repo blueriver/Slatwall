@@ -149,7 +149,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function deleteProductType(required any productType) {
-		if( arguments.productType.hasProducts() || arguments.productType.hasSubProductTypes() ) {
+		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
 			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
 		var deleted = Super.delete(arguments.productType);

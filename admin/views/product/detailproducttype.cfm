@@ -50,7 +50,7 @@ Notes:
     <cf_ActionCaller action="admin:product.listproducttypes" type="list">
 	<cfif !rc.edit><cf_ActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
 </ul>
-
+Has subtypes: #rc.productType.hasSubProductType()#
 <cfif rc.edit>
 <form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
@@ -98,7 +98,7 @@ Notes:
 <cfif rc.edit>
 	<div id="actionButtons" class="clearfix">
 		<cf_ActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-		<cfif !rc.productType.isNew() and !rc.productType.hasProducts() and !rc.productType.hasSubProductTypes()>
+		<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
 		<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 		</cfif>
 		<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">

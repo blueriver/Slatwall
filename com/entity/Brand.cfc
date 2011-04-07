@@ -58,14 +58,6 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	       variables.Products = [];
 	   return Super.init();
 	}
-	
-	public boolean function hasProducts() {
-		if(arrayLen(this.getProducts()) gt 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
  
  /******* Association management methods for bidirectional relationships **************/
 	

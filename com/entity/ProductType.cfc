@@ -66,22 +66,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	   return Super.init();
 	}
 	
-	public boolean function hasProducts() {
-		if(arrayLen(this.getProducts()) gt 0) {
-			return true;
-		} else {
-			return false;
-		}
-	} 
-	
-	public boolean function hasSubProductTypes() {
-		if(isNull(variables.subProductTypes) || arrayLen(this.getSubProductTypes()) == 0) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
 	public boolean function isCustomSettings() {
 		var isCustom = false;
 		var props = getMetaData(this).properties;
