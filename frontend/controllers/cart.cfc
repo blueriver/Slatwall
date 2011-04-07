@@ -38,13 +38,13 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
-	property name="cartService" type="any";
+	property name="orderService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.cartID" default="";
 		
 		if(rc.cartID != "") {
-			rc.cart = getCartService().getByID(rc.cartID);
+			rc.cart = orderService().getByID(rc.cartID);
 		} else {
 			rc.cart = rc.$.slatwall.cart();
 		}

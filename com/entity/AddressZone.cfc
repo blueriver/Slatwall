@@ -36,14 +36,21 @@
 Notes:
 
 */
-component displayname="Cart Item" entityname="SlatwallCartItem" table="SlatwallCartItem" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Address Zone" entityname="SlatwallAddressZone" table="SlatwallAddressZone" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="cartItemID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantity" ormtype="integer";
+	property name="addressZoneID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="addressZoneName" ormtype="string";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
-	property name="cart" cfc="Cart" fieldtype="many-to-one" fkcolumn="cartID";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-
+	property name="addressZoneLocations" singularname="addressZoneLocation" type="array" cfc="AddressZoneLocation" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all";
+	
+	public array function getAddressZoneLocations() {
+		if(isNull(variables.addressZoneLocations)) {
+			variables.addressZoneLocations = arrayNew(1);
+		}
+		return variables.addressZoneLocations;
+	}
 }

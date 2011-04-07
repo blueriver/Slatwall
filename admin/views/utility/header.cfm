@@ -63,10 +63,11 @@ Notes:
 		<cf_ActionCaller action="admin:setting" type="link">
 		<ul class="addMenuNav">
 			<cf_ActionCaller action="admin:setting.detail" type="list">
-			<cf_ActionCaller action="admin:setting.editpermissions" type="list" class="last">
+			<cf_ActionCaller action="admin:setting.detailpermissions" type="list" class="last">
+			<cf_ActionCaller action="admin:setting.listaddresszones" type="list" class="last">
 			<cf_ActionCaller action="admin:setting.listshippingmethods" type="list" class="last">
 			<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list" class="last">
-			<cf_ActionCaller action="admin:setting.detailintegration" type="list" class="last">
+			<cf_ActionCaller action="admin:setting.listintegrationservices" type="list" class="last">
 		</ul>
 	</li>
 	<li id="navHelp">

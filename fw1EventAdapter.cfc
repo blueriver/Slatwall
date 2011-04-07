@@ -52,7 +52,7 @@ Notes:
 	
 	<cffunction name="onRenderStart">
 		<cfargument name="$" />
-		
+
 		<cfset doAction($, "frontend:event.onrenderstart") />
 
 		<cfif $.event('#variables.framework.action#') neq "">

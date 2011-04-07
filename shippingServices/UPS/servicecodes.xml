@@ -1,0 +1,16 @@
+<servicecodes>
+	<us>
+		<code value="01" label="UPS Next Day Air" />
+		<code value="02" label="UPS 2nd Day Air" />
+		<code value="03" label="UPS Ground" />
+		<code value="07" label="UPS Worldwide Express" />
+		<code value="08" label="UPS Worldwide Express Expedited" />
+		<code value="11" label="UPS Standard" />		
+		<code value="12" label="UPS 3 Day Select" />		
+		<code value="13" label="UPS Next Day Air Saver" />		
+		<code value="14" label="UPS Next Day Air Early A.M." />		
+		<code value="54" label="UPS Worldwide Express Plus" />
+		<code value="59" label="UPS 2nd Day Air A.M." />
+		<code value="65" label="UPS Saver" />
+	</us>
+</servicecodes>

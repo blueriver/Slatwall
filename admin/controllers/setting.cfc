@@ -46,6 +46,7 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detail");
 	}
 	
+	// Global Settings
 	public void function detail(required struct rc) {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
@@ -62,7 +63,7 @@ component extends="BaseController" output="false" accessors="true" {
 		for(var item in rc) {
 			if(!isObject(item)) {
 				var setting = getSettingService().getBySettingName(item);
-				if(setting.isNew() == false) {
+				if(!setting.isNew()) {
 					setting.setSettingValue(rc[item]);
 					getSettingService().save(entity=setting);
 				}
@@ -72,10 +73,19 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detail");
 	}
 	
-	public void function editpermissions(required struct rc) {
+	// User Permissions
+	public void function detailpermissions(required struct rc) {
+		param name="rc.edit" default="false";
+		
 		rc.muraUserGroups = getUserManager().getUserGroups();
 		rc.permissionActions = getSettingService().getPermissionActions();
 		rc.permissionSettings = getSettingService().getPermissions();
+	}
+	
+	public void function editpermissions(required struct rc) {
+		detailpermissions(arguments.rc);
+		getFW().setView("admin:setting.detailpermissions");
+		rc.edit = true;
 	}
 	
 	public void function savepermissions(required struct rc) {
@@ -97,6 +107,36 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:main.dashboard");
 	}
 	
+	// Shipping Services
+	public void function listShippingServices(required struct rc) {
+		rc.shippingServices = getSettingService().getShippingServices();	
+	}
+	
+	public void function detailShippingService(required struct rc) {
+		param name="rc.edit" default="false";
+		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
+	}
+	
+	public void function editShippingService(required struct rc) {
+		detailShippingService(rc);
+		getFW().setView("admin:setting.detailshippingservice");
+		rc.edit = true;
+	}
+	
+	public void function saveShippingService(required struct rc) {
+		for(var item in rc) {
+			if(!isObject(item) && listGetAt(item,1,"_") == "shippingservice") {
+				var setting = getSettingService().getBySettingName(item);
+				setting.setSettingName(item);
+				setting.setSettingValue(rc[item]);
+				getSettingService().save(entity=setting);
+			}
+		}
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.listshippingservices");
+	}
+	
+	// Shipping Methods
 	public void function listShippingMethods(required struct rc) {
 		rc.shippingMethods = getSettingService().getShippingMethods();
 	}
@@ -109,6 +149,10 @@ component extends="BaseController" output="false" accessors="true" {
 		if(isNull(rc.shippingMethod)) {
 			rc.shippingMethod = getSettingService().getNewEntity("SlatwallShippingMethod");
 		}
+		
+		rc.shippingServices = getSettingService().getShippingServices();
+		rc.addressZones = getSettingService().list("SlatwallAddressZone");
+		rc.blankShippingRate = getSettingService().getNewEntity("SlatwallShippingRate");
 	}
 	
 	public void function deleteShippingMethod(required struct rc) {
@@ -148,4 +192,61 @@ component extends="BaseController" output="false" accessors="true" {
 	   		getFW().setView(action="admin:setting.editshippingmethod");
 		}
 	}
+	
+	
+	// Payment Services
+	
+	// Payment Methods
+		
+	// Integrations Services
+	
+	// Address Zones
+	public void function listAddressZones(required struct rc) {
+		rc.addressZones = getSettingService().list("SlatwallAddressZone");
+	}
+	
+	public void function detailAddressZone(required struct rc) {
+		param name="rc.addressZoneID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.addressZone = getSettingService().getByID(rc.addressZoneID, "SlatwallAddressZone");
+		if(isNull(rc.addressZone)) {
+			rc.addressZone = getSettingService().getNewEntity("SlatwallAddressZone");
+		}
+		
+		rc.countriesArray = getSettingService().list("SlatwallCountry");
+	}
+	
+	public void function editAddressZone(required struct rc) {
+		detailAddressZone(rc);
+		getFW().setView("admin:setting.detailaddresszone");
+		rc.edit = true;
+	}
+	
+	public void function createAddressZone(required struct rc) {
+		editAddressZone(rc);
+	}
+	
+	public void function saveAddressZone(required struct rc) {
+		detailAddressZone(rc);
+		
+		var formStruct = getService("formUtilities").buildFormCollections(rc);
+		if(structKeyExists(formStruct, "addressZoneLocations")) {
+			rc.addressZoneLocations = formStruct.addressZoneLocations;	
+		}
+		
+		rc.addressZone = getSettingService().saveAddressZone(rc.addressZone, rc);
+		
+		if(!rc.addressZone.hasErrors()) {
+			getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");
+		} else {
+			getFW().setView("admin:setting.detailaddresszone");
+			rc.edit = true;
+		}
+	}
+	
+	public void function deleteAddressZone(required struct rc) {
+		// TODO: Add logic to make sure that the address zone isn't being used by shipping rates, ext...
+		getFW().redirect(action="admin:setting.listaddresszones");
+	}	
 }

@@ -42,6 +42,8 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeName" ormtype="string";
 	property name="attributeHint" ormtype="string";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
 	property name="attributeType" cfc="Type" fieldtyp="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";

@@ -43,6 +43,7 @@ Notes:
 	<div class="svoadminlistshippingmethods">
 		<ul id="navTask">
 	    	<cf_ActionCaller action="admin:setting.createshippingmethod" type="list">
+			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
 		</ul>
 		
 		<table id="shippingMethodList" class="stripe">
