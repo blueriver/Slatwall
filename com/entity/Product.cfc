@@ -38,43 +38,44 @@ Notes:
 */
 component displayname="Product" entityname="SlatwallProduct" table="SlatwallProduct" persistent="true" extends="slatwall.com.entity.baseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="active" ormtype="boolean" default="true" displayname="Active" hint="As Products Get Old, They would be marked as Not Active";
-	property name="filename" ormtype="string" default="" displayname="File Name" hint="This is the name that is used in the URL string";
-	property name="template" ormtype="string" default="" displayname="Design Template" hint="This is the Template to use for product display";
-	property name="productName" ormtype="string" default="" displayname="Product Name" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
-	property name="productCode" ormtype="string" default="" displayname="Product Code" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
-	property name="productDescription" ormtype="string" default="" displayname="Product Description" hint="HTML Formated description of the Product";
-	property name="productYear" ormtype="int" displayname="Product Year" hint="Products specific model year if it has one";
-	property name="manufactureDiscontinued"	ormtype="boolean" default=false persistent=true displayname="Manufacture Discounted" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="showOnWeb" ormtype="boolean" default=false displayname="Show On Web Retail" hint="Should this product be sold on the web retail Site";
-	property name="showOnWebWholesale" ormtype="boolean" default=false persistent=true displayname="Show On Web Wholesale" hint="Should this product be sold on the web wholesale Site";
-	property name="trackInventory" ormtype="boolean" default=false displayname="Non-Inventory Item";
-	property name="callToOrder" ormtype="boolean" default=false displayname="Call To Order";
-	property name="allowShipping" ormtype="boolean" default=true displayname="Allow Shipping";
-	property name="allowPreorder" ormtype="boolean" default=true displayname="Allow Pre-Orders" hint="";
-	property name="allowBackorder" ormtype="boolean" default=false displayname="Allow Backorders";
-	property name="allowDropship" ormtype="boolean" default="false" displayname="Allow Dropship";
+	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
+	property name="filename" ormtype="string" hint="This is the name that is used in the URL string";
+	property name="template" ormtype="string" hint="This is the Template to use for product display";
+	property name="productName" ormtype="string" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
+	property name="productCode" ormtype="string" unique="true" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
+	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
+	property name="manufactureDiscontinuedFlag"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
+	property name="showOnWebFlag" ormtype="boolean" hint="Should this product be sold on the web retail Site";
+	property name="showOnWebWholesaleFlag" ormtype="boolean" hint="Should this product be sold on the web wholesale Site";
+	property name="trackInventoryFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowBackorderFlag" ormtype="boolean";
+	property name="allowDropshipFlag" ormtype="boolean";
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	property name="publishedWeight" ormtype="float" default="0" hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
-	property name="createdDateTime" ormtype="date" default="" displayname="Date Create";
-	property name="lastUpdatedDateTime"	ormtype="date" default="" displayname="Date Last Updated";
+	property name="createdDateTime" ormtype="timestamp";
+	property name="lastUpdatedDateTime"	ormtype="timestamp";
 	
 	// Related Object Properties
-	property name="brand" displayname="Brand" validateRequired cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
-	property name="productType" displayname="Product Type" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="productType" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all";
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
 	property name="title" type="string" persistent="false";
 	property name="defaultSku" persistent="false";
-	property name="onTermSale" type="boolean" persistent="false";
-	property name="onClearanceSale" type="boolean" persistent="false";
+	property name="onTermSaleFlag" type="boolean" persistent="false";
+	property name="onClearanceSaleFlag" type="boolean" persistent="false";
 	property name="dateFirstReceived" type="date" persistent="false";
 	property name="dateLastReceived" type="date" persistent="false";
 	property name="livePrice" type="numeric" persistent="false";
@@ -91,6 +92,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
+	   }
+	   if(isNull(variables.attributeSetAssignments)) {
+	       variables.attributeSetAssignments = [];
 	   }
 	   return Super.init();
 	}
@@ -109,31 +113,26 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public any function getBrandOptions() {
 		if(!isDefined("variables.brandOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(rawProperty="brandName", aliase="name");
-			smartList.addSelect(rawProperty="brandID", aliase="id"); 
+			smartList.addSelect(rawProperty="brandName", alias="name");
+			smartList.addSelect(rawProperty="brandID", alias="id"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
 		}
 		return variables.brandOptions;
 	}
-	
-    public any function getProductTypeOptions() {
-        if(!structKeyExists(variables,"propertyTypeOptions")) {
-            var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductType");
-            smartList.addSelect(rawProperty="productType", aliase="name");
-            smartList.addSelect(rawProperty="productTypeID", aliase="id");
-			smartList.addOrder("productType|ASC");
-            variables.propertyTypeOptions = smartList.getRecords();
-        }
-        return variables.propertyTypeOptions;
+    
+    public any function getProductTypeTree() {
+        return getService("ProductService").getProductTypeTree();
     }
+    	
 	
-	public array function getSkus() {
-		if(!structKeyExists(variables, "skus")) {
-			variables.skus = arrayNew(1);
-		}
-		return variables.skus;
-	}
+    public array function getSkus(sortby, sortType="text", direction="asc") {
+        if(!structKeyExists(arguments,"sortby")) {
+            return variables.Skus;
+        } else {
+            return sortObjectArray(variables.Skus,arguments.sortby,arguments.sortType,arguments.direction);
+        }
+    }
 	
 	public any function getSkuByID(required string skuID) {
 		var skus = getSkus();
@@ -180,7 +179,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getProductURL() {
-		return getMuraScope().createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
+		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
 	
 	public numeric function getQIA() {
@@ -301,12 +300,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	/************   END Association Management Methods   *******************/
 
-    public any function getProductTypeTree() {
-        return getService("ProductService").getProductTypeTree();
-    }
-    	
 	public struct function getOptionGroupsStruct() {
-		if(isNull(variables.optionGroups)) {
+		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = structNew();
 			var skus = getSkus();
 			for(var i=1; i <= arrayLen(skus); i++){

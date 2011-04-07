@@ -52,7 +52,7 @@ Notes:
 	
 	<cffunction name="onRenderStart">
 		<cfargument name="$" />
-		
+
 		<cfset doAction($, "frontend:event.onrenderstart") />
 
 		<cfif $.event('#variables.framework.action#') neq "">
@@ -77,7 +77,6 @@ Notes:
 		<cfset request.pluginConfig=variables.pluginConfig>
 		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onApplicationStart" />
 		<cfset restoreInternalState(request,state)>
-		<!--- <cfset variables.pluginConfig.addEventHandler(this)> --->
 	</cffunction>
 
 	<cffunction name="preseveInternalState" output="false">
@@ -142,7 +141,7 @@ Notes:
 		
 		<cfset url[variables.framework.action] = arguments.action />
 		
-		<cfset state=preseveInternalState(request)>	
+		<cfset state=preseveInternalState(request)>
 		
 		<cfif fw1.getSection(arguments.action) eq "event">
 			<cfset fw1.setView("frontend:event.blank") />

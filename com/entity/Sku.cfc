@@ -39,10 +39,11 @@ Notes:
 component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="skuID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="listPrice" default="0" ormtype="float";
-	property name="price" default="0" ormtype="float";
-	property name="isDefault" default="false" ormtype="boolean";  
+	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="skuCode" ormtype="string" length="50" validateRequired;
+	property name="listPrice" ormtype="float" default="0";
+	property name="price" ormtype="float" default="0";
+	property name="defaultFlag" ormtype="boolean";  
 	
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="product";
@@ -84,8 +85,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Product (many-to-one)
 	
 	public void function setProduct(required Product Product) {
+	   variables.product = arguments.Product;
 	   if(isNew() or !arguments.Product.hasSku(this)) {
-	   	   variables.product = arguments.Product;
 	       arrayAppend(arguments.Product.getSkus(),this);
 	   }
 	}
@@ -124,17 +125,17 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     /************   END Association Management Methods   *******************/
     
-    public void function setIsDefault(required boolean isDefault) {
-		if(arguments.isDefault == true) {
+    public void function setDefaultFlag(required boolean defaultFlag) {
+		if(arguments.defaultFlag == true) {
 			getProduct().setDefaultSku(this);
 			var skus = getProduct().getSkus();
 			for(var i = 1; i <= arrayLen(skus); i++) {
-				if(skus[i].getIsDefault() == true) {
-					skus[i].setIsDefault(false);
+				if(skus[i].getDefaultFlag() == true) {
+					skus[i].setDefaultFlag(false);
 				}
 			}
 		}
-		variables.isDefault = arguments.isDefault;
+		variables.defaultFlag = arguments.defaultFlag;
 	}
     
     public numeric function getQOH() {

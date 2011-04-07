@@ -44,7 +44,7 @@ component displayname="Account Phone" entityname="SlatwallAccountPhone" table="S
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPhoneType" cfc="Account" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
+	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
 	
 	public string function getPhoneType() {
 		return getAccountPhoneType().getType();

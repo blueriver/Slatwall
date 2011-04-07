@@ -39,7 +39,7 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 	
 	property name="productService" type="any";
-	property name="cartService" type="any";
+	property name="orderService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.filename" default="";
@@ -71,9 +71,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.selectedOptions" default="";
 		param name="rc.quantity" default="1";
 		
-		rc.product = getProductService().getByID(rc.productID);
+		var product = getProductService().getByID(rc.productID);
+		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
 		
-		getCartService().addCartItem(sku=rc.product.getSkuBySelectedOptions(rc.selectedOptions), quantity=rc.quantity);
-		location(rc.product.getProductURL(), false);
+		getOrderService().addOrderItem(sku=sku, quantity=rc.quantity);
+		getFW().redirectExact(product.getProductURL(), false);
 	}
 }

@@ -36,11 +36,11 @@
 Notes:
 
 */
-component displayname="Base Service" persistent="false" accessors="true" output="false" hint="This is a base service that all services will extend" {
+component displayname="Base Service" persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" hint="This is a base service that all services will extend" {
 
 	property name="entityName" type="string";
 	property name="DAO" type="any";
-	property name="Validator" table="Slatwall.com.utility.Validator";
+	property name="Validator" type="Slatwall.com.utility.Validator";
 	property name="fileService" type="any";
 	
 	public any function init() {
@@ -89,30 +89,39 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 	
-	public boolean function delete(required any entity){
-		var deleted = false;
+	public any function delete(required any entity){
+		var response = new com.utility.ResponseBean();
+		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(entity=arguments.entity);
-			deleted = true;
+			response.setMessage(rbKey("entity.#entityName#.delete_success"));
+			response.setStatusCode(1);
 		} else {
-			transactionRollback();
+			response.setStatusCode(0);
+			response.setData(arguments.entity);
+			request.slatwall.ormHasErrors = true;
 		}
-		return deleted;
+		return response;
 	}
 	
-	public any function save(required any entity, struct data) {
-		if(structKeyExists(arguments,"data")){
-			arguments.entity.populate(arguments.data);
-		}
-        getValidator().validateObject(entity=arguments.entity);
-		
-		if(!arguments.entity.hasErrors()) {
-			arguments.entity = getDAO().save(entity=arguments.entity);
-		} else {
-			transactionRollback();
-			//trace( text="rolled back save within base service");
-		}
+	public any function populate(required any entity, required struct data) {
+		arguments.entity.populate(arguments.data);
 		return arguments.entity;
 	}	
+	
+
+    public any function save(required any entity, struct data) {
+        if(structKeyExists(arguments,"data")){
+            populate(arguments.entity,arguments.data);
+        }
+        getValidator().validateObject(entity=arguments.entity);
+        
+        if(!arguments.entity.hasErrors()) {
+            arguments.entity = getDAO().save(entity=arguments.entity);
+        } else {
+            request.slatwall.ormHasErrors = true;
+        }
+        return arguments.entity;
+    }   
 
 }

@@ -43,6 +43,7 @@ Notes:
 	<cfset this.datasource = getProfileString("#baseDir#/config/settings.ini.cfm", "production", "datasource") />
 	<cfset this.ormSettings.dbcreate = "update" />
 	<cfset this.ormSettings.flushAtRequestEnd = false />
+	<cfset this.ormsettings.eventhandling = true />
 	<cfset this.ormSettings.automanageSession = false />
 	<cfset this.ormSettings.logSQL = true />
 	<cfset this.ormsettings.cfclocation = "/plugins/Slatwall/com/entity" />

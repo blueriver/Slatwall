@@ -60,13 +60,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function edit(required struct rc) {
-		if(structKeyExists(rc,"brand") && isObject(rc.brand)) {
-			var errors = rc.brand.getErrorBean();
-			rc.brand = entityMerge(rc.brand);
-			rc.brand.setErrorBean(errors);
-		} else {
-			rc.brand = getBrandService().getByID(ID=rc.brandID);
-		}
+	   rc.brand = getBrandService().getByID(ID=rc.brandID);
 	   if(!isNull(rc.Brand)) {	
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		} else {
@@ -89,18 +83,19 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {
-	   		getFW().redirect(action="admin:brand.edit", preserve="brand");
+			rc.itemTitle = rc.brand.isNew() ? rc.$.Slatwall.rbKey("admin.brand.create") : rc.$.Slatwall.rbKey("admin.brand.edit") & ": #rc.brand.getBrandName()#";
+	   		getFW().setView(action="admin:brand.edit");
 		}
 	}
 	
 	public void function delete(required struct rc) {
 		var brand = getBrandService().getByID(rc.brandID);
-		if(getBrandService().delete(brand)) {
-			rc.message="admin.brand.delete_success";
+		var deleteResponse = getBrandService().delete(brand);
+		if(deleteResponse.getStatusCode()) {
+			rc.message=deleteResponse.getMessage();
 		} else {
-			//TODO: Check for error in the bean and display from there
-			rc.message="admin.brand.delete_disabled";
-			rc.messagetype="warning";
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
 		}	   
 		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
 	}

@@ -148,15 +148,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 					}
 					if( structKeyExists(local,"fkValue") ) {
 						local.varValue = EntityLoadByPK("Slatwall" & local.theProperty.cfc,local.fkValue);
-						if( !isNull(local.varValue) ) 
-						/*{
-							if( !structKeyExists(local.theProperty,"notNull") || !local.theProperty.notNull ) {
-								_setPropertyNull(local.theProperty.name);
-							} else {
-								throw( message="Trying to load a null into the " & local.theProperty.name & ", but it doesn't accept nulls.");
-							}
-						} else*/ {
+						if( !isNull(local.varValue) ) {
 							_setProperty(local.theProperty.name,local.varValue);
+						} else {
+							_setPropertyNull(local.theProperty.name);
 						}
 					}
 				}
@@ -220,7 +215,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	private void function _setProperty( required any name, any value ) {
 		var theMethod = this["set" & arguments.name];
 		if( isNull(arguments.value) ) {
-			theMethod(javacast('NULL', ''));
+			structDelete(variables,arguments.name);
 		} else {
 			theMethod(arguments.value);
 		}
@@ -236,10 +231,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		var timestamp = now();
 		
 		if(structKeyExists(this,"setCreatedDateTime")){
-			this.setDateCreated(timestamp);
+			this.setCreatedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setLastUpdatedDateTime")){
-			this.setDateLastUpdated(timestamp);
+			this.setLastUpdatedDateTime(timestamp);
 		}
 		
 	}
@@ -248,7 +243,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		var timestamp = now();
 		
 		if(structKeyExists(this,"setLastUpdatedDateTime")){
-			this.setDateLastUpdated(timestamp);
+			this.setLastUpdatedDateTime(timestamp);
 		}
 	}
 	

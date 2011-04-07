@@ -40,9 +40,13 @@ Notes:
 <cfparam name="rc.productTypes" type="any" default="#rc.Product.getProductTypeTree()#" />
 <cfparam name="rc.optionGroups" type="any" />
 
+<ul id="navTask">
+	<cf_ActionCaller action="admin:product.list" type="list">
+</ul>
+
 <cfoutput>
 <div id="createProductForm">
-	<form name="CreateProduct" method="post">
+	<form name="CreateProduct" action="#buildURL(action='admin:product.save')#" method="post">
 		<dl class="oneColumn">
 		    <cf_PropertyDisplay object="#rc.Product#" first="true" property="productName" edit="true">
 		    <cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="true">

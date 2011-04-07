@@ -40,17 +40,21 @@ Notes:
 
 <cfoutput>
 	<div class="svofrontendcartdetail">
-		<cfif not arrayLen(rc.cart.getCartItems())>
+		<form name="updateCart" action="#buildURL(action='frontend:cart.update')#" method="post">
+		<cfif not arrayLen(rc.cart.getOrderItems())>
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
+			<button type="submit">Continue Shopping</button>
 		<cfelse>
-			<cfloop array="#rc.cart.getCartItems()#" index="local.cartItem">
+			<cfloop array="#rc.cart.getOrderItems()#" index="local.orderItem">
 				<dl class="cartItem">
-					<dt class="image">#local.cartItem.getSku().getImage(size="small")#</dt>
-					<dt class="title">#local.cartItem.getSku().getProduct().getTitle()#</dt>
-					<dd class="options">#local.cartItem.getSku().displayOptions()#</dd>
-					<dd class="quantity">#local.cartItem.getQuantity()#</dd>
+					<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
+					<dt class="title">#local.orderItem.getSku().getProduct().getTitle()#</dt>
+					<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+					<dd class="quantity">#local.orderItem.getQuantity()#</dd>
 				</dl>
 			</cfloop>
+			<cf_ActionCaller action="frontend:checkout.detail" type="submit">
 		</cfif>
+		</form>
 	</div>
 </cfoutput>

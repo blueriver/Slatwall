@@ -38,9 +38,13 @@ Notes:
 */
 component extends="framework" output="false" {
 
-	include "../../config/applicationSettings.cfm";
-	include "../../config/mappings.cfm";
-	include "../mappings.cfm";
+	// If the page request was an admin request then we need to setup all of the defaults from mura
+	if(isAdminRequest()) {
+		include "../../config/applicationSettings.cfm";
+		include "../../config/mappings.cfm";
+		include "../mappings.cfm";
+	}
+	
 	include "fw1Config.cfm";
 	
 	variables.subsystems = {};
@@ -48,7 +52,7 @@ component extends="framework" output="false" {
 	variables.subsystems.admin.baseURL = "";
 	variables.subsystems.frontend = {};
 	variables.subsystems.frontend.baseURL = "";
-
+	
 	public void function setPluginConfig(required any pluginConfig) {
 		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
 	}
@@ -63,6 +67,10 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
+		setupMuraRequirements();
+		
+		ormReload();
+		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( !structKeyExists(application, "appinitialized") || application.appinitialized == false) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
@@ -81,19 +89,8 @@ component extends="framework" output="false" {
 		  	include "plugin/config.cfm";
 		}
 	    setPluginConfig(request.PluginConfig);
-		xmlPath = "#expandPath( '/plugins' )#/#getPluginConfig().getDirectory()#/config/coldspring.xml";
+		xmlPath = "#expandPath( '/plugins/Slatwall/config/coldspring.xml' )#";
 		xml = FileRead("#xmlPath#"); 
-		
-		
-		// Parse the xml and replace all [plugin] with the actual plugin mapping path.
-	  	xml = replaceNoCase( xml, "[plugin]", "plugins.#getPluginConfig().getDirectory()#.", "ALL");
-		
-		if (getPluginConfig().getSetting("Integration") neq "Internal"){
-			xml = replaceNoCase( xml, "[integration]", "#getPluginConfig().getSetting('Integration')#.", "ALL");
-		}
-		else {
-			xml = replaceNoCase( xml, "[integration]", "", "ALL");
-		}
 		
 		// Build Coldspring factory & Set in FW/1
 		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
@@ -114,51 +111,56 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
-		// Set default mura session variables when needed
-		param name="session.rb" default="en";
-		param name="session.locale" default="en";
-		param name="session.siteid" default="default";
-		param name="session.dashboardSpan" default="30";
-		if(!structKeyExists(session, "datekey")) {
-			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
-			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
-		}
-		
-		// Setup Slatwall Session
-		getBeanFactory().getBean("sessionService").setupSessionRequest();
-		
-		// Look for mura Scope.  If it doens't exist add it.
-		if (!structKeyExists(request.context,"$")){
-			request.context.$=getBeanFactory().getBean("muraScope").init(session.siteid);
-		}
-		
-		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
-		if(request.context.$.event('siteid') == "") {
-			request.context.$.event('siteid', session.siteid);
-		}
-		
-		// Setup Base URL's for each subsystem
-		variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
-		variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
-		if(request.context.$.globalConfig().getSiteIDInURLS()) {
-			variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
-		}
-		if(request.context.$.globalConfig().getIndexFileInURLS()) {
-			variables.subsystems.frontend.baseURL &= "index.cfm";
-		}
-		
-		// Create SlatwallScope and add it to the muraScope
-		request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
-		
-		// Run subsytem specific logic.
-		if(isAdminRequest()) {
-			controller("admin:BaseController.subSystemBefore");
-		} else {
-			controller("frontend:BaseController.subSystemBefore");
+		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
+			setupMuraRequirements();
+			
+			param name="request.slatwall" default="#structNew()#";
+			param name="request.slatwall.ormHasErrors" default="false";
+			
+			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.
+			ormGetSession().clear();
+			
+			// Look for mura Scope.  If it doens't exist add it.
+			if (!structKeyExists(request.context,"$")){
+				if (!structKeyExists(request, "muraScope")) {
+					request.muraScope = getBeanFactory().getBean("muraScope").init(session.siteid);
+				}
+				request.context.$ = request.muraScope;
+			}
+			
+			// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
+			if(request.context.$.event('siteid') == "") {
+				request.context.$.event('siteid', session.siteid);
+			}
+			
+			// Create SlatwallScope and add it to the muraScope if it doesn't already exist
+			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
+				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			}
+			
+			// Setup Slatwall Session If it doesn't already exist
+			if( !structKeyExists(request.slatwall, "session") ) {
+				request.slatwall.session = getBeanFactory().getBean("sessionService").getPropperSession();
+			}
+			
+			// Setup Base URL's for each subsystem
+			variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
+			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
+			if(request.context.$.globalConfig().getSiteIDInURLS()) {
+				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
+			}
+			if(request.context.$.globalConfig().getIndexFileInURLS()) {
+				variables.subsystems.frontend.baseURL &= "index.cfm";
+			}
+						
+			// Run subsytem specific logic.
+			if(isAdminRequest()) {
+				controller("admin:BaseController.subSystemBefore");
+			} else {
+				controller("frontend:BaseController.subSystemBefore");
+			}
 		}
 	}
-
-	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
 	// Helper Functions
@@ -172,28 +174,44 @@ component extends="framework" output="false" {
 	
 	public boolean function secureDisplay(required string action, boolean testing=false) {
 		var hasAccess = false;
-		
 		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
 		
-		if(request.context.$.currentUser().getS2()) {
+		if(getSubsystem(arguments.action) eq "frontend") {
 			hasAccess = true;
-		} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
-			var rolesWithAccess = "";
-			if(find("save", permissionName)) {
-				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
-				listAppend(rolesWithAccess, application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "update")));
-			} else {
-				rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=permissionName);
-			}
-			
-			for(var i=1; i<= listLen(rolesWithAccess); i++) {
-				if( find( listGetAt(rolesWithAccess, i), request.context.$.currentUser().getMemberships() ) ) {
-					hasAccess=true;
-					break;
+		} else {
+			if(request.context.$.currentUser().getS2()) {
+				hasAccess = true;
+			} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
+				var rolesWithAccess = "";
+				if(find("save", permissionName)) {
+					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
+					listAppend(rolesWithAccess, application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "update")));
+				} else {
+					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=permissionName);
+				}
+				
+				for(var i=1; i<= listLen(rolesWithAccess); i++) {
+					if( find( listGetAt(rolesWithAccess, i), request.context.$.currentUser().getMemberships() ) ) {
+						hasAccess=true;
+						break;
+					}
 				}
 			}
 		}
 		return hasAccess;
+	}
+	
+	private void function setupMuraRequirements() {
+		// Set default mura session variables when needed
+		param name="session.rb" default="en";
+		param name="session.locale" default="en";
+		param name="session.siteid" default="default";
+		param name="session.dashboardSpan" default="30";
+		
+		if(!structKeyExists(session, "datekey")) {
+			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
+			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
+		}
 	}
 	
 	// Override autowire function from fw/1 so that properties work
@@ -220,79 +238,38 @@ component extends="framework" output="false" {
 		}
 	}
 	
-	/**
-	/*@hint used to populate beans from the request context. FW1 method overriden to set empty values to null
-	
-	public any function populate(required any cfc, string keys="", boolean trustKeys=false, boolean trim=false, boolean acceptEmptyValues=true) {
-		var key = 0;
-		var property = 0;
-		var trimproperty = 0;
-		var args = 0;
-		
-		if(arguments.keys == "") {
-			if(arguments.trustKeys) {
-				// assume everything in the request context can be set into the CFC
-				for(property in request.context) {
-					key = "set" & property;
-					try {
-						args = {};
-						args[property] = request.context[ property ];
-						if(arguments.trim && isSimpleValue(args[property])) {
-							args[property] = trim( args[property] );
-						}
-						if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
-							evaluate("arguments.cfc.#key#(argumentCollection=args)");
-						} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
-							evaluate("arguments.cfc.#key#(javacast('null',''))");
-						}
-					} catch(any e) {
-						onPopulateError( arguments.cfc, property, request.context );
-					}
-				}
-			} else {
-				for(key in arguments.cfc) {
-					if(len(key) > 3 and left(key,3) == "set") {
-						property = right( key, len( key ) - 3 );
-						if(structKeyExists( request.context, property )) {
-							args = structNew();
-							args[ property ] = request.context[ property ];
-							if(arguments.trim and isSimpleValue( args[property] )) {
-								args[property] = trim( args[property] );
-							}
-							if(len(args[property]) > 0 || arguments.acceptEmptyValues) {
-								evaluate("arguments.cfc.#key#(argumentCollection=args)");
-							} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
-								evaluate("arguments.cfc.#key#(javacast('null',''))");
-							}
-						}
-					}
-				}	
-			}
-		} else {
-			for(var i=1; i<=listLen(arguments.keys); i++) {
-				trimProperty = trim(listGetAt(arguments.keys,i));
-				key = "set" & trimProperty;
-				if(structKeyExists( arguments.cfc, key ) || arguments.trustKeys) {
-					if(structKeyExists( request.context, trimProperty )) {
-						args = {};
-						args[ trimProperty ] = request.context[ trimProperty ];
-						if(arguments.trim && isSimpleValue( args[trimProperty] )) {
-							args[trimProperty] = trim( args[trimProperty] );
-						}
-						if(len(args[trimproperty]) > 0 || arguments.acceptEmptyValues) {
-							evaluate("arguments.cfc.#key#(argumentCollection=args)");
-						} else if( len(args[property]) == 0 && !arguments.acceptEmptyValues ) {
-							evaluate("arguments.cfc.#key#(javacast('null',''))");
-						}
-					}
-				}
-			}
-		}
-		return arguments.cfc;
-	}*/
-
-	public string function buildURL(required string action, string path="#variables.framework.baseURL#", string queryString="") {
+	// Override buildURL function to add some custom logic, but still call the Super
+	public string function buildURL(required string action) {
 		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
 		return super.buildURL(argumentCollection=arguments);
+	}
+	
+	// Override onRequest function to add some custom logic to the end of the request
+	public any function onRequest() {
+		super.onRequest(argumentCollection=arguments);
+		endSlatwallLifecycle();
+	}
+	
+	// Override redirect function to flush the ORM when needed
+	public void function redirect() {
+		endSlatwallLifecycle();
+		super.redirect(argumentCollection=arguments);
+	}
+	
+	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
+	public void function redirectExact(required string location, boolean addToken=false) {
+		endSlatwallLifecycle();
+		location(arguments.location, arguments.addToken);
+	}
+	
+	private void function endSlatwallLifecycle() {
+		if(!request.slatwall.ormHasErrors) {
+			transaction {
+				ORMflush();
+			}
+		}
+		structDelete(request.slatwall, "currentProduct");
+		structDelete(request.slatwall, "currentSession");
+		ormGetSession().clear();
 	}
 }

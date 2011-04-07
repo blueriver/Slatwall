@@ -41,7 +41,31 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	// Persistant Properties
 	property name="attributeOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeOptionValue" ormtype="string";
+	property name="attributeOptionLabel" ormtype="string";
 	
 	// Related Object Properties
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
+	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Attribute (many-to-one)
+	
+	public void function setAttribute(required Attribute attribute) {
+		variables.attribute = arguments.attribute;
+		if(!arguments.attribute.hasAttributeOption(this)) {
+		   arrayAppend(arguments.attribute.getAttributeOptions(),this);
+		}
+	}
+	
+	public void function removeAttribute(required Attribute attribute) {
+		var index = arrayFind(arguments.attribute.getAttributeOptions(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.attribute.getAttributeOptions(),index);
+		}    
+		structDelete(variables,"attribute");
+    }
+	
+	/************   END Association Management Methods   *******************/
+
 }

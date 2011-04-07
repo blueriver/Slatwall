@@ -37,22 +37,46 @@ Notes:
 
 */
 component accessors="true" output="false" extends="BaseObject" {
+
+	property name="currentProductID" type="string";
+	property name="readOnlyFlag" type="boolean";
 	
-	property name="currentProduct" type="any";
+	public any function init() {
+		setCurrentProductID("");
+		setReadOnlyFlag(true);
+		
+		return this;	
+	}
+	
+	public any function getCurrentProduct() {
+		if(!structKeyExists(request.slatwall, "currentProduct")) {
+			request.slatwall.currentProduct = getService("productService").getByID(getCurrentProductID());	
+			
+			if(isNull(request.slatwall.currentProduct)) {
+				request.slatwall.currentProduct = getService("productService").getNewEntity();
+			}
+			if(getReadOnlyFlag()) {
+				//ormGetSession().setReadOnly(request.slatwall.currentProduct, true);
+			}
+		}
+		
+		return request.slatwall.currentProduct;
+	}
+	
+	public any function getCurrentSession() {
+		var session = getService("sessionService").getCurrent();
+		if(getReadOnlyFlag()) {
+			//ormGetSession().setReadOnly(session, true);
+		}
+		return session;
+	}
 	
 	public any function getCurrentAccount() {
-		return getService("sessionService").getCurrent().getAccount();
+		return getCurrentSession().getAccount();
 	}
 	
 	public any function getCurrentCart() {
-		return getService("sessionService").getCurrent().getCart();
-	}
-
-	public any function getCurrentProduct() {
-		if(!isDefined("variables.currentProduct")) {
-			variables.currentProduct = getService("productService").getNewEntity();
-		}
-		return variables.currentProduct;
+		return getCurrentSession().getCart();
 	}
 	
 	public any function account(string property, string value) {
@@ -92,4 +116,3 @@ component accessors="true" output="false" extends="BaseObject" {
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 }
-

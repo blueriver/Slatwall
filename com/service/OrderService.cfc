@@ -38,6 +38,42 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-
-
+	property name="sessionService";
+	
+	public void function addOrderItem(required any sku, numeric quantity=1, any order) {
+		
+		// Check to see if a order was passed into the method call	
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = getSessionService().getCurrent().getCart();
+		}
+		
+		// TODO: Check the status of the order to make sure it isn't closed
+		
+		var orderItems = arguments.order.getOrderItems();
+		var exists = false;
+		
+		writeDump(arguments.order);
+		
+		// Check the existing order items and just add quantity if sku exists
+		for(var i = 1; i <= arrayLen(orderItems); i++) {
+			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID()) {
+				exists = true;
+				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+			}
+		}
+		
+		// If the sku doesn't exist in the order, then create a new order item and add it
+		if(!exists) {
+			var newOrderItem = getNewEntity(entityName="SlatwallOrderItem");
+			newOrderItem.setQuantity(arguments.quantity);
+			newOrderItem.setOrder(arguments.order);
+			newOrderItem.setSku(arguments.sku);
+			arguments.order.addOrderItem(newOrderItem);
+		}
+		
+		writeDump(arguments.order);
+		
+		save(arguments.order);
+	}
+	
 }

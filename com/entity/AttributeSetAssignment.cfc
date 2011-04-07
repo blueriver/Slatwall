@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,40 +35,37 @@
 
 Notes:
 
---->
-<cfoutput>
-<script type="text/javascript">
-var current= 1;
-
-jQuery(document).ready(function() {
-	jQuery("##addSKU").click(function() {
-		current++;
-		$newSKU= jQuery( "##tableTemplate tbody>tr:last" ).clone(true);
-		
-		/*$newSKU.children("ol").children("li").children("label").each(function(i) {
-			var $currentElem= $(this);
-			$currentElem.attr("for","shirt["+current+"]."+$currentElem.attr("for"));
-		});
-		$newSKU.children("ol").children("li").children("input").each(function(i) {
-			var $currentElem= $(this);
-			$currentElem.attr("name","shirt["+current+"]."+$currentElem.attr("name"));
-			$currentElem.attr("id","shirt["+current+"]."+$currentElem.attr("id"));
-		});
-		$newSKU.children("ol").children("li").children("select").each(function(i) {
-			var $currentElem= $(this);
-			$currentElem.attr("name","shirt["+current+"]."+$currentElem.attr("name"));
-			$currentElem.attr("id","shirt["+current+"]."+$currentElem.attr("id"));
-		});*/
-		
-		
-		jQuery('##skuTable > tbody:last').append($newSKU);
-	});
-});
+*/
+component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
 	
-</script>
+	// Persistant Properties
+	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="excludeFlag" ormtype="boolean";
+	property name="baseItemID" length="32" ormtype="string" hint="This is where the assignment is made, e.g. productID,productTypeID,accountID,accountTypeID" ;  
+	
+	// Related Object Properties
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 
 
-<style type="text/css">
-.hideElement {display:none;}
-</style>
-</cfoutput>
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Attribute Set (many-to-one)
+	
+	public void function setAttributeSet(required AttributeSet attributeSet) {
+		variables.attributeSet = arguments.attributeSet;
+		if(!arguments.attributeSet.hasAttributeSetAssignment(this)) {
+		   arrayAppend(arguments.attributeSet.getAttributeSetAssignments(),this);
+		}
+	}
+	
+	public void function removeAttributeSet(required AttributeSet attributeSet) {
+		var index = arrayFind(arguments.attributeSet.getAttributeSetAssignments(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.attributeSet.getAttributeSetAssignments(),index);
+		}    
+		structDelete(variables,"attributeSet");
+    }
+    
+	/************   END Association Management Methods   *******************/
+
+}

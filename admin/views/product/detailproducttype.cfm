@@ -50,7 +50,7 @@ Notes:
     <cf_ActionCaller action="admin:product.listproducttypes" type="list">
 	<cfif !rc.edit><cf_ActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
 </ul>
-
+Has subtypes: #rc.productType.hasSubProductType()#
 <cfif rc.edit>
 <form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
@@ -58,7 +58,7 @@ Notes:
     <dl class="twoColumn">
     	<cf_PropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
 		<cfif rc.edit>
-		<cfset local.tree = rc.productTypeTree />
+		<cfset local.tree = rc.productType.getProductTypeTree() />
 		<dt>
 			<label for="parentProductType_productTypeID">Parent Product Type</label>
 		</dt>
@@ -97,8 +97,8 @@ Notes:
 	</table>
 <cfif rc.edit>
 	<div id="actionButtons" class="clearfix">
-		<a href="javascript: history.go(-1)" class="button">#rc.$.Slatwall.rbKey("sitemanager.cancel")#</a>
-		<cfif !rc.productType.isNew() and !rc.productType.hasProducts() and !rc.productType.hasSubProductTypes()>
+		<cf_ActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
 		<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 		</cfif>
 		<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">

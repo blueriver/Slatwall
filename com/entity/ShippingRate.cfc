@@ -39,7 +39,7 @@ Notes:
 component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="SlatwallShippingRate" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="shippingRateID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="shippingRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="minWeight" ormtype="float";
 	property name="maxWeight" ormtype="float";
 	property name="minPrice" ormtype="float";
@@ -48,6 +48,16 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 	
 	// Related Object Properties
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="shippingZone" cfc="ShippingZone" fieldtype="many-to-one" fkcolumn="shippingZoneID";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
+	public array function getAddressZoneOptions() {
+		if(!structKeyExists(vriables, "addressZoneOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAddressZone");
+			smartList.addSelect(rawProperty="addressZoneName", aliase="name");
+			smartList.addSelect(rawProperty="addressZoneID", aliase="id"); 
+			smartList.addOrder("addressZoneName|ASC");
+			variables.addressZoneOptions = smartList.getRecords();
+		}
+		return variables.addressZoneOptions;
+	}
 }

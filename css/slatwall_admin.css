@@ -74,6 +74,11 @@ a.button:hover {
 	text-decoration: none;
 }
 
+div.svoadminproductdetail {
+	width: 920px;
+	margin: 0;
+	padding: 0;
+}
 
 div#buttons {
 	margin-bottom: 10px;	
@@ -234,6 +239,10 @@ p.error_message {
 
 .formError {
 	color: #8a1f11;
+}
+
+.hideElement {
+	display:none;
 }
 
 div.svoadminproductdetail img.skuImage {float:right;}

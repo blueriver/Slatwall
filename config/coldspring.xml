@@ -3,20 +3,19 @@
 <beans default-autowire="byName">
 	
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
-	<bean id="brandDAO" class="slatwall.com.dao.[integration]BrandDAO" />
-	<bean id="productDAO" class="slatwall.com.dao.[integration]ProductDAO" />
-	<bean id="productTypeDAO" class="slatwall.com.dao.[integration]ProductTypeDAO">
+	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />
+	<bean id="productDAO" class="slatwall.com.dao.ProductDAO" />
+	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO">
 		 <property name="productTypeTreeSorter"><ref bean="productTypeTreeSorter" /></property>
 	</bean>
 	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
 	<bean id="orderDAO" class="slatwall.com.dao.orderDAO" />
-	<bean id="cartDAO" class="slatwall.com.dao.cartDAO" />
-	<bean id="settingDAO" class="slatwall.com.dao.[integration]SettingDAO" />
-	<bean id="skuDAO" class="slatwall.com.dao.[integration]SkuDAO" />
-    <bean id="optionDAO" class="slatwall.com.dao.[integration]OptionDAO" />
-    <bean id="optionGroupDAO" class="slatwall.com.dao.[integration]OptionGroupDAO" />
+	<bean id="settingDAO" class="slatwall.com.dao.SettingDAO" />
+	<bean id="skuDAO" class="slatwall.com.dao.SkuDAO" />
+    <bean id="optionDAO" class="slatwall.com.dao.OptionDAO" />
+    <bean id="optionGroupDAO" class="slatwall.com.dao.OptionGroupDAO" />
 	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
-	<bean id="vendorDAO" class="slatwall.com.dao.[integration]VendorDAO" />
+	<bean id="vendorDAO" class="slatwall.com.dao.VendorDAO" />
 	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
 	<bean id="FileService" class="slatwall.com.service.FileService" />
 	<bean id="TagProxyService" class="slatwall.com.service.TagProxyService" />
@@ -27,195 +26,78 @@
 		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
 		<constructor-arg name="pathColumn"><value>productTypeName</value></constructor-arg>
 	</bean>
-	
-	<!-- transaction advice -->
-    <bean id="transactionAdvice" class="slatwall.com.utility.transactionadvice" />
-	
-	<!-- transaction advisor -->
-	<bean id="transactionAdvisor" class="slatwall.com.utility.coldspring.NamedMethodExclusionPointcutAdvisor">
-		<property name="advice">
-			<ref bean="transactionAdvice" />
-		</property>
-		<property name="MappedNames">
-			<value>populate,getnewentity</value>
-		</property>
-	</bean>
 		
-    <bean id="accountService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.accountService">
-		        <property name="entityName"><value>SlatwallAccount</value></property>
-		        <property name="DAO"><ref bean="accountDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-				<property name="userManager"><ref bean="userManager" /></property>
-				<property name="sessionService"><ref bean="sessionService" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="accountService" class="slatwall.com.service.accountService">
+        <property name="entityName"><value>SlatwallAccount</value></property>
+        <property name="DAO"><ref bean="accountDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+		<property name="userManager"><ref bean="userManager" /></property>
+		<property name="sessionService"><ref bean="sessionService" /></property>
     </bean>
 	
-    <bean id="brandService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.brandService">
-		        <property name="entityName"><value>SlatwallBrand</value></property>
-		        <property name="DAO"><ref bean="BrandDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
+	<bean id="brandService" class="slatwall.com.service.brandService">
+        <property name="entityName"><value>SlatwallBrand</value></property>
+        <property name="DAO"><ref bean="BrandDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+	</bean>
 	
-	<bean id="orderService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.orderService">
-		        <property name="entityName"><value>SlatwallOrder</value></property>
-		        <property name="DAO"><ref bean="OrderDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="orderService" class="slatwall.com.service.orderService">
+        <property name="entityName"><value>SlatwallOrder</value></property>
+        <property name="DAO"><ref bean="OrderDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+		<property name="sessionService"><ref bean="sessionService" /></property>
     </bean>
 
-	<bean id="cartService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.cartService">
-		        <property name="entityName"><value>SlatwallCart</value></property>
-		        <property name="DAO"><ref bean="CartDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-				<property name="sessionService"><ref bean="sessionService" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+
+    <bean id="optionService" class="slatwall.com.service.OptionService">
+        <property name="entityName"><value>SlatwallOption</value></property>
+        <property name="DAO"><ref bean="OptionDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+		<property name="fileService"><ref bean="FileService" /></property>            
     </bean>
 
-    <bean id="optionService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.OptionService">
-                <property name="entityName"><value>SlatwallOption</value></property>
-                <property name="DAO"><ref bean="OptionDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-				<property name="fileService"><ref bean="FileService" /></property>            
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
-	
-    <bean id="productService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.productService">
-		        <property name="entityName"><value>SlatwallProduct</value></property>
-		        <property name="DAO"><ref bean="ProductDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-				<property name="fileService"><ref bean="FileService" /></property>  
-		        <property name="skuDAO"><ref bean="SkuDAO" /></property>
-		        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
-				<property name="skuService"><ref bean="SkuService" /></property>
-		        <property name="ContentManager"><ref bean="ContentManager" /></property>
-				<property name="feedManager"><ref bean="feedManager" /></property>
-		        <property name="SettingsManager"><ref bean="SettingsManager" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="productService" class="slatwall.com.service.productService">
+        <property name="entityName"><value>SlatwallProduct</value></property>
+        <property name="DAO"><ref bean="ProductDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+		<property name="fileService"><ref bean="FileService" /></property>  
+        <property name="skuDAO"><ref bean="SkuDAO" /></property>
+        <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
+		<property name="skuService"><ref bean="SkuService" /></property>
+        <property name="ContentManager"><ref bean="ContentManager" /></property>
+		<property name="feedManager"><ref bean="feedManager" /></property>
+        <property name="SettingsManager"><ref bean="SettingsManager" /></property>
     </bean>
 
-	<bean id="skuService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.skuService">
-                <property name="entityName"><value>SlatwallSku</value></property>
-                <property name="DAO"><ref bean="SkuDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="skuService" class="slatwall.com.service.skuService">
+        <property name="entityName"><value>SlatwallSku</value></property>
+        <property name="DAO"><ref bean="SkuDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
     </bean>
 
-	<bean id="typeService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.typeService">
-                <property name="entityName"><value>SlatwallType</value></property>
-                <property name="DAO"><ref bean="TypeDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
-	
-	<bean id="sessionService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.sessionService">
-		        <property name="entityName"><value>SlatwallSession</value></property>
-		        <property name="DAO"><ref bean="SessionDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-				<property name="TagProxyService"><ref bean="TagProxyService" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean>
-	
-	<bean id="settingService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.settingService">
-		        <property name="entityName"><value>SlatwallSetting</value></property>
-		        <property name="DAO"><ref bean="settingDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="typeService" class="slatwall.com.service.typeService">
+        <property name="entityName"><value>SlatwallType</value></property>
+        <property name="DAO"><ref bean="TypeDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
     </bean>
 
-    <bean id="vendorService" class="coldspring.aop.framework.ProxyFactoryBean">
-        <property name="target">
-            <bean class="slatwall.com.service.vendorService">
-		        <property name="entityName"><value>SlatwallVendor</value></property>
-		        <property name="DAO"><ref bean="VendorDAO" /></property>
-				<property name="validator"><ref bean="Validator" /></property>
-            </bean>
-        </property>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
+    <bean id="sessionService" class="slatwall.com.service.sessionService">
+        <property name="entityName"><value>SlatwallSession</value></property>
+        <property name="DAO"><ref bean="SessionDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+		<property name="TagProxyService"><ref bean="TagProxyService" /></property>
+    </bean>
+
+    <bean id="settingService" class="slatwall.com.service.settingService">
+        <property name="entityName"><value>SlatwallSetting</value></property>
+        <property name="DAO"><ref bean="settingDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+    </bean>
+
+    <bean id="vendorService" class="slatwall.com.service.vendorService">
+        <property name="entityName"><value>SlatwallVendor</value></property>
+        <property name="DAO"><ref bean="VendorDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
     </bean>
 
 </beans>

@@ -39,11 +39,11 @@ Notes:
 component displayname="Option" entityname="SlatwallOption" table="SlatwallOption" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
-	property name="optionID" ormtype="string" lenth="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="optionCode" ormtype="string";
+	property name="optionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="optionCode" validateRequired ormtype="string";
 	property name="optionName" validateRequired ormtype="string";
 	property name="optionImage" ormtype="string";
-	property name="optionDescription" ormtype="string";
+	property name="optionDescription" ormtype="string" length="4000";
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties
@@ -51,18 +51,19 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true" lazy="extra" cascade="save-update"; 
 	
 	// Calculated Properties
-	property name="isAssigned" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
+	property name="assignedFlag" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
 
 	// Non-persistent Properties
 	property name="imageDirectory" type="string" hint="Base directory for option images" persistent="false";
 
     public Option function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.skus))
-	       variables.skus = [];
-    	getMuraScope().event('siteid');
-	   setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
-       return Super.init();
+		// set default collections for association management methods
+		if(isNull(variables.skus)) {
+			variables.skus = [];
+		}
+	    
+		setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
+		return Super.init();
     }
     
     public boolean function hasSkus() {
