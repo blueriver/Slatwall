@@ -213,7 +213,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			var options = getOptions();
 			var optionString = "";
 			for(var i=1; i<=arrayLen(options); i++){
-				if(options[i].getOptionGroup().getIsImageGroup()){
+				if(options[i].getOptionGroup().getImageGroupFlag()){
 					optionString &= "_#options[i].getOptionCode()#";
 				}
 			}
