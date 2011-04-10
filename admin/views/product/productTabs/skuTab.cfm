@@ -1,7 +1,9 @@
 ﻿<cfoutput>
 <cfif rc.edit>
 <div id="buttons">
+	<cfif rc.Product.getOptionGroupCount() gt 0>
 	<a class="button" id="addSKU">#rc.$.Slatwall.rbKey("admin.product.edit.addsku")#</a>
+	</cfif>
 	<a class="button" id="remSKU" style="display:none;">#rc.$.Slatwall.rbKey("admin.product.edit.removesku")#</a>
     <a class="button" id="addOption">#rc.$.Slatwall.rbKey("admin.product.edit.addoption")#</a>
 </div>
