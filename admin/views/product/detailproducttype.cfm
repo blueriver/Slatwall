@@ -50,7 +50,7 @@ Notes:
     <cf_ActionCaller action="admin:product.listproducttypes" type="list">
 	<cfif !rc.edit><cf_ActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
 </ul>
-Has subtypes: #rc.productType.hasSubProductType()#
+
 <cfif rc.edit>
 <form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
 <input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />

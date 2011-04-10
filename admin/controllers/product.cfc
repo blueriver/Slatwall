@@ -124,7 +124,6 @@ component extends="BaseController" output=false accessors=true {
 		
 		// Redirect & Error Handle
 		if(!rc.product.hasErrors()) {
-			getProductService().setProductTypeTree();
 			// add product details if this is a new product
 			if(isNew) {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
@@ -148,7 +147,6 @@ component extends="BaseController" output=false accessors=true {
 		var product = getProductService().getByID(rc.productID);
 		var deleteResponse = getProductService().delete(product);
 		if(deleteResponse.getStatusCode()) {
-			getProductService().setProductTypeTree();
 			rc.message = deleteResponse.getMessage();		
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -218,7 +216,6 @@ component extends="BaseController" output=false accessors=true {
 		
 		if(!rc.productType.hasErrors()) {
 			// no errors, so refresh the cached product type tree and redirect to list with success message
-			getProductService().setProductTypeTree();
 			rc.message = "admin.product.saveproducttype_success";
 		  	getFW().redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {
@@ -233,7 +230,6 @@ component extends="BaseController" output=false accessors=true {
 		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		var deleteResponse = getProductService().deleteProductType(productType);
 		if(deleteResponse.getStatusCode()) {
-			getProductService().setProductTypeTree();
 			rc.message = deleteResponse.getMessage();		
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
