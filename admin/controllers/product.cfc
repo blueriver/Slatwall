@@ -71,7 +71,6 @@ component extends="BaseController" output=false accessors=true {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
-			rc.productImage = rc.product.getImage("s");
 		} else {
 			getFW().redirect("admin:product.list");
 		}
@@ -109,14 +108,9 @@ component extends="BaseController" output=false accessors=true {
 		if(isNew) {
 			// set up options struct for generating skus if this is a new product
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
-			// option groups in rc in case validation fails and we come back to the create view
-			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		} else {
 			// set up sku array to handle any skus that were edited
 			rc.skuArray = getService("formUtilities").buildFormCollections(rc).skus;
-			// these are for the edit view in case of failed validation
-			rc.productPages = getProductService().getProductPages();
-            rc.productImage = rc.product.getImage("s");
 		}
 
 		// Attempt to Save Product
@@ -133,9 +127,11 @@ component extends="BaseController" output=false accessors=true {
             }
 		} else {
 			if(isNew) {
+				rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
 				getFW().setView(action="admin:product.create");
 			} else {
+				rc.productPages = getProductService().getProductPages();
 				rc.edit = true;
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");
