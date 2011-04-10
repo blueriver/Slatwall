@@ -319,6 +319,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.optionGroups;
 	}
 	
+	public numeric function getOptionGroupCount() {
+		return listlen(structKeyList(getOptionGroupsStruct()));
+	}
+	
 	public any function getDefaultSku() {
 		if( !structKeyExists(variables, "defaultSku")) {
 			var skus = getSkus();

@@ -52,7 +52,6 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 				processImageUpload(arguments.entity,arguments.data.imageUploadResult);
 			} 
 		} else {
-			transactionRollback();
 			// delete image if one was uploaded
 			if(structKeyExists(arguments.data,"imageUploadResult")) {
 				var result = arguments.data.imageUploadResult;
