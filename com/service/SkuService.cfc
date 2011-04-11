@@ -78,6 +78,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// set the first sku as the default one
 			if(i==1) {
 				thisSku.setDefaultFlag(true);
+			} else {
+				thisSku.setDefaultFlag(false);
 			}
 		}
 	}

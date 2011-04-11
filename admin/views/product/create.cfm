@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfparam name="rc.product" type="any" />
-<cfparam name="rc.productTypes" type="any" default="#rc.Product.getProductTypeTree()#" />
 <cfparam name="rc.optionGroups" type="any" />
 
 <ul id="navTask">
@@ -45,6 +44,8 @@ Notes:
 </ul>
 
 <cfoutput>
+	
+<cfif arrayLen(rc.product.getBrandOptions()) gt 0 and arrayLen(rc.product.getProductTypeOptions()) gt 0>
 <div id="createProductForm">
 	<form name="CreateProduct" action="#buildURL(action='admin:product.save')#" method="post">
 		<dl class="oneColumn">
@@ -52,37 +53,11 @@ Notes:
 		    <cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="true">
 		    <cf_PropertyDisplay object="#rc.Product#" property="brand" edit="true">
 			     <cf_ActionCaller action="admin:brand.create" type="link">
-		    <dt>
-		        <label for="productType_productTypeID">#rc.$.Slatwall.rbKey("entity.product.producttype")# *</label>
-		    </dt>
-		    <dd>
-		    	<cfif rc.productTypes.recordCount gt 0>
-			        <select name="productType" id="productType_productTypeID">
-			            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
-			        <cfloop query="rc.productTypes">
-			            <cfif rc.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
-			            <cfset local.label = listChangeDelims(rc.productTypes.path, " &raquo; ") />
-			            <option value="#rc.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ rc.productTypes.productTypeID> selected="selected"</cfif>>
-			                #local.label#
-			            </option>
-			            </cfif>
-			        </cfloop>
-			        </select>
-				<cfelse>
-				 <!--- no product types defined --->
-				<em>#rc.$.Slatwall.rbKey("admin.product.noproducttypesdefined")#</em>
-				<input type="hidden" name="productType_productTypeID" value="" />
-				</cfif>
-				<cfif Len(rc.product.getErrorBean().getError("productType"))>
-                    <span class="formError">#rc.product.getErrorBean().getError("productType")#</span>
-                </cfif>
-		    </dd>
+			<cf_PropertyDisplay object="#rc.Product#" property="productType" edit="true">
 		      <cf_ActionCaller action="admin:product.createproducttype" type="link">
 		</dl>
 		<br />
 		<dl class="twoColumn productPrice">
-			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="true" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
 		</dl>
@@ -118,9 +93,20 @@ Notes:
 			<input type="hidden" name="contentID" value="" /> 
 		<div id="actionButtons" class="clearfix">
 			<cf_actionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:product.save" type="submit" />
+			<cf_ActionCaller action="admin:product.save" type="submit" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
 		</div>
 	</form>
 </div>
+<cfelse>
+	<p><em>#rc.$.Slatwall.rbKey("admin.product.create.disabled")#</em></p>
+	<cfif arrayLen(rc.product.getBrandOptions()) eq 0>
+		<p><cf_ActionCaller action="admin:brand.create" type="link"></p>
+	</cfif>
+	<cfif arrayLen(rc.product.getProductTypeOptions()) eq 0>
+		<p><cf_ActionCaller action="admin:product.createProductType" type="link"></p>
+	</cfif>
+</cfif>
+
 </cfoutput>
+
 

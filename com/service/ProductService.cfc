@@ -46,13 +46,6 @@ component extends="BaseService" accessors="true" {
 	property name="feedManager" type="any";
 	property name="ProductTypeTree" type="any";
 	
-	public any function init(required any productTypeDAO) {
-		//TODO: look at changing it to property injection through coldspring
-		setproductTypeDAO(arguments.productTypeDAO);
-		setProductTypeTree();
-		
-		return this;
-	}
 		
 	public any function getProductTemplates() {
 		return getSettingsManager().getSite(session.siteid).getTemplates();
@@ -123,7 +116,21 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.Product = Super.save(arguments.Product);
 		
+		if( !arguments.Product.hasErrors() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+		}
+		
 		return arguments.Product;
+	}
+	
+	public any function delete( required any product ) {
+		var deleteResponse = Super.delete( arguments.product );
+		if( deleteResponse.getStatusCode() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+		}
+		return deleteResponse;
 	}
 	
 	public any function getProductContentSmartList(required struct rc, required string contentID) {
@@ -135,6 +142,17 @@ component extends="BaseService" accessors="true" {
     public void function setProductTypeTree() {
         variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
     }
+    
+    public any function getProductTypeTree() {
+    	if( !structKeyExists(variables, "productTypeTree") ) {
+    		setProductTypeTree();
+    	}
+    	return variables.productTypeTree; 
+    }
+    
+    public void function clearProductTypeTree() {
+    	structDelete(variables,"productTypeTree");
+    }
 	
 	public any function saveProductType(required any productType, required struct data) {
 		
@@ -145,6 +163,10 @@ component extends="BaseService" accessors="true" {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
 	   var entity = Super.save(arguments.productType);
+	   if( !entity.hasErrors() ) {
+	   		// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+	   }
 	   return entity;
 	}
 	
@@ -152,6 +174,10 @@ component extends="BaseService" accessors="true" {
 		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
 			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
+		if( !arguments.productType.hasErrors() ) {
+	   		// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+	   }
 		var deleted = Super.delete(arguments.productType);
 		return deleted;
 	}

@@ -54,7 +54,7 @@ Notes:
 <!--- hint: This can be used to override the default value of a property" --->
 <cfparam name="attributes.value" default="" />
 
-<!--- hint: This can be used to override the default filed name" --->
+<!--- hint: This can be used to override the default field name" --->
 <cfparam name="attributes.fieldName" default="" />
 
 <!--- hint: This can be used to override the default data type" --->
@@ -69,8 +69,8 @@ Notes:
 <!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
 <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
 
-<!--- hint:i id-name struct to use as the default for select boxes --->
-<cfparam name="attributes.defaultOption" default="#structNew()#" type="struct" />
+<!--- hint: whether to allow null (empty string) option in select box control --->
+<cfparam name="attributes.allowNullOption" default="true" type="boolean" />
 
 <!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
 <cfparam name="attributes.tooltip" default="false" type="boolean" />
@@ -84,7 +84,7 @@ Notes:
 <!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
 <cfparam name="attributes.toggletext" default="Show,Hide" />
 
-<!--- hint: This attribute is used to specify if the information comes back as a dl item or table row --->
+<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 <cfparam name="attributes.displaytype" default="dl" />
 
 <!--- Add Custom class --->
@@ -230,9 +230,10 @@ Notes:
 				<td class="property varWidth">
 			</cfif>
 	        
+	        <cfif attributes.displaytype neq "plain">
 	        	<cfif attributes.tooltip>
-                    <a href="##" class="tooltip">
-                </cfif> 			
+	                <a href="##" class="tooltip">
+	            </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
 					<label for="#attributes.fieldName#">
@@ -263,21 +264,26 @@ Notes:
 				</cfif>
 	            <cfif attributes.tooltip>
 					<cfif len(trim(attributes.tooltipmessage))>
-                    	<span>#attributes.tooltipmessage#</span></a>
+	                	<span>#attributes.tooltipmessage#</span></a>
 					<cfelse>
 						<span>#request.customMuraScopeKeys.slatwall.rbKey("entity.#local.entityName#.#attributes.property#_hint")#</span></a>
 					</cfif>
-                </cfif>
-                <cfif listFindNoCase("show,hide",attributes.toggle)>
-                    <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-                    <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
-                </cfif>	
-
-			<cfif attributes.displaytype eq "dl">
-				</dt>
-		 		<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
-			<cfelseif attributes.displaytype eq "table">
-				</td>
+	            </cfif>
+	            <cfif listFindNoCase("show,hide",attributes.toggle)>
+	                <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
+	                <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+	            </cfif>	
+	
+				<cfif attributes.displaytype eq "dl">
+					</dt>
+				<cfelseif attributes.displaytype eq "table">
+					</td>
+				</cfif>
+			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
+			
+			<cfif attributes.displayType eq "dl">
+				<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+			<cfelseif attributes.displayType eq "table">
 				<td id="#attributes.id#" class="value">
 			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
@@ -292,10 +298,8 @@ Notes:
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
 						<select name="#attributes.fieldName#" id="#attributes.fieldName#_#attributes.fieldName#ID">
-							<cfif structIsEmpty(attributes.defaultOption)>
-							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
-							<cfelse>
-								<option value="#attributes.defaultOption['id']#">#attributes.defaultOption['name']#</option>
+							<cfif attributes.allowNullOption>
+								<option value="">#attributes.nullValue eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullValue#</option>
 							</cfif>
 							<cfloop array="#attributes.editOptions#" index="i" >
 								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#i['name']#</option>	
@@ -334,9 +338,9 @@ Notes:
 					<!-- A Default Edit Type Could not be created -->
 				<cfelse>
 					<cfif attributes.dataType eq "boolean" and attributes.value eq true>
-						YES
+						#request.customMuraScopeKeys.slatwall.rbKey("sitemanager.yes")#
 					<cfelseif attributes.dataType eq "boolean" and attributes.value eq false>
-						NO
+						#request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no")#
 					<cfelse>
 						#attributes.Value#
 					</cfif>

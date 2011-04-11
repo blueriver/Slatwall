@@ -99,4 +99,8 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
+	
+	public string function setting(required string settingName) {
+		return Super.setting(arguments.settingName);
+	}
 }
