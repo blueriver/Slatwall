@@ -297,12 +297,13 @@ Notes:
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" id="#attributes.fieldName#_#attributes.fieldName#ID">
+						<select name="#attributes.fieldName#" id="#attributes.fieldName#">
 							<cfif attributes.allowNullOption>
 								<option value="">#attributes.nullValue eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullValue#</option>
 							</cfif>
 							<cfloop array="#attributes.editOptions#" index="i" >
-								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#i['name']#</option>	
+								<cfset label = structKeyExists(i,"label") ? i['label'] : i['name'] />
+								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#label#</option>	
 							</cfloop>
 						</select>
 <!---						<cfelse>
@@ -312,12 +313,13 @@ Notes:
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" id="yes" value="1"<cfif yesnoformat(attributes.value)> checked</cfif>> <label for="yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" id="no" value="0"<cfif not yesnoformat(attributes.value)> checked</cfif>> <label for="no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#yes" value="1"<cfif yesnoformat(attributes.value)> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#no" value="0"<cfif not yesnoformat(attributes.value)> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
 						<cfelse>
 							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
 							<cfloop array="#attributes.editOptions#" index="i">
-								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
+								<cfset label = structKeyExists(i,"label") ? i.label : i.name />
+								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
 							</cfloop>
 						</cfif>
 						</ul>
