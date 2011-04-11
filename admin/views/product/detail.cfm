@@ -43,10 +43,6 @@ Notes:
 	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/skuForm.js"></script>' />
 </cfif>
 
-<!--- set up options for setting select boxes --->
-<cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
-<cfset local.defaultOption = {id="",name=rc.$.Slatwall.rbKey('setting.inherit')} />
-
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">
 	<cfif !rc.edit>
@@ -124,24 +120,7 @@ Notes:
 		</dl>
 	</div>
 	<div id="tabProductSettings">
-		<table class="stripe" id="productTypeSettings">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.productsettings')#</th>
-				<th></th>
-			</tr>
-			<!--- TODO: These can only be set in the product and can't inherit 
-			<cf_PropertyDisplay object="#rc.Product#" property="showOnWeb" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('showOnWeb'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="showOnWebWholesale" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('showOnWebWholesale'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('manufactureDiscontinued'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			 End: Section to Fix --->
-			
-			<cf_PropertyDisplay object="#rc.Product#" property="trackInventoryFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.product.getSetting('trackInventoryFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="callToOrderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('callToOrderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowShippingFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowShippingFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowPreorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowPreorderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowBackorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowBackorderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowDropShipFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowDropShipFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-		</table>
+		#view("product/productTabs/settingsTab")#
 	</div>
 	<div id="tabProductPages">
 		<cfif rc.edit>
