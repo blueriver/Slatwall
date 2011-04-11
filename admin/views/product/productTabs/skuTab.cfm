@@ -116,10 +116,15 @@ Notes:
 				</cfif>
 				<cfif rc.edit>
 					<td class="administration">
-						<ul class="two">
-							<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 />
-							<cf_ActionCaller action="admin:product.editSku" querystring="skuID=#local.thisSku.getSkuID()#" class="edit" type="list">
-							<cf_ActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku')#" confirmrequired="true">
+						<cfset local.disabledText = "" />
+						<ul class="one">
+							<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or local.thisSku.getDefaultFlag() />
+							<cfif local.deleteDisabled and arrayLen(rc.product.getSkus()) eq 1>
+								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku') />
+							<cfelseif local.deleteDisabled and local.thisSku.getDefaultFlag()>
+								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateIsDefault') />
+							</cfif>
+							<cf_ActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
 						</ul>
 					</td>
 				</cfif>

@@ -43,7 +43,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuCode" ormtype="string" length="50" validateRequired;
 	property name="listPrice" ormtype="float" default="0";
 	property name="price" ormtype="float" default="0";
-	property name="defaultFlag" ormtype="boolean";  
+	property name="defaultFlag" ormtype="boolean" default="false";  
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -58,9 +58,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Non-Persistant Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
-	property name="qoh" persistent="false" type="numeric";
-	property name="qc" persistent="false" type="numeric";
-	property name="qexp" persistent="false" type="numeric";
+	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
+	property name="qc" persistent="false" type="numeric" hint="quantity committed";
+	property name="qexp" persistent="false" type="numeric" hint="quantity exptected";
 	property name="webQOH" persistent="false" type="numeric";
 	property name="webQC" persistent="false" type="numeric";
 	property name="webQEXP" persistent="false" type="numeric";
@@ -97,7 +97,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	   }
 	}
 	
-	public void function removeProduct(required Product Product) {
+	public void function removeProduct(Product Product) {
+	   if(!structKeyExists(arguments,"Product")) {
+	   		arguments.Product = variables.Product;
+	   }
        var index = arrayFind(arguments.Product.getSkus(),this);
        if(index > 0) {
            arrayDeleteAt(arguments.Product.getSkus(),index);
@@ -177,10 +180,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	return variables.qc;
     }
 	
+	/**
+	/* @hint quantity immediately available
+	*/
 	public numeric function getQIA() {
 		return getQOH() - getQC();
 	}
-	
+
+	/**
+	/* @hint quantity expected available
+	*/	
 	public numeric function getQEA() {
 		return (getQOH() - getQC()) + getQEXP();
 	}

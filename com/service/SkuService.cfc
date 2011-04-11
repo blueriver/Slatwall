@@ -43,6 +43,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
+		if(arguments.sku.getDefaultFlag() == true) {
+			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
+		}
+		if(!arguments.sku.hasErrors()) {
+			arguments.sku.removeProduct();
+		}
 		var deleted = Super.delete(arguments.sku);
 		return deleted;
 	}
@@ -78,9 +84,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// set the first sku as the default one
 			if(i==1) {
 				thisSku.setDefaultFlag(true);
-			} else {
-				thisSku.setDefaultFlag(false);
-			}
+			} 
 		}
 	}
 
@@ -89,15 +93,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		thisSku.setProduct(arguments.product);
 		thisSku.setPrice(arguments.data.price);
 		thisSku.setListPrice(arguments.data.listprice);
-		if( structKeyExists(arguments.data,"skuCode") && len(arguments.data.skuCode) ) {
-			thisSku.setSkuCode(arguments.data.skuCode);
-		} else {
-			thisSku.setSkuCode(createUUID());
-		}
+		var comboCode = "";
 		// loop through optionID's within the option combination and set them into the sku
 		for( j=1;j<=listLen(arguments.data.options);j++ ) {
 			var thisOptionID = listGetAt(arguments.data.options,j);
-			thisSku.addOption(getByID(thisOptionID,"SlatwallOption"));
+			var thisOption = getByID(thisOptionID,"SlatwallOption");
+			thisSku.addOption(thisOption);
+			// generate code from options to be used in Sku Code
+			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
+		}
+		if( structKeyExists(arguments.data,"skuCode") && len(arguments.data.skuCode) ) {
+			thisSku.setSkuCode(arguments.data.skuCode);
+		} else {
+			thisSku.setSkuCode( listPrepend(comboCode,arguments.product.getProductCode(),"-") );
 		}
 		return thisSku;
 	}
