@@ -48,7 +48,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="publishedFlag" ormtype="boolean" default="true" hint="Should this product be sold on the web retail Site";
+	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="trackInventoryFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
 	property name="allowShippingFlag" ormtype="boolean";
