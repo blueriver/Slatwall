@@ -57,7 +57,6 @@ component extends="BaseController" output=false accessors=true {
 		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
 			rc.product = getProductService().getNewEntity();
 		}
-		rc.productTypes = getProductService().getProductTypeTree();
 		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
     }
 	

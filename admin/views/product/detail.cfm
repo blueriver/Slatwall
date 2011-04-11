@@ -123,24 +123,7 @@ Notes:
 		#view("product/productTabs/settingsTab")#
 	</div>
 	<div id="tabProductPages">
-		<cfif rc.edit>
-			<cfif rc.productPages.getRecordCount() gt 0>
-				<input type="hidden" name="contentID" value="" />
-				<ul>
-					<cfloop condition="rc.productPages.hasNext()">
-						<li>
-							<cfset local.thisProductPage = rc.productPages.next() />
-							<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
-							<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
-						</li>	
-					</cfloop>
-				</ul>
-			<cfelse>
-				<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
-			</cfif>
-		<cfelse>
-			<!---#rc.product.getProductContent()[1].getContentID()#--->
-		</cfif>
+		#view("product/productTabs/productPagesTab")#
 	</div>
 	<div id="tabCustomAttributes">
 	

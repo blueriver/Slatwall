@@ -63,7 +63,7 @@ Notes:
 		</cfloop>
 	</table>
 <cfelse>
-#rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#
+<em>#rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#</em>
 </cfif>
 </div>
 </cfoutput>
