@@ -42,6 +42,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	property name="skuService" type="Slatwall.com.service.SkuService";
+	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -108,7 +109,7 @@ component extends="BaseController" output=false accessors=true {
 			// set up options struct for generating skus if this is a new product
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 		} else {
-			// set up sku array to handle any skus that were edited
+			// set up sku array to handle any skus that were edited and/or added
 			rc.skuArray = getService("formUtilities").buildFormCollections(rc).skus;
 		}
 
@@ -116,7 +117,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.product = getProductService().save( rc.product,rc );
 		
 		// Redirect & Error Handle
-		if(!rc.product.hasErrors()) {
+		if(!getRequestCacheService().getValue("ormHasErrors")) {
 			// add product details if this is a new product
 			if(isNew) {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
@@ -130,8 +131,8 @@ component extends="BaseController" output=false accessors=true {
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
 				getFW().setView(action="admin:product.create");
 			} else {
-				rc.productPages = getProductService().getProductPages();
 				rc.edit = true;
+				rc.productPages = getProductService().getProductPages();
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");
 			}
@@ -162,7 +163,7 @@ component extends="BaseController" output=false accessors=true {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
 		}
-		getFW().redirect(action="admin:product.detail",querystring="productID=#productID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messagetype");
 	}
 	
 	//   Product Type actions      
@@ -198,7 +199,6 @@ component extends="BaseController" output=false accessors=true {
 			rc.itemTitle &= ": " & rc.productType.getProductTypeName();
 		}
 	}
-
 	
 	public void function saveProductType(required struct rc) {
 		if(len(rc.productTypeID)) {
@@ -234,4 +234,3 @@ component extends="BaseController" output=false accessors=true {
 	}
 		
 }
-

@@ -62,35 +62,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
-		<dt>
-            <cfif rc.edit>
-            <label for="productType_productTypeID">#rc.$.Slatwall.rbKey("entity.product.productType")#*:</label>
-			<cfelse>
-			    Product Type:
-			</cfif>
-		</dt>
-        <dd>
-            <cfif rc.edit>
-				<cfset local.productTypes = rc.product.getProductTypeTree() />
-		        <select name="productType" id="productType_productTypeID">
-		            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
-		        <cfloop query="local.productTypes">
-		            <cfif local.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
-		            <cfset local.label = listChangeDelims(local.productTypes.path, " &raquo; ") />
-		            <option value="#local.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ local.productTypes.productTypeID> selected="selected"</cfif>>
-		                #local.label#
-		            </option>
-		            </cfif>
-		        </cfloop>
-		        </select>
-			<cfelse>
-			    <cfif isNull(rc.Product.getProductType())>
-				None
-				<cfelse>
-				  #rc.Product.getProductType().getProductTypeName()#
-				 </cfif>
-			</cfif>
-        </dd>
+		<cf_PropertyDisplay object="#rc.Product#" property="productType" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
 	
