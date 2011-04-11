@@ -44,7 +44,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="filename" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" hint="This is the Template to use for product display";
 	property name="productName" ormtype="string" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
-	property name="productCode" ormtype="string" unique="true" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productCode" ormtype="string" unique="true" validateRequired validateUnique hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
@@ -65,7 +65,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="brand" validateRequired displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
 	property name="productType" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
@@ -114,7 +114,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public any function getBrandOptions() {
-		if(!isDefined("variables.brandOptions")) {
+		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(rawProperty="brandName", alias="name");
 			smartList.addSelect(rawProperty="brandID", alias="id"); 
@@ -122,6 +122,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.brandOptions = smartList.getRecords();
 		}
 		return variables.brandOptions;
+	}
+	
+	public any function getProductTypeOptions() {
+		if(!structKeyExists(variables, "productTypeOptions")) {
+			var productTypeTree = getProductTypeTree();
+			var producTypeOptions = [];
+			for(var i=1; i <= productTypeTree.recordCount; i++) {
+				// only get the leaf nodes of the tree (those with no children)
+				if( productTypeTree.childCount[i] == 0 ) {
+					productTypeOptions[i] = {id=productTypeTree.productTypeID[i], name=listChangeDelims(productTypeTree.path[i], " &raquo; ")};
+				}
+			}
+			variables.productTypeOptions = productTypeOptions;
+		}
+		return variables.productTypeOptions;
 	}
     
     public any function getProductTypeTree() {
