@@ -1,4 +1,4 @@
-﻿/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,7 +35,7 @@
 
 Notes:
 
-*/
+--->
 
 <cfoutput>
 <cfif rc.edit>

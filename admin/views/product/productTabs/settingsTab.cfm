@@ -1,4 +1,4 @@
-﻿/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,7 +35,7 @@
 
 Notes:
 
-*/
+--->
 
 <!--- set up options for setting select boxes --->
 <cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
