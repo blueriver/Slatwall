@@ -151,9 +151,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	if(isNull(variables.qoh)) {
     		variables.qoh = 0;
     		var stocks = getStocks();
-    		for(var i = 1; i<= arrayLen(stocks); i++) {
-    			variables.qoh += stocks[i].getQOH();
-    		}
+    		if(isDefined("stocks")) {
+	    		for(var i = 1; i<= arrayLen(stocks); i++) {
+	    			variables.qoh += stocks[i].getQOH();
+	    		}
+	    	}
     	}
     	return variables.qoh;
     }
@@ -162,9 +164,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	if(isNull(variables.qc)) {
     		variables.qc = 0;
     		var stocks = getStocks();
-    		for(var i = 1; i<= arrayLen(stocks); i++) {
-    			variables.qc += stocks[i].getQC();
-    		}
+    		if(isDefined("stocks")) {
+	    		for(var i = 1; i<= arrayLen(stocks); i++) {
+	    			variables.qc += stocks[i].getQC();
+	    		}
+	    	}
     	}
     	return variables.qc;
     }
@@ -173,8 +177,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        	if(isNull(variables.qexp)) {
     		variables.qc = 0;
     		var stocks = getStocks();
-    		for(var i = 1; i<= arrayLen(stocks); i++) {
-    			variables.qexp += stocks[i].getQEXP();
+        	if(isDefined("stocks")) {
+	    		for(var i = 1; i<= arrayLen(stocks); i++) {
+	    			variables.qexp += stocks[i].getQEXP();
+	    		}
     		}
     	}
     	return variables.qc;

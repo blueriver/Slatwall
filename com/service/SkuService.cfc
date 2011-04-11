@@ -144,19 +144,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public string function getOptionCombinations (required struct options) {
 		var optionGroupList = structKeyList(arguments.options);
 		// get list of options from first option group
-		var comboList = arguments.options[listFirst(optionGroupList)];
-		
+		var comboList = listChangeDelims(arguments.options[listFirst(optionGroupList)],";");
 		// parse options struct to build list of possible option combinations
 		for( var optionGroup in arguments.options ) {
 			if(optionGroup != listFirst(optionGroupList)) {
 				var tempList = "";
-				for(var i=1;i<=listLen(comboList);i++) {
-					local.thisCombo = listGetAt(comboList,i);
+				for(var i=1;i<=listLen(comboList,";");i++) {
+					local.thisCombo = listGetAt(comboList,i,";");
 					local.newCombo = "";
 					for(var j=1; j<=listLen(arguments.options[optionGroup]);j++) {
-						newCombo = listAppend(newCombo,thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
+						local.newCombo = listAppend(local.newCombo,local.thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
 					}
-					tempList = listAppend(tempList,newCombo,";");
+					tempList = listAppend(tempList,local.newCombo,";");
 				}
 				comboList = tempList;
 			}

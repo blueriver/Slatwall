@@ -109,7 +109,7 @@ component extends="BaseController" output=false accessors=true {
 			// set up options struct for generating skus if this is a new product
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 		} else {
-			// set up sku array to handle any skus that were edited
+			// set up sku array to handle any skus that were edited and/or added
 			rc.skuArray = getService("formUtilities").buildFormCollections(rc).skus;
 		}
 
