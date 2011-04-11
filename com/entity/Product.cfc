@@ -47,8 +47,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productCode" ormtype="string" unique="true" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
-	property name="manufactureDiscontinuedFlag"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="publishedFlag" ormtype="boolean" hint="Should this product be sold on the web retail Site";
+	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
+	property name="publishedFlag" ormtype="boolean" default="true" hint="Should this product be sold on the web retail Site";
 	property name="trackInventoryFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
 	property name="allowShippingFlag" ormtype="boolean";
@@ -197,20 +197,36 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	/******* Generic setting accessor **************/
+	/******* Setting methods **************/
 	
+	// Generic setting accessor
 	public boolean function getSetting( required string settingName ) {
 		if(structKeyExists(variables,arguments.settingName)) {
 			return variables[arguments.settingName];
 		} else {
-			var settingValue = getService("ProductService").getProductTypeSetting( getProductType().getProductTypeName(),arguments.settingName );
-			if(len(settingValue) > 0) {
-				return settingValue;
-			} else {
-				return setting("product_#arguments.settingName#");
+			return getInheritedSetting( arguments.settingName );
 			}
 		}
 		
+	
+	public boolean function getInheritedSetting( required string settingName ) {
+		var settingValue = getService("ProductService").getProductTypeSetting( getProductType().getProductTypeName(),arguments.settingName );
+		if(len(settingValue) > 0) {
+			return settingValue;
+		} else {
+			return setting("product_#arguments.settingName#");
+		}
+	}
+	
+	// Get source of setting
+	public string function getSettingSource( required string settingName ) {
+		if( structKeyExists(variables, arguments.settingName ) ) {
+			return rbKey( "entity.product" );
+		} else if( len( getService("ProductService").getProductTypeSetting(getProductType().getProductTypeName(), arguments.settingName) ) > 0 ) {
+			return rbKey( "entity.productType" );
+		} else {
+			return rbKey( "entity.setting.global" );
+		}
 	}
 	
 	
