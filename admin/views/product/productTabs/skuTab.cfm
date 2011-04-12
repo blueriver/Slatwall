@@ -44,20 +44,24 @@ Notes:
 	<a class="button" id="addSKU">#rc.$.Slatwall.rbKey("admin.product.edit.addsku")#</a>
 	</cfif>
 	<a class="button" id="remSKU" style="display:none;">#rc.$.Slatwall.rbKey("admin.product.edit.removesku")#</a>
-    <a class="button" id="addOption">#rc.$.Slatwall.rbKey("admin.product.edit.addoption")#</a>
+    <!---<a class="button" id="addOption">#rc.$.Slatwall.rbKey("admin.product.edit.addoption")#</a>--->
 </div>
 </cfif>
 <cfset local.skus = rc.product.getSkus(sortby='skuCode') />
 	<table id="skuTable" class="stripe">
 		<thead>
 			<tr>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.isDefault")#</th>
 				<cfset local.optionGroups = rc.Product.getOptionGroupsStruct() />
 				<cfloop collection="#local.optionGroups#" item="local.i">
 					<th>#local.optionGroups[local.i].getOptionGroupName()#</th>
 				</cfloop>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imagePath")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
+				<cfif rc.edit>
+					<th></th>
+				</cfif>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
@@ -77,22 +81,40 @@ Notes:
 			<cfset local.thisSku = local.skus[local.skuCount] />
 			<tr id="Sku#local.skuCount#" class="skuRow">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
-				<cfif rc.edit>
-					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif local.thisSku.getDefaultFlag()> checked="checked"</cfif> /></td>
-				<cfelse>
-					<td><cfif local.thisSku.getDefaultFlag()>#rc.$.Slatwall.rbKey("sitemanager.yes")#</cfif></td>
-				</cfif>
-				<cfloop collection="#local.optionGroups#" item="local.i">
-					<td>#local.thisSku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
-				</cfloop>
-				<td>
+				<td class="alignLeft">
 					<cfif rc.edit>
 						<input type="text" name="skus[#local.skuCount#].skuCode" value="#local.thisSku.getSkuCode()#" />
 					<cfelse>
 						#local.thisSku.getSkuCode()#
 					</cfif>
 				</td>
-				<td class="varWidth">#local.thisSku.getImagePath()#</td>
+				<cfif rc.edit>
+					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif local.thisSku.getDefaultFlag()> checked="checked"</cfif> /></td>
+				<cfelse>
+					<td><cfif local.thisSku.getDefaultFlag()><img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
+				</cfif>
+				<cfloop collection="#local.optionGroups#" item="local.i">
+					<td>#local.thisSku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
+				</cfloop>
+				<td class="varWidth">
+					<cfif local.thisSku.imageExists()>
+						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImagePath()#</a>
+					<cfelse>
+						#local.thisSku.getImagePath()#
+					</cfif>		
+				</td>
+				<td>
+					<cfif local.thisSku.imageExists()>
+						<img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+					<cfelse>
+						<img src="/plugins/Slatwall/images/icons/cross.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
+					</cfif>
+				</td>
+				<cfif rc.edit>
+					<td>
+						<a class="button uploadImage" href="/plugins/Slatwall/?slatAction=admin:product.uploadSkuImage&skuID=#local.thisSku.getSkuID()#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
+					</td>
+				</cfif>
 				<td>
 					<cfif rc.edit>
 						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#local.thisSku.getPrice()#" />
@@ -116,10 +138,15 @@ Notes:
 				</cfif>
 				<cfif rc.edit>
 					<td class="administration">
-						<ul class="two">
-							<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 />
-							<cf_ActionCaller action="admin:product.editSku" querystring="skuID=#local.thisSku.getSkuID()#" class="edit" type="list">
-							<cf_ActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku')#" confirmrequired="true">
+						<cfset local.disabledText = "" />
+						<ul class="one">
+							<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or local.thisSku.getDefaultFlag() />
+							<cfif local.deleteDisabled and arrayLen(rc.product.getSkus()) eq 1>
+								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku') />
+							<cfelseif local.deleteDisabled and local.thisSku.getDefaultFlag()>
+								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateIsDefault') />
+							</cfif>
+							<cf_ActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
 						</ul>
 					</td>
 				</cfif>
@@ -132,6 +159,10 @@ Notes:
 <table id="tableTemplate" class="hideElement">
 <tbody>
     <tr id="temp">
+        <td>
+            <input type="text" name="skuCode" value="" />
+			<input type="hidden" name="skuID" value="" />
+        </td>
         <td><input type="radio" name="defaultSku" value="" /></td>
         <cfloop collection="#local.optionGroups#" item="local.i">
             <td>
@@ -143,11 +174,9 @@ Notes:
                 </select>
 			</td>
         </cfloop>
-        <td>
-            <input type="text" name="skuCode" value="" />
-			<input type="hidden" name="skuID" value="" />
-        </td>
-        <td class="varWidth"></td>
+        <td class="varWidth"><!--image path --></td>
+		<td><!--image exists --></td>
+		<td><!--upload image field --></td>
         <td>
             $<input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
         </td>

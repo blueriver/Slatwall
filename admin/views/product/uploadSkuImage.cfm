@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,32 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.product" type="any" />
 
 <cfoutput>
-	<div class="svofrontendproductdetail">
-		<div class="image">
-			Image Here
+	<form id="uploadSkuImage" method="post" enctype="multipart/form-data" action="#buildURL('admin:product.uploadSkuImage')#">
+		<input type="hidden" name="skuID" value="#rc.skuID#" />
+		<p>#rc.$.Slatwall.rbKey("admin.product.selectImageForSku")#<br>#rc.sku.getSkuCode()#</p>
+		<input type="file" name="skuImageFile" accept="image/gif, image/jpeg, image/jpg, image/png" />
+		<br><br>
+		<div id="actionButtons" class="clearfix">
+			<cf_ActionCaller action="admin:product.uploadSkuImage" type="submit">
 		</div>
-		<cf_PropertyDisplay object="#rc.Product#" property="productCode">
-		<cf_PropertyDisplay object="#rc.Product#" property="productYear">
-		<div class="description">#rc.product.getProductDescription()#</div>
-		<form action="#buildURL(action='frontend:product.addtocart')#" method="post">
-			<input type="hidden" name="productID" value="#rc.product.getProductID()#" />
-			<cfset local.productOptionGroups = rc.product.getOptionGroupsStruct() />
-			<cfloop collection="#local.productOptionGroups#" item="local.groupKey">
-				<dt>#local.productOptionGroups[local.groupKey].getOptionGroupName()#</dt>
-				<dd>
-				<select name="selectedOptions">
-					<cfset local.groupID = listLast(local.groupKey,"_") />
-					<cfset local.availableOptions = rc.product.getAvailableGroupOptionsBySelectedOptions(optionGroupID=local.groupID) />
-					<cfloop collection="#local.availableOptions#" item="local.optionID">
-						<option selected="selected" value="#local.availableOptions[local.optionID].getOptionID()#">#local.availableOptions[local.optionID].getOptionName()#</option>
-					</cfloop>
-				</select>
-				</dd>
-			</cfloop>
-			<button type="submit">Add To Cart</button>
-		</form>
-	</div>
+	</form>
 </cfoutput>

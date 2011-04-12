@@ -70,5 +70,5 @@ jQuery(document).ready(function() {
 			jQuery('#remSKU').attr('style','display:none;');
 		}
 	});
-	
+	jQuery(".uploadImage").colorbox();
 });

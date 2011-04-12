@@ -43,18 +43,18 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	}
 
 	// Image File Methods
-	public string function displayImage(required string imagePath, string width="", string height="",string alt="",string class="") {
+	public string function displayImage(required string imagePath, numeric width=0, numeric height=0,string alt="",string class="") {
 		var imageDisplay = "";
 		if(!fileExists(expandPath(arguments.imagePath))) {
 			arguments.imagePath = "/plugins/Slatwall/images/misc/ImageNotAvailable.jpg";
 		}
-		if(!len(arguments.width) && !len(arguments.height)) {
+		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
 			var img = imageRead(expandPath(arguments.imagePath));
 			imageDisplay = '<img src="#arguments.imagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" />';
 		} else {
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
-			var imageNameSuffix = (len(arguments.width) && len(arguments.height)) ? "_#arguments.width#w_#arguments.height#h" : (len(arguments.width) ? "_#arguments.width#w" : "_#arguments.height#h");
+			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
 			var imageExt = listLast(arguments.imagePath,".");
 			var resizedImagePath = replaceNoCase(arguments.imagePath,".#imageExt#","#imageNameSuffix#.#imageExt#");
 			if(fileExists(expandPath(resizedImagePath))) {
@@ -62,9 +62,14 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 			} else {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
-				if(len(arguments.width) and len(arguments.height)) {
+				if(arguments.width && arguments.height) {
 					imageScaleToFit(img,arguments.width,arguments.height);
 				} else {
+					if(!arguments.width) {
+						arguments.width = "";
+					} else if(!arguments.height) {
+						arguments.height = "";
+					}
 					imageResize(img,arguments.width,arguments.height);
 				}
 				imageWrite(img,expandPath(resizedImagePath));
@@ -74,7 +79,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		return imageDisplay;
 	}
 
-	public boolean function saveImage(required struct uploadResult, required string filePath, string allowedExtensions="") {
+	public boolean function saveImage(required struct uploadResult, required string filePath, string allowedExtensions="", boolean overwrite=true) {
 		var result = arguments.uploadResult;
 		if(result.fileWasSaved){
 			var uploadPath = result.serverDirectory & "/" & result.serverFile;
@@ -88,7 +93,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 				if(!directoryExists(getDirectoryFromPath(absPath))) {
 					directoryCreate(getDirectoryFromPath(absPath));
 				}
-				imageWrite(img,absPath);
+				imageWrite(img,absPath,arguments.overwrite);
 				return true;
 			} else {
 				// file was not a valid image, so delete it

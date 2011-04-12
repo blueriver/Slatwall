@@ -48,7 +48,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="publishedFlag" ormtype="boolean" default="true" hint="Should this product be sold on the web retail Site";
+	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="trackInventoryFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
 	property name="allowShippingFlag" ormtype="boolean";
@@ -84,9 +84,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent="false";
 	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
 	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
-	property name="qoh" type="numeric" persistent="false";
-	property name="qc" type="numeric" persistent="false";
-	property name="qexp" type="numeric" persistent="false";
+	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
+	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
+	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
+	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
+	property name="qea" type="numeric" persistent="false" hint="quantity expected available";           
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -131,7 +133,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			for(var i=1; i <= productTypeTree.recordCount; i++) {
 				// only get the leaf nodes of the tree (those with no children)
 				if( productTypeTree.childCount[i] == 0 ) {
-					productTypeOptions[i] = {id=productTypeTree.productTypeID[i], name=listChangeDelims(productTypeTree.path[i], " &raquo; ")};
+					productTypeOptions[i] = {id=productTypeTree.productTypeID[i], name=productTypeTree.productTypeName[i], label=listChangeDelims(productTypeTree.path[i], " &raquo; ")};
 				}
 			}
 			variables.productTypeOptions = productTypeOptions;
@@ -198,6 +200,49 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getProductURL() {
 		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
+	}
+	
+	public numeric function getQOH() {
+		if(isNull(variables.qoh)) {
+    		variables.qoh = 0;
+    		if(getSetting("trackInventoryFlag")) {
+	    		var skus = getSkus();
+	    		for(var i = 1; i<= arrayLen(skus); i++) {
+	    			variables.qoh += skus[i].getQOH();
+	    		}	
+    		}
+    	}
+    	return variables.qoh;
+	}
+	
+	public numeric function getQC() {
+		if(isNull(variables.qc)) {
+    		variables.qc = 0;
+    		if(getSetting("trackInventoryFlag")) {
+	    		var skus = getSkus();
+	    		for(var i = 1; i<= arrayLen(skus); i++) {
+	    			variables.qc += skus[i].getQC();
+	    		}	
+    		}
+    	}
+    	return variables.qc;
+	}
+	
+	public numeric function getQEXP() {
+		if(isNull(variables.qexp)) {
+    		variables.qexp = 0;
+    		if(getSetting("trackInventoryFlag")) {
+	    		var skus = getSkus();
+	    		for(var i = 1; i<= arrayLen(skus); i++) {
+	    			variables.qexp += skus[i].getQEXP();
+	    		}	
+    		}
+    	}
+    	return variables.qexp;
+	}
+	
+	public numeric function getQEA() {
+		return (getQOH() - getQC()) + getQEXP();
 	}
 	
 	public numeric function getQIA() {
@@ -342,7 +387,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 				var options = skus[i].getOptions();
 				for(var ii=1; ii <= arrayLen(options); ii++) {
 					if( !structKeyExists( variables.optionGroups, options[ii].getOptionGroup().getOptionGroupID() ) ){
-						variables.optionGroups[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
+						variables.optionGroups[options[ii].getOptionGroup().getOptionGroupName()&"_"&options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
 					}
 				}
 			}

@@ -43,7 +43,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuCode" ormtype="string" length="50" validateRequired;
 	property name="listPrice" ormtype="float" default="0";
 	property name="price" ormtype="float" default="0";
-	property name="defaultFlag" ormtype="boolean";  
+	property name="defaultFlag" ormtype="boolean" default="false";  
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -58,21 +58,23 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Non-Persistant Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
-	property name="qoh" persistent="false" type="numeric";
-	property name="qc" persistent="false" type="numeric";
-	property name="qexp" persistent="false" type="numeric";
+	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
+	property name="qc" persistent="false" type="numeric" hint="quantity committed";
+	property name="qexp" persistent="false" type="numeric" hint="quantity exptected";
 	property name="webQOH" persistent="false" type="numeric";
 	property name="webQC" persistent="false" type="numeric";
 	property name="webQEXP" persistent="false" type="numeric";
 	property name="webWholesaleQOH" persistent="false" type="numeric";
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
+	property name="imageDirectory" type="string" hint="Base directory for product images" persistent="false";
 	
     public Sku function init() {
        // set default collections for association management methods
        if(isNull(variables.Options)) {
        	    variables.options=[];
        }
+       setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/products/");
        return Super.init();
     }
     
@@ -97,7 +99,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	   }
 	}
 	
-	public void function removeProduct(required Product Product) {
+	public void function removeProduct(Product Product) {
+	   if(!structKeyExists(arguments,"Product")) {
+	   		arguments.Product = variables.Product;
+	   }
        var index = arrayFind(arguments.Product.getSkus(),this);
        if(index > 0) {
            arrayDeleteAt(arguments.Product.getSkus(),index);
@@ -148,9 +153,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	if(isNull(variables.qoh)) {
     		variables.qoh = 0;
     		var stocks = getStocks();
-    		for(var i = 1; i<= arrayLen(stocks); i++) {
-    			variables.qoh += stocks[i].getQOH();
-    		}
+    		if(isDefined("stocks")) {
+	    		for(var i = 1; i<= arrayLen(stocks); i++) {
+	    			variables.qoh += stocks[i].getQOH();
+	    		}
+	    	}
     	}
     	return variables.qoh;
     }
@@ -159,9 +166,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	if(isNull(variables.qc)) {
     		variables.qc = 0;
     		var stocks = getStocks();
-    		for(var i = 1; i<= arrayLen(stocks); i++) {
-    			variables.qc += stocks[i].getQC();
-    		}
+    		if(isDefined("stocks")) {
+	    		for(var i = 1; i<= arrayLen(stocks); i++) {
+	    			variables.qc += stocks[i].getQC();
+	    		}
+	    	}
     	}
     	return variables.qc;
     }
@@ -170,17 +179,25 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        	if(isNull(variables.qexp)) {
     		variables.qc = 0;
     		var stocks = getStocks();
-    		for(var i = 1; i<= arrayLen(stocks); i++) {
-    			variables.qexp += stocks[i].getQEXP();
+        	if(isDefined("stocks")) {
+	    		for(var i = 1; i<= arrayLen(stocks); i++) {
+	    			variables.qexp += stocks[i].getQEXP();
+	    		}
     		}
     	}
     	return variables.qc;
     }
 	
+	/**
+	/* @hint quantity immediately available
+	*/
 	public numeric function getQIA() {
 		return getQOH() - getQC();
 	}
-	
+
+	/**
+	/* @hint quantity expected available
+	*/	
 	public numeric function getQEA() {
 		return (getQOH() - getQC()) + getQEXP();
 	}
@@ -214,12 +231,20 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			var optionString = "";
 			for(var i=1; i<=arrayLen(options); i++){
 				if(options[i].getOptionGroup().getImageGroupFlag()){
-					optionString &= "_#options[i].getOptionCode()#";
+					optionString &= "-#options[i].getOptionCode()#";
 				}
 			}
-			variables.imagePath = "/default/assets/images/Slatwall/#getProduct().getProductCode()##optionString#.jpg";
+			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.jpg";
 		}
 		return variables.imagePath;
+	}
+	
+	public boolean function imageExists() {
+		if( fileExists(expandPath(getImagePath())) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public any function getOptionsByGroupIDStruct() {
