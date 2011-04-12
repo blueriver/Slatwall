@@ -3,6 +3,7 @@
 <beans default-autowire="byName">
 	
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
+	<bean id="attributeDAO" class="slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />
 	<bean id="productDAO" class="slatwall.com.dao.ProductDAO" />
 	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO">
@@ -34,6 +35,12 @@
 		<property name="validator"><ref bean="Validator" /></property>
 		<property name="userManager"><ref bean="userManager" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+    </bean>
+	
+    <bean id="attributeService" class="slatwall.com.service.attributeService">
+        <property name="entityName"><value>SlatwallAttribute</value></property>
+        <property name="DAO"><ref bean="attributeDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
     </bean>
 	
 	<bean id="brandService" class="slatwall.com.service.brandService">
