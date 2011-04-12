@@ -16,10 +16,19 @@
 		<Record typeID="444df28fbf77bf464b36ba66d6ab487e" parentTypeID="444df28ec3c4a84bf918671dfc179780" type="Employee" systemCode="artEmployee" />
 		<Record typeID="444df290c7d6c54f046eec90e2353096" parentTypeID="444df28ec3c4a84bf918671dfc179780" type="Child" systemCode="artChild" />
 		
-		<Record typeID="444df2919d15d8ef5c9bc67857f19228" type="Attribute Types" systemCode="attributeType" />
-		<Record typeID="444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Profile" systemCode="atProfile" />
-		<Record typeID="444df293fcc530434949d63e408cac2b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product" systemCode="atProduct" />
-		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="atAccount" />
+		<Record typeID="444df2919d15d8ef5c9bc67857f19228" type="Attribute Set Types" systemCode="attributeSetType" />
+		<Record typeID="444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Profile" systemCode="astProfile" />
+		<Record typeID="444df293fcc530434949d63e408cac2b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product" systemCode="astProduct" />
+		<Record typeID="444df2abc9d58d4faba8358d49cc6e1c" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product Type" systemCode="astProductType" />
+		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="astAccount" />
+		
+		<Record typeID="444df2a4e7c799436c29759e09b6e2c5" type="Attribute Types" systemCode="attributeType" />
+		<Record typeID="444df2a5a9088e72342c0b5eaf731c64" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Text Box" systemCode="atTextBox" />
+		<Record typeID="444df2a60dbf45cfad1b1b96baa44c47" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="TextArea" systemCode="atTextArea" />
+		<Record typeID="444df2a7a2c39796d2b15516840344ea" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Rich Text Editor" systemCode="atRichTextEditor" />
+		<Record typeID="444df2a8bfb73ecb3a777c8599950d5f" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Select Box" systemCode="atSelectBox" />
+		<Record typeID="444df2aaed92cb33d16a83d2bde93e72" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box" systemCode="atCheckBox" />
+		<Record typeID="444df2a9fe732d3ec9d8b495ab1dddf7" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Radio Group" systemCode="atRadioGroup" />
 		
 		<Record typeID="444df294de226e21c4789a8e7a3eec16" type="Sku Types" systemCode="skuType" />
 		<Record typeID="444df2950022c7e106229d49eb36b9e9" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Company Sku" systemCode="stCompany" />
@@ -37,14 +46,7 @@
 <!--
 Below Are UUID's to use... delete after using
 
-444df2a4e7c799436c29759e09b6e2c5
-444df2a5a9088e72342c0b5eaf731c64
-444df2a60dbf45cfad1b1b96baa44c47
-444df2a7a2c39796d2b15516840344ea
-444df2a8bfb73ecb3a777c8599950d5f
-444df2a9fe732d3ec9d8b495ab1dddf7
-444df2aaed92cb33d16a83d2bde93e72
-444df2abc9d58d4faba8358d49cc6e1c
+
 444df2ac94eaa8a4881d4cbb3c2e0b98
 444df2adb8774aa68279f91db58b8711
 444df2aef6c81f77a9b35e0060c0b141

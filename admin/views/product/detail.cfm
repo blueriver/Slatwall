@@ -79,7 +79,7 @@ Notes:
 		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
 		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
 		<li><a href="##tabCustomAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.customattributes")#</span></a></li>
-		<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>
+		<!---<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>--->
 	</ul>
 
 	<div id="tabSkus">
@@ -103,11 +103,11 @@ Notes:
 		#view("product/productTabs/productPagesTab")#
 	</div>
 	<div id="tabCustomAttributes">
-	
+		#view("product/productTabs/customAttributesTab")#
 	</div>
-	<div id="tabAlternateImages">
+<!---	<div id="tabAlternateImages">
 	
-	</div>
+	</div>--->
 </div>
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">

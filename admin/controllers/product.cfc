@@ -42,6 +42,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	property name="skuService" type="Slatwall.com.service.SkuService";
+	property name="attributeService" type="Slatwall.com.service.AttributeService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	
 	public void function before(required struct rc) {
@@ -80,6 +81,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.edit = true;
 		detail(rc);
 		rc.productPages = getProductService().getProductPages();
+		rc.attributeSets = getAttributeService().getAttributeSets(type="Product");
 		getFW().setView("admin:product.detail");
 	}
 

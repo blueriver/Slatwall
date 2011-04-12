@@ -63,6 +63,23 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 	
+	public any function getByFilter(required struct filterCriteria, string entityName, string sortOrder="", boolean unique=false) {
+		var collection = [];
+		if(!structKeyExists(arguments,"entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		collection = getDAO().list(argumentCollection=arguments);
+		if(!arguments.unique) {
+			return collection;
+		} else {
+			if(arrayLen(collection) == 1) {
+				return collection[1];
+			} else {
+				throw(type="GetByFilter.NonUniqueResult", message="The method getByFilter() returned more than one enity. The attribute 'unique' cannot be set to 'true' for the current filter criteria.");
+			}
+		}
+	}
+	
 	public any function getNewEntity(string entityName) {
 		if(isDefined("arguments.entityName")) {
 			var entity = entityNew(arguments.entityName);
@@ -82,7 +99,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function getSmartList(required struct rc, string entityName){
-		if(isDefined("arguments.entityName")) {
+		if(structKeyExists(arguments, "entityName")) {
 			return getDAO().getSmartList(rc=arguments.rc, entityName=arguments.entityName);
 		} else {
 			return getDAO().getSmartList(rc=arguments.rc, entityName=getEntityName());
