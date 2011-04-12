@@ -129,7 +129,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public any function getProductTypeOptions() {
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			var productTypeTree = getProductTypeTree();
-			var producTypeOptions = [];
+			var productTypeOptions = [];
 			for(var i=1; i <= productTypeTree.recordCount; i++) {
 				// only get the leaf nodes of the tree (those with no children)
 				if( productTypeTree.childCount[i] == 0 ) {
