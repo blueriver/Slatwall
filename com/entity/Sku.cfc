@@ -67,12 +67,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQOH" persistent="false" type="numeric";
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
+	property name="imageDirectory" type="string" hint="Base directory for product images" persistent="false";
 	
     public Sku function init() {
        // set default collections for association management methods
        if(isNull(variables.Options)) {
        	    variables.options=[];
        }
+       setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/products/");
        return Super.init();
     }
     
@@ -229,12 +231,20 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			var optionString = "";
 			for(var i=1; i<=arrayLen(options); i++){
 				if(options[i].getOptionGroup().getImageGroupFlag()){
-					optionString &= "_#options[i].getOptionCode()#";
+					optionString &= "-#options[i].getOptionCode()#";
 				}
 			}
-			variables.imagePath = "/default/assets/images/Slatwall/#getProduct().getProductCode()##optionString#.jpg";
+			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.jpg";
 		}
 		return variables.imagePath;
+	}
+	
+	public boolean function imageExists() {
+		if( fileExists(expandPath(getImagePath())) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public any function getOptionsByGroupIDStruct() {

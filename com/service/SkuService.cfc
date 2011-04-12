@@ -163,5 +163,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return comboList;
 	}
 	
+	public any function processImageUpload(required any Sku, required struct imageUploadResult) {
+		var imagePath = arguments.Sku.getImagePath();
+		var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");
+		if(imageSaved) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
 
 }

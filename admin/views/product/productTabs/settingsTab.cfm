@@ -54,7 +54,7 @@ Notes:
 					<span>#rc.$.Slatwall.rbKey("entity.Product.publishedFlag_hint")#</span>
 				</a>
 			</td>
-			<td><!--- Removed Because Causing Error #rc.Product.getSettingSource("publishedFlag")# ---></td>
+			<td>#rc.Product.getSettingSource("publishedFlag")#</td>
 			<td><cf_PropertyDisplay object="#rc.Product#" property="publishedFlag" edit="#rc.edit#" displayType="plain" editType="select" editOptions="#local.Options#" allowNullOption="false"></td>
 		</tr>
 		<tr>
@@ -64,7 +64,7 @@ Notes:
 					<span>#rc.$.Slatwall.rbKey("entity.Product.manufactureDiscontinuedFlag_hint")#</span>
 				</a>
 			</td>
-			<td><!--- Removed Because Causing Error #rc.Product.getSettingSource("manufactureDiscontinuedFlag")# ---></td>
+			<td>#rc.Product.getSettingSource("manufactureDiscontinuedFlag")#</td>
 			<td><cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinuedFlag" edit="#rc.edit#" displayType="plain" editType="select" editOptions="#local.Options#" allowNullOption="false"></td>
 		</tr>
 		<tr>

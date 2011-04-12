@@ -113,7 +113,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Image Management methods
 	
-	public string function displayImage(string width="", string height="") {
+	public string function displayImage(numeric width=0, numeric height=0) {
 		var imageDisplay = "";
 		if(this.hasImage()) {
 			var fileService = getService("FileService");
