@@ -96,7 +96,13 @@ Notes:
 				<cfloop collection="#local.optionGroups#" item="local.i">
 					<td>#local.thisSku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
 				</cfloop>
-				<td class="varWidth">#local.thisSku.getImagePath()#</td>
+				<td class="varWidth">
+					<cfif local.thisSku.imageExists()>
+						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImagePath()#</a>
+					<cfelse>
+						#local.thisSku.getImagePath()#
+					</cfif>		
+				</td>
 				<td>
 					<cfif local.thisSku.imageExists()>
 						<img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />

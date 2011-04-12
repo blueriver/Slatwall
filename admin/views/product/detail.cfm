@@ -45,6 +45,9 @@ Notes:
 	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/skuForm.js"></script>' />
 </cfif>
 
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/imgpreview.min.js"></script>' />
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/imgHover.js"></script>' />
+
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">
 	<cfif !rc.edit>
