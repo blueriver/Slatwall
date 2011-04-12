@@ -121,6 +121,15 @@ a.buttonOff:hover {
 	color: #FF3A00;
 }
 
+
+div.modalContainer {
+	height: 200px;
+	width: 300px;
+	text-align: center;
+	padding: 50px;
+	font-size: 1.1em;
+}
+
 table#productTypes {
 	width: 850px;
 }
@@ -143,6 +152,14 @@ table#Options, table#ProductSettings, table#ProductBrands {
 
 table#ProductList {
 	width: 900px;
+}
+
+table .alignLeft {
+	text-align: left;
+}
+
+form#uploadSkuImage {
+	width: auto;
 }
 
 dl.optionDetail {

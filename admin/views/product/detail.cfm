@@ -40,6 +40,8 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfif rc.edit>
+	<cfhtmlhead text='<link media="screen" rel="stylesheet" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/css/colorbox.css"/>' />
+	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/jquery.colorbox-min.js"></script>' />
 	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/skuForm.js"></script>' />
 </cfif>
 

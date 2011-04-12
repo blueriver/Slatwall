@@ -166,6 +166,23 @@ component extends="BaseController" output=false accessors=true {
 		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messagetype");
 	}
 	
+	public void function uploadSkuImage(required struct rc) {
+		rc.sku = getSkuService().getByID(rc.skuID);
+		
+		// upload the image and return the result struct if there was an upload
+		if(structKeyExists(rc, "skuImageFile") && rc.skuImageFile != "") {
+			var imageUploadResult = fileUpload(getTempDirectory(),"skuImageFile","","makeUnique");
+			rc.uploadSuccess = getSkuService().processImageUpload(rc.sku, imageUploadResult);
+			if(rc.uploadSuccess) {
+				rc.message = rc.$.Slatwall.rbKey("admin.product.uploadSkuImage_success");
+			} else {
+				rc.message = rc.$.Slatwall.rbKey("admin.product.uploadSkuImage_error");
+				rc.messagetype = "error";
+			}
+			getFW().redirect(action="admin:product.edit",querystring="productID=#rc.sku.getProduct().getProductID()#",preserve="message,messagetype");
+		} 
+	}
+	
 	//   Product Type actions      
 		
 	public void function createProductType(required struct rc) {

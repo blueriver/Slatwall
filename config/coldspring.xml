@@ -74,6 +74,7 @@
         <property name="entityName"><value>SlatwallSku</value></property>
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="validator"><ref bean="Validator" /></property>
+		<property name="fileService"><ref bean="FileService" /></property> 
     </bean>
 
     <bean id="typeService" class="slatwall.com.service.typeService">
