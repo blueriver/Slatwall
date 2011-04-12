@@ -37,5 +37,38 @@ Notes:
 
 */
 
-component accessors="true" output="false" {
+component displayname="Gateway Request"  accessors="true" output="false" {
+	
+	//customer info
+	property name="accountID" type="string" ;
+	property name="firstName" type="string" ;   
+	property name="lastName" type="string" ;   
+	property name="streetAddress" type="string" ;   
+	property name="street2Address" type="string" ;   
+	property name="city" type="string" ;   
+	property name="stateCode" type="string" ;   
+	property name="postalCode" type="string" ;   
+	property name="countryCode" type="string" ;   
+	property name="phone" type="string" ; 
+	property name="email" type="string" ;
+	// payment info
+	property name="currency" type="string" ;   
+	property name="amount" type="numeric" ;   
+	property name="ccNumber" type="string" ;   
+	property name="expMonth" type="numeric" ;   
+	property name="expYear" type="numeric" ;   
+	property name="cvv" type="numeric" ;   
+	//transaction info
+	property name="orderID" type="string" ;
+	property name="originalTransactionID" type="string" ;
+	
+	// other info
+	property name="comment" type="string" ;  
+	
+
+	public function init(){
+		return this;
+	}
+
+	
 }

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,17 +35,50 @@
 
 Notes:
 
---->
+*/
 
-<cfinterface>
+component displayname="Gateway Response"  accessors="true" output="false" {
+
+	property name="result" type="string" ;   
+	property name="status" type="string" ;   
+	property name="message" type="string" ;   
+	property name="transactionID" type="string" ;   
+	property name="authCode" type="string" ;   
+	property name="AVSCode" type="string" ;   
+	property name="CVVCode" type="string" ;   
 	
-	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
+	public function init(){
+		return this;
+	}
+
+	public string function setAVSCode(string avsCode){
+		if(arrayFind(getAllowedAVSCodes(),avsCode)){
+			variables.AVSCode = avsCode;
+		} else {
+			throw("Returned AVS code not allowed by the system","Slatwall");
+		}
+	}
 	
-	<cffunction name="processTransaction" access="public" returntype="Slatwall.com.utility.payment.ResponseBean">
-		<cfargument name="requestData" type="Slatwall.com.utility.payment.RequestBean" required="true" />
-		<cfargument name="transactionType" type="string" required="true" /> 
+	public string function setCVVCode(string CVVCode){
+		if(arrayFind(getAllowedCVVCodes(),CVVCode)){
+			variables.CVVCode = CVVCode;
+		} else {
+			throw("Returned CVV code not allowed by the system","Slatwall");
+		}
+	}
+	
+	// Private methods
+	
+	private array function getAllowedAVSCodes(){
+		var allowedAVSCodes = [];
 		
-	</cffunction>
+		return allowedAVSCodes;
+	}
+	
+	private array function getAllowedCVVCodes(){
+		var allowedCVVCodes = [];
 		
-</cfinterface>
+		return allowedCVVCodes;
+	}
+	
+}
