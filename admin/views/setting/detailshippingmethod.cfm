@@ -42,6 +42,11 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 <cfparam name="rc.blankShippingRate" type="any" />
 
+<!--- Setup Necessary JS Variables --->
+<cfif !isNull(rc.shippingMethod.getShippingProvider())>
+	<cfset getAssetWire().addJSVariable("shippingProvider", rc.shippingMethod.getShippingProvider()) />
+</cfif>
+
 <cfoutput>
 	<div class="svoadmindetailshippingmethod">
 		<ul id="navTask">
