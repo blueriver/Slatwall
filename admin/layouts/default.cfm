@@ -46,30 +46,14 @@ Notes:
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
 	<link rel="icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
 	<link rel="shortcut icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui-i18n.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/admin.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/slatwall.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/fw1AjaxAdapter.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckfinder/ckfinder.js"></script>
-	<link href="#application.configBean.getContext()#/admin/css/admin.css?coreversion=#application.coreversion#" rel="stylesheet" type="text/css" />
-	<link href="#application.configBean.getContext()#/admin/css/jquery/default/jquery.ui.all.css?coreversion=#application.coreversion#" rel="stylesheet" type="text/css" />
-	<link href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/css/slatwall_admin.css" rel="stylesheet" type="text/css" />
-	<link href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/css/slatwall.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript">
-		var htmlEditorType='#application.configBean.getValue("htmlEditorType")#';
-		var context='#application.configBean.getContext()#';
-		var themepath='#application.settingsManager.getSite(session.siteID).getThemeAssetPath()#';
-		var rb='#lcase(session.rb)#';
-		var sessionTimeout=<cfif isNumeric(application.configBean.getValue('sessionTimeout'))>#evaluate("application.configBean.getValue('sessionTimeout') * 60")#<cfelse>180</cfif>;
-	</script>
-		#session.dateKey#
+	
+	[[assetWire]]
+	
+	#session.dateKey#
 	<script type="text/javascript">
 		jQuery(document).ready(function(){setDatePickers(".datepicker",dtLocale);setTabs(".tabs",#rc.activeTab#);setHTMLEditors();setAccordions(".accordion",#rc.activePanel#)});
 	</script>
+	
 </head>
 <body>
 	<div id="header">

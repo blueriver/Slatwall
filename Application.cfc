@@ -275,4 +275,22 @@ component extends="framework" output="false" {
 		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
 		ormGetSession().clear();
 	}
+	
+	// assetWire functions
+	private void function buildViewAndLayoutQueue() {
+		super.buildViewAndLayoutQueue();
+		getAssetWire().wireFW1();
+	}
+	
+	public string function view( string path, struct args = { } ) {
+		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
+		return super.view(argumentcollection=arguments);
+	}
+	
+	public any function getAssetWire() {
+		if(!structKeyExists(request, "assetWire")) {
+			request.assetWire = new assetWire.assetWire(this); 
+		}
+		return request.assetWire;
+	}
 }

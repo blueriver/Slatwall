@@ -70,5 +70,16 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(right(rc.itemTitle, 8) == "_missing") {
 			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
 		}
+		
+		// Add mura specific JS variables
+		getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType"));
+		getAssetWire().addJSVariable("context", application.configBean.getContext());
+		getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath());
+		getAssetWire().addJSVariable("rb", lcase(session.rb));
+		if( isNumeric(application.configBean.getValue('sessionTimeout')) ) {
+			getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60);
+		} else {
+			getAssetWire().addJSVariable("sessionTimeout", 180);
+		}
 	}
 }
