@@ -70,5 +70,14 @@ jQuery(document).ready(function() {
 			jQuery('#remSKU').attr('style','display:none;');
 		}
 	});
-	jQuery(".uploadImage").colorbox();
+	jQuery(".uploadImage").colorbox({
+		onComplete: function() {
+		    $('input#skuImageFile').change(function(){
+		            if($(this).val()) {
+		                $('button#adminproductuploadSkuImage').removeAttr('disabled');
+		            } 
+			});			
+		}
+	});
+
 });
