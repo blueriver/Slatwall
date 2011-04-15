@@ -59,7 +59,7 @@ component extends="BaseController" output=false accessors=true {
 		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
 			rc.product = getProductService().getNewEntity();
 		}
-		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
+		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="sortOrder", sortType="numeric");
     }
 	
 	public void function detail(required struct rc) {
@@ -85,14 +85,9 @@ component extends="BaseController" output=false accessors=true {
 		getFW().setView("admin:product.detail");
 	}
 
-	
 	public void function list(required struct rc) {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
-
-/*	public void function save(required struct rc) {
-		rc.options = getService("formUtilities").buildFormCollections(rc).options;
-	}*/
 	
 	public void function save(required struct rc) {
 		var isNew = 0;
@@ -229,7 +224,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.productType = getProductService().saveProductType(rc.productType,rc);
 		
 		if(!rc.productType.hasErrors()) {
-			// no errors, so refresh the cached product type tree and redirect to list with success message
+			// no errors, redirect to list with success message
 			rc.message = "admin.product.saveproducttype_success";
 		  	getFW().redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {

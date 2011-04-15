@@ -41,12 +41,12 @@ Notes:
 
 <cfif rc.edit>
 	<cfhtmlhead text='<link media="screen" rel="stylesheet" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/css/colorbox.css"/>' />
-	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/jquery.colorbox-min.js"></script>' />
-	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/skuForm.js"></script>' />
+	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/plugins/jquery.colorbox-min.js"></script>' />
+	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.product.edit.js"></script>' />
 </cfif>
 
-<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/imgpreview.min.js"></script>' />
-<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/imgHover.js"></script>' />
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/plugins/imgpreview.min.js"></script>' />
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.product.detail.js"></script>' />
 
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">

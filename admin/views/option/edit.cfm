@@ -42,7 +42,7 @@ Notes:
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.optionID" type="string" default="" />
 
-<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/sorter.js"></script>' />
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.option.edit.js"></script>' />
 
 <cfset local.options = rc.optionGroup.getOptions(sortby="sortOrder",sortType="numeric") />
 
@@ -57,11 +57,8 @@ Notes:
 <cfoutput>
 
 <cfif rc.create>
-<cfif rc.optionID eq "new">
-	<cfset local.thisOpen = true />
-<cfelse>
-	<cfset local.thisOpen = false />
-</cfif>
+<cfset local.thisOpen = rc.optionID eq "new" ? true : false />
+
 <div id="buttons">
 <a class="button" id="newFrmopen" href="javascript:;" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##newFrmcontainer').slideDown();this.style.display='none';jQuery('##newFrmclose').show();return false;">#rc.$.Slatwall.rbKey('admin.option.addoption')#</a>
 <a class="button" href="javascript:;" <cfif !local.thisOpen>style="display:none;"</cfif> id="newFrmclose" onclick="jQuery('##newFrmcontainer').slideUp();this.style.display='none';jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('admin.option.closeform')#</a>
@@ -104,7 +101,7 @@ Notes:
 	<cfset local.thisOpen = false />
 </cfif>
 	<li optionID="#local.thisOption.getOptionID()#">
-		<span id="handle#local.i#" class="handle" style="display:none;">[Drag]</span>
+		<span id="handle#local.i#" class="handle" style="display:none;">[#rc.$.Slatwall.rbKey("admin.option.order.handle")#]</span>
 		#local.thisOption.getOptionName()# 
 		<a title="#rc.$.Slatwall.rbKey('sitemanager.edit')#" href="javascript:;" id="editFrm#local.i#open" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##editFrm#local.i#container').slideDown();this.style.display='none';jQuery('##editFrm#local.i#close').show();return false;">[#rc.$.Slatwall.rbKey("sitemanager.edit")#]</a> 
 		<a title="#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" href="javascript:;" id="editFrm#local.i#close" <cfif !local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##editFrm#local.i#container').slideUp();this.style.display='none';jQuery('##editFrm#local.i#open').show();return false;">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
