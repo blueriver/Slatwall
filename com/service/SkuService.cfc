@@ -142,11 +142,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
 	*/
 	public string function getOptionCombinations (required struct options) {
-		var optionGroupList = structKeyList(arguments.options);
+		var optionGroupList = listSort( structKeyList(arguments.options), "numeric" );
 		// get list of options from first option group
 		var comboList = listChangeDelims(arguments.options[listFirst(optionGroupList)],";");
-		// parse options struct to build list of possible option combinations
-		for( var optionGroup in arguments.options ) {
+		// parse options struct (in order) to build list of possible option combinations
+		for( var i=1; i<=listLen(optionGroupList); i++ ) {
+			var optionGroup = listGetAt(optionGroupList,i);
 			if(optionGroup != listFirst(optionGroupList)) {
 				var tempList = "";
 				for(var i=1;i<=listLen(comboList,";");i++) {

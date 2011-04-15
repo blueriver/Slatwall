@@ -74,7 +74,7 @@ Notes:
 					<cfset local.optionIndex = 1 />	
 					<ul>
 					<cfloop array="#local.options#" index="local.thisOption">
-						<li><input type="checkbox" name="options.#local.thisOptionGroup.getOptionGroupName()#" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
+						<li><input type="checkbox" name="options.#local.thisOptionGroup.getSortOrder()#" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
 		            <cfset local.optionIndex++ />
 					</cfloop>
 					</ul>

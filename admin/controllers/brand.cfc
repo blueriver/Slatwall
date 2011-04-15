@@ -71,7 +71,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     public void function list(required struct rc) {
 		//param name="rc.orderby" default="brandName|A";
         //rc.brandSmartList = getBrandService().getSmartList(rc=arguments.rc);
-		rc.brands = getBrandService().list(sortOrder = "brandName ASC");
+		rc.brands = getBrandService().list(sortBy = "brandName ASC");
     }
 
 	public void function save(required struct rc) {

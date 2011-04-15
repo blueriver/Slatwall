@@ -53,9 +53,9 @@ Notes:
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.isDefault")#</th>
-				<cfset local.optionGroups = rc.Product.getOptionGroupsStruct() />
-				<cfloop collection="#local.optionGroups#" item="local.i">
-					<th>#local.optionGroups[local.i].getOptionGroupName()#</th>
+				<cfset local.optionGroups = rc.Product.getOptionGroups() />
+				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
+					<th>#local.thisOptionGroup.getOptionGroupName()#</th>
 				</cfloop>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imagePath")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
@@ -93,8 +93,8 @@ Notes:
 				<cfelse>
 					<td><cfif local.thisSku.getDefaultFlag()><img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
 				</cfif>
-				<cfloop collection="#local.optionGroups#" item="local.i">
-					<td>#local.thisSku.getOptionByOptionGroupID(local.optionGroups[local.i].getOptionGroupID()).getOptionName()#</td>
+				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
+					<td>#local.thisSku.getOptionByOptionGroupID(local.thisOptionGroup.getOptionGroupID()).getOptionName()#</td>
 				</cfloop>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
@@ -164,10 +164,10 @@ Notes:
 			<input type="hidden" name="skuID" value="" />
         </td>
         <td><input type="radio" name="defaultSku" value="" /></td>
-        <cfloop collection="#local.optionGroups#" item="local.i">
+        <cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
             <td>
 			   <select name="options">
-                    <cfset local.options = local.optionGroups[local.i].getOptions() />
+                    <cfset local.options = local.thisOptionGroup.getOptions() />
                     <cfloop array="#local.options#" index="local.thisOption">
                         <option value="#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</option>
                     </cfloop>
