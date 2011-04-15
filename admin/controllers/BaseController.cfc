@@ -72,14 +72,14 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		}
 		
 		// Add mura specific JS variables
-		getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType"));
-		getAssetWire().addJSVariable("context", application.configBean.getContext());
-		getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath());
-		getAssetWire().addJSVariable("rb", lcase(session.rb));
+		getFW().getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType"));
+		getFW().getAssetWire().addJSVariable("context", application.configBean.getContext());
+		getFW().getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath());
+		getFW().getAssetWire().addJSVariable("rb", lcase(session.rb));
 		if( isNumeric(application.configBean.getValue('sessionTimeout')) ) {
-			getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60);
+			getFW().getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60);
 		} else {
-			getAssetWire().addJSVariable("sessionTimeout", 180);
+			getFW().getAssetWire().addJSVariable("sessionTimeout", 180);
 		}
 	}
 }

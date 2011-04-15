@@ -41,9 +41,6 @@ Notes:
 $.use('/admin/js/jquery/jquery-ui.js');
 $.use('/admin/js/jquery/jquery-ui-i18n.js');
 $.use('/admin/js/admin.js');
-$.use('/tasks/widgets/ckeditor/ckeditor.js');
-$.use('/tasks/widgets/ckeditor/adapters/jquery.js');
-$.use('/tasks/widgets/ckfinder/ckfinder.js');
 
 var search_delay = 0;
 var search_form = 0;

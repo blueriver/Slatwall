@@ -100,7 +100,7 @@ component output="false" {
 		
 	}
 	
-	public void function includeJSAsset(required string asset, boolean preAppend = false){
+	public void function includeJSAsset(required string asset, boolean preAppend = false, boolean lazy = true){
 		if(fileExists(expandPath("#variables.baseJSAssetPath##arguments.asset#")) && !arrayContains(variables.jsAssets, arguments.asset)) {
 			if(arguments.preAppend) {
 				arrayInsertAt(variables.jsAssets,1,arguments.asset);	
@@ -132,11 +132,11 @@ component output="false" {
 			allAssets &= '<script type="text/javascript">#chr(10)#';
 			
 			for(var i=1; i<=arrayLen(variables.jsAssets); i++){
-				allAssets &= "#chr(9)##chr(9)#$.use('#variables.baseJSAssetPath##variables.jsAssets[i]#');#chr(10)#";
+				allAssets &= "#chr(9)#$.use('#variables.baseJSAssetPath##variables.jsAssets[i]#');#chr(10)#";
 			}
 			allAssets &= '#chr(10)#';
 			for(var i=1; i<=arrayLen(variables.jsVariables); i++){
-				allAssets &= '#chr(9)##chr(9)#var #structKeyList(variables.jsVariables[i])# = #variables.jsVariables[i][structKeyList(variables.jsVariables[i])]#;#chr(10)#';
+				allAssets &= '#chr(9)#var #structKeyList(variables.jsVariables[i])# = #variables.jsVariables[i][structKeyList(variables.jsVariables[i])]#;#chr(10)#';
 			}
 			
 			allAssets &= '</script>#chr(10)#';

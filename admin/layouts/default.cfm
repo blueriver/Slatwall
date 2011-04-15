@@ -49,6 +49,11 @@ Notes:
 	
 	[[assetWire]]
 	
+	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js"></script>
+	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckfinder/ckfinder.js"></script>
+	
+	
 	#session.dateKey#
 	<script type="text/javascript">
 		jQuery(document).ready(function(){setDatePickers(".datepicker",dtLocale);setTabs(".tabs",#rc.activeTab#);setHTMLEditors();setAccordions(".accordion",#rc.activePanel#)});
