@@ -63,7 +63,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 	
-	public any function getByFilter(required struct filterCriteria, string entityName, string sortOrder="", boolean unique=false) {
+	public any function getByFilter(required struct filterCriteria, string entityName, string sortBy="", boolean unique=false) {
 		var collection = [];
 		if(!structKeyExists(arguments,"entityName")) {
 			arguments.entityName = getEntityName();

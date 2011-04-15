@@ -130,6 +130,10 @@ div.modalContainer {
 	font-size: 1.1em;
 }
 
+td.handle {
+	width: 5%;
+}
+
 table#productTypes {
 	width: 850px;
 }
@@ -146,7 +150,7 @@ table#productTypeSettings {
 	width: 600px;
 }
 
-table#Options, table#ProductSettings, table#ProductBrands {
+table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands {
 	width: 800px;
 }
 

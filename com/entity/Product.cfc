@@ -129,7 +129,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public any function getProductTypeOptions() {
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			var productTypeTree = getProductTypeTree();
-			var producTypeOptions = [];
+			var productTypeOptions = [];
 			for(var i=1; i <= productTypeTree.recordCount; i++) {
 				// only get the leaf nodes of the tree (those with no children)
 				if( productTypeTree.childCount[i] == 0 ) {
@@ -380,17 +380,32 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	/************   END Association Management Methods   *******************/
 
 	public struct function getOptionGroupsStruct() {
-		if( !structKeyExists(variables, "optionGroups") ) {
-			variables.optionGroups = structNew();
+		if( !structKeyExists(variables, "optionGroupsStruct") ) {
+			variables.optionGroupsStruct = structNew();
 			var skus = getSkus();
 			for(var i=1; i <= arrayLen(skus); i++){
 				var options = skus[i].getOptions();
 				for(var ii=1; ii <= arrayLen(options); ii++) {
-					if( !structKeyExists( variables.optionGroups, options[ii].getOptionGroup().getOptionGroupID() ) ){
-						variables.optionGroups[options[ii].getOptionGroup().getOptionGroupName()&"_"&options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
+					if( !structKeyExists( variables.optionGroupsStruct, options[ii].getOptionGroup().getOptionGroupID() ) ){
+						variables.optionGroupsStruct[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
 					}
 				}
 			}
+		}
+		return variables.optionGroupsStruct;
+	}
+	
+	public array function getOptionGroups() {
+		if( !structKeyExists(variables, "optionGroups") ) {
+			variables.optionGroups = [];
+			// optionGroupStruct() and reorder them into a sort-ordered array.
+			var optionGroupsStruct = getOptionGroupsStruct();
+			var i = 1;	
+			for( var optionGroupID in optionGroupsStruct ) {
+				variables.optionGroups[i] = optionGroupsStruct[optionGroupID];
+				i++;
+			}
+			variables.optionGroups = sortObjectArray(variables.optionGroups, "sortOrder", "numeric");
 		}
 		return variables.optionGroups;
 	}
