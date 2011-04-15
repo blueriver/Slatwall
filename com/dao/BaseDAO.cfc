@@ -50,11 +50,11 @@ component output="false" {
 		return ormExecuteQuery(" from #arguments.entityName# where filename = :filename", {filename=arguments.filename}, true);
 	}
 	
-	public array function list(required string entityName,struct filterCriteria=structNew(),string sortOrder="") {
-		if(structIsEmpty(arguments.filterCriteria) and !len("arguments.sortOrder")) {
+	public array function list(required string entityName,struct filterCriteria=structNew(),string sortBy="") {
+		if(structIsEmpty(arguments.filterCriteria) and !len("arguments.sortby")) {
 			return entityLoad(arguments.entityName);
 		} else {
-			return entityLoad(arguments.entityName,arguments.filterCriteria,arguments.sortOrder);
+			return entityLoad(arguments.entityName,arguments.filterCriteria,arguments.sortby);
 		}	
 	}
 	

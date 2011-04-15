@@ -39,14 +39,25 @@ Notes:
 <cfparam name="rc.optiongroups" type="any" />
 
 <cfoutput>
-<table class="stripe" id="Options">
+
+<div id="buttons">
+<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
+<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
+</div>
+
+<table class="stripe" id="OptionGroups">
+	<thead>
 	<tr>
+		<th class="handle" style="display:none;"></th>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupname")#</th>
 		<th>#rc.$.Slatwall.rbKey("entity.optiongroup.options")#</th>
 		<th>&nbsp;</th>
 	</tr>
+	</thead>
+	<tbody id="OptionGroupList">
 <cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-	<tr>
+	<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
+		<td class="handle" style="display:none;"><img src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/draghandle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
 		<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
 		<td>#local.thisOptionGroup.getOptionsCount()#</td>
 		<td class="administration">
@@ -60,5 +71,6 @@ Notes:
 		</td>
 	</tr>
 </cfloop>
+    </tbody>
 </table>
 </cfoutput>

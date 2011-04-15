@@ -40,6 +40,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	public any function save(required any entity, required struct data) {	
 		arguments.entity.populate(arguments.data);
+		arguments.entity.setSortOrder(getOptionGroupCount()+1);
 		arguments.entity = Super.save(arguments.entity);
 		
 		if(!arguments.entity.hasErrors()) {
@@ -97,6 +98,18 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 			var thisOption = getByID(optionID);
 			thisOption.setSortOrder(i);
 		}
+	}
+	
+	public void function saveOptionGroupSort(required string optionGroupIDs) {
+		for(var i=1; i<=listlen(arguments.optionGroupIDs);i++) {
+			var optionGroupID = listGetAt(arguments.optionGroupIDs,i);
+			var thisOptionGroup = getByID(optionGroupID,"SlatwallOptionGroup");
+			thisOptionGroup.setSortOrder(i);
+		}
+	}
+	
+	public numeric function getOptionGroupCount() {
+		return arrayLen(list());
 	}
 	
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {

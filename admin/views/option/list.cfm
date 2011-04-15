@@ -39,6 +39,8 @@ Notes:
 <cfparam name="rc.options" type="any" />
 <cfparam name="rc.optionGroups" type="any" />
 
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.option.list.js"></script>' />
+
 <cfoutput>
 <ul id="navTask">
     <cf_ActionCaller action="admin:option.createoptiongroup" type="list">
