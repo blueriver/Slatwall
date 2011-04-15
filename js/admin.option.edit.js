@@ -45,9 +45,7 @@ function showSaveSort(id){
 			jQuery(this).show();
 		}
 	);
-	
 	setSortable(id);
-	
 }
 	
 function showSort(id){
@@ -59,10 +57,8 @@ function showSort(id){
 			jQuery(this).hide();
 		}
 	);
-	
 	jQuery("#" + id).sortable('destroy');
 	jQuery("#" + id).enableSelection();
-	
 }
 	
 function saveOptionSort(id){

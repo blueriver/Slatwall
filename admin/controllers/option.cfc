@@ -79,7 +79,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
         param name="rc.listby" default="optiongroups";
         rc.orderby="optiongroup_optiongroupname|A^sortOrder|A";
         rc.options = getOptionService().getSmartList(rc=arguments.rc);
-        rc.optionGroups = getOptionService().list(entityName="SlatwallOptionGroup",sortOrder="OptionGroupName Asc");
+        rc.optionGroups = getOptionService().list(entityName="SlatwallOptionGroup",sortby="sortOrder Asc");
     }
 	
 	public void function save(required struct rc) {
@@ -188,6 +188,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
 			getFW().setView(action="admin:option.detailOptionGroup");
 		}
+	}
+
+	public void function saveOptionGroupSort(required struct rc) {
+		getOptionService().saveOptionGroupSort(rc.optionGroupID);
+		getFW().redirect("admin:option.list");
 	}
 	
 	public void function deleteOptionGroup(required struct rc) {
