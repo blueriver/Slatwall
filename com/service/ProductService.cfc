@@ -56,7 +56,9 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function getProductPages() {
-		return getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" }).getIterator();
+		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
+		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
+		return pageFeed.getIterator();
 	}
 
 	/**
