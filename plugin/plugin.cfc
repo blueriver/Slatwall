@@ -101,29 +101,21 @@ component extends="mura.plugin.plugincfc" output="false" {
 			} );
 			// we load the subType (in case it already exists) before it's saved
 			local.thisSubType.load();
-			var isNewSubType = len(local.thisSubType.getSubTypeID()) ? false : true;
 			local.thisSubType.save();
-			// set up extendSet if the subtype didn't already exist
-			if(isNewSubType) {
-				// get the default extend set. this is automatically created for every subType
-				local.thisExtendSet = local.thisSubType.getExtendSetByName( "Default" );
-				// rename the extend set, set the subtypeID, and save it 
-				local.thisExtendSet.set({
-					name = "Slatwall Product Listing Attributes",
-					subType = local.thisSubType.getSubTypeID()
-				});
-				local.thisExtendSet.save();
-				// create a new attribute for the "default" extend set
-				// getAttributeBy Name will look for it and if not found give me a new bean to use 
-				local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
-				local.thisAttribute.set({
-					label = "Products Per Page",
-					type = "TextBox",
-					validation = "numeric",
-					defaultValue = "16"
-				});
-				local.thisAttribute.save();
-			}
+			// get the extend set. One is created if it doesn't already exist
+			local.thisExtendSet = local.thisSubType.getExtendSetByName( "Slatwall Product Listing Attributes" );
+			local.thisExtendSet.setSubTypeID(local.thisSubType.getSubTypeID());
+			local.thisExtendSet.save();
+			// create a new attribute for the extend set
+			// getAttributeBy Name will look for it and if not found give me a new bean to use 
+			local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
+			local.thisAttribute.set({
+				label = "Products Per Page",
+				type = "TextBox",
+				validation = "numeric",
+				defaultValue = "16"
+			});
+			local.thisAttribute.save();
 		}
 	}
 	
