@@ -36,14 +36,16 @@
 Notes:
 
 --->
-<cfparam name="rc.optiongroups" type="any" />
+<cfparam name="rc.optionGroups" type="any" />
 
 <cfoutput>
 
-<div id="buttons">
-<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
-<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
-</div>
+<cfif arrayLen(rc.optionGroups) gt 1>
+	<div id="buttons">
+	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
+	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
+	</div>
+</cfif>
 
 <table class="stripe" id="OptionGroups">
 	<thead>
