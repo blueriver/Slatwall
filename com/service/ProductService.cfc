@@ -142,7 +142,14 @@ component extends="BaseService" accessors="true" {
 	//   Product Type Methods
 	
     public void function setProductTypeTree() {
-        variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
+    	var qProductTypes = getProductTypeDAO().getProductTypeQuery();
+    	var productTypeTree = getService("utilities").queryTreeSort(
+    		theQuery = qProductTypes,
+    		itemID = "productTypeID",
+    		parentID = "parentProductTypeID",
+    		pathColumn = "productTypeName"
+    	);
+        variables.productTypeTree = productTypeTree;
     }
     
     public any function getProductTypeTree() {
@@ -217,6 +224,15 @@ component extends="BaseService" accessors="true" {
 		} else {
 			return "";
 		}
+	}
+	
+	public any function getWhereSettingDefined( required string productTypeID, required string settingName ) {
+		var productTypeRecord = getProductTypeRecordWhereSettingDefined(argumentCollection=arguments);
+		if( productTypeRecord.recordCount == 1 ) {
+			return productTypeRecord[arguments.settingName][1];
+		} else {
+			return "";
+		}		
 	}
 	
 }
