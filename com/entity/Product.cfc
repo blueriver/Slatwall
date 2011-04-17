@@ -265,24 +265,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return variables[arguments.settingName];
 		} else {
 			return getInheritedSetting( arguments.settingName );
-			}
 		}
-		
+	}	
 	
 	public boolean function getInheritedSetting( required string settingName ) {
-		var settingValue = getService("ProductService").getProductTypeSetting( getProductType().getProductTypeName(),arguments.settingName );
-		if(len(settingValue) > 0) {
-			return settingValue;
-		} else {
-			return setting("product_#arguments.settingName#");
-		}
+		return getProductType().getSetting(arguments.settingName);
 	}
 	
 	// Get source of setting
 	public string function getSettingSource( required string settingName ) {
 		if( structKeyExists(variables, arguments.settingName ) ) {
 			return rbKey( "entity.product" );
-		} else if( len( getService("ProductService").getProductTypeSetting(getProductType().getProductTypeName(), arguments.settingName) ) > 0 ) {
+		} else if( len( getService("ProductService").getProductTypeSetting(getProductType().getProductTypeID(), arguments.settingName) ) > 0 ) {
 			return rbKey( "entity.productType" );
 		} else {
 			return rbKey( "entity.setting.global" );

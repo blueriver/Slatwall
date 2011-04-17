@@ -47,15 +47,14 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.brand.brandWebsite")#</th>
 			<th>&nbsp;</th>
 		</tr>
-		<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->
 		<cfloop array="#rc.brands#" index="Local.Brand">
 			<tr>
-				<td class="varWidth"><a href="#buildURL(action='admin:brand.detail', queryString='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></td>
+				<td class="varWidth">#local.Brand.getBrandName()#</td>
 				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
 				<td class="administration">
-		          <ul class="two">
+		          <ul class="three">
                       <cf_ActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
-					 <!--- <cf_ActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">--->
+					  <cf_ActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">
 					  <cf_ActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.getAssignedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.brand.delete_validateisassigned')#" confirmrequired="true">
 		          </ul>     						
 				</td>

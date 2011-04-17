@@ -63,8 +63,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.product.qia")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qea")#</th>
 			<th>&nbsp</th>
-		</tr>
-	<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->		
+		</tr>	
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
 			<tr>
 				<!---<td>#local.Product.getSearchScore()#</td>--->

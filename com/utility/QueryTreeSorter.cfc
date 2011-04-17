@@ -87,10 +87,11 @@ Notes:
         <cfset var ThisLineage="" />
         <cfset var ThisParentRowID="" />
 		<cfset var thisPath = "" />
+		<cfset var thisIDPath = "" />
 		<cfset var i ="" />
 		<cfset var ColName="" /> <!--- loop index variable for building query --->
 		<cfset var altRet="" /> <!--- variable for filtered query if number of levels is passed in --->
-        <cfset var AddColumns="TreeDepth,NewOrder,Lineage" />
+        <cfset var AddColumns="TreeDepth,NewOrder,Lineage,idPath" />
         <cfset var RetColList=ListAppend(arguments.theQuery.ColumnList,AddColumns) />
         <cfset var Ret="" />
         
@@ -170,11 +171,15 @@ Notes:
                 	<!--- set up path to item to set in path cell --->
                     <cfloop list="#thisLineage#" index="i">
                     	<cfset thisPath = listAppend(thisPath,Ret[variables.pathColumn][i],variables.pathDelimiter) />
+						<cfset thisIDPath = listAppend(thisIDPath,Ret[variables.itemID][i],variables.PathDelimiter) />
                     </cfloop>
 					<!--- add current item to path --->
 					<cfset thisPath = listAppend(thisPath,theQuery[variables.pathColumn][RowID],variables.pathDelimiter) />
+					<cfset thisIDPath = listAppend(thisIDPath,theQuery[variables.itemID][RowID],variables.pathDelimiter) />
                     <cfset querySetCell(Ret,"Path", thisPath & arguments.pathSuffix) />
+					<cfset querySetCell(Ret,"idPath", thisIDPath) />
                     <cfset thispath = "" /> <!--- resets variable for the next item --->
+					<cfset thisIDPath = "" />
                 </cfif>
 				<cfloop list="#theQuery.ColumnList#" index="ColName"><!--- loop over the original querys columns to copy the data to our return query --->
 					<cfset QuerySetCell(Ret, ColName, theQuery[ColName][RowID]) />

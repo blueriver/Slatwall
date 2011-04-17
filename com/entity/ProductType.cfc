@@ -73,6 +73,26 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public any function getProductTypeTree() {
 		return getService("ProductService").getProductTypeTree();
 	}
+
+	
+    // @hint use this to implement get{setting}Options() calls for PropertyDisplay tags for settings
+	public function onMissingMethod(missingMethodName, missingMethodArguments) {
+		// first look to see if the method name follows the get{SettingName}Options naming convention and that {setting} is a valid property
+		if( left(arguments.missingMethodName,3) == "get" 
+		    && right(arguments.missingMethodName,7) == "options"
+		    && listFindNoCase( getPropertyList(),mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10) ) ) {
+		    	var settingName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10);
+		    	return getSettingOptions(settingName);
+		    }
+	}
+	
+	private array function getSettingOptions(required string settingName) {
+		var settingOptions = [
+		  {id="1", name=rbKey("sitemanager.yes")},
+		  {id="0", name=rbKey("sitemanager.no")}
+		];
+		return settingOptions;
+	}
 	
     /******* Association management methods for bidirectional relationships **************/
 	
@@ -98,4 +118,26 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	
     /************   END Association Management Methods   *******************/
+    
+    public boolean function getSetting(required string settingName) {
+        if(structKeyExists(variables,arguments.settingName)) {
+            return variables[arguments.settingName];
+        } else {
+            return getInheritedSetting( arguments.settingName );
+        }
+    }
+
+    public boolean function getInheritedSetting( required string settingName ) {
+    	if( this.hasParentProductType() ) {
+	        var settingValue = getService("ProductService").getProductTypeSetting( getParentProductType().getProductTypeID(),arguments.settingName );
+	    } else {
+	    	var settingValue = "";
+	    }
+        if(len(settingValue) > 0) {
+            return settingValue;
+        } else {
+        	// if setting hasn't been defined at the product type level, return the global setting
+            return setting("product_#arguments.settingName#");
+        }
+    }
 }

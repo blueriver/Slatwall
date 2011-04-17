@@ -40,9 +40,9 @@ Notes:
 <cfparam name="rc.productType" type="any" />
 <cfparam name="rc.parentProductTypeID" type="string" default="" />
 
-<!--- set up options for setting select boxes --->
-<cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
-<cfset local.defaultOption = {id="",name=rc.$.Slatwall.rbKey('setting.inherit')} />
+<!--- set up options for setting select boxes 
+<cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />--->
+
 
 
 <cfoutput>
@@ -77,20 +77,21 @@ Notes:
         </select>	
 		</dd>
 		<cfelse>
-			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" nullValue="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
+			<cfset local.parentLink = rc.productType.hasParentProductType() ? buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.productType.getParentProductType().getProductTypeID()#') : "" />
+			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
 		</cfif>
 	</dl>
 	<table class="stripe" id="productTypeSettings">
 		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.producttypesettings')#</th>
-			<th></th>
+			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.setting.settingName')#</th>
+			<th>#rc.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
 		</tr>
-		<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('entity.setting.global')# (#yesNoFormat(rc.$.Slatwall.setting('product_trackInventoryFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-		<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('entity.setting.global')# (#yesNoFormat(rc.$.Slatwall.setting('product_callToOrderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('entity.setting.global')# (#yesNoFormat(rc.$.Slatwall.setting('product_allowShippingFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('entity.setting.global')# (#yesNoFormat(rc.$.Slatwall.setting('product_allowPreorderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('entity.setting.global')# (#yesNoFormat(rc.$.Slatwall.setting('product_allowBackorderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-		<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('entity.setting.global')# (#yesNoFormat(rc.$.Slatwall.setting('product_allowDropshipFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)" tooltip="true">
+		<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)" tooltip="true">
 	</table>
 <cfif rc.edit>
 	<div id="actionButtons" class="clearfix">
