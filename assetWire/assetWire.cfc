@@ -41,7 +41,10 @@ component output="false" {
 	variables.assetWirePath = "/plugins/Slatwall/assetWire/";
 	variables.baseJSAssetPath = "/plugins/Slatwall/assets/js/";
 	variables.baseCSSAssetPath = "/plugins/Slatwall/assets/css/";
+	variables.jQueryPath = "/admin/js/jquery/jquery.js";
+	/* can't use Google CDN for local development, as sometimes I don't have network access
 	variables.jQueryPath = "//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js";
+	*/
 	
 	variables.framework = "";
 	variables.jsVariables = [];

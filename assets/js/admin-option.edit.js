@@ -36,59 +36,46 @@
 	the GNU General Public License version 2  without this exception.  You may, if you choose, apply this exception 
 	to your own modified versions of Mura CMS. */
 
-function showSaveSort(id){
-	jQuery('#showSort').hide();
-	jQuery('#saveSort').show();
+$(document).ready(function(){
 	
-	jQuery(".handle").each(
-		function(index) {
-			jQuery(this).show();
-		}
-	);
-	setSortable(id);
-}
+	$("#showSort").click(function(){
+		$("#optionList").sortable().disableSelection();
+		$('#showSort').hide();
+		$('#saveSort').show();
+		
+		$(".handle").each(
+			function(index) {
+				$(this).show();
+			}
+		);
+		return false;
+	});
+	
+	$("#saveSort").click(function(){
+		var attArray=new Array();
+		
+		$("#optionList > li").each(
+			function(index) {
+				attArray.push( $(this).attr("optionID") );
+			}
+		);
+		
+		var url = "index.cfm";
+		var pars = 'slatAction=admin:option.saveoptionsort&optionID=' + attArray.toString() + '&cacheID=' + Math.random();	
+		
+		$.post(url + "?" + pars); 
+		showSort();
+	});
+});
 	
 function showSort(id){
-	jQuery('#showSort').show();
-	jQuery('#saveSort').hide();
+	$('#showSort').show();
+	$('#saveSort').hide();
 	
-	jQuery(".handle").each(
+	$(".handle").each(
 		function(index) {
-			jQuery(this).hide();
+			$(this).hide();
 		}
 	);
-	jQuery("#" + id).sortable('destroy');
-	jQuery("#" + id).enableSelection();
-}
-	
-function saveOptionSort(id){
-	var attArray=new Array();
-	
-	jQuery("#" + id + ' > li').each(
-		function(index) {
-			attArray.push( jQuery(this).attr("optionID") );
-		}
-	);
-	
-	var url = "index.cfm";
-	var pars = 'slatAction=admin:option.saveoptionsort&optionID=' + attArray.toString() + '&cacheID=' + Math.random();	
-	
-	//location.href=url + "?" + pars;
-	jQuery.post(url + "?" + pars); 
-	showSort(id)
-}
-
-function setSortable(id){	
-	jQuery("#" + id).sortable();
-	jQuery("#" + id).disableSelection();
-}
-
-function setBaseInfo(str){
-	var dataArray=str.split("^");
-	
-	document.subTypeFrm.type.value=dataArray[0];
-	document.subTypeFrm.baseTable.value=dataArray[1];
-	document.subTypeFrm.baseKeyField.value=dataArray[2];
-	document.subTypeFrm.dataTable.value=dataArray[3];
-	
+	jQuery("#optionList").sortable('destroy').enableSelection();
 }

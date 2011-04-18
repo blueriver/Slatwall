@@ -40,13 +40,11 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfif rc.edit>
-	<cfhtmlhead text='<link media="screen" rel="stylesheet" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/plugins/css/colorbox.css"/>' />
-	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/plugins/jquery.colorbox-min.js"></script>' />
-	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.product.edit.js"></script>' />
+	<cfset getAssetWire().includeJSAsset("admin-product.edit.js") />
+	<cfset getAssetWire().includeCSSAsset("admin-product.edit.css") />
 </cfif>
 
-<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/plugins/imgpreview.min.js"></script>' />
-<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.product.detail.js"></script>' />
+<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/productDetail.js"></script>' />
 
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">
@@ -63,11 +61,11 @@ Notes:
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 	</cfif>
 	<dl class="twoColumn">
-		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="activeFlag" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
-		<cf_PropertyDisplay object="#rc.Product#" property="productType" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
+		<cf_PropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
 	
@@ -90,11 +88,15 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
 	</div>
 	<div id="tabProductDetails">
-		<dl class="twoColumn">
-			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#">
-		</dl>
+		<table class="stripe">
+			<tr>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productDetails")#</th>
+				<th></th>
+			</tr>
+			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#" displayType="table">
+		</table>
 	</div>
 	<div id="tabProductSettings">
 		#view("product/productTabs/settingsTab")#

@@ -38,13 +38,8 @@ Notes:
 */
 component extends="slatwall.com.dao.BaseDAO" accessors="true" {
 
-    property name="ProductTypeTreeSorter" type="any";
-	
-	public any function init() {
-       return this;
-    }
-
-    public any function getProductTypeTree() {
+	//@hint for caching product types as a tree-sorted query
+    public query function getProductTypeQuery() {
 	   var qs = new query();
 	   qs.setSQL("SELECT *,
 	   					(SELECT count(SlatwallProduct.productID)
@@ -56,7 +51,7 @@ component extends="slatwall.com.dao.BaseDAO" accessors="true" {
 	               FROM SlatwallProductType
 				   ORDER BY productTypeName ASC");
 	   // return query sorted Product Type tree 
-	   return getProductTypeTreeSorter().sortQuery(qs.execute().getResult());
+	   return qs.execute().getResult();
 	}
 	
 }

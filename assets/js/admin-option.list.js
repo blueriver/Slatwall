@@ -63,24 +63,20 @@ $(document).ready(function(){
 		var url = "index.cfm";
 		var pars = 'slatAction=admin:option.saveOptionGroupSort&optionGroupID=' + attArray.toString() + '&cacheID=' + Math.random();	
 		
-		//location.href=url + "?" + pars;
-		jQuery.post(url + "?" + pars); 
-		showSort()
+		$.post(url + "?" + pars); 
+		showSort();
 	});
 });
 
-
-	
 function showSort(){
 	$('#showSort').show();
 	$('#saveSort').hide();
 	
 	$(".handle").each(
 		function(index) {
-			jQuery(this).hide();
+			$(this).hide();
 		}
 	);
 	
 	$("#OptionGroups tbody").sortable('destroy').enableSelection();
-	
 }
