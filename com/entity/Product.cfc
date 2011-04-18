@@ -257,7 +257,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	/******* Setting methods **************/
+	// Persistent property helpers
+	
+	public string function getURLTitle() {
+		return getFileName();
+	}
+
+	
+	/******* Product Setting methods **************/
 	
 	// Generic setting accessor
 	public boolean function getSetting( required string settingName ) {
