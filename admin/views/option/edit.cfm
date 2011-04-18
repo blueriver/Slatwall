@@ -42,8 +42,6 @@ Notes:
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.optionID" type="string" default="" />
 
-<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/admin.option.edit.js"></script>' />
-
 <cfset local.options = rc.optionGroup.getOptions(sortby="sortOrder",sortType="numeric") />
 
 <ul id="navTask">
@@ -84,8 +82,8 @@ Notes:
 <cfif arrayLen(local.options) gt 0>
 
 <p>
-<a href="javascript:;" style="display:none;" id="saveSort" onclick="saveOptionSort('optionList');return false;">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
-<a href="javascript:;"  id="showSort" onclick="showSaveSort('optionList');return false;">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
+<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
+<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
 </p>
 
 <ul id="optionList">

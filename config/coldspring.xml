@@ -6,9 +6,7 @@
 	<bean id="attributeDAO" class="slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />
 	<bean id="productDAO" class="slatwall.com.dao.ProductDAO" />
-	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO">
-		 <property name="productTypeTreeSorter"><ref bean="productTypeTreeSorter" /></property>
-	</bean>
+	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO" />
 	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
 	<bean id="orderDAO" class="slatwall.com.dao.orderDAO" />
 	<bean id="settingDAO" class="slatwall.com.dao.SettingDAO" />
@@ -21,12 +19,7 @@
 	<bean id="FileService" class="slatwall.com.service.FileService" />
 	<bean id="TagProxyService" class="slatwall.com.service.TagProxyService" />
 	<bean id="Validator" class="slatwall.com.utility.Validator" />
-	<bean id="ProductTypeTreeSorter" class="slatwall.com.utility.QueryTreeSorter">
-		<constructor-arg name="TitleColumn"><value>productTypeName</value></constructor-arg>
-		<constructor-arg name="ItemID"><value>productTypeID</value></constructor-arg>
-		<constructor-arg name="ParentID"><value>parentProductTypeID</value></constructor-arg>
-		<constructor-arg name="pathColumn"><value>productTypeName</value></constructor-arg>
-	</bean>
+	<bean id="Utilities" class="slatwall.com.utility.Utilities" />
 	<bean id="requestCacheService" class="slatwall.com.service.requestCacheService" />
 		
     <bean id="accountService" class="slatwall.com.service.accountService">

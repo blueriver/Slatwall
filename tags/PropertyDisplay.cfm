@@ -90,6 +90,15 @@ Notes:
 <!--- Add Custom class --->
 <cfparam name="attributes.class" default="" />
 
+<!--- if specified, will wrap property value with an achor tag using the attribute as the href value --->
+<cfparam name="attributes.link" default="" />
+
+<!--- class for styling link, if specified --->
+<cfparam name="attributes.linkClass" default="" />
+
+<!--- id for styling link, if specified --->
+<cfparam name="attributes.linkID" default="" />
+
 <!--- overwrite the generated id for the property element (dd or td) --->
 <cfparam name="attributes.id" default="" />
 
@@ -139,6 +148,15 @@ Notes:
 			</cfif>
 		</cfif>
 		
+		<!--- Try to determine the datatype of the property, if not passed in --->
+		<cfif attributes.dataType eq "">
+			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
+				<cfset attributes.dataType = "boolean" />
+			<cfelse>
+				<cfset attributes.dataType = "string" />
+			</cfif>
+		</cfif>
+		
 		<!--- If the value attribute was not set, then try to determine the value from the object, and if that isn't set, then use the objects default. --->
 		<cfif attributes.value eq "">
 			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
@@ -160,6 +178,8 @@ Notes:
 				</cfif>
 			<cfelseif isNull(attributes.value) and len(attributes.nullValue)>
 				<cfset attributes.value = attributes.nullValue />
+			<cfelseif isNull(attributes.value) and !len(attributes.nullValue) and attributes.dataType eq "boolean">
+				<cfset attributes.value = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
 			<cfelse>
 			     <cfset attributes.value = "" />
 			</cfif>
@@ -173,13 +193,6 @@ Notes:
 		  <cfset attributes.id = "spd" & LCASE(attributes.fieldName) />
 		</cfif>
 		
-		<cfif attributes.dataType eq "">
-			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
-				<cfset attributes.dataType = "boolean" />
-			<cfelse>
-				<cfset attributes.dataType = "string" />
-			</cfif>
-		</cfif>
 		
 		<!--- If in edit mode, and that editType attribute is not set then figure out what to use --->
 		<cfif attributes.edit>
@@ -340,11 +353,16 @@ Notes:
 					<!-- A Default Edit Type Could not be created -->
 				<cfelse>
 					<cfif attributes.dataType eq "boolean" and attributes.value eq true>
-						#request.customMuraScopeKeys.slatwall.rbKey("sitemanager.yes")#
+						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.yes") />
 					<cfelseif attributes.dataType eq "boolean" and attributes.value eq false>
-						#request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no")#
+						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
 					<cfelse>
-						#attributes.Value#
+						<cfset propertyValue = attributes.Value />
+					</cfif>
+					<cfif len(attributes.link) gt 0>
+						<a href="#attributes.link#"<cfif len(attributes.linkClass) gt 0> class="#attributes.linkClass#"</cfif><cfif len(attributes.linkID) gt 0> id="#attributes.linkID#"</cfif>>#propertyValue#</a>
+					<cfelse>
+						#propertyValue#
 					</cfif>
 				</cfif>
 			<!--- If the object has an error Bean, check for errors on this property --->

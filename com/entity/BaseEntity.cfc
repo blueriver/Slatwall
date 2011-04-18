@@ -180,8 +180,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return sortedArray;
 	}
 
-
-
 	public any function isNew() {
 		var identifierColumns = ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
 		var returnNew = true;
@@ -196,6 +194,17 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	public string function getClassName(){
 		return ListLast(GetMetaData(this).entityname, "." );
 	}
+	
+    public string function getPropertyList() {
+        if( !structKeyExists(variables,"propertyList") ) {
+            variables.propertyList = "";
+            var props = getMetadata(this)["properties"];
+            for( var i=1; i<=arrayLen(props); i++ ) {
+                variables.propertyList = listAppend(variables.propertyList,props[i].name);
+            }
+        }
+        return variables.propertyList;
+    }
 	
 	public void function addError(required string name, required string message) {
 		getErrorBean().addError(argumentCollection=arguments);

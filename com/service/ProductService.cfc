@@ -142,7 +142,14 @@ component extends="BaseService" accessors="true" {
 	//   Product Type Methods
 	
     public void function setProductTypeTree() {
-        variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
+    	var qProductTypes = getProductTypeDAO().getProductTypeQuery();
+    	var productTypeTree = getService("utilities").queryTreeSort(
+    		theQuery = qProductTypes,
+    		itemID = "productTypeID",
+    		parentID = "parentProductTypeID",
+    		pathColumn = "productTypeName"
+    	);
+        variables.productTypeTree = productTypeTree;
     }
     
     public any function getProductTypeTree() {
@@ -185,29 +192,54 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	/**
-	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty string if it wasn't set
+	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set
 	*/
-	public any function getProductTypeSetting( required string productType,required string setting ) {
+	public any function getProductTypeRecordWhereSettingDefined( required string productTypeID,required string settingName ) {
 		var ptTree = getProductTypeTree();
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
 		qoq.setAttributes(ptTable = ptTree);
-		qoq.setSQL("select #arguments.setting#, path from ptTable where lower(productTypeName) = :ptype");
-		qoq.addParam(name="ptype", value=lcase(arguments.productType), cfsqlType="cf_sql_varchar");
+		qoq.setSQL("select productTypeName, productTypeID, path, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
+		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
 		var qGetSetting = qoq.execute(dbtype="query").getResult();
 		if(qGetSetting.recordCount == 1) {
-			local.theValue = evaluate("qGetSetting.#arguments.setting#");
-			if(local.theValue != "") {
-				return local.theValue;
-			} else if(local.theValue == "" && lcase(qGetSetting.path) != lcase(arguments.productType)) {
+			local.settingValue = qGetSetting[arguments.settingName];
+			if(local.settingValue != "") {
+				return qGetSetting;
+			} else if(local.settingValue == "" && lcase(qGetSetting.idpath) != lcase(arguments.productTypeID)) {
 				// gets the next product type up in the lineage and calls this function recursively
-				local.parentProductType = listGetAt(qGetSetting.path,listLen(qGetSetting.path)-1);
-				return getProductTypeSetting( productType=local.parentProductType,setting=arguments.setting );
+				local.parentProductTypeID = listGetAt(qGetSetting.idpath,listLen(qGetSetting.idpath)-1);
+				return getProductTypeRecordWhereSettingDefined( productTypeID=local.parentProductTypeID,settingName=arguments.settingName );
 			} else {
-				return "";
+				return queryNew("productTypeID");
 			}
 		}
-		else return "";
+		else return queryNew("productTypeID");
+	}
+	
+	public any function getProductTypeSetting( required string productTypeID, required string settingName ) {
+		var productTypeRecord = getProductTypeRecordWhereSettingDefined(argumentCollection=arguments);
+		if( productTypeRecord.recordCount == 1 ) {
+			return productTypeRecord[arguments.settingName][1];
+		} else {
+			return "";
+		}
+	}
+	
+	public any function getWhereSettingDefined( required string productTypeID, required string settingName ) {
+		var productTypeRecord = getProductTypeRecordWhereSettingDefined(argumentCollection=arguments);
+		if( productTypeRecord.recordCount == 1 ) {
+			return {
+				type = "Product Type",
+				name = productTypeRecord.productTypeName,
+				id = productTypeRecord.productTypeID
+			};
+		} else {
+			return {
+				type = "Global",
+				name = "Global"
+			};
+		}		
 	}
 	
 }

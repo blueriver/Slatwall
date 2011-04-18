@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,40 +36,27 @@
 Notes:
 
 --->
-<!---
-	Filename: QueryTreeSorter.cfc
-	Author: Tony Garcia
-	Purpose: Component that sorts queries from adjacency model tree table and can display a nested simple list, html list, select box, or padded html table
-	Created: 27 Sept. 2007
+
+<cfcomponent extends="Slatwall.com.utility.BaseObject">
+
+	<!---
+	QueryTreeSort takes a query and efficiently (O(n)) resorts it hierarchically (parent-child), adding a Depth column that can then be used when displaying the data.
 	
-	This code was adapted from a series of blog posts by Rick Osborne http://rickosborne.org/blog/?p=3 
---->
-<cfcomponent displayname="QueryTreeSorter" output="false"cache="true" cachetimeout="0" hint="I sort queries from parent-child adjacency list tables without using recursion">
-	
-	<cffunction name="init" access="public" output="false" returntype="any">
-		<cfargument name="TitleColumn" type="String" default="Name" hint="the name of the column in the table containing the item name" />
-		<cfargument name="ItemID" type="string" default="ItemID" hint="the name of the column in the table containing the item's ID (primary key)" />
-		<cfargument name="ParentID" type="string" default="ParentID" hint="the name of the column in the table containing the ID of the item's parent" />
-		<cfargument name="PathColumn" type="string" default="" hint="the name of the column containing the values to use to build paths to the items in the tree" />
-        <cfargument name="PathDelimiter" type="string" default="," />
-		<cfargument name="pathSuffix" type="string" default="" />
-		
-		<cfset variables.titleColumn=arguments.TitleColumn />
-		<cfset variables.itemID=arguments.ItemID />
-		<cfset variables.parentID=arguments.ParentID />
-		<cfset variables.PathColumn = arguments.pathColumn />
-        <cfset variables.PathDelimiter = arguments.PathDelimiter />
-		<cfset variables.PathSuffix = arguments.PathSuffix />
-		
-		<cfreturn this />
-	</cffunction>
-	
-	<cffunction name="SortQuery" access="public" output="false" returntype="query">
+	@return Returns a query.
+	@author Rick Osborne (deliver8r@gmail.com)
+	@version 1, April 9, 2007
+	@ http://cflib.org/udf/queryTreeSort
+	@ modified by Tony Garcia September 27, 2007
+	--->
+	<cffunction name="queryTreeSort" access="public" output="false" returntype="query">
 		<cfargument name="theQuery" type="query" required="true" hint="the query to sort" />
+		<cfargument name="ParentID" type="string" default="ParentID" hint="the name of the column in the table containing the ID of the item's parent" />
+		<cfargument name="ItemID" type="string" default="ItemID" hint="the name of the column in the table containing the item's ID (primary key)" />
 		<cfargument name="rootID" type="numeric" default="0" hint="the ID of the item to use as the root, defaults to the tree root" />
 		<cfargument name="levels" type="numeric" default="0" hint="how many levels to return, defaults to all levels when set to 0" />
 		<cfargument name="BaseDepth" type="numeric" default="0" hint="the number to use as the base depth" />
-		<cfargument name="pathSuffix" type="string" default="#variables.pathSuffix#" />
+		<cfargument name="PathColumn" type="string" default="" hint="the name of the column containing the values to use to build paths to the items in the tree" />
+        <cfargument name="PathDelimiter" type="string" default="," />
 		
 		<cfset var RowFromID=StructNew() /> <!--- indexing structure that contains the query row for each ID key --->
 		<cfset var ChildrenFromID=StructNew() /> <!--- indexing struct that contains an array of children ID for each ID key --->
@@ -87,14 +74,15 @@ Notes:
         <cfset var ThisLineage="" />
         <cfset var ThisParentRowID="" />
 		<cfset var thisPath = "" />
+		<cfset var thisIDPath = "" />
 		<cfset var i ="" />
 		<cfset var ColName="" /> <!--- loop index variable for building query --->
 		<cfset var altRet="" /> <!--- variable for filtered query if number of levels is passed in --->
-        <cfset var AddColumns="TreeDepth,NewOrder,Lineage" />
+        <cfset var AddColumns="TreeDepth,NewOrder,Lineage,idPath" />
         <cfset var RetColList=ListAppend(arguments.theQuery.ColumnList,AddColumns) />
         <cfset var Ret="" />
         
-		<cfif len(variables.pathColumn)>
+		<cfif len(arguments.pathColumn)>
 			<cfset retColList=ListAppend(retColList,"Path") />
 		</cfif>
 		<!--- set up the return query --->
@@ -103,21 +91,21 @@ Notes:
 		<!--- Set up all of our indexing --->
 		<cfloop query="arguments.theQuery">
 			<!--- an index of ID to row in "raw" order (not sorted by parent) --->
-			<cfset RowFromID[theQuery[variables.ItemID][theQuery.CurrentRow]]=CurrentRow />
-			<cfif NOT StructKeyExists(ChildrenFromID, theQuery[variables.ParentID][theQuery.CurrentRow])>
+			<cfset RowFromID[theQuery[arguments.itemID][theQuery.CurrentRow]]=CurrentRow />
+			<cfif NOT StructKeyExists(ChildrenFromID, theQuery[arguments.parentID][theQuery.CurrentRow])>
 				<!--- only create a new parentID array within the ChildrenFromID struct for every new ParentID --->
-				<cfset ChildrenFromID[theQuery[variables.ParentID][theQuery.CurrentRow]]=ArrayNew(1) />
+				<cfset ChildrenFromID[theQuery[arguments.parentID][theQuery.CurrentRow]]=ArrayNew(1) />
 			</cfif>
 			<!--- add the ItemID to it's ParentID array within the ChildrenFromID struct --->
-			<cfset ArrayAppend(ChildrenFromID[theQuery[variables.ParentID][theQuery.CurrentRow]], theQuery[variables.ItemID][theQuery.CurrentRow]) />
+			<cfset ArrayAppend(ChildrenFromID[theQuery[arguments.parentID][theQuery.CurrentRow]], theQuery[arguments.itemID][theQuery.CurrentRow]) />
 		</cfloop>
         
 		<!--- Find root items --->
 		<cfif not arguments.rootID><!--- if a rootID wasn't specified, use the absolute root --->
 			<cfloop query="arguments.theQuery">
 				<!--- root items are ones whose parent ID does not exist in the rowfromID struct (parent ID isn't an ID of another item)  --->
-				<cfif NOT StructKeyExists(RowFromID, theQuery[variables.ParentID][theQuery.CurrentRow])>
-					<cfset ArrayAppend(RootItems, theQuery[variables.ItemID][theQuery.CurrentRow]) />
+				<cfif NOT StructKeyExists(RowFromID, theQuery[arguments.parentID][theQuery.CurrentRow])>
+					<cfset ArrayAppend(RootItems, theQuery[arguments.itemID][theQuery.CurrentRow]) />
 					<cfset ArrayAppend(Depth, arguments.baseDepth) />
 					<cfset ArrayAppend(Order, RootOrder) />
 					<cfset RootOrder++ />
@@ -126,8 +114,8 @@ Notes:
 		<cfelse><!--- use the value of the rootID argument, if passed in, as the root of the tree --->
 			<cfloop query="arguments.theQuery">
 				<!--- root items are ones whose parent ID matches the rootID argument  --->
-				<cfif theQuery[variables.ParentID][theQuery.CurrentRow] eq arguments.rootID>
-					<cfset ArrayAppend(RootItems, theQuery[variables.ItemID][theQuery.CurrentRow]) />
+				<cfif theQuery[arguments.parentID][theQuery.CurrentRow] eq arguments.rootID>
+					<cfset ArrayAppend(RootItems, theQuery[arguments.itemID][theQuery.CurrentRow]) />
 					<cfset ArrayAppend(Depth, arguments.baseDepth) />
 					<cfset ArrayAppend(Order, RootOrder) />
 					<cfset RootOrder++ />
@@ -151,14 +139,14 @@ Notes:
                 
                 <cfset NewRowFromID[ThisID]=Ret.recordCount />
 				<!--- Try to find the parent's lineage --->
-                <cfif StructKeyExists(Lineages, theQuery[variables.ParentID][RowID])>
-                    <cfset ThisLineage=Lineages[theQuery[variables.ParentID][RowID]] />
+                <cfif StructKeyExists(Lineages, theQuery[arguments.parentID][RowID])>
+                    <cfset ThisLineage=Lineages[theQuery[arguments.parentID][RowID]] />
                 <cfelse>
                     <cfset ThisLineage="" /><!--- no grandparents --->
                 </cfif>
                 <!--- Add the parent if there is one --->
-                <cfif structKeyExists(NewRowFromID, theQuery[variables.ParentID][RowID])> 
-                    <cfset ThisLineage=ListAppend(ThisLineage, NewRowFromID[theQuery[variables.ParentID][RowID]]) />
+                <cfif structKeyExists(NewRowFromID, theQuery[arguments.parentID][RowID])> 
+                    <cfset ThisLineage=ListAppend(ThisLineage, NewRowFromID[theQuery[arguments.parentID][RowID]]) />
                 </cfif>
                 <cfset Lineages[ThisID]=ThisLineage />
                 
@@ -166,15 +154,19 @@ Notes:
 				<cfset QuerySetCell(Ret, "NewOrder", ThisOrder) /> <!--- set order info in column --->
 				<!--- set Tree lineage in cell --->
 				<cfset QuerySetCell(Ret,"Lineage", ThisLineage)>
-                <cfif len(variables.pathColumn)>
+                <cfif len(arguments.pathColumn)>
                 	<!--- set up path to item to set in path cell --->
                     <cfloop list="#thisLineage#" index="i">
-                    	<cfset thisPath = listAppend(thisPath,Ret[variables.pathColumn][i],variables.pathDelimiter) />
+                    	<cfset thisPath = listAppend(thisPath,Ret[arguments.pathColumn][i],arguments.pathDelimiter) />
+						<cfset thisIDPath = listAppend(thisIDPath,Ret[arguments.itemID][i],arguments.pathDelimiter) />
                     </cfloop>
 					<!--- add current item to path --->
-					<cfset thisPath = listAppend(thisPath,theQuery[variables.pathColumn][RowID],variables.pathDelimiter) />
-                    <cfset querySetCell(Ret,"Path", thisPath & arguments.pathSuffix) />
+					<cfset thisPath = listAppend(thisPath,theQuery[arguments.pathColumn][RowID],arguments.pathDelimiter) />
+					<cfset thisIDPath = listAppend(thisIDPath,theQuery[arguments.itemID][RowID],arguments.pathDelimiter) />
+                    <cfset querySetCell(Ret,"Path", thisPath) />
+					<cfset querySetCell(Ret,"idPath", thisIDPath) />
                     <cfset thispath = "" /> <!--- resets variable for the next item --->
+					<cfset thisIDPath = "" />
                 </cfif>
 				<cfloop list="#theQuery.ColumnList#" index="ColName"><!--- loop over the original querys columns to copy the data to our return query --->
 					<cfset QuerySetCell(Ret, ColName, theQuery[ColName][RowID]) />
@@ -203,5 +195,39 @@ Notes:
 			<cfreturn altRet />
 		</cfif>
 	</cffunction>
-		
+	
+	
+
+	<cfscript>
+	/**
+	 * Makes a row of a query into a structure.
+	 * 
+	 * @param query 	 The query to work with. 
+	 * @param row 	 Row number to check. Defaults to row 1. 
+	 * @return Returns a structure. 
+	 * @author Nathan Dintenfass (nathan@changemedia.com) 
+	 * @version 1, December 11, 2001
+	 * http://cflib.org/index.cfm?event=page.udfbyid&udfid=358
+	 */
+	function queryRowToStruct(query){
+		//by default, do this to the first row of the query
+		var row = 1;
+		//a var for looping
+		var ii = 1;
+		//the cols to loop over
+		var cols = listToArray(query.columnList);
+		//the struct to return
+		var stReturn = structnew();
+		//if there is a second argument, use that for the row number
+		if(arrayLen(arguments) GT 1)
+			row = arguments[2];
+		//loop over the cols and build the struct from the query row	
+		for(ii = 1; ii lte arraylen(cols); ii = ii + 1){
+			stReturn[cols[ii]] = query[cols[ii]][row];
+		}		
+		//return the struct
+		return stReturn;
+	}
+	</cfscript>	
+	
 </cfcomponent>

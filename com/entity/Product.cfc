@@ -257,7 +257,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	/******* Setting methods **************/
+	// Persistent property helpers
+	
+	public string function getURLTitle() {
+		return getFileName();
+	}
+
+	
+	/******* Product Setting methods **************/
 	
 	// Generic setting accessor
 	public boolean function getSetting( required string settingName ) {
@@ -265,29 +272,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return variables[arguments.settingName];
 		} else {
 			return getInheritedSetting( arguments.settingName );
-			}
 		}
-		
+	}	
 	
 	public boolean function getInheritedSetting( required string settingName ) {
-		var settingValue = getService("ProductService").getProductTypeSetting( getProductType().getProductTypeName(),arguments.settingName );
-		if(len(settingValue) > 0) {
-			return settingValue;
-		} else {
-			return setting("product_#arguments.settingName#");
-		}
+		return getProductType().getSetting(arguments.settingName);
 	}
 	
 	// Get source of setting
-	public string function getSettingSource( required string settingName ) {
-		if( structKeyExists(variables, arguments.settingName ) ) {
-			return rbKey( "entity.product" );
-		} else if( len( getService("ProductService").getProductTypeSetting(getProductType().getProductTypeName(), arguments.settingName) ) > 0 ) {
-			return rbKey( "entity.productType" );
-		} else {
-			return rbKey( "entity.setting.global" );
-		}
-	}
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product"};
+    	} else {
+    		return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
+    	}
+    }
 	
 	
 	/***************************************************/

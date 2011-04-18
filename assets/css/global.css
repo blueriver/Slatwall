@@ -150,7 +150,7 @@ table#productTypeSettings {
 	width: 600px;
 }
 
-table#Options, table#ProductSettings, table#ProductBrands {
+table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands {
 	width: 800px;
 }
 

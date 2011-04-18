@@ -36,11 +36,12 @@
 Notes:
 
 */
+$.use("/plugins/Slatwall/assets/js/tools/imgPreview-min.js");
 
-jQuery(document).ready(function() {
-	jQuery('a.preview').imgPreview({
-	    imgCSS: {
-	        width: '150px'
-	    }
-	});
+$(document).ready(function() {
+    $("a.preview").imgPreview({
+        imgCSS: {
+            width: '150px'
+        }
+    });
 });
