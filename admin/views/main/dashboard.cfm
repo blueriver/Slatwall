@@ -46,7 +46,7 @@ Notes:
 	<br />
 	<!---
 	<cfset connectionService = getBeanFactory().getBean("ColdBooksConnectionService") />
-	<cfset connection = connectionService.getConnectionByName("VisualUnrest") />
+	<cfset connection = connectionService.getConnectionByName("test") />
 	<cfsavecontent variable="testRequest">
 			<ItemInventoryQueryRq>
 			</ItemInventoryQueryRq>

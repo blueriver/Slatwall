@@ -41,26 +41,64 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="productService" type="any";
 	property name="accountService" type="any";
 	property name="sessionService" type="any";
+	property name="contentManager" type="any";
 	
 	public void function before(required any rc) {
 		variables.fw.setView("frontend:event.blank");
 	}
 	
 	public void function onSiteRequestStart(required any rc) {
-
+		// This enables SEO friendly product URL's
+		if( listLen(rc.path, "/") >= 3) {
+			if( listGetAt(rc.path, 2, "/") == setting("product_urlKey") ) {
+				if(rc.$.event('slatAction') == "") {
+					
+					// Set the action as product detail and put the filename in the url scope directly
+					rc.$.event('slatAction', 'frontend:product.detail');
+					url.filename = listGetAt(rc.path, 3, "/");
+					
+					// Create a blank content Bean in the event so a 404 doesn't happen
+					var productBean = getContentManager().getBean();
+					productBean.setType("Page");
+					productBean.setSubType("Default");
+					productBean.setIsNew(0);
+					productBean.setActive(1);
+					productBean.setBody("");
+					productBean.setTitle("");
+					productBean.setMenuTitle("");
+					productBean.setFilename("#url.filename#");
+					productBean.setParentID("00000000000000000000000000000000END");
+					productBean.setContentID("00000000000000000000000000000000001");
+					productBean.setPath("00000000000000000000000000000000001");
+					productBean.setSiteID(rc.$.event('siteid'));
+					productBean.setDisplay(1);
+					productBean.setApproved(1);
+					
+					rc.$.event('contentBean', productBean);
+				}
+			}
+		}
 	}
 	
 	public void function onRenderStart(required any rc) {
+		/*
 		// This enables SEO friendly product URL's
 		if( listLen(rc.path, "/") >= 3) {
-			if( listGetAt(rc.path, 2, "/") == setting('product_urlKey') ) {
+			if( listGetAt(rc.path, 2, "/") == setting("product_urlKey") ) {
 				if(rc.$.event('slatAction') == "") {
-					
 					url.filename = listGetAt(rc.path, 3, "/");
 					rc.$.event('slatAction', 'frontend:product.detail');
 					rc.$.content().setIsNew(0);
 					rc.$.event('overrideContent', 1);
 				}
+			}
+		}
+		*/
+		
+		// This checks for Product Listing Pages
+		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:product.listcontentproducts");
 			}
 		}
 	}

@@ -111,6 +111,7 @@ component extends="framework" output="false" {
 		
 		// Set this in the application scope to be used later
 		application[ variables.framework.applicationKey ].fw = this;
+		application.cs = getBeanFactory();
 	}
 	
 	public void function setupRequest() {
