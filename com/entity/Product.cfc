@@ -273,15 +273,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// Get source of setting
-	public string function getSettingSource( required string settingName ) {
-		if( structKeyExists(variables, arguments.settingName ) ) {
-			return rbKey( "entity.product" );
-		} else if( len( getService("ProductService").getProductTypeSetting(getProductType().getProductTypeID(), arguments.settingName) ) > 0 ) {
-			return rbKey( "entity.productType" );
-		} else {
-			return rbKey( "entity.setting.global" );
-		}
-	}
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product"};
+    	} else {
+    		return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
+    	}
+    }
 	
 	
 	/***************************************************/

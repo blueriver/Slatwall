@@ -140,4 +140,12 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
             return setting("product_#arguments.settingName#");
         }
     }
+    
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product Type", name=getProductTypeName(),id=getProductTypeID()};
+    	} else {
+    		return getService("ProductService").getWhereSettingDefined( getProductTypeID(),arguments.settingName );
+    	}
+    }
 }

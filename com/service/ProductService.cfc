@@ -229,9 +229,16 @@ component extends="BaseService" accessors="true" {
 	public any function getWhereSettingDefined( required string productTypeID, required string settingName ) {
 		var productTypeRecord = getProductTypeRecordWhereSettingDefined(argumentCollection=arguments);
 		if( productTypeRecord.recordCount == 1 ) {
-			return productTypeRecord[arguments.settingName][1];
+			return {
+				type = "Product Type",
+				name = productTypeRecord.productTypeName,
+				id = productTypeRecord.productTypeID
+			};
 		} else {
-			return "";
+			return {
+				type = "Global",
+				name = "Global"
+			};
 		}		
 	}
 	
