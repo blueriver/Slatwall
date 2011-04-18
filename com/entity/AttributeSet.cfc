@@ -42,7 +42,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeSetName" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
-	property name="globalFlag" ormtype="boolean";
+	property name="globalFlag" ormtype="boolean" default="false" ;
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -79,5 +79,18 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	}
 	
     /************   END Association Management Methods   *******************/
+    
+    public array function getAttributeSetTypeOptions() {
+		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
+			smartList.addSelect(rawProperty="type", alias="name");
+			smartList.addSelect(rawProperty="typeID", alias="id");
+			// TODO: fix this filter bug in smartlist
+			//smartList.addFilter(rawProperty="parentType_type", value="Attribute Set Types"); 
+			smartList.addOrder("type|ASC");
+			variables.attributeSetTypeOptions = smartList.getRecords();
+		}
+		return variables.attributeSetTypeOptions;
+    }
 
 }

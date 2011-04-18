@@ -73,7 +73,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 	
 	public any function deleteOptionGroup(required any optionGroup) {
-		if(arguments.optionGroup.hasOptions()) {
+		if(arguments.optionGroup.hasOption()) {
 			getValidator().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
 		} else {
 			removeImage(arguments.optionGroup);
