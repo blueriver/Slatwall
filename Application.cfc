@@ -53,6 +53,9 @@ component extends="framework" output="false" {
 	variables.subsystems.frontend = {};
 	variables.subsystems.frontend.baseURL = "";
 	
+	
+	
+	
 	public void function setPluginConfig(required any pluginConfig) {
 		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
 	}
