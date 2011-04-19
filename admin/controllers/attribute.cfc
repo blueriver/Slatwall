@@ -46,96 +46,85 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function create(required struct rc) {
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
-		if(!isNull(rc.optionGroup)) {
-			rc.newOption = getOptionService().getNewEntity();
+		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		if(!isNull(rc.attributeSet)) {
+			rc.newAttribute = getAttributeService().getNewEntity();
 			rc.create = true;
-			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
-			getFW().setView("option.edit");
+			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
+			getFW().setView("attribute.edit");
 		} else {
-			getFW().redirect("option.list");
+			getFW().redirect("attribute.list");
 		}
 	}
 
 	public void function edit(required struct rc) {
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
-		if(!isNull(rc.optionGroup)) {
-			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
+		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		if(!isNull(rc.attributeSet)) {
+			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
 		} else {
-			getFW().redirect("option.list");
+			getFW().redirect("attribute.list");
 		}
 	}
 	
 	public void function detail(required struct rc) {
-		if(len(rc.option.getOptionName())) {
-			rc.itemTitle &= ": #rc.option.getOptionName()#";
+		if(len(rc.attribute.getAttributeName())) {
+			rc.itemTitle &= ": #rc.attribute.getAttributeName()#";
 		} else {
-			getFW().redirect("admin:option.list");
+			getFW().redirect("admin:attribute.list");
 		}
 	}
 	
     
     public void function list(required struct rc) {
-        param name="rc.listby" default="attributeSets";
-        rc.orderby="attributeSet_attributeSetName|A^sortOrder|A";
-        rc.attributes = getAttributeService().getSmartList(rc=arguments.rc);
         rc.attributeSets = getAttributeService().list(entityName="SlatwallAttributeSet",sortby="attributeSetName Asc");
     }
 	
 	public void function save(required struct rc) {
-		if(structKeyExists(rc,"optionid")) {
-			rc.option = getOptionService().getByID(rc.optionID);
+		if(structKeyExists(rc,"attributeID")) {
+			rc.attribute = getAttributeService().getByID(rc.attributeID);
 		} else {
-			rc.option = getOptionService().getNewEntity();
+			rc.attribute = getAttributeService().getNewEntity();
 		}
-		
-		//put optionGroup in rc in case we have to show the edit screen again
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 					
-		// upload the image and return the result struct
-		if(rc.optionImageFile != "") {
-			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionImageFile","","makeUnique");
-		} 
-
-		rc.option = getOptionService().save(rc.option,rc);
+		rc.attribute = getAttributeService().save(rc.attribute,rc);
 		
-		if(!rc.option.hasErrors()) {
-			// go to the 'manage option group' form to add/edit more options
-			rc.message="admin.option.save_success";
-			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
+		if(!rc.attribute.hasErrors()) {
+			// go to the 'manage attribute set' form to add/edit more attributes
+			rc.message="admin.attribute.save_success";
+			getFW().redirect(action="admin:attribute.create",querystring="attributeSetID=#rc.attributeSetID#",preserve="message");
 		} else {
-			if(rc.option.isNew()) {
-				rc.newOption = rc.option;
+			//put attributeSet in rc for form
+			rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.attribute.create") & ": #rc.attributeSet.getAttributeSetName()#";
+			if(rc.attribute.isNew()) {
+				rc.newAttribute = rc.attribute;
 				rc.create = true;
-				rc.optionID = "new";
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create");
-				getFW().setView("admin:option.edit");
+				rc.newAttributeFormOpen=true;
+				getFW().setView("admin:attribute.edit");
 			} else {
-				rc.activeOption = rc.option;
-				rc.optionID = rc.option.getOptionID();
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
-				getFW().setView("admin:option.edit");
+				rc.activeAttribute = rc.attribute;
+				getFW().setView("admin:attribute.edit");
 			}		
 		}
 		
 	}
 	
-	public void function saveOptionSort(required struct rc) {
-		getOptionService().saveOptionSort(rc.optionID);
-		getFW().redirect("admin:option.list");
+	public void function saveAttributeSort(required struct rc) {
+		getAttributeService().saveAttributeSort(rc.attributeID);
+		getFW().redirect("admin:attribute.list");
 	}
 	
 	public void function delete(required struct rc) {
-		var option = getOptionService().getByID(rc.optionid);
-		var optiongroupID = option.getOptionGroup().getOptionGroupID();
-		var deleteResponse = getOptionService().delete(option);
+		var attribute = getAttributeService().getByID(rc.attributeID);
+		var attributeSetID = attribute.getAttributeSet().getAttributeSetID();
+		var deleteResponse = getAttributeService().delete(attribute);
 		if(deleteResponse.getStatusCode()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
+		getFW().redirect(action="admin:attribute.edit", querystring="attributeSetID=#attributeSetID#",preserve="message,messagetype");
 	}
 	
 	public void function createAttributeSet(required struct rc) {
@@ -144,67 +133,62 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   getFW().setView("admin:attribute.detailAttributeSet");
 	}
 	
-	public void function detailOptionGroup(required struct rc) {
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
-		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
-			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
+	public void function detailAttributeSet(required struct rc) {
+		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		if(!isNull(rc.attributeSet) and !rc.attributeSet.isNew()) {
+			rc.itemTitle &= ": #rc.attributeSet.getAttributeSetName()#";
 		} else {
-			getFW().redirect("admin:option.list");
+			getFW().redirect("admin:attribute.list");
 		}
 	}
 	
-	public void function editOptionGroup(required struct rc) {
+	public void function editAttributeSet(required struct rc) {
 		rc.edit=true;
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
-		if(!isNull(rc.optionGroup)) {
-			if( len(rc.optionGroup.getOptionGroupName()) ) {
-				rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
+		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		if(!isNull(rc.attributeSet)) {
+			if( len(rc.attributeSet.getAttributeSetName()) ) {
+				rc.itemTitle &= ": #rc.attributeSet.getAttributeSetName()#";
 			}
-			getFW().setView("admin:option.detailoptiongroup");
+			getFW().setView("admin:attribute.detailAttributeSet");
 		} else
-		  getFW().redirect("admin:option.list");
+		  getFW().redirect("admin:attribute.list");
 	}
 
-	public void function saveOptionGroup(required struct rc) {
-		if(len(trim(rc.optiongroupID))) {
-			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+	public void function saveAttributeSet(required struct rc) {
+		if(len(trim(rc.attributeSetID))) {
+			rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
 		} else {
-			rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
+			rc.attributeSet = getAttributeService().getNewEntity("SlatwallAttributeSet");
 		}
-
-		// upload the image and return the result struct
-		if(rc.optionGroupImageFile != "") {
-			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionGroupImageFile","","makeUnique");
-		} 
 		
-		rc.optionGroup = getOptionService().save(rc.optionGroup,rc);
+		rc.attributeSet = getAttributeService().save(rc.attributeSet,rc);
 		
-		if(!rc.optionGroup.hasErrors()) {
-			// go to the 'manage option group' form to add options
-			rc.message="admin.option.saveoptiongroup_success";
-			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
+		if(!rc.attributeSet.hasErrors()) {
+			// go to the 'manage attribute set' form to add attributes
+			rc.message=rc.$.Slatwall.rbKey("admin.attribute.saveAttributeSet_success");
+			getFW().redirect(action="admin:attribute.create",querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#",preserve="message");
 		} else {
 			rc.edit = true;
-			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
-			getFW().setView(action="admin:option.detailOptionGroup");
+			rc.itemTitle = rc.AttributeSet.isNew() ? rc.$.Slatwall.rbKey("admin.attribute.createAttributeSet") : rc.$.Slatwall.rbKey("admin.attribute.editAttributeSet") & ": #rc.attributeSet.getAttributeSetName()#";
+			getFW().setView(action="admin:attribute.detailAttributeSet");
 		}
 	}
 
-	public void function saveOptionGroupSort(required struct rc) {
-		getOptionService().saveOptionGroupSort(rc.optionGroupID);
-		getFW().redirect("admin:option.list");
+	public void function saveAttributeSetSort(required struct rc) {
+		getAttributeService().saveAttributeSetSort(rc.attributeSetID);
+		getFW().redirect("admin:attribute.list");
 	}
 	
-	public void function deleteOptionGroup(required struct rc) {
-		var optionGroup = getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup");
-		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
+	public void function deleteAttributeSet(required struct rc) {
+		var attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		var deleteResponse = getAttributeService().deleteAttributeSet(attributeSet);
 		if(deleteResponse.getStatusCode()) {
 			rc.message = deleteResponse.getMessage();
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
 		}
-		getFW().redirect(action="admin:option.list",preserve="message,messagetype");
+		getFW().redirect(action="admin:attribute.list",preserve="message,messagetype");
 	}
 	
 }

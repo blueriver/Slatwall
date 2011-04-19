@@ -36,42 +36,51 @@
 Notes:
 
 --->
-<cfparam name="rc.listBy" type="string" />
-<cfparam name="rc.attributes" type="any" />
 <cfparam name="rc.attributeSets" type="any" />
 
 <cfoutput>
 <ul id="navTask">
     <cf_ActionCaller action="admin:attribute.createAttributeSet" type="list">
-	<cfif rc.listby EQ "attributeSets">
-		<cf_ActionCaller action="admin:attribute.list" text="#rc.$.Slatwall.rbKey('admin.attribute.listbyAttributes')#" querystring="listby=attributes" type="list">
-	<cfelseif rc.listby EQ "attributes">
-		<cf_ActionCaller action="admin:attribute.list" text="#rc.$.Slatwall.rbKey('admin.attribute.listbyAttributeSets')#" querystring="listby=attributeSets" type="list">
-	</cfif>
 </ul>
 
 <cfif arrayLen(rc.attributeSets) GT 0>
 
-	<cfif rc.listby eq "attributes">
-	<form name="filterAttributes" method="get">
-		 #rc.$.Slatwall.rbKey("admin.option.attributeSetFilter")#:
-		<input type="hidden" name="action" value="admin:attribute.list" />
-		<input type="hidden" name="listby" value="attributes" />
-		<select name="F_attributeSet_attributeSetName">
-			<option value="">#rc.$.Slatwall.rbKey('admin.attribute.showall')#</option>
-		<cfloop array="#rc.attributeSets#" index="local.thisAttributeSet">
-			<option value="#local.thisAttributeSet.getAttributeSetName()#"<cfif structKeyExists(rc,"F_attributeSet_attributeSetname") and rc.F_attributeSet_attributeSetname eq local.thisattributeSet.getattributeSetName()> selected="selected"</cfif>>#local.thisAttributeSet.getAttributeSetName()#</option>
-		</cfloop>
-		</select>
-		<cf_ActionCaller action="admin:attribute.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.attribute.show')#">
-	</form>
-	#view("attribute/inc/attributeTable")#
-	<cfelse>
-	#view("attribute/inc/attributeSetTable")#
-	</cfif>
+<!---<cfif arrayLen(rc.attributeSets) gt 1>
+	<div id="buttons">
+	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.attribute.saveorder")#</a>
+	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.attribute.reorder')#</a>	
+	</div>
+</cfif>--->
+
+<table class="stripe" id="AttributeSets">
+	<thead>
+	<tr>
+		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.attributeSet.attributeSetName")#</th>
+		<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
+		<th>&nbsp;</th>
+	</tr>
+	</thead>
+	<tbody id="AttributeSetList">
+<cfloop array="#rc.attributeSets#" index="local.thisAttributeSet">
+	<tr class="attributeSet" id="#local.thisAttributeSet.getAttributeSetID()#">
+		<td class="varWidth">#local.thisAttributeSet.getAttributeSetName()#</td>
+		<td>#local.thisAttributeSet.getAttributeSetType().getType()#</td>
+		<td class="administration">
+		  <ul class="three">
+		  	  <cfset local.deleteDisabled = local.thisAttributeSet.getAttributeCount() gt 0 ? true : false />
+		      <cf_ActionCaller action="admin:attribute.create" querystring="AttributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="edit" type="list">
+              <cf_ActionCaller action="admin:attribute.detailAttributeSet" querystring="attributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="viewDetails" type="list">
+			  <cf_ActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
+		  </ul>		
+		
+		</td>
+	</tr>
+</cfloop>
+    </tbody>
+</table>
 
 <cfelse>
-	<p><em>#rc.$.Slatwall.rbKey("admin.attribute.noattributeSetsdefined")#</em></p>
+	<p><em>#rc.$.Slatwall.rbKey("admin.attribute.noAttributeSetsdefined")#</em></p>
 </cfif>
 
 </cfoutput>
