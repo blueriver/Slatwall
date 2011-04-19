@@ -215,6 +215,16 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return variables.entityMetaData[arguments.entityName];
 	}
 	
+	public string function getEntityMetaValue(required string entityName, required string propertyName, required string attribute) {
+		var entityMetaData = getEntityMetaData(arguments.entityName);
+		
+		for(var i=1; i<= arrayLen(entityMetaData.properties); i++) {
+			if( structKeyExists(entityMetaData.properties[i], "cfc") && entityMetaData.properties[i].name == arguments.propertyName) {
+				return entityMetaData.properties[i][arguments.attribute];
+			}
+		}
+	}
+	
 	private string function getValidHQLProperty(required string rawProperty) {
 		var returnProperty = "";
 		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
@@ -228,7 +238,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				} else {
 					returnProperty &= ".#entityProperty#";
 				}
-				currentEntityName = "Slatwall#entityProperty#";
+				currentEntityName = "Slatwall#getEntityMetaValue(currentEntityName, entityProperty, 'cfc')#";
 			} else {
 				returnProperty = "";
 			}
@@ -247,7 +257,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 				if(i == arrayLen(entityPropertyArray)) {
 					returnValue = getValidEntityPropertyValue(entityProperty, arguments.value, currentEntityName);
 				} else {
-					currentEntityName = "Slatwall#entityProperty#";
+					currentEntityName = "Slatwall#getEntityMetaValue(currentEntityName, entityProperty, 'cfc')#";
 				}
 			}
 		}

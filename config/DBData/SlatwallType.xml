@@ -41,19 +41,20 @@
 		<Record typeID="444df29a955f8c674152e90c5f18f72f" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Purchase Order" systemCode="satPurchaseOrder" />
 		<Record typeID="444df29bd86a0f4c489061b76e196e62" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Transfer" systemCode="satTransfer" />
 		<Record typeID="444df29ce07a5c76683d4099c2662425" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Order Shipment" systemCode="satOrderShipment" />
+
+		<Record typeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Validation Types" systemCode="validationType" />
+		<Record typeID="444df2adb8774aa68279f91db58b8711" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Date" systemCode="vtDate" />
+		<Record typeID="444df2aef6c81f77a9b35e0060c0b141" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Numeric" systemCode="vtNumeric" />
+		<Record typeID="444df2afcc7332933829e449ff70e360" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Email" systemCode="vtEmail" />
+		<Record typeID="444df2b0e1867f38402ff0aced5ca60f" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="URL" systemCode="vtURL" />
+		<Record typeID="444df2b201a098f5b277febb17a7cb0a" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Zip Code" systemCode="vtZipCode" />
+		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
 
-444df2ac94eaa8a4881d4cbb3c2e0b98
-444df2adb8774aa68279f91db58b8711
-444df2aef6c81f77a9b35e0060c0b141
-444df2afcc7332933829e449ff70e360
-444df2b0e1867f38402ff0aced5ca60f
-444df2b193d8c854256c8cde9d4921b3
-444df2b201a098f5b277febb17a7cb0a
 444df2b3df09f67ddcb27918f02c2d83
 444df2b498de93b4b33001593e96f4be
 444df2b5c8f9b37338229d4f7dd84ad1

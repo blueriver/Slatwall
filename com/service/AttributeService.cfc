@@ -39,6 +39,14 @@ Notes:
 
 component  extends="slatwall.com.service.BaseService" accessors="true" {
 	
+	public void function saveAttributeSort(required string attributeIDs) {
+		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
+			var attributeID = listGetAt(arguments.attributeIDs,i);
+			var thisAttribute = getByID(attributeID);
+			thisAttribute.setSortOrder(i);
+		}
+	}
+		
 	public any function getAttributeSets(string Type) {
 		if( structKeyExists(arguments,"type") ) {
 			var asType = getByFilter(filterCriteria={type=arguments.type}, entityName="SlatwallType", unique="true");

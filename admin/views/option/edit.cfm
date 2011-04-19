@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.newOption" type="any" default="" />
 <cfparam name="rc.activeOption" type="any" default="" >
 <cfparam name="rc.optionGroup" type="any" />
-<cfparam name="rc.optionID" type="string" default="" />
+<cfparam name="rc.newOptionFormOpen" type="boolean" default="false" />
 
 <cfset local.options = rc.optionGroup.getOptions(sortby="sortOrder",sortType="numeric") />
 
@@ -55,7 +55,7 @@ Notes:
 <cfoutput>
 
 <cfif rc.create>
-<cfset local.thisOpen = rc.optionID eq "new" ? true : false />
+<cfset local.thisOpen = rc.newOptionFormOpen />
 
 <div id="buttons">
 <a class="button" id="newFrmopen" href="javascript:;" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##newFrmcontainer').slideDown();this.style.display='none';jQuery('##newFrmclose').show();return false;">#rc.$.Slatwall.rbKey('admin.option.addoption')#</a>
@@ -86,14 +86,12 @@ Notes:
 <a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
 </p>
 
-<ul id="optionList">
+<ul id="optionList" class="orderList">
 <cfloop from="1" to="#arraylen(local.options)#" index="local.i">
 <cfset local.thisOption = local.options[local.i] />
 <!--- see if this is the option to be actively edited --->
 <cfif isObject(rc.activeOption) and local.thisOption.getOptionID() eq rc.activeOption.getOptionID()>
 	<cfset local.thisOption = rc.activeOption />
-</cfif>
-<cfif local.thisOption.getOptionID() eq rc.optionID>
 	<cfset local.thisOpen = true />
 <cfelse>
 	<cfset local.thisOpen = false />
@@ -113,7 +111,7 @@ Notes:
 		    <dl class="oneColumn">
 		        <cf_PropertyDisplay id="optionname#local.i#" object="#local.thisOption#" property="optionname" edit="true">
 				<cf_PropertyDisplay id="optioncode#local.i#" object="#local.thisOption#" property="optioncode" edit="true">
-				<cf_PropertyDisplay id="optioinimage#local.i#" object="#local.thisOption#" property="optionImage" edit="true" tooltip="true" editType="file">
+				<cf_PropertyDisplay id="optionimage#local.i#" object="#local.thisOption#" property="optionImage" edit="true" tooltip="true" editType="file">
 		        <cfif local.thisOption.hasImage()>
 		        <dd>
 		            <a href="#local.thisOption.getImagePath()#">#local.thisOption.displayImage("40")#</a>

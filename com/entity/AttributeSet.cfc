@@ -40,9 +40,9 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Persistant Properties
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeSetName" ormtype="string";
+	property name="attributeSetName" validateRequired ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
-	property name="globalFlag" ormtype="boolean";
+	property name="globalFlag" ormtype="boolean" default="false" ;
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -51,9 +51,28 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	property name="attributeSetType" cfc="Type" validateRequired fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
 	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all";
+	
+	
+	public AttributeSet function init(){
+       // set default collections for association management methods
+       if(isNull(variables.Attributes))
+           variables.Attributes = [];
+       if(isNull(variables.attributeSetAssignments))
+           variables.attributeSetAssignments = [];
+       return Super.init();
+    }
+	
+	
+	public array function getAttributes(sortby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"sortby")) {
+			return variables.Attributes;
+		} else {
+			return sortObjectArray(variables.Attributes,arguments.sortby,arguments.sortType,arguments.direction);
+		}
+	}
 	
 	
     /******* Association management methods for bidirectional relationships **************/
@@ -79,5 +98,23 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	}
 	
     /************   END Association Management Methods   *******************/
+    
+    public array function getAttributeSetTypeOptions() {
+		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
+			smartList.addSelect(rawProperty="type", alias="name");
+			smartList.addSelect(rawProperty="typeID", alias="id");
+			// TODO: fix this filter bug in smartlist
+			smartList.addFilter(rawProperty="parentType_systemCode", value="attributeSetType", entity="Type");
+			smartList.addOrder("type|ASC");
+			
+			variables.attributeSetTypeOptions = smartList.getRecords();
+		}
+		return variables.attributeSetTypeOptions;
+    }
+    
+   	public numeric function getAttributeCount() {
+		return arrayLen(this.getAttributes());
+	}
 
 }

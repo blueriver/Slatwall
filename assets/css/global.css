@@ -150,7 +150,7 @@ table#productTypeSettings {
 	width: 600px;
 }
 
-table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands {
+table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands, table#AttributeSets {
 	width: 800px;
 }
 
@@ -178,7 +178,7 @@ dl.productPrice dd {
 	margin-left: 130px;
 }
 
-ul#optionList {
+ul.orderList {
 	margin: 20px 0 0 10px;
 }
 

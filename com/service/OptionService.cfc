@@ -40,7 +40,9 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	public any function save(required any entity, required struct data) {	
 		arguments.entity.populate(arguments.data);
-		arguments.entity.setSortOrder(getOptionGroupCount()+1);
+		if( arguments.entity.getClassName() == "SlatwallOptionGroup" ) {
+			arguments.entity.setSortOrder(getOptionGroupCount()+1);
+		}
 		arguments.entity = Super.save(arguments.entity);
 		
 		if(!arguments.entity.hasErrors()) {
@@ -73,7 +75,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 	
 	public any function deleteOptionGroup(required any optionGroup) {
-		if(arguments.optionGroup.hasOptions()) {
+		if(arguments.optionGroup.hasOption()) {
 			getValidator().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
 		} else {
 			removeImage(arguments.optionGroup);
@@ -109,7 +111,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 	
 	public numeric function getOptionGroupCount() {
-		return arrayLen(list());
+		return arrayLen(list("SlatwallOptionGroup"));
 	}
 	
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {

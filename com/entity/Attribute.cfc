@@ -40,10 +40,10 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	
 	// Persistant Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeName" ormtype="string";
+	property name="attributeName" ormtype="string" validateRequired;
 	property name="attributeHint" ormtype="string";
 	property name="defaultValue" ormtype="string";
-	property name="requiredFlag" ormtype="boolean";
+	property name="requiredFlag" ormtype="boolean" default="false" ;
 	property name="sortOrder" ormtype="integer";
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
@@ -56,7 +56,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
+	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" validateRequired hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all";
 	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
@@ -102,4 +102,26 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	
 	/************   END Association Management Methods   *******************/
 
+    public array function getAttributeTypeOptions() {
+		if(!structKeyExists(variables, "attributeTypeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
+			smartList.addSelect(rawProperty="type", alias="name");
+			smartList.addSelect(rawProperty="typeID", alias="id");
+			smartList.addFilter(rawProperty="parentType_systemCode", value="attributeType"); 
+			smartList.addOrder("type|ASC");
+			variables.attributeTypeOptions = smartList.getRecords();
+		}
+		return variables.attributeTypeOptions;
+    }
+   
+    public array function getValidationTypeOptions() {
+		if(!structKeyExists(variables, "validationTypeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
+			smartList.addSelect(rawProperty="type", alias="name");
+			smartList.addSelect(rawProperty="typeID", alias="id");
+			smartList.addFilter(rawProperty="parentType_systemCode", value="validationType"); 
+			variables.validationTypeOptions = smartList.getRecords();
+		}
+		return variables.validationTypeOptions;
+    }
 }
