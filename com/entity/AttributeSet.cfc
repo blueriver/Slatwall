@@ -86,8 +86,9 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 			smartList.addSelect(rawProperty="type", alias="name");
 			smartList.addSelect(rawProperty="typeID", alias="id");
 			// TODO: fix this filter bug in smartlist
-			//smartList.addFilter(rawProperty="parentType_type", value="Attribute Set Types"); 
+			smartList.addFilter(rawProperty="parentType_systemCode", value="attributeType", entity="Type");
 			smartList.addOrder("type|ASC");
+			
 			variables.attributeSetTypeOptions = smartList.getRecords();
 		}
 		return variables.attributeSetTypeOptions;

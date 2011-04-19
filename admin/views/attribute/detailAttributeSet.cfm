@@ -40,6 +40,7 @@ Notes:
 <cfparam name="rc.attributeSet" type="any" />
  
 <cfoutput>
+	
 <ul id="navTask">
 	<cfif !rc.attributeSet.isNew()><cf_ActionCaller action="admin:attribute.create" querystring="attributeSetId=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
     <cfif !rc.edit><cf_ActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetid=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
