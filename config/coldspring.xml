@@ -2,8 +2,6 @@
 
 <beans default-autowire="byName">
 	
-	<import resource="/cfide/administrator/ColdBooks/config/ColdSpring.ColdBooks.core.xml" />
-	
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
 	<bean id="attributeDAO" class="slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />

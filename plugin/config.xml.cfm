@@ -40,24 +40,14 @@ Notes:
 <name>Slatwall</name>
 <package>Slatwall</package>
 <directoryFormat>packageOnly</directoryFormat>
-<version>0.4</version>
+<version>0.5</version>
 <provider>Slatwall</provider>
 <providerURL>http://www.getslatwall.com/</providerURL>
 <category>Application</category>
+<ormcfclocation>com/entity</ormcfclocation>
+<customtagpaths>tags</customtagpaths>
 <settings>
-	<setting>  
-		<name>ORMpreference</name>  
-		<label>Automatically Install ORM Setting?</label>  
-		<hint>Allow Slatwall to automatically install ORM settings for you?</hint>  
-		<type>select</type>
-		<required>true</required>
-		<validation></validation>  
-		<regex></regex>
-		<message></message>
-		<defaultvalue></defaultvalue>  
-		<optionlist>true^false</optionlist>  
-		<optionlabellist>Yes^No</optionlabellist>  
-	</setting>
+	
 </settings>
 
 <eventHandlers>

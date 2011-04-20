@@ -49,7 +49,6 @@ component extends="mura.plugin.plugincfc" output="false" {
 	public void function install() {
 		application.appInitialized=false;
 		setUpClassExtension();
-		installORMSettings();
 		ormReload();
 	}
 	
@@ -57,38 +56,15 @@ component extends="mura.plugin.plugincfc" output="false" {
 	public void function update() {
 		application.appInitialized=false;
 		setUpClassExtension();
-		installORMSettings();
 		ormReload();
 	}
 	
 	// On delete
 	public void function delete() {
-		structDelete(session, "slatwallSession");
-		// Clear out cfapplication file
-	    ClearOldAppContents();
 		ormReload();
 	}
 	
 	// Private Funtions
-	private void function installORMSettings() {
-			
-		// Clear out old Slatwall data
-		ClearOldAppContents();
-		
-		// Check if install/update needs to remove comments
-		if (#variables.config.getSetting( 'ORMpreference' )#){
-			var includeStr = "<cfinclude template='/plugins/Slatwall/config/cfapplication.cfm'>";
-		} else {
-			var includeStr = "<!--- <cfinclude template='/plugins/Slatwall/config/cfapplication.cfm'> --->";
-		}
-		
-		// Append to file new ORM code
-		var fileobj= fileOpen("#ExpandPath("/config/cfapplication.cfm")#", "append");
-		fileWriteLine(fileObj,"#includeStr#" );
-		fileClose(fileobj);
-	
-	}
-	
 	private void function setUpClassExtension() {
 		var assignedSites = variables.config.getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
@@ -117,16 +93,5 @@ component extends="mura.plugin.plugincfc" output="false" {
 			});
 			local.thisAttribute.save();
 		}
-	}
-	
-	private void function ClearOldAppContents() {
-	    // Get current cfapplication file and all its settings
-		var FileData = FileRead("#ExpandPath("/config/cfapplication.cfm")#"); 
-		// See if we have any Slatwall code that needs removing from this file
-		var	data = REReplace(FileData, "<cfinclude template='/plugins/Slatwall/config/cfapplication.cfm'>", "", "ALL");
-		// Remove ONLY Slatwall code from the cfapplication.cfc file
-		var fileobj= fileOpen("#ExpandPath("/config/cfapplication.cfm")#", "write" );
-		fileWriteLine(fileObj,"#data#" );
-		fileClose(fileobj);
 	}
 }
