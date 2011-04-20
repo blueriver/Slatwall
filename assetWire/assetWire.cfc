@@ -58,7 +58,9 @@ component output="false" {
 	public void function wireFW1() {
 		includeJSAsset("global.js");
 		includeCSSAsset("global.css");
-		addViewToAssets(request.view);
+		if(structKeyExists(request, "view")) {
+			addViewToAssets(request.view);	
+		}
 	}
 	
 	public any function getJSAssets() {
