@@ -1,0 +1,10 @@
+<Table tableName="SlatwallLocation">
+	<Columns>
+		<column name="locationID" fieldtype="id" />
+		<column name="locationName" />
+		<column name="sellStockOnWebFlag" update="false" />
+	</Columns>
+	<Records>
+		<Record locationID="88e6d435d3ac2e5947c81ab3da60eba2" locationName="Default" sellStockOnWebFlag="1" />
+	</Records>
+</Table>
