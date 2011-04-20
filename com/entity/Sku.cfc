@@ -43,7 +43,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuCode" ormtype="string" length="50" validateRequired;
 	property name="listPrice" ormtype="float" default="0";
 	property name="price" ormtype="float" default="0";
-	property name="defaultFlag" ormtype="boolean" default="false";  
+	property name="defaultFlag" ormtype="boolean" default="false";
+	
+	// Remote properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

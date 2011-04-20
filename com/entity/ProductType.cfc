@@ -48,6 +48,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     property name="allowBackorderFlag" ormtype="boolean";
     property name="allowDropshipFlag" ormtype="boolean";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
