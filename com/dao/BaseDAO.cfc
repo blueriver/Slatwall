@@ -55,7 +55,7 @@ component output="false" {
 			return entityLoad(arguments.entityName);
 		} else {
 			return entityLoad(arguments.entityName,arguments.filterCriteria,arguments.sortby);
-		}	
+		}
 	}
 	
 	public any function getSmartList(required struct rc, required string entityName){

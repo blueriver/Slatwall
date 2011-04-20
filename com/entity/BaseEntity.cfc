@@ -154,6 +154,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 							_setPropertyNull(local.theProperty.name);
 						}
 					}
+				
 				}
 			}
 		}

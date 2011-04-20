@@ -120,6 +120,7 @@ Notes:
 	attributes.displaytype have the following options:
 	dl
 	table
+	plain
 --->
 
 <cfif thisTag.executionMode is "start">

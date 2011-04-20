@@ -50,19 +50,22 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	// Related Object Properties
-	property name="shippingMethodType" cfc="Type" fieldtype="many-to-one" fkcolumn="shippingMethodTypeID";
-	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" filedtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all";  
+	// Related Object Properties 
+	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all";
 	
-	public string function getMethodType() {
-		return getShippingMethodType().getType();
-	}
-	
-	public array function getShippingRates() {
+	public any function init() {
 		if(isNull(variables.shippingRates)) {
-			variables.shippingRates = arrayNew(1);
+			variables.shippingRates = [];
 		}
-		return variables.shippingRates;
+		
+		return super.init();
 	}
-
+	
+	public void function addShippingRate(required any shippingRate) {
+		if(!arrayFind(variables.shippingRates, arguments.shippingRate) || arguments.shippingRate.isNew()) {
+			arrayAppend(variables.shippingRates, arguments.shippingRate);
+			arguments.shippingRate.setShippingMethod(this);
+		}
+	}
+	
 }

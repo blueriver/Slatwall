@@ -37,10 +37,16 @@ Notes:
 
 */
 component extends="BaseController" output="false" accessors="true" {
-			
+	
+	// Slatwall Service Injection		
 	property name="settingService" type="any";
-	property name="userManager" type="any";
 	property name="productService" type="any";
+	property name="shippingService" type="any";
+	property name="paymentService" type="any";
+	property name="formUtilities" type="any";
+	
+	// Mura Service Injection
+	property name="userManager" type="any";
 	
 	public void function dashboard() {
 		getFW().redirect(action="admin:setting.detail");
@@ -149,8 +155,7 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		rc.shippingServices = getSettingService().getShippingServices();
-		rc.addressZones = getSettingService().list("SlatwallAddressZone");
-		rc.blankShippingRate = getSettingService().getNewEntity("SlatwallShippingRate");
+		rc.blankShippingRate = getShippingService().getNewEntity("SlatwallShippingRate");
 	}
 	
 	public void function deleteShippingMethod(required struct rc) {
@@ -167,9 +172,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function createShippingMethod(required struct rc) {
-		detailShippingMethod(rc);
-		getFW().setView("admin:setting.detailshippingmethod");
-		rc.edit = true;
+		editShippingMethod(rc);
 	}
 	
 	public void function editShippingMethod(required struct rc) {
@@ -180,7 +183,16 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function saveShippingMethod(required struct rc) {
 		detailShippingMethod(rc);
-		rc.shippingMethod = getSettingService().save(rc.shippingMethod, rc);
+		
+		if(rc.shippingProvider == "RateTable") {
+			var formStruct = getFormUtilities().buildFormCollections(rc);
+			if(structKeyExists(formStruct, "shippingRates")) {
+				rc.shippingRates = formStruct.shippingRates;	
+			}	
+		}
+		
+		rc.shippingMethod = getShippingService().saveShippingMethod(entity=rc.shippingMethod, data=rc);
+
 		if(!rc.shippingMethod.hasErrors()) {
 			getFW().redirect(action="admin:setting.listshippingmethods", querystring="reload=true&message=admin.setting.saveshippingmethod_success");
 		} else {
@@ -226,7 +238,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function saveAddressZone(required struct rc) {
 		detailAddressZone(rc);
 		
-		var formStruct = getService("formUtilities").buildFormCollections(rc);
+		var formStruct = getFormUtilities().buildFormCollections(rc);
 		if(structKeyExists(formStruct, "addressZoneLocations")) {
 			rc.addressZoneLocations = formStruct.addressZoneLocations;	
 		}
@@ -242,7 +254,16 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function deleteAddressZone(required struct rc) {
-		// TODO: Add logic to make sure that the address zone isn't being used by shipping rates, ext...
-		getFW().redirect(action="admin:setting.listaddresszones");
+		detailAddressZone(rc);
+		var deleteResponse = getSettingService().delete(rc.addressZone);
+		
+		if(deleteResponse.getStatusCode()) {
+			rc.message=deleteResponse.getMessage();
+		} else {
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
 	}	
 }
