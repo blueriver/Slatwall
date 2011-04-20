@@ -69,8 +69,8 @@ component extends="BaseController" output="false" accessors="true" {
 				}
 			}
 		}
-		getSettingService().reloadConfiguration();
-		getFW().redirect(action="admin:setting.detail");
+		
+		getFW().redirect(action="admin:setting.detail", queryString="reload=true");
 	}
 	
 	// User Permissions
@@ -103,8 +103,7 @@ component extends="BaseController" output="false" accessors="true" {
 				}
 			}
 		}
-		getSettingService().reloadConfiguration();
-		getFW().redirect(action="admin:main.dashboard");
+		getFW().redirect(action="admin:main.dashboard", queryString="reload=true");
 	}
 	
 	// Shipping Services
@@ -132,8 +131,7 @@ component extends="BaseController" output="false" accessors="true" {
 				getSettingService().save(entity=setting);
 			}
 		}
-		getSettingService().reloadConfiguration();
-		getFW().redirect(action="admin:setting.listshippingservices");
+		getFW().redirect(action="admin:setting.listshippingservices", queryString="reload=true");
 	}
 	
 	// Shipping Methods
@@ -165,8 +163,7 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
-		getSettingService().reloadConfiguration();
-		getFW().redirect(action="admin:setting.listshippingmethods", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.listshippingmethods", queryString="reload=true", preserve="message,messagetype");
 	}
 	
 	public void function createShippingMethod(required struct rc) {
@@ -185,8 +182,7 @@ component extends="BaseController" output="false" accessors="true" {
 		detailShippingMethod(rc);
 		rc.shippingMethod = getSettingService().save(rc.shippingMethod, rc);
 		if(!rc.shippingMethod.hasErrors()) {
-			getSettingService().reloadConfiguration();
-	   		getFW().redirect(action="admin:setting.listshippingmethods", querystring="message=admin.setting.saveshippingmethod_success");
+			getFW().redirect(action="admin:setting.listshippingmethods", querystring="reload=true&message=admin.setting.saveshippingmethod_success");
 		} else {
 			rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
 	   		getFW().setView(action="admin:setting.editshippingmethod");
