@@ -71,11 +71,6 @@ component displayname="Base Object" output="false" {
 		return application.slatwall.pluginConfig;
 	}
 	
-	// @hint Private helper function for returning the current Mura Scope
-	private any function getMuraScope() {
-		
-	}
-	
 	public any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}

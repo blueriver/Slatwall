@@ -68,7 +68,7 @@ Notes:
 							<td id="spdproduct_defaulttemplate" class="value">
 								<select name="product_defaulttemplate">
 									<cfloop query="rc.productTemplateOptions">
-										<option value="#rc.productTemplateOptions.name#" <cfif rc.allSettings.product_defaultTemplate.getSettingValue() eq rc.productTemplateOptions.name>selected="selected"</cfif>>#rc.productTemplateOptions.name#</option>
+										<option value="#rc.productTemplateOptions.filename#" <cfif rc.allSettings.product_defaultTemplate.getSettingValue() eq rc.productTemplateOptions.filename>selected="selected"</cfif>>#rc.productTemplateOptions.menutitle#</option>
 									</cfloop>
 								</select>
 							</td>

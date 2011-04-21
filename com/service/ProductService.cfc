@@ -38,17 +38,19 @@ Notes:
 */
 component extends="BaseService" accessors="true" {
 	
+	// Slatwall Service Injection
 	property name="skuDAO" type="any";
 	property name="ProductTypeDAO" type="any";
 	property name="SkuService" type="any";  
-	property name="contentManager" type="any";
-	property name="settingsManager" type="any";
-	property name="feedManager" type="any";
 	property name="ProductTypeTree" type="any";
 	
+	// Mura Service Injection
+	property name="contentManager" type="any";
+	property name="feedManager" type="any";
 		
-	public any function getProductTemplates() {
-		return getSettingsManager().getSite(session.siteid).getTemplates();
+	public any function getProductTemplates(required string siteID) {
+		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
+		return getContentManager().getNest(parentID=productTemplatesID, siteid=arguments.siteid);
 	}
 	
 	public any function getContentFeed() {

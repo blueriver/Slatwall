@@ -38,9 +38,13 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 	
+	// Slatwall Service Injection
 	property name="productService" type="any";
 	property name="accountService" type="any";
 	property name="sessionService" type="any";
+	property name="requestCacheService" type="any";
+	
+	// Mura Service Injection
 	property name="contentManager" type="any";
 	
 	public void function before(required any rc) {
@@ -48,53 +52,22 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onSiteRequestStart(required any rc) {
-		// This enables SEO friendly product URL's
-		if( listLen(rc.path, "/") >= 3) {
-			if( listGetAt(rc.path, 2, "/") == setting("product_urlKey") ) {
-				if(rc.$.event('slatAction') == "") {
-					
-					// Set the action as product detail and put the filename in the url scope directly
-					rc.$.event('slatAction', 'frontend:product.detail');
-					url.filename = listGetAt(rc.path, 3, "/");
-					
-					// Create a blank content Bean in the event so a 404 doesn't happen
-					var productBean = getContentManager().getBean();
-					productBean.setType("Page");
-					productBean.setSubType("Default");
-					productBean.setIsNew(0);
-					productBean.setActive(1);
-					productBean.setBody("");
-					productBean.setTitle("");
-					productBean.setMenuTitle("");
-					productBean.setFilename("#url.filename#");
-					productBean.setParentID("00000000000000000000000000000000END");
-					productBean.setContentID("00000000000000000000000000000000001");
-					productBean.setPath("00000000000000000000000000000000001");
-					productBean.setSiteID(rc.$.event('siteid'));
-					productBean.setDisplay(1);
-					productBean.setApproved(1);
-					
-					rc.$.event('contentBean', productBean);
-				}
-			}
+		// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
+		if( listLen(rc.path, "/") >= 3 && listGetAt(rc.path, 2, "/") == setting("product_urlKey")) {
+			
+			// Load Product
+			var product = getProductService().getByFilename(listGetAt(rc.path, 3, "/"));
+			
+			// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
+			if(!isNull(product)) {
+				getRequestCacheService().setValue("currentProduct", product);
+				rc.$.event('slatAction', 'frontend:product.detail');
+				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(),rc.$.event('siteid'),true));
+			}	
 		}
 	}
 	
 	public void function onRenderStart(required any rc) {
-		/*
-		// This enables SEO friendly product URL's
-		if( listLen(rc.path, "/") >= 3) {
-			if( listGetAt(rc.path, 2, "/") == setting("product_urlKey") ) {
-				if(rc.$.event('slatAction') == "") {
-					url.filename = listGetAt(rc.path, 3, "/");
-					rc.$.event('slatAction', 'frontend:product.detail');
-					rc.$.content().setIsNew(0);
-					rc.$.event('overrideContent', 1);
-				}
-			}
-		}
-		*/
-		
 		// This checks for Product Listing Pages
 		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
 			if(rc.$.event('slatAction') == "") {

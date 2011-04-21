@@ -39,8 +39,7 @@ Notes:
 component extends="mura.plugin.plugincfc" output="false" { 
 
 	variables.config="";
-	variables.instance.extensionManager = application.classExtensionManager;
-
+	
 	public void function init(any config) {
 		variables.config = arguments.config;
 	}
@@ -48,50 +47,16 @@ component extends="mura.plugin.plugincfc" output="false" {
 	// On install
 	public void function install() {
 		application.appInitialized=false;
-		setUpClassExtension();
-		ormReload();
 	}
 	
 	// On update
 	public void function update() {
 		application.appInitialized=false;
-		setUpClassExtension();
-		ormReload();
 	}
 	
 	// On delete
 	public void function delete() {
-		ormReload();
 	}
 	
-	// Private Funtions
-	private void function setUpClassExtension() {
-		var assignedSites = variables.config.getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			local.thisSiteID = assignedSites["siteID"][i];
-			local.thisSubType = application.classExtensionManager.getSubTypeBean();
-			local.thisSubType.set( {
-				type = "Page",
-				subType = "SlatwallProductListing",
-				siteID = local.thisSiteID
-			} );
-			// we load the subType (in case it already exists) before it's saved
-			local.thisSubType.load();
-			local.thisSubType.save();
-			// get the extend set. One is created if it doesn't already exist
-			local.thisExtendSet = local.thisSubType.getExtendSetByName( "Slatwall Product Listing Attributes" );
-			local.thisExtendSet.setSubTypeID(local.thisSubType.getSubTypeID());
-			local.thisExtendSet.save();
-			// create a new attribute for the extend set
-			// getAttributeBy Name will look for it and if not found give me a new bean to use 
-			local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
-			local.thisAttribute.set({
-				label = "Products Per Page",
-				type = "TextBox",
-				validation = "numeric",
-				defaultValue = "16"
-			});
-			local.thisAttribute.save();
-		}
-	}
+	
 }

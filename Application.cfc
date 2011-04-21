@@ -53,9 +53,6 @@ component extends="framework" output="false" {
 	variables.subsystems.frontend = {};
 	variables.subsystems.frontend.baseURL = "";
 	
-	
-	
-	
 	public void function setPluginConfig(required any pluginConfig) {
 		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
 	}
@@ -70,8 +67,6 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		/*setupMuraRequirements();*/
-		
 		ormReload();
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
@@ -79,10 +74,7 @@ component extends="framework" output="false" {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
-		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		var dataPopulator = new Slatwall.com.utility.DataPopulator();
-		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-		
+		// Get Coldspring Config
 		var serviceFactory = "";
 		var rbFactory = "";
 		var xml = "";
@@ -111,7 +103,13 @@ component extends="framework" output="false" {
 		
 		// Set this in the application scope to be used later
 		application[ variables.framework.applicationKey ].fw = this;
-		application.cs = getBeanFactory();
+		
+		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
+		var dataPopulator = new Slatwall.com.utility.DataPopulator();
+		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
+		
+		// Run mura requirements check
+		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 	}
 	
 	public void function setupRequest() {
@@ -122,7 +120,7 @@ component extends="framework" output="false" {
 			getBeanFactory().getBean("requestCacheService").enableRequestCache();
 			
 			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
-				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false, onlyIfNew=true);
+				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
 			}
 			
 			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.

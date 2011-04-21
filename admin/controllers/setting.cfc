@@ -56,7 +56,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function detail(required struct rc) {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
-		rc.productTemplateOptions = getProductService().getProductTemplates();
+		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
 	}
 	
 	public void function edit(required struct rc) {
