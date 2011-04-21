@@ -77,7 +77,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        if(isNull(variables.Options)) {
        	    variables.options=[];
        }
-       setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/products/");
+       setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/products/");
        return Super.init();
     }
     
@@ -124,7 +124,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     
     public void function removeOption(required Option Option) {
-       // first remove the option from this Sku    
+       // first remove the option from this Sku
        if(hasOption(arguments.option)) {
 	       var index = arrayFind(this.getOptions(),arguments.option);
 	       if(index>0) {
