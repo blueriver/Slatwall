@@ -170,7 +170,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
 			variables.permissionActions = structNew();
 			var dirLocation = ExpandPath("/plugins/Slatwall/admin/controllers");
-			var dirList = directoryList( dirLocation );
+			var dirList = directoryList(dirLocation,"false","name","*.cfc");
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var controllerName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
 				var controller = createObject("component", "Slatwall.admin.controllers.#controllerName#");
