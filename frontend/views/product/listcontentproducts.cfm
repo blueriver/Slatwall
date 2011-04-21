@@ -36,10 +36,10 @@
 Notes:
 
 --->
-<cfparam name="rc.productContentSmartList" type="any" />
+
 <cfoutput>
 	<div class="svofrontendlistcontentproducts">
-		<cfloop array="#rc.productContentSmartList.getPageRecords()#" index="local.product">
+		<cfloop array="#rc.$.slatwall.productList().getPageRecords()#" index="local.product">
 			<a href="#local.product.getProductURL()#">
 			<dl>
 				<dt class="image">#local.product.getImage("s")#</dt>

@@ -48,7 +48,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function listcontentproducts(required struct rc) {
-		rc.productContentSmartList = getProductService().getProductContentSmartList(rc=arguments.rc, contentID=$.content("contentID"));
+		
 	}
 	
 	public void function addtocart(required struct rc) {
