@@ -63,6 +63,13 @@ component accessors="true" output="false" extends="BaseObject" {
 		return getCurrentSession().getCart();
 	}
 	
+	private any function getCurrentProductList() {
+		if(!getService("requestCacheService").keyExists("currentProductList")) {
+			getService("requestCacheService").setValue("currentProductList", new Slatwall.com.utility.SmartList(entityName="SlatwallProduct"));
+		}
+		return getService("requestCacheService").getValue("currentProductList");
+	}
+	
 	public any function account(string property, string value) {
 		if(isDefined("arguments.property") && isDefined("arguments.value")) {
 			return evaluate("getCurrentAccount().set#arguments.property#(#arguments.value#)");
@@ -90,6 +97,16 @@ component accessors="true" output="false" extends="BaseObject" {
 			return evaluate("getCurrentProduct().get#arguments.property#()");
 		} else {
 			return getCurrentProduct();	
+		}
+	}
+	
+	public any function productList(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return evaluate("getCurrentProduct().set#arguments.property#(#arguments.value#)");
+		} else if (structKeyExists(arguments, "property")) {
+			return evaluate("getCurrentProduct().get#arguments.property#()");
+		} else {
+			return getCurrentProductList();	
 		}
 	}
 	
