@@ -44,7 +44,11 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	public any function getCurrentProduct() {
 		if(!getService("requestCacheService").keyExists("currentProduct")) {
-			getService("requestCacheService").setValue("currentProduct", getService("productService").getNewEntity());
+			if(getService("requestCacheService").keyExists("currentProductID")) {
+				getService("requestCacheService").setValue("currentProduct", getService("productService").getByID(getService("requestCacheService").getValue("currentProductID")));
+			} else {
+				getService("requestCacheService").setValue("currentProduct", getService("productService").getNewEntity());	
+			}
 		}
 		return getService("requestCacheService").getValue("currentProduct");
 	}

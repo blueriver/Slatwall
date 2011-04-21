@@ -50,6 +50,10 @@ component output="false" {
 		return ormExecuteQuery(" from #arguments.entityName# where filename = :filename", {filename=arguments.filename}, true);
 	}
 	
+	public any function readByRemoteID(required string remoteID, required string entityName){
+		return ormExecuteQuery(" from #arguments.entityName# where remoteID = :remoteID", {remoteID=arguments.remoteID}, true);
+	}
+	
 	public array function list(required string entityName,struct filterCriteria=structNew(),string sortBy="") {
 		if(structIsEmpty(arguments.filterCriteria) and !len("arguments.sortby")) {
 			return entityLoad(arguments.entityName);

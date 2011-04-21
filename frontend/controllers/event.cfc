@@ -61,6 +61,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
 			if(!isNull(product)) {
 				getRequestCacheService().setValue("currentProduct", product);
+				getRequestCacheService().setValue("currentProductID", product.getProductID());
 				rc.$.event('slatAction', 'frontend:product.detail');
 				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(),rc.$.event('siteid'),true));
 			}	
