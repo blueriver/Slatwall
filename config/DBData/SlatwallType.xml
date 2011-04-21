@@ -17,9 +17,8 @@
 		<Record typeID="444df290c7d6c54f046eec90e2353096" parentTypeID="444df28ec3c4a84bf918671dfc179780" type="Child" systemCode="artChild" />
 		
 		<Record typeID="444df2919d15d8ef5c9bc67857f19228" type="Attribute Set Types" systemCode="attributeSetType" />
-		<Record typeID="444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Profile" systemCode="astProfile" />
 		<Record typeID="444df293fcc530434949d63e408cac2b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product" systemCode="astProduct" />
-		<Record typeID="444df2abc9d58d4faba8358d49cc6e1c" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product Type" systemCode="astProductType" />
+		<Record typeID="444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product Customization" systemCode="astProductCustomization" />
 		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="astAccount" />
 		
 		<Record typeID="444df2a4e7c799436c29759e09b6e2c5" type="Attribute Types" systemCode="attributeType" />
