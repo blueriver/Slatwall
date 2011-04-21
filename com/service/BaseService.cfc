@@ -63,6 +63,14 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 	
+	public any function getByRemoteID(required string remoteID, string entityName) {
+		if(isDefined("arguments.entityName")) {
+			return getDAO().readByRemoteID(remoteID=arguments.remoteID, entityName=arguments.entityName);
+		} else {
+			return getDAO().readByRemoteID(remoteID=arguments.remoteID, entityName=getEntityName());	
+		}
+	}
+	
 	public any function getByFilter(required struct filterCriteria, string entityName, string sortBy="", boolean unique=false) {
 		var collection = [];
 		if(!structKeyExists(arguments,"entityName")) {
