@@ -60,7 +60,7 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	
 	public void function setAttribute(required Attribute attribute) {
 		variables.attribute = arguments.attribute;
-		if(!arguments.attribute.hasAttributeOption(this)) {
+		if(isNew() || !arguments.attribute.hasAttributeOption(this)) {
 		   arrayAppend(arguments.attribute.getAttributeOptions(),this);
 		}
 	}

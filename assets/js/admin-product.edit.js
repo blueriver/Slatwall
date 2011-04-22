@@ -39,9 +39,9 @@ Notes:
 
 $.use('tools/jquery.colorbox-min.js');
 
-jQuery(document).ready(function() {
+$(document).ready(function() {
     var skuCount = jQuery('tr[id^="Sku"]').length;
-    jQuery("#addSKU").click(function() {
+    $("#addSKU").click(function() {
         var current = jQuery('tr[id^="Sku"]').length;
         current++;
         var $newSKU= jQuery( "#tableTemplate tbody>tr:last" ).clone(true);
@@ -55,8 +55,8 @@ jQuery(document).ready(function() {
             var $currentElem= $(this);
             $currentElem.attr("name","skus["+current+"]."+$currentElem.attr("name"));
         });
-        jQuery('#remSKU').attr('style','');
-        jQuery('#skuTable > tbody:last').append($newSKU);
+        $('#remSKU').attr('style','');
+        $('#skuTable > tbody:last').append($newSKU);
         $newSKU.attr("id","Sku" + current);
         // add stripe to row
         if(current % 2 == 1) {
@@ -64,15 +64,15 @@ jQuery(document).ready(function() {
         }
     });
     
-    jQuery('#remSKU').click(function() {
+    $('#remSKU').click(function() {
         var num = jQuery('tr[id^="Sku"]').length;
-        jQuery('#Sku' + num).remove();
+        $('#Sku' + num).remove();
         // can't remove more skus than were originally present
         if(num-1 == skuCount) {
             jQuery('#remSKU').attr('style','display:none;');
         }
     });
-    jQuery(".uploadImage").colorbox({
+    $(".uploadImage").colorbox({
         onComplete: function() {
 			// upload button is disabled unless file field is filled
             $('input#skuImageFile').change(function(){
