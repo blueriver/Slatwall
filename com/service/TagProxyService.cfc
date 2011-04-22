@@ -47,4 +47,9 @@ Notes:
 		<cfcookie name="#arguments.name#" value="#arguments.value#" expires="#arguments.expires#" secure="#arguments.secure#">
 	</cffunction>
 	
+	<cffunction name="cfhtmlhead">
+		<cfargument name="text" type="string" required="true" />
+		<cfhtmlhead text="#arguments.text#">
+	</cffunction>
+	
 </cfcomponent>

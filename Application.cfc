@@ -278,7 +278,14 @@ component extends="framework" output="false" {
 		ormGetSession().clear();
 	}
 	
-	// assetWire functions
+	// Start assetWire functions ==================================
+	public any function getAssetWire() {
+		if(!structKeyExists(request, "assetWire")) {
+			request.assetWire = new assets.assetWire(this); 
+		}
+		return request.assetWire;
+	}
+	
 	private void function buildViewAndLayoutQueue() {
 		super.buildViewAndLayoutQueue();
 		getAssetWire().includeAsset("js/global.js");
@@ -288,21 +295,26 @@ component extends="framework" output="false" {
 		}
 	}
 	
+	private string function internalView( string viewPath, struct args = { } ) {
+		var rtn = super.internalView(argumentcollection=arguments);
+		if((structKeyExists(request, 'layout') && !request.layout) || !arrayLen(request.layouts)){
+			getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
+		}
+		return rtn;
+	}
+	
+	private string function internalLayout( string layoutPath, string body ) {
+		var rtn = super.internalLayout(argumentcollection=arguments);
+		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
+			getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());
+		}
+		return rtn;
+	}
+		
 	public string function view( string path, struct args = { } ) {
 		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
 		return super.view(argumentcollection=arguments);
 	}
 	
-	public any function getAssetWire() {
-		if(!structKeyExists(request, "assetWire")) {
-			request.assetWire = new assets.assetWire(this); 
-		}
-		return request.assetWire;
-	}
-	
-	public any function onPreOutput( out ) {
-		// Integration point with assetWire
-		
-		return replace(out, "[[assetWire]]", getAssetWire().getAllAssets());
-	}
+	// End assetWire functions ==================================
 }
