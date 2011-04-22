@@ -58,6 +58,13 @@ component output="false" accessors="true" {
 		
 		allAssets &= '#chr(10)#<!-- Asset Wire Automatic Wiring Start -->#chr(10)##chr(10)#';
 		
+		// Add all Scripts
+		for(var i=1; i<=arrayLen(variables.jsAssets); i++){
+			allAssets &= '  <script src="#variables.jsAssets[i]#" type="text/javascript"></script>#chr(10)#';
+		}
+		allAssets &= '#chr(10)#';
+		
+		
 		// Add all Javascript Variables
 		if( arrayLen(variables.jsVariables) ) {
 			allAssets &= '  <script type="text/javascript">#chr(10)#';
@@ -68,12 +75,6 @@ component output="false" accessors="true" {
 			allAssets &= '#chr(10)#';
 		}
 		
-		// Add all Scripts
-		for(var i=1; i<=arrayLen(variables.jsAssets); i++){
-			allAssets &= '  <script src="#variables.jsAssets[i]#" type="text/javascript"></script>#chr(10)#';
-		}
-		
-		allAssets &= '#chr(10)#';
 		
 		// Add all CSS			
 		for(var i=1; i<=arrayLen(variables.cssAssets); i++){
@@ -142,13 +143,16 @@ component output="false" accessors="true" {
 	}
 		
 	private void function includeAssetDependencies(required string asset) {
+		
 		if( structKeyExists(variables.assetDependencies, getFullAssetPath(arguments.asset)) ) {
+			
 			var dependencies = variables.assetDependencies[ getFullAssetPath(arguments.asset) ];
-			for(var i=1; i<= arrayLen(dependencies); i++){
+			
+			for(var i=1; i <= arrayLen(dependencies); i++){
 				if(getFullAssetPath(arguments.asset) == dependencies[i]) {
 					throw("An Asset Cannot Be Dependent on Itself")	
 				}
-				includeAsset(dependencies[i]);
+				includeAsset(getFullAssetPath(dependencies[i]));
 			}
 		}
 	}
