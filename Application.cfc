@@ -279,11 +279,6 @@ component extends="framework" output="false" {
 	}
 	
 	// assetWire functions
-	private void function buildViewAndLayoutQueue() {
-		super.buildViewAndLayoutQueue();
-		getAssetWire().wireFW1();
-	}
-	
 	public string function view( string path, struct args = { } ) {
 		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
 		return super.view(argumentcollection=arguments);
@@ -291,8 +286,18 @@ component extends="framework" output="false" {
 	
 	public any function getAssetWire() {
 		if(!structKeyExists(request, "assetWire")) {
-			request.assetWire = new assetWire.assetWire(this); 
+			request.assetWire = new assets.assetWire(this); 
 		}
 		return request.assetWire;
+	}
+	
+	public any function onPreOutput( out ) {
+		// Integration point with assetWire
+		getAssetWire().includeAsset("js/global.js");
+		getAssetWire().includeAsset("css/global.css");
+		if(structKeyExists(request, "view")) {
+			getAssetWire().addViewToAssets(request.view);	
+		}
+		return replace(out, "[[assetWire]]", getAssetWire().getAllAssets());
 	}
 }

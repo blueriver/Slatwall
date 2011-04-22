@@ -36,7 +36,6 @@
 Notes:
 
 */
-$.use("/plugins/Slatwall/assets/js/tools/imgPreview-min.js");
 
 $(document).ready(function() {
     $("a.preview").imgPreview({

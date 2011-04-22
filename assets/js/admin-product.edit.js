@@ -36,9 +36,6 @@
 Notes:
 
 */
-
-$.use('tools/jquery.colorbox-min.js');
-
 jQuery(document).ready(function() {
     var skuCount = jQuery('tr[id^="Sku"]').length;
     jQuery("#addSKU").click(function() {

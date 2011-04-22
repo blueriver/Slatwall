@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfif rc.edit>
-	<cfset getAssetWire().includeJSAsset("admin-product.edit.js") />
-	<cfset getAssetWire().includeCSSAsset("admin-product.edit.css") />
+	<cfset getAssetWire().includeAsset("admin-product.edit.js") />
+	<cfset getAssetWire().includeAsset("admin-product.edit.css") />
 </cfif>
 
 <cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/productDetail.js"></script>' />

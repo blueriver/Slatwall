@@ -38,10 +38,6 @@ Notes:
 
 */
 
-$.use('/admin/js/jquery/jquery-ui.js');
-$.use('/admin/js/jquery/jquery-ui-i18n.js');
-$.use('/admin/js/admin.js');
-
 var search_delay = 0;
 var search_form = 0;
 var svo_request_id = 0;
