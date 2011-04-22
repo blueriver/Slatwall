@@ -46,6 +46,32 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 			thisAttribute.setSortOrder(i);
 		}
 	}
+	
+	
+	public any function save( required any attribute, required struct data ) {
+		
+		var order=0;
+		// set the attribute options into the attribute, if defined.
+		for( var i=1; i<=arrayLen(data.optionsArray);i++ ) {
+			var thisOptionStruct = data.optionsArray[i];
+			// don't do anything unless there is an actual value passed in
+			if(len(trim(thisOptionStruct.value))) {
+				order++;
+				if(len(thisOptionStruct.attributeOptionID)) {
+					var thisAttributeOption = getByID(thisOptionStruct.attributeOptionID,"SlatwallAttributeOption");
+				} else {
+					var thisAttributeOption = getNewEntity("SlatwallAttributeOption");
+				}
+				thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
+				if(len(thisOptionStruct.label)) {
+					thisAttributeOption.setAttributeOptionLabel(thisOptionStruct.label);
+				}
+				thisAttributeOption.setSortOrder(order);
+				arguments.attribute.addAttributeOption(thisAttributeOption);
+			}
+		}
+		return Super.save(arguments.attribute,arguments.data);
+	}
 		
 	public any function getAttributeSets(string Type) {
 		if( structKeyExists(arguments,"type") ) {

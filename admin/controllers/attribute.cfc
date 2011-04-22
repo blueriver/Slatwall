@@ -78,6 +78,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     public void function list(required struct rc) {
         rc.attributeSets = getAttributeService().list(entityName="SlatwallAttributeSet",sortby="attributeSetName Asc");
     }
+    
+/*   public void function save() {
+    	rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+    }*/
 	
 	public void function save(required struct rc) {
 		if(structKeyExists(rc,"attributeID")) {
@@ -85,7 +89,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		} else {
 			rc.attribute = getAttributeService().getNewEntity();
 		}
-					
+		
+		rc.optionsArray = getService("formUtilities").buildFormCollections(rc).options;			
 		rc.attribute = getAttributeService().save(rc.attribute,rc);
 		
 		if(!rc.attribute.hasErrors()) {
@@ -106,7 +111,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().setView("admin:attribute.edit");
 			}		
 		}
-		
 	}
 	
 	public void function saveAttributeSort(required struct rc) {
