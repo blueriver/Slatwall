@@ -46,15 +46,16 @@ Notes:
 
 
 <cfoutput>
-<ul id="navTask">
-    <cf_ActionCaller action="admin:product.listproducttypes" type="list">
-	<cfif !rc.edit><cf_ActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
-</ul>
+	<ul id="navTask">
+	    <cf_ActionCaller action="admin:product.listproducttypes" type="list">
+		<cfif !rc.edit><cf_ActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
+	</ul>
+	
+	<cfif rc.edit>
+		<form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
+		<input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
+	</cfif>
 
-<cfif rc.edit>
-<form name="ProductTypeForm" id="ProductTypeForm" action="#buildURL(action='admin:product.saveproducttype')#" method="post">
-<input type="hidden" id="productTypeID" name="productTypeID" value="#rc.productType.getProductTypeID()#" />
-</cfif>
     <dl class="twoColumn">
     	<cf_PropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
 		<cfif rc.edit>
@@ -81,147 +82,191 @@ Notes:
 			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
 		</cfif>
 	</dl>
-	<table class="stripe" id="productTypeSettings">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.setting.settingName')#</th>
-			<th>#rc.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
-			<th>#rc.$.Slatwall.rbKey('admin.productType.settingDefinedIn')#</th>
-		</tr>
-		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.productType.trackInventoryFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.ProductType.trackInventoryFlag_hint")#</span>
-				</a>
-			</td>
-			<td>
-				<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)">
-			</td>
-			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("trackInventoryFlag") />
-			<td>
-				<cfif local.thisSettingSource.type eq "Global">
-					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
-				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
-					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-				<cfelse>
-					#local.thisSettingSource.name#
-				</cfif>
-			</td>
-		</tr>
-		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.productType.callToOrderFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.ProductType.callToOrderFlag_hint")#</span>
-				</a>
-			</td>
-			<td>
-				<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)">
-			</td>
-			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("callToOrderFlag") />
-			<td>
-				<cfif local.thisSettingSource.type eq "Global">
-					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
-				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
-					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-				<cfelse>
-					#local.thisSettingSource.name#
-				</cfif>
-			</td>
-		</tr>
-		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.productType.allowShippingFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowShippingFlag_hint")#</span>
-				</a>
-			</td>
-			<td>
-				<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)">
-			</td>
-			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowShippingFlag") />
-			<td>
-				<cfif local.thisSettingSource.type eq "Global">
-					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
-				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
-					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-				<cfelse>
-					#local.thisSettingSource.name#
-				</cfif>
-			</td>
-		</tr>
-		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.productType.allowPreorderFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowPreorderFlag_hint")#</span>
-				</a>
-			</td>
-			<td>
-				<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)">
-			</td>
-			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowPreorderFlag") />
-			<td>
-				<cfif local.thisSettingSource.type eq "Global">
-					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
-				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
-					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-				<cfelse>
-					#local.thisSettingSource.name#
-				</cfif>
-			</td>
-		</tr>
-		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.productType.allowBackorderFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowBackorderFlag_hint")#</span>
-				</a>
-			</td>
-			<td>
-				<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)">
-			</td>
-			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowBackorderFlag") />
-			<td>
-				<cfif local.thisSettingSource.type eq "Global">
-					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
-				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
-					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-				<cfelse>
-					#local.thisSettingSource.name#
-				</cfif>
-			</td>
-		</tr>
-		<tr>
-			<td class="property varWidth">
-				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.productType.allowDropShipFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowDropshipFlag_hint")#</span>
-				</a>
-			</td>
-			<td>
-				<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)">
-			</td>
-			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowDropShipFlag") />
-			<td>
-				<cfif local.thisSettingSource.type eq "Global">
-					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
-				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
-					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
-				<cfelse>
-					#local.thisSettingSource.name#
-				</cfif>
-			</td>
-		</tr>
-	</table>
-<cfif rc.edit>
-	<div id="actionButtons" class="clearfix">
-		<cf_ActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-		<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
-		<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
-		</cfif>
-		<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
+	<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+		<ul>
+			<li><a href="##tabSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabSettings')#</span></a></li>	
+			<li><a href="##tabAttributeSets" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabAttributeSets')#</span></a></li>
+		</ul>
+		<div id="tabSettings">
+			<table class="stripe" id="productTypeSettings">
+				<tr>
+					<th class="varWidth">#rc.$.Slatwall.rbKey('entity.setting.settingName')#</th>
+					<th>#rc.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
+					<th>#rc.$.Slatwall.rbKey('admin.productType.settingDefinedIn')#</th>
+				</tr>
+				<tr>
+					<td class="property varWidth">
+						<a href="##" class="tooltip">
+							#rc.$.Slatwall.rbKey("entity.productType.trackInventoryFlag")#
+							<span>#rc.$.Slatwall.rbKey("entity.ProductType.trackInventoryFlag_hint")#</span>
+						</a>
+					</td>
+					<td>
+						<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)">
+					</td>
+					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("trackInventoryFlag") />
+					<td>
+						<cfif local.thisSettingSource.type eq "Global">
+							<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+						<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+							<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+						<cfelse>
+							#local.thisSettingSource.name#
+						</cfif>
+					</td>
+				</tr>
+				<tr>
+					<td class="property varWidth">
+						<a href="##" class="tooltip">
+							#rc.$.Slatwall.rbKey("entity.productType.callToOrderFlag")#
+							<span>#rc.$.Slatwall.rbKey("entity.ProductType.callToOrderFlag_hint")#</span>
+						</a>
+					</td>
+					<td>
+						<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)">
+					</td>
+					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("callToOrderFlag") />
+					<td>
+						<cfif local.thisSettingSource.type eq "Global">
+							<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+						<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+							<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+						<cfelse>
+							#local.thisSettingSource.name#
+						</cfif>
+					</td>
+				</tr>
+				<tr>
+					<td class="property varWidth">
+						<a href="##" class="tooltip">
+							#rc.$.Slatwall.rbKey("entity.productType.allowShippingFlag")#
+							<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowShippingFlag_hint")#</span>
+						</a>
+					</td>
+					<td>
+						<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)">
+					</td>
+					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowShippingFlag") />
+					<td>
+						<cfif local.thisSettingSource.type eq "Global">
+							<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+						<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+							<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+						<cfelse>
+							#local.thisSettingSource.name#
+						</cfif>
+					</td>
+				</tr>
+				<tr>
+					<td class="property varWidth">
+						<a href="##" class="tooltip">
+							#rc.$.Slatwall.rbKey("entity.productType.allowPreorderFlag")#
+							<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowPreorderFlag_hint")#</span>
+						</a>
+					</td>
+					<td>
+						<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)">
+					</td>
+					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowPreorderFlag") />
+					<td>
+						<cfif local.thisSettingSource.type eq "Global">
+							<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+						<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+							<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+						<cfelse>
+							#local.thisSettingSource.name#
+						</cfif>
+					</td>
+				</tr>
+				<tr>
+					<td class="property varWidth">
+						<a href="##" class="tooltip">
+							#rc.$.Slatwall.rbKey("entity.productType.allowBackorderFlag")#
+							<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowBackorderFlag_hint")#</span>
+						</a>
+					</td>
+					<td>
+						<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)">
+					</td>
+					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowBackorderFlag") />
+					<td>
+						<cfif local.thisSettingSource.type eq "Global">
+							<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+						<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+							<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+						<cfelse>
+							#local.thisSettingSource.name#
+						</cfif>
+					</td>
+				</tr>
+				<tr>
+					<td class="property varWidth">
+						<a href="##" class="tooltip">
+							#rc.$.Slatwall.rbKey("entity.productType.allowDropShipFlag")#
+							<span>#rc.$.Slatwall.rbKey("entity.ProductType.allowDropshipFlag_hint")#</span>
+						</a>
+					</td>
+					<td>
+						<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)">
+					</td>
+					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowDropShipFlag") />
+					<td>
+						<cfif local.thisSettingSource.type eq "Global">
+							<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+						<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+							<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+						<cfelse>
+							#local.thisSettingSource.name#
+						</cfif>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="tabAttributeSets">
+			<table id="AttributeSets" class="stripe">
+				<tr>
+					<th class="varWidth">#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetName')#</th>
+					<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
+					<th>#rc.$.Slatwall.rbKey('admin.product.detailProductType.attributeSetAssigned')#</th>	
+				</tr>
+				<!--- assigned attributeSetIDs --->
+				<cfset local.attributeSetIDs = "" />
+				<cfloop array="#rc.productType.getAttributeSetAssignments()#" index="local.AttributeSetAssignment">
+					<cfset local.attributeSetIDs = listAppend(local.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) />
+				</cfloop>	
+				<cfloop array="#rc.attributeSets#" index="local.attributeSet">
+					<tr>
+						<td class="property varWidth">
+							<cf_PropertyDisplay object="#attributeSet#" property="attributeSetName" edit="false" displaytype="plain">
+						</td>
+						<td>
+							<cf_PropertyDisplay object="#attributeSet.getAttributeSetType()#" property="type" edit="false" displaytype="plain">
+						</td>
+						<td>
+							<cfif attributeSet.getGlobalFlag()>
+								#rc.$.Slatwall.rbKey('yes')# (#rc.$.Slatwall.rbKey('global')#)
+							<cfelse>
+								<cfset local.assignedFlag = listFind(attributeSetIDs,attributeSet.getAttributeSetID()) />
+								<cfif rc.edit>
+									<input type="checkbox" name="attributeSetIDs" value="#attributeSet.getAttributeSetID()#" <cfif assignedFlag>checked </cfif>>
+								<cfelse>
+									#yesNoFormat(assignedFlag)#
+								</cfif>
+							</cfif>
+						</td>
+					</tr>
+				</cfloop>
+			</table>
+		</div>
 	</div>
-</form>
-</cfif>
+	<cfif rc.edit>
+		<div id="actionButtons" class="clearfix">
+			<cf_ActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
+			<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
+			</cfif>
+			<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
+		</div>
+	</form>
+	</cfif>
 </cfoutput>

@@ -192,6 +192,7 @@ component extends="BaseController" output=false accessors=true {
 		
 	public void function editProductType(required struct rc) {	
 	   	rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		rc.attributeSets = getAttributeService().getAttributeSets(systemCode="astProduct|astProductCustomization");
 	   	if(!isNull(rc.productType)) {
 	   		rc.edit = true;
 		   	rc.itemTitle &= ": " & rc.productType.getProductTypeName();
@@ -207,6 +208,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function detailProductType(required struct rc) {
 		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		rc.attributeSets = getAttributeService().getAttributeSets(systemCode="astProduct|astProductCustomization");
 		if(isNull(rc.productType)) {
 			getFW().redirect("admin:product.listProductTypes");
 		} else {
