@@ -278,21 +278,37 @@ component extends="framework" output="false" {
 		ormGetSession().clear();
 	}
 	
-	// assetWire functions
-	private void function buildViewAndLayoutQueue() {
-		super.buildViewAndLayoutQueue();
-		getAssetWire().wireFW1();
+	// Start assetWire functions ==================================
+	public any function getAssetWire() {
+		if(!structKeyExists(request, "assetWire")) {
+			request.assetWire = new assets.assetWire(this); 
+		}
+		return request.assetWire;
 	}
 	
+	private void function buildViewAndLayoutQueue() {
+		super.buildViewAndLayoutQueue();
+		getAssetWire().includeAsset("js/global.js");
+		getAssetWire().includeAsset("css/global.css");
+		if(structKeyExists(request, "view")) {
+			getAssetWire().addViewToAssets(request.view);	
+		}
+	}
+	
+	private string function internalLayout( string layoutPath, string body ) {
+		var rtn = super.internalLayout(argumentcollection=arguments);
+		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
+			if(getSubsystem(request.action) == "admin") {
+				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
+			}
+		}
+		return rtn;
+	}
+		
 	public string function view( string path, struct args = { } ) {
 		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
 		return super.view(argumentcollection=arguments);
 	}
 	
-	public any function getAssetWire() {
-		if(!structKeyExists(request, "assetWire")) {
-			request.assetWire = new assetWire.assetWire(this); 
-		}
-		return request.assetWire;
-	}
+	// End assetWire functions ==================================
 }

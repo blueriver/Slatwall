@@ -539,10 +539,12 @@ component {
 			out = internalLayout( request.layouts[i], out );
 		}
 		
-		// Integration point with assetWire
-		out = replace(out, "[[assetWire]]", request.assetWire.getAllAssets());
-		
+		out = onPreOutput( out );
 		writeOutput( out );
+	}
+	
+	public any function onPreOutput( out ) {
+		return arguments.out;
 	}
 	
 	/*

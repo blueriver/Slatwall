@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,14 +35,12 @@
 
 Notes:
 
---->
-<cfoutput>
-	<script language="Javascript" type="text/javascript" src="/plugins/Slatwall/js/jquery.js"></script>
-	<script language="Javascript" type="text/javascript" src="/plugins/Slatwall/js/slatwall.js"></script>
-	<script language="Javascript" type="text/javascript" src="/plugins/Slatwall/js/fw1AjaxAdapter.js"></script>
-	<link rel="stylesheet" type="text/css" href="/plugins/Slatwall/css/slatwall.css" />
-	<cfif variables.fw.secureDisplay("admin:utility.toolbar")>
-			#variables.fw.view("admin:utility/toolbar")#
-	</cfif>
-	
-</cfoutput>
+*/
+
+$(document).ready(function() {
+    $("a.preview").imgPreview({
+        imgCSS: {
+            width: '150px'
+        }
+    });
+});

@@ -1,4 +1,3 @@
-
 /*
 
     Slatwall - An e-commerce plugin for Mura CMS
@@ -37,58 +36,9 @@
 Notes:
 
 */
-
-var search_delay = 0;
-var search_form = 0;
-var svo_request_id = 0;
-var ajax_request_id = 0;
-
-$(document).ready(function(){
-	$('li.LogoSearch img').click(function(e){
-		$('ul.MainMenu').show('fast');
-		e.stopPropagation();
-	});
-	
-	$("ul.MainMenu").click(function(e){
-    	e.stopPropagation();
-	});
-	
-	$("input.AdminSearch").val("");
-
-});
-
-function toolbarSearchKeyup(form){
-	clearTimeout(search_delay);
-	search_form = form;
-	if($("input.AdminSearch").val() != ''){
-		search_delay = setTimeout("adminSearch()",280);
-	}
-}
-
-function adminSearch(){
-	slatwallAjaxFormSubmit(search_form);
-}
-
-function btnConfirmDialog(message,btn){
-    
-    jQuery("#alertDialogMessage").html(message);
-    jQuery("#alertDialog").dialog({
-            resizable: false,
-            modal: true,
-            buttons: {
-                'YES': function() {
-                    jQuery(this).dialog('close');
-                    btn.form.submit();        
-                    },
-                'NO': function() {
-                    jQuery(this).dialog('close');
-                }
-            }
-        });
-
-    return false;   
-}
-
-$(document).click(function(e){
-	$('ul.MainMenu').hide('fast');
+jQuery(document).ready(function(){
+	setDatePickers(".datepicker",dtLocale);
+	setTabs(".tabs",activeTab);
+	setHTMLEditors();
+	setAccordions(".accordion",activePanel)
 });

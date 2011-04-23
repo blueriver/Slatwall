@@ -39,6 +39,14 @@ Notes:
 <cfparam name="rc.section" default="Slatwall" />
 <cfparam name="rc.activeTab" default=0 />
 <cfparam name="rc.activePanel" default=0 />
+
+<cfset getAssetWire().addJSVariable("activeTab", rc.activeTab) />
+<cfset getAssetWire().addJSVariable("activePanel", rc.activeTab) />
+<cfset getAssetWire().addJSVariable("dtExample", DateFormat(now(), "MM/DD/YYYY")) />
+<cfset getAssetWire().addJSVariable("dtCh", "/") />
+<cfset getAssetWire().addJSVariable("dtFormat", [0,1,2]) />
+<cfset getAssetWire().addJSVariable("dtLocale", "en-US") />
+
 <cfoutput>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
@@ -46,19 +54,6 @@ Notes:
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
 	<link rel="icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
 	<link rel="shortcut icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
-	
-	[[assetWire]]
-	
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckfinder/ckfinder.js"></script>
-	
-	
-	#session.dateKey#
-	<script type="text/javascript">
-		jQuery(document).ready(function(){setDatePickers(".datepicker",dtLocale);setTabs(".tabs",#rc.activeTab#);setHTMLEditors();setAccordions(".accordion",#rc.activePanel#)});
-	</script>
-	
 </head>
 <body>
 	<div id="header">

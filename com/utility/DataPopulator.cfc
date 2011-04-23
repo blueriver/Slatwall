@@ -89,11 +89,23 @@ component displayname="Data Populator" {
 				
 				if(isDefined("columnAttributes.update") && columnAttributes.update == false) {
 					insertColumns &= " #thisColumn#,";
-					insertValues &= " '#value#',";
+					if(isNumeric(value)) {
+						insertValues &= " #value#,";	
+					} else {
+						insertValues &= " '#value#',";
+					}
 				} else {
-					updateSetString &= " #thisColumn#='#value#',";
+					if(isNumeric(value)) {
+						updateSetString &= " #thisColumn#=#value#,";
+					} else {
+						updateSetString &= " #thisColumn#='#value#',";
+					}
 					insertColumns &= " #thisColumn#,";
-					insertValues &= " '#value#',";
+					if(isNumeric(value)) {
+						insertValues &= " #value#,";	
+					} else {
+						insertValues &= " '#value#',";
+					}
 				}
 			}
 			if(len(updateSetString)) {
@@ -129,4 +141,3 @@ component displayname="Data Populator" {
 	}
 	
 }
-
