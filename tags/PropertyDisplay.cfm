@@ -51,8 +51,12 @@ Notes:
 <!--- hint: This can be used to override the displayName of a property" --->
 <cfparam name="attributes.title" default="" />
 
-<!--- hint: This can be used to override the default value of a property" --->
+<!--- hint: This can be used to override the value of a property --->
 <cfparam name="attributes.value" default="" />
+
+<!--- hint: This can be used to set a default value for the property IF it hasn't been defined --->
+<!--- NOTE: right now this only works for select boxes --->
+<cfparam name="attributes.defaultValue" default="" />
 
 <!--- hint: This can be used to override the default field name" --->
 <cfparam name="attributes.fieldName" default="" />
@@ -185,7 +189,7 @@ Notes:
 			     <cfset attributes.value = "" />
 			</cfif>
 		</cfif>
-		
+
 		<cfif attributes.fieldName eq "">
 			<cfset attributes.fieldName = local.propertyMetadata.name />
 		</cfif>
@@ -311,11 +315,13 @@ Notes:
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" id="#attributes.fieldName#">
+						<select name="#attributes.fieldName#" id="#attributes.fieldName#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
 							<cfif attributes.allowNullOption>
 								<option value="">#attributes.nullValue eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullValue#</option>
 							</cfif>
-							<cfloop array="#attributes.editOptions#" index="i" >
+                            <cfset attributes.value = (len(attributes.defaultValue) gt 0 AND attributes.value eq "") ? attributes.defaultValue : attributes.value />
+							<cfloop array="#attributes.editOptions#" index="i">
+								<!--- if there is a key named "label" use that as the displayed label for the option, if not, default to the "name" key value --->
 								<cfset label = structKeyExists(i,"label") ? i['label'] : i['name'] />
 								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#label#</option>	
 							</cfloop>

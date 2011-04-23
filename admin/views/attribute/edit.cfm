@@ -70,13 +70,44 @@ Notes:
     <dl class="oneColumn">
         <cf_PropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" edit="true">
+		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
+		<div id="attribOptionsnew">
+		<dt>
+			Attribute Options
+		</dt>
+		<dd>
+			<table id="attribnew">
+				<thead>
+					<tr>
+						<th>#rc.$.Slatwall.rbKey("admin.attribute.attributeOptionValue")#</th>
+						<th>#rc.$.Slatwall.rbKey("admin.attribute.attributeOptionLabel")#</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="new">
+						<td>
+							<input type="text" name="options[1].value" />
+							<input type="hidden" name="options[1].attributeOptionID" value="" />
+						</td>
+						<td><input type="text" name="options[1].label" /></td>
+					</tr>
+                    <tr class="new">
+                        <td>
+                        	<input type="text" name="options[2].value" />
+							<input type="hidden" name="options[2].attributeOptionID" value="" />
+						</td>
+                        <td><input type="text" name="options[2].label" /></td>
+                    </tr>
+				</tbody>
+			</table>
+			<a href="##" attribID="new" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="new" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>
+		</dd>
+		</div>
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="defaultValue" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="requiredFlag" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationType" edit="true">
+		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationType" nullValue="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationRegex" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationMessage" edit="true">
-		<!---<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeOptions" edit="true">--->
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
@@ -117,13 +148,41 @@ Notes:
 		    <dl class="oneColumn">
 		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_PropertyDisplay id="attributeType#local.i#" object="#local.thisAttribute#" property="attributeType" edit="true">
+				<cf_PropertyDisplay id="attributeType#local.i#" class="#local.thisAttribute.getAttributeID()#" object="#local.thisAttribute#" property="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
+				<div id="attribOptions#local.thisAttribute.getAttributeID()#">
+				<dt>
+					Attribute Options
+				</dt>
+				<dd>
+					<table id="attrib#local.thisAttribute.getAttributeID()#">
+						<thead>
+							<tr>
+								<th>#rc.$.Slatwall.rbKey("admin.attribute.attributeOptionValue")#</th>
+								<th>#rc.$.Slatwall.rbKey("admin.attribute.attributeOptionLabel")#</th>
+							</tr>
+						</thead>
+						<tbody>
+							<cfset local.optionIndex = 0>
+							<cfloop array="#thisAttribute.getAttributeOptions()#" index="thisAttributeOption" >
+							<cfset local.optionIndex++ />
+							<tr class="#local.thisAttribute.getAttributeID()#">
+								<td>
+									<input type="text" name="options[#local.optionIndex#].value" value="#thisAttributeOption.getAttributeOptionValue()#" />
+									<input type="hidden" name="options[#local.optionIndex#].attributeOptionID" value="#thisAttributeOption.getAttributeOptionID()#" />
+								</td>
+								<td><input type="text" name="options[#local.optionIndex#].label" value="#thisAttributeOption.getAttributeOptionLabel()#"/></td>
+							</tr>
+							</cfloop>
+						</tbody>
+					</table>
+					<a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>
+				</dd>
+				</div>
 				<cf_PropertyDisplay id="defaultValue#local.i#" object="#local.thisAttribute#" property="defaultValue" edit="true">
 				<cf_PropertyDisplay id="requiredFlag#local.i#" object="#local.thisAttribute#" property="requiredFlag" edit="true">
-				<cf_PropertyDisplay id="validationType#local.i#" object="#local.thisAttribute#" property="validationType" edit="true">
+				<cf_PropertyDisplay id="validationType#local.i#" object="#local.thisAttribute#" nullValue="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" edit="true">
 				<cf_PropertyDisplay id="validationRegex#local.i#" object="#local.thisAttribute#" property="validationRegex" edit="true">
 				<cf_PropertyDisplay id="validationMessage#local.i#" object="#local.thisAttribute#" property="validationMessage" edit="true">
-				<!---<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeOptions" edit="true">--->
 				<cf_PropertyDisplay id="activeFlag#local.i#" object="#local.thisAttribute#" property="activeFlag" edit="true">
 		    </dl>
 			<a class="button" href="javascript:;" onclick="jQuery('##editFrm#local.i#container').slideUp();jQuery('##editFrm#local.i#open').show();jQuery('##editFrm#local.i#close').hide();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
@@ -137,5 +196,15 @@ Notes:
 <cfelse>
 	<p><em>#rc.$.Slatwall.rbKey("admin.attribute.noAttributesInSet")#</em></p>
 </cfif>
-
+<table id="tableTemplate" class="hideElement">
+	<tbody>
+        <tr id="temp">
+            <td>
+            	<input type="text" name="value" />
+				<input type="hidden" name="attributeOptionID" value="" />
+			</td>
+            <td><input type="text" name="label" /></td>
+		</tr>
+	</tbody>
+</table>
 </cfoutput>

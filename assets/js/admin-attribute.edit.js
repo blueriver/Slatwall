@@ -37,7 +37,7 @@
 	to your own modified versions of Mura CMS. */
 
 $(document).ready(function(){
-	
+	var optionsCount = $('tr[id^="option"]').length;
 	$("#showSort").click(function(){
 		$("#attributeList").sortable().disableSelection();
 		$('#showSort').hide();
@@ -66,6 +66,34 @@ $(document).ready(function(){
 		$.post(url + "?" + pars); 
 		showSort();
 	});
+	
+    $('a.addOption').click(function() {
+		var attribID = $(this).attr("attribID");
+		var current = $('tr.' + attribID).length;
+        current++;
+        var $newOption= $( "#tableTemplate tbody>tr:last" ).clone(true);
+        $newOption.children("td").children("input").each(function(i) {
+            var $currentElem= $(this);
+            $currentElem.attr("name", "options[" + current + "]." + $currentElem.attr("name"));
+        });
+        $('a[class=remOption][attribID=' +attribID+ ']').attr('style','');
+        $('#attrib' + attribID + ' > tbody:last').append($newOption);
+        $newOption.attr("class",attribID).attr("id","new" + current + attribID);
+		return false;
+    });
+	
+    $('a.remOption').click(function() {
+		var attribID = $(this).attr("attribID");
+        var num = $('tr.' + attribID).length;
+		$("#attrib" + attribID + " tbody>tr:last").remove();
+		//alert(num);
+        //$('#option' + num).remove();
+        // can't remove more options than were originally present
+        if($('tr[id^="new"]').length == 0) {
+            $('a.remOption').attr('style','display:none;');
+        }
+		return false;
+    });
 });
 	
 function showSort(id){
