@@ -61,15 +61,21 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="Products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all";
+	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false" ;
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
 	
 	public ProductType function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.Products))
+	   if(isNull(variables.Products)){
 	       variables.Products = [];
+	   }
+	   /*
+	   if(isNull(variables.attributeSetAssignments)){
+	   		variables.attributeSetAssignments = [];
+	   }
+	   */
 	   return Super.init();
 	}
 	
@@ -95,6 +101,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		  {id="0", name=rbKey("sitemanager.no")}
 		];
 		return settingOptions;
+	}
+	
+	public array function getAttributeSetAssignments(){
+		var attributeSetAssignments = getService("AttributeService").getByFilter({baseItemID=getProductTypeID()},"SlatwallAttributeSetAssignment");
+		if(!arrayLen(attributeSetAssignments)){
+			attributeSetAssignments = [];
+		}
+		return attributeSetAssignments;
 	}
 	
     /******* Association management methods for bidirectional relationships **************/
@@ -150,5 +164,25 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	} else {
     		return getService("ProductService").getWhereSettingDefined( getProductTypeID(),arguments.settingName );
     	}
+    }
+    
+    public void function populate(required any data){
+    	// remove the ones not selected
+    	for(var attributeSetAssignment in getAttributeSetAssignments()){
+    		if(!structKeyExists(data,"attributeSetIDs") || listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
+    			getService("AttributeService").delete(attributeSetAssignment);
+    			//this.removeAttributeSetAssignment(attributeSetAssignment);
+    		}
+    	}
+    	// Add new ones
+    	if(structKeyExists(data,"attributeSetIDs")){
+    		var attributeSetIDArray = listToArray(data.attributeSetIDs);
+    		for(var attributeSetID in attributeSetIDArray){
+    			var attributeSetAssignment = getService("AttributeService").getNewEntity("SlatwallAttributeSetAssignment");
+    			getService("AttributeService").save(attributeSetAssignment,{baseItemID=getProductTypeID(),attributeSetID=attributeSetID});
+    			//this.addAttributeSetAssignment(attributeSetAssignment);
+    		}
+    	}
+    	super.populate(data);
     }
 }

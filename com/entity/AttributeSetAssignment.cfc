@@ -40,7 +40,6 @@ component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSe
 	
 	// Persistant Properties
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="excludeFlag" ormtype="boolean";
 	property name="baseItemID" length="32" ormtype="string" hint="This is where the assignment is made, e.g. productID,productTypeID,accountID,accountTypeID" ;  
 	
 	// Related Object Properties

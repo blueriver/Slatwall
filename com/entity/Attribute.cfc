@@ -41,6 +41,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	// Persistant Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeName" ormtype="string" validateRequired;
+	property name="attributeDescription" ormtype="string" length="4000" ;
 	property name="attributeHint" ormtype="string";
 	property name="defaultValue" ormtype="string";
 	property name="requiredFlag" ormtype="boolean" default="false" ;

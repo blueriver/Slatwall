@@ -73,17 +73,8 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 		return Super.save(arguments.attribute,arguments.data);
 	}
 		
-	public any function getAttributeSets(string Type) {
-		if( structKeyExists(arguments,"type") ) {
-			var asType = getByFilter(filterCriteria={type=arguments.type}, entityName="SlatwallType", unique="true");
-			if(isObject(asType)) {
-				return getByFilter(filterCriteria={attributeSetType=asType}, entityName="SlatwallAttributeSet");
-			} else {
-				return [];
-			}
-		} else {
-			return getDAO.list("SlatwallAttributeSet");
-		}
+	public any function getAttributeSets(string systemCode) {
+		return getSmartList({attributeSetType.systemCode=arguments.systemCode},"SlatwallAttributeSet").getRecords();
 	}
 	
 }

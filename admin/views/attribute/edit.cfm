@@ -69,6 +69,7 @@ Notes:
 	<input type="hidden" name="sortOrder" value="#arrayLen(local.attributes)+1#"
     <dl class="oneColumn">
         <cf_PropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
+		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" editType="wysiwyg" />
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
 		<div id="attribOptionsnew">
@@ -147,6 +148,7 @@ Notes:
 			<input type="hidden" name="sortOrder" value="#local.thisAttribute.getSortOrder()#" />
 		    <dl class="oneColumn">
 		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
+				<cf_PropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" edit="true" editType="wysiwyg" />
 				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
 				<cf_PropertyDisplay id="attributeType#local.i#" class="#local.thisAttribute.getAttributeID()#" object="#local.thisAttribute#" property="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
 				<div id="attribOptions#local.thisAttribute.getAttributeID()#">
