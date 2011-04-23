@@ -1,0 +1,51 @@
+div.svoadminutilitytoolbar ul.MainToolbar li.LogoSearch img		{z-index:100010;}
+div.svoadminutilitytoolbar ul.MainToolbar 						{z-index:100009;}
+div.svoadminutilitytoolbar ul.MainMenu							{z-index:100005;}
+div.svoadminutilitytoolbar div.svoutilitycampaignlink			{z-index:100004;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu					{z-index:100004;}						
+
+div.svoadminutilitytoolbar 										{position: fixed; bottom:0px; left:0px; width:100%; height:40px; float:left;  font-family:Arial, Helvetica, sans-serif;}
+
+div.svoadminutilitytoolbar ul li								{display:inline-block; float:left; height:40px;}
+div.svoadminutilitytoolbar ul.MainToolbar 						{position:absolute; bottom:0px;left:0px;width:100%;height:40px;background: transparent url(../../images/toolbar/toolbar_bg.png) repeat-x bottom left; list-style:none; margin:0px;}
+div.svoadminutilitytoolbar ul.MainToolbar li.LogoSearch 		{position:relative; height:40px; width:260px;}
+div.svoadminutilitytoolbar ul.MainToolbar li.LogoSearch img		{position:absolute; height:40px; width:50px; top:0px; left:10px; cursor:hand; cursor:pointer;}
+div.svoadminutilitytoolbar ul.MainToolbar li.LogoSearch input	{position:absolute; height:18px; width:200px; top:18px; left:40px; text-align:right; height:18px; font-size:12px; border: 1px solid #999999; margin:0px; padding:0px;}
+div.svoadminutilitytoolbar ul.MainToolbar li a								{position:relative;margin-top:18px;display:inline-block;padding:2px 15px 2px 15px;color:#333333; font-size:11px; border-left:1px solid #cccccc; }
+div.svoadminutilitytoolbar ul.MainToolbar li a:hover						{color:#111111;text-decoration:underline;}
+
+div.svoadminutilitytoolbar ul.MainMenu							{display:none; position:fixed; bottom:0px; width:270px; list-style:none; margin:0px;}
+div.svoadminutilitytoolbar ul.MainMenu li						{display:block; float:none; background: transparent url(../../images/toolbar/toolbar_menu_bg.png) repeat-y top left; margin:0px;}
+div.svoadminutilitytoolbar ul.MainMenu li.MenuTop				{height:10px; background: transparent url(../../images/toolbar/toolbar_menu_top.png) no-repeat top left;}
+div.svoadminutilitytoolbar ul.MainMenu li.MenuBottom				{height:70px;}
+div.svoadminutilitytoolbar ul.MainMenu li a						{display:block; font-size:14px; font-weight:bold; color:#333;padding:10px 20px 10px 20px; border-bottom:1px solid #cdcdcd; width:217px;}
+div.svoadminutilitytoolbar ul.MainMenu li a:hover				{background-color:#efefef;}
+
+div.svoadminutilitytoolbar ul.MainMenu li div.MenuSubOne					{display:none; width:200px;padding:20px;}
+div.svoadminutilitytoolbar ul.MainMenu li:hover div.MenuSubOne			{display:block;}
+
+div.svoadminutilitytoolbar ul.MainMenu li div.MenuSubOne					{position:absolute;left:258px;top:5px;background-color:#333333;}
+div.svoadminutilitytoolbar ul.MainMenu li div.MenuSubOne ul				{width:auto;height:1000px;}
+div.svoadminutilitytoolbar ul.MainMenu li div.MenuSubOne ul li			{background:none; width:auto; height:auto; margin:0px;}
+div.svoadminutilitytoolbar ul.MainMenu li div.MenuSubOne ul li a			{color:#cdcdcd; width:auto; font-size:12px; padding:5px;}
+div.svoadminutilitytoolbar ul.MainMenu li div.MenuSubOne ul li a:hover	{background:none;color:#ffffff;}
+
+div.svoadminutilitytoolbarsearch													{height:auto; width:auto;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu									{display:block;position:fixed; bottom:0px; width:270px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li								{display:block; float:none; background: transparent url(../../images/toolbar/toolbar_menu_bg.png) repeat-y top left; height:auto;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.MenuTop						{height:10px; background: transparent url(../../images/toolbar/toolbar_menu_top.png) no-repeat top left;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.MenuBottom						{height:70px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li a								{display:block; font-size:11px; font-weight:bold; color:#333;padding:2px 20px 2px 20px; border-bottom:1px solid #cdcdcd; width:217px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li a:hover						{background-color:#efefef;}
+
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne					{display:none; width:200px;padding:20px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li:hover div.MenuSubOne			{display:block;}
+
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne					{position:relative;left:258px;top:-40px;background-color:#333333;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul				{width:auto;height:1000px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li			{background:none; width:auto; height:auto;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li a			{color:#cdcdcd; width:auto; font-size:12px; padding:5px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li div.MenuSubOne ul li a:hover	{background:none;color:#ffffff;}
+
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.SearchHeader a					{background-color:#f26521;font-size:12px;}
+div.svoadminutilitytoolbarsearch ul.SearchMenu li.Spacer							{height:10px;}

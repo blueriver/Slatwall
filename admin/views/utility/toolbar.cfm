@@ -38,7 +38,7 @@ Notes:
 --->
 <cfset variables.framework.baseURL = "http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/" />
 <cfoutput>
-	<div class="svoutilitytoolbar">
+	<div class="svoadminutilitytoolbar">
 		#view('admin:utility/toolbarsearch')#
 		#view('admin:utility/campaignlink', args)#
 		<ul class="MainMenu">

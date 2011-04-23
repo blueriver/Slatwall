@@ -54,7 +54,6 @@ Notes:
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
 	<link rel="icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
 	<link rel="shortcut icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
-	[[assetWire]]
 </head>
 <body>
 	<div id="header">

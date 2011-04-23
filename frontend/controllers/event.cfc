@@ -80,12 +80,16 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function onRenderEnd(required any rc) {
 		// Add necessary html to the header
-		savecontent variable="html_head" {
-			include "/plugins/#application.Slatwall.pluginConfig.getDirectory()#/frontend/layouts/inc/html_head.cfm";
+		/*
+		if( getFW().secureDisplay("admin:utility.toolbar") ){
+			savecontent variable="html_head" {
+				getFW().view("admin:utility/toolbar");
+			}
+			var oldContent = rc.$.getEvent().getValue( "__MuraResponse__" );
+			var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
+			rc.$.getEvent().setValue( "__MuraResponse__", newContent);
 		}
-		var oldContent = rc.$.getEvent().getValue( "__MuraResponse__" );
-		var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
-		rc.$.getEvent().setValue( "__MuraResponse__", newContent);
+		*/
 	}
 
 }

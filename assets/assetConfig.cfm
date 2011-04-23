@@ -14,7 +14,9 @@ variables.assetDependencies["js/admin.js"] = [
 	"/admin/js/admin.js",
 	"/tasks/widgets/ckeditor/ckeditor.js",
 	"/tasks/widgets/ckeditor/adapters/jquery.js",
-	"/tasks/widgets/ckfinder/ckfinder.js"
+	"/tasks/widgets/ckfinder/ckfinder.js",
+	"/admin/css/admin.css",
+	"/admin/css/jquery/default/jquery.ui.all.css"
 	];
 	
 variables.assetDependencies["js/admin-product.detail.js"] =	[

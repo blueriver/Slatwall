@@ -295,18 +295,12 @@ component extends="framework" output="false" {
 		}
 	}
 	
-	private string function internalView( string viewPath, struct args = { } ) {
-		var rtn = super.internalView(argumentcollection=arguments);
-		if((structKeyExists(request, 'layout') && !request.layout) || !arrayLen(request.layouts)){
-			getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
-		}
-		return rtn;
-	}
-	
 	private string function internalLayout( string layoutPath, string body ) {
 		var rtn = super.internalLayout(argumentcollection=arguments);
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());
+			if(getSubsystem(request.action) == "admin") {
+				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
+			}
 		}
 		return rtn;
 	}
