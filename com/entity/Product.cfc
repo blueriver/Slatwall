@@ -516,6 +516,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return availableSkus;
 		}
 	}
+	
+	// get all the assigned attribute sets
+	public array function getAttributeSets(array systemCode){
+		var attributeSets = [];
+		// get all the parent product types
+		var productTypeIDs = listChangeDelims(getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath,"^");
+		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeSetAssignment");
+		//Todo: need to get added as OR criteria 
+		//smartList.addFilter("baseItemID",productTypeIDs);
+		//smartList.addFilter("attributeSet_globalFlag",1);
+		if(structKeyExists(arguments,"systemCode")){
+			smartList.addFilter("attributeSet_attribtueSetType_systemCode",arrayToList(systemCode,"^"));
+		}
+		smartList.addOrder("attributeSet_attributeSetType_systemCode|ASC");
+		smartList.addOrder("attributeSet_sortOrder|ASC");
+		var attributeSetAssignments = smartList.getRecords();
+		for(var attributeSetAssignment in attributeSetAssignments){
+			arrayAppend(attributeSets,attributeSetAssignment.getAttributeSet());
+		}
+		return attributeSets;
+	}
+	
 }
 
 

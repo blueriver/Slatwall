@@ -40,37 +40,40 @@ Notes:
 <cfparam name="rc.attributeSet" type="any" />
  
 <cfoutput>
-	
-<ul id="navTask">
-	<cfif !rc.attributeSet.isNew()><cf_ActionCaller action="admin:attribute.create" querystring="attributeSetId=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
-    <cfif !rc.edit><cf_ActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetid=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
-	<cf_ActionCaller action="admin:attribute.list" type="list">
-</ul>
-<cfif rc.edit>
-<form name="attributeSetForm" id="attributeSetForm" enctype="multipart/form-data" action="#buildURL(action='admin:attribute.saveAttributeSet')#" method="post">
-<input type="hidden" id="attributeSetID" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
-</cfif>
-    <dl class="oneColumn attributeDetail">
-    	<cf_PropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#" />
+	<ul id="navTask">
+		<cfif !rc.attributeSet.isNew()><cf_ActionCaller action="admin:attribute.create" querystring="attributeSetId=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
+	    <cfif !rc.edit><cf_ActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetid=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
+		<cf_ActionCaller action="admin:attribute.list" type="list">
+	</ul>
+	<cfset local.attributeSetTypeSelected = "" />
+	<cfif !rc.attributeSet.isNew()>
+		<cfset local.attributeSetTypeSelected = rc.attributeSet.getAttributeSetType().getType() />
+	</cfif>
+	<cfif rc.edit>
+		<form name="attributeSetForm" id="attributeSetForm" enctype="multipart/form-data" action="#buildURL(action='admin:attribute.saveAttributeSet')#" method="post">
+		<input type="hidden" id="attributeSetID" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
+	</cfif>
+	<dl class="oneColumn attributeDetail">
+		<cf_PropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#" />
 		<cf_PropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#" tooltip=true />
-		<cf_PropertyDisplay object="#rc.attributeSet#" property="attributeSetType" edit="#rc.edit#" />
+		<cf_PropertyDisplay object="#rc.attributeSet#" property="attributeSetType" value="#local.attributeSetTypeSelected#" edit="#rc.edit#" />
 		<cf_PropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
 	</dl>
-<cfif rc.edit>
-<div id="actionButtons" class="clearfix">
-	<cf_actionCaller action="admin:attribute.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-	<cfif not rc.attributeSet.hasAttribute() and !rc.attributeSet.isNew()>
-	<cf_ActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
+	<cfif rc.edit>
+		<div id="actionButtons" class="clearfix">
+			<cf_actionCaller action="admin:attribute.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cfif not rc.attributeSet.hasAttribute() and !rc.attributeSet.isNew()>
+				<cf_ActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
+			</cfif>
+			<cf_ActionCaller action="admin:attribute.saveAttributeSet" type="submit">
+		</div>
+		</form>
+	<cfelse>
+		<h4>#rc.$.Slatwall.rbKey('entity.attributeSet.attributes')#</h4>
+		<ul id="attributeList">
+		<cfloop array="#rc.attributeSet.getAttributes()#" index="local.thisAttribute">
+			<li>#local.thisAttribute.getAttributeName()#</li>
+		</cfloop>
+		</ul>
 	</cfif>
-	<cf_ActionCaller action="admin:attribute.saveAttributeSet" type="submit">
-</div>
-</form>
-<cfelse>
-<h4>#rc.$.Slatwall.rbKey('entity.attributeSet.attributes')#</h4>
-<ul id="attributeList">
-<cfloop array="#rc.attributeSet.getAttributes()#" index="local.thisAttribute">
-	<li>#local.thisAttribute.getAttributeName()#</li>
-</cfloop>
-</ul>
-</cfif>
 </cfoutput>

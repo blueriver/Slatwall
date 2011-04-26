@@ -161,6 +161,16 @@ component extends="BaseService" accessors="true" {
     	return variables.productTypeTree; 
     }
     
+    public any function getProductTypeFromTree(string productTypeID) {
+		var productTypeTree = getProductTypeTree();
+		var productType = new Query();
+		productType.setAttributes(productTypeTable = productTypeTree);
+		productType.setSQL("select * from productTypeTable where productTypeID = :productTypeID");
+		productType.addParam(name="productTypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
+		productType = productType.execute(dbtype="query").getResult();
+    	return productType; 
+    }
+    
     public void function clearProductTypeTree() {
     	structDelete(variables,"productTypeTree");
     }

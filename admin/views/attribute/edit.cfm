@@ -66,7 +66,7 @@ Notes:
 
 <form id="newAttributeForm" enctype="multipart/form-data" action="#buildURL('admin:attribute.save')#" method="post">
     <input type="hidden" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
-	<input type="hidden" name="sortOrder" value="#arrayLen(local.attributes)+1#"
+	<input type="hidden" name="sortOrder" value="#arrayLen(local.attributes)+1#" />
     <dl class="oneColumn">
         <cf_PropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" editType="wysiwyg" />
@@ -150,7 +150,7 @@ Notes:
 		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_PropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" edit="true" editType="wysiwyg" />
 				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_PropertyDisplay id="attributeType#local.i#" class="#local.thisAttribute.getAttributeID()#" object="#local.thisAttribute#" property="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
+				<cf_PropertyDisplay id="attributeType#local.i#" class="#local.thisAttribute.getAttributeID()#" object="#local.thisAttribute#" property="attributeType" value="#local.thisAttribute.getAttributeType().getType()#" defaultValue="Text Box" allowNullOption="false" edit="true">
 				<div id="attribOptions#local.thisAttribute.getAttributeID()#">
 				<dt>
 					Attribute Options

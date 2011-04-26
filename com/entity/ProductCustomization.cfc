@@ -1,4 +1,4 @@
-﻿<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,12 +35,17 @@
 
 Notes:
 
---->
+*/
+component displayname="Product Customization" entityname="SlatwallProductCustomization" table="SlatwallProductCustomization" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+	
+	// Persistant Properties
+	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='attributeSet'}" missingrowignored="true";
+	property name="requiredFlag" ormtype="boolean" ;
+	property name="accountSaveFlag" ormtype="boolean" ;
+	property name="cost" ormtype="float" ;
+	
+	// Related Object Properties
+	property name="attributeSet" cfc="AttributeSet" fieldtype="one-to-one" constrained="true";
 
-<cfoutput>
-	<cfif rc.edit>
-		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-			<cfdump var="#local.attributeSet#" />
-		</cfloop> 
-	</cfif>
-</cfoutput>
+
+}

@@ -165,7 +165,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.attributeSet = getAttributeService().getNewEntity("SlatwallAttributeSet");
 		}
 		
-		rc.attributeSet = getAttributeService().save(rc.attributeSet,rc);
+		rc.attributeSet = getAttributeService().saveAttributeSet(rc.attributeSet,rc);
 		
 		if(!rc.attributeSet.hasErrors()) {
 			// go to the 'manage attribute set' form to add attributes
