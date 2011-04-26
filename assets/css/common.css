@@ -44,6 +44,7 @@ div.svocommontoolbarmenu {
 	width:100%;
 	height:30px;
 	background: url(../images/common.toolbar.menu_bg.gif) repeat-x bottom left;
+	z-index: 499999;
 }
 
 div.svocommontoolbarmenu ul.home {
