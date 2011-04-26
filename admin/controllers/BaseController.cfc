@@ -71,15 +71,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
 		}
 		
-		// Add mura specific JS variables
-		getFW().getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType"));
-		getFW().getAssetWire().addJSVariable("context", application.configBean.getContext());
-		getFW().getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath());
-		getFW().getAssetWire().addJSVariable("rb", lcase(session.rb));
-		if( isNumeric(application.configBean.getValue('sessionTimeout')) ) {
-			getFW().getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60);
-		} else {
-			getFW().getAssetWire().addJSVariable("sessionTimeout", 180);
-		}
+		
 	}
 }

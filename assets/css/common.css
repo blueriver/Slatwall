@@ -1,0 +1,156 @@
+/*
+
+    Slatwall - An e-commerce plugin for Mura CMS
+    Copyright (C) 2011 ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    Linking this library statically or dynamically with other modules is
+    making a combined work based on this library.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+ 
+    As a special exception, the copyright holders of this library give you
+    permission to link this library with independent modules to produce an
+    executable, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting executable under
+    terms of your choice, provided that you also meet, for each linked
+    independent module, the terms and conditions of the license of that
+    module.  An independent module is a module which is not derived from
+    or based on this library.  If you modify this library, you may extend
+    this exception to your version of the library, but you are not
+    obligated to do so.  If you do not wish to do so, delete this
+    exception statement from your version.
+
+Notes:
+
+*/
+
+div.svocommontoolbarmenu {
+	position: fixed;
+	bottom:0px;
+	left:0px;
+	width:100%;
+	height:30px;
+	background: url(../images/common.toolbar.menu_bg.gif) repeat-x bottom left;
+}
+
+div.svocommontoolbarmenu ul.home {
+	height:30px;
+	float:left;
+	background: url(../images/common.toolbar.menu_bg.gif) repeat-x bottom left;
+}
+div.svocommontoolbarmenu ul.home li ul {
+	position: absolute;
+	bottom:30px;
+	background: #7D7D7D;
+    height: auto;
+	width: 140px;
+}
+div.svocommontoolbarmenu ul.favorites {
+	height:30px;
+	float:left;
+	background: url(../images/common.toolbar.menu_darkbg.gif) repeat-x bottom left;
+}
+
+div.svocommontoolbarmenu ul {
+	list-style:none;
+	position:relative;
+	margin:0px;
+	padding:0px;
+}
+div.svocommontoolbarmenu li {
+	display:inline-block;
+	float:left;
+	position:relative;
+	margin:0px;
+	padding:0px;
+	height:30px;
+}
+div.svocommontoolbarmenu li a {
+	display:block;
+	margin:0px;
+	padding:7px 12px 0px 20px;
+	height:30px;
+	color:#ffffff;
+	text-shadow: rgba(0, 0, 0, .80) 0px -1px 0px;
+	text-indent: 14px;
+	font-size:11px;
+}
+
+div.svocommontoolbarmenu li:hover a {
+	color:#dedede;
+	text-decoration:none;	
+}
+
+div.svocommontoolbarmenu li ul {
+	display:none;
+}
+div.svocommontoolbarmenu ul.favorites li ul li {
+	background-image:none;
+}
+div.svocommontoolbarmenu li ul li a {
+	background-image:none;
+	margin:0px;
+	padding:0px;
+}
+div.svocommontoolbarmenu ul.favorites li:hover ul {
+	display:block;
+	position: absolute;
+	bottom:30px;
+	background: #7D7D7D;
+    height: auto;
+	width: 140px;
+}
+
+div.svocommontoolbarmenu ul li#search input {
+	width:200px;
+	border:1px solid #efefef;
+	height:13px;
+	margin-top:7px;
+}
+div.svocommontoolbarmenu li#mainMenu>a.logo {
+	display:block;
+	margin:0px;
+	padding:0px;
+	text-indent: -9999px;
+	width:50px;
+	height:30px;
+	background: url(../images/common.toolbar.menu_logo.png) no-repeat;
+}
+div.svocommontoolbarmenu li#mainMenu>a.logo:hover {
+	background: url(../images/common.toolbar.menu_logohover.png) no-repeat;
+}
+div.svocommontoolbarmenu ul.favorites li {
+	background: url(../images/common.toolbar.menu_libg.gif) no-repeat;
+}
+div.svocommontoolbarmenu li#pageTools>a.website {
+	background: url("/admin/images/icons/ntwrk_24.png") no-repeat scroll 15px 7px transparent !important;
+}
+div.svocommontoolbarmenu li#navDashboard {
+	background:none;
+}
+div.svocommontoolbarmenu li#navDashboard>a {
+	background: url("/admin/images/icons/dashboard_14.png") no-repeat scroll 15px 7px transparent !important;
+}
+div.svocommontoolbarmenu li#navProducts>a {
+	background: url("/admin/images/icons/smicn_24.png") no-repeat scroll 15px 7px transparent !important;
+}
+div.svocommontoolbarmenu li#navAccounts>a {
+	background: url("/admin/images/icons/permissions_on.png") no-repeat scroll 15px 7px transparent !important;
+}
+
+div.svocommontoolbarmenu li#navSettings>a {
+	background: url("/admin/images/icons/confg_24.png") no-repeat scroll 15px 7px transparent !important;
+}
