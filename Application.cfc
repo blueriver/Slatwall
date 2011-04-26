@@ -36,6 +36,7 @@
 Notes:
 
 	The Version log for Slatwall is now in version.txt
+	Testing
 */
 component extends="framework" output="false" {
 
