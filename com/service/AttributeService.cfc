@@ -47,6 +47,9 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 		}
 	}
 	
+	public any function saveAttributeSet(required any attributeSet, required struct data){
+		return super.save(attributeSet,data);
+	}
 	
 	public any function save( required any attribute, required struct data ) {
 		
@@ -73,8 +76,14 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 		return Super.save(arguments.attribute,arguments.data);
 	}
 		
-	public any function getAttributeSets(string systemCode) {
-		return getSmartList({attributeSetType.systemCode=arguments.systemCode},"SlatwallAttributeSet").getRecords();
+	public any function getAttributeSets(array systemCode) {
+		var smartList = getSmartList({},"SlatwallAttributeSet");
+		if(structKeyExists(arguments,"systemCode")){
+			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode,"^"));
+		}
+		smartList.addOrder("attributeSetType_systemCode|ASC");
+		smartList.addOrder("sortOrder|ASC");
+		return smartList.getRecords();
 	}
 	
 }
