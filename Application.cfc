@@ -298,7 +298,7 @@ component extends="framework" output="false" {
 	private string function internalLayout( string layoutPath, string body ) {
 		var rtn = super.internalLayout(argumentcollection=arguments);
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			if(getSubsystem(request.action) == "admin") {
+			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd") {
 				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
 			}
 		}

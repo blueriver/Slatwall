@@ -76,20 +76,17 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				getRequestCacheService().setValue("currentProductListing", getProductService().getProductContentSmartList(rc=arguments.rc, contentID=rc.$.content("contentID")));
 			}
 		}
+		
 	}
 	
 	public void function onRenderEnd(required any rc) {
+		
 		// Add necessary html to the header
-		/*
-		if( getFW().secureDisplay("admin:utility.toolbar") ){
-			savecontent variable="html_head" {
-				getFW().view("admin:utility/toolbar");
-			}
-			var oldContent = rc.$.getEvent().getValue( "__MuraResponse__" );
-			var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
-			rc.$.getEvent().setValue( "__MuraResponse__", newContent);
+		if( getFW().secureDisplay("admin:main.dashboard") ){
+			var oldContent = rc.$.event( "__MuraResponse__" );
+			var newContent = Replace(oldContent, "</head>", "#getFW().view("common:toolbar/menu")#</head>");
+			rc.$.event("__MuraResponse__", newContent);
 		}
-		*/
 	}
 
 }

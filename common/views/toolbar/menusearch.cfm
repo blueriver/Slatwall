@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cfif isDefined("rc.toolbarKeyword") and len(rc.toolbarKeyword) gte 2>
-		<div class="svoadminutilitytoolbarsearch">
+		<div class="svocommontoolbarsearch">
 			<ul class="SearchMenu">
 				<li class="MenuTop">&nbsp;</li>
 				

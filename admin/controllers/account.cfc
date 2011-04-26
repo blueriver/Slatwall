@@ -43,10 +43,32 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function before(required struct rc) {
 	}
 	
-	public void function dashboard() {
+	public void function dashboard(required struct rc) {
 		getFW().redirect(action="admin:account.list");
 	}
 	
+	public void function detail(required struct rc) {
+		param name="rc.accountID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.account = getAccountService().getByID(rc.accountID);
+		if(isNull(rc.account)) {
+			rc.account = getAccountService().getNewEntity();
+		}
+	}
+	
+	public void function create(required struct rc) {
+		detail(arguments.rc);
+		getFW().setView("admin:account.detail");
+		rc.edit = true;
+	}
+	
+	public void function edit(required struct rc) {
+		detail(arguments.rc);
+		getFW().setView("admin:account.detail");
+		rc.edit = true;
+	}
+
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
 		
