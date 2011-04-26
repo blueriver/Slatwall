@@ -42,3 +42,23 @@ jQuery(document).ready(function(){
 	setHTMLEditors();
 	setAccordions(".accordion",activePanel)
 });
+
+function btnConfirmDialog(message,btn){
+    
+    jQuery("#alertDialogMessage").html(message);
+    jQuery("#alertDialog").dialog({
+            resizable: false,
+            modal: true,
+            buttons: {
+                'YES': function() {
+                    jQuery(this).dialog('close');
+                    btn.form.submit();        
+                    },
+                'NO': function() {
+                    jQuery(this).dialog('close');
+                }
+            }
+        });
+
+    return false;   
+}
