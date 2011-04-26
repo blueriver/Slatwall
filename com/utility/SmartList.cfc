@@ -19,8 +19,9 @@
 component displayname="Smart List" accessors="true" persistent="false" {
 	
 	property name="entityName" type="string" hint="This is the base entity that the list is based on.";
-	property name="entityMetaData" type="struct" hint="This is the meta data of the base entity.";
-
+	property name="entityMetaData" type="struct" hint="This struct holds meta data for each entity";
+	property name="relatedEntities" type="array" hint="This array hold all of the related properties needed to load";
+	
 	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
 	property name="filters" type="struct" hint="This struct holds any filters that are set on the entities properties";
 	property name="ranges" type="struct" hint="This struct holds any ranges set on any of the entities properties";
@@ -31,18 +32,11 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	property name="recordStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
 	property name="recordShow" type="numeric" hint="This is the total number of entities to display";
-	
-	/*
-	property name="recordEnd" type="numeric" hint="This represents the last record to display and it is used in paging.";
-	property name="totalRecords" type="numeric";
-	property name="currentPage" type="numeric" hint="This is the current page that the smart list is displaying worth of entities";
-	property name="totalPages" type="numeric" hint="This is the total number of pages worth of entities";
-	*/
 
 	property name="fillTime" type="numeric";
 	property name="searchTime" type="numeric";
 
-	public any function init(struct rc, required string entityName) {
+	public any function init(required string entityName, struct data, numeric recordStart=1, numeric recordShow=10) {
 		// Set defaults for the main properties
 		setSelects(structNew());
 		setFilters(structNew());
@@ -52,14 +46,13 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		setKeywords(arrayNew(1));
 		setRecordStart(1);
 		setRecordShow(10);
-		setEntityMetaData(structNew());
 		setSearchTime(0);
 		
 		// Set entity name based on whatever
 		setEntityName(arguments.entityName);
 		
-		if(isDefined("arguments.rc")) {
-			applyRC(rc=arguments.RC);
+		if(structKeyExists(arguments, "data")) {
+			applyData(data=arguments.data);	
 		}
 		
 		variables.HQLWhereParams = structNew();
@@ -87,8 +80,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return ceiling(getTotalRecords() / setRecordShow());
 	}
 	
-	public void function addSelect(required string rawProperty, required string alias) {
-		var selectProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
+	public void function addSelect(required string propertyIdentifier, required string alias) {
+		var selectProperty = getValidHQLProperty(propertyIdentifier=arguments.propertyIdentifier);
 		if(selectProperty != "") {
 			if(structKeyExists(variables.selects, selectProperty)) {
 				variables.selects[selectProperty] = arguments.alias;
@@ -98,11 +91,11 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	public void function addFilter(required string rawProperty, required string value) {
-		var filterProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
+	public void function addFilter(required string propertyIdentifier, required string value, numeric filterGroup) {
+		var filterProperty = getValidHQLProperty(propertyIdentifier=arguments.propertyIdentifier);
 		if(filterProperty != "") {
 			for(var i=1; i <= listLen(arguments.value, "^"); i++) {
-				var filterValue = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=listGetAt(arguments.value, i, "^"));
+				var filterValue = getValidHQLPropertyValue(propertyIdentifier=arguments.propertyIdentifier, value=listGetAt(arguments.value, i, "^"));
 				if(filterValue != "") {
 					if(structKeyExists(variables.filters, filterProperty)) {
 						variables.filters[filterProperty] = "#variables.filters[filterProperty]#^#filterValue#";
@@ -114,12 +107,12 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	public void function addRange(required string rawProperty, required string value) {
-		var rangeProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
+	public void function addRange(required string propertyIdentifier, required string value, numeric filterGroup) {
+		var rangeProperty = getValidHQLProperty(propertyIdentifier=arguments.propertyIdentifier);
 		if(rangeProperty != "") {
 			if(Find("^", arguments.value)) {
-				var lowerRange = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=Left(arguments.value, Find("^", arguments.value)-1));
-				var upperRange = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=Right(arguments.value, Len(arguments.value) - Find("^", arguments.value)));
+				var lowerRange = getValidHQLPropertyValue(propertyIdentifier=arguments.propertyIdentifier, value=Left(arguments.value, Find("^", arguments.value)-1));
+				var upperRange = getValidHQLPropertyValue(propertyIdentifier=arguments.propertyIdentifier, value=Right(arguments.value, Len(arguments.value) - Find("^", arguments.value)));
 				if(isNumeric(lowerRange) && isNumeric(upperRange) && lowerRange <= upperRange) {
 					if(structKeyExists(variables.ranges, rangeProperty)) {
 						variables.ranges[rangeProperty] = "#lowerRange#^#upperRange#";
@@ -133,7 +126,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 	
 	public void function addOrder(required string orderStatement, numeric position) {
 		var orderStruct = structNew();
-		var orderProperty = getValidHQLProperty(rawProperty=Left(arguments.orderStatement, Find("|", arguments.orderStatement)-1));
+		var orderProperty = getValidHQLProperty(propertyIdentifier=Left(arguments.orderStatement, Find("|", arguments.orderStatement)-1));
 		
 		if(orderProperty != "") {
 			var orderDirection = Right(arguments.orderStatement, Len(arguments.orderStatement) - Find("|", arguments.orderStatement));
@@ -156,8 +149,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	public void function addKeywordProperty(required string rawProperty, required numeric weight) {
-		var keywordProperty = getValidHQLProperty(arguments.rawProperty);
+	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
+		var keywordProperty = getValidHQLProperty(arguments.propertyIdentifier);
 		if(keywordProperty != "" && isNumeric(arguments.weight)) {
 			if(structKeyExists(variables.keywordProperties, keywordProperty)) {
 				variables.keywordProperties[keywordProperty] = arguments.weight;
@@ -167,33 +160,33 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	public void function applyRC(required struct rc) {
+	public void function applyData(required struct data) {
 		var pageCurrent = 0;
-		for(i in arguments.rc) {
+		for(i in arguments.data) {
 			if(findNoCase("F_",i)) {
-				addFilter(rawProperty=ReplaceNoCase(i,"F_", ""), value=arguments.rc[i]);
+				addFilter(propertyIdentifier=ReplaceNoCase(i,"F_", ""), value=arguments.data[i]);
 			} else if(findNoCase("R_",i)) {
-				addRange(rawProperty=ReplaceNoCase(i,"R_", ""), value=arguments.rc[i]);
+				addRange(propertyIdentifier=ReplaceNoCase(i,"R_", ""), value=arguments.data[i]);
 			} else if(findNoCase("P_Show",i)) {
-				if(isNumeric(arguments.rc[i])){
-					setRecordShow(arguments.rc[i]);
+				if(isNumeric(arguments.data[i])){
+					setRecordShow(arguments.data[i]);
 				}
 			} else if(findNoCase("P_Start",i)) {
-				if(isNumeric(arguments.rc[i])){
-					setRecordStart(arguments.rc[i]);
+				if(isNumeric(arguments.data[i])){
+					setRecordStart(arguments.data[i]);
 				}
 			} else if(findNoCase("P_Current", i)){
-				if(isNumeric(arguments.rc[i])){
-					pageCurrent = arguments.rc[i];
+				if(isNumeric(arguments.data[i])){
+					pageCurrent = arguments.data[i];
 				}
 			} else if(findNoCase("OrderBy",i)) {
-				for(var ii=1; ii <= listLen(arguments.rc[i], "^"); ii++ ) {
-					addOrder(orderStatement=listGetAt(arguments.rc[i], ii, "^"));
+				for(var ii=1; ii <= listLen(arguments.data[i], "^"); ii++ ) {
+					addOrder(orderStatement=listGetAt(arguments.data[i], ii, "^"));
 				}
 			}
 		}
-		if(isDefined("rc.Keyword")){
-			var KeywordList = Replace(arguments.rc.Keyword," ","^","all");
+		if(isDefined("data.Keyword")){
+			var KeywordList = Replace(arguments.data.Keyword," ","^","all");
 			KeywordList = Replace(KeywordList,"%20","^","all");
 			KeywordList = Replace(KeywordList,"+","^","all");
 			KeywordList = Replace(KeywordList,"'","","all");
@@ -206,7 +199,6 @@ component displayname="Smart List" accessors="true" persistent="false" {
 			setRecordStart((((pageCurrent-1)*getRecordShow()) + 1));
 		}
 	}
-	
 	
 	public struct function getEntityMetaData(required string entityName) {
 		if(!structKeyExists(variables.entityMetaData, arguments.entityName)) {
@@ -225,9 +217,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
-	private string function getValidHQLProperty(required string rawProperty) {
+	private string function getValidHQLProperty(required string propertyIdentifier) {
 		var returnProperty = "";
-		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
+		var entityPropertyArray = ListToArray(arguments.propertyIdentifier, "_");
 		var currentEntityName = getEntityName();
 		
 		for(var i=1; i <= arrayLen(entityPropertyArray); i++){
@@ -246,9 +238,9 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnProperty;
 	}
 			
-	private string function getValidHQLPropertyValue(required string rawProperty, required any value) {
+	private string function getValidHQLPropertyValue(required string propertyIdentifier, required any value) {
 		var returnValue = "";
-		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
+		var entityPropertyArray = ListToArray(arguments.propertyIdentifier, "_");
 		var currentEntityName = getEntityName();
 		
 		for(var i=1; i <= arrayLen(entityPropertyArray); i++){
@@ -264,12 +256,12 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnValue;
 	}
 	
-	private string function getValidEntityProperty(required string rawProperty, entityName) {
+	private string function getValidEntityProperty(required string propertyIdentifier, entityName) {
 		var returnProperty = "";
 		var entityProperties = getEntityMetaData(entityName=arguments.entityName).properties;
 		
 		for(var i=1; i <= arrayLen(entityProperties); i++){
-			if (entityProperties[i].name == arguments.rawProperty) {
+			if (entityProperties[i].name == arguments.propertyIdentifier) {
 				returnProperty = entityProperties[i].name;
 				break;
 			}
@@ -277,12 +269,12 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnProperty;
 	}
 	
-	private string function getValidEntityPropertyValue(required string rawProperty, required string value, entityName) {
+	private string function getValidEntityPropertyValue(required string propertyIdentifier, required string value, entityName) {
 		var returnValue = "";
 		var entityProperties = getEntityMetaData(entityName=arguments.entityName).properties;
 		
 		for(var i=1; i <= arrayLen(entityProperties); i++){
-			if (entityProperties[i].name == arguments.rawProperty) {
+			if (entityProperties[i].name == arguments.propertyIdentifier) {
 				var thisProperty = entityProperties[i];
 				if(isDefined("thisProperty.type")) {
 					if(entityProperties[i].type == "string") {
@@ -303,11 +295,11 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return returnValue;
 	}
 	
-	public void function addHQLWhereParam(paramName, paramValue) {
-		variables.HQLWhereParams[ arguments.paramName ] = arguments.paramValue;
+	private void function addHQLParam(paramName, paramValue) {
+		variables.HQLParam[ arguments.paramName ] = arguments.paramValue;
 	}
 	
-	public any function getHQLWhereParams() {
+	private struct function getHQLParams() {
 		return variables.HQLWhereParams;
 	}
 	
@@ -478,15 +470,14 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		if(isArray(arguments.records)) {
 			variables.records = arguments.records;
 		} else if (isQuery(arguments.records)) {
-			for(var i=1; i <= arguments.records.recordcount; i++) {
-				var entity = entityNew(getEntityName());
-				entity.set(arguments.records[i]);
-				arrayAppend(variables.records, entity);
-			}
+			// TODO: add the ability to pass in a query.
+			throw("Passing in a query is a feature that hasn't been finished yet");
+		} else {
+			throw("You must either pass an array of records, or a query or records");
 		}
 		
 		// Apply Search Score to Entites
-		if(arrayLen(variables.keywords)) {
+		if(arrayLen(getKeywords())) {
 			applySearchScore();
 		}
 	}
@@ -498,8 +489,8 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		return variables.records;
 	}
 
-	public array function getPageRecords(boolean refresh=false) {
-		if( !structKeyExists(variables, "pageRecords") || arguments.refresh == true) {
+	public array function getPageRecords() {
+		if( !structKeyExists(variables, "pageRecords")) {
 			var records = getRecords(arguments.refresh);
 			variables.pageRecords = arrayNew(1);
 			for(var i=getRecordStart(); i<=getRecordEnd(); i++) {

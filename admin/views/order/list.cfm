@@ -58,7 +58,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderTotal")#</th>
 			<th>&nbsp</th>
 		</tr>
-		<cfloop array="#rc.OrderSmartList.getPageRecords()#" index="Local.Order">
+		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="Local.Order">
 			<tr>
 				<td>#Local.Order.getOrderID()#</td>
 				<td>#Local.Order.getOrderCloseDate()#</td>

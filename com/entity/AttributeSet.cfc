@@ -66,7 +66,6 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
        return Super.init();
     }
 	
-	
 	public array function getAttributes(sortby, sortType="text", direction="asc") {
 		if(!structKeyExists(arguments,"sortby")) {
 			return variables.Attributes;
@@ -74,7 +73,6 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 			return sortObjectArray(variables.Attributes,arguments.sortby,arguments.sortType,arguments.direction);
 		}
 	}
-	
 	
     /******* Association management methods for bidirectional relationships **************/
 	
@@ -103,10 +101,10 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
     public array function getAttributeSetTypeOptions() {
 		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
-			smartList.addSelect(rawProperty="type", alias="name");
-			smartList.addSelect(rawProperty="typeID", alias="id");
+			smartList.addSelect(propertyIdentifier="type", alias="name");
+			smartList.addSelect(propertyIdentifier="typeID", alias="id");
 			// TODO: fix this filter bug in smartlist
-			smartList.addFilter(rawProperty="parentType_systemCode", value="attributeSetType", entity="Type");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeSetType", entity="Type");
 			smartList.addOrder("type|ASC");
 			
 			variables.attributeSetTypeOptions = smartList.getRecords();

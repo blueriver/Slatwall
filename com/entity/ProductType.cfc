@@ -113,7 +113,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public array function getInheritedAttributeSetAssignments(){
 		//Todo get by all the parent productTypeIDs
-		var attributeSetAssignments = getService("AttributeService").getSmartList({baseItemID=""},"SlatwallAttributeSetAssignment").getRecords();
+		var attributeSetAssignments = getService("AttributeService").getSmartList(entityName="SlatwallAttributeSetAssignment", data={baseItemID=""}).getRecords();
 		if(!arrayLen(attributeSetAssignments)){
 			attributeSetAssignments = [];
 		}

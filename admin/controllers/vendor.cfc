@@ -37,6 +37,8 @@ Notes:
 
 */
 component extends="baseController" output="false" {
+
+	property name="vendorService" type="any";
 	
 	public void function setVendorService(required any vendorService) {
 		variables.vendorService = arguments.vendorService;
@@ -51,7 +53,7 @@ component extends="baseController" output="false" {
 	}
 	
 	public void function list(required struct rc) {
-		rc.vendorSmartList = variables.vendorService.getSmartList(rc=arguments.rc);
+		rc.vendorSmartList = getVendorService().getSmartList(data=arguments.rc);
 	}
 	
 }
