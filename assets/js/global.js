@@ -38,36 +38,25 @@ Notes:
 
 */
 
-var search_delay = 0;
-var search_form = 0;
-var svo_request_id = 0;
-var ajax_request_id = 0;
-
 $(document).ready(function(){
 	$('li.LogoSearch img').click(function(e){
 		$('ul.MainMenu').show('fast');
 		e.stopPropagation();
 	});
-	
-	$("ul.MainMenu").click(function(e){
-    	e.stopPropagation();
-	});
-	
-	$("input.AdminSearch").val("");
-
 });
 
-function toolbarSearchKeyup(form){
-	clearTimeout(search_delay);
-	search_form = form;
-	if($("input.AdminSearch").val() != ''){
-		search_delay = setTimeout("adminSearch()",280);
-	}
-}
+$(document).bind('keydown', 'Alt+s', function(e){
+	e.preventDefault();
+	$('li#search > input').focus();
+	$('li#mainMenu > ul').show('fast');	
+});
 
-function adminSearch(){
-	slatwallAjaxFormSubmit(search_form);
-}
+$(document).bind('keydown', 'esc', function(e){
+	e.preventDefault();
+	$('li#search > input').blur();
+	$('li#search > input').val('');
+	$('li#mainMenu > ul').hide('fast');	
+});
 
 function btnConfirmDialog(message,btn){
     
@@ -88,7 +77,3 @@ function btnConfirmDialog(message,btn){
 
     return false;   
 }
-
-$(document).click(function(e){
-	$('ul.MainMenu').hide('fast');
-});
