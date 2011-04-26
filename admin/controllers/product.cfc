@@ -81,7 +81,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.edit = true;
 		detail(rc);
 		rc.productPages = getProductService().getProductPages();
-		rc.attributeSets = getAttributeService().getAttributeSets(type="Product");
+		rc.attributeSets = rc.Product.getAttributeSets("astProduct");
 		getFW().setView("admin:product.detail");
 	}
 

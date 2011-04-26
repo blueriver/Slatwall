@@ -111,6 +111,15 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return attributeSetAssignments;
 	}
 	
+	public array function getInheritedAttributeSetAssignments(){
+		//Todo get by all the parent productTypeIDs
+		var attributeSetAssignments = getService("AttributeService").getSmartList({baseItemID=""},"SlatwallAttributeSetAssignment").getRecords();
+		if(!arrayLen(attributeSetAssignments)){
+			attributeSetAssignments = [];
+		}
+		return attributeSetAssignments;
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Products (one-to-many)

@@ -57,6 +57,7 @@ Notes:
 	<tr>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.attributeSet.attributeSetName")#</th>
 		<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
+		<th>#rc.$.Slatwall.rbKey('entity.attributeSet.globalFlag')#</th>
 		<th>&nbsp;</th>
 	</tr>
 	</thead>
@@ -65,6 +66,7 @@ Notes:
 	<tr class="attributeSet" id="#local.thisAttributeSet.getAttributeSetID()#">
 		<td class="varWidth">#local.thisAttributeSet.getAttributeSetName()#</td>
 		<td>#local.thisAttributeSet.getAttributeSetType().getType()#</td>
+		<td>#yesNoformat(local.thisAttributeSet.getGlobalFlag())#</td>
 		<td class="administration">
 		  <ul class="three">
 		  	  <cfset local.deleteDisabled = local.thisAttributeSet.getAttributeCount() gt 0 ? true : false />

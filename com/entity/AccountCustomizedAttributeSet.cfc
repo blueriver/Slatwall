@@ -1,4 +1,4 @@
-﻿<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,12 +35,14 @@
 
 Notes:
 
---->
+*/
+component displayname="Account Customized AttributeSet" entityname="SlatwallAccountCustomizedAttributeSet" table="SlatwallAccountCustomizedAttributeSet" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+	
+	// Persistant Properties
+	property name="accountCustomizedAttributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Object Properties
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 
-<cfoutput>
-	<cfif rc.edit>
-		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-			<cfdump var="#local.attributeSet#" />
-		</cfloop> 
-	</cfif>
-</cfoutput>
+}
