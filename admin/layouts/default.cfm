@@ -40,6 +40,16 @@ Notes:
 <cfparam name="rc.activeTab" default=0 />
 <cfparam name="rc.activePanel" default=0 />
 
+<!--- Add mura specific JS variables --->
+<cfset getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType")) />
+<cfset getAssetWire().addJSVariable("context", application.configBean.getContext()) />
+<cfset getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath()) />
+<cfset getAssetWire().addJSVariable("rb", lcase(session.rb)) />
+<cfif isNumeric(application.configBean.getValue('sessionTimeout'))>
+	<cfset getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60) />
+<cfelse>
+	<cfset getAssetWire().addJSVariable("sessionTimeout", 180) />
+</cfif>
 <cfset getAssetWire().addJSVariable("activeTab", rc.activeTab) />
 <cfset getAssetWire().addJSVariable("activePanel", rc.activeTab) />
 <cfset getAssetWire().addJSVariable("dtExample", DateFormat(now(), "MM/DD/YYYY")) />
@@ -56,14 +66,15 @@ Notes:
 	<link rel="shortcut icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
 </head>
 <body>
+	#view("common:toolbar/menu")#
 	<div id="header">
 		<h1>Mura CMS</h1>
-		#view("utility/header")#
+		#view("admin:utility/header")# 
 		<p id="currentSite"><cf_ActionCaller text="#rc.sectionTitle#" action="#request.subsystem#:#request.section#" type="link"> &rarr; #rc.itemTitle#</p>
 	</div>
-	#view('utility/toolbar')#
+	
 	<div class="admincontainer">
-		#view("utility/messageBox")#
+		#view("admin:utility/messageBox")#
 		#body#
 	</div>
 <div id="alertDialog" title="Alert" style="display:none">

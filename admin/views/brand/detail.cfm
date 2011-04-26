@@ -36,11 +36,24 @@
 Notes:
 
 --->
-<cfparam name="rc.brand" type="any" />
+<cfparam name="rc.brand" type="any">
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<dl class="ItemDetailMain oneColumn">
-		<cf_PropertyDisplay object="#rc.Brand#" property="BrandName" first="true">
-		<cf_PropertyDisplay object="#rc.Brand#" property="BrandWebsite">
-	</dl>
+	<div class="svoadminbranddetail">
+		<form name="BrandEdit" action="#buildURL('admin:brand.save')#" method="post">
+			<input type="hidden" name="BrandID" value="#rc.Brand.getBrandID()#" />
+			<dl class="oneColumn">
+				<cf_PropertyDisplay object="#rc.Brand#" property="BrandName" edit="#rc.edit#" first="true">
+				<cf_PropertyDisplay object="#rc.Brand#" property="BrandWebsite" edit="#rc.edit#">
+			</dl>
+			<div id="actionButtons" class="clearfix">
+				<cf_ActionCaller action="admin:brand.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cfif !rc.brand.isNew() and !rc.brand.hasProduct()>
+				<cf_ActionCaller action="admin:brand.delete" querystring="brandid=#rc.brand.getBrandID()#" class="button" type="link" confirmrequired="true">
+				</cfif>
+				<cf_ActionCaller action="admin:brand.save" type="submit">
+			</div>
+		</form>
+	</div>
 </cfoutput>

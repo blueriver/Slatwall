@@ -36,4 +36,22 @@
 Notes:
 
 --->
+<cfparam name="rc.account" type="any" />
+<cfparam name="rc.edit" type="boolean" />
 
+<cfoutput>
+	<div class="svoadminaccountdetail">
+		<dl class="oneColumn">
+			<cf_PropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
+			<cf_PropertyDisplay object="#rc.Account#" property="lastName" edit="#rc.edit#">
+			<cf_PropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
+		</dl>
+		<div id="actionButtons" class="clearfix">
+			<cf_ActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cfif !rc.account.isNew()>
+				<cf_ActionCaller action="admin:account.delete" querystring="accountID=#rc.account.getBrandID()#" class="button" type="link" confirmrequired="true">
+			</cfif>
+			<cf_ActionCaller action="admin:account.save" type="submit">
+		</div>
+	</div>
+</cfoutput>
