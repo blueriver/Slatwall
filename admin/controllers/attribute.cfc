@@ -91,7 +91,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		
 		rc.optionsArray = getService("formUtilities").buildFormCollections(rc).options;			
-		rc.attribute = getAttributeService().save(rc.attribute,rc);
+		rc.attribute = getAttributeService().saveAttribute(rc.attribute,rc);
 		
 		if(!rc.attribute.hasErrors()) {
 			// go to the 'manage attribute set' form to add/edit more attributes
@@ -165,7 +165,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.attributeSet = getAttributeService().getNewEntity("SlatwallAttributeSet");
 		}
 		
-		rc.attributeSet = getAttributeService().saveAttributeSet(rc.attributeSet,rc);
+		rc.attributeSet = getAttributeService().save(rc.attributeSet,rc);
 		
 		if(!rc.attributeSet.hasErrors()) {
 			// go to the 'manage attribute set' form to add attributes

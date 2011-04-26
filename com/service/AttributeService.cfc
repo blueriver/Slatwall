@@ -47,11 +47,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 		}
 	}
 	
-	public any function saveAttributeSet(required any attributeSet, required struct data){
-		return super.save(attributeSet,data);
-	}
-	
-	public any function save( required any attribute, required struct data ) {
+	public any function saveAttribute( required any attribute, required struct data ) {
 		
 		var order=0;
 		// set the attribute options into the attribute, if defined.
