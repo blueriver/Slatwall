@@ -38,41 +38,55 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 	
+	// Slatwall Service Injection
 	property name="productService" type="any";
 	property name="accountService" type="any";
 	property name="sessionService" type="any";
+	property name="requestCacheService" type="any";
+	
+	// Mura Service Injection
+	property name="contentManager" type="any";
 	
 	public void function before(required any rc) {
 		variables.fw.setView("frontend:event.blank");
 	}
 	
 	public void function onSiteRequestStart(required any rc) {
-
+		// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
+		if( listLen(rc.path, "/") >= 3 && listGetAt(rc.path, 2, "/") == setting("product_urlKey")) {
+			
+			// Load Product
+			var product = getProductService().getByFilename(listGetAt(rc.path, 3, "/"));
+			
+			// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
+			if(!isNull(product)) {
+				getRequestCacheService().setValue("currentProduct", product);
+				getRequestCacheService().setValue("currentProductID", product.getProductID());
+				rc.$.event('slatAction', 'frontend:product.detail');
+				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(),rc.$.event('siteid'),true));
+			}	
+		}
 	}
 	
 	public void function onRenderStart(required any rc) {
-		// This enables SEO friendly product URL's
-		if( listLen(rc.path, "/") >= 3) {
-			if( listGetAt(rc.path, 2, "/") == setting('product_urlKey') ) {
-				if(rc.$.event('slatAction') == "") {
-					
-					url.filename = listGetAt(rc.path, 3, "/");
-					rc.$.event('slatAction', 'frontend:product.detail');
-					rc.$.content().setIsNew(0);
-					rc.$.event('overrideContent', 1);
-				}
+		// This checks for Product Listing Pages
+		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:product.listcontentproducts");
+				getRequestCacheService().setValue("currentProductListing", getProductService().getProductContentSmartList(rc=arguments.rc, contentID=rc.$.content("contentID")));
 			}
 		}
+		
 	}
 	
 	public void function onRenderEnd(required any rc) {
+		
 		// Add necessary html to the header
-		savecontent variable="html_head" {
-			include "/plugins/#application.Slatwall.pluginConfig.getDirectory()#/frontend/layouts/inc/html_head.cfm";
+		if( getFW().secureDisplay("admin:main.dashboard") ){
+			var oldContent = rc.$.event( "__MuraResponse__" );
+			var newContent = Replace(oldContent, "</head>", "#getFW().view("common:toolbar/menu")#</head>");
+			rc.$.event("__MuraResponse__", newContent);
 		}
-		var oldContent = rc.$.getEvent().getValue( "__MuraResponse__" );
-		var newContent = Replace(oldContent, "</head>", "#html_head#</head>");
-		rc.$.getEvent().setValue( "__MuraResponse__", newContent);
 	}
 
 }

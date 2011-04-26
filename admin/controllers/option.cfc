@@ -79,7 +79,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
         param name="rc.listby" default="optiongroups";
         rc.orderby="optiongroup_optiongroupname|A^sortOrder|A";
         rc.options = getOptionService().getSmartList(rc=arguments.rc);
-        rc.optionGroups = getOptionService().list(entityName="SlatwallOptionGroup",sortOrder="OptionGroupName Asc");
+        rc.optionGroups = getOptionService().list(entityName="SlatwallOptionGroup",sortby="sortOrder Asc");
     }
 	
 	public void function save(required struct rc) {
@@ -89,8 +89,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.option = getOptionService().getNewEntity();
 		}
 		
-		//put optionGroup in rc in case we have to show the edit screen again
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
 					
 		// upload the image and return the result struct
 		if(rc.optionImageFile != "") {
@@ -104,16 +102,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.message="admin.option.save_success";
 			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
 		} else {
+			//put optionGroup in rc for form
+			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
 			if(rc.option.isNew()) {
 				rc.newOption = rc.option;
 				rc.create = true;
-				rc.optionID = "new";
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create");
+				rc.newOptionFormOpen=true;
 				getFW().setView("admin:option.edit");
 			} else {
-				rc.activeOption = rc.option;
-				rc.optionID = rc.option.getOptionID();
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
+				rc.activeOption = rc.option;				
 				getFW().setView("admin:option.edit");
 			}		
 		}
@@ -188,6 +186,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
 			getFW().setView(action="admin:option.detailOptionGroup");
 		}
+	}
+
+	public void function saveOptionGroupSort(required struct rc) {
+		getOptionService().saveOptionGroupSort(rc.optionGroupID);
+		getFW().redirect("admin:option.list");
 	}
 	
 	public void function deleteOptionGroup(required struct rc) {

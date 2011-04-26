@@ -6,7 +6,7 @@
 	</Columns>
 	<Records>
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="product_urlKey" settingValue="sp" />
-		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="default.cfm" />
+		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="product-templates/default" />
 		<Record settingID="dbb32799a1090790de93f0b6dd6b36ef" settingName="product_imagewidthsmall" settingValue="150" />
 		<Record settingID="dbb3278dde43a5711cd8ea043d4bba1c" settingName="product_imagewidthmedium" settingValue="300" />
 		<Record settingID="dbb3278cd959dc151f36ae48ce579b47" settingName="product_imagewidthlarge" settingValue="600" />

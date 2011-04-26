@@ -70,5 +70,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(right(rc.itemTitle, 8) == "_missing") {
 			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
 		}
+		
+		
 	}
 }

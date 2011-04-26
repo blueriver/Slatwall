@@ -38,24 +38,19 @@ Notes:
 */
 component extends="BaseService" accessors="true" {
 	
+	// Slatwall Service Injection
 	property name="skuDAO" type="any";
 	property name="ProductTypeDAO" type="any";
 	property name="SkuService" type="any";  
-	property name="contentManager" type="any";
-	property name="settingsManager" type="any";
-	property name="feedManager" type="any";
 	property name="ProductTypeTree" type="any";
 	
-	public any function init(required any productTypeDAO) {
-		//TODO: look at changing it to property injection through coldspring
-		setproductTypeDAO(arguments.productTypeDAO);
-		setProductTypeTree();
+	// Mura Service Injection
+	property name="contentManager" type="any";
+	property name="feedManager" type="any";
 		
-		return this;
-	}
-		
-	public any function getProductTemplates() {
-		return getSettingsManager().getSite(session.siteid).getTemplates();
+	public any function getProductTemplates(required string siteID) {
+		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
+		return getContentManager().getNest(parentID=productTemplatesID, siteid=arguments.siteid);
 	}
 	
 	public any function getContentFeed() {
@@ -63,7 +58,9 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function getProductPages() {
-		return getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" }).getIterator();
+		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
+		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
+		return pageFeed.getIterator();
 	}
 
 	/**
@@ -123,7 +120,21 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.Product = Super.save(arguments.Product);
 		
+		if( !arguments.Product.hasErrors() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+		}
+		
 		return arguments.Product;
+	}
+	
+	public any function delete( required any product ) {
+		var deleteResponse = Super.delete( arguments.product );
+		if( deleteResponse.getStatusCode() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+		}
+		return deleteResponse;
 	}
 	
 	public any function getProductContentSmartList(required struct rc, required string contentID) {
@@ -133,7 +144,35 @@ component extends="BaseService" accessors="true" {
 	//   Product Type Methods
 	
     public void function setProductTypeTree() {
-        variables.productTypeTree = getProductTypeDAO().getProductTypeTree();
+    	var qProductTypes = getProductTypeDAO().getProductTypeQuery();
+    	var productTypeTree = getService("utilities").queryTreeSort(
+    		theQuery = qProductTypes,
+    		itemID = "productTypeID",
+    		parentID = "parentProductTypeID",
+    		pathColumn = "productTypeName"
+    	);
+        variables.productTypeTree = productTypeTree;
+    }
+    
+    public any function getProductTypeTree() {
+    	if( !structKeyExists(variables, "productTypeTree") ) {
+    		setProductTypeTree();
+    	}
+    	return variables.productTypeTree; 
+    }
+    
+    public any function getProductTypeFromTree(string productTypeID) {
+		var productTypeTree = getProductTypeTree();
+		var productType = new Query();
+		productType.setAttributes(productTypeTable = productTypeTree);
+		productType.setSQL("select * from productTypeTable where productTypeID = :productTypeID");
+		productType.addParam(name="productTypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
+		productType = productType.execute(dbtype="query").getResult();
+    	return productType; 
+    }
+    
+    public void function clearProductTypeTree() {
+    	structDelete(variables,"productTypeTree");
     }
 	
 	public any function saveProductType(required any productType, required struct data) {
@@ -145,6 +184,10 @@ component extends="BaseService" accessors="true" {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
 	   var entity = Super.save(arguments.productType);
+	   if( !entity.hasErrors() ) {
+	   		// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+	   }
 	   return entity;
 	}
 	
@@ -152,34 +195,63 @@ component extends="BaseService" accessors="true" {
 		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
 			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
+		if( !arguments.productType.hasErrors() ) {
+	   		// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+	   }
 		var deleted = Super.delete(arguments.productType);
 		return deleted;
 	}
 	
 	/**
-	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty string if it wasn't set
+	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set
 	*/
-	public any function getProductTypeSetting( required string productType,required string setting ) {
+	public any function getProductTypeRecordWhereSettingDefined( required string productTypeID,required string settingName ) {
 		var ptTree = getProductTypeTree();
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
 		qoq.setAttributes(ptTable = ptTree);
-		qoq.setSQL("select #arguments.setting#, path from ptTable where lower(productTypeName) = :ptype");
-		qoq.addParam(name="ptype", value=lcase(arguments.productType), cfsqlType="cf_sql_varchar");
+		qoq.setSQL("select productTypeName, productTypeID, path, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
+		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
 		var qGetSetting = qoq.execute(dbtype="query").getResult();
 		if(qGetSetting.recordCount == 1) {
-			local.theValue = evaluate("qGetSetting.#arguments.setting#");
-			if(local.theValue != "") {
-				return local.theValue;
-			} else if(local.theValue == "" && lcase(qGetSetting.path) != lcase(arguments.productType)) {
+			local.settingValue = qGetSetting[arguments.settingName];
+			if(local.settingValue != "") {
+				return qGetSetting;
+			} else if(local.settingValue == "" && lcase(qGetSetting.idpath) != lcase(arguments.productTypeID)) {
 				// gets the next product type up in the lineage and calls this function recursively
-				local.parentProductType = listGetAt(qGetSetting.path,listLen(qGetSetting.path)-1);
-				return getProductTypeSetting( productType=local.parentProductType,setting=arguments.setting );
+				local.parentProductTypeID = listGetAt(qGetSetting.idpath,listLen(qGetSetting.idpath)-1);
+				return getProductTypeRecordWhereSettingDefined( productTypeID=local.parentProductTypeID,settingName=arguments.settingName );
 			} else {
-				return "";
+				return queryNew("productTypeID");
 			}
 		}
-		else return "";
+		else return queryNew("productTypeID");
+	}
+	
+	public any function getProductTypeSetting( required string productTypeID, required string settingName ) {
+		var productTypeRecord = getProductTypeRecordWhereSettingDefined(argumentCollection=arguments);
+		if( productTypeRecord.recordCount == 1 ) {
+			return productTypeRecord[arguments.settingName][1];
+		} else {
+			return "";
+		}
+	}
+	
+	public any function getWhereSettingDefined( required string productTypeID, required string settingName ) {
+		var productTypeRecord = getProductTypeRecordWhereSettingDefined(argumentCollection=arguments);
+		if( productTypeRecord.recordCount == 1 ) {
+			return {
+				type = "Product Type",
+				name = productTypeRecord.productTypeName,
+				id = productTypeRecord.productTypeID
+			};
+		} else {
+			return {
+				type = "Global",
+				name = "Global"
+			};
+		}		
 	}
 	
 }

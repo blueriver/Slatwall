@@ -42,6 +42,8 @@ component extends="BaseController" output=false accessors=true {
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	property name="skuService" type="Slatwall.com.service.SkuService";
+	property name="attributeService" type="Slatwall.com.service.AttributeService";
+	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -57,8 +59,7 @@ component extends="BaseController" output=false accessors=true {
 		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
 			rc.product = getProductService().getNewEntity();
 		}
-		rc.productTypes = getProductService().getProductTypeTree();
-		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
+		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="sortOrder", sortType="numeric");
     }
 	
 	public void function detail(required struct rc) {
@@ -71,7 +72,6 @@ component extends="BaseController" output=false accessors=true {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
-			rc.productImage = rc.product.getImage("s");
 		} else {
 			getFW().redirect("admin:product.list");
 		}
@@ -81,17 +81,13 @@ component extends="BaseController" output=false accessors=true {
 		rc.edit = true;
 		detail(rc);
 		rc.productPages = getProductService().getProductPages();
+		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		getFW().setView("admin:product.detail");
 	}
 
-	
 	public void function list(required struct rc) {
 		rc.productSmartList = getProductService().getSmartList(arguments.rc);
 	}
-
-/*	public void function save(required struct rc) {
-		rc.options = getService("formUtilities").buildFormCollections(rc).options;
-	}*/
 	
 	public void function save(required struct rc) {
 		var isNew = 0;
@@ -109,22 +105,16 @@ component extends="BaseController" output=false accessors=true {
 		if(isNew) {
 			// set up options struct for generating skus if this is a new product
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
-			// option groups in rc in case validation fails and we come back to the create view
-			rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 		} else {
-			// set up sku array to handle any skus that were edited
+			// set up sku array to handle any skus that were edited and/or added
 			rc.skuArray = getService("formUtilities").buildFormCollections(rc).skus;
-			// these are for the edit view in case of failed validation
-			rc.productPages = getProductService().getProductPages();
-            rc.productImage = rc.product.getImage("s");
 		}
 
 		// Attempt to Save Product
 		rc.product = getProductService().save( rc.product,rc );
 		
 		// Redirect & Error Handle
-		if(!rc.product.hasErrors()) {
-			getProductService().setProductTypeTree();
+		if(!getRequestCacheService().getValue("ormHasErrors")) {
 			// add product details if this is a new product
 			if(isNew) {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
@@ -134,10 +124,12 @@ component extends="BaseController" output=false accessors=true {
             }
 		} else {
 			if(isNew) {
+				rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
 				getFW().setView(action="admin:product.create");
 			} else {
 				rc.edit = true;
+				rc.productPages = getProductService().getProductPages();
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");
 			}
@@ -148,7 +140,6 @@ component extends="BaseController" output=false accessors=true {
 		var product = getProductService().getByID(rc.productID);
 		var deleteResponse = getProductService().delete(product);
 		if(deleteResponse.getStatusCode()) {
-			getProductService().setProductTypeTree();
 			rc.message = deleteResponse.getMessage();		
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -169,7 +160,24 @@ component extends="BaseController" output=false accessors=true {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
 		}
-		getFW().redirect(action="admin:product.detail",querystring="productID=#productID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messagetype");
+	}
+	
+	public void function uploadSkuImage(required struct rc) {
+		rc.sku = getSkuService().getByID(rc.skuID);
+		
+		// upload the image and return the result struct if there was an upload
+		if(structKeyExists(rc, "skuImageFile") && rc.skuImageFile != "") {
+			var imageUploadResult = fileUpload(getTempDirectory(),"skuImageFile","","makeUnique");
+			rc.uploadSuccess = getSkuService().processImageUpload(rc.sku, imageUploadResult);
+			if(rc.uploadSuccess) {
+				rc.message = rc.$.Slatwall.rbKey("admin.product.uploadSkuImage_success");
+			} else {
+				rc.message = rc.$.Slatwall.rbKey("admin.product.uploadSkuImage_error");
+				rc.messagetype = "error";
+			}
+			getFW().redirect(action="admin:product.edit",querystring="productID=#rc.sku.getProduct().getProductID()#",preserve="message,messagetype");
+		} 
 	}
 	
 	//   Product Type actions      
@@ -184,6 +192,7 @@ component extends="BaseController" output=false accessors=true {
 		
 	public void function editProductType(required struct rc) {	
 	   	rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 	   	if(!isNull(rc.productType)) {
 	   		rc.edit = true;
 		   	rc.itemTitle &= ": " & rc.productType.getProductTypeName();
@@ -199,13 +208,13 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function detailProductType(required struct rc) {
 		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 		if(isNull(rc.productType)) {
 			getFW().redirect("admin:product.listProductTypes");
 		} else {
 			rc.itemTitle &= ": " & rc.productType.getProductTypeName();
 		}
 	}
-
 	
 	public void function saveProductType(required struct rc) {
 		if(len(rc.productTypeID)) {
@@ -217,8 +226,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.productType = getProductService().saveProductType(rc.productType,rc);
 		
 		if(!rc.productType.hasErrors()) {
-			// no errors, so refresh the cached product type tree and redirect to list with success message
-			getProductService().setProductTypeTree();
+			// no errors, redirect to list with success message
 			rc.message = "admin.product.saveproducttype_success";
 		  	getFW().redirect(action="admin:product.listproducttypes",preserve="message");
 		} else {
@@ -233,7 +241,6 @@ component extends="BaseController" output=false accessors=true {
 		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
 		var deleteResponse = getProductService().deleteProductType(productType);
 		if(deleteResponse.getStatusCode()) {
-			getProductService().setProductTypeTree();
 			rc.message = deleteResponse.getMessage();		
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -243,4 +250,3 @@ component extends="BaseController" output=false accessors=true {
 	}
 		
 }
-

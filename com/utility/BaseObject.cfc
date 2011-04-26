@@ -46,8 +46,8 @@ component displayname="Base Object" output="false" {
 	
 	variables.$ = request.muraScope;
 	
-	// @hint Private helper function for returning the any of the services in the application
-	private any function getService(required string service) {
+	// @hint helper function for returning the any of the services in the application
+	public any function getService(required string service) {
 		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean(arguments.service);
 	}
 	
@@ -69,11 +69,6 @@ component displayname="Base Object" output="false" {
 	// @hint Private helper function for returning the plugin config inside of any component in the application
 	private any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
-	}
-	
-	// @hint Private helper function for returning the current Mura Scope
-	private any function getMuraScope() {
-		
 	}
 	
 	public any function inject(required string property, required any value) {

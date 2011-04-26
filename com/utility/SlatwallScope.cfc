@@ -38,36 +38,24 @@ Notes:
 */
 component accessors="true" output="false" extends="BaseObject" {
 
-	property name="currentProductID" type="string";
-	property name="readOnlyFlag" type="boolean";
-	
 	public any function init() {
-		setCurrentProductID("");
-		setReadOnlyFlag(true);
-		
 		return this;	
 	}
 	
 	public any function getCurrentProduct() {
-		if(!structKeyExists(request.slatwall, "currentProduct")) {
-			request.slatwall.currentProduct = getService("productService").getByID(getCurrentProductID());	
-			
-			if(isNull(request.slatwall.currentProduct)) {
-				request.slatwall.currentProduct = getService("productService").getNewEntity();
-			}
-			if(getReadOnlyFlag()) {
-				//ormGetSession().setReadOnly(request.slatwall.currentProduct, true);
+		if(!getService("requestCacheService").keyExists("currentProduct")) {
+			if(getService("requestCacheService").keyExists("currentProductID")) {
+				getService("requestCacheService").setValue("currentProduct", getService("productService").getByID(getService("requestCacheService").getValue("currentProductID")));
+			} else {
+				getService("requestCacheService").setValue("currentProduct", getService("productService").getNewEntity());	
 			}
 		}
-		
-		return request.slatwall.currentProduct;
+		return getService("requestCacheService").getValue("currentProduct");
 	}
 	
 	public any function getCurrentSession() {
 		var session = getService("sessionService").getCurrent();
-		if(getReadOnlyFlag()) {
-			//ormGetSession().setReadOnly(session, true);
-		}
+		
 		return session;
 	}
 	
@@ -77,6 +65,13 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	public any function getCurrentCart() {
 		return getCurrentSession().getCart();
+	}
+	
+	private any function getCurrentProductList() {
+		if(!getService("requestCacheService").keyExists("currentProductList")) {
+			getService("requestCacheService").setValue("currentProductList", new Slatwall.com.utility.SmartList(entityName="SlatwallProduct"));
+		}
+		return getService("requestCacheService").getValue("currentProductList");
 	}
 	
 	public any function account(string property, string value) {
@@ -109,10 +104,24 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
+	public any function productList(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return evaluate("getCurrentProduct().set#arguments.property#(#arguments.value#)");
+		} else if (structKeyExists(arguments, "property")) {
+			return evaluate("getCurrentProduct().get#arguments.property#()");
+		} else {
+			return getCurrentProductList();	
+		}
+	}
+	
 	public string function rbKey(required string key, string local) {
 		if(!isDefined("arguments.local")) {
 			arguments.local = session.rb;
 		}
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
+	}
+	
+	public string function setting(required string settingName) {
+		return Super.setting(arguments.settingName);
 	}
 }

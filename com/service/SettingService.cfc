@@ -36,8 +36,13 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" output="false" {
+component extends="BaseService" persistent="false" output="false" accessors="true"  {
 	
+	// Mura Service Injection
+	property name="configBean" type="any";
+	property name="contentManager" type="any";
+	
+	// Global Properties Set in Application Scope
 	property name="settings" type="struct";
 	property name="permissions" type="struct";
 	property name="shippingMethods" type="struct";
@@ -165,7 +170,7 @@ component extends="BaseService" persistent="false" output="false" {
 		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
 			variables.permissionActions = structNew();
 			var dirLocation = ExpandPath("/plugins/Slatwall/admin/controllers");
-			var dirList = directoryList( dirLocation );
+			var dirList = directoryList(dirLocation,"false","name","*.cfc");
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var controllerName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
 				var controller = createObject("component", "Slatwall.admin.controllers.#controllerName#");
@@ -238,6 +243,133 @@ component extends="BaseService" persistent="false" output="false" {
 			}
 		}
 		return save(argumentcollection=arguments);
+	}
+	
+	// -------------- Start Mura Setup Functions
+	public any function verifyMuraRequirements() {
+		verifyMuraClassExtension();
+		verifyMuraRequiredPages();
+	}
+	
+	private void function verifyMuraClassExtension() {
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			local.thisSiteID = assignedSites["siteID"][i];
+			local.thisSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
+			local.thisSubType.set( {
+				type = "Page",
+				subType = "SlatwallProductListing",
+				siteID = local.thisSiteID
+			} );
+			// we load the subType (in case it already exists) before it's saved
+			local.thisSubType.load();
+			local.thisSubType.save();
+			// get the extend set. One is created if it doesn't already exist
+			local.thisExtendSet = local.thisSubType.getExtendSetByName( "Slatwall Product Listing Attributes" );
+			local.thisExtendSet.setSubTypeID(local.thisSubType.getSubTypeID());
+			local.thisExtendSet.save();
+			// create a new attribute for the extend set
+			// getAttributeBy Name will look for it and if not found give me a new bean to use 
+			local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
+			local.thisAttribute.set({
+				label = "Products Per Page",
+				type = "TextBox",
+				validation = "numeric",
+				defaultValue = "16"
+			});
+			local.thisAttribute.save();
+		}
+	}
+	
+	private void function verifyMuraRequiredPages() {
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			var thisSiteID = assignedSites["siteID"][i];
+			
+			// Setup Shopping Cart Page
+			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="shopping-cart", siteid=local.thisSiteID);
+			if(shoppingCartPage.getIsNew()) {
+				shoppingCartPage.setDisplayTitle("Shopping Cart");
+				shoppingCartPage.setHTMLTitle("Shopping Cart");
+				shoppingCartPage.setMenuTitle("Shopping Cart");
+				shoppingCartPage.setIsNav(0);
+			}
+			shoppingCartPage.setActive(1);
+			shoppingCartPage.setApproved(1);
+			shoppingCartPage.setIsLocked(1);
+			shoppingCartPage.setParentID("00000000000000000000000000000000001");
+			shoppingCartPage.setFilename("shopping-cart");
+			shoppingCartPage.setSiteID(thisSiteID);
+			shoppingCartPage.save();
+			
+			
+			// Setup Account Page
+			var myAccountPage = getContentManager().getActiveContentByFilename(filename="my-account", siteid=local.thisSiteID);
+			if(myAccountPage.getIsNew()) {
+				myAccountPage.setDisplayTitle("My Account");
+				myAccountPage.setHTMLTitle("My Account");
+				myAccountPage.setMenuTitle("My Account");
+				myAccountPage.setIsNav(0);
+				myAccountPage.setForceSSL(1);
+			}
+			myAccountPage.setActive(1);
+			myAccountPage.setApproved(1);
+			myAccountPage.setIsLocked(1);
+			myAccountPage.setRestricted(1);
+			myAccountPage.setParentID("00000000000000000000000000000000001");
+			myAccountPage.setFilename("my-account");
+			myAccountPage.setSiteID(thisSiteID);
+			myAccountPage.save();
+			
+			// Setup Checkout Page
+			var checkoutPage = getContentManager().getActiveContentByFilename(filename="checkout", siteid=local.thisSiteID);
+			if(checkoutPage.getIsNew()) {
+				checkoutPage.setDisplayTitle("Checkout");
+				checkoutPage.setHTMLTitle("Checkout");
+				checkoutPage.setMenuTitle("Checkout");
+				checkoutPage.setIsNav(0);
+				checkoutPage.setForceSSL(1);
+			}
+			checkoutPage.setActive(1);
+			checkoutPage.setApproved(1);
+			checkoutPage.setIsLocked(1);
+			checkoutPage.setParentID("00000000000000000000000000000000001");
+			checkoutPage.setFilename("checkout");
+			checkoutPage.setSiteID(thisSiteID);
+			checkoutPage.save();
+			
+			// Setup Product Templates Page
+			var productTemplates = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=local.thisSiteID);
+			if(productTemplates.getIsNew()) {
+				productTemplates.setDisplayTitle("Product Templates");
+				productTemplates.setHTMLTitle("Product Templates");
+				productTemplates.setMenuTitle("Product Templates");
+				productTemplates.setIsNav(0);
+			}
+			productTemplates.setActive(1);
+			productTemplates.setApproved(1);
+			productTemplates.setIsLocked(1);
+			productTemplates.setParentID("00000000000000000000000000000000001");
+			productTemplates.setFilename("product-templates");
+			productTemplates.setSiteID(thisSiteID);
+			productTemplates.save();
+			
+			// Setup Default Product Template
+			var defaultProductTemplate = getContentManager().getActiveContentByFilename(filename="product-templates/default", siteid=local.thisSiteID);
+			if(defaultProductTemplate.getIsNew()) {
+				defaultProductTemplate.setDisplayTitle("Default");
+				defaultProductTemplate.setHTMLTitle("Default");
+				defaultProductTemplate.setMenuTitle("Default");
+				defaultProductTemplate.setIsNav(0);
+			}
+			defaultProductTemplate.setActive(1);
+			defaultProductTemplate.setApproved(1);
+			defaultProductTemplate.setIsLocked(1);
+			defaultProductTemplate.setParentID(productTemplates.getContentID());
+			defaultProductTemplate.setFilename("product-templates/default");
+			defaultProductTemplate.setSiteID(thisSiteID);
+			defaultProductTemplate.save();
+		}
 	}
 	
 }

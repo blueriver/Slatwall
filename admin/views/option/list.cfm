@@ -70,7 +70,7 @@ Notes:
 	</cfif>
 
 <cfelse>
-	<p>#rc.$.Slatwall.rbKey("admin.option.nooptiongroupsdefined")#</p>
+	<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptiongroupsdefined")#</em></p>
 </cfif>
 
 </cfoutput>

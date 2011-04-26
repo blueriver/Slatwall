@@ -45,6 +45,7 @@ Notes:
 </ul>
 
 <div class="svoadminproductlist">
+<cfif rc.productSmartList.getTotalRecords()>
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
 	</form>
@@ -57,36 +58,44 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.product.productYear_title")#</th>
 			<!---<th>Product Code</th>--->
 			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qoo")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.product.qexp")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qia")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qea")#</th>
 			<th>&nbsp</th>
-		</tr>
-	<!--- since we are looping through an array, not a recordset, I'll use a counter do the alternate row table formatting --->		
-		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="Local.Product">
+		</tr>	
+		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
 			<tr>
-				<!---<td>#Local.Product.getSearchScore()#</td>--->
-				<td>#Local.Product.getBrandName()#</td>
-				<td class="varWidth">#Local.Product.getProductName()#</td>
-				<td>#Local.Product.getProductYear()#</td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<!---<td>#local.Product.getSearchScore()#</td>--->
+				<td>#local.Product.getBrandName()#</td>
+				<td class="varWidth">#local.Product.getProductName()#</td>
+				<td>#local.Product.getProductYear()#</td>
+				<cfif local.Product.getSetting("trackInventoryFlag")>
+					<td>#local.Product.getQOH()#</td>
+					<td>#local.Product.getQC()#</td>
+					<td>#local.Product.getQEXP()#</td>
+					<td>#local.Product.getQIA()#</td>
+					<td>#local.Product.getQEA()#</td>
+				<cfelse>
+					<td colspan="5">
+						<em>#rc.$.Slatwall.rbKey("admin.product.list.inventoryNotTracked")#</em>
+					</td>
+				</cfif>
 				<td class="administration">
-					<cfset local.productID = Local.Product.getProductID() />
+					<cfset local.ProductID = local.Product.getProductID() />
 		          <ul class="four">
-                      <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.productID#" class="edit" type="list">            
-					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.productID#" class="viewDetails" type="list">
-					  <li class="preview"><a href="#local.product.getProductURL()#">Preview Product</a></li>
-					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.productID#" class="delete" type="list" disabled="false" confirmrequired="true">
+                      <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
+					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
+					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
+					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="false" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
 		</cfloop>
 	</table>
+<cfelse>
+	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
+</cfif>
 </div>
 </cfoutput>
 

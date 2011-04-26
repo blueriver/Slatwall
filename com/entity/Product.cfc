@@ -44,11 +44,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="filename" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" hint="This is the Template to use for product display";
 	property name="productName" ormtype="string" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
-	property name="productCode" ormtype="string" unique="true" validateRequired="Product Code Is Required" hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productCode" ormtype="string" unique="true" validateRequired hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
-	property name="manufactureDiscontinuedFlag"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
-	property name="publishedFlag" ormtype="boolean" hint="Should this product be sold on the web retail Site";
+	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
+	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="trackInventoryFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
 	property name="allowShippingFlag" ormtype="boolean";
@@ -58,6 +58,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	property name="publishedWeight" ormtype="float" default="0" hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
@@ -65,13 +68,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="brand" displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="brand" validateRequired displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
 	property name="productType" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all";
+	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false";
 	
 	// Non-Persistant Properties
 	property name="gender" type="string" persistent="false";
@@ -84,9 +87,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent="false";
 	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
 	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
-	property name="qoh" type="numeric" persistent="false";
-	property name="qc" type="numeric" persistent="false";
-	property name="qexp" type="numeric" persistent="false";
+	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
+	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
+	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
+	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
+	property name="qea" type="numeric" persistent="false" hint="quantity expected available";           
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -114,7 +119,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public any function getBrandOptions() {
-		if(!isDefined("variables.brandOptions")) {
+		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(rawProperty="brandName", alias="name");
 			smartList.addSelect(rawProperty="brandID", alias="id"); 
@@ -122,6 +127,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.brandOptions = smartList.getRecords();
 		}
 		return variables.brandOptions;
+	}
+	
+	public any function getProductTypeOptions() {
+		if(!structKeyExists(variables, "productTypeOptions")) {
+			var productTypeTree = getProductTypeTree();
+			var productTypeOptions = [];
+			for(var i=1; i <= productTypeTree.recordCount; i++) {
+				// only get the leaf nodes of the tree (those with no children)
+				if( productTypeTree.childCount[i] == 0 ) {
+					productTypeOptions[i] = {id=productTypeTree.productTypeID[i], name=productTypeTree.productTypeName[i], label=listChangeDelims(productTypeTree.path[i], " &raquo; ")};
+				}
+			}
+			variables.productTypeOptions = productTypeOptions;
+		}
+		return variables.productTypeOptions;
 	}
     
     public any function getProductTypeTree() {
@@ -185,6 +205,49 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
 	
+	public numeric function getQOH() {
+		if(isNull(variables.qoh)) {
+    		variables.qoh = 0;
+    		if(getSetting("trackInventoryFlag")) {
+	    		var skus = getSkus();
+	    		for(var i = 1; i<= arrayLen(skus); i++) {
+	    			variables.qoh += skus[i].getQOH();
+	    		}	
+    		}
+    	}
+    	return variables.qoh;
+	}
+	
+	public numeric function getQC() {
+		if(isNull(variables.qc)) {
+    		variables.qc = 0;
+    		if(getSetting("trackInventoryFlag")) {
+	    		var skus = getSkus();
+	    		for(var i = 1; i<= arrayLen(skus); i++) {
+	    			variables.qc += skus[i].getQC();
+	    		}	
+    		}
+    	}
+    	return variables.qc;
+	}
+	
+	public numeric function getQEXP() {
+		if(isNull(variables.qexp)) {
+    		variables.qexp = 0;
+    		if(getSetting("trackInventoryFlag")) {
+	    		var skus = getSkus();
+	    		for(var i = 1; i<= arrayLen(skus); i++) {
+	    			variables.qexp += skus[i].getQEXP();
+	    		}	
+    		}
+    	}
+    	return variables.qexp;
+	}
+	
+	public numeric function getQEA() {
+		return (getQOH() - getQC()) + getQEXP();
+	}
+	
 	public numeric function getQIA() {
 		return getQOH() - getQC();
 	}
@@ -197,21 +260,36 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	/******* Generic setting accessor **************/
+	// Persistent property helpers
 	
+	public string function getURLTitle() {
+		return getFileName();
+	}
+
+	
+	/******* Product Setting methods **************/
+	
+	// Generic setting accessor
 	public boolean function getSetting( required string settingName ) {
 		if(structKeyExists(variables,arguments.settingName)) {
 			return variables[arguments.settingName];
 		} else {
-			var settingValue = getService("ProductService").getProductTypeSetting( getProductType().getProductTypeName(),arguments.settingName );
-			if(len(settingValue) > 0) {
-				return settingValue;
-			} else {
-				return setting("product_#arguments.settingName#");
-			}
+			return getInheritedSetting( arguments.settingName );
 		}
-		
+	}	
+	
+	public boolean function getInheritedSetting( required string settingName ) {
+		return getProductType().getSetting(arguments.settingName);
 	}
+	
+	// Get source of setting
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product"};
+    	} else {
+    		return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
+    	}
+    }
 	
 	
 	/***************************************************/
@@ -304,19 +382,38 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	/************   END Association Management Methods   *******************/
 
 	public struct function getOptionGroupsStruct() {
-		if( !structKeyExists(variables, "optionGroups") ) {
-			variables.optionGroups = structNew();
+		if( !structKeyExists(variables, "optionGroupsStruct") ) {
+			variables.optionGroupsStruct = structNew();
 			var skus = getSkus();
 			for(var i=1; i <= arrayLen(skus); i++){
 				var options = skus[i].getOptions();
 				for(var ii=1; ii <= arrayLen(options); ii++) {
-					if( !structKeyExists( variables.optionGroups, options[ii].getOptionGroup().getOptionGroupID() ) ){
-						variables.optionGroups[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
+					if( !structKeyExists( variables.optionGroupsStruct, options[ii].getOptionGroup().getOptionGroupID() ) ){
+						variables.optionGroupsStruct[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
 					}
 				}
 			}
 		}
+		return variables.optionGroupsStruct;
+	}
+	
+	public array function getOptionGroups() {
+		if( !structKeyExists(variables, "optionGroups") ) {
+			variables.optionGroups = [];
+			// optionGroupStruct() and reorder them into a sort-ordered array.
+			var optionGroupsStruct = getOptionGroupsStruct();
+			var i = 1;	
+			for( var optionGroupID in optionGroupsStruct ) {
+				variables.optionGroups[i] = optionGroupsStruct[optionGroupID];
+				i++;
+			}
+			variables.optionGroups = sortObjectArray(variables.optionGroups, "sortOrder", "numeric");
+		}
 		return variables.optionGroups;
+	}
+	
+	public numeric function getOptionGroupCount() {
+		return listlen(structKeyList(getOptionGroupsStruct()));
 	}
 	
 	public any function getDefaultSku() {
@@ -419,6 +516,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return availableSkus;
 		}
 	}
+	
+	// get all the assigned attribute sets
+	public array function getAttributeSets(array systemCode){
+		var attributeSets = [];
+		// get all the parent product types
+		var productTypeIDs = listChangeDelims(getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath,"^");
+		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeSetAssignment");
+		//Todo: need to get added as OR criteria 
+		//smartList.addFilter("baseItemID",productTypeIDs);
+		//smartList.addFilter("attributeSet_globalFlag",1);
+		if(structKeyExists(arguments,"systemCode")){
+			smartList.addFilter("attributeSet_attribtueSetType_systemCode",arrayToList(systemCode,"^"));
+		}
+		smartList.addOrder("attributeSet_attributeSetType_systemCode|ASC");
+		smartList.addOrder("attributeSet_sortOrder|ASC");
+		var attributeSetAssignments = smartList.getRecords();
+		for(var attributeSetAssignment in attributeSetAssignments){
+			arrayAppend(attributeSets,attributeSetAssignment.getAttributeSet());
+		}
+		return attributeSets;
+	}
+	
 }
 
 

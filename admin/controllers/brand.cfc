@@ -45,33 +45,33 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:brand.list");
 	}
 
-    public void function create(required struct rc) {
-	   rc.brand = getBrandService().getNewEntity();
-       getFW().setView("brand.edit");
-    }
-
 	public void function detail(required struct rc) {
-	   rc.brand = getBrandService().getByID(ID=rc.brandID);
-	   if(!isNull(rc.brand) and !rc.brand.isNew()) {
-	       rc.itemTitle &= ": " & rc.brand.getBrandName();
-	   } else {
-	       getFW().redirect("brand.list");
-	   }
+		param name="rc.brandID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.brand = getBrandService().getByID(ID=rc.brandID);
+		if(!isNull(rc.brand) and !rc.brand.isNew()) {
+			rc.itemTitle &= ": " & rc.brand.getBrandName();
+		}
 	}
 
+
+    public void function create(required struct rc) {
+		detail(arguments.rc);
+		getFW().setView("admin:brand.detail");
+		rc.edit = true;
+    }
+
 	public void function edit(required struct rc) {
-	   rc.brand = getBrandService().getByID(ID=rc.brandID);
-	   if(!isNull(rc.Brand)) {	
-			rc.itemTitle &= ": " & rc.brand.getBrandName();
-		} else {
-		  getFW().redirect("brand.list");
-		}
+		detail(arguments.rc);
+		getFW().setView("admin:brand.detail");
+		rc.edit = true;
 	}
 	 
     public void function list(required struct rc) {
 		//param name="rc.orderby" default="brandName|A";
         //rc.brandSmartList = getBrandService().getSmartList(rc=arguments.rc);
-		rc.brands = getBrandService().list(sortOrder = "brandName ASC");
+		rc.brands = getBrandService().list(sortBy = "brandName ASC");
     }
 
 	public void function save(required struct rc) {

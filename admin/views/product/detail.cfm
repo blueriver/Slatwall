@@ -40,12 +40,9 @@ Notes:
 <cfparam name="rc.product" type="any" />
 
 <cfif rc.edit>
-	<cfhtmlhead text='<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/skuForm.js"></script>' />
+	<cfset getAssetWire().includeAsset("js/admin-product.edit.js") />
+	<cfset getAssetWire().includeAsset("css/admin-product.edit.css") />
 </cfif>
-
-<!--- set up options for setting select boxes --->
-<cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
-<cfset local.defaultOption = {id="",name=rc.$.Slatwall.rbKey('setting.inherit')} />
 
 <ul id="navTask">
 	<cf_ActionCaller action="admin:product.list" type="list">
@@ -56,45 +53,17 @@ Notes:
 
 <cfoutput>
 <div class="svoadminproductdetail">
-	<cfif !rc.product.isNew()>#rc.productImage#</cfif>
+	#rc.product.getImage("s")#
 	<cfif rc.edit>
 	<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 	</cfif>
 	<dl class="twoColumn">
-		<cf_PropertyDisplay object="#rc.Product#" property="active" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="activeFlag" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="brand" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
-		<dt>
-            <cfif rc.edit>
-            <label for="productType_productTypeID">#rc.$.Slatwall.rbKey("entity.product.productType")#*:</label>
-			<cfelse>
-			    Product Type:
-			</cfif>
-		</dt>
-        <dd>
-            <cfif rc.edit>
-				<cfset local.productTypes = rc.product.getProductTypeTree() />
-		        <select name="productType" id="productType_productTypeID">
-		            <option value="">#rc.$.Slatwall.rbKey("admin.product.selectproducttype")#</option>
-		        <cfloop query="local.productTypes">
-		            <cfif local.productTypes.childCount eq 0> <!--- only want to show leaf nodes of the product type tree --->
-		            <cfset local.label = listChangeDelims(local.productTypes.path, " &raquo; ") />
-		            <option value="#local.productTypes.productTypeID#"<cfif !isNull(rc.product.getProductType()) AND rc.product.getProductType().getProductTypeID() EQ local.productTypes.productTypeID> selected="selected"</cfif>>
-		                #local.label#
-		            </option>
-		            </cfif>
-		        </cfloop>
-		        </select>
-			<cfelse>
-			    <cfif isNull(rc.Product.getProductType())>
-				None
-				<cfelse>
-				  #rc.Product.getProductType().getProductTypeName()#
-				 </cfif>
-			</cfif>
-        </dd>
+		<cf_PropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
+		<cf_PropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
 	
@@ -106,7 +75,7 @@ Notes:
 		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
 		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
 		<li><a href="##tabCustomAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.customattributes")#</span></a></li>
-		<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>
+		<!---<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>--->
 	</ul>
 
 	<div id="tabSkus">
@@ -117,58 +86,28 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
 	</div>
 	<div id="tabProductDetails">
-		<dl class="twoColumn">
-			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#">
-		</dl>
-	</div>
-	<div id="tabProductSettings">
-		<table class="stripe" id="productTypeSettings">
+		<table class="stripe">
 			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.productsettings')#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productDetails")#</th>
 				<th></th>
 			</tr>
-			<!--- TODO: These can only be set in the product and can't inherit 
-			<cf_PropertyDisplay object="#rc.Product#" property="showOnWeb" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('showOnWeb'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="showOnWebWholesale" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('showOnWebWholesale'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="manufactureDiscontinued" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('manufactureDiscontinued'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			 End: Section to Fix --->
-			
-			<cf_PropertyDisplay object="#rc.Product#" property="trackInventoryFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.product.getSetting('trackInventoryFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="callToOrderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('callToOrderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowShippingFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowShippingFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowPreorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowPreorderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowBackorderFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowBackorderFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="allowDropShipFlag" edit="#rc.edit#" displayType="table" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')#  (#yesNoFormat(rc.product.getSetting('allowDropShipFlag'))#)" editOptions="#local.Options#" defaultOption="#local.defaultOption#" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#" displayType="table">
 		</table>
 	</div>
+	<div id="tabProductSettings">
+		#view("product/productTabs/settingsTab")#
+	</div>
 	<div id="tabProductPages">
-		<cfif rc.edit>
-			<cfif rc.productPages.getRecordCount() gt 0>
-				<input type="hidden" name="contentID" value="" />
-				<ul>
-					<cfloop condition="rc.productPages.hasNext()">
-						<li>
-							<cfset local.thisProductPage = rc.productPages.next() />
-							<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
-							<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
-						</li>	
-					</cfloop>
-				</ul>
-			<cfelse>
-				<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
-			</cfif>
-		<cfelse>
-			<!---#rc.product.getProductContent()[1].getContentID()#--->
-		</cfif>
+		#view("product/productTabs/productPagesTab")#
 	</div>
 	<div id="tabCustomAttributes">
-	
+		#view("product/productTabs/customAttributesTab")#
 	</div>
-	<div id="tabAlternateImages">
+<!---	<div id="tabAlternateImages">
 	
-	</div>
+	</div>--->
 </div>
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
@@ -179,4 +118,5 @@ Notes:
 </form>
 </cfif>
 </div>
+
 </cfoutput>

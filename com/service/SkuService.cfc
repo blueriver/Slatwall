@@ -43,6 +43,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
+		if(arguments.sku.getDefaultFlag() == true) {
+			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
+		}
+		if(!arguments.sku.hasErrors()) {
+			arguments.sku.removeProduct();
+		}
 		var deleted = Super.delete(arguments.sku);
 		return deleted;
 	}
@@ -78,7 +84,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// set the first sku as the default one
 			if(i==1) {
 				thisSku.setDefaultFlag(true);
-			}
+			} 
 		}
 	}
 
@@ -87,15 +93,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		thisSku.setProduct(arguments.product);
 		thisSku.setPrice(arguments.data.price);
 		thisSku.setListPrice(arguments.data.listprice);
-		if( structKeyExists(arguments.data,"skuCode") && len(arguments.data.skuCode) ) {
-			thisSku.setSkuCode(arguments.data.skuCode);
-		} else {
-			thisSku.setSkuCode(createUUID());
-		}
+		var comboCode = "";
 		// loop through optionID's within the option combination and set them into the sku
 		for( j=1;j<=listLen(arguments.data.options);j++ ) {
 			var thisOptionID = listGetAt(arguments.data.options,j);
-			thisSku.addOption(getByID(thisOptionID,"SlatwallOption"));
+			var thisOption = getByID(thisOptionID,"SlatwallOption");
+			thisSku.addOption(thisOption);
+			// generate code from options to be used in Sku Code
+			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
+		}
+		if( structKeyExists(arguments.data,"skuCode") && len(arguments.data.skuCode) ) {
+			thisSku.setSkuCode(arguments.data.skuCode);
+		} else {
+			thisSku.setSkuCode( listPrepend(comboCode,arguments.product.getProductCode(),"-") );
 		}
 		return thisSku;
 	}
@@ -132,21 +142,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
 	*/
 	public string function getOptionCombinations (required struct options) {
-		var optionGroupList = structKeyList(arguments.options);
+		var optionGroupList = listSort( structKeyList(arguments.options), "numeric" );
 		// get list of options from first option group
-		var comboList = arguments.options[listFirst(optionGroupList)];
-		
-		// parse options struct to build list of possible option combinations
-		for( var optionGroup in arguments.options ) {
+		var comboList = listChangeDelims(arguments.options[listFirst(optionGroupList)],";");
+		// parse options struct (in order) to build list of possible option combinations
+		for( var i=1; i<=listLen(optionGroupList); i++ ) {
+			var optionGroup = listGetAt(optionGroupList,i);
 			if(optionGroup != listFirst(optionGroupList)) {
 				var tempList = "";
-				for(var i=1;i<=listLen(comboList);i++) {
-					local.thisCombo = listGetAt(comboList,i);
+				for(var i=1;i<=listLen(comboList,";");i++) {
+					local.thisCombo = listGetAt(comboList,i,";");
 					local.newCombo = "";
 					for(var j=1; j<=listLen(arguments.options[optionGroup]);j++) {
-						newCombo = listAppend(newCombo,thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
+						local.newCombo = listAppend(local.newCombo,local.thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
 					}
-					tempList = listAppend(tempList,newCombo,";");
+					tempList = listAppend(tempList,local.newCombo,";");
 				}
 				comboList = tempList;
 			}
@@ -154,5 +164,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return comboList;
 	}
 	
+	public any function processImageUpload(required any Sku, required struct imageUploadResult) {
+		var imagePath = arguments.Sku.getImagePath();
+		var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");
+		if(imageSaved) {
+			return true;
+		} else {
+			return false;
+		}	
+	}
 
 }

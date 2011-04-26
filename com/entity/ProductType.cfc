@@ -48,6 +48,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     property name="allowBackorderFlag" ormtype="boolean";
     property name="allowDropshipFlag" ormtype="boolean";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
@@ -58,20 +61,63 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="Products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all";
+	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false" ;
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
 	
 	public ProductType function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.Products))
+	   if(isNull(variables.Products)){
 	       variables.Products = [];
+	   }
+	   /*
+	   if(isNull(variables.attributeSetAssignments)){
+	   		variables.attributeSetAssignments = [];
+	   }
+	   */
 	   return Super.init();
 	}
 	
 	public any function getProductTypeTree() {
 		return getService("ProductService").getProductTypeTree();
+	}
+
+	
+    // @hint use this to implement get{setting}Options() calls for PropertyDisplay tags for settings
+	public function onMissingMethod(missingMethodName, missingMethodArguments) {
+		// first look to see if the method name follows the get{SettingName}Options naming convention and that {setting} is a valid property
+		if( left(arguments.missingMethodName,3) == "get" 
+		    && right(arguments.missingMethodName,7) == "options"
+		    && listFindNoCase( getPropertyList(),mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10) ) ) {
+		    	var settingName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10);
+		    	return getSettingOptions(settingName);
+		    }
+	}
+	
+	private array function getSettingOptions(required string settingName) {
+		var settingOptions = [
+		  {id="1", name=rbKey("sitemanager.yes")},
+		  {id="0", name=rbKey("sitemanager.no")}
+		];
+		return settingOptions;
+	}
+	
+	public array function getAttributeSetAssignments(){
+		var attributeSetAssignments = getService("AttributeService").getByFilter({baseItemID=getProductTypeID()},"SlatwallAttributeSetAssignment");
+		if(!arrayLen(attributeSetAssignments)){
+			attributeSetAssignments = [];
+		}
+		return attributeSetAssignments;
+	}
+	
+	public array function getInheritedAttributeSetAssignments(){
+		//Todo get by all the parent productTypeIDs
+		var attributeSetAssignments = getService("AttributeService").getSmartList({baseItemID=""},"SlatwallAttributeSetAssignment").getRecords();
+		if(!arrayLen(attributeSetAssignments)){
+			attributeSetAssignments = [];
+		}
+		return attributeSetAssignments;
 	}
 	
     /******* Association management methods for bidirectional relationships **************/
@@ -98,4 +144,54 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	
     /************   END Association Management Methods   *******************/
+    
+    public boolean function getSetting(required string settingName) {
+        if(structKeyExists(variables,arguments.settingName)) {
+            return variables[arguments.settingName];
+        } else {
+            return getInheritedSetting( arguments.settingName );
+        }
+    }
+
+    public boolean function getInheritedSetting( required string settingName ) {
+    	if( this.hasParentProductType() ) {
+	        var settingValue = getService("ProductService").getProductTypeSetting( getParentProductType().getProductTypeID(),arguments.settingName );
+	    } else {
+	    	var settingValue = "";
+	    }
+        if(len(settingValue) > 0) {
+            return settingValue;
+        } else {
+        	// if setting hasn't been defined at the product type level, return the global setting
+            return setting("product_#arguments.settingName#");
+        }
+    }
+    
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product Type", name=getProductTypeName(),id=getProductTypeID()};
+    	} else {
+    		return getService("ProductService").getWhereSettingDefined( getProductTypeID(),arguments.settingName );
+    	}
+    }
+    
+    public void function populate(required any data){
+    	// remove the ones not selected
+    	for(var attributeSetAssignment in getAttributeSetAssignments()){
+    		if(!structKeyExists(data,"attributeSetIDs") || listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
+    			getService("AttributeService").delete(attributeSetAssignment);
+    			//this.removeAttributeSetAssignment(attributeSetAssignment);
+    		}
+    	}
+    	// Add new ones
+    	if(structKeyExists(data,"attributeSetIDs")){
+    		var attributeSetIDArray = listToArray(data.attributeSetIDs);
+    		for(var attributeSetID in attributeSetIDArray){
+    			var attributeSetAssignment = getService("AttributeService").getNewEntity("SlatwallAttributeSetAssignment");
+    			getService("AttributeService").save(attributeSetAssignment,{baseItemID=getProductTypeID(),attributeSetID=attributeSetID});
+    			//this.addAttributeSetAssignment(attributeSetAssignment);
+    		}
+    	}
+    	super.populate(data);
+    }
 }

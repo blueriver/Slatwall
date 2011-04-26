@@ -39,6 +39,24 @@ Notes:
 <cfparam name="rc.section" default="Slatwall" />
 <cfparam name="rc.activeTab" default=0 />
 <cfparam name="rc.activePanel" default=0 />
+
+<!--- Add mura specific JS variables --->
+<cfset getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType")) />
+<cfset getAssetWire().addJSVariable("context", application.configBean.getContext()) />
+<cfset getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath()) />
+<cfset getAssetWire().addJSVariable("rb", lcase(session.rb)) />
+<cfif isNumeric(application.configBean.getValue('sessionTimeout'))>
+	<cfset getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60) />
+<cfelse>
+	<cfset getAssetWire().addJSVariable("sessionTimeout", 180) />
+</cfif>
+<cfset getAssetWire().addJSVariable("activeTab", rc.activeTab) />
+<cfset getAssetWire().addJSVariable("activePanel", rc.activeTab) />
+<cfset getAssetWire().addJSVariable("dtExample", DateFormat(now(), "MM/DD/YYYY")) />
+<cfset getAssetWire().addJSVariable("dtCh", "/") />
+<cfset getAssetWire().addJSVariable("dtFormat", [0,1,2]) />
+<cfset getAssetWire().addJSVariable("dtLocale", "en-US") />
+
 <cfoutput>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
@@ -46,40 +64,17 @@ Notes:
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
 	<link rel="icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
 	<link rel="shortcut icon" href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/favicon.png" type="image/png" />
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/jquery/jquery-ui-i18n.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/admin/js/admin.js?coreversion=#application.coreversion#"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/slatwall.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/js/fw1AjaxAdapter.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js"></script>
-	<script type="text/javascript" src="#application.configBean.getContext()#/tasks/widgets/ckfinder/ckfinder.js"></script>
-	<link href="#application.configBean.getContext()#/admin/css/admin.css?coreversion=#application.coreversion#" rel="stylesheet" type="text/css" />
-	<link href="#application.configBean.getContext()#/admin/css/jquery/default/jquery.ui.all.css?coreversion=#application.coreversion#" rel="stylesheet" type="text/css" />
-	<link href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/css/slatwall_admin.css" rel="stylesheet" type="text/css" />
-	<link href="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/css/slatwall.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript">
-		var htmlEditorType='#application.configBean.getValue("htmlEditorType")#';
-		var context='#application.configBean.getContext()#';
-		var themepath='#application.settingsManager.getSite(session.siteID).getThemeAssetPath()#';
-		var rb='#lcase(session.rb)#';
-		var sessionTimeout=<cfif isNumeric(application.configBean.getValue('sessionTimeout'))>#evaluate("application.configBean.getValue('sessionTimeout') * 60")#<cfelse>180</cfif>;
-	</script>
-		#session.dateKey#
-	<script type="text/javascript">
-		jQuery(document).ready(function(){setDatePickers(".datepicker",dtLocale);setTabs(".tabs",#rc.activeTab#);setHTMLEditors();setAccordions(".accordion",#rc.activePanel#)});
-	</script>
 </head>
 <body>
+	#view("common:toolbar/menu")#
 	<div id="header">
 		<h1>Mura CMS</h1>
-		#view("utility/header")#
+		#view("admin:utility/header")# 
 		<p id="currentSite"><cf_ActionCaller text="#rc.sectionTitle#" action="#request.subsystem#:#request.section#" type="link"> &rarr; #rc.itemTitle#</p>
 	</div>
-	#view('utility/toolbar')#
+	
 	<div class="admincontainer">
-		#view("utility/messageBox")#
+		#view("admin:utility/messageBox")#
 		#body#
 	</div>
 <div id="alertDialog" title="Alert" style="display:none">

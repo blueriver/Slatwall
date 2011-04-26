@@ -42,7 +42,6 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	property name="locationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="locationName" ormtype="string";
 	property name="sellStockOnWebFlag" ormtype="boolean";
-	property name="sellStockOnWebWholesaleFlag" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

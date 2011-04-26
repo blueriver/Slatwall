@@ -36,9 +36,9 @@
 Notes:
 
 --->
+<cfparam name="rc.edit" />
 <cfparam name="rc.shippingServicePackage" />
 <cfparam name="rc.shippingService" />
-<cfparam name="rc.edit" />
 
 <cfset local.serviceMeta = getMetaData(rc.shippingService) />
 

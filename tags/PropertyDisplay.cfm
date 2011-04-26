@@ -51,10 +51,14 @@ Notes:
 <!--- hint: This can be used to override the displayName of a property" --->
 <cfparam name="attributes.title" default="" />
 
-<!--- hint: This can be used to override the default value of a property" --->
+<!--- hint: This can be used to override the value of a property --->
 <cfparam name="attributes.value" default="" />
 
-<!--- hint: This can be used to override the default filed name" --->
+<!--- hint: This can be used to set a default value for the property IF it hasn't been defined --->
+<!--- NOTE: right now this only works for select boxes --->
+<cfparam name="attributes.defaultValue" default="" />
+
+<!--- hint: This can be used to override the default field name" --->
 <cfparam name="attributes.fieldName" default="" />
 
 <!--- hint: This can be used to override the default data type" --->
@@ -69,8 +73,8 @@ Notes:
 <!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
 <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
 
-<!--- hint:i id-name struct to use as the default for select boxes --->
-<cfparam name="attributes.defaultOption" default="#structNew()#" type="struct" />
+<!--- hint: whether to allow null (empty string) option in select box control --->
+<cfparam name="attributes.allowNullOption" default="true" type="boolean" />
 
 <!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
 <cfparam name="attributes.tooltip" default="false" type="boolean" />
@@ -84,11 +88,20 @@ Notes:
 <!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
 <cfparam name="attributes.toggletext" default="Show,Hide" />
 
-<!--- hint: This attribute is used to specify if the information comes back as a dl item or table row --->
+<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 <cfparam name="attributes.displaytype" default="dl" />
 
 <!--- Add Custom class --->
 <cfparam name="attributes.class" default="" />
+
+<!--- if specified, will wrap property value with an achor tag using the attribute as the href value --->
+<cfparam name="attributes.link" default="" />
+
+<!--- class for styling link, if specified --->
+<cfparam name="attributes.linkClass" default="" />
+
+<!--- id for styling link, if specified --->
+<cfparam name="attributes.linkID" default="" />
 
 <!--- overwrite the generated id for the property element (dd or td) --->
 <cfparam name="attributes.id" default="" />
@@ -111,6 +124,7 @@ Notes:
 	attributes.displaytype have the following options:
 	dl
 	table
+	plain
 --->
 
 <cfif thisTag.executionMode is "start">
@@ -139,6 +153,15 @@ Notes:
 			</cfif>
 		</cfif>
 		
+		<!--- Try to determine the datatype of the property, if not passed in --->
+		<cfif attributes.dataType eq "">
+			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
+				<cfset attributes.dataType = "boolean" />
+			<cfelse>
+				<cfset attributes.dataType = "string" />
+			</cfif>
+		</cfif>
+		
 		<!--- If the value attribute was not set, then try to determine the value from the object, and if that isn't set, then use the objects default. --->
 		<cfif attributes.value eq "">
 			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
@@ -160,11 +183,13 @@ Notes:
 				</cfif>
 			<cfelseif isNull(attributes.value) and len(attributes.nullValue)>
 				<cfset attributes.value = attributes.nullValue />
+			<cfelseif isNull(attributes.value) and !len(attributes.nullValue) and attributes.dataType eq "boolean">
+				<cfset attributes.value = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
 			<cfelse>
 			     <cfset attributes.value = "" />
 			</cfif>
 		</cfif>
-		
+
 		<cfif attributes.fieldName eq "">
 			<cfset attributes.fieldName = local.propertyMetadata.name />
 		</cfif>
@@ -173,13 +198,6 @@ Notes:
 		  <cfset attributes.id = "spd" & LCASE(attributes.fieldName) />
 		</cfif>
 		
-		<cfif attributes.dataType eq "">
-			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
-				<cfset attributes.dataType = "boolean" />
-			<cfelse>
-				<cfset attributes.dataType = "string" />
-			</cfif>
-		</cfif>
 		
 		<!--- If in edit mode, and that editType attribute is not set then figure out what to use --->
 		<cfif attributes.edit>
@@ -230,9 +248,10 @@ Notes:
 				<td class="property varWidth">
 			</cfif>
 	        
+	        <cfif attributes.displaytype neq "plain">
 	        	<cfif attributes.tooltip>
-                    <a href="##" class="tooltip">
-                </cfif> 			
+	                <a href="##" class="tooltip">
+	            </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
 					<label for="#attributes.fieldName#">
@@ -263,21 +282,26 @@ Notes:
 				</cfif>
 	            <cfif attributes.tooltip>
 					<cfif len(trim(attributes.tooltipmessage))>
-                    	<span>#attributes.tooltipmessage#</span></a>
+	                	<span>#attributes.tooltipmessage#</span></a>
 					<cfelse>
 						<span>#request.customMuraScopeKeys.slatwall.rbKey("entity.#local.entityName#.#attributes.property#_hint")#</span></a>
 					</cfif>
-                </cfif>
-                <cfif listFindNoCase("show,hide",attributes.toggle)>
-                    <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-                    <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
-                </cfif>	
-
-			<cfif attributes.displaytype eq "dl">
-				</dt>
-		 		<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
-			<cfelseif attributes.displaytype eq "table">
-				</td>
+	            </cfif>
+	            <cfif listFindNoCase("show,hide",attributes.toggle)>
+	                <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
+	                <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+	            </cfif>	
+	
+				<cfif attributes.displaytype eq "dl">
+					</dt>
+				<cfelseif attributes.displaytype eq "table">
+					</td>
+				</cfif>
+			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
+			
+			<cfif attributes.displayType eq "dl">
+				<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+			<cfelseif attributes.displayType eq "table">
 				<td id="#attributes.id#" class="value">
 			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
@@ -291,14 +315,15 @@ Notes:
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" id="#attributes.fieldName#_#attributes.fieldName#ID">
-							<cfif structIsEmpty(attributes.defaultOption)>
-							<option value="">#request.customMuraScopeKeys.slatwall.rbKey("admin." & local.entityname & "." & "select" & attributes.property)#</option>
-							<cfelse>
-								<option value="#attributes.defaultOption['id']#">#attributes.defaultOption['name']#</option>
+						<select name="#attributes.fieldName#" id="#attributes.fieldName#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
+							<cfif attributes.allowNullOption>
+								<option value="">#attributes.nullValue eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullValue#</option>
 							</cfif>
-							<cfloop array="#attributes.editOptions#" index="i" >
-								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#i['name']#</option>	
+                            <cfset attributes.value = (len(attributes.defaultValue) gt 0 AND attributes.value eq "") ? attributes.defaultValue : attributes.value />
+							<cfloop array="#attributes.editOptions#" index="i">
+								<!--- if there is a key named "label" use that as the displayed label for the option, if not, default to the "name" key value --->
+								<cfset label = structKeyExists(i,"label") ? i['label'] : i['name'] />
+								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#label#</option>	
 							</cfloop>
 						</select>
 <!---						<cfelse>
@@ -308,12 +333,13 @@ Notes:
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" id="yes" value="1"<cfif yesnoformat(attributes.value)> checked</cfif>> <label for="yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" id="no" value="0"<cfif not yesnoformat(attributes.value)> checked</cfif>> <label for="no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#yes" value="1"<cfif yesnoformat(attributes.value)> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#no" value="0"<cfif not yesnoformat(attributes.value)> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
 						<cfelse>
 							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
 							<cfloop array="#attributes.editOptions#" index="i">
-								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#i.name#</label></li>
+								<cfset label = structKeyExists(i,"label") ? i.label : i.name />
+								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
 							</cfloop>
 						</cfif>
 						</ul>
@@ -334,11 +360,16 @@ Notes:
 					<!-- A Default Edit Type Could not be created -->
 				<cfelse>
 					<cfif attributes.dataType eq "boolean" and attributes.value eq true>
-						YES
+						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.yes") />
 					<cfelseif attributes.dataType eq "boolean" and attributes.value eq false>
-						NO
+						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
 					<cfelse>
-						#attributes.Value#
+						<cfset propertyValue = attributes.Value />
+					</cfif>
+					<cfif len(attributes.link) gt 0>
+						<a href="#attributes.link#"<cfif len(attributes.linkClass) gt 0> class="#attributes.linkClass#"</cfif><cfif len(attributes.linkID) gt 0> id="#attributes.linkID#"</cfif>>#propertyValue#</a>
+					<cfelse>
+						#propertyValue#
 					</cfif>
 				</cfif>
 			<!--- If the object has an error Bean, check for errors on this property --->

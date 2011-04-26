@@ -44,6 +44,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupImage" ormtype="string";
 	property name="optionGroupDescription" ormtype="string" length="4000";
 	property name="imageGroupFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer" required="true";  
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -87,13 +88,6 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 
     /************   END Association Management Methods   *******************/
 	
-	public boolean function hasOptions() {
-		if(this.getOptionsCount() gt 0) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
 	public numeric function getOptionsCount() {
 		return arrayLen(this.getOptions());

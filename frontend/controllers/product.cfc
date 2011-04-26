@@ -40,29 +40,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	property name="productService" type="any";
 	property name="orderService" type="any";
+	property name="requestCacheService" type="any";
 	
 	public void function detail(required struct rc) {
-		param name="rc.filename" default="";
-		param name="rc.productID" default="";
-		
-		if(rc.productID != "") {
-			rc.product = getProductService().getByID(rc.productID);
-		} else if(rc.filename != "") {
-			rc.product = getProductService().getByFilename(rc.filename);
-		}
-		if(isNull(rc.product)) {
-			rc.product = getProductService().getNewEntity();
-		}
-		
-		rc.$.slatwall.setCurrentProduct(rc.product);
-		
-		rc.$.content().setTitle(rc.product.getTitle());
-		rc.$.content().setTemplate(rc.product.getTemplate());
-		rc.$.content().setHTMLTitle(rc.product.getTitle());
+		rc.$.content().setTitle(rc.$.slatwall.product().getTitle());
+		rc.$.content().setHTMLTitle(rc.$.slatwall.product().getTitle());
 	}
 	
 	public void function listcontentproducts(required struct rc) {
-		rc.productContentSmartList = getProductService().getProductContentSmartList(rc=arguments.rc, contentID=$.content("contentID"));
 		
 	}
 	

@@ -42,6 +42,7 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	property name="attributeOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeOptionValue" ormtype="string";
 	property name="attributeOptionLabel" ormtype="string";
+	property name="sortOrder" ormtype="integer";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -59,7 +60,7 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	
 	public void function setAttribute(required Attribute attribute) {
 		variables.attribute = arguments.attribute;
-		if(!arguments.attribute.hasAttributeOption(this)) {
+		if(isNew() || !arguments.attribute.hasAttributeOption(this)) {
 		   arrayAppend(arguments.attribute.getAttributeOptions(),this);
 		}
 	}

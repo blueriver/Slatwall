@@ -16,10 +16,18 @@
 		<Record typeID="444df28fbf77bf464b36ba66d6ab487e" parentTypeID="444df28ec3c4a84bf918671dfc179780" type="Employee" systemCode="artEmployee" />
 		<Record typeID="444df290c7d6c54f046eec90e2353096" parentTypeID="444df28ec3c4a84bf918671dfc179780" type="Child" systemCode="artChild" />
 		
-		<Record typeID="444df2919d15d8ef5c9bc67857f19228" type="Attribute Types" systemCode="attributeType" />
-		<Record typeID="444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Profile" systemCode="atProfile" />
-		<Record typeID="444df293fcc530434949d63e408cac2b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product" systemCode="atProduct" />
-		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="atAccount" />
+		<Record typeID="444df2919d15d8ef5c9bc67857f19228" type="Attribute Set Types" systemCode="attributeSetType" />
+		<Record typeID="444df293fcc530434949d63e408cac2b" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product" systemCode="astProduct" />
+		<Record typeID="444df292eea355ddad72f5614726bc75" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Product Customization" systemCode="astProductCustomization" />
+		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="astAccount" />
+		
+		<Record typeID="444df2a4e7c799436c29759e09b6e2c5" type="Attribute Types" systemCode="attributeType" />
+		<Record typeID="444df2a5a9088e72342c0b5eaf731c64" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Text Box" systemCode="atTextBox" />
+		<Record typeID="444df2a60dbf45cfad1b1b96baa44c47" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="TextArea" systemCode="atTextArea" />
+		<Record typeID="444df2a7a2c39796d2b15516840344ea" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Rich Text Editor" systemCode="atRichTextEditor" />
+		<Record typeID="444df2a8bfb73ecb3a777c8599950d5f" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Select Box" systemCode="atSelectBox" />
+		<Record typeID="444df2aaed92cb33d16a83d2bde93e72" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box" systemCode="atCheckBox" />
+		<Record typeID="444df2a9fe732d3ec9d8b495ab1dddf7" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Radio Group" systemCode="atRadioGroup" />
 		
 		<Record typeID="444df294de226e21c4789a8e7a3eec16" type="Sku Types" systemCode="skuType" />
 		<Record typeID="444df2950022c7e106229d49eb36b9e9" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Company Sku" systemCode="stCompany" />
@@ -32,26 +40,20 @@
 		<Record typeID="444df29a955f8c674152e90c5f18f72f" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Purchase Order" systemCode="satPurchaseOrder" />
 		<Record typeID="444df29bd86a0f4c489061b76e196e62" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Transfer" systemCode="satTransfer" />
 		<Record typeID="444df29ce07a5c76683d4099c2662425" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Order Shipment" systemCode="satOrderShipment" />
+
+		<Record typeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Validation Types" systemCode="validationType" />
+		<Record typeID="444df2adb8774aa68279f91db58b8711" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Date" systemCode="vtDate" />
+		<Record typeID="444df2aef6c81f77a9b35e0060c0b141" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Numeric" systemCode="vtNumeric" />
+		<Record typeID="444df2afcc7332933829e449ff70e360" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Email" systemCode="vtEmail" />
+		<Record typeID="444df2b0e1867f38402ff0aced5ca60f" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="URL" systemCode="vtURL" />
+		<Record typeID="444df2b201a098f5b277febb17a7cb0a" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Zip Code" systemCode="vtZipCode" />
+		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
-444df2a4e7c799436c29759e09b6e2c5
-444df2a5a9088e72342c0b5eaf731c64
-444df2a60dbf45cfad1b1b96baa44c47
-444df2a7a2c39796d2b15516840344ea
-444df2a8bfb73ecb3a777c8599950d5f
-444df2a9fe732d3ec9d8b495ab1dddf7
-444df2aaed92cb33d16a83d2bde93e72
-444df2abc9d58d4faba8358d49cc6e1c
-444df2ac94eaa8a4881d4cbb3c2e0b98
-444df2adb8774aa68279f91db58b8711
-444df2aef6c81f77a9b35e0060c0b141
-444df2afcc7332933829e449ff70e360
-444df2b0e1867f38402ff0aced5ca60f
-444df2b193d8c854256c8cde9d4921b3
-444df2b201a098f5b277febb17a7cb0a
+
 444df2b3df09f67ddcb27918f02c2d83
 444df2b498de93b4b33001593e96f4be
 444df2b5c8f9b37338229d4f7dd84ad1

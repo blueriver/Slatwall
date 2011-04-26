@@ -67,8 +67,6 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		setupMuraRequirements();
-		
 		ormReload();
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
@@ -76,10 +74,7 @@ component extends="framework" output="false" {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
-		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		var dataPopulator = new Slatwall.com.utility.DataPopulator();
-		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-		
+		// Get Coldspring Config
 		var serviceFactory = "";
 		var rbFactory = "";
 		var xml = "";
@@ -108,14 +103,25 @@ component extends="framework" output="false" {
 		
 		// Set this in the application scope to be used later
 		application[ variables.framework.applicationKey ].fw = this;
+		
+		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
+		var dataPopulator = new Slatwall.com.utility.DataPopulator();
+		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
+		
+		// Run mura requirements check
+		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 	}
 	
 	public void function setupRequest() {
 		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
 			setupMuraRequirements();
 			
-			param name="request.slatwall" default="#structNew()#";
-			param name="request.slatwall.ormHasErrors" default="false";
+			// Enable the request cache service
+			getBeanFactory().getBean("requestCacheService").enableRequestCache();
+			
+			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
+				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
+			}
 			
 			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.
 			ormGetSession().clear();
@@ -133,14 +139,14 @@ component extends="framework" output="false" {
 				request.context.$.event('siteid', session.siteid);
 			}
 			
-			// Create SlatwallScope and add it to the muraScope if it doesn't already exist
-			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-				request.context.$.setCustomMuraScopeKey("slatwall", new Slatwall.com.utility.SlatwallScope());
+			// Setup slatwall scope in request cache If it doesn't already exist
+			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
+				getBeanFactory().getBean("requestCacheService").setValue(key="slatwallScope", value= new Slatwall.com.utility.SlatwallScope());	
 			}
 			
-			// Setup Slatwall Session If it doesn't already exist
-			if( !structKeyExists(request.slatwall, "session") ) {
-				request.slatwall.session = getBeanFactory().getBean("sessionService").getPropperSession();
+			// Inject slatwall scope into the mura scope
+			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
+				request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
 			}
 			
 			// Setup Base URL's for each subsystem
@@ -263,13 +269,46 @@ component extends="framework" output="false" {
 	}
 	
 	private void function endSlatwallLifecycle() {
-		if(!request.slatwall.ormHasErrors) {
+		if(!getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			transaction {
 				ORMflush();
 			}
 		}
-		structDelete(request.slatwall, "currentProduct");
-		structDelete(request.slatwall, "currentSession");
+		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
 		ormGetSession().clear();
 	}
+	
+	// Start assetWire functions ==================================
+	public any function getAssetWire() {
+		if(!structKeyExists(request, "assetWire")) {
+			request.assetWire = new assets.assetWire(this); 
+		}
+		return request.assetWire;
+	}
+	
+	private void function buildViewAndLayoutQueue() {
+		super.buildViewAndLayoutQueue();
+		getAssetWire().includeAsset("js/global.js");
+		getAssetWire().includeAsset("css/global.css");
+		if(structKeyExists(request, "view")) {
+			getAssetWire().addViewToAssets(request.view);	
+		}
+	}
+	
+	private string function internalLayout( string layoutPath, string body ) {
+		var rtn = super.internalLayout(argumentcollection=arguments);
+		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
+			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd") {
+				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
+			}
+		}
+		return rtn;
+	}
+		
+	public string function view( string path, struct args = { } ) {
+		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
+		return super.view(argumentcollection=arguments);
+	}
+	
+	// End assetWire functions ==================================
 }
