@@ -37,7 +37,6 @@
 	to your own modified versions of Mura CMS. */
 
 $(document).ready(function(){
-	var optionsCount = $('tr[id^="option"]').length;
 	$("#showSort").click(function(){
 		$("#attributeList").sortable().disableSelection();
 		$('#showSort').hide();
@@ -86,15 +85,55 @@ $(document).ready(function(){
 		var attribID = $(this).attr("attribID");
         var num = $('tr.' + attribID).length;
 		$("#attrib" + attribID + " tbody>tr:last").remove();
-		//alert(num);
-        //$('#option' + num).remove();
+
         // can't remove more options than were originally present
         if($('tr[id^="new"]').length == 0) {
             $('a.remOption').attr('style','display:none;');
         }
 		return false;
     });
+	
+	$("a.deleteAttributeOption").click(function() {
+		var attribOptionID = $(this).attr("id");
+		deleteAttributeOption(attribOptionID);
+		return false;
+	});
 });
+
+function btnConfirmAttributeOptionDelete(message,link) {
+    var attribOptionID = $(link).attr("id");
+	$("#alertDialogMessage").html(message);
+    $("#alertDialog").dialog({
+            resizable: false,
+            modal: true,
+            buttons: {
+                'YES': function() {
+                    $(this).dialog('close');
+                    deleteAttributeOption(attribOptionID);        
+                    },
+                'NO': function() {
+                    $(this).dialog('close');
+                }
+            }
+        });
+
+    return false;   
+}
+
+function deleteAttributeOption(id){
+	var params = {attributeOptionID: id, asynch: 'true', cacheID: Math.random()};
+	
+	$.post("index.cfm?slatAction=admin:attribute.deleteAttributeOption",params, function(data){
+		if (data.success) {
+			$('tr#' + id).fadeOut('normal', function(){
+				$(this).remove();
+			});
+		}
+		else {
+			$("#message" + id).html(data.message).show("fast");
+		}
+	}, "json");
+}	
 	
 function showSort(id){
 	$('#showSort').show();
