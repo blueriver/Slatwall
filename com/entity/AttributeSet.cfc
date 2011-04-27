@@ -53,7 +53,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Related Object Properties
 	property name="attributeSetType" cfc="Type" validateRequired fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
-	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all";
+	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all" orderby="sortOrder" ;
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all";
 	property name="productCustomization" fieldtype="one-to-one" cfc="ProductCustomization" cascade="all";     
 	
