@@ -36,11 +36,28 @@
 Notes:
 
 --->
-
+<dl class="twoColumn">
 <cfoutput>
-	<cfif rc.edit>
-		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
-			<cfdump var="#local.attributeSet#" />
-		</cfloop> 
-	</cfif>
+	<cfloop array="#rc.attributeSets#" index="local.attributeSet">
+		<cfloop array="#local.attributeSet.getAttributes()#" index="local.attribute">
+			<cfset local.attributeValue = rc.Product.getAttributeValue(local.attribute.getAttributeID()) />
+			<cfset local.attributeValueID = local.attributeValue.isNew()?"0":local.attributeValue.getAttributeValueID() />
+			<dt>
+				<label for="attribute.#local.attribute.getAttributeID()#">#local.attribute.getAttributeName()#<cfif local.attribute.getRequiredFlag() EQ 1> *</cfif></label>
+			</dt>
+			<dd>
+				<cfif local.attribute.getAttributeType().getSystemCode() EQ "atSelectBox">
+					<select name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#">
+						<cfloop array="#local.attribute.getAttributeOptions()#" index="local.option" >
+							<option value="#local.option.getAttributeOptionValue()#" <cfif local.attributeValue.getAttributeValue() EQ local.option.getAttributeOptionValue()> Selected</cfif>>#local.option.getAttributeOptionLabel()#</option>
+						</cfloop>
+					</select>
+				</cfif>
+				<cfif local.attribute.getAttributeType().getSystemCode() EQ "atTextBox">
+					<input type="text" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#" value="#local.attributeValue.getAttributeValue()#" />
+				</cfif>
+			</dd>
+		</cfloop>
+	</cfloop> 
 </cfoutput>
+</dl>
