@@ -71,7 +71,7 @@ Notes:
 		</cfif>
 		<cfif rc.edit>
 			<cf_ActionCaller action="admin:setting.listshippingservices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit">
+			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit" class="button">
 			</form>
 		</cfif>
 	</div>

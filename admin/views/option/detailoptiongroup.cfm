@@ -76,7 +76,7 @@ Notes:
 	<cfif rc.optiongroup.getOptionsCount() eq 0 and !rc.optionGroup.isNew()>
 	<cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
 	</cfif>
-	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
+	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
 </div>
 </form>
 <cfelse>

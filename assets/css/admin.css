@@ -52,7 +52,7 @@ img.slatwallLogo	{
 	text-decoration: none;
 }
 
-a.button, button {
+a.button, input.button, button {
 	background-color: #78A8D4;
 	vertical-align: middle;
 	/*padding: 0;*/
