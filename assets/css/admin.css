@@ -156,6 +156,10 @@ table#ProductList {
 	width: 900px;
 }
 
+table.attributeOptions {
+	width: 200px;
+}
+
 table .alignLeft {
 	text-align: left;
 }

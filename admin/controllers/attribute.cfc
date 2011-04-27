@@ -80,7 +80,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
     
 /*   public void function save() {
-    	rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+    	rc.optionsArray = getService("formUtilities").buildFormCollections(rc);
     }*/
 	
 	public void function save(required struct rc) {
@@ -95,7 +95,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		if(!rc.attribute.hasErrors()) {
 			// go to the 'manage attribute set' form to add/edit more attributes
-			rc.message="admin.attribute.save_success";
+			rc.message=rc.$.Slatwall.rbKey("admin.attribute.save_success");
 			getFW().redirect(action="admin:attribute.create",querystring="attributeSetID=#rc.attributeSetID#",preserve="message");
 		} else {
 			//put attributeSet in rc for form
@@ -193,6 +193,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		getFW().redirect(action="admin:attribute.list",preserve="message,messagetype");
+	}
+	
+	public void function deleteAttributeOption(required struct rc) {
+		param name="rc.asynch" default="false";
+		var attributeOption = getAttributeService().getByID(rc.attributeOptionID,"SlatwallAttributeOption");
+		if(!isNull(attributeOption)) {
+			var deleteResponse = getAttributeService().delete(attributeOption);
+			if( deleteResponse.getStatusCode() ) {
+				rc.success=1;
+				rc.message=deleteResponse.getMessage();
+			} else {
+				rc.success=0;
+				rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			}
+		}
 	}
 	
 }
