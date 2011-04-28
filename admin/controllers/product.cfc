@@ -109,7 +109,11 @@ component extends="BaseController" output=false accessors=true {
 			// set up sku array to handle any skus that were edited and/or added
 			var formCollections = getService("formUtilities").buildFormCollections(rc);
 			rc.skuArray = formCollections.skus;
-			rc.attributes = formCollections.attribute;
+			if(structKeyExists(formCollections,"attribute")){
+				rc.attributes = formCollections.attribute;
+			} else {
+				rc.attributes = {};
+			}
 		}
 
 		// Attempt to Save Product

@@ -119,7 +119,7 @@ component extends="BaseService" accessors="true" {
 		assignProductContent(arguments.Product,arguments.data.contentID);
 		
 		// save custom attributes
-		if(structKeyExists(data,"attribtues")){
+		if(structKeyExists(data,"attributes")){
 			for(var attributeID in data.attributes){
 				for(var attributeValueID in data.attributes[attributeID]){
 					var attributeValue = getService("AttributeService").getByID(attributeValueID,"SlatwallAttributeValue");
