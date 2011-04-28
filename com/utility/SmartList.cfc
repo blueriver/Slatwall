@@ -175,14 +175,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public void function addOrder(required string orderStatement, numeric position) {
-		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
-		var orderDirect = listLast(arguments.orderStatment, variables.orderDirectionDelimiter);
+		var propertyIdentifier = listFirst(arguments.orderStatement, variables.orderDirectionDelimiter);
+		var orderDirection = listLast(arguments.orderStatement, variables.orderDirectionDelimiter);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
+		
 		if(orderDirection == "A") {
 			orderDirection == "ASC";
 		} else if (orderDirection == "D") {
 			orderDirection == "DESC";
 		}
-		arrayAppend(variables.order, {property=aliasedProperty, direction=orderDirection});
+		arrayAppend(variables.orders, {property=aliasedProperty, direction=orderDirection});
 	}
 
 	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
@@ -348,7 +350,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				var hqlOrder &= " ORDER BY";
 			}
 			for(var i=1; i<=arrayLen(variables.orders); i++) {
-				var hqlOrder &= " variables.orders[i].property variables.orders[i].direction,";
+				var hqlOrder &= " #variables.orders[i].property# #variables.orders[i].direction#,";
 			}
 			hqlOrder = left(hqlOrder, len(hqlOrder)-1);
 		}
