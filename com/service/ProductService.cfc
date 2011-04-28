@@ -73,6 +73,14 @@ component extends="BaseService" accessors="true" {
 		return pageFeed.getIterator();
 	}
 
+	public any function getProductSmartList(struct data={}) {
+		return getDAO().getProductSmartList(arguments.data);
+	}
+	
+	public any function getProductContentSmartList(required string contentID, struct data={}) {
+		return getDAO().getProductContentSmartList(arguments.contentID, arguments.data);
+	}
+
 	/**
 	/* @hint associates this product with Mura content objects
 	*/

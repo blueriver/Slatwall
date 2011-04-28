@@ -47,10 +47,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.$.content().setHTMLTitle(rc.$.slatwall.product().getTitle());
 	}
 	
-	public void function listcontentproducts(required struct rc) {
-		
-	}
-	
 	public void function addtocart(required struct rc) {
 		param name="rc.productID" default="";
 		param name="rc.selectedOptions" default="";

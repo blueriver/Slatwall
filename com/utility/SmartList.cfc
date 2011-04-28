@@ -249,6 +249,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				hqlSelect &= " #select# as #variables.selects[select]#,";
 			}
 			hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
+		} else {
+			hqlSelect &= "SELECT #variables.entities[getBaseEntityName()].entityAlias#";
 		}
 		
 		return hqlSelect;

@@ -73,10 +73,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
 			if(rc.$.event('slatAction') == "") {
 				rc.$.event("slatAction", "frontend:product.listcontentproducts");
-				getRequestCacheService().setValue("currentProductListing", getProductService().getProductContentSmartList(rc=arguments.rc, contentID=rc.$.content("contentID")));
 			}
 		}
-		
 	}
 	
 	public void function onRenderEnd(required any rc) {
