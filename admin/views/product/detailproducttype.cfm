@@ -265,7 +265,7 @@ Notes:
 			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
 			<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 			</cfif>
-			<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
+			<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit" class="button">
 		</div>
 	</form>
 	</cfif>

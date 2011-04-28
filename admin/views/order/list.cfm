@@ -46,7 +46,7 @@ Notes:
 
 <div class="svoadminorderlist">
 	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
+		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
 	</form>
 
 	<table id="OrderList" class="stripe">
@@ -58,7 +58,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderTotal")#</th>
 			<th>&nbsp</th>
 		</tr>
-		<cfloop array="#rc.OrderSmartList.getPageRecords()#" index="Local.Order">
+		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="Local.Order">
 			<tr>
 				<td>#Local.Order.getOrderID()#</td>
 				<td>#Local.Order.getOrderCloseDate()#</td>

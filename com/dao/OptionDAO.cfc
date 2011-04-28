@@ -38,13 +38,13 @@ Notes:
 */
 component extends="slatwall.com.dao.BaseDAO" {
 
-	public any function getSmartList(required struct rc, required string entityName){
-		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName=arguments.entityName);
+	public any function getSmartList(required string entityName, struct data={}){
+		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
 		
-		smartList.addKeywordProperty(rawProperty="optionCode", weight=9);
-		smartList.addKeywordProperty(rawProperty="optionName", weight=3);
-		smartList.addKeywordProperty(rawProperty="optionGroup_optionGroupName", weight="4");
-		smartList.addKeywordProperty(rawProperty="optionDescription", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="optionCode", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="optionName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="optionGroup_optionGroupName", weight="4");
+		smartList.addKeywordProperty(propertyIdentifier="optionDescription", weight=1);
 		
 		return smartList;
 	}

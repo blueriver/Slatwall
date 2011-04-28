@@ -52,7 +52,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderCloseDate|D";
-		rc.orderSmartList = getOrderService().getSmartList(rc=arguments.rc);
+		rc.orderSmartList = getOrderService().getSmartList(data=arguments.rc);
     }
 
 	public void function detail(required struct rc) {

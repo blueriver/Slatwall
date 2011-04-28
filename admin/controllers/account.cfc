@@ -72,6 +72,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
 		
-		rc.accountSmartList = getAccountService().getSmartList(arguments.rc);
+		rc.accountSmartList = getAccountService().getSmartList(data=arguments.rc);
 	}
 }

@@ -86,7 +86,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 
 	public void function list(required struct rc) {
-		rc.productSmartList = getProductService().getSmartList(arguments.rc);
+		rc.productSmartList = getProductService().getSmartList(data=arguments.rc);
 	}
 	
 	public void function save(required struct rc) {

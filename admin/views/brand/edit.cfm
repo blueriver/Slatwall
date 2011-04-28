@@ -51,7 +51,7 @@ Notes:
 				<cfif !rc.brand.isNew() and !rc.brand.hasProduct()>
 				<cf_ActionCaller action="admin:brand.delete" querystring="brandid=#rc.brand.getBrandID()#" class="button" type="link" confirmrequired="true">
 				</cfif>
-				<cf_ActionCaller action="admin:brand.save" type="submit">
+				<cf_ActionCaller action="admin:brand.save" type="submit" class="button">
 			</div>
 		</form>
 	</div>

@@ -45,7 +45,7 @@ Notes:
 			<th>Account Number</th>
 			<th>Website</th>
 		</tr>
-		<cfloop array="#rc.VendorSmartList.getEntityArray()#" index="Local.Vendor">
+		<cfloop array="#rc.vendorSmartList.getPageRecords()#" index="Local.Vendor">
 			<tr>
 				<td><a href="#BuildURL(action='vendor.detail', querystring='VendorID=#local.Vendor.getVendorID()#')#">#local.Vendor.getVendorName()#</a></td>
 				<td>#Local.Vendor.getAccountNumber()#</td>

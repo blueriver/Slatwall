@@ -47,7 +47,7 @@ Notes:
 <div class="svoadminproductlist">
 <cfif rc.productSmartList.getTotalRecords()>
 	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
+		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
 
 	<table id="ProductList" class="stripe">

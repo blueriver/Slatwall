@@ -288,8 +288,6 @@ component extends="framework" output="false" {
 	
 	private void function buildViewAndLayoutQueue() {
 		super.buildViewAndLayoutQueue();
-		getAssetWire().includeAsset("js/global.js");
-		getAssetWire().includeAsset("css/global.css");
 		if(structKeyExists(request, "view")) {
 			getAssetWire().addViewToAssets(request.view);	
 		}

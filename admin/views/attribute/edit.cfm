@@ -120,7 +120,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-	<cf_ActionCaller action="admin:attribute.save" type="submit">
+	<cf_ActionCaller action="admin:attribute.save" type="submit" class="button">
 </form>
 </div>
 </cfif>
@@ -206,7 +206,7 @@ Notes:
 				<cf_PropertyDisplay id="activeFlag#local.i#" object="#local.thisAttribute#" property="activeFlag" edit="true">
 		    </dl>
 			<a class="button" href="javascript:;" onclick="jQuery('##editFrm#local.i#container').slideUp();jQuery('##editFrm#local.i#open').show();jQuery('##editFrm#local.i#close').hide();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-			<cf_ActionCaller action="admin:attribute.save" type="submit">
+			<cf_ActionCaller action="admin:attribute.save" type="submit" class="button">
 		</form>  
 		</div>
 	</li>

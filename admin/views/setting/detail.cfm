@@ -108,7 +108,7 @@ Notes:
 		<cfif rc.edit eq true>
 			<div id="actionButtons" class="clearfix">
 				<cf_actionCaller action="admin:setting.detail" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_ActionCaller action="admin:setting.save" type="submit">
+				<cf_ActionCaller action="admin:setting.save" type="submit" class="button">
 			</div>
 		</form>
 		</cfif>

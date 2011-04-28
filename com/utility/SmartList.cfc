@@ -16,422 +16,352 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-component displayname="Smart List" accessors="true" persistent="false" {
+component displayname="Smart List" accessors="true" persistent="false" output="false" {
 	
-	property name="entityName" type="string" hint="This is the base entity that the list is based on.";
-	property name="entityMetaData" type="struct" hint="This is the meta data of the base entity.";
-
+	property name="baseEntityName" type="string";
+	
+	property name="entities" type="struct";
 	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
-	property name="filters" type="struct" hint="This struct holds any filters that are set on the entities properties";
-	property name="ranges" type="struct" hint="This struct holds any ranges set on any of the entities properties";
+	property name="whereGroups" type="array" hint="this holds all filters and ranges";
 	property name="orders" type="array" hint="This struct holds the display order specification based on property";
 	
 	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
 	property name="keywords" type="array" hint="This array holds all of the keywords that were searched for";
+
+	property name="hqlParams" type="struct";
 	
 	property name="recordStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
 	property name="recordShow" type="numeric" hint="This is the total number of entities to display";
-	
-	/*
-	property name="recordEnd" type="numeric" hint="This represents the last record to display and it is used in paging.";
-	property name="totalRecords" type="numeric";
-	property name="currentPage" type="numeric" hint="This is the current page that the smart list is displaying worth of entities";
-	property name="totalPages" type="numeric" hint="This is the total number of pages worth of entities";
-	*/
 
-	property name="fillTime" type="numeric";
 	property name="searchTime" type="numeric";
-
-	public any function init(struct rc, required string entityName) {
+	property name="paramCount" type="numeric";
+	
+	// Delimiter Settings
+	variables.subEntityDelimiter = "_";
+	variables.valueDelimiter = ",";
+	variables.orderDirectionDelimiter = "|";
+	variables.orderPropertyDelimiter = ",";
+	variables.dataKeyDelimiter = ":";
+	variables.paramKeyCounter = 0;
+	
+	public any function init(required string entityName, struct data, numeric recordStart=1, numeric recordShow=10) {
 		// Set defaults for the main properties
-		setSelects(structNew());
-		setFilters(structNew());
-		setRanges(structNew());
-		setOrders(arrayNew(1));
-		setKeywordProperties(structNew());
-		setKeywords(arrayNew(1));
-		setRecordStart(1);
-		setRecordShow(10);
-		setEntityMetaData(structNew());
+		setSelects({});
+		setWhereGroups([]);
+		setOrders([]);
+		setKeywordProperties({});
+		setKeywords([]);
 		setSearchTime(0);
+		setEntities({});
+		setHQLParams({});
+		setParamCount(0);
 		
-		// Set entity name based on whatever
-		setEntityName(arguments.entityName);
+		// Set paging defaults
+		setRecordStart(arguments.recordStart);
+		setRecordShow(arguments.recordShow);
 		
-		if(isDefined("arguments.rc")) {
-			applyRC(rc=arguments.RC);
+		var baseEntity = entityNew("#arguments.entityName#");
+		var baseEntityMeta = getMetaData(baseEntity);
+		
+		setBaseEntityName(arguments.entityName);
+		
+		addEntity(
+			entityName=arguments.entityName,
+			entityAlias=getAliasFromEntityName(arguments.entityName),
+			entityFullName=baseEntityMeta.fullName,
+			entityProperties=getPropertiesStructFromMetaArray(baseEntityMeta.properties)
+		);
+		
+		if(structKeyExists(arguments, "data")) {
+			applyData(data=arguments.data);	
 		}
-		
-		variables.HQLWhereParams = structNew();
 				
 		return this;
 	}
 	
-	public numeric function getRecordEnd() {
-		variables.recordEnd = getRecordStart() + getRecordShow() - 1;
-		if(variables.recordEnd > arrayLen(getRecords())) {
-			variables.recordEnd = arrayLen(getRecords());
-		}
-		return variables.recordEnd;
-	}
 	
-	public numeric function getCurrentPage() {
-		return ceiling(getRecordStart() / getRecordEnd());
-	}
 	
-	public numeric function getTotalRecords() {
-		return arrayLen(getRecords());
-	}
-	
-	public numeric function getTotalPages() {
-		return ceiling(getTotalRecords() / setRecordShow());
-	}
-	
-	public void function addSelect(required string rawProperty, required string alias) {
-		var selectProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
-		if(selectProperty != "") {
-			if(structKeyExists(variables.selects, selectProperty)) {
-				variables.selects[selectProperty] = arguments.alias;
-			} else {
-				structInsert(variables.selects, selectProperty, arguments.alias);
+	public void function confirmWhereGroup(required numeric whereGroup) {
+		for(var i=1; i<=arguments.whereGroup; i++) {
+			if(arrayLen(variables.whereGroups) < i) {
+				arrayAppend(variables.whereGroups, {filters={},ranges={}});
 			}
 		}
 	}
 	
-	public void function addFilter(required string rawProperty, required string value) {
-		var filterProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
-		if(filterProperty != "") {
-			for(var i=1; i <= listLen(arguments.value, "^"); i++) {
-				var filterValue = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=listGetAt(arguments.value, i, "^"));
-				if(filterValue != "") {
-					if(structKeyExists(variables.filters, filterProperty)) {
-						variables.filters[filterProperty] = "#variables.filters[filterProperty]#^#filterValue#";
-					} else {
-						structInsert(variables.filters, filterProperty, filterValue);
-					}
-				}
-			}
+	public string function getAliasFromEntityName(required string entityName) {
+		return "a#lcase(arguments.entityName)#";
+	}
+	
+	public struct function getPropertiesStructFromMetaArray(required array properties) {
+		var propertyStruct = {};
+		
+		for(var i=1; i<=arrayLen(arguments.properties); i++) {
+			propertyStruct[arguments.properties[i].name] = duplicate(arguments.properties[i]);
+		}
+		
+		return propertyStruct;
+	}
+	
+	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="") {
+		var parentEntityFullName = variables.entities[ arguments.parentEntityName ].entityFullName;
+		if(listLen(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc,".") < 2) {
+			var newEntityCFC = Replace(parentEntityFullName, listLast(parentEntityFullName,"."), variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc);	
+		} else {
+			var newEntityCFC = variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc;
+		}
+		var newEntity = createObject("component","#newEntityCFC#");
+		var newEntityMeta = getMetaData(newEntity);
+		
+		if(structKeyExists(newEntityMeta, "entityName")) {
+			var newEntityName = newEntityMeta.entityName;
+		} else {
+			var newEntityName = listLast(newEntityMeta.fullName,".");
+		}
+		
+		if(!structKeyExists(variables.entities,newEntityName)) {
+			addEntity(
+				entityName=newEntityName,
+				entityAlias=getAliasFromEntityName(newEntityName),
+				entityFullName=newEntityMeta.fullName,
+				entityProperties=getPropertiesStructFromMetaArray(newEntityMeta.properties),
+				parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
+				parentRelationship=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype,
+				parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,
+				fkColumn=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fkcolumn,
+				joinType=arguments.joinType
+			);
+		} else if(arguments.joinType != "") {
+			variables.entities[newEntityName].joinType = arguments.joinType;
+		}
+		
+		return newEntityName;
+	}
+	
+	public void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string fkColumn="", string joinType="") {
+		variables.entities[arguments.entityName] = duplicate(arguments);
+	}
+	
+	public string function getAliasedProperty(required string propertyIdentifier) {
+		var entityName = getBaseEntityName();
+		var entityAlias = variables.entities[getBaseEntityName()].entityAlias;
+		for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiter); i++) {
+			entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiter));
+			entityAlias = variables.entities[entityName].entityAlias;
+		}
+		return "#entityAlias#.#variables.entities[entityName].entityProperties[listLast(propertyIdentifier, variables.subEntityDelimiter)].name#";
+	}
+	
+	public void function addSelect(required string propertyIdentifier, required string alias) {
+		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.alias;
+	}
+	
+	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)) {
+			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] &= "#variables.valueDelimiter##arguments.value#";
+		} else {
+			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = "#arguments.value#";
 		}
 	}
 	
-	public void function addRange(required string rawProperty, required string value) {
-		var rangeProperty = getValidHQLProperty(rawProperty=arguments.rawProperty);
-		if(rangeProperty != "") {
-			if(Find("^", arguments.value)) {
-				var lowerRange = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=Left(arguments.value, Find("^", arguments.value)-1));
-				var upperRange = getValidHQLPropertyValue(rawProperty=arguments.rawProperty, value=Right(arguments.value, Len(arguments.value) - Find("^", arguments.value)));
-				if(isNumeric(lowerRange) && isNumeric(upperRange) && lowerRange <= upperRange) {
-					if(structKeyExists(variables.ranges, rangeProperty)) {
-						variables.ranges[rangeProperty] = "#lowerRange#^#upperRange#";
-					} else {
-						structInsert(variables.ranges, rangeProperty, "#lowerRange#^#upperRange#");
-					}
-				}
-			}
-		}
+	public void function addRange(required string propertyIdentifier, required string value, numeric filterGroup) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		
+		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = "#arguments.value#";
 	}
 	
 	public void function addOrder(required string orderStatement, numeric position) {
-		var orderStruct = structNew();
-		var orderProperty = getValidHQLProperty(rawProperty=Left(arguments.orderStatement, Find("|", arguments.orderStatement)-1));
+		var propertyIdentifier = listFirst(arguments.orderStatement, variables.orderDirectionDelimiter);
+		var orderDirection = listLast(arguments.orderStatement, variables.orderDirectionDelimiter);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=propertyIdentifier);
 		
-		if(orderProperty != "") {
-			var orderDirection = Right(arguments.orderStatement, Len(arguments.orderStatement) - Find("|", arguments.orderStatement));
-			if(orderDirection == "A" || orderDirection == "ASC") {
-				orderDirection = "ASC";
-			} else if(orderDirection == "D" || orderDirection == "DESC") {
-				orderDirection = "DESC";
-			} else {
-				orderDirection = "";
-			}
-			if(orderDirection != "") {
-				ordertStruct.property = orderProperty;
-				ordertStruct.direction = orderDirection;
-				if(isDefined("arguments.position") && arguments.position < arrayLen(variables.orders)) {
-					arrayInsertAt(variables.orders, ordertStruct, arguments.propertyOrder);
-				} else {
-					arrayAppend(variables.orders, Duplicate(ordertStruct));
-				}
-			}
+		if(orderDirection == "A") {
+			orderDirection == "ASC";
+		} else if (orderDirection == "D") {
+			orderDirection == "DESC";
 		}
+		arrayAppend(variables.orders, {property=aliasedProperty, direction=orderDirection});
+	}
+
+	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
+		variable.keywordProperties[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.weight;
 	}
 	
-	public void function addKeywordProperty(required string rawProperty, required numeric weight) {
-		var keywordProperty = getValidHQLProperty(arguments.rawProperty);
-		if(keywordProperty != "" && isNumeric(arguments.weight)) {
-			if(structKeyExists(variables.keywordProperties, keywordProperty)) {
-				variables.keywordProperties[keywordProperty] = arguments.weight;
-			} else {
-				structInsert(variables.keywordProperties, keywordProperty, arguments.weight);
+	public void function applyData(required struct data) {
+		var currentPage = 1;
+		
+		for(var i in arguments.data) {
+			if(left(i,2) == "F#variables.dataKeyDelimiter#") {
+				addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+			} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
+				addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+			} else if(i == "OrderBy") {
+				for(var ii=1; ii <= listLen(arguments.data[i], variables.orderPropertyDelimiter); ii++ ) {
+					addOrder(orderStatement=listGetAt(arguments.data[i], ii, variables.orderPropertyDelimiter));
+				}
+			} else if(i == "P#variables.dataKeyDelimiter#Show" && isNumeric(arguments.data[i])) {
+				setRecordShow(arguments.data[i]);
+			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i])) {
+				setRecordStart(arguments.data[i]);
+			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i])) {
+				currentPage = arguments.data[i];
 			}
 		}
-	}
-	
-	public void function applyRC(required struct rc) {
-		var pageCurrent = 0;
-		for(i in arguments.rc) {
-			if(findNoCase("F_",i)) {
-				addFilter(rawProperty=ReplaceNoCase(i,"F_", ""), value=arguments.rc[i]);
-			} else if(findNoCase("R_",i)) {
-				addRange(rawProperty=ReplaceNoCase(i,"R_", ""), value=arguments.rc[i]);
-			} else if(findNoCase("P_Show",i)) {
-				if(isNumeric(arguments.rc[i])){
-					setRecordShow(arguments.rc[i]);
-				}
-			} else if(findNoCase("P_Start",i)) {
-				if(isNumeric(arguments.rc[i])){
-					setRecordStart(arguments.rc[i]);
-				}
-			} else if(findNoCase("P_Current", i)){
-				if(isNumeric(arguments.rc[i])){
-					pageCurrent = arguments.rc[i];
-				}
-			} else if(findNoCase("OrderBy",i)) {
-				for(var ii=1; ii <= listLen(arguments.rc[i], "^"); ii++ ) {
-					addOrder(orderStatement=listGetAt(arguments.rc[i], ii, "^"));
-				}
-			}
-		}
-		if(isDefined("rc.Keyword")){
-			var KeywordList = Replace(arguments.rc.Keyword," ","^","all");
+		if(structKeyExists(arguments.data, "keyword")){
+			var KeywordList = Replace(arguments.data.Keyword," ","^","all");
 			KeywordList = Replace(KeywordList,"%20","^","all");
 			KeywordList = Replace(KeywordList,"+","^","all");
-			KeywordList = Replace(KeywordList,"'","","all");
-			KeywordList = Replace(KeywordList,"-","","all");
 			for(var i=1; i <= listLen(KeywordList, "^"); i++) {
 				arrayAppend(variables.Keywords, listGetAt(KeywordList, i, "^"));
 			}
 		}
-		if(pageCurrent gt 0) {
-			setRecordStart((((pageCurrent-1)*getRecordShow()) + 1));
+		
+		if(currentPage gt 1) {
+			setRecordStart((((currentPage-1)*getRecordShow()) + 1));
 		}
 	}
 	
-	
-	public struct function getEntityMetaData(required string entityName) {
-		if(!structKeyExists(variables.entityMetaData, arguments.entityName)) {
-			variables.entityMetaData[arguments.entityName] = getMetadata(entityNew("#arguments.EntityName#"));
-		}
-		return variables.entityMetaData[arguments.entityName];
+	public string function getNewParamID() {
+		var paramID = "pid#javaCast('string',getParamCount())#";
+		setParamCount(getParamCount() + 1);
+		return paramID;
 	}
 	
-	public string function getEntityMetaValue(required string entityName, required string propertyName, required string attribute) {
-		var entityMetaData = getEntityMetaData(arguments.entityName);
-		
-		for(var i=1; i<= arrayLen(entityMetaData.properties); i++) {
-			if( structKeyExists(entityMetaData.properties[i], "cfc") && entityMetaData.properties[i].name == arguments.propertyName) {
-				return entityMetaData.properties[i][arguments.attribute];
-			}
-		}
+	public void function addHQLParam(required string paramName, required string paramValue) {
+		variables.hqlParams[ arguments.paramName ] = arguments.paramValue;
 	}
 	
-	private string function getValidHQLProperty(required string rawProperty) {
-		var returnProperty = "";
-		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
-		var currentEntityName = getEntityName();
-		
-		for(var i=1; i <= arrayLen(entityPropertyArray); i++){
-			var entityProperty = getValidEntityProperty(entityPropertyArray[i], currentEntityName);
-			if(entityProperty != ""){
-				if(i==1){
-					returnProperty &= "a#currentEntityName#.#entityProperty#";
-				} else {
-					returnProperty &= ".#entityProperty#";
-				}
-				currentEntityName = "Slatwall#getEntityMetaValue(currentEntityName, entityProperty, 'cfc')#";
-			} else {
-				returnProperty = "";
-			}
-		}
-		return returnProperty;
-	}
-			
-	private string function getValidHQLPropertyValue(required string rawProperty, required any value) {
-		var returnValue = "";
-		var entityPropertyArray = ListToArray(arguments.rawProperty, "_");
-		var currentEntityName = getEntityName();
-		
-		for(var i=1; i <= arrayLen(entityPropertyArray); i++){
-			var entityProperty = getValidEntityProperty(entityPropertyArray[i], currentEntityName);
-			if(entityProperty != ""){
-				if(i == arrayLen(entityPropertyArray)) {
-					returnValue = getValidEntityPropertyValue(entityProperty, arguments.value, currentEntityName);
-				} else {
-					currentEntityName = "Slatwall#getEntityMetaValue(currentEntityName, entityProperty, 'cfc')#";
-				}
-			}
-		}
-		return returnValue;
-	}
-	
-	private string function getValidEntityProperty(required string rawProperty, entityName) {
-		var returnProperty = "";
-		var entityProperties = getEntityMetaData(entityName=arguments.entityName).properties;
-		
-		for(var i=1; i <= arrayLen(entityProperties); i++){
-			if (entityProperties[i].name == arguments.rawProperty) {
-				returnProperty = entityProperties[i].name;
-				break;
-			}
-		}
-		return returnProperty;
-	}
-	
-	private string function getValidEntityPropertyValue(required string rawProperty, required string value, entityName) {
-		var returnValue = "";
-		var entityProperties = getEntityMetaData(entityName=arguments.entityName).properties;
-		
-		for(var i=1; i <= arrayLen(entityProperties); i++){
-			if (entityProperties[i].name == arguments.rawProperty) {
-				var thisProperty = entityProperties[i];
-				if(isDefined("thisProperty.type")) {
-					if(entityProperties[i].type == "string") {
-						returnValue = arguments.value;
-					} else if (entityProperties[i].type == "numeric" && isNumeric(arguments.value)) {
-						returnValue = arguments.value;
-					} else if (entityProperties[i].type == "boolean" && (arguments.value == 1 || arguments.value == true || arguments.value == "yes")) {
-						returnValue = 1;
-					} else if (entityProperties[i].type == "boolean" && (arguments.value == 0 || arguments.value == false || arguments.value == "no")) {
-						returnValue = 0;
-					}
-				} else {
-					returnValue = arguments.value;
-				}
-				break;
-			}
-		}
-		return returnValue;
-	}
-	
-	public void function addHQLWhereParam(paramName, paramValue) {
-		variables.HQLWhereParams[ arguments.paramName ] = arguments.paramValue;
-	}
-	
-	public any function getHQLWhereParams() {
-		return variables.HQLWhereParams;
-	}
-	
-	public string function getHQLSelect () {
-		var returnSelect = "";
-		var currentSelect = 0;
-		
-		if(structCount(variables.selects)) {
-			returnSelect = "SELECT new map(";
-			for(select in variables.selects) {
-				currentSelect = currentSelect + 1;
-				returnSelect &= "#select# as #variables.selects[select]#";
-				if(currentSelect < structCount(variables.selects)) {
-					returnSelect &= ", ";
-				}
-			}
-			returnSelect &= ")";
-		}
-		
-		return returnSelect;
-	}
-	
-	public string function getHQLWhereOrder(boolean suppressWhere) {
-		var returnWhereOrder = "";
-		
-		// Check to see if any Filters, Ranges or Keyword requirements exist.  If not, don't create a where
-		if(structCount(variables.Filters) || structCount(variables.Ranges) || (arrayLen(variables.Keywords) && structCount(variables.keywordProperties))) {
-			
-			var currentFilter = 0;
-			var currentFilterValue = 0;
-			var currentRange = 0;
-			var currentKeywordProperty = 0;
-			var currentKeyword = 0;
-			
-			if(isDefined("arguments.suppressWhere") && arguments.suppressWhere) {
-				returnWhereOrder = "AND";
-			} else {
-				returnWhereOrder = "WHERE";
-			}
-			
-			// Add any filters to the returnWhereOrder
-			for(filter in variables.filters) {
-				currentFilter = currentFilter + 1;
-				currentFilterValue = 0;
-				
-				for(var i=1; i <= listLen(variables.filters[filter], "^"); i++) {
-				
-					var filterValue = listGetAt(variables.filters[filter], i, "^");
-					currentFilterValue = currentFilterValue + 1;
-				
-					if(currentFilter > 1 && currentFilterValue == 1) {
-						returnWhereOrder &= " AND (";
-					} else if (currentFilterValue == 1) {
-						returnWhereOrder &= " (";
-					} else if (currentFilterValue > 1) {
-						returnWhereOrder &= " OR ";
-					}
-				
-					returnWhereOrder &= "#filter# = :F_#currentFilter#_#i#";
-					addHQLWhereParam("F_#currentFilter#_#i#", filterValue);
-					
-					if (currentFilterValue == listLen(variables.filters[filter], "^")) {
-						returnWhereOrder &= ")";
-					}
-				}
-			}
-			
-			// Add Keywords to returnWhereOrder
-			if(arrayLen(variables.keywords)) {
-				for(keywordProperty in variables.keywordProperties) {
-					currentKeywordProperty = currentKeywordProperty + 1;
-					currentKeyword = 0;
-					
-					if(currentKeywordProperty == 1 && currentFilter > 0) {
-						returnWhereOrder &= " AND (";
-					} else if (currentKeywordProperty == 1 && currentFilter == 0) {
-						returnWhereOrder &= " (";
-					} 
-					
-					for(var i=1; i <= arrayLen(variables.keywords); i++) {
-						currentKeyword = currentKeyword + 1;
-						if (currentKeyword > 1 or currentKeywordProperty > 1) {
-							returnWhereOrder &= " OR ";
-						}
-						returnWhereOrder &= "#keywordProperty# LIKE :K_#i#";
-						addHQLWhereParam("K_#i#", "%#variables.keywords[i]#%");
-					}
-					
-					if (currentKeywordProperty == structCount(variables.keywordProperties)) {
-						returnWhereOrder &= ")";
-					}
-				}
-			}
-			
-			// Add any ranges to returnWhereOrder
-			for(range in variables.ranges) {
-				if(Find("^", variables.ranges[range])) {
-					var lowerRange = Left(variables.ranges[range], Find("^", variables.ranges[range])-1);
-					var upperRange = Right(variables.ranges[range], Len(variables.ranges[range]) - Find("^", variables.ranges[range]));
-					currentRange = currentRange + 1;
-					if(currentRange > 1 || currentFilter > 0 || currentKeywordProperty > 0) {
-						returnWhereOrder &= " AND";
-					}
-					returnWhereOrder &= " (#range# >= :RL_#currentRange# and #range# <= :RU_#currentRange#)";
-					addHQLWhereParam("RL_#currentRange#", lowerRange);
-					addHQLWhereParam("RU_#currentRange#", upperRange);
-				}
-			}
-		}
-		
-		// Add Order to returnWhereOrder
-		if(arrayLen(variables.orders)) {
-			returnWhereOrder &= " ORDER BY ";
-			for(var i=1; i <= arrayLen(variables.orders); i++) {
-				returnWhereOrder &= " #variables.orders[i].property# #variables.orders[i].direction#";
-				if(i < arrayLen(variables.orders)) {
-					returnWhereOrder &= ",";
-				}
-			}
-		}
-		
-		return returnWhereOrder;
+	public struct function getHQLParams() {
+		return duplicate(variables.hqlParams);
 	}
 
+	public string function getHQLSelect () {
+		var hqlSelect = "";
+		
+		if(structCount(variables.selects)) {
+			hqlSelect = "SELECT new map(";
+			for(var select in variables.selects) {
+				hqlSelect &= " #select# as #variables.selects[select]#,";
+			}
+			hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
+		}
+		
+		return hqlSelect;
+	}
+	
+	public string function getHQLFrom(boolean supressFrom=false) {
+		var hqlFrom = "";
+		if(!arguments.supressFrom) {
+			hqlFrom &= " FROM";	
+		}
+		hqlFrom &= " #getBaseEntityName()# as #variables.entities[getBaseEntityName()].entityAlias#";
+		for(var i in variables.entities) {
+			if(i != getBaseEntityName()) {
+				var joinType = variables.entities[i].joinType;
+				if(!len(joinType)) {
+					joinType = "inner";
+				}
+				hqlFrom &= " #joinType# join fetch #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";
+			}
+		}
+		return hqlFrom;
+	}
+
+	public string function getHQLWhere(boolean suppressWhere=false) {
+		var hqlWhere = "";
+		
+		// Loop over where groups
+		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
+			if( structCount(variables.whereGroups[i].filters) || structCount(variables.whereGroups[i].ranges) ) {
+				if(len(hqlWhere) == 0) {
+					if(!arguments.suppressWhere) {
+						hqlWhere &= " WHERE";
+					}
+					hqlWhere &= " (";
+				} else {
+					hqlWhere &= " OR";
+				}
+				
+				// Open A Where Group
+				hqlWhere &= " (";
+				
+				// Add Where Group Filters
+				for(var filter in variables.whereGroups[i].filters) {
+					if(listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter) gt 1) {
+						var paramID = "F_#replace(filter, ".", "", "all")##i#";
+						addHQLParam(paramID, replace(variables.whereGroups[i].filters[filter], variables.valueDelimiter,",","all"));
+						hqlWhere &= " #filter# IN ( :#paramID# ) AND";
+					} else {
+						var paramID = "F#replace(filter, ".", "", "all")##i#";
+						addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
+						hqlWhere &= " #filter# = :#paramID# AND";
+					}
+				}
+				
+				// Add Where Group Ranges
+				for(var range in variables.whereGroups[i].ranges) {
+					var paramIDupper = "R#replace(filter, ".", "", "all")##i#upper";
+					var paramIDlower = "R#replace(filter, ".", "", "all")##i#lower";
+					addHQLParam(paramIDlower, listGetAt(variables.whereGroups[i].ranges[range], 1, variables.valueDelimiter));
+					addHQLParam(paramIDupper, listGetAt(variables.whereGroups[i].ranges[range], 2, variables.valueDelimiter));
+					
+					hqlWhere &= " #range# > :#paramIDlower# AND #range# < :#paramIDupper# AND";
+					
+				}
+				
+				// Close Where Group
+				hqlWhere = left(hqlWhere, len(hqlWhere)-3)& ")";
+				if( i == arrayLen(variables.whereGroups)) {
+					hqlWhere &= " )";
+				}
+			}
+		}
+		
+		if( arrayLen(variables.Keywords) && structCount(variables.keywordProperties) ) {
+			if(len(hqlWhere) == 0) {
+				if(!arguments.suppressWhere) {
+					hqlWhere &= " WHERE";
+				}
+			} else {
+				hqlWhere &= " AND";
+			}
+			hqlWhere &= " (";
+			for(var keywordProperty in variables.keywordProperties) {
+				for(var ii=1; ii<=arrayLen(variables.Keywords); ii++) {
+					var paramID = "K#replace(keywordProperty, ".", "", "all")##ii#";
+					addHQLParam(paramID, "%#variables.Keywords[ii]#%");
+					hqlWhere &= " #keywordProperty# LIKE :#paramID# AND";
+				}
+			}
+			hqlWhere = left(hqlWhere, len(hqlWhere)-3 ) & ")";
+		}
+		
+		return hqlWhere;
+	}
+	
+	public string function getHQLOrder(boolean supressOrderBy=false) {
+		var hqlOrder = "";
+		if(arrayLen(variables.orders)){
+			if(!arguments.supressOrderBy) {
+				var hqlOrder &= " ORDER BY";
+			}
+			for(var i=1; i<=arrayLen(variables.orders); i++) {
+				var hqlOrder &= " #variables.orders[i].property# #variables.orders[i].direction#,";
+			}
+			hqlOrder = left(hqlOrder, len(hqlOrder)-1);
+		}
+		return hqlOrder;
+	}
+	
+	public string function getHQL() {
+		return "#getHQLSelect()##getHQLFrom()##getHQLWhere()##getHQLOrder()#";
+	}
+
+	/* This Needs To Be Refactored
 	public void function applySearchScore(){
 		var searchStart = getTickCount();
 		var structSort = structNew();
@@ -471,6 +401,7 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		
 		setSearchTime(getTickCount()-searchStart);
 	}
+	*/
 	
 	public void function setRecords(required any records) {
 		variables.records = arrayNew(1);
@@ -478,11 +409,10 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		if(isArray(arguments.records)) {
 			variables.records = arguments.records;
 		} else if (isQuery(arguments.records)) {
-			for(var i=1; i <= arguments.records.recordcount; i++) {
-				var entity = entityNew(getEntityName());
-				entity.set(arguments.records[i]);
-				arrayAppend(variables.records, entity);
-			}
+			// TODO: add the ability to pass in a query.
+			throw("Passing in a query is a feature that hasn't been finished yet");
+		} else {
+			throw("You must either pass an array of records, or a query or records");
 		}
 		
 		// Apply Search Score to Entites
@@ -491,15 +421,35 @@ component displayname="Smart List" accessors="true" persistent="false" {
 		}
 	}
 	
+	public numeric function getRecordEnd() {
+		variables.recordEnd = getRecordStart() + getRecordShow() - 1;
+		if(variables.recordEnd > arrayLen(getRecords())) {
+			variables.recordEnd = arrayLen(getRecords());
+		}
+		return variables.recordEnd;
+	}
+	
+	public numeric function getCurrentPage() {
+		return ceiling(getRecordStart() / getRecordEnd());
+	}
+	
+	public numeric function getTotalRecords() {
+		return arrayLen(getRecords());
+	}
+	
+	public numeric function getTotalPages() {
+		return ceiling(getTotalRecords() / setRecordShow());
+	}
+	
 	public array function getRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-			variables.records = getDefaultQueryRecords();
+			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true"});
 		}
 		return variables.records;
 	}
 
 	public array function getPageRecords(boolean refresh=false) {
-		if( !structKeyExists(variables, "pageRecords") || arguments.refresh == true) {
+		if( !structKeyExists(variables, "pageRecords")) {
 			var records = getRecords(arguments.refresh);
 			variables.pageRecords = arrayNew(1);
 			for(var i=getRecordStart(); i<=getRecordEnd(); i++) {
@@ -507,18 +457,5 @@ component displayname="Smart List" accessors="true" persistent="false" {
 			}
 		}
 		return variables.pageRecords;
-	}
-	
-	private array function getDefaultQueryRecords() {
-		var fillTimeStart = getTickCount();
-		var defaultQueryRecords = arrayNew(1);
-		if(structCount(variables.selects)) {
-			var HQL = "#getHQLSelect()# from #getEntityName()# a#getEntityName()# #getHQLWhereOrder()#";
-		} else  {
-			var HQL = " from #getEntityName()# a#getEntityName()# #getHQLWhereOrder()#";
-		}
-		defaultQueryRecords = ormExecuteQuery(HQL, getHQLWhereParams(), false, {ignoreCase="true"});
-		setFillTime(getTickCount() - fillTimeStart);
-		return defaultQueryRecords;
 	}
 }

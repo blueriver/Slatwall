@@ -80,7 +80,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 		
 	public any function getAttributeSets(array systemCode) {
-		var smartList = getSmartList({},"SlatwallAttributeSet");
+		var smartList = getSmartList(entityName="SlatwallAttributeSet", data={});
 		if(structKeyExists(arguments,"systemCode")){
 			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode,"^"));
 		}

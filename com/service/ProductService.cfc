@@ -156,9 +156,11 @@ component extends="BaseService" accessors="true" {
 		return deleteResponse;
 	}
 	
-	public any function getProductContentSmartList(required struct rc, required string contentID) {
+	/*
+	public any function getProductContentSmartList(required struct data={}, required string contentID) {
 		return getDAO().getProductContentSmartList(rc=arguments.rc, entityName=getEntityName(), contentID=arguments.contentID);
 	}
+	*/
 	
 	//   Product Type Methods
 	
