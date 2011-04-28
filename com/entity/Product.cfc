@@ -121,8 +121,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public any function getBrandOptions() {
 		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(rawProperty="brandName", alias="name");
-			smartList.addSelect(rawProperty="brandID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="brandName", alias="name");
+			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
 		}
@@ -520,19 +520,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array systemCode){
 		var attributeSets = [];
+		/*
 		// get all the parent product types
 		var productTypeIDs = listChangeDelims(getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath,"^");
-		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeSet");
+		var smartList = getService("ProductService").getSmartList(entityName="SlatwallAttributeSetAssignment");
 		//Todo: need to get added as OR criteria 
 		//smartList.addFilter("attributeSetAssignments_baseItemID",productTypeIDs);
 		//smartList.addFilter("globalFlag",1);
 		//smartList.addFilter("attributes_activeFlag",1);
+		
 		if(structKeyExists(arguments,"systemCode")){
-			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode,"^"));
+			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode));
 		}
 		smartList.addOrder("attributeSetType_systemCode|ASC");
 		smartList.addOrder("sortOrder|ASC");
+		
 		var attributeSets = smartList.getRecords();
+		*/
 		return attributeSets;
 	}
 	

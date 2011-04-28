@@ -1,4 +1,3 @@
-
 /*
 
     Slatwall - An e-commerce plugin for Mura CMS
@@ -38,42 +37,36 @@ Notes:
 
 */
 
+/*
+ 
+  
+  This can be added back once i fix hotkeys  - GM 
+  
+
 $(document).ready(function(){
-	$('li.LogoSearch img').click(function(e){
-		$('ul.MainMenu').show('fast');
-		e.stopPropagation();
+	$('li#mainMenu > a').click(function(e){
+		toggleToolbarMenu(true);
 	});
 });
 
 $(document).bind('keydown', 'Alt+s', function(e){
 	e.preventDefault();
-	$('li#search > input').focus();
-	$('li#mainMenu > ul').show('fast');	
+	toggleToolbarMenu(true);
 });
 
 $(document).bind('keydown', 'esc', function(e){
 	e.preventDefault();
-	$('li#search > input').blur();
-	$('li#search > input').val('');
-	$('li#mainMenu > ul').hide('fast');	
+	toggleToolbarMenu(false);
 });
 
-function btnConfirmDialog(message,btn){
-    
-    jQuery("#alertDialogMessage").html(message);
-    jQuery("#alertDialog").dialog({
-            resizable: false,
-            modal: true,
-            buttons: {
-                'YES': function() {
-                    jQuery(this).dialog('close');
-                    btn.form.submit();        
-                    },
-                'NO': function() {
-                    jQuery(this).dialog('close');
-                }
-            }
-        });
-
-    return false;   
+function toggleToolbarMenu(toggle) {
+	if(toggle) {
+		$('li#search > input').focus();
+		$('li#mainMenu > ul').show('fast');	
+	} else {
+		$('li#search > input').blur();
+		$('li#search > input').val('');
+		$('li#mainMenu > ul').hide('fast');	
+	}
 }
+*/

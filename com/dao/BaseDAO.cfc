@@ -62,8 +62,8 @@ component output="false" {
 		}
 	}
 	
-	public any function getSmartList(required struct rc, required string entityName){
-		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName=arguments.entityName);
+	public any function getSmartList(required string entityName, struct data={}){
+		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
 	
 		return smartList;
 	}
