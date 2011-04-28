@@ -98,7 +98,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return propertyStruct;
 	}
 	
-	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="") {
+	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch) {
 		var parentEntityFullName = variables.entities[ arguments.parentEntityName ].entityFullName;
 		if(listLen(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc,".") < 2) {
 			var newEntityCFC = Replace(parentEntityFullName, listLast(parentEntityFullName,"."), variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc);	
@@ -115,6 +115,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 		if(!structKeyExists(variables.entities,newEntityName)) {
+			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
+				arguments.fetch = true;
+			} else if(!structKeyExists(arguments, "fetch")) {
+				arguments.fetch = false;
+			}
+			
 			addEntity(
 				entityName=newEntityName,
 				entityAlias=getAliasFromEntityName(newEntityName),
@@ -124,10 +130,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				parentRelationship=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype,
 				parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,
 				fkColumn=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fkcolumn,
-				joinType=arguments.joinType
+				joinType=arguments.joinType,
+				fetch=arguments.fetch
 			);
-		} else if(arguments.joinType != "") {
-			variables.entities[newEntityName].joinType = arguments.joinType;
+		} else {
+			if(arguments.joinType != "") {
+				variables.entities[newEntityName].joinType = arguments.joinType;
+			}
+			if(structKeyExists(arguments, "fetch")) {
+				variables.entities[newEntityName].fetch = arguments.fetch;
+			}
 		}
 		
 		return newEntityName;
@@ -254,7 +266,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				if(!len(joinType)) {
 					joinType = "inner";
 				}
-				hqlFrom &= " #joinType# join fetch #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";
+				var fetch = "";
+				if(variables.entities[i].fetch) {
+					fetch = "fetch";
+				}
+				hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";
 			}
 		}
 		return hqlFrom;
