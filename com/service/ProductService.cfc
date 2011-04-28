@@ -59,7 +59,17 @@ component extends="BaseService" accessors="true" {
 	
 	public any function getProductPages() {
 		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
+		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
+		
+		/*
+		var iterator = pageFeed.getIterator();
+		do {
+			var record = iterator.next();
+			writeDump(record.getTitle());
+		} while (iterator.hasNext());
+		abort;
+		*/
 		return pageFeed.getIterator();
 	}
 
