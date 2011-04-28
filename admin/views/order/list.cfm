@@ -46,7 +46,7 @@ Notes:
 
 <div class="svoadminorderlist">
 	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
+		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
 	</form>
 
 	<table id="OrderList" class="stripe">

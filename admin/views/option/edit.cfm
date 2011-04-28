@@ -75,7 +75,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.newOption#" property="optionDescription" edit="true" editType="wysiwyg" toggle="show">
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-	<cf_ActionCaller action="admin:option.save" type="submit">
+	<cf_ActionCaller action="admin:option.save" type="submit" class="button">
 </form>
 </div>
 </cfif>
@@ -124,7 +124,7 @@ Notes:
 				<cf_PropertyDisplay id="optiondescription#local.i#" object="#local.thisOption#" property="optionDescription" edit="true" editType="wysiwyg" toggle="show">
 		    </dl>
 			<a class="button" href="javascript:;" onclick="jQuery('##editFrm#local.i#container').slideUp();jQuery('##editFrm#local.i#open').show();jQuery('##editFrm#local.i#close').hide();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-			<cf_ActionCaller action="admin:option.save" type="submit">
+			<cf_ActionCaller action="admin:option.save" type="submit" class="button">
 		</form>  
 		</div>
 	</li>

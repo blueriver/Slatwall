@@ -54,7 +54,7 @@ Notes:
 	<cfif rc.listby eq "options">
 	<form name="filterOptions" method="get">
 		 #rc.$.Slatwall.rbKey("admin.option.optiongroupfilter")#:
-		<input type="hidden" name="action" value="admin:option.list" />
+		<input type="hidden" name="slatAction" value="admin:option.list" />
 		<input type="hidden" name="listby" value="options" />
 		<select name="F_optiongroup_optiongroupname">
 			<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
@@ -62,7 +62,7 @@ Notes:
 			<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F_optiongroup_optiongroupname") and rc.F_optiongroup_optiongroupname eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
 		</cfloop>
 		</select>
-		<cf_ActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#">
+		<cf_ActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#" class="button">
 	</form>
 	#view("option/inc/optiontable")#
 	<cfelse>

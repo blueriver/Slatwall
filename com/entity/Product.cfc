@@ -520,29 +520,30 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array systemCode){
 		var attributeSets = [];
-		/*
 		// get all the parent product types
-		var productTypeIDs = listChangeDelims(getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath,"^");
-		var smartList = getService("ProductService").getSmartList(entityName="SlatwallAttributeSetAssignment");
-		//Todo: need to get added as OR criteria 
-		//smartList.addFilter("attributeSetAssignments_baseItemID",productTypeIDs);
-		//smartList.addFilter("globalFlag",1);
-		//smartList.addFilter("attributes_activeFlag",1);
+		var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeSet");
+		/*
+		smartList.addFilter("attributes_activeFlag",1);
+		smartList.addFilter("globalFlag",1);
+		smartList.addFilter("attributes_activeFlag",1,2);
+		smartList.addFilter("attributeSetAssignments_baseItemID",productTypeIDs,2);
+		*/
 		
 		if(structKeyExists(arguments,"systemCode")){
-			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode));
+			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode),1);
+			//smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode),2);
 		}
 		smartList.addOrder("attributeSetType_systemCode|ASC");
 		smartList.addOrder("sortOrder|ASC");
 		
 		var attributeSets = smartList.getRecords();
-		*/
 		return attributeSets;
 	}
 	
 	//get attribute value
 	public any function getAttributeValue(required string attributeID){
-		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeValue");
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeValue");
 		smartList.addFilter("baseID",getProductID());
 		smartList.addFilter("attribute_attributeID",attributeID);
 		var attributeValue = smartList.getRecords();

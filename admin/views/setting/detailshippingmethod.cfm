@@ -131,7 +131,7 @@ Notes:
 				<cfif !rc.shippingMethod.isNew()>
 					<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
 				</cfif>
-				<cf_ActionCaller action="admin:setting.saveshippingmethod" type="submit">
+				<cf_ActionCaller action="admin:setting.saveshippingmethod" type="submit" class="button">
 			</div>
 		</form>
 	</cfif>

@@ -80,9 +80,11 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 		
 	public any function getAttributeSets(array systemCode) {
-		var smartList = getSmartList(entityName="SlatwallAttributeSet", data={});
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeSet");
 		if(structKeyExists(arguments,"systemCode")){
-			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode,"^"));
+			for(var i = 1; i <= arrayLen(systemCode); i++){
+				smartList.addFilter("attributeSetType_systemCode",systemCode[i],i);
+			}
 		}
 		smartList.addOrder("attributeSetType_systemCode|ASC");
 		smartList.addOrder("sortOrder|ASC");

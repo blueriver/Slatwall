@@ -44,7 +44,8 @@ Notes:
 		<input type="file" id="skuImageFile" name="skuImageFile" accept="image/gif, image/jpeg, image/jpg, image/png" />
 		<br><br>
 		<div id="actionButtons" class="clearfix">
-			<button id="adminproductuploadSkuImage" title="Upload Image" value="admin:product.uploadSkuImage" name="slatAction" type="submit" disabled="true">#rc.$.Slatwall.rbKey("admin.product.uploadSkuImage")#</button>
+			<input type="submit" class="button" id="adminproductuploadSkuImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadSkuImage')#" disabled="true" />
+			<!---<button id="adminproductuploadSkuImage" title="Upload Image" value="admin:product.uploadSkuImage" name="slatAction" type="submit" disabled="true">#rc.$.Slatwall.rbKey("admin.product.uploadSkuImage")#</button>--->
 		</div>
 	</form>
 </cfoutput>

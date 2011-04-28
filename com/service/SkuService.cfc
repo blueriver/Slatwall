@@ -142,26 +142,32 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
 	*/
 	public string function getOptionCombinations (required struct options) {
-		var optionGroupList = listSort( structKeyList(arguments.options), "numeric" );
-		// get list of options from first option group
-		var comboList = listChangeDelims(arguments.options[listFirst(optionGroupList)],";");
-		// parse options struct (in order) to build list of possible option combinations
-		for( var i=1; i<=listLen(optionGroupList); i++ ) {
-			var optionGroup = listGetAt(optionGroupList,i);
-			if(optionGroup != listFirst(optionGroupList)) {
-				var tempList = "";
-				for(var i=1;i<=listLen(comboList,";");i++) {
-					local.thisCombo = listGetAt(comboList,i,";");
-					local.newCombo = "";
-					for(var j=1; j<=listLen(arguments.options[optionGroup]);j++) {
-						local.newCombo = listAppend(local.newCombo,local.thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
-					}
-					tempList = listAppend(tempList,local.newCombo,";");
+		var optionsKeyArray = structSort(options);
+		// pick the first group and create the array for cartesian output
+		var optionComboArray = listToArray(options[optionsKeyArray[1]]); 
+		// loop for second to last group
+		for(var i = 2; i <= arrayLen(optionsKeyArray); i++){
+			var optionComboArrayLen = arrayLen(optionComboArray);
+			var optionTempArray = [];
+			// loop through each item in the group
+			for(var j = 1; j <= optionComboArrayLen; j++){
+				var thisOptionArray = listToArray(options[optionsKeyArray[i]]);
+				var currentOptionList = optionComboArray[j];
+				// loop through each item in the group
+				for(var optionID in thisOptionArray){
+					// new combination by appending to the existing values
+					var thisCombo = listAppend(currentOptionList,optionID);
+					arrayAppend(optionComboArray,thisCombo);
 				}
-				comboList = tempList;
+				// store old value to be discarded
+				arrayAppend(optionTempArray,currentOptionList);
+			}
+			// discard old values because now we have new combination
+			for(var item in optionTempArray){
+				arrayDelete(optionComboArray,item);
 			}
 		}
-		return comboList;
+		return arrayToList(optionComboArray,";");
 	}
 	
 	public any function processImageUpload(required any Sku, required struct imageUploadResult) {

@@ -83,7 +83,7 @@ Notes:
 						<dd>
 							<cfif rc.CampaignName eq "NewCampaign">
 								<input type="text" name="CampaignName" />
-								<button type="submit" onClick="updateCampaign(0);">Add</button>
+								<button type="submit" onClick="updateCampaign(0);">#rc.$.Slatwall.rbKey("admin.campaignLink.Add")#</button>
 							<cfelse>
 								<select name="CampaignName" onChange="updateCampaign(0);">
 									<cfset Local.CampaignNameOptions = application.Slatwall.campaignManager.getExistingCampaignNames() />
@@ -106,7 +106,7 @@ Notes:
 							<dd>
 								<cfif rc.CampaignSource eq "NewSource">
 									<input type="text" name="CampaignSource" />
-									<button type="submit" onClick="updateCampaign(0);">Add</button>
+									<button type="submit" onClick="updateCampaign(0);">#rc.$.Slatwall.rbKey("admin.campaignLink.Add")#</button>
 								<cfelse>
 									<select name="CampaignSource" onChange="updateCampaign(0);">
 										<cfset Local.CampaignSourceOptions = application.Slatwall.campaignManager.getExistingCampaignSources() />
@@ -139,7 +139,7 @@ Notes:
 							<dt>Ad Content Description (optional)</dt>
 							<dd><input type="text" name="AdContent" /></dd>
 						</dl>
-						<button type="submit" onClick="updateCampaign(1);" name="Add">Create</button>
+						<button type="submit" onClick="updateCampaign(1);" name="Add">#rc.$.Slatwall.rbKey("admin.campaignLink.create")#</button>
 					</cfif>
 				</form>
 				<a href="javascript:;" onClick="doSlatAction('utility.campaignlink',{'Show': 0})" style="position:absolute; top:0px; right:0px;">Close</a>

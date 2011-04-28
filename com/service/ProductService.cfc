@@ -137,19 +137,21 @@ component extends="BaseService" accessors="true" {
 		assignProductContent(arguments.Product,arguments.data.contentID);
 		
 		// save custom attributes
-		for(var attributeID in data.attributes){
-			for(var attributeValueID in data.attributes[attributeID]){
-				var attributeValue = getService("AttributeService").getByID(attributeValueID,"SlatwallAttributeValue");
-				if(isNull(attributeValue)){
-					var attributeValue = getService("AttributeService").getNewEntity("SlatwallAttributeValue");
+		if(structKeyExists(data,"attributes")){
+			for(var attributeID in data.attributes){
+				for(var attributeValueID in data.attributes[attributeID]){
+					var attributeValue = getService("AttributeService").getByID(attributeValueID,"SlatwallAttributeValue");
+					if(isNull(attributeValue)){
+						var attributeValue = getService("AttributeService").getNewEntity("SlatwallAttributeValue");
+					}
+					attributeValue.setAttributeValue(data.attributes[attributeID][attributeValueID]);
+					if(attributeValue.isNew()){
+						var attribute = getService("AttributeService").getByID(attributeID,"SlatwallAttribute");
+						attributeValue.setAttribute(attribute);
+						attributeValue.setBaseID(product.getProductID());
+					}
+					getService("AttributeService").save(attributeValue);
 				}
-				attributeValue.setAttributeValue(data.attributes[attributeID][attributeValueID]);
-				if(attributeValue.isNew()){
-					var attribute = getService("AttributeService").getByID(attributeID,"SlatwallAttribute");
-					attributeValue.setAttribute(attribute);
-					attributeValue.setBaseID(product.getProductID());
-				}
-				getService("AttributeService").save(attributeValue);
 			}
 		}
 		
