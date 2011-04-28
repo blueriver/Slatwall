@@ -436,12 +436,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// Start: Functions that deligate to the default sku
-	public string function getImage(string size, numeric width, numeric height, string class) {
+	public string function getImage(string size, numeric width, numeric height, string class, string alt) {
 		return getDefaultSku().getImage(argumentCollection = arguments);
 	}
 	
 	public string function getImagePath() {
 		return getDefaultSku().getImagePath();
+	}
+	
+	public string function getResizedImagePath(string size, numeric width, numeric height) {
+		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
 	public numeric function getPrice() {

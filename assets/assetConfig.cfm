@@ -22,12 +22,6 @@ variables.assetDependencies["js/admin-product.detail.js"] =	[
 	"js/tools/imgPreview-min.js"
 	];
 	
-variables.assetDependencies["js/admin-product.detail.js"] =	[
-	"js/tools/jquery.colorbox-min.js",
-	"css/tools/colorbox/colorbox.css",
-	"js/tools/imgPreview-min.js"
-	];
-	
 /*
 variables.assetDependencies["js/common-toolbar.menu.js"] =	[
 	"js/tools/jquery.hotkeys-0.7.9.min.js"
