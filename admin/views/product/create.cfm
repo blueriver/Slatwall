@@ -93,7 +93,7 @@ Notes:
 			<input type="hidden" name="contentID" value="" /> 
 		<div id="actionButtons" class="clearfix">
 			<cf_actionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:product.save" type="submit" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
+			<cf_ActionCaller action="admin:product.save" type="submit" class="button" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
 		</div>
 	</form>
 </div>

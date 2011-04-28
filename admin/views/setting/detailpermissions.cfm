@@ -125,7 +125,7 @@ Notes:
 				</cfloop>
 			</table>
 			<cfif rc.edit>
-			<button type="submit">Save</button>
+			<cf_ActionCaller type="submit" action="admin:setting.savepermissions" class="button">
 			</cfif>
 		</form>
 	</div>

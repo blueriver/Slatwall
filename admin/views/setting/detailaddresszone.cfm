@@ -76,7 +76,7 @@ Notes:
 			</dl>
 		<cfif rc.edit>
 			<cf_actionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.saveaddresszone" type="submit">
+			<cf_ActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
 		</form>
 		</cfif>
 		
