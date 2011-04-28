@@ -108,9 +108,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	
 	public any function getSmartList(string entityName, struct data={}){
 		if(structKeyExists(arguments, "entityName")) {
-			return getDAO().getSmartList(rc=arguments.rc, entityName=arguments.entityName);
+			return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
 		} else {
-			return getDAO().getSmartList(rc=arguments.rc, entityName=getEntityName());
+			return getDAO().getSmartList(entityName=getEntityName(), data=arguments.data);
 		}
 	}
 	
