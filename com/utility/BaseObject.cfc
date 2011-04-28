@@ -38,10 +38,9 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
-	param name="session.siteid" default="default";
-	
 	if(!structKeyExists(request, "muraScope")) {
-		request.muraScope = getService("muraScope").init(session.siteid);
+		variables.assignedSites = getPluginConfig().getAssignedSites();
+		request.muraScope = getService("muraScope").init(assignedSites["siteid"][1]);
 	}
 	
 	variables.$ = request.muraScope;
