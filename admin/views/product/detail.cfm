@@ -53,7 +53,7 @@ Notes:
 
 <cfoutput>
 <div class="svoadminproductdetail">
-	#rc.product.getImage("s")#
+	#rc.product.getImage(width="100")#
 	<cfif rc.edit>
 	<form name="ProductEdit" action="#buildURL(action='admin:product.save')#" method="post">
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />

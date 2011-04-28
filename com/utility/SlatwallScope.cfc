@@ -69,7 +69,7 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	private any function getCurrentProductList() {
 		if(!getService("requestCacheService").keyExists("currentProductList")) {
-			getService("requestCacheService").setValue("currentProductList", new Slatwall.com.utility.SmartList(entityName="SlatwallProduct"));
+			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data={}));
 		}
 		return getService("requestCacheService").getValue("currentProductList");
 	}

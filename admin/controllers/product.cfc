@@ -75,14 +75,14 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.list");
 		}
+		rc.productPages = getProductService().getProductPages();
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 	}
 	
 	public void function edit(required struct rc) {
-		rc.edit = true;
 		detail(rc);
-		rc.productPages = getProductService().getProductPages();
 		getFW().setView("admin:product.detail");
+		rc.edit = true;
 	}
 
 	public void function list(required struct rc) {

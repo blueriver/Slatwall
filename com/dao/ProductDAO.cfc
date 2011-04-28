@@ -38,7 +38,7 @@ Notes:
 */
 component extends="slatwall.com.dao.BaseDAO" {
 
-	public any function getSmartList(struct data={}){
+	public any function getProductSmartList(struct data={}){
 		
 		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data);
 		
@@ -51,23 +51,20 @@ component extends="slatwall.com.dao.BaseDAO" {
 		return smartList;	
 	}
 	
-	/*
-	public any function getProductContentSmartList(required string contentID, struct data={}) {
-		var smartList = new Slatwall.com.utility.SmartList(rc=arguments.rc, entityName="SlatwallProductContent", entityPerfix="Slatwall");
+	public any function getProductContentSmartList(required string contentID, struct data={}){
 		
-		smartList.addKeywordProperty(propertyIdentifier="product_productCode", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="product_productName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="product_productYear", weight=6);
-		smartList.addKeywordProperty(propertyIdentifier="product_productDescription", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="product_brand_brandName", weight=3);
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data);
+				
+		smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);
 		
-		var HQL = "Select product from SlatwallProductContent aSlatwallProductContent where aSlatwallProductContent.contentID = :contentID #smartList.getHQLWhereOrder(true)#";
-		smartList.addHQLWhereParam("contentID", arguments.contentID);
-		smartList.setRecords(ormExecuteQuery(HQL, smartList.getHQLWhereParams(), false, {ignoreCase="true"}));
+		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="productYear", weight=6);
+		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
-		return smartList;
+		return smartList;	
 	}
-	*/
 	
 	public any function clearProductContent(required any product) {
 		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
