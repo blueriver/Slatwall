@@ -36,9 +36,10 @@
 Notes:
 
 --->
-<cfparam name="rc.create" type="boolean" default="false" >
+<cfparam name="rc.create" type="boolean" default="false" />
 <cfparam name="rc.newOption" type="any" default="" />
-<cfparam name="rc.activeOption" type="any" default="" >
+<cfparam name="rc.activeOption" type="any" default="" />
+<cfparam name="rc.optionID" type="string" default="" />
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.newOptionFormOpen" type="boolean" default="false" />
 
@@ -92,6 +93,8 @@ Notes:
 <!--- see if this is the option to be actively edited --->
 <cfif isObject(rc.activeOption) and local.thisOption.getOptionID() eq rc.activeOption.getOptionID()>
 	<cfset local.thisOption = rc.activeOption />
+	<cfset local.thisOpen = true />
+<cfelseif rc.optionID eq local.thisOption.getOptionID()>
 	<cfset local.thisOpen = true />
 <cfelse>
 	<cfset local.thisOpen = false />

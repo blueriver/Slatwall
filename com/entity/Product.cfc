@@ -522,22 +522,32 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		var attributeSets = [];
 		// get all the parent product types
 		var productTypeIDs = listChangeDelims(getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath,"^");
-		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeSetAssignment");
+		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeSet");
 		//Todo: need to get added as OR criteria 
-		//smartList.addFilter("baseItemID",productTypeIDs);
-		//smartList.addFilter("attributeSet_globalFlag",1);
+		//smartList.addFilter("attributeSetAssignments_baseItemID",productTypeIDs);
+		//smartList.addFilter("globalFlag",1);
+		//smartList.addFilter("attributes_activeFlag",1);
 		if(structKeyExists(arguments,"systemCode")){
-			smartList.addFilter("attributeSet_attribtueSetType_systemCode",arrayToList(systemCode,"^"));
+			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode,"^"));
 		}
-		smartList.addOrder("attributeSet_attributeSetType_systemCode|ASC");
-		smartList.addOrder("attributeSet_sortOrder|ASC");
-		var attributeSetAssignments = smartList.getRecords();
-		for(var attributeSetAssignment in attributeSetAssignments){
-			arrayAppend(attributeSets,attributeSetAssignment.getAttributeSet());
-		}
+		smartList.addOrder("attributeSetType_systemCode|ASC");
+		smartList.addOrder("sortOrder|ASC");
+		var attributeSets = smartList.getRecords();
 		return attributeSets;
 	}
 	
+	//get attribute value
+	public any function getAttributeValue(required string attributeID){
+		var smartList = getService("ProductService").getSmartList({},"SlatwallAttributeValue");
+		smartList.addFilter("baseID",getProductID());
+		smartList.addFilter("attribute_attributeID",attributeID);
+		var attributeValue = smartList.getRecords();
+		if(arrayLen(attributeValue)){
+			return attributeValue[1];
+		}else{
+			return getService("ProductService").getNewEntity("SlatwallAttributeValue");
+		}
+	}
 }
 
 

@@ -75,13 +75,13 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.list");
 		}
+		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 	}
 	
 	public void function edit(required struct rc) {
 		rc.edit = true;
 		detail(rc);
 		rc.productPages = getProductService().getProductPages();
-		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		getFW().setView("admin:product.detail");
 	}
 
@@ -107,7 +107,9 @@ component extends="BaseController" output=false accessors=true {
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 		} else {
 			// set up sku array to handle any skus that were edited and/or added
-			rc.skuArray = getService("formUtilities").buildFormCollections(rc).skus;
+			var formCollections = getService("formUtilities").buildFormCollections(rc);
+			rc.skuArray = formCollections.skus;
+			rc.attributes = formCollections.attribute;
 		}
 
 		// Attempt to Save Product
