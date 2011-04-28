@@ -206,26 +206,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="") {
-		if(isDefined("arguments.size")) {
-			arguments.size = lcase(arguments.size);
-			if(arguments.size eq "l" || arguments.size eq "large") {
-				arguments.size = "large";
-			} else if (arguments.size eq "m" || arguments.size eq "medium") {
-				arguments.size = "medium";
-			} else {
-				arguments.size = "small";
-			}
-			arguments.width = setting("product_imagewidth#arguments.size#");
-			arguments.height = setting("product_imageheight#arguments.size#");
-		}
+		var resizedImagePath = getResizedImagePath(argumentcollection=arguments);
+		var img = imageRead(expandPath(resizedImagePath));
 		if(arguments.alt == "") {
 			arguments.alt = "#getProduct().getTitle()# #displayOptions()#";
 		}
 		if(arguments.class == "") {
 			arguments.class = "skuImage";	
 		}
-		
-		return getService("FileService").displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=arguments.alt, class=arguments.class);
+		var imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
+		return imageDisplay;
 	}
 	
 	public string function getImagePath() {
@@ -240,6 +230,22 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.jpg";
 		}
 		return variables.imagePath;
+	}
+	
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0) {
+		if(structKeyExists(arguments, "size")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l" || arguments.size eq "large") {
+				arguments.size = "large";
+			} else if (arguments.size eq "m" || arguments.size eq "medium") {
+				arguments.size = "medium";
+			} else {
+				arguments.size = "small";
+			}
+			arguments.width = setting("product_imagewidth#arguments.size#");
+			arguments.height = setting("product_imageheight#arguments.size#");
+		}
+		return getService("FileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
 	}
 	
 	public boolean function imageExists() {

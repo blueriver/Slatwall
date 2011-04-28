@@ -41,25 +41,22 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	public any function init() {
 		return this;
 	}
-
+	
 	// Image File Methods
-	public string function displayImage(required string imagePath, numeric width=0, numeric height=0,string alt="",string class="") {
-		var imageDisplay = "";
+	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0) {
+		var resizedImagePath = "";
 		if(!fileExists(expandPath(arguments.imagePath))) {
 			arguments.imagePath = "/plugins/Slatwall/images/misc/ImageNotAvailable.jpg";
 		}
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
-			var img = imageRead(expandPath(arguments.imagePath));
-			imageDisplay = '<img src="#arguments.imagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" />';
+			resizedPath = arguments.imagePath;
 		} else {
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
 			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
 			var imageExt = listLast(arguments.imagePath,".");
 			var resizedImagePath = replaceNoCase(arguments.imagePath,".#imageExt#","#imageNameSuffix#.#imageExt#");
-			if(fileExists(expandPath(resizedImagePath))) {
-				var img = imageRead(expandPath(resizedImagePath));
-			} else {
+			if(!fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
 				if(arguments.width && arguments.height) {
@@ -74,8 +71,14 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 				}
 				imageWrite(img,expandPath(resizedImagePath));
 			}
-			imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';	
 		}
+		return resizedImagePath;
+	}
+	
+	public string function displayImage(required string imagePath, numeric width=0, numeric height=0,string alt="",string class="") {
+		var resizedImagePath = getResizedImagePath(imagePath=arguments.imagePath, width=arguments.width, height=arguments.height);
+		var img = imageRead(expandPath(resizedImagePath));
+		var imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 		return imageDisplay;
 	}
 
