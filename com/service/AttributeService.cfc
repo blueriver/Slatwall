@@ -52,21 +52,28 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 		var order=0;
 		// set the attribute options into the attribute, if defined.
 		for( var i=1; i<=arrayLen(data.optionsArray);i++ ) {
-			var thisOptionStruct = data.optionsArray[i];
-			// don't do anything unless there is an actual value passed in
-			if(len(trim(thisOptionStruct.value))) {
-				order++;
-				if(len(thisOptionStruct.attributeOptionID)) {
-					var thisAttributeOption = getByID(thisOptionStruct.attributeOptionID,"SlatwallAttributeOption");
-				} else {
-					var thisAttributeOption = getNewEntity("SlatwallAttributeOption");
+			// it's possible that array elements are missing if options were deleted, so check
+			if(arrayIsDefined(data.optionsArray,i)) {
+				var thisOptionStruct = data.optionsArray[i];
+				// don't do anything unless there is an actual value passed in
+				if(len(trim(thisOptionStruct.value))) {
+					order++;
+					if(len(thisOptionStruct.attributeOptionID)) {
+						var thisAttributeOption = getByID(thisOptionStruct.attributeOptionID,"SlatwallAttributeOption");
+					} else {
+						var thisAttributeOption = getNewEntity("SlatwallAttributeOption");
+					}
+					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
+					if(len(thisOptionStruct.label)) {
+						thisAttributeOption.setAttributeOptionLabel(thisOptionStruct.label);
+					}
+					if(len(trim(thisOptionStruct.sortOrder)) && isNumeric(thisOptionStruct.sortOrder)) {
+						thisAttributeOption.setSortOrder(trim(thisOptionStruct.sortOrder));
+					} else {
+						thisAttributeOption.setSortOrder(order);
+					}
+					arguments.attribute.addAttributeOption(thisAttributeOption);
 				}
-				thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
-				if(len(thisOptionStruct.label)) {
-					thisAttributeOption.setAttributeOptionLabel(thisOptionStruct.label);
-				}
-				thisAttributeOption.setSortOrder(order);
-				arguments.attribute.addAttributeOption(thisAttributeOption);
 			}
 		}
 		return Super.save(arguments.attribute,arguments.data);

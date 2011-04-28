@@ -71,6 +71,13 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	   return Super.init();
 	}
 
+	public array function getAttributeOptions(sortby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"sortby")) {
+			return variables.AttributeOptions;
+		} else {
+			return sortObjectArray(variables.AttributeOptions,arguments.sortby,arguments.sortType,arguments.direction);
+		}
+	}
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
