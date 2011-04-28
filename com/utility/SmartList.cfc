@@ -34,7 +34,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	property name="recordShow" type="numeric" hint="This is the total number of entities to display";
 
 	property name="searchTime" type="numeric";
-	property name="paramCount" type="numeric";
 	
 	// Delimiter Settings
 	variables.subEntityDelimiter = "_";
@@ -42,7 +41,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.orderDirectionDelimiter = "|";
 	variables.orderPropertyDelimiter = ",";
 	variables.dataKeyDelimiter = ":";
-	variables.paramKeyCounter = 0;
 	
 	public any function init(required string entityName, struct data, numeric recordStart=1, numeric recordShow=10) {
 		// Set defaults for the main properties
@@ -54,7 +52,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setSearchTime(0);
 		setEntities({});
 		setHQLParams({});
-		setParamCount(0);
 		
 		// Set paging defaults
 		setRecordStart(arguments.recordStart);
@@ -78,9 +75,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				
 		return this;
 	}
-	
-	
-	
+		
 	public void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
 			if(arrayLen(variables.whereGroups) < i) {
@@ -225,12 +220,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
-	public string function getNewParamID() {
-		var paramID = "pid#javaCast('string',getParamCount())#";
-		setParamCount(getParamCount() + 1);
-		return paramID;
-	}
-	
 	public void function addHQLParam(required string paramName, required string paramValue) {
 		variables.hqlParams[ arguments.paramName ] = arguments.paramValue;
 	}
@@ -292,9 +281,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				// Add Where Group Filters
 				for(var filter in variables.whereGroups[i].filters) {
 					if(listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter) gt 1) {
-						var paramID = "F_#replace(filter, ".", "", "all")##i#";
-						addHQLParam(paramID, replace(variables.whereGroups[i].filters[filter], variables.valueDelimiter,",","all"));
-						hqlWhere &= " #filter# IN ( :#paramID# ) AND";
+						hqlWhere &= " (";
+						for(var ii=1; ii<=listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter); ii++) {
+							var paramID = "F_#replace(filter, ".", "", "all")##i##ii#";
+							addHQLParam(paramID, listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter));
+							hqlWhere &= " #filter# = :#paramID# OR";
+						}
+						hqlWhere = left(hqlWhere, len(hqlWhere)-2) & ") AND";
 					} else {
 						var paramID = "F#replace(filter, ".", "", "all")##i#";
 						addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
