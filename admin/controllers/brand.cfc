@@ -53,6 +53,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!isNull(rc.brand) and !rc.brand.isNew()) {
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		}
+		if(isNull(rc.brand)) {
+			rc.brand = getBrandService().getNewEntity();
+		}
 	}
 
 

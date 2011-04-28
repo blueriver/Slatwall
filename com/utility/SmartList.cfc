@@ -34,7 +34,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	property name="recordShow" type="numeric" hint="This is the total number of entities to display";
 
 	property name="searchTime" type="numeric";
-	property name="paramCount" type="numeric";
 	
 	// Delimiter Settings
 	variables.subEntityDelimiter = "_";
@@ -42,7 +41,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.orderDirectionDelimiter = "|";
 	variables.orderPropertyDelimiter = ",";
 	variables.dataKeyDelimiter = ":";
-	variables.paramKeyCounter = 0;
 	
 	public any function init(required string entityName, struct data, numeric recordStart=1, numeric recordShow=10) {
 		// Set defaults for the main properties
@@ -54,7 +52,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setSearchTime(0);
 		setEntities({});
 		setHQLParams({});
-		setParamCount(0);
 		
 		// Set paging defaults
 		setRecordStart(arguments.recordStart);
@@ -78,9 +75,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				
 		return this;
 	}
-	
-	
-	
+		
 	public void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
 			if(arrayLen(variables.whereGroups) < i) {
@@ -103,7 +98,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return propertyStruct;
 	}
 	
-	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="") {
+	public string function joinRelatedProperty(required string parentEntityName, required string relatedProperty, string joinType="", boolean fetch) {
 		var parentEntityFullName = variables.entities[ arguments.parentEntityName ].entityFullName;
 		if(listLen(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc,".") < 2) {
 			var newEntityCFC = Replace(parentEntityFullName, listLast(parentEntityFullName,"."), variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].cfc);	
@@ -120,6 +115,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 		if(!structKeyExists(variables.entities,newEntityName)) {
+			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
+				arguments.fetch = true;
+			} else if(!structKeyExists(arguments, "fetch")) {
+				arguments.fetch = false;
+			}
+			
 			addEntity(
 				entityName=newEntityName,
 				entityAlias=getAliasFromEntityName(newEntityName),
@@ -129,10 +130,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				parentRelationship=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype,
 				parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,
 				fkColumn=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fkcolumn,
-				joinType=arguments.joinType
+				joinType=arguments.joinType,
+				fetch=arguments.fetch
 			);
-		} else if(arguments.joinType != "") {
-			variables.entities[newEntityName].joinType = arguments.joinType;
+		} else {
+			if(arguments.joinType != "") {
+				variables.entities[newEntityName].joinType = arguments.joinType;
+			}
+			if(structKeyExists(arguments, "fetch")) {
+				variables.entities[newEntityName].fetch = arguments.fetch;
+			}
 		}
 		
 		return newEntityName;
@@ -225,12 +232,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
-	public string function getNewParamID() {
-		var paramID = "pid#javaCast('string',getParamCount())#";
-		setParamCount(getParamCount() + 1);
-		return paramID;
-	}
-	
 	public void function addHQLParam(required string paramName, required string paramValue) {
 		variables.hqlParams[ arguments.paramName ] = arguments.paramValue;
 	}
@@ -265,7 +266,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				if(!len(joinType)) {
 					joinType = "inner";
 				}
-				hqlFrom &= " #joinType# join fetch #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";
+				var fetch = "";
+				if(variables.entities[i].fetch) {
+					fetch = "fetch";
+				}
+				hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";
 			}
 		}
 		return hqlFrom;
@@ -292,9 +297,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				// Add Where Group Filters
 				for(var filter in variables.whereGroups[i].filters) {
 					if(listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter) gt 1) {
-						var paramID = "F_#replace(filter, ".", "", "all")##i#";
-						addHQLParam(paramID, replace(variables.whereGroups[i].filters[filter], variables.valueDelimiter,",","all"));
-						hqlWhere &= " #filter# IN ( :#paramID# ) AND";
+						hqlWhere &= " (";
+						for(var ii=1; ii<=listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter); ii++) {
+							var paramID = "F_#replace(filter, ".", "", "all")##i##ii#";
+							addHQLParam(paramID, listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter));
+							hqlWhere &= " #filter# = :#paramID# OR";
+						}
+						hqlWhere = left(hqlWhere, len(hqlWhere)-2) & ") AND";
 					} else {
 						var paramID = "F#replace(filter, ".", "", "all")##i#";
 						addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
