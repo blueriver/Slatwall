@@ -39,7 +39,7 @@ Notes:
 
 <cfoutput>
 	<div class="svofrontendlistcontentproducts">
-		<cfloop array="#rc.$.slatwall.productList().getPageRecords()#" index="local.product">
+		<cfloop array="#$.slatwall.productList().getPageRecords()#" index="local.product">
 			<a href="#local.product.getProductURL()#">
 			<dl>
 				<dt class="image">#local.product.getImage("s")#</dt>

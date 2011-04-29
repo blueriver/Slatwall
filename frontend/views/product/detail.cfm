@@ -41,17 +41,17 @@ Notes:
 		<div class="image">
 			Image Here
 		</div>
-		<cf_PropertyDisplay object="#rc.$.slatwall.Product()#" property="productCode">
-		<cf_PropertyDisplay object="#rc.$.slatwall.Product()#" property="productYear">
-		<div class="description">#rc.$.slatwall.Product().getProductDescription()#</div>
-		<form action="#buildURL(action='frontend:product.addtocart')#" method="post">
-			<input type="hidden" name="productID" value="#rc.$.slatwall.Product().getProductID()#" />
-			<cfset local.productOptionGroups = rc.$.slatwall.Product().getOptionGroupsStruct() />
+		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productCode">
+		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productYear">
+		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
+		<form action="/shopping-cart/?slatAction=frontend:product.addtocart" method="post">
+			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
+			<cfset local.productOptionGroups = $.slatwall.Product().getOptionGroupsStruct() />
 			<cfloop collection="#local.productOptionGroups#" item="local.groupID">
 				<dt>#local.productOptionGroups[local.groupID].getOptionGroupName()#</dt>
 				<dd>
 				<select name="selectedOptions">
-					<cfset local.availableOptions = rc.$.slatwall.Product().getAvailableGroupOptionsBySelectedOptions(optionGroupID=local.groupID) />
+					<cfset local.availableOptions = $.slatwall.Product().getAvailableGroupOptionsBySelectedOptions(optionGroupID=local.groupID) />
 					<cfloop collection="#local.availableOptions#" item="local.optionID">
 						<option selected="selected" value="#local.availableOptions[local.optionID].getOptionID()#">#local.availableOptions[local.optionID].getOptionName()#</option>
 					</cfloop>
