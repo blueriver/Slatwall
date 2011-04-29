@@ -103,8 +103,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
 			smartList.addSelect(propertyIdentifier="typeID", alias="id");
-			// TODO: fix this filter bug in smartlist
-			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeSetType", entity="Type");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeSetType");
 			smartList.addOrder("type|ASC");
 			
 			variables.attributeSetTypeOptions = smartList.getRecords();
