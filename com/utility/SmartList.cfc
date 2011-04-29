@@ -179,7 +179,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
-	public void function addRange(required string propertyIdentifier, required string value, numeric filterGroup) {
+	public void function addRange(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
