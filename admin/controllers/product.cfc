@@ -191,8 +191,7 @@ component extends="BaseController" output=false accessors=true {
 	public void function createProductType(required struct rc) {
 	   rc.edit=true;
 	   rc.productType = getProductService().getNewEntity("SlatwallProductType");
-	   // put type tree into the rc for parent dropdown
-	   rc.productTypeTree = getProductService().getProductTypeTree();
+	   rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 	   getFW().setView("admin:product.detailproducttype");
 	}
 		
