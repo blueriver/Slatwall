@@ -173,17 +173,17 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
 		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)) {
-			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] &= "#variables.valueDelimiter##arguments.value#";
+			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] &= variables.valueDelimiter & arguments.value;
 		} else {
-			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = "#arguments.value#";
+			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
 		}
 	}
 	
-	public void function addRange(required string propertyIdentifier, required string value, numeric filterGroup) {
+	public void function addRange(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
-		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = "#arguments.value#";
+		variables.whereGroups[arguments.whereGroup].ranges[aliasedProperty] = arguments.value;
 	}
 	
 	public void function addOrder(required string orderStatement, numeric position) {
@@ -255,7 +255,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			}
 			hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
 		} else {
-			hqlSelect &= "SELECT #variables.entities[getBaseEntityName()].entityAlias#";
+			hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";
 		}
 		
 		return hqlSelect;
@@ -320,8 +320,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				
 				// Add Where Group Ranges
 				for(var range in variables.whereGroups[i].ranges) {
-					var paramIDupper = "R#replace(filter, ".", "", "all")##i#upper";
-					var paramIDlower = "R#replace(filter, ".", "", "all")##i#lower";
+					var paramIDupper = "R#replace(range, ".", "", "all")##i#upper";
+					var paramIDlower = "R#replace(range, ".", "", "all")##i#lower";
 					addHQLParam(paramIDlower, listGetAt(variables.whereGroups[i].ranges[range], 1, variables.valueDelimiter));
 					addHQLParam(paramIDupper, listGetAt(variables.whereGroups[i].ranges[range], 2, variables.valueDelimiter));
 					
