@@ -206,20 +206,35 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="") {
-		var resizedImagePath = getResizedImagePath(argumentcollection=arguments);
-		var img = imageRead(expandPath(resizedImagePath));
+		// Get the expected Image Path
+		var path=getImagePath();
+		
+		// If no image Exists use the defult missing image 
+		if(!fileExists(expandPath(path))) {
+			path = setting('product_missingimagepath');
+		}
+		
+		// If there were sizes specified, get the resized image path
+		if(structKeyExists(arguments, "size") || arguments.width != 0 || arguments.height != 0) {
+			path = getResizedImagePath(argumentcollection=arguments);	
+		}
+		
+		// Read the Image
+		var img = imageRead(expandPath(path));
+		
+		// Setup Alt & Class for the image
 		if(arguments.alt == "") {
 			arguments.alt = "#getProduct().getTitle()# #displayOptions()#";
 		}
 		if(arguments.class == "") {
 			arguments.class = "skuImage";	
 		}
-		var imageDisplay = '<img src="#resizedImagePath#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
-		return imageDisplay;
+		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
 	public string function getImagePath() {
 		if(!structKeyExists(variables, "imagePath") or isNull(variables.imagePath)) {
+			// Genreates the image path based upon product code, and image options for this sku
 			var options = getOptions();
 			var optionString = "";
 			for(var i=1; i<=arrayLen(options); i++){

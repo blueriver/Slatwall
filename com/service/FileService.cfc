@@ -46,7 +46,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0) {
 		var resizedImagePath = "";
 		if(!fileExists(expandPath(arguments.imagePath))) {
-			arguments.imagePath = "/plugins/Slatwall/images/misc/ImageNotAvailable.jpg";
+			arguments.imagePath = "/plugins/Slatwall/assets/images/missingimage.jpg";
 		}
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
