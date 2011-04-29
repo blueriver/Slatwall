@@ -227,7 +227,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 					optionString &= "-#options[i].getOptionCode()#";
 				}
 			}
-			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.jpg";
+			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 		}
 		return variables.imagePath;
 	}
