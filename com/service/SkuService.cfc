@@ -138,11 +138,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	/**
-	/* @hint takes a struct of optionGroup (keys) and lists of optionID's (values) and returns a list of all possible optionID combinations 
+	/* @hint takes a struct of optionGroup (keys are option group sort orders) and lists of optionID's (values) and returns a list of all possible optionID combinations 
 	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
 	*/
 	public string function getOptionCombinations (required struct options) {
-		var optionsKeyArray = structSort(options);
+		// use struct keys to make sure options are ordered by sort order of option group
+		var optionsKeyArray = structKeyArray(options);
+		arraySort(optionsKeyArray,"numeric");
 		// pick the first group and create the array for cartesian output
 		var optionComboArray = listToArray(options[optionsKeyArray[1]]); 
 		// loop for second to last group
