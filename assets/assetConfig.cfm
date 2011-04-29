@@ -16,10 +16,9 @@ variables.assetDependencies["js/admin.js"] = [
 	"/admin/css/jquery/default/jquery.ui.all.css"
 	];
 	
-variables.assetDependencies["js/admin-product.detail.js"] =	[
+variables.assetDependencies["js/admin-product.edit.js"] =	[
 	"js/tools/jquery.colorbox-min.js",
-	"css/tools/colorbox/colorbox.css",
-	"js/tools/imgPreview-min.js"
+	"css/tools/colorbox/colorbox.css"
 	];
 	
 /*
