@@ -64,7 +64,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		addEntity(
 			entityName=arguments.entityName,
-			entityAlias=getAliasFromEntityName(arguments.entityName),
+			entityAlias="a#lcase(arguments.entityName)#",
 			entityFullName=baseEntityMeta.fullName,
 			entityProperties=getPropertiesStructFromMetaArray(baseEntityMeta.properties)
 		);
@@ -82,10 +82,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				arrayAppend(variables.whereGroups, {filters={},ranges={}});
 			}
 		}
-	}
-	
-	public string function getAliasFromEntityName(required string entityName) {
-		return "a#lcase(arguments.entityName)#";
 	}
 	
 	public struct function getPropertiesStructFromMetaArray(required array properties) {
@@ -114,6 +110,15 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			var newEntityName = listLast(newEntityMeta.fullName,".");
 		}
 		
+		var newEntityAlias = "a#lcase(newEntityName)#";
+		
+		// Check to see if this is a Self Join, and setup appropriatly.
+		if(newEntityAlias == variables.entities[ arguments.parentEntityName ].entityAlias) {
+			newEntityAlias = "b#lcase(newEntityName)#";
+			newEntityName = "#lcase(newEntityName)#_B";
+			arguments.fetch = false;
+		}
+		
 		if(!structKeyExists(variables.entities,newEntityName)) {
 			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
 				arguments.fetch = true;
@@ -123,7 +128,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			addEntity(
 				entityName=newEntityName,
-				entityAlias=getAliasFromEntityName(newEntityName),
+				entityAlias=newEntityAlias,
 				entityFullName=newEntityMeta.fullName,
 				entityProperties=getPropertiesStructFromMetaArray(newEntityMeta.properties),
 				parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
