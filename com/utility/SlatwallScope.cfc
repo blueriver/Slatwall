@@ -69,7 +69,11 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	private any function getCurrentProductList() {
 		if(!getService("requestCacheService").keyExists("currentProductList")) {
-			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data={}));
+			var data = {};
+			if(structKeyExists(request, "context")) {
+				data = request.context;
+			}
+			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data));
 		}
 		return getService("requestCacheService").getValue("currentProductList");
 	}
