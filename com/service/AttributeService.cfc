@@ -47,16 +47,29 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 		}
 	}
 	
-	public any function saveAttribute( required any attribute, required struct data ) {
-		
+	public any function saveAttribute( required any entity, required struct data ) {
+		var attribute = Super.save(arguments.entity,arguments.data);
+		// save attribute options if the saved entity was the correct type
+		var optionsAttributeTypeList = "atSelectBox,atCheckBox,atRadioGroup";
+		if( listFind(optionsAttributeTypeList,attribute.getAttributeType().getSystemCode()) 
+			&& structKeyExists(arguments.data,"optionsArray")
+			&& !attribute.hasErrors() ) {
+			saveAttributeOptions(attribute,arguments.data.optionsArray);
+		}
+		return attribute;
+	}
+	
+	private void function saveAttributeOptions( required any attribute, required array optionsArray ) {
 		var order=0;
+		// list of option values to keep track of so we don't include any duplicates
+		var optionValueList = "";
 		// set the attribute options into the attribute, if defined.
-		for( var i=1; i<=arrayLen(data.optionsArray);i++ ) {
-			// it's possible that array elements are missing if options were deleted, so check
-			if(arrayIsDefined(data.optionsArray,i)) {
-				var thisOptionStruct = data.optionsArray[i];
-				// don't do anything unless there is an actual value passed in
-				if(len(trim(thisOptionStruct.value))) {
+		for( var i=1; i<=arrayLen(arguments.optionsArray);i++ ) {
+			// it's possible that array elements are undefined if options were deleted, so check
+			if(arrayIsDefined(arguments.optionsArray,i)) {
+				var thisOptionStruct = arguments.optionsArray[i];
+				// don't do anything unless there is an actual value passed in and it's not a duplicate
+				if( len(trim(thisOptionStruct.value)) && !listFind(optionValueList,trim(thisOptionStruct.value)) ) {
 					order++;
 					if(len(thisOptionStruct.attributeOptionID)) {
 						var thisAttributeOption = getByID(thisOptionStruct.attributeOptionID,"SlatwallAttributeOption");
@@ -64,6 +77,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 						var thisAttributeOption = getNewEntity("SlatwallAttributeOption");
 					}
 					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
+					optionValueList = listAppend(optionValueList, thisAttributeOption.getAttributeOptionValue());
 					if(len(thisOptionStruct.label)) {
 						thisAttributeOption.setAttributeOptionLabel(thisOptionStruct.label);
 					}
@@ -75,8 +89,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 					arguments.attribute.addAttributeOption(thisAttributeOption);
 				}
 			}
-		}
-		return Super.save(arguments.attribute,arguments.data);
+		}		
 	}
 		
 	public any function getAttributeSets(array systemCode) {
