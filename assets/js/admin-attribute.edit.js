@@ -37,6 +37,16 @@
 	to your own modified versions of Mura CMS. */
 
 $(document).ready(function(){
+	
+	// make sure attribute options form is displayed only for the right type of attributes
+	$("select.attributeType").each(function(){
+		var id = $(this).attr("id");
+		var $selectedOption = $(this).find('option:selected').html();
+		if(["Select Box","Radio Group","Check Box"].indexOf($selectedOption) > -1) {
+			$("div#" + id).show();
+		}
+	});
+	
 	$("#showSort").click(function(){
 		$("#attributeList").sortable().disableSelection();
 		$('#showSort').hide();
@@ -93,11 +103,18 @@ $(document).ready(function(){
 		return false;
     });
 	
-	$("a.deleteAttributeOption").click(function() {
-		var attribOptionID = $(this).attr("id");
-		deleteAttributeOption(attribOptionID);
-		return false;
+
+	$('select.attributeType').change(function(){
+		var id = $(this).attr("id");
+		var $selectedOption = $(this).find('option:selected').html();
+		if(["Select Box","Radio Group","Check Box"].indexOf($selectedOption) > -1) {
+			$("div#" + id).show();
+		} else {
+			$("div#" + id).hide();
+		}
 	});
+
+	
 });
 
 function btnConfirmAttributeOptionDelete(message,link) {

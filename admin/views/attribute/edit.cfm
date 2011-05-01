@@ -73,7 +73,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
-		<div id="attribOptionsnew">
+		<div id="attributeTypenew" style="display:none;">
 		<dt>
 			Attribute Options
 		</dt>
@@ -160,8 +160,8 @@ Notes:
 		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_PropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
 				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_PropertyDisplay id="attributeType#local.i#" class="#local.thisAttribute.getAttributeID()#" object="#local.thisAttribute#" property="attributeType" value="#local.thisAttribute.getAttributeType().getType()#" defaultValue="Text Box" allowNullOption="false" edit="true">
-				<div id="attribOptions#local.thisAttribute.getAttributeID()#">
+				<cf_PropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" value="#local.thisAttribute.getAttributeType().getType()#" defaultValue="Text Box" allowNullOption="false" edit="true">
+				<div id="attributeType#local.thisAttribute.getAttributeID()#" style="display:none;">
 				<dt>
 					Attribute Options
 				</dt>
@@ -188,7 +188,7 @@ Notes:
 								</td>
 								<td valign="middle">
 									<input type="text" name="options[#local.optionIndex#].label" value="#local.thisAttributeOption.getAttributeOptionLabel()#"/>
-									<a href="#buildURL(action='admin:attribute.deleteAttributeOption',queryString='attributeOptionID=#thisAttributeOption.getAttributeOptionID()#')#" class="deleteAttributeOption" id="#local.thisAttributeOption.getAttributeOptionID()#"><img src="/plugins/Slatwall/images/icons/delete.png" height="16" width="16" alt="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" title="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" /></a>
+									<a href="#buildURL(action='admin:attribute.deleteAttributeOption',queryString='attributeOptionID=#thisAttributeOption.getAttributeOptionID()#')#" class="deleteAttributeOption" id="#local.thisAttributeOption.getAttributeOptionID()#" onclick="return btnConfirmAttributeOptionDelete('#rc.$.Slatwall.rbKey("admin.attribute.deleteAttributeOption_confirm")#',this);"><img src="/plugins/Slatwall/images/icons/delete.png" height="16" width="16" alt="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" title="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" /></a>
 									<div id="message#local.thisAttributeOption.getAttributeOptionID()#" class="formError" style="display:none;"></div>
 								</td>
 							</tr>
