@@ -315,7 +315,7 @@ Notes:
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" id="#attributes.fieldName#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
+						<select name="#attributes.fieldName#" id="#attributes.fieldName##attributes.id#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
 							<cfif attributes.allowNullOption>
 								<option value="">#attributes.nullValue eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullValue#</option>
 							</cfif>
