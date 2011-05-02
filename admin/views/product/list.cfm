@@ -43,14 +43,6 @@ Notes:
 <ul id="navTask">
     <cf_ActionCaller action="admin:product.create" type="list">
 </ul>
-<!---
-<cfset rc.ProductSmartList.joinEntity(parentEntityName="SlatwallProduct", parentJoinKey="productID", entityName="SlatwallAttribute", joinKey="baseItemID") />
---->
-<cfset hql="SELECT DISTINCT aslatwallproduct FROM SlatwallProduct as aslatwallproduct join SlatwallAttributeValue aslatwallattributevalue where aslatwallattributevalue.baseID = aslatwallproduct.productID" />
-<cfset test = ormExecuteQuery(hql) />
-<cfdump var="#test#" />
-<cfdump var="#rc.ProductSmartList.getHQL()#" />
-<cfabort />
 
 <div class="svoadminproductlist">
 <cfif rc.productSmartList.getTotalRecords()>
