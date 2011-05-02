@@ -231,7 +231,7 @@ component extends="framework" output="false" {
 			if(len(key) > 3 && left(key,3) is "set") {
 				property = right(key, len(key)-3);
 				if(arguments.beanFactory.containsBean(property)) {
-					evaluate("arguments.cfc.#key#(#arguments.beanFactory.getBean(property)#)");
+					evaluate("arguments.cfc.#key#(arguments.beanFactory.getBean(property))");
 				}
 			}
 		}
