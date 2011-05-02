@@ -150,6 +150,30 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return newEntityName;
 	}
 	
+	// This method is still in development and doesn't work yet.
+	/*
+	public string function joinEntity(required string parentEntityName, required string parentJoinKey, required string entityName, required string joinKey, string joinType="", boolean fetch=false) {
+		var entity = entityNew(arguments.entityName);
+		var newEntityName = arguments.entityName;
+		var newEntityMeta = getMetaData(entity);
+		var newEntityAlias = "a#lcase(newEntityName)#";
+		
+		addEntity(
+			entityName=newEntityName,
+			entityAlias=newEntityAlias,
+			entityFullName=newEntityMeta.fullName,
+			entityProperties=getPropertiesStructFromMetaArray(newEntityMeta.properties),
+			parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
+			parentRelationship="",
+			parentRelatedProperty="",
+			fkColumn="",
+			joinType=arguments.joinType,
+			joinOn="#variables.entities[ arguments.parentEntityName ].entityAlias#.#arguments.parentJoinKey# = #newEntityAlias#.#arguments.joinKey#",
+			fetch=arguments.fetch
+		);
+	}
+	*/
+	
 	public void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string fkColumn="", string joinType="") {
 		variables.entities[arguments.entityName] = duplicate(arguments);
 	}
@@ -273,11 +297,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				if(!len(joinType)) {
 					joinType = "inner";
 				}
+				
 				var fetch = "";
 				if(variables.entities[i].fetch) {
 					fetch = "fetch";
 				}
-				hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";
+				
+				hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";	
 			}
 		}
 		return hqlFrom;

@@ -43,6 +43,11 @@ component displayname="Base Object" output="false" {
 		request.muraScope = getService("muraScope").init(assignedSites["siteid"][1]);
 	}
 	
+	if(request.muraScope.event('siteid') == "") {
+		variables.assignedSites = getPluginConfig().getAssignedSites();
+		request.muraScope.event('siteid', assignedSites["siteid"][1]);
+	}
+	
 	variables.$ = request.muraScope;
 	
 	// @hint helper function for returning the any of the services in the application

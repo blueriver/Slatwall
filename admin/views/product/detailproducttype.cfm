@@ -84,9 +84,13 @@ Notes:
 	</dl>
 	<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 		<ul>
+			<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabDescription')#</span></a></li>
 			<li><a href="##tabSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabSettings')#</span></a></li>	
 			<li><a href="##tabAttributeSets" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabAttributeSets')#</span></a></li>
 		</ul>
+		<div id="tabDescription">
+			<cf_PropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg" >
+		</div>
 		<div id="tabSettings">
 			<table class="stripe" id="productTypeSettings">
 				<tr>
