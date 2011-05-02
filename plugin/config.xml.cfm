@@ -36,15 +36,12 @@
 Notes:
 
 --->
-<cfsilent>
-	<cffile action="read" file="#expandPath( '/plugins/Slatwall/version.txt' )#" variable="slatwallVersion">
-</cfsilent>
 <plugin>
 <name>Slatwall</name>
 <package>Slatwall</package>
 <directoryFormat>packageOnly</directoryFormat>
 <provider>Slatwall</provider>
-<version><cfoutput>#trim(slatwallVersion)#</cfoutput></version>
+<version></version>
 <providerURL>http://www.getslatwall.com/</providerURL>
 <category>Application</category>
 <ormcfclocation>com/entity</ormcfclocation>
