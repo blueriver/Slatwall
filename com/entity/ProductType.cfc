@@ -61,8 +61,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
-	property name="Products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false" ;
+	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" inverse="true" cascade="all";
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
@@ -104,6 +104,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return settingOptions;
 	}
 	
+	/*
+	No longer needed because of the new way that attribute set assignment is handled with relationships
+	
 	public array function getAttributeSetAssignments(){
 		var attributeSetAssignments = getService("AttributeService").getByFilter({baseItemID=getProductTypeID()},"SlatwallAttributeSetAssignment");
 		if(!arrayLen(attributeSetAssignments)){
@@ -111,6 +114,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 		return attributeSetAssignments;
 	}
+	*/
 	
 	public array function getInheritedAttributeSetAssignments(){
 		//Todo get by all the parent productTypeIDs
