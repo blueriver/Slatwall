@@ -73,7 +73,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
-		<div id="attribOptionsnew">
+		<div id="attributeTypenew" style="display:none;">
 		<dt>
 			Attribute Options
 		</dt>
@@ -99,7 +99,7 @@ Notes:
 					</tr>
                     <tr class="new">
                   		<td>
-							<input type="text" size="4" name="options[2].sortOrder" value="" />
+							<input type="text" class="sortOrder" size="4" name="options[2].sortOrder" value="" />
 						</td>
                         <td>
                         	<input type="text" size="6" name="options[2].value" />
@@ -135,6 +135,7 @@ Notes:
 <ul id="attributeList" class="orderList">
 <cfloop from="1" to="#arraylen(local.attributes)#" index="local.i">
 <cfset local.thisAttribute = local.attributes[local.i] />
+<cfset local.attributeOptions = local.thisAttribute.getAttributeOptions(sortby='sortOrder') />
 <!--- see if this is the attribute to be actively edited --->
 <cfif isObject(rc.activeAttribute) and local.thisAttribute.getAttributeID() eq rc.activeAttribute.getAttributeID()>
 	<cfset local.thisAttribute = rc.activeAttribute />
@@ -160,8 +161,8 @@ Notes:
 		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_PropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
 				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_PropertyDisplay id="attributeType#local.i#" class="#local.thisAttribute.getAttributeID()#" object="#local.thisAttribute#" property="attributeType" value="#local.thisAttribute.getAttributeType().getType()#" defaultValue="Text Box" allowNullOption="false" edit="true">
-				<div id="attribOptions#local.thisAttribute.getAttributeID()#">
+				<cf_PropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" value="#local.thisAttribute.getAttributeType().getType()#" defaultValue="Text Box" allowNullOption="false" edit="true">
+				<div id="attributeType#local.thisAttribute.getAttributeID()#" style="display:none;">
 				<dt>
 					Attribute Options
 				</dt>
@@ -176,23 +177,46 @@ Notes:
 						</thead>
 						<tbody>
 							<cfset local.optionIndex = 0>
-							<cfloop array="#thisAttribute.getAttributeOptions(sortby='sortOrder')#" index="local.thisAttributeOption" >
-							<cfset local.optionIndex++ />
-							<tr class="#local.thisAttribute.getAttributeID()#" id="#local.thisAttributeOption.getAttributeOptionID()#">
-								<td>
-									<input type="text" size="4" class="sortOrder" name="options[#local.optionIndex#].sortOrder" value="#local.optionIndex#" />
-								</td>
-								<td>
-									<input type="text" size="6" name="options[#local.optionIndex#].value" value="#local.thisAttributeOption.getAttributeOptionValue()#" />
-									<input type="hidden" name="options[#local.optionIndex#].attributeOptionID" value="#local.thisAttributeOption.getAttributeOptionID()#" />
-								</td>
-								<td valign="middle">
-									<input type="text" name="options[#local.optionIndex#].label" value="#local.thisAttributeOption.getAttributeOptionLabel()#"/>
-									<a href="#buildURL(action='admin:attribute.deleteAttributeOption',queryString='attributeOptionID=#thisAttributeOption.getAttributeOptionID()#')#" class="deleteAttributeOption" id="#local.thisAttributeOption.getAttributeOptionID()#"><img src="/plugins/Slatwall/images/icons/delete.png" height="16" width="16" alt="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" title="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" /></a>
-									<div id="message#local.thisAttributeOption.getAttributeOptionID()#" class="formError" style="display:none;"></div>
-								</td>
-							</tr>
-							</cfloop>
+							<cfif arrayLen(local.attributeOptions)>
+								<cfloop array="#local.AttributeOptions#" index="local.thisAttributeOption" >
+								<cfset local.optionIndex++ />
+								<tr class="#local.thisAttribute.getAttributeID()#" id="#local.thisAttributeOption.getAttributeOptionID()#">
+									<td>
+										<input type="text" size="4" class="sortOrder" name="options[#local.optionIndex#].sortOrder" value="#local.optionIndex#" />
+									</td>
+									<td>
+										<input type="text" size="6" name="options[#local.optionIndex#].value" value="#local.thisAttributeOption.getAttributeOptionValue()#" />
+										<input type="hidden" name="options[#local.optionIndex#].attributeOptionID" value="#local.thisAttributeOption.getAttributeOptionID()#" />
+									</td>
+									<td>
+										<input type="text" name="options[#local.optionIndex#].label" value="#local.thisAttributeOption.getAttributeOptionLabel()#"/>
+										<a href="#buildURL(action='admin:attribute.deleteAttributeOption',queryString='attributeOptionID=#local.thisAttributeOption.getAttributeOptionID()#')#" class="deleteAttributeOption" id="#local.thisAttributeOption.getAttributeOptionID()#" onclick="return btnConfirmAttributeOptionDelete('#rc.$.Slatwall.rbKey("admin.attribute.deleteAttributeOption_confirm")#',this);"><img src="/plugins/Slatwall/images/icons/delete.png" height="16" width="16" alt="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" title="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" /></a>
+										<div id="message#local.thisAttributeOption.getAttributeOptionID()#" class="formError" style="display:none;"></div>
+									</td>
+								</tr>
+								</cfloop>
+							<cfelse>
+								<tr class="new">
+									<td>
+										<input type="text" class=sortOrder size="4" name="options[1].sortOrder" value="" />
+									</td>
+									<td>
+										<input type="text" size="6" name="options[1].value" />
+										<input type="hidden" name="options[1].attributeOptionID" value="" />
+									</td>
+									<td><input type="text" name="options[1].label" /></td>
+								</tr>
+			                    <tr class="new">
+			                  		<td>
+										<input type="text" class="sortOrder" size="4" name="options[2].sortOrder" value="" />
+									</td>
+			                        <td>
+			                        	<input type="text" size="6" name="options[2].value" />
+										<input type="hidden" name="options[2].attributeOptionID" value="" />
+									</td>
+			                        <td><input type="text" name="options[2].label" /></td>
+			                    </tr>						
+							</cfif>
 						</tbody>
 					</table>
 					<a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>

@@ -355,7 +355,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					addHQLParam(paramIDlower, listGetAt(variables.whereGroups[i].ranges[range], 1, variables.valueDelimiter));
 					addHQLParam(paramIDupper, listGetAt(variables.whereGroups[i].ranges[range], 2, variables.valueDelimiter));
 					
-					hqlWhere &= " #range# > :#paramIDlower# AND #range# < :#paramIDupper# AND";
+					hqlWhere &= " #range# >= :#paramIDlower# AND #range# <= :#paramIDupper# AND";
 					
 				}
 				
