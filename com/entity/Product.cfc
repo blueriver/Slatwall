@@ -74,6 +74,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="genderType" cfc="Type" fieldtype="many-to-one" fkcolumn="typeID" cascade="all" inverse=true;
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
+	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
 	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false";
 	
 	// Non-Persistant Properties
@@ -547,14 +548,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	//get attribute value
 	public any function getAttributeValue(required string attributeID){
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeValue");
-		smartList.addFilter("baseID",getProductID());
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductAttributeValue");
+		smartList.addFilter("product_productID",getProductID());
 		smartList.addFilter("attribute_attributeID",attributeID);
 		var attributeValue = smartList.getRecords();
 		if(arrayLen(attributeValue)){
 			return attributeValue[1];
 		}else{
-			return getService("ProductService").getNewEntity("SlatwallAttributeValue");
+			return getService("ProductService").getNewEntity("SlatwallProductAttributeValue");
 		}
 	}
 }

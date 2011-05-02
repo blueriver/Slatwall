@@ -986,12 +986,15 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallAttribute" row="attributeID" />
 </row>
-<row name="baseID (productID|accountID|accountProductCustomizationID|orderItemID)" null="1" autoincrement="0">
+<row name="(productID|accountID|accountProductCustomizationID|orderItemID)" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallProduct" row="productID" />
 <relation table="SlatwallAccountProductCustomization" row="accountProductCustomizationID" />
 </row>
 <row name="attributeValue" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="attributeValueType (Product|Account)" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <key type="PRIMARY" name="">
@@ -1219,18 +1222,21 @@
 </key>
 </table>
 <table x="421" y="1225" name="SlatwallAttributeSetAssignment">
-<row name="attributeClassAssignmentID" null="1" autoincrement="1">
+<row name="attributeSetAssignmentID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="attributeSetID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallAttributeSet" row="attributeSetID" />
 </row>
-<row name="baseItemID (productID|productTypeID|accountID|accoutTypeID)" null="1" autoincrement="0">
+<row name="(productID|productTypeID|accountID|accoutTypeID)" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
+<row name="attributeAssignmentType" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
 <key type="PRIMARY" name="">
-<part>attributeClassAssignmentID</part>
+<part>attributeSetAssignmentID</part>
 </key>
 </table>
 <table x="52" y="1065" name="SlatwallProductCustomization">
