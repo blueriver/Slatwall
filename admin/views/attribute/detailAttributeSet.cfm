@@ -46,7 +46,7 @@ Notes:
 		<cf_ActionCaller action="admin:attribute.list" type="list">
 	</ul>
 	<cfset local.attributeSetTypeSelected = "" />
-	<cfif !rc.attributeSet.isNew()>
+	<cfif !isNull(rc.attributeSet.getAttributeSetType())>
 		<cfset local.attributeSetTypeSelected = rc.attributeSet.getAttributeSetType().getType() />
 	</cfif>
 	<cfif rc.edit>
