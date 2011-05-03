@@ -40,4 +40,25 @@ component displayname="Product Attribute Value" entityname="SlatwallProductAttri
 	
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" inverse="true" cascade="all";
 	
+
+	/******* Association management methods for bidirectional relationships **************/
+	// Product (many-to-one)
+	
+	public void function setProduct(required Product product) {
+		variables.product = arguments.product;
+		if(isNew() || !arguments.product.hasAttributeValue(this)) {
+		   arrayAppend(arguments.product.getAttributeValues(),this);
+		}
+	}
+	
+	public void function removeProduct(required Product product) {
+		var index = arrayFind(arguments.product.getAttributeValues(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.product.getAttributeValues(),index);
+		}    
+		structDelete(variables,"product");
+    }
+    
+	/************   END Association Management Methods   *******************/
+
 }

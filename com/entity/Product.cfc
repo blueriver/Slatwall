@@ -102,6 +102,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
 	   }
+	   if(isNull(variables.attributeValues)) {
+	       variables.attributeValues = [];
+	   }	   
 	   if(isNull(variables.attributeSetAssignments)) {
 	       variables.attributeSetAssignments = [];
 	   }
@@ -380,6 +383,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.Sku.removeProduct(this);
 	}
 	
+	// attributeValues (one-to-many))
+	public void function addAttribtueValue(required any attributeValue) {
+	   arguments.attributeValue.setProduct(this);
+	}
+	
+	public void function removeAttributeValue(required any attributeValue) {
+	   arguments.attributeValue.removeProduct(this);
+	}
+	
 	/************   END Association Management Methods   *******************/
 
 	public struct function getOptionGroupsStruct() {
@@ -557,6 +569,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}else{
 			return getService("ProductService").getNewEntity("SlatwallProductAttributeValue");
 		}
+	}
+	
+	//populate the entity with passed data
+	public void function populate(required struct data) {
+		// populate custom attributes
+		if(structKeyExists(data,"attributes")){
+			for(var attributeID in data.attributes){
+				for(var attributeValueID in data.attributes[attributeID]){
+					var attributeValue = getService("AttributeService").getByID(attributeValueID,"SlatwallProductAttributeValue");
+					if(isNull(attributeValue)){
+						var attributeValue = getService("AttributeService").getNewEntity("SlatwallProductAttributeValue");
+					}
+					attributeValue.setAttributeValue(data.attributes[attributeID][attributeValueID]);
+					if(attributeValue.isNew()){
+						var attribute = getService("AttributeService").getByID(attributeID,"SlatwallAttribute");
+						attributeValue.setAttribute(attribute);
+						addAttribtueValue(attributeValue);
+					}
+				}
+			}
+		}
+		super.populate(argumentCollection=arguments);
 	}
 }
 

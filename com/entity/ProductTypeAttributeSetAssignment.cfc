@@ -39,5 +39,27 @@ Notes:
 
 component displayname="Product Type Attribute Set Assignment" entityname="SlatwallProductTypeAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.AttributeSetAssignment" discriminatorvalue="ProductType" {
 
-	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID" inverse="true" cascade="all";
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID" inverse="true";
+
+
+	/******* Association management methods for bidirectional relationships **************/
+	// Product Type (many-to-one)
+	
+	public void function setProductType(required ProductType productType) {
+		variables.productType = arguments.productType;
+		if(isNew() || !arguments.productType.hasAttributeSetAssignment(this)) {
+		   arrayAppend(arguments.productType.getAttributeSetAssignments(),this);
+		}
+	}
+	
+	public void function removeProductType(required ProductType productType) {
+		var index = arrayFind(arguments.productType.getAttributeSetAssignments(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.productType.getAttributeSetAssignments(),index);
+		}
+		structDelete(variables,"productType");
+    }
+    
+	/************   END Association Management Methods   *******************/
+
 }
