@@ -62,7 +62,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all" ;
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
@@ -154,10 +154,10 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	
 	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
-		//Todo: not sure why the remove method is not deleting the child entity
-	   arguments.attributeSetAssignment.removeProductType(this);
-	   arguments.attributeSetAssignment.removeAttributeSet(attributeSetAssignment.getAttributeSet());
-	   getService("AttributeService").delete(attributeSetAssignment);
+		arguments.attributeSetAssignment.removeProductType(this);
+		
+		//Todo: not sure why the remove method is not deleting the child entity.  This line makes sure that the record is actually deleted.
+		getService("AttributeService").delete(attributeSetAssignment);
 	}
 	
     /************   END Association Management Methods   *******************/
@@ -197,7 +197,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	var attributeSetAssignmentCount = arrayLen(getAttributeSetAssignments());
     	for(var i = attributeSetAssignmentCount; i > 0; i--){
     		var attributeSetAssignment = getAttributeSetAssignments()[i];
-    		if(!structKeyExists(data,"attributeSetIDs") || listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
+    		if(structKeyExists(data,"attributeSetIDs") && listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
     			removeAttributeSetAssignment(attributeSetAssignment);
     		}
     	}

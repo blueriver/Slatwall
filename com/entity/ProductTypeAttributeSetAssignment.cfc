@@ -40,7 +40,7 @@ Notes:
 component displayname="Product Type Attribute Set Assignment" entityname="SlatwallProductTypeAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.AttributeSetAssignment" discriminatorvalue="ProductType" {
 
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID" inverse="true";
-
+	
 
 	/******* Association management methods for bidirectional relationships **************/
 	// Product Type (many-to-one)

@@ -234,6 +234,7 @@ Notes:
 					<th>#rc.$.Slatwall.rbKey('admin.product.detailProductType.attributeSetAssigned')#</th>	
 				</tr>
 				<!--- assigned attributeSetIDs --->
+				<input type="hidden" name="attributeSetIDs" value="" />
 				<cfset local.attributeSetIDs = "" />
 				<cfloop array="#rc.productType.getAttributeSetAssignments()#" index="local.AttributeSetAssignment">
 					<cfset local.attributeSetIDs = listAppend(local.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) />
