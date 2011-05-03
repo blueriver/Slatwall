@@ -57,6 +57,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Related Object Properties
 	property name="type" cfc="Type" fieldtype="many-to-one" fkcolumn="accountTypeID";
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
+	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all"; 
 	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false";
 	
 	// Non-Persistant Properties
@@ -148,5 +149,20 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	public any function setPrimaryEmail() {
 		throw("Setting the primary email for an account should be done to an accountEmail entity, and should be done by using the method 'setIsPrimary'");
 	}
+	
+    /******* Association management methods for bidirectional relationships **************/
+	
+	// Orders (one-to-many)
+	
+	public void function addOrder(required Order Order) {
+	   arguments.order.setAccount(this);
+	}
+	
+	public void function removeOrder(required Order Order) {
+	   arguments.order.removeAccount(this);
+	}
+	
+    /************   END Association Management Methods   *******************/
+
 	
 }

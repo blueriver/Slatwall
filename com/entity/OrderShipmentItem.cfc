@@ -46,4 +46,24 @@ component displayname="Order Shipment Item" entityname="SlatwallOrderShipmentIte
 	property name="orderShipment" cfc="OrderShipment" fieldtype="many-to-one" fkcolumn="orderShipmentID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
+   /******* Association management methods for bidirectional relationships **************/
+	
+	// OrderShipment (many-to-one)
+	
+	public void function setOrderShipment(required OrderShipment OrderShipment) {
+	   variables.orderShipment = arguments.orderShipment;
+	   if(!arguments.orderShipment.hasOrderShipmentItem(this)) {
+	       arrayAppend(arguments.orderShipment.getOrderShipmentItems(),this);
+	   }
+	}
+	
+	public void function removeorderShipment(required OrderShipment OrderShipment) {
+       var index = arrayFind(arguments.orderShipment.getOrderShipmentItems(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.orderShipment.getOrderShipmentItems(),index);
+       }    
+       structDelete(variables,"orderShipment");
+	}
+    /************   END Association Management Methods   *******************/
+	
 }
