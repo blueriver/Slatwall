@@ -53,7 +53,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
-	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";   
+	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";   
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -82,5 +83,56 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		return totalQuantity;
 	}
+	
+    /******* Association management methods for bidirectional relationships **************/
+	
+	// OrderItems (one-to-many)
+	
+	public void function addOrderItem(required OrderItem OrderItem) {
+	   arguments.orderItem.setOrder(this);
+	}
+	
+	public void function removeOrderItem(required OrderItem OrderItem) {
+	   arguments.orderItem.removeOrder(this);
+	}
+	
+	// OrderShipments (one-to-many)
+	
+	public void function addOrderShipment(required OrderShipment OrderShipment) {
+	   arguments.orderShipment.setOrder(this);
+	}
+	
+	public void function removeOrderShipment(required OrderShipment OrderShipment) {
+	   arguments.orderShipment.removeOrder(this);
+	}
+	
+	// OrderPayments (one-to-many)
+	
+	public void function addOrderPayment(required OrderPayment OrderPayment) {
+	   arguments.orderPayment.setOrder(this);
+	}
+	
+	public void function removeOrderPayment(required OrderPayment OrderPayment) {
+	   arguments.orderPayment.removeOrder(this);
+	}
+	
+	// Account (many-to-one)
+	
+	public void function setAccount(required Account Account) {
+	   variables.account = arguments.account;
+	   if(!arguments.Account.hasOrder(this)) {
+	       arrayAppend(arguments.Account.getOrders(),this);
+	   }
+	}
+	
+	public void function removeAccount(required Account Account) {
+       var index = arrayFind(arguments.Account.getOrders(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.Account.getOrders(),index);
+       }    
+       structDelete(variables,"Account");
+    }
+	
+    /************   END Association Management Methods   *******************/
 	
 }

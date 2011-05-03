@@ -64,7 +64,7 @@ Notes:
 			<label for="parentProductType_productTypeID">Parent Product Type</label>
 		</dt>
 		<dd>
-		<select name="parentProductType" id="parentProductType_productTypeID">
+		<select name="parentProductType" id="parentProductType_productTypeID" onchange="alertDialog('#$.Slatwall.rbKey("admin.product.changeParentProductType_confirm")#');">
             <option value=""<cfif isNull(rc.productType.getParentProductType())> selected</cfif>>None</option>
         <cfloop query="local.tree">
 		    <cfif not listFind(local.tree.path,rc.productType.getProductTypeName())><!--- can't be child of itself or any of its children --->
@@ -89,7 +89,7 @@ Notes:
 			<li><a href="##tabAttributeSets" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabAttributeSets')#</span></a></li>
 		</ul>
 		<div id="tabDescription">
-			<cf_PropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg" >
+			<cf_PropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg">
 		</div>
 		<div id="tabSettings">
 			<table class="stripe" id="productTypeSettings">
@@ -270,7 +270,7 @@ Notes:
 			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
 			<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 			</cfif>
-			<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit" class="button">
+			<cf_ActionCaller action="admin:product.saveproducttype" type="submit" class="button">
 		</div>
 	</form>
 	</cfif>

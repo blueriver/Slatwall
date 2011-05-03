@@ -270,7 +270,7 @@ Notes:
 						</cfif>
 					</label>
 				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
-					<div class="#attributes.fieldName#File">
+					<div class="#attributes.fieldName#">
 						#attributes.title#
 						<!--- If this is a required field the add an asterisk --->
 						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
