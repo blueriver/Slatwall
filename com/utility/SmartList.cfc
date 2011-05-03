@@ -66,7 +66,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			entityName=arguments.entityName,
 			entityAlias="a#lcase(arguments.entityName)#",
 			entityFullName=baseEntityMeta.fullName,
-			entityProperties=getPropertiesStructFromMetaArray(baseEntityMeta.properties)
+			entityProperties=getPropertiesStructFromEntityMeta(baseEntityMeta)
 		);
 		
 		if(structKeyExists(arguments, "data")) {
@@ -84,12 +84,29 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
-	public struct function getPropertiesStructFromMetaArray(required array properties) {
+	public struct function getPropertiesStructFromEntityMeta(required struct meta) {
 		var propertyStruct = {};
+		var hasExtendedComponent = true;
+		var currentEntityMeta = arguments.meta;
 		
-		for(var i=1; i<=arrayLen(arguments.properties); i++) {
-			propertyStruct[arguments.properties[i].name] = duplicate(arguments.properties[i]);
-		}
+		do {
+			if(structKeyExists(currentEntityMeta, "properties")) {
+				for(var i=1; i<=arrayLen(currentEntityMeta.properties); i++) {
+					if(!structKeyExists(propertyStruct, currentEntityMeta.properties[i].name)) {
+						propertyStruct[currentEntityMeta.properties[i].name] = duplicate(currentEntityMeta.properties[i]);	
+					}
+				}
+			}
+			
+			hasExtendedComponent = false;
+			
+			if(structKeyExists(currentEntityMeta, "extends")) {
+				currentEntityMeta = currentEntityMeta.extends;
+				if(structKeyExists(currentEntityMeta, "persistent") && currentEntityMeta.persistent) {
+					hasExtendedComponent = true;	
+				}
+			}
+		} while (hasExtendedComponent);
 		
 		return propertyStruct;
 	}
@@ -130,7 +147,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				entityName=newEntityName,
 				entityAlias=newEntityAlias,
 				entityFullName=newEntityMeta.fullName,
-				entityProperties=getPropertiesStructFromMetaArray(newEntityMeta.properties),
+				entityProperties=getPropertiesStructFromEntityMeta(newEntityMeta),
 				parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
 				parentRelationship=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype,
 				parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,

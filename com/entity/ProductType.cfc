@@ -61,8 +61,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
-	property name="Products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	//property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false" ;
+	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all" ;
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
@@ -104,6 +104,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return settingOptions;
 	}
 	
+	/*
+	No longer needed because of the new way that attribute set assignment is handled with relationships
+	
 	public array function getAttributeSetAssignments(){
 		var attributeSetAssignments = getService("AttributeService").getByFilter({baseItemID=getProductTypeID()},"SlatwallAttributeSetAssignment");
 		if(!arrayLen(attributeSetAssignments)){
@@ -111,10 +114,11 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 		return attributeSetAssignments;
 	}
+	*/
 	
 	public array function getInheritedAttributeSetAssignments(){
 		//Todo get by all the parent productTypeIDs
-		var attributeSetAssignments = getService("AttributeService").getSmartList(entityName="SlatwallAttributeSetAssignment", data={baseItemID=""}).getRecords();
+		var attributeSetAssignments = getService("AttributeService").getSmartList(entityName="SlatwallAttributeSetAssignment", data={}).getRecords();
 		if(!arrayLen(attributeSetAssignments)){
 			attributeSetAssignments = [];
 		}
@@ -142,6 +146,18 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public void function removeProduct(required Product Product) {
 	   arguments.Product.removeProductType(this);
+	}
+	
+	// attributeValues (one-to-many))
+	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
+	   arguments.attributeSetAssignment.setProductType(this);
+	}
+	
+	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.removeProductType(this);
+		
+		//Todo: not sure why the remove method is not deleting the child entity.  This line makes sure that the record is actually deleted.
+		getService("AttributeService").delete(attributeSetAssignment);
 	}
 	
     /************   END Association Management Methods   *******************/
@@ -177,22 +193,29 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     }
     
     public void function populate(required any data){
-    	// remove the ones not selected
-    	for(var attributeSetAssignment in getAttributeSetAssignments()){
-    		if(!structKeyExists(data,"attributeSetIDs") || listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
-    			getService("AttributeService").delete(attributeSetAssignment);
-    			//this.removeAttributeSetAssignment(attributeSetAssignment);
+    	// remove the ones not selected, loop in reverse to prevent shifting of array items
+    	var attributeSetAssignmentCount = arrayLen(getAttributeSetAssignments());
+    	for(var i = attributeSetAssignmentCount; i > 0; i--){
+    		var attributeSetAssignment = getAttributeSetAssignments()[i];
+    		if(structKeyExists(data,"attributeSetIDs") && listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
+    			removeAttributeSetAssignment(attributeSetAssignment);
     		}
     	}
     	// Add new ones
     	if(structKeyExists(data,"attributeSetIDs")){
     		var attributeSetIDArray = listToArray(data.attributeSetIDs);
     		for(var attributeSetID in attributeSetIDArray){
-    			var attributeSetAssignment = getService("AttributeService").getNewEntity("SlatwallAttributeSetAssignment");
-    			getService("AttributeService").save(attributeSetAssignment,{baseItemID=getProductTypeID(),attributeSetID=attributeSetID});
-    			//this.addAttributeSetAssignment(attributeSetAssignment);
+    			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=getProductTypeID()};
+    			var attributeSetAssignmentArray = new Slatwall.com.utility.SmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
+    			if(!arrayLen(attributeSetAssignmentArray)){
+	    			var attributeSetAssignment = getService("AttributeService").getNewEntity("SlatwallProductTypeAttributeSetAssignment");
+	    			var attributeSet = getService("AttributeService").getByID(attributeSetID,"SlatwallAttributeSet");
+	    			attributeSetAssignment.setProductType(this);
+	    			attributeSetAssignment.setAttributeSet(attributeSet);
+	    			addAttributeSetAssignment(attributeSetAssignment);
+    			}
     		}
     	}
-    	super.populate(data);
+    	super.populate(argumentCollection=arguments);
     }
 }

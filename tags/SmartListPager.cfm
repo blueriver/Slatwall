@@ -14,7 +14,7 @@
 				<li class="next"><a href="">Next</a></li>
 			</ul>
 			<form name="productsPerPage" method="get">
-				<select name="P_Show">
+				<select name="P:Show">
 					<cfloop list="attributes.showOptions" index="local.i" >
 						<option value="#local.i#">local.i</option>
 					</cfloop>
