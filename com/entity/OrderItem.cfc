@@ -65,4 +65,25 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getOrderItemStatusType().getSystemCode();
 	}
 	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Order (many-to-one)
+	
+	public void function setOrder(required Order Order) {
+	   variables.order = arguments.order;
+	   if(isNew() or !arguments.order.hasOrderItem(this)) {
+	       arrayAppend(arguments.order.getOrderItems(),this);
+	   }
+	}
+	
+	public void function removeOrder(required Order Order) {
+       var index = arrayFind(arguments.order.getOrdertItems(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.order.getOrderItems(),index);
+       }    
+       structDelete(variables,"order");
+    }
+	
+	/************   END Association Management Methods   *******************/
+	
 }
