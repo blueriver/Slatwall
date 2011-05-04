@@ -41,8 +41,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.orderDirectionDelimiter = "|";
 	variables.orderPropertyDelimiter = ",";
 	variables.dataKeyDelimiter = ":";
+	variables.currentURL = "";
 	
-	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10) {
+	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
 		// Set defaults for the main properties
 		setSelects({});
 		setWhereGroups([]);
@@ -524,7 +525,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return ceiling(getRecordsCount() / getPageRecordsShow());
 	}
 	
-	public string function buildURL(required string queryAddition, boolean appendValues=true, boolean toggleKeys=true, string currentURL="") {
+	public string function buildURL(required string queryAddition, boolean appendValues=true, boolean toggleKeys=true, string currentURL=variables.currentURL) {
 		// Generate full URL if one wasn't passed in
 		if(arguments.currentURL == "") {
 			arguments.currentURL &= CGI.SCRIPT_NAME;
