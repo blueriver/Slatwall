@@ -64,6 +64,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
 	
@@ -71,7 +72,6 @@ Notes:
 	<ul>
 		<li><a href="##tabSkus" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.skus")#</span></a></li>	
 		<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.webdescription")#</span></a></li>
-		<li><a href="##tabProductDetails" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productdetails")#</span></a></li>
 		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
 		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
 		<li><a href="##tabCustomAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.customattributes")#</span></a></li>
@@ -84,17 +84,6 @@ Notes:
 	
 	<div id="tabDescription">
 		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
-	</div>
-	<div id="tabProductDetails">
-		<table class="stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productDetails")#</th>
-				<th></th>
-			</tr>
-			<cf_PropertyDisplay object="#rc.Product#" property="productYear" edit="#rc.edit#" displayType="table">
-			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#" displayType="table">
-			<cf_PropertyDisplay object="#rc.Product#" property="publishedWeight" edit="#rc.edit#" displayType="table">
-		</table>
 	</div>
 	<div id="tabProductSettings">
 		#view("product/productTabs/settingsTab")#

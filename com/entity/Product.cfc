@@ -46,7 +46,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productName" ormtype="string" validateRequired="Product Name Is Required" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" unique="true" validateRequired hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
-	property name="productYear" ormtype="integer" hint="Products specific model year if it has one";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
 	property name="trackInventoryFlag" ormtype="boolean";
@@ -56,7 +55,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
-	property name="publishedWeight" ormtype="float" default="0" hint="This Weight is used for display purposes on the website, gets overridden by sku Published Weight";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -77,7 +75,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" inverse="true" cascade="all";
 	
 	// Non-Persistant Properties
-	property name="gender" type="string" persistent="false";
 	property name="title" type="string" persistent="false";
 	property name="defaultSku" persistent="false";
 	property name="onTermSaleFlag" type="boolean" persistent="false";
@@ -169,13 +166,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	public any function getGenderType() {
-		if(! structKeyExists(variables, "genderType")) {
-			variables.genderType = getService(service="TypeService").getNewEntity(); //get New Entity here should have a parent programing type ID set in the future.
-		}
-		return variables.genderType;
-	}
-	
 	public any function getTemplateOptions() {
 		if(!isDefined("variables.templateOptions")){
 			variables.templateOptions = getService(service="ProductService").getProductTemplates();
@@ -193,15 +183,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return contentIDs;
 	}
 	
-	public string function getGender() {
-		if(!structKeyExists(variables, "gender")) {
-			variables.gender = getGenderType().getType();
-		}
-		return variables.gender;
-	}
-	
 	public string function getTitle() {
-		return "#getBrandName()# #getProductYear()# #getProductName()#";
+		return "#getBrandName()# #getProductName()#";
 	}
 	
 	public string function getProductURL() {

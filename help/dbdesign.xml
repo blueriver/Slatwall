@@ -127,7 +127,7 @@
 <part>SkuID</part>
 </key>
 </table>
-<table x="540" y="685" name="SlatwallOrder">
+<table x="529" y="768" name="SlatwallOrder">
 <row name="orderID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -181,7 +181,7 @@
 </key>
 <comment>This table will hold all accounts including customers and tie them to a single mura user.  However some times there will be an account, but no user in mura.  If they do exist in both mura and slataccount, then the FirstName, LastName and Company will not be saved in this table</comment>
 </table>
-<table x="1080" y="1010" name="SlatwallShippingMethod">
+<table x="1015" y="1092" name="SlatwallShippingMethod">
 <row name="shippingMethodID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -341,7 +341,7 @@
 <part>vendorAccountID</part>
 </key>
 </table>
-<table x="804" y="911" name="SlatwallOrderItem">
+<table x="762" y="944" name="SlatwallOrderItem">
 <row name="orderItemID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -357,13 +357,10 @@
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallType" row="typeID" />
 </row>
-<row name="stockID" null="1" autoincrement="0">
+<row name="skuID" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default><relation table="SlatwallStock" row="stockID" />
 </row>
-<row name="profileID (optional)" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
 <row name="price" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -377,7 +374,7 @@
 <part>orderItemID</part>
 </key>
 </table>
-<table x="1081" y="1311" name="SlatwallOrderShipmentItem">
+<table x="1015" y="930" name="SlatwallOrderShipmentItem">
 <row name="orderShipmentItemID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -433,7 +430,7 @@
 <part>AccountAddressID</part>
 </key>
 </table>
-<table x="1199" y="702" name="SlatwallAddress">
+<table x="1259" y="633" name="SlatwallAddress">
 <row name="addressID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -775,7 +772,7 @@
 <part>vendorBrandID</part>
 </key>
 </table>
-<table x="802" y="752" name="SlatwallOrderShipping">
+<table x="761" y="769" name="SlatwallOrderShipping">
 <row name="orderShippingID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -1043,7 +1040,7 @@
 <part>historyProductID</part>
 </key>
 </table>
-<table x="540" y="837" name="SlatwallOrderPayment">
+<table x="520" y="927" name="SlatwallOrderPayment">
 <row name="orderPaymentID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -1095,7 +1092,7 @@
 <part>historyOrderID</part>
 </key>
 </table>
-<table x="539" y="1086" name="SlatwallPaymentMethod">
+<table x="267" y="1077" name="SlatwallPaymentMethod">
 <row name="paymentMethodID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -1162,7 +1159,7 @@
 <part>shippingZoneLocationID</part>
 </key>
 </table>
-<table x="1081" y="1160" name="SlatwallOrderShipment">
+<table x="1017" y="767" name="SlatwallOrderShipment">
 <row name="orderShipmentID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
@@ -1221,7 +1218,7 @@
 <part>attributeSetID</part>
 </key>
 </table>
-<table x="421" y="1225" name="SlatwallAttributeSetAssignment">
+<table x="420" y="1271" name="SlatwallAttributeSetAssignment">
 <row name="attributeSetAssignmentID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
