@@ -52,11 +52,8 @@ Notes:
 
 	<table id="ProductList" class="stripe">
 		<tr>
-			<!---<th>Search Score</th>--->
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.productYear_title")#</th>
-			<!---<th>Product Code</th>--->
 			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qexp")#</th>
@@ -66,10 +63,8 @@ Notes:
 		</tr>	
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
 			<tr>
-				<!---<td>#local.Product.getSearchScore()#</td>--->
 				<td>#local.Product.getBrandName()#</td>
 				<td class="varWidth">#local.Product.getProductName()#</td>
-				<td>#local.Product.getProductYear()#</td>
 				<cfif local.Product.getSetting("trackInventoryFlag")>
 					<td>#local.Product.getQOH()#</td>
 					<td>#local.Product.getQC()#</td>
