@@ -73,6 +73,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
 			if(rc.$.event('slatAction') == "") {
 				rc.$.event("slatAction", "frontend:product.listcontentproducts");
+				if(!structKeyExists(form, "P:Show") && !structKeyExists(url, "P:Show")) {
+					rc.$.slatwall.productList().setPageRecordsShow(rc.$.content('productsPerPage'));	
+				}
 			}
 		}
 	}

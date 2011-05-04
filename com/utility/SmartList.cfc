@@ -524,13 +524,15 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return ceiling(getRecordsCount() / getPageRecordsShow());
 	}
 	
-	public string function buildSmartListURL(required string queryAddition, boolean appendValues=true, string currentURL="") {
+	public string function buildURL(required string queryAddition, boolean appendValues=true, boolean toggleKeys=true, string currentURL="") {
 		// Generate full URL if one wasn't passed in
 		if(arguments.currentURL == "") {
-			arguments.currentURL &= cgi.script_name;
-			
+			arguments.currentURL &= CGI.SCRIPT_NAME;
+			if(CGI.PATH_INFO != "" && CGI.PATH_INFO neq CGI.SCRIPT_NAME) {
+				arguments.currentURL &= CGI.PATH_INFO;	
+			}
 			if(len(cgi.query_string)) {
-				arguments.currentURL &= "?" & cgi.query_string;	
+				arguments.currentURL &= "?" & CGI.QUERY_STRING;	
 			}
 		}
 
@@ -557,13 +559,30 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		// Get all keys and values from the old query string added
 		for(var key in oldQueryKeys) {
-			if(!structKeyExists(newQueryKeys, key) && key != "P#variables.dataKeyDelimiter#Current" && key != "P#variables.dataKeyDelimiter#Start" && key != "P#variables.dataKeyDelimiter#Show") {
-				modifiedURL &= "#key#=#oldQueryKeys[key]#&";
-			} else {
-				// If aguments.appendValues is true then add the values from the new query to the old
-				if(arguments.appendValues && key != "P#variables.dataKeyDelimiter#Current" && key != "P#variables.dataKeyDelimiter#Start" && key != "P#variables.dataKeyDelimiter#Show") {
-					modifiedURL &= "#key#=#oldQueryKeys[key]##variables.valueDelimiter##newQueryKeys[key]#&";
-					structDelete(newQueryKeys, key);	
+			if(key != "P#variables.dataKeyDelimiter#Current" && key != "P#variables.dataKeyDelimiter#Start" && key != "P#variables.dataKeyDelimiter#Show") {
+				if(!structKeyExists(newQueryKeys, key)) {
+					modifiedURL &= "#key#=#oldQueryKeys[key]#&";
+				} else {
+					if(arguments.toggleKeys && structKeyExists(oldQueryKeys, key) && structKeyExists(newQueryKeys, key) && oldQueryKeys[key] == newQueryKeys[key]) {
+						structDelete(newQueryKeys, key);
+					} else if(arguments.appendValues) {
+						for(var i=1; i<=listLen(newQueryKeys[key], variables.valueDelimiter); i++) {
+							var thisVal = listGetAt(newQueryKeys[key], i, variables.valueDelimiter);
+							var findCount = listFind(oldQueryKeys[key], thisVal, variables.valueDelimiter);
+							if(findCount) {
+								newQueryKeys[key] = listDeleteAt(newQueryKeys[key], i, variables.valueDelimiter);
+								if(arguments.toggleKeys) {
+									oldQueryKeys[key] = listDeleteAt(oldQueryKeys[key], findCount);
+								}
+							}
+						}
+						if(len(oldQueryKeys[key]) && len(newQueryKeys[key])) {
+							modifiedURL &= "#key#=#oldQueryKeys[key]##variables.valueDelimiter##newQueryKeys[key]#&";	
+						} else if(len(oldQueryKeys[key])) {
+							modifiedURL &= "#key#=#oldQueryKeys[key]#&";
+						}
+						structDelete(newQueryKeys, key);
+					}
 				}
 			}
 		}

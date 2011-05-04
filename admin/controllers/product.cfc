@@ -126,7 +126,7 @@ component extends="BaseController" output=false accessors=true {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
             } else {
             	rc.message = "admin.product.save_success";
-            	getFW().redirect(action="admin:product.detail",querystring="productID=#rc.product.getProductID()#",preserve="message");
+            	getFW().redirect(action="admin:product.list",preserve="message");
             }
 		} else {
 			if(isNew) {
