@@ -58,7 +58,6 @@ Notes:
 	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>	
 </eventHandlers>
 <displayobjects location="global">
-	<displayobject name="Content Product List" displaymethod="product_listcontentproducts" component="fw1DisplayAdapter" persist="false"/>
 	<displayobject name="Account" displaymethod="account_detail" component="fw1DisplayAdapter" persist="false"/>
 </displayobjects>
 </plugin>
