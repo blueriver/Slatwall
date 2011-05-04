@@ -524,7 +524,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return ceiling(getRecordsCount() / getPageRecordsShow());
 	}
 	
-	public string function buildModifiedURL(required string queryAddition, boolean appendValues=true, string currentURL="") {
+	public string function buildSmartListURL(required string queryAddition, boolean appendValues=true, string currentURL="") {
 		// Generate full URL if one wasn't passed in
 		if(arguments.currentURL == "") {
 			if(cgi.remote_port == 443) {
