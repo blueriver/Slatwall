@@ -72,11 +72,11 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	   if(isNull(variables.Products)){
 	       variables.Products = [];
 	   }
-	   /*
+	  
 	   if(isNull(variables.attributeSetAssignments)){
 	   		variables.attributeSetAssignments = [];
 	   }
-	   */
+	   
 	   return Super.init();
 	}
 	
