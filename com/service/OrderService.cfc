@@ -75,7 +75,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function clearOrderItems(required any order) {
 		// TODO: Check the status of the order to make sure it hasn't been placed yet.
 		
-		argments.order.setOrderItems(arrayNew());
+		argments.order.setOrderItems(arrayNew(1));
 		save(arguments.order);
 	}
 	
