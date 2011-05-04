@@ -527,13 +527,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public string function buildSmartListURL(required string queryAddition, boolean appendValues=true, string currentURL="") {
 		// Generate full URL if one wasn't passed in
 		if(arguments.currentURL == "") {
-			if(cgi.remote_port == 443) {
-				arguments.currentURL &= "https://";
-			} else {
-				arguments.currentURL &= "http://";
-			}
-			arguments.currentURL &= cgi.http_host;
-			arguments.currentURL &= cgi.path_info;
+			arguments.currentURL &= cgi.script_name;
+			
 			if(len(cgi.query_string)) {
 				arguments.currentURL &= "?" & cgi.query_string;	
 			}
