@@ -40,15 +40,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="orderService" type="any";
 	
-	public void function detail(required struct rc) {
-		param name="rc.cartID" default="";
-		
-		if(rc.cartID != "") {
-			rc.cart = orderService().getByID(rc.cartID);
-		} else {
-			rc.cart = rc.$.slatwall.cart();
-		}
-		
+	public void function clear(required struct rc) {
+		getorderService().clearOrderItems(rc.$.slatwall.cart());
 	}
 	
 }

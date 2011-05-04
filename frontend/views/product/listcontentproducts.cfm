@@ -39,14 +39,18 @@ Notes:
 
 <cfoutput>
 	<div class="svofrontendlistcontentproducts">
-		<cfloop array="#$.slatwall.productList().getPageRecords()#" index="local.product">
-			<a href="#local.product.getProductURL()#">
-			<dl>
-				<dt class="image">#local.product.getImage("s")#</dt>
-				<dt class="title">#local.product.getTitle()#</dt>
-				<dd class="price">#DollarFormat(local.product.getLivePrice())#</dd>
-			</dl>
-			</a>
-		</cfloop>
+		<cf_smartListPager smartList="#$.slatwall.productList()#">
+		<div class="productList">
+			<cfloop array="#$.slatwall.productList().getPageRecords()#" index="local.product">
+				<a href="#local.product.getProductURL()#">
+					<dl>
+						<dt class="image">#local.product.getImage("s")#</dt>
+						<dt class="title">#local.product.getTitle()#</dt>
+						<dd class="price">#DollarFormat(local.product.getLivePrice())#</dd>
+					</dl>
+				</a>
+			</cfloop>
+		</div>
+		<cf_smartListPager smartList="#$.slatwall.productList()#">
 	</div>
 </cfoutput>

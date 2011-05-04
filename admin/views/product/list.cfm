@@ -49,7 +49,8 @@ Notes:
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
-
+	<a href="#rc.ProductSmartList.buildURL('F:brand_brandName=Nixon')#">Nixon</a>
+	<a href="#rc.ProductSmartList.buildURL('F:brand_brandName=Timex')#">Timex</a>
 	<table id="ProductList" class="stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>

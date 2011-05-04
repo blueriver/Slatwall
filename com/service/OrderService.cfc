@@ -40,7 +40,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	property name="sessionService";
 	
-	public void function addOrderItem(required any sku, numeric quantity=1, any order) {
+	public void function addOrderItem(required any order, required any sku, numeric quantity=1) {
 		
 		// Check to see if a order was passed into the method call	
 		if(!structKeyExists(arguments, "order")) {
@@ -51,8 +51,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		var orderItems = arguments.order.getOrderItems();
 		var exists = false;
-		
-		writeDump(arguments.order);
 		
 		// Check the existing order items and just add quantity if sku exists
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
@@ -71,8 +69,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			arguments.order.addOrderItem(newOrderItem);
 		}
 		
-		writeDump(arguments.order);
+		save(arguments.order);
+	}
+	
+	public void function clearOrderItems(required any order) {
+		// TODO: Check the status of the order to make sure it hasn't been placed yet.
 		
+		argments.order.setOrderItems(arrayNew());
 		save(arguments.order);
 	}
 	
