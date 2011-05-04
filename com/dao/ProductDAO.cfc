@@ -44,7 +44,6 @@ component extends="slatwall.com.dao.BaseDAO" {
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="productYear", weight=6);
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
@@ -59,7 +58,6 @@ component extends="slatwall.com.dao.BaseDAO" {
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="productYear", weight=6);
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
