@@ -67,7 +67,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
-	
+
 <div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 	<ul>
 		<li><a href="##tabSkus" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.skus")#</span></a></li>	
@@ -101,7 +101,9 @@ Notes:
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
 	<cf_ActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+	<cfif !rc.product.getOrderedFlag()>
 	<cf_ActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
+	</cfif>
 	<cf_ActionCaller action="admin:product.save" type="submit" class="button">
 </div>
 </form>

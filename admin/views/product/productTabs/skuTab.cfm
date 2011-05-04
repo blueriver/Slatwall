@@ -140,11 +140,13 @@ Notes:
 					<td class="administration">
 						<cfset local.disabledText = "" />
 						<ul class="one">
-							<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or local.thisSku.getDefaultFlag() />
+							<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or local.thisSku.getDefaultFlag() or local.thisSku.getOrderedFlag() />
 							<cfif local.deleteDisabled and arrayLen(rc.product.getSkus()) eq 1>
 								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku') />
 							<cfelseif local.deleteDisabled and local.thisSku.getDefaultFlag()>
 								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateIsDefault') />
+							<cfelseif local.deleteDisabled and local.thisSku.getOrderedFlag()>
+								<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOrdered') />
 							</cfif>
 							<cf_ActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
 						</ul>
