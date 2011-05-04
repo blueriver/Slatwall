@@ -30,8 +30,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 
 	property name="hqlParams" type="struct";
 	
-	property name="recordStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
-	property name="recordShow" type="numeric" hint="This is the total number of entities to display";
+	property name="pageRecordsStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
+	property name="pageRecordsShow" type="numeric" hint="This is the total number of entities to display";
 
 	property name="searchTime" type="numeric";
 	
@@ -42,7 +42,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.orderPropertyDelimiter = ",";
 	variables.dataKeyDelimiter = ":";
 	
-	public any function init(required string entityName, struct data, numeric recordStart=1, numeric recordShow=10) {
+	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10) {
 		// Set defaults for the main properties
 		setSelects({});
 		setWhereGroups([]);
@@ -54,8 +54,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setHQLParams({});
 		
 		// Set paging defaults
-		setRecordStart(arguments.recordStart);
-		setRecordShow(arguments.recordShow);
+		setPageRecordsStart(arguments.pageRecordsStart);
+		setPageRecordsShow(arguments.pageRecordsShow);
 		
 		var baseEntity = entityNew("#arguments.entityName#");
 		var baseEntityMeta = getMetaData(baseEntity);
@@ -76,7 +76,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return this;
 	}
 		
-	public void function confirmWhereGroup(required numeric whereGroup) {
+	private void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
 			if(arrayLen(variables.whereGroups) < i) {
 				arrayAppend(variables.whereGroups, {filters={},ranges={}});
@@ -84,7 +84,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
-	public struct function getPropertiesStructFromEntityMeta(required struct meta) {
+	private struct function getPropertiesStructFromEntityMeta(required struct meta) {
 		var propertyStruct = {};
 		var hasExtendedComponent = true;
 		var currentEntityMeta = arguments.meta;
@@ -191,11 +191,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	*/
 	
-	public void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string fkColumn="", string joinType="") {
+	private void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string fkColumn="", string joinType="") {
 		variables.entities[arguments.entityName] = duplicate(arguments);
 	}
 	
-	public string function getAliasedProperty(required string propertyIdentifier) {
+	private string function getAliasedProperty(required string propertyIdentifier) {
 		var entityName = getBaseEntityName();
 		var entityAlias = variables.entities[getBaseEntityName()].entityAlias;
 		for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiter); i++) {
@@ -256,10 +256,14 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				for(var ii=1; ii <= listLen(arguments.data[i], variables.orderPropertyDelimiter); ii++ ) {
 					addOrder(orderStatement=listGetAt(arguments.data[i], ii, variables.orderPropertyDelimiter));
 				}
-			} else if(i == "P#variables.dataKeyDelimiter#Show" && isNumeric(arguments.data[i])) {
-				setRecordShow(arguments.data[i]);
+			} else if(i == "P#variables.dataKeyDelimiter#Show") {
+				if(arguments.data[i] == "ALL") {
+					setPageRecordsShow(1000000000);
+				} else if (isNumeric(arguments.data[i])) {
+					setPageRecordsShow(arguments.data[i]);	
+				}
 			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i])) {
-				setRecordStart(arguments.data[i]);
+				setPageRecordsStart(arguments.data[i]);
 			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i])) {
 				currentPage = arguments.data[i];
 			}
@@ -274,7 +278,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 		if(currentPage gt 1) {
-			setRecordStart((((currentPage-1)*getRecordShow()) + 1));
+			setPageRecordsStart((((currentPage-1)*getPageRecordsShow()) + 1));
 		}
 	}
 	
@@ -480,41 +484,124 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
-	public numeric function getRecordEnd() {
-		variables.recordEnd = getRecordStart() + getRecordShow() - 1;
-		if(variables.recordEnd > arrayLen(getRecords())) {
-			variables.recordEnd = arrayLen(getRecords());
-		}
-		return variables.recordEnd;
-	}
-	
-	public numeric function getCurrentPage() {
-		return ceiling(getRecordStart() / getRecordEnd());
-	}
-	
-	public numeric function getTotalRecords() {
-		return arrayLen(getRecords());
-	}
-	
-	public numeric function getTotalPages() {
-		return ceiling(getTotalRecords() / setRecordShow());
-	}
-	
 	public array function getRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
 			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true"});
 		}
 		return variables.records;
 	}
-
+	
+	// Paging Methods
+	
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
 			var records = getRecords(arguments.refresh);
 			variables.pageRecords = arrayNew(1);
-			for(var i=getRecordStart(); i<=getRecordEnd(); i++) {
+			for(var i=getPageRecordsStart(); i<=getPageRecordsEnd(); i++) {
 				arrayAppend(variables.pageRecords, records[i]);
 			}
 		}
 		return variables.pageRecords;
 	}
+	
+	public numeric function getPageRecordsEnd() {
+		var pageRecordEnd = getPageRecordsStart() + getPageRecordsShow() - 1;
+		if(pageRecordEnd > getRecordsCount()) {
+			pageRecordEnd = getRecordsCount();
+		}
+		return pageRecordEnd;
+	}
+	
+	public numeric function getCurrentPage() {
+		return ceiling(getPageRecordsStart() / getPageRecordsShow());
+	}
+	
+	public numeric function getRecordsCount() {
+		return arrayLen(getRecords());
+	}
+	
+	public any function getTotalPages() {
+		return ceiling(getRecordsCount() / getPageRecordsShow());
+	}
+	
+	public string function buildModifiedURL(required string queryAddition, boolean appendValues=true, string currentURL="") {
+		// Generate full URL if one wasn't passed in
+		if(arguments.currentURL == "") {
+			if(cgi.remote_port == 443) {
+				arguments.currentURL &= "https://";
+			} else {
+				arguments.currentURL &= "http://";
+			}
+			arguments.currentURL &= cgi.http_host;
+			arguments.currentURL &= cgi.path_info;
+			if(len(cgi.query_string)) {
+				arguments.currentURL &= "?" & cgi.query_string;	
+			}
+		}
+
+		// Setup the base of the new URL
+		var modifiedURL = listFirst(arguments.currentURL, "?") & "?";
+		
+		// Turn the old query string into a struct
+		var oldQueryKeys = {};
+		
+		if(listLen(arguments.currentURL, "?") == 2) {
+			for(var i=1; i<=listLen(listLast(arguments.currentURL, "?"), "&"); i++) {
+				var keyValuePair = listGetAt(listLast(arguments.currentURL, "?"), i, "&");
+				oldQueryKeys[listFirst(keyValuePair,"=")] = listLast(keyValuePair,"=");
+			}	
+		}
+		
+		// Turn the added query string to a struct
+		var newQueryKeys = {};
+		for(var i=1; i<=listLen(arguments.queryAddition, "&"); i++) {
+			var keyValuePair = listGetAt(arguments.queryAddition, i, "&");
+			newQueryKeys[listFirst(keyValuePair,"=")] = listLast(keyValuePair,"=");
+		}
+		
+		
+		// Get all keys and values from the old query string added
+		for(var key in oldQueryKeys) {
+			if(!structKeyExists(newQueryKeys, key) && key != "P#variables.dataKeyDelimiter#Current" && key != "P#variables.dataKeyDelimiter#Start" && key != "P#variables.dataKeyDelimiter#Show") {
+				modifiedURL &= "#key#=#oldQueryKeys[key]#&";
+			} else {
+				// If aguments.appendValues is true then add the values from the new query to the old
+				if(arguments.appendValues && key != "P#variables.dataKeyDelimiter#Current" && key != "P#variables.dataKeyDelimiter#Start" && key != "P#variables.dataKeyDelimiter#Show") {
+					modifiedURL &= "#key#=#oldQueryKeys[key]##variables.valueDelimiter##newQueryKeys[key]#&";
+					structDelete(newQueryKeys, key);	
+				}
+			}
+		}
+		
+		// Get all keys and values from the additional query string added 
+		for(var key in newQueryKeys) {
+			if(key != "P#variables.dataKeyDelimiter#Current" && key != "P#variables.dataKeyDelimiter#Start" && key != "P#variables.dataKeyDelimiter#Show") {
+				modifiedURL &= "#key#=#newQueryKeys[key]#&";
+			}
+		}
+		
+		if(!structKeyExists(newQueryKeys, "P#variables.dataKeyDelimiter#Show") || newQueryKeys["P#variables.dataKeyDelimiter#Show"] == getPageRecordsShow()) {
+			// Add the correct page start
+			if( structKeyExists(newQueryKeys, "P#variables.dataKeyDelimiter#Start") ) {
+				modifiedURL &= "P#variables.dataKeyDelimiter#Start=#newQueryKeys[ 'P#variables.dataKeyDelimiter#Start' ]#&";
+			} else if( structKeyExists(newQueryKeys, "P#variables.dataKeyDelimiter#Current") ) {
+				modifiedURL &= "P#variables.dataKeyDelimiter#Current=#newQueryKeys[ 'P#variables.dataKeyDelimiter#Current' ]#&";
+			} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Start") ) {
+				modifiedURL &= "P#variables.dataKeyDelimiter#Start=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Start' ]#&";
+			} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Current") ) {
+				modifiedURL &= "P#variables.dataKeyDelimiter#Current=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Current' ]#&";
+			}
+		}
+		
+		// Add the correct page show
+		if( structKeyExists(newQueryKeys, "P#variables.dataKeyDelimiter#Show") ) {
+			modifiedURL &= "P#variables.dataKeyDelimiter#Show=#newQueryKeys[ 'P#variables.dataKeyDelimiter#Show' ]#&";
+		} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Show") ) {
+			modifiedURL &= "P#variables.dataKeyDelimiter#Show=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Show' ]#&";
+		}
+		
+		
+		return left(modifiedURL, len(modifiedURL)-1);
+	}
+
 }

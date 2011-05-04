@@ -45,7 +45,7 @@ Notes:
 </ul>
 
 <div class="svoadminproductlist">
-<cfif rc.productSmartList.getTotalRecords()>
+<cfif rc.productSmartList.getRecordsCount()>
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
@@ -93,6 +93,7 @@ Notes:
 			</tr>
 		</cfloop>
 	</table>
+	<cf_smartListPager smartList="#rc.ProductSmartList#">
 <cfelse>
 	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
 </cfif>
