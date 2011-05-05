@@ -32,7 +32,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	property name="pageRecordsStart" type="numeric" hint="This represents the first record to display and it is used in paging.";
 	property name="pageRecordsShow" type="numeric" hint="This is the total number of entities to display";
-
+	
 	property name="searchTime" type="numeric";
 	
 	// Delimiter Settings
@@ -42,6 +42,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.orderPropertyDelimiter = ",";
 	variables.dataKeyDelimiter = ":";
 	variables.currentURL = "";
+	variables.currentPageDeclaration = 1;
 	
 	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
 		// Set defaults for the main properties
@@ -53,6 +54,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setSearchTime(0);
 		setEntities({});
 		setHQLParams({});
+		
+		// Set currentURL from the arguments
+		variables.currentURL = arguments.currentURL;
 		
 		// Set paging defaults
 		setPageRecordsStart(arguments.pageRecordsStart);
@@ -266,7 +270,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i])) {
 				setPageRecordsStart(arguments.data[i]);
 			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i])) {
-				currentPage = arguments.data[i];
+				variables.currentPageDeclaration = arguments.data[i];
 			}
 		}
 		if(structKeyExists(arguments.data, "keyword")){
@@ -276,10 +280,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			for(var i=1; i <= listLen(KeywordList, "^"); i++) {
 				arrayAppend(variables.Keywords, listGetAt(KeywordList, i, "^"));
 			}
-		}
-		
-		if(currentPage gt 1) {
-			setPageRecordsStart((((currentPage-1)*getPageRecordsShow()) + 1));
 		}
 	}
 	
@@ -492,8 +492,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return variables.records;
 	}
 	
-	// Paging Methods
+	public numeric function getRecordsCount() {
+		return arrayLen(getRecords());
+	}
 	
+	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
 			var records = getRecords(arguments.refresh);
@@ -503,6 +506,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			}
 		}
 		return variables.pageRecords;
+	}
+	
+	public numeric function getPageRecordsStart() {
+		if(variables.currentPageDeclaration > 1) {
+			variables.pageRecordsStart = ((variables.currentPageDeclaration-1)*getPageRecordsShow()) + 1;
+		}
+		return variables.pageRecordsStart;
 	}
 	
 	public numeric function getPageRecordsEnd() {
@@ -515,10 +525,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public numeric function getCurrentPage() {
 		return ceiling(getPageRecordsStart() / getPageRecordsShow());
-	}
-	
-	public numeric function getRecordsCount() {
-		return arrayLen(getRecords());
 	}
 	
 	public any function getTotalPages() {

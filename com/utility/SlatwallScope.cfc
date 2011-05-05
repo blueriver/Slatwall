@@ -73,7 +73,11 @@ component accessors="true" output="false" extends="BaseObject" {
 			if(structKeyExists(request, "context")) {
 				data = request.context;
 			}
-			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data));
+			var currentURL = $.createHREF(filename=$.content('filename'));
+			if(len(CGI.QUERY_STRING)) {
+				currentURL &= "?" & CGI.QUERY_STRING;
+			}
+			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL));
 		}
 		return getService("requestCacheService").getValue("currentProductList");
 	}

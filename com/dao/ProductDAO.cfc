@@ -50,9 +50,9 @@ component extends="slatwall.com.dao.BaseDAO" {
 		return smartList;	
 	}
 	
-	public any function getProductContentSmartList(required string contentID, struct data={}){
+	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL=""){
 		
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data);
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
 				
 		smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);
 		
