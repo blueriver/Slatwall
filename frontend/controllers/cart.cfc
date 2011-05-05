@@ -40,8 +40,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="orderService" type="any";
 	
-	public void function clear(required struct rc) {
-		getorderService().clearOrderItems(rc.$.slatwall.cart());
+	public void function clearItems(required struct rc) {
+		getOrderService().clearOrderItems(order=rc.$.slatwall.cart());
+		getFW().redirectExact(rc.$.createHREF(filename='/'));
+	}
+	
+	public void function update() {
+		getFW().setView("frontend:cart.detail");
 	}
 	
 }
