@@ -71,6 +71,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	property name="imageDirectory" type="string" hint="Base directory for product images" persistent="false";
+
+	// Calculated Properties
+	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID=skuID";
+
 	
     public Sku function init() {
        // set default collections for association management methods

@@ -147,6 +147,10 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function delete( required any product ) {
+		// make sure this product isn't in the order history
+		if( arguments.product.getOrderedFlag() ) {
+			getValidator().setError(entity=arguments.product,errorName="delete",rule="Ordered");
+		}
 		var deleteResponse = Super.delete( arguments.product );
 		if( deleteResponse.getStatusCode() ) {
 			// clear cached product type tree so that it's refreshed on the next request

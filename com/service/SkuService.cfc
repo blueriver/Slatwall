@@ -46,6 +46,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arguments.sku.getDefaultFlag() == true) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
 		}
+		if(arguments.sku.getOrderedFlag() == true) {
+			getValidator().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
+		}
 		if(!arguments.sku.hasErrors()) {
 			arguments.sku.removeProduct();
 		}
