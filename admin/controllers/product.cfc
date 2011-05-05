@@ -136,6 +136,7 @@ component extends="BaseController" output=false accessors=true {
 			} else {
 				rc.edit = true;
 				rc.productPages = getProductService().getProductPages();
+				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");
 			}
