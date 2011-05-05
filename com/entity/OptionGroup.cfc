@@ -60,7 +60,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
     public OptionGroup function init(){
        // set default collections for association management methods
-	   this.setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
+	   this.setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/");
        if(isNull(variables.Options))
            variables.Options = [];
        return Super.init();
@@ -95,13 +95,32 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
 	
 	// Image Management methods
-	public string function displayImage(string width="", string height="") {
-		var imageDisplay = "";
-		if(this.hasImage()) {
-			var fileService = getService("FileService");
-			imageDisplay = fileService.displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=getOptionGroupName());
+	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
+		if( this.hasImage() ) {
+			
+			// If there were sizes specified, get the resized image path
+			if(arguments.width != 0 || arguments.height != 0) {
+				path = getResizedImagePath(argumentcollection=arguments);	
+			} else {
+				path = getImagePath();
+			}
+			
+			// Read the Image
+			var img = imageRead(expandPath(path));
+			
+			// Setup Alt & Class for the image
+			if(arguments.alt == "") {
+				arguments.alt = "#getOptionGroupName()#";
+			}
+			if(arguments.class == "") {
+				arguments.class = "optionGroupImage";	
+			}
+			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 		}
-		return imageDisplay;
+	}
+	
+	public string function getResizedImagePath(numeric width=0, numeric height=0) {
+		return getService("FileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
 	}
 	
 	public boolean function hasImage() {

@@ -117,7 +117,7 @@ Notes:
 				<cf_PropertyDisplay id="optionimage#local.i#" object="#local.thisOption#" property="optionImage" edit="true" tooltip="true" editType="file">
 		        <cfif local.thisOption.hasImage()>
 		        <dd>
-		            <a href="#local.thisOption.getImagePath()#">#local.thisOption.displayImage("40")#</a>
+		            <a href="#local.thisOption.getImagePath()#">#local.thisOption.getImage("40")#</a>
 		            <input type="checkbox" name="removeImage" value="1" id="removeOptionImage#local.i#" /> <label for="removeOptionImage#local.i#">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		        </dd>
 		        </cfif>

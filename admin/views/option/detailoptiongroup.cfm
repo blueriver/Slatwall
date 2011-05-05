@@ -62,7 +62,7 @@ Notes:
 			#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupimage")#
 		</dt>
 		<dd>
-			<a href="#rc.OptionGroup.getImagePath()#">#rc.OptionGroup.displayImage("40")#</a>
+			<a href="#rc.OptionGroup.getImagePath()#">#rc.OptionGroup.getImage("40")#</a>
 		<cfif rc.edit>
 			<input type="checkbox" name="removeImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		</cfif>

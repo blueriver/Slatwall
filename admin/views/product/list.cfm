@@ -81,7 +81,7 @@ Notes:
                       <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
 					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
 					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="false" confirmrequired="true">
+					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
