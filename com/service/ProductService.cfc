@@ -57,12 +57,19 @@ component extends="BaseService" accessors="true" {
 		return getFeedManager().getBean();
 	}
 	
-	public any function getProductPages() {
+	public any function getProductPages(returnFormat="iterator") {
 		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
 		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
 		
-		return treeSort(pageFeed.getQuery());
+		if( arguments.returnFormat == "iterator" ) {
+			return pageFeed.getIterator();
+		} else if( arguments.returnFormat == "query" ) {
+			return pageFeed.getQuery();
+		} else if( arguments.returnFormat == "nestedQuery" ) {
+			return treeSort(pageFeed.getQuery());
+		}
+		
 	}
 
 	public any function getProductSmartList(struct data={}) {
