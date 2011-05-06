@@ -40,20 +40,22 @@ Notes:
 <cfoutput>
 	<cfif rc.edit>
 		<input type="hidden" name="contentID" value="" />
-		<cfif rc.productPages.getRecordCount() gt 0>
-			<table id="ProductPagesSelect" class="stripe">
+		<cfif rc.productPages.recordCount gt 0>
+			<table id="productPages" class="stripe">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 				</tr>
-				<cfloop condition="rc.productPages.hasNext()">
+				<cfloop query="rc.productPages">
 					<tr>
-						<cfset local.thisProductPage = rc.productPages.next() />
 						<td>
-							<input type="checkbox" id="productPage#local.thisProductPage.getContentID()#" name="contentID" value="#local.thisProductPage.getContentID()#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
+							<input type="checkbox" id="#rc.productPages.contentID#" name="contentID" value="#rc.productPages.contentID#"<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)> checked="checked"</cfif> /> 
 						</td>
+						<cfset local.thisNest = rc.productPages.treeDepth eq 0 ? "neston" : "nest" & rc.productPages.treedepth & "on" />
 						<td class="varWidth">
-							<label for="productPage#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label>
+							<ul class="#local.thisNest#">
+				                <li class="Category"><label for="#rc.productPages.contentID#">#rc.productPages.title#</label></li>
+							</ul> 
 						</td>
 					</tr>	
 				</cfloop>
@@ -68,16 +70,18 @@ Notes:
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
 				</tr>
-				<cfloop array="#rc.product.getProductContent()#" index="local.thisProductContent">
-					<cfset local.thisContentBean = rc.$.getBean("content").loadBy(contentID=local.thisProductContent.getContentID()) />
-					<tr>
-						<td class="varWidth">#local.thisContentBean.getTitle()#</td>
-						<td class="administration">
-							<ul class="one">
-								<li class="preview"><a href="#local.thisContentBean.getURL()#" target="_blank">Preview</a></li>
-							</ul>
-						</td>
-					</tr>
+				<cfloop query="rc.productPages">
+					<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)>
+						<cfset local.thisContentBean = rc.$.getBean("content").loadBy(contentID=rc.productPages.contentID) />
+						<tr>
+							<td class="varWidth">#listChangeDelims(rc.productPages.menuTitlePath," &raquo; ")#</td>
+							<td class="administration">
+								<ul class="one">
+									<li class="preview"><a href="#local.thisContentBean.getURL()#" target="_blank">Preview</a></li>
+								</ul>
+							</td>
+						</tr>
+					</cfif>
 				</cfloop>
 			</table>
 		<cfelse>

@@ -57,20 +57,19 @@ component extends="BaseService" accessors="true" {
 		return getFeedManager().getBean();
 	}
 	
-	public any function getProductPages() {
+	public any function getProductPages(returnFormat="iterator") {
 		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
 		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
 		
-		/*
-		var iterator = pageFeed.getIterator();
-		do {
-			var record = iterator.next();
-			writeDump(record.getTitle());
-		} while (iterator.hasNext());
-		abort;
-		*/
-		return pageFeed.getIterator();
+		if( arguments.returnFormat == "iterator" ) {
+			return pageFeed.getIterator();
+		} else if( arguments.returnFormat == "query" ) {
+			return pageFeed.getQuery();
+		} else if( arguments.returnFormat == "nestedQuery" ) {
+			return treeSort(pageFeed.getQuery());
+		}
+		
 	}
 
 	public any function getProductSmartList(struct data={}) {
@@ -249,7 +248,7 @@ component extends="BaseService" accessors="true" {
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
 		qoq.setAttributes(ptTable = ptTree);
-		qoq.setSQL("select productTypeName, productTypeID, path, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
+		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
 		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
 		var qGetSetting = qoq.execute(dbtype="query").getResult();
 		if(qGetSetting.recordCount == 1) {
@@ -290,6 +289,24 @@ component extends="BaseService" accessors="true" {
 				name = "Global"
 			};
 		}		
+	}	
+
+	private query function treeSort(required query productPages) {
+		// loop through query and construct an array of parent IDs from the 'path' column
+		var parentIDArray = [];
+		for( var i=1; i <= arguments.productPages.recordCount; i++ ) {
+			local.path = arguments.productPages.path[i];
+			local.parentID = listLen( local.path ) > 1 ? listGetAt( local.path, listLen(local.path) -1 ) : 0;
+			parentArray[i] = local.parentID;
+		}
+		// add column of parentIDs to query so we can treeSort it
+		queryAddColumn(arguments.productPages, "parentID", "VarChar", parentArray );
+    	var productPagesTree = getService("utilities").queryTreeSort(
+    		theQuery = arguments.productPages,
+    		itemID = "contentID",
+    		parentID = "parentID",
+    		pathColumn = "menuTitle"
+    	);
+		return productPagesTree;
 	}
-	
 }
