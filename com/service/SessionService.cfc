@@ -72,8 +72,6 @@ component extends="BaseService" accessors="true" output="false" {
 		if($.currentUser().isLoggedIn()) {
 			var muraUser = $.currentUser().getUserBean();
 			var slatwallAccount = getService("AccountService").getAccountByMuraUser(muraUser);
-			writeDump(var=newAccount, top=2);
-			abort;
 			if(slatwallAccount.getFirstName() != muraUser.getFName()){
 				slatwallAccount.setFirstName(muraUser.getFName());
 			}

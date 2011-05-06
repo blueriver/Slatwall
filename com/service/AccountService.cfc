@@ -45,27 +45,17 @@ component extends="BaseService" accessors="true" {
 		// Load Account based upon the logged in muraUserID
 		var account = getDAO().readByMuraUserID(muraUserID = arguments.muraUser.getUserID());
 		
+		// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this mura user id.
+		
 		if(isnull(account)) {
-			// If no account exists, check for an account with that email 
-			account = getDAO().readByAccountEmail(email = arguments.muraUser.getEmail());
-			
-			if(isnull(account)) {
-				// If no account exists, create a new one and save it linked to the user that just logged in.
-				account = getNewEntity();
-				account.setMuraUserID(arguments.muraUser.getUserID());
-				var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
-				accountEmail.setEmail(arguments.muraUser.getEmail());
-				accountEmail.setPrimaryFlag(1);
-				accountEmail.setAccount(account);
-				save(entity=account);
-			} else {
-				// If account does exist with that e-mail, check if the account has a muraUserID already tied to it
-				if(isnull(account.getMuraUser())) {
-					// TODO: If no muraUserID already assigend to this account, Assign this muraUserID but set the verified = 0
-				} else {
-					// TODO: If a muraUserID is already assigned, Offer to merge Accounts.
-				}
-			}
+			// If no account exists, create a new one and save it linked to the user that just logged in.
+			account = getNewEntity();
+			account.setMuraUserID(arguments.muraUser.getUserID());
+			var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
+			accountEmail.setEmail(arguments.muraUser.getEmail());
+			accountEmail.setPrimaryFlag(1);
+			accountEmail.setAccount(account);
+			save(entity=account);
 		}
 		
 		return account;
