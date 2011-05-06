@@ -38,30 +38,8 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 	
-	property name="productService" type="any";
-	property name="orderService" type="any";
-	property name="requestCacheService" type="any";
-	
 	public void function detail(required struct rc) {
 		rc.$.content().setTitle(rc.$.slatwall.product().getTitle());
 		rc.$.content().setHTMLTitle(rc.$.slatwall.product().getTitle());
-	}
-	
-	public void function addToCart(required struct rc) {
-		param name="rc.productID" default="";
-		param name="rc.selectedOptions" default="";
-		param name="rc.quantity" default=1;
-		param name="rc.orderShippingID" default="";
-		
-		// Get the product
-		var product = getProductService().getByID(rc.productID);
-		
-		// Find the sku based on the product options selected
-		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
-		
-		// Add to the cart() order the new sku with quantity and shipping id
-		getOrderService().addOrderItem(order=$.slatwall.cart(), sku=sku, quantity=rc.quantity, orderShippingID=rc.orderShippingID);
-		
-		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);
 	}
 }

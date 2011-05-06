@@ -39,14 +39,36 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
 	property name="orderService" type="any";
+	property name="productService" type="any";
 	
 	public void function clearItems(required struct rc) {
 		getOrderService().clearOrderItems(order=rc.$.slatwall.cart());
 		getFW().redirectExact(rc.$.createHREF(filename='/'));
 	}
 	
-	public void function update() {
+	public void function update(required struct rc) {
 		getFW().setView("frontend:cart.detail");
+	}
+	
+	public void function addItem(required struct rc) {
+		param name="rc.productID" default="";
+		param name="rc.selectedOptions" default="";
+		param name="rc.quantity" default=1;
+		param name="rc.orderShippingID" default="";
+		
+		// Get the product
+		var product = getProductService().getByID(rc.productID);
+		
+		// Find the sku based on the product options selected
+		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
+
+		// Add to the cart() order the new sku with quantity and shipping id
+		getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, orderShippingID=rc.orderShippingID);
+		
+		// Make sure that this order ID is in the session.
+		rc.$.slatwall.session().setOrderID(rc.$.slatwall.cart().getOrderID());
+		
+		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);
 	}
 	
 }

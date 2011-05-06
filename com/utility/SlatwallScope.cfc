@@ -114,11 +114,31 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	public any function productList(string property, string value) {
 		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return evaluate("getCurrentProduct().set#arguments.property#(#arguments.value#)");
+			return evaluate("getCurrentProductList().set#arguments.property#(#arguments.value#)");
 		} else if (structKeyExists(arguments, "property")) {
-			return evaluate("getCurrentProduct().get#arguments.property#()");
+			return evaluate("getCurrentProductList().get#arguments.property#()");
 		} else {
 			return getCurrentProductList();	
+		}
+	}
+	
+	public any function session(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return evaluate("getCurrentSession().set#arguments.property#(#arguments.value#)");
+		} else if (structKeyExists(arguments, "property")) {
+			return evaluate("getCurrentSession().get#arguments.property#()");
+		} else {
+			return getCurrentSession();	
+		}
+	}
+	
+	public any function sessionFacade(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return getService("sessionService").setValue(arguments.property, arguments.value);
+		} else if (structKeyExists(arguments, "property")) {
+			return getService("sessionService").getValue(arguments.property);
+		} else {
+			return getService("sessionService");	
 		}
 	}
 	

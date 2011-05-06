@@ -40,16 +40,15 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	
 	// Persistant Properties
 	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="orderID" ormtype="string" length="32";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="modifiedDateTime" ormtype="timestamp";
 	
-	// Related Object Properties
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascade="all" inverse="true";
-	
 	// Non-Related & Non-Persistent entities
-	property name="account" type="any" persistent="false";  
+	property name="account" type="any" persistent="false";
+	property name="order" type="any" persistent="false";    
 	
 	public any function getAccount() {
 		if(!structKeyExists(variables, "account")) {
@@ -68,7 +67,12 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	
 	public any function getOrder() {
 		if(!structKeyExists(variables, "order")) {
-			variables.order = getService("OrderService").getNewEntity();
+			if(structKeyExists(variables, "orderID")) {
+				variables.order = getService("OrderService").getByID(variables.orderID);
+			}
+			if(isNull(variables.order)) {
+				variables.order = getService("OrderService").getNewEntity();
+			}
 		}
 		return variables.order;
 	}
