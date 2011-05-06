@@ -42,7 +42,6 @@ component extends="BaseService" accessors="true" {
 	property name="userManager" type="any";
 	
 	public any function getAccountByMuraUser(required any muraUser) {
-		
 		// Load Account based upon the logged in muraUserID
 		var account = getDAO().readByMuraUserID(muraUserID = arguments.muraUser.getUserID());
 		
@@ -53,11 +52,11 @@ component extends="BaseService" accessors="true" {
 			if(isnull(account)) {
 				// If no account exists, create a new one and save it linked to the user that just logged in.
 				account = getNewEntity();
-				account.setMuraUser(arguments.muraUser);
+				account.setMuraUserID(arguments.muraUser.getUserID());
 				var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
 				accountEmail.setEmail(arguments.muraUser.getEmail());
+				accountEmail.setPrimaryFlag(1);
 				accountEmail.setAccount(account);
-				account.addAccountEmail(accountEmail);
 				save(entity=account);
 			} else {
 				// If account does exist with that e-mail, check if the account has a muraUserID already tied to it

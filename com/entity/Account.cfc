@@ -43,10 +43,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="firstName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="lastName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="muraUserID" ormtype="string";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
-	property name="muraUserID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -55,99 +55,19 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="type" cfc="Type" fieldtype="many-to-one" fkcolumn="accountTypeID";
-	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" inverse="true" cascade="all";
-	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all"; 
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="baseItemID" cascade="all" constrained="false";
+	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" cascade="all-delete-orphan";
+	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all";
 	
-	// Non-Persistant Properties
-	property name="primaryEmail" type="string" persistent="false";
-	property name="muraUser" type="any" persistent="false";
-	
-	public array function getAccountEmails() {
-		if(!isDefined("variables.accountEmails")) {
-			variables.accountEmails = arrayNew(1);
+	public any function init() {
+		if(isNull(variables.accountEmails)) {
+			variables.accountEmails = [];
 		}
-		return variables.accountEmails;
+		return super.init();
 	}
-
-	// Start: User Helpers
-	// The following four functions are designed to connect a Slatwall account to a Mura account.  If the mura account exists then this will pull all data from mura, if not then the firstName, lastName & company will be stored in the Slatwall DB.
-	public string function getFirstName() {
-		if(!getMuraUser().getIsNew()) {
-			variables.firstName = getMuraUser().getFname();
-		}
-		if(!structKeyExists(variables, "firstName")) {
-			variables.firstName = "";
-		}
-		return variables.firstName;
-	}
-	
-	public string function getLastName() {
-		if(!getMuraUser().getIsNew()) {
-			variables.lastName = getMuraUser().getLname();
-		}
-		if(!structKeyExists(variables, "lastName")) {
-			variables.lastName = "";
-		}
-		return variables.lastName;
-	}
-	
-	public string function getCompany() {
-		if(!getMuraUser().getIsNew()) {
-			variables.company = getMuraUser().getCompany();
-		}
-		if(!structKeyExists(variables, "company")) {
-			variables.company = "";
-		}
-		
-		return variables.company;
-	}
-	// End: User Helpers
 	
 	public string function getFullName() {
 		return "#getFirstName()# #getLastName()#";
-	}
-		
-	public any function getMuraUser() {
-		if(!structKeyExists(variables, "muraUser")) {
-			variables.muraUser = getService("userManager").read(userID=getMuraUserID());
-		}
-		return variables.muraUser;
-	}
-	
-	public any function setMuraUser(required any muraUser) {
-		variables.muraUser = arguments.muraUser;
-		setMuraUserID(arguments.muraUser.getUserID());
-	}
-	
-	public string function getPrimaryEmail() {
-		if(!structKeyExists(variables, "primaryEmail")) {
-			
-			// Look through all account emails for the primary one
-			var emails = getAccountEmails();
-			
-			for(var i = 1; i <= arrayLen(emails); i++) {
-				if(emails[i].getPrimaryFlag() == true) {
-					variables.primaryEmail = emails[i].getEmail();
-				}
-			}
-			
-			// If one wasn't found, but there were 1 or more emails, set the first one as primary.  Otherwise set as blank
-			if(!isDefined("variables.primaryEmail") && arrayLen(emails) > 0) {
-				emails[1].setPrimaryFlag(true);
-				getService("accountService").save(entity = emails[1]);
-				variables.primaryEmail = emails[1].getEmail();
-			} else if(!isDefined("variables.primaryEmail")) {
-				variables.primaryEmail = "";
-			}
-		}
-
-		return variables.primaryEmail;
-	}
-	
-	public any function setPrimaryEmail() {
-		throw("Setting the primary email for an account should be done to an accountEmail entity, and should be done by using the method 'setIsPrimary'");
 	}
 	
     /******* Association management methods for bidirectional relationships **************/
@@ -162,6 +82,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	   arguments.order.removeAccount(this);
 	}
 	
+	// Account (one-to-many)
+	
+	public void function addAccountEmail(required AccountEmail accountEmail) {
+	   arguments.accountEmail.setAccount(this);
+	}
+		
     /************   END Association Management Methods   *******************/
 
 	

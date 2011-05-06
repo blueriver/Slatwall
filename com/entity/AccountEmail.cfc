@@ -50,19 +50,13 @@ component displayname="Account Email" entityname="SlatwallAccountEmail" table="S
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true";
 	
-	public void function setPrimaryFlag(required boolean primaryFlag) {
-		if(primaryFlag == true) {
-			var emails = getAccount().getAccountEmails();
-			for(var i = 1; i <= arrayLen(emails); i++) {
-				if(emails[i].getPrimaryFlag() == true) {
-					emails[i].setPrimaryFlag(false);
-					getService("accountService").save(entity=emails[i]);
-				}
-			}
+	public void function setAccount(required Account account) {
+		variables.account = arguments.account;
+		if(!arguments.account.hasAccountEmail(this)) {
+			arrayAppend(arguments.account.getAccountEmails(),this);
 		}
-		variables.primaryFlag = arguments.primaryFlag;
 	}
 	
 }

@@ -67,7 +67,25 @@ component extends="BaseService" accessors="true" output="false" {
 			currentSession = getNewEntity();
 			save(currentSession);
 		}
-				
+		
+		// Setup account here
+		if($.currentUser().isLoggedIn()) {
+			var muraUser = $.currentUser().getUserBean();
+			var slatwallAccount = getService("AccountService").getAccountByMuraUser(muraUser);
+			writeDump(var=newAccount, top=2);
+			abort;
+			if(slatwallAccount.getFirstName() != muraUser.getFName()){
+				slatwallAccount.setFirstName(muraUser.getFName());
+			}
+			if(slatwallAccount.getLastName() != muraUser.getLName()) {
+				slatwallAccount.setLastName(muraUser.getLName());
+			}
+			if(slatwallAccount.getCompany() != muraUser.getCompany()) {
+				slatwallAccount.setCompany(muraUser.getCompany());
+			}
+			currentSession.setAccount(slatwallAccount);
+		}
+						
 		session.slatwall.sessionID = currentSession.getSessionID();
 		getTagProxyService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
 		

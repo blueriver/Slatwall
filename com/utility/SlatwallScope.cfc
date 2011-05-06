@@ -54,17 +54,23 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function getCurrentSession() {
-		var session = getService("sessionService").getCurrent();
-		
-		return session;
+		return getService("sessionService").getCurrent();
 	}
 	
 	public any function getCurrentAccount() {
-		return getCurrentSession().getAccount();
+		if(!isNull(getCurrentSession().getAccount())) {
+			return getCurrentSession().getAccount();
+		} else {
+			return getService("AccountService").getNewEntity();	
+		}
 	}
 	
 	public any function getCurrentCart() {
-		return getCurrentSession().getCart();
+		if(!isNull(getCurrentSession().getOrder())) {
+			return getCurrentSession().getOrder();
+		} else {
+			return getService("OrderService").getNewEntity();	
+		}
 	}
 	
 	private any function getCurrentProductList() {
