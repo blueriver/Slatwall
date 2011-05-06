@@ -150,8 +150,8 @@ component extends="framework" output="false" {
 			}
 			
 			// Setup Base URL's for each subsystem
-			variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig().getDomain()#/plugins/#getPluginConfig().getDirectory()#/";
-			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
+			variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/plugins/#getPluginConfig().getDirectory()#/";
+			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/";
 			if(request.context.$.globalConfig().getSiteIDInURLS()) {
 				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
 			}
