@@ -136,11 +136,11 @@ table#productTypes {
 	width: 850px;
 }
 
-table#productTypes ul {
+table#productTypes ul, table#productPages ul {
 	background-image: none;
 }
 
-table#productTypes ul.neston {
+table#productTypes ul.neston, table#productPages ul.neston {
 	font-weight: bold;
 }
 
