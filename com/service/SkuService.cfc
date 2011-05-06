@@ -117,6 +117,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
     /* @hint bulk update of skus from product edit page
     */	
 	public any function updateSkus(required any product,required array skus) {
+		// keep track of sku codes so that we can flag any duplicates
+		var skuCodeList = "";
 		for(var i=1;i<=arrayLen(arguments.skus);i++) {
 			local.skuStruct = arguments.skus[i];
 			if( len(local.skuStruct.skuID) > 0 ) {
@@ -134,11 +136,32 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	            }
 	         } else {
 	         	// this is a new sku added from product.edit form (no skuID yet)
-	         	createSkuFromStruct( local.skuStruct, arguments.product );
+	         	local.thisSku = createSkuFromStruct( local.skuStruct, arguments.product );
 	         }
+	         validateSkuCode( local.thisSku, skuCodeList );
+	         skuCodeList = listAppend(skuCodeList, local.thisSku.getSkuCode());
 		}
 		return true;
 	}
+	
+	
+	public any function validateSkuCode( required any sku, string skuCodeList ) {
+		var isDuplicate = false;
+		// first check if there was a duplicate among the Skus that are being created with this one
+		if(structKeyExists(arguments,"skuCodeList")) {
+			isDuplicate = listFindNoCase( arguments.skuCodeList, arguments.sku.getSkuCode() );
+		}
+		// then check the database (only if a duplicate wasn't already found)
+		if( isDuplicate == false ) {
+			isDuplicate = getDAO().isDuplicateProperty("skuCode", arguments.sku);
+		}
+		var skuCodeError = getService("validator").validate(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
+		if( !structIsEmpty(skuCodeError) ) {
+			arguments.sku.addError(argumentCollection=skuCodeError);
+			getService("requestCacheService").setValue("ormHasErrors", true);
+		}
+	}
+	
 	
 	/**
 	/* @hint takes a struct of optionGroup (keys are option group sort orders) and lists of optionID's (values) and returns a list of all possible optionID combinations 

@@ -136,6 +136,20 @@ component extends="BaseService" accessors="true" {
 		// set up associations between product and content
 		assignProductContent(arguments.Product,arguments.data.contentID);
 		
+		// make sure that the product code doesn't already exist
+		var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
+		var productCodeError = getService("validator").validate(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+		if( !structIsEmpty(productCodeError) ) {
+			arguments.product.addError(argumentCollection=productCodeError);
+		}
+		
+		// make sure that the filename (product URL title) doesn't already exist
+		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+		var filenameError = getService("validator").validate(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		if( !structIsEmpty(filenameError) ) {
+			arguments.product.addError(argumentCollection=filenameError);
+		}
+		
 		arguments.Product = Super.save(arguments.Product);
 		
 		if( !arguments.Product.hasErrors() ) {

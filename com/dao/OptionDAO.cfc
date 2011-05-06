@@ -48,4 +48,9 @@ component extends="slatwall.com.dao.BaseDAO" {
 		
 		return smartList;
 	}
+	
+	// @hint checks if the passed if the option code of the passed in option is already in use within its option group
+	public any function isDuplicateOptionCode( required any option ) {
+		return arrayLen(ormExecuteQuery("from SlatwallOption where optionCode = :code and optionGroup = :group and optionID != :id", {code=arguments.option.getOptionCode(), group=arguments.option.getOptionGroup(), id=arguments.option.getOptionID()}));
+	}
 }
