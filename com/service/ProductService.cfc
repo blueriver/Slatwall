@@ -297,10 +297,10 @@ component extends="BaseService" accessors="true" {
 		for( var i=1; i <= arguments.productPages.recordCount; i++ ) {
 			local.path = arguments.productPages.path[i];
 			local.parentID = listLen( local.path ) > 1 ? listGetAt( local.path, listLen(local.path) -1 ) : 0;
-			parentArray[i] = local.parentID;
+			parentIDArray[i] = local.parentID;
 		}
 		// add column of parentIDs to query so we can treeSort it
-		queryAddColumn(arguments.productPages, "parentID", "VarChar", parentArray );
+		queryAddColumn(arguments.productPages, "parentID", "VarChar", parentIDArray );
     	var productPagesTree = getService("utilities").queryTreeSort(
     		theQuery = arguments.productPages,
     		itemID = "contentID",
