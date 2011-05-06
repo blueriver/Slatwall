@@ -86,7 +86,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		// Checks for Checkout page
 		} else if (rc.$.content('filename') == 'checkout') {
 			if(rc.$.event('slatAction') == "") {
-				rc.$.event("slatAction", "frontend:chekout.detail");
+				rc.$.event("slatAction", "frontend:checkout.detail");
 			}
 		// Checks for My-Account page
 		} else if (rc.$.content('filename') == 'my-account') {

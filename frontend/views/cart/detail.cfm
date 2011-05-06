@@ -50,8 +50,9 @@ Notes:
 					<dd class="quantity">#local.orderItem.getQuantity()#</dd>
 				</dl>
 			</cfloop>
-			<cf_ActionCaller action="frontend:checkout.detail" type="submit">
+			<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
 			<cf_ActionCaller action="frontend:cart.clearItems" type="link" class="button">
+			<cf_ActionCaller action="frontend:cart.update" type="submit">
 		</cfif>
 		</form>
 	</div>
