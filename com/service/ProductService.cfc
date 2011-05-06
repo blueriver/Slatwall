@@ -77,8 +77,8 @@ component extends="BaseService" accessors="true" {
 		return getDAO().getProductSmartList(arguments.data);
 	}
 	
-	public any function getProductContentSmartList(required string contentID, struct data={}) {
-		return getDAO().getProductContentSmartList(arguments.contentID, arguments.data);
+	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL="") {
+		return getDAO().getProductContentSmartList(contentID=arguments.contentID, data=arguments.data, currentURL=arguments.currentURL);
 	}
 
 	/**

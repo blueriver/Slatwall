@@ -77,6 +77,22 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 					rc.$.slatwall.productList().setPageRecordsShow(rc.$.content('productsPerPage'));	
 				}
 			}
+		// Checks for shopping cart
+		} else if (rc.$.content('filename') == 'shopping-cart') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:cart.detail");
+			}
+			
+		// Checks for Checkout page
+		} else if (rc.$.content('filename') == 'checkout') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:chekout.detail");
+			}
+		// Checks for My-Account page
+		} else if (rc.$.content('filename') == 'my-account') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:account.detail");
+			}
 		}
 	}
 	

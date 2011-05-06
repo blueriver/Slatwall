@@ -40,7 +40,9 @@ component extends="BaseService" accessors="true" output="false" {
 
 	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
-
+	
+	variables.slatwallKeys = "sessionid";
+	
 	public any function getCurrent() {
 		if(!getRequestCacheService().keyExists("currentSession")) {
 			getRequestCacheService().setValue("currentSession", getPropperSession());
@@ -48,28 +50,38 @@ component extends="BaseService" accessors="true" output="false" {
 		return getRequestCacheService().getValue("currentSession");
 	}
 	
-	public any function getPropperSession() {
+	private any function getPropperSession() {
 		// Figure out the appropriate session ID and create a new one if necessary
-		if(!structKeyExists(session, "slatwallSessionID")) {
+		if(!isDefined('session.slatwall.sessionID')) {
 			if(structKeyExists(cookie, "slatwallSessionID")) {
-				session.slatwallSessionID = cookie.slatwallSessionID;
+				session.slatwall.sessionID = cookie.slatwallSessionID;
 			} else {
-				session.slatwallSessionID = "";
+				session.slatwall.sessionID = "";
 			}
 		}
-		
+
 		// Load Session
-		var session = getByID(session.slatwallSessionID);
+		var currentSession = getByID(session.slatwall.SessionID);
 		
-		if(isNull(session)) {
-			session = getNewEntity();
-			save(session);
+		if(isNull(currentSession)) {
+			currentSession = getNewEntity();
+			save(currentSession);
 		}
+				
+		session.slatwall.sessionID = currentSession.getSessionID();
+		getTagProxyService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
 		
-		session.slatwallSessionID = session.getSessionID();
-		getTagProxyService().cfcookie(name="slatwallSessionID", value=session.slatwallSessionID, expires="never");
-		
-		return session;
+		return currentSession;
+	}
+	
+	public void function setValue(property, value) {
+		if(!arguments.property == "sessionID") {
+			session.slatwall[arguments.property] = arguments.value;	
+		}
+	}
+	
+	public any function getValue(property) {
+		return session.slatwall[arguments.property];
 	}
 	
 }

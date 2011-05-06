@@ -150,13 +150,13 @@ component extends="framework" output="false" {
 			}
 			
 			// Setup Base URL's for each subsystem
-			variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
+			variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig().getDomain()#/plugins/#getPluginConfig().getDirectory()#/";
 			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
 			if(request.context.$.globalConfig().getSiteIDInURLS()) {
 				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
 			}
 			if(request.context.$.globalConfig().getIndexFileInURLS()) {
-				variables.subsystems.frontend.baseURL &= "index.cfm";
+				variables.subsystems.frontend.baseURL &= "index.cfm/";
 			}
 						
 			// Run subsytem specific logic.
@@ -235,7 +235,7 @@ component extends="framework" output="false" {
 				}
 			}
 		}
-		if(isDefined("meta.accessors") && meta.accessors == true) {
+		if(structKeyExists(meta, "accessors") && meta.accessors && structKeyExists(meta, "properties")) {
 			for(var i = 1; i <= arrayLen(meta.properties); i++) {
 				if(arguments.beanFactory.containsBean(meta.properties[i].name)) {
 					evaluate("arguments.cfc.set#meta.properties[i].name#(arguments.beanFactory.getBean(meta.properties[i].name))");
@@ -270,9 +270,7 @@ component extends="framework" output="false" {
 	
 	private void function endSlatwallLifecycle() {
 		if(!getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
-			transaction {
-				ORMflush();
-			}
+			ORMflush();
 		}
 		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
 		ormGetSession().clear();
