@@ -43,8 +43,49 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 	property name="cost" ormtype="float";
 	
 	// Related Object Properties
+	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	property name="orderShippingItems" singularname="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID" inverse="true" cascade="all";
 	
+	public any function init() {
+		if(isNull(variables.orderShippingItems)) {
+			variables.orderShippingItems = [];
+		}
+		
+		return super.init();
+	}
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Order (many-to-one)
+	
+	public void function setOrder(required Order order) {
+		variables.order = arguments.order;
+		if(!arguments.order.hasOrderShipping(this)) {
+			arrayAppend(arguments.order.getOrderShippings(),this);
+		}
+	}
+	
+	public void function removeOrder(Order order) {
+	   if(!structKeyExists(arguments,"order")) {
+	   		arguments.order = variables.order;
+	   }
+       var index = arrayFind(arguments.order.getOrderShippings(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.order.getOrderShippings(), index);
+       }
+       structDelete(variables,"order");
+    }
+    
+    // Order Shipping Items (one-to-many)
+    public void function addOrderShippingItem(required OrderShippingItem orderShippingItem) {
+    	arguments.orderShippingItem.addOrderShipping(this);
+    }
+    
+    public void function removeOrderShippingItem(required OrderShippingItem orderShippingItem) {
+    	arguments.orderShippingItem.removeOrderShipping(this);
+    }
+    
+    
 }

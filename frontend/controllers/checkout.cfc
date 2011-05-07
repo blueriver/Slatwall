@@ -40,8 +40,54 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="orderService" type="any";
 	property name="productService" type="any";
+	property name="addressService" type="any";
 	
 	public void function detail(required struct rc) {
+		param name="rc.validAccount" default="false";
+		param name="rc.validShipping" default="false";
+		param name="rc.validPayment" default="false";
+		
+		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
+		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
+			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
+		}
+		
+		// If the current account is not new, then it should be used for the cart.
+		if(!rc.$.slatwall.account().isNew()) {
+			rc.$.slatwall.cart().setAccount(rc.$.slatwall.account());
+		}
+		
+		// Verify the sections that should be shown
+		if(isNull(rc.$.slatwall.cart().getAccount())) {
+			rc.validAccount = true;
+		}
+		if(getOrderService().verifyOrderShipping()) {
+			rc.validShipping = true;
+		}
+		if(getOrderService().verifyOrderPayment()) {
+			rc.validShipping = true;
+		}
+	}
+	
+	public void function update(required struct rc) {
+		
+		
+	}
+	
+	public void function addShippingAddress(required struct rc) {
+		param name="rc.shippingAddressID" default="";
+		
+		// Save the address
+		rc.shippingAddress = getAddressService().getByID(rc.shippingAddressID);
+		if(isNull(rc.shippingAddress)) {
+			rc.shippingAddress = getAddressService().getNewEntity();
+		}
+		rc.shippingAddress = getAddressService().save(rc.shippingAddress, rc);
+		
+		
+	}
+	
+	public void function addOrderPayment(required struct rc) {
 		
 	}
 	

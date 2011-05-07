@@ -49,4 +49,9 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 	property name="createdDateTime" ormtype="timestamp";
 	property name="modifiedDateTime" ormtype="timestamp";
 	
+	public void function removeAccount() {
+		if(structKeyExists(variables, "account")) {
+			structDelete(variables, "account");	
+		}
+	}
 }

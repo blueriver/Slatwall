@@ -40,43 +40,85 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	property name="sessionService";
 	
-	public void function addOrderItem(required any order, required any sku, numeric quantity=1) {
-		
-		// Check to see if a order was passed into the method call	
-		if(!structKeyExists(arguments, "order")) {
-			arguments.order = getSessionService().getCurrent().getCart();
-		}
-		
+	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
 		// TODO: Check the status of the order to make sure it isn't closed
 		
 		var orderItems = arguments.order.getOrderItems();
-		var exists = false;
+		var itemExists = false;
 		
-		// Check the existing order items and just add quantity if sku exists
+		// Check for an orderShipping in the arguments.  If none, use the orders first.  If none has been setup create a new one
+		if(!structKeyExists(arguments, "orderShipping")) {
+			var osArray = arguments.order.getOrderShippings();
+			if(!arrayLen(osArray)) {
+				arguments.orderShipping = getNewEntity("SlatwallOrderShipping");
+				arguments.orderShipping.setOrder(arguments.order);
+				save(arguments.orderShipping);
+			} else {
+				arguments.orderShipping = osArray[i];
+			}
+		}
+		
+		// Check the existing order items
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
-			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID()) {
-				exists = true;
+			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderShipping() == arguments.orderShipping) {
+				itemExists = true;
 				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
 			}
 		}
 		
 		// If the sku doesn't exist in the order, then create a new order item and add it
-		if(!exists) {
-			var newOrderItem = getNewEntity(entityName="SlatwallOrderItem");
-			newOrderItem.setQuantity(arguments.quantity);
-			newOrderItem.setOrder(arguments.order);
-			newOrderItem.setSku(arguments.sku);
-			arguments.order.addOrderItem(newOrderItem);
+		if(!itemExists) {
+			var newItem = getNewEntity(entityName="SlatwallOrderItem");
+			newItem.setSku(arguments.sku);
+			newItem.setQuantity(arguments.quantity);
+			newItem.setOrder(arguments.order);
+			newItem.setOrderShipping(arguments.orderShipping);
 		}
+		
+		save(arguments.order);
 	}
 	
 	public void function clearOrderItems(required any order) {
 		// TODO: Check the status of the order to make sure it hasn't been placed yet.
+		var orderItems = arguments.order.getOrderItems();
 		
-		// Not sure the best way to remove all items from the order.
-		arguments.order.setOrderItems(arrayNew(1));
+		for(var i=1; i<=arrayLen(orderItems); i++) {
+			orderItems[i].removeOrder(arguments.order);
+		}
 		
 		save(arguments.order);
 	}
+	
+	public boolean function verifyOrderShipping(required any order) {
+		var verified = true;
+		
+		if(isNull(arguments.order.getOrderShippings())) {
+			verified = false;
+		} else {
+			for( var i=1; i<=arrayLen(arguments.order.orderItems()); i++ ) {
+				if(isNull(arguments.order.getOrderItems()[i].getOrderShipping())) {
+					varified = false;
+				}
+			}
+		}
+		
+		return verified;
+	}
+	
+	public boolean function verifyOrderPayment(required any order) {
+		return false;
+	}
+	
+	/*
+	public any function setupOrderShipping(required any order, required any address, required any shippingMethod, any orderShipping) {
+		if(!structKeyExists(arguments, "orderShipping")) {
+			if(!arrayLen(arguments.orderShipping.getOrderShippings())) {
+				// Create new order shipping
+				arguments.orderShipping = getNewEntity("SlatwallOrderShipping");
+				
+			}
+		}
+	}
+	*/
 	
 }
