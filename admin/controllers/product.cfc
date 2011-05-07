@@ -129,6 +129,8 @@ component extends="BaseController" output=false accessors=true {
             	getFW().redirect(action="admin:product.list",preserve="message");
             }
 		} else {
+			rc.message = $.Slatwall.rbKey("admin.product.save_error");
+			rc.messageType = "error";
 			if(isNew) {
 				rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
