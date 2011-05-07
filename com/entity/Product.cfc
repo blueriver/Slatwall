@@ -269,7 +269,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}	
 	
 	public boolean function getInheritedSetting( required string settingName ) {
-		return getProductType().getSetting(arguments.settingName);
+		if(!isNull(getProductType())) {
+			return getProductType().getSetting(arguments.settingName);
+		} else {
+			// so a CF error won't be thrown during validtion if the product type wasn't selected
+			return setting("product_" & arguments.settingName);
+		}
 	}
 	
 	// Get source of setting
