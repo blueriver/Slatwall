@@ -161,8 +161,6 @@ Notes:
 		</cfloop>
 	</tbody>
 </table>
-<!--- workaround for imgPreview plugin bug when no a.preview links are present --->
-<a href="/plugins/Slatwall/assets/images/missingimage.jpg" class="preview" style="display:none;">##</a>
 
 <cfif rc.edit>
 <table id="tableTemplate" class="hideElement">
