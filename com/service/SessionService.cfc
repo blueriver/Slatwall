@@ -95,12 +95,12 @@ component extends="BaseService" accessors="true" output="false" {
 			currentSession.setAccount(slatwallAccount);
 		}
 		
+		// Save the session
+		save(currentSession);
+		
 		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();
 		getTagProxyService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
-		
-		// Save the session
-		save(currentSession);
 		
 		return currentSession;
 	}

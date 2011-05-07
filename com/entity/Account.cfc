@@ -59,6 +59,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all";
 	
+	// Non-Persistent Cached Values
+	variables.primaryEmail = "";
+	
+	
 	public any function init() {
 		if(isNull(variables.accountEmails)) {
 			variables.accountEmails = [];
@@ -68,6 +72,16 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	public string function getFullName() {
 		return "#getFirstName()# #getLastName()#";
+	}
+	
+	public string function getPrimaryEmail() {
+		var emails = getAccountEmails();
+		for(var i=1; i<=arrayLen(emails); i++) {
+			if(emails[i].getPrimaryFlag()) {
+				variables.primaryEmail = emails[i].getEmail();
+			}
+		}
+		return variables.primaryEmail;
 	}
 	
     /******* Association management methods for bidirectional relationships **************/
