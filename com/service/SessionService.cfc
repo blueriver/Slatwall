@@ -95,6 +95,9 @@ component extends="BaseService" accessors="true" output="false" {
 			currentSession.setAccount(slatwallAccount);
 		} else {
 			currentSession.removeAccount();
+			if(!currentSession.getOrder().isNew()) {
+				currentSession.getOrder().removeAccount();
+			}
 		}
 		
 		// Save the session

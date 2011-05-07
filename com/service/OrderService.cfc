@@ -54,7 +54,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.orderShipping.setOrder(arguments.order);
 				save(arguments.orderShipping);
 			} else {
-				arguments.orderShipping = osArray[i];
+				arguments.orderShipping = osArray[1];
 			}
 		}
 		
@@ -92,13 +92,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public boolean function verifyOrderShipping(required any order) {
 		var verified = true;
 		
-		if(isNull(arguments.order.getOrderShippings())) {
-			verified = false;
-		} else {
-			for( var i=1; i<=arrayLen(arguments.order.orderItems()); i++ ) {
-				if(isNull(arguments.order.getOrderItems()[i].getOrderShipping())) {
-					varified = false;
-				}
+		var orderShippings = arguments.order.getOrderShippings();
+		
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getAddress()) || isNull(orderShippings[i].getShippingMethod())) {
+				verified = false;
 			}
 		}
 		
@@ -108,17 +106,5 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public boolean function verifyOrderPayment(required any order) {
 		return false;
 	}
-	
-	/*
-	public any function setupOrderShipping(required any order, required any address, required any shippingMethod, any orderShipping) {
-		if(!structKeyExists(arguments, "orderShipping")) {
-			if(!arrayLen(arguments.orderShipping.getOrderShippings())) {
-				// Create new order shipping
-				arguments.orderShipping = getNewEntity("SlatwallOrderShipping");
-				
-			}
-		}
-	}
-	*/
 	
 }
