@@ -61,12 +61,17 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Find the sku based on the product options selected
 		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
+		
+		var cart = rc.$.slatwall.cart();
+		
+		// Check to see if the cart is a new order and save it if it is.
+		rc.$.slatwall.session().setOrder(cart);
 
 		// Add to the cart() order the new sku with quantity and shipping id
-		getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, orderShippingID=rc.orderShippingID);
+		getOrderService().addOrderItem(order=cart, sku=sku, quantity=rc.quantity, orderShippingID=rc.orderShippingID);
 		
-		// Make sure that this order ID is in the session.
-		rc.$.slatwall.session().setOrderID(rc.$.slatwall.cart().getOrderID());
+		// Save the Cart
+		getOrderService().save(cart);
 		
 		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);
 	}

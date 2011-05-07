@@ -68,8 +68,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			newOrderItem.setSku(arguments.sku);
 			arguments.order.addOrderItem(newOrderItem);
 		}
-		
-		save(arguments.order);
 	}
 	
 	public void function clearOrderItems(required any order) {

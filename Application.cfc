@@ -158,6 +158,9 @@ component extends="framework" output="false" {
 			if(request.context.$.globalConfig().getIndexFileInURLS()) {
 				variables.subsystems.frontend.baseURL &= "index.cfm/";
 			}
+			
+			// Confirm Session Setup
+			getBeanFactory().getBean("SessionService").confirmSession();
 						
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
@@ -272,6 +275,7 @@ component extends="framework" output="false" {
 		if(!getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			ORMflush();
 		}
+		
 		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
 		ormGetSession().clear();
 	}

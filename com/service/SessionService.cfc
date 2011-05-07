@@ -41,13 +41,23 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	
-	variables.slatwallKeys = "sessionid";
+	public void function confirmSession() {
+		getCurrent();
+	}
 	
 	public any function getCurrent() {
 		if(!getRequestCacheService().keyExists("currentSession")) {
 			getRequestCacheService().setValue("currentSession", getPropperSession());
 		}
 		return getRequestCacheService().getValue("currentSession");
+	}
+	
+	public any function getCurrentAccount() {
+		if(getRequestCacheService().keyExists("currentSession")) {
+			return getRequestCacheService().getValue("currentSession").getAccount();
+		} else {
+			return JavaCast("null", "");
+		}
 	}
 	
 	private any function getPropperSession() {
@@ -61,13 +71,34 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 
 		// Load Session
-		var currentSession = getByID(session.slatwall.SessionID);
+		var currentSession = getByID(session.slatwall.sessionID);
 		
+		// If No Session in Database create a new one.
 		if(isNull(currentSession)) {
 			currentSession = getNewEntity();
-			save(currentSession);
 		}
-				
+		
+		// Setup account here
+		if($.currentUser().isLoggedIn()) {
+			var muraUser = $.currentUser();
+			var slatwallAccount = getService("AccountService").getAccountByMuraUser(muraUser);
+			if(slatwallAccount.getFirstName() != muraUser.getFName()){
+				slatwallAccount.setFirstName(muraUser.getFName());
+			}
+			if(slatwallAccount.getLastName() != muraUser.getLName()) {
+				slatwallAccount.setLastName(muraUser.getLName());
+			}
+			if(slatwallAccount.getCompany() != muraUser.getCompany()) {
+				slatwallAccount.setCompany(muraUser.getCompany());
+			}
+			
+			currentSession.setAccount(slatwallAccount);
+		}
+		
+		// Save the session
+		save(currentSession);
+		
+		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();
 		getTagProxyService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
 		
