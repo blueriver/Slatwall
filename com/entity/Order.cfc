@@ -145,12 +145,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	   }
 	}
 	
-	public void function removeAccount(required Account Account) {
-       var index = arrayFind(arguments.Account.getOrders(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.Account.getOrders(),index);
-       }    
-       structDelete(variables,"Account");
+	public void function removeAccount(Account account) {
+		if(structKeyExists(variables,"account")) {
+			if(!structKeyExists(arguments, "account")) {
+				arguments.account = variables.account;
+			}
+			var index = arrayFind(arguments.account.getOrders(),this);
+			if(index > 0) {
+				arrayDeleteAt(arguments.account.getOrders(),index);
+			}    
+			structDelete(variables,"account");
+		}
     }
 	
     /************   END Association Management Methods   *******************/

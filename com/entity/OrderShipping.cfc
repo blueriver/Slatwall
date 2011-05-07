@@ -56,6 +56,11 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 		return super.init();
 	}
 	
+	public void function getShippingMethodOptions() {
+		var options = [];
+		return options;
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)
@@ -87,5 +92,5 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
     	arguments.orderShippingItem.removeOrderShipping(this);
     }
     
-    
+    /******* END Association management methods */ 
 }

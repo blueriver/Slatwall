@@ -36,12 +36,21 @@
 Notes:
 
 --->
+<cfparam name="rc.validAccount" type="boolean" />
+<cfparam name="rc.validShipping" type="boolean" />
+<cfparam name="rc.validPayment" type="boolean" />
+
 <cfoutput>
 	<div class="svofrontendcheckoutdetail">
 		<form name="checkout" method="post" action="#$.createHREF(filename='checkout')#">
-			<h3 id="checkoutAccountTitle" class="titleBlock">Account</h3>
+			<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif rc.validAccount><a class="editLink">Edit</a></cfif></h3>
 			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif rc.$.slatwall.cart().isNew()>
+				<cfif rc.validAccount>
+					<dl class="accountInfo">
+						<dt class="fullName">#$.slatwall.cart().getAccount().getFullName()#</dt>
+						<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmail()#</dd>
+					</dl>
+				<cfelse>
 					<div class="loginAccount">
 						<h4>Account Login</h4>
 						<dl>

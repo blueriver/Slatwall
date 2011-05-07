@@ -58,36 +58,62 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 		
 		// Verify the sections that should be shown
-		if(isNull(rc.$.slatwall.cart().getAccount())) {
+		if(!isNull(rc.$.slatwall.cart().getAccount())) {
 			rc.validAccount = true;
 		}
-		if(getOrderService().verifyOrderShipping()) {
+		if(getOrderService().verifyOrderShipping(rc.$.slatwall.cart())) {
 			rc.validShipping = true;
 		}
-		if(getOrderService().verifyOrderPayment()) {
+		if(getOrderService().verifyOrderPayment(rc.$.slatwall.cart())) {
 			rc.validShipping = true;
 		}
 	}
 	
-	public void function update(required struct rc) {
+	public void function updateOrderAccount(required struct rc) {
+		param name="rc.accountID" default="";
 		
-		
-	}
-	
-	public void function addShippingAddress(required struct rc) {
-		param name="rc.shippingAddressID" default="";
-		
-		// Save the address
-		rc.shippingAddress = getAddressService().getByID(rc.shippingAddressID);
-		if(isNull(rc.shippingAddress)) {
-			rc.shippingAddress = getAddressService().getNewEntity();
+		var account = getAccountService().getByID(rc.accountID);
+		if( isNull(account) ) {
+			var account = getAccountService.getNewEntity();
 		}
-		rc.shippingAddress = getAddressService().save(rc.shippingAddress, rc);
+		setView("frontend:checkout.detail");
+		detail(rc);
+	}
+	
+	public void function updateOrderShippingAddress(required struct rc) {
+		param name="rc.orderShippingID" default="";
+		param name="rc.orderShippingAddressID" default="";
 		
+		// Get The Order Shipping
+		var orderShipping = getOrderService().getByID(rc.orderShippingID, "SlatwallOrderShipping");
+		if(isNull(orderShipping)) {
+			var orderShipping = getOrderService().getNewEntity("SlatwallOrderShipping");
+		}
+		
+		// Get The Address
+		var orderShippingAddress = getAddressService().getByID(rc.orderShippingAddressID);
+		if(isNull(ordershippingAddress)) {
+			var ordershippingAddress = getAddressService().getNewEntity();
+		}
+		
+		// Save the Address
+		rc.orderShippingAddress = getAddressService().save(rc.orderShippingAddress, rc);
+		
+		// Set the Address as the 
+		rc.$.slatwall.cart().getOrderShippings()[1].setAddress(rc.orderShippingAddress);
+	}
+	
+	public void function updateOrderShippingMethod(required struct rc) {
 		
 	}
 	
-	public void function addOrderPayment(required struct rc) {
+	public void function updateOrderShippingPayment(required struct rc) {
+		
+	}
+	
+	
+	
+	public void function updateOrderPayment(required struct rc) {
 		
 	}
 	
