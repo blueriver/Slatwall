@@ -38,10 +38,10 @@ Notes:
 --->
 <cfoutput>
 	<div class="svofrontendcheckoutdetail">
-		<form name="checkout" method="post" action="#buildURL('frontend:checkout.detail')#">
+		<form name="checkout" method="post" action="#$.createHREF(filename='checkout')#">
 			<h3 id="checkoutAccountTitle" class="titleBlock">Account</h3>
 			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif rc.$.slatwall.account().isNew()>
+				<cfif rc.$.slatwall.cart().isNew()>
 					<div class="loginAccount">
 						<h4>Account Login</h4>
 						<dl>

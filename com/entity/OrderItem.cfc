@@ -54,6 +54,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="sku" cfc="sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
+	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
 	property name="orderShipment" cfc="OrderShipment" fieldtype="many-to-one" fkcolumn="orderShipmentID";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	
@@ -70,18 +71,41 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// Order (many-to-one)
 	
 	public void function setOrder(required Order Order) {
-	   variables.order = arguments.order;
-	   if(isNew() or !arguments.order.hasOrderItem(this)) {
-	       arrayAppend(arguments.order.getOrderItems(),this);
-	   }
+		variables.order = arguments.order;
+		if(isNew() || !arguments.order.hasOrderItem(this)) {
+			arrayAppend(arguments.order.getOrderItems(),this);
+		}
 	}
 	
-	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrdertItems(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderItems(),index);
-       }    
-       structDelete(variables,"order");
+	public void function removeOrder(Order order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getOrdertItems(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getOrderItems(),index);
+		}    
+		structDelete(variables,"order");
+    }
+    
+    // Order Shipping (many-to-one)
+    
+    public void function setOrderShipping(required OrderShipping orderShipping) {
+		variables.orderShipping = arguments.orderShipping;
+		if(isNew() || !arguments.orderShipping.hasOrderShippingItems(this)) {
+			arrayAppend(arguments.orderShipping.getOrderShippingItems(),this);
+		}
+    }
+    
+    public void function removeOrderShipping(OrderShipping orderShipping) {
+    	if(!structKeyExists(arguments, "orderShipping")) {
+    		arguments.orderShipping = variables.orderShipping;
+    	}
+    	var index = arrayFind(arguments.orderShipping.getOrderShippingItems(), this);
+    	if(index > 0) {
+    		arrayDeleteAt(arguments.orderShipping.getOrderShippingItems(), index);
+    	}
+    	structDelete(variables, "orderShipping");
     }
 	
 	/************   END Association Management Methods   *******************/

@@ -52,9 +52,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
+	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
 	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
-	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
+	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all-delete-orphan";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
+	
+	public any function init() {
+		if(isNull(variables.orderShippings)) {
+			variables.orderShippings = [];
+		}
+		if(isNull(variables.orderShipments)) {
+			variables.orderShipments = [];
+		}
+		if(isNull(variables.orderItems)) {
+			variables.orderItems = [];
+		}
+		if(isNull(variables.orderPayments)) {
+			variables.orderPayments = [];
+		}
+		return super.init();
+	}
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -62,13 +79,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public string function getStatusCode() {
 		return getOrderStatusType().getSystemCode();
-	}
-	
-	public array function getOrderItems() {
-		if(!structKeyExists(variables, "orderItems")) {
-			variables.orderItems = arrayNew(1);
-		}
-		return variables.orderItems;
 	}
 	
 	public numeric function getTotalItems() {
@@ -94,6 +104,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public void function removeOrderItem(required OrderItem OrderItem) {
 	   arguments.orderItem.removeOrder(this);
+	}
+	
+	// OrderShippings (one-to-many)
+	
+	public void function addOrderShipping(required OrderShipment orderShipping) {
+	   arguments.orderShipping.setOrder(this);
+	}
+	
+	public void function removeOrderShipping(required OrderShipment orderShipping) {
+	   arguments.orderShipping.removeOrder(this);
 	}
 	
 	// OrderShipments (one-to-many)
