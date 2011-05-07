@@ -244,20 +244,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			this.setCreatedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setCreatedByAccount")){
-			if(!$.slatwall.account().isNew()) {
-				// Doesn't work and I don't know why
-				//setCreatedByAccount($.slatwall.account());
-			}
+			setCreatedByAccount(getService("SessionService").getCurrentAccount());
 		}
 		
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setModifiedByAccount")){
-			if(!$.slatwall.account().isNew()) {
-				// Doesn't work and I don't know why
-				// setCreatedByAccount($.slatwall.account());
-			}
+			setModifiedByAccount(getService("SessionService").getCurrentAccount());
 		}
 		
 	}
@@ -269,10 +263,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			this.setModifiedDateTime(timestamp);
 		}
 		if(structKeyExists(this,"setModifiedByAccount")){
-			if(!$.slatwall.account().isNew()) {
-				// Doesn't work and I don't know why
-				setCreatedByAccount($.slatwall.account());
-			}
+			setModifiedByAccount(getService("SessionService").getCurrentAccount());
 		}
 	}
 	

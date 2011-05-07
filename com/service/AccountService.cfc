@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" accessors="true" {
+component extends="BaseService" accessors="true" output="false" {
 			
 	property name="sessionService" type="any";
 	property name="userManager" type="any";
@@ -49,15 +49,17 @@ component extends="BaseService" accessors="true" {
 		
 		if(isnull(account)) {
 			// If no account exists, create a new one and save it linked to the user that just logged in.
-			account = getNewEntity();
+			var account = getNewEntity();
 			account.setMuraUserID(arguments.muraUser.getUserID());
 			var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
 			accountEmail.setEmail(arguments.muraUser.getEmail());
 			accountEmail.setPrimaryFlag(1);
 			accountEmail.setAccount(account);
+			
 			save(entity=account);
 		}
 		
 		return account;
 	}
+	
 }
