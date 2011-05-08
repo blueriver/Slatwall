@@ -45,8 +45,8 @@ Notes:
 <!--- hint: This is used in case a sub object property has a different name than the property --->
 <cfparam name="attributes.propertyObject" type="string" default="" />
 
-<!--- hint: Value that is displayed when the property value is null --->
-<cfparam name="attributes.nullValue" type="string" default="" />
+<!--- hint: text that is displayed when the property value is null --->
+<cfparam name="attributes.nullLabel" type="string" default="" />
 
 <!--- hint: This can be used to override the displayName of a property" --->
 <cfparam name="attributes.title" default="" />
@@ -171,19 +171,22 @@ Notes:
 					<cfset local.subEntityMetadata = getMetadata(attributes.value) />
 					<cfset attributes.value = "">
 					<cfloop array="#local.subEntityMetadata.properties#" index="i">
-						<cfif i.name EQ attributes.property & 'name' or i.name EQ attributes.propertyObject & 'name'>
+						<cfif i.name EQ attributes.property & 'name' 
+							  or i.name EQ attributes.propertyObject & 'name'
+							  or i.name EQ attributes.property
+							  or i.name EQ attributes.propertyObject>
 							<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
 							<cfbreak />
 						</cfif>
 					</cfloop>
 				<cfelseif attributes.value eq "" and structKeyExists(local.propertyMetadata, "default")>
 					<cfset attributes.value = local.propertyMetadata.default />
-				<cfelseif attributes.value eq "" and not structKeyExists(local.propertyMetadata,"default")>
+				<cfelseif (attributes.value eq "" and not structKeyExists(local.propertyMetadata,"default")) or isNull(attributes.value)>
 					<cfset attributes.value = "" />
 				</cfif>
-			<cfelseif isNull(attributes.value) and len(attributes.nullValue)>
-				<cfset attributes.value = attributes.nullValue />
-			<cfelseif isNull(attributes.value) and !len(attributes.nullValue) and attributes.dataType eq "boolean">
+			<cfelseif isNull(attributes.value) and len(attributes.nullLabel)>
+				<cfset attributes.value = attributes.nullLabel />
+			<cfelseif isNull(attributes.value) and !len(attributes.nullLabel) and attributes.dataType eq "boolean">
 				<cfset attributes.value = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
 			<cfelse>
 			     <cfset attributes.value = "" />
@@ -317,7 +320,7 @@ Notes:
 						<cfif arrayLen(attributes.editOptions) gt 0>
 						<select name="#attributes.fieldName#" id="#attributes.fieldName##attributes.id#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
 							<cfif attributes.allowNullOption>
-								<option value="">#attributes.nullValue eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullValue#</option>
+								<option value="">#attributes.nullLabel eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullLabel#</option>
 							</cfif>
                             <cfset attributes.value = (len(attributes.defaultValue) gt 0 AND attributes.value eq "") ? attributes.defaultValue : attributes.value />
 							<cfloop array="#attributes.editOptions#" index="i">
