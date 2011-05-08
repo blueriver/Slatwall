@@ -126,11 +126,14 @@ Notes:
 </cfif>
 
 <cfif arrayLen(local.attributes) gt 0>
-
-<p>
-<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.attribute.saveorder")#]</a>
-<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.attribute.reorder')#]</a>
-</p>
+	
+	<!--- only show reordering controls if there are more than one attributes --->
+	<cfif arrayLen(local.attributes) gt 1>
+		<p>
+		<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.attribute.saveorder")#]</a>
+		<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.attribute.reorder')#]</a>
+		</p>
+	</cfif>
 
 <ul id="attributeList" class="orderList">
 <cfloop from="1" to="#arraylen(local.attributes)#" index="local.i">
@@ -145,6 +148,7 @@ Notes:
 <cfelse>
 	<cfset local.thisOpen = false />
 </cfif>
+	<cfif len(local.thisAttribute.getAttributeID())>
 	<li id="#local.thisAttribute.getAttributeID()#">
 		<span id="handle#local.i#" class="handle" style="display:none;">[#rc.$.Slatwall.rbKey("admin.attribute.order.handle")#]</span>
 		#local.thisAttribute.getAttributeName()# 
@@ -234,6 +238,7 @@ Notes:
 		</form>  
 		</div>
 	</li>
+	</cfif>
 </cfloop>
 </ul>
 
