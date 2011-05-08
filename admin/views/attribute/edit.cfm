@@ -72,7 +72,7 @@ Notes:
         <cf_PropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
+		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
 		<div id="attributeTypenew" style="display:none;">
 		<dt>
 			Attribute Options
@@ -114,7 +114,7 @@ Notes:
 		</div>
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="defaultValue" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="requiredFlag" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationType" nullValue="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
+		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationType" propertyObject="Type" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationRegex" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationMessage" edit="true">
 		<cf_PropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
@@ -161,7 +161,7 @@ Notes:
 		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_PropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
 				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_PropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" value="#local.thisAttribute.getAttributeType().getType()#" defaultValue="Text Box" allowNullOption="false" edit="true">
+				<cf_PropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="Text Box" allowNullOption="false" edit="true">
 				<div id="attributeType#local.thisAttribute.getAttributeID()#" style="display:none;">
 				<dt>
 					Attribute Options
@@ -219,12 +219,12 @@ Notes:
 							</cfif>
 						</tbody>
 					</table>
-					<a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>
+					<a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>				
 				</dd>
 				</div>
 				<cf_PropertyDisplay id="defaultValue#local.i#" object="#local.thisAttribute#" property="defaultValue" edit="true">
 				<cf_PropertyDisplay id="requiredFlag#local.i#" object="#local.thisAttribute#" property="requiredFlag" edit="true">
-				<cf_PropertyDisplay id="validationType#local.i#" object="#local.thisAttribute#" nullValue="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" edit="true">
+				<cf_PropertyDisplay id="validationType#local.i#" object="#local.thisAttribute#" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" propertyObject="Type" edit="true">
 				<cf_PropertyDisplay id="validationRegex#local.i#" object="#local.thisAttribute#" property="validationRegex" edit="true">
 				<cf_PropertyDisplay id="validationMessage#local.i#" object="#local.thisAttribute#" property="validationMessage" edit="true">
 				<cf_PropertyDisplay id="activeFlag#local.i#" object="#local.thisAttribute#" property="activeFlag" edit="true">
@@ -240,6 +240,7 @@ Notes:
 <cfelse>
 	<p><em>#rc.$.Slatwall.rbKey("admin.attribute.noAttributesInSet")#</em></p>
 </cfif>
+
 <table id="tableTemplate" class="hideElement">
 	<tbody>
         <tr id="temp">
