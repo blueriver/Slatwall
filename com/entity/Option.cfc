@@ -127,7 +127,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 			var img = imageRead(expandPath(path));
 			
 			// Setup Alt & Class for the image
-			if(arguments.alt == "") {
+			if(arguments.alt == "" and len(getOptionName())) {
 				arguments.alt = "#getOptionName()#";
 			}
 			if(arguments.class == "") {

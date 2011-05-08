@@ -105,11 +105,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				rc.newAttribute = rc.attribute;
 				rc.create = true;
 				rc.newAttributeFormOpen=true;
-				getFW().setView("admin:attribute.edit");
 			} else {
 				rc.activeAttribute = rc.attribute;
-				getFW().setView("admin:attribute.edit");
-			}		
+			}
+			getFW().setView("admin:attribute.edit");	
 		}
 	}
 	

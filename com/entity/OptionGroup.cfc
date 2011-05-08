@@ -53,7 +53,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" lazy="extra" cascade="delete";
+	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan";
 
 	// Non-persistent Properties
 	property name="imageDirectory" type="string" hint="Base directory for optionGroup images" persistent="false";

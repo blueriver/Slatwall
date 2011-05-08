@@ -82,10 +82,13 @@ Notes:
 
 <cfif arrayLen(local.options) gt 0>
 
-<p>
-<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
-<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
-</p>
+	<!--- only show reordering controls if there are more than one options --->
+	<cfif arrayLen(local.options) gt 1>
+		<p>
+		<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
+		<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
+		</p>
+	</cfif>
 
 <ul id="optionList" class="orderList">
 <cfloop from="1" to="#arraylen(local.options)#" index="local.i">
@@ -99,6 +102,7 @@ Notes:
 <cfelse>
 	<cfset local.thisOpen = false />
 </cfif>
+	<cfif len(local.thisOption.getOptionID())>
 	<li optionID="#local.thisOption.getOptionID()#">
 		<span id="handle#local.i#" class="handle" style="display:none;">[#rc.$.Slatwall.rbKey("admin.option.order.handle")#]</span>
 		#local.thisOption.getOptionName()# 
@@ -128,6 +132,7 @@ Notes:
 		</form>  
 		</div>
 	</li>
+	</cfif>
 </cfloop>
 </ul>
 

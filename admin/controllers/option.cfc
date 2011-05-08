@@ -87,8 +87,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.option = getOptionService().getByID(rc.optionID);
 		} else {
 			rc.option = getOptionService().getNewEntity();
-		}
-		
+		}		
 					
 		// upload the image and return the result struct
 		if(rc.optionImageFile != "") {
@@ -99,7 +98,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		if(!rc.option.hasErrors()) {
 			// go to the 'manage option group' form to add/edit more options
-			rc.message="admin.option.save_success";
+			rc.message=$.Slatwall.rbKey("admin.option.save_success");
 			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
 		} else {
 			//put optionGroup in rc for form
@@ -109,11 +108,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				rc.newOption = rc.option;
 				rc.create = true;
 				rc.newOptionFormOpen=true;
-				getFW().setView("admin:option.edit");
 			} else {
 				rc.activeOption = rc.option;				
-				getFW().setView("admin:option.edit");
-			}		
+			}
+			getFW().setView("admin:option.edit");
 		}
 		
 	}
