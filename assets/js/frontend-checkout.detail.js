@@ -38,8 +38,8 @@ Notes:
 */
  
 $(document).ready(function(){
-	$("input[name='guestAccount']").change(function(){
-		if($("input[name='guestAccount']:checked").val() == 0) {
+	$("input[name='createMuraAccount']").change(function(){
+		if($("input[name='createMuraAccount']:checked").val() == 1) {
 			$("div.accountPassword").show();
 		} else {
 			$("div.accountPassword").hide();

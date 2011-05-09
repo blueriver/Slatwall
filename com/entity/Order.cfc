@@ -159,10 +159,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Account (many-to-one)
 	
-	public void function setAccount(required Account Account) {
+	public void function setAccount(required Account account) {
 	   variables.account = arguments.account;
-	   if(!arguments.Account.hasOrder(this)) {
-	       arrayAppend(arguments.Account.getOrders(),this);
+	   if(!arguments.account.hasOrder(this)) {
+	       arrayAppend(arguments.account.getOrders(),this);
 	   }
 	}
 	

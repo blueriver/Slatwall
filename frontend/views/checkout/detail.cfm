@@ -52,7 +52,7 @@ Notes:
 				</dl>
 			<cfelse>
 				<div class="loginAccount">
-					<form name="newCustomer" method="post" action="?nocache=1">
+					<form name="loginAccount" method="post" action="?nocache=1">
 						<h4>Account Login</h4>
 						<dl>
 							<dt>E-Mail Address</dt>
@@ -60,11 +60,12 @@ Notes:
 							<dt>Password</dt>
 							<dd><input type="password" name="password" value="" /></dd>
 						</dl>
-						<button type="submit" name="doaction" value="login">Login & Continue</button>
+						<input type="hidden" name="doaction" value="login" />
+						<button type="submit">Login & Continue</button>
 					</form>
 				</div>
 				<div class="newAccount">
-					<form name="newCustomer" method="post" action="?slatAction=frontend:checkout.saveNewAccount">
+					<form name="newAccount" method="post" action="?slatAction=frontend:checkout.saveNewAccount">
 						<h4>New Customer</h4>
 						<dl>
 							<dt>First Name</dt>
@@ -79,8 +80,8 @@ Notes:
 							<dd><input type="text" name="emailConfirm" value="" /></dd>
 							<dt>Guest Checkout</dt>
 							<dd>
-								<input type="radio" name="guestAccount" value="0" />Save Account
-								<input type="radio" name="guestAccount" value="1" checked="checked" />Checkout As Guest
+								<input type="radio" name="createMuraAccount" value="1" />Save Account
+								<input type="radio" name="createMuraAccount" value="0" checked="checked" />Checkout As Guest
 							</dd>
 							<div class="accountPassword" style="display:none;">
 								<dt>Password</dt>
@@ -183,4 +184,5 @@ Notes:
 			</form>
 		</cfif>
 	</div>
+	<cfdump var="#$.slatwall.cart().getAccount()#" top="2" />
 </cfoutput>

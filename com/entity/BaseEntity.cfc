@@ -158,6 +158,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				}
 			}
 		}
+		return this;
 	}
 	
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 

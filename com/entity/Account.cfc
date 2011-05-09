@@ -40,8 +40,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Persistant Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="firstName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
-	property name="lastName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="firstName" validateRequired ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" validateRequired ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="muraUserID" ormtype="string";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -56,6 +56,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Related Object Properties
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" cascade="all-delete-orphan";
+	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhone" cascade="all-delete-orphan";
 	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all";
 	
@@ -66,6 +67,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	public any function init() {
 		if(isNull(variables.accountEmails)) {
 			variables.accountEmails = [];
+		}
+		if(isNull(variables.accountPhoneNumbers)) {
+			variables.accountPhoneNumbers = [];
+		}
+		if(isNull(variables.orders)) {
+			variables.orders = [];
 		}
 		return super.init();
 	}
@@ -85,7 +92,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public boolean function isGuestAccount() {
-		if(isNull(getMuraID())) {
+		if(isNull(getMuraUserID())) {
 			return true;
 		} else {
 			return false;
@@ -108,6 +115,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	public void function addAccountEmail(required AccountEmail accountEmail) {
 	   arguments.accountEmail.setAccount(this);
+	}
+	
+	public void function addAccountPhoneNumber(required AccountPhone accountPhone) {
+	   arguments.accountPhone.setAccount(this);
 	}
 		
     /************   END Association Management Methods   *******************/

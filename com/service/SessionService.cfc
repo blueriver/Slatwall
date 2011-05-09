@@ -92,6 +92,9 @@ component extends="BaseService" accessors="true" output="false" {
 				slatwallAccount.setCompany(muraUser.getCompany());
 			}
 			currentSession.setAccount(slatwallAccount);
+			if(!currentSession.getOrder().isNew()) {
+				currentSession.getOrder().setAccount(slatwallAccount);
+			}
 		} else {
 			// Remove any account associated with the session
 			currentSession.removeAccount();

@@ -130,10 +130,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function populate(required any entity, required struct data) {
-		arguments.entity.populate(arguments.data);
-		return arguments.entity;
-	}	
-	
+		return arguments.entity.populate(arguments.data);
+	}
 
     public any function save(required any entity, struct data) {
         if(structKeyExists(arguments,"data")){
