@@ -91,11 +91,13 @@ component extends="BaseService" accessors="true" output="false" {
 			if(slatwallAccount.getCompany() != muraUser.getCompany()) {
 				slatwallAccount.setCompany(muraUser.getCompany());
 			}
-			
 			currentSession.setAccount(slatwallAccount);
 		} else {
+			// Remove any account associated with the session
 			currentSession.removeAccount();
-			if(!currentSession.getOrder().isNew()) {
+			
+			// If the account associated with the current order is not a guest account, then remove it.
+			if(!isNull(currentSession.getOrder().getAccount()) && !currentSession.getOrder().getAccount().isGuestAccount()) {
 				currentSession.getOrder().removeAccount();
 			}
 		}

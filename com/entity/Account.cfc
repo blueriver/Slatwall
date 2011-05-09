@@ -84,6 +84,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return variables.primaryEmail;
 	}
 	
+	public boolean function isGuestAccount() {
+		if(isNull(getMuraID())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Orders (one-to-many)

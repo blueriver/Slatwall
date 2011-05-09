@@ -66,6 +66,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getOrderItemStatusType().getSystemCode();
 	}
 	
+	public numeric function getExtendedPrice() {
+		return getPrice()*getQuantity();
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)

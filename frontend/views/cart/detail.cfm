@@ -42,14 +42,28 @@ Notes:
 		<cfif not arrayLen($.slatwall.cart().getOrderItems())>
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
 		<cfelse>
-			<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
-				<dl class="cartItem">
-					<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
-					<dt class="title">#local.orderItem.getSku().getProduct().getTitle()#</dt>
-					<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
-					<dd class="quantity">#local.orderItem.getQuantity()#</dd>
+			<div class="orderItems">
+				<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
+					<dl class="orderItem">
+						<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
+						<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
+						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+						<dd class="price">#local.orderItem.getPrice()#</dd>
+						<dd class="quantity">#local.orderItem.getQuantity()#</dd>
+						<dd class="extended">#local.orderItem.getQuantity()*local.orderItem.getPrice()#</dd>
+					</dl>
+				</cfloop>
+				<dl class="totals">
+					<dt class="subtotal">Subtotal</dt>
+					<dd class="subtotal">#DollarFormat($.slatwall.cart().getSubtotal())#</dd>
+					<dt class="shipping">Shipping</dt>
+					<dd class="shipping">#DollarFormat($.slatwall.cart().getShippingTotal())#</dd>
+					<dt class="tax">Tax</dt>
+					<dd class="tax">#DollarFormat($.slatwall.cart().getTaxTotal())#</dd>
+					<dt class="total">Total</dt>
+					<dd class="total">#DollarFormat($.slatwall.cart().getTotal())#</dd>
 				</dl>
-			</cfloop>
+			</div>
 			<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
 			<cf_ActionCaller action="frontend:cart.clearItems" type="link" class="button">
 			<cf_ActionCaller action="frontend:cart.update" type="submit">

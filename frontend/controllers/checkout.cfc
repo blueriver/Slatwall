@@ -44,7 +44,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function detail(required struct rc) {
 		param name="rc.validAccount" default="false";
-		param name="rc.validShipping" default="false";
+		param name="rc.validShippingAddress" default="false";
+		param name="rc.validShippingMethod" default="false";
 		param name="rc.validPayment" default="false";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
@@ -58,11 +59,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 		
 		// Verify the sections that should be shown
-		if(!isNull(rc.$.slatwall.cart().getAccount())) {
+		if(getOrderService().verifyOrderAccount(rc.$.slatwall.cart())) {
 			rc.validAccount = true;
 		}
-		if(getOrderService().verifyOrderShipping(rc.$.slatwall.cart())) {
-			rc.validShipping = true;
+		if(getOrderService().verifyOrderShippingAddress(rc.$.slatwall.cart())) {
+			rc.validShippingAddress = true;
+		}
+		if(getOrderService().verifyOrderShippingMethod(rc.$.slatwall.cart())) {
+			rc.validShippingMethod = true;
 		}
 		if(getOrderService().verifyOrderPayment(rc.$.slatwall.cart())) {
 			rc.validShipping = true;

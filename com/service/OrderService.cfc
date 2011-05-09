@@ -89,13 +89,37 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		save(arguments.order);
 	}
 	
-	public boolean function verifyOrderShipping(required any order) {
+	public boolean function verifyOrderAccount(required any order) {
+		var verified = true;
+		
+		if(isNull(argument.order.account) || arguments.order.account.isNew()) {
+			verified = false;
+		}
+		
+		return verified;
+	}
+	
+	public boolean function verifyOrderShippingAddress(required any order) {
 		var verified = true;
 		
 		var orderShippings = arguments.order.getOrderShippings();
 		
 		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getAddress()) || isNull(orderShippings[i].getShippingMethod())) {
+			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
+				verified = false;
+			}
+		}
+		
+		return verified;
+	}
+	
+	public boolean function verifyOrderShippingMethod(required any order) {
+		var verified = true;
+		
+		var orderShippings = arguments.order.getOrderShippings();
+		
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getShippingMethod())) {
 				verified = false;
 			}
 		}
