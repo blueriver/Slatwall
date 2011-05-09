@@ -94,6 +94,27 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return totalQuantity;
 	}
 	
+	public numeric function getSubtotal() {
+		var subtotal = 0;
+		var orderItems = getOrderItems();
+		for(var i=1; i<=arrayLen(orderItems); i++) {
+			subtotal += orderItems[i].getExtendedPrice();
+		}
+		return subtotal;
+	}
+	
+	public numeric function getTaxTotal() {
+		return 0;
+	}
+	
+	public numeric function getShippingTotal() {
+		return 0;
+	}
+	
+	public numeric function getTotal() {
+		return getSubtotal() + getTaxTotal() + getShippingTotal();
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
@@ -138,10 +159,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Account (many-to-one)
 	
-	public void function setAccount(required Account Account) {
+	public void function setAccount(required Account account) {
 	   variables.account = arguments.account;
-	   if(!arguments.Account.hasOrder(this)) {
-	       arrayAppend(arguments.Account.getOrders(),this);
+	   if(!arguments.account.hasOrder(this)) {
+	       arrayAppend(arguments.account.getOrders(),this);
 	   }
 	}
 	

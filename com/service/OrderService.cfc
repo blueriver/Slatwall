@@ -39,6 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
+	property name="userManager";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
 		// TODO: Check the status of the order to make sure it isn't closed
@@ -58,7 +59,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		
-		// Check the existing order items
+		// Check the existing order items and increment quantity if possible.
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
 			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderShipping() == arguments.orderShipping) {
 				itemExists = true;
@@ -78,6 +79,76 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		save(arguments.order);
 	}
 	
+	public void function setupOrderAccount(required any order, struct data={}) {
+		
+		if(isNull(arguments.order.getAccount())) {
+			arguments.order.setAccount(getNewEntity("SlatwallAccount"));
+		}
+		
+		// Populate the order Account
+		arguments.order.getAccount().populate(arguments.data);
+		
+		// Validate the order Account
+		getValidator().validateObject(entity=arguments.order.getAccount());
+		
+		// Setup the account e-mail
+		var accountEmails = arguments.order.getAccount().getAccountEmails();
+		var emailExists = false;
+		
+		// Check to see if the e-mail already exists
+		if(!isNull(accountEmails)) {
+			for(var i=1; i<=arrayLen(accountEmails); i++) {
+				if(accountEmails[i].getEmail() == arguments.data.email) {
+					emailExists = true;
+				}
+			}	
+		}
+		
+		// If the email doesn't exist, create one and add to the account.
+		if(!emailExists) {
+			var newAccountEmail = getNewEntity("SlatwallAccountEmail");
+			newAccountEmail.setEmail(arguments.data.email);
+			newAccountEmail.setAccount(arguments.order.getAccount());
+		}
+		
+		// Setup the account phone number
+		var accountPhoneNumbers = arguments.order.getAccount().getAccountPhoneNumbers();		
+		var phoneExists = false;
+		
+		// Check to see if the phone already exists
+		if(!isNull(accountPhoneNumbers)) {
+			for(var i=1; i<=arrayLen(accountPhoneNumbers); i++) {
+				if(accountEmails[i].getPhoneNumber() == arguments.data.phoneNumber) {
+					phoneExists = true;
+				}
+			}
+		}
+		
+		// If the phone number doesn't exist, create one and add to the account.
+		if(!phoneExists) {
+			var newAccountPhoneNumber = getNewEntity("SlatwallAccountPhoneNumber");
+			newAccountPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
+			newAccountPhoneNumber.setAccount(arguments.order.getAccount());
+		}
+		
+		if(!arguments.order.getAccount().hasErrors()) {
+			if(structKeyExists(arguments.data, "createMuraAccount") && arguments.data.createMuraAccount) {
+				// Look for a username that is set as that e-mail
+				var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
+				muraUser.setFName(arguments.data.firstName);
+				muraUser.setLName(arguments.data.lastName);
+				muraUser.setLName(arguments.data.lastName);
+				muraUser.setUsername(arguments.data.email);
+				muraUser.setEmail(arguments.data.email);
+				muraUser.setSiteID($.event('siteid'));
+				muraUser.save();
+			}
+			
+			save(arguments.order.getAccount());	
+		}
+		
+	}
+	
 	public void function clearOrderItems(required any order) {
 		// TODO: Check the status of the order to make sure it hasn't been placed yet.
 		var orderItems = arguments.order.getOrderItems();
@@ -89,13 +160,37 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		save(arguments.order);
 	}
 	
-	public boolean function verifyOrderShipping(required any order) {
+	public boolean function verifyOrderAccount(required any order) {
+		var verified = true;
+		
+		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().isNew()) {
+			verified = false;
+		}
+		
+		return verified;
+	}
+	
+	public boolean function verifyOrderShippingAddress(required any order) {
 		var verified = true;
 		
 		var orderShippings = arguments.order.getOrderShippings();
 		
 		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getAddress()) || isNull(orderShippings[i].getShippingMethod())) {
+			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
+				verified = false;
+			}
+		}
+		
+		return verified;
+	}
+	
+	public boolean function verifyOrderShippingMethod(required any order) {
+		var verified = true;
+		
+		var orderShippings = arguments.order.getOrderShippings();
+		
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getShippingMethod())) {
 				verified = false;
 			}
 		}

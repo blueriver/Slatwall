@@ -36,11 +36,11 @@
 Notes:
 
 */
-component displayname="Account Phone" entityname="SlatwallAccountPhone" table="SlatwallAccountPhone" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNumber" table="SlatwallAccountPhoneNumber" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
 	
 	// Persistant Properties
 	property name="accountPhoneID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="phone" type="string";
+	property name="phoneNumber" validateRequired type="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -49,10 +49,17 @@ component displayname="Account Phone" entityname="SlatwallAccountPhone" table="S
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true";
 	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
 	
 	public string function getPhoneType() {
 		return getAccountPhoneType().getType();
+	}
+	
+	public void function setAccount(required Account account) {
+		variables.account = arguments.account;
+		if(!arguments.account.hasAccountPhoneNumber(this)) {
+			arrayAppend(arguments.account.getAccountPhoneNumbers(),this);
+		}
 	}
 }

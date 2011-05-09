@@ -44,7 +44,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function detail(required struct rc) {
 		param name="rc.validAccount" default="false";
-		param name="rc.validShipping" default="false";
+		param name="rc.validShippingAddress" default="false";
+		param name="rc.validShippingMethod" default="false";
 		param name="rc.validPayment" default="false";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
@@ -52,32 +53,24 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
 		}
 		
-		// If the current account is not new, then it should be used for the cart.
-		if(!rc.$.slatwall.account().isNew()) {
-			rc.$.slatwall.cart().setAccount(rc.$.slatwall.account());
-		}
-		
 		// Verify the sections that should be shown
-		if(!isNull(rc.$.slatwall.cart().getAccount())) {
+		if( getOrderService().verifyOrderAccount(rc.$.slatwall.cart()) ) {
 			rc.validAccount = true;
 		}
-		if(getOrderService().verifyOrderShipping(rc.$.slatwall.cart())) {
-			rc.validShipping = true;
+		if(getOrderService().verifyOrderShippingAddress(rc.$.slatwall.cart())) {
+			rc.validShippingAddress = true;
+		}
+		if(getOrderService().verifyOrderShippingMethod(rc.$.slatwall.cart())) {
+			rc.validShippingMethod = true;
 		}
 		if(getOrderService().verifyOrderPayment(rc.$.slatwall.cart())) {
 			rc.validShipping = true;
 		}
 	}
 	
-	public void function updateOrderAccount(required struct rc) {
-		param name="rc.accountID" default="";
-		
-		var account = getAccountService().getByID(rc.accountID);
-		if( isNull(account) ) {
-			var account = getAccountService.getNewEntity();
-		}
-		setView("frontend:checkout.detail");
-		detail(rc);
+	public void function saveNewAccount(required struct rc) {
+		getOrderService().setupOrderAccount(order=rc.$.slatwall.cart(), data=rc);
+		getFW().redirectExact($.creatHREF(filename='checkout'));
 	}
 	
 	public void function updateOrderShippingAddress(required struct rc) {

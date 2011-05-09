@@ -37,47 +37,53 @@ Notes:
 
 --->
 <cfparam name="rc.validAccount" type="boolean" />
-<cfparam name="rc.validShipping" type="boolean" />
+<cfparam name="rc.validShippingAddress" type="boolean" />
+<cfparam name="rc.validShippingMethod" type="boolean" />
 <cfparam name="rc.validPayment" type="boolean" />
 
 <cfoutput>
 	<div class="svofrontendcheckoutdetail">
-		<form name="checkout" method="post" action="#$.createHREF(filename='checkout')#">
-			<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif rc.validAccount><a class="editLink">Edit</a></cfif></h3>
-			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif rc.validAccount>
-					<dl class="accountInfo">
-						<dt class="fullName">#$.slatwall.cart().getAccount().getFullName()#</dt>
-						<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmail()#</dd>
-					</dl>
-				<cfelse>
-					<div class="loginAccount">
+		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif rc.validAccount><a href="?doaction=logout" class="editLink">Edit</a></cfif></h3>
+		<div id="checkoutAccountContent" class="contentBlock">
+			<cfif rc.validAccount>
+				<dl class="accountInfo">
+					<dt class="fullName">#$.slatwall.cart().getAccount().getFullName()#</dt>
+					<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmail()#</dd>
+				</dl>
+			<cfelse>
+				<div class="loginAccount">
+					<form name="loginAccount" method="post" action="?nocache=1">
 						<h4>Account Login</h4>
 						<dl>
 							<dt>E-Mail Address</dt>
-							<dd><input type="text" name="email" value="" /></dd>
+							<dd><input type="text" name="username" value="" /></dd>
 							<dt>Password</dt>
 							<dd><input type="password" name="password" value="" /></dd>
 						</dl>
+						<input type="hidden" name="doaction" value="login" />
 						<button type="submit">Login & Continue</button>
-					</div>
-					<div class="newAccount">
-						<h4>Guest Checkout</h4>
+					</form>
+				</div>
+				<div class="newAccount">
+					<form name="newAccount" method="post" action="?slatAction=frontend:checkout.saveNewAccount">
+						<h4>New Customer</h4>
 						<dl>
 							<dt>First Name</dt>
 							<dd><input type="text" name="firstName" value="" /></dd>
 							<dt>Last Name</dt>
 							<dd><input type="text" name="lastName" value="" /></dd>
+							<dt>Phone Number</dt>
+							<dd><input type="text" name="phoneNumber" value="" /></dd>
 							<dt>Email</dt>
 							<dd><input type="text" name="email" value="" /></dd>
 							<dt>Confirm Email</dt>
 							<dd><input type="text" name="emailConfirm" value="" /></dd>
 							<dt>Guest Checkout</dt>
 							<dd>
-								<input type="radio" name="guestAccount" value="0"  />Save Account
-								<input type="radio" name="guestAccount" value="1" checked="checked" />Checkout As Guest
+								<input type="radio" name="createMuraAccount" value="1" />Save Account
+								<input type="radio" name="createMuraAccount" value="0" checked="checked" />Checkout As Guest
 							</dd>
-							<div class="guestPassword" style="display:none;">
+							<div class="accountPassword" style="display:none;">
 								<dt>Password</dt>
 								<dd><input type="password" name="password" value="" /></dd>
 								<dt>Confirm Password</dt>
@@ -85,39 +91,54 @@ Notes:
 							</div>
 						</dl>
 						<button type="submit">Continue</button>
-					</div>
+					</form>
+				</div>
+			</cfif>
+		</div>
+		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
+		<cfif rc.validAccount>
+			<div id="checkoutShippingContent" class="contentBlock">
+				<cfif rc.validShippingAddress>
+				<cfelse>
+					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShipping">
+						<div class="shippingAddress">
+							<h4>Shipping Address</h4>
+							<dl>
+								<dt>Name</dt>
+								<dd><input type="text" name="shippingName" value="" /></dd>
+								<dt>Company</dt>
+								<dd><input type="text" name="shippingCompany" value="" /></dd>
+								<dt>Street Address</dt>
+								<dd><input type="text" name="shippingStreetAddress" value="" /></dd>
+								<dt>Street Address 2</dt>
+								<dd><input type="text" name="shippingStreet2Address" value="" /></dd>
+								<dt>City</dt>
+								<dd><input type="text" name="shippingCity" value="" /></dd>
+								<dt>State</dt>
+								<dd><input type="text" name="shippingState" value="" /></dd>
+								<dt>Postal Code</dt>
+								<dd><input type="text" name="shippingPostalCode" value="" /></dd>
+							</dl>
+						</div>
+						<div class="shippingMethod">
+							<h4>Shipping Method</h4>
+							<div class="shippingOptions">
+								
+							</div>
+						</div>
+						<button type="submit">Save & Continue</button>
+					</form>
 				</cfif>
 			</div>
-			<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
-			<div id="checkoutShippingContent" class="contentBlock">
-				<div class="shippingAddress">
-					<h4>Shipping Address</h4>
-					<dl>
-						<dt>Name</dt>
-						<dd><input type="text" name="shippingName" value="" /></dd>
-						<dt>Company</dt>
-						<dd><input type="text" name="shippingCompany" value="" /></dd>
-						<dt>Street Address</dt>
-						<dd><input type="text" name="shippingStreetAddress" value="" /></dd>
-						<dt>Street Address 2</dt>
-						<dd><input type="text" name="shippingStreet2Address" value="" /></dd>
-						<dt>City</dt>
-						<dd><input type="text" name="shippingCity" value="" /></dd>
-						<dt>State</dt>
-						<dd><input type="text" name="shippingState" value="" /></dd>
-						<dt>Postal Code</dt>
-						<dd><input type="text" name="shippingPostalCode" value="" /></dd>
-					</dl>
-				</div>
-				<div class="shippingMethod">
-					<h4>Shipping Metod</h4>
-					<dl>
-						<!--- Shipping Options Here --->
-					</dl>
-				</div>
-				<button type="submit">Save & Continue</button>
+		</cfif>
+		<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method</h3>
+		<cfif rc.validAccount && rc.validShippingAddress>
+			<div id="checkoutShippingMethodContent" class="contentBlock">
+				
 			</div>
-			<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
+		</cfif>
+		<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
+		<cfif rc.validAccount && rc.validShippingAddress && rc.validShippingMethod>
 			<div id="checkoutPaymentContent" class="contentBlock">
 				<div class="paymentAddress">
 					<h4>Payment Address</h4>
@@ -133,16 +154,35 @@ Notes:
 					</dl>
 				</div>
 			</div>
-			<h3 id="checkoutItemsTitle" class="titleBlick">Order Items</h3>
-			<div id="checkoutItemsContent" class="contentBlock">
-				<div class="paymentItems">
-					<dl>
-						<dt>Same As Shipping</dt>
-						<dd><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
-					</dl>
-				</div>
+		</cfif>
+		<h3 id="checkoutItemsTitle" class="titleBlick">Order Items</h3>
+		<div id="checkoutItemsContent" class="contentBlock orderItems">
+			<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
+				<dl class="orderItem">
+					<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
+					<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
+					<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+					<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
+					<dd class="quantity">#NumberFormat(local.orderItem.getQuantity(),"0")#</dd>
+					<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
+				</dl>
+			</cfloop>
+			<dl class="totals">
+				<dt class="subtotal">Subtotal</dt>
+				<dd class="subtotal">#DollarFormat($.slatwall.cart().getSubtotal())#</dd>
+				<dt class="shipping">Shipping</dt>
+				<dd class="shipping">#DollarFormat($.slatwall.cart().getShippingTotal())#</dd>
+				<dt class="tax">Tax</dt>
+				<dd class="tax">#DollarFormat($.slatwall.cart().getTaxTotal())#</dd>
+				<dt class="total">Total</dt>
+				<dd class="total">#DollarFormat($.slatwall.cart().getTotal())#</dd>
+			</dl>
+		</div>
+		<cfif rc.validAccount && rc.validShippingAddress && rc.validPayment>
+			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
 				<button type="submit">Submit Order</button>
-			</div>
-		</form>
+			</form>
+		</cfif>
 	</div>
+	<cfdump var="#$.slatwall.cart().getAccount()#" top="2" />
 </cfoutput>
