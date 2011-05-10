@@ -40,6 +40,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	property name="sessionService";
 	property name="userManager";
+	property name="loginManager";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
 		// TODO: Check the status of the order to make sure it isn't closed
@@ -81,7 +82,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public void function setupOrderAccount(required any order, struct data={}) {
-		
 		if(isNull(arguments.order.getAccount())) {
 			arguments.order.setAccount(getNewEntity("SlatwallAccount"));
 		}
@@ -132,22 +132,42 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			newAccountPhoneNumber.setAccount(arguments.order.getAccount());
 		}
 		
-		if(!arguments.order.getAccount().hasErrors()) {
-			if(structKeyExists(arguments.data, "createMuraAccount") && arguments.data.createMuraAccount) {
-				// Look for a username that is set as that e-mail
-				var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
-				muraUser.setFName(arguments.data.firstName);
-				muraUser.setLName(arguments.data.lastName);
-				muraUser.setLName(arguments.data.lastName);
-				muraUser.setUsername(arguments.data.email);
-				muraUser.setEmail(arguments.data.email);
-				muraUser.setSiteID($.event('siteid'));
-				muraUser.save();
-			}
+		// If the new account is not a guest account, create a mura account
+		if(structKeyExists(arguments.data, "createMuraAccount") && arguments.data.createMuraAccount) {
+			// Look for a username that is set as that e-mail
+			var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
 			
-			save(arguments.order.getAccount());	
+			// Setup the mura user
+			muraUser.setFName(arguments.data.firstName);
+			muraUser.setLName(arguments.data.lastName);
+			muraUser.setLName(arguments.data.lastName);
+			muraUser.setUsername(arguments.data.email);
+			muraUser.setEmail(arguments.data.email);
+			muraUser.setPassword(arguments.data.password);
+			muraUser.setSiteID($.event('siteid'));
+			
+			// Save the mura user
+			muraUser.save();
+			
+			// Set the mura userID in the new account
+			arguments.order.getAccount().setMuraUserID(muraUser.getUserID());
+			
+			// Save the new account via an order save
+			save(arguments.order);
+			
+			// Login the new user
+			var muraData = {};
+			muraData.userID = muraUser.getUserID();
+			muraData.siteid = $.event('siteid');
+			getLoginManager().loginByUserID(muraData);
+			
+		} else {
+			// Save the new account via an order save
+			save(arguments.order);
 		}
 		
+			
+		save(arguments.order);
 	}
 	
 	public void function clearOrderItems(required any order) {
@@ -167,6 +187,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().isNew()) {
 			verified = false;
 		}
+		
+		writeDump(verified);
+		writeDump(arguments.order);
+		abort;
 		
 		return verified;
 	}

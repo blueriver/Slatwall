@@ -49,6 +49,8 @@
         <property name="DAO"><ref bean="OrderDAO" /></property>
 		<property name="validator"><ref bean="Validator" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="userManager"><ref bean="userManager" /></property>
+		<property name="loginManager"><ref bean="loginManager" /></property>
     </bean>
 
 

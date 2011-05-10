@@ -70,7 +70,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function saveNewAccount(required struct rc) {
 		getOrderService().setupOrderAccount(order=rc.$.slatwall.cart(), data=rc);
-		getFW().redirectExact($.creatHREF(filename='checkout'));
+		getFW().redirectExact($.createHREF(filename='checkout'));
 	}
 	
 	public void function updateOrderShippingAddress(required struct rc) {
