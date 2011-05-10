@@ -37,17 +37,42 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcheckoutdetail">
-		<cfinclude template="account.cfm" />
-		<cfinclude template="shipping.cfm" />
-		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="payment.cfm" />
-		<cfinclude template="items.cfm" />
-		
-		<cfif $.slatwall.cart().isValidForProcessing()>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
-				<button type="submit">Submit Order</button>
-			</form>
+	<div class="svofrontendcheckoutshipping">
+		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
+		<cfif $.slatwall.cart().hasValidAccount()>
+			<div id="checkoutShippingContent" class="contentBlock">
+				<cfif $.slatwall.cart().hasValidOrderShippingAddress()>
+				<cfelse>
+					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShipping">
+						<div class="shippingAddress">
+							<h4>Shipping Address</h4>
+							<dl>
+								<dt>Name</dt>
+								<dd><input type="text" name="shippingName" value="" /></dd>
+								<dt>Company</dt>
+								<dd><input type="text" name="shippingCompany" value="" /></dd>
+								<dt>Street Address</dt>
+								<dd><input type="text" name="shippingStreetAddress" value="" /></dd>
+								<dt>Street Address 2</dt>
+								<dd><input type="text" name="shippingStreet2Address" value="" /></dd>
+								<dt>City</dt>
+								<dd><input type="text" name="shippingCity" value="" /></dd>
+								<dt>State</dt>
+								<dd><input type="text" name="shippingState" value="" /></dd>
+								<dt>Postal Code</dt>
+								<dd><input type="text" name="shippingPostalCode" value="" /></dd>
+							</dl>
+						</div>
+						<div class="shippingMethod">
+							<h4>Shipping Method</h4>
+							<div class="shippingOptions">
+								
+							</div>
+						</div>
+						<button type="submit">Save & Continue</button>
+					</form>
+				</cfif>
+			</div>
 		</cfif>
 	</div>
 </cfoutput>

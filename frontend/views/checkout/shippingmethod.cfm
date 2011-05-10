@@ -36,18 +36,14 @@
 Notes:
 
 --->
+
 <cfoutput>
-	<div class="svofrontendcheckoutdetail">
-		<cfinclude template="account.cfm" />
-		<cfinclude template="shipping.cfm" />
-		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="payment.cfm" />
-		<cfinclude template="items.cfm" />
+	<div class="svocheckoutshippingmethod">
+	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method</h3>
+	<cfif $.slatwall.cart().hasValidAccount() && $.slatwall.cart().hasValidOrderShippingAddress()>
+	<div id="checkoutShippingMethodContent" class="contentBlock">
 		
-		<cfif $.slatwall.cart().isValidForProcessing()>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
-				<button type="submit">Submit Order</button>
-			</form>
-		</cfif>
+	</div>
+	</cfif>
 	</div>
 </cfoutput>
