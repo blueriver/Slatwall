@@ -56,7 +56,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Related Object Properties
 	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" cascade="all-delete-orphan";
-	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhone" cascade="all-delete-orphan";
+	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan";
 	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all";
 	
@@ -117,8 +117,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	   arguments.accountEmail.setAccount(this);
 	}
 	
-	public void function addAccountPhoneNumber(required AccountPhone accountPhone) {
-	   arguments.accountPhone.setAccount(this);
+	public void function addAccountPhoneNumber(required AccountPhoneNumber accountPhoneNumber) {
+	   arguments.accountPhoneNumber.setAccount(this);
 	}
 		
     /************   END Association Management Methods   *******************/
