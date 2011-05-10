@@ -61,7 +61,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Check the existing order items and increment quantity if possible.
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
-			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderShipping() == arguments.orderShipping) {
+			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderShipping().getOrderShippingID() == arguments.orderShipping.getOrderShippingID()) {
 				itemExists = true;
 				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
 			}
@@ -74,6 +74,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			newItem.setQuantity(arguments.quantity);
 			newItem.setOrder(arguments.order);
 			newItem.setOrderShipping(arguments.orderShipping);
+			newItem.setPrice(arguments.sku.getPrice());
 		}
 		
 		save(arguments.order);

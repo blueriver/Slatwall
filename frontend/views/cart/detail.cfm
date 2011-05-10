@@ -50,7 +50,7 @@ Notes:
 						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
 						<dd class="price">#local.orderItem.getPrice()#</dd>
 						<dd class="quantity">#local.orderItem.getQuantity()#</dd>
-						<dd class="extended">#local.orderItem.getQuantity()*local.orderItem.getPrice()#</dd>
+						<dd class="extended">#local.orderItem.getExtendedPrice()#</dd>
 					</dl>
 				</cfloop>
 				<dl class="totals">
