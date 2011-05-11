@@ -52,11 +52,19 @@ component extends="BaseService" accessors="true" output="false" {
 			// If no account exists, create a new one and save it linked to the user that just logged in.
 			var account = getNewEntity();
 			account.setMuraUserID(arguments.muraUser.getUserID());
-			var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
-			accountEmail.setEmail(arguments.muraUser.getEmail());
+			var accountEmail = getNewEntity(entityName="SlatwallAccountEmailAddress");
+			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
 			accountEmail.setPrimaryFlag(1);
 			accountEmail.setAccount(account);
-			
+			save(entity=account);
+		}
+		
+		// Add a primary e-mail to the account if one doesn't exist in slatwall but does in mura
+		if(account.getPrimaryEmailAddress() == "" && arguments.muraUser.getEmail() != "") {
+			var accountEmail = getNewEntity(entityName="SlatwallAccountEmailAddress");
+			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
+			accountEmail.setPrimaryFlag(1);
+			accountEmail.setAccount(account);
 			save(entity=account);
 		}
 		
@@ -68,7 +76,7 @@ component extends="BaseService" accessors="true" output="false" {
 		var newAccount = getNewEntity();
 		
 		// Populate the account from the data
-		account.populate(arguments.data);
+		newAccount.populate(arguments.data);
 		
 		// Validate Account
 		getValidator().validateObject(entity=newAccount);

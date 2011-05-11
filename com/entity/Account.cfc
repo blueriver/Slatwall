@@ -80,14 +80,30 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return "#getFirstName()# #getLastName()#";
 	}
 	
-	public string function getPrimaryEmail() {
-		var emails = getAccountEmailAddresses();
-		for(var i=1; i<=arrayLen(emails); i++) {
-			if(emails[i].getPrimaryFlag()) {
-				variables.primaryEmail = emails[i].getEmail();
+	public string function getPrimaryEmailAddress() {
+		if(!structKeyExists(variables, "primaryEmailAddress")) {
+			variables.primaryEmailAddress = "";
+			var emailAddresses = getAccountEmailAddresses();
+			for(var i=1; i<=arrayLen(emailAddresses); i++) {
+				if(emailAddresses[i].getPrimaryFlag()) {
+					variables.primaryEmailAddress = emailAddresses[i].getEmailAddress();
+				}
 			}
 		}
-		return variables.primaryEmail;
+		return variables.primaryEmailAddress;
+	}
+	
+	public string function getPrimaryPhoneNumber() {
+		if(!structKeyExists(variables, "primaryPhoneNumber")) {
+			variables.primaryPhoneNumber = "";
+			var phoneNumbers = getAccountPhoneNumbers();
+			for(var i=1; i<=arrayLen(phoneNumbers); i++) {
+				if(emails[i].getPrimaryFlag()) {
+					variables.primaryPhoneNumber = phoneNumbers[i].getPhoneNumber();
+				}
+			}
+		}
+		return variables.primaryPhoneNumber;
 	}
 	
 	public boolean function isGuestAccount() {

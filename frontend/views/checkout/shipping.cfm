@@ -36,12 +36,21 @@
 Notes:
 
 --->
+<cfparam name="rc.edit" type="string" default="">
+
 <cfoutput>
 	<div class="svofrontendcheckoutshipping">
 		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
-		<cfif $.slatwall.cart().hasValidAccount()>
+		<cfif $.slatwall.cart().hasValidAccount() and rc.edit eq "" || rc.edit eq "shipping">
 			<div id="checkoutShippingContent" class="contentBlock">
-				<cfif $.slatwall.cart().hasValidOrderShippingAddress()>
+				<cfif $.slatwall.cart().hasValidOrderShippingAddress() and rc.edit eq "" || rc.edit eq "shipping">
+					<cfif rc.edit eq "shipping">
+						<!--- Shipping Address Edit Here --->
+					<cfelse>
+						<div class="shippingAddress">
+							<!--- Shipping Address Display Here --->
+						</div>
+					</cfif>
 				<cfelse>
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShipping">
 						<div class="shippingAddress">

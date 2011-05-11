@@ -36,16 +36,16 @@
 Notes:
 
 --->
-<cfparam name="rc.editAccount" type="boolean" default="false"> 
+<cfparam name="rc.edit" type="string" default="">
 
 <cfoutput>
 	<div class="svofrontendcheckoutaccount">
-		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif $.slatwall.cart().hasValidAccount()><a href="?doaction=logout&editAccount=1" class="editLink">Edit</a></cfif></h3>
+		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif $.slatwall.cart().hasValidAccount()><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
 		<div id="checkoutAccountContent" class="contentBlock">
-			<cfif $.slatwall.cart().hasValidAccount()>
-				<cfif rc.editAccount>
+			<cfif $.slatwall.cart().hasValidAccount() and rc.edit eq "" || rc.edit eq "account">
+				<cfif rc.edit eq "account">
 					<div class="accountEdit">
-						<form name="editAccount" method="post" action="?slatAction=frontend:checkout.saveNewAccount">
+						<form name="accountEdit" method="post" action="?slatAction=frontend:checkout.updateAccount">
 							<h4>Account Information</h4>
 							<dl>
 								<dt>First Name</dt>
@@ -55,7 +55,7 @@ Notes:
 								<dt>Phone Number</dt>
 								<dd><input type="text" name="phoneNumber" value="#$.slatwall.cart().getAccount().getPrimaryPhoneNumber()#" /></dd>
 								<dt>Email</dt>
-								<dd><input type="text" name="email" value="#$.slatwall.cart().getAccount().getPrimaryEmail()#" /></dd>
+								<dd><input type="text" name="email" value="#$.slatwall.cart().getAccount().getPrimaryEmailAddress()#" /></dd>
 								<cfif isNull($.slatwall.cart().getAccount().getMuraUserID())>
 									<dt>Guest Checkout</dt>
 									<dd>
@@ -70,6 +70,8 @@ Notes:
 									</div>
 								</cfif>
 							</dl>
+							<input type="hidden" name="accountID" value="#$.slatwall.cart().getAccount().getAccountID()#" />
+							<cfif $.currentUser().isLoggedIn()><a href="?doaction=logout">logout</a></cfif>
 							<button type="submit">Save & Continue</button>
 						</form>
 					</div>
@@ -77,7 +79,7 @@ Notes:
 					<div class="accountDetails">
 						<dl class="accountInfo">
 							<dt class="fullName">#$.slatwall.cart().getAccount().getFullName()#</dt>
-							<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmail()#</dd>
+							<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmailAddress()#</dd>
 						</dl>
 					</div>
 				</cfif>

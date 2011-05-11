@@ -54,8 +54,8 @@ component displayname="Account Email" entityname="SlatwallAccountEmailAddress" t
 	
 	public void function setAccount(required Account account) {
 		variables.account = arguments.account;
-		if(!arguments.account.hasAccountEmail(this)) {
-			arrayAppend(arguments.account.getAccountEmails(),this);
+		if(!arguments.account.hasAccountEmailAddress(this)) {
+			arrayAppend(arguments.account.getAccountEmailAddresses(),this);
 		}
 	}
 	
