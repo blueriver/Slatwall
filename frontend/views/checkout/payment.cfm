@@ -37,17 +37,24 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcheckoutdetail">
-		<cfinclude template="account.cfm" />
-		<cfinclude template="shipping.cfm" />
-		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="payment.cfm" />
-		<cfinclude template="items.cfm" />
-		
-		<cfif $.slatwall.cart().isValidForProcessing()>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
-				<button type="submit">Submit Order</button>
-			</form>
+	<div class="svofrontendorderpayment">
+		<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
+		<cfif $.slatwall.cart().hasValidAccount() && $.slatwall.cart().hasValidOrderShipping()>
+			<div id="checkoutPaymentContent" class="contentBlock">
+				<div class="paymentAddress">
+					<h4>Payment Address</h4>
+					<dl>
+						<dt>Same As Shipping</dt>
+						<dd><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
+					</dl>
+				</div>
+				<div class="paymentMethod">
+					<h4>Payment Method</h4>
+					<dl>
+						<!--- Payment Options Here --->
+					</dl>
+				</div>
+			</div>
 		</cfif>
 	</div>
 </cfoutput>

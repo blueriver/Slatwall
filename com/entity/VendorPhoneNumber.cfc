@@ -36,11 +36,11 @@
 Notes:
 
 */
-component displayname="Vendor Phone" entityname="SlatwallVendorPhone" table="SlatwallVendorPhone" persistent="true" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Vendor Phone" entityname="SlatwallVendorPhoneNumber" table="SlatwallVendorPhoneNumber" persistent="true" extends="BaseEntity" {
 	
 	// Persistant Properties
-	property name="vendorPhoneID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="phone" ormtype="string";
+	property name="vendorPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="phoneNumber" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -50,9 +50,5 @@ component displayname="Vendor Phone" entityname="SlatwallVendorPhone" table="Sla
 	
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorPhoneTypeID";
-	
-	public string function getPhoneType() {
-		return getVendorPhoneType().getType();
-	}
+
 }

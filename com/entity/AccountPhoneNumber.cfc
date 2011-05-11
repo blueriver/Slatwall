@@ -41,6 +41,7 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	// Persistant Properties
 	property name="accountPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="phoneNumber" validateRequired type="string";
+	property name="primaryFlag" default="false" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

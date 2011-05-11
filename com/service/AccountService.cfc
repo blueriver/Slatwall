@@ -40,6 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 	property name="sessionService" type="any";
 	property name="userManager" type="any";
+	property name="userUtility" type="any";
 	
 	public any function getAccountByMuraUser(required any muraUser) {
 		// Load Account based upon the logged in muraUserID
@@ -51,15 +52,94 @@ component extends="BaseService" accessors="true" output="false" {
 			// If no account exists, create a new one and save it linked to the user that just logged in.
 			var account = getNewEntity();
 			account.setMuraUserID(arguments.muraUser.getUserID());
-			var accountEmail = getNewEntity(entityName="SlatwallAccountEmail");
-			accountEmail.setEmail(arguments.muraUser.getEmail());
+			var accountEmail = getNewEntity(entityName="SlatwallAccountEmailAddress");
+			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
 			accountEmail.setPrimaryFlag(1);
 			accountEmail.setAccount(account);
-			
+			save(entity=account);
+		}
+		
+		// Add a primary e-mail to the account if one doesn't exist in slatwall but does in mura
+		if(account.getPrimaryEmailAddress() == "" && arguments.muraUser.getEmail() != "") {
+			var accountEmail = getNewEntity(entityName="SlatwallAccountEmailAddress");
+			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
+			accountEmail.setPrimaryFlag(1);
+			accountEmail.setAccount(account);
 			save(entity=account);
 		}
 		
 		return account;
 	}
 	
+	public any function createNewAccount(required struct data) {
+		// Create new Account
+		var newAccount = getNewEntity();
+		var errorsExist = false;
+		
+		// Populate the account from the data
+		newAccount.populate(arguments.data);
+		
+		// Validate Account
+		getValidator().validateObject(entity=newAccount);
+		if(newAccount.hasErrors()) {
+			errorsExist = true;
+		}
+		
+		// Create a Primary e-mail
+		if( structKeyExists(arguments.data, "emailAddress") ) {
+			var newEmailAddress = getNewEntity("SlatwallAccountEmailAddress");
+			newEmailAddress.setEmailAddress(arguments.data.emailAddress);
+			newEmailAddress.setPrimaryFlag(1);
+			newEmailAddress.setAccount(newAccount);
+			getValidator().validateObject(entity=newEmailAddress);
+			if(newEmailAddress.hasErrors()) {
+				errorsExist = true;
+			}
+		}
+		
+		// Create a primary Phone Number
+		if( structKeyExists(arguments.data, "phoneNumber") ) {
+			var newPhoneNumber = getNewEntity("SlatwallAccountPhoneNumber");
+			newPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
+			newPhoneNumber.setPrimaryFlag(1);
+			newPhoneNumber.setAccount(newAccount);
+			getValidator().validateObject(entity=newPhoneNumber);
+			if(newPhoneNumber.hasErrors()) {
+				errorsExist = true;
+			}
+		}
+		
+		// Create Mura User
+		if( structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && structKeyExists(arguments.data, "emailAddress")) {
+			var newMuraUser = getUserManager().getBean();
+			
+			// Setup the mura user
+			newMuraUser.setFName(arguments.data.firstName);
+			newMuraUser.setLName(arguments.data.lastName);
+			newMuraUser.setUsername(arguments.data.emailAddress);
+			newMuraUser.setEmail(arguments.data.emailAddress);
+			newMuraUser.setPassword(arguments.data.password);
+			newMuraUser.setSiteID($.event('siteid'));
+			
+			// Set the mura userID in the new account
+			newAccount.setMuraUserID(newMuraUser.getUserID());
+		}
+		
+		if(!errorsExist) {
+			// Save the account
+			getDAO().save(entity=newAccount);
+			
+			if(!isNull(newMuraUser)) {
+				// Save the mura user
+				newMuraUser.save();
+				
+				// Login the new user
+				getUserUtility().loginByUserID(newMuraUser.getUserID(), $.event('siteid'));
+			}
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
+		}
+		
+		return newAccount;
+	}
 }

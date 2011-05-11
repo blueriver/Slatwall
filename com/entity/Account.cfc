@@ -55,7 +55,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="accountEmails" singularname="accountEmail" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmail" cascade="all-delete-orphan";
+	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan";
 	property name="orders" singularname="order" fieldType="one-to-many" fkColumn="accountID" cfc="Order" inverse="true" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all";
@@ -63,10 +63,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Non-Persistent Cached Values
 	variables.primaryEmail = "";
 	
-	
 	public any function init() {
-		if(isNull(variables.accountEmails)) {
-			variables.accountEmails = [];
+		if(isNull(variables.accountEmailAddresses)) {
+			variables.accountEmailAddresses = [];
 		}
 		if(isNull(variables.accountPhoneNumbers)) {
 			variables.accountPhoneNumbers = [];
@@ -81,14 +80,30 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return "#getFirstName()# #getLastName()#";
 	}
 	
-	public string function getPrimaryEmail() {
-		var emails = getAccountEmails();
-		for(var i=1; i<=arrayLen(emails); i++) {
-			if(emails[i].getPrimaryFlag()) {
-				variables.primaryEmail = emails[i].getEmail();
+	public string function getPrimaryEmailAddress() {
+		if(!structKeyExists(variables, "primaryEmailAddress")) {
+			variables.primaryEmailAddress = "";
+			var emailAddresses = getAccountEmailAddresses();
+			for(var i=1; i<=arrayLen(emailAddresses); i++) {
+				if(emailAddresses[i].getPrimaryFlag()) {
+					variables.primaryEmailAddress = emailAddresses[i].getEmailAddress();
+				}
 			}
 		}
-		return variables.primaryEmail;
+		return variables.primaryEmailAddress;
+	}
+	
+	public string function getPrimaryPhoneNumber() {
+		if(!structKeyExists(variables, "primaryPhoneNumber")) {
+			variables.primaryPhoneNumber = "";
+			var phoneNumbers = getAccountPhoneNumbers();
+			for(var i=1; i<=arrayLen(phoneNumbers); i++) {
+				if(phoneNumbers[i].getPrimaryFlag()) {
+					variables.primaryPhoneNumber = phoneNumbers[i].getPhoneNumber();
+				}
+			}
+		}
+		return variables.primaryPhoneNumber;
 	}
 	
 	public boolean function isGuestAccount() {

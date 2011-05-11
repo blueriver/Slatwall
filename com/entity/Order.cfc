@@ -115,6 +115,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getSubtotal() + getTaxTotal() + getShippingTotal();
 	}
 	
+	public void function removeAllOrderItems() {
+		var orderItems = getOrderItems();
+		for(var i=1; i<=arrayLen(orderItems); i++) {
+			removeOrderItem(orderItems[i]);
+		}
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
@@ -180,5 +187,79 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     }
 	
     /************   END Association Management Methods   *******************/
+	
+	// These Methods are designed to check what still needs to be set before an order is ready to process
+	public boolean function hasValidAccount() {
+		if(isNull(variables.account) || variables.account.isNew()) {
+			return false;
+		} else {
+			return true;	
+		}
+	}
+	
+	public boolean function hasValidOrderShippingAddress() {
+		var valid = true;
+		
+		var orderShippings = getOrderShippings();
+		
+		// Loop over all order Shippings to make sure that there is a shipping address asigned
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
+				valid = false;
+			}
+		}
+		
+		return valid;
+	}
+	
+	public boolean function hasValidOrderShippingMethod() {
+		var valid = true;
+		
+		var orderShippings = getOrderShippings();
+		
+		// Loop over all order Shippings to make sure that there is a shipping method asigned
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getShippingMethod())) {
+				valid = false;
+			}
+		}
+		
+		return valid;
+	}
+	
+	public boolean function hasValidOrderShipping() {
+		var valid = false;
+		
+		if(hasValidOrderShippingAddress() && hasValidOrderShippingMethod()) {
+			valid = true;
+		}
+		
+		return valid;
+	}
+	
+	public boolean function hasValidPayment() {
+		var valid = true;
+		var totalPayments = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPayments += orderPayments[i].getAmount();
+		}
+		
+		if(totalPayments == getTotal()) {
+			valid = true;
+		}
+		
+		return valid;
+	}
+	
+	public boolean function isValidForProcessing() {
+		var valid = false;
+		if(hasValidAccount() && hasValidOrderShippingAddress() && hasValidOrderShippingMethod() && hasValidPayment()) {
+			valid = true;
+		}
+		return valid;
+	}
+	
 	
 }

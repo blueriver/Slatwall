@@ -28,8 +28,9 @@
         <property name="entityName"><value>SlatwallAccount</value></property>
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="validator"><ref bean="Validator" /></property>
-		<property name="userManager"><ref bean="userManager" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="userManager"><ref bean="userManager" /></property>
+		<property name="userUtility"><ref bean="userUtility" /></property>
     </bean>
 	
     <bean id="attributeService" class="slatwall.com.service.attributeService">

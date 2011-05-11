@@ -68,6 +68,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().setView("admin:account.detail");
 		rc.edit = true;
 	}
+	
+	public void function delete(required struct rc) {
+		var account = getAccountService().getByID(rc.accountID);
+		var deleteResponse = getAccountService().delete(account);
+		if(deleteResponse.getStatusCode()) {
+			rc.message = deleteResponse.getMessage();		
+		} else {
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
+		}
+		getFW().redirect(action="admin:account.list",preserve="message");
+	}
 
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";

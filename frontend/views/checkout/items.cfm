@@ -37,17 +37,29 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcheckoutdetail">
-		<cfinclude template="account.cfm" />
-		<cfinclude template="shipping.cfm" />
-		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="payment.cfm" />
-		<cfinclude template="items.cfm" />
-		
-		<cfif $.slatwall.cart().isValidForProcessing()>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
-				<button type="submit">Submit Order</button>
-			</form>
-		</cfif>
+	<div class="svofrontendcheckoutitems">
+		<h3 id="checkoutItemsTitle" class="titleBlick">Order Items</h3>
+		<div id="checkoutItemsContent" class="contentBlock orderItems">
+			<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
+				<dl class="orderItem">
+					<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
+					<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
+					<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+					<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
+					<dd class="quantity">#NumberFormat(local.orderItem.getQuantity(),"0")#</dd>
+					<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
+				</dl>
+			</cfloop>
+			<dl class="totals">
+				<dt class="subtotal">Subtotal</dt>
+				<dd class="subtotal">#DollarFormat($.slatwall.cart().getSubtotal())#</dd>
+				<dt class="shipping">Shipping</dt>
+				<dd class="shipping">#DollarFormat($.slatwall.cart().getShippingTotal())#</dd>
+				<dt class="tax">Tax</dt>
+				<dd class="tax">#DollarFormat($.slatwall.cart().getTaxTotal())#</dd>
+				<dt class="total">Total</dt>
+				<dd class="total">#DollarFormat($.slatwall.cart().getTotal())#</dd>
+			</dl>
+		</div>
 	</div>
 </cfoutput>

@@ -39,7 +39,6 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
-	property name="userManager";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
 		// TODO: Check the status of the order to make sure it isn't closed
@@ -61,7 +60,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Check the existing order items and increment quantity if possible.
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
-			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderShipping() == arguments.orderShipping) {
+			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderShipping().getOrderShippingID() == arguments.orderShipping.getOrderShippingID()) {
 				itemExists = true;
 				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
 			}
@@ -74,13 +73,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			newItem.setQuantity(arguments.quantity);
 			newItem.setOrder(arguments.order);
 			newItem.setOrderShipping(arguments.orderShipping);
+			newItem.setPrice(arguments.sku.getPrice());
 		}
 		
 		save(arguments.order);
 	}
 	
+	/*
 	public void function setupOrderAccount(required any order, struct data={}) {
-		
 		if(isNull(arguments.order.getAccount())) {
 			arguments.order.setAccount(getNewEntity("SlatwallAccount"));
 		}
@@ -131,75 +131,42 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			newAccountPhoneNumber.setAccount(arguments.order.getAccount());
 		}
 		
-		if(!arguments.order.getAccount().hasErrors()) {
-			if(structKeyExists(arguments.data, "createMuraAccount") && arguments.data.createMuraAccount) {
-				// Look for a username that is set as that e-mail
-				var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
-				muraUser.setFName(arguments.data.firstName);
-				muraUser.setLName(arguments.data.lastName);
-				muraUser.setLName(arguments.data.lastName);
-				muraUser.setUsername(arguments.data.email);
-				muraUser.setEmail(arguments.data.email);
-				muraUser.setSiteID($.event('siteid'));
-				muraUser.save();
-			}
+		// If the new account is not a guest account, create a mura account
+		if(structKeyExists(arguments.data, "createMuraAccount") && arguments.data.createMuraAccount) {
+			// Look for a username that is set as that e-mail
+			var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
 			
-			save(arguments.order.getAccount());	
+			// Setup the mura user
+			muraUser.setFName(arguments.data.firstName);
+			muraUser.setLName(arguments.data.lastName);
+			muraUser.setLName(arguments.data.lastName);
+			muraUser.setUsername(arguments.data.email);
+			muraUser.setEmail(arguments.data.email);
+			muraUser.setPassword(arguments.data.password);
+			muraUser.setSiteID($.event('siteid'));
+			
+			// Save the mura user
+			muraUser.save();
+			
+			// Set the mura userID in the new account
+			arguments.order.getAccount().setMuraUserID(muraUser.getUserID());
+			
+			// Save the new account via an order save
+			save(arguments.order);
+			
+			// Login the new user
+			var muraData = {};
+			muraData.userID = muraUser.getUserID();
+			muraData.siteid = $.event('siteid');
+			getLoginManager().loginByUserID(muraData);
+			
+		} else {
+			// Save the new account via an order save
+			save(arguments.order);
 		}
 		
-	}
-	
-	public void function clearOrderItems(required any order) {
-		// TODO: Check the status of the order to make sure it hasn't been placed yet.
-		var orderItems = arguments.order.getOrderItems();
-		
-		for(var i=1; i<=arrayLen(orderItems); i++) {
-			orderItems[i].removeOrder(arguments.order);
-		}
-		
+			
 		save(arguments.order);
 	}
-	
-	public boolean function verifyOrderAccount(required any order) {
-		var verified = true;
-		
-		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().isNew()) {
-			verified = false;
-		}
-		
-		return verified;
-	}
-	
-	public boolean function verifyOrderShippingAddress(required any order) {
-		var verified = true;
-		
-		var orderShippings = arguments.order.getOrderShippings();
-		
-		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
-				verified = false;
-			}
-		}
-		
-		return verified;
-	}
-	
-	public boolean function verifyOrderShippingMethod(required any order) {
-		var verified = true;
-		
-		var orderShippings = arguments.order.getOrderShippings();
-		
-		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getShippingMethod())) {
-				verified = false;
-			}
-		}
-		
-		return verified;
-	}
-	
-	public boolean function verifyOrderPayment(required any order) {
-		return false;
-	}
-	
+	*/	
 }
