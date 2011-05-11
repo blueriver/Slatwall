@@ -38,9 +38,8 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
+	property name="accountService" type="any";
 	property name="orderService" type="any";
-	property name="productService" type="any";
-	property name="addressService" type="any";
 	
 	public void function detail(required struct rc) {
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
@@ -49,11 +48,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 	}
 	
-	public void function saveNewAccount(required struct rc) {
-		getOrderService().setupOrderAccount(order=rc.$.slatwall.cart(), data=rc);
+	public void function saveNewOrderAccount(required struct rc) {
+		rc.$.slatwall.cart().setAccount(getAccountService().createNewAccount(data=rc));
 		getFW().redirectExact($.createHREF(filename='checkout'));
 	}
 	
+	/*
 	public void function updateOrderShippingAddress(required struct rc) {
 		param name="rc.orderShippingID" default="";
 		param name="rc.orderShippingAddressID" default="";
@@ -94,5 +94,5 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function processOrder(required struct rc) {
 		
 	}
-	
+	*/
 }

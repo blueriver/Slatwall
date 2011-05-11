@@ -39,8 +39,6 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
-	property name="userManager";
-	property name="loginManager";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
 		// TODO: Check the status of the order to make sure it isn't closed
@@ -81,6 +79,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		save(arguments.order);
 	}
 	
+	/*
 	public void function setupOrderAccount(required any order, struct data={}) {
 		if(isNull(arguments.order.getAccount())) {
 			arguments.order.setAccount(getNewEntity("SlatwallAccount"));
@@ -169,16 +168,5 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 		save(arguments.order);
 	}
-	
-	public void function clearOrderItems(required any order) {
-		// TODO: Check the status of the order to make sure it hasn't been placed yet.
-		var orderItems = arguments.order.getOrderItems();
-		
-		for(var i=1; i<=arrayLen(orderItems); i++) {
-			orderItems[i].removeOrder(arguments.order);
-		}
-		
-		save(arguments.order);
-	}
-	
+	*/	
 }

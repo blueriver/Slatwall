@@ -40,6 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 	property name="sessionService" type="any";
 	property name="userManager" type="any";
+	property name="loginManager" type="any";
 	
 	public any function getAccountByMuraUser(required any muraUser) {
 		// Load Account based upon the logged in muraUserID
@@ -62,4 +63,68 @@ component extends="BaseService" accessors="true" output="false" {
 		return account;
 	}
 	
+	public any function createNewAccount(required struct data) {
+		// Create new Account
+		var newAccount = getNewEntity();
+		
+		// Populate the account from the data
+		account.populate(arguments.data);
+		
+		// Validate Account
+		getValidator().validateObject(entity=newAccount);
+		
+		// Create a Primary e-mail
+		if( structKeyExists(arguments.data, "emailAddress") ) {
+			var newEmailAddress = getNewEntity("SlatwallAccountEmailAddress");
+			newEmailAddress.setEmailAddress(arguments.data.emailAddress);
+			newEmailAddress.setPrimaryFlag(1);
+			newEmailAddress.setAccount(newAccount);
+			getValidator().validateObject(entity=newEmailAddress);
+		}
+		
+		// Create a primary Phone Number
+		if( structKeyExists(arguments.data, "phoneNumber") ) {
+			var newPhoneNumber = getNewEntity("SlatwallAccountPhoneNumber");
+			newPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
+			newPhoneNumber.setPrimaryFlag(1);
+			newPhoneNumber.setAccount(newAccount);
+			getValidator().validateObject(entity=newEmailAddress);
+		}
+		
+		// Create Mura User
+		if( structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && structKeyExists(arguments.data, "emailAddress")) {
+			var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
+			
+			// Setup the mura user
+			muraUser.setFName(arguments.data.firstName);
+			muraUser.setLName(arguments.data.lastName);
+			muraUser.setUsername(arguments.data.emailAddress);
+			muraUser.setEmail(arguments.data.emailAddress);
+			muraUser.setPassword(arguments.data.password);
+			muraUser.setSiteID($.event('siteid'));
+			
+			// Set the mura userID in the new account
+			newAccount.setMuraUserID(muraUser.getUserID());
+		}
+		
+		if(!newAccount.hasErros() && !newEmailAddress.hasErros() && !newPhoneNumber.hasErros()) {
+			// Save the account
+			getDAO().save(entity=newAccount);
+			
+			if(!isNull(muraUser)) {
+				// Save the mura user
+				muraUser.save();
+				
+				// Login the new user
+				var muraData = {};
+				muraData.userID = muraUser.getUserID();
+				muraData.siteid = $.event('siteid');
+				getLoginManager().loginByUserID(muraData);
+			}
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
+		}
+		
+		return newAccount;
+	}
 }

@@ -42,7 +42,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="productService" type="any";
 	
 	public void function clearItems(required struct rc) {
-		getOrderService().clearOrderItems(order=rc.$.slatwall.cart());
+		rc.$.slatwall.cart().removeAllOrderItems();
 		getFW().redirectExact(rc.$.createHREF(filename='/'));
 	}
 	

@@ -63,12 +63,6 @@ Notes:
 								<dd><input type="text" name="shippingPostalCode" value="" /></dd>
 							</dl>
 						</div>
-						<div class="shippingMethod">
-							<h4>Shipping Method</h4>
-							<div class="shippingOptions">
-								
-							</div>
-						</div>
 						<button type="submit">Save & Continue</button>
 					</form>
 				</cfif>
