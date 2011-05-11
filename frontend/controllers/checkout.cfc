@@ -50,6 +50,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function saveNewOrderAccount(required struct rc) {
 		rc.$.slatwall.cart().setAccount(getAccountService().createNewAccount(data=rc));
+		getOrderService().save(rc.$.slatwall.cart());
 		getFW().redirectExact($.createHREF(filename='checkout'));
 	}
 	

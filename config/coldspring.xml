@@ -30,7 +30,7 @@
 		<property name="validator"><ref bean="Validator" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="userManager"><ref bean="userManager" /></property>
-		<property name="loginManager"><ref bean="loginManager" /></property>
+		<property name="userUtility"><ref bean="userUtility" /></property>
     </bean>
 	
     <bean id="attributeService" class="slatwall.com.service.attributeService">

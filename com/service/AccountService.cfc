@@ -40,7 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 	property name="sessionService" type="any";
 	property name="userManager" type="any";
-	property name="loginManager" type="any";
+	property name="userUtility" type="any";
 	
 	public any function getAccountByMuraUser(required any muraUser) {
 		// Load Account based upon the logged in muraUserID
@@ -74,12 +74,16 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function createNewAccount(required struct data) {
 		// Create new Account
 		var newAccount = getNewEntity();
+		var errorsExist = false;
 		
 		// Populate the account from the data
 		newAccount.populate(arguments.data);
 		
 		// Validate Account
 		getValidator().validateObject(entity=newAccount);
+		if(newAccount.hasErrors()) {
+			errorsExist = true;
+		}
 		
 		// Create a Primary e-mail
 		if( structKeyExists(arguments.data, "emailAddress") ) {
@@ -88,6 +92,9 @@ component extends="BaseService" accessors="true" output="false" {
 			newEmailAddress.setPrimaryFlag(1);
 			newEmailAddress.setAccount(newAccount);
 			getValidator().validateObject(entity=newEmailAddress);
+			if(newEmailAddress.hasErrors()) {
+				errorsExist = true;
+			}
 		}
 		
 		// Create a primary Phone Number
@@ -96,38 +103,38 @@ component extends="BaseService" accessors="true" output="false" {
 			newPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
 			newPhoneNumber.setPrimaryFlag(1);
 			newPhoneNumber.setAccount(newAccount);
-			getValidator().validateObject(entity=newEmailAddress);
+			getValidator().validateObject(entity=newPhoneNumber);
+			if(newPhoneNumber.hasErrors()) {
+				errorsExist = true;
+			}
 		}
 		
 		// Create Mura User
 		if( structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && structKeyExists(arguments.data, "emailAddress")) {
-			var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
+			var newMuraUser = getUserManager().getBean();
 			
 			// Setup the mura user
-			muraUser.setFName(arguments.data.firstName);
-			muraUser.setLName(arguments.data.lastName);
-			muraUser.setUsername(arguments.data.emailAddress);
-			muraUser.setEmail(arguments.data.emailAddress);
-			muraUser.setPassword(arguments.data.password);
-			muraUser.setSiteID($.event('siteid'));
+			newMuraUser.setFName(arguments.data.firstName);
+			newMuraUser.setLName(arguments.data.lastName);
+			newMuraUser.setUsername(arguments.data.emailAddress);
+			newMuraUser.setEmail(arguments.data.emailAddress);
+			newMuraUser.setPassword(arguments.data.password);
+			newMuraUser.setSiteID($.event('siteid'));
 			
 			// Set the mura userID in the new account
-			newAccount.setMuraUserID(muraUser.getUserID());
+			newAccount.setMuraUserID(newMuraUser.getUserID());
 		}
 		
-		if(!newAccount.hasErros() && !newEmailAddress.hasErros() && !newPhoneNumber.hasErros()) {
+		if(!errorsExist) {
 			// Save the account
 			getDAO().save(entity=newAccount);
 			
-			if(!isNull(muraUser)) {
+			if(!isNull(newMuraUser)) {
 				// Save the mura user
-				muraUser.save();
+				newMuraUser.save();
 				
 				// Login the new user
-				var muraData = {};
-				muraData.userID = muraUser.getUserID();
-				muraData.siteid = $.event('siteid');
-				getLoginManager().loginByUserID(muraData);
+				getUserUtility().loginByUserID(newMuraUser.getUserID(), $.event('siteid'));
 			}
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);

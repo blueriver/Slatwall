@@ -98,7 +98,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 			variables.primaryPhoneNumber = "";
 			var phoneNumbers = getAccountPhoneNumbers();
 			for(var i=1; i<=arrayLen(phoneNumbers); i++) {
-				if(emails[i].getPrimaryFlag()) {
+				if(phoneNumbers[i].getPrimaryFlag()) {
 					variables.primaryPhoneNumber = phoneNumbers[i].getPhoneNumber();
 				}
 			}

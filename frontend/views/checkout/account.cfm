@@ -55,7 +55,7 @@ Notes:
 								<dt>Phone Number</dt>
 								<dd><input type="text" name="phoneNumber" value="#$.slatwall.cart().getAccount().getPrimaryPhoneNumber()#" /></dd>
 								<dt>Email</dt>
-								<dd><input type="text" name="email" value="#$.slatwall.cart().getAccount().getPrimaryEmailAddress()#" /></dd>
+								<dd><input type="text" name="emailAddress" value="#$.slatwall.cart().getAccount().getPrimaryEmailAddress()#" /></dd>
 								<cfif isNull($.slatwall.cart().getAccount().getMuraUserID())>
 									<dt>Guest Checkout</dt>
 									<dd>
@@ -108,9 +108,9 @@ Notes:
 							<dt>Phone Number</dt>
 							<dd><input type="text" name="phoneNumber" value="" /></dd>
 							<dt>Email</dt>
-							<dd><input type="text" name="email" value="" /></dd>
+							<dd><input type="text" name="emailAddress" value="" /></dd>
 							<dt>Confirm Email</dt>
-							<dd><input type="text" name="emailConfirm" value="" /></dd>
+							<dd><input type="text" name="emailAddressConfirm" value="" /></dd>
 							<dt>Guest Checkout</dt>
 							<dd>
 								<input type="radio" name="createMuraAccount" value="1" />Save Account
