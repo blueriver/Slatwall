@@ -270,12 +270,38 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 			local.thisExtendSet.save();
 			// create a new attribute for the extend set
 			// getAttributeBy Name will look for it and if not found give me a new bean to use 
+			// TODO: Internationalize attribute labels and hints
 			local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
 			local.thisAttribute.set({
 				label = "Products Per Page",
 				type = "TextBox",
 				validation = "numeric",
-				defaultValue = "16"
+				defaultValue = "16",
+				orderNo = "1"
+			});
+			local.thisAttribute.save();
+			
+			local.thisAttribute = local.thisExtendSet.getAttributeByName("showSubPageProducts");
+			local.thisAttribute.set({
+				label = "Show Products Assigned to Sub Pages",
+				hint = "If this is enabled, products assigned to any sub pages will also show up in this page.",
+				type = "RadioGroup",
+				defaultValue = "1",
+				optionList="0^1",
+				optionLabelList="No^Yes",
+				orderNo="2"
+			});
+			local.thisAttribute.save();
+			
+			local.thisAttribute = local.thisExtendSet.getAttributeByName("excludefromAssignment");
+			local.thisAttribute.set({
+				label = "Exclude from Product Assignment",
+				hint = "If this is enabled, products cannot be assigned directly to this page. This can be used to set up parent product listing pages but enforce assignment of products to subpages.",
+				type = "RadioGroup",
+				defaultValue = "0",
+				optionList="0^1",
+				optionLabelList="No^Yes",
+				orderNo="3"
 			});
 			local.thisAttribute.save();
 		}

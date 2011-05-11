@@ -49,7 +49,7 @@ Notes:
 				<cfloop query="rc.productPages">
 					<tr>
 						<td>
-							<input type="checkbox" id="#rc.productPages.contentID#" name="contentID" value="#rc.productPages.contentID#"<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)> checked="checked"</cfif> /> 
+							<input type="checkbox" id="#rc.productPages.contentID#" name="contentID" value="#listChangeDelims(rc.productPages.path,' ')#"<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)> checked="checked"</cfif> /> 
 						</td>
 						<cfset local.thisNest = rc.productPages.treeDepth eq 0 ? "neston" : "nest" & rc.productPages.treedepth & "on" />
 						<td class="varWidth">

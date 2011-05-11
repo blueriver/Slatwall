@@ -105,5 +105,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.event("__MuraResponse__", newContent);
 		}
 	}
-
+	
+	public void function onAfterPageSlatwallProductListingSave(required any rc) {
+		getProductService().updateProductContentPaths(contentID=rc.$.content("contentID"));
+	}
+	
+	public void function onAfterPageSlatwallProductListingDelete(required any rc) {
+		getProductService().deleteProductContent(rc.$.content("contentID"));
+	}
 }
