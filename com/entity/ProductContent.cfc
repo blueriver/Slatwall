@@ -40,7 +40,9 @@ component displayname="Product Content" entityname="SlatwallProductContent" tabl
 	
 	// Persistent Properties
 	property name="productContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
-	property name="contentID" ormtype="string" length="35";  
+	property name="contentID" ormtype="string" length="35";
+	property name="contentPath" ormtype="string";
+	 
 	
 	// Related Object Properties
 	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
