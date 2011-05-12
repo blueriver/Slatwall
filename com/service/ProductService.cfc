@@ -66,8 +66,8 @@ component extends="BaseService" accessors="true" {
 			return pageFeed.getIterator();
 		} else if( arguments.returnFormat == "query" ) {
 			return pageFeed.getQuery();
-		} else if( arguments.returnFormat == "nestedQuery" ) {
-			return treeSort(pageFeed.getQuery());
+		} else if( arguments.returnFormat == "nestedIterator" ) {
+			return $.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
 		}
 		
 	}
