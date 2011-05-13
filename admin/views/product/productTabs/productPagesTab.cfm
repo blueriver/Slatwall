@@ -71,14 +71,14 @@ Notes:
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
 				</tr>
-				<cfloop query="rc.productPages">
-					<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)>
-						<cfset local.thisContentBean = rc.$.getBean("content").loadBy(contentID=rc.productPages.contentID) />
+				<cfloop condition="rc.productPages.hasNext()">
+					<cfset local.thisProductPage = rc.productPages.next() />
+					<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())>
 						<tr>
-							<td class="varWidth">#listChangeDelims(rc.productPages.menuTitlePath," &raquo; ")#</td>
+							<td class="varWidth">#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
 							<td class="administration">
 								<ul class="one">
-									<li class="preview"><a href="#local.thisContentBean.getURL()#" target="_blank">Preview</a></li>
+									<li class="preview"><a href="#local.thisProductPage.getURL()#" target="_blank">Preview</a></li>
 								</ul>
 							</td>
 						</tr>
