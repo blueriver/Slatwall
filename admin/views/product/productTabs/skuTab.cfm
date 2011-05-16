@@ -92,9 +92,9 @@ Notes:
 					</cfif>
 				</td>
 				<cfif rc.edit>
-					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif local.thisSku.getDefaultFlag()> checked="checked"</cfif> /></td>
+					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()> checked="checked"</cfif> /></td>
 				<cfelse>
-					<td><cfif local.thisSku.getDefaultFlag()><img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
+					<td><cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()><img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
 				</cfif>
 				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
 					<td>#local.thisSku.getOptionByOptionGroupID(local.thisOptionGroup.getOptionGroupID()).getOptionName()#</td>
@@ -144,10 +144,10 @@ Notes:
 						<cfif !local.thisSku.isNew()>
 							<cfset local.disabledText = "" />
 							<ul class="one">
-								<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or local.thisSku.getDefaultFlag() or local.thisSku.getOrderedFlag() />
+								<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID() or local.thisSku.getOrderedFlag() />
 								<cfif local.deleteDisabled and arrayLen(rc.product.getSkus()) eq 1>
 									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku') />
-								<cfelseif local.deleteDisabled and local.thisSku.getDefaultFlag()>
+								<cfelseif local.deleteDisabled and rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()>
 									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateIsDefault') />
 								<cfelseif local.deleteDisabled and local.thisSku.getOrderedFlag()>
 									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOrdered') />

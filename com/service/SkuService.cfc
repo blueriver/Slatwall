@@ -43,9 +43,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
+		/*
+		// Now because the default sku is set as a realationship this validation block needs to change
 		if(arguments.sku.getDefaultFlag() == true) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
 		}
+		*/
 		if(arguments.sku.getOrderedFlag() == true) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
 		}
@@ -71,7 +74,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
-			thisSku.setDefaultFlag(true);
+			arguments.product.setDefaultSku(thisSku);
 		}
 		return true;
 	}
@@ -86,8 +89,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice},arguments.product);
 			// set the first sku as the default one
 			if(i==1) {
-				thisSku.setDefaultFlag(true);
-			} 
+				arguments.product.setDefaultSku(thisSku);
+			}
 		}
 	}
 

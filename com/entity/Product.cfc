@@ -66,17 +66,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="brand" validateRequired displayname="Brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="skus" type="array" cfc="sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all" inverse=true;
+	property name="brand" validateRequired cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="productType" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
-	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" inverse="true" cascade="all";
+	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
+	
+	property name="skus" type="array" cfc="Sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Non-Persistant Properties
 	property name="title" type="string" persistent="false";
-	property name="defaultSku" persistent="false";
 	property name="onTermSaleFlag" type="boolean" persistent="false";
 	property name="onClearanceSaleFlag" type="boolean" persistent="false";
 	property name="dateFirstReceived" type="date" persistent="false";
@@ -420,6 +421,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return listlen(structKeyList(getOptionGroupsStruct()));
 	}
 	
+	/*
 	public any function getDefaultSku() {
 		if( !structKeyExists(variables, "defaultSku")) {
 			var skus = getSkus();
@@ -438,6 +440,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		return variables.defaultSku;
 	}
+	*/
 	
 	// Start: Functions that deligate to the default sku
 	public string function getImage(string size, numeric width, numeric height, string class, string alt) {

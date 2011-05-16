@@ -149,9 +149,7 @@ component extends="BaseService" accessors="true" {
 		// set Default sku
 		if( structKeyExists(arguments.data,"defaultSku") && len(arguments.data.defaultSku) ) {
 			var dSku = arguments.Product.getSkuByID(arguments.data.defaultSku);
-			if(!dSku.getDefaultFlag()) {
-				dSku.setDefaultFlag(true);
-			}
+			arguments.product.setDefaultSku(dSku);
 		}
 		
 		// set up associations between product and content
