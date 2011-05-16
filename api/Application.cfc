@@ -36,6 +36,15 @@
 	Notes:
 	
 */
-component extends="Slatwall.requirements.taffy.core.api" {
+component extends="taffy.core.api" {
+
+	//the name can be anything you like
+	this.name = hash(getCurrentTemplatePath());
+
+	//use this instead of onApplicationStart()
+	void function applicationStartEvent(){}
+	
+	//use this instead of onRequestStart()
+	void function requestStartEvent(){}
 
 }
