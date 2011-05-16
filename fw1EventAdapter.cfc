@@ -67,7 +67,7 @@ Notes:
 	<cffunction name="onGlobalSessionStart" output="false">
 		<cfargument name="$">
 		<cfset var state=preseveInternalState(request)>
-		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onSessionStart" />
+		<cfinvoke component="Application" method="onSessionStart" />
 		<cfset restoreInternalState(request,state)>
 	</cffunction>
 
@@ -75,7 +75,7 @@ Notes:
 		<cfargument name="$">
 		<cfset var state=preseveInternalState(request)>
 		<cfset request.pluginConfig=variables.pluginConfig>
-		<cfinvoke component="#pluginConfig.getPackage()#.Application" method="onApplicationStart" />
+		<cfinvoke component="Application" method="onApplicationStart" />
 		<cfset restoreInternalState(request,state)>
 	</cffunction>
 
@@ -115,7 +115,7 @@ Notes:
 		<cfset var result = "" />
 		<cfset var savedEvent = "" />
 		<cfset var savedAction = "" />
-		<cfset var fw1 = createObject("component","#pluginConfig.getPackage()#.Application") />
+		<cfset var fw1 = createObject("component","Application") />
 		<cfset var local=structNew()>
 		<cfset var state=structNew()>
 		

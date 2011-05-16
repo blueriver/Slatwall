@@ -84,7 +84,7 @@ component extends="framework" output="false" {
 		  	include "plugin/config.cfm";
 		}
 	    setPluginConfig(request.PluginConfig);
-		xmlPath = "#expandPath( '/plugins/Slatwall/config/coldspring.xml' )#";
+		xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
 		xml = FileRead("#xmlPath#"); 
 		
 		// Build Coldspring factory & Set in FW/1
