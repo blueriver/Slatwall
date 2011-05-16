@@ -36,24 +36,9 @@
 	Notes:
 	
 */
-
-component extends="taffy.core.api" {
+component extends="taffy.core.resource" {
 	
-	// This file gets updated by the onApplicationLoad of the slatwall plugin.  It doesn't exist until the app is reloaded
-	include "../../../config/applicationSettings.cfm";
-	include "../../../config/mappings.cfm";
-	include "../../mappings.cfm";
-	
-	this.mappings["/taffy"] = getDirectoryFromPath(getCurrentTemplatePath()) & "taffy";
-	
-	//use this instead of onApplicationStart()
-	public void function applicationStartEvent(){
-
+	public any function getService(required string service) {
+		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean(arguments.service);
 	}
-	
-	//use this instead of onRequestStart()
-	public void function requestStartEvent(){
-
-	}
-	
 }
