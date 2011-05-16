@@ -40,21 +40,22 @@ Notes:
 <cfoutput>
 	<cfif rc.edit>
 		<input type="hidden" name="contentID" value="" />
-		<cfif rc.productPages.recordCount gt 0>
+		<cfif rc.productPages.recordCount() gt 0>
 			<table id="productPages" class="stripe">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 				</tr>
-				<cfloop query="rc.productPages">
+				<cfloop condition="rc.productPages.hasNext()">
+					<cfset local.thisProductPage = rc.productPages.next() />
 					<tr>
 						<td>
-							<input type="checkbox" id="#rc.productPages.contentID#" name="contentID" value="#rc.productPages.contentID#"<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)> checked="checked"</cfif> /> 
+							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="contentID" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
 						</td>
-						<cfset local.thisNest = rc.productPages.treeDepth eq 0 ? "neston" : "nest" & rc.productPages.treedepth & "on" />
+						<cfset local.thisNest = local.thisProductPage.getTreeDepth() eq 0 ? "neston" : "nest" & local.thisProductPage.getTreeDepth() & "on" />
 						<td class="varWidth">
 							<ul class="#local.thisNest#">
-				                <li class="Category"><label for="#rc.productPages.contentID#">#rc.productPages.title#</label></li>
+				                <li class="Category"><label for="#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label></li>
 							</ul> 
 						</td>
 					</tr>	
@@ -70,14 +71,14 @@ Notes:
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
 				</tr>
-				<cfloop query="rc.productPages">
-					<cfif listFind(rc.product.getContentIDs(),rc.productPages.contentID)>
-						<cfset local.thisContentBean = rc.$.getBean("content").loadBy(contentID=rc.productPages.contentID) />
+				<cfloop condition="rc.productPages.hasNext()">
+					<cfset local.thisProductPage = rc.productPages.next() />
+					<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())>
 						<tr>
-							<td class="varWidth">#listChangeDelims(rc.productPages.menuTitlePath," &raquo; ")#</td>
+							<td class="varWidth">#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
 							<td class="administration">
 								<ul class="one">
-									<li class="preview"><a href="#local.thisContentBean.getURL()#" target="_blank">Preview</a></li>
+									<li class="preview"><a href="#local.thisProductPage.getURL()#" target="_blank">Preview</a></li>
 								</ul>
 							</td>
 						</tr>

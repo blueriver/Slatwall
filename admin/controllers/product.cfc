@@ -75,7 +75,7 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.list");
 		}
-		rc.productPages = getProductService().getProductPages("nestedQuery");
+		rc.productPages = getProductService().getProductPages("nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 	}
 	
@@ -137,7 +137,7 @@ component extends="BaseController" output=false accessors=true {
 				getFW().setView(action="admin:product.create");
 			} else {
 				rc.edit = true;
-				rc.productPages = getProductService().getProductPages("nestedQuery");
+				rc.productPages = getProductService().getProductPages("nestedIterator");
 				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");

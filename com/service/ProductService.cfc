@@ -66,8 +66,8 @@ component extends="BaseService" accessors="true" {
 			return pageFeed.getIterator();
 		} else if( arguments.returnFormat == "query" ) {
 			return pageFeed.getQuery();
-		} else if( arguments.returnFormat == "nestedQuery" ) {
-			return treeSort(pageFeed.getQuery());
+		} else if( arguments.returnFormat == "nestedIterator" ) {
+			return $.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
 		}
 		
 	}
@@ -88,10 +88,32 @@ component extends="BaseService" accessors="true" {
 		getDAO().clearProductContent(arguments.product);
 		for(var i=1;i<=listLen(arguments.contentID);i++) {
 			local.thisContentID = listGetAt(arguments.contentID,i);
-			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=local.thisContentID});
+			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=listLast(local.thisContentID," "),contentPath=listChangeDelims(local.thisContentID,","," ")});
 			arrayAppend(productContentArray,local.thisProductContent);
 		}
 		arguments.product.setProductContent(productContentArray);
+	}
+	
+	public void function updateProductContentPaths(required string contentID) {
+		var pcArray = getDAO().list("SlatwallProductContent");
+		for( var i=1; i<=arrayLen(pcArray); i++) {
+			local.thisPC = pcArray[i];
+			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
+				var newPath = getContentManager().read(contentID=local.thisPC.getContentID(),siteID=$.event("siteID")).getPath();
+				local.thisPC.setContentPath(newPath);
+			}
+		} 
+	}
+	
+	public void function deleteProductContent(required string contentID) {
+		var pcArray = getDAO().list("SlatwallProductContent");
+		for( var i=1; i<=arrayLen(pcArray); i++ ) {
+			local.thisPC = pcArray[i];
+			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
+				// when mura content is deleted, so is all content nested underneath, so we delete all productContent records in which we find the passed in content ID in the content path
+				getDAO().delete(local.thisPC);
+			}
+		}
 	}
 	
 	/**
