@@ -44,7 +44,7 @@ Notes:
 		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productCode">
 		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productYear">
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
-		<form action="#$.slatwall.buildURL(action='frontend:cart.addItem')#" method="post">
+		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
 			<cfset local.productOptionGroups = $.slatwall.Product().getOptionGroupsStruct() />
 			<cfloop collection="#local.productOptionGroups#" item="local.groupID">
