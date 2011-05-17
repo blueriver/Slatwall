@@ -53,8 +53,12 @@ component extends="slatwall.com.dao.BaseDAO" {
 	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL=""){
 		
 		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
-				
-		smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);
+		
+		if( structKeyExists(arguments.data, "showSubPageProducts") && arguments.data.showSubPageProducts) {
+			smartList.addLikeFilter(propertyIdentifier="productContent_contentPath", value="%#arguments.contentID#%");
+		} else {
+			smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);	
+		}
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
