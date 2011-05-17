@@ -58,7 +58,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		return this;
 	}
 	
-	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required any requestBean, required string transactionType){
+	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required Slatwall.com.utility.payment.RequestBean requestBean, required string transactionType){
 		var rawResponse = "";
 		var requestData = getRequestData(requestBean,transactionType);
 		var requestID = getRequestID(requestBean);

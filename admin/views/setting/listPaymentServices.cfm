@@ -36,40 +36,32 @@
 Notes:
 
 --->
-
-<cfparam name="rc.paymentMethods" type="struct" />
+<cfparam name="rc.$" type="any" />
+<cfparam name="rc.paymentServices" type="any" />
 
 <cfoutput>
-	<div class="svoadminListPaymentMethods">
+	<div class="svoadminlistPaymentServices">
 		<ul id="navTask">
 	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
 			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
-		<table id="paymentMethodList" class="stripe">
+		<table id="paymentServicesList" class="stripe">
 			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listPaymentMethods_nav")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.paymentMethod.activeFlag")#</th>
-				<th>&nbsp;</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listPaymentServices.servicedisplayname")#</th>
+				<th>&nbsp</th>
 			</tr>
 				
-			<cfloop collection="#rc.paymentMethods#" item="local.thisPaymentMethodID">
-				<cfset local.thisPaymentMethod = rc.paymentMethods[local.thisPaymentMethodID] />
+			<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
 				<tr>
-					<cfset local.paymentMethodMetaData = getMetaData(local.thisPaymentMethod) />
-					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodCode())#</td>
-					<td>
-						<cfif local.thisPaymentMethod.getActiveFlag()>
-							<img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
-						<cfelse>
-							<img src="/plugins/Slatwall/images/icons/cross.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
-						</cfif>
-					</td>
+					<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
+					<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
+					<td class="varWidth">#local.paymentServiceMetaData.displayName#</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="edit" type="list">
-						</ul> 						
+							<cf_ActionCaller action="admin:setting.detailPaymentService" querystring="paymentServicePackage=#local.paymentServicePackage#" class="viewDetails" type="list">
+							<cf_ActionCaller action="admin:setting.editPaymentService" querystring="paymentServicePackage=#local.paymentServicePackage#" class="edit" type="list">
+						</ul>     						
 					</td>
 				</tr>
 			</cfloop>

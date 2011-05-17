@@ -36,43 +36,48 @@
 Notes:
 
 --->
-
-<cfparam name="rc.paymentMethods" type="struct" />
+<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.paymentMethod" type="any" />
+<cfparam name="rc.paymentServices" type="any" />
 
 <cfoutput>
-	<div class="svoadminListPaymentMethods">
+	<div class="svoadmindetailpaymentmethod">
 		<ul id="navTask">
 	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
 			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
-		<table id="paymentMethodList" class="stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listPaymentMethods_nav")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.paymentMethod.activeFlag")#</th>
-				<th>&nbsp;</th>
-			</tr>
-				
-			<cfloop collection="#rc.paymentMethods#" item="local.thisPaymentMethodID">
-				<cfset local.thisPaymentMethod = rc.paymentMethods[local.thisPaymentMethodID] />
-				<tr>
-					<cfset local.paymentMethodMetaData = getMetaData(local.thisPaymentMethod) />
-					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodCode())#</td>
-					<td>
-						<cfif local.thisPaymentMethod.getActiveFlag()>
-							<img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
-						<cfelse>
-							<img src="/plugins/Slatwall/images/icons/cross.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
-						</cfif>
-					</td>
-					<td class="administration">
-						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="edit" type="list">
-						</ul> 						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
+		<cfif rc.edit>
+		<form name="ShippingMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
+			<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
+		</cfif>
+			<dl class="oneColumn">
+				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
+				<!--- include any payment method-specific settings --->	
+				#view("setting/paymentMethods/#rc.paymentMethod.getPaymentMethodCode()#")#
+				<dt class="spdprovidergateway">
+					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
+				</dt>
+				<dd id="spdprovidergateway">
+					<cfif rc.edit>
+						<select id="providerGateway" name="providerGateway">
+							<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
+								<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
+								<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
+								<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
+							</cfloop>
+						</select>
+					<cfelse>
+						#rc.paymentMethod.getProviderGateway()#
+					</cfif>
+				</dd>
+			</dl>
+	<cfif rc.edit>
+			<div id="actionButtons" class="clearfix">
+				<cf_ActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_ActionCaller action="admin:setting.savePaymentMethod" type="submit" class="button">
+			</div>
+		</form>
+	</cfif>
+
 </cfoutput>

@@ -41,7 +41,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	
 	// Custom Properties that need to be set by the end user
 	property name="login" displayname="Login ID" type="sting";
-	property name="transKey" displayname="Traansaction Key" type="sting";
+	property name="transKey" displayname="Transaction Key" type="sting";
 	property name="developerAccountFlag" displayname="Test Account" type="boolean" default="true";
 	property name="testModeFlag" displayname="Test Mode" type="boolean" default="true";
 	
@@ -58,7 +58,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		return this;
 	}
 	
-	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required any requestBean){
+	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required Slatwall.com.utility.payment.RequestBean requestBean, required string transactionType){
 		var rawResponse = "";
 		var requestData = getRequestData(requestBean);
 		rawResponse = postRequest(requestData);
