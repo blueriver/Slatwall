@@ -43,7 +43,7 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="processTransaction" access="public" returntype="Slatwall.com.utility.payment.ResponseBean">
-		<cfargument name="requestData" type="Slatwall.com.utility.payment.RequestBean" required="true" />
+		<cfargument name="requestBean" type="Slatwall.com.utility.payment.RequestBean" required="true" />
 		<cfargument name="transactionType" type="string" required="true" /> 
 		
 	</cffunction>

@@ -37,3 +37,44 @@ Notes:
 
 --->
 
+<cfparam name="rc.edit" />
+<cfparam name="rc.paymentServicePackage" />
+<cfparam name="rc.paymentService" />
+
+<cfset local.serviceMeta = getMetaData(rc.paymentService) />
+
+<cfoutput>
+	<div class="svoadminsettingdetailPaymentService">
+		<ul id="navTask">
+	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
+			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
+		</ul>
+		
+		<cfif rc.edit>
+			<form name="savePaymentService" method="post" action="#buildURL(action='admin:setting.savePaymentService')#">
+				<input type="hidden" name="paymentServicePackage" value="#rc.paymentServicePackage#" />
+		</cfif>
+		<cfif structKeyExists(local.serviceMeta, "properties")>
+			<dl>
+				<cfloop array="#local.serviceMeta.properties#" index="local.property">
+					
+					<!--- Get The Property Title --->
+					<cfset local.propertyTitle = "" />
+					<cfif structKeyExists(local.property, "displayName")>
+						<cfset local.propertyTitle = local.property.displayName />
+					<cfelse>
+						<cfset local.propertyTitle = local.property.name />
+					</cfif>
+					
+					<cf_PropertyDisplay object="#rc.paymentService#" fieldName="paymentService_#rc.paymentServicePackage#_#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+				</cfloop>
+			</dl>
+		</cfif>
+		<cfif rc.edit>
+			<cf_ActionCaller action="admin:setting.listPaymentServices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_ActionCaller action="admin:setting.savePaymentService" type="submit" class="button">
+			</form>
+		</cfif>
+	</div>
+</cfoutput>
+

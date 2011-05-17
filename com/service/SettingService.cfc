@@ -65,10 +65,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		
 		getPermissionActions();
 		getShippingServices();
+		getPaymentServices();
 		
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
-			if( listGetAt( settingsList[i].getSettingName(), 1, "_") == "permission") {
+			if( listFirst( settingsList[i].getSettingName(), "_") == "permission") {
 				
 				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
@@ -76,7 +77,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 			} else {
 				
 				// Inject Service Specific Values
-				if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "shippingservice") {
+				if ( listFirst( settingsList[i].getSettingName(), "_") == "shippingservice") {
 					// Inject Shipping Service Setting Values
 					var shippingServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
 					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
@@ -84,10 +85,15 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
 						evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");
 					}
-				} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "paymentservice") {
+				} else if ( listFirst( settingsList[i].getSettingName(), "_") == "paymentservice") {
 					// Inject Payment Service Setting Values
+					var paymentServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
+					if( structKeyExists(variables.paymentServices, paymentServicePackage) ) {
+						var paymentService = getByPaymentServicePackage(paymentServicePackage);
+						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
+						evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");
+					}
 				}
-				
 				// Set the global setting value in the settings scope
 				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
 			}
@@ -100,7 +106,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		
 		// Load Payment Methods
 		for(var i = 1; i <= arrayLen(paymentMethodsList); i++) {
-			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodsID() ] = paymentMethodsList[i];
+			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodID() ] = paymentMethodsList[i];
 		}
 	}
 	
@@ -166,6 +172,12 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		}
 	}
 	
+	public any function getByPaymentServicePackage(required string paymentServicePackage) {
+		if(structKeyExists(variables.paymentServices, arguments.paymentServicePackage)) {
+			return variables.paymentServices[ arguments.paymentServicePackage ];
+		}
+	}
+	
 	public struct function getPermissionActions(boolean reload=false) {
 		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
 			variables.permissionActions = structNew();
@@ -209,16 +221,19 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		}
 		return variables.shippingServices;
 	}
-	
-	public struct function getPaymentServices(boolean reload=false) {
-		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.shippingServices) || arguments.reload) {
+
+	public any function getPaymentServices(boolean reload=false) {
+		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.paymentServices) || arguments.reload) {
 			variables.paymentServices = structNew();
 			var dirLocation = ExpandPath("/plugins/Slatwall/paymentServices");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
-				var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-				var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
-				variables.paymentServices[ "#serviceName#" ] = service;
+				var fileInfo = getFileInfo(dirList[i]);
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
+					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+					var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
+					variables.paymentServices[ "#serviceName#" ] = service;
+				}
 			}
 		}
 		return variables.paymentServices;

@@ -120,6 +120,8 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function detailShippingService(required struct rc) {
 		param name="rc.edit" default="false";
 		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
+		local.serviceName = getMetaData(rc.shippingService)["displayName"];
+		rc.itemTitle = rc.itemTitle & ": " & local.serviceName;
 	}
 	
 	public void function editShippingService(required struct rc) {
@@ -203,8 +205,57 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	
 	// Payment Services
+	public void function listPaymentServices(required struct rc) {
+		rc.paymentServices = getSettingService().getPaymentServices(reload=true);	
+	}
+	
+	public void function detailPaymentService(required struct rc) {
+		param name="rc.edit" default="false";
+		rc.paymentService = getSettingService().getByPaymentServicePackage(rc.paymentServicePackage);
+		local.serviceName = getMetaData(rc.paymentService)["displayName"];
+		rc.itemTitle = rc.itemTitle & ": " & local.serviceName;
+	}
+	
+	public void function editPaymentService(required struct rc) {
+		detailPaymentService(rc);
+		getFW().setView("admin:setting.detailPaymentService");
+		rc.edit = true;
+	}
+	
+	public void function savePaymentService(required struct rc) {
+		for(var item in rc) {
+			if(!isObject(item) && listGetAt(item,1,"_") == "paymentService") {
+				var setting = getSettingService().getBySettingName(item);
+				setting.setSettingName(item);
+				setting.setSettingValue(rc[item]);
+				getSettingService().save(entity=setting);
+			}
+		}
+		getFW().redirect(action="admin:setting.listPaymentServices", queryString="reload=true");
+	}
 	
 	// Payment Methods
+	public void function listPaymentMethods(required struct rc) {
+		rc.paymentMethods = getSettingService().getPaymentMethods();	
+	}
+
+	public void function detailPaymentMethod(required struct rc) {
+		param name="rc.paymentMethodID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.paymentMethod = getSettingService().getByID(rc.paymentMethodID, "SlatwallPaymentMethod");
+		if(isNull(rc.paymentMethod)) {
+			getFW().redirect(action="admin:setting.listPaymentMethods");
+		}	
+		rc.paymentServices = getSettingService().getPaymentServices();
+		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodCode());
+	}
+	
+	public void function editPaymentMethod(required struct rc) {
+		detailPaymentMethod(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailPaymentMethod");
+	}
 		
 	// Integrations Services
 	

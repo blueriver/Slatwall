@@ -1,0 +1,10 @@
+<Table tableName="SlatwallPaymentMethod">
+	<Columns>
+		<column name="paymentMethodID" fieldtype="id" />
+		<column name="paymentMethodCode" />
+		<column name="activeFlag" update="false" />
+	</Columns>
+	<Records>
+		<Record paymentMethodID="dbb3279ecff4e634461fea378a345bce" paymentMethodCode="creditCard" activeFlag="0" />
+	</Records>
+</Table>

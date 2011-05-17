@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,43 +36,18 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" />
-<cfparam name="rc.shippingServicePackage" />
-<cfparam name="rc.shippingService" />
-
-<cfset local.serviceMeta = getMetaData(rc.shippingService) />
-
 <cfoutput>
-	<div class="svoadminsettingdetailshippingservice">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
-		
-		<cfif rc.edit>
-			<form name="saveShippingService" method="post" action="#buildURL(action='admin:setting.saveshippingservice')#">
-				<input type="hidden" name="shippingServicePackage" value="#rc.shippingServicePackage#" />
-		</cfif>
-		<cfif structKeyExists(local.serviceMeta, "properties")>
-			<dl>
-				<cfloop array="#local.serviceMeta.properties#" index="local.property">
-					
-					<!--- Get The Property Title --->
-					<cfset local.propertyTitle = "" />
-					<cfif structKeyExists(local.property, "displayName")>
-						<cfset local.propertyTitle = local.property.displayName />
-					<cfelse>
-						<cfset local.propertyTitle = local.property.name />
-					</cfif>
-					
-					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="shippingservice_#rc.shippingServicePackage#_#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
-				</cfloop>
-			</dl>
-		</cfif>
-		<cfif rc.edit>
-			<cf_ActionCaller action="admin:setting.listshippingservices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit" class="button">
-			</form>
-		</cfif>
-	</div>
+<dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
+
+<cfif rc.edit>
+	<dd id="spdcreditcardsaccepted">
+		<select name="paymentmethod_creditCard_creditCardTypes">
+			<!---<cfloop collection="#local.shippingServiceMethods#" item="local.shippingMethodID">
+				<option value="#local.shippingMethodID#" <cfif rc.shippingMethod.getShippingProviderMethod() eq local.shippingMethodID>selected="selected"</cfif>>#local.shippingServiceMethods[shippingMethodID]#</option>
+			</cfloop>--->
+		</select>
+	</dd>
+<cfelse>
+	<!---<dd id="spdshippingprovidermethod">#local.shippingServiceMethods[rc.shippingMethod.getShippingProviderMethod()]#</dd>	--->
+</cfif>
 </cfoutput>
