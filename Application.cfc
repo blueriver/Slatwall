@@ -123,9 +123,6 @@ component extends="framework" output="false" {
 				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
 			}
 			
-			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.
-			ormGetSession().clear();
-			
 			// Look for mura Scope.  If it doens't exist add it.
 			if (!structKeyExists(request.context,"$")){
 				if (!structKeyExists(request, "muraScope")) {
@@ -272,12 +269,12 @@ component extends="framework" output="false" {
 	}
 	
 	private void function endSlatwallLifecycle() {
-		if(!getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
-			ORMflush();
+		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
+			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
+			ormGetSession().clear();
+		} else {
+			transaction{}
 		}
-		
-		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
-		ormGetSession().clear();
 	}
 	
 	// Start assetWire functions ==================================
