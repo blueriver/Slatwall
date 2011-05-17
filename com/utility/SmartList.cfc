@@ -84,7 +84,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	private void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
 			if(arrayLen(variables.whereGroups) < i) {
-				arrayAppend(variables.whereGroups, {filters={},ranges={}});
+				arrayAppend(variables.whereGroups, {filters={},likeFilters={},ranges={}});
 			}
 		}
 	}
@@ -225,6 +225,17 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 	}
 	
+	public void function addLikeFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
+		confirmWhereGroup(arguments.whereGroup);
+		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		
+		if(structKeyExists(variables.whereGroups[arguments.whereGroup].likeFilters, aliasedProperty)) {
+			variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] &= variables.valueDelimiter & arguments.value;
+		} else {
+			variables.whereGroups[arguments.whereGroup].likeFilters[aliasedProperty] = arguments.value;
+		}
+	}
+	
 	public void function addRange(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
@@ -336,7 +347,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		// Loop over where groups
 		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
-			if( structCount(variables.whereGroups[i].filters) || structCount(variables.whereGroups[i].ranges) ) {
+			if( structCount(variables.whereGroups[i].filters) || structCount(variables.whereGroups[i].likeFilters) || structCount(variables.whereGroups[i].ranges) ) {
 				if(len(hqlWhere) == 0) {
 					if(!arguments.suppressWhere) {
 						hqlWhere &= " WHERE";
@@ -354,7 +365,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					if(listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter) gt 1) {
 						hqlWhere &= " (";
 						for(var ii=1; ii<=listLen(variables.whereGroups[i].filters[filter], variables.valueDelimiter); ii++) {
-							var paramID = "F_#replace(filter, ".", "", "all")##i##ii#";
+							var paramID = "F#replace(filter, ".", "", "all")##i##ii#";
 							addHQLParam(paramID, listGetAt(variables.whereGroups[i].filters[filter], ii, variables.valueDelimiter));
 							hqlWhere &= " #filter# = :#paramID# OR";
 						}
@@ -363,6 +374,23 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 						var paramID = "F#replace(filter, ".", "", "all")##i#";
 						addHQLParam(paramID, variables.whereGroups[i].filters[filter]);
 						hqlWhere &= " #filter# = :#paramID# AND";
+					}
+				}
+				
+				// Add Where Group Like Filters
+				for(var likeFilter in variables.whereGroups[i].likeFilters) {
+					if(listLen(variables.whereGroups[i].likeFilters[likeFilter], variables.valueDelimiter) gt 1) {
+						hqlWhere &= " (";
+						for(var ii=1; ii<=listLen(variables.whereGroups[i].likeFilters[likeFilter], variables.valueDelimiter); ii++) {
+							var paramID = "LF#replace(likeFilter, ".", "", "all")##i##ii#";
+							addHQLParam(paramID, listGetAt(variables.whereGroups[i].likeFilters[likeFilter], ii, variables.valueDelimiter));
+							hqlWhere &= " #likeFilter# LIKE :#paramID# OR";
+						}
+						hqlWhere = left(hqlWhere, len(hqlWhere)-2) & ") AND";
+					} else {
+						var paramID = "LF#replace(likeFilter, ".", "", "all")##i#";
+						addHQLParam(paramID, variables.whereGroups[i].likeFilters[likeFilter]);
+						hqlWhere &= " #likeFilter# LIKE :#paramID# AND";
 					}
 				}
 				
@@ -620,9 +648,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		} else if( structKeyExists(oldQueryKeys, "P#variables.dataKeyDelimiter#Show") ) {
 			modifiedURL &= "P#variables.dataKeyDelimiter#Show=#oldQueryKeys[ 'P#variables.dataKeyDelimiter#Show' ]#&";
 		}
-		
-		
+	
 		return left(modifiedURL, len(modifiedURL)-1);
 	}
-
 }
