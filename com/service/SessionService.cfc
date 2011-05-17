@@ -92,7 +92,7 @@ component extends="BaseService" accessors="true" output="false" {
 				slatwallAccount.setCompany(muraUser.getCompany());
 			}
 			currentSession.setAccount(slatwallAccount);
-			if(!isNull(currentSession.getOrder) && !currentSession.getOrder().isNew()) {
+			if(!isNull(currentSession.getOrder()) && !currentSession.getOrder().isNew()) {
 				currentSession.getOrder().setAccount(slatwallAccount);
 			}
 		} else {
@@ -100,7 +100,7 @@ component extends="BaseService" accessors="true" output="false" {
 			currentSession.removeAccount();
 			
 			// If the account associated with the current order is not a guest account, then remove it.
-			if(!isNull(currentSession.getOrder) && !isNull(currentSession.getOrder().getAccount()) && !currentSession.getOrder().getAccount().isGuestAccount()) {
+			if(!isNull(currentSession.getOrder()) && !isNull(currentSession.getOrder().getAccount()) && !currentSession.getOrder().getAccount().isGuestAccount()) {
 				currentSession.getOrder().removeAccount();
 			}
 		}
