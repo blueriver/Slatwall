@@ -276,7 +276,7 @@ component extends="framework" output="false" {
 			ORMflush();
 		}
 		
-		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
+		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
 		ormGetSession().clear();
 	}
 	
