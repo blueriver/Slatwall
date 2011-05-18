@@ -81,7 +81,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        	    variables.options=[];
        }
        setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/products/");
-       return Super.init();
+       return super.init();
     }
     
     public string function displayOptions() {

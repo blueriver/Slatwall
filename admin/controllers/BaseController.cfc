@@ -43,7 +43,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	public any function init(required any fw) {
 		setFW(arguments.fw);
 		
-		return this;
+		return super.init();
 	}
 	
 	public void function subSystemBefore(required struct rc) {

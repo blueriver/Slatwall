@@ -54,11 +54,23 @@ component extends="framework" output="false" {
 	variables.subsystems.frontend.baseURL = "";
 	
 	public void function setPluginConfig(required any pluginConfig) {
-		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
+		application.slatwall.pluginConfig = arguments.pluginConfig; 
 	}
 	
 	public any function getPluginConfig() {
-		return application[ variables.framework.applicationKey ].pluginConfig; 
+		if(isDefined('application.slatwall.pluginConfig')) {
+			return application.slatwall.pluginConfig;
+		}
+	}
+	
+	public void function setFW(required any fw) {
+		application.slatwall.fw = arguments.fw;
+	}
+	
+	public void function getFW(required any fw) {
+		if(isDefined('application.slatwall.fw')) {
+			return application.slatwall.fw;
+		}
 	}
 	
 	public any function getSubsystemBaseURL( string subsystem="admin") {
@@ -67,6 +79,9 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
+		setPluginConfig(request.PluginConfig);
+		setFW(this);
+		
 		ormReload();
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
@@ -83,7 +98,7 @@ component extends="framework" output="false" {
 	    if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
 		  	include "plugin/config.cfm";
 		}
-	    setPluginConfig(request.PluginConfig);
+	    
 		xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
 		xml = FileRead("#xmlPath#"); 
 		
@@ -100,9 +115,6 @@ component extends="framework" output="false" {
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
-		
-		// Set this in the application scope to be used later
-		application[ variables.framework.applicationKey ].fw = this;
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		var dataPopulator = new Slatwall.com.utility.DataPopulator();

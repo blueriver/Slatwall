@@ -44,7 +44,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	property name="fileService" type="any";
 	
 	public any function init() {
-		return this;
+		return super.init();
 	}
 	
 	public any function getByID(required string ID, string entityName) {
