@@ -55,15 +55,17 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	// Related Object Properties
 	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan";
 
-	// Non-persistent Properties
-	property name="imageDirectory" type="string" hint="Base directory for optionGroup images" persistent="false";
-	
-    public OptionGroup function init(){
+	public OptionGroup function init(){
        // set default collections for association management methods
-	   this.setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/");
-       if(isNull(variables.Options))
+	   if(isNull(variables.Options)) {
            variables.Options = [];
+       }
+       
        return Super.init();
+    }
+    
+    public string function getImageDirectory() {
+    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
 	
 	public array function getOptions(sortby, sortType="text", direction="asc") {

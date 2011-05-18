@@ -42,7 +42,7 @@ Notes:
     	<cf_ActionCaller action="admin:account.create" type="list">
 	</ul>
 	
-	<table class="listtable stripe">
+	<table class="stripe">
 		<thead>
 			<tr>
 				<th class="varWidth">Name</th>

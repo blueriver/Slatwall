@@ -47,5 +47,8 @@ Notes:
 		<cfargument name="transactionType" type="string" required="true" /> 
 		
 	</cffunction>
+	
+	<cffunction name="getSupportedPaymentMethods">
+	</cffunction>
 		
 </cfinterface>

@@ -55,7 +55,7 @@ Notes:
 			<dl class="oneColumn">
 				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
 				<!--- include any payment method-specific settings --->	
-				#view("setting/paymentMethods/#rc.paymentMethod.getPaymentMethodCode()#")#
+				#view("setting/paymentMethods/#lcase(rc.paymentMethod.getPaymentMethodCode())#")#
 				<dt class="spdprovidergateway">
 					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
 				</dt>
