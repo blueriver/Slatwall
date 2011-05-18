@@ -70,8 +70,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQOH" persistent="false" type="numeric";
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
-	property name="imageDirectory" type="string" hint="Base directory for product images" persistent="false";
-
+	
 	// Calculated Properties
 	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID=skuID";
 
@@ -80,7 +79,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        if(isNull(variables.Options)) {
        	    variables.options=[];
        }
-       setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/products/");
+       
        return super.init();
     }
     
@@ -142,20 +141,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     /************   END Association Management Methods   *******************/
     
-    /*
-    public void function setDefaultFlag(required boolean defaultFlag) {
-		if(arguments.defaultFlag == true) {
-			getProduct().setDefaultSku(this);
-			var skus = getProduct().getSkus();
-			for(var i = 1; i <= arrayLen(skus); i++) {
-				if(skus[i].getDefaultFlag() == true) {
-					skus[i].setDefaultFlag(false);
-				}
-			}
-		}
-		variables.defaultFlag = arguments.defaultFlag;
-	}
-	*/
+    public string function getImageDirectory() {
+    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/products/";	
+    }
     
     public numeric function getQOH() {
     	if(isNull(variables.qoh)) {

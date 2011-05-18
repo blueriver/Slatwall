@@ -38,17 +38,6 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
-	/*
-	if(!structKeyExists(request, "muraScope")) {
-		request.muraScope = createObject("component", "mura.MuraScope");
-		request.muraScope.init('default');
-	}
-	
-	if(request.muraScope.event('siteid') == "") {
-		request.muraScope.event('siteid', 'default');
-	}
-	*/
-	
 	public any function init() {
 		if(!structKeyExists(request, "muraScope")) {
 			request.muraScope = new mura.MuraScope('default');

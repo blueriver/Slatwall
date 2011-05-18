@@ -79,6 +79,10 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
+		if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
+		  	include "plugin/config.cfm";
+		}
+		
 		setPluginConfig(request.PluginConfig);
 		setFW(this);
 		
@@ -95,11 +99,7 @@ component extends="framework" output="false" {
 		var xml = "";
 		var xmlPath = "";
 
-	    if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
-		  	include "plugin/config.cfm";
-		}
-	    
-		xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
+	    xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
 		xml = FileRead("#xmlPath#"); 
 		
 		// Build Coldspring factory & Set in FW/1
