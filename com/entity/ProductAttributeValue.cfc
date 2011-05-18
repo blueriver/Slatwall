@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Product Attribute Value" entityname="SlatwallProductAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="Slatwall.com.entity.AttributeValue" discriminatorValue="Product" {
+component displayname="Product Attribute Value" entityname="SlatwallProductAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="Product" {
 	
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" inverse="true" cascade="all";
 	

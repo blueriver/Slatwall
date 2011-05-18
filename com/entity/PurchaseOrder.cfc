@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Purchase Order" entityname="SlatwallPurchaseOrder" table="SlatwallPurchaseOrder" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Purchase Order" entityname="SlatwallPurchaseOrder" table="SlatwallPurchaseOrder" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="purchaseOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
