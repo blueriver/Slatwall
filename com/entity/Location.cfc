@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Location" entityname="SlatwallLocation" table="SlatwallLocation" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
+component displayname="Location" entityname="SlatwallLocation" table="SlatwallLocation" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="locationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

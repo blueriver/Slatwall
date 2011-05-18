@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Relationship" entityname="SlatwallAccountRelationship" table="SlatwallAccountRelationship" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Account Relationship" entityname="SlatwallAccountRelationship" table="SlatwallAccountRelationship" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="accountRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

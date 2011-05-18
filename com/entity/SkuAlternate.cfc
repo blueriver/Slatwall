@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Sku Alternate" entityname="SlatwallSkuAlternate" table="SlatwallSkuAlternate" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
+component displayname="Sku Alternate" entityname="SlatwallSkuAlternate" table="SlatwallSkuAlternate" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="skuAlternateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

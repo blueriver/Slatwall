@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component displayname="Product Type Attribute Set Assignment" entityname="SlatwallProductTypeAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.AttributeSetAssignment" discriminatorvalue="ProductType" {
+component displayname="Product Type Attribute Set Assignment" entityname="SlatwallProductTypeAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="AttributeSetAssignment" discriminatorvalue="ProductType" {
 
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
