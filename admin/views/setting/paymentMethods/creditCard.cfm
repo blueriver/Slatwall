@@ -46,7 +46,7 @@ Notes:
 <dd id="spdcreditcardsaccepted">
 <cfif rc.edit>
 	<cfloop list="#local.typeOptions#" index="local.thisTypeOption" >
-		<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
+		<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"<cfif listFind($.Slatwall.setting("paymentmethod_creditCard_creditCardTypes"),local.thisTypeOption)> checked="checked"</cfif>> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
 	</cfloop>
 <cfelse>
 	#$.Slatwall.setting("paymentmethod_creditCard_creditCardTypes")#
