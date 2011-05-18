@@ -52,7 +52,7 @@ Notes:
 						</div>
 					</cfif>
 				<cfelse>
-					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShipping">
+					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
 							<dl>
