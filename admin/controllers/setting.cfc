@@ -256,6 +256,19 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = true;
 		getFW().setView("admin:setting.detailPaymentMethod");
 	}
+	
+	public void function savePaymentMethod(required struct rc) {
+		rc.paymentMethod = getSettingService().getByID(rc.paymentMethodID, "SlatwallPaymentMethod");
+		rc.paymentMethod = getPaymentService().savePaymentMethod(entity=rc.paymentMethod, data=rc);
+
+		if(!rc.paymentMethod.hasErrors()) {
+			getFW().redirect(action="admin:setting.listpaymentmethods", querystring="reload=true&message=#rc.$.Slatwall.rbKey('admin.setting.savepaymentmethod_success')#");
+		} else {
+			rc.paymentServices = getSettingService().getPaymentServices();
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentmethod") & ": #rc.$.Slatwall.rbKey('rc.paymentMethod.getPaymentMethodCode()')#";
+	   		getFW().setView(action="admin:setting.editpaymentmethod");
+		}
+	}
 		
 	// Integrations Services
 	

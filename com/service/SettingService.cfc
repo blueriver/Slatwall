@@ -139,7 +139,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	}
 	
 	public any function getSettingValue(required string settingName) {
-		return variables.settings[ arguments.settingName ].getSettingValue();
+		if( structKeyExists(variables.settings,arguments.settingName) ) {
+			return variables.settings[ arguments.settingName ].getSettingValue();
+		} else {
+			return "";
+		}	
 	}
 	
 	public any function getPermissionValue(required string permissionName) {
