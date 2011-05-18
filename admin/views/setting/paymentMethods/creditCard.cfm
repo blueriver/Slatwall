@@ -36,18 +36,20 @@
 Notes:
 
 --->
+
+<cfset local.typeOptions = $.Slatwall.setting("paymentMethod_creditCard_creditCardTypeOptions") />
+
 <cfoutput>
+	
 <dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
 
+<dd id="spdcreditcardsaccepted">
 <cfif rc.edit>
-	<dd id="spdcreditcardsaccepted">
-		<select name="paymentmethod_creditCard_creditCardTypes">
-			<!---<cfloop collection="#local.shippingServiceMethods#" item="local.shippingMethodID">
-				<option value="#local.shippingMethodID#" <cfif rc.shippingMethod.getShippingProviderMethod() eq local.shippingMethodID>selected="selected"</cfif>>#local.shippingServiceMethods[shippingMethodID]#</option>
-			</cfloop>--->
-		</select>
-	</dd>
+	<cfloop list="#local.typeOptions#" index="local.thisTypeOption" >
+		<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
+	</cfloop>
 <cfelse>
-	<!---<dd id="spdshippingprovidermethod">#local.shippingServiceMethods[rc.shippingMethod.getShippingProviderMethod()]#</dd>	--->
+	#$.Slatwall.setting("paymentmethod_creditCard_creditCardTypes")#
 </cfif>
+</dd>
 </cfoutput>
