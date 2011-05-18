@@ -38,26 +38,23 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
-	if(!structKeyExists(request, "muraScope")) {
-		variables.assignedSites = getPluginConfig().getAssignedSites();
-		request.muraScope = getService("muraScope").init(assignedSites["siteid"][1]);
+	public any function init() {
+		if(!structKeyExists(request, "muraScope")) {
+			request.muraScope = new mura.MuraScope('default');
+		}
+		variables.$ = request.muraScope;
+		
+		return this;	
 	}
-	
-	if(request.muraScope.event('siteid') == "") {
-		variables.assignedSites = getPluginConfig().getAssignedSites();
-		request.muraScope.event('siteid', assignedSites["siteid"][1]);
-	}
-	
-	variables.$ = request.muraScope;
 	
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string service) {
-		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean(arguments.service);
+		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
 	}
 	
 	// @hint Private helper function to return the Slatwall RB Factory in any component
 	private any function getRBFactory() {
-		return application.slatwall.pluginConfig.getApplication().getValue("rbFactory");
+		return getPluginConfig().getApplication().getValue("rbFactory");
 	}
 	
 	// @hint Private helper function to return the RB Key from RB Factory in any component
@@ -72,12 +69,16 @@ component displayname="Base Object" output="false" {
 	
 	// @hint Private helper function for returning the plugin config inside of any component in the application
 	private any function getPluginConfig() {
-		return application.slatwall.pluginConfig;
+		if(isDefined('application.slatwall.pluginConfig')) {
+			return application.slatwall.pluginConfig;
+		}
 	}
 	
 	// @hint Private helper function for returning the fw
 	private any function getFW() {
-		return application.slatwall.fw;
+		if(isDefined('application.slatwall.fw')) {
+			return application.slatwall.fw;
+		}
 	}
 	
 	public any function inject(required string property, required any value) {
@@ -93,11 +94,11 @@ component displayname="Base Object" output="false" {
 	}
 	
 	public string function buildURL() {
-		return application.slatwall.fw.buildURL(argumentCollection = arguments);
+		return getFW().buildURL(argumentCollection = arguments);
 	}
 	
 	public string function secureDisplay() {
-		return application.slatwall.fw.secureDisplay(argumentCollection = arguments);
+		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
 	
