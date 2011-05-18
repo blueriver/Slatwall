@@ -36,13 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="boolean" />
+<cfparam name="rc.edit" type="boolean" default="false" />
 <cfparam name="rc.paymentMethod" type="any" />
 <cfparam name="rc.paymentServices" type="any" />
 
 <cfoutput>
 	<div class="svoadmindetailpaymentmethod">
 		<ul id="navTask">
+			<cfif not rc.edit><cf_ActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#rc.paymentMethod.getPaymentMethodID()#" type="list"></cfif>
 	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
 			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
@@ -61,6 +62,7 @@ Notes:
 				<dd id="spdprovidergateway">
 					<cfif rc.edit>
 						<select id="providerGateway" name="providerGateway">
+							<option value="">#$.Slatwall.rbKey("define.select")#</option>
 							<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
 								<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
 								<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
@@ -79,5 +81,4 @@ Notes:
 			</div>
 		</form>
 	</cfif>
-
 </cfoutput>
