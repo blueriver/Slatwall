@@ -55,10 +55,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function saveOrderShippingAddress(required struct rc) {
-		param name="rc.orderShippingAddressID" value="";
+		param name="rc.orderShippingAddressID" default="";
 		
 		rc.$.slatwall.cart().getOrderShippings()[1];
-		var address = getAccountService().getByID(rc.orderShippingAddressID, true);
+		var address = getAccountService().getByID(rc.orderShippingAddressID, "SlatwallAddress", true);
 		address = getAccountService().save(address,rc);
 		if(!address.hasErrors()) {
 			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(address);

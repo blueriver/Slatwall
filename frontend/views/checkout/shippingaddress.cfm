@@ -39,16 +39,19 @@ Notes:
 <cfparam name="rc.edit" type="string" default="">
 
 <cfoutput>
-	<div class="svofrontendcheckoutshipping">
+	<div class="svofrontendcheckoutshippingaddress">
 		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
-		<cfif $.slatwall.cart().hasValidAccount() and rc.edit eq "" || rc.edit eq "shipping">
+		<cfif $.slatwall.cart().hasValidAccount() and (rc.edit eq "" || rc.edit eq "shipping")>
 			<div id="checkoutShippingContent" class="contentBlock">
 				<cfif $.slatwall.cart().hasValidOrderShippingAddress() and rc.edit eq "" || rc.edit eq "shipping">
 					<cfif rc.edit eq "shipping">
 						<!--- Shipping Address Edit Here --->
 					<cfelse>
 						<div class="shippingAddress">
-							<!--- Shipping Address Display Here --->
+							<dt>#$.slatwall.cart().getOrderShippings()[1].getAddress().getName()#</dt>
+							<dd>#$.slatwall.cart().getOrderShippings()[1].getAddress().getCompany()#</dd>
+							<dd>#$.slatwall.cart().getOrderShippings()[1].getAddress().getStreetAddress()#</dd>
+							<dd>#$.slatwall.cart().getOrderShippings()[1].getAddress().getCity()# #$.slatwall.cart().getOrderShippings()[1].getAddress().getStateCode()#, #$.slatwall.cart().getOrderShippings()[1].getAddress().getPostalCode()#</dd>
 						</div>
 					</cfif>
 				<cfelse>
@@ -57,19 +60,19 @@ Notes:
 							<h4>Shipping Address</h4>
 							<dl>
 								<dt>Name</dt>
-								<dd><input type="text" name="shippingName" value="" /></dd>
+								<dd><input type="text" name="name" value="" /></dd>
 								<dt>Company</dt>
-								<dd><input type="text" name="shippingCompany" value="" /></dd>
+								<dd><input type="text" name="company" value="" /></dd>
 								<dt>Street Address</dt>
-								<dd><input type="text" name="shippingStreetAddress" value="" /></dd>
+								<dd><input type="text" name="streetAddress" value="" /></dd>
 								<dt>Street Address 2</dt>
-								<dd><input type="text" name="shippingStreet2Address" value="" /></dd>
+								<dd><input type="text" name="street2Address" value="" /></dd>
 								<dt>City</dt>
-								<dd><input type="text" name="shippingCity" value="" /></dd>
+								<dd><input type="text" name="city" value="" /></dd>
 								<dt>State</dt>
-								<dd><input type="text" name="shippingState" value="" /></dd>
+								<dd><input type="text" name="stateCode" value="" /></dd>
 								<dt>Postal Code</dt>
-								<dd><input type="text" name="shippingPostalCode" value="" /></dd>
+								<dd><input type="text" name="postalCode" value="" /></dd>
 							</dl>
 						</div>
 						<button type="submit">Save & Continue</button>
