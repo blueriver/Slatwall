@@ -40,13 +40,13 @@ Notes:
 <cfparam name="rc.shippingServices" type="any" />
 
 <cfoutput>
-	<div class="svoadminlistshippingmethods">
+	<div class="svoadminlistshippingservices">
 		<ul id="navTask">
 	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
 			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
 		</ul>
 		
-		<table id="shippingMethodList" class="stripe">
+		<table id="shippingServiceList" class="stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
 				<th>&nbsp</th>

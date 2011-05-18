@@ -45,18 +45,14 @@ Notes:
 </ul>
 
 <div class="svoadminproductlist">
-<cfif rc.productSmartList.getTotalRecords()>
+<cfif rc.productSmartList.getRecordsCount()>
 	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">Search</button>
+		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
-
 	<table id="ProductList" class="stripe">
 		<tr>
-			<!---<th>Search Score</th>--->
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.productYear_title")#</th>
-			<!---<th>Product Code</th>--->
 			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qexp")#</th>
@@ -66,10 +62,8 @@ Notes:
 		</tr>	
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
 			<tr>
-				<!---<td>#local.Product.getSearchScore()#</td>--->
 				<td>#local.Product.getBrandName()#</td>
 				<td class="varWidth">#local.Product.getProductName()#</td>
-				<td>#local.Product.getProductYear()#</td>
 				<cfif local.Product.getSetting("trackInventoryFlag")>
 					<td>#local.Product.getQOH()#</td>
 					<td>#local.Product.getQC()#</td>
@@ -87,12 +81,13 @@ Notes:
                       <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
 					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
 					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="false" confirmrequired="true">
+					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
 		</cfloop>
 	</table>
+	<cf_smartListPager smartList="#rc.ProductSmartList#">
 <cfelse>
 	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
 </cfif>

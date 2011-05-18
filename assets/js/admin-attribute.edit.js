@@ -37,7 +37,16 @@
 	to your own modified versions of Mura CMS. */
 
 $(document).ready(function(){
-	var optionsCount = $('tr[id^="option"]').length;
+	
+	// make sure attribute options form is displayed only for the right type of attributes
+	$("select.attributeType").each(function(){
+		var id = $(this).attr("id");
+		var $selectedOption = $(this).find('option:selected').html();
+		if(["Select Box","Radio Group","Check Box"].indexOf($selectedOption) > -1) {
+			$("div#" + id).show();
+		}
+	});
+	
 	$("#showSort").click(function(){
 		$("#attributeList").sortable().disableSelection();
 		$('#showSort').hide();
@@ -86,15 +95,62 @@ $(document).ready(function(){
 		var attribID = $(this).attr("attribID");
         var num = $('tr.' + attribID).length;
 		$("#attrib" + attribID + " tbody>tr:last").remove();
-		//alert(num);
-        //$('#option' + num).remove();
+
         // can't remove more options than were originally present
         if($('tr[id^="new"]').length == 0) {
             $('a.remOption').attr('style','display:none;');
         }
 		return false;
     });
+	
+
+	$('select.attributeType').change(function(){
+		var id = $(this).attr("id");
+		var $selectedOption = $(this).find('option:selected').html();
+		if(["Select Box","Radio Group","Check Box"].indexOf($selectedOption) > -1) {
+			$("div#" + id).show();
+		} else {
+			$("div#" + id).hide();
+		}
+	});
+
+	
 });
+
+function btnConfirmAttributeOptionDelete(message,link) {
+    var attribOptionID = $(link).attr("id");
+	$("#alertDialogMessage").html(message);
+    $("#alertDialog").dialog({
+            resizable: false,
+            modal: true,
+            buttons: {
+                'YES': function() {
+                    $(this).dialog('close');
+                    deleteAttributeOption(attribOptionID);        
+                    },
+                'NO': function() {
+                    $(this).dialog('close');
+                }
+            }
+        });
+
+    return false;   
+}
+
+function deleteAttributeOption(id){
+	var params = {attributeOptionID: id, asynch: 'true', cacheID: Math.random()};
+	
+	$.post("index.cfm?slatAction=admin:attribute.deleteAttributeOption",params, function(data){
+		if (data.success) {
+			$('tr#' + id).fadeOut('normal', function(){
+				$(this).remove();
+			});
+		}
+		else {
+			$("#message" + id).html(data.message).show("fast");
+		}
+	}, "json");
+}	
 	
 function showSort(id){
 	$('#showSort').show();

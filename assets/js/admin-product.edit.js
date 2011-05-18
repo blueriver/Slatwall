@@ -76,7 +76,7 @@ jQuery(document).ready(function() {
 			// upload button is disabled unless file field is filled
             $('input#skuImageFile').change(function(){
                     if($(this).val()) {
-                        $('button#adminproductuploadSkuImage').removeAttr('disabled');
+                        $('input#adminproductuploadSkuImage').removeAttr('disabled');
                     } 
             });         
         }

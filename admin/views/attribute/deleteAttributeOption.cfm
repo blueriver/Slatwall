@@ -1,4 +1,4 @@
-/*
+﻿/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,23 +36,6 @@
 Notes:
 
 */
-component displayname="Account Phone" entityname="SlatwallAccountPhone" table="SlatwallAccountPhone" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
-	
-	// Persistant Properties
-	property name="accountPhoneID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="phone" type="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
-	
-	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
-	
-	public string function getPhoneType() {
-		return getAccountPhoneType().getType();
-	}
-}
+<cfset request.layout = false />
+<cfprocessingdirective pageEncoding="utf-8"/><cfcontent
+type="application/javascript" /><cfoutput>{"success":#rc.success#, "message":"#rc.message#"}</cfoutput>

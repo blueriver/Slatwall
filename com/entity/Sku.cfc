@@ -36,14 +36,14 @@
 Notes:
 
 */
-component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
+component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="skuCode" ormtype="string" length="50" validateRequired;
+	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired;
 	property name="listPrice" ormtype="float" default="0";
 	property name="price" ormtype="float" default="0";
-	property name="defaultFlag" ormtype="boolean" default="false";
+	//property name="defaultFlag" ormtype="boolean" default="false";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -71,8 +71,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	property name="imageDirectory" type="string" hint="Base directory for product images" persistent="false";
-	
-    public Sku function init() {
+
+	// Calculated Properties
+	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID=skuID";
+
+	public Sku function init() {
        // set default collections for association management methods
        if(isNull(variables.Options)) {
        	    variables.options=[];
@@ -139,6 +142,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     /************   END Association Management Methods   *******************/
     
+    /*
     public void function setDefaultFlag(required boolean defaultFlag) {
 		if(arguments.defaultFlag == true) {
 			getProduct().setDefaultSku(this);
@@ -151,6 +155,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		variables.defaultFlag = arguments.defaultFlag;
 	}
+	*/
     
     public numeric function getQOH() {
     	if(isNull(variables.qoh)) {
@@ -206,7 +211,49 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="") {
-		if(isDefined("arguments.size")) {
+		// Get the expected Image Path
+		var path=getImagePath();
+		
+		// If no image Exists use the defult missing image 
+		if(!fileExists(expandPath(path))) {
+			path = setting('product_missingimagepath');
+		}
+		
+		// If there were sizes specified, get the resized image path
+		if(structKeyExists(arguments, "size") || arguments.width != 0 || arguments.height != 0) {
+			path = getResizedImagePath(argumentcollection=arguments);	
+		}
+		
+		// Read the Image
+		var img = imageRead(expandPath(path));
+		
+		// Setup Alt & Class for the image
+		if(arguments.alt == "") {
+			arguments.alt = "#getProduct().getTitle()# #displayOptions()#";
+		}
+		if(arguments.class == "") {
+			arguments.class = "skuImage";	
+		}
+		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
+	}
+	
+	public string function getImagePath() {
+		if(!structKeyExists(variables, "imagePath") or isNull(variables.imagePath)) {
+			// Genreates the image path based upon product code, and image options for this sku
+			var options = getOptions();
+			var optionString = "";
+			for(var i=1; i<=arrayLen(options); i++){
+				if(options[i].getOptionGroup().getImageGroupFlag()){
+					optionString &= "-#options[i].getOptionCode()#";
+				}
+			}
+			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
+		}
+		return variables.imagePath;
+	}
+	
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0) {
+		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {
 				arguments.size = "large";
@@ -218,28 +265,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.width = setting("product_imagewidth#arguments.size#");
 			arguments.height = setting("product_imageheight#arguments.size#");
 		}
-		if(arguments.alt == "") {
-			arguments.alt = "#getProduct().getTitle()# #displayOptions()#";
-		}
-		if(arguments.class == "") {
-			arguments.class = "skuImage";	
-		}
-		
-		return getService("FileService").displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=arguments.alt, class=arguments.class);
-	}
-	
-	public string function getImagePath() {
-		if(!structKeyExists(variables, "imagePath") or isNull(variables.imagePath)) {
-			var options = getOptions();
-			var optionString = "";
-			for(var i=1; i<=arrayLen(options); i++){
-				if(options[i].getOptionGroup().getImageGroupFlag()){
-					optionString &= "-#options[i].getOptionCode()#";
-				}
-			}
-			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.jpg";
-		}
-		return variables.imagePath;
+		return getService("FileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
 	}
 	
 	public boolean function imageExists() {

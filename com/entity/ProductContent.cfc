@@ -36,11 +36,13 @@
 Notes:
 
 */
-component displayname="Product Content" entityname="SlatwallProductContent" table="SlatwallProductContent" persistent=true output=false accessors=true extends="slatwall.com.entity.baseEntity" {
+component displayname="Product Content" entityname="SlatwallProductContent" table="SlatwallProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="productContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
-	property name="contentID" ormtype="string" length="35";  
+	property name="contentID" ormtype="string" length="35";
+	property name="contentPath" ormtype="string";
+	 
 	
 	// Related Object Properties
 	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";

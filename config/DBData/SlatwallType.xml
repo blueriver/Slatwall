@@ -29,6 +29,28 @@
 		<Record typeID="444df2aaed92cb33d16a83d2bde93e72" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box" systemCode="atCheckBox" />
 		<Record typeID="444df2a9fe732d3ec9d8b495ab1dddf7" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Radio Group" systemCode="atRadioGroup" />
 		
+		<Record typeID="444df2b3df09f67ddcb27918f02c2d83" type="Order Status Types" systemCode="orderStatusType" />
+		<Record typeID="444df2b498de93b4b33001593e96f4be" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Not Placed" systemCode="ostNotPlaced" />
+		<Record typeID="444df2b5c8f9b37338229d4f7dd84ad1" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="New" systemCode="ostNew" />
+		<Record typeID="444df2b6b8b5d1ccfc14a4ab38aa0a4c" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Processing" systemCode="ostProcessing" />
+		<Record typeID="444df2b7d7dcce8a3aa485f80264ac3a" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="On Hold" systemCode="ostOnHold" />
+		<Record typeID="444df2b8b98441f8e8fc6b5b4266548c" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Closed" systemCode="ostClosed" />
+		<Record typeID="444df2b90f62f72711eb5b3c90848e7e" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Canceled" systemCode="ostCanceled" />
+		
+		<Record typeID="444df2bac3f06e0645cf38f1d6a4e443" type="Order Item Status Types" systemCode="orderItemType" />
+		<Record typeID="444df2bbbedeac5c0707d8ec445d1865" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="Not Placed" systemCode="oistNotPlaced" />
+		<Record typeID="444df2bbbedeac5c0707d8ec445d1865" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="New" systemCode="oistNew" />
+		<Record typeID="444df2bcac18a033c7611b0e046e7de9" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="Picked" systemCode="oistPicked" />
+		<Record typeID="444df2bdd89b4fe8f128c3a7590c99b6" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="Backordered" systemCode="oistBackordered" />
+		<Record typeID="444df2bedf079c901347d35abab7c032" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="Fulfilled" systemCode="oistFulfilled" />
+
+		<Record typeID="444df2bfcce010ca2fc46bf1d2122904" type="Order Shipping Status Types" systemCode="orderShippingStatusType" />
+		<Record typeID="444df2c0ba0f0ddc3d80060c4be1dd42" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Not Placed" systemCode="osstNotPlaced" />
+		<Record typeID="444df2c1adba9a6971a24cc5e2f6826b" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="New" systemCode="osstNew" />
+		<Record typeID="444df2c2e64c3d14495edf52677ad126" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Processing" systemCode="osstProcessing" />
+		<Record typeID="444df2c390d333aa4eb20892ed6a510f" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Partially Shipped" systemCode="osstPartiallyShipped" />
+		<Record typeID="444df2c40b655fbdfdaf70647b61f9ea" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Shipped" systemCode="osstShipped" />
+
 		<Record typeID="444df294de226e21c4789a8e7a3eec16" type="Sku Types" systemCode="skuType" />
 		<Record typeID="444df2950022c7e106229d49eb36b9e9" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Company Sku" systemCode="stCompany" />
 		<Record typeID="444df296e8aed565328bce7ab1104d5b" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Vendor Sku" systemCode="stVendor" />
@@ -53,25 +75,6 @@
 <!--
 Below Are UUID's to use... delete after using
 
-
-444df2b3df09f67ddcb27918f02c2d83
-444df2b498de93b4b33001593e96f4be
-444df2b5c8f9b37338229d4f7dd84ad1
-444df2b6b8b5d1ccfc14a4ab38aa0a4c
-444df2b7d7dcce8a3aa485f80264ac3a
-444df2b8b98441f8e8fc6b5b4266548c
-444df2b90f62f72711eb5b3c90848e7e
-444df2bac3f06e0645cf38f1d6a4e443
-444df2bbbedeac5c0707d8ec445d1865
-444df2bcac18a033c7611b0e046e7de9
-444df2bdd89b4fe8f128c3a7590c99b6
-444df2bedf079c901347d35abab7c032
-444df2bfcce010ca2fc46bf1d2122904
-444df2c0ba0f0ddc3d80060c4be1dd42
-444df2c1adba9a6971a24cc5e2f6826b
-444df2c2e64c3d14495edf52677ad126
-444df2c390d333aa4eb20892ed6a510f
-444df2c40b655fbdfdaf70647b61f9ea
 444df2c50df0693b037b44521287250f
 444df2c6ad38850e66a1f3151c05ac3e
 444df2c79a51cb70cf3f61efff8ae41b

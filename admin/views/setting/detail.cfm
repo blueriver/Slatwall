@@ -76,6 +76,8 @@ Notes:
 						</cfif>
 					</tr>
 					<cf_PropertyDisplay object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" property="settingValue" fieldName="product_urlKey" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_PropertyDisplay object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" property="settingValue" fieldName="product_missingimagepath" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_PropertyDisplay object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" property="settingValue" fieldName="product_imageextension" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<cf_PropertyDisplay object="#rc.allSettings.product_imagewidthsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthsmall')#" property="settingValue" fieldName="product_imagewidthsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<cf_PropertyDisplay object="#rc.allSettings.product_imageheightsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightsmall')#" property="settingValue" fieldName="product_imageheightsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<cf_PropertyDisplay object="#rc.allSettings.product_imagewidthmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthmedium')#" property="settingValue" fieldName="product_imagewidthmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
@@ -108,7 +110,7 @@ Notes:
 		<cfif rc.edit eq true>
 			<div id="actionButtons" class="clearfix">
 				<cf_actionCaller action="admin:setting.detail" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_ActionCaller action="admin:setting.save" type="submit">
+				<cf_ActionCaller action="admin:setting.save" type="submit" class="button">
 			</div>
 		</form>
 		</cfif>

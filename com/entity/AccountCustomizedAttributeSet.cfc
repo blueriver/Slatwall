@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Customized AttributeSet" entityname="SlatwallAccountCustomizedAttributeSet" table="SlatwallAccountCustomizedAttributeSet" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Account Customized AttributeSet" entityname="SlatwallAccountCustomizedAttributeSet" table="SlatwallAccountCustomizedAttributeSet" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="accountCustomizedAttributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

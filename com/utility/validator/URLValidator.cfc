@@ -42,9 +42,9 @@ Notes:
 component extends="BaseValidator" {
 	
 	private boolean function validate(String objectValue){
-		var valid = true;
-		if(!isValid('URL',arguments.objectValue)){
-			valid = false;
+		var valid = false;
+		if(isnull(arguments.objectValue) || arguments.objectValue == "" && isValid('URL',arguments.objectValue)){
+			valid = true;
 		}
 		return valid;
 	}

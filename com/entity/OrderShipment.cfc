@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Shipment" entityname="SlatwallOrderShipment" table="SlatwallOrderShipment" persistent="true" accessors="true" output="false" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Order Shipment" entityname="SlatwallOrderShipment" table="SlatwallOrderShipment" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="orderShipmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -54,5 +54,35 @@ component displayname="Order Shipment" entityname="SlatwallOrderShipment" table=
 	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderShipmentItems" singularname="orderShipmentItem" cfc="OrderShipmentItem" fieldtype="one-to-many" fkcolumn="orderShipmentID" cascade="all";
+
+
+    /******* Association management methods for bidirectional relationships **************/
 	
+	// Order (many-to-one)
+	
+	public void function setOrder(required Order Order) {
+	   variables.order = arguments.order;
+	   if(!arguments.order.hasOrderShipment(this)) {
+	       arrayAppend(arguments.order.getOrderShipments(),this);
+	   }
+	}
+	
+	public void function removeOrder(required Order Order) {
+       var index = arrayFind(arguments.order.getOrderShipments(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.order.getOrderShipments(),index);
+       }    
+       structDelete(variables,"order");
+    }
+	
+	// OrderShipmentItems (one-to-many)
+	
+	public void function addOrderShipmentItem(required orderShipmentItem orderShipmentItem) {
+	   arguments.orderShipmentItem.setOrderShipment(this);
+	}
+	
+	public void function removeOrderShipmentItem(required OrderShipmentItem OrderShipmentItem) {
+	   arguments.orderShipmentItem.removeOrderShipment(this);
+	}
+    /************   END Association Management Methods   *******************/
 }

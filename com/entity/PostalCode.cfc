@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Postal Code" entityname="SlatwallPostalCode" table="SlatwallPostalCode" persistent="true" extends="slatwall.com.entity.baseEntity" {
+component displayname="Postal Code" entityname="SlatwallPostalCode" table="SlatwallPostalCode" persistent="true" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="postalCode" type="string" fieldtype="id" displayname="Postal Code";

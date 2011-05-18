@@ -48,8 +48,10 @@ Notes:
 			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
 		</ul>
 		
+		<cfif rc.edit>
 		<form name="ShippingMethodEdit" action="#buildURL('admin:setting.saveshippingmethod')#" method="post">
 			<input type="hidden" name="shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />
+		</cfif>
 			<dl class="oneColumn">
 				<cf_PropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#" first="true">
 				<dt class="spdshippingprovider">
@@ -131,7 +133,7 @@ Notes:
 				<cfif !rc.shippingMethod.isNew()>
 					<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
 				</cfif>
-				<cf_ActionCaller action="admin:setting.saveshippingmethod" type="submit">
+				<cf_ActionCaller action="admin:setting.saveshippingmethod" type="submit" class="button">
 			</div>
 		</form>
 	</cfif>

@@ -36,11 +36,12 @@
 Notes:
 
 */
-component displayname="Vendor Email" entityname="SlatwallVendorEmail" table="SlatwallVendorEmail" persistent="true" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Account Email" entityname="SlatwallAccountEmailAddress" table="SlatwallAccountEmailAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistant Properties
-	property name="vendorEmailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="email" ormtype="string";
+	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="emailAddress" validateRequired validateEmail ormtype="string" inverse="true";
+	property name="primaryFlag" default="false" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -49,10 +50,13 @@ component displayname="Vendor Email" entityname="SlatwallVendorEmail" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorEmailType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorEmailTypeID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true";
 	
-	public string function getEmailType() {
-		return getVendorEmailType().getType();
+	public void function setAccount(required Account account) {
+		variables.account = arguments.account;
+		if(!arguments.account.hasAccountEmailAddress(this)) {
+			arrayAppend(arguments.account.getAccountEmailAddresses(),this);
+		}
 	}
+	
 }

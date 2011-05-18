@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" table="SlatwallVendorSkuStock" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
+component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" table="SlatwallVendorSkuStock" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="vendorSkuStockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

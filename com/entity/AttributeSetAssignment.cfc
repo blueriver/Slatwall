@@ -36,15 +36,13 @@
 Notes:
 
 */
-component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" discriminatorcolumn="attributeSetAssignmentType" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="baseItemID" length="32" ormtype="string" hint="This is where the assignment is made, e.g. productID,productTypeID,accountID,accountTypeID" ;  
 	
 	// Related Object Properties
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
-
 
 	/******* Association management methods for bidirectional relationships **************/
 	

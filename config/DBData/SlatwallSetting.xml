@@ -7,12 +7,14 @@
 	<Records>
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="product_urlKey" settingValue="sp" />
 		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="product-templates/default" />
-		<Record settingID="dbb32799a1090790de93f0b6dd6b36ef" settingName="product_imagewidthsmall" settingValue="150" />
-		<Record settingID="dbb3278dde43a5711cd8ea043d4bba1c" settingName="product_imagewidthmedium" settingValue="300" />
-		<Record settingID="dbb3278cd959dc151f36ae48ce579b47" settingName="product_imagewidthlarge" settingValue="600" />
-		<Record settingID="dbb3278e9caff52a94d1999ca909a4bb" settingName="product_imageheightsmall" settingValue="150" />
-		<Record settingID="dbb3278fc40b735e096f76d3f6a4037a" settingName="product_imageheightmedium" settingValue="300" />
-		<Record settingID="dbb32790a3d4fc2a1cec88be34c9dbc6" settingName="product_imageheightlarge" settingValue="600" />
+		<Record settingID="dbb3279cee21f040e126e9e499710707" settingName="product_missingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
+		<Record settingID="dbb3279be8c752977fefc8768918e8df" settingName="product_imageExtension" settingValue="jpg" />
+		<Record settingID="dbb32799a1090790de93f0b6dd6b36ef" settingName="product_imageWidthSmall" settingValue="150" />
+		<Record settingID="dbb3278dde43a5711cd8ea043d4bba1c" settingName="product_imageWidthMedium" settingValue="300" />
+		<Record settingID="dbb3278cd959dc151f36ae48ce579b47" settingName="product_imageWidthLarge" settingValue="600" />
+		<Record settingID="dbb3278e9caff52a94d1999ca909a4bb" settingName="product_imageHeightSmall" settingValue="150" />
+		<Record settingID="dbb3278fc40b735e096f76d3f6a4037a" settingName="product_imageHeightMedium" settingValue="300" />
+		<Record settingID="dbb32790a3d4fc2a1cec88be34c9dbc6" settingName="product_imageHeightLarge" settingValue="600" />
 		
 		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventoryFlag" settingValue="0" />
 		<Record settingID="dbb32795f0ad81a6996c60a8e05702a7" settingName="product_callToOrderFlag" settingValue="0" />
@@ -21,6 +23,8 @@
 		<Record settingID="dbb3279aa919ec2609ab33bfbfa732e6" settingName="product_allowBackorderFlag" settingValue="0" />
 		<Record settingID="dbb32798ffe388844546d7457612a6c7" settingName="product_allowDropshipFlag" settingValue="0" />
 		
+		<Record settingID="dbb3279def932d8ce05d3405228630fe" settingName="paymentMethod_creditCard_creditCardTypeOptions" settingValue="Mastercard,Visa,Amex,Discover" />
+		
 		<Record settingID="dbb32786b330315f7869d11b78bd7222" settingName="order_notificationEmailTo" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb32787e840bb61c8fde17a08a0ea9a" settingName="order_notificationEmailFrom" settingValue="info@mySlatwallStore.com" />
 	</Records>
@@ -28,12 +32,6 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	dbb3279be8c752977fefc8768918e8df
-	dbb3279cee21f040e126e9e499710707
-	dbb3279def932d8ce05d3405228630fe
-	dbb3279ecff4e634461fea378a345bce
-	dbb3279f9087e0773624eb4964dec5b2
-	dbb327a0ac3e0baeacdd1d938563265e
 	dbb327a1fa414362a2934a72ea77eb03
 	dbb327a2c663e36317b216ebc09ee385
 	dbb327a3e256e78458125906a2f8c05a

@@ -46,7 +46,7 @@ Notes:
 		<cf_ActionCaller action="admin:attribute.list" type="list">
 	</ul>
 	<cfset local.attributeSetTypeSelected = "" />
-	<cfif !rc.attributeSet.isNew()>
+	<cfif !isNull(rc.attributeSet.getAttributeSetType())>
 		<cfset local.attributeSetTypeSelected = rc.attributeSet.getAttributeSetType().getType() />
 	</cfif>
 	<cfif rc.edit>
@@ -65,7 +65,7 @@ Notes:
 			<cfif not rc.attributeSet.hasAttribute() and !rc.attributeSet.isNew()>
 				<cf_ActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
 			</cfif>
-			<cf_ActionCaller action="admin:attribute.saveAttributeSet" type="submit">
+			<cf_ActionCaller action="admin:attribute.saveAttributeSet" type="submit"  class="button">
 		</div>
 		</form>
 	<cfelse>

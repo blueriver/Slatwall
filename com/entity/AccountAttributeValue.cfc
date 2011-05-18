@@ -1,4 +1,3 @@
-
 /*
 
     Slatwall - An e-commerce plugin for Mura CMS
@@ -37,43 +36,29 @@
 Notes:
 
 */
+component displayname="Account Attribute Value" entityname="SlatwallAccountAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="Account" {
+	
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
+	
 
-$(document).ready(function(){
-	$('li.LogoSearch img').click(function(e){
-		$('ul.MainMenu').show('fast');
-		e.stopPropagation();
-	});
-});
-
-$(document).bind('keydown', 'Alt+s', function(e){
-	e.preventDefault();
-	$('li#search > input').focus();
-	$('li#mainMenu > ul').show('fast');	
-});
-
-$(document).bind('keydown', 'esc', function(e){
-	e.preventDefault();
-	$('li#search > input').blur();
-	$('li#search > input').val('');
-	$('li#mainMenu > ul').hide('fast');	
-});
-
-function btnConfirmDialog(message,btn){
+	/******* Association management methods for bidirectional relationships **************/
+	// Account (many-to-one)
+	
+	public void function setAccount(required Account account) {
+		variables.account = arguments.account;
+		if(isNew() || !arguments.account.hasAttributeValue(this)) {
+		   arrayAppend(arguments.account.getAttributeValues(),this);
+		}
+	}
+	
+	public void function removeAccount(required Account account) {
+		var index = arrayFind(arguments.account.getAttributeValues(),this);
+		if(index > 0) {
+		   arrayDeleteAt(arguments.account.getAttributeValues(),index);
+		}    
+		structDelete(variables,"account");
+    }
     
-    jQuery("#alertDialogMessage").html(message);
-    jQuery("#alertDialog").dialog({
-            resizable: false,
-            modal: true,
-            buttons: {
-                'YES': function() {
-                    jQuery(this).dialog('close');
-                    btn.form.submit();        
-                    },
-                'NO': function() {
-                    jQuery(this).dialog('close');
-                }
-            }
-        });
+	/************   END Association Management Methods   *******************/
 
-    return false;   
 }

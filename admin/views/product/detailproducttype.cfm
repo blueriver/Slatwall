@@ -64,10 +64,10 @@ Notes:
 			<label for="parentProductType_productTypeID">Parent Product Type</label>
 		</dt>
 		<dd>
-		<select name="parentProductType" id="parentProductType_productTypeID">
+		<select name="parentProductType" id="parentProductType_productTypeID" onchange="alertDialog('#$.Slatwall.rbKey("admin.product.changeParentProductType_confirm")#');">
             <option value=""<cfif isNull(rc.productType.getParentProductType())> selected</cfif>>None</option>
         <cfloop query="local.tree">
-		    <cfif not listFind(local.tree.path,rc.productType.getProductTypeName())><!--- can't be child of itself or any of its children --->
+		    <cfif not listFind(local.tree.productTypeNamePath,rc.productType.getProductTypeName())><!--- can't be child of itself or any of its children --->
             <cfset ThisDepth = local.tree.TreeDepth />
             <cfif ThisDepth><cfset bullet="-"><cfelse><cfset bullet=""></cfif>
             <option value="#local.tree.productTypeID#"<cfif (!isNull(rc.productType.getParentProductType()) and rc.productType.getParentProductType().getProductTypeID() eq local.tree.productTypeID) or rc.parentProductTypeID eq local.tree.productTypeID> selected="selected"</cfif>>
@@ -79,14 +79,18 @@ Notes:
 		</dd>
 		<cfelse>
 			<cfset local.parentLink = rc.productType.hasParentProductType() ? buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.productType.getParentProductType().getProductTypeID()#') : "" />
-			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullValue="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
+			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
 		</cfif>
 	</dl>
 	<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 		<ul>
+			<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabDescription')#</span></a></li>
 			<li><a href="##tabSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabSettings')#</span></a></li>	
 			<li><a href="##tabAttributeSets" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabAttributeSets')#</span></a></li>
 		</ul>
+		<div id="tabDescription">
+			<cf_PropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg">
+		</div>
 		<div id="tabSettings">
 			<table class="stripe" id="productTypeSettings">
 				<tr>
@@ -102,7 +106,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)">
+						<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("trackInventoryFlag") />
 					<td>
@@ -123,7 +127,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)">
+						<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("callToOrderFlag") />
 					<td>
@@ -144,7 +148,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)">
+						<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowShippingFlag") />
 					<td>
@@ -165,7 +169,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)">
+						<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowPreorderFlag") />
 					<td>
@@ -186,7 +190,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)">
+						<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowBackorderFlag") />
 					<td>
@@ -207,7 +211,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" editType="select" nullValue="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)">
+						<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowDropShipFlag") />
 					<td>
@@ -230,6 +234,7 @@ Notes:
 					<th>#rc.$.Slatwall.rbKey('admin.product.detailProductType.attributeSetAssigned')#</th>	
 				</tr>
 				<!--- assigned attributeSetIDs --->
+				<input type="hidden" name="attributeSetIDs" value="" />
 				<cfset local.attributeSetIDs = "" />
 				<cfloop array="#rc.productType.getAttributeSetAssignments()#" index="local.AttributeSetAssignment">
 					<cfset local.attributeSetIDs = listAppend(local.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) />
@@ -265,7 +270,7 @@ Notes:
 			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
 			<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 			</cfif>
-			<cf_ActionCaller action="admin:product.saveproducttype" confirmrequired="true" type="submit">
+			<cf_ActionCaller action="admin:product.saveproducttype" type="submit" class="button">
 		</div>
 	</form>
 	</cfif>

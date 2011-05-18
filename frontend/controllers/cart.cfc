@@ -39,16 +39,41 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
 	property name="orderService" type="any";
+	property name="productService" type="any";
 	
-	public void function detail(required struct rc) {
-		param name="rc.cartID" default="";
+	public void function clearItems(required struct rc) {
+		rc.$.slatwall.cart().removeAllOrderItems();
+		getFW().redirectExact(rc.$.createHREF(filename='/'));
+	}
+	
+	public void function update(required struct rc) {
+		getFW().setView("frontend:cart.detail");
+	}
+	
+	public void function addItem(required struct rc) {
+		param name="rc.productID" default="";
+		param name="rc.selectedOptions" default="";
+		param name="rc.quantity" default=1;
+		param name="rc.orderShippingID" default="";
 		
-		if(rc.cartID != "") {
-			rc.cart = orderService().getByID(rc.cartID);
-		} else {
-			rc.cart = rc.$.slatwall.cart();
-		}
+		// Get the product
+		var product = getProductService().getByID(rc.productID);
 		
+		// Find the sku based on the product options selected
+		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
+		
+		var cart = rc.$.slatwall.cart();
+		
+		// Check to see if the cart is a new order and save it if it is.
+		rc.$.slatwall.session().setOrder(cart);
+
+		// Add to the cart() order the new sku with quantity and shipping id
+		getOrderService().addOrderItem(order=cart, sku=sku, quantity=rc.quantity, orderShippingID=rc.orderShippingID);
+		
+		// Save the Cart
+		getOrderService().save(cart);
+		
+		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);
 	}
 	
 }

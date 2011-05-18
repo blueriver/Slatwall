@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="History Sku" entityname="SlatwallHistorySku" table="SlatwallHistorySku" persistent="true" extends="slatwall.com.entity.baseEntity" {
+component displayname="History Sku" entityname="SlatwallHistorySku" table="SlatwallHistorySku" persistent="true" extends="BaseEntity" {
 			
 	// Persistant Properties
 	property name="historySkuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

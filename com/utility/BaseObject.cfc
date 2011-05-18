@@ -38,10 +38,14 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
-	param name="session.siteid" default="default";
-	
 	if(!structKeyExists(request, "muraScope")) {
-		request.muraScope = getService("muraScope").init(session.siteid);
+		variables.assignedSites = getPluginConfig().getAssignedSites();
+		request.muraScope = getService("muraScope").init(assignedSites["siteid"][1]);
+	}
+	
+	if(request.muraScope.event('siteid') == "") {
+		variables.assignedSites = getPluginConfig().getAssignedSites();
+		request.muraScope.event('siteid', assignedSites["siteid"][1]);
 	}
 	
 	variables.$ = request.muraScope;
@@ -71,6 +75,11 @@ component displayname="Base Object" output="false" {
 		return application.slatwall.pluginConfig;
 	}
 	
+	// @hint Private helper function for returning the fw
+	private any function getFW() {
+		return application.slatwall.fw;
+	}
+	
 	public any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}
@@ -90,4 +99,6 @@ component displayname="Base Object" output="false" {
 	public string function secureDisplay() {
 		return application.slatwall.fw.secureDisplay(argumentCollection = arguments);
 	}
+	
+	
 }

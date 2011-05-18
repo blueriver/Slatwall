@@ -38,9 +38,11 @@ Notes:
 */
 
 $(document).ready(function() {
-    $("a.preview").imgPreview({
-        imgCSS: {
-            width: '150px'
-        }
-    });
+	if($("a.preview").size()) {
+	    $("a.preview").imgPreview({
+	        imgCSS: {
+	            width: '150px'
+	        }
+	    });		
+	}
 });

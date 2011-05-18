@@ -43,8 +43,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
+		/*
+		// Now because the default sku is set as a realationship this validation block needs to change
 		if(arguments.sku.getDefaultFlag() == true) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
+		}
+		*/
+		if(arguments.sku.getOrderedFlag() == true) {
+			getValidator().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
 		}
 		if(!arguments.sku.hasErrors()) {
 			arguments.sku.removeProduct();
@@ -68,7 +74,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
-			thisSku.setDefaultFlag(true);
+			arguments.product.setDefaultSku(thisSku);
 		}
 		return true;
 	}
@@ -83,8 +89,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice},arguments.product);
 			// set the first sku as the default one
 			if(i==1) {
-				thisSku.setDefaultFlag(true);
-			} 
+				arguments.product.setDefaultSku(thisSku);
+			}
 		}
 	}
 
@@ -114,6 +120,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
     /* @hint bulk update of skus from product edit page
     */	
 	public any function updateSkus(required any product,required array skus) {
+		// keep track of sku codes so that we can flag any duplicates
+		var skuCodeList = "";
 		for(var i=1;i<=arrayLen(arguments.skus);i++) {
 			local.skuStruct = arguments.skus[i];
 			if( len(local.skuStruct.skuID) > 0 ) {
@@ -131,37 +139,66 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	            }
 	         } else {
 	         	// this is a new sku added from product.edit form (no skuID yet)
-	         	createSkuFromStruct( local.skuStruct, arguments.product );
+	         	local.thisSku = createSkuFromStruct( local.skuStruct, arguments.product );
 	         }
+	         validateSkuCode( local.thisSku, skuCodeList );
+	         skuCodeList = listAppend(skuCodeList, local.thisSku.getSkuCode());
 		}
 		return true;
 	}
 	
+	
+	public any function validateSkuCode( required any sku, string skuCodeList ) {
+		var isDuplicate = false;
+		// first check if there was a duplicate among the Skus that are being created with this one
+		if(structKeyExists(arguments,"skuCodeList")) {
+			isDuplicate = listFindNoCase( arguments.skuCodeList, arguments.sku.getSkuCode() );
+		}
+		// then check the database (only if a duplicate wasn't already found)
+		if( isDuplicate == false ) {
+			isDuplicate = getDAO().isDuplicateProperty("skuCode", arguments.sku);
+		}
+		var skuCodeError = getService("validator").validate(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
+		if( !structIsEmpty(skuCodeError) ) {
+			arguments.sku.addError(argumentCollection=skuCodeError);
+			getService("requestCacheService").setValue("ormHasErrors", true);
+		}
+	}
+	
+	
 	/**
-	/* @hint takes a struct of optionGroup (keys) and lists of optionID's (values) and returns a list of all possible optionID combinations 
+	/* @hint takes a struct of optionGroup (keys are option group sort orders) and lists of optionID's (values) and returns a list of all possible optionID combinations 
 	/* (combinations are semicolon-delimited and option id's within each combination are comma-delimited )
 	*/
 	public string function getOptionCombinations (required struct options) {
-		var optionGroupList = listSort( structKeyList(arguments.options), "numeric" );
-		// get list of options from first option group
-		var comboList = listChangeDelims(arguments.options[listFirst(optionGroupList)],";");
-		// parse options struct (in order) to build list of possible option combinations
-		for( var i=1; i<=listLen(optionGroupList); i++ ) {
-			var optionGroup = listGetAt(optionGroupList,i);
-			if(optionGroup != listFirst(optionGroupList)) {
-				var tempList = "";
-				for(var i=1;i<=listLen(comboList,";");i++) {
-					local.thisCombo = listGetAt(comboList,i,";");
-					local.newCombo = "";
-					for(var j=1; j<=listLen(arguments.options[optionGroup]);j++) {
-						local.newCombo = listAppend(local.newCombo,local.thisCombo & "," & listGetAt(arguments.options[optionGroup],j),";");
-					}
-					tempList = listAppend(tempList,local.newCombo,";");
+		// use struct keys to make sure options are ordered by sort order of option group
+		var optionsKeyArray = structKeyArray(options);
+		arraySort(optionsKeyArray,"numeric");
+		// pick the first group and create the array for cartesian output
+		var optionComboArray = listToArray(options[optionsKeyArray[1]]); 
+		// loop for second to last group
+		for(var i = 2; i <= arrayLen(optionsKeyArray); i++){
+			var optionComboArrayLen = arrayLen(optionComboArray);
+			var optionTempArray = [];
+			// loop through each item in the group
+			for(var j = 1; j <= optionComboArrayLen; j++){
+				var thisOptionArray = listToArray(options[optionsKeyArray[i]]);
+				var currentOptionList = optionComboArray[j];
+				// loop through each item in the group
+				for(var optionID in thisOptionArray){
+					// new combination by appending to the existing values
+					var thisCombo = listAppend(currentOptionList,optionID);
+					arrayAppend(optionComboArray,thisCombo);
 				}
-				comboList = tempList;
+				// store old value to be discarded
+				arrayAppend(optionTempArray,currentOptionList);
+			}
+			// discard old values because now we have new combination
+			for(var item in optionTempArray){
+				arrayDelete(optionComboArray,item);
 			}
 		}
-		return comboList;
+		return arrayToList(optionComboArray,";");
 	}
 	
 	public any function processImageUpload(required any Sku, required struct imageUploadResult) {

@@ -36,12 +36,11 @@
 Notes:
 
 */
-component displayname="Account Email" entityname="SlatwallAccountEmail" table="SlatwallAccountEmail" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddress" table="SlatwallVendorEmailAddress" persistent="true" extends="BaseEntity" {
 	
 	// Persistant Properties
-	property name="accountEmailID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="email" ormtype="string";
-	property name="primaryFlag" default="false" ormtype="boolean"; 
+	property name="vendorEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="emailAddress" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -50,19 +49,6 @@ component displayname="Account Email" entityname="SlatwallAccountEmail" table="S
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	
-	public void function setPrimaryFlag(required boolean primaryFlag) {
-		if(primaryFlag == true) {
-			var emails = getAccount().getAccountEmails();
-			for(var i = 1; i <= arrayLen(emails); i++) {
-				if(emails[i].getPrimaryFlag() == true) {
-					emails[i].setPrimaryFlag(false);
-					getService("accountService").save(entity=emails[i]);
-				}
-			}
-		}
-		variables.primaryFlag = arguments.primaryFlag;
-	}
+	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	
 }

@@ -50,7 +50,7 @@ Notes:
 		</ul>
 		
 		<cfif rc.edit>
-			<form name="saveShippingService" action="#buildURL(action='admin:setting.saveshippingservice')#">
+			<form name="saveShippingService" method="post" action="#buildURL(action='admin:setting.saveshippingservice')#">
 				<input type="hidden" name="shippingServicePackage" value="#rc.shippingServicePackage#" />
 		</cfif>
 		<cfif structKeyExists(local.serviceMeta, "properties")>
@@ -71,7 +71,7 @@ Notes:
 		</cfif>
 		<cfif rc.edit>
 			<cf_ActionCaller action="admin:setting.listshippingservices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit">
+			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit" class="button">
 			</form>
 		</cfif>
 	</div>

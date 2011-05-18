@@ -36,9 +36,10 @@
 Notes:
 
 --->
-<cfparam name="rc.create" type="boolean" default="false" >
+<cfparam name="rc.create" type="boolean" default="false" />
 <cfparam name="rc.newOption" type="any" default="" />
-<cfparam name="rc.activeOption" type="any" default="" >
+<cfparam name="rc.activeOption" type="any" default="" />
+<cfparam name="rc.optionID" type="string" default="" />
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.newOptionFormOpen" type="boolean" default="false" />
 
@@ -74,17 +75,20 @@ Notes:
 		<cf_PropertyDisplay object="#rc.newOption#" property="optionDescription" edit="true" editType="wysiwyg" toggle="show">
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-	<cf_ActionCaller action="admin:option.save" type="submit">
+	<cf_ActionCaller action="admin:option.save" type="submit" class="button">
 </form>
 </div>
 </cfif>
 
 <cfif arrayLen(local.options) gt 0>
 
-<p>
-<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
-<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
-</p>
+	<!--- only show reordering controls if there are more than one options --->
+	<cfif arrayLen(local.options) gt 1>
+		<p>
+		<a href="##" style="display:none;" id="saveSort">[#rc.$.Slatwall.rbKey("admin.option.saveorder")#]</a>
+		<a href="##"  id="showSort">[#rc.$.Slatwall.rbKey('admin.option.reorder')#]</a>
+		</p>
+	</cfif>
 
 <ul id="optionList" class="orderList">
 <cfloop from="1" to="#arraylen(local.options)#" index="local.i">
@@ -93,9 +97,12 @@ Notes:
 <cfif isObject(rc.activeOption) and local.thisOption.getOptionID() eq rc.activeOption.getOptionID()>
 	<cfset local.thisOption = rc.activeOption />
 	<cfset local.thisOpen = true />
+<cfelseif rc.optionID eq local.thisOption.getOptionID()>
+	<cfset local.thisOpen = true />
 <cfelse>
 	<cfset local.thisOpen = false />
 </cfif>
+	<cfif len(local.thisOption.getOptionID())>
 	<li optionID="#local.thisOption.getOptionID()#">
 		<span id="handle#local.i#" class="handle" style="display:none;">[#rc.$.Slatwall.rbKey("admin.option.order.handle")#]</span>
 		#local.thisOption.getOptionName()# 
@@ -114,17 +121,18 @@ Notes:
 				<cf_PropertyDisplay id="optionimage#local.i#" object="#local.thisOption#" property="optionImage" edit="true" tooltip="true" editType="file">
 		        <cfif local.thisOption.hasImage()>
 		        <dd>
-		            <a href="#local.thisOption.getImagePath()#">#local.thisOption.displayImage("40")#</a>
+		            <a href="#local.thisOption.getImagePath()#">#local.thisOption.getImage("40")#</a>
 		            <input type="checkbox" name="removeImage" value="1" id="removeOptionImage#local.i#" /> <label for="removeOptionImage#local.i#">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		        </dd>
 		        </cfif>
 				<cf_PropertyDisplay id="optiondescription#local.i#" object="#local.thisOption#" property="optionDescription" edit="true" editType="wysiwyg" toggle="show">
 		    </dl>
 			<a class="button" href="javascript:;" onclick="jQuery('##editFrm#local.i#container').slideUp();jQuery('##editFrm#local.i#open').show();jQuery('##editFrm#local.i#close').hide();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-			<cf_ActionCaller action="admin:option.save" type="submit">
+			<cf_ActionCaller action="admin:option.save" type="submit" class="button">
 		</form>  
 		</div>
 	</li>
+	</cfif>
 </cfloop>
 </ul>
 

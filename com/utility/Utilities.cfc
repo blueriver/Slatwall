@@ -83,7 +83,7 @@ Notes:
         <cfset var Ret="" />
         
 		<cfif len(arguments.pathColumn)>
-			<cfset retColList=ListAppend(retColList,"Path") />
+			<cfset retColList=ListAppend(retColList,"#arguments.pathColumn#Path") />
 		</cfif>
 		<!--- set up the return query --->
         <cfset Ret=QueryNew(RetColList) />
@@ -163,7 +163,7 @@ Notes:
 					<!--- add current item to path --->
 					<cfset thisPath = listAppend(thisPath,theQuery[arguments.pathColumn][RowID],arguments.pathDelimiter) />
 					<cfset thisIDPath = listAppend(thisIDPath,theQuery[arguments.itemID][RowID],arguments.pathDelimiter) />
-                    <cfset querySetCell(Ret,"Path", thisPath) />
+                    <cfset querySetCell(Ret,"#arguments.PathColumn#Path", thisPath) />
 					<cfset querySetCell(Ret,"idPath", thisIDPath) />
                     <cfset thispath = "" /> <!--- resets variable for the next item --->
 					<cfset thisIDPath = "" />

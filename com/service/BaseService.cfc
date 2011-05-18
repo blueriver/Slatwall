@@ -106,11 +106,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().list(argumentCollection=arguments);
 	}
 	
-	public any function getSmartList(required struct rc, string entityName){
+	public any function getSmartList(string entityName, struct data={}){
 		if(structKeyExists(arguments, "entityName")) {
-			return getDAO().getSmartList(rc=arguments.rc, entityName=arguments.entityName);
+			return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
 		} else {
-			return getDAO().getSmartList(rc=arguments.rc, entityName=getEntityName());
+			return getDAO().getSmartList(entityName=getEntityName(), data=arguments.data);
 		}
 	}
 	
@@ -130,10 +130,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function populate(required any entity, required struct data) {
-		arguments.entity.populate(arguments.data);
-		return arguments.entity;
-	}	
-	
+		return arguments.entity.populate(arguments.data);
+	}
 
     public any function save(required any entity, struct data) {
         if(structKeyExists(arguments,"data")){

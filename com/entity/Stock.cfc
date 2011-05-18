@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" persistent=true accessors=true output=false extends="slatwall.com.entity.BaseEntity" {
+component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

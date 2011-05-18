@@ -87,7 +87,7 @@ Notes:
 		<cfelseif attributes.type eq "button">
 			<cfoutput><button type="button" class="#attributes.class#" name="slatAction" value="#attributes.action#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif>>#attributes.text#</button></cfoutput>
 		<cfelseif attributes.type eq "submit">
-			<cfoutput><button type="submit" class="#attributes.class#" name="slatAction" value="#attributes.action#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif>>#attributes.text#</button></cfoutput>
+			<cfoutput><input type="submit" class="#attributes.class#" value="#attributes.text#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif> /></cfoutput>
 		</cfif>
 	</cfif>
 </cfif>

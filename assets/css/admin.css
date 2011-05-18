@@ -52,7 +52,7 @@ img.slatwallLogo	{
 	text-decoration: none;
 }
 
-a.button, button {
+a.button, input.button, button {
 	background-color: #78A8D4;
 	vertical-align: middle;
 	/*padding: 0;*/
@@ -136,11 +136,11 @@ table#productTypes {
 	width: 850px;
 }
 
-table#productTypes ul {
+table#productTypes ul, table#productPages ul {
 	background-image: none;
 }
 
-table#productTypes ul.neston {
+table#productTypes ul.neston, table#productPages ul.neston {
 	font-weight: bold;
 }
 
@@ -154,6 +154,10 @@ table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands, t
 
 table#ProductList {
 	width: 900px;
+}
+
+table.attributeOptions {
+	width: 200px;
 }
 
 table .alignLeft {

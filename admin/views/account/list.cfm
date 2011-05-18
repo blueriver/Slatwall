@@ -55,7 +55,7 @@ Notes:
 				<tr>
 					<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
 					<td>
-						<a href="mailto:#local.account.getPrimaryEmail()#" title="Email #local.account.getFirstName()# #local.account.getLastName()# (#local.account.getPrimaryEmail()#)">#local.account.getPrimaryEmail()#</a>
+						<a href="mailto:#local.account.getPrimaryEmailAddress()#" title="Email #local.account.getFirstName()# #local.account.getLastName()# (#local.account.getPrimaryEmailAddress()#)">#local.account.getPrimaryEmailAddress()#</a>
 					</td>
 					<td class="administration">
 						<ul class="two">

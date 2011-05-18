@@ -40,7 +40,11 @@ component extends="BaseService" accessors="true" output="false" {
 
 	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
-
+	
+	public void function confirmSession() {
+		getCurrent();
+	}
+	
 	public any function getCurrent() {
 		if(!getRequestCacheService().keyExists("currentSession")) {
 			getRequestCacheService().setValue("currentSession", getPropperSession());
@@ -48,28 +52,77 @@ component extends="BaseService" accessors="true" output="false" {
 		return getRequestCacheService().getValue("currentSession");
 	}
 	
-	public any function getPropperSession() {
+	public any function getCurrentAccount() {
+		if(getRequestCacheService().keyExists("currentSession")) {
+			return getRequestCacheService().getValue("currentSession").getAccount();
+		} else {
+			return JavaCast("null", "");
+		}
+	}
+	
+	private any function getPropperSession() {
 		// Figure out the appropriate session ID and create a new one if necessary
-		if(!structKeyExists(session, "slatwallSessionID")) {
+		if(!isDefined('session.slatwall.sessionID')) {
 			if(structKeyExists(cookie, "slatwallSessionID")) {
-				session.slatwallSessionID = cookie.slatwallSessionID;
+				session.slatwall.sessionID = cookie.slatwallSessionID;
 			} else {
-				session.slatwallSessionID = "";
+				session.slatwall.sessionID = "";
+			}
+		}
+
+		// Load Session
+		var currentSession = getByID(session.slatwall.sessionID);
+		
+		// If No Session in Database create a new one.
+		if(isNull(currentSession)) {
+			currentSession = getNewEntity();
+		}
+		
+		// Setup account here
+		if($.currentUser().isLoggedIn()) {
+			var muraUser = $.currentUser();
+			var slatwallAccount = getService("AccountService").getAccountByMuraUser(muraUser);
+			if(slatwallAccount.getFirstName() != muraUser.getFName()){
+				slatwallAccount.setFirstName(muraUser.getFName());
+			}
+			if(slatwallAccount.getLastName() != muraUser.getLName()) {
+				slatwallAccount.setLastName(muraUser.getLName());
+			}
+			if(slatwallAccount.getCompany() != muraUser.getCompany()) {
+				slatwallAccount.setCompany(muraUser.getCompany());
+			}
+			currentSession.setAccount(slatwallAccount);
+			if(!isNull(currentSession.getOrder()) && !currentSession.getOrder().isNew()) {
+				currentSession.getOrder().setAccount(slatwallAccount);
+			}
+		} else {
+			// Remove any account associated with the session
+			currentSession.removeAccount();
+			
+			// If the account associated with the current order is not a guest account, then remove it.
+			if(!isNull(currentSession.getOrder()) && !isNull(currentSession.getOrder().getAccount()) && !currentSession.getOrder().getAccount().isGuestAccount()) {
+				currentSession.getOrder().removeAccount();
 			}
 		}
 		
-		// Load Session
-		var session = getByID(session.slatwallSessionID);
+		// Save the session
+		save(currentSession);
 		
-		if(isNull(session)) {
-			session = getNewEntity();
-			save(session);
+		// Save session ID in the session Scope & cookie scope for next request
+		session.slatwall.sessionID = currentSession.getSessionID();
+		getTagProxyService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
+		
+		return currentSession;
+	}
+	
+	public void function setValue(property, value) {
+		if(!arguments.property == "sessionID") {
+			session.slatwall[arguments.property] = arguments.value;	
 		}
-		
-		session.slatwallSessionID = session.getSessionID();
-		getTagProxyService().cfcookie(name="slatwallSessionID", value=session.slatwallSessionID, expires="never");
-		
-		return session;
+	}
+	
+	public any function getValue(property) {
+		return session.slatwall[arguments.property];
 	}
 	
 }

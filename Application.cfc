@@ -84,7 +84,7 @@ component extends="framework" output="false" {
 		  	include "plugin/config.cfm";
 		}
 	    setPluginConfig(request.PluginConfig);
-		xmlPath = "#expandPath( '/plugins/Slatwall/config/coldspring.xml' )#";
+		xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
 		xml = FileRead("#xmlPath#"); 
 		
 		// Build Coldspring factory & Set in FW/1
@@ -123,9 +123,6 @@ component extends="framework" output="false" {
 				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
 			}
 			
-			// Clear the session so that nobody's previous and dirty ORM objects get persisted to the DB.
-			ormGetSession().clear();
-			
 			// Look for mura Scope.  If it doens't exist add it.
 			if (!structKeyExists(request.context,"$")){
 				if (!structKeyExists(request, "muraScope")) {
@@ -150,14 +147,17 @@ component extends="framework" output="false" {
 			}
 			
 			// Setup Base URL's for each subsystem
-			variables.subsystems.admin.baseURL="http://#cgi.http_host#/plugins/#getPluginConfig().getDirectory()#/";
-			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig().getDomain()#/";
+			variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/plugins/#getPluginConfig().getDirectory()#/";
+			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/";
 			if(request.context.$.globalConfig().getSiteIDInURLS()) {
 				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
 			}
 			if(request.context.$.globalConfig().getIndexFileInURLS()) {
-				variables.subsystems.frontend.baseURL &= "index.cfm";
+				variables.subsystems.frontend.baseURL &= "index.cfm/";
 			}
+			
+			// Confirm Session Setup
+			getBeanFactory().getBean("SessionService").confirmSession();
 						
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
@@ -231,11 +231,11 @@ component extends="framework" output="false" {
 			if(len(key) > 3 && left(key,3) is "set") {
 				property = right(key, len(key)-3);
 				if(arguments.beanFactory.containsBean(property)) {
-					evaluate("arguments.cfc.#key#(#arguments.beanFactory.getBean(property)#)");
+					evaluate("arguments.cfc.#key#(arguments.beanFactory.getBean(property))");
 				}
 			}
 		}
-		if(isDefined("meta.accessors") && meta.accessors == true) {
+		if(structKeyExists(meta, "accessors") && meta.accessors && structKeyExists(meta, "properties")) {
 			for(var i = 1; i <= arrayLen(meta.properties); i++) {
 				if(arguments.beanFactory.containsBean(meta.properties[i].name)) {
 					evaluate("arguments.cfc.set#meta.properties[i].name#(arguments.beanFactory.getBean(meta.properties[i].name))");
@@ -269,13 +269,12 @@ component extends="framework" output="false" {
 	}
 	
 	private void function endSlatwallLifecycle() {
-		if(!getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
-			transaction {
-				ORMflush();
-			}
+		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
+			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
+			ormGetSession().clear();
+		} else {
+			transaction{}
 		}
-		getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct");
-		ormGetSession().clear();
 	}
 	
 	// Start assetWire functions ==================================
@@ -288,8 +287,6 @@ component extends="framework" output="false" {
 	
 	private void function buildViewAndLayoutQueue() {
 		super.buildViewAndLayoutQueue();
-		getAssetWire().includeAsset("js/global.js");
-		getAssetWire().includeAsset("css/global.css");
 		if(structKeyExists(request, "view")) {
 			getAssetWire().addViewToAssets(request.view);	
 		}

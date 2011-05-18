@@ -73,10 +73,27 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
 			if(rc.$.event('slatAction') == "") {
 				rc.$.event("slatAction", "frontend:product.listcontentproducts");
-				getRequestCacheService().setValue("currentProductListing", getProductService().getProductContentSmartList(rc=arguments.rc, contentID=rc.$.content("contentID")));
+				if(!structKeyExists(form, "P:Show") && !structKeyExists(url, "P:Show")) {
+					rc.$.slatwall.productList().setPageRecordsShow(rc.$.content('productsPerPage'));	
+				}
+			}
+		// Checks for shopping cart
+		} else if (rc.$.content('filename') == 'shopping-cart') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:cart.detail");
+			}
+			
+		// Checks for Checkout page
+		} else if (rc.$.content('filename') == 'checkout') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:checkout.detail");
+			}
+		// Checks for My-Account page
+		} else if (rc.$.content('filename') == 'my-account') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:account.detail");
 			}
 		}
-		
 	}
 	
 	public void function onRenderEnd(required any rc) {
@@ -88,5 +105,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.event("__MuraResponse__", newContent);
 		}
 	}
-
+	
+	public void function onAfterPageSlatwallProductListingSave(required any rc) {
+		getProductService().updateProductContentPaths(contentID=rc.$.content("contentID"));
+	}
+	
+	public void function onAfterPageSlatwallProductListingDelete(required any rc) {
+		getProductService().deleteProductContent(rc.$.content("contentID"));
+	}
 }

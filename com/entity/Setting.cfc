@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSetting" persistent="true" accessors="true" output="false" extends="Slatwall.com.entity.BaseEntity" {
+component displayname="Setting" entityname="SlatwallSetting" table="SlatwallSetting" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="settingID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

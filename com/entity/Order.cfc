@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -52,8 +52,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
+	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
 	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
-	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";   
+	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all-delete-orphan";
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
+	
+	public any function init() {
+		if(isNull(variables.orderShippings)) {
+			variables.orderShippings = [];
+		}
+		if(isNull(variables.orderShipments)) {
+			variables.orderShipments = [];
+		}
+		if(isNull(variables.orderItems)) {
+			variables.orderItems = [];
+		}
+		if(isNull(variables.orderPayments)) {
+			variables.orderPayments = [];
+		}
+		return super.init();
+	}
 	
 	public string function getStatus() {
 		return getOrderStatusType().getType();
@@ -61,13 +79,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public string function getStatusCode() {
 		return getOrderStatusType().getSystemCode();
-	}
-	
-	public array function getOrderItems() {
-		if(!structKeyExists(variables, "orderItems")) {
-			variables.orderItems = arrayNew(1);
-		}
-		return variables.orderItems;
 	}
 	
 	public numeric function getTotalItems() {
@@ -82,5 +93,173 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		return totalQuantity;
 	}
+	
+	public numeric function getSubtotal() {
+		var subtotal = 0;
+		var orderItems = getOrderItems();
+		for(var i=1; i<=arrayLen(orderItems); i++) {
+			subtotal += orderItems[i].getExtendedPrice();
+		}
+		return subtotal;
+	}
+	
+	public numeric function getTaxTotal() {
+		return 0;
+	}
+	
+	public numeric function getShippingTotal() {
+		return 0;
+	}
+	
+	public numeric function getTotal() {
+		return getSubtotal() + getTaxTotal() + getShippingTotal();
+	}
+	
+	public void function removeAllOrderItems() {
+		var orderItems = getOrderItems();
+		for(var i=1; i<=arrayLen(orderItems); i++) {
+			removeOrderItem(orderItems[i]);
+		}
+	}
+	
+    /******* Association management methods for bidirectional relationships **************/
+	
+	// OrderItems (one-to-many)
+	
+	public void function addOrderItem(required OrderItem OrderItem) {
+	   arguments.orderItem.setOrder(this);
+	}
+	
+	public void function removeOrderItem(required OrderItem OrderItem) {
+	   arguments.orderItem.removeOrder(this);
+	}
+	
+	// OrderShippings (one-to-many)
+	
+	public void function addOrderShipping(required OrderShipment orderShipping) {
+	   arguments.orderShipping.setOrder(this);
+	}
+	
+	public void function removeOrderShipping(required OrderShipment orderShipping) {
+	   arguments.orderShipping.removeOrder(this);
+	}
+	
+	// OrderShipments (one-to-many)
+	
+	public void function addOrderShipment(required OrderShipment OrderShipment) {
+	   arguments.orderShipment.setOrder(this);
+	}
+	
+	public void function removeOrderShipment(required OrderShipment OrderShipment) {
+	   arguments.orderShipment.removeOrder(this);
+	}
+	
+	// OrderPayments (one-to-many)
+	
+	public void function addOrderPayment(required OrderPayment OrderPayment) {
+	   arguments.orderPayment.setOrder(this);
+	}
+	
+	public void function removeOrderPayment(required OrderPayment OrderPayment) {
+	   arguments.orderPayment.removeOrder(this);
+	}
+	
+	// Account (many-to-one)
+	
+	public void function setAccount(required Account account) {
+	   variables.account = arguments.account;
+	   if(!arguments.account.hasOrder(this)) {
+	       arrayAppend(arguments.account.getOrders(),this);
+	   }
+	}
+	
+	public void function removeAccount(Account account) {
+		if(structKeyExists(variables,"account")) {
+			if(!structKeyExists(arguments, "account")) {
+				arguments.account = variables.account;
+			}
+			var index = arrayFind(arguments.account.getOrders(),this);
+			if(index > 0) {
+				arrayDeleteAt(arguments.account.getOrders(),index);
+			}    
+			structDelete(variables,"account");
+		}
+    }
+	
+    /************   END Association Management Methods   *******************/
+	
+	// These Methods are designed to check what still needs to be set before an order is ready to process
+	public boolean function hasValidAccount() {
+		if(isNull(variables.account) || variables.account.isNew()) {
+			return false;
+		} else {
+			return true;	
+		}
+	}
+	
+	public boolean function hasValidOrderShippingAddress() {
+		var valid = true;
+		
+		var orderShippings = getOrderShippings();
+		
+		// Loop over all order Shippings to make sure that there is a shipping address asigned
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
+				valid = false;
+			}
+		}
+		
+		return valid;
+	}
+	
+	public boolean function hasValidOrderShippingMethod() {
+		var valid = true;
+		
+		var orderShippings = getOrderShippings();
+		
+		// Loop over all order Shippings to make sure that there is a shipping method asigned
+		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
+			if(isNull(orderShippings[i].getShippingMethod())) {
+				valid = false;
+			}
+		}
+		
+		return valid;
+	}
+	
+	public boolean function hasValidOrderShipping() {
+		var valid = false;
+		
+		if(hasValidOrderShippingAddress() && hasValidOrderShippingMethod()) {
+			valid = true;
+		}
+		
+		return valid;
+	}
+	
+	public boolean function hasValidPayment() {
+		var valid = true;
+		var totalPayments = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPayments += orderPayments[i].getAmount();
+		}
+		
+		if(totalPayments == getTotal()) {
+			valid = true;
+		}
+		
+		return valid;
+	}
+	
+	public boolean function isValidForProcessing() {
+		var valid = false;
+		if(hasValidAccount() && hasValidOrderShippingAddress() && hasValidOrderShippingMethod() && hasValidPayment()) {
+			valid = true;
+		}
+		return valid;
+	}
+	
 	
 }

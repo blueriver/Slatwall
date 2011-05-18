@@ -54,22 +54,41 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function getCurrentSession() {
-		var session = getService("sessionService").getCurrent();
-		
-		return session;
+		return getService("sessionService").getCurrent();
 	}
 	
 	public any function getCurrentAccount() {
-		return getCurrentSession().getAccount();
+		if(!isNull(getCurrentSession().getAccount())) {
+			return getCurrentSession().getAccount();
+		} else {
+			return getService("AccountService").getNewEntity();	
+		}
 	}
 	
 	public any function getCurrentCart() {
-		return getCurrentSession().getCart();
+		if(!isNull(getCurrentSession().getOrder())) {
+			return getCurrentSession().getOrder();
+		} else {
+			return getService("OrderService").getNewEntity();	
+		}
 	}
 	
 	private any function getCurrentProductList() {
 		if(!getService("requestCacheService").keyExists("currentProductList")) {
-			getService("requestCacheService").setValue("currentProductList", new Slatwall.com.utility.SmartList(entityName="SlatwallProduct"));
+			var data = {};
+			if(structKeyExists(request, "context")) {
+				data = request.context;
+			}
+			if($.content("showSubPageProducts") eq "") {
+				data.showSubPageProducts = 0;
+			} else {
+				data.showSubPageProducts = $.content("showSubPageProducts");	
+			}
+			var currentURL = $.createHREF(filename=$.content('filename'));
+			if(len(CGI.QUERY_STRING)) {
+				currentURL &= "?" & CGI.QUERY_STRING;
+			}
+			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL, subContentProducts=$.content("showSubPageProducts")));
 		}
 		return getService("requestCacheService").getValue("currentProductList");
 	}
@@ -106,11 +125,31 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	public any function productList(string property, string value) {
 		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return evaluate("getCurrentProduct().set#arguments.property#(#arguments.value#)");
+			return evaluate("getCurrentProductList().set#arguments.property#(#arguments.value#)");
 		} else if (structKeyExists(arguments, "property")) {
-			return evaluate("getCurrentProduct().get#arguments.property#()");
+			return evaluate("getCurrentProductList().get#arguments.property#()");
 		} else {
 			return getCurrentProductList();	
+		}
+	}
+	
+	public any function session(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return evaluate("getCurrentSession().set#arguments.property#(#arguments.value#)");
+		} else if (structKeyExists(arguments, "property")) {
+			return evaluate("getCurrentSession().get#arguments.property#()");
+		} else {
+			return getCurrentSession();	
+		}
+	}
+	
+	public any function sessionFacade(string property, string value) {
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return getService("sessionService").setValue(arguments.property, arguments.value);
+		} else if (structKeyExists(arguments, "property")) {
+			return getService("sessionService").getValue(arguments.property);
+		} else {
+			return getService("sessionService");	
 		}
 	}
 	

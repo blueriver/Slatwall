@@ -40,8 +40,8 @@ Notes:
 <name>Slatwall</name>
 <package>Slatwall</package>
 <directoryFormat>packageOnly</directoryFormat>
-<version>0.5</version>
 <provider>Slatwall</provider>
+<version></version>
 <providerURL>http://www.getslatwall.com/</providerURL>
 <category>Application</category>
 <ormcfclocation>com/entity</ormcfclocation>
@@ -55,10 +55,11 @@ Notes:
 	<eventHandler event="onGlobalSessionStart" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onSiteRequestStart" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAfterPageSlatwallProductListingSave" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>	
 </eventHandlers>
 <displayobjects location="global">
-	<displayobject name="Content Product List" displaymethod="product_listcontentproducts" component="fw1DisplayAdapter" persist="false"/>
 	<displayobject name="Account" displaymethod="account_detail" component="fw1DisplayAdapter" persist="false"/>
 </displayobjects>
 </plugin>

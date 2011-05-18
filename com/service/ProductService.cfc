@@ -57,10 +57,27 @@ component extends="BaseService" accessors="true" {
 		return getFeedManager().getBean();
 	}
 	
-	public any function getProductPages() {
+	public any function getProductPages(returnFormat="iterator") {
 		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
+		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
-		return pageFeed.getIterator();
+		
+		if( arguments.returnFormat == "iterator" ) {
+			return pageFeed.getIterator();
+		} else if( arguments.returnFormat == "query" ) {
+			return pageFeed.getQuery();
+		} else if( arguments.returnFormat == "nestedIterator" ) {
+			return $.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
+		}
+		
+	}
+
+	public any function getProductSmartList(struct data={}) {
+		return getDAO().getProductSmartList(arguments.data);
+	}
+	
+	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL="") {
+		return getDAO().getProductContentSmartList(contentID=arguments.contentID, data=arguments.data, currentURL=arguments.currentURL);
 	}
 
 	/**
@@ -71,10 +88,32 @@ component extends="BaseService" accessors="true" {
 		getDAO().clearProductContent(arguments.product);
 		for(var i=1;i<=listLen(arguments.contentID);i++) {
 			local.thisContentID = listGetAt(arguments.contentID,i);
-			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=local.thisContentID});
+			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=listLast(local.thisContentID," "),contentPath=listChangeDelims(local.thisContentID,","," ")});
 			arrayAppend(productContentArray,local.thisProductContent);
 		}
 		arguments.product.setProductContent(productContentArray);
+	}
+	
+	public void function updateProductContentPaths(required string contentID) {
+		var pcArray = getDAO().list("SlatwallProductContent");
+		for( var i=1; i<=arrayLen(pcArray); i++) {
+			local.thisPC = pcArray[i];
+			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
+				var newPath = getContentManager().read(contentID=local.thisPC.getContentID(),siteID=$.event("siteID")).getPath();
+				local.thisPC.setContentPath(newPath);
+			}
+		} 
+	}
+	
+	public void function deleteProductContent(required string contentID) {
+		var pcArray = getDAO().list("SlatwallProductContent");
+		for( var i=1; i<=arrayLen(pcArray); i++ ) {
+			local.thisPC = pcArray[i];
+			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
+				// when mura content is deleted, so is all content nested underneath, so we delete all productContent records in which we find the passed in content ID in the content path
+				getDAO().delete(local.thisPC);
+			}
+		}
 	}
 	
 	/**
@@ -110,13 +149,27 @@ component extends="BaseService" accessors="true" {
 		// set Default sku
 		if( structKeyExists(arguments.data,"defaultSku") && len(arguments.data.defaultSku) ) {
 			var dSku = arguments.Product.getSkuByID(arguments.data.defaultSku);
-			if(!dSku.getDefaultFlag()) {
-				dSku.setDefaultFlag(true);
-			}
+			arguments.product.setDefaultSku(dSku);
 		}
 		
 		// set up associations between product and content
 		assignProductContent(arguments.Product,arguments.data.contentID);
+		
+		// make sure that the product code doesn't already exist
+		if( len(data.productCode) ) {
+			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
+			var productCodeError = getService("validator").validate(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+			if( !structIsEmpty(productCodeError) ) {
+				arguments.product.addError(argumentCollection=productCodeError);
+			}
+		}
+		
+		// make sure that the filename (product URL title) doesn't already exist
+		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+		var filenameError = getService("validator").validate(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		if( !structIsEmpty(filenameError) ) {
+			arguments.product.addError(argumentCollection=filenameError);
+		}
 		
 		arguments.Product = Super.save(arguments.Product);
 		
@@ -129,6 +182,10 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function delete( required any product ) {
+		// make sure this product isn't in the order history
+		if( arguments.product.getOrderedFlag() ) {
+			getValidator().setError(entity=arguments.product,errorName="delete",rule="Ordered");
+		}
 		var deleteResponse = Super.delete( arguments.product );
 		if( deleteResponse.getStatusCode() ) {
 			// clear cached product type tree so that it's refreshed on the next request
@@ -137,9 +194,11 @@ component extends="BaseService" accessors="true" {
 		return deleteResponse;
 	}
 	
-	public any function getProductContentSmartList(required struct rc, required string contentID) {
+	/*
+	public any function getProductContentSmartList(required struct data={}, required string contentID) {
 		return getDAO().getProductContentSmartList(rc=arguments.rc, entityName=getEntityName(), contentID=arguments.contentID);
 	}
+	*/
 	
 	//   Product Type Methods
 	
@@ -211,7 +270,7 @@ component extends="BaseService" accessors="true" {
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
 		qoq.setAttributes(ptTable = ptTree);
-		qoq.setSQL("select productTypeName, productTypeID, path, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
+		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
 		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
 		var qGetSetting = qoq.execute(dbtype="query").getResult();
 		if(qGetSetting.recordCount == 1) {
@@ -252,6 +311,24 @@ component extends="BaseService" accessors="true" {
 				name = "Global"
 			};
 		}		
+	}	
+
+	private query function treeSort(required query productPages) {
+		// loop through query and construct an array of parent IDs from the 'path' column
+		var parentIDArray = [];
+		for( var i=1; i <= arguments.productPages.recordCount; i++ ) {
+			local.path = arguments.productPages.path[i];
+			local.parentID = listLen( local.path ) > 1 ? listGetAt( local.path, listLen(local.path) -1 ) : 0;
+			parentIDArray[i] = local.parentID;
+		}
+		// add column of parentIDs to query so we can treeSort it
+		queryAddColumn(arguments.productPages, "parentID", "VarChar", parentIDArray );
+    	var productPagesTree = getService("utilities").queryTreeSort(
+    		theQuery = arguments.productPages,
+    		itemID = "contentID",
+    		parentID = "parentID",
+    		pathColumn = "menuTitle"
+    	);
+		return productPagesTree;
 	}
-	
 }

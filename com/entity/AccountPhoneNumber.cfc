@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,7 +35,32 @@
 
 Notes:
 
---->
-<cfoutput>
-	Option Name: #rc.option.getOptionName()#
-</cfoutput>
+*/
+component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNumber" table="SlatwallAccountPhoneNumber" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+	
+	// Persistant Properties
+	property name="accountPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="phoneNumber" validateRequired type="string";
+	property name="primaryFlag" default="false" ormtype="boolean";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
+	// Related Object Properties
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true";
+	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
+	
+	public string function getPhoneType() {
+		return getAccountPhoneType().getType();
+	}
+	
+	public void function setAccount(required Account account) {
+		variables.account = arguments.account;
+		if(!arguments.account.hasAccountPhoneNumber(this)) {
+			arrayAppend(arguments.account.getAccountPhoneNumbers(),this);
+		}
+	}
+}

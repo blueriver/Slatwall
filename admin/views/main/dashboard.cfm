@@ -44,17 +44,7 @@ Notes:
 	This is the future home of customizable widgits<br />
 	<hr />
 	<br />
-	<!---
-	<cfset connectionService = getBeanFactory().getBean("ColdBooksConnectionService") />
-	<cfset connection = connectionService.getConnectionByName("test") />
-	<cfsavecontent variable="testRequest">
-			<ItemInventoryQueryRq>
-			</ItemInventoryQueryRq>
-	</cfsavecontent>
 	
-	<cfset messageID = connection.sendXmlRequest(testRequest, "C:\inetpub\wwwroot\muradev\plugins\Slatwall\integrationServices\ColdBooks\QuickBooksResponseHandler.cfc", "logResponse", "xml") />
-	<cfoutput>#messageID#</cfoutput>
-	--->
 </div>
 </cfoutput>
 

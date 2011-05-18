@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Option Group" entityname="SlatwallOptionGroup" table="SlatwallOptionGroup" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Option Group" entityname="SlatwallOptionGroup" table="SlatwallOptionGroup" persistent=true output=false accessors=true extends="BaseEntity" {
 
 	// Persistant Properties
 	property name="optionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -53,14 +53,14 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="options" singularname="option" type="array" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" lazy="extra" cascade="delete";
+	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan";
 
 	// Non-persistent Properties
 	property name="imageDirectory" type="string" hint="Base directory for optionGroup images" persistent="false";
 	
     public OptionGroup function init(){
        // set default collections for association management methods
-	   this.setImageDirectory("#$.siteConfig().getAssetPath()#/images/Slatwall/meta/");
+	   this.setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/");
        if(isNull(variables.Options))
            variables.Options = [];
        return Super.init();
@@ -95,13 +95,32 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
 	
 	// Image Management methods
-	public string function displayImage(string width="", string height="") {
-		var imageDisplay = "";
-		if(this.hasImage()) {
-			var fileService = getService("FileService");
-			imageDisplay = fileService.displayImage(imagePath=getImagePath(), width=arguments.width, height=arguments.height, alt=getOptionGroupName());
+	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
+		if( this.hasImage() ) {
+			
+			// If there were sizes specified, get the resized image path
+			if(arguments.width != 0 || arguments.height != 0) {
+				path = getResizedImagePath(argumentcollection=arguments);	
+			} else {
+				path = getImagePath();
+			}
+			
+			// Read the Image
+			var img = imageRead(expandPath(path));
+			
+			// Setup Alt & Class for the image
+			if(arguments.alt == "") {
+				arguments.alt = "#getOptionGroupName()#";
+			}
+			if(arguments.class == "") {
+				arguments.class = "optionGroupImage";	
+			}
+			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 		}
-		return imageDisplay;
+	}
+	
+	public string function getResizedImagePath(numeric width=0, numeric height=0) {
+		return getService("FileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
 	}
 	
 	public boolean function hasImage() {

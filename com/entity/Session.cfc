@@ -36,40 +36,22 @@
 Notes:
 
 */
-component displayname="Session" entityname="SlatwallSession" table="SlatwallSession" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Session" entityname="SlatwallSession" table="SlatwallSession" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="sessionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Entities
+	property name="account" type="any" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="order" type="any" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="modifiedDateTime" ormtype="timestamp";
 	
-	// Related Object Properties
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" cascade="all" inverse="true";
-	
-	// Non-Related & Non-Persistent entities
-	property name="account" type="any" persistent="false";  
-	
-	public any function getAccount() {
-		if(!structKeyExists(variables, "account")) {
-			if($.currentUser().isLoggedIn()) {
-				variables.account = getService("AccountService").getAccountByMuraUser($.currentUser().getUserBean());
-			} else {
-				variables.account = getService("AccountService").getNewEntity();	
-			}
+	public void function removeAccount() {
+		if(structKeyExists(variables, "account")) {
+			structDelete(variables, "account");	
 		}
-		return variables.account;
-	}
-	
-	public any function getCart() {
-		return getOrder();
-	}
-	
-	public any function getOrder() {
-		if(!structKeyExists(variables, "order")) {
-			variables.order = getService("OrderService").getNewEntity();
-		}
-		return variables.order;
 	}
 }

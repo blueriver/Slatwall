@@ -9,7 +9,7 @@ http://www.getslatwall.com/contributors
 
 For more information on how to get involved please reference the "Contribution" 
 section of our development guide that is located here: 
-https://github.com/ten24/Slatwall/wiki/Developer-Guide
+http://github.com/ten24/Slatwall/wiki/Developer-Guide
 
 
 Installation
@@ -17,18 +17,10 @@ Installation
 
 Install Option 1: Have ORM settings auto Installed for you.
 
-1. Create a Zip file of the source code with this directory as your top level directory.
-2. Install Zip files as a plugin to Mura CMS and Deploy.
-3. In configuring the Plug-In settings choose to 'Automatically Install ORM Settings'
-4. Click update.
-
-Install Option 2: ORM Manual setup.
-
-1. Create a Zip file of the source code with this directory as your top level directory.
-2. Install Zip files as a plugin to Mura CMS and Deploy.
-3. In configuring the Plug-In settings choose NOT to 'Automatically Install ORM Settings'
-4. Click Update.
-5. Open your the cfapplication.cfm file located here: muraroot/plugins/Slatwall_[ID]/cfapplication.cfm, and remove the two comment lines that say "remove this line" both at the top and the bottom of the slatwall code block.
+1. To be on the safe side you should make sure that you are running the latest version of Mura.
+2. Download the latest Slatwall zip from this link: http://github.com/ten24/Slatwall/zipball/master
+3. In the mura admin, go to Site Settings > Global Settings
+4. Click on the Plugins Tab, and Upload the Slatwall zip file as a new plugin.
 
 
 Documentation

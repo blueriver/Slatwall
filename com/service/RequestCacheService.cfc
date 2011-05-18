@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component {
+component output="false" {
 
 	public void function enableRequestCache() {
 		if( !isInitiated() ) {

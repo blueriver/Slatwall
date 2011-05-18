@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Attribute" entityname="SlatwallAttribute" table="SlatwallAttribute" persistent="true" output="false" accessors="true" extends="slatwall.com.entity.BaseEntity" {
+component displayname="Attribute" entityname="SlatwallAttribute" table="SlatwallAttribute" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -59,7 +59,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	// Related Object Properties
 	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" validateRequired hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
-	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all";
+	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder" ;
 	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
 
 
@@ -71,6 +71,13 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	   return Super.init();
 	}
 
+	public array function getAttributeOptions(sortby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"sortby")) {
+			return variables.AttributeOptions;
+		} else {
+			return sortObjectArray(variables.AttributeOptions,arguments.sortby,arguments.sortType,arguments.direction);
+		}
+	}
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
@@ -106,9 +113,9 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
     public array function getAttributeTypeOptions() {
 		if(!structKeyExists(variables, "attributeTypeOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
-			smartList.addSelect(rawProperty="type", alias="name");
-			smartList.addSelect(rawProperty="typeID", alias="id");
-			smartList.addFilter(rawProperty="parentType_systemCode", value="attributeType"); 
+			smartList.addSelect(propertyIdentifier="type", alias="name");
+			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeType"); 
 			smartList.addOrder("type|ASC");
 			variables.attributeTypeOptions = smartList.getRecords();
 		}
@@ -118,9 +125,9 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
     public array function getValidationTypeOptions() {
 		if(!structKeyExists(variables, "validationTypeOptions")) {
 			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
-			smartList.addSelect(rawProperty="type", alias="name");
-			smartList.addSelect(rawProperty="typeID", alias="id");
-			smartList.addFilter(rawProperty="parentType_systemCode", value="validationType"); 
+			smartList.addSelect(propertyIdentifier="type", alias="name");
+			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="validationType"); 
 			variables.validationTypeOptions = smartList.getRecords();
 		}
 		return variables.validationTypeOptions;

@@ -36,12 +36,13 @@
 Notes:
 
 */
-component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="slatwall.com.entity.BaseEntity" {
+component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="paymentMethodName" ormtype="string";
+	property name="paymentMethodCode" ormtype="string";
 	property name="providerGateway" ormtype="string";
+	property name="activeFlag" ormtype="boolean" default="false"; 
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

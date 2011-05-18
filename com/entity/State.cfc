@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="State" entityname="SlatwallState" table="SlatwallState" persistent="true" extends="slatwall.com.entity.baseEntity" {
+component displayname="State" entityname="SlatwallState" table="SlatwallState" persistent="true" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="stateCode" ormtype="string" fieldtype="id";

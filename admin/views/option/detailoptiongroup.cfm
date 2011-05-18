@@ -62,7 +62,7 @@ Notes:
 			#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupimage")#
 		</dt>
 		<dd>
-			<a href="#rc.OptionGroup.getImagePath()#">#rc.OptionGroup.displayImage("40")#</a>
+			<a href="#rc.OptionGroup.getImagePath()#">#rc.OptionGroup.getImage("40")#</a>
 		<cfif rc.edit>
 			<input type="checkbox" name="removeImage" value="1" id="chkRemoveImage"> <label for="chkRemoveImage">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		</cfif>
@@ -76,7 +76,7 @@ Notes:
 	<cfif rc.optiongroup.getOptionsCount() eq 0 and !rc.optionGroup.isNew()>
 	<cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
 	</cfif>
-	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit">
+	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
 </div>
 </form>
 <cfelse>

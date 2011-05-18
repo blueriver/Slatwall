@@ -49,9 +49,9 @@ Notes:
 		<div id="actionButtons" class="clearfix">
 			<cf_ActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cfif !rc.account.isNew()>
-				<cf_ActionCaller action="admin:account.delete" querystring="accountID=#rc.account.getBrandID()#" class="button" type="link" confirmrequired="true">
+				<cf_ActionCaller action="admin:account.delete" querystring="accountID=#rc.account.getAccountID()#" class="button" type="link" confirmrequired="true">
 			</cfif>
-			<cf_ActionCaller action="admin:account.save" type="submit">
+			<cf_ActionCaller action="admin:account.save" type="submit"  class="button">
 		</div>
 	</div>
 </cfoutput>

@@ -65,10 +65,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		
 		getPermissionActions();
 		getShippingServices();
+		getPaymentServices();
 		
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
-			if( listGetAt( settingsList[i].getSettingName(), 1, "_") == "permission") {
+			if( listFirst( settingsList[i].getSettingName(), "_") == "permission") {
 				
 				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
@@ -76,7 +77,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 			} else {
 				
 				// Inject Service Specific Values
-				if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "shippingservice") {
+				if ( listFirst( settingsList[i].getSettingName(), "_") == "shippingservice") {
 					// Inject Shipping Service Setting Values
 					var shippingServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
 					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
@@ -84,10 +85,15 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
 						evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");
 					}
-				} else if ( listGetAt( settingsList[i].getSettingName(), 1, "_") == "paymentservice") {
+				} else if ( listFirst( settingsList[i].getSettingName(), "_") == "paymentservice") {
 					// Inject Payment Service Setting Values
+					var paymentServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
+					if( structKeyExists(variables.paymentServices, paymentServicePackage) ) {
+						var paymentService = getByPaymentServicePackage(paymentServicePackage);
+						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
+						evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");
+					}
 				}
-				
 				// Set the global setting value in the settings scope
 				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
 			}
@@ -100,7 +106,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		
 		// Load Payment Methods
 		for(var i = 1; i <= arrayLen(paymentMethodsList); i++) {
-			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodsID() ] = paymentMethodsList[i];
+			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodID() ] = paymentMethodsList[i];
 		}
 	}
 	
@@ -133,7 +139,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	}
 	
 	public any function getSettingValue(required string settingName) {
-		return variables.settings[ arguments.settingName ].getSettingValue();
+		if( structKeyExists(variables.settings,arguments.settingName) ) {
+			return variables.settings[ arguments.settingName ].getSettingValue();
+		} else {
+			return "";
+		}	
 	}
 	
 	public any function getPermissionValue(required string permissionName) {
@@ -163,6 +173,12 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	public any function getByShippingServicePackage(required string shippingServicePackage) {
 		if(structKeyExists(variables.shippingServices, arguments.shippingServicePackage)) {
 			return variables.shippingServices[ arguments.shippingServicePackage ];
+		}
+	}
+	
+	public any function getByPaymentServicePackage(required string paymentServicePackage) {
+		if(structKeyExists(variables.paymentServices, arguments.paymentServicePackage)) {
+			return variables.paymentServices[ arguments.paymentServicePackage ];
 		}
 	}
 	
@@ -209,16 +225,19 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		}
 		return variables.shippingServices;
 	}
-	
-	public struct function getPaymentServices(boolean reload=false) {
-		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.shippingServices) || arguments.reload) {
+
+	public any function getPaymentServices(boolean reload=false) {
+		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.paymentServices) || arguments.reload) {
 			variables.paymentServices = structNew();
 			var dirLocation = ExpandPath("/plugins/Slatwall/paymentServices");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
-				var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-				var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
-				variables.paymentServices[ "#serviceName#" ] = service;
+				var fileInfo = getFileInfo(dirList[i]);
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
+					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+					var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
+					variables.paymentServices[ "#serviceName#" ] = service;
+				}
 			}
 		}
 		return variables.paymentServices;
@@ -270,12 +289,38 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 			local.thisExtendSet.save();
 			// create a new attribute for the extend set
 			// getAttributeBy Name will look for it and if not found give me a new bean to use 
+			// TODO: Internationalize attribute labels and hints
 			local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
 			local.thisAttribute.set({
 				label = "Products Per Page",
 				type = "TextBox",
 				validation = "numeric",
-				defaultValue = "16"
+				defaultValue = "16",
+				orderNo = "1"
+			});
+			local.thisAttribute.save();
+			
+			local.thisAttribute = local.thisExtendSet.getAttributeByName("showSubPageProducts");
+			local.thisAttribute.set({
+				label = "Show Products Assigned to Sub Pages",
+				hint = "If this is enabled, products assigned to any sub pages will also show up in this page.",
+				type = "RadioGroup",
+				defaultValue = "1",
+				optionList="0^1",
+				optionLabelList="No^Yes",
+				orderNo="2"
+			});
+			local.thisAttribute.save();
+			
+			local.thisAttribute = local.thisExtendSet.getAttributeByName("excludefromAssignment");
+			local.thisAttribute.set({
+				label = "Exclude from Product Assignment",
+				hint = "If this is enabled, products cannot be assigned directly to this page. This can be used to set up parent product listing pages but enforce assignment of products to subpages.",
+				type = "RadioGroup",
+				defaultValue = "0",
+				optionList="0^1",
+				optionLabelList="No^Yes",
+				orderNo="3"
 			});
 			local.thisAttribute.save();
 		}

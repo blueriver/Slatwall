@@ -158,6 +158,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				}
 			}
 		}
+		return this;
 	}
 	
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 
@@ -243,8 +244,15 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		if(structKeyExists(this,"setCreatedDateTime")){
 			this.setCreatedDateTime(timestamp);
 		}
+		if(structKeyExists(this,"setCreatedByAccount")){
+			setCreatedByAccount(getService("SessionService").getCurrentAccount());
+		}
+		
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
+		}
+		if(structKeyExists(this,"setModifiedByAccount")){
+			setModifiedByAccount(getService("SessionService").getCurrentAccount());
 		}
 		
 	}
@@ -254,6 +262,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 		if(structKeyExists(this,"setModifiedDateTime")){
 			this.setModifiedDateTime(timestamp);
+		}
+		if(structKeyExists(this,"setModifiedByAccount")){
+			setModifiedByAccount(getService("SessionService").getCurrentAccount());
 		}
 	}
 	

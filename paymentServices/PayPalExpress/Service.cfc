@@ -59,7 +59,7 @@ component accessors="true" output="false" displayname="PayPal Express" implement
 		return this;
 	}
 	
-	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required any requestBean,required string action){
+	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required Slatwall.com.utility.payment.RequestBean requestBean,required string transactionType){
 		var rawResponse = "";
 		var requestData = getRequestData(requestBean,action);
 		rawResponse = postRequest(requestData);
