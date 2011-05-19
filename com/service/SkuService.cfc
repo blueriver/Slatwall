@@ -43,12 +43,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
-		/*
-		// Now because the default sku is set as a realationship this validation block needs to change
-		if(arguments.sku.getDefaultFlag() == true) {
+		
+		if(arguments.sku.getSkuID() == arguments.sku.getProduct().getDefaultSku().getSkuID()) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
 		}
-		*/
+		
 		if(arguments.sku.getOrderedFlag() == true) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
 		}
