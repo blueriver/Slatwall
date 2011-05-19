@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 	<div class="svofrontendcheckoutshippingaddress">
-		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
+		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping<cfif $.slatwall.cart().hasValidOrderShippingAddress() and rc.edit eq "" || rc.edit eq "shippingaddress"> <a href="?edit="shippingaddress">Edit</a></cfif></h3>
 		<cfif $.slatwall.cart().hasValidAccount() and (rc.edit eq "" || rc.edit eq "shipping")>
 			<div id="checkoutShippingContent" class="contentBlock">
 				<cfif $.slatwall.cart().hasValidOrderShippingAddress() and rc.edit eq "" || rc.edit eq "shipping">

@@ -47,15 +47,12 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return super.init();
 	}
 	
-	public any function getByID(required string ID, string entityName, returnNewWhenNotFound=false) {
+	public any function getByID(required string ID, string entityName) {
 		if(!isDefined("arguments.entityName")) {
 			arguments.entityName = getEntityName();
 		}
-		var entity = getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
-		if(isNull(entity) && returnNewWhenNotFound) {
-			entity = getNewEntity(arguments.entityName);
-		}
-		return entity;
+		
+		return getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
 	}
 	
 	public any function getByFilename(required string filename, string entityName) {

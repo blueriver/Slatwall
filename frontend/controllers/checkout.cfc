@@ -58,7 +58,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.orderShippingAddressID" default="";
 		
 		rc.$.slatwall.cart().getOrderShippings()[1];
-		var address = getAccountService().getByID(rc.orderShippingAddressID, "SlatwallAddress", true);
+		var address = getAccountService().getByID(rc.orderShippingAddressID, "SlatwallAddress");
+		if(isNull(address)) {
+			address = getAccountService().getNewEntity("SlatwallAddress");
+		}
 		address = getAccountService().save(address,rc);
 		if(!address.hasErrors()) {
 			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(address);

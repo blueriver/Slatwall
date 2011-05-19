@@ -56,9 +56,8 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 		return super.init();
 	}
 	
-	public void function getShippingMethodOptions() {
-		var options = [];
-		return options;
+	public array function getShippingMethodOptionsWithCost() {
+		return getService("shippingService").getShippingMethodOptionsWithCost(this);
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/

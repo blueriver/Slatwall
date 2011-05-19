@@ -66,9 +66,81 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 	}
 	
 	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
-		var ratesResponseBean = new com.utility.shipping.RatesResponseBean();
 		
 		// Insert Custom Logic Here
+		var totalItemsWeight = 0;
+		var totalItemsPrice = 0;
+		
+		// Loop over all items to get a price and weight for shipping
+		for(var i=1; i<=arrayLen(arguments.orderShipping.getOrderShippingItems()); i++) {
+			totalItemsWeight += arguments.orderShipping.getOrderShippingItems()[i].getSku().getProduct().getShippingWeight();
+			totalItemsPrice += arguments.orderShipping.getOrderShippingItems()[i].getSku().getPrice();
+		}
+		
+		if(totalItemsWeight < 1) {
+			totalItemsWeight = 1;
+		}
+		
+		// Build Request XML
+		var xmlPacket = "";
+		
+		savecontent variable="xmlPacket" {
+			include "RatesRequestTemplate.cfm";
+        }
+        
+        // Setup Request to push to FedEx
+        var httpRequest = new http();
+        httpRequest.setMethod("POST");
+		httpRequest.setPort("443");
+		httpRequest.setTimeout(45);
+		if(variables.sandbox) {
+			httpRequest.setUrl("https://gatewaybeta.fedex.com/xml");
+		} else {
+			httpRequest.setUrl("https://gateway.fedex.com/xml");
+		}
+		httpRequest.setUrl("https://gateway.fedex.com/xml");
+		httpRequest.setResolveurl(false);
+		httpRequest.addParam(type="XML", name="name",value=xmlPacket);
+		
+		var xmlResponse = XmlParse(httpRequest.send().getPrefix().fileContent);
+		
+		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
+		ratesResponseBean.setRawRequestData(XmlParse(xmlPacket));
+		ratesResponseBean.setRawResponseData(xmlResponse);
+		
+		if(isDefined('xmlResponse.Fault')) {
+			// If XML fault then log error
+			var message = ratesResponseBean.getNewMessageBean();
+			message.setMessageCode("0");
+			message.setMessageType("Unexpected");
+			message.setMessage("An unexpected programming error occured, please notify system administrator.");
+			ratesResponseBean.addErrorMessageBean(message);
+		} else {
+			
+			// Log all messages from FedEx into the response bean
+			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
+				
+				var message = ratesResponseBean.getNewMessageBean();
+				message.setMessageCode(xmlResponse.RateReply.Notifications[i].Code.xmltext);
+				message.setMessageType(xmlResponse.RateReply.Notifications[i].Severity.xmltext);
+				message.setMessage(xmlResponse.RateReply.Notifications[i].Message.xmltext);
+				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
+					ratesResponseBean.addErrorMessageBean(message);
+				} else {
+					ratesResponseBean.addMessageBean(message);
+				}
+				
+			}
+			
+			if(!ratesResponseBean.hasErrors()) {
+				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
+					var rate = ratesResponseBean.getNewMethodRateResponseBean();
+					rate.setShippingProviderMethod(xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext);
+					rate.setTotalCost(xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext);
+					ratesResponseBean.addMethodRateResponseBean(rate);
+				}
+			}
+		}
 		
 		return ratesResponseBean;
 	}
