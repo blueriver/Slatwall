@@ -456,15 +456,30 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public numeric function getPrice() {
-		return getDefaultSku().getPrice();
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getPrice();
+		} else {
+			return 0;
+		}
 	}
 	
 	public numeric function getListPrice() {
-		return getDefaultSku().getListPrice();
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getListPrice();
+		} else {
+			return 0;
+		}
 	}
 	
 	public numeric function getLivePrice() {
-		return getDefaultSku().getLivePrice();
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getLivePrice();
+		} else {
+			return 0;
+		}
 	}
 	
 	// Start Functions for determining different option combinations
