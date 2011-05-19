@@ -170,7 +170,7 @@ Notes:
             <input type="text" name="skuCode" value="" />
 			<input type="hidden" name="skuID" value="" />
         </td>
-        <td><input type="radio" name="defaultSku" value="" /></td>
+        <td><!-- default sku radio --></td>
         <cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
             <td>
 			   <select name="options">
