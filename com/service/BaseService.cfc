@@ -48,11 +48,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function getByID(required string ID, string entityName) {
-		if(isDefined("arguments.entityName")) {
-			return getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
-		} else {
-			return getDAO().read(ID=arguments.ID, entityName=getEntityName());
+		if(!isDefined("arguments.entityName")) {
+			arguments.entityName = getEntityName();
 		}
+		
+		return getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
 	}
 	
 	public any function getByFilename(required string filename, string entityName) {

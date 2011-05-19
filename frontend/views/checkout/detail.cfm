@@ -39,7 +39,7 @@ Notes:
 <cfoutput>
 	<div class="svofrontendcheckoutdetail">
 		<cfinclude template="account.cfm" />
-		<cfinclude template="shipping.cfm" />
+		<cfinclude template="shippingaddress.cfm" />
 		<cfinclude template="shippingmethod.cfm" />
 		<cfinclude template="payment.cfm" />
 		<cfinclude template="items.cfm" />

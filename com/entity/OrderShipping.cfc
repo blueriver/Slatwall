@@ -40,13 +40,13 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 	
 	// Persistant Properties
 	property name="orderShippingID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="cost" ormtype="float";
+	property name="shippingCharge" ormtype="float";
 	
 	// Related Object Properties
 	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="orderShippingItems" singularname="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID" inverse="true" cascade="all";
+	property name="orderShippingItems" singularname="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID" cascade="all" inverse="true";
 	
 	public any function init() {
 		if(isNull(variables.orderShippingItems)) {
@@ -56,9 +56,8 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 		return super.init();
 	}
 	
-	public void function getShippingMethodOptions() {
-		var options = [];
-		return options;
+	public array function getShippingMethodOptionsWithCost() {
+		return getService("shippingService").getShippingMethodOptionsWithCost(this);
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/

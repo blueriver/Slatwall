@@ -54,6 +54,23 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().redirectExact($.createHREF(filename='checkout'));
 	}
 	
+	public void function saveOrderShippingAddress(required struct rc) {
+		param name="rc.orderShippingAddressID" default="";
+		
+		rc.$.slatwall.cart().getOrderShippings()[1];
+		var address = getAccountService().getByID(rc.orderShippingAddressID, "SlatwallAddress");
+		if(isNull(address)) {
+			address = getAccountService().getNewEntity("SlatwallAddress");
+		}
+		address = getAccountService().save(address,rc);
+		if(!address.hasErrors()) {
+			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(address);
+	   		getFW().redirectExact($.createHREF(filename='checkout'));
+		} else {
+			getFW().setView("frontend:checkout.detail");
+		}
+	}
+	
 	/*
 	public void function updateOrderShippingAddress(required struct rc) {
 		param name="rc.orderShippingID" default="";
