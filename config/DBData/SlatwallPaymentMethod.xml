@@ -6,5 +6,6 @@
 	</Columns>
 	<Records>
 		<Record paymentMethodID="dbb3279ecff4e634461fea378a345bce" paymentMethodCode="creditCard" activeFlag="0" />
+		<Record paymentMethodID="444df2c50df0693b037b44521287250f" paymentMethodCode="paypalExpress" activeFlag="0" />
 	</Records>
 </Table>
