@@ -56,7 +56,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public array function getShippingMethodOptionsWithCost(required any orderShipping) {
+	public array function populateOrderShippingWithMethodOptions(required any orderShipping) {
 		var shippingMethods = getDAO().list("SlatwallShippingMethod");
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
@@ -87,11 +87,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Loop over the rates return by the provider to match with a shipping method
 					for(var r=1; r<=arrayLen(ratesResponseBean.getMethodRateResponseBeans()); r++) {
 						if(ratesResponseBean.getMethodRateResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
-							var option = {};
-							option.method = shippingMethods[m];
-							option.totalCost = ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost();
-							option.estimatedArrivalDate = ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate();
-							arrayAppend(methodOptions, option);
+							var option = getNewEntity("SlatwallOrderShippingMethodOption");
+							option.setShippingMethod(shippingMethods[m]);
+							option.setTotalCost(ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost());
+							option.setEstimatedArrivalDate(ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate());
+							arguments.orderShipping.addOrderShippingMethodOption(option);
 						}
 					}
 				}

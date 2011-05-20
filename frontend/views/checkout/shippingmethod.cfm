@@ -42,11 +42,11 @@ Notes:
 	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method</h3>
 	<cfif $.slatwall.cart().hasValidAccount() && $.slatwall.cart().hasValidOrderShippingAddress()>
 	<div id="checkoutShippingMethodContent" class="contentBlock">
-		<cfset local.shippingMethodOptions = $.slatwall.cart().getOrderShippings()[1].getShippingMethodOptionsWithCost() />
-		<cfloop array="#local.shippingMethodOptions#" index="option">
+		<cfset local.methodOptions = $.slatwall.cart().getOrderShippings()[1].getOrderShippingMethodOptions() />
+		<cfloop array="#local.methodOptions#" index="option">
 			<dl>
-				<dt><input type="radio" name="shippingMethodID" value="#option.method.getShippingMethodID()#">#option.method.getShippingMethodName()#</dt>
-				<dd>#DollarFormat(option.totalCost)#</dd>
+				<dt><input type="radio" name="shippingMethodID" value="#option.getOrderShippingMethodOptionID()#">#option.getShippingMethod().getShippingMethodName()#</dt>
+				<dd>#DollarFormat(option.getTotalCost())#</dd>
 			</dl>
 		</cfloop>
 	</div>
