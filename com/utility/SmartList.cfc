@@ -145,7 +145,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		if(!structKeyExists(variables.entities,newEntityName)) {
 			arrayAppend(variables.entityJoinOrder, newEntityName);
 			
-			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
+			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch") && arguments.parentEntityName == getBaseEntityName()) {
 				arguments.fetch = true;
 			} else if(!structKeyExists(arguments, "fetch")) {
 				arguments.fetch = false;
