@@ -388,15 +388,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 
 	public struct function getOptionGroupsStruct() {
 		if( !structKeyExists(variables, "optionGroupsStruct") ) {
-			variables.optionGroupsStruct = structNew();
-			var skus = getSkus();
-			for(var i=1; i <= arrayLen(skus); i++){
-				var options = skus[i].getOptions();
-				for(var ii=1; ii <= arrayLen(options); ii++) {
-					if( !structKeyExists( variables.optionGroupsStruct, options[ii].getOptionGroup().getOptionGroupID() ) ){
-						variables.optionGroupsStruct[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
-					}
-				}
+			variables.optionGroupsStruct = {};
+			for(var optionGroup in getOptionGroups()){
+				variables.optionGroupsStruct[optionGroup.getOptionGroupID()] = optionGroup;
 			}
 		}
 		return variables.optionGroupsStruct;
@@ -405,20 +399,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public array function getOptionGroups() {
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
-			// optionGroupStruct() and reorder them into a sort-ordered array.
-			var optionGroupsStruct = getOptionGroupsStruct();
-			var i = 1;	
-			for( var optionGroupID in optionGroupsStruct ) {
-				variables.optionGroups[i] = optionGroupsStruct[optionGroupID];
-				i++;
-			}
-			variables.optionGroups = sortObjectArray(variables.optionGroups, "sortOrder", "numeric");
+			var smartList = getSmartList("SlatwallOptionGroup");
+			smartList.addFilter("options_skus_product_productID",this.getProductID());
+			smartList.addOrder("sortOrder|ASC");
+			variables.optionGroups = smartList.getRecords();
 		}
 		return variables.optionGroups;
 	}
 	
 	public numeric function getOptionGroupCount() {
-		return listlen(structKeyList(getOptionGroupsStruct()));
+		return arrayLen(getOptionGroups());
 	}
 	
 	/*
@@ -443,6 +433,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	*/
 	
 	// Start: Functions that deligate to the default sku
+    public string function getImageDirectory() {
+    	return getDefaultSku().getImageDirectory();	
+    }
+    
 	public string function getImage(string size, numeric width, numeric height, string class, string alt) {
 		return getDefaultSku().getImage(argumentCollection = arguments);
 	}
