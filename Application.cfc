@@ -89,7 +89,7 @@ component extends="framework" output="false" {
 		ormReload();
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
-		if( !structKeyExists(application, "appinitialized") || application.appinitialized == false) {
+		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
@@ -121,6 +121,7 @@ component extends="framework" output="false" {
 		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 		
 		// Run mura requirements check
+		setupMuraRequirements();
 		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 	}
 	
