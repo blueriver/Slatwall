@@ -81,6 +81,13 @@ component displayname="Base Object" output="false" {
 		}
 	}
 	
+	// @hint Public helper function for returning the smartlist
+	public any function getSmartList(required string entityName, struct data={}){
+		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
+	
+		return smartList;
+	}
+	
 	public any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}
