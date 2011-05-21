@@ -45,7 +45,6 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
-	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order Shipping (many-to-one)

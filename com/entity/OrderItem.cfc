@@ -85,7 +85,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(!structKeyExists(arguments, "order")) {
 			arguments.order = variables.order;
 		}
-		var index = arrayFind(arguments.order.getOrdertItems(),this);
+		var index = arrayFind(arguments.order.getOrderItems(),this);
 		if(index > 0) {
 			arrayDeleteAt(arguments.order.getOrderItems(),index);
 		}    
@@ -113,5 +113,36 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     }
 	
 	/************   END Association Management Methods   *******************/
+	
+	
+	
+	// These methods insure that the shipping method options get adjusted if order items change
+	public void function preUpdate(struct oldData){
+		
+		// Remove order shipping method and options
+		if(!isNull(variable.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
+		
+		super.preUpdate();
+	}
+	
+	public void function preInsert(any entity){
+		
+		// Remove order shipping method and options
+		if(!isNull(variable.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
+		
+		super.preInsert();
+	}
+	
+	public void function preDelete(any entity){
+		
+		// Remove order shipping method and options
+		if(!isNull(variable.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
+	}
 	
 }

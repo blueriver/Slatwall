@@ -46,6 +46,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
 			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
 		}
+		
+		// Populate order Shipping Methods if needed.
+		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
 	}
 	
 	public void function saveNewOrderAccount(required struct rc) {

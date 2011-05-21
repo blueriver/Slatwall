@@ -56,7 +56,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public array function populateOrderShippingWithMethodOptions(required any orderShipping) {
+	public array function populateOrderShippingMethodOptions(required any orderShipping) {
 		var shippingMethods = getDAO().list("SlatwallShippingMethod");
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
