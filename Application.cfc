@@ -47,29 +47,13 @@ component extends="framework" output="false" {
 	
 	include "fw1Config.cfm";
 	
-	variables.subsystems = {};
-	variables.subsystems.admin = {};
-	variables.subsystems.admin.baseURL = "";
-	variables.subsystems.frontend = {};
-	variables.subsystems.frontend.baseURL = "";
-	
 	public void function setPluginConfig(required any pluginConfig) {
 		application.slatwall.pluginConfig = arguments.pluginConfig; 
 	}
 	
 	public any function getPluginConfig() {
-		if(isDefined('application.slatwall.pluginConfig')) {
-			return application.slatwall.pluginConfig;
-		}
-	}
-	
-	public void function setFW(required any fw) {
-		application.slatwall.fw = arguments.fw;
-	}
-	
-	public void function getFW(required any fw) {
-		if(isDefined('application.slatwall.fw')) {
-			return application.slatwall.fw;
+		if( isDefined('application.slatwall.pluginConfig') ) {
+			return application.slatwall.pluginConfig;	
 		}
 	}
 	
@@ -79,19 +63,27 @@ component extends="framework" output="false" {
 	
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
-		  	include "plugin/config.cfm";
-		}
-		
-		setPluginConfig(request.PluginConfig);
-		setFW(this);
-		
-		ormReload();
-		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
+		
+		// This insures that the required session values are setup
+		setupMuraRequirements();
+		
+		// Check to see if the plugin config has been setup in the application
+		if ( isNull(getPluginConfig()) ) {
+			if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
+		  		include "plugin/config.cfm";
+			}
+			setPluginConfig(request.PluginConfig);	
+		}
+		
+		// Set this in the application scope to be used on the frontend
+		getPluginConfig().getApplication().setValue( "fw", this);
+		
+		// Make's sure that our entities get updated
+		ormReload();
 		
 		// Get Coldspring Config
 		var serviceFactory = "";
@@ -107,7 +99,7 @@ component extends="framework" output="false" {
 		serviceFactory.loadBeansFromXmlRaw( xml );
 		serviceFactory.setParent(application.servicefactory);
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
-		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
+		setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ));
 		
 		// Setup run Setting Service reload config
 		getBeanFactory().getBean("settingService").reloadConfiguration();
@@ -119,15 +111,18 @@ component extends="framework" output="false" {
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		var dataPopulator = new Slatwall.com.utility.DataPopulator();
 		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-		
-		// Run mura requirements check
-		setupMuraRequirements();
-		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 	}
 	
 	public void function setupRequest() {
 		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
+			// This verifies that all mura session variables are setup
 			setupMuraRequirements();
+			
+			// This will verify that all of the required slatwall elements are in Mura
+			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmend') != true) {
+				getBeanFactory().getBean("settingService").verifyMuraRequirements();
+				getPluginConfig().getApplication().setValue('applicationSetupConfirmend', true);
+			}
 			
 			// Enable the request cache service
 			getBeanFactory().getBean("requestCacheService").enableRequestCache();
@@ -159,19 +154,9 @@ component extends="framework" output="false" {
 				request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
 			}
 			
-			// Setup Base URL's for each subsystem
-			variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/plugins/#getPluginConfig().getDirectory()#/";
-			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/";
-			if(request.context.$.globalConfig().getSiteIDInURLS()) {
-				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
-			}
-			if(request.context.$.globalConfig().getIndexFileInURLS()) {
-				variables.subsystems.frontend.baseURL &= "index.cfm/";
-			}
-			
 			// Confirm Session Setup
 			getBeanFactory().getBean("SessionService").confirmSession();
-						
+			
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
 				controller("admin:BaseController.subSystemBefore");
@@ -226,12 +211,8 @@ component extends="framework" output="false" {
 		param name="session.locale" default="en";
 		param name="session.siteid" default="default";
 		param name="session.dashboardSpan" default="30";
-		
-		if(!structKeyExists(session, "datekey")) {
-			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
-			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
-		}
 	}
+	
 	
 	// Override autowire function from fw/1 so that properties work
 	private void function autowire(cfc, beanFactory) {
@@ -255,12 +236,6 @@ component extends="framework" output="false" {
 				}
 			}
 		}
-	}
-	
-	// Override buildURL function to add some custom logic, but still call the Super
-	public string function buildURL(required string action) {
-		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
-		return super.buildURL(argumentCollection=arguments);
 	}
 	
 	// Override onRequest function to add some custom logic to the end of the request

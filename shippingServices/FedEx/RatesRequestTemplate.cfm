@@ -30,11 +30,11 @@
 	        </ns:TotalInsuredValue>
 	        <ns:Shipper>
 	            <ns:Address>
-	                <ns:StreetLines>#arguments.orderShipping.getAddress().getStreetAddress()#</ns:StreetLines>
-	                <ns:City>#arguments.orderShipping.getAddress().getCity()#</ns:City>
-	                <ns:StateOrProvinceCode>#arguments.orderShipping.getAddress().getStateCode()#</ns:StateOrProvinceCode>
-	                <ns:PostalCode>#arguments.orderShipping.getAddress().getPostalCode()#</ns:PostalCode>
-	                <ns:CountryCode>#arguments.orderShipping.getAddress().getCountryCode()#</ns:CountryCode>
+	            	<ns:StreetLines>#variables.shipperStreet#</ns:StreetLines>
+	                <ns:City>#variables.shipperCity#</ns:City>
+	                <ns:StateOrProvinceCode>#variables.shipperStateCode#</ns:StateOrProvinceCode>
+	                <ns:PostalCode>#variables.shipperPostalCode#</ns:PostalCode>
+	                <ns:CountryCode>#variables.shipperCountryCode#</ns:CountryCode>
 	            </ns:Address>
 	        </ns:Shipper>
 	        <ns:Recipient>

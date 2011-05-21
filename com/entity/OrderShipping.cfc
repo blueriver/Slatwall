@@ -58,14 +58,27 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 			variables.orderShippingMethodOptions = [];
 		}
 		
-		return super.init();
+		return this;
 	}
 	
-	public array function getOrderShippingMethodOptions() {
-		if(!arrayLen(variables.orderShippingMethodOptions)) {
-			getService("shippingService").populateOrderShippingWithMethodOptions(this);
+	public void function populateOrderShippingMethodOptionsIfEmpty() {
+		if(!isNull(variables.address) && arrayLen(variables.orderShippingItems) && !arrayLen(variables.orderShippingMethodOptions)) {
+			getService("ShippingService").populateOrderShippingMethodOptions(this);
 		}
-		return variables.orderShippingMethodOptions;
+	}
+	
+	public void function removeOrderShippingMethodAndMethodOptions() {
+		// remove all existing options
+		for(var = i; i <= arrayLen(getOrderShippingMethodOptions()); i++) {
+			getOrderShippingMethodOptions()[i].removeOrderShipping();
+		}
+		
+	}
+	
+	// Any time a new Address gets set, we need to adjust the order shipping options
+	public void function setAddress(required Address address) {
+		variables.address = arguments.address;
+		removeOrderShippingMethodAndMethodOptions();
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/

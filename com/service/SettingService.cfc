@@ -83,8 +83,10 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
 						var shippingService = getByShippingServicePackage(shippingServicePackage);
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						if( isDefined('shippingService.properties.#propertyName#') ) {
+						try {
 							evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");	
+						} catch (any e) {
+							// TODO: Add code to remove that setting from the DB
 						}
 					}
 				} else if ( listFirst( settingsList[i].getSettingName(), "_") == "paymentservice") {
@@ -93,8 +95,10 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 					if( structKeyExists(variables.paymentServices, paymentServicePackage) ) {
 						var paymentService = getByPaymentServicePackage(paymentServicePackage);
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						if( isDefined('paymentService.properties.#propertyName#') ) {
-							evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");
+						try {
+							evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");	
+						} catch (any e) {
+							// TODO: Add code to remove that setting from the DB
 						}
 					}
 				}

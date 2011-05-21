@@ -45,6 +45,11 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
 	property name="meterNo" displayname="FedEx Meter Number" type="string";
 	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";
+	property name="shipperStreet" displayname="Shipper Street Address" type="string";
+	property name="shipperCity" displayname="Shipper City" type="string";
+	property name="shipperStateCode" displayname="Shipper State Code" type="string";
+	property name="shipperPostalCode" displayname="Shipper Postal Code" type="string";
+	property name="shipperCountryCode" displayname="Shipper Country Code" type="string";
 
 	public any function init() {
 		// Insert Custom Logic Here 
@@ -89,7 +94,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
         httpRequest.setMethod("POST");
 		httpRequest.setPort("443");
 		httpRequest.setTimeout(45);
-		if(variables.testingMode) {
+		if(variables.testingFlag) {
 			httpRequest.setUrl("https://gatewaybeta.fedex.com/xml");
 		} else {
 			httpRequest.setUrl("https://gateway.fedex.com/xml");
