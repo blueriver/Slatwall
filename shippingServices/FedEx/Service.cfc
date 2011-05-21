@@ -44,14 +44,10 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 	property name="password" displayname="FedEx Password" type="string";
 	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
 	property name="meterNo" displayname="FedEx Meter Number" type="string";
-	property name="sandbox" displayname="Use Sandbox?" type="boolean" default="false";
-	
-	// Variables Saved in this application scope, but not set by end user
-	variables.fedExRatesV7 = "";
+	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";
 
 	public any function init() {
 		// Insert Custom Logic Here 
-		variables.fedExRatesV7 = new FedexRates_v7();
 		variables.shippingMethods = {
 			FIRST_OVERNIGHT="FedEx First Overnight",
 			PRIORITY_OVERNIGHT="FedEx Priority Overnight",
@@ -93,12 +89,11 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
         httpRequest.setMethod("POST");
 		httpRequest.setPort("443");
 		httpRequest.setTimeout(45);
-		if(variables.sandbox) {
+		if(variables.testingMode) {
 			httpRequest.setUrl("https://gatewaybeta.fedex.com/xml");
 		} else {
 			httpRequest.setUrl("https://gateway.fedex.com/xml");
 		}
-		httpRequest.setUrl("https://gateway.fedex.com/xml");
 		httpRequest.setResolveurl(false);
 		httpRequest.addParam(type="XML", name="name",value=xmlPacket);
 		

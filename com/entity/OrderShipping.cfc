@@ -61,7 +61,7 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 		return super.init();
 	}
 	
-	public array function getShippingMethodOptions() {
+	public array function getOrderShippingMethodOptions() {
 		if(!arrayLen(variables.orderShippingMethodOptions)) {
 			getService("shippingService").populateOrderShippingWithMethodOptions(this);
 		}
@@ -97,6 +97,15 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
     
     public void function removeOrderShippingItem(required OrderShippingItem orderShippingItem) {
     	arguments.orderShippingItem.removeOrderShipping(this);
+    }
+    
+    // Order Shipping Method Options (one-to-many)
+    public void function addOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    	arguments.orderShippingMethodOption.addOrderShipping(this);
+    }
+    
+    public void function removeOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    	arguments.orderShippingMethodOption.removeOrderShipping(this);
     }
     
     /******* END Association management methods */ 

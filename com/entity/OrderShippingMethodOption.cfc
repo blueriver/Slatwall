@@ -42,6 +42,31 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	property name="totalCost" ormtype="float";
 	property name="estimatedArrivalDate" ormtype="date";
 	
+	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-
+	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Order Shipping (many-to-one)
+	public void function setOrderShipping(required OrderShipping orderShipping) {
+		variables.orderShipping = arguments.orderShipping;
+		if(isNew() || !arguments.orderShipping.hasOrderShippingMethodOption(this)) {
+			arrayAppend(arguments.orderShipping.getOrderShippingMethodOptions(),this);
+		}
+	}
+	
+	public void function removeOrderShipping(OrderShipping orderShipping) {
+	   if(!structKeyExists(arguments,"orderShipping")) {
+	   		arguments.orderShipping = variables.orderShipping;
+	   }
+       var index = arrayFind(arguments.order.getOrderShippingMethodOptions(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.order.getOrderShippingMethodOptions(), index);
+       }
+       structDelete(variables,"orderShipping");
+    }
+    
+    /******* END Association management methods */ 
+	
 }

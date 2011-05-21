@@ -83,7 +83,9 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
 						var shippingService = getByShippingServicePackage(shippingServicePackage);
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");
+						if( isDefined('shippingService.properties.#propertyName#') ) {
+							evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");	
+						}
 					}
 				} else if ( listFirst( settingsList[i].getSettingName(), "_") == "paymentservice") {
 					// Inject Payment Service Setting Values
@@ -91,7 +93,9 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 					if( structKeyExists(variables.paymentServices, paymentServicePackage) ) {
 						var paymentService = getByPaymentServicePackage(paymentServicePackage);
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");
+						if( isDefined('paymentService.properties.#propertyName#') ) {
+							evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");
+						}
 					}
 				}
 				// Set the global setting value in the settings scope

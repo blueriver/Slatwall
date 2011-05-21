@@ -91,7 +91,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							option.setShippingMethod(shippingMethods[m]);
 							option.setTotalCost(ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost());
 							option.setEstimatedArrivalDate(ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate());
-							arguments.orderShipping.addOrderShippingMethodOption(option);
+							option.setOrderShipping(arguments.orderShipping);
+							getDAO().save(option);
 						}
 					}
 				}
