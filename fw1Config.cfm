@@ -48,3 +48,4 @@ Notes:
 <cfset variables.framework.subsystemdelimiter=":">
 <cfset variables.framework.generateSES = false>
 <cfset variables.framework.SESOmitIndex = true>
+<cfset variables.framework.baseURL = "/plugins/Slatwall/" />

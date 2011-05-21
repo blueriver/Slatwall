@@ -69,16 +69,12 @@ component displayname="Base Object" output="false" {
 	
 	// @hint Private helper function for returning the plugin config inside of any component in the application
 	private any function getPluginConfig() {
-		if(isDefined('application.slatwall.pluginConfig')) {
-			return application.slatwall.pluginConfig;
-		}
+		return application.slatwall.pluginConfig;
 	}
 	
 	// @hint Private helper function for returning the fw
 	private any function getFW() {
-		if(isDefined('application.slatwall.fw')) {
-			return application.slatwall.fw;
-		}
+		return getPluginConfig().getApplication().getValue('fw');
 	}
 	
 	// @hint Public helper function for returning the smartlist
