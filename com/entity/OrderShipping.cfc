@@ -69,10 +69,11 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 	
 	public void function removeOrderShippingMethodAndMethodOptions() {
 		// remove all existing options
-		for(var = i; i <= arrayLen(getOrderShippingMethodOptions()); i++) {
-			getOrderShippingMethodOptions()[i].removeOrderShipping();
+		for(var i = arrayLen(getOrderShippingMethodOptions()); i >= 1; i--) {
+			getOrderShippingMethodOptions()[i].removeOrderShipping(this);
 		}
-		
+		setShippingMethod(javaCast("null", ""));
+		setShippingCharge(0);
 	}
 	
 	// Any time a new Address gets set, we need to adjust the order shipping options

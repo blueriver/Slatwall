@@ -59,9 +59,9 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	   if(!structKeyExists(arguments,"orderShipping")) {
 	   		arguments.orderShipping = variables.orderShipping;
 	   }
-       var index = arrayFind(arguments.order.getOrderShippingMethodOptions(),this);
+       var index = arrayFind(arguments.orderShipping.getOrderShippingMethodOptions(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderShippingMethodOptions(), index);
+           arrayDeleteAt(arguments.orderShipping.getOrderShippingMethodOptions(), index);
        }
        structDelete(variables,"orderShipping");
     }
