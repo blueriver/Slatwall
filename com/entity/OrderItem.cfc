@@ -79,6 +79,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(isNew() || !arguments.order.hasOrderItem(this)) {
 			arrayAppend(arguments.order.getOrderItems(),this);
 		}
+		
+		// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
 	}
 	
 	public void function removeOrder(Order order) {
@@ -90,6 +95,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			arrayDeleteAt(arguments.order.getOrderItems(),index);
 		}    
 		structDelete(variables,"order");
+		
+		// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
     }
     
     // Order Shipping (many-to-one)
@@ -98,6 +108,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		variables.orderShipping = arguments.orderShipping;
 		if(isNew() || !arguments.orderShipping.hasOrderShippingItems(this)) {
 			arrayAppend(arguments.orderShipping.getOrderShippingItems(),this);
+		}
+		
+		// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
 		}
     }
     
@@ -110,39 +125,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     		arrayDeleteAt(arguments.orderShipping.getOrderShippingItems(), index);
     	}
     	structDelete(variables, "orderShipping");
+    	
+    	// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
     }
 	
 	/************   END Association Management Methods   *******************/
-	
-	
-	
-	// These methods insure that the shipping method options get adjusted if order items change
-	public void function preUpdate(struct oldData){
-		
-		// Remove order shipping method and options
-		if(!isNull(variable.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
-		
-		super.preUpdate();
-	}
-	
-	public void function preInsert(any entity){
-		
-		// Remove order shipping method and options
-		if(!isNull(variable.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
-		
-		super.preInsert();
-	}
-	
-	public void function preDelete(any entity){
-		
-		// Remove order shipping method and options
-		if(!isNull(variable.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
-	}
-	
 }
