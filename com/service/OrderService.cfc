@@ -41,10 +41,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
-		// TODO: Check the status of the order to make sure it isn't closed
 		
-		var orderItems = arguments.order.getOrderItems();
-		var itemExists = false;
+		// Check to see if the order has a status
+		if(isNull(arguments.order.getOrderStatusType())) {
+			arguments.order.setOrderStatusType(getTypeBySystemCode('ostNotPlaced'));
+		} else if (arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
+			throw("You cannot add an item to an order that has been closed or canceld");
+		}
 		
 		// Check for an orderShipping in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderShipping")) {
@@ -57,6 +60,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.orderShipping = osArray[1];
 			}
 		}
+		
+		var orderItems = arguments.order.getOrderItems();
+		var itemExists = false;
 		
 		// Check the existing order items and increment quantity if possible.
 		for(var i = 1; i <= arrayLen(orderItems); i++) {

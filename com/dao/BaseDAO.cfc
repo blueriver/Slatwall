@@ -42,24 +42,51 @@ component output="false" {
 		return this;
 	}
 	
-	public any function read(required string ID, required string entityName) {
-		return entityLoad(arguments.entityName, arguments.ID, true);
-	}
-	
-	public any function readByFilename(required string filename, required string entityName){
-		return ormExecuteQuery(" from #arguments.entityName# where filename = :filename", {filename=arguments.filename}, true);
-	}
-	
-	public any function readByRemoteID(required string remoteID, required string entityName){
-		return ormExecuteQuery(" from #arguments.entityName# where remoteID = :remoteID", {remoteID=arguments.remoteID}, true);
-	}
-	
-	public array function list(required string entityName,struct filterCriteria=structNew(),string sortBy="") {
-		if(structIsEmpty(arguments.filterCriteria) and !len("arguments.sortby")) {
-			return entityLoad(arguments.entityName);
-		} else {
-			return entityLoad(arguments.entityName,arguments.filterCriteria,arguments.sortby);
+	public void function delete(required target) {
+		if(isArray(target)) {
+			for(var object in target) {
+				delete(object);
+			}
 		}
+		entityDelete(target);
+	}
+
+	public any function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
+		if ( isSimpleValue( idOrFilter ) && len( idOrFilter ) && idOrFilter != 0 ) {
+			var entity = entityLoadByPK( entityName, idOrFilter );
+		} else if ( isStruct( idOrFilter ) ){
+			var entity = entityLoad( entityName, idOrFilter, true );
+		}
+		
+		if ( !isNull( entity ) ) {
+			return entity;
+		}
+
+		if ( isReturnNewOnNotFound ) {
+			return new( entityName );
+		}
+	}
+
+	function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+		return entityLoad( entityName, filterCriteria, sortOrder, options );
+	}
+
+
+	function new( required string entityName ) {
+		return entityNew( entityName );
+	}
+
+
+	function save( required target ) {
+		if ( isArray( target ) ) {
+			for ( var object in target ) {
+				save( object );
+			}
+		}
+
+		entitySave( target );
+		
+		return target;
 	}
 	
 	// @hint checks whether another entity has the same value for the given property
@@ -76,12 +103,5 @@ component output="false" {
 		return smartList;
 	}
 	
-	public void function delete(required any entity) {
-		EntityDelete(arguments.entity);
-	}
 	
-	public any function save(required any entity) {
-		EntitySave(arguments.entity);
-		return arguments.entity;
-	}
 }
