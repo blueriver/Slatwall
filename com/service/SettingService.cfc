@@ -276,6 +276,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	public any function verifyMuraRequirements() {
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
+		verifyMuraFrontendViews();
 	}
 	
 	private void function verifyMuraClassExtension() {
@@ -425,4 +426,43 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		}
 	}
 	
+	private void function verifyMuraFrontendViews() {
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			var thisSiteID = assignedSites["siteID"][i];
+			
+			var baseSitePath = expandPath("#application.configBean.getContext()#/#thisSiteID#/includes/display_objects/slatwall/");
+			var baseSlatwallPath = expandPath("#application.configBean.getContext()#/plugins/Slatwall/frontend/views/"); 
+			
+			// Check that the slatwall directory exists
+			if( !directoryExists(baseSitePath) ){
+				directoryCreate(baseSitePath);
+			}
+			
+			
+			var sections = directoryList(baseSlatwallPath);
+			
+			for(var s = 1; s<=arrayLen(sections); s++) {
+				// Get name of section
+				var thisSection = listLast(sections[s], "\/");
+				
+				// Check if the section exists
+				if(!directoryExists("#baseSitePath#/#thisSection#")) {
+					directoryCreate("#baseSitePath#/#thisSection#");
+				}
+				
+				// Loop over the items in that section and copy them
+				sectionItems = directoryList(baseSlatwallPath & "/#thisSection#");
+				
+				for(var si = 1; si <=arrayLen(sectionItems); si++) {
+					var thisItem = listLast(sectionItems[si], "\/");
+					if(!fileExists("#baseSitePath#/#thisSection#/#thisItem#")) {
+						fileCopy("#baseSlatwallPath#/#thisSection#/#thisItem#","#baseSitePath#/#thisSection#/#thisItem#");
+					}
+				}
+				
+			}
+			
+		}
+	}
 }
