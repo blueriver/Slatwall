@@ -69,13 +69,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
+			
 			if( listFirst( settingsList[i].getSettingName(), "_") == "permission") {
-				
 				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
-				
 			} else {
-				
 				// Inject Service Specific Values
 				if ( listFirst( settingsList[i].getSettingName(), "_") == "shippingservice") {
 					// Inject Shipping Service Setting Values
@@ -431,7 +429,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			var thisSiteID = assignedSites["siteID"][i];
 			
-			var baseSitePath = expandPath("#application.configBean.getContext()#/#thisSiteID#/includes/display_objects/slatwall/");
+			var baseSitePath = expandPath("#application.configBean.getContext()#/#thisSiteID#/includes/display_objects/custom/slatwall/");
 			var baseSlatwallPath = expandPath("#application.configBean.getContext()#/plugins/Slatwall/frontend/views/"); 
 			
 			// Check that the slatwall directory exists

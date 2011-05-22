@@ -44,7 +44,11 @@ Notes:
 	This is the future home of customizable widgits<br />
 	<hr />
 	<br />
+	<!---
+	<cfset paymentService = getBeanFactory().getBean("settingService").getByPaymentServicePackage("PayFlowPro") />
 	
+	<cfdump var="#paymentService#" />
+	--->
 </div>
 </cfoutput>
 
