@@ -37,15 +37,15 @@ Notes:
 
 */
 
-/*
- 
-  
-  This can be added back once i fix hotkeys  - GM 
-  
+var toolbarShowing = false;
 
 $(document).ready(function(){
 	$('li#mainMenu > a').click(function(e){
-		toggleToolbarMenu(true);
+		if(toolbarShowing) {
+			toggleToolbarMenu(false);	
+		} else {
+			toggleToolbarMenu(true);
+		}
 	});
 });
 
@@ -59,14 +59,15 @@ $(document).bind('keydown', 'esc', function(e){
 	toggleToolbarMenu(false);
 });
 
-function toggleToolbarMenu(toggle) {
-	if(toggle) {
+function toggleToolbarMenu(showing) {
+	if(showing) {
 		$('li#search > input').focus();
 		$('li#mainMenu > ul').show('fast');	
+		toolbarShowing = true;
 	} else {
 		$('li#search > input').blur();
 		$('li#search > input').val('');
-		$('li#mainMenu > ul').hide('fast');	
+		$('li#mainMenu > ul').hide('fast');
+		toolbarShowing = false;
 	}
 }
-*/
