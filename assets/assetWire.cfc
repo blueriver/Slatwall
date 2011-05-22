@@ -86,28 +86,32 @@ component output="false" accessors="true" {
 	}
 	
 	public void function addViewToAssets(required string view) {
-		var frameworkConfig = variables.framework.getConfig();
+		var frameworkConfig = getFramework().getConfig();
+		
+		var item = Replace(listGetAt(arguments.view,listLen(arguments.view,"/"),"/"), ".cfm", "");
+		var section = listGetAt(arguments.view,listLen(arguments.view,"/")-1,"/");
+		var subSection = listGetAt(arguments.view,listLen(arguments.view,"/")-3,"/"); 
 		
 		if(frameworkConfig.usingsubsystems) {
 			// Subsystem Related
-			includeAsset("js/#listGetAt(arguments.view,listLen(arguments.view,'/')-3,'/')#.js");
-			includeAsset("css/#listGetAt(arguments.view,listLen(arguments.view,'/')-3,'/')#.css");
+			includeAsset("js/#subSection#.js");
+			includeAsset("css/#subSection#.css");
 			
 			// Section Related
-			includeAsset("js/#listGetAt(arguments.view,listLen(arguments.view,'/')-3,'/')#-#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.js");
-			includeAsset("css/#listGetAt(arguments.view,listLen(arguments.view,'/')-3,'/')#-#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.css");
+			includeAsset("js/#subSection#-#section#.js");
+			includeAsset("css/#subSection#-#section#.css");
 			
 			// Item Related
-			includeAsset("js/#listGetAt(arguments.view,listLen(arguments.view,'/')-3,'/')#-#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.#Replace(listLast(arguments.view,'/'),'.cfm','.js')#");
-			includeAsset("css/#listGetAt(arguments.view,listLen(arguments.view,'/')-3,'/')#-#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.#Replace(listLast(arguments.view,'/'),'.cfm','.css')#");
+			includeAsset("js/#subSection#-#section#.#item#.js");
+			includeAsset("css/#subSection#-#section#.#item#.css");
 		} else {
 			// Section Related
-			includeAsset("js/#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.js");
-			includeAsset("css/#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.css");
+			includeAsset("js/#section#.js");
+			includeAsset("css/#section#.css");
 			
 			// Item Related
-			includeAsset("js/#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.#Replace(listLast(arguments.view,'/'),'.cfm','.js')#");
-			includeAsset("css/#listGetAt(arguments.view,listLen(arguments.view,'/')-1,'/')#.#Replace(listLast(arguments.view,'/'),'.cfm','.css')#");
+			includeAsset("js/#section#.#item#.js");
+			includeAsset("css/#section#.#item#.css");
 		}
 	}
 	

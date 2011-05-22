@@ -104,6 +104,9 @@ component extends="framework" output="false" {
 		// Setup run Setting Service reload config
 		getBeanFactory().getBean("settingService").reloadConfiguration();
 		
+		// Verify that Mura has all pages, page types, extensions & frontend views
+		getBeanFactory().getBean("settingService").verifyMuraRequirements();
+		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
@@ -256,6 +259,7 @@ component extends="framework" output="false" {
 		location(arguments.location, arguments.addToken);
 	}
 	
+	// This handels all of the ORM persistece.
 	private void function endSlatwallLifecycle() {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
@@ -263,6 +267,14 @@ component extends="framework" output="false" {
 		} else {
 			transaction{}
 		}
+	}
+	
+	// This is used to setup the frontend path to pull from the siteid directory
+	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
+			arguments.fullPath = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/slatwall/");
+		}
+		return arguments.fullPath;
 	}
 	
 	// Start assetWire functions ==================================
@@ -276,15 +288,16 @@ component extends="framework" output="false" {
 	private void function buildViewAndLayoutQueue() {
 		super.buildViewAndLayoutQueue();
 		if(structKeyExists(request, "view")) {
-			getAssetWire().addViewToAssets(request.view);	
+			getAssetWire().addViewToAssets(request.view);
 		}
 	}
 	
 	private string function internalLayout( string layoutPath, string body ) {
 		var rtn = super.internalLayout(argumentcollection=arguments);
+		
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
 			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd") {
-				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
+				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());
 			}
 		}
 		return rtn;
