@@ -206,7 +206,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Payment Services
 	public void function listPaymentServices(required struct rc) {
-		rc.paymentServices = getSettingService().getPaymentServices(reload=true);	
+		rc.paymentServices = getSettingService().getPaymentServices();	
 	}
 	
 	public void function detailPaymentService(required struct rc) {
@@ -224,7 +224,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function savePaymentService(required struct rc) {
 		for(var item in rc) {
-			if(!isObject(item) && listGetAt(item,1,"_") == "paymentService") {
+			if(!isObject(item) && listGetAt(item,1,"_") == "paymentservice") {
 				var setting = getSettingService().getBySettingName(item);
 				setting.setSettingName(item);
 				setting.setSettingValue(rc[item]);
