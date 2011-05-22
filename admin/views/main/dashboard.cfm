@@ -37,40 +37,10 @@ Notes:
 
 --->
 <cfparam name="rc.productSmartList" type="any" />
+<cfparam name="rc.orderSmartList" type="any" />
 
 <cfoutput>
 <div class="svoadminmaindefault">
-	<!---
-	<div class="orders dashboardSection">
-		<h3>Open Orders</h3>
-		<table id="orderList" class="stripe">
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.createdDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.modifiedDateTime")#</th>
-				<th>&nbsp</th>
-			</tr>	
-			<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
-				<tr>
-					<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
-					<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-					<td><a href="#buildURL(action='admin:product.detailproducttype', querystring='productTypeID=#local.Product.getProductType().getProductTypeID()#')#">#local.product.getProductType().getProductTypeName()#</a></td>
-					
-					<td class="administration">
-						<cfset local.ProductID = local.Product.getProductID() />
-			          <ul class="four">
-	                      <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
-						  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
-						  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-						  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
-			          </ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
-	--->
 	<div class="products dashboardSection">
 		<h3>Recently Updated Products</h3>
 		<table id="orderList" class="stripe">
@@ -89,7 +59,34 @@ Notes:
 		</table>
 		<cf_actionCaller action="admin:product.list" />
 	</div>
-	
+	<div class="orders dashboardSection">
+		<h3>New Orders</h3>
+		<table id="orderList" class="stripe">
+			<tr>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullname")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.createdDateTime")#</th>
+			</tr>	
+			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
+				<tr>
+					<td></td>
+					<cfif !isNull(local.order.getAccount())>
+						<td class="varWidth">#local.order.getAccount().getFullName()#</td>
+					<cfelse>
+						<td class="varWidth"></td>
+					</cfif>
+					<td>#DateFormat(local.product.getProductType().getCreatedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getProductType().getCreatedDateTime(), "HH:MM:SS")#</td>
+				</tr>
+			</cfloop>
+		</table>
+		<cf_actionCaller action="admin:order.list" />
+	</div>
+	<div class="started dashboardSection">
+		<h3>Getting Started</h3>
+		<p>Welcome to the Slatwall administation panel.  From here you can manage every aspect of your Online Store, and much more.</p>
+		<p>The first thing you'll want to do is farmiliarize yourself with the toolbar below.  It will provide access to every aspect of your administation panel.  In addition by clicking the "Website" link you can be taken directly to the front-end of your website where the toolbar will remain</p>
+		<p>Just as a quick tip, you can quickly access the toolbars Main Menu quickly by presing "ctrl + M" go ahead and try it right now.  Once the menu has opend you can close it by hitting the "esc" key</p>
+	</div>
 </div>
 </cfoutput>
 

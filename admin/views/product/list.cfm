@@ -51,9 +51,9 @@ Notes:
 	</form>
 	<table id="ProductList" class="stripe">
 		<tr>
+			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qexp")#</th>
@@ -63,9 +63,9 @@ Notes:
 		</tr>	
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
 			<tr>
+				<td><a href="#buildURL(action='admin:product.detailproducttype', querystring='productTypeID=#local.Product.getProductType().getProductTypeID()#')#">#local.product.getProductType().getProductTypeName()#</a></td>
 				<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
 				<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-				<td><a href="#buildURL(action='admin:product.detailproducttype', querystring='productTypeID=#local.Product.getProductType().getProductTypeID()#')#">#local.product.getProductType().getProductTypeName()#</a></td>
 				<cfif local.Product.getSetting("trackInventoryFlag")>
 					<td>#local.Product.getQOH()#</td>
 					<td>#local.Product.getQC()#</td>
