@@ -104,9 +104,6 @@ component extends="framework" output="false" {
 		// Setup run Setting Service reload config
 		getBeanFactory().getBean("settingService").reloadConfiguration();
 		
-		// Verify that Mura has all pages, page types, extensions & frontend views
-		getBeanFactory().getBean("settingService").verifyMuraRequirements();
-		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
