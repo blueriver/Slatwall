@@ -67,7 +67,7 @@ component output="false" {
 		}
 	}
 
-	function list( required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+	function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
 		return entityLoad( entityName, filterCriteria, sortOrder, options );
 	}
 

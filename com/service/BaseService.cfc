@@ -47,24 +47,43 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return super.init();
 	}
 	
-	public any function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
-		return getDAO().get(argumentscollection=arguments);
+	public any function get( string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
+		if(!structKeyExists(arguments, "entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		return getDAO().get(argumentcollection=arguments);
 	}
 
-	public any function list( required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
-		return getDAO().list(argumentscollection=arguments);
+	public any function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+		if(!structKeyExists(arguments, "entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		
+		return getDAO().list(argumentcollection=arguments);
 	}
 
-	public any function new( required string entityName ) {
-		return getDAO().new(argumentscollection=arguments);
+	public any function new( string entityName ) {
+		if(!structKeyExists(arguments, "entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		return getDAO().new(argumentcollection=arguments);
 	}
 
 	public any function getSmartList(string entityName, struct data={}){
-		if(structKeyExists(arguments, "entityName")) {
-			return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
-		} else {
-			return getDAO().getSmartList(entityName=getEntityName(), data=arguments.data);
+		if(!structKeyExists(arguments, "entityName")) {
+			arguments.entityName = getEntityName();
 		}
+		
+		return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
 	}
 	
 	public any function delete(required any entity){
@@ -125,11 +144,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	 *
 	 * NOTE: Ordered arguments only--named arguments not supported.
 	 */
-	function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
+	public any function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		var lCaseMissingMethodName = lCase( missingMethodName );
 
-		writeDump(var=missingMethodArguments, label="missingMethodDAO");
-		
 		if ( lCaseMissingMethodName.startsWith( 'get' ) ) {
 			return onMissingGetMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'new' ) ) {
@@ -144,9 +161,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 		throw( 'No matching method for #missingMethodName#().' );
 	}
-	
-	
-	
 	
 
 
@@ -173,11 +187,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var isReturnNewOnNotFound = structKeyExists( missingMethodArguments, '2' ) ? missingMethodArguments[ 2 ] : false;
 
 		var entityName = missingMethodName.substring( 3 );
-
-		writeDump(entityName);
-		writeDump(arguments);
-		writeDump(isReturnNewOnNotFound);
-		abort;
 
 		if ( entityName.matches( '(?i).+by.+' ) ) {
 			var tokens = entityName.split( '(?i)by', 2 );
@@ -246,7 +255,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var listArgs = {};
 
 		listArgs.entityName = missingMethodName.substring( 4 );
-
+		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
+		
 		if ( structKeyExists( missingMethodArguments, '1' ) ) {
 			listArgs.filterCriteria = missingMethodArguments[ '1' ];
 
@@ -281,6 +291,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var tokens = temp.split( '(?i)FilterBy', 2 );
 
 		listArgs.entityName = tokens[ 1 ];
+		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 
 		listArgs.filterCriteria = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
 
@@ -316,6 +327,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var tokens = temp.split( '(?i)FilterBy', 2 );
 
 		listArgs.entityName = tokens[ 1 ];
+		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 
 		tokens = tokens[ 2 ].split( '(?i)OrderBy', 2 );
 
@@ -350,6 +362,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var tokens = temp.split( '(?i)OrderBy', 2 );
 
 		listArgs.entityName = tokens[ 1 ];
+		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 
 		listArgs.sortOrder = tokens[ 2 ];
 
@@ -438,12 +451,4 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		entity.init(argumentcollection=arguments);
 		return entity;
 	}
-	
-	public any function list(string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		return getDAO().list(argumentCollection=arguments);
-	}
-
 }

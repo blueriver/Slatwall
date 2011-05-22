@@ -67,7 +67,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
-		var account = getAccountService().getByID(rc.accountID);
+		var account = getAccountService().getAccount(rc.accountID);
 		var deleteResponse = getAccountService().delete(account);
 		if(deleteResponse.getStatusCode()) {
 			rc.message = deleteResponse.getMessage();		
