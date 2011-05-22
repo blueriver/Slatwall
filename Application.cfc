@@ -56,11 +56,7 @@ component extends="framework" output="false" {
 			return application.slatwall.pluginConfig;	
 		}
 	}
-	
-	public any function getSubsystemBaseURL( string subsystem="admin") {
-		return variables.subsystems[ arguments.subsystem ].baseURL; 
-	}
-	
+
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
