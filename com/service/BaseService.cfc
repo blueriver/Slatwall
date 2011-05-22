@@ -47,68 +47,18 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return super.init();
 	}
 	
-	// This method is deprecated, and being replaced by the new OnMissingMethod
-	public any function getByID(required string ID, string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().get(entityName=arguments.entityName, idOrFilter=arguments.ID);
+	public any function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
+		return getDAO().get(argumentscollection=arguments);
 	}
-	
-	// This method is deprecated, and being replaced by the new OnMissingMethod
-	public any function getByFilename(required string filename, string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().get(entityName=arguments.entityName, idOrFilter={filename=arguments.filename});
+
+	public any function list( required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+		return getDAO().list(argumentscollection=arguments);
 	}
-	
-	// This method is deprecated, and being replaced by the new OnMissingMethod
-	public any function getByRemoteID(required string remoteID, string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().get(entityName=arguments.entityName, idOrFilter={filename=arguments.filename});
+
+	public any function new( required string entityName ) {
+		return getDAO().new(argumentscollection=arguments);
 	}
-	
-	public any function getByFilter(required struct filterCriteria, string entityName, string sortBy="", boolean unique=false) {
-		var collection = [];
-		if(!structKeyExists(arguments,"entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		collection = getDAO().list(argumentCollection=arguments);
-		if(!arguments.unique) {
-			return collection;
-		} else {
-			if(arrayLen(collection) == 1) {
-				return collection[1];
-			} else {
-				throw(type="GetByFilter.NonUniqueResult", message="The method getByFilter() returned more than one enity. The attribute 'unique' cannot be set to 'true' for the current filter criteria.");
-			}
-		}
-	}
-	
-	public any function getNewEntity(string entityName) {
-		if(isDefined("arguments.entityName")) {
-			var entity = entityNew(arguments.entityName);
-			structDelete(arguments, "entityName");
-		} else {
-			var entity = entityNew(getEntityName());
-		}
-		entity.init(argumentcollection=arguments);
-		return entity;
-	}
-	
-	public any function list(string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		return getDAO().list(argumentCollection=arguments);
-	}
-	
+
 	public any function getSmartList(string entityName, struct data={}){
 		if(structKeyExists(arguments, "entityName")) {
 			return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
@@ -149,72 +99,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         }
         return arguments.entity;
     }
-    
-    // NEW METHODS START HERE
-    function delete(required target) {
-		if(isArray(target)) {
-			for(var object in target) {
-				delete(object);
-			}
-		}
-		entityDelete(target);
-	}
-
-
-	function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
-		// Add Slatwall Prefix If Needed
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall" & arguments.entityName;
-		}
-		
-		if ( isSimpleValue( idOrFilter ) && len( idOrFilter ) && idOrFilter != 0 ) {
-			var entity = entityLoadByPK( entityName, idOrFilter );
-		} else if ( isStruct( idOrFilter ) ){
-			var entity = entityLoad( entityName, idOrFilter, true );
-		}
-		
-		if ( !isNull( entity ) ) {
-			return entity;
-		}
-
-		if ( isReturnNewOnNotFound ) {
-			return new( entityName );
-		}
-	}
-
-
-	function list( required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
-		// Add Slatwall Prefix If Needed
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall" & arguments.entityName;
-		}
-		
-		return entityLoad( entityName, filterCriteria, sortOrder, options );
-	}
-
-
-	function new( required string entityName ) {
-		// Add Slatwall Prefix If Needed
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall" & arguments.entityName;
-		}
-		
-		return entityNew( entityName );
-	}
-
-
-	function save( required target ) {
-		if ( isArray( target ) ) {
-			for ( var object in target ) {
-				save( object );
-			}
-		}
-
-		entitySave( target );
-		
-		return target;
-	}
-    
     
  /**
 	 * Provides dynamic methods, by convention, on missing method:
@@ -494,6 +378,72 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments )
 	{
 		return save( missingMethodArguments[ 1 ] );
+	}
+	
+	
+	// THESE ARE ALL OF THE OLD METHODS THAT WE WILL BE REMOVING
+	
+	
+	
+	public any function getByID(required string ID, string entityName) {
+		if(!isDefined("arguments.entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		
+		return getDAO().get(entityName=arguments.entityName, idOrFilter=arguments.ID);
+	}
+	
+	
+	public any function getByFilename(required string filename, string entityName) {
+		if(!isDefined("arguments.entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		
+		return getDAO().get(entityName=arguments.entityName, idOrFilter={filename=arguments.filename});
+	}
+	
+	
+	public any function getByRemoteID(required string remoteID, string entityName) {
+		if(!isDefined("arguments.entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		
+		return getDAO().get(entityName=arguments.entityName, idOrFilter={filename=arguments.filename});
+	}
+	
+	public any function getByFilter(required struct filterCriteria, string entityName, string sortBy="", boolean unique=false) {
+		var collection = [];
+		if(!structKeyExists(arguments,"entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		collection = getDAO().list(argumentCollection=arguments);
+		if(!arguments.unique) {
+			return collection;
+		} else {
+			if(arrayLen(collection) == 1) {
+				return collection[1];
+			} else {
+				throw(type="GetByFilter.NonUniqueResult", message="The method getByFilter() returned more than one enity. The attribute 'unique' cannot be set to 'true' for the current filter criteria.");
+			}
+		}
+	}
+	
+	public any function getNewEntity(string entityName) {
+		if(isDefined("arguments.entityName")) {
+			var entity = entityNew(arguments.entityName);
+			structDelete(arguments, "entityName");
+		} else {
+			var entity = entityNew(getEntityName());
+		}
+		entity.init(argumentcollection=arguments);
+		return entity;
+	}
+	
+	public any function list(string entityName) {
+		if(!isDefined("arguments.entityName")) {
+			arguments.entityName = getEntityName();
+		}
+		return getDAO().list(argumentCollection=arguments);
 	}
 
 }
