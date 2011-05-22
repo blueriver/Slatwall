@@ -429,7 +429,8 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			var thisSiteID = assignedSites["siteID"][i];
 			var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
-			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/frontend/views/";
+			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/";
+			
 			getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
 	}

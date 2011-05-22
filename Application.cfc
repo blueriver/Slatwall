@@ -78,6 +78,9 @@ component extends="framework" output="false" {
 		// Set this in the application scope to be used on the frontend
 		getPluginConfig().getApplication().setValue( "fw", this);
 		
+		// Set the setup confirmed as false
+		getPluginConfig().getApplication().setValue('applicationSetupConfirmend', false);
+		
 		// Make's sure that our entities get updated
 		ormReload();
 		
