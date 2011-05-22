@@ -36,19 +36,65 @@
 Notes:
 
 --->
+<cfparam name="rc.productSmartList" type="any" />
+
 <cfoutput>
 <div class="svoadminmaindefault">
-	<strong>#rc.$.Slatwall.account('FullName')#</strong>
-	Welcome to the Slatwall Dashboard.<br />
-	<br />
-	This is the future home of customizable widgits<br />
-	<hr />
-	<br />
 	<!---
+	<div class="orders dashboardSection">
+		<h3>Open Orders</h3>
+		<table id="orderList" class="stripe">
+			<tr>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.createdDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.modifiedDateTime")#</th>
+				<th>&nbsp</th>
+			</tr>	
+			<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
+				<tr>
+					<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
+					<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailproducttype', querystring='productTypeID=#local.Product.getProductType().getProductTypeID()#')#">#local.product.getProductType().getProductTypeName()#</a></td>
+					
+					<td class="administration">
+						<cfset local.ProductID = local.Product.getProductID() />
+			          <ul class="four">
+	                      <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
+						  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
+						  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
+						  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
+			          </ul>     						
+					</td>
+				</tr>
+			</cfloop>
+		</table>
+	</div>
+	--->
+	<div class="products dashboardSection">
+		<h3>Recently Updated Products</h3>
+		<table id="orderList" class="stripe">
+			<tr>
+				<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.modifiedDateTime")#</th>
+			</tr>	
+			<cfloop array="#rc.productSmartList.getPageRecords()#" index="local.Product">
+				<tr>
+					<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
+					<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
+					<td>#DateFormat(local.product.getProductType().getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getProductType().getModifiedDateTime(), "HH:MM:SS")#</td>
+				</tr>
+			</cfloop>
+		</table>
+		<cf_actionCaller action="admin:product.list" />
+	</div>
+	
+</div>
+</cfoutput>
+
+<!---
 	<cfset paymentService = getBeanFactory().getBean("settingService").getByPaymentServicePackage("PayFlowPro") />
 	
 	<cfdump var="#paymentService#" />
 	--->
-</div>
-</cfoutput>
-

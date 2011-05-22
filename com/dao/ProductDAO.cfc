@@ -47,7 +47,9 @@ component extends="slatwall.com.dao.BaseDAO" {
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
 		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
-		return smartList;	
+		smartList.joinRelatedProperty("SlatwallProduct","productType");
+		
+		return smartList;
 	}
 	
 	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL=""){
