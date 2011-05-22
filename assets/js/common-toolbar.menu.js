@@ -37,11 +37,11 @@ Notes:
 
 */
 
-var toolbarShowing = false;
+var slatwallMenuShowing = false;
 
 $(document).ready(function(){
 	$('li#mainMenu > a').click(function(e){
-		if(toolbarShowing) {
+		if(slatwallMenuShowing) {
 			toggleToolbarMenu(false);	
 		} else {
 			toggleToolbarMenu(true);
@@ -49,25 +49,26 @@ $(document).ready(function(){
 	});
 });
 
-$(document).bind('keydown', 'Alt+s', function(e){
-	e.preventDefault();
-	toggleToolbarMenu(true);
-});
-
-$(document).bind('keydown', 'esc', function(e){
-	e.preventDefault();
-	toggleToolbarMenu(false);
+$(document).keydown(function(e) {
+	if (e.keyCode == 27) {
+		e.preventDefault();
+		toggleToolbarMenu(false);
+	}
+	if (e.keyCode == 77 && e.ctrlKey) {
+		e.preventDefault();
+		toggleToolbarMenu(true);
+	}
 });
 
 function toggleToolbarMenu(showing) {
 	if(showing) {
 		$('li#search > input').focus();
 		$('li#mainMenu > ul').show('fast');	
-		toolbarShowing = true;
+		slatwallMenuShowing = true;
 	} else {
 		$('li#search > input').blur();
 		$('li#search > input').val('');
 		$('li#mainMenu > ul').hide('fast');
-		toolbarShowing = false;
+		slatwallMenuShowing = false;
 	}
 }
