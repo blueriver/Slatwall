@@ -48,7 +48,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function create(required struct rc) {
 		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		if(!isNull(rc.attributeSet)) {
-			rc.newAttribute = getAttributeService().getNewEntity();
+			rc.newAttribute = getAttributeService().newAttribute();
 			rc.create = true;
 			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
 			getFW().setView("attribute.edit");
@@ -76,7 +76,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
     
     public void function list(required struct rc) {
-        rc.attributeSets = getAttributeService().list(entityName="SlatwallAttributeSet",sortby="attributeSetName Asc");
+        rc.attributeSets = getAttributeService().listAttributeSetOrderByAttributeSetName();
     }
     
 /*   public void function save() {
@@ -84,11 +84,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }*/
 	
 	public void function save(required struct rc) {
-		if(structKeyExists(rc,"attributeID")) {
-			rc.attribute = getAttributeService().getByID(rc.attributeID);
-		} else {
-			rc.attribute = getAttributeService().getNewEntity();
-		}
+		param name="rc.attributeID" default="";
+		
+		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
 		
 		rc.optionsArray = getService("formUtilities").buildFormCollections(rc).options;			
 		rc.attribute = getAttributeService().saveAttribute(rc.attribute,rc);
@@ -99,7 +97,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().redirect(action="admin:attribute.create",querystring="attributeSetID=#rc.attributeSetID#",preserve="message");
 		} else {
 			//put attributeSet in rc for form
-			rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+			rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 			rc.itemTitle = rc.$.Slatwall.rbKey("admin.attribute.create") & ": #rc.attributeSet.getAttributeSetName()#";
 			if(rc.attribute.isNew()) {
 				rc.newAttribute = rc.attribute;
@@ -118,7 +116,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
-		var attribute = getAttributeService().getByID(rc.attributeID);
+		var attribute = getAttributeService().getAttribute(rc.attributeID);
 		var attributeSetID = attribute.getAttributeSet().getAttributeSetID();
 		var deleteResponse = getAttributeService().delete(attribute);
 		if(deleteResponse.getStatusCode()) {
@@ -132,12 +130,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function createAttributeSet(required struct rc) {
 	   rc.edit=true;
-	   rc.attributeSet = getAttributeService().getNewEntity("SlatwallAttributeSet");
+	   rc.attributeSet = getAttributeService().newAttributeSet();
 	   getFW().setView("admin:attribute.detailAttributeSet");
 	}
 	
 	public void function detailAttributeSet(required struct rc) {
-		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		if(!isNull(rc.attributeSet) and !rc.attributeSet.isNew()) {
 			rc.itemTitle &= ": #rc.attributeSet.getAttributeSetName()#";
 		} else {
@@ -147,7 +145,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function editAttributeSet(required struct rc) {
 		rc.edit=true;
-		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		if(!isNull(rc.attributeSet)) {
 			if( len(rc.attributeSet.getAttributeSetName()) ) {
 				rc.itemTitle &= ": #rc.attributeSet.getAttributeSetName()#";
@@ -159,9 +157,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function saveAttributeSet(required struct rc) {
 		if(len(trim(rc.attributeSetID))) {
-			rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+			rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		} else {
-			rc.attributeSet = getAttributeService().getNewEntity("SlatwallAttributeSet");
+			rc.attributeSet = getAttributeService().newAttributeSet();
 		}
 		
 		rc.attributeSet = getAttributeService().save(rc.attributeSet,rc);
@@ -183,7 +181,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteAttributeSet(required struct rc) {
-		var attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		var attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		var deleteResponse = getAttributeService().deleteAttributeSet(attributeSet);
 		if(deleteResponse.getStatusCode()) {
 			rc.message = deleteResponse.getMessage();
@@ -196,7 +194,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function deleteAttributeOption(required struct rc) {
 		param name="rc.asynch" default="false";
-		var attributeOption = getAttributeService().getByID(rc.attributeOptionID,"SlatwallAttributeOption");
+		var attributeOption = getAttributeService().getAttributeOption(rc.attributeOptionID);
 		if(!isNull(attributeOption)) {
 			var deleteResponse = getAttributeService().delete(attributeOption);
 			if( deleteResponse.getStatusCode() ) {

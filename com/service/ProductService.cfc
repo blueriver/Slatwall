@@ -95,7 +95,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function updateProductContentPaths(required string contentID) {
-		var pcArray = getDAO().list("SlatwallProductContent");
+		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++) {
 			local.thisPC = pcArray[i];
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
@@ -106,7 +106,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function deleteProductContent(required string contentID) {
-		var pcArray = getDAO().list("SlatwallProductContent");
+		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++ ) {
 			local.thisPC = pcArray[i];
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
@@ -187,16 +187,9 @@ component extends="BaseService" accessors="true" {
 		}
 		return deleteResponse;
 	}
-	
-	/*
-	public any function getProductContentSmartList(required struct data={}, required string contentID) {
-		return getDAO().getProductContentSmartList(rc=arguments.rc, entityName=getEntityName(), contentID=arguments.contentID);
-	}
-	*/
-	
+
 	//   Product Type Methods
-	
-    public void function setProductTypeTree() {
+	public void function setProductTypeTree() {
     	var qProductTypes = getProductTypeDAO().getProductTypeQuery();
     	var productTypeTree = getService("utilities").queryTreeSort(
     		theQuery = qProductTypes,

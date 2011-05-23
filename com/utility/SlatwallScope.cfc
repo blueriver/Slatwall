@@ -45,9 +45,9 @@ component accessors="true" output="false" extends="BaseObject" {
 	public any function getCurrentProduct() {
 		if(!getService("requestCacheService").keyExists("currentProduct")) {
 			if(getService("requestCacheService").keyExists("currentProductID")) {
-				getService("requestCacheService").setValue("currentProduct", getService("productService").getByID(getService("requestCacheService").getValue("currentProductID")));
+				getService("requestCacheService").setValue("currentProduct", getService("productService").getProduct(getService("requestCacheService").getValue("currentProductID")));
 			} else {
-				getService("requestCacheService").setValue("currentProduct", getService("productService").getNewEntity());	
+				getService("requestCacheService").setValue("currentProduct", getService("productService").newProduct());	
 			}
 		}
 		return getService("requestCacheService").getValue("currentProduct");
@@ -61,7 +61,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		if(!isNull(getCurrentSession().getAccount())) {
 			return getCurrentSession().getAccount();
 		} else {
-			return getService("AccountService").getNewEntity();	
+			return getService("AccountService").newAccount();	
 		}
 	}
 	
@@ -69,7 +69,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		if(!isNull(getCurrentSession().getOrder())) {
 			return getCurrentSession().getOrder();
 		} else {
-			return getService("OrderService").getNewEntity();	
+			return getService("OrderService").newOrder();	
 		}
 	}
 	

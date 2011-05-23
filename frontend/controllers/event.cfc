@@ -56,7 +56,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if( listLen(rc.path, "/") >= 3 && listGetAt(rc.path, 2, "/") == setting("product_urlKey")) {
 			
 			// Load Product
-			var product = getProductService().getByFilename(listGetAt(rc.path, 3, "/"));
+			var product = getProductService().getProductByFilename(listGetAt(rc.path, 3, "/"));
 			
 			// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
 			if(!isNull(product)) {

@@ -52,11 +52,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderCloseDate|D";
-		rc.orderSmartList = getOrderService().getSmartList(data=arguments.rc);
+		rc.orderSmartList = getOrderService().getSmartList(entityName="Order", data=arguments.rc);
     }
 
 	public void function detail(required struct rc) {
-	   rc.brand = getOrderService().getByID(ID=rc.orderID);
+	   rc.order = getOrderService().getOrder(rc.orderID);
 	   if(!isNull(rc.order) and !rc.order.isNew()) {
 	       rc.itemTitle &= ": Order No. " & rc.order.getOrderID();
 	   } else {

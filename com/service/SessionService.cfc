@@ -71,11 +71,11 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 
 		// Load Session
-		var currentSession = getByID(session.slatwall.sessionID);
+		var currentSession = this.getSession(session.slatwall.sessionID);
 		
 		// If No Session in Database create a new one.
 		if(isNull(currentSession)) {
-			currentSession = getNewEntity();
+			currentSession = this.newSession();
 		}
 		
 		// Setup account here

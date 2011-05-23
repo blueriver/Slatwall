@@ -43,9 +43,9 @@ component extends="BaseController" output=false accessors=true {
 	property name="orderService" type="Slatwall.com.service.OrderService";
 	
 	public void function dashboard(required struct rc) {
-		rc.productSmartList = getProductService().getSmartList(data=arguments.rc);
+		rc.productSmartList = getProductService().getSmartList(entityName="SlatwallProduct", data=arguments.rc);
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");
-		rc.orderSmartList = getOrderService().getSmartList(data=arguments.rc);
+		rc.orderSmartList = getOrderService().getSmartList(entityName="SlatwallOrder", data=arguments.rc);
 		rc.orderSmartList.addOrder("createdDateTime|DESC");
 	}
 }

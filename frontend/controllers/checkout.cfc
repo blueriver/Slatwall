@@ -61,10 +61,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.orderShippingAddressID" default="";
 		
 		rc.$.slatwall.cart().getOrderShippings()[1];
-		var address = getAccountService().getByID(rc.orderShippingAddressID, "SlatwallAddress");
-		if(isNull(address)) {
-			address = getAccountService().getNewEntity("SlatwallAddress");
-		}
+		var address = getAccountService().getAddress(rc.orderShippingAddressID, true);
+		
 		address = getAccountService().save(address,rc);
 		if(!address.hasErrors()) {
 			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(address);
@@ -73,47 +71,4 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().setView("frontend:checkout.detail");
 		}
 	}
-	
-	/*
-	public void function updateOrderShippingAddress(required struct rc) {
-		param name="rc.orderShippingID" default="";
-		param name="rc.orderShippingAddressID" default="";
-		
-		// Get The Order Shipping
-		var orderShipping = getOrderService().getByID(rc.orderShippingID, "SlatwallOrderShipping");
-		if(isNull(orderShipping)) {
-			var orderShipping = getOrderService().getNewEntity("SlatwallOrderShipping");
-		}
-		
-		// Get The Address
-		var orderShippingAddress = getAddressService().getByID(rc.orderShippingAddressID);
-		if(isNull(ordershippingAddress)) {
-			var ordershippingAddress = getAddressService().getNewEntity();
-		}
-		
-		// Save the Address
-		rc.orderShippingAddress = getAddressService().save(rc.orderShippingAddress, rc);
-		
-		// Set the Address as the 
-		rc.$.slatwall.cart().getOrderShippings()[1].setAddress(rc.orderShippingAddress);
-	}
-	
-	public void function updateOrderShippingMethod(required struct rc) {
-		
-	}
-	
-	public void function updateOrderShippingPayment(required struct rc) {
-		
-	}
-	
-	
-	
-	public void function updateOrderPayment(required struct rc) {
-		
-	}
-	
-	public void function processOrder(required struct rc) {
-		
-	}
-	*/
 }

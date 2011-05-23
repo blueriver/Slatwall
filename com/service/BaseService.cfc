@@ -47,43 +47,20 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return super.init();
 	}
 	
-	public any function get( string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
-		if(!structKeyExists(arguments, "entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
-		}
+	public any function get(required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
 		return getDAO().get(argumentcollection=arguments);
 	}
 
-	public any function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
-		if(!structKeyExists(arguments, "entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
-		}
-		
+	public any function list(required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
 		return getDAO().list(argumentcollection=arguments);
 	}
 
-	public any function new( string entityName ) {
-		if(!structKeyExists(arguments, "entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
-		}
+	public any function new(required string entityName ) {
 		return getDAO().new(argumentcollection=arguments);
 	}
 
 	public any function getSmartList(string entityName, struct data={}){
-		if(!structKeyExists(arguments, "entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
+		return getDAO().getSmartList(argumentcollection=arguments);
 	}
 	
 	public any function delete(required any entity){
@@ -255,7 +232,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var listArgs = {};
 
 		listArgs.entityName = missingMethodName.substring( 4 );
-		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 		
 		if ( structKeyExists( missingMethodArguments, '1' ) ) {
 			listArgs.filterCriteria = missingMethodArguments[ '1' ];
@@ -291,7 +267,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var tokens = temp.split( '(?i)FilterBy', 2 );
 
 		listArgs.entityName = tokens[ 1 ];
-		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 
 		listArgs.filterCriteria = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
 
@@ -327,7 +302,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var tokens = temp.split( '(?i)FilterBy', 2 );
 
 		listArgs.entityName = tokens[ 1 ];
-		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 
 		tokens = tokens[ 2 ].split( '(?i)OrderBy', 2 );
 
@@ -362,7 +336,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var tokens = temp.split( '(?i)OrderBy', 2 );
 
 		listArgs.entityName = tokens[ 1 ];
-		listArgs.entityName = left(listArgs.entityName, len(listArgs.entityName)-1);
 
 		listArgs.sortOrder = tokens[ 2 ];
 
@@ -391,64 +364,5 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments )
 	{
 		return save( missingMethodArguments[ 1 ] );
-	}
-	
-	
-	// THESE ARE ALL OF THE OLD METHODS THAT WE WILL BE REMOVING
-	
-	
-	
-	public any function getByID(required string ID, string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().get(entityName=arguments.entityName, idOrFilter=arguments.ID);
-	}
-	
-	
-	public any function getByFilename(required string filename, string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().get(entityName=arguments.entityName, idOrFilter={filename=arguments.filename});
-	}
-	
-	
-	public any function getByRemoteID(required string remoteID, string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		
-		return getDAO().get(entityName=arguments.entityName, idOrFilter={filename=arguments.filename});
-	}
-	
-	public any function getByFilter(required struct filterCriteria, string entityName, string sortBy="", boolean unique=false) {
-		var collection = [];
-		if(!structKeyExists(arguments,"entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		collection = getDAO().list(argumentCollection=arguments);
-		if(!arguments.unique) {
-			return collection;
-		} else {
-			if(arrayLen(collection) == 1) {
-				return collection[1];
-			} else {
-				throw(type="GetByFilter.NonUniqueResult", message="The method getByFilter() returned more than one enity. The attribute 'unique' cannot be set to 'true' for the current filter criteria.");
-			}
-		}
-	}
-	
-	public any function getNewEntity(string entityName) {
-		if(isDefined("arguments.entityName")) {
-			var entity = entityNew(arguments.entityName);
-			structDelete(arguments, "entityName");
-		} else {
-			var entity = entityNew(getEntityName());
-		}
-		entity.init(argumentcollection=arguments);
-		return entity;
 	}
 }
