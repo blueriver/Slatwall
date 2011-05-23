@@ -44,6 +44,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="shippingService" type="any";
 	property name="paymentService" type="any";
 	property name="formUtilities" type="any";
+	property name="fileService" type="any";
 	
 	// Mura Service Injection
 	property name="userManager" type="any";
@@ -322,5 +323,13 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
+	}
+	
+	public void function updateFrontendViews(required struct rc) {
+		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
+		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
+		
+		getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
+		getFW().redirect(action="admin:main");
 	}
 }

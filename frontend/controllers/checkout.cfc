@@ -71,4 +71,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().setView("frontend:checkout.detail");
 		}
 	}
+	
+	public void function saveOrderShippingMethod(required struct rc) {
+		param name="rc.orderShippingMethodOptionID" default="";
+		getOrderService().setOrderShippingMethodFromMethodOptionID(orderShipping=rc.$.slatwall.cart().getOrderShippings()[1], orderShippingMethodOptionID=rc.orderShippingMethodOptionID);
+		getFW().redirectExact($.createHREF(filename='checkout'));
+	}
 }

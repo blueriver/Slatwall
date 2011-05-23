@@ -84,4 +84,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		save(arguments.order);
 	}
+	
+	public void function setOrderShippingMethodFromMethodOptionID(required any orderShipping, required string orderShippingMethodOptionID) {
+		var selectedOption = this.getOrderShippingMethodOption(arguments.orderShippingMethodOptionID);
+		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
+		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
+	}
 }

@@ -36,23 +36,11 @@
 Notes:
 
 --->
-
 <cfoutput>
-	<div class="svocheckoutshippingmethod">
-	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method</h3>
-	<cfif $.slatwall.cart().hasValidAccount() && $.slatwall.cart().hasValidOrderShippingAddress()>
-	<div id="checkoutShippingMethodContent" class="contentBlock">
-		<form action="?slatAction=frontend:checkout.saveordershippingmethod" method="post">
-		<cfset local.methodOptions = $.slatwall.cart().getOrderShippings()[1].getOrderShippingMethodOptions() />
-		<cfloop array="#local.methodOptions#" index="option">
-			<dl>
-				<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#">#option.getShippingMethod().getShippingMethodName()#</dt>
-				<dd>#DollarFormat(option.getTotalCost())#</dd>
-			</dl>
-		</cfloop>
-			<button type="submit">Save & Continue</button>
+	<div class="svoadminsettingdetailviewupdate">
+		<form action="#buildURL(action='admin:setting.updatefrontendviews')#" method="post">
+			<p>Only Click this button if you are 100% sure that you want to updated all of the views in you the <strong>#rc.$.event('siteid')#</strong> site directory</p>
+			<cf_ActionCaller action="admin:setting.updatefrontendviews" type="submit" class="button">
 		</form>
-	</div>
-	</cfif>
 	</div>
 </cfoutput>
