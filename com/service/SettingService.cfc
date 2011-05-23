@@ -53,8 +53,8 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	
 	public void function reloadConfiguration() {
 		var settingsList = list();
-		var shippingMethodsList = list(entityName="SlatwallShippingMethod");
-		var paymentMethodsList = list(entityName="SlatwallPaymentMethod");
+		var shippingMethodsList = list("ShippingMethod");
+		var paymentMethodsList = list("PaymentMethod");
 		
 		variables.permissions = {};
 		variables.settings = {};

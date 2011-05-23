@@ -38,6 +38,10 @@ Notes:
 --->
 <cfcomponent output="false">
 	
+	<cffunction name="init">
+		<cfreturn this />
+	</cffunction>
+	
 	<cffunction name="cfcookie">
 		<cfargument name="name" type="string" required="true" />
 		<cfargument name="value" type="any" required="true" />
@@ -50,6 +54,26 @@ Notes:
 	<cffunction name="cfhtmlhead">
 		<cfargument name="text" type="string" required="true" />
 		<cfhtmlhead text="#arguments.text#">
+	</cffunction>
+	
+	<cffunction name="cfinvoke" output="false">
+		<cfargument name="component" type="any" required="true" hint="CFC name or instance." />
+		<cfargument name="method" type="string" required="true" hint="Method name to be invoked." />
+		<cfargument name="theArgumentCollection" type="struct" default="#structNew()#" hint="Argument collection to pass to method invocation." />
+
+		<cfset var returnVariable = 0 />
+		
+		<cfinvoke
+			component="#arguments.component#"
+			method="#arguments.method#"
+			argumentcollection="#arguments.theArgumentCollection#"
+			returnvariable="returnVariable"
+		/>
+
+		<cfif not isNull( returnVariable )>
+			<cfreturn returnVariable />
+		</cfif>
+	
 	</cffunction>
 	
 </cfcomponent>

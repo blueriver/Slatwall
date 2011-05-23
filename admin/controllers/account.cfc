@@ -51,10 +51,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.accountID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.account = getAccountService().getByID(rc.accountID);
-		if(isNull(rc.account)) {
-			rc.account = getAccountService().getNewEntity();
-		}
+		rc.account = getAccountService().getAccount(rc.accountID, true);
 	}
 	
 	public void function create(required struct rc) {
@@ -70,7 +67,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
-		var account = getAccountService().getByID(rc.accountID);
+		var account = getAccountService().getAccount(rc.accountID);
 		var deleteResponse = getAccountService().delete(account);
 		if(deleteResponse.getStatusCode()) {
 			rc.message = deleteResponse.getMessage();		

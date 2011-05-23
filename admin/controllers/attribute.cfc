@@ -46,7 +46,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function create(required struct rc) {
-		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		if(!isNull(rc.attributeSet)) {
 			rc.newAttribute = getAttributeService().getNewEntity();
 			rc.create = true;
@@ -58,7 +58,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function edit(required struct rc) {
-		rc.attributeSet = getAttributeService().getByID(rc.attributeSetID,"SlatwallAttributeSet");
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		if(!isNull(rc.attributeSet)) {
 			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
 		} else {
