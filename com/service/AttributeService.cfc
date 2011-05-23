@@ -42,7 +42,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 	public void function saveAttributeSort(required string attributeIDs) {
 		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
 			var attributeID = listGetAt(arguments.attributeIDs,i);
-			var thisAttribute = getByID(attributeID);
+			var thisAttribute = this.getAttribute(attributeID);
 			thisAttribute.setSortOrder(i);
 		}
 	}
@@ -72,9 +72,9 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 				if( len(trim(thisOptionStruct.value)) && !listFind(optionValueList,trim(thisOptionStruct.value)) ) {
 					order++;
 					if(len(thisOptionStruct.attributeOptionID)) {
-						var thisAttributeOption = getByID(thisOptionStruct.attributeOptionID,"SlatwallAttributeOption");
+						var thisAttributeOption = this.getAttributeOption(thisOptionStruct.attributeOptionID);
 					} else {
-						var thisAttributeOption = getNewEntity("SlatwallAttributeOption");
+						var thisAttributeOption = newAttributeOption();
 					}
 					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
 					optionValueList = listAppend(optionValueList, thisAttributeOption.getAttributeOptionValue());

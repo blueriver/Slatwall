@@ -44,10 +44,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"shippingRates") ) {
 			for(var i=1; i<=arrayLen(arguments.data.shippingRates); i++) {	
 				if( len(arguments.data.shippingRates[i].shippingRateID) > 0 ) {
-					var rate = getByID(arguments.data.shippingRates[i].shippingRateID, "SlatwallShippingRate");
+					var rate = this.getShippingRate(arguments.data.shippingRates[i].shippingRateID);
 					rate.populate(data=arguments.data.shippingRates[i]);
 		         } else {
-		         	var rate = getNewEntity("SlatwallShippingRate");
+		         	var rate = this.newShippingRate();
 		         	rate.populate(data=arguments.data.shippingRates[i]);
 		         	arguments.entity.addShippingRate(rate);
 		         }
@@ -57,7 +57,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public array function populateOrderShippingMethodOptions(required any orderShipping) {
-		var shippingMethods = getDAO().list("SlatwallShippingMethod");
+		var shippingMethods = getDAO().list(entityName="SlatwallShippingMethod");
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
 		var methodOptions = [];
@@ -87,7 +87,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Loop over the rates return by the provider to match with a shipping method
 					for(var r=1; r<=arrayLen(ratesResponseBean.getMethodRateResponseBeans()); r++) {
 						if(ratesResponseBean.getMethodRateResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
-							var option = getNewEntity("SlatwallOrderShippingMethodOption");
+							var option = this.newOrderShippingMethodOption();
 							option.setShippingMethod(shippingMethods[m]);
 							option.setTotalCost(ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost());
 							option.setEstimatedArrivalDate(ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate());

@@ -42,16 +42,12 @@ component output="false" {
 		return this;
 	}
 	
-	public void function delete(required target) {
-		if(isArray(target)) {
-			for(var object in target) {
-				delete(object);
-			}
-		}
-		entityDelete(target);
-	}
-
 	public any function get( required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
+		// Adds the Slatwall Prefix to the entityName when needed.
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		
 		if ( isSimpleValue( idOrFilter ) && len( idOrFilter ) && idOrFilter != 0 ) {
 			var entity = entityLoadByPK( entityName, idOrFilter );
 		} else if ( isStruct( idOrFilter ) ){
@@ -68,11 +64,21 @@ component output="false" {
 	}
 
 	function list( string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+		// Adds the Slatwall Prefix to the entityName when needed.
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		
 		return entityLoad( entityName, filterCriteria, sortOrder, options );
 	}
 
 
 	function new( required string entityName ) {
+		// Adds the Slatwall Prefix to the entityName when needed.
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		
 		return entityNew( entityName );
 	}
 
@@ -89,6 +95,26 @@ component output="false" {
 		return target;
 	}
 	
+	public void function delete(required target) {
+		if(isArray(target)) {
+			for(var object in target) {
+				delete(object);
+			}
+		}
+		entityDelete(target);
+	}
+
+	public any function getSmartList(required string entityName, struct data={}){
+		// Adds the Slatwall Prefix to the entityName when needed.
+		if(left(arguments.entityName,8) != "Slatwall") {
+			arguments.entityName = "Slatwall#arguments.entityName#";
+		}
+		
+		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
+	
+		return smartList;
+	}
+	
 	// @hint checks whether another entity has the same value for the given property
 	public boolean function isDuplicateProperty( required string propertyName, required any entity ) {
 		var entityName = arguments.entity.getClassName();
@@ -96,12 +122,4 @@ component output="false" {
 		var propertyValue = evaluate("arguments.entity.get#arguments.propertyName#()");
 		return arrayLen(ormExecuteQuery("from #entityName# e where e.#arguments.propertyName# = :propValue and e.id != :entityID", {propValue=propertyValue, entityID=idValue}));
 	}
-
-	public any function getSmartList(required string entityName, struct data={}){
-		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
-	
-		return smartList;
-	}
-	
-	
 }

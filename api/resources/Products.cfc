@@ -39,7 +39,7 @@
 component extends="BaseResource" taffy_uri="/products/" {
 
 	public any function get() {
-		var productList = getService("productService").list();
+		var productList = getService("productService").listProduct();
 		return representationOf(productList).withStatus(200);
 	}
 	

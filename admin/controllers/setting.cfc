@@ -151,13 +151,10 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.shippingMethodID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.shippingMethod = getSettingService().getByID(rc.shippingMethodID, "SlatwallShippingMethod");
-		if(isNull(rc.shippingMethod)) {
-			rc.shippingMethod = getSettingService().getNewEntity("SlatwallShippingMethod");
-		}
+		rc.shippingMethod = getSettingService().getShippingMethod(rc.shippingMethodID, true);
 		
 		rc.shippingServices = getSettingService().getShippingServices();
-		rc.blankShippingRate = getShippingService().getNewEntity("SlatwallShippingRate");
+		rc.blankShippingRate = getShippingService().newShippingRate();
 	}
 	
 	public void function deleteShippingMethod(required struct rc) {
@@ -243,7 +240,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.paymentMethodID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.paymentMethod = getSettingService().getByID(rc.paymentMethodID, "SlatwallPaymentMethod");
+		rc.paymentMethod = getSettingService().getPaymentMethod(rc.paymentMethodID);
 		if(isNull(rc.paymentMethod)) {
 			getFW().redirect(action="admin:setting.listPaymentMethods");
 		}	
@@ -258,7 +255,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function savePaymentMethod(required struct rc) {
-		rc.paymentMethod = getSettingService().getByID(rc.paymentMethodID, "SlatwallPaymentMethod");
+		rc.paymentMethod = getSettingService().getPaymentMethod(rc.paymentMethodID, true);
 		rc.paymentMethod = getPaymentService().savePaymentMethod(entity=rc.paymentMethod, data=rc);
 
 		if(!rc.paymentMethod.hasErrors()) {
@@ -274,19 +271,15 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Address Zones
 	public void function listAddressZones(required struct rc) {
-		rc.addressZones = getSettingService().list("SlatwallAddressZone");
+		rc.addressZones = getSettingService().listAddressZone();
 	}
 	
 	public void function detailAddressZone(required struct rc) {
 		param name="rc.addressZoneID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.addressZone = getSettingService().getByID(rc.addressZoneID, "SlatwallAddressZone");
-		if(isNull(rc.addressZone)) {
-			rc.addressZone = getSettingService().getNewEntity("SlatwallAddressZone");
-		}
-		
-		rc.countriesArray = getSettingService().list("SlatwallCountry");
+		rc.addressZone = getSettingService().getAddressZone(rc.addressZoneID, true);
+		rc.countriesArray = getSettingService().listCountry();
 	}
 	
 	public void function editAddressZone(required struct rc) {
@@ -329,5 +322,5 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
-	}	
+	}
 }

@@ -46,9 +46,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function create(required struct rc) {
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		if(!isNull(rc.optionGroup)) {
-			rc.newOption = getOptionService().getNewEntity();
+			rc.newOption = getOptionService().newOption();
 			rc.create = true;
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 			getFW().setView("option.edit");
@@ -58,7 +58,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function edit(required struct rc) {
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		if(!isNull(rc.optionGroup)) {
 			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
 		} else {
@@ -78,16 +78,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     public void function list(required struct rc) {
         param name="rc.listby" default="optiongroups";
         rc.orderby="optiongroup_optiongroupname|A^sortOrder|A";
-        rc.options = getOptionService().getSmartList(data=arguments.rc);
-        rc.optionGroups = getOptionService().list(entityName="SlatwallOptionGroup",sortby="sortOrder Asc");
+        rc.options = getOptionService().getSmartList(entityName="SlatwallOption", data=arguments.rc);
+        rc.optionGroups = getOptionService().listOptionGroupOrderBySortOrder();
     }
 	
 	public void function save(required struct rc) {
-		if(structKeyExists(rc,"optionid")) {
-			rc.option = getOptionService().getByID(rc.optionID);
-		} else {
-			rc.option = getOptionService().getNewEntity();
-		}		
+		param name="rc.optionID" default="";
+		rc.option = getOptionService().getOption(rc.optionID,true);
 					
 		// upload the image and return the result struct
 		if(rc.optionImageFile != "") {
@@ -102,7 +99,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
 		} else {
 			//put optionGroup in rc for form
-			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 			rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
 			if(rc.option.isNew()) {
 				rc.newOption = rc.option;
@@ -122,7 +119,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
-		var option = getOptionService().getByID(rc.optionid);
+		var option = getOptionService().getOption(rc.optionid);
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
 		var deleteResponse = getOptionService().delete(option);
 		if(deleteResponse.getStatusCode()) {
@@ -136,12 +133,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function createOptionGroup(required struct rc) {
 	   rc.edit=true;
-	   rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
+	   rc.optionGroup = getOptionService().newOptionGroup();
 	   getFW().setView("admin:option.detailoptiongroup");
 	}
 	
 	public void function detailOptionGroup(required struct rc) {
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID,"SlatwallOptionGroup");
 		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
 		} else {
@@ -151,7 +148,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function editOptionGroup(required struct rc) {
 		rc.edit=true;
-		rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		if(!isNull(rc.optionGroup)) {
 			if( len(rc.optionGroup.getOptionGroupName()) ) {
 				rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
@@ -162,12 +159,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function saveOptionGroup(required struct rc) {
-		if(len(trim(rc.optiongroupID))) {
-			rc.optionGroup = getOptionService().getByID(rc.optionGroupID,"SlatwallOptionGroup");
-		} else {
-			rc.optionGroup = getOptionService().getNewEntity("SlatwallOptionGroup");
-		}
-
+		param name="rc.optionGroupID" default="";
+		
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID,true);
+		
 		// upload the image and return the result struct
 		if(rc.optionGroupImageFile != "") {
 			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionGroupImageFile","","makeUnique");
@@ -192,7 +187,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteOptionGroup(required struct rc) {
-		var optionGroup = getOptionService().getByID(rc.optiongroupid,"SlatwallOptionGroup");
+		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
 		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
 		if(deleteResponse.getStatusCode()) {
 			rc.message = deleteResponse.getMessage();

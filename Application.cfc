@@ -100,9 +100,6 @@ component extends="framework" output="false" {
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ));
 		
-		// Setup run Setting Service reload config
-		getBeanFactory().getBean("settingService").reloadConfiguration();
-		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
@@ -119,6 +116,8 @@ component extends="framework" output="false" {
 			
 			// This will verify that all of the required slatwall elements are in Mura
 			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmend') != true) {
+				// Setup run Setting Service reload config
+				getBeanFactory().getBean("settingService").reloadConfiguration();
 				getBeanFactory().getBean("settingService").verifyMuraRequirements();
 				getPluginConfig().getApplication().setValue('applicationSetupConfirmend', true);
 			}

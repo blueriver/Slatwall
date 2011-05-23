@@ -36,13 +36,14 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" output="false" accessors="true"  {
+component extends="BaseService" output="false" accessors="true"  {
 	
 	// Mura Service Injection
 	property name="configBean" type="any";
 	property name="contentManager" type="any";
 	
 	// Global Properties Set in Application Scope
+	
 	property name="settings" type="struct";
 	property name="permissions" type="struct";
 	property name="shippingMethods" type="struct";
@@ -50,11 +51,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	property name="paymentMethods" type="struct";
 	property name="paymentServices" type="struct";
 	property name="permissionActions" type="struct";
-	
+		
 	public void function reloadConfiguration() {
-		var settingsList = list();
-		var shippingMethodsList = list("ShippingMethod");
-		var paymentMethodsList = list("PaymentMethod");
+		var settingsList = this.listSetting();
+		var shippingMethodsList = this.listShippingMethod();
+		var paymentMethodsList = this.listPaymentMethod();
 		
 		variables.permissions = {};
 		variables.settings = {};
@@ -164,7 +165,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		if(structKeyExists(variables.settings, arguments.settingName)) {
 			return variables.settings[ arguments.settingName ];
 		} else {
-			return getNewEntity();	
+			return this.newSetting();	
 		}
 	}
 	
@@ -172,7 +173,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		if(structKeyExists(variables.permissions, arguments.permissionName)) {
 			return variables.permissions[ arguments.permissionName ];
 		} else {
-			return getNewEntity();	
+			return this.newSetting();	
 		}
 	}
 	
@@ -253,12 +254,12 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"addressZoneLocations") ) {
 			for(var i in arguments.data.addressZoneLocations) {
 				if(left(i,3) == "new" && len(i) >= 4) {
-					var addressZoneLocation = getNewEntity("SlatwallAddressZoneLocation");
+					var addressZoneLocation = newAddressZoneLocation();
 					addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
 					addressZoneLocation.setAddressZone(arguments.entity);
 					arguments.entity.addAddressZoneLocation(addressZoneLocation);
 				} else {
-					var addressZoneLocation = getByID(i,"SlatwallAddressZoneLocation");
+					var addressZoneLocation = this.getAddressZoneLocation(i);
 					if(!isNull(addressZoneLocation)) {
 						addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
 						addressZoneLocation.setAddressZone(arguments.entity);

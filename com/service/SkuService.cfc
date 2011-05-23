@@ -68,7 +68,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var comboList = getOptionCombinations(options);
 			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice);
 		} else {  // no options were selected so create a default sku
-			var thisSku = getNewEntity();
+			var thisSku = this.newSku();
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
@@ -94,7 +94,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 
 	public any function createSkuFromStruct (required struct data, required any product) {
-		var thisSku = getNewEntity();
+		var thisSku = this.newSku();
 		thisSku.setProduct(arguments.product);
 		thisSku.setPrice(arguments.data.price);
 		thisSku.setListPrice(arguments.data.listprice);
@@ -102,7 +102,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// loop through optionID's within the option combination and set them into the sku
 		for( j=1;j<=listLen(arguments.data.options);j++ ) {
 			var thisOptionID = listGetAt(arguments.data.options,j);
-			var thisOption = getByID(thisOptionID,"SlatwallOption");
+			var thisOption = this.getShippingRate(thisOptionID,"SlatwallOption");
 			thisSku.addOption(thisOption);
 			// generate code from options to be used in Sku Code
 			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
@@ -124,7 +124,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		for(var i=1;i<=arrayLen(arguments.skus);i++) {
 			local.skuStruct = arguments.skus[i];
 			if( len(local.skuStruct.skuID) > 0 ) {
-				local.thisSku = getByID(local.skuStruct.skuID);
+				local.thisSku = this.getSku(local.skuStruct.skuID);
 				// set the new sku Code if one was entered
 				if(len(trim(local.skuStruct.skuCode)) > 0) {
 					local.thisSku.setSkuCode(local.skuStruct.skuCode);

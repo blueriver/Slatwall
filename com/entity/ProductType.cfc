@@ -196,8 +196,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=getProductTypeID()};
     			var attributeSetAssignmentArray = new Slatwall.com.utility.SmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
     			if(!arrayLen(attributeSetAssignmentArray)){
-	    			var attributeSetAssignment = getService("AttributeService").getNewEntity("SlatwallProductTypeAttributeSetAssignment");
-	    			var attributeSet = getService("AttributeService").getByID(attributeSetID,"SlatwallAttributeSet");
+	    			var attributeSetAssignment = getService("AttributeService").newProductTypeAttributeSetAssignment();
+	    			var attributeSet = getService("AttributeService").getAttributeSet(attributeSetID);
 	    			attributeSetAssignment.setProductType(this);
 	    			attributeSetAssignment.setAttributeSet(attributeSet);
 	    			addAttributeSetAssignment(attributeSetAssignment);

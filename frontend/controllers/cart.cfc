@@ -57,7 +57,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.orderShippingID" default="";
 		
 		// Get the product
-		var product = getProductService().getByID(rc.productID);
+		var product = getProductService().getProduct(rc.productID);
 		
 		// Find the sku based on the product options selected
 		var sku = product.getSkuBySelectedOptions(rc.selectedOptions);

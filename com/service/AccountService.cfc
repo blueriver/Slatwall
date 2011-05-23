@@ -50,9 +50,9 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		if(isnull(account)) {
 			// If no account exists, create a new one and save it linked to the user that just logged in.
-			var account = getNewEntity();
+			var account = this.newAccount();
 			account.setMuraUserID(arguments.muraUser.getUserID());
-			var accountEmail = getNewEntity(entityName="SlatwallAccountEmailAddress");
+			var accountEmail = this.newAccountEmailAddress();
 			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
 			accountEmail.setPrimaryFlag(1);
 			accountEmail.setAccount(account);
@@ -61,7 +61,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Add a primary e-mail to the account if one doesn't exist in slatwall but does in mura
 		if(account.getPrimaryEmailAddress() == "" && arguments.muraUser.getEmail() != "") {
-			var accountEmail = getNewEntity(entityName="SlatwallAccountEmailAddress");
+			var accountEmail = this.newAccountEmailAddress();
 			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
 			accountEmail.setPrimaryFlag(1);
 			accountEmail.setAccount(account);
@@ -73,7 +73,7 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	public any function createNewAccount(required struct data) {
 		// Create new Account
-		var newAccount = getNewEntity();
+		var newAccount = this.newAccount();
 		var errorsExist = false;
 		
 		// Populate the account from the data
@@ -87,7 +87,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Create a Primary e-mail
 		if( structKeyExists(arguments.data, "emailAddress") ) {
-			var newEmailAddress = getNewEntity("SlatwallAccountEmailAddress");
+			var newEmailAddress = this.newAccountEmailAddress();
 			newEmailAddress.setEmailAddress(arguments.data.emailAddress);
 			newEmailAddress.setPrimaryFlag(1);
 			newEmailAddress.setAccount(newAccount);
@@ -99,7 +99,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Create a primary Phone Number
 		if( structKeyExists(arguments.data, "phoneNumber") ) {
-			var newPhoneNumber = getNewEntity("SlatwallAccountPhoneNumber");
+			var newPhoneNumber = this.newAccountPhoneNumber();
 			newPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
 			newPhoneNumber.setPrimaryFlag(1);
 			newPhoneNumber.setAccount(newAccount);

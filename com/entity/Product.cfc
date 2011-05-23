@@ -411,27 +411,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return arrayLen(getOptionGroups());
 	}
 	
-	/*
-	public any function getDefaultSku() {
-		if( !structKeyExists(variables, "defaultSku")) {
-			var skus = getSkus();
-			for(var i = 1; i<= arrayLen(skus); i++) {
-				if(skus[i].getDefaultFlag()) {
-					variables.defaultSku = skus[i];
-				}
-			}
-			if( !isNew() && !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
-				skus[1].setDefaultFlag(true);
-				getService("skuService").save(entity=skus[1]);
-				variables.defaultSku = skus[1];
-			} else if ( !structKeyExists(variables, "defaultSku") ) {
-				variables.defaultSku = getService("skuService").getNewEntity();
-			}
-		}
-		return variables.defaultSku;
-	}
-	*/
-	
 	// Start: Functions that deligate to the default sku
     public string function getImageDirectory() {
     	return getDefaultSku().getImageDirectory();	
@@ -570,7 +549,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(arrayLen(attributeValue)){
 			return attributeValue[1];
 		}else{
-			return getService("ProductService").getNewEntity("SlatwallProductAttributeValue");
+			return getService("ProductService").newProductAttributeValue();
 		}
 	}
 	
@@ -580,13 +559,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(structKeyExists(data,"attributes")){
 			for(var attributeID in data.attributes){
 				for(var attributeValueID in data.attributes[attributeID]){
-					var attributeValue = getService("AttributeService").getByID(attributeValueID,"SlatwallProductAttributeValue");
-					if(isNull(attributeValue)){
-						var attributeValue = getService("AttributeService").getNewEntity("SlatwallProductAttributeValue");
-					}
+					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
 					attributeValue.setAttributeValue(data.attributes[attributeID][attributeValueID]);
 					if(attributeValue.isNew()){
-						var attribute = getService("AttributeService").getByID(attributeID,"SlatwallAttribute");
+						var attribute = getService("AttributeService").getAttribute(attributeID);
 						attributeValue.setAttribute(attribute);
 						addAttribtueValue(attributeValue);
 					}

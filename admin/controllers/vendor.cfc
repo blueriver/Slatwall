@@ -49,11 +49,11 @@ component extends="baseController" output="false" {
 	}
 	
 	public void function detail(required struct rc) {
-		rc.vendor = variables.vendorService.getByID(ID=rc.vendorID);
+		rc.vendor = variables.vendorService.getVendor(rc.vendorID, true);
 	}
 	
 	public void function list(required struct rc) {
-		rc.vendorSmartList = getVendorService().getSmartList(data=arguments.rc);
+		rc.vendorSmartList = getVendorService().getSmartList(entityName="Vendor", data=arguments.rc);
 	}
 	
 }
