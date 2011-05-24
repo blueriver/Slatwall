@@ -57,7 +57,7 @@ Notes:
 				<cfset local.thisPaymentMethod = rc.paymentMethods[local.thisPaymentMethodID] />
 				<tr>
 					<cfset local.paymentMethodMetaData = getMetaData(local.thisPaymentMethod) />
-					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodCode())#</td>
+					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodID())#</td>
 					<td>
 						<cfif local.thisPaymentMethod.getActiveFlag()>
 							<img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />

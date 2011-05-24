@@ -260,7 +260,7 @@ component extends="BaseController" output="false" accessors="true" {
 			getFW().redirect(action="admin:setting.listPaymentMethods");
 		}	
 		rc.paymentServices = getSettingService().getPaymentServices();
-		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodCode());
+		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodID());
 	}
 	
 	public void function editPaymentMethod(required struct rc) {
@@ -277,7 +277,7 @@ component extends="BaseController" output="false" accessors="true" {
 			getFW().redirect(action="admin:setting.listpaymentmethods", querystring="reload=true&message=#rc.$.Slatwall.rbKey('admin.setting.savepaymentmethod_success')#");
 		} else {
 			rc.paymentServices = getSettingService().getPaymentServices();
-			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentmethod") & ": #rc.$.Slatwall.rbKey('rc.paymentMethod.getPaymentMethodCode()')#";
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentmethod") & ": #rc.$.Slatwall.rbKey('rc.paymentMethod.getPaymentMethodID()')#";
 	   		getFW().setView(action="admin:setting.editpaymentmethod");
 		}
 	}
