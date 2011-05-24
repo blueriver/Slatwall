@@ -57,7 +57,7 @@ Notes:
 				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
 					<th>#local.thisOptionGroup.getOptionGroupName()#</th>
 				</cfloop>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imagePath")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imageFile")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
 				<cfif rc.edit>
 					<th></th>
@@ -101,9 +101,9 @@ Notes:
 				</cfloop>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
-						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImagePath()#</a>
+						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImageFile()#</a>
 					<cfelse>
-						#local.thisSku.getImagePath()#
+						#local.thisSku.getImageFile()#
 					</cfif>		
 				</td>
 				<td>
