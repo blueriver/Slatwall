@@ -57,6 +57,10 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		var isValid = createObject("component",validatorClass).init(argumentCollection=arguments);
 		
 		if(!isValid){
+			// if the error message wasn't passed in, get it now
+			if(!structKeyExists(arguments,"message")) {
+				arguments.message = getMessageByRule(arguments.rule,arguments.objectName);
+			}
 			var error = getError(argumentCollection=arguments);
 			return error;
 		} else {
@@ -137,11 +141,16 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 	
 	// @hint returns error message by validation rule from the resource bundle
-	private string function getMessageByRule(required string rule, required string propertyName, required any entity){
-		//first remove the "Slatwall" prefix from the entity name
-		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
-		var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
-		if(right(message,8) == "_missing") {
+	private string function getMessageByRule(required string rule, required string propertyName, any entity){
+		if(structKeyExists(arguments,"entity")) {
+			//if this is an entity-related eroor, first remove the "Slatwall" prefix from the entity name
+			var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+			var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+			if(right(message,8) == "_missing") {
+				message = rbKey("validator.#arguments.rule#");
+			}	
+		} else {
+			// error isn't necessarily entity-related, so get generic message for rule
 			message = rbKey("validator.#arguments.rule#");
 		}
 		return message;

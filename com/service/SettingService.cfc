@@ -165,7 +165,9 @@ component extends="BaseService" output="false" accessors="true"  {
 		if(structKeyExists(variables.settings, arguments.settingName)) {
 			return variables.settings[ arguments.settingName ];
 		} else {
-			return this.newSetting();	
+			var setting = this.newSetting();
+			setting.setSettingName(arguments.settingName);
+			return	setting;
 		}
 	}
 	
@@ -249,7 +251,44 @@ component extends="BaseService" output="false" accessors="true"  {
 		}
 		return variables.paymentServices;
 	}
+
+	public any function savePaymentService(required struct data) {
+		var settingsStruct = {};
+		var errorList = "";
+		for(var item in arguments.data) {
+			if(isSimpleValue(arguments.data[item]) && listFirst(item,"_") == "paymentService") {
+				var thisSetting = getBySettingName(item);
+				thisSetting.setSettingValue(arguments.data[item]);
+				var rawSettingName = listLast(thisSetting.getSettingName(),"_");
+				// look to see if validation should be applied to this setting
+				if( structKeyExists(arguments.data,"validate_" & item) ) {
+					errorList = listAppend( errorList,validateServiceSetting(thisSetting, rawSettingName, arguments.data["validate_" & item]) );
+				}
+				thisSetting = save(entity=thisSetting);
+				settingsStruct[ rawSettingName ] = thisSetting.getSettingValue();
+			}
+		}
+		if(listLen(errorList)) {
+			settingsStruct[ "errors" ] = errorList;
+		}
+		return settingsStruct;
+	}
 	
+	public string function validateServiceSetting( required any setting, required string settingName, required string validationCodes ) {
+		var errorList = "";
+		for( var i = 1; i<= listLen(arguments.validationCodes); i++ ) {
+			local.thisValidation = listGetAt( arguments.validationCodes,i );
+			local.thisRule = listFirst(local.thisValidation,"_");
+			local.thisCriteria = listLen(local.thisValidation,"_") == 2 ? listLast(local.thisValidation,"_") : "";
+			local.thisError = getValidator().validate(local.thisRule,local.thisCriteria,arguments.setting.getSettingValue(),"settingValue",arguments.settingName);
+			if(!structIsEmpty(thisError)) {
+				local.errorList = listAppend(local.errorList,thisError.message);
+				arguments.setting.addError(argumentCollection=thisError);	
+			}
+		}
+		return errorList;
+	}
+
 	public any function saveAddressZone(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"addressZoneLocations") ) {
 			for(var i in arguments.data.addressZoneLocations) {
