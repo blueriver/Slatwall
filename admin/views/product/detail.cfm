@@ -64,7 +64,6 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#">
 		<cf_PropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
 

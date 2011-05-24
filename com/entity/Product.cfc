@@ -54,7 +54,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
-	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -85,6 +84,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent="false";
 	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
 	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
+	property name="shippingWeight" type="numeric" validateNumeric persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
@@ -450,6 +450,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		// brand new products won't have a default SKU yet but need this method for create form
 		if( structKeyExists(variables,"defaultSku") ) {
 			return getDefaultSku().getLivePrice();
+		} else {
+			return 0;
+		}
+	}
+
+	public numeric function getShippingWeight() {
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getShippingWeight();
 		} else {
 			return 0;
 		}

@@ -76,8 +76,8 @@ a.button:hover {
 	text-decoration: none;
 }
 
-div.svoadminproductdetail {
-	width: 920px;
+div.svoadminproductdetail form {
+	width: 100%;
 	margin: 0;
 	padding: 0;
 }

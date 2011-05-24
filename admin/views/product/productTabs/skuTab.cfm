@@ -57,13 +57,14 @@ Notes:
 				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
 					<th>#local.thisOptionGroup.getOptionGroupName()#</th>
 				</cfloop>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imagePath")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imageFile")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
 				<cfif rc.edit>
 					<th></th>
 				</cfif>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
@@ -101,9 +102,9 @@ Notes:
 				</cfloop>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
-						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImagePath()#</a>
+						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImageFile()#</a>
 					<cfelse>
-						#local.thisSku.getImagePath()#
+						#local.thisSku.getImageFile()#
 					</cfif>		
 				</td>
 				<td>
@@ -120,16 +121,23 @@ Notes:
 				</cfif>
 				<td>
 					<cfif rc.edit>
-						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#local.thisSku.getPrice()#" />
+						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />
 					<cfelse>
 						#DollarFormat(local.thisSku.getPrice())#
 					</cfif>
 				</td>
 				<td>
 					<cfif rc.edit>
-						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#local.thisSku.getListPrice()#" />         
+						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#decimalFormat(local.thisSku.getListPrice())#" />         
 					<cfelse>
 						#DollarFormat(local.thisSku.getListPrice())#
+					</cfif>
+				</td>
+				<td>
+					<cfif rc.edit>
+						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
+					<cfelse>
+						#local.thisSku.getShippingWeight()#
 					</cfif>
 				</td>
 				<cfif rc.product.getSetting("trackInventoryFlag")>

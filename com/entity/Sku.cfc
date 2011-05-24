@@ -43,6 +43,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired;
 	property name="listPrice" ormtype="float" default="0";
 	property name="price" ormtype="float" default="0";
+	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges";
+	property name="imageFile" ormtype="string" length="50";
 	//property name="defaultFlag" ormtype="boolean" default="false";
 	
 	// Remote properties
@@ -145,6 +147,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/products/";	
     }
     
+    public string function getImagePath() {
+    	return this.getImageDirectory() & this.getImageFile();
+    }
+    
     public numeric function getQOH() {
     	if(isNull(variables.qoh)) {
     		variables.qoh = 0;
@@ -223,21 +229,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.class = "skuImage";	
 		}
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
-	}
-	
-	public string function getImagePath() {
-		if(!structKeyExists(variables, "imagePath") or isNull(variables.imagePath)) {
-			// Genreates the image path based upon product code, and image options for this sku
-			var options = getOptions();
-			var optionString = "";
-			for(var i=1; i<=arrayLen(options); i++){
-				if(options[i].getOptionGroup().getImageGroupFlag()){
-					optionString &= "-#options[i].getOptionCode()#";
-				}
-			}
-			variables.imagePath = getImageDirectory() & "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
-		}
-		return variables.imagePath;
 	}
 	
 	public string function getResizedImagePath(string size, numeric width=0, numeric height=0) {
