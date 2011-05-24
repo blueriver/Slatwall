@@ -43,56 +43,98 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="settingService" type="any";
 	
 	public void function detail(required struct rc) {
+		param name="rc.accountID" default="";
+		param name="rc.shippingAddressID" default="";
+		param name="rc.paymentAddressID" default="";
+		param name="rc.paymentID" default="";
+		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
 			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
 		}
 		
-		// Populate order Shipping Methods if needed.
-		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
-		
-		// Populate Countries Array
+		// Setup all of the objects for their views
 		rc.countriesArray = getSettingService().listCountry();
 		
-		if(!isNull(rc.$.slatwall.cart().getOrderShippings()[1].getAddress())) {
+		if( rc.accountID != "" ) {
+			rc.account = getAccountService().getAccount(rc.accountID, true);
+		} else if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
+			rc.account = rc.$.slatwall.cart().getAccount();
+		} else {
+			rc.account = getAccountService().newAccount();
+		}
+		
+		if(rc.shippingAddressID != "") {
+			rc.shippingAddress = getAccountService().getOrderShippingAddress(rc.shippingAddressID, true);	
+		} else if (!isNull(rc.$.slatwall.cart().getOrderShippings()[1].getAddress())) {
 			rc.shippingAddress = rc.$.slatwall.cart().getOrderShippings()[1].getAddress();
 		} else {
 			rc.shippingAddress = getAccountService().newAddress();
 		}
+		
+		if( rc.paymentID != "") {
+			rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
+		} else if( !isNull(rc.$.slatwall.cart().getOrderPayments()) && arrayLen(rc.$.slatwall.cart().getOrderPayments()) ) {
+			rc.payment = rc.$.slatwall.cart().getOrderShippings()[1];
+		} else {
+			rc.payment = getOrderService().newOrderPayment();
+		}
+		
+		// Populate order Shipping Methods if needed.
+		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
 	}
 	
-	public void function saveNewOrderAccount(required struct rc) {
-		rc.$.slatwall.cart().setAccount(getAccountService().createNewAccount(data=rc));
-		getOrderService().save(rc.$.slatwall.cart());
-		getFW().redirectExact($.createHREF(filename='checkout'));
+	public void function saveAccount(required struct rc) {
+		detail(rc);
+		
+		account = getAccountService.saveAccount(account, rc);
+		
+		if(!account.hasErrors()) {
+			rc.$.slatwall.cart().setAccount(account);
+		}
+		
+		setView("frontend:checkout.detail");
 	}
 	
-	public void function saveOrderShippingAddress(required struct rc) {
-		param name="rc.orderShippingAddressID" default="";
+	public void function saveShippingAddress(required struct rc) {
+		detail(rc);
 		
-		rc.$.slatwall.cart().getOrderShippings()[1];
-		var address = getAccountService().getAddress(rc.orderShippingAddressID, true);
+		rc.shippingAddress = getAccountService().save(rc.shippingAddress,rc);
 		
-		address = getAccountService().save(address,rc);
 		if(!address.hasErrors()) {
 			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(address);
-	   		getFW().redirectExact($.createHREF(filename='checkout'));
-		} else {
-			getFW().setView("frontend:checkout.detail");
 		}
-	}
-	
-	public void function saveOrderShippingMethod(required struct rc) {
-		param name="rc.orderShippingMethodOptionID" default="";
-		getOrderService().setOrderShippingMethodFromMethodOptionID(orderShipping=rc.$.slatwall.cart().getOrderShippings()[1], orderShippingMethodOptionID=rc.orderShippingMethodOptionID);
-		getFW().redirectExact($.createHREF(filename='checkout'));
-	}
-	
-	public void function saveOrderPayment(required struct rc) {
-		param name="rc.orderPaymentID" default="";
 		
-		var orderPayment = getPaymentService().save(getPaymentService().getOrderPayment(rc.orderPaymentID, true), rc);
-		orderPayment.setOrder(rc.$.slatwall.cart());
-		getFW().redirectExact($.createHREF(filename='checkout'));
+		getFW().setView("frontend:checkout.detail");
+	}
+	
+	public void function saveShippingMethod(required struct rc) {
+		param name="rc.orderShippingMethodOptionID" default="";
+		
+		detail(rc);
+		
+		getOrderService().setOrderShippingMethodFromMethodOptionID(orderShipping=rc.$.slatwall.cart().getOrderShippings()[1], orderShippingMethodOptionID=rc.orderShippingMethodOptionID);
+		
+		getFW().setView("frontend:checkout.detail");
+	}
+	
+	public void function processOrder(required struct rc) {
+		detail(rc);
+		
+		var orderProcessOK = false;
+		
+		rc.payment = getOrderService.processOrderPayment(rc.payment, rc);
+		
+		if(!rc.payment.hasErrors()) {
+			rc.$.slatwall.cart().addOrderPayment(rc.payment);
+			processOK = getOrderService().processOrder(rc.$.slatwall.cart());
+		}
+		
+		if(processOK) {
+			// Redirect to order Confirmation
+			getFW().redirectExact($.createHREF(filename='my-account'), false);
+		}
+		
+		getFW().setView("frontend:checkout.detail");
 	}
 }

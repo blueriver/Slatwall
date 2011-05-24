@@ -50,7 +50,7 @@ Notes:
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
 							<dl>
-								<dt class="spdcountry"><label for="country">#$.rbKey('entity.address.countryCode')#</label></dt>
+								<dt class="spdcountry"><label for="country">#$.slatwall.rbKey('entity.address.countryCode')#</label></dt>
 								<dd id="spdcountry"><cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="countryCode"></dd>
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="name" edit="true" />
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="company" edit="true" />

@@ -41,13 +41,7 @@ Notes:
 		<cfinclude template="account.cfm" />
 		<cfinclude template="shippingaddress.cfm" />
 		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="payment.cfm" />
 		<cfinclude template="items.cfm" />
-		
-		<cfif $.slatwall.cart().isValidForProcessing()>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
-				<button type="submit">Submit Order</button>
-			</form>
-		</cfif>
+		<cfinclude template="payment.cfm" />
 	</div>
 </cfoutput>
