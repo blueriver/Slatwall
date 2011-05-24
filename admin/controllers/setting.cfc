@@ -131,6 +131,19 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function saveShippingService(required struct rc) {
+		rc.settingsStruct = getSettingService().saveShippingService(rc);
+
+		if( !getService("requestCacheService").getValue("ormHasErrors") ) {
+			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
+			getFW().redirect(action="admin:setting.listShippingServices", queryString="reload=true", preserve="message");
+		} else {
+			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
+			rc.messageType = "error";
+			getFW().redirect(action="admin:setting.editShippingService", queryString="shippingServicePackage=#rc.shippingServicePackage#", preserve="settingsStruct,message,messageType");
+		}
+	}
+	
+/*	public void function saveShippingService(required struct rc) {
 		for(var item in rc) {
 			if(!isObject(item) && listGetAt(item,1,"_") == "shippingservice") {
 				var setting = getSettingService().getBySettingName(item);
@@ -140,7 +153,7 @@ component extends="BaseController" output="false" accessors="true" {
 			}
 		}
 		getFW().redirect(action="admin:setting.listshippingservices", queryString="reload=true");
-	}
+	}*/
 	
 	// Shipping Methods
 	public void function listShippingMethods(required struct rc) {
@@ -229,7 +242,6 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_error");
 			rc.messageType = "error";
 			getFW().redirect(action="admin:setting.editPaymentService", queryString="paymentServicePackage=#rc.paymentServicePackage#", preserve="settingsStruct,message,messageType");
-			//rc.itemTitle = $.Slatwall.rbKey("admin.setting.editPaymentService") & ": " & local.serviceName;
 		}
 	}
 	

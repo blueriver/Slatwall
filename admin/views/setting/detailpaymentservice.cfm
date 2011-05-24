@@ -44,12 +44,6 @@ Notes:
 <cfparam name="rc.settingsStruct" default="#structNew()#" />
 
 <cfset local.serviceMeta = getMetaData(rc.paymentService) />
-<!---<cfif !structIsEmpty(rc.settingsStruct)>
-	<cfset request.layout = false />
-	<cfdump var="#local.serviceMeta#" >
-	<cfdump var="#rc.settingsStruct#" abort="true" >
-</cfif>
---->
 
 <cfoutput>
 	<div class="svoadminsettingdetailPaymentService">

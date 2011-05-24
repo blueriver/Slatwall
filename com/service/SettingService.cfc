@@ -235,6 +235,28 @@ component extends="BaseService" output="false" accessors="true"  {
 		return variables.shippingServices;
 	}
 
+	public any function saveShippingService(required struct data) {
+		var settingsStruct = {};
+		var errorList = "";
+		for(var item in arguments.data) {
+			if(isSimpleValue(arguments.data[item]) && listFirst(item,"_") == "shippingService") {
+				var thisSetting = getBySettingName(item);
+				thisSetting.setSettingValue(arguments.data[item]);
+				var rawSettingName = listLast(thisSetting.getSettingName(),"_");
+				// look to see if validation should be applied to this setting
+				if( structKeyExists(arguments.data,"validate_" & item) ) {
+					errorList = listAppend( errorList,validateServiceSetting(thisSetting, rawSettingName, arguments.data["validate_" & item]) );
+				}
+				thisSetting = save(entity=thisSetting);
+				settingsStruct[ rawSettingName ] = thisSetting.getSettingValue();
+			}
+		}
+		if(listLen(errorList)) {
+			settingsStruct[ "errors" ] = errorList;
+		}
+		return settingsStruct;
+	}
+
 	public any function getPaymentServices(boolean reload=false) {
 		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.paymentServices) || arguments.reload) {
 			variables.paymentServices = structNew();
