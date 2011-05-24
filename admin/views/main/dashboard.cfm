@@ -89,9 +89,3 @@ Notes:
 	</div>
 </div>
 </cfoutput>
-
-<!---
-	<cfset paymentService = getBeanFactory().getBean("settingService").getByPaymentServicePackage("PayFlowPro") />
-	
-	<cfdump var="#paymentService#" />
-	--->

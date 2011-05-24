@@ -77,4 +77,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getOrderService().setOrderShippingMethodFromMethodOptionID(orderShipping=rc.$.slatwall.cart().getOrderShippings()[1], orderShippingMethodOptionID=rc.orderShippingMethodOptionID);
 		getFW().redirectExact($.createHREF(filename='checkout'));
 	}
+	
+	public void function saveOrderPayment(required struct rc) {
+		param name="rc.orderPaymentID" default="";
+		
+		var orderPayment = getPaymentService().save(getPaymentService().getOrderPayment(rc.orderPaymentID, true), rc);
+		orderPayment.setOrder(rc.$.slatwall.cart());
+		getFW().redirectExact($.createHREF(filename='checkout'));
+	}
 }
