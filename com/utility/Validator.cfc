@@ -46,6 +46,7 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	// @hint main validation method that calls the individual validator class
 	public struct function validate(
 		String rule,
+		any criteria,
 		Any objectValue,
 		String objectName,
 		String objectLabel,
@@ -56,6 +57,10 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		var isValid = createObject("component",validatorClass).init(argumentCollection=arguments);
 		
 		if(!isValid){
+			// if the error message wasn't passed in, get it now
+			if(!structKeyExists(arguments,"message")) {
+				arguments.message = getMessageByRule(arguments.rule,arguments.objectName);
+			}
 			var error = getError(argumentCollection=arguments);
 			return error;
 		} else {
@@ -79,9 +84,10 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 			for(attrib in prop){
 				if(attrib.toLowerCase().startsWith("validate")){
 					var validationRule = replaceNoCase(attrib,"validate","","one");
+					var criteria = prop[attrib];
 					var message = getMessageByRule(validationRule,name,arguments.entity);
 					if(len(validationRule)){
-						var error = validate(validationRule,val,name,displayName,message);
+						var error = validate(validationRule,criteria,val,name,displayName,message);
 						if(!structIsEmpty(error) and hasErrorBean(arguments.entity)){
 							arguments.entity.addError(argumentCollection=error);
 						}
@@ -115,18 +121,19 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 
 	// @hint returns an error name/message struct
-	public struct function getError(Any objectValue="",String objectName="",String objectLabel="",String Message=""){
-		//if lable is not defined, default it to name
+	public struct function getError(Any objectValue="",String objectName="",String objectLabel="",any criteria = "", String Message=""){
+		//if label is not defined, default it to name
 		var displayName = arguments.objectLabel != "" ? arguments.objectLabel : arguments.objectName; 
 		var msg = arguments.message;
 		msg = replaceNoCase(msg,"{objectLabel}",displayName,"all");
 		msg = replaceNoCase(msg,"{objectValue}",arguments.objectValue,"all");
+		msg = replaceNoCase(msg,"{criteria}",arguments.criteria,"all");
 		var errorName = arguments.objectName != "" ? arguments.objectName : arguments.rule;
 		return {name=errorName, message=msg};
 	}
 	
 	
-	//@hint gets the entitie's property label from the rb
+	//@hint gets the entity's property label from the rb
 	private string function getPropertyLabel(required any entity, required string propertyName) {
 		//first remove the "Slatwall" prefix from the entity name
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
@@ -134,11 +141,16 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 	
 	// @hint returns error message by validation rule from the resource bundle
-	private string function getMessageByRule(required string rule, required string propertyName, required any entity){
-		//first remove the "Slatwall" prefix from the entity name
-		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
-		var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
-		if(right(message,8) == "_missing") {
+	private string function getMessageByRule(required string rule, required string propertyName, any entity){
+		if(structKeyExists(arguments,"entity")) {
+			//if this is an entity-related eroor, first remove the "Slatwall" prefix from the entity name
+			var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+			var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+			if(right(message,8) == "_missing") {
+				message = rbKey("validator.#arguments.rule#");
+			}	
+		} else {
+			// error isn't necessarily entity-related, so get generic message for rule
 			message = rbKey("validator.#arguments.rule#");
 		}
 		return message;
