@@ -73,6 +73,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
+			thisSku.setImageFile(generateImageFileName(thisSku));
 			arguments.product.setDefaultSku(thisSku);
 		}
 		return true;
@@ -104,6 +105,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisOptionID = listGetAt(arguments.data.options,j);
 			var thisOption = this.getShippingRate(thisOptionID,"SlatwallOption");
 			thisSku.addOption(thisOption);
+			thisSku.setImageFile(generateImageFileName(thisSku));
 			// generate code from options to be used in Sku Code
 			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
 		}
@@ -136,6 +138,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	            if(isNumeric(local.skuStruct.listPrice)) {
 	                local.thisSku.setListPrice(local.skuStruct.listPrice);
 	            }
+	            local.thisSku.setImageFile(generateImageFileName(local.thisSku));
 	         } else {
 	         	// this is a new sku added from product.edit form (no skuID yet)
 	         	local.thisSku = createSkuFromStruct( local.skuStruct, arguments.product );
@@ -208,6 +211,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else {
 			return false;
 		}	
+	}
+	
+	private string function generateImageFileName( required any sku ) {
+		// Generates the image path based upon product code, and image options for this sku
+		var options = arguments.sku.getOptions();
+		var optionString = "";
+		for(var i=1; i<=arrayLen(options); i++){
+			if(options[i].getOptionGroup().getImageGroupFlag()){
+				optionString &= "-#options[i].getOptionCode()#";
+			}
+		}
+		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
 
 }
