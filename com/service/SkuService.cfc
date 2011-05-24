@@ -61,17 +61,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
+	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
 		// check to see if any options were selected
 		if(len(arguments.optionsStruct.formCollectionsList)) {
 			var options = arguments.optionsStruct.options;
 			var comboList = getOptionCombinations(options);
-			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice);
+			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice,arguments.shippingWeight);
 		} else {  // no options were selected so create a default sku
 			var thisSku = this.newSku();
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
+			thisSku.setShippingWeight(arguments.shippingWeight);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
 			thisSku.setImageFile(generateImageFileName(thisSku));
 			arguments.product.setDefaultSku(thisSku);
@@ -82,11 +83,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint takes a list of optionID combinations and generates skus
 	*/
-	public void function createSkusFromOptions (required string comboList, required any product, required price, required listPrice) {
+	public void function createSkusFromOptions (required string comboList, required any product, required price, required listPrice, required shippingWeight) {
 		for(  i=1; i<=listLen(arguments.comboList,";");i++ ) {
 			//every option combination represents 1 Sku, so we create it
 			var thisCombo = listGetAt(arguments.comboList,i,";");
-			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice},arguments.product);
+			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice,shippingWeight=arguments.shippingWeight},arguments.product);
 			// set the first sku as the default one
 			if(i==1) {
 				arguments.product.setDefaultSku(thisSku);
@@ -99,11 +100,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		thisSku.setProduct(arguments.product);
 		thisSku.setPrice(arguments.data.price);
 		thisSku.setListPrice(arguments.data.listprice);
+		thisSku.setShippingWeight(arguments.data.shippingWeight);
 		var comboCode = "";
 		// loop through optionID's within the option combination and set them into the sku
 		for( j=1;j<=listLen(arguments.data.options);j++ ) {
 			var thisOptionID = listGetAt(arguments.data.options,j);
-			var thisOption = this.getShippingRate(thisOptionID,"SlatwallOption");
+			var thisOption = this.getOption(thisOptionID);
 			thisSku.addOption(thisOption);
 			thisSku.setImageFile(generateImageFileName(thisSku));
 			// generate code from options to be used in Sku Code
@@ -137,6 +139,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 	            if(isNumeric(local.skuStruct.listPrice)) {
 	                local.thisSku.setListPrice(local.skuStruct.listPrice);
+	            }
+	          	if(isNumeric(local.skuStruct.shippingWeight)) {
+	                local.thisSku.setShippingWeight(local.skuStruct.shippingWeight);
 	            }
 	            local.thisSku.setImageFile(generateImageFileName(local.thisSku));
 	         } else {

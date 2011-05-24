@@ -119,7 +119,7 @@ component extends="BaseService" accessors="true" {
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
+	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
 		return getSkuService().createSkus(argumentCollection=arguments);
 	}
 	
@@ -141,7 +141,7 @@ component extends="BaseService" accessors="true" {
 		
 		// set up sku(s) if this is a new product
 		if(arguments.Product.isNew()) {
-			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
+			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
 		} else {
 			updateSkus(arguments.Product,arguments.data.skuArray);
 		}

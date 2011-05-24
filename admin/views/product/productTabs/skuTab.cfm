@@ -64,6 +64,7 @@ Notes:
 				</cfif>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
@@ -120,16 +121,23 @@ Notes:
 				</cfif>
 				<td>
 					<cfif rc.edit>
-						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#local.thisSku.getPrice()#" />
+						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />
 					<cfelse>
 						#DollarFormat(local.thisSku.getPrice())#
 					</cfif>
 				</td>
 				<td>
 					<cfif rc.edit>
-						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#local.thisSku.getListPrice()#" />         
+						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#decimalFormat(local.thisSku.getListPrice())#" />         
 					<cfelse>
 						#DollarFormat(local.thisSku.getListPrice())#
+					</cfif>
+				</td>
+				<td>
+					<cfif rc.edit>
+						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
+					<cfelse>
+						#local.thisSku.getShippingWeight()#
 					</cfif>
 				</td>
 				<cfif rc.product.getSetting("trackInventoryFlag")>

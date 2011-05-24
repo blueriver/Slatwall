@@ -60,6 +60,7 @@ Notes:
 		<dl class="twoColumn productPrice">
 			<cf_PropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
 			<cf_PropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
+			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
 		</dl>
 		<br />
 		<br />
