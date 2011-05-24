@@ -47,7 +47,7 @@ Notes:
 			<cfset local.methodOptions = $.slatwall.cart().getOrderShippings()[1].getOrderShippingMethodOptions() />
 			<cfloop array="#local.methodOptions#" index="option">
 				<cfset local.optionSelected = false />
-				<cfif $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
+				<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
 					<cfset local.optionSelected = true />
 				</cfif>
 				<dl>

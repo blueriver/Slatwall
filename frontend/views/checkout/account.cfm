@@ -65,8 +65,6 @@ Notes:
 								<dd><input type="text" name="firstName" value="" /></dd>
 								<dt>Last Name</dt>
 								<dd><input type="text" name="lastName" value="" /></dd>
-								<dt>Phone Number</dt>
-								<dd><input type="text" name="phoneNumber" value="" /></dd>
 								<dt>Email</dt>
 								<dd><input type="text" name="emailAddress" value="" /></dd>
 								<dt>Confirm Email</dt>
@@ -95,10 +93,8 @@ Notes:
 								<dd><input type="text" name="firstName" value="#$.slatwall.cart().getAccount().getFirstName()#" /></dd>
 								<dt>Last Name</dt>
 								<dd><input type="text" name="lastName" value="#$.slatwall.cart().getAccount().getLastName()#" /></dd>
-								<dt>Phone Number</dt>
-								<dd><input type="text" name="phoneNumber" value="#$.slatwall.cart().getAccount().getPrimaryPhoneNumber()#" /></dd>
 								<dt>Email</dt>
-								<dd><input type="text" name="emailAddress" value="#$.slatwall.cart().getAccount().getPrimaryEmailAddress()#" /></dd>
+								<dd><input type="text" name="emailAddress" value="#$.slatwall.cart().getAccount().getPrimaryEmailAddress().getEmailAddress()#" /></dd>
 								<cfif isNull($.slatwall.cart().getAccount().getMuraUserID())>
 									<dt>Guest Checkout</dt>
 									<dd>
@@ -122,7 +118,7 @@ Notes:
 					<div class="accountDetails">
 						<dl class="accountInfo">
 							<dt class="fullName">#$.slatwall.cart().getAccount().getFullName()#</dt>
-							<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmailAddress()#</dd>
+							<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmailAddress().getEmailAddress()#</dd>
 						</dl>
 					</div>
 				</cfif>

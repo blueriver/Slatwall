@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.addressZone" type="any" />
+<cfparam name="rc.countriesArray" type="array" />
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
