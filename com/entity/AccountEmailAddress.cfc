@@ -41,7 +41,6 @@ component displayname="Account Email" entityname="SlatwallAccountEmailAddress" t
 	// Persistant Properties
 	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailAddress" validateRequired validateEmail ormtype="string" inverse="true";
-	property name="primaryFlag" default="false" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

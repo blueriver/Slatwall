@@ -48,24 +48,26 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this mura user id.
 		
-		if(isnull(account)) {
-			// If no account exists, create a new one and save it linked to the user that just logged in.
-			var account = this.newAccount();
+		// If no account exists, create a new one and save it linked to the user that just logged in.
+		if( isnull(account) ) {
+			account = this.newAccount();
 			account.setMuraUserID(arguments.muraUser.getUserID());
+			account.setFirstName(arguments.muraUser.getFName());
+			account.setLastName(arguments.muraUser.getLName());
 			var accountEmail = this.newAccountEmailAddress();
 			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
-			accountEmail.setPrimaryFlag(1);
 			accountEmail.setAccount(account);
-			save(entity=account);
-		}
-		
-		// Add a primary e-mail to the account if one doesn't exist in slatwall but does in mura
-		if(account.getPrimaryEmailAddress() == "" && arguments.muraUser.getEmail() != "") {
-			var accountEmail = this.newAccountEmailAddress();
-			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
-			accountEmail.setPrimaryFlag(1);
-			accountEmail.setAccount(account);
-			save(entity=account);
+			account.setPrimaryEmailAddress(accountEmail);
+			getDAO().save(target=account);
+		} else if ( isNull(account.getPrimaryEmailAddress()) ) {
+			if( isNull(account.getAccountEmailAddresses()) || !arrayLen(account.getAccountEmailAddresses()) ) {
+				var accountEmail = this.newAccountEmailAddress();
+				accountEmail.setEmailAddress(arguments.muraUser.getEmail());
+				accountEmail.setAccount(account);
+				account.setPrimaryEmailAddress(accountEmail);
+			} else {
+				account.setPrimaryEmailAddress(account.getAccountEmailAddresses()[1]);
+			}
 		}
 		
 		return account;
