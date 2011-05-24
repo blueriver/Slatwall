@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
+	property name="settingService" type="any";
 	
 	public void function detail(required struct rc) {
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
@@ -49,6 +50,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Populate order Shipping Methods if needed.
 		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
+		
+		// Populate Countries Array
+		rc.countriesArray = getSettingService().listCountry();
+		
+		if(!isNull(rc.$.slatwall.cart().getOrderShippings()[1].getAddress())) {
+			rc.shippingAddress = rc.$.slatwall.cart().getOrderShippings()[1].getAddress();
+		} else {
+			rc.shippingAddress = getAccountService().newAddress();
+		}
 	}
 	
 	public void function saveNewOrderAccount(required struct rc) {

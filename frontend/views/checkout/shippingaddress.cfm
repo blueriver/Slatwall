@@ -37,31 +37,28 @@ Notes:
 
 --->
 <cfparam name="rc.edit" type="string" default="">
+<cfparam name="rc.countriesArray" type="array">
+<cfparam name="rc.shippingAddress" type="any">
 
 <cfoutput>
 	<div class="svofrontendcheckoutshippingaddress">
 		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping<cfif $.slatwall.cart().hasValidOrderShippingAddress()> <a href="?edit=shippingAddress">Edit</a></cfif></h3>
 		<cfif $.slatwall.cart().hasValidAccount() and (rc.edit eq "" || rc.edit eq "shippingAddress")>
 			<div id="checkoutShippingContent" class="contentBlock">
-				<cfif !$.slatwall.cart().hasValidOrderShippingAddress() || rc.edit eq "shippingAddress">
+				<cfif not $.slatwall.cart().hasValidOrderShippingAddress() or rc.edit eq "shippingAddress">
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
 							<dl>
-								<dt>Name</dt>
-								<dd><input type="text" name="name" value="" /></dd>
-								<dt>Company</dt>
-								<dd><input type="text" name="company" value="" /></dd>
-								<dt>Street Address</dt>
-								<dd><input type="text" name="streetAddress" value="" /></dd>
-								<dt>Street Address 2</dt>
-								<dd><input type="text" name="street2Address" value="" /></dd>
-								<dt>City</dt>
-								<dd><input type="text" name="city" value="" /></dd>
-								<dt>State</dt>
-								<dd><input type="text" name="stateCode" value="" /></dd>
-								<dt>Postal Code</dt>
-								<dd><input type="text" name="postalCode" value="" /></dd>
+								<dt class="spdcountry"><label for="country">#$.rbKey('entity.address.countryCode')#</label></dt>
+								<dd id="spdcountry"><cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="countryCode"></dd>
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="name" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="company" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="streetAddress" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="street2Address" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="city" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="state" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="postalCode" edit="true" />
 							</dl>
 						</div>
 						<button type="submit">Save & Continue</button>
