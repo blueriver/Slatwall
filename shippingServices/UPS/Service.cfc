@@ -40,9 +40,9 @@ Notes:
 component accessors="true" output="false" displayname="UPS" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
-	property name="key" displayname="Transaction Key" type="sting";
-	property name="username" displayname="Username" type="sting";
-	property name="password" displayname="Password" type="sting";
+	property name="key" validateRequired displayname="Transaction Key" type="string";
+	property name="username" displayname="Username" type="string";
+	property name="password" displayname="Password" type="string";
 	property name="developmentmode" displayname="Development Mode" type="boolean";
 	
 	// Variables Saved in this application scope, but not set by end user

@@ -51,7 +51,7 @@ Notes:
 	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
 			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
-		
+
 		<cfif structKeyExists(rc.SettingsStruct,"errors") and len(rc.SettingsStruct.errors) gt 0>
 			<ul class="error">
 				<cfloop list="#rc.settingsStruct.errors#" index="local.thisError">
