@@ -90,4 +90,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
 		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
 	}
+	
+	public any function processOrderPayment(required any orderPayment) {
+		arguments.orderPayment.addError("testing", "no workie");
+		return arguments.orderPayment;
+	}
+	
+	public any function processOrder(required any order) {
+		return false;
+	}
 }

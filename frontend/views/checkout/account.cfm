@@ -36,70 +36,58 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="string" default="">
+<cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.account" type="any" />
 
 <cfoutput>
 	<div class="svofrontendcheckoutaccount">
 		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif $.slatwall.cart().hasValidAccount()><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
 		<cfif rc.edit eq "" || rc.edit eq "account">
 			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif !$.slatwall.cart().hasValidAccount()>
-					<div class="loginAccount">
-						<form name="loginAccount" method="post" action="?nocache=1">
-							<h4>Account Login</h4>
-							<dl>
-								<dt>E-Mail Address</dt>
-								<dd><input type="text" name="username" value="" /></dd>
-								<dt>Password</dt>
-								<dd><input type="password" name="password" value="" /></dd>
-							</dl>
-							<input type="hidden" name="doaction" value="login" />
-							<button type="submit">Login & Continue</button>
-						</form>
+				<cfif $.slatwall.cart().hasValidAccount()>
+					<div class="accountDetails">
+						<dl class="accountInfo">
+							<dt class="fullName">#rc.account.getFullName()#</dt>
+							<dd class="primaryEmail">#rc.account.getPrimaryEmailAddress().getEmailAddress()#</dd>
+						</dl>
 					</div>
-					<div class="newAccount">
-						<form name="newAccount" method="post" action="?slatAction=frontend:checkout.saveNewOrderAccount">
-							<h4>New Customer</h4>
-							<dl>
-								<dt>First Name</dt>
-								<dd><input type="text" name="firstName" value="" /></dd>
-								<dt>Last Name</dt>
-								<dd><input type="text" name="lastName" value="" /></dd>
-								<dt>Email</dt>
-								<dd><input type="text" name="emailAddress" value="" /></dd>
-								<dt>Confirm Email</dt>
-								<dd><input type="text" name="emailAddressConfirm" value="" /></dd>
-								<dt>Guest Checkout</dt>
-								<dd>
-									<input type="radio" name="createMuraAccount" value="1" />Save Account
-									<input type="radio" name="createMuraAccount" value="0" checked="checked" />Checkout As Guest
-								</dd>
-								<div class="accountPassword" style="display:none;">
+				<cfelseif not $.slatwall.cart().hasValidAccount() || rc.edit eq "account">
+					<cfif not $.slatwall.cart().hasValidAccount()>
+						<div class="loginAccount">
+							<form name="loginAccount" method="post" action="?nocache=1">
+								<h4>Account Login</h4>
+								<dl>
+									<dt>E-Mail Address</dt>
+									<dd><input type="text" name="username" value="" /></dd>
 									<dt>Password</dt>
 									<dd><input type="password" name="password" value="" /></dd>
-									<dt>Confirm Password</dt>
-									<dd><input type="password" name="passwordConfirm" value="" /></dd>
-								</div>
-							</dl>
-							<button type="submit">Continue</button>
-						</form>
-					</div>
-				<cfelseif rc.edit eq "account">
-					<div class="accountEdit">
-						<form name="accountEdit" method="post" action="?slatAction=frontend:checkout.updateAccount">
-							<h4>Account Information</h4>
+								</dl>
+								<input type="hidden" name="doaction" value="login" />
+								<button type="submit">Login & Continue</button>
+							</form>
+						</div>
+					</cfif>
+					<div class="accountDetails">
+						<form name="account" method="post" action="?slatAction=frontend:checkout.saveaccount">
+							<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
+							<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
 							<dl>
-								<dt>First Name</dt>
-								<dd><input type="text" name="firstName" value="#$.slatwall.cart().getAccount().getFirstName()#" /></dd>
-								<dt>Last Name</dt>
-								<dd><input type="text" name="lastName" value="#$.slatwall.cart().getAccount().getLastName()#" /></dd>
-								<dt>Email</dt>
-								<dd><input type="text" name="emailAddress" value="#$.slatwall.cart().getAccount().getPrimaryEmailAddress().getEmailAddress()#" /></dd>
-								<cfif isNull($.slatwall.cart().getAccount().getMuraUserID())>
-									<dt>Guest Checkout</dt>
-									<dd>
-										<input type="radio" name="createMuraAccount" value="1" />Save Account
-										<input type="radio" name="createMuraAccount" value="0" checked="checked" />Checkout As Guest
+								<cf_PropertyDisplay object="#rc.account#" property="firstName" edit="true">
+								<cf_PropertyDisplay object="#rc.account#" property="lastName" edit="true">
+								<cf_PropertyDisplay object="#rc.account#" property="company" edit="true">
+								<cfif isNull(rc.account.getPrimaryEmailAddress()) >
+									<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
+									<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
+								<cfelse>
+									<cf_PropertyDisplay object="#rc.account.getPrimaryEmailAddress()#" property="emailAddress" edit="true">	
+								</cfif>
+								<dt class="spdemailaddress"><label for="emailAddressConfirm">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddressConfirm')#</label></dt>
+								<dd id="spdemailaddress"><input type="text" name="emailAddressConfirm" value="" /></dd>
+								<cfif rc.account.isGuestAccount()>
+									<dt class="guestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
+									<dd id="guestcheckout">
+										<input type="radio" name="createMuraAccount" value="1" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
+										<input type="radio" name="createMuraAccount" value="0" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
 									</dd>
 									<div class="accountPassword" style="display:none;">
 										<dt>Password</dt>
@@ -109,17 +97,8 @@ Notes:
 									</div>
 								</cfif>
 							</dl>
-							<input type="hidden" name="accountID" value="#$.slatwall.cart().getAccount().getAccountID()#" />
-							<cfif $.currentUser().isLoggedIn()><a href="?doaction=logout">logout</a></cfif>
-							<button type="submit">Save & Continue</button>
+							<cf_ActionCaller action="frontend:checkout.detail" type="submit">
 						</form>
-					</div>
-				<cfelse>
-					<div class="accountDetails">
-						<dl class="accountInfo">
-							<dt class="fullName">#$.slatwall.cart().getAccount().getFullName()#</dt>
-							<dd class="primaryEmail">#$.slatwall.cart().getAccount().getPrimaryEmailAddress().getEmailAddress()#</dd>
-						</dl>
 					</div>
 				</cfif>
 			</div>

@@ -73,75 +73,79 @@ component extends="BaseService" accessors="true" output="false" {
 		return account;
 	}
 	
-	public any function createNewAccount(required struct data) {
-		// Create new Account
-		var newAccount = this.newAccount();
-		var errorsExist = false;
-		
+	public any function saveAccount(required any account, required struct data) {
 		// Populate the account from the data
-		newAccount.populate(arguments.data);
+		arguments.account.populate(arguments.data);
 		
 		// Validate Account
-		getValidator().validateObject(entity=newAccount);
-		if(newAccount.hasErrors()) {
-			errorsExist = true;
-		}
+		getValidator().validateObject(entity=arguments.account);
 		
-		// Create a Primary e-mail
+		// Account Email
 		if( structKeyExists(arguments.data, "emailAddress") ) {
-			var newEmailAddress = this.newAccountEmailAddress();
-			newEmailAddress.setEmailAddress(arguments.data.emailAddress);
-			newEmailAddress.setPrimaryFlag(1);
-			newEmailAddress.setAccount(newAccount);
-			getValidator().validateObject(entity=newEmailAddress);
-			if(newEmailAddress.hasErrors()) {
-				errorsExist = true;
+			param name="arguments.data.accountEmailAddressID" default="";
+			
+			// Setup Email Address
+			var accountEmailAddress = this.getAccountEmailAddress(arguments.data.accountEmailAddressID, true);
+			accountEmailAddress.populate(arguments.data);
+			accountEmailAddress.setAccount(arguments.account);
+			if( isNull(arguments.account.getPrimaryEmailAddress()) ) {
+				arguments.account.setPrimaryEmailAddress(accountEmailAddress);
+			}
+			
+			// Validate This Object
+			getValidator().validateObject(entity=accountEmailAddress);
+			if(accountEmailAddress.hasErrors()) {
+				arguments.account.getErrorBean().addError("primaryEmailAddress", "The Account E-Mail Address Has Errors");
 			}
 		}
 		
-		// Create a primary Phone Number
+		// Account Phone Number
 		if( structKeyExists(arguments.data, "phoneNumber") ) {
-			var newPhoneNumber = this.newAccountPhoneNumber();
-			newPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
-			newPhoneNumber.setPrimaryFlag(1);
-			newPhoneNumber.setAccount(newAccount);
-			getValidator().validateObject(entity=newPhoneNumber);
-			if(newPhoneNumber.hasErrors()) {
-				errorsExist = true;
+			param name="arguments.data.accountPhoneNumberID" default="";
+			
+			// Setup Phone Number
+			var accountPhoneNumber = this.getAccountPhoneNumber(arguments.data.accountPhoneNumberID, true);
+			accountPhoneNumber.populate(arguments.data);
+			accountPhoneNumber.setAccount(arguments.account);
+			if( isNull(arguments.account.getPrimaryPhoneNumber()) ) {
+				arguments.account.setPrimaryPhoneNumber(accountPhoneNumber);
+			}
+			
+			// Validate This Object
+			getValidator().validateObject(entity=accountPhoneNumber);
+			if(accountPhoneNumber.hasErrors()) {
+				arguments.account.getErrorBean().addError("primaryPhoneNumber", "The Account Phone Number Has Errors");
 			}
 		}
 		
-		// Create Mura User
-		if( structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && structKeyExists(arguments.data, "emailAddress")) {
-			var newMuraUser = getUserManager().getBean();
+		if( !arguments.account.hasErrors() ) {
+			getDAO().save(targer=arguments.account);
 			
-			// Setup the mura user
-			newMuraUser.setFName(arguments.data.firstName);
-			newMuraUser.setLName(arguments.data.lastName);
-			newMuraUser.setUsername(arguments.data.emailAddress);
-			newMuraUser.setEmail(arguments.data.emailAddress);
-			newMuraUser.setPassword(arguments.data.password);
-			newMuraUser.setSiteID($.event('siteid'));
-			
-			// Set the mura userID in the new account
-			newAccount.setMuraUserID(newMuraUser.getUserID());
-		}
-		
-		if(!errorsExist) {
-			// Save the account
-			getDAO().save(entity=newAccount);
-			
-			if(!isNull(newMuraUser)) {
-				// Save the mura user
-				newMuraUser.save();
+			// Check for new mura user information
+			if( (isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
 				
-				// Login the new user
-				getUserUtility().loginByUserID(newMuraUser.getUserID(), $.event('siteid'));
+				// TODO: Make sure that this user doesn't exist in mura
+				
+				var muraUser = getUserManager().getBean();
+				
+				// Setup the mura user
+				muraUser.setFName(arguments.account.getFirstName());
+				muraUser.setLName(arguments.account.getLastName());
+				muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
+				muraUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());
+				muraUser.setPassword(arguments.data.password);
+				muraUser.setSiteID($.event('siteid'));
+				muraUser.save();
+				
+				// Set the mura userID in the account
+				arguments.account.setMuraUserID(muraUser.getUserID());
+				
+				getUserUtility().loginByUserID(muraUser.getUserID(), $.event('siteid'));
 			}
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
 		
-		return newAccount;
+		return arguments.account;
 	}
 }
