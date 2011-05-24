@@ -41,7 +41,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	
 	// Custom Properties that need to be set by the end user
 	property name="login" displayname="Login ID" type="string";
-	property name="transKey" displayname="Transaction Key" type="string";
+	property name="transKey" validateRequired displayname="Transaction Key" type="string";
 	property name="developerAccountFlag" displayname="Test Account" type="boolean" default="true";
 	property name="testModeFlag" displayname="Test Mode" type="boolean" default="true";
 	

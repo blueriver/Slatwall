@@ -144,18 +144,6 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
-/*	public void function saveShippingService(required struct rc) {
-		for(var item in rc) {
-			if(!isObject(item) && listGetAt(item,1,"_") == "shippingservice") {
-				var setting = getSettingService().getBySettingName(item);
-				setting.setSettingName(item);
-				setting.setSettingValue(rc[item]);
-				getSettingService().save(entity=setting);
-			}
-		}
-		getFW().redirect(action="admin:setting.listshippingservices", queryString="reload=true");
-	}*/
-	
 	// Shipping Methods
 	public void function listShippingMethods(required struct rc) {
 		rc.shippingMethods = getSettingService().getShippingMethods();
