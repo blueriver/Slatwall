@@ -41,9 +41,52 @@ Notes:
 <cfoutput>
 	<div class="svofrontendcheckoutaccount">
 		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif $.slatwall.cart().hasValidAccount()><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
-		<div id="checkoutAccountContent" class="contentBlock">
-			<cfif $.slatwall.cart().hasValidAccount() and rc.edit eq "" || rc.edit eq "account">
-				<cfif rc.edit eq "account">
+		<cfif rc.edit eq "" || rc.edit eq "account">
+			<div id="checkoutAccountContent" class="contentBlock">
+				<cfif !$.slatwall.cart().hasValidAccount()>
+					<div class="loginAccount">
+						<form name="loginAccount" method="post" action="?nocache=1">
+							<h4>Account Login</h4>
+							<dl>
+								<dt>E-Mail Address</dt>
+								<dd><input type="text" name="username" value="" /></dd>
+								<dt>Password</dt>
+								<dd><input type="password" name="password" value="" /></dd>
+							</dl>
+							<input type="hidden" name="doaction" value="login" />
+							<button type="submit">Login & Continue</button>
+						</form>
+					</div>
+					<div class="newAccount">
+						<form name="newAccount" method="post" action="?slatAction=frontend:checkout.saveNewOrderAccount">
+							<h4>New Customer</h4>
+							<dl>
+								<dt>First Name</dt>
+								<dd><input type="text" name="firstName" value="" /></dd>
+								<dt>Last Name</dt>
+								<dd><input type="text" name="lastName" value="" /></dd>
+								<dt>Phone Number</dt>
+								<dd><input type="text" name="phoneNumber" value="" /></dd>
+								<dt>Email</dt>
+								<dd><input type="text" name="emailAddress" value="" /></dd>
+								<dt>Confirm Email</dt>
+								<dd><input type="text" name="emailAddressConfirm" value="" /></dd>
+								<dt>Guest Checkout</dt>
+								<dd>
+									<input type="radio" name="createMuraAccount" value="1" />Save Account
+									<input type="radio" name="createMuraAccount" value="0" checked="checked" />Checkout As Guest
+								</dd>
+								<div class="accountPassword" style="display:none;">
+									<dt>Password</dt>
+									<dd><input type="password" name="password" value="" /></dd>
+									<dt>Confirm Password</dt>
+									<dd><input type="password" name="passwordConfirm" value="" /></dd>
+								</div>
+							</dl>
+							<button type="submit">Continue</button>
+						</form>
+					</div>
+				<cfelseif rc.edit eq "account">
 					<div class="accountEdit">
 						<form name="accountEdit" method="post" action="?slatAction=frontend:checkout.updateAccount">
 							<h4>Account Information</h4>
@@ -83,50 +126,7 @@ Notes:
 						</dl>
 					</div>
 				</cfif>
-			<cfelse>
-				<div class="loginAccount">
-					<form name="loginAccount" method="post" action="?nocache=1">
-						<h4>Account Login</h4>
-						<dl>
-							<dt>E-Mail Address</dt>
-							<dd><input type="text" name="username" value="" /></dd>
-							<dt>Password</dt>
-							<dd><input type="password" name="password" value="" /></dd>
-						</dl>
-						<input type="hidden" name="doaction" value="login" />
-						<button type="submit">Login & Continue</button>
-					</form>
-				</div>
-				<div class="newAccount">
-					<form name="newAccount" method="post" action="?slatAction=frontend:checkout.saveNewOrderAccount">
-						<h4>New Customer</h4>
-						<dl>
-							<dt>First Name</dt>
-							<dd><input type="text" name="firstName" value="" /></dd>
-							<dt>Last Name</dt>
-							<dd><input type="text" name="lastName" value="" /></dd>
-							<dt>Phone Number</dt>
-							<dd><input type="text" name="phoneNumber" value="" /></dd>
-							<dt>Email</dt>
-							<dd><input type="text" name="emailAddress" value="" /></dd>
-							<dt>Confirm Email</dt>
-							<dd><input type="text" name="emailAddressConfirm" value="" /></dd>
-							<dt>Guest Checkout</dt>
-							<dd>
-								<input type="radio" name="createMuraAccount" value="1" />Save Account
-								<input type="radio" name="createMuraAccount" value="0" checked="checked" />Checkout As Guest
-							</dd>
-							<div class="accountPassword" style="display:none;">
-								<dt>Password</dt>
-								<dd><input type="password" name="password" value="" /></dd>
-								<dt>Confirm Password</dt>
-								<dd><input type="password" name="passwordConfirm" value="" /></dd>
-							</div>
-						</dl>
-						<button type="submit">Continue</button>
-					</form>
-				</div>
-			</cfif>
-		</div>
+			</div>
+		</cfif>
 	</div>
 </cfoutput>

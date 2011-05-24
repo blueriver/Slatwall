@@ -39,6 +39,7 @@ Notes:
 component displayname="Account Attribute Value" entityname="SlatwallAccountAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="Account" {
 	
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="attributeValueType" insert="false" update="false";
 	
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
 	

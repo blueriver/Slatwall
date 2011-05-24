@@ -126,75 +126,11 @@ Notes:
 					<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
 					<cf_ActionCaller action="admin:attribute" type="list" class="last">
+					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list" class="last">
 				</ul>
 				<cf_ActionCaller action="admin:setting" type="link">
 			</li>
 		</ul>
-		<!---
-		<ul class="mainMenu">
-			<li class="menuTop"></li>
-			<cfif secureDisplay("admin:main")>
-				<cf_ActionCaller action="admin:main" type="list">
-				<li>
-					<cf_ActionCaller action="admin:product">
-					<div class="MenuSubOne">
-						<ul>
-							<cf_ActionCaller action="admin:product" type="list">
-							<cf_ActionCaller action="admin:product.listproducttypes" type="list">
-							<cf_ActionCaller action="admin:option" type="list">
-							<cf_ActionCaller action="admin:brand" type="list">
-						</ul>
-					</div>
-				</li>
-			</cfif>
-			<cfif secureDisplay("admin:account")>
-				<li>
-					<cf_ActionCaller action="admin:account">
-					<div class="MenuSubOne">
-						<ul>
-							<cf_ActionCaller action="admin:account.list" type="list">
-						</ul>
-					</div>
-				</li>
-			</cfif>
-			<cfif secureDisplay("admin:setting")>
-				<li>
-					<cf_ActionCaller action="admin:setting">
-					<div class="MenuSubOne">
-						<ul>
-							<cf_ActionCaller action="admin:setting.detail" type="list">
-							<cf_ActionCaller action="admin:setting.editpermissions" type="list">
-						</ul>
-					</div>
-				</li>
-			</cfif>
-			<cfif secureDisplay("admin:help")>
-				<li>
-					<cf_ActionCaller action="admin:help">
-					<div class="MenuSubOne">
-						<ul>
-							<cf_ActionCaller action="admin:help.about" type="list">
-						</ul>
-					</div>
-				</li>
-			</cfif>
-			<li class="MenuBottom"></li>
-		</ul>
-		
-		<ul class="mainToolbar">
-			<li class="LogoSearch">
-				<img src="/plugins/Slatwall/assets/images/toolbar/toolbar_logo.png" />
-				<form name="ToolbarSearch" method="post" onKeyup="toolbarSearchKeyup(this);" onSubmit="return slatwallAjaxFormSubmit(this);">
-					<input type="hidden" name="action" value="admin:utility.toolbarsearch" />
-					<input type="text" name="ToolbarKeyword" class="AdminSearch" />
-				</form>
-			</li>
-			<li><a href="http://#cgi.http_host#/">Website</a></li>
-			<cfif getSubsystem(rc.slatAction) eq "frontend" and not $.slatwall.product().isNew()>
-				<cf_ActionCaller action="admin:product.detail" queryString="productID=#$.slatwall.product().getProductID()#" type="list">
-			</cfif>
-		</ul>
-		--->
 	</div>
 </cfoutput>
 

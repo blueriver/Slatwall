@@ -40,8 +40,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Persistant Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="orderOpenDate" ormtype="timestamp";
-	property name="orderCloseDate" ormtype="timestamp";
+	property name="orderNumber" ormtype="string"; 
+	property name="orderOpenDateTime" ormtype="timestamp";
+	property name="orderCloseDateTime" ormtype="timestamp";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -55,7 +56,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	
 	
 	public any function init() {
 		if(isNull(variables.orderShippings)) {
@@ -260,5 +263,27 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return valid;
 	}
 	
+	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
+	private void function confirmOrderNumber() {
+		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
+			var maxOrderNumber = ormExecuteQuery("SELECT max(aslatwallorder.orderNumber) FROM SlatwallOrder aslatwallorder");
+			if(isNull(maxOrderNumber)) {
+				maxOrderNumber = 1;
+			}
+			setOrderNumber(maxOrderNumber + 1);
+		}
+	} 
+	
+	//  -------------------- ORM Event Metods -------------------
+	public void function preInsert(){
+		confirmOrderNumber();
+		super.preInsert();
+	}
+	
+	public void function preUpdate(Struct oldData){
+		confirmOrderNumber();
+		super.preInsert();
+	}
+	//  -------------------- END: ORM Event Metods -------------------
 	
 }
