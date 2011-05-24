@@ -67,7 +67,7 @@ Notes:
 							<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
 								<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
 								<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
-								<cfif listFind( local.paymentService.getSupportedPaymentMethods(),rc.paymentMethod.getPaymentMethodCode() )>
+								<cfif listFind( local.paymentService.getSupportedPaymentMethods(),rc.paymentMethod.getPaymentMethodID() )>
 									<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
 								</cfif>
 							</cfloop>
