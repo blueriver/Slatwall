@@ -54,19 +54,22 @@ Notes:
 		</cfif>
 			<dl class="oneColumn">
 				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
-				<!--- include any payment method-specific settings --->	
-				#view("setting/paymentMethods/#lcase(rc.paymentMethod.getPaymentMethodCode())#")#
+				<!--- include any payment method-specific settings --->
+				<cfif fileExists(expandPath("paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodCode())#.cfm"))>
+					#view("setting/paymentMethods/#lcase(rc.paymentMethod.getPaymentMethodCode())#")#
+				</cfif>
 				<dt class="spdprovidergateway">
 					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
 				</dt>
 				<dd id="spdprovidergateway">
 					<cfif rc.edit>
 						<select id="providerGateway" name="providerGateway">
-							<option value="">#$.Slatwall.rbKey("define.select")#</option>
 							<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
 								<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
 								<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
-								<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
+								<cfif listFind( local.paymentService.getSupportedPaymentMethods(),rc.paymentMethod.getPaymentMethodCode() )>
+									<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
+								</cfif>
 							</cfloop>
 						</select>
 					<cfelse>

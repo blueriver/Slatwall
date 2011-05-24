@@ -235,6 +235,7 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			// errors, so show edit view again
 		  rc.edit = true;
+		  rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 		  rc.itemTitle = rc.productType.isNew() ? rc.$.Slatwall.rbKey("admin.product.createProductType") : rc.$.Slatwall.rbKey("admin.product.editProductType") & ": #rc.productType.getProductTypeName()#";
 		  getFW().setView(action="admin:product.detailproducttype");
         }
