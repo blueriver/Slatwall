@@ -258,7 +258,7 @@ component extends="framework" output="false" {
 	private void function endSlatwallLifecycle() {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
-			ormGetSession().clear();
+			ormClearSession();
 		} else {
 			transaction{}
 		}
