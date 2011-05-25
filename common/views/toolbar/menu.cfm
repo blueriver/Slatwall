@@ -127,6 +127,7 @@ Notes:
 					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
 					<cf_ActionCaller action="admin:attribute" type="list" class="last">
 					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list" class="last">
+					<li><a href="/plugins/Slatwall/?reload=true">Reload</a></li>
 				</ul>
 				<cf_ActionCaller action="admin:setting" type="link">
 			</li>

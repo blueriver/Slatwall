@@ -46,28 +46,23 @@ component extends="BaseService" accessors="true" output="false" {
 		// Load Account based upon the logged in muraUserID
 		var account = getDAO().readByMuraUserID(muraUserID = arguments.muraUser.getUserID());
 		
-		// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this mura user id.
-		
-		// If no account exists, create a new one and save it linked to the user that just logged in.
 		if( isnull(account) ) {
+			// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this mura user id.
+			
+			// Create new Account
 			account = this.newAccount();
+			
+			// Link account to thus mura user
 			account.setMuraUserID(arguments.muraUser.getUserID());
-			account.setFirstName(arguments.muraUser.getFName());
-			account.setLastName(arguments.muraUser.getLName());
-			var accountEmail = this.newAccountEmailAddress();
-			accountEmail.setEmailAddress(arguments.muraUser.getEmail());
-			accountEmail.setAccount(account);
-			account.setPrimaryEmailAddress(accountEmail);
+			
+			// update and save with values from mura user
+			account = updateAccountFromMuraUser(account, arguments.muraUser);
 			getDAO().save(target=account);
-		} else if ( isNull(account.getPrimaryEmailAddress()) ) {
-			if( isNull(account.getAccountEmailAddresses()) || !arrayLen(account.getAccountEmailAddresses()) ) {
-				var accountEmail = this.newAccountEmailAddress();
-				accountEmail.setEmailAddress(arguments.muraUser.getEmail());
-				accountEmail.setAccount(account);
-				account.setPrimaryEmailAddress(accountEmail);
-			} else {
-				account.setPrimaryEmailAddress(account.getAccountEmailAddresses()[1]);
-			}
+			
+		
+		} else {
+			// Update the existing account 
+			account = updateAccountFromMuraUser(account, arguments.muraUser);	
 		}
 		
 		return account;
@@ -119,33 +114,110 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		if( !arguments.account.hasErrors() ) {
-			getDAO().save(targer=arguments.account);
+			// Make sure that the account is in the hibernate session so it will save.
+			getDAO().save(target=arguments.account);
 			
-			// Check for new mura user information
-			if( (isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
+			// If this account doesn't have a mura user check to see if we can create one
+			if( ( isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
 				
 				// TODO: Make sure that this user doesn't exist in mura
 				
 				var muraUser = getUserManager().getBean();
 				
-				// Setup the mura user
-				muraUser.setFName(arguments.account.getFirstName());
-				muraUser.setLName(arguments.account.getLastName());
+				// Setup a new mura user
 				muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
-				muraUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());
 				muraUser.setPassword(arguments.data.password);
 				muraUser.setSiteID($.event('siteid'));
+				
+				// Update mura user with values from account
+				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
 				muraUser.save();
 				
 				// Set the mura userID in the account
 				arguments.account.setMuraUserID(muraUser.getUserID());
 				
-				getUserUtility().loginByUserID(muraUser.getUserID(), $.event('siteid'));
+			// If the account already has a mura user, make sure that the mura user gets updated
+			} else if ( !isNull(arguments.account.getMuraUserID()) ) {
+				
+				// Load existing mura user
+				var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());
+				
+				// If that user exists, update from account and save
+				if(!muraUser.getIsNew()) {
+					muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
+					muraUser.save();
+				}
+				
 			}
-		} else {
+			
+			// Re-Login the current user so that the new values are saved.
+			if($.currentUser().getUserID() == muraUser.getUserID()) {
+				getUserUtility().loginByUserID(muraUser.getUserID(), $.event('siteid'));	
+			}
+			
+		} else if ( !isNull(arguments.account.getMuraUserID()) && arguments.account.getMuraUserID() != "") {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
 		
 		return arguments.account;
 	}
+	
+	public any function updateMuraUserFromAccount(required any muraUser, required any Account) {
+		
+		// Sync Name & Company
+		arguments.muraUser.setFName(arguments.account.getFirstName());
+		arguments.muraUser.setLName(arguments.account.getLastName());
+		if(!isNull(arguments.account.getCompany())) {
+			arguments.muraUser.setCompany(arguments.account.getCompany());	
+		}
+		
+		// Sync Primary Email
+		if(!isNull(arguments.account.getPrimaryEmailAddress())) {
+			arguments.muraUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
+		}
+		
+		// TODO: Sync the mobile phone number
+		// TODO: Loop over addresses and sync them as well.
+				
+		return arguments.muraUser;
+	}
+	
+	public any function updateAccountFromMuraUser(required any account, required any muraUser) {
+		
+		// Sync Name & Company
+		if(arguments.account.getFirstName() != muraUser.getFName()){
+			arguments.account.setFirstName(muraUser.getFName());
+		}
+		if(arguments.account.getLastName() != muraUser.getLName()) {
+			arguments.account.setLastName(muraUser.getLName());
+		}
+		if(arguments.account.getCompany() != muraUser.getCompany()) {
+			arguments.account.setCompany(muraUser.getCompany());
+		}
+		
+		// Sync the primary email if out of sync
+		if( isNull(arguments.account.getPrimaryEmailAddress()) || arguments.account.getPrimaryEmailAddress().getEmailAddress() != arguments.muraUser.getEmail()) {
+			// Setup the new primary email object
+			var primaryEmail = arguments.account.getPrimaryEmailAddress();
+			
+			// Attempt to find that e-mail address in all of our emails
+			for(var i=1; i<=arrayLen(arguments.account.getAccountEmailAddresses()); i++) {
+				if(agruments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
+					primaryEmail = agruments.account.getAccountEmailAddresses()[i];
+				}
+			}
+			if( isNull(primaryEmail) ) {
+				primaryEmail = this.newAccountEmail();
+				primaryEmail.setEmailAddress(arguments.muraUser.getEmail());
+				primaryEmail.setAccount(arguments.account);
+			}
+			arguments.account.setPrimaryEmail(primaryEmail);
+		}
+		
+		// TODO: Sync the mobile phone number
+		// TODO: Loop over addresses and set those up as well.
+		
+		return arguments.account;
+	}
+	
 }

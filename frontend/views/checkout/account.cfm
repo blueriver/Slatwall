@@ -44,14 +44,7 @@ Notes:
 		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif $.slatwall.cart().hasValidAccount()><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
 		<cfif rc.edit eq "" || rc.edit eq "account">
 			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif $.slatwall.cart().hasValidAccount()>
-					<div class="accountDetails">
-						<dl class="accountInfo">
-							<dt class="fullName">#rc.account.getFullName()#</dt>
-							<dd class="primaryEmail">#rc.account.getPrimaryEmailAddress().getEmailAddress()#</dd>
-						</dl>
-					</div>
-				<cfelseif not $.slatwall.cart().hasValidAccount() || rc.edit eq "account">
+				<cfif not $.slatwall.cart().hasValidAccount() || rc.edit eq "account">
 					<cfif not $.slatwall.cart().hasValidAccount()>
 						<div class="loginAccount">
 							<form name="loginAccount" method="post" action="?nocache=1">
@@ -78,11 +71,9 @@ Notes:
 								<cfif isNull(rc.account.getPrimaryEmailAddress()) >
 									<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
 									<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
-								<cfelse>
-									<cf_PropertyDisplay object="#rc.account.getPrimaryEmailAddress()#" property="emailAddress" edit="true">	
+									<dt class="spdemailaddress"><label for="emailAddressConfirm">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddressConfirm')#</label></dt>
+									<dd id="spdemailaddress"><input type="text" name="emailAddressConfirm" value="" /></dd>
 								</cfif>
-								<dt class="spdemailaddress"><label for="emailAddressConfirm">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddressConfirm')#</label></dt>
-								<dd id="spdemailaddress"><input type="text" name="emailAddressConfirm" value="" /></dd>
 								<cfif rc.account.isGuestAccount()>
 									<dt class="guestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
 									<dd id="guestcheckout">
@@ -97,8 +88,15 @@ Notes:
 									</div>
 								</cfif>
 							</dl>
-							<cf_ActionCaller action="frontend:checkout.detail" type="submit">
+							<cf_ActionCaller action="frontend:checkout.saveaccount" type="submit">
 						</form>
+					</div>
+				<cfelseif $.slatwall.cart().hasValidAccount()>
+					<div class="accountDetails">
+						<dl class="accountInfo">
+							<dt class="fullName">#rc.account.getFullName()#</dt>
+							<dd class="primaryEmail">#rc.account.getPrimaryEmailAddress().getEmailAddress()#</dd>
+						</dl>
 					</div>
 				</cfif>
 			</div>
