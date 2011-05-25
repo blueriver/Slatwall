@@ -46,7 +46,7 @@ Notes:
 		<cfif $.slatwall.cart().hasValidAccount() and (rc.edit eq "" || rc.edit eq "shippingAddress")>
 			<div id="checkoutShippingContent" class="contentBlock">
 				<cfif not $.slatwall.cart().hasValidOrderShippingAddress() or rc.edit eq "shippingAddress">
-					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShippingAddress">
+					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
 							<dl>
@@ -61,7 +61,8 @@ Notes:
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="postalCode" edit="true" />
 							</dl>
 						</div>
-						<button type="submit">Save & Continue</button>
+						<input type="hidden" name="shippingAddressID" value="#rc.shippingAddress.getAddressID()#" />
+						<cf_ActionCaller action="frontend:checkout.saveShippingAddress" type="submit" />
 					</form>
 				<cfelse>
 					<div class="shippingAddress">

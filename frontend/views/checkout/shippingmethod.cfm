@@ -43,7 +43,7 @@ Notes:
 	<cfif $.slatwall.cart().hasValidAccount() and $.slatwall.cart().hasValidOrderShippingAddress() and (rc.edit eq "" || rc.edit eq "shippingMethod")>
 	<div id="checkoutShippingMethodContent" class="contentBlock">
 		<cfif !$.slatwall.cart().hasValidOrderShippingMethod() || rc.edit eq "shippingMethod">
-			<form action="?slatAction=frontend:checkout.saveordershippingmethod" method="post">
+			<form action="?slatAction=frontend:checkout.saveshippingmethod" method="post">
 			<cfset local.methodOptions = $.slatwall.cart().getOrderShippings()[1].getOrderShippingMethodOptions() />
 			<cfloop array="#local.methodOptions#" index="option">
 				<cfset local.optionSelected = false />
@@ -55,7 +55,7 @@ Notes:
 					<dd>#DollarFormat(option.getTotalCost())#</dd>
 				</dl>
 			</cfloop>
-				<button type="submit">Save & Continue</button>
+				<cf_ActionCaller action="frontend:checkout.saveShippingMethod" type="submit" />
 			</form>
 		<cfelse>
 			<dl class="shippingMethod">

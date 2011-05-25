@@ -65,7 +65,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 		
 		if(rc.shippingAddressID != "") {
-			rc.shippingAddress = getAccountService().getOrderShippingAddress(rc.shippingAddressID, true);	
+			rc.shippingAddress = getAccountService().getAddress(rc.shippingAddressID, true);	
 		} else if (!isNull(rc.$.slatwall.cart().getOrderShippings()[1].getAddress())) {
 			rc.shippingAddress = rc.$.slatwall.cart().getOrderShippings()[1].getAddress();
 		} else {
@@ -87,13 +87,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveAccount(required struct rc) {
 		detail(rc);
 		
-		account = getAccountService.saveAccount(account, rc);
+		rc.account = getAccountService().saveAccount(rc.account, rc);
 		
-		if(!account.hasErrors()) {
-			rc.$.slatwall.cart().setAccount(account);
+		if(!rc.account.hasErrors()) {
+			rc.$.slatwall.cart().setAccount(rc.account);
 		}
 		
-		setView("frontend:checkout.detail");
+		getFW().setView("frontend:checkout.detail");
 	}
 	
 	public void function saveShippingAddress(required struct rc) {
@@ -101,9 +101,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		rc.shippingAddress = getAccountService().save(rc.shippingAddress,rc);
 		
-		if(!address.hasErrors()) {
-			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(address);
+		if(!rc.shippingAddress.hasErrors()) {
+			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(rc.shippingAddress);
 		}
+		
+		// Populate order Shipping Methods if needed.
+		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
 		
 		getFW().setView("frontend:checkout.detail");
 	}

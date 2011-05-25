@@ -40,6 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 
 	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
+	property name="accountService" type="Slatwall.com.service.AccountService";
 	
 	public void function confirmSession() {
 		getCurrent();
@@ -80,18 +81,19 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Setup account here
 		if($.currentUser().isLoggedIn()) {
+			// Load the mura User
 			var muraUser = $.currentUser();
-			var slatwallAccount = getService("AccountService").getAccountByMuraUser(muraUser);
-			if(slatwallAccount.getFirstName() != muraUser.getFName()){
-				slatwallAccount.setFirstName(muraUser.getFName());
-			}
-			if(slatwallAccount.getLastName() != muraUser.getLName()) {
-				slatwallAccount.setLastName(muraUser.getLName());
-			}
-			if(slatwallAccount.getCompany() != muraUser.getCompany()) {
-				slatwallAccount.setCompany(muraUser.getCompany());
-			}
+			
+			// Load the account
+			var slatwallAccount = getAccountService().getAccountByMuraUser(muraUser);
+			
+			// Update the account with any changes in the mura user
+			slatwallAccount = getAccountService().updateAccountFromMuraUser(slatwallAccount, muraUser);
+			
+			// Set the account in the current session
 			currentSession.setAccount(slatwallAccount);
+			
+			// Make sure that the account on the current order is whoever is logged in
 			if(!isNull(currentSession.getOrder()) && !currentSession.getOrder().isNew()) {
 				currentSession.getOrder().setAccount(slatwallAccount);
 			}
