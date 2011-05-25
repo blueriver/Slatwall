@@ -249,6 +249,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				}
 				thisSetting = save(entity=thisSetting);
 				settingsStruct[ rawSettingName ] = thisSetting.getSettingValue();
+				thisSetting.clearErrors();
 			}
 		}
 		if(listLen(errorList)) {
@@ -288,6 +289,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				}
 				thisSetting = save(entity=thisSetting);
 				settingsStruct[ rawSettingName ] = thisSetting.getSettingValue();
+				thisSetting.clearErrors();
 			}
 		}
 		if(listLen(errorList)) {
