@@ -47,7 +47,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		// if this is an option, make sure the option code is unique
 		if( arguments.entity.getClassName() =="SlatwallOption" ) {
 			var checkOptionCode = getDAO().isDuplicateOptionCode(arguments.entity);
-			var optionCodeError = getService("validator").validate(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
+			var optionCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
 			if( !structIsEmpty(optionCodeError) ) {
 				arguments.entity.addError(argumentCollection=optionCodeError);
 			}

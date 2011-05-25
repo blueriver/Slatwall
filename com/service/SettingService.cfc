@@ -304,7 +304,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			local.thisValidation = listGetAt( arguments.validationCodes,i );
 			local.thisRule = listFirst(local.thisValidation,"_");
 			local.thisCriteria = listLen(local.thisValidation,"_") == 2 ? listLast(local.thisValidation,"_") : "";
-			local.thisError = getValidator().validate(local.thisRule,local.thisCriteria,arguments.setting.getSettingValue(),"settingValue",arguments.settingName);
+			local.thisError = getValidator().validateValue(local.thisRule,local.thisCriteria,arguments.setting.getSettingValue(),"settingValue",arguments.settingName);
 			if(!structIsEmpty(thisError)) {
 				local.errorList = listAppend(local.errorList,thisError.message);
 				arguments.setting.addError(argumentCollection=thisError);	

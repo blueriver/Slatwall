@@ -69,10 +69,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(target=arguments.entity);
 			response.setMessage(rbKey("entity.#entityName#.delete_success"));
-			response.setStatusCode(1);
 		} else {
-			response.setStatusCode(0);
 			response.setData(arguments.entity);
+			response.getErrorBean().setErrors(arguments.entity.getErrorBean().getErrors());
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
 		return response;

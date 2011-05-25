@@ -119,7 +119,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var attribute = getAttributeService().getAttribute(rc.attributeID);
 		var attributeSetID = attribute.getAttributeSet().getAttributeSetID();
 		var deleteResponse = getAttributeService().delete(attribute);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -183,7 +183,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function deleteAttributeSet(required struct rc) {
 		var attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		var deleteResponse = getAttributeService().deleteAttributeSet(attributeSet);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message = deleteResponse.getMessage();
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
@@ -197,7 +197,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var attributeOption = getAttributeService().getAttributeOption(rc.attributeOptionID);
 		if(!isNull(attributeOption)) {
 			var deleteResponse = getAttributeService().delete(attributeOption);
-			if( deleteResponse.getStatusCode() ) {
+			if( !deleteResponse.hasErrors() ) {
 				rc.success=1;
 				rc.message=deleteResponse.getMessage();
 			} else {
