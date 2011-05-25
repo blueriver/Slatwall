@@ -126,7 +126,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		var orderProcessOK = false;
 		
-		rc.payment = getOrderService.processOrderPayment(rc.payment, rc);
+		rc.payment = getOrderService().processOrderPayment(rc.payment, rc);
 		
 		if(!rc.payment.hasErrors()) {
 			rc.$.slatwall.cart().addOrderPayment(rc.payment);
