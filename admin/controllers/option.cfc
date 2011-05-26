@@ -122,7 +122,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var option = getOptionService().getOption(rc.optionid);
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
 		var deleteResponse = getOptionService().delete(option);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -189,7 +189,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function deleteOptionGroup(required struct rc) {
 		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
 		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message = deleteResponse.getMessage();
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");

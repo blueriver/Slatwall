@@ -39,8 +39,7 @@ Notes:
 <cfparam name="rc.edit" />
 <cfparam name="rc.shippingServicePackage" />
 <cfparam name="rc.shippingService" />
-<!--- holder for setting values if coming back from a failed validation --->
-<cfparam name="rc.settingsStruct" default="#structNew()#" />
+<cfparam name="rc.errors" default="#structNew()#" />
 
 <cfset local.serviceMeta = getMetaData(rc.shippingService) />
 
@@ -51,10 +50,10 @@ Notes:
 			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
 		</ul>
 		
-		<cfif structKeyExists(rc.SettingsStruct,"errors") and len(rc.SettingsStruct.errors) gt 0>
+		<cfif !structIsEmpty(rc.errors)>
 			<ul class="error">
-				<cfloop list="#rc.settingsStruct.errors#" index="local.thisError">
-					<li>#local.thisError#</li>
+				<cfloop collection="#rc.errors#" item="local.thisError">
+					<li>#rc.errors[local.thisError]#</li>
 				</cfloop>
 			</ul>
 		</cfif>
@@ -74,17 +73,7 @@ Notes:
 					<cfelse>
 						<cfset local.propertyTitle = local.property.name />
 					</cfif>
-					<cfset local.thisFieldName = "shippingService_#rc.shippingServicePackage#_#local.property.name#" />
-					<cfset local.thisPropertyValue = structKeyExists(rc.settingsStruct,local.property.name) ? rc.settingsStruct[local.property.name] : "" />
-					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="#local.thisFieldName#" property="#local.property.name#" title="#local.propertyTitle#" value="#local.thisPropertyValue#" edit="#rc.edit#">
-					<!--- look for validation metadata for the property --->
-					<cfloop collection="#local.property#" item="local.thisAttrib">
-						<cfif local.thisAttrib.toLowerCase().startsWith("validate")>
-							<cfset local.thisRule = right(local.thisAttrib,len(local.thisAttrib)-8) />
-							<cfset local.thisRuleCriteria = local.property[local.thisAttrib] />
-							<input type="hidden" name="validate_#local.thisFieldName#" value="#local.thisRule#<cfif len(local.thisRuleCriteria)>_#local.thisRuleCriteria#</cfif>" />
-						</cfif>
-					</cfloop>
+					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="shippingService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
 				</cfloop>
 			</dl>
 		</cfif>

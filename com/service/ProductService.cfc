@@ -152,7 +152,7 @@ component extends="BaseService" accessors="true" {
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {
 			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getService("validator").validate(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+			var productCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
 			if( !structIsEmpty(productCodeError) ) {
 				arguments.product.addError(argumentCollection=productCodeError);
 			}
@@ -160,7 +160,7 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist
 		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		var filenameError = getService("validator").validate(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		var filenameError = getService("validator").validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
 		if( !structIsEmpty(filenameError) ) {
 			arguments.product.addError(argumentCollection=filenameError);
 		}
@@ -181,7 +181,7 @@ component extends="BaseService" accessors="true" {
 			getValidator().setError(entity=arguments.product,errorName="delete",rule="Ordered");
 		}
 		var deleteResponse = Super.delete( arguments.product );
-		if( deleteResponse.getStatusCode() ) {
+		if( !deleteResponse.hasErrors() ) {
 			// clear cached product type tree so that it's refreshed on the next request
 	   		clearProductTypeTree();
 		}

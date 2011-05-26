@@ -234,28 +234,27 @@ component extends="BaseService" output="false" accessors="true"  {
 		}
 		return variables.shippingServices;
 	}
-
-	public any function saveShippingService(required struct data) {
-		var settingsStruct = {};
-		var errorList = "";
-		for(var item in arguments.data) {
-			if(isSimpleValue(arguments.data[item]) && listFirst(item,"_") == "shippingService") {
-				var thisSetting = getBySettingName(item);
+	
+	public any function saveShippingService(required string shippingServicePackage, required struct data) {
+		var shippingService = getByShippingServicePackage(arguments.shippingServicePackage);
+		// populate non-persistent service object for validation
+		for( var item in arguments.data ) {
+			evaluate("shippingService.set#item#(data[item])");
+		}
+		var response = getValidator().validate(shippingService);
+		if(!response.hasErrors()) {
+			//save service as individual setting entities
+			for(var item in arguments.data) {
+				var settingName = "shippingService_#arguments.shippingServicePackage#_#item#";
+				var thisSetting = getBySettingName(settingName);
 				thisSetting.setSettingValue(arguments.data[item]);
-				var rawSettingName = listLast(thisSetting.getSettingName(),"_");
-				// look to see if validation should be applied to this setting
-				if( structKeyExists(arguments.data,"validate_" & item) ) {
-					errorList = listAppend( errorList,validateServiceSetting(thisSetting, rawSettingName, arguments.data["validate_" & item]) );
-				}
 				thisSetting = save(entity=thisSetting);
-				settingsStruct[ rawSettingName ] = thisSetting.getSettingValue();
-				thisSetting.clearErrors();
 			}
+		} else {
+			response.setData(shippingService);
+			getService("requestCacheService").setValue("ormHasErrors",true);
 		}
-		if(listLen(errorList)) {
-			settingsStruct[ "errors" ] = errorList;
-		}
-		return settingsStruct;
+		return response;
 	}
 
 	public any function getPaymentServices(boolean reload=false) {
@@ -274,43 +273,27 @@ component extends="BaseService" output="false" accessors="true"  {
 		}
 		return variables.paymentServices;
 	}
-
-	public any function savePaymentService(required struct data) {
-		var settingsStruct = {};
-		var errorList = "";
-		for(var item in arguments.data) {
-			if(isSimpleValue(arguments.data[item]) && listFirst(item,"_") == "paymentService") {
-				var thisSetting = getBySettingName(item);
-				thisSetting.setSettingValue(arguments.data[item]);
-				var rawSettingName = listLast(thisSetting.getSettingName(),"_");
-				// look to see if validation should be applied to this setting
-				if( structKeyExists(arguments.data,"validate_" & item) ) {
-					errorList = listAppend( errorList,validateServiceSetting(thisSetting, rawSettingName, arguments.data["validate_" & item]) );
-				}
-				thisSetting = save(entity=thisSetting);
-				settingsStruct[ rawSettingName ] = thisSetting.getSettingValue();
-				thisSetting.clearErrors();
-			}
-		}
-		if(listLen(errorList)) {
-			settingsStruct[ "errors" ] = errorList;
-		}
-		return settingsStruct;
-	}
 	
-	public string function validateServiceSetting( required any setting, required string settingName, required string validationCodes ) {
-		var errorList = "";
-		for( var i = 1; i<= listLen(arguments.validationCodes); i++ ) {
-			local.thisValidation = listGetAt( arguments.validationCodes,i );
-			local.thisRule = listFirst(local.thisValidation,"_");
-			local.thisCriteria = listLen(local.thisValidation,"_") == 2 ? listLast(local.thisValidation,"_") : "";
-			local.thisError = getValidator().validate(local.thisRule,local.thisCriteria,arguments.setting.getSettingValue(),"settingValue",arguments.settingName);
-			if(!structIsEmpty(thisError)) {
-				local.errorList = listAppend(local.errorList,thisError.message);
-				arguments.setting.addError(argumentCollection=thisError);	
-			}
+	public any function savePaymentService(required string paymentServicePackage, required struct data) {
+		var paymentService = getByPaymentServicePackage(arguments.paymentServicePackage);
+		// populate non-persistent service object for validation
+		for( var item in arguments.data ) {
+			evaluate("paymentService.set#item#(data[item])");
 		}
-		return errorList;
+		var response = getValidator().validate(paymentService);
+		if(!response.hasErrors()) {
+			//save service as individual setting entities
+			for(var item in arguments.data) {
+				var settingName = "paymentService_#arguments.paymentServicePackage#_#item#";
+				var thisSetting = getBySettingName(settingName);
+				thisSetting.setSettingValue(arguments.data[item]);
+				thisSetting = save(entity=thisSetting);
+			}
+		} else {
+			response.setData(paymentService);
+			getService("requestCacheService").setValue("ormHasErrors",true);
+		}
+		return response;
 	}
 
 	public any function saveAddressZone(required any entity, struct data) {

@@ -44,7 +44,7 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 	
 	// @hint main validation method that calls the individual validator class
-	public struct function validate(
+	public struct function validateValue(
 		String rule,
 		any criteria,
 		Any objectValue,
@@ -68,17 +68,18 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		}
 	}
 	
-	// @hint method to validate entity based on property definition 
-	public function validateObject(required any entity, struct objMD){
+	// @hint method to validate entity based on property definition, returns a responseBean 
+	public function validate(required any entity, struct objMD){
 		var objMetadata = isNull(objMD) ? getMetadata(entity) : objMD ;
 		// get the object property array 
 		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
+		var errors = {};
 		//loop through each property;
 		for(var i=1; i <= arrayLen(props); i++) {
 			var prop = props[i] ;
 			var name = prop["name"] ;
 			var val =  isNull(evaluate("arguments.entity." & "get#name#()")) ? "" : evaluate("arguments.entity." & "get#name#()") ;
-			var displayName = getPropertyLabel(entity=arguments.entity, propertyName=name);
+			var displayName = structKeyExists(prop,"displayname") ? prop["displayName"] : getPropertyLabel(entity=arguments.entity, propertyName=name);
 			var attrib = "";
 			//loop through each attribute to look for validation rule
 			for(attrib in prop){
@@ -87,13 +88,26 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 					var criteria = prop[attrib];
 					var message = getMessageByRule(validationRule,name,arguments.entity);
 					if(len(validationRule)){
-						var error = validate(validationRule,criteria,val,name,displayName,message);
-						if(!structIsEmpty(error) and hasErrorBean(arguments.entity)){
-							arguments.entity.addError(argumentCollection=error);
+						var error = validateValue(validationRule,criteria,val,name,displayName,message);
+						if(!structIsEmpty(error)){
+							errors[error.name] = error.Message;
 						}
 					}
 				}
 			}
+		}
+		response = new Slatwall.com.utility.ResponseBean({data=arguments.entity});
+		if( !structIsEmpty(errors) ) {
+			response.getErrorBean().setErrors(errors);
+		}
+		return response;
+	}
+	
+	// @hint method to validate entity based on property definition, returns a the entity with errors in the errorBean 
+	public any function validateObject(required any entity) {
+		var response = validate(arguments.entity);
+		if( hasErrorBean(arguments.entity) && response.hasErrors() ) {
+			arguments.entity.getErrorBean().setErrors(response.getErrorBean().getErrors());
 		}
 		return arguments.entity;
 	}
@@ -142,11 +156,14 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	
 	// @hint returns error message by validation rule from the resource bundle
 	private string function getMessageByRule(required string rule, required string propertyName, any entity){
+		var message = "";
 		if(structKeyExists(arguments,"entity")) {
-			//if this is an entity-related eroor, first remove the "Slatwall" prefix from the entity name
-			var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
-			var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
-			if(right(message,8) == "_missing") {
+			//if this is an entity-related error, first remove the "Slatwall" prefix from the entity name
+			if(structKeyExists(arguments.entity,"getClassName")) {
+				var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+				message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+			}
+			if(right(message,8) == "_missing" || !structKeyExists(arguments.entity,"getClassName") ) {
 				message = rbKey("validator.#arguments.rule#");
 			}	
 		} else {

@@ -86,7 +86,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function delete(required struct rc) {
 		var brand = getBrandService().getBrand(rc.brandID);
 		var deleteResponse = getBrandService().delete(brand);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");

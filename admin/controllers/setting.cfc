@@ -131,7 +131,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = true;
 	}
 	
-	public void function saveShippingService(required struct rc) {
+/*	public void function saveShippingService(required struct rc) {
 		rc.settingsStruct = getSettingService().saveShippingService(rc);
 
 		if( !getService("requestCacheService").getValue("ormHasErrors") ) {
@@ -141,6 +141,25 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
 			rc.messageType = "error";
 			getFW().redirect(action="admin:setting.editShippingService", queryString="shippingServicePackage=#rc.shippingServicePackage#", preserve="settingsStruct,message,messageType");
+		}
+	}*/
+	
+	public void function saveShippingService(required struct rc) {
+		rc.serviceProperties = getService("formUtilities").buildFormCollections(rc).shippingService;
+		var response = getSettingService().saveShippingService(rc.shippingServicePackage,rc.serviceProperties);
+
+		if( !response.hasErrors() ) {
+			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
+			getFW().redirect(action="admin:setting.listShippingServices", queryString="reload=true", preserve="message");
+		} else {
+			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
+			rc.messageType = "error";
+			rc.shippingService = response.getData();
+			rc.errors = response.getErrorBean().getErrors();
+			local.serviceName = getMetaData(rc.shippingService)["displayName"];
+			rc.itemTitle = $.Slatwall.rbKey("admin.setting.editshippingservice") & ": " & local.serviceName;
+			rc.edit = true;
+			getFW().setView(action="admin:setting.detailShippingService");
 		}
 	}
 	
@@ -163,7 +182,7 @@ component extends="BaseController" output="false" accessors="true" {
 		detailShippingMethod(rc);
 		var deleteResponse = getSettingService().delete(rc.shippingMethod);
 		
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -221,16 +240,23 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = true;
 	}
 	
+	
 	public void function savePaymentService(required struct rc) {
-		rc.settingsStruct = getSettingService().savePaymentService(rc);
+		rc.serviceProperties = getService("formUtilities").buildFormCollections(rc).paymentService;
+		var response = getSettingService().savePaymentService(rc.paymentServicePackage,rc.serviceProperties);
 
-		if( !getService("requestCacheService").getValue("ormHasErrors") ) {
+		if( !response.hasErrors() ) {
 			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_success");
 			getFW().redirect(action="admin:setting.listPaymentServices", queryString="reload=true", preserve="message");
 		} else {
 			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_error");
 			rc.messageType = "error";
-			getFW().redirect(action="admin:setting.editPaymentService", queryString="paymentServicePackage=#rc.paymentServicePackage#", preserve="settingsStruct,message,messageType");
+			rc.paymentService = response.getData();
+			rc.errors = response.getErrorBean().getErrors();
+			local.serviceName = getMetaData(rc.paymentService)["displayName"];
+			rc.itemTitle = $.Slatwall.rbKey("admin.setting.editpaymentservice") & ": " & local.serviceName;
+			rc.edit = true;
+			getFW().setView(action="admin:setting.detailPaymentService");
 		}
 	}
 	
@@ -317,7 +343,7 @@ component extends="BaseController" output="false" accessors="true" {
 		detailAddressZone(rc);
 		var deleteResponse = getSettingService().delete(rc.addressZone);
 		
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
