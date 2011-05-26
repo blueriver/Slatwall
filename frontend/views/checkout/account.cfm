@@ -77,15 +77,17 @@ Notes:
 								<cfif rc.account.isGuestAccount()>
 									<dt class="guestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
 									<dd id="guestcheckout">
-										<input type="radio" name="createMuraAccount" value="1" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
-										<input type="radio" name="createMuraAccount" value="0" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
+										<input type="radio" name="createMuraAccount" value="1" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
+										<input type="radio" name="createMuraAccount" value="0" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
 									</dd>
-									<div class="accountPassword" style="display:none;">
+									<div class="accountPassword">
 										<dt>Password</dt>
 										<dd><input type="password" name="password" value="" /></dd>
 										<dt>Confirm Password</dt>
 										<dd><input type="password" name="passwordConfirm" value="" /></dd>
 									</div>
+								<cfelse>
+									<a href="?doaction=logout">Logout</a>
 								</cfif>
 							</dl>
 							<cf_ActionCaller action="frontend:checkout.saveaccount" type="submit">

@@ -91,8 +91,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
 	}
 	
-	public any function processOrderPayment(required any orderPayment) {
-		arguments.orderPayment.addError("testing", "no workie");
+	public any function populateAndValidateOrderPayment(required any orderPayment, struct data={}) {
+		arguments.orderPayment.populate(arguments.data);
+		getValidator().validateObject(entity=arguments.orderPayment);
+		
 		return arguments.orderPayment;
 	}
 	

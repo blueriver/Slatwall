@@ -93,6 +93,8 @@ Notes:
 						</dl>
 					</div>
 				</div>
+				<input type="hidden" name="paymentMethodID" value="CreditCard" />
+				<input type="hidden" name="orderPaymentID" value="#rc.payment.getOrderPaymentID()#" />
 				<cf_ActionCaller action="frontend:checkout.processOrder" type="submit">
 			</form>
 		</cfif>

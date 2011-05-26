@@ -46,7 +46,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.accountID" default="";
 		param name="rc.shippingAddressID" default="";
 		param name="rc.paymentAddressID" default="";
-		param name="rc.paymentID" default="";
+		param name="rc.orderPaymentID" default="";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
@@ -72,13 +72,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.shippingAddress = getAccountService().newAddress();
 		}
 		
-		if( rc.paymentID != "") {
-			rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
-		} else if( !isNull(rc.$.slatwall.cart().getOrderPayments()) && arrayLen(rc.$.slatwall.cart().getOrderPayments()) ) {
-			rc.payment = rc.$.slatwall.cart().getOrderShippings()[1];
-		} else {
-			rc.payment = getOrderService().newOrderPayment();
-		}
+		
+		rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
+		
 		
 		// Populate order Shipping Methods if needed.
 		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
@@ -126,14 +122,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		var orderProcessOK = false;
 		
-		rc.payment = getOrderService().processOrderPayment(rc.payment, rc);
+		if(rc.payment.isNew()) {
+			rc.payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+		}
+		
+		rc.payment = getOrderService().populateAndValidateOrderPayment(rc.payment, rc);
 		
 		if(!rc.payment.hasErrors()) {
 			rc.$.slatwall.cart().addOrderPayment(rc.payment);
-			processOK = getOrderService().processOrder(rc.$.slatwall.cart());
+			orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 		}
 		
-		if(processOK) {
+		if(orderProcessOK) {
 			// Redirect to order Confirmation
 			getFW().redirectExact($.createHREF(filename='my-account'), false);
 		}
