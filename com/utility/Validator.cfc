@@ -79,7 +79,7 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 			var prop = props[i] ;
 			var name = prop["name"] ;
 			var val =  isNull(evaluate("arguments.entity." & "get#name#()")) ? "" : evaluate("arguments.entity." & "get#name#()") ;
-			var displayName = getPropertyLabel(entity=arguments.entity, propertyName=name);
+			var displayName = structKeyExists(prop,"displayname") ? prop["displayName"] : getPropertyLabel(entity=arguments.entity, propertyName=name);
 			var attrib = "";
 			//loop through each attribute to look for validation rule
 			for(attrib in prop){
@@ -96,7 +96,7 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 				}
 			}
 		}
-		response = new com.utility.ResponseBean({data=arguments.entity});
+		response = new Slatwall.com.utility.ResponseBean({data=arguments.entity});
 		if( !structIsEmpty(errors) ) {
 			response.getErrorBean().setErrors(errors);
 		}
@@ -156,11 +156,14 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	
 	// @hint returns error message by validation rule from the resource bundle
 	private string function getMessageByRule(required string rule, required string propertyName, any entity){
+		var message = "";
 		if(structKeyExists(arguments,"entity")) {
-			//if this is an entity-related eroor, first remove the "Slatwall" prefix from the entity name
-			var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
-			var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
-			if(right(message,8) == "_missing") {
+			//if this is an entity-related error, first remove the "Slatwall" prefix from the entity name
+			if(structKeyExists(arguments.entity,"getClassName")) {
+				var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+				message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+			}
+			if(right(message,8) == "_missing" || !structKeyExists(arguments.entity,"getClassName") ) {
 				message = rbKey("validator.#arguments.rule#");
 			}	
 		} else {

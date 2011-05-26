@@ -45,7 +45,7 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	public any function init() {
 		this.setData("");
 		this.setMessage("");
-		this.setErrorBean(new com.utility.ErrorBean());
+		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
 		this.setStatusCode(0);
 		return this;
 	} 
