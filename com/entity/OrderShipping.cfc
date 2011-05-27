@@ -58,7 +58,7 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 			variables.orderShippingMethodOptions = [];
 		}
 		
-		return this;
+		return super.init();
 	}
 	
 	public void function populateOrderShippingMethodOptionsIfEmpty() {

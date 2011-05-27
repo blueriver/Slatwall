@@ -268,7 +268,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			var maxOrderNumber = ormExecuteQuery("SELECT isNull(max(aslatwallorder.orderNumber), 0) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 			setOrderNumber(maxOrderNumber[1] + 1);
-			orderOpenDateTime(now());
+			setOrderOpenDateTime(now());
 		}
 	} 
 	

@@ -50,7 +50,7 @@ Notes:
 		<cf_PropertyDisplay object="#rc.Order#" property="filename" edit="#rc.edit#">
 	</dl>
 	<h3 class="tableheader">Order Items</h3>
-	<table class="strips">
+	<table class="stripe">
 		<tr>
 			<th>#$.slatwall.rbKey('entity.brand.brandname')#</th>
 			<th class="varWidth">#$.slatwall.rbKey('entity.product.productname')#</th>
