@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-	Switched Hook to Pre-Merge
+	Now I am testing as a Pre-Commit
 --->
 
 <!--- This File Should be left blank --->
