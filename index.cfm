@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-	Switched Hook to Pre-Merge
+	Back to eGit
 --->
 
 <!--- This File Should be left blank --->
