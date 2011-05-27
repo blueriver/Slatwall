@@ -77,7 +77,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     
     public void function list(required struct rc) {
         param name="rc.listby" default="optiongroups";
-        rc.orderby="optiongroup_optiongroupname|A^sortOrder|A";
+        rc.orderby="optiongroup_optiongroupname|ASC^sortOrder|ASC";
         rc.options = getOptionService().getSmartList(entityName="SlatwallOption", data=arguments.rc);
         rc.optionGroups = getOptionService().listOptionGroupOrderBySortOrder();
     }
