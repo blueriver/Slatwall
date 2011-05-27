@@ -64,10 +64,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="false";
-		// we could be redirected here from a failed form submission, so check rc for product object first
-		if( !(structKeyExists(rc,"product") && isObject(rc.product)) ) {
-			rc.product = getProductService().getProduct(rc.productID);
-		}
+		rc.product = getProductService().getProduct(rc.productID);
 		if(!isNull(rc.product) ) {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
@@ -77,6 +74,7 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productPages = getProductService().getProductPages("nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
+		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 	}
 	
 	public void function edit(required struct rc) {
@@ -136,6 +134,7 @@ component extends="BaseController" output=false accessors=true {
 				rc.edit = true;
 				rc.productPages = getProductService().getProductPages("nestedIterator");
 				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
+				rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");
 			}
