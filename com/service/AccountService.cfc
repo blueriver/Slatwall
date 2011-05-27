@@ -203,7 +203,7 @@ component extends="BaseService" accessors="true" output="false" {
 			// Attempt to find that e-mail address in all of our emails
 			for(var i=1; i<=arrayLen(arguments.account.getAccountEmailAddresses()); i++) {
 				if(arguments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
-					primaryEmail = agruments.account.getAccountEmailAddresses()[i];
+					primaryEmail = arguments.account.getAccountEmailAddresses()[i];
 				}
 			}
 			if( isNull(primaryEmail) ) {
@@ -211,7 +211,7 @@ component extends="BaseService" accessors="true" output="false" {
 				primaryEmail.setEmailAddress(arguments.muraUser.getEmail());
 				primaryEmail.setAccount(arguments.account);
 			}
-			arguments.account.setPrimaryEmail(primaryEmail);
+			arguments.account.setPrimaryEmailAddress(primaryEmail);
 		}
 		
 		// TODO: Sync the mobile phone number
