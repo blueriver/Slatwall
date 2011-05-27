@@ -64,18 +64,24 @@ Notes:
 		<table id="orderList" class="stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullname")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.createdDateTime")#</th>
+				<th>&nbsp;</th>
 			</tr>	
 			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
 				<tr>
-					<td>#local.order.getOrderNumber()#</td>
+					<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#local.order.getOrderNumber()#</a></td>
+					<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#DateFormat(local.order.getOrderOpenDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.order.getOrderOpenDateTime(), "short")#</a></td>
 					<cfif !isNull(local.order.getAccount())>
-						<td class="varWidth">#local.order.getAccount().getFullName()#</td>
+						<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='accountID=#local.order.getAccount().getAccountID()#')#">#local.order.getAccount().getFullName()#</a></td>
 					<cfelse>
 						<td class="varWidth"></td>
 					</cfif>
-					<td>#DateFormat(local.product.getProductType().getCreatedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getProductType().getCreatedDateTime(), "HH:MM:SS")#</td>
+					<td class="administration">
+						<ul class="one">
+						  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+						</ul>     						
+					</td>
 				</tr>
 			</cfloop>
 		</table>

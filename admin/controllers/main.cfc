@@ -46,6 +46,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.productSmartList = getProductService().getSmartList(entityName="SlatwallProduct", data=arguments.rc);
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");
 		rc.orderSmartList = getOrderService().getSmartList(entityName="SlatwallOrder", data=arguments.rc);
-		rc.orderSmartList.addOrder("createdDateTime|DESC");
+		rc.orderSmartList.addFilter("orderStatusType_systemCode", "ostNew");
+		rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}
 }
