@@ -42,8 +42,38 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	property name="creditCardNumber" ormType="string";
+	property name="creditCardLastFour" ormType="string";
+	property name="experationMonth" ormType="string";
+	property name="experationYear" ormType="string";
 	property name="amountAuthorized" ormtype="float";
 	property name="amountCharged" ormtype="float";
 	property name="amountSettled" ormtype="float";
 	
+	property name="securityCode" persistent="false";
+	
+	public void function setCreditCardNumber(required string creditCardNumber) {
+		variables.creditCardNumber = arguments.creditCardNumber;
+		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+	}
+	
+	public void function encryptCreditCardNumber() {
+		if(!isNull(getCreditCardNumber()) && getCreditCardNumber() != "") {
+			variables.creditCardNumber = getService("encryptionService").encryptValue(getCreditCardNumber());
+		}
+	}
+	
+	private void function preInsert() {
+		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
+		
+		
+		// Call Super Pre-Insert
+		super.preInsert();
+	}
+	
+	private void function preUpdate(Struct oldData) {
+		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
+		
+		// Call Super Pre-Update
+		super.preUpdate();
+	}
 }

@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
+	property name="paymentService" type="any";
 	property name="settingService" type="any";
 	
 	public void function detail(required struct rc) {
@@ -72,13 +73,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.shippingAddress = getAccountService().newAddress();
 		}
 		
-		if( rc.paymentID != "") {
-			rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
-		} else if( !isNull(rc.$.slatwall.cart().getOrderPayments()) && arrayLen(rc.$.slatwall.cart().getOrderPayments()) ) {
-			rc.payment = rc.$.slatwall.cart().getOrderShippings()[1];
-		} else {
-			rc.payment = getOrderService().newOrderPayment();
-		}
+		
+		rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
+		
 		
 		// Populate order Shipping Methods if needed.
 		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
@@ -126,14 +123,21 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		var orderProcessOK = false;
 		
-		rc.payment = getOrderService().processOrderPayment(rc.payment, rc);
-		
-		if(!rc.payment.hasErrors()) {
-			rc.$.slatwall.cart().addOrderPayment(rc.payment);
-			processOK = getOrderService().processOrder(rc.$.slatwall.cart());
+		if(rc.payment.isNew()) {
+			rc.payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
 		}
 		
-		if(processOK) {
+		// Populate and Validate Payment
+		rc.payment = getPaymentService().populateAndValidateOrderPayment(rc.payment, rc);
+		
+		// If Payment has no errors than attach to order and process the order
+		if(!rc.payment.hasErrors()) {
+			rc.payment.setAmount(rc.$.slatwall.cart().getTotal());
+			rc.$.slatwall.cart().addOrderPayment(rc.payment);
+			orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
+		}
+		
+		if(orderProcessOK) {
 			// Redirect to order Confirmation
 			getFW().redirectExact($.createHREF(filename='my-account'), false);
 		}
