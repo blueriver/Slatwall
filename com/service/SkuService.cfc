@@ -38,7 +38,10 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-
+	public any function getSkuSmartList(string productID, struct data={}) {
+		return getDAO().getSkuSmartList(argumentCollection=arguments);
+	}
+	
 	public any function delete(required any sku) {
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");

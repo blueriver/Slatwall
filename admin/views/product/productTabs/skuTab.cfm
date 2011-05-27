@@ -47,7 +47,7 @@ Notes:
     <!---<a class="button" id="addOption">#rc.$.Slatwall.rbKey("admin.product.edit.addoption")#</a>--->
 </div>
 </cfif>
-<cfset local.skus = rc.product.getSkus(sortby='skuCode') />
+<!---<cfset local.skus = rc.SkuSmartList.getPageRecords() />--->
 	<table id="skuTable" class="stripe">
 		<thead>
 			<tr>
@@ -78,8 +78,8 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-		<cfloop from="1" to="#arrayLen(local.skus)#" index="local.skuCount">
-			<cfset local.thisSku = local.skus[local.skuCount] />
+		<cfloop from="1" to="#arrayLen(rc.SkuSmartList.getPageRecords())#" index="local.skuCount">
+			<cfset local.thisSku = rc.SkuSmartList.getPageRecords()[local.skuCount] />
 			<tr id="Sku#local.skuCount#" class="skuRow">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<td class="alignLeft">
@@ -170,6 +170,8 @@ Notes:
 	</tbody>
 </table>
 
+<cf_smartListPager smartList="#rc.SkuSmartList#">
+
 <cfif rc.edit>
 <table id="tableTemplate" class="hideElement">
 <tbody>
@@ -198,6 +200,9 @@ Notes:
         <td>
             $<input type="text" size="6" name="listPrice" value="#rc.product.getDefaultSku().getListPrice()#" />         
         </td>
+		<td>
+			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
+		</td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
         <td></td>
         <td></td>

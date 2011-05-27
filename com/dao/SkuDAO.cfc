@@ -38,4 +38,15 @@ Notes:
 */
 component extends="slatwall.com.dao.BaseDAO" {
 
+	public any function getSkuSmartList(string productID, struct data={}){
+		
+		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallSku", data=arguments.data);
+		
+		if( structKeyExists(arguments,"productID") ) {
+			smartList.addFilter(propertyIdentifier="product_productID", value=arguments.productID);
+		}
+		
+		return smartList;
+	}
+
 }
