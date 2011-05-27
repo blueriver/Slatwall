@@ -39,6 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
+	property name="paymentService";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
 		
@@ -91,14 +92,34 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
 	}
 	
-	public any function populateAndValidateOrderPayment(required any orderPayment, struct data={}) {
-		arguments.orderPayment.populate(arguments.data);
-		getValidator().validateObject(entity=arguments.orderPayment);
-		
-		return arguments.orderPayment;
-	}
-	
 	public any function processOrder(required any order) {
+		var allPaymentsOK = true;
+		
+		// Process All Payments and Save the ones that were successful
+		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+			var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i]);
+			if(!paymentOK) {
+				allPaymentsOK = false;
+			}
+		}
+		
+		// If all payments were successful, then change the order status and clear the cart.
+		if(allPaymentsOK) {
+			// Set the current cart to None
+			if(arguments.order.getOrderID() == $.slatwall.cart().getOrderID()) {
+				$.slatwall.getCurrentSession().setOrder(JavaCast("null",""));
+			}
+			
+			// Update the order status
+			arguments.order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+			
+			// Save the order to the database
+			getDAO().save(arguments.order);
+			
+			return true;
+		}
+		
+		
 		return false;
 	}
 }

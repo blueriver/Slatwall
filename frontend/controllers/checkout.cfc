@@ -40,13 +40,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
+	property name="paymentService" type="any";
 	property name="settingService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.accountID" default="";
 		param name="rc.shippingAddressID" default="";
 		param name="rc.paymentAddressID" default="";
-		param name="rc.orderPaymentID" default="";
+		param name="rc.paymentID" default="";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
@@ -126,9 +127,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
 		}
 		
-		rc.payment = getOrderService().populateAndValidateOrderPayment(rc.payment, rc);
+		// Populate and Validate Payment
+		rc.payment = getPaymentService().populateAndValidateOrderPayment(rc.payment, rc);
 		
+		// If Payment has no errors than attach to order and process the order
 		if(!rc.payment.hasErrors()) {
+			rc.payment.setAmount(rc.$.slatwall.cart().getTotal());
 			rc.$.slatwall.cart().addOrderPayment(rc.payment);
 			orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 		}

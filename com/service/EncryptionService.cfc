@@ -36,33 +36,5 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
-
-	property name="settingService" type="any";
-
-	public any function savePaymentMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") ) {
-			// save paymentMethod-specific settings
-			for(var item in arguments.data) {
-				if(!isObject(arguments.data[item]) && listFirst(item,"_") == "paymentMethod") {
-					var setting = getSettingService().getBySettingName(item);
-					setting.setSettingName(item);
-					setting.setSettingValue(arguments.data[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		return save(argumentcollection=arguments);
-	}
-	
-	public any function populateAndValidateOrderPayment(required any orderPayment, struct data={}) {
-		arguments.orderPayment.populate(arguments.data);
-		getValidator().validateObject(entity=arguments.orderPayment);
-		
-		return arguments.orderPayment;
-	}
-	
-	public boolean function processPayment() {
-		return true;
-	}
+component {
 }

@@ -266,11 +266,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumber() {
 		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-			var maxOrderNumber = ormExecuteQuery("SELECT max(aslatwallorder.orderNumber) FROM SlatwallOrder aslatwallorder");
-			if(isNull(maxOrderNumber)) {
-				maxOrderNumber = 1;
-			}
-			setOrderNumber(maxOrderNumber + 1);
+			var maxOrderNumber = ormExecuteQuery("SELECT isNull(max(aslatwallorder.orderNumber), 0) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+			setOrderNumber(maxOrderNumber[1] + 1);
 		}
 	} 
 	
