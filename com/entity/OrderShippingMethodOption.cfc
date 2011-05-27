@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,20 +35,37 @@
 
 Notes:
 
---->
+*/
+component displayname="Order Shipping Method Option" entityname="SlatwallOrderShippingMethodOption" table="SlatwallOrderShippingMethodOption" persistent=true accessors=true output=false extends="BaseEntity" {
 
-<cfinterface>
+	property name="orderShippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="totalCost" ormtype="float";
+	property name="estimatedArrivalDate" ormtype="date";
 	
-	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
+	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
-	<cffunction name="processTransaction" access="public" returntype="Slatwall.com.utility.payment.ResponseBean">
-		<cfargument name="requestBean" type="Slatwall.com.utility.payment.RequestBean" required="true" />
-		<cfargument name="transactionType" type="string" required="true" /> 
-		
-	</cffunction>
+	/******* Association management methods for bidirectional relationships **************/
 	
-	<cffunction name="getSupportedPaymentMethods">
-	</cffunction>
-		
-</cfinterface>
+	// Order Shipping (many-to-one)
+	public void function setOrderShipping(required OrderShipping orderShipping) {
+		variables.orderShipping = arguments.orderShipping;
+		if(isNew() || !arguments.orderShipping.hasOrderShippingMethodOption(this)) {
+			arrayAppend(arguments.orderShipping.getOrderShippingMethodOptions(),this);
+		}
+	}
+	
+	public void function removeOrderShipping(OrderShipping orderShipping) {
+	   if(!structKeyExists(arguments,"orderShipping")) {
+	   		arguments.orderShipping = variables.orderShipping;
+	   }
+       var index = arrayFind(arguments.orderShipping.getOrderShippingMethodOptions(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.orderShipping.getOrderShippingMethodOptions(), index);
+       }
+       structDelete(variables,"orderShipping");
+    }
+    
+    /******* END Association management methods */ 
+	
+}

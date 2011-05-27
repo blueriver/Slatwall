@@ -57,17 +57,14 @@ component extends="BaseController" output=false accessors=true {
 
     public void function create(required struct rc) {
 		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
-			rc.product = getProductService().getNewEntity();
+			rc.product = getProductService().newProduct();
 		}
-		rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="sortOrder", sortType="numeric");
+		rc.optionGroups = getProductService().listOptionGroupOrderBySortOrder();
     }
 	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="false";
-		// we could be redirected here from a failed form submission, so check rc for product object first
-		if( !(structKeyExists(rc,"product") && isObject(rc.product)) ) {
-			rc.product = getProductService().getByID(rc.productID);
-		}
+		rc.product = getProductService().getProduct(rc.productID);
 		if(!isNull(rc.product) ) {
 			if(len(rc.product.getProductName())) {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
@@ -77,6 +74,7 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productPages = getProductService().getProductPages("nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
+		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 	}
 	
 	public void function edit(required struct rc) {
@@ -86,17 +84,14 @@ component extends="BaseController" output=false accessors=true {
 	}
 
 	public void function list(required struct rc) {
-		rc.productSmartList = getProductService().getSmartList(data=arguments.rc);
+		rc.productSmartList = getProductService().getSmartList(entityName="Product", data=arguments.rc);
 	}
 	
 	public void function save(required struct rc) {
+		param name="rc.productID" default="";
 		var isNew = 0;
 		
-		if(len(rc.productID)) {
-			rc.product = getProductService().getByID(rc.productID);
-		} else {
-			rc.product = getProductService().getNewEntity();	
-		}
+		rc.product = getProductService().getProduct(rc.productID, true);
 		
 		if(rc.product.isNew()) {
 			isNew = 1;
@@ -132,13 +127,14 @@ component extends="BaseController" output=false accessors=true {
 			rc.message = $.Slatwall.rbKey("admin.product.save_error");
 			rc.messageType = "error";
 			if(isNew) {
-				rc.optionGroups = getProductService().list(entityName="SlatwallOptionGroup",sortby="OptionGroupName");
+				rc.optionGroups = getProductService().listOptionGroupOrderByOptionGroupName();
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
 				getFW().setView(action="admin:product.create");
 			} else {
 				rc.edit = true;
 				rc.productPages = getProductService().getProductPages("nestedIterator");
 				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
+				rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
 				getFW().setView(action="admin:product.detail");
 			}
@@ -146,9 +142,9 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function delete(required struct rc) {
-		var product = getProductService().getByID(rc.productID);
+		var product = getProductService().getProduct(rc.productID);
 		var deleteResponse = getProductService().delete(product);
-		if(deleteResponse.getStatusCode()) {
+		if(deleteResponse.hasErrors()) {
 			rc.message = deleteResponse.getMessage();		
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
@@ -160,10 +156,10 @@ component extends="BaseController" output=false accessors=true {
 	// SKU actions
 	
 	public void function deleteSku(required struct rc) {
-		var sku = getSkuService().getByID(rc.skuID);
+		var sku = getSkuService().getSku(rc.skuID);
 		var productID = sku.getProduct().getProductID();
 		var deleteResponse = getSkuService().delete(sku);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message = deleteResponse.getMessage();
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
@@ -173,7 +169,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function uploadSkuImage(required struct rc) {
-		rc.sku = getSkuService().getByID(rc.skuID);
+		rc.sku = getSkuService().getSku(rc.skuID);
 		
 		// upload the image and return the result struct if there was an upload
 		if(structKeyExists(rc, "skuImageFile") && rc.skuImageFile != "") {
@@ -193,13 +189,13 @@ component extends="BaseController" output=false accessors=true {
 		
 	public void function createProductType(required struct rc) {
 	   rc.edit=true;
-	   rc.productType = getProductService().getNewEntity("SlatwallProductType");
+	   rc.productType = getProductService().newProductType();
 	   rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 	   getFW().setView("admin:product.detailproducttype");
 	}
 		
 	public void function editProductType(required struct rc) {	
-	   	rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+	   	rc.productType = getProductService().getProductType(rc.productTypeID);
 		rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 	   	if(!isNull(rc.productType)) {
 	   		rc.edit = true;
@@ -215,7 +211,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function detailProductType(required struct rc) {
-		rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		rc.productType = getProductService().getProductType(rc.productTypeID);
 		rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 		if(isNull(rc.productType)) {
 			getFW().redirect("admin:product.listProductTypes");
@@ -225,11 +221,9 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function saveProductType(required struct rc) {
-		if(len(rc.productTypeID)) {
-			rc.productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
-		} else {
-			rc.productType = getProductService().getNewEntity("SlatwallProductType");	
-		}
+		param name="rc.productTypeID" default="";
+		
+		rc.productType = getProductService().getProductType(rc.productTypeID, true);
 		
 		rc.productType = getProductService().saveProductType(rc.productType,rc);
 		
@@ -240,15 +234,16 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			// errors, so show edit view again
 		  rc.edit = true;
+		  rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 		  rc.itemTitle = rc.productType.isNew() ? rc.$.Slatwall.rbKey("admin.product.createProductType") : rc.$.Slatwall.rbKey("admin.product.editProductType") & ": #rc.productType.getProductTypeName()#";
 		  getFW().setView(action="admin:product.detailproducttype");
         }
 	}
 	
 	public void function deleteProductType(required struct rc) {
-		var productType = getProductService().getByID(rc.productTypeID,"SlatwallProductType");
+		var productType = getProductService().getProductType(rc.productTypeID);
 		var deleteResponse = getProductService().deleteProductType(productType);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message = deleteResponse.getMessage();		
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");

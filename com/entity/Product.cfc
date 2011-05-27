@@ -54,7 +54,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
-	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges, gets overridden by sku Shipping Weight";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -85,6 +84,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent="false";
 	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
 	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
+	property name="shippingWeight" type="numeric" validateNumeric persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
@@ -388,15 +388,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 
 	public struct function getOptionGroupsStruct() {
 		if( !structKeyExists(variables, "optionGroupsStruct") ) {
-			variables.optionGroupsStruct = structNew();
-			var skus = getSkus();
-			for(var i=1; i <= arrayLen(skus); i++){
-				var options = skus[i].getOptions();
-				for(var ii=1; ii <= arrayLen(options); ii++) {
-					if( !structKeyExists( variables.optionGroupsStruct, options[ii].getOptionGroup().getOptionGroupID() ) ){
-						variables.optionGroupsStruct[options[ii].getOptionGroup().getOptionGroupID()] = options[ii].getOptionGroup();
-					}
-				}
+			variables.optionGroupsStruct = {};
+			for(var optionGroup in getOptionGroups()){
+				variables.optionGroupsStruct[optionGroup.getOptionGroupID()] = optionGroup;
 			}
 		}
 		return variables.optionGroupsStruct;
@@ -405,44 +399,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public array function getOptionGroups() {
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
-			// optionGroupStruct() and reorder them into a sort-ordered array.
-			var optionGroupsStruct = getOptionGroupsStruct();
-			var i = 1;	
-			for( var optionGroupID in optionGroupsStruct ) {
-				variables.optionGroups[i] = optionGroupsStruct[optionGroupID];
-				i++;
-			}
-			variables.optionGroups = sortObjectArray(variables.optionGroups, "sortOrder", "numeric");
+			var smartList = getSmartList("SlatwallOptionGroup");
+			smartList.addFilter("options_skus_product_productID",this.getProductID());
+			smartList.addOrder("sortOrder|ASC");
+			variables.optionGroups = smartList.getRecords();
 		}
 		return variables.optionGroups;
 	}
 	
 	public numeric function getOptionGroupCount() {
-		return listlen(structKeyList(getOptionGroupsStruct()));
+		return arrayLen(getOptionGroups());
 	}
-	
-	/*
-	public any function getDefaultSku() {
-		if( !structKeyExists(variables, "defaultSku")) {
-			var skus = getSkus();
-			for(var i = 1; i<= arrayLen(skus); i++) {
-				if(skus[i].getDefaultFlag()) {
-					variables.defaultSku = skus[i];
-				}
-			}
-			if( !isNew() && !structKeyExists(variables, "defaultSku") && arrayLen(skus) > 0) {
-				skus[1].setDefaultFlag(true);
-				getService("skuService").save(entity=skus[1]);
-				variables.defaultSku = skus[1];
-			} else if ( !structKeyExists(variables, "defaultSku") ) {
-				variables.defaultSku = getService("skuService").getNewEntity();
-			}
-		}
-		return variables.defaultSku;
-	}
-	*/
 	
 	// Start: Functions that deligate to the default sku
+    public string function getImageDirectory() {
+    	return getDefaultSku().getImageDirectory();	
+    }
+    
 	public string function getImage(string size, numeric width, numeric height, string class, string alt) {
 		return getDefaultSku().getImage(argumentCollection = arguments);
 	}
@@ -456,15 +429,39 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public numeric function getPrice() {
-		return getDefaultSku().getPrice();
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getPrice();
+		} else {
+			return 0;
+		}
 	}
 	
 	public numeric function getListPrice() {
-		return getDefaultSku().getListPrice();
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getListPrice();
+		} else {
+			return 0;
+		}
 	}
 	
 	public numeric function getLivePrice() {
-		return getDefaultSku().getLivePrice();
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getLivePrice();
+		} else {
+			return 0;
+		}
+	}
+
+	public numeric function getShippingWeight() {
+		// brand new products won't have a default SKU yet but need this method for create form
+		if( structKeyExists(variables,"defaultSku") ) {
+			return getDefaultSku().getShippingWeight();
+		} else {
+			return 0;
+		}
 	}
 	
 	// Start Functions for determining different option combinations
@@ -561,7 +558,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(arrayLen(attributeValue)){
 			return attributeValue[1];
 		}else{
-			return getService("ProductService").getNewEntity("SlatwallProductAttributeValue");
+			return getService("ProductService").newProductAttributeValue();
 		}
 	}
 	
@@ -571,13 +568,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(structKeyExists(data,"attributes")){
 			for(var attributeID in data.attributes){
 				for(var attributeValueID in data.attributes[attributeID]){
-					var attributeValue = getService("AttributeService").getByID(attributeValueID,"SlatwallProductAttributeValue");
-					if(isNull(attributeValue)){
-						var attributeValue = getService("AttributeService").getNewEntity("SlatwallProductAttributeValue");
-					}
+					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
 					attributeValue.setAttributeValue(data.attributes[attributeID][attributeValueID]);
 					if(attributeValue.isNew()){
-						var attribute = getService("AttributeService").getByID(attributeID,"SlatwallAttribute");
+						var attribute = getService("AttributeService").getAttribute(attributeID);
 						attributeValue.setAttribute(attribute);
 						addAttribtueValue(attributeValue);
 					}

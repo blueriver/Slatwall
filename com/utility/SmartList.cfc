@@ -43,6 +43,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	variables.dataKeyDelimiter = ":";
 	variables.currentURL = "";
 	variables.currentPageDeclaration = 1;
+	variables.entityJoinOrder = [];
 	
 	public any function init(required string entityName, struct data, numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL="") {
 		// Set defaults for the main properties
@@ -142,7 +143,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 		if(!structKeyExists(variables.entities,newEntityName)) {
-			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
+			arrayAppend(variables.entityJoinOrder, newEntityName);
+			
+			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch") && arguments.parentEntityName == getBaseEntityName()) {
 				arguments.fetch = true;
 			} else if(!structKeyExists(arguments, "fetch")) {
 				arguments.fetch = false;
@@ -324,7 +327,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			hqlFrom &= " FROM";	
 		}
 		hqlFrom &= " #getBaseEntityName()# as #variables.entities[getBaseEntityName()].entityAlias#";
-		for(var i in variables.entities) {
+
+		for(var i in variables.entityJoinOrder) {
 			if(i != getBaseEntityName()) {
 				var joinType = variables.entities[i].joinType;
 				if(!len(joinType)) {

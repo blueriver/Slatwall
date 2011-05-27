@@ -36,19 +36,11 @@
 Notes:
 
 --->
-
-<cfinterface>
-	
-	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
-	
-	<cffunction name="processTransaction" access="public" returntype="Slatwall.com.utility.payment.ResponseBean">
-		<cfargument name="requestBean" type="Slatwall.com.utility.payment.RequestBean" required="true" />
-		<cfargument name="transactionType" type="string" required="true" /> 
-		
-	</cffunction>
-	
-	<cffunction name="getSupportedPaymentMethods">
-	</cffunction>
-		
-</cfinterface>
+<cfoutput>
+	<div class="svoadminsettingdetailviewupdate">
+		<form action="#buildURL(action='admin:setting.updatefrontendviews')#" method="post">
+			<p>Only Click this button if you are 100% sure that you want to updated all of the views in you the <strong>#rc.$.event('siteid')#</strong> site directory</p>
+			<cf_ActionCaller action="admin:setting.updatefrontendviews" type="submit" class="button">
+		</form>
+	</div>
+</cfoutput>

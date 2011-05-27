@@ -44,15 +44,61 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"shippingRates") ) {
 			for(var i=1; i<=arrayLen(arguments.data.shippingRates); i++) {	
 				if( len(arguments.data.shippingRates[i].shippingRateID) > 0 ) {
-					var rate = getByID(arguments.data.shippingRates[i].shippingRateID, "SlatwallShippingRate");
+					var rate = this.getShippingRate(arguments.data.shippingRates[i].shippingRateID);
 					rate.populate(data=arguments.data.shippingRates[i]);
 		         } else {
-		         	var rate = getNewEntity("SlatwallShippingRate");
+		         	var rate = this.newShippingRate();
 		         	rate.populate(data=arguments.data.shippingRates[i]);
 		         	arguments.entity.addShippingRate(rate);
 		         }
 			}
 		}
 		return save(argumentcollection=arguments);
+	}
+	
+	public array function populateOrderShippingMethodOptions(required any orderShipping) {
+		var shippingMethods = getDAO().list(entityName="SlatwallShippingMethod");
+		var shippingProviders = [];
+		var providerRateResponseBeans = [];
+		var methodOptions = [];
+		
+		// Loop over all methods and organize them by provider
+		for(var i=1; i<=arrayLen(shippingMethods); i++) {
+			if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
+				arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+			}
+		}
+		
+		// Loop over Shipping Providers
+		for(var p=1; p<=arrayLen(shippingProviders); p++) {
+			
+			// Get Provider Service
+			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
+			
+			// Query the Provider For Rates
+			var ratesResponseBean = providerService.getRates(arguments.orderShipping);
+			
+			// Loop Over Shipping Methods
+			for(var m=1; m<=arrayLen(shippingMethods); m++) {
+				
+				// Check the method to see if it is from this provider
+				if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
+					
+					// Loop over the rates return by the provider to match with a shipping method
+					for(var r=1; r<=arrayLen(ratesResponseBean.getMethodRateResponseBeans()); r++) {
+						if(ratesResponseBean.getMethodRateResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
+							var option = this.newOrderShippingMethodOption();
+							option.setShippingMethod(shippingMethods[m]);
+							option.setTotalCost(ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost());
+							option.setEstimatedArrivalDate(ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate());
+							option.setOrderShipping(arguments.orderShipping);
+							getDAO().save(option);
+						}
+					}
+				}
+			}
+		}
+		
+		return methodOptions;
 	}
 }

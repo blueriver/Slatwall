@@ -49,12 +49,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.brandID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.brand = getBrandService().getByID(ID=rc.brandID);
-		if(!isNull(rc.brand) and !rc.brand.isNew()) {
+		rc.brand = getBrandService().getBrand(rc.brandID,true);
+		if(!rc.brand.isNew()) {
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
-		}
-		if(isNull(rc.brand)) {
-			rc.brand = getBrandService().getNewEntity();
 		}
 	}
 
@@ -72,16 +69,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	 
     public void function list(required struct rc) {
-		//param name="rc.orderby" default="brandName|A";
-        //rc.brandSmartList = getBrandService().getSmartList(data=arguments.rc);
-		rc.brands = getBrandService().list(sortBy = "brandName ASC");
+		rc.brands = getBrandService().listBrandOrderByBrandName();
     }
 
 	public void function save(required struct rc) {
-	   rc.brand = getBrandService().getByID(rc.brandID);
-	   if(isNull(rc.brand)) {
-	       rc.brand = getBrandService().getNewEntity();
-	   }
+	   rc.brand = getBrandService().getBrand(rc.brandID,true);
 	   rc.brand = getBrandService().save(rc.brand,rc);
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
@@ -92,9 +84,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
-		var brand = getBrandService().getByID(rc.brandID);
+		var brand = getBrandService().getBrand(rc.brandID);
 		var deleteResponse = getBrandService().delete(brand);
-		if(deleteResponse.getStatusCode()) {
+		if(!deleteResponse.hasErrors()) {
 			rc.message=deleteResponse.getMessage();
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");

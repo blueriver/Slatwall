@@ -40,6 +40,7 @@ Notes:
 <cfparam name="rc.edit" />
 <cfparam name="rc.paymentServicePackage" />
 <cfparam name="rc.paymentService" />
+<cfparam name="rc.errors" default="#structNew()#" />
 
 <cfset local.serviceMeta = getMetaData(rc.paymentService) />
 
@@ -49,6 +50,14 @@ Notes:
 	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
 			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
+
+		<cfif !structIsEmpty(rc.errors)>
+			<ul class="error">
+				<cfloop collection="#rc.errors#" item="local.thisError">
+					<li>#rc.errors[local.thisError]#</li>
+				</cfloop>
+			</ul>
+		</cfif>
 		
 		<cfif rc.edit>
 			<form name="savePaymentService" method="post" action="#buildURL(action='admin:setting.savePaymentService')#">
@@ -65,8 +74,7 @@ Notes:
 					<cfelse>
 						<cfset local.propertyTitle = local.property.name />
 					</cfif>
-					
-					<cf_PropertyDisplay object="#rc.paymentService#" fieldName="paymentService_#rc.paymentServicePackage#_#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+					<cf_PropertyDisplay object="#rc.paymentService#" fieldName="paymentService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
 				</cfloop>
 			</dl>
 		</cfif>

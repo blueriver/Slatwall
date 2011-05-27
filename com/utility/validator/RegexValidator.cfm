@@ -36,12 +36,16 @@
 Notes:
 
 */
-component persistent="false" accessors="true" output="false" extends="BaseController" {
+/**
+ * @hint validates that the value is false
+ */
+component extends="BaseValidator" {
 
-	property name="productService" type="any";
-	
-	public void function productlist(required struct rc) {
-		rc.ProductSmartList = getProductService().getSmartList(rc=arguments.rc);	
+	public boolean function validate(any objectValue, string criteria){
+		var valid = true;
+		if( arrayLen(rematch(arguments.criteria,arguments.objectValue)) == 0 ){
+			valid = false;
+		}
+		return valid;
 	}
-	
 }

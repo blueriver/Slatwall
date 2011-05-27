@@ -47,7 +47,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		// if this is an option, make sure the option code is unique
 		if( arguments.entity.getClassName() =="SlatwallOption" ) {
 			var checkOptionCode = getDAO().isDuplicateOptionCode(arguments.entity);
-			var optionCodeError = getService("validator").validate(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
+			var optionCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
 			if( !structIsEmpty(optionCodeError) ) {
 				arguments.entity.addError(argumentCollection=optionCodeError);
 			}
@@ -107,7 +107,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	public void function saveOptionSort(required string optionIDs) {
 		for(var i=1; i<=listlen(arguments.optionIDs);i++) {
 			var optionID = listGetAt(arguments.optionIDs,i);
-			var thisOption = getByID(optionID);
+			var thisOption = this.getOption(optionID);
 			thisOption.setSortOrder(i);
 		}
 	}
@@ -115,13 +115,13 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	public void function saveOptionGroupSort(required string optionGroupIDs) {
 		for(var i=1; i<=listlen(arguments.optionGroupIDs);i++) {
 			var optionGroupID = listGetAt(arguments.optionGroupIDs,i);
-			var thisOptionGroup = getByID(optionGroupID,"SlatwallOptionGroup");
+			var thisOptionGroup = this.getOptionGroup(optionGroupID);
 			thisOptionGroup.setSortOrder(i);
 		}
 	}
 	
 	public numeric function getOptionGroupCount() {
-		return arrayLen(list("SlatwallOptionGroup"));
+		return arrayLen(this.listOptionGroup());
 	}
 	
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {

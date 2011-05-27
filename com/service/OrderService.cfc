@@ -39,24 +39,31 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
+	property name="paymentService";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
-		// TODO: Check the status of the order to make sure it isn't closed
 		
-		var orderItems = arguments.order.getOrderItems();
-		var itemExists = false;
+		// Check to see if the order has a status
+		if(isNull(arguments.order.getOrderStatusType())) {
+			arguments.order.setOrderStatusType(this.getTypeBySystemCode('ostNotPlaced'));
+		} else if (arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
+			throw("You cannot add an item to an order that has been closed or canceld");
+		}
 		
 		// Check for an orderShipping in the arguments.  If none, use the orders first.  If none has been setup create a new one
 		if(!structKeyExists(arguments, "orderShipping")) {
 			var osArray = arguments.order.getOrderShippings();
 			if(!arrayLen(osArray)) {
-				arguments.orderShipping = getNewEntity("SlatwallOrderShipping");
+				arguments.orderShipping = this.newOrderShipping();
 				arguments.orderShipping.setOrder(arguments.order);
 				save(arguments.orderShipping);
 			} else {
 				arguments.orderShipping = osArray[1];
 			}
 		}
+		
+		var orderItems = arguments.order.getOrderItems();
+		var itemExists = false;
 		
 		// Check the existing order items and increment quantity if possible.
 		for(var i = 1; i <= arrayLen(orderItems); i++) {
@@ -68,7 +75,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// If the sku doesn't exist in the order, then create a new order item and add it
 		if(!itemExists) {
-			var newItem = getNewEntity(entityName="SlatwallOrderItem");
+			var newItem = this.newOrderItem();
 			newItem.setSku(arguments.sku);
 			newItem.setQuantity(arguments.quantity);
 			newItem.setOrder(arguments.order);
@@ -79,94 +86,40 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		save(arguments.order);
 	}
 	
-	/*
-	public void function setupOrderAccount(required any order, struct data={}) {
-		if(isNull(arguments.order.getAccount())) {
-			arguments.order.setAccount(getNewEntity("SlatwallAccount"));
-		}
+	public void function setOrderShippingMethodFromMethodOptionID(required any orderShipping, required string orderShippingMethodOptionID) {
+		var selectedOption = this.getOrderShippingMethodOption(arguments.orderShippingMethodOptionID);
+		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
+		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
+	}
+	
+	public any function processOrder(required any order) {
+		var allPaymentsOK = true;
 		
-		// Populate the order Account
-		arguments.order.getAccount().populate(arguments.data);
-		
-		// Validate the order Account
-		getValidator().validateObject(entity=arguments.order.getAccount());
-		
-		// Setup the account e-mail
-		var accountEmails = arguments.order.getAccount().getAccountEmails();
-		var emailExists = false;
-		
-		// Check to see if the e-mail already exists
-		if(!isNull(accountEmails)) {
-			for(var i=1; i<=arrayLen(accountEmails); i++) {
-				if(accountEmails[i].getEmail() == arguments.data.email) {
-					emailExists = true;
-				}
-			}	
-		}
-		
-		// If the email doesn't exist, create one and add to the account.
-		if(!emailExists) {
-			var newAccountEmail = getNewEntity("SlatwallAccountEmail");
-			newAccountEmail.setEmail(arguments.data.email);
-			newAccountEmail.setAccount(arguments.order.getAccount());
-		}
-		
-		// Setup the account phone number
-		var accountPhoneNumbers = arguments.order.getAccount().getAccountPhoneNumbers();		
-		var phoneExists = false;
-		
-		// Check to see if the phone already exists
-		if(!isNull(accountPhoneNumbers)) {
-			for(var i=1; i<=arrayLen(accountPhoneNumbers); i++) {
-				if(accountEmails[i].getPhoneNumber() == arguments.data.phoneNumber) {
-					phoneExists = true;
-				}
+		// Process All Payments and Save the ones that were successful
+		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+			var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i]);
+			if(!paymentOK) {
+				allPaymentsOK = false;
 			}
 		}
 		
-		// If the phone number doesn't exist, create one and add to the account.
-		if(!phoneExists) {
-			var newAccountPhoneNumber = getNewEntity("SlatwallAccountPhoneNumber");
-			newAccountPhoneNumber.setPhoneNumber(arguments.data.phoneNumber);
-			newAccountPhoneNumber.setAccount(arguments.order.getAccount());
+		// If all payments were successful, then change the order status and clear the cart.
+		if(allPaymentsOK) {
+			// Set the current cart to None
+			if(arguments.order.getOrderID() == $.slatwall.cart().getOrderID()) {
+				$.slatwall.getCurrentSession().setOrder(JavaCast("null",""));
+			}
+			
+			// Update the order status
+			arguments.order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+			
+			// Save the order to the database
+			getDAO().save(arguments.order);
+			
+			return true;
 		}
 		
-		// If the new account is not a guest account, create a mura account
-		if(structKeyExists(arguments.data, "createMuraAccount") && arguments.data.createMuraAccount) {
-			// Look for a username that is set as that e-mail
-			var muraUser = getUserManager().readByUsername(username=arguments.data.email, siteid=$.event('siteid'));
-			
-			// Setup the mura user
-			muraUser.setFName(arguments.data.firstName);
-			muraUser.setLName(arguments.data.lastName);
-			muraUser.setLName(arguments.data.lastName);
-			muraUser.setUsername(arguments.data.email);
-			muraUser.setEmail(arguments.data.email);
-			muraUser.setPassword(arguments.data.password);
-			muraUser.setSiteID($.event('siteid'));
-			
-			// Save the mura user
-			muraUser.save();
-			
-			// Set the mura userID in the new account
-			arguments.order.getAccount().setMuraUserID(muraUser.getUserID());
-			
-			// Save the new account via an order save
-			save(arguments.order);
-			
-			// Login the new user
-			var muraData = {};
-			muraData.userID = muraUser.getUserID();
-			muraData.siteid = $.event('siteid');
-			getLoginManager().loginByUserID(muraData);
-			
-		} else {
-			// Save the new account via an order save
-			save(arguments.order);
-		}
 		
-			
-		save(arguments.order);
+		return false;
 	}
-	*/	
 }

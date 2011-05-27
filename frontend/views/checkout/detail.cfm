@@ -39,15 +39,20 @@ Notes:
 <cfoutput>
 	<div class="svofrontendcheckoutdetail">
 		<cfinclude template="account.cfm" />
-		<cfinclude template="shipping.cfm" />
+		<cfinclude template="shippingaddress.cfm" />
 		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="payment.cfm" />
 		<cfinclude template="items.cfm" />
-		
-		<cfif $.slatwall.cart().isValidForProcessing()>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder">
-				<button type="submit">Submit Order</button>
-			</form>
-		</cfif>
+		<cfinclude template="payment.cfm" />
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("input[name='createMuraAccount']").change(function(){
+					if($("input[name='createMuraAccount']:checked").val() == 1) {
+						$("div.accountPassword").show();
+					} else {
+						$("div.accountPassword").hide();
+					}
+				});
+			});
+		</script>
 	</div>
 </cfoutput>

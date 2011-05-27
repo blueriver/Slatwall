@@ -44,8 +44,9 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 	
 	// @hint main validation method that calls the individual validator class
-	public struct function validate(
+	public struct function validateValue(
 		String rule,
+		any criteria,
 		Any objectValue,
 		String objectName,
 		String objectLabel,
@@ -56,6 +57,10 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		var isValid = createObject("component",validatorClass).init(argumentCollection=arguments);
 		
 		if(!isValid){
+			// if the error message wasn't passed in, get it now
+			if(!structKeyExists(arguments,"message")) {
+				arguments.message = getMessageByRule(arguments.rule,arguments.objectName);
+			}
 			var error = getError(argumentCollection=arguments);
 			return error;
 		} else {
@@ -63,31 +68,46 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		}
 	}
 	
-	// @hint method to validate entity based on property definition 
-	public function validateObject(required any entity, struct objMD){
+	// @hint method to validate entity based on property definition, returns a responseBean 
+	public function validate(required any entity, struct objMD){
 		var objMetadata = isNull(objMD) ? getMetadata(entity) : objMD ;
 		// get the object property array 
 		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
+		var errors = {};
 		//loop through each property;
 		for(var i=1; i <= arrayLen(props); i++) {
 			var prop = props[i] ;
 			var name = prop["name"] ;
 			var val =  isNull(evaluate("arguments.entity." & "get#name#()")) ? "" : evaluate("arguments.entity." & "get#name#()") ;
-			var displayName = getPropertyLabel(entity=arguments.entity, propertyName=name);
+			var displayName = structKeyExists(prop,"displayname") ? prop["displayName"] : getPropertyLabel(entity=arguments.entity, propertyName=name);
 			var attrib = "";
 			//loop through each attribute to look for validation rule
 			for(attrib in prop){
 				if(attrib.toLowerCase().startsWith("validate")){
 					var validationRule = replaceNoCase(attrib,"validate","","one");
+					var criteria = prop[attrib];
 					var message = getMessageByRule(validationRule,name,arguments.entity);
 					if(len(validationRule)){
-						var error = validate(validationRule,val,name,displayName,message);
-						if(!structIsEmpty(error) and hasErrorBean(arguments.entity)){
-							arguments.entity.addError(argumentCollection=error);
+						var error = validateValue(validationRule,criteria,val,name,displayName,message);
+						if(!structIsEmpty(error)){
+							errors[error.name] = error.Message;
 						}
 					}
 				}
 			}
+		}
+		response = new Slatwall.com.utility.ResponseBean({data=arguments.entity});
+		if( !structIsEmpty(errors) ) {
+			response.getErrorBean().setErrors(errors);
+		}
+		return response;
+	}
+	
+	// @hint method to validate entity based on property definition, returns a the entity with errors in the errorBean 
+	public any function validateObject(required any entity) {
+		var response = validate(arguments.entity);
+		if( hasErrorBean(arguments.entity) && response.hasErrors() ) {
+			arguments.entity.getErrorBean().setErrors(response.getErrorBean().getErrors());
 		}
 		return arguments.entity;
 	}
@@ -115,18 +135,19 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 
 	// @hint returns an error name/message struct
-	public struct function getError(Any objectValue="",String objectName="",String objectLabel="",String Message=""){
-		//if lable is not defined, default it to name
+	public struct function getError(Any objectValue="",String objectName="",String objectLabel="",any criteria = "", String Message=""){
+		//if label is not defined, default it to name
 		var displayName = arguments.objectLabel != "" ? arguments.objectLabel : arguments.objectName; 
 		var msg = arguments.message;
 		msg = replaceNoCase(msg,"{objectLabel}",displayName,"all");
 		msg = replaceNoCase(msg,"{objectValue}",arguments.objectValue,"all");
+		msg = replaceNoCase(msg,"{criteria}",arguments.criteria,"all");
 		var errorName = arguments.objectName != "" ? arguments.objectName : arguments.rule;
 		return {name=errorName, message=msg};
 	}
 	
 	
-	//@hint gets the entitie's property label from the rb
+	//@hint gets the entity's property label from the rb
 	private string function getPropertyLabel(required any entity, required string propertyName) {
 		//first remove the "Slatwall" prefix from the entity name
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
@@ -134,11 +155,19 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 	
 	// @hint returns error message by validation rule from the resource bundle
-	private string function getMessageByRule(required string rule, required string propertyName, required any entity){
-		//first remove the "Slatwall" prefix from the entity name
-		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
-		var message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
-		if(right(message,8) == "_missing") {
+	private string function getMessageByRule(required string rule, required string propertyName, any entity){
+		var message = "";
+		if(structKeyExists(arguments,"entity")) {
+			//if this is an entity-related error, first remove the "Slatwall" prefix from the entity name
+			if(structKeyExists(arguments.entity,"getClassName")) {
+				var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+				message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+			}
+			if(right(message,8) == "_missing" || !structKeyExists(arguments.entity,"getClassName") ) {
+				message = rbKey("validator.#arguments.rule#");
+			}	
+		} else {
+			// error isn't necessarily entity-related, so get generic message for rule
 			message = rbKey("validator.#arguments.rule#");
 		}
 		return message;

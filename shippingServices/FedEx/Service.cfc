@@ -40,18 +40,19 @@ Notes:
 component accessors="true" output="false" displayname="FedEx" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
-	property name="accountNo" displayname="FedEx Account Number" type="string";
+	property name="accountNo" validateRequired displayname="FedEx Account Number" type="string";
 	property name="password" displayname="FedEx Password" type="string";
 	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
 	property name="meterNo" displayname="FedEx Meter Number" type="string";
-	property name="sandbox" displayname="Use Sandbox?" type="boolean" default="false";
-	
-	// Variables Saved in this application scope, but not set by end user
-	variables.fedExRatesV7 = "";
+	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";
+	property name="shipperStreet" displayname="Shipper Street Address" type="string";
+	property name="shipperCity" displayname="Shipper City" type="string";
+	property name="shipperStateCode" displayname="Shipper State Code" type="string";
+	property name="shipperPostalCode" displayname="Shipper Postal Code" type="string";
+	property name="shipperCountryCode" displayname="Shipper Country Code" type="string";
 
 	public any function init() {
 		// Insert Custom Logic Here 
-		variables.fedExRatesV7 = new FedexRates_v7();
 		variables.shippingMethods = {
 			FIRST_OVERNIGHT="FedEx First Overnight",
 			PRIORITY_OVERNIGHT="FedEx Priority Overnight",
@@ -66,9 +67,83 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 	}
 	
 	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
-		var ratesResponseBean = new com.utility.shipping.RatesResponseBean();
 		
 		// Insert Custom Logic Here
+		var totalItemsWeight = 0;
+		var totalItemsPrice = 0;
+		
+		// Loop over all items to get a price and weight for shipping
+		for(var i=1; i<=arrayLen(arguments.orderShipping.getOrderShippingItems()); i++) {
+			if(!isNull(arguments.orderShipping.getOrderShippingItems()[i].getSku().getShippingWeight()) && isNumeric(arguments.orderShipping.getOrderShippingItems()[i].getSku().getShippingWeight())) {
+				totalItemsWeight +=	arguments.orderShipping.getOrderShippingItems()[i].getSku().getShippingWeight();
+			}
+			 
+			totalItemsPrice += arguments.orderShipping.getOrderShippingItems()[i].getSku().getPrice();
+		}
+		
+		if(totalItemsWeight < 1) {
+			totalItemsWeight = 1;
+		}
+		
+		// Build Request XML
+		var xmlPacket = "";
+		
+		savecontent variable="xmlPacket" {
+			include "RatesRequestTemplate.cfm";
+        }
+        
+        // Setup Request to push to FedEx
+        var httpRequest = new http();
+        httpRequest.setMethod("POST");
+		httpRequest.setPort("443");
+		httpRequest.setTimeout(45);
+		if(variables.testingFlag) {
+			httpRequest.setUrl("https://gatewaybeta.fedex.com/xml");
+		} else {
+			httpRequest.setUrl("https://gateway.fedex.com/xml");
+		}
+		httpRequest.setResolveurl(false);
+		httpRequest.addParam(type="XML", name="name",value=xmlPacket);
+		
+		var xmlResponse = XmlParse(httpRequest.send().getPrefix().fileContent);
+		
+		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
+		ratesResponseBean.setRawRequestData(XmlParse(xmlPacket));
+		ratesResponseBean.setRawResponseData(xmlResponse);
+		
+		if(isDefined('xmlResponse.Fault')) {
+			// If XML fault then log error
+			var message = ratesResponseBean.getNewMessageBean();
+			message.setMessageCode("0");
+			message.setMessageType("Unexpected");
+			message.setMessage("An unexpected programming error occured, please notify system administrator.");
+			ratesResponseBean.addErrorMessageBean(message);
+		} else {
+			
+			// Log all messages from FedEx into the response bean
+			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
+				
+				var message = ratesResponseBean.getNewMessageBean();
+				message.setMessageCode(xmlResponse.RateReply.Notifications[i].Code.xmltext);
+				message.setMessageType(xmlResponse.RateReply.Notifications[i].Severity.xmltext);
+				message.setMessage(xmlResponse.RateReply.Notifications[i].Message.xmltext);
+				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
+					ratesResponseBean.addErrorMessageBean(message);
+				} else {
+					ratesResponseBean.addMessageBean(message);
+				}
+				
+			}
+			
+			if(!ratesResponseBean.hasErrors()) {
+				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
+					var rate = ratesResponseBean.getNewMethodRateResponseBean();
+					rate.setShippingProviderMethod(xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext);
+					rate.setTotalCost(xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext);
+					ratesResponseBean.addMethodRateResponseBean(rate);
+				}
+			}
+		}
 		
 		return ratesResponseBean;
 	}

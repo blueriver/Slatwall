@@ -160,4 +160,36 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	    return lcase(newfilename);
 	}
 
+	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='' ){
+		arguments.source = replace(arguments.source,"\","/","all");
+		arguments.destination = replace(arguments.destination,"\","/","all");
+		
+		if(isNull(arguments.baseSourceDir)){
+			var baseSourceDir = source;
+		}
+		
+		var dirList = directoryList(arguments.source,false,"query");
+		for(var i = 1; i <= dirList.recordCount; i++){
+			if(dirList.type[i] == "File" && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
+				var copyFrom = "#replace(dirList.directory[i],'\','/','all')#/#dirList.name[i]#";
+				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),baseSourceDir,'')#/#dirList.name[i]#";
+				copyFile(copyFrom,copyTo,arguments.overwrite);
+			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=baseSourceDir);
+			}
+		}
+	}
+	
+	private void function copyFile(required string source, required string destination, boolean overwrite=false){
+		var destinationDir = getdirectoryFromPath(arguments.destination);
+		//create directory
+		if(!directoryExists(destinationDir)){
+			directoryCreate(destinationDir);
+		}
+		//copy file if it doens't exist in destination
+		if(arguments.overwrite || !fileExists(arguments.destination)) {
+			fileCopy(arguments.source,arguments.destination);
+		}
+	}
+
 }

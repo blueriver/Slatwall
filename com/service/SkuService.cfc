@@ -38,17 +38,19 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-
+	public any function getSkuSmartList(string productID, struct data={}) {
+		return getDAO().getSkuSmartList(argumentCollection=arguments);
+	}
+	
 	public any function delete(required any sku) {
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
-		/*
-		// Now because the default sku is set as a realationship this validation block needs to change
-		if(arguments.sku.getDefaultFlag() == true) {
+		
+		if(arguments.sku.getSkuID() == arguments.sku.getProduct().getDefaultSku().getSkuID()) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
 		}
-		*/
+		
 		if(arguments.sku.getOrderedFlag() == true) {
 			getValidator().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
 		}
@@ -62,18 +64,20 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
+	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
 		// check to see if any options were selected
 		if(len(arguments.optionsStruct.formCollectionsList)) {
 			var options = arguments.optionsStruct.options;
 			var comboList = getOptionCombinations(options);
-			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice);
+			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice,arguments.shippingWeight);
 		} else {  // no options were selected so create a default sku
-			var thisSku = getNewEntity();
+			var thisSku = this.newSku();
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setListPrice(arguments.listprice);
+			thisSku.setShippingWeight(arguments.shippingWeight);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
+			thisSku.setImageFile(generateImageFileName(thisSku));
 			arguments.product.setDefaultSku(thisSku);
 		}
 		return true;
@@ -82,11 +86,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint takes a list of optionID combinations and generates skus
 	*/
-	public void function createSkusFromOptions (required string comboList, required any product, required price, required listPrice) {
+	public void function createSkusFromOptions (required string comboList, required any product, required price, required listPrice, required shippingWeight) {
 		for(  i=1; i<=listLen(arguments.comboList,";");i++ ) {
 			//every option combination represents 1 Sku, so we create it
 			var thisCombo = listGetAt(arguments.comboList,i,";");
-			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice},arguments.product);
+			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice,shippingWeight=arguments.shippingWeight},arguments.product);
 			// set the first sku as the default one
 			if(i==1) {
 				arguments.product.setDefaultSku(thisSku);
@@ -95,16 +99,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 
 	public any function createSkuFromStruct (required struct data, required any product) {
-		var thisSku = getNewEntity();
+		var thisSku = this.newSku();
 		thisSku.setProduct(arguments.product);
 		thisSku.setPrice(arguments.data.price);
 		thisSku.setListPrice(arguments.data.listprice);
+		thisSku.setShippingWeight(arguments.data.shippingWeight);
 		var comboCode = "";
 		// loop through optionID's within the option combination and set them into the sku
 		for( j=1;j<=listLen(arguments.data.options);j++ ) {
 			var thisOptionID = listGetAt(arguments.data.options,j);
-			var thisOption = getByID(thisOptionID,"SlatwallOption");
+			var thisOption = this.getOption(thisOptionID);
 			thisSku.addOption(thisOption);
+			thisSku.setImageFile(generateImageFileName(thisSku));
 			// generate code from options to be used in Sku Code
 			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
 		}
@@ -125,7 +131,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		for(var i=1;i<=arrayLen(arguments.skus);i++) {
 			local.skuStruct = arguments.skus[i];
 			if( len(local.skuStruct.skuID) > 0 ) {
-				local.thisSku = getByID(local.skuStruct.skuID);
+				local.thisSku = this.getSku(local.skuStruct.skuID);
 				// set the new sku Code if one was entered
 				if(len(trim(local.skuStruct.skuCode)) > 0) {
 					local.thisSku.setSkuCode(local.skuStruct.skuCode);
@@ -137,6 +143,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	            if(isNumeric(local.skuStruct.listPrice)) {
 	                local.thisSku.setListPrice(local.skuStruct.listPrice);
 	            }
+	          	if(isNumeric(local.skuStruct.shippingWeight)) {
+	                local.thisSku.setShippingWeight(local.skuStruct.shippingWeight);
+	            }
+	            local.thisSku.setImageFile(generateImageFileName(local.thisSku));
 	         } else {
 	         	// this is a new sku added from product.edit form (no skuID yet)
 	         	local.thisSku = createSkuFromStruct( local.skuStruct, arguments.product );
@@ -158,7 +168,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if( isDuplicate == false ) {
 			isDuplicate = getDAO().isDuplicateProperty("skuCode", arguments.sku);
 		}
-		var skuCodeError = getService("validator").validate(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
+		var skuCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
 		if( !structIsEmpty(skuCodeError) ) {
 			arguments.sku.addError(argumentCollection=skuCodeError);
 			getService("requestCacheService").setValue("ormHasErrors", true);
@@ -209,6 +219,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else {
 			return false;
 		}	
+	}
+	
+	private string function generateImageFileName( required any sku ) {
+		// Generates the image path based upon product code, and image options for this sku
+		var options = arguments.sku.getOptions();
+		var optionString = "";
+		for(var i=1; i<=arrayLen(options); i++){
+			if(options[i].getOptionGroup().getImageGroupFlag()){
+				optionString &= "-#options[i].getOptionCode()#";
+			}
+		}
+		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
 
 }

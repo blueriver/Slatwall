@@ -59,17 +59,17 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
 
-	// Non-persistent Properties
-	property name="imageDirectory" type="string" hint="Base directory for option images" persistent="false";
-
-    public Option function init(){
+	public Option function init(){
 		// set default collections for association management methods
 		if(isNull(variables.skus)) {
 			variables.skus = [];
 		}
-	    
-		setImageDirectory("#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/");
+		
 		return Super.init();
+    }
+    
+    public string function getImageDirectory() {
+    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
     
     public boolean function hasSkus() {

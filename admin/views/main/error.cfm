@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,38 +35,17 @@
 
 Notes:
 
-*/
-component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="paymentMethodID" {
-	
-	// Persistant Properties
-	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amount" ormtype="float";
-	
-	// Related Object Properties
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" insert="false" update="false";
-
-    /******* Association management methods for bidirectional relationships **************/
-	
-
-	// Order (many-to-one)
-	
-	public void function setOrder(required Order Order) {
-	   variables.Order = arguments.order;
-	   if(!arguments.order.hasOrderPayment(this)) {
-	       arrayAppend(arguments.order.getOrderPayments(),this);
-	   }
-	}
-	
-	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderPayments(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderPayments(),index);
-       }    
-       structDelete(variables,"order");
-    }
-	
-    /************   END Association Management Methods   *******************/
-	
-}
+--->
+<cfset arguments.exception = request.exception />
+<cfif structKeyExists(application,"configBean")>
+	<cfif not application.configBean.getDebuggingEnabled()>
+		<cfif len(application.configBean.getValue("errorTemplate"))>
+			<cfinclude template="#application.configBean.getValue('errorTemplate')#">
+		<cfelse>
+			<cfinclude template="/muraWRM/config/error.html">
+		</cfif>
+	<cfelse>
+		<cfdump var="#arguments.exception#">
+	</cfif>
+</cfif>
+<cfabort>		

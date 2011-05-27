@@ -95,7 +95,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function updateProductContentPaths(required string contentID) {
-		var pcArray = getDAO().list("SlatwallProductContent");
+		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++) {
 			local.thisPC = pcArray[i];
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
@@ -106,7 +106,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function deleteProductContent(required string contentID) {
-		var pcArray = getDAO().list("SlatwallProductContent");
+		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++ ) {
 			local.thisPC = pcArray[i];
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
@@ -119,7 +119,7 @@ component extends="BaseService" accessors="true" {
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice) {
+	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
 		return getSkuService().createSkus(argumentCollection=arguments);
 	}
 	
@@ -141,15 +141,9 @@ component extends="BaseService" accessors="true" {
 		
 		// set up sku(s) if this is a new product
 		if(arguments.Product.isNew()) {
-			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice);
+			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
 		} else {
 			updateSkus(arguments.Product,arguments.data.skuArray);
-		}
-		
-		// set Default sku
-		if( structKeyExists(arguments.data,"defaultSku") && len(arguments.data.defaultSku) ) {
-			var dSku = arguments.Product.getSkuByID(arguments.data.defaultSku);
-			arguments.product.setDefaultSku(dSku);
 		}
 		
 		// set up associations between product and content
@@ -158,7 +152,7 @@ component extends="BaseService" accessors="true" {
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {
 			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getService("validator").validate(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+			var productCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
 			if( !structIsEmpty(productCodeError) ) {
 				arguments.product.addError(argumentCollection=productCodeError);
 			}
@@ -166,7 +160,7 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist
 		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		var filenameError = getService("validator").validate(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		var filenameError = getService("validator").validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
 		if( !structIsEmpty(filenameError) ) {
 			arguments.product.addError(argumentCollection=filenameError);
 		}
@@ -187,22 +181,15 @@ component extends="BaseService" accessors="true" {
 			getValidator().setError(entity=arguments.product,errorName="delete",rule="Ordered");
 		}
 		var deleteResponse = Super.delete( arguments.product );
-		if( deleteResponse.getStatusCode() ) {
+		if( !deleteResponse.hasErrors() ) {
 			// clear cached product type tree so that it's refreshed on the next request
 	   		clearProductTypeTree();
 		}
 		return deleteResponse;
 	}
-	
-	/*
-	public any function getProductContentSmartList(required struct data={}, required string contentID) {
-		return getDAO().getProductContentSmartList(rc=arguments.rc, entityName=getEntityName(), contentID=arguments.contentID);
-	}
-	*/
-	
+
 	//   Product Type Methods
-	
-    public void function setProductTypeTree() {
+	public void function setProductTypeTree() {
     	var qProductTypes = getProductTypeDAO().getProductTypeQuery();
     	var productTypeTree = getService("utilities").queryTreeSort(
     		theQuery = qProductTypes,

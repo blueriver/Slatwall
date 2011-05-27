@@ -43,28 +43,28 @@ Notes:
 <div class="svoadminorderdetail">
 	<dl class="twoColumn">
 		<cf_PropertyDisplay object="#rc.Order#" property="OrderID" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Order#" property="OrderCloseDate" edit="#rc.edit#">
+		<cf_PropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Order.getAccount()#" property="fullName" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Order.getOrderStatusType()#" property="Type" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#">
 		<cf_PropertyDisplay object="#rc.Order#" property="filename" edit="#rc.edit#">
 	</dl>
 	<h3 class="tableheader">Order Items</h3>
-	<table class="strips">
+	<table class="stripe">
 		<tr>
-			<th>Sku Code</th>
-			<th>Brand</th>
-			<th>Year</th>
-			<th>Product</th>
-			<th>QO</th>
+			<th>#$.slatwall.rbKey('entity.brand.brandname')#</th>
+			<th class="varWidth">#$.slatwall.rbKey('entity.product.productname')#</th>
+			<th>Options</th>
+			<th>#$.slatwall.rbKey('entity.sku.skuCode')#</th>
+			<th>#$.slatwall.rbKey('entity.orderitem.quantity')#</th>
 		</tr>
-		<cfloop array="#rc.Order.getOrderShipments()#" index="shipment">
+		<cfloop array="#rc.Order.getOrderItems()#" index="local.orderItem">
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td>#local.orderItem.getSku().getProduct().getBrand().getBrandName()#</td>
+				<td class="varWidth">#local.orderItem.getSku().getProduct().getProductName()#</td>
+				<td>#local.orderItem.getSku().displayOptions()#</td>
+				<td>#local.orderItem.getSku().getSkuCode()#</td>
+				<td>#local.orderItem.getQuantity()#</td>
 			</tr>
 		</cfloop>
 	</table>

@@ -40,25 +40,46 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
 	
 	// Persistant Properties
 	property name="orderShippingID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="cost" ormtype="float";
+	property name="shippingCharge" ormtype="float";
 	
 	// Related Object Properties
 	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="orderShippingItems" singularname="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID" inverse="true" cascade="all";
+	
+	property name="orderShippingItems" singularname="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID" cascade="all" inverse="true";
+	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderShippingID" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
 		if(isNull(variables.orderShippingItems)) {
 			variables.orderShippingItems = [];
 		}
+		if(isNull(variables.orderShippingMethodOptions)) {
+			variables.orderShippingMethodOptions = [];
+		}
 		
 		return super.init();
 	}
 	
-	public void function getShippingMethodOptions() {
-		var options = [];
-		return options;
+	public void function populateOrderShippingMethodOptionsIfEmpty() {
+		if(!isNull(variables.address) && arrayLen(variables.orderShippingItems) && !arrayLen(variables.orderShippingMethodOptions)) {
+			getService("ShippingService").populateOrderShippingMethodOptions(this);
+		}
+	}
+	
+	public void function removeOrderShippingMethodAndMethodOptions() {
+		// remove all existing options
+		for(var i = arrayLen(getOrderShippingMethodOptions()); i >= 1; i--) {
+			getOrderShippingMethodOptions()[i].removeOrderShipping(this);
+		}
+		setShippingMethod(javaCast("null", ""));
+		setShippingCharge(0);
+	}
+	
+	// Any time a new Address gets set, we need to adjust the order shipping options
+	public void function setAddress(required Address address) {
+		variables.address = arguments.address;
+		removeOrderShippingMethodAndMethodOptions();
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/
@@ -90,6 +111,15 @@ component displayname="Order Shipping" entityname="SlatwallOrderShipping" table=
     
     public void function removeOrderShippingItem(required OrderShippingItem orderShippingItem) {
     	arguments.orderShippingItem.removeOrderShipping(this);
+    }
+    
+    // Order Shipping Method Options (one-to-many)
+    public void function addOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    	arguments.orderShippingMethodOption.addOrderShipping(this);
+    }
+    
+    public void function removeOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    	arguments.orderShippingMethodOption.removeOrderShipping(this);
     }
     
     /******* END Association management methods */ 

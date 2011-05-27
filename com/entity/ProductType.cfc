@@ -104,18 +104,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return settingOptions;
 	}
 	
-	/*
-	No longer needed because of the new way that attribute set assignment is handled with relationships
-	
-	public array function getAttributeSetAssignments(){
-		var attributeSetAssignments = getService("AttributeService").getByFilter({baseItemID=getProductTypeID()},"SlatwallAttributeSetAssignment");
-		if(!arrayLen(attributeSetAssignments)){
-			attributeSetAssignments = [];
-		}
-		return attributeSetAssignments;
-	}
-	*/
-	
 	public array function getInheritedAttributeSetAssignments(){
 		//Todo get by all the parent productTypeIDs
 		var attributeSetAssignments = getService("AttributeService").getSmartList(entityName="SlatwallAttributeSetAssignment", data={}).getRecords();
@@ -208,8 +196,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=getProductTypeID()};
     			var attributeSetAssignmentArray = new Slatwall.com.utility.SmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
     			if(!arrayLen(attributeSetAssignmentArray)){
-	    			var attributeSetAssignment = getService("AttributeService").getNewEntity("SlatwallProductTypeAttributeSetAssignment");
-	    			var attributeSet = getService("AttributeService").getByID(attributeSetID,"SlatwallAttributeSet");
+	    			var attributeSetAssignment = getService("AttributeService").newProductTypeAttributeSetAssignment();
+	    			var attributeSet = getService("AttributeService").getAttributeSet(attributeSetID);
 	    			attributeSetAssignment.setProductType(this);
 	    			attributeSetAssignment.setAttributeSet(attributeSet);
 	    			addAttributeSetAssignment(attributeSetAssignment);

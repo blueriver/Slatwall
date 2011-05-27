@@ -44,86 +44,34 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	property name="fileService" type="any";
 	
 	public any function init() {
-		return this;
+		return super.init();
 	}
 	
-	public any function getByID(required string ID, string entityName) {
-		if(isDefined("arguments.entityName")) {
-			return getDAO().read(ID=arguments.ID, entityName=arguments.entityName);
-		} else {
-			return getDAO().read(ID=arguments.ID, entityName=getEntityName());
-		}
+	public any function get(required string entityName, required any idOrFilter, boolean isReturnNewOnNotFound = false ) {
+		return getDAO().get(argumentcollection=arguments);
 	}
-	
-	public any function getByFilename(required string filename, string entityName) {
-		if(isDefined("arguments.entityName")) {
-			return getDAO().readByFilename(filename=arguments.filename, entityName=arguments.entityName);
-		} else {
-			return getDAO().readByFilename(filename=arguments.filename, entityName=getEntityName());	
-		}
+
+	public any function list(required string entityName, struct filterCriteria = {}, string sortOrder = '', struct options = {} ) {
+		return getDAO().list(argumentcollection=arguments);
 	}
-	
-	public any function getByRemoteID(required string remoteID, string entityName) {
-		if(isDefined("arguments.entityName")) {
-			return getDAO().readByRemoteID(remoteID=arguments.remoteID, entityName=arguments.entityName);
-		} else {
-			return getDAO().readByRemoteID(remoteID=arguments.remoteID, entityName=getEntityName());	
-		}
+
+	public any function new(required string entityName ) {
+		return getDAO().new(argumentcollection=arguments);
 	}
-	
-	public any function getByFilter(required struct filterCriteria, string entityName, string sortBy="", boolean unique=false) {
-		var collection = [];
-		if(!structKeyExists(arguments,"entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		collection = getDAO().list(argumentCollection=arguments);
-		if(!arguments.unique) {
-			return collection;
-		} else {
-			if(arrayLen(collection) == 1) {
-				return collection[1];
-			} else {
-				throw(type="GetByFilter.NonUniqueResult", message="The method getByFilter() returned more than one enity. The attribute 'unique' cannot be set to 'true' for the current filter criteria.");
-			}
-		}
-	}
-	
-	public any function getNewEntity(string entityName) {
-		if(isDefined("arguments.entityName")) {
-			var entity = entityNew(arguments.entityName);
-			structDelete(arguments, "entityName");
-		} else {
-			var entity = entityNew(getEntityName());
-		}
-		entity.init(argumentcollection=arguments);
-		return entity;
-	}
-	
-	public any function list(string entityName) {
-		if(!isDefined("arguments.entityName")) {
-			arguments.entityName = getEntityName();
-		}
-		return getDAO().list(argumentCollection=arguments);
-	}
-	
+
 	public any function getSmartList(string entityName, struct data={}){
-		if(structKeyExists(arguments, "entityName")) {
-			return getDAO().getSmartList(entityName=arguments.entityName, data=arguments.data);
-		} else {
-			return getDAO().getSmartList(entityName=getEntityName(), data=arguments.data);
-		}
+		return getDAO().getSmartList(argumentcollection=arguments);
 	}
 	
 	public any function delete(required any entity){
 		var response = new com.utility.ResponseBean();
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
-			getDAO().delete(entity=arguments.entity);
+			getDAO().delete(target=arguments.entity);
 			response.setMessage(rbKey("entity.#entityName#.delete_success"));
-			response.setStatusCode(1);
 		} else {
-			response.setStatusCode(0);
 			response.setData(arguments.entity);
+			response.getErrorBean().setErrors(arguments.entity.getErrorBean().getErrors());
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
 		return response;
@@ -140,11 +88,280 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         getValidator().validateObject(entity=arguments.entity);
         
         if(!arguments.entity.hasErrors()) {
-            arguments.entity = getDAO().save(entity=arguments.entity);
+            arguments.entity = getDAO().save(target=arguments.entity);
         } else {
             getService("requestCacheService").setValue("ormHasErrors", true);
         }
         return arguments.entity;
-    }   
+    }
+    
+ /**
+	 * Provides dynamic methods, by convention, on missing method:
+	 *
+	 *   newXXX()
+	 *
+	 *   saveXXX( required any xxxEntity )
+	 *
+	 *   deleteXXX( required any xxxEntity )
+	 *
+	 *   getXXX( required any ID, boolean isReturnNewOnNotFound = false )
+	 *
+	 *   getXXXByYYY( required any yyyFilterValue, boolean isReturnNewOnNotFound = false )
+	 *
+	 *   listXXX( struct filterCriteria, string sortOrder, struct options )
+	 *
+	 *   listXXXFilterByYYY( required any yyyFilterValue, string sortOrder, struct options )
+	 *
+	 *   listXXXOrderByZZZ( struct filterCriteria, struct options )
+	 *
+	 *   listXXXFilterByYYYOrderByZZZ( required any yyyFilterValue, struct options )
+	 *
+	 * ...in which XXX is an ORM entity name, and YYY and ZZZ are entity property names.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	public any function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		var lCaseMissingMethodName = lCase( missingMethodName );
 
+		if ( lCaseMissingMethodName.startsWith( 'get' ) ) {
+			return onMissingGetMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'new' ) ) {
+			return onMissingNewMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'list' ) ) {
+			return onMissingListMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'save' ) ) {
+			return onMissingSaveMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'delete' ) )	{
+			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
+		}
+
+		throw( 'No matching method for #missingMethodName#().' );
+	}
+	
+
+
+	/********** PRIVATE ************************************************************/
+
+
+	private function onMissingDeleteMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		return delete( missingMethodArguments[ 1 ] );
+	}
+
+
+	/**
+	 * Provides dynamic get methods, by convention, on missing method:
+	 *
+	 *   getXXX( required any ID, boolean isReturnNewOnNotFound = false )
+	 *
+	 *   getXXXByYYY( required any yyyFilterValue, boolean isReturnNewOnNotFound = false )
+	 *
+	 * ...in which XXX is an ORM entity name, and YYY is an entity property name.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	private function onMissingGetMethod( required string missingMethodName, required struct missingMethodArguments ){
+		var isReturnNewOnNotFound = structKeyExists( missingMethodArguments, '2' ) ? missingMethodArguments[ 2 ] : false;
+
+		var entityName = missingMethodName.substring( 3 );
+
+		if ( entityName.matches( '(?i).+by.+' ) ) {
+			var tokens = entityName.split( '(?i)by', 2 );
+			entityName = tokens[ 1 ];
+			var filter = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
+			return get( entityName, filter, isReturnNewOnNotFound );
+		} else {
+			var id = missingMethodArguments[ 1 ];
+			return get( entityName, id, isReturnNewOnNotFound );
+		}
+	}
+
+
+	/**
+	 * Provides dynamic list methods, by convention, on missing method:
+	 *
+	 *   listXXX( struct filterCriteria, string sortOrder, struct options )
+	 *
+	 *   listXXXFilterByYYY( required any yyyFilterValue, string sortOrder, struct options )
+	 *
+	 *   listXXXOrderByZZZ( struct filterCriteria, struct options )
+	 *
+	 *   listXXXFilterByYYYOrderByZZZ( required any yyyFilterValue, struct options )
+	 *
+	 * ...in which XXX is an ORM entity name, and YYY and ZZZ are entity property names.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	private function onMissingListMethod( required string missingMethodName, required struct missingMethodArguments ){
+		var listMethodForm = 'listXXX';
+
+		if ( findNoCase( 'FilterBy', missingMethodName ) ) {
+			listMethodForm &= 'FilterByYYY';
+		}
+
+		if ( findNoCase( 'OrderBy', missingMethodName ) ) {
+			listMethodForm &= 'OrderByZZZ';
+		}
+
+		switch( listMethodForm ) {
+			case 'listXXX':
+				return onMissingListXXXMethod( missingMethodName, missingMethodArguments );
+
+			case 'listXXXFilterByYYY':
+				return onMissingListXXXFilterByYYYMethod( missingMethodName, missingMethodArguments );
+
+			case 'listXXXOrderByZZZ':
+				return onMissingListXXXOrderByZZZMethod( missingMethodName, missingMethodArguments );
+
+			case 'listXXXFilterByYYYOrderByZZZ':
+				return onMissingListXXXFilterByYYYOrderByZZZMethod( missingMethodName, missingMethodArguments );
+		}
+	}
+
+
+	/**
+	 * Provides dynamic list method, by convention, on missing method:
+	 *
+	 *   listXXX( struct filterCriteria, string sortOrder, struct options )
+	 *
+	 * ...in which XXX is an ORM entity name.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	private function onMissingListXXXMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		var listArgs = {};
+
+		listArgs.entityName = missingMethodName.substring( 4 );
+		
+		if ( structKeyExists( missingMethodArguments, '1' ) ) {
+			listArgs.filterCriteria = missingMethodArguments[ '1' ];
+
+			if ( structKeyExists( missingMethodArguments, '2' ) ) {
+				listArgs.sortOrder = missingMethodArguments[ '2' ];
+
+				if ( structKeyExists( missingMethodArguments, '3' ) ) {
+					listArgs.options = missingMethodArguments[ '3' ];
+				}
+			}
+		}
+
+		return list( argumentCollection = listArgs );
+	}
+
+
+	/**
+	 * Provides dynamic list method, by convention, on missing method:
+	 *
+	 *   listXXXFilterByYYY( required any yyyFilterValue, string sortOrder, struct options )
+	 *
+	 * ...in which XXX is an ORM entity name, and YYY is an entity property name.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	private function onMissingListXXXFilterByYYYMethod( required string missingMethodName, required struct missingMethodArguments )
+	{
+		var listArgs = {};
+
+		var temp = missingMethodName.substring( 4 );
+
+		var tokens = temp.split( '(?i)FilterBy', 2 );
+
+		listArgs.entityName = tokens[ 1 ];
+
+		listArgs.filterCriteria = { '#tokens[ 2 ]#' = missingMethodArguments[ 1 ] };
+
+		if ( structKeyExists( missingMethodArguments, '2' ) )
+		{
+			listArgs.sortOrder = missingMethodArguments[ '2' ];
+
+			if ( structKeyExists( missingMethodArguments, '3' ) )
+			{
+				listArgs.options = missingMethodArguments[ '3' ];
+			}
+		}
+
+		return list( argumentCollection = listArgs );
+	}
+
+
+	/**
+	 * Provides dynamic list method, by convention, on missing method:
+	 *
+	 *   listXXXFilterByYYYOrderByZZZ( required any yyyFilterValue, struct options )
+	 *
+	 * ...in which XXX is an ORM entity name, and YYY and ZZZ are entity property names.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	private function onMissingListXXXFilterByYYYOrderByZZZMethod( required string missingMethodName, required struct missingMethodArguments )
+	{
+		var listArgs = {};
+
+		var temp = missingMethodName.substring( 4 );
+
+		var tokens = temp.split( '(?i)FilterBy', 2 );
+
+		listArgs.entityName = tokens[ 1 ];
+
+		tokens = tokens[ 2 ].split( '(?i)OrderBy', 2 );
+
+		listArgs.filterCriteria = { '#tokens[ 1 ]#' = missingMethodArguments[ 1 ] };
+
+		listArgs.sortOrder = tokens[ 2 ];
+
+		if ( structKeyExists( missingMethodArguments, '2' ) )
+		{
+			listArgs.options = missingMethodArguments[ '2' ];
+		}
+
+		return list( argumentCollection = listArgs );
+	}
+
+
+	/**
+	 * Provides dynamic list method, by convention, on missing method:
+	 *
+	 *   listXXXOrderByZZZ( struct filterCriteria, struct options )
+	 *
+	 * ...in which XXX is an ORM entity name, and ZZZ is an entity property name.
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	private function onMissingListXXXOrderByZZZMethod( required string missingMethodName, required struct missingMethodArguments )
+	{
+		var listArgs = {};
+
+		var temp = missingMethodName.substring( 4 );
+
+		var tokens = temp.split( '(?i)OrderBy', 2 );
+
+		listArgs.entityName = tokens[ 1 ];
+
+		listArgs.sortOrder = tokens[ 2 ];
+
+		if ( structKeyExists( missingMethodArguments, '1' ) )
+		{
+			listArgs.filterCriteria = missingMethodArguments[ '1' ];
+
+			if ( structKeyExists( missingMethodArguments, '2' ) )
+			{
+				listArgs.options = missingMethodArguments[ '2' ];
+			}
+		}
+
+		return list( argumentCollection = listArgs );
+	}
+
+
+	private function onMissingNewMethod( required string missingMethodName, required struct missingMethodArguments )
+	{
+		var entityName = missingMethodName.substring( 3 );
+
+		return new( entityName );
+	}
+
+
+	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments )
+	{
+		return save( missingMethodArguments[ 1 ] );
+	}
 }

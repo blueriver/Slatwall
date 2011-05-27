@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,47 +35,11 @@
 
 Notes:
 
---->
-<cfparam name="rc.edit" type="string" default="">
+*/
+component accessors="true" {
 
-<cfoutput>
-	<div class="svofrontendcheckoutshipping">
-		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping</h3>
-		<cfif $.slatwall.cart().hasValidAccount() and rc.edit eq "" || rc.edit eq "shipping">
-			<div id="checkoutShippingContent" class="contentBlock">
-				<cfif $.slatwall.cart().hasValidOrderShippingAddress() and rc.edit eq "" || rc.edit eq "shipping">
-					<cfif rc.edit eq "shipping">
-						<!--- Shipping Address Edit Here --->
-					<cfelse>
-						<div class="shippingAddress">
-							<!--- Shipping Address Display Here --->
-						</div>
-					</cfif>
-				<cfelse>
-					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveOrderShipping">
-						<div class="shippingAddress">
-							<h4>Shipping Address</h4>
-							<dl>
-								<dt>Name</dt>
-								<dd><input type="text" name="shippingName" value="" /></dd>
-								<dt>Company</dt>
-								<dd><input type="text" name="shippingCompany" value="" /></dd>
-								<dt>Street Address</dt>
-								<dd><input type="text" name="shippingStreetAddress" value="" /></dd>
-								<dt>Street Address 2</dt>
-								<dd><input type="text" name="shippingStreet2Address" value="" /></dd>
-								<dt>City</dt>
-								<dd><input type="text" name="shippingCity" value="" /></dd>
-								<dt>State</dt>
-								<dd><input type="text" name="shippingState" value="" /></dd>
-								<dt>Postal Code</dt>
-								<dd><input type="text" name="shippingPostalCode" value="" /></dd>
-							</dl>
-						</div>
-						<button type="submit">Save & Continue</button>
-					</form>
-				</cfif>
-			</div>
-		</cfif>
-	</div>
-</cfoutput>
+	property name="messageCode" type="string";
+	property name="messageType" type="string";
+	property name="message" type="string";
+	
+}

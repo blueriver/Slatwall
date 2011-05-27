@@ -40,10 +40,10 @@ Notes:
 component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.paymentServices.PaymentInterface" {
 	
 	// Custom Properties that need to be set by the end user
-	property name="vendor" displayname="Vendor" type="sting";
-	property name="partner" displayname="Partner" type="sting";
-	property name="username" displayname="Username" type="sting";
-	property name="password" displayname="Password" type="sting";
+	property name="vendor" displayname="Vendor" type="string";
+	property name="partner" displayname="Partner" type="string";
+	property name="username" displayname="Username" type="string";
+	property name="password" displayname="Password" type="string";
 	property name="liveModeFlag" displayname="Live Mode" type="boolean" ;
 	
 	//Global variables
@@ -56,6 +56,10 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	public any function init(){
 		variables.transactionCodes = getTransactionCodes();
 		return this;
+	}
+	
+	public any function getSupportedPaymentMethods() {
+		return "creditCard";
 	}
 	
 	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required Slatwall.com.utility.payment.RequestBean requestBean, required string transactionType){

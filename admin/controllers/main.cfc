@@ -40,12 +40,13 @@ component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
 	property name="productService" type="Slatwall.com.service.ProductService";
-	property name="brandService" type="Slatwall.com.service.BrandService";
+	property name="orderService" type="Slatwall.com.service.OrderService";
 	
 	public void function dashboard(required struct rc) {
-		
-		
+		rc.productSmartList = getProductService().getSmartList(entityName="SlatwallProduct", data=arguments.rc);
+		rc.productSmartList.addOrder("modifiedDateTime|DESC");
+		rc.orderSmartList = getOrderService().getSmartList(entityName="SlatwallOrder", data=arguments.rc);
+		rc.orderSmartList.addFilter("orderStatusType_systemCode", "ostNew");
+		rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}
-	
-	
 }

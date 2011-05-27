@@ -40,8 +40,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Persistant Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="orderOpenDate" ormtype="timestamp";
-	property name="orderCloseDate" ormtype="timestamp";
+	property name="orderNumber" ormtype="string"; 
+	property name="orderOpenDateTime" ormtype="timestamp";
+	property name="orderCloseDateTime" ormtype="timestamp";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -52,10 +53,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
-	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
-	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
-	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all-delete-orphan";
-	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" inverse="true" cascade="all";
+	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	
 	
 	public any function init() {
 		if(isNull(variables.orderShippings)) {
@@ -116,9 +119,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public void function removeAllOrderItems() {
-		var orderItems = getOrderItems();
-		for(var i=1; i<=arrayLen(orderItems); i++) {
-			removeOrderItem(orderItems[i]);
+		for(var i=arrayLen(getOrderItems()); i >= 1; i--) {
+			getOrderItems()[i].removeOrder(this);
 		}
 	}
 	
@@ -261,5 +263,25 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return valid;
 	}
 	
+	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
+	private void function confirmOrderNumberAndOpenDate() {
+		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
+			var maxOrderNumber = ormExecuteQuery("SELECT isNull(max(aslatwallorder.orderNumber), 0) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+			setOrderNumber(maxOrderNumber[1] + 1);
+			setOrderOpenDateTime(now());
+		}
+	} 
+	
+	//  -------------------- ORM Event Metods -------------------
+	public void function preInsert(){
+		confirmOrderNumberAndOpenDate();
+		super.preInsert();
+	}
+	
+	public void function preUpdate(Struct oldData){
+		confirmOrderNumberAndOpenDate();
+		super.preInsert();
+	}
+	//  -------------------- END: ORM Event Metods -------------------
 	
 }

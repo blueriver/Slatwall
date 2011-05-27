@@ -47,32 +47,42 @@ component extends="framework" output="false" {
 	
 	include "fw1Config.cfm";
 	
-	variables.subsystems = {};
-	variables.subsystems.admin = {};
-	variables.subsystems.admin.baseURL = "";
-	variables.subsystems.frontend = {};
-	variables.subsystems.frontend.baseURL = "";
-	
 	public void function setPluginConfig(required any pluginConfig) {
-		application[ variables.framework.applicationKey ].pluginConfig = arguments.pluginConfig; 
+		application.slatwall.pluginConfig = arguments.pluginConfig; 
 	}
 	
 	public any function getPluginConfig() {
-		return application[ variables.framework.applicationKey ].pluginConfig; 
+		if( isDefined('application.slatwall.pluginConfig') ) {
+			return application.slatwall.pluginConfig;	
+		}
 	}
-	
-	public any function getSubsystemBaseURL( string subsystem="admin") {
-		return variables.subsystems[ arguments.subsystem ].baseURL; 
-	}
-	
+
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		ormReload();
-		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
-		if( !structKeyExists(application, "appinitialized") || application.appinitialized == false) {
+		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
+		
+		// This insures that the required session values are setup
+		setupMuraRequirements();
+		
+		// Check to see if the plugin config has been setup in the application
+		if ( isNull(getPluginConfig()) ) {
+			if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
+		  		include "plugin/config.cfm";
+			}
+			setPluginConfig(request.PluginConfig);	
+		}
+		
+		// Set this in the application scope to be used on the frontend
+		getPluginConfig().getApplication().setValue( "fw", this);
+		
+		// Set the setup confirmed as false
+		getPluginConfig().getApplication().setValue('applicationSetupConfirmend', false);
+		
+		// Make's sure that our entities get updated
+		ormReload();
 		
 		// Get Coldspring Config
 		var serviceFactory = "";
@@ -80,11 +90,7 @@ component extends="framework" output="false" {
 		var xml = "";
 		var xmlPath = "";
 
-	    if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
-		  	include "plugin/config.cfm";
-		}
-	    setPluginConfig(request.PluginConfig);
-		xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
+	    xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
 		xml = FileRead("#xmlPath#"); 
 		
 		// Build Coldspring factory & Set in FW/1
@@ -92,29 +98,29 @@ component extends="framework" output="false" {
 		serviceFactory.loadBeansFromXmlRaw( xml );
 		serviceFactory.setParent(application.servicefactory);
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
-		setBeanFactory(request.PluginConfig.getApplication().getValue( "serviceFactory" ));
-		
-		// Setup run Setting Service reload config
-		getBeanFactory().getBean("settingService").reloadConfiguration();
+		setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ));
 		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 		
-		// Set this in the application scope to be used later
-		application[ variables.framework.applicationKey ].fw = this;
-		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		var dataPopulator = new Slatwall.com.utility.DataPopulator();
 		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-		
-		// Run mura requirements check
-		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 	}
 	
 	public void function setupRequest() {
 		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
+			// This verifies that all mura session variables are setup
 			setupMuraRequirements();
+			
+			// This will verify that all of the required slatwall elements are in Mura
+			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmend') != true) {
+				// Setup run Setting Service reload config
+				getBeanFactory().getBean("settingService").reloadConfiguration();
+				getBeanFactory().getBean("settingService").verifyMuraRequirements();
+				getPluginConfig().getApplication().setValue('applicationSetupConfirmend', true);
+			}
 			
 			// Enable the request cache service
 			getBeanFactory().getBean("requestCacheService").enableRequestCache();
@@ -146,19 +152,9 @@ component extends="framework" output="false" {
 				request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
 			}
 			
-			// Setup Base URL's for each subsystem
-			variables.subsystems.admin.baseURL="http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/plugins/#getPluginConfig().getDirectory()#/";
-			variables.subsystems.frontend.baseURL = "http://#request.context.$.siteConfig('domain')##request.context.$.globalConfig('serverPort')##request.context.$.globalConfig('context')#/";
-			if(request.context.$.globalConfig().getSiteIDInURLS()) {
-				variables.subsystems.frontend.baseURL &= "#request.context.$.siteConfig('siteid')#/"; 
-			}
-			if(request.context.$.globalConfig().getIndexFileInURLS()) {
-				variables.subsystems.frontend.baseURL &= "index.cfm/";
-			}
-			
 			// Confirm Session Setup
 			getBeanFactory().getBean("SessionService").confirmSession();
-						
+			
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
 				controller("admin:BaseController.subSystemBefore");
@@ -213,12 +209,8 @@ component extends="framework" output="false" {
 		param name="session.locale" default="en";
 		param name="session.siteid" default="default";
 		param name="session.dashboardSpan" default="30";
-		
-		if(!structKeyExists(session, "datekey")) {
-			getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().setJSDateKeys();
-			session.datekey = getpluginConfig().getApplication().getValue( "rbFactory" ).getUtils().getJSDateKey();
-		}
 	}
+	
 	
 	// Override autowire function from fw/1 so that properties work
 	private void function autowire(cfc, beanFactory) {
@@ -244,12 +236,6 @@ component extends="framework" output="false" {
 		}
 	}
 	
-	// Override buildURL function to add some custom logic, but still call the Super
-	public string function buildURL(required string action) {
-		arguments.path = getSubsystemBaseURL(getSubsystem(arguments.action));
-		return super.buildURL(argumentCollection=arguments);
-	}
-	
 	// Override onRequest function to add some custom logic to the end of the request
 	public any function onRequest() {
 		super.onRequest(argumentCollection=arguments);
@@ -268,13 +254,22 @@ component extends="framework" output="false" {
 		location(arguments.location, arguments.addToken);
 	}
 	
+	// This handels all of the ORM persistece.
 	private void function endSlatwallLifecycle() {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
-			ormGetSession().clear();
+			ormClearSession();
 		} else {
 			transaction{}
 		}
+	}
+	
+	// This is used to setup the frontend path to pull from the siteid directory
+	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
+		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
+			arguments.fullPath = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/");
+		}
+		return arguments.fullPath;
 	}
 	
 	// Start assetWire functions ==================================
@@ -288,15 +283,16 @@ component extends="framework" output="false" {
 	private void function buildViewAndLayoutQueue() {
 		super.buildViewAndLayoutQueue();
 		if(structKeyExists(request, "view")) {
-			getAssetWire().addViewToAssets(request.view);	
+			getAssetWire().addViewToAssets(request.view);
 		}
 	}
 	
 	private string function internalLayout( string layoutPath, string body ) {
 		var rtn = super.internalLayout(argumentcollection=arguments);
+		
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
 			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd") {
-				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());	
+				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());
 			}
 		}
 		return rtn;

@@ -79,17 +79,27 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(isNew() || !arguments.order.hasOrderItem(this)) {
 			arrayAppend(arguments.order.getOrderItems(),this);
 		}
+		
+		// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
 	}
 	
 	public void function removeOrder(Order order) {
 		if(!structKeyExists(arguments, "order")) {
 			arguments.order = variables.order;
 		}
-		var index = arrayFind(arguments.order.getOrdertItems(),this);
+		var index = arrayFind(arguments.order.getOrderItems(),this);
 		if(index > 0) {
 			arrayDeleteAt(arguments.order.getOrderItems(),index);
 		}    
 		structDelete(variables,"order");
+		
+		// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
     }
     
     // Order Shipping (many-to-one)
@@ -98,6 +108,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		variables.orderShipping = arguments.orderShipping;
 		if(isNew() || !arguments.orderShipping.hasOrderShippingItems(this)) {
 			arrayAppend(arguments.orderShipping.getOrderShippingItems(),this);
+		}
+		
+		// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
 		}
     }
     
@@ -110,8 +125,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     		arrayDeleteAt(arguments.orderShipping.getOrderShippingItems(), index);
     	}
     	structDelete(variables, "orderShipping");
+    	
+    	// Remove order shipping method and options
+		if(!isNull(variables.orderShipping)) {
+			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		}
     }
 	
 	/************   END Association Management Methods   *******************/
-	
 }

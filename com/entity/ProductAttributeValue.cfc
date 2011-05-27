@@ -38,9 +38,11 @@ Notes:
 */
 component displayname="Product Attribute Value" entityname="SlatwallProductAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="Product" {
 	
+	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="attributeValueType" insert="false" update="false";
+	
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" inverse="true" cascade="all";
 	
-
 	/******* Association management methods for bidirectional relationships **************/
 	// Product (many-to-one)
 	

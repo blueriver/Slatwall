@@ -36,13 +36,14 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" output="false" accessors="true"  {
+component extends="BaseService" output="false" accessors="true"  {
 	
 	// Mura Service Injection
 	property name="configBean" type="any";
 	property name="contentManager" type="any";
 	
 	// Global Properties Set in Application Scope
+	
 	property name="settings" type="struct";
 	property name="permissions" type="struct";
 	property name="shippingMethods" type="struct";
@@ -50,11 +51,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	property name="paymentMethods" type="struct";
 	property name="paymentServices" type="struct";
 	property name="permissionActions" type="struct";
-	
+		
 	public void function reloadConfiguration() {
-		var settingsList = list();
-		var shippingMethodsList = list(entityName="SlatwallShippingMethod");
-		var paymentMethodsList = list(entityName="SlatwallPaymentMethod");
+		var settingsList = this.listSetting();
+		var shippingMethodsList = this.listShippingMethod();
+		var paymentMethodsList = this.listPaymentMethod();
 		
 		variables.permissions = {};
 		variables.settings = {};
@@ -69,13 +70,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		
 		// Load Settings & Permissions
 		for(var i = 1; i <= arrayLen(settingsList); i++) {
+			
 			if( listFirst( settingsList[i].getSettingName(), "_") == "permission") {
-				
 				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
-				
 			} else {
-				
 				// Inject Service Specific Values
 				if ( listFirst( settingsList[i].getSettingName(), "_") == "shippingservice") {
 					// Inject Shipping Service Setting Values
@@ -83,7 +82,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
 						var shippingService = getByShippingServicePackage(shippingServicePackage);
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");
+						try {
+							evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");	
+						} catch (any e) {
+							// TODO: Add code to remove that setting from the DB
+						}
 					}
 				} else if ( listFirst( settingsList[i].getSettingName(), "_") == "paymentservice") {
 					// Inject Payment Service Setting Values
@@ -91,7 +94,11 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 					if( structKeyExists(variables.paymentServices, paymentServicePackage) ) {
 						var paymentService = getByPaymentServicePackage(paymentServicePackage);
 						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");
+						try {
+							evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");	
+						} catch (any e) {
+							// TODO: Add code to remove that setting from the DB
+						}
 					}
 				}
 				// Set the global setting value in the settings scope
@@ -158,7 +165,9 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		if(structKeyExists(variables.settings, arguments.settingName)) {
 			return variables.settings[ arguments.settingName ];
 		} else {
-			return getNewEntity();	
+			var setting = this.newSetting();
+			setting.setSettingName(arguments.settingName);
+			return	setting;
 		}
 	}
 	
@@ -166,7 +175,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		if(structKeyExists(variables.permissions, arguments.permissionName)) {
 			return variables.permissions[ arguments.permissionName ];
 		} else {
-			return getNewEntity();	
+			return this.newSetting();	
 		}
 	}
 	
@@ -225,6 +234,28 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		}
 		return variables.shippingServices;
 	}
+	
+	public any function saveShippingService(required string shippingServicePackage, required struct data) {
+		var shippingService = getByShippingServicePackage(arguments.shippingServicePackage);
+		// populate non-persistent service object for validation
+		for( var item in arguments.data ) {
+			evaluate("shippingService.set#item#(data[item])");
+		}
+		var response = getValidator().validate(shippingService);
+		if(!response.hasErrors()) {
+			//save service as individual setting entities
+			for(var item in arguments.data) {
+				var settingName = "shippingService_#arguments.shippingServicePackage#_#item#";
+				var thisSetting = getBySettingName(settingName);
+				thisSetting.setSettingValue(arguments.data[item]);
+				thisSetting = save(entity=thisSetting);
+			}
+		} else {
+			response.setData(shippingService);
+			getService("requestCacheService").setValue("ormHasErrors",true);
+		}
+		return response;
+	}
 
 	public any function getPaymentServices(boolean reload=false) {
 		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.paymentServices) || arguments.reload) {
@@ -243,16 +274,38 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		return variables.paymentServices;
 	}
 	
+	public any function savePaymentService(required string paymentServicePackage, required struct data) {
+		var paymentService = getByPaymentServicePackage(arguments.paymentServicePackage);
+		// populate non-persistent service object for validation
+		for( var item in arguments.data ) {
+			evaluate("paymentService.set#item#(data[item])");
+		}
+		var response = getValidator().validate(paymentService);
+		if(!response.hasErrors()) {
+			//save service as individual setting entities
+			for(var item in arguments.data) {
+				var settingName = "paymentService_#arguments.paymentServicePackage#_#item#";
+				var thisSetting = getBySettingName(settingName);
+				thisSetting.setSettingValue(arguments.data[item]);
+				thisSetting = save(entity=thisSetting);
+			}
+		} else {
+			response.setData(paymentService);
+			getService("requestCacheService").setValue("ormHasErrors",true);
+		}
+		return response;
+	}
+
 	public any function saveAddressZone(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"addressZoneLocations") ) {
 			for(var i in arguments.data.addressZoneLocations) {
 				if(left(i,3) == "new" && len(i) >= 4) {
-					var addressZoneLocation = getNewEntity("SlatwallAddressZoneLocation");
+					var addressZoneLocation = newAddressZoneLocation();
 					addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
 					addressZoneLocation.setAddressZone(arguments.entity);
 					arguments.entity.addAddressZoneLocation(addressZoneLocation);
 				} else {
-					var addressZoneLocation = getByID(i,"SlatwallAddressZoneLocation");
+					var addressZoneLocation = this.getAddressZoneLocation(i);
 					if(!isNull(addressZoneLocation)) {
 						addressZoneLocation.populate(arguments.data.addressZoneLocations[i]);
 						addressZoneLocation.setAddressZone(arguments.entity);
@@ -268,6 +321,7 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 	public any function verifyMuraRequirements() {
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
+		verifyMuraFrontendViews();
 	}
 	
 	private void function verifyMuraClassExtension() {
@@ -417,4 +471,14 @@ component extends="BaseService" persistent="false" output="false" accessors="tru
 		}
 	}
 	
+	private void function verifyMuraFrontendViews() {
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			var thisSiteID = assignedSites["siteID"][i];
+			var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
+			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/";
+			
+			getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
+		}
+	}
 }

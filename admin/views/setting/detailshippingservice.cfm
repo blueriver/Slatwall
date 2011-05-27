@@ -39,6 +39,7 @@ Notes:
 <cfparam name="rc.edit" />
 <cfparam name="rc.shippingServicePackage" />
 <cfparam name="rc.shippingService" />
+<cfparam name="rc.errors" default="#structNew()#" />
 
 <cfset local.serviceMeta = getMetaData(rc.shippingService) />
 
@@ -48,6 +49,14 @@ Notes:
 	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
 			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
 		</ul>
+		
+		<cfif !structIsEmpty(rc.errors)>
+			<ul class="error">
+				<cfloop collection="#rc.errors#" item="local.thisError">
+					<li>#rc.errors[local.thisError]#</li>
+				</cfloop>
+			</ul>
+		</cfif>
 		
 		<cfif rc.edit>
 			<form name="saveShippingService" method="post" action="#buildURL(action='admin:setting.saveshippingservice')#">
@@ -64,8 +73,7 @@ Notes:
 					<cfelse>
 						<cfset local.propertyTitle = local.property.name />
 					</cfif>
-					
-					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="shippingservice_#rc.shippingServicePackage#_#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="shippingService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
 				</cfloop>
 			</dl>
 		</cfif>

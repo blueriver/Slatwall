@@ -50,13 +50,13 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		// Automatically set the default search score to 0
 		this.setSearchScore(0);
 		
-		// When called from getNewEntity() within base service a struct or query record can be passed to pre-populate;
+		// When called from newXXX() within base service a struct or query record can be passed to pre-populate;
 		if(!structIsEmpty(arguments)){
 			// TODO: Debug this
 			//this.set(record=arguments);
 		}
 		
-		return this;
+		return super.init();
 	}
 	
 	// @hint This function is utilized by the fw1 populate method to only update persistent properties in the entity.

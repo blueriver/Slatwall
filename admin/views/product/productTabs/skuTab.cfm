@@ -47,7 +47,7 @@ Notes:
     <!---<a class="button" id="addOption">#rc.$.Slatwall.rbKey("admin.product.edit.addoption")#</a>--->
 </div>
 </cfif>
-<cfset local.skus = rc.product.getSkus(sortby='skuCode') />
+<!---<cfset local.skus = rc.SkuSmartList.getPageRecords() />--->
 	<table id="skuTable" class="stripe">
 		<thead>
 			<tr>
@@ -57,13 +57,14 @@ Notes:
 				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
 					<th>#local.thisOptionGroup.getOptionGroupName()#</th>
 				</cfloop>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imagePath")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imageFile")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
 				<cfif rc.edit>
 					<th></th>
 				</cfif>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
@@ -77,8 +78,8 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-		<cfloop from="1" to="#arrayLen(local.skus)#" index="local.skuCount">
-			<cfset local.thisSku = local.skus[local.skuCount] />
+		<cfloop from="1" to="#arrayLen(rc.SkuSmartList.getPageRecords())#" index="local.skuCount">
+			<cfset local.thisSku = rc.SkuSmartList.getPageRecords()[local.skuCount] />
 			<tr id="Sku#local.skuCount#" class="skuRow">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<td class="alignLeft">
@@ -101,9 +102,9 @@ Notes:
 				</cfloop>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
-						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImagePath()#</a>
+						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImageFile()#</a>
 					<cfelse>
-						#local.thisSku.getImagePath()#
+						#local.thisSku.getImageFile()#
 					</cfif>		
 				</td>
 				<td>
@@ -120,16 +121,23 @@ Notes:
 				</cfif>
 				<td>
 					<cfif rc.edit>
-						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#local.thisSku.getPrice()#" />
+						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />
 					<cfelse>
 						#DollarFormat(local.thisSku.getPrice())#
 					</cfif>
 				</td>
 				<td>
 					<cfif rc.edit>
-						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#local.thisSku.getListPrice()#" />         
+						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#decimalFormat(local.thisSku.getListPrice())#" />         
 					<cfelse>
 						#DollarFormat(local.thisSku.getListPrice())#
+					</cfif>
+				</td>
+				<td>
+					<cfif rc.edit>
+						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
+					<cfelse>
+						#local.thisSku.getShippingWeight()#
 					</cfif>
 				</td>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
@@ -162,6 +170,8 @@ Notes:
 	</tbody>
 </table>
 
+<cf_smartListPager smartList="#rc.SkuSmartList#">
+
 <cfif rc.edit>
 <table id="tableTemplate" class="hideElement">
 <tbody>
@@ -170,7 +180,7 @@ Notes:
             <input type="text" name="skuCode" value="" />
 			<input type="hidden" name="skuID" value="" />
         </td>
-        <td><input type="radio" name="defaultSku" value="" /></td>
+        <td><!-- default sku radio --></td>
         <cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
             <td>
 			   <select name="options">
@@ -190,6 +200,9 @@ Notes:
         <td>
             $<input type="text" size="6" name="listPrice" value="#rc.product.getDefaultSku().getListPrice()#" />         
         </td>
+		<td>
+			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
+		</td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
         <td></td>
         <td></td>
