@@ -202,7 +202,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			// Attempt to find that e-mail address in all of our emails
 			for(var i=1; i<=arrayLen(arguments.account.getAccountEmailAddresses()); i++) {
-				if(agruments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
+				if(arguments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
 					primaryEmail = agruments.account.getAccountEmailAddresses()[i];
 				}
 			}
