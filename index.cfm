@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-	Finished Testing
+	Switched Hook to Pre-Merge
 --->
 
 <!--- This File Should be left blank --->
