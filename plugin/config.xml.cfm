@@ -36,12 +36,19 @@
 Notes:
 
 --->
+<cfsilent>
+	<cfset local.version = "Unknown" />
+	<cfset local.versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt" />
+	<cfif fileExists(local.versionFile)>
+		<cfset local.version = fileRead(local.versionFile) />
+	</cfif>
+</cfsilent>
 <plugin>
 <name>Slatwall</name>
 <package>Slatwall</package>
 <directoryFormat>packageOnly</directoryFormat>
 <provider>Slatwall</provider>
-<version></version>
+<version><cfoutput>#local.version#</cfoutput></version>
 <providerURL>http://www.getslatwall.com/</providerURL>
 <category>Application</category>
 <ormcfclocation>com/entity</ormcfclocation>
