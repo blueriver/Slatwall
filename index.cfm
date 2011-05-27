@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-	Now I am testing as a Pre-Commit
+	Now I am testing as a Pre-Commit From gitGui
 --->
 
 <!--- This File Should be left blank --->
