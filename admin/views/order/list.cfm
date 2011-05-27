@@ -51,24 +51,23 @@ Notes:
 
 	<table id="OrderList" class="stripe">
 		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderCloseDate")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.type.orderStatusType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderTotal")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
 			<th>&nbsp</th>
 		</tr>
 		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="Local.Order">
 			<tr>
-				<td>#Local.Order.getOrderID()#</td>
-				<td>#Local.Order.getOrderCloseDate()#</td>
+				<td>#Local.Order.getOrderNumber()#</td>
+				<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "MM/DD/YYYY")#</td>
 				<td class="varWidth">#Local.Order.getAccount().getFullName()#</td>
 				<td>#Local.Order.getOrderStatusType().getType()#</td>
-				<td>#local.Order.getOrderTotal()#</td>
+				<td>#DollarFormat(local.Order.getTotal())#</td>
 				<td class="administration">
-					<cfset local.orderID = Local.Order.getOrderID() />
 					<ul class="four">
-					  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.orderID#" class="viewDetails" type="list">
+					  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
 					</ul>     						
 				</td>
 			</tr>

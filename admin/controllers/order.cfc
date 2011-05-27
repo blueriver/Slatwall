@@ -51,14 +51,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
     public void function list(required struct rc) {
-		param name="rc.orderby" default="orderCloseDate|D";
-		rc.orderSmartList = getOrderService().getSmartList(entityName="Order", data=arguments.rc);
+		param name="rc.orderby" default="orderOpenDateTime|DESC";
+		rc.orderSmartList = getOrderService().getSmartList(entityName="SlatwallOrder", data=arguments.rc);
     }
 
 	public void function detail(required struct rc) {
 	   rc.order = getOrderService().getOrder(rc.orderID);
 	   if(!isNull(rc.order) and !rc.order.isNew()) {
-	       rc.itemTitle &= ": Order No. " & rc.order.getOrderID();
+	       rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
 	   } else {
 	       getFW().redirect("admin:order.list");
 	   }

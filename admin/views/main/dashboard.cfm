@@ -63,13 +63,13 @@ Notes:
 		<h3>New Orders</h3>
 		<table id="orderList" class="stripe">
 			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderID")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullname")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.createdDateTime")#</th>
 			</tr>	
 			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
 				<tr>
-					<td></td>
+					<td>#local.order.getOrderNumber()#</td>
 					<cfif !isNull(local.order.getAccount())>
 						<td class="varWidth">#local.order.getAccount().getFullName()#</td>
 					<cfelse>

@@ -264,21 +264,22 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
-	private void function confirmOrderNumber() {
+	private void function confirmOrderNumberAndOpenDate() {
 		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			var maxOrderNumber = ormExecuteQuery("SELECT isNull(max(aslatwallorder.orderNumber), 0) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 			setOrderNumber(maxOrderNumber[1] + 1);
+			orderOpenDateTime(now());
 		}
 	} 
 	
 	//  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){
-		confirmOrderNumber();
+		confirmOrderNumberAndOpenDate();
 		super.preInsert();
 	}
 	
 	public void function preUpdate(Struct oldData){
-		confirmOrderNumber();
+		confirmOrderNumberAndOpenDate();
 		super.preInsert();
 	}
 	//  -------------------- END: ORM Event Metods -------------------
