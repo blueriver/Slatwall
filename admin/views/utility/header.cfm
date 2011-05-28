@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-<img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="24" width="150" alt="Slatwall Ecommerce" />
+<img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" />
 
 <ul id="navUtility">
     <li id="navSiteManager">
