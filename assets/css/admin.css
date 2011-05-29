@@ -40,11 +40,21 @@ Notes:
 
 body	{background-image:none;}
 
+h1 {
+    background: url("../images/mura_logo.png") no-repeat scroll 0 0 transparent;
+    color: #FEE100;
+    float: left;
+    height: 53px;
+    margin: 0 0 0 6px;
+    text-indent: -999em;
+    width: 58px;
+}
+
 div.admincontainer		{margin: 5px 20px 60px;}
 div.admincontainer h1	{position:relative; background:none; color:#000000; text-indent: 0px; clear:both; float:none;}
 img.slatwallLogo	{
 	float: left;
- 	margin: 4px 100px 0 50px;
+ 	margin: 8px 0px 0 5px;
 }
 
 .ui-widget-content a  {
