@@ -137,9 +137,9 @@ div.svocommontoolbarmenu ul.favorites li:hover ul {
 	-webkit-border-top-left-radius: 5px;
 	-moz-border-radius-topright: 5px;
 	-webkit-border-top-right-radius: 5px;
-	-webkit-box-shadow: 2px 2px 5px #666;
-	-moz-box-shadow: 3px 3px 5px #555;
-	box-shadow: 3px 3px 3px #555 !important;
+	-webkit-box-shadow: 2px -2px 5px #666;
+	-moz-box-shadow: 3px -3px 5px #555;
+	box-shadow: 3px -3px 3px #555 !important;
 	color:#fff !important;
 }
 
