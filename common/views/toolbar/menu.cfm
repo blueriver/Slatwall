@@ -102,7 +102,7 @@ Notes:
 				<cf_ActionCaller action="admin:main" type="link">
 			</li>
 			<li id="navProducts">
-				<ul class="subMenu">
+				<ul class="addMenuNav">
 					<cf_ActionCaller action="admin:product.list" type="list">
 					<cf_ActionCaller action="admin:product.create" type="list">
 					<cf_ActionCaller action="admin:product.listproducttypes" type="list">
@@ -112,13 +112,13 @@ Notes:
 				<cf_ActionCaller action="admin:product" type="link">
 			</li>
 			<li id="navAccounts">
-				<ul class="subMenu">
+				<ul class="addMenuNav">
 					<cf_ActionCaller action="admin:account.list" type="list" class="last">
 				</ul>
 				<cf_ActionCaller action="admin:account" type="link">
 			</li>
 			<li id="navSettings">
-				<ul class="subMenu">
+				<ul class="addMenuNav">
 					<cf_ActionCaller action="admin:setting.detail" type="list">
 					<cf_ActionCaller action="admin:setting.detailpermissions" type="list">
 					<cf_ActionCaller action="admin:setting.listaddresszones" type="list">
@@ -126,8 +126,8 @@ Notes:
 					<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
 					<cf_ActionCaller action="admin:attribute" type="list" class="last">
-					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list" class="last">
-					<li><a href="/plugins/Slatwall/?reload=true">Reload</a></li>
+					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list">
+					<li class="last"><a href="/plugins/Slatwall/?reload=true">Reload</a></li>
 				</ul>
 				<cf_ActionCaller action="admin:setting" type="link">
 			</li>
