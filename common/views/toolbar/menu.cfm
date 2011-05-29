@@ -125,7 +125,7 @@ Notes:
 					<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
-					<cf_ActionCaller action="admin:attribute" type="list" class="last">
+					<cf_ActionCaller action="admin:attribute" type="list">
 					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list">
 					<li class="last"><a href="/plugins/Slatwall/?reload=true">Reload</a></li>
 				</ul>
