@@ -55,8 +55,8 @@ Notes:
 			<dl class="oneColumn">
 				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
 				<!--- include any payment method-specific settings --->
-				<cfif fileExists(expandPath("paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
-					#view("setting/paymentMethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
+				<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
+					#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
 				</cfif>
 				<dt class="spdprovidergateway">
 					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
