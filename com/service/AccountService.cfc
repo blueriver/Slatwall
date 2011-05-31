@@ -207,7 +207,7 @@ component extends="BaseService" accessors="true" output="false" {
 				}
 			}
 			if( isNull(primaryEmail) ) {
-				primaryEmail = this.newAccountEmail();
+				primaryEmail = this.newAccountEmailAddress();
 				primaryEmail.setEmailAddress(arguments.muraUser.getEmail());
 				primaryEmail.setAccount(arguments.account);
 			}
