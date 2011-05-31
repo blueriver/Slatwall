@@ -18,13 +18,20 @@
 	<cfoutput>
 		<div class="smartListPager">
 			<cfif attributes.smartList.getTotalPages() gt 1>
-				<span class="showing">Showing #attributes.smartList.getPageRecordsStart()#-#attributes.smartList.getPageRecordsEnd()# (#attributes.smartList.getRecordsCount()#)</span>
+				<span class="showing">Showing #attributes.smartList.getPageRecordsStart()#-#attributes.smartList.getPageRecordsEnd()# (of #attributes.smartList.getRecordsCount()#)</span>
 				<ul class="pages">
 					<cfif attributes.smartList.getCurrentPage() gt 1>
 						<li class="prev"><a href="#attributes.smartList.buildURL('P:Current=#attributes.smartList.getCurrentPage() - 1#')#">Prev</a></li>
 					</cfif>
 					<cfloop from="1" to="#attributes.smartList.getTotalPages()#" step="1" index="i">
-						<li class="page#i#"><a href="#attributes.smartList.buildURL('P:Current=#i#')#">#i#</a></li>
+						<cfset currentPage = attributes.smartList.getCurrentPage() />
+						<li class="page#i#<cfif currentPage eq i> current</cfif>">
+							<cfif currentPage neq i>
+								<a href="#attributes.smartList.buildURL('P:Current=#i#')#">#i#</a>
+							<cfelse>
+								<span>#i#</span>
+							</cfif>
+						</li>
 					</cfloop>
 					<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
 						<li class="next"><a href="#attributes.smartList.buildURL('P:Current=#attributes.smartList.getCurrentPage() + 1#')#">Next</a></li>
