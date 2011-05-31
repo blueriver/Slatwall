@@ -284,3 +284,35 @@ p.error_message {
 }
 
 div.svoadminproductdetail img.skuImage {float:right;}
+
+.smartListPager {
+	float: right;
+}
+
+.smartListPager ul.pages {
+	margin: 1em 0 !important;
+	padding: 0;
+	list-style: none;
+}
+
+.smartListPager li {
+	display: inline;
+	margin: 0 !important;
+	padding: 0;
+	text-align: center;
+}
+
+.smartListPager li.current {
+	font-weight: bold;
+}
+
+.smartListPager a {
+	color: #6699CC;
+	text-decoration: none;
+}
+
+.smartListPager a,
+.smartListPager li span {
+	border: 1px solid #E4E4E4;
+	padding: 0.2em 0.3em;
+}
