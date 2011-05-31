@@ -489,8 +489,8 @@
 </key>
 <comment>If a type has a system code, then it can not be deleted</comment>
 </table>
-<table x="1002" y="309" name="SlatwallAccountEmail">
-<row name="AccountEmailID" null="1" autoincrement="1">
+<table x="1002" y="309" name="SlatwallAccountEmailAddress">
+<row name="AccountEmailAddressID" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="accountID" null="1" autoincrement="0">

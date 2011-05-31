@@ -105,8 +105,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Account (one-to-many)
 	
-	public void function addAccountEmail(required AccountEmail accountEmail) {
-	   arguments.accountEmail.setAccount(this);
+	public void function addAccountEmailAddress(required AccountEmailAddress accountEmailAddress) {
+	   arguments.accountEmailAddress.setAccount(this);
 	}
 	
 	public void function addAccountPhoneNumber(required AccountPhoneNumber accountPhoneNumber) {
