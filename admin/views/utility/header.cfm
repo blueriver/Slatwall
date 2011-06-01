@@ -37,8 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-<img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" />
-
+<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="/plugins/#getPluginConfig().getDirectory()#/images/slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
 <ul id="navUtility">
     <li id="navSiteManager">
     	<a href="/admin/index.cfm?fuseaction=cArch.list&siteid=#rc.$.event('siteid')#&moduleid=00000000000000000000000000000000000&topid=00000000000000000000000000000000001">#application.rbFactory.getKeyValue(session.rb,"layout.sitemanager")#</a>
