@@ -74,7 +74,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 					if(len(thisOptionStruct.attributeOptionID)) {
 						var thisAttributeOption = this.getAttributeOption(thisOptionStruct.attributeOptionID);
 					} else {
-						var thisAttributeOption = newAttributeOption();
+						var thisAttributeOption = new slatwall.com.entity.AttributeOption();
 					}
 					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
 					optionValueList = listAppend(optionValueList, thisAttributeOption.getAttributeOptionValue());
