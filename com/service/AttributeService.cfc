@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component  extends="slatwall.com.service.BaseService" accessors="true" {
+component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
 	public void function saveAttributeSort(required string attributeIDs) {
 		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
@@ -74,7 +74,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 					if(len(thisOptionStruct.attributeOptionID)) {
 						var thisAttributeOption = this.getAttributeOption(thisOptionStruct.attributeOptionID);
 					} else {
-						var thisAttributeOption = new slatwall.com.entity.AttributeOption();
+						var thisAttributeOption = this.newAttributeOption();
 					}
 					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
 					optionValueList = listAppend(optionValueList, thisAttributeOption.getAttributeOptionValue());
