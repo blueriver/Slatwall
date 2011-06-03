@@ -36,36 +36,43 @@
 Notes:
 
 */
-component displayname="Order Shipping Method Option" entityname="SlatwallOrderShippingMethodOption" table="SlatwallOrderShippingMethodOption" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulfillmentShipping" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="shipping" {
+	
+	// Persistant Properties
+	property name="orderFilfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 
-	property name="orderShippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="totalCost" ormtype="float";
-	property name="estimatedArrivalDate" ormtype="date";
-	
-	property name="orderFulfillmentShipping" cfc="OrderFulfillmentShipping" fieldtype="many-to-one" fkcolumn="orderFulfilmentID";
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Order Shipping (many-to-one)
-	public void function setOrderFulfillmentShipping(required OrderFulfillmentShipping orderFulfillmentShipping) {
-		variables.orderFulfillmentShipping = arguments.orderFulfillmentShipping;
-		if(isNew() || !arguments.orderFulfillmentShipping.hasOrderShippingMethodOption(this)) {
-			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
+
+	public void function populateOrderShippingMethodOptionsIfEmpty() {
+		if(!isNull(variables.address) && arrayLen(variables.orderShippingItems) && !arrayLen(variables.orderShippingMethodOptions)) {
+			getService("ShippingService").populateOrderShippingMethodOptions(this);
 		}
 	}
 	
-	public void function removeOrderFulfillmentShipping(OrderFulfillmentShipping orderFulfillmentShipping) {
-	   if(!structKeyExists(arguments,"orderFulfillmentShipping")) {
-	   		arguments.orderFulfillmentShipping = variables.orderFulfillmentShipping;
-	   }
-       var index = arrayFind(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(), index);
-       }
-       structDelete(variables,"orderFulfillmentShipping");
+	public void function removeOrderShippingMethodAndMethodOptions() {
+		// remove all existing options
+		for(var i = arrayLen(getOrderShippingMethodOptions()); i >= 1; i--) {
+			getOrderShippingMethodOptions()[i].removeOrderShipping(this);
+		}
+		setShippingMethod(javaCast("null", ""));
+		setShippingCharge(0);
+	}
+	
+	// Any time a new Address gets set, we need to adjust the order shipping options
+	public void function setAddress(required Address address) {
+		variables.address = arguments.address;
+		removeOrderShippingMethodAndMethodOptions();
+	}
+		
+    // Order Shipping Method Options (one-to-many)
+    public void function addOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    	arguments.orderShippingMethodOption.addOrderShipping(this);
     }
     
-    /******* END Association management methods */ 
-	
+    public void function removeOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    	arguments.orderShippingMethodOption.removeOrderShipping(this);
+    }
+
+
 }

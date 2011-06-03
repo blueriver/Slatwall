@@ -53,19 +53,18 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
-	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" filedtype="one-to-many" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
-		if(isNull(variables.orderShippings)) {
-			variables.orderShippings = [];
+		if(isNull(variables.orderFulfillments)) {
+			variables.orderFulfillments = [];
 		}
-		if(isNull(variables.orderShipments)) {
-			variables.orderShipments = [];
+		if(isNull(variables.orderDeliveries)) {
+			variables.orderDeliveries = [];
 		}
 		if(isNull(variables.orderItems)) {
 			variables.orderItems = [];
@@ -110,7 +109,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return 0;
 	}
 	
-	public numeric function getShippingTotal() {
+	public numeric function getFulfillmentTotal() {
 		return 0;
 	}
 	
@@ -136,24 +135,24 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	   arguments.orderItem.removeOrder(this);
 	}
 	
-	// OrderShippings (one-to-many)
+	// OrderFulfillments (one-to-many)
 	
-	public void function addOrderShipping(required OrderShipment orderShipping) {
-	   arguments.orderShipping.setOrder(this);
+	public void function addOrderFulfillment(required OrderFulfillment orderFulfillment) {
+	   arguments.orderFulfillment.setOrder(this);
 	}
 	
-	public void function removeOrderShipping(required OrderShipment orderShipping) {
-	   arguments.orderShipping.removeOrder(this);
+	public void function removeOrderFulfillment(required OrderFulfillment orderFulfillment) {
+	   arguments.orderFulfillment.removeOrder(this);
 	}
 	
-	// OrderShipments (one-to-many)
+	// OrderDeliveries (one-to-many)
 	
-	public void function addOrderShipment(required OrderShipment OrderShipment) {
+	public void function addOrderDelivery(required OrderDelivery orderDelivery) {
 	   arguments.orderShipment.setOrder(this);
 	}
 	
-	public void function removeOrderShipment(required OrderShipment OrderShipment) {
-	   arguments.orderShipment.removeOrder(this);
+	public void function removeOrderDelivery(required OrderDelivery orderDelivery) {
+	   arguments.orderDelivery.removeOrder(this);
 	}
 	
 	// OrderPayments (one-to-many)
