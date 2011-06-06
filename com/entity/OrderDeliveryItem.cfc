@@ -36,33 +36,33 @@
 Notes:
 
 */
-component displayname="Order Shipment Item" entityname="SlatwallOrderShipmentItem" table="SlatwallOrderShipmentItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryItem" table="SlatwallOrderDeliveryItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistant Properties
-	property name="orderShipmentItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityShipped" ormtype="integer";
+	property name="orderDeliveryItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="quantityDelivered" ormtype="integer";
 	
 	// Related Object Properties
-	property name="orderShipment" cfc="OrderShipment" fieldtype="many-to-one" fkcolumn="orderShipmentID";
+	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
    /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderShipment (many-to-one)
 	
-	public void function setOrderShipment(required OrderShipment OrderShipment) {
-	   variables.orderShipment = arguments.orderShipment;
-	   if(!arguments.orderShipment.hasOrderShipmentItem(this)) {
-	       arrayAppend(arguments.orderShipment.getOrderShipmentItems(),this);
+	public void function setOrderDelivery(required OrderDelivery orderDelivery) {
+	   variables.orderDelivery = arguments.orderDelivery;
+	   if(!arguments.orderDelivery.hasOrderShipmentItem(this)) {
+	       arrayAppend(arguments.orderDelivery.getOrderDeliveryItems(),this);
 	   }
 	}
 	
-	public void function removeorderShipment(required OrderShipment OrderShipment) {
-       var index = arrayFind(arguments.orderShipment.getOrderShipmentItems(),this);
+	public void function removeOrderDelivery(required OrderShipment orderDelivery) {
+       var index = arrayFind(arguments.orderDelivery.getOrderDeliveryItems(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.orderShipment.getOrderShipmentItems(),index);
+           arrayDeleteAt(arguments.orderDelivery.getOrderDeliveryItems(),index);
        }    
-       structDelete(variables,"orderShipment");
+       structDelete(variables,"orderDelivery");
 	}
     /************   END Association Management Methods   *******************/
 	

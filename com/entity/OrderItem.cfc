@@ -54,8 +54,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="sku" cfc="sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
-	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
-	property name="orderShipment" cfc="OrderShipment" fieldtype="many-to-one" fkcolumn="orderShipmentID";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	
 	public string function getStatus(){
@@ -81,9 +81,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		
 		// Remove order shipping method and options
+		/*
 		if(!isNull(variables.orderShipping)) {
 			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
 		}
+		*/
 	}
 	
 	public void function removeOrder(Order order) {
@@ -97,39 +99,45 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		structDelete(variables,"order");
 		
 		// Remove order shipping method and options
+		/* Needs to be refactored
 		if(!isNull(variables.orderShipping)) {
 			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
 		}
+		*/
     }
     
     // Order Shipping (many-to-one)
     
-    public void function setOrderShipping(required OrderShipping orderShipping) {
-		variables.orderShipping = arguments.orderShipping;
-		if(isNew() || !arguments.orderShipping.hasOrderShippingItems(this)) {
-			arrayAppend(arguments.orderShipping.getOrderShippingItems(),this);
+    public void function setOrderFulfillment(required OrderFulfillment orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() || !arguments.orderFulfillment.hasOrderFulfillmentItems(this)) {
+			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(),this);
 		}
 		
 		// Remove order shipping method and options
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
+		/* Needs to be refactored
+		if(!isNull(variables.orderFulfillment)) {
+			variables.orderFulfillment.removeOrderShippingMethodAndMethodOptions();
 		}
+		*/
     }
     
-    public void function removeOrderShipping(OrderShipping orderShipping) {
-    	if(!structKeyExists(arguments, "orderShipping")) {
-    		arguments.orderShipping = variables.orderShipping;
+    public void function removeOrderFulfillment(OrderFulfillment orderFulfillment) {
+    	if(!structKeyExists(arguments, "orderFulfillment")) {
+    		arguments.orderFulfillment = variables.orderFulfillment;
     	}
-    	var index = arrayFind(arguments.orderShipping.getOrderShippingItems(), this);
+    	var index = arrayFind(arguments.orderFulfillment.getOrderShippingItems(), this);
     	if(index > 0) {
-    		arrayDeleteAt(arguments.orderShipping.getOrderShippingItems(), index);
+    		arrayDeleteAt(arguments.orderFulfillment.getOrderShippingItems(), index);
     	}
-    	structDelete(variables, "orderShipping");
+    	structDelete(variables, "orderFulfillment");
     	
     	// Remove order shipping method and options
+    	/* Needs to be refactored
 		if(!isNull(variables.orderShipping)) {
 			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
 		}
+		*/
     }
 	
 	/************   END Association Management Methods   *******************/
