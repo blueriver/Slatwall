@@ -40,14 +40,14 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Persistant Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingCharge" ormtype="float";
+	property name="fulfillmentCharge" ormtype="float";
 	
 	// Related Object Properties
 	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderFulfillmentItems" singularname="orderShippingItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderShippingID" cascade="all" inverse="true";
+	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
 	
 	// Special Related Discriminator Property
-	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
+	//property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillmentItems)) {
