@@ -114,7 +114,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getTotal() {
-		return getSubtotal() + getTaxTotal() + getShippingTotal();
+		return getSubtotal() + getTaxTotal() + getFulfillmentTotal();
 	}
 	
 	public void function removeAllOrderItems() {
@@ -198,6 +198,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 	}
 	
+	/*
 	public boolean function hasValidOrderShippingAddress() {
 		var valid = true;
 		
@@ -237,7 +238,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		
 		return valid;
 	}
-	
+	*/
 	public boolean function hasValidPayment() {
 		var valid = true;
 		var totalPayments = 0;
@@ -254,6 +255,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return valid;
 	}
 	
+	/*
 	public boolean function isValidForProcessing() {
 		var valid = false;
 		if(hasValidAccount() && hasValidOrderShippingAddress() && hasValidOrderShippingMethod() && hasValidPayment()) {
@@ -261,6 +263,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		return valid;
 	}
+	*/
 	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberAndOpenDate() {

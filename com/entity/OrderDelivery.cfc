@@ -36,12 +36,12 @@
 Notes:
 
 */
-component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="BaseEntity" discriminatorcolumn="fulfillmentMethodID" {
 	
 	// Persistant Properties
-	property name="orderShipmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="trackingNumber" ormtype="string";
-	property name="shippedDateTime" ormtype="timestamp";
+	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="deliveryOpenDateTime" ormtype="timestamp";
+	property name="deliveryCloseDateTime" ormtype="timestamp";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -50,12 +50,13 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
 
-
+	// Special Related Discriminator Property
+	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)

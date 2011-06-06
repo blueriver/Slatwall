@@ -41,7 +41,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService";
 	property name="paymentService";
 	
-	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderShipping) {
+	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
 		
 		// Check to see if the order has a status
 		if(isNull(arguments.order.getOrderStatusType())) {
@@ -50,15 +50,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			throw("You cannot add an item to an order that has been closed or canceld");
 		}
 		
-		// Check for an orderShipping in the arguments.  If none, use the orders first.  If none has been setup create a new one
-		if(!structKeyExists(arguments, "orderShipping")) {
-			var osArray = arguments.order.getOrderShippings();
+		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			var osArray = arguments.order.getOrderFulfillments();
 			if(!arrayLen(osArray)) {
-				arguments.orderShipping = this.newOrderShipping();
-				arguments.orderShipping.setOrder(arguments.order);
-				save(arguments.orderShipping);
+				arguments.orderFulfillment = this.newOrderFulfillment();
+				arguments.orderFulfillment.setOrder(arguments.order);
+				save(arguments.orderFulfillment);
 			} else {
-				arguments.orderShipping = osArray[1];
+				arguments.orderFulfillment = osArray[1];
 			}
 		}
 		
