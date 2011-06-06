@@ -138,7 +138,7 @@ Notes:
 <ul id="attributeList" class="orderList">
 <cfloop from="1" to="#arraylen(local.attributes)#" index="local.i">
 <cfset local.thisAttribute = local.attributes[local.i] />
-<cfset local.attributeOptions = local.thisAttribute.getAttributeOptions(sortby='sortOrder') />
+<cfset local.attributeOptions = local.thisAttribute.getAttributeOptions(sortBy="sortOrder",sortType="numeric") />
 <!--- see if this is the attribute to be actively edited --->
 <cfif isObject(rc.activeAttribute) and local.thisAttribute.getAttributeID() eq rc.activeAttribute.getAttributeID()>
 	<cfset local.thisAttribute = rc.activeAttribute />
