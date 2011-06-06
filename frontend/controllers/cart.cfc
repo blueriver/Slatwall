@@ -70,9 +70,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		// Add to the cart() order the new sku with quantity and shipping id
 		getOrderService().addOrderItem(order=cart, sku=sku, quantity=rc.quantity, orderShippingID=rc.orderShippingID);
 		
-		// Save the Cart
-		getOrderService().save(cart);
-		
 		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);
 	}
 	

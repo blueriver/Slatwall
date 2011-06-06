@@ -57,7 +57,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
-	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" filedtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillments)) {
