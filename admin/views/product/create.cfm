@@ -67,7 +67,7 @@ Notes:
 	    <h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
 			<cfif arrayLen(rc.optionGroups) gt 0>
 				<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-				<cfset local.options = local.thisOptionGroup.getOptions(sortby="sortOrder") />
+				<cfset local.options = local.thisOptionGroup.getOptions(sortby="sortOrder",sortType="numeric") />
 				<p><a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideDown();">#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</a></p>
 				<div class="optionsSelector" id="selectOptions#local.thisOptionGroup.getOptionGroupID()#" style="display:none;">
 					<a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideUp();">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
