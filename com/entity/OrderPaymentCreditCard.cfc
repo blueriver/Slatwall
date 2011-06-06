@@ -43,8 +43,8 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	
 	property name="creditCardNumber" ormType="string";
 	property name="creditCardLastFour" ormType="string";
-	property name="experationMonth" ormType="string";
-	property name="experationYear" ormType="string";
+	property name="expirationMonth" ormType="string";
+	property name="expirationYear" ormType="string";
 	property name="amountAuthorized" ormtype="float";
 	property name="amountCharged" ormtype="float";
 	property name="amountSettled" ormtype="float";

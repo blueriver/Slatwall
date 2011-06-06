@@ -61,7 +61,7 @@ Notes:
 							<dd><input type="text" name="securityCode" /></dd>
 							<dt>Expires</dt>
 							<dd>
-								<select name="experationMonth">
+								<select name="expirationMonth">
 									<option value="01">01</option>
 									<option value="02">02</option>
 									<option value="03">03</option>
@@ -75,7 +75,7 @@ Notes:
 									<option value="11">11</option>
 									<option value="12">12</option>
 								</select> / 
-								<select name="experationYear">
+								<select name="expirationYear">
 									<option value="01">2011</option>
 									<option value="02">2012</option>
 									<option value="03">2013</option>
