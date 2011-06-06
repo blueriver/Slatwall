@@ -57,4 +57,16 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	public string function getFullAddress() {
+		var address = "";
+		address = listAppend(address,getCompany());
+		address = listAppend(address, getStreetAddress());
+		address = listAppend(address,getStreet2Address());
+		address = listAppend(address,getCity(),", ");
+		address = listAppend(address,getStateCode());
+		address = listAppend(address,getPostalCode());
+		address = listAppend(address,getCountryCode());
+		address = listChangeDelims(address,", ",",","no");
+		return address;
+	}
 }

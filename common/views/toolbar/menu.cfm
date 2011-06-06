@@ -111,6 +111,9 @@ Notes:
 				</ul>
 				<cf_ActionCaller action="admin:product" type="link">
 			</li>
+			<li id="navOrders">
+				<cf_ActionCaller action="admin:order" type="link">
+			</li>
 			<li id="navAccounts">
 				<ul class="addMenuNav">
 					<cf_ActionCaller action="admin:account.list" type="list" class="last">
