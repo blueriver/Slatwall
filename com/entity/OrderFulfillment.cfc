@@ -63,8 +63,8 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	public void function setOrder(required Order order) {
 		variables.order = arguments.order;
-		if(!arguments.order.hasOrderShipping(this)) {
-			arrayAppend(arguments.order.getOrderShippings(),this);
+		if(!arguments.order.hasOrderFulfillment(this)) {
+			arrayAppend(arguments.order.getOrderFulfillments(),this);
 		}
 	}
 	
@@ -72,20 +72,20 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	   if(!structKeyExists(arguments,"order")) {
 	   		arguments.order = variables.order;
 	   }
-       var index = arrayFind(arguments.order.getOrderShippings(),this);
+       var index = arrayFind(arguments.order.getOrderFulfillments(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderShippings(), index);
+           arrayDeleteAt(arguments.order.getOrderFulfillments(), index);
        }
        structDelete(variables,"order");
     }
     
     // Order Fulfillment Items (one-to-many)
     public void function addOrderFulfillmentItem(required OrderFulfillmentItem orderFulfillmentItem) {
-    	arguments.orderFulfillmentItem.addOrderShipping(this);
+    	arguments.orderFulfillmentItem.addOrderFulfillment(this);
     }
     
     public void function removeOrderFulfillmentItem(required OrderFulfillmentItem orderFulfillmentItem) {
-    	arguments.orderFulfillmentItem.removeOrderShipping(this);
+    	arguments.orderFulfillmentItem.removeOrderFulfillment(this);
     }
     
     /******* END Association management methods */ 

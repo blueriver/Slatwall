@@ -126,9 +126,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	if(!structKeyExists(arguments, "orderFulfillment")) {
     		arguments.orderFulfillment = variables.orderFulfillment;
     	}
-    	var index = arrayFind(arguments.orderFulfillment.getOrderShippingItems(), this);
+    	var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
     	if(index > 0) {
-    		arrayDeleteAt(arguments.orderFulfillment.getOrderShippingItems(), index);
+    		arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
     	}
     	structDelete(variables, "orderFulfillment");
     	
