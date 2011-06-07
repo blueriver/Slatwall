@@ -53,8 +53,8 @@ Notes:
 			<dl class="totals">
 				<dt class="subtotal">Subtotal</dt>
 				<dd class="subtotal">#DollarFormat($.slatwall.cart().getSubtotal())#</dd>
-				<dt class="shipping">Shipping</dt>
-				<dd class="shipping">#DollarFormat($.slatwall.cart().getShippingTotal())#</dd>
+				<dt class="delivery">Delivery</dt>
+				<dd class="delivery">#DollarFormat($.slatwall.cart().getFulfillmentTotal())#</dd>
 				<dt class="tax">Tax</dt>
 				<dd class="tax">#DollarFormat($.slatwall.cart().getTaxTotal())#</dd>
 				<dt class="total">Total</dt>

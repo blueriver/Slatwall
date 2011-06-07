@@ -36,16 +36,17 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="string" default="">
+<cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.orderRequirementsList" type="string" default="" />
 <cfparam name="rc.countriesArray" type="array">
 <cfparam name="rc.shippingAddress" type="any">
 
 <cfoutput>
 	<div class="svofrontendcheckoutshippingaddress">
-		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping<cfif $.slatwall.cart().hasValidOrderShippingAddress()> <a href="?edit=shippingAddress">Edit</a></cfif></h3>
-		<cfif $.slatwall.cart().hasValidAccount() and (rc.edit eq "" || rc.edit eq "shippingAddress")>
+		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping<cfif not listFind(rc.orderRequirementsList, 'shippingAddress')> <a href="?edit=shippingAddress">Edit</a></cfif></h3>
+		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "shippingAddress")>
 			<div id="checkoutShippingContent" class="contentBlock">
-				<cfif not $.slatwall.cart().hasValidOrderShippingAddress() or rc.edit eq "shippingAddress">
+				<cfif listFind(rc.orderRequirementsList, 'shippingAddress') or rc.edit eq "shippingAddress">
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
@@ -57,7 +58,7 @@ Notes:
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="streetAddress" edit="true" />
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="street2Address" edit="true" />
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="city" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="state" edit="true" />
+								<cf_PropertyDisplay object="#rc.shippingAddress#" property="stateCode" edit="true" />
 								<cf_PropertyDisplay object="#rc.shippingAddress#" property="postalCode" edit="true" />
 							</dl>
 						</div>
@@ -66,10 +67,10 @@ Notes:
 					</form>
 				<cfelse>
 					<div class="shippingAddress">
-						<dt>#$.slatwall.cart().getOrderShippings()[1].getAddress().getName()#</dt>
-						<dd>#$.slatwall.cart().getOrderShippings()[1].getAddress().getCompany()#</dd>
-						<dd>#$.slatwall.cart().getOrderShippings()[1].getAddress().getStreetAddress()#</dd>
-						<dd>#$.slatwall.cart().getOrderShippings()[1].getAddress().getCity()# #$.slatwall.cart().getOrderShippings()[1].getAddress().getStateCode()#, #$.slatwall.cart().getOrderShippings()[1].getAddress().getPostalCode()#</dd>
+						<dt>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getName()#</dt>
+						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCompany()#</dd>
+						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStreetAddress()#</dd>
+						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCity()# #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStateCode()#, #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getPostalCode()#</dd>
 					</div>
 				</cfif>
 			</div>

@@ -36,11 +36,14 @@
 Notes:
 
 --->
+<cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.orderRequirementsList" type="string" default="" />
+
 <cfoutput>
 	<div class="svofrontendorderpayment">
 		<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
 		
-		<cfif $.slatwall.cart().isValidForProcessing() and (rc.edit eq "" || rc.edit eq "payment")>
+		<cfif rc.orderRequirementsList eq "" and (rc.edit eq "" || rc.edit eq "payment")>
 			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder" method="post">
 				<div id="checkoutPaymentContent" class="contentBlock">
 					<div class="paymentAddress">
