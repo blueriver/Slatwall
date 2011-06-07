@@ -57,23 +57,22 @@ Notes:
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
-				<li><a href="##tabFulFillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
-				<li><a href="##tabFulFillmentMethodWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
+				<li><a href="##tabFulfillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
+				<li><a href="##tabFulfillmentMethodWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
 			</ul>
+			<div id="tabFulfillmentMethodBasicSettings">
+				<!--- include any fulfillment method-specific settings ---> 
+				<cfif fileExists(expandPath("admin/views/setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#.cfm"))>
+					#view("setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#")#
+				<cfelse>
+					This Fulfillment Method has no Basic Settings 
+				</cfif>
+			</div>
+			
+			<div id="tabFulfillmentMethodWorkflowSettings">
+				
+			</div>
 		</div>
-		
-		<div id="tabFulFillmentMethodBasicSettings">
-			<!--- include any fulfillment method-specific settings --->
-			<cfif fileExists(expandPath("admin/views/setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#.cfm"))>
-				#view("setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#")#
-			<cfelse>
-				This Fulfillment Method has no Settings 
-			</cfif>
-		</div>
-		
-		<div id="tabFulFillmentMethodWorkflowSettings">
-		</div>
-
 		<cfif rc.edit>
 				<div id="actionButtons" class="clearfix">
 					<cf_ActionCaller action="admin:setting.listFulfillmentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
