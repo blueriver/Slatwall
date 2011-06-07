@@ -80,8 +80,8 @@ component extends="BaseService" accessors="true" {
 		return getDAO().getProductContentSmartList(contentID=arguments.contentID, data=arguments.data, currentURL=arguments.currentURL);
 	}
 	
-	public array function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
-		return getSkuDAO().getProductSkuBySelectedOptions(argumentCollection=arguments);
+	public any function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
+		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
 	}
 
 	/**

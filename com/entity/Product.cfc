@@ -411,7 +411,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return arrayLen(getOptionGroups());
 	}
 	
-	// Start: Functions that deligate to the default sku
+	// Start: Functions that delegate to the default sku
     public string function getImageDirectory() {
     	return getDefaultSku().getImageDirectory();	
     }
