@@ -111,6 +111,9 @@ Notes:
 				</ul>
 				<cf_ActionCaller action="admin:product" type="link">
 			</li>
+			<li id="navOrders">
+				<cf_ActionCaller action="admin:order" type="link">
+			</li>
 			<li id="navAccounts">
 				<ul class="addMenuNav">
 					<cf_ActionCaller action="admin:account.list" type="list" class="last">
@@ -124,6 +127,7 @@ Notes:
 					<cf_ActionCaller action="admin:setting.listaddresszones" type="list">
 					<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list">
+					<cf_ActionCaller action="admin:setting.listfulfillmentmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
 					<cf_ActionCaller action="admin:attribute" type="list">
 					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list">

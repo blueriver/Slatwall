@@ -36,37 +36,5 @@
 Notes:
 
 */
-component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddress" persistent="true" output="false" accessors="true" extends="BaseEntity" {
-	
-	// Persistant Properties
-	property name="addressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="name" ormtype="string" validateRequired;
-	property name="company" ormtype="string";
-	property name="phone" ormtype="string";
-	property name="streetAddress" ormtype="string" validateRequired;
-	property name="street2Address" ormtype="string";
-	property name="locality" ormtype="string";
-	property name="city" ormtype="string" validateRequired;
-	property name="stateCode" ormtype="string";
-	property name="postalCode" ormtype="string";
-	property name="countryCode" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
-	
-	public string function getFullAddress() {
-		var address = "";
-		address = listAppend(address,getCompany());
-		address = listAppend(address, getStreetAddress());
-		address = listAppend(address,getStreet2Address());
-		address = listAppend(address,getCity(),", ");
-		address = listAppend(address,getStateCode());
-		address = listAppend(address,getPostalCode());
-		address = listAppend(address,getCountryCode());
-		address = listChangeDelims(address,", ",",","no");
-		return address;
-	}
+component extends="BaseDAO" {
 }

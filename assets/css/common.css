@@ -202,6 +202,9 @@ div.svocommontoolbarmenu li#navDashboard>a {
 div.svocommontoolbarmenu li#navProducts>a {
 	background: url("/admin/images/icons/smicn_24.png") no-repeat scroll 15px 7px transparent !important;
 }
+div.svocommontoolbarmenu li#navOrders>a {
+	background: url("/plugins/Slatwall/images/icons/orders_icon.png") no-repeat scroll 14px 6px transparent !important;
+}
 div.svocommontoolbarmenu li#navAccounts>a {
 	background: url("/admin/images/icons/permissions_on.png") no-repeat scroll 15px 7px transparent !important;
 }

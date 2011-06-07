@@ -48,16 +48,20 @@ Notes:
 			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
-		<cfif rc.edit>
-		<form name="ShippingMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
-			<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
-		</cfif>
+		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+			<ul>
+				<li><a href="##tabBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
+				<li><a href="##tabWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
+			</ul>
+		</div>
+		
+		<div id="tabBasicSettings">
+			<cfif rc.edit>
+			<form name="PaymentMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
+				<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
+			</cfif>
 			<dl class="oneColumn">
 				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
-				<!--- include any payment method-specific settings --->
-				<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
-					#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
-				</cfif>
 				<dt class="spdprovidergateway">
 					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
 				</dt>
@@ -76,7 +80,15 @@ Notes:
 						#rc.paymentMethod.getProviderGateway()#
 					</cfif>
 				</dd>
-			</dl>
+				<!--- include any payment method-specific settings --->
+				<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
+					#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
+				</cfif>
+			</dl>			
+		</div>
+		
+		<div id="tabWorkflowSettings"></div>
+	
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_ActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
@@ -84,4 +96,5 @@ Notes:
 			</div>
 		</form>
 	</cfif>
+	</div>
 </cfoutput>

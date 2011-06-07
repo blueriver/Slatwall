@@ -5,6 +5,7 @@
 	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
 	<bean id="attributeDAO" class="slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />
+	<bean id="fulfillmentDAO" class="slatwall.com.dao.FulfillmentDAO" />
 	<bean id="productDAO" class="slatwall.com.dao.ProductDAO" />
 	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO" />
 	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
@@ -92,6 +93,12 @@
 	
 	<bean id="paymentService" class="slatwall.com.service.paymentService">
         <property name="DAO"><ref bean="paymentDAO" /></property>
+		<property name="validator"><ref bean="Validator" /></property>
+		<property name="settingService"><ref bean="settingService" /></property>
+    </bean>
+	
+	<bean id="fulfillmentService" class="slatwall.com.service.fulfillmentService">
+        <property name="DAO"><ref bean="fulfillmentDAO" /></property>
 		<property name="validator"><ref bean="Validator" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>
     </bean>
