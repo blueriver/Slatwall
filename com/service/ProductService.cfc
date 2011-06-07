@@ -79,6 +79,10 @@ component extends="BaseService" accessors="true" {
 	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL="") {
 		return getDAO().getProductContentSmartList(contentID=arguments.contentID, data=arguments.data, currentURL=arguments.currentURL);
 	}
+	
+	public array function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
+		return getSkuDAO().getProductSkuBySelectedOptions(argumentCollection=arguments);
+	}
 
 	/**
 	/* @hint associates this product with Mura content objects

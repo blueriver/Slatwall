@@ -464,66 +464,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	// Start Functions for determining different option combinations
-	public array function getAvaiableSkusBySelectedOptions(required string selectedOptions) {
-		var availableSkus = arrayNew(1);
-		var skus = getSkus();
-		
-		for(var i = 1; i<=arrayLen(skus); i++) {
-			var skuOptions = skus[i].getOptions();
-			var matchCount = 0;
-			for(var ii = 1; ii <= arrayLen(skuOptions); ii++) {
-				var option = skuOptions[ii];
-				for(var iii = 1; iii <= listLen(arguments.selectedOptions); iii++) {
-					if(option.getOptionID() == listGetAt(arguments.selectedOptions, iii)) {
-						matchCount += 1;
-					}
-				}
-			}
-			if(matchCount == listLen(arguments.selectedOptions)) {
-				arrayAppend(availableSkus, skus[i]);
-			}
-		}
-		return availableSkus;
+	public array function getOptionsByOptionGroup(required string optionGroupID) {
+		var smartList = getSmartList("SlatwallOption");
+		smartList.addFilter("optionGroup_optionGroupID",arguments.optionGroupID);
+		smartList.addFilter("skus_product_productID",this.getProductID());
+		smartList.addOrder("sortOrder|ASC");
+		return smartList.getRecords();
 	}
-	
-	public struct function getAvailableOptionsBySelectedOptions(required string selectedOptions) {
-		var availableGroupOptions = structNew();
-		var availableSkus = getAvaiableSkusBySelectedOptions(arguments.selectedOptions);
-		for(var i = 1; i<=arrayLen(availableSkus); i++) {
-			var options = availableSkus[i].getOptions();
-			for(var ii = 1; ii <= arrayLen(options); ii++) {
-				if(!listFind(arguments.selectedOptions, options[ii].getOptionID())) {
-					if(!structKeyExists(availableGroupOptions, options[ii].getOptionGroup().getOptionGroupID())) {
-						availableGroupOptions[options[ii].getOptionGroup().getOptionGroupID()] = structNew();
-					}
-					if(!structKeyExists(availableGroupOptions[options[ii].getOptionGroup().getOptionGroupID()], options[ii].getOptionID())){
-						availableGroupOptions[options[ii].getOptionGroup().getOptionGroupID()][options[ii].getOptionID()] = options[ii];
-					}
-				}
-			}	
-		}
-		return availableGroupOptions;
-	}
-	
-	public struct function getAvailableGroupOptionsBySelectedOptions(required string optionGroupID, string selectedOptions="") {
-		var availableGroupOptions = getAvailableOptionsBySelectedOptions(arguments.selectedOptions);
-		if(structKeyExists(availableGroupOptions, arguments.optionGroupID)) {
-			return availableGroupOptions[arguments.optionGroupID];
-		} else {
-			return structNew();
-		}
-	}
-	// End Functions for determining different option combinations
-	
+
 	public any function getSkuBySelectedOptions(string selectedOptions="") {
-		var availableSkus = getAvaiableSkusBySelectedOptions(arguments.selectedOptions);
-		if(arrayLen(availableSkus) == 1) {
-			return availableSkus[1];
-		} else {
-			return availableSkus;
-		}
+		return getService("productService").getProductSkuBySelectedOptions(arguments.selectedOptions,this.getProductID());
 	}
+	
 	
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array systemCode){
