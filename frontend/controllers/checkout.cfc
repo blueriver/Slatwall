@@ -44,6 +44,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="settingService" type="any";
 	
 	public void function detail(required struct rc) {
+		param name="rc.edit" default="";
+		param name="rc.orderRequirementsList" default="";
 		param name="rc.accountID" default="";
 		param name="rc.shippingAddressID" default="";
 		param name="rc.paymentAddressID" default="";
@@ -64,21 +66,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		} else {
 			rc.account = getAccountService().newAccount();
 		}
-		
+
+		// TODO: This is currently a hack, because at the end of the day not all fulfillments will require a shipping address  
 		if(rc.shippingAddressID != "") {
 			rc.shippingAddress = getAccountService().getAddress(rc.shippingAddressID, true);	
-		} else if (!isNull(rc.$.slatwall.cart().getOrderShippings()[1].getAddress())) {
-			rc.shippingAddress = rc.$.slatwall.cart().getOrderShippings()[1].getAddress();
+		} else if (!isNull(rc.$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())) {
+			rc.shippingAddress = rc.$.slatwall.cart().getOrderFulfilments()[1].getShippingAddress();
 		} else {
 			rc.shippingAddress = getAccountService().newAddress();
-		}
-		
+		}		
 		
 		rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
 		
-		
-		// Populate order Shipping Methods if needed.
-		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
+		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 	}
 	
 	public void function saveAccount(required struct rc) {

@@ -53,7 +53,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(!structKeyExists(arguments, "orderFulfillment")) {
 			var osArray = arguments.order.getOrderFulfillments();
 			if(!arrayLen(osArray)) {
+				// TODO: This next is a hack... later the type of Fulfillment created should be dynamic 
 				arguments.orderFulfillment = this.newOrderFulfillmentShipping();
+				
 				arguments.orderFulfillment.setOrder(arguments.order);
 				save(arguments.orderFulfillment);
 			} else {
@@ -118,7 +120,24 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			return true;
 		}
 		
-		
 		return false;
+	}
+	
+	public any function getOrderRequirementsList(required any order) {
+		var orderRequirementsList = "";
+		
+		// Check if the order still requires a valid account
+		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
+			orderRequirementsList &= "account,";
+		}
+		
+		orderRequirementsList &= "shippingAddress,";
+		orderRequirementsList &= "shippingMethod,";
+		
+		if(len(orderRequirementsList)) {
+			orderRequirementsList = left(orderRequirementsList, len(orderRequirementsList)-1);
+		}
+		
+		return orderRequirementsList;
 	}
 }

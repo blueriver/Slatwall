@@ -42,7 +42,9 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	property name="orderFilfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
-
+	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	
+	property name="orderShippingMethodOptions" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID";
 
 	public void function populateOrderShippingMethodOptionsIfEmpty() {
 		if(!isNull(variables.address) && arrayLen(variables.orderShippingItems) && !arrayLen(variables.orderShippingMethodOptions)) {

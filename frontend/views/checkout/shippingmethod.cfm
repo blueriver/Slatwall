@@ -36,34 +36,37 @@
 Notes:
 
 --->
+<cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.orderRequirementsList" type="string" default="" />
 
 <cfoutput>
 	<div class="svocheckoutshippingmethod">
-	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method <cfif $.slatwall.cart().hasValidOrderShippingMethod()> <a href="?edit=shippingMethod">Edit</a></cfif></h3>
-	<cfif $.slatwall.cart().hasValidAccount() and $.slatwall.cart().hasValidOrderShippingAddress() and (rc.edit eq "" || rc.edit eq "shippingMethod")>
-	<div id="checkoutShippingMethodContent" class="contentBlock">
-		<cfif !$.slatwall.cart().hasValidOrderShippingMethod() || rc.edit eq "shippingMethod">
-			<form action="?slatAction=frontend:checkout.saveshippingmethod" method="post">
-			<cfset local.methodOptions = $.slatwall.cart().getOrderShippings()[1].getOrderShippingMethodOptions() />
-			<cfloop array="#local.methodOptions#" index="option">
-				<cfset local.optionSelected = false />
-				<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
-					<cfset local.optionSelected = true />
-				</cfif>
-				<dl>
-					<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
-					<dd>#DollarFormat(option.getTotalCost())#</dd>
+	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method <cfif not listFind(rc.orderRequirementsList, "shippingMethod")> <a href="?edit=shippingMethod">Edit</a></cfif></h3>
+	<cfif not listFind(rc.orderRequirementsList, "account") and not listFind(rc.orderRequirementsList, "shippingAddress") and (rc.edit eq "" || rc.edit eq "shippingMethod")>
+		<div id="checkoutShippingMethodContent" class="contentBlock">
+			<cfif listFind(rc.orderRequirementsList, "shippingMethod") or rc.edit eq "shippingMethod">
+				<form action="?slatAction=frontend:checkout.saveshippingmethod" method="post">
+				<cfset $.slatwall.cart().getOrderFulfillments()[1].populateOrderShippingMethodOptionsIfEmpty() />
+				<cfset local.methodOptions = $.slatwall.cart().getOrderFulfillments()[1].getOrderShippingMethodOptions() />
+				<cfloop array="#local.methodOptions#" index="option">
+					<cfset local.optionSelected = false />
+					<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
+						<cfset local.optionSelected = true />
+					</cfif>
+					<dl>
+						<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
+						<dd>#DollarFormat(option.getTotalCost())#</dd>
+					</dl>
+				</cfloop>
+					<cf_ActionCaller action="frontend:checkout.saveShippingMethod" type="submit" />
+				</form>
+			<cfelse>
+				<dl class="shippingMethod">
+					<dt>#$.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodName()#</dt>
+					<dd>#$.slatwall.cart().getOrderShippings()[1].getShippingCharge()#</dd>
 				</dl>
-			</cfloop>
-				<cf_ActionCaller action="frontend:checkout.saveShippingMethod" type="submit" />
-			</form>
-		<cfelse>
-			<dl class="shippingMethod">
-				<dt>#$.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodName()#</dt>
-				<dd>#$.slatwall.cart().getOrderShippings()[1].getShippingCharge()#</dd>
-			</dl>
-		</cfif>
-	</div>
+			</cfif>
+		</div>
 	</cfif>
 	</div>
 </cfoutput>

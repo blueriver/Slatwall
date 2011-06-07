@@ -37,15 +37,16 @@ Notes:
 
 --->
 <cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.orderRequirementsList" type="string" default="" />
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
 	<div class="svofrontendcheckoutaccount">
-		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif $.slatwall.cart().hasValidAccount()><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
+		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif not listFind(rc.orderRequirementsList, 'account')><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
 		<cfif rc.edit eq "" || rc.edit eq "account">
 			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif not $.slatwall.cart().hasValidAccount() || rc.edit eq "account">
-					<cfif not $.slatwall.cart().hasValidAccount()>
+				<cfif listFind(rc.orderRequirementsList, 'account') || rc.edit eq "account">
+					<cfif listFind(rc.orderRequirementsList, 'account')>
 						<div class="loginAccount">
 							<form name="loginAccount" method="post" action="?nocache=1">
 								<h4>Account Login</h4>
@@ -93,7 +94,7 @@ Notes:
 							<cf_ActionCaller action="frontend:checkout.saveaccount" type="submit">
 						</form>
 					</div>
-				<cfelseif $.slatwall.cart().hasValidAccount()>
+				<cfelseif not listFind(rc.orderRequirementsList, 'account')>
 					<div class="accountDetails">
 						<dl class="accountInfo">
 							<dt class="fullName">#rc.account.getFullName()#</dt>
