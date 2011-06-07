@@ -48,5 +48,26 @@ component extends="slatwall.com.dao.BaseDAO" {
 		
 		return smartList;
 	}
+	
+	// returns product sku which matches ALL options (list of optionIDs) that are passed in
+	public array function getProductSkuBySelectedOptions(required string selectedOptions,required string productID) {
+		var params = [];
+		var hql = "select distinct sku from SlatwallSku as sku 
+					inner join sku.options as opt 
+					where 
+					0 = 0 ";
+		for(var i=1; i<=listLen(arguments.selectedOptions); i++) {
+			var thisOptionID = listGetat(arguments.selectedOptions,i);
+			hql &= "and exists (
+						from SlatwallOption o
+						join o.skus s where s.id = sku.id
+						and o.optionID = ?
+					) ";
+			arrayAppend(params,thisOptionID);
+		}
+		hql &= "and sku.product.id = ?";
+		arrayAppend(params,arguments.productID);
+		return ormExecuteQuery(hql,params);
+	}
 
 }

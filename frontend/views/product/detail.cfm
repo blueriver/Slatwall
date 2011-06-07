@@ -46,18 +46,20 @@ Notes:
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
-			<cfset local.productOptionGroups = $.slatwall.Product().getOptionGroupsStruct() />
-			<cfloop collection="#local.productOptionGroups#" item="local.groupID">
-				<dt>#local.productOptionGroups[local.groupID].getOptionGroupName()#</dt>
+			<cfset local.productOptionGroups = $.slatwall.Product().getOptionGroups() />
+			<dl>
+			<cfloop array="#local.productOptionGroups#" index="local.group">
+				<dt>#local.group.getOptionGroupName()#</dt>
 				<dd>
 				<select name="selectedOptions">
-					<cfset local.availableOptions = $.slatwall.Product().getAvailableGroupOptionsBySelectedOptions(optionGroupID=local.groupID) />
-					<cfloop collection="#local.availableOptions#" item="local.optionID">
-						<option selected="selected" value="#local.availableOptions[local.optionID].getOptionID()#">#local.availableOptions[local.optionID].getOptionName()#</option>
+					<cfset local.availableOptions = $.slatwall.Product().getOptionsByOptionGroup(optionGroupID=local.group.getOptionGroupID()) />
+					<cfloop array="#local.availableOptions#" index="local.option">
+						<option value="#local.option.getOptionID()#">#local.option.getOptionName()#</option>
 					</cfloop>
 				</select>
 				</dd>
 			</cfloop>
+			</dl>
 			<button type="submit">Add To Cart</button>
 		</form>
 	</div>
