@@ -46,6 +46,15 @@ Notes:
 	    	<cf_ActionCaller action="admin:setting.listFulfillmentMethods" type="list">
 		</ul>
 		
+		<cfif rc.edit>
+			<form name="FulFillmentMethodEdit" action="#buildURL('admin:setting.saveFulfillmentMethod')#" method="post">
+				<input type="hidden" name="fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
+		</cfif>
+		
+		<dl class="oneColumn">
+			<cf_PropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
+		</dl>
+		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
 				<li><a href="##tabFulFillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
@@ -54,21 +63,16 @@ Notes:
 		</div>
 		
 		<div id="tabFulFillmentMethodBasicSettings">
-			<cfif rc.edit>
-			<form name="FulFillmentMethodEdit" action="#buildURL('admin:setting.saveFulfillmentMethod')#" method="post">
-				<input type="hidden" name="fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
+			<!--- include any fulfillment method-specific settings --->
+			<cfif fileExists(expandPath("admin/views/setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#.cfm"))>
+				#view("setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#")#
+			<cfelse>
+				This Fulfillment Method has no Settings 
 			</cfif>
-			<dl class="oneColumn">
-				<cf_PropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
-				<!--- include any fulfillment method-specific settings --->
-				<cfif fileExists(expandPath("admin/views/setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#.cfm"))>
-					#view("setting/fulfillmentmethods/#lcase(rc.fulfillmentMethod.getFulfillmentMethodID())#")#
-				</cfif>
-			</dl>
 		</div>
 		
 		<div id="tabFulFillmentMethodWorkflowSettings">
-		</div
+		</div>
 
 		<cfif rc.edit>
 				<div id="actionButtons" class="clearfix">
