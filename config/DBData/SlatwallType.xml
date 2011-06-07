@@ -70,13 +70,15 @@
 		<Record typeID="444df2b0e1867f38402ff0aced5ca60f" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="URL" systemCode="vtURL" />
 		<Record typeID="444df2b201a098f5b277febb17a7cb0a" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Zip Code" systemCode="vtZipCode" />
 		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
+		
+		<Record typeID="444df2c6ad38850e66a1f3151c05ac3e" type="Order Action Types" systemCode="orderActionType" />
+		<Record typeID="444df2c8cce9f1417627bd164a65f133" parentTypeID="444df2c6ad38850e66a1f3151c05ac3e" type="Cancel Order" systemCode="oatCancel" />
+		
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
-444df2c6ad38850e66a1f3151c05ac3e
-444df2c79a51cb70cf3f61efff8ae41b
 444df2c8cce9f1417627bd164a65f133
 444df2c9cddaf8cafd6660ff320aac19
 444df2cad53c6edae52df82f27efe892
