@@ -36,22 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any" />
-<cfparam name="rc.shippingServices" type="any" />
-
 <cfoutput>
-	<div class="svoadminlistshippingservices">
-		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
-		</ul>
-		
+	<dl class="oneColumn">
+		<dt>Shipping Services</dt>
 		<table id="shippingServiceList" class="stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
 				<th>&nbsp</th>
 			</tr>
-				
 			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
 				<tr>
 					<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
@@ -66,5 +58,29 @@ Notes:
 				</tr>
 			</cfloop>
 		</table>
-	</div>
+		<dt>Shipping Methods</dt>
+		<dd>
+			<cf_ActionCaller action="admin:setting.createshippingmethod" type="link">
+		</dd>
+		<cfif structCount(rc.shippingMethods) gt 0>
+			<table id="shippingMethodList" class="stripe">
+				<tr>
+					<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
+					<th>&nbsp</th>
+				</tr>
+				<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
+					<tr>
+						<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
+						<td class="administration">
+							<ul class="three">
+								<cf_ActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
+								<cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
+								<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
+							</ul>     						
+						</td>
+					</tr>
+				</cfloop>
+			</table>
+		</cfif>
+	</dl>
 </cfoutput>

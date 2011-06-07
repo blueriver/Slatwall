@@ -113,7 +113,7 @@ div.svocommontoolbarmenu li ul li a {
 	text-indent: 0px;
 	margin: 1px 0 !important;
 	line-height: 1.2 !important;
-	background: url(../images/arrow_dk_grey.gif) no-repeat 3px center !important;
+	background: url(../images/common.toolbar.menu.arrow_dk_grey.gif) no-repeat 3px center !important;
 	color: #333 !important;
 	text-shadow: rgba(255,255,255,.30) 0px 1px 0px;
 }
@@ -144,7 +144,7 @@ div.svocommontoolbarmenu ul.favorites li:hover ul {
 }
 
 div.svocommontoolbarmenu ul.favorites li li a:hover {
-	background: url(../images/arrow_grey.gif) no-repeat 3px center !important;
+	background: url(../images/common.toolbar.menu.arrow_grey.gif) no-repeat 3px center !important;
 	color: #fff !important;
 	text-shadow: rgba(0,0,0,.60) 0px -1px 0px;
 	
@@ -153,7 +153,7 @@ div.svocommontoolbarmenu ul.favorites li li a:hover {
 div.svocommontoolbarmenu ul.favorites li:hover ul a:hover, div.svocommontoolbarmenu ul.favorites li.sfhover ul a:hover { 
 	color: #fff !important;
 	text-shadow: rgba(0,0,0,.60) 0px -1px 0px;
-	background: url(../images/arrow_grey.gif) no-repeat 3px center !important;
+	background: url(../images/common.toolbar.menu.arrow_grey.gif) no-repeat 3px center !important;
 }
 
 div.svocommontoolbarmenu ul.favorites li ul li.last {
@@ -203,7 +203,7 @@ div.svocommontoolbarmenu li#navProducts>a {
 	background: url("/admin/images/icons/smicn_24.png") no-repeat scroll 15px 7px transparent !important;
 }
 div.svocommontoolbarmenu li#navOrders>a {
-	background: url("/plugins/Slatwall/images/icons/orders_icon.png") no-repeat scroll 14px 6px transparent !important;
+	background: url("../images/common.toolbar.menu.orders_icon.png") no-repeat scroll 14px 6px transparent !important;
 }
 div.svocommontoolbarmenu li#navAccounts>a {
 	background: url("/admin/images/icons/permissions_on.png") no-repeat scroll 15px 7px transparent !important;

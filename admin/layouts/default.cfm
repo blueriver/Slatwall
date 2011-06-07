@@ -39,6 +39,8 @@ Notes:
 <cfparam name="rc.section" default="Slatwall" />
 <cfparam name="rc.activeTab" default=0 />
 <cfparam name="rc.activePanel" default=0 />
+<cfparam name="rc.message" type="string" default="" />
+<cfparam name="rc.messagetype" type="string" default="info" />
 
 <!--- Add mura specific JS variables --->
 <cfset getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType")) />
@@ -69,12 +71,34 @@ Notes:
 	#view("common:toolbar/menu")#
 	<div id="header">
 		<h1>Mura CMS</h1>
-		#view("admin:utility/header")# 
+		<cfoutput>
+		<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="/plugins/Slatwall/assets/images/admin.default.slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
+		<ul id="navUtility">
+		    <li id="navSiteManager">
+		    	<a href="/admin/index.cfm?fuseaction=cArch.list&siteid=#rc.$.event('siteid')#&moduleid=00000000000000000000000000000000000&topid=00000000000000000000000000000000001">#application.rbFactory.getKeyValue(session.rb,"layout.sitemanager")#</a>
+			</li>
+		    <li id="navLogout">
+		    	<a href="/admin/index.cfm?fuseaction=cLogin.logout">#application.rbFactory.getKeyValue(session.rb,"layout.logout")#</a>
+			</li>
+		</ul>
+		<p id="welcome">#application.rbFactory.getKeyValue(session.rb,"layout.welcome")#, #HTMLEditFormat("#session.mura.fname# #session.mura.lname#")#.</p>
+		</cfoutput>
 		<p id="currentSite"><cf_ActionCaller text="#rc.sectionTitle#" action="#request.subsystem#:#request.section#" type="link"> &rarr; #rc.itemTitle#</p>
 	</div>
 	
 	<div class="admincontainer">
-		#view("admin:utility/messageBox")#
+		<cfif len(trim(rc.message)) gt 0>
+			<cfset local.message = rc.$.Slatwall.rbKey(rc.message) />
+			<cfif right(local.message,8) eq "_missing">
+				<cfset local.message = rc.message />
+			</cfif>
+		</cfif>
+		
+		<cfif structKeyExists(local,"message")>
+			<p class="messagebox #rc.messagetype#_message">
+			#htmlEditFormat(local.message)#
+			</p>
+		</cfif>
 		#body#
 	</div>
 <div id="alertDialog" title="Alert" style="display:none">

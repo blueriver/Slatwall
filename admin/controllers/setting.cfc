@@ -115,10 +115,6 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	// Shipping Services
-	public void function listShippingServices(required struct rc) {
-		rc.shippingServices = getSettingService().getShippingServices();	
-	}
-	
 	public void function detailShippingService(required struct rc) {
 		param name="rc.edit" default="false";
 		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
@@ -152,10 +148,6 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	// Shipping Methods
-	public void function listShippingMethods(required struct rc) {
-		rc.shippingMethods = getSettingService().getShippingMethods();
-	}
-	
 	public void function detailShippingMethod(required struct rc) {
 		param name="rc.shippingMethodID" default="";
 		param name="rc.edit" default="false";
@@ -298,6 +290,9 @@ component extends="BaseController" output="false" accessors="true" {
 			getFW().redirect(action="admin:setting.listFulfillmentMethods");
 		}	
 		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
+		
+		rc.shippingMethods = getSettingService().getShippingMethods();
+		rc.shippingServices = getSettingService().getShippingServices();
 	}
 	
 	public void function editFulfillmentMethod(required struct rc) {

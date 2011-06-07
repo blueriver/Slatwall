@@ -125,7 +125,6 @@ Notes:
 					<cf_ActionCaller action="admin:setting.detail" type="list">
 					<cf_ActionCaller action="admin:setting.detailpermissions" type="list">
 					<cf_ActionCaller action="admin:setting.listaddresszones" type="list">
-					<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listfulfillmentmethods" type="list">
 					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
