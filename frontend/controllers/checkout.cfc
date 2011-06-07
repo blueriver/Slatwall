@@ -39,6 +39,7 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
 	property name="accountService" type="any";
+	property name="addressService" type="any";
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
 	property name="settingService" type="any";
@@ -69,11 +70,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 		// TODO: This is currently a hack, because at the end of the day not all fulfillments will require a shipping address  
 		if(rc.shippingAddressID != "") {
-			rc.shippingAddress = getAccountService().getAddress(rc.shippingAddressID, true);	
+			rc.shippingAddress = getAddressService().getAddress(rc.shippingAddressID, true);	
 		} else if (!isNull(rc.$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())) {
 			rc.shippingAddress = rc.$.slatwall.cart().getOrderFulfilments()[1].getShippingAddress();
 		} else {
-			rc.shippingAddress = getAccountService().newAddress();
+			rc.shippingAddress = getAddressService().newAddress();
 		}		
 		
 		rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
@@ -96,7 +97,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveShippingAddress(required struct rc) {
 		detail(rc);
 		
-		rc.shippingAddress = getAccountService().save(rc.shippingAddress,rc);
+		rc.shippingAddress = getAddressService().save(rc.shippingAddress,rc);
 		
 		if(!rc.shippingAddress.hasErrors()) {
 			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(rc.shippingAddress);
