@@ -56,6 +56,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		var settingsList = this.listSetting();
 		var shippingMethodsList = this.listShippingMethod();
 		var paymentMethodsList = this.listPaymentMethod();
+		var fulfillmentMethodslist = this.listFulfillmentMethod();
 		
 		variables.permissions = {};
 		variables.settings = {};
@@ -115,6 +116,10 @@ component extends="BaseService" output="false" accessors="true"  {
 		for(var i = 1; i <= arrayLen(paymentMethodsList); i++) {
 			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodID() ] = paymentMethodsList[i];
 		}
+		// Load FulFillment Methods Methods
+		for(var i = 1; i <= arrayLen(fulfillmentMethodsList); i++) {
+			variables.fulfillmentMethods[ fulfillmentMethodsList[i].getfulfillmentMethodID() ] = fulfillmentMethodsList[i];
+		}
 	}
 	
 	public struct function getSettings(boolean reload=false) {
@@ -143,6 +148,13 @@ component extends="BaseService" output="false" accessors="true"  {
 			reloadConfiguration();
 		}
 		return variables.paymentMethods;
+	}
+	
+	public struct function getFulfillmentMethods(boolean reload=false) {
+		if(!structKeyExists(variables, "fulfillmentMethods") || arguments.reload == true) {
+			reloadConfiguration();
+		}
+		return variables.fulfillmentMethods;
 	}
 	
 	public any function getSettingValue(required string settingName) {

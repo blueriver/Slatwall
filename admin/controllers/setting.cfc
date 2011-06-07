@@ -43,6 +43,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="productService" type="any";
 	property name="shippingService" type="any";
 	property name="paymentService" type="any";
+	property name="fulfillmentService" type="any";
 	property name="formUtilities" type="any";
 	property name="fileService" type="any";
 	
@@ -130,19 +131,6 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().setView("admin:setting.detailshippingservice");
 		rc.edit = true;
 	}
-	
-/*	public void function saveShippingService(required struct rc) {
-		rc.settingsStruct = getSettingService().saveShippingService(rc);
-
-		if( !getService("requestCacheService").getValue("ormHasErrors") ) {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
-			getFW().redirect(action="admin:setting.listShippingServices", queryString="reload=true", preserve="message");
-		} else {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
-			rc.messageType = "error";
-			getFW().redirect(action="admin:setting.editShippingService", queryString="shippingServicePackage=#rc.shippingServicePackage#", preserve="settingsStruct,message,messageType");
-		}
-	}*/
 	
 	public void function saveShippingService(required struct rc) {
 		rc.serviceProperties = getService("formUtilities").buildFormCollections(rc).shippingService;
@@ -293,6 +281,42 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.paymentServices = getSettingService().getPaymentServices();
 			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentmethod") & ": #rc.$.Slatwall.rbKey('rc.paymentMethod.getPaymentMethodID()')#";
 	   		getFW().setView(action="admin:setting.editpaymentmethod");
+		}
+	}
+
+	// Fulfillment Methods
+	public void function listFulfillmentMethods(required struct rc) {
+		rc.fulfillmentMethods = getSettingService().getFulfillmentMethods();	
+	}
+
+	public void function detailFulfillmentMethod(required struct rc) {
+		param name="rc.fulfillmentMethodID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.fulfillmentMethod = getSettingService().getFulfillmentMethod(rc.fulfillmentMethodID);
+		if(isNull(rc.fulfillmentMethod)) {
+			getFW().redirect(action="admin:setting.listFulfillmentMethods");
+		}	
+		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
+	}
+	
+	public void function editFulfillmentMethod(required struct rc) {
+		detailFulfillmentMethod(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailFulfillmentMethod");
+	}
+	
+	public void function saveFulfillmentMethod(required struct rc) {
+		rc.fulfillmentMethod = getSettingService().getFulfillmentMethod(rc.fulfillmentMethodID, true);
+		//writeDump(rc.fulfillmentMethod);
+		//abort;
+		rc.fulfillmentMethod = getFulfillmentService().saveFulfillmentMethod(entity=rc.fulfillmentMethod, data=rc);
+
+		if(!rc.fulfillmentMethod.hasErrors()) {
+			getFW().redirect(action="admin:setting.listfulfillmentmethods", querystring="reload=true&message=#rc.$.Slatwall.rbKey('admin.setting.savefulfillmentmethod_success')#");
+		} else {
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editfulfillmentmethod") & ": #rc.$.Slatwall.rbKey('rc.fulfillmentMethod.getFulfillmentMethodID()')#";
+	   		getFW().setView(action="admin:setting.editfulfillmentmethod");
 		}
 	}
 		

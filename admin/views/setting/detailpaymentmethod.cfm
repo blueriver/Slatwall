@@ -49,7 +49,7 @@ Notes:
 		</ul>
 		
 		<cfif rc.edit>
-		<form name="ShippingMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
+		<form name="PaymentMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
 			<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 		</cfif>
 			<dl class="oneColumn">
