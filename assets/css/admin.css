@@ -57,6 +57,10 @@ img.slatwallLogo	{
  	margin: 8px 0px 0 5px;
 }
 
+.clear {
+	clear: both;
+}
+
 .ui-widget-content a  {
 	color: #FF3A00;
 	text-decoration: none;
@@ -161,6 +165,18 @@ div.dashboardSection {
 	width:500px;
 	float:left;
 	margin:20px;
+}
+
+div.basicOrderInfo {
+	width: 400px;
+	float: left;
+	margin: 10px;
+}
+
+div.paymentInfo {
+	width: 600px;
+	float: left;
+	margin: 10px;
 }
 /*
 table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands, table#AttributeSets {
