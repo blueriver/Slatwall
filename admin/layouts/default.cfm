@@ -39,6 +39,8 @@ Notes:
 <cfparam name="rc.section" default="Slatwall" />
 <cfparam name="rc.activeTab" default=0 />
 <cfparam name="rc.activePanel" default=0 />
+<cfparam name="rc.message" type="string" default="" />
+<cfparam name="rc.messagetype" type="string" default="info" />
 
 <!--- Add mura specific JS variables --->
 <cfset getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType")) />
@@ -85,7 +87,18 @@ Notes:
 	</div>
 	
 	<div class="admincontainer">
-		#view("admin:utility/messageBox")#
+		<cfif len(trim(rc.message)) gt 0>
+			<cfset local.message = rc.$.Slatwall.rbKey(rc.message) />
+			<cfif right(local.message,8) eq "_missing">
+				<cfset local.message = rc.message />
+			</cfif>
+		</cfif>
+		
+		<cfif structKeyExists(local,"message")>
+			<p class="messagebox #rc.messagetype#_message">
+			#htmlEditFormat(local.message)#
+			</p>
+		</cfif>
 		#body#
 	</div>
 <div id="alertDialog" title="Alert" style="display:none">
