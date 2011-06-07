@@ -48,8 +48,8 @@ Notes:
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
-				<li><a href="##tabFulFillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.detailfulfillmentmethod.tab.basicsettings")#</span></a></li>	
-				<li><a href="##tabFulFillmentMethodWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.detailfulfillmentmethod.tab.workflowsettings")#</span></a></li>
+				<li><a href="##tabFulFillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
+				<li><a href="##tabFulFillmentMethodWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
 			</ul>
 		</div>
 		
@@ -77,4 +77,5 @@ Notes:
 				</div>
 			</form>
 		</cfif>
+	</div>
 </cfoutput>
