@@ -48,12 +48,15 @@ component extends="taffy.core.api" {
 	
 	//use this instead of onApplicationStart()
 	public void function applicationStartEvent(){
-
+		
 	}
 	
 	//use this instead of onRequestStart()
 	public void function requestStartEvent(){
-
+		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
+		url.slatAction = "frontend:event.blank";
+		slatwallFW.onRequestStart(cgi.script_nume);
+		slatwallFW.onRequest(cgi.script_nume);
 	}
 	
 }

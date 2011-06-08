@@ -43,12 +43,12 @@
 		
 		<cfset var display = "" />
 		<cfset var address = getService("addressService").newAddress() />
-		<cfset address.populate(arguments.data) />
+		<cfset address.populate(deserializeJSON(arguments.data)) />
 		<cfsavecontent variable="display">
 			<cf_AddressForm address="#address#" />
 		</cfsavecontent>
 		
-		<cfreturn "test" />
+		<cfreturn representationOF(display) />
 	</cffunction>
 	
 </cfcomponent>
