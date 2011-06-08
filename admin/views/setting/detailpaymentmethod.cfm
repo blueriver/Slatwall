@@ -53,42 +53,41 @@ Notes:
 				<li><a href="##tabBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
 				<li><a href="##tabWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
 			</ul>
-		</div>
-		
-		<div id="tabBasicSettings">
-			<cfif rc.edit>
-			<form name="PaymentMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
-				<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
-			</cfif>
-			<dl class="oneColumn">
-				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
-				<dt class="spdprovidergateway">
-					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
-				</dt>
-				<dd id="spdprovidergateway">
-					<cfif rc.edit>
-						<select id="providerGateway" name="providerGateway">
-							<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
-								<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
-								<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
-								<cfif listFind( local.paymentService.getSupportedPaymentMethods(),rc.paymentMethod.getPaymentMethodID() )>
-									<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
-								</cfif>
-							</cfloop>
-						</select>
-					<cfelse>
-						#rc.paymentMethod.getProviderGateway()#
-					</cfif>
-				</dd>
-				<!--- include any payment method-specific settings --->
-				<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
-					#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
+
+			<div id="tabBasicSettings">
+				<cfif rc.edit>
+				<form name="PaymentMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
+					<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 				</cfif>
-			</dl>			
-		</div>
-		
-		<div id="tabWorkflowSettings"></div>
-	
+				<dl class="oneColumn">
+					<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
+					<dt class="spdprovidergateway">
+						#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
+					</dt>
+					<dd id="spdprovidergateway">
+						<cfif rc.edit>
+							<select id="providerGateway" name="providerGateway">
+								<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
+									<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
+									<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
+									<cfif listFind( local.paymentService.getSupportedPaymentMethods(),rc.paymentMethod.getPaymentMethodID() )>
+										<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
+									</cfif>
+								</cfloop>
+							</select>
+						<cfelse>
+							#rc.paymentMethod.getProviderGateway()#
+						</cfif>
+					</dd>
+					<!--- include any payment method-specific settings --->
+					<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
+						#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
+					</cfif>
+				</dl>			
+			</div>
+			
+			<div id="tabWorkflowSettings"></div>
+		</div>	
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_ActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
