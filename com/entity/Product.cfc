@@ -458,7 +458,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public numeric function getShippingWeight() {
 		// brand new products won't have a default SKU yet but need this method for create form
 		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getShippingWeight();
+			if(isNumeric(getDefaultSku().getShippingWeight())) {
+				return getDefaultSku().getShippingWeight();	
+			} else {
+				return 0;
+			}
 		} else {
 			return 0;
 		}
