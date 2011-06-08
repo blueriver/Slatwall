@@ -194,7 +194,7 @@ Notes:
 									</td>
 									<td>
 										<input type="text" name="options[#local.optionIndex#].label" value="#local.thisAttributeOption.getAttributeOptionLabel()#"/>
-										<a href="#buildURL(action='admin:attribute.deleteAttributeOption',queryString='attributeOptionID=#local.thisAttributeOption.getAttributeOptionID()#')#" class="deleteAttributeOption" id="#local.thisAttributeOption.getAttributeOptionID()#" onclick="return btnConfirmAttributeOptionDelete('#rc.$.Slatwall.rbKey("admin.attribute.deleteAttributeOption_confirm")#',this);"><img src="/plugins/Slatwall/images/icons/delete.png" height="16" width="16" alt="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" title="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" /></a>
+										<a href="#buildURL(action='admin:attribute.deleteAttributeOption',queryString='attributeOptionID=#local.thisAttributeOption.getAttributeOptionID()#')#" class="deleteAttributeOption" id="#local.thisAttributeOption.getAttributeOptionID()#" onclick="return btnConfirmAttributeOptionDelete('#rc.$.Slatwall.rbKey("admin.attribute.deleteAttributeOption_confirm")#',this);"><img src="#$.Slatwall.root()#/assets/images/admin.ui.delete.png" height="16" width="16" alt="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" title="#rc.$.Slatwall.rbKey('admin.attribute.deleteAttributeOption')#" /></a>
 										<div id="message#local.thisAttributeOption.getAttributeOptionID()#" class="formError" style="display:none;"></div>
 									</td>
 								</tr>

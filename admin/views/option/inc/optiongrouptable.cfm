@@ -59,7 +59,7 @@ Notes:
 	<tbody id="OptionGroupList">
 <cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
 	<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
-		<td class="handle" style="display:none;"><img src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/draghandle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
+		<td class="handle" style="display:none;"><img src="#$.slatwall.root()#/assets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
 		<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
 		<td>#local.thisOptionGroup.getOptionsCount()#</td>
 		<td class="administration">
