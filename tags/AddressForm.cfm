@@ -36,19 +36,22 @@
 Notes:
 
 --->
-<cfparam name="attributes.countriesArray" type="array" />
-<cfparam name="attributes.selectName" type="string" default="country" />
-<cfparam name="attributes.selectID" type="string" default="" />
-<cfparam name="attributes.selectedCountryCode" type="string" default="US" />
-
-<cfset variables.fw = caller.this />
+<cfparam name="attributes.address" type="any" />
+<cfparam name="attributes.edit" type="boolean" default="true" />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<select <cfif len(attributes.selectID)>id="#attributes.selectID#"</cfif> name="#attributes.selectName#">
-			<cfloop array="#attributes.countriesArray#" index="country">
-				<option value="#country.getCountryCode()#" <cfif country.getCountryCode() eq attributes.selectedCountryCode>selected="selected"</cfif>>#country.getCountryName()#</option>
-			</cfloop>
-		</select>
+		<div class="addressForm">
+			<dl>
+				<cf_PropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="name" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="company" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="streetAddress" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="street2Address" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="city" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="#attributes.edit#" />
+				<cf_PropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
+			</dl>
+		</div>
 	</cfoutput>
 </cfif>
