@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
 
 <cfoutput>
-	<div class="svofrontendcheckoutdetail">
+	<div class="svocheckoutdetail">
 		<cfinclude template="account.cfm" />
 		<cfif not listFind(rc.orderRequirementsList, "account")>
 			<cfinclude template="fulfillment.cfm" />

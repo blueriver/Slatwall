@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcartdetail">
+	<div class="svocartdetail">
 		<form name="updateCart" action="#buildURL(action='frontend:cart.update')#" method="post">
 		<cfif not arrayLen($.slatwall.cart().getOrderItems())>
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>

@@ -38,18 +38,17 @@ Notes:
 --->
 <cfparam name="rc.edit" type="string" default="" />
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
-<cfparam name="rc.orderFulfillments" type="array">
 
 <cfoutput>
-	<div class="svofrontendcheckoutfulfillment">
+	<div class="svocheckoutfulfillment">
 		<h3 id="checkoutFulfillmentTitle" class="titleBlick">Delivery<cfif not listFind(rc.orderRequirementsList, 'fulfillment')> <a href="?edit=fulfillment">Edit</a></cfif></h3>
 		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "fulfillment")>
 			<div id="checkoutFulfillmentContent" class="contentBlock">
-				<cfloop array="#rc.orderFulfillments#" index="local.fulfillment">
+				<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="local.fulfillment">
 					<div class="fulfillmentOptions">
 						<cfset params = structNew() />
 						<cfset params.orderFullfilment = local.fulfillment />
-						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethod().getFulfillmentMethodName()#", params)# 
+						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", params)# 
 					</div>
 					<div class="fulfillmentItems">
 						<cfloop array="#local.fulfillment.getOrderFulfillmentItems()#" index="local.fulfillmentItem">

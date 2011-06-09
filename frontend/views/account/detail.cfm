@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <cfoutput>
-	<div class="svofrontendaccountdetail">
+	<div class="svoaccountdetail">
 		<h3>#rc.Account.getFirstName()# #rc.Account.getLastName()#</h3>
 		<dl>
 			<cf_PropertyDisplay object="#rc.Account#" property="primaryEmail" edit="#rc.edit#">

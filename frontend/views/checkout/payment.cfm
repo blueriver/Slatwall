@@ -40,66 +40,8 @@ Notes:
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
 
 <cfoutput>
-	<div class="svofrontendorderpayment">
+	<div class="svoorderpayment">
 		<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
-		
-		<cfif rc.orderRequirementsList eq "" and (rc.edit eq "" || rc.edit eq "payment")>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder" method="post">
-				<div id="checkoutPaymentContent" class="contentBlock">
-					<div class="paymentAddress">
-						<h4>Payment Address</h4>
-						<dl>
-							<dt>Same As Shipping</dt>
-							<dd><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
-						</dl>
-					</div>
-					<div class="paymentMethod">
-						<h4>Payment Method</h4>
-						<dl>
-							<dt>Name On Card</dt>
-							<dd><input type="text" name="nameOnCart" /></dd>
-							<dt>Credit Card Number</dt>
-							<dd><input type="text" name="creditCardNumber" /></dd>
-							<dt>CVV Code</dt>
-							<dd><input type="text" name="securityCode" /></dd>
-							<dt>Expires</dt>
-							<dd>
-								<select name="expirationMonth">
-									<option value="01">01</option>
-									<option value="02">02</option>
-									<option value="03">03</option>
-									<option value="04">04</option>
-									<option value="05">05</option>
-									<option value="06">06</option>
-									<option value="07">07</option>
-									<option value="08">08</option>
-									<option value="09">09</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-								</select> / 
-								<select name="expirationYear">
-									<option value="01">2011</option>
-									<option value="02">2012</option>
-									<option value="03">2013</option>
-									<option value="04">2014</option>
-									<option value="05">2015</option>
-									<option value="06">2016</option>
-									<option value="07">2017</option>
-									<option value="08">2018</option>
-									<option value="09">2019</option>
-									<option value="10">2020</option>
-									<option value="11">2021</option>
-									<option value="12">2022</option>
-								</select>
-							</dd>
-						</dl>
-					</div>
-				</div>
-				<input type="hidden" name="paymentMethodID" value="CreditCard" />
-				<input type="hidden" name="paymentID" value="#rc.payment.getOrderPaymentID()#" />
-				<cf_ActionCaller action="frontend:checkout.processOrder" type="submit">
-			</form>
-		</cfif>
+		#view("frontend:checkout/payment/creditCard")#
 	</div>
 </cfoutput>

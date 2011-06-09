@@ -46,12 +46,14 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	
 	property name="orderShippingMethodOptions" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID";
 
-
 	public boolean function isProcessable() {
 		if(!super.isProcessable()) {
 			return false;
 		}
 		if(getService("addressService").validateAddress(shippingAddress).getErrorBean().hasErrors()) {
+			return false;
+		}
+		if(isNull(getShippingMethod())) {
 			return false;
 		}
 		

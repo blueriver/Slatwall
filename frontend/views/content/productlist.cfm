@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcontentproductlist">
+	<div class="svocontentproductlist">
 		<cfloop array="#rc.ProductSmartList.getEntityArray()#" index="Local.Product">
 			<div class="product">
 				<a href="#Local.Product.getProductURL()#">
