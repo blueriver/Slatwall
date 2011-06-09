@@ -143,10 +143,6 @@ Notes:
 		
 		<cfset state=preseveInternalState(request)>
 		
-		<cfif fw1.getSection(arguments.action) eq "event">
-			<cfset fw1.setView("frontend:event.blank") />
-		</cfif>
-		
 		<!--- call the frameworks onRequestStart --->
 		<cfset fw1.onRequestStart(CGI.SCRIPT_NAME) />
 		

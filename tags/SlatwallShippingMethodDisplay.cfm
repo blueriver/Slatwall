@@ -33,21 +33,28 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-	Notes:
-	
+Notes:
+
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
-	
-	<cffunction name="post">
-		
-		<cfset var display = "" />
-		<cfset var address = getService("addressService").newAddress() />
-		<cfset address.populate(arguments) />
-		<cfsavecontent variable="display">
-			<cf_SlatwallAddressForm address="#address#" />
-		</cfsavecontent>
-		
-		<cfreturn representationOF(display) />
-	</cffunction>
-	
-</cfcomponent>
+<cfparam name="attributes.orderFulfillmentShipping" type="any" />
+
+<cfset local.methodOptions = attributes.orderFulfillmentShipping.getOrderShippingMethodOptions() />
+
+<cfif thisTag.executionMode is "start">
+	<cfoutput>
+		<cfif arrayLen(local.methodOptions)>
+			<cfloop array="#local.methodOptions#" index="option">
+				<cfset local.optionSelected = false />
+				<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
+					<cfset local.optionSelected = true />
+				</cfif>
+				<dl>
+					<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
+					<dd>#DollarFormat(option.getTotalCost())#</dd>
+				</dl>
+			</cfloop>
+		<cfelse>
+			<p class="noOptions">No Shipping options available, please update your address to proceed.</p>
+		</cfif>
+	</cfoutput>
+</cfif>

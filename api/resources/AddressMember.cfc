@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -33,23 +33,14 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
+	Notes:
+	
+*/
+component extends="BaseResource" taffy_uri="/address/{addressID}/" {
 
---->
-<cfparam name="attributes.orderFulfillmentShipping" type="any" />
-
-<cfif thisTag.executionMode is "start">
-	<cfoutput>
-		<cfset local.methodOptions = attributes.orderFulfillmentShipping.getOrderShippingMethodOptions() />
-		<cfloop array="#local.methodOptions#" index="option">
-			<cfset local.optionSelected = false />
-			<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
-				<cfset local.optionSelected = true />
-			</cfif>
-			<dl>
-				<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
-				<dd>#DollarFormat(option.getTotalCost())#</dd>
-			</dl>
-		</cfloop>
-	</cfoutput>
-</cfif>
+	public any function get(string addressID="") {
+		var address = getService("addressService").getAddress(arguments.addressID);
+		return representationOf(address).withStatus(200);
+	}
+	
+}

@@ -41,6 +41,7 @@ component displayname="Country" entityname="SlatwallCountry" table="SlatwallCoun
 	// Persistant Properties
 	property name="countryCode" ormtype="string" fieldtype="id";
 	property name="countryName" ormtype="string";
+	property name="activeFlag" ormtype="boolean";
 	
 	property name="streetAddressLabel" ormtype="string";
 	property name="streetAddressShowFlag" ormtype="boolean";
@@ -58,9 +59,9 @@ component displayname="Country" entityname="SlatwallCountry" table="SlatwallCoun
 	property name="cityShowFlag" ormtype="boolean";
 	property name="cityRequiredFlag" ormtype="boolean";
 	
-	property name="stateLabel" ormtype="string";
-	property name="stateShowFlag" ormtype="boolean";
-	property name="stateRequiredFlag" ormtype="boolean";
+	property name="stateCodeLabel" ormtype="string";
+	property name="stateCodeShowFlag" ormtype="boolean";
+	property name="stateCodeRequiredFlag" ormtype="boolean";
 	
 	property name="postalCodeLabel" ormtype="string";
 	property name="postalCodeShowFlag" ormtype="boolean";

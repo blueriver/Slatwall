@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,26 +35,19 @@
 
 	Notes:
 	
-*/
-
-component extends="taffy.core.api" {
+--->
+<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
 	
-	// This file gets updated by the onApplicationLoad of the slatwall plugin.  It doesn't exist until the app is reloaded
-	include "../../../config/applicationSettings.cfm";
-	include "../../../config/mappings.cfm";
-	include "../../mappings.cfm";
-	
-	this.mappings["/taffy"] = getDirectoryFromPath(getCurrentTemplatePath()) & "taffy";
-	
-	//use this instead of onApplicationStart()
-	public void function applicationStartEvent(){
+	<cffunction name="post">
 		
-	}
+		<cfset var display = "" />
+		<cfset var address = getService("addressService").newAddress() />
+		<cfset address.populate(arguments) />
+		<cfsavecontent variable="display">
+			<cf_SlatwallAddressDisplay address="#address#" />
+		</cfsavecontent>
+		
+		<cfreturn representationOF(display) />
+	</cffunction>
 	
-	//use this instead of onRequestStart()
-	public void function requestStartEvent(){
-		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		slatwallFW.onRequestStart(cgi.script_nume);
-	}
-	
-}
+</cfcomponent>

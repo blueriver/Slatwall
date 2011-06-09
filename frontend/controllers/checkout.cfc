@@ -83,7 +83,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		detail(rc);
 		
 		// Load the fulfillment
-		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
+		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID, true);
 		
 		// Verify the fulfillment is part of the cart then proceed
 		if(rc.$.slatwall.cart().hasOrderFulfillment(fulfillment)) {

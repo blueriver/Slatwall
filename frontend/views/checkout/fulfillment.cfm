@@ -47,40 +47,23 @@ Notes:
 				<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="local.fulfillment">
 					<div class="fulfillmentOptions">
 						<cfset params = structNew() />
-						<cfset params.orderFullfilment = local.fulfillment />
+						<cfset params.orderFulfillment = local.fulfillment />
+						<cfset params.edit = true />
 						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", params)# 
 					</div>
-					<div class="fulfillmentItems">
-						<cfloop array="#local.fulfillment.getOrderFulfillmentItems()#" index="local.fulfillmentItem">
-							<dl class="orderItem">
-								<dt class="title"><a href="#local.fulfillmentItem.getSku().getProduct().getProductURL()#" title="#local.fulfillmentItem.getSku().getProduct().getTitle()#">#local.fulfillmentItem.getSku().getProduct().getTitle()#</a></dt>
-								<dd class="options">#local.fulfillmentItem.getSku().displayOptions()#</dd>
-								<dd class="quantity">#NumberFormat(local.fulfillmentItem.getQuantity(),"0")#</dd>
-							</dl>
-						</cfloop>
-					</div>
+					<cfif arrayLen($.slatwall.cart().getOrderFulfillments()) gt 1>
+						<div class="fulfillmentItems">
+							<cfloop array="#local.fulfillment.getOrderFulfillmentItems()#" index="local.fulfillmentItem">
+								<dl class="orderItem">
+									<dt class="title"><a href="#local.fulfillmentItem.getSku().getProduct().getProductURL()#" title="#local.fulfillmentItem.getSku().getProduct().getTitle()#">#local.fulfillmentItem.getSku().getProduct().getTitle()#</a></dt>
+									<dd class="options">#local.fulfillmentItem.getSku().displayOptions()#</dd>
+									<dd class="quantity">#NumberFormat(local.fulfillmentItem.getQuantity(),"0")#</dd>
+								</dl>
+							</cfloop>
+						</div>
+					</cfif>
 				</cfloop>
 			</div>
 		</cfif>
 	</div>
 </cfoutput>
-
-<!---
-<cfif listFind(rc.orderRequirementsList, 'shippingAddress') or rc.edit eq "shippingAddress">
-					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
-						<div class="shippingAddress">
-							<h4>Shipping Address</h4>
-							<cf_SlatwallAddressForm address="#rc.shippingAddress#">
-						</div>
-						<input type="hidden" name="shippingAddressID" value="#rc.shippingAddress.getAddressID()#" />
-						<cf_ActionCaller action="frontend:checkout.saveShippingAddress" type="submit" />
-					</form>
-				<cfelse>
-					<div class="shippingAddress">
-						<dt>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getName()#</dt>
-						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCompany()#</dd>
-						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStreetAddress()#</dd>
-						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCity()# #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStateCode()#, #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getPostalCode()#</dd>
-					</div>
-				</cfif>
---->
