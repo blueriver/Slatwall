@@ -57,6 +57,9 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	// Non persistent cached properties
+	property name="country" persistent="false";
+	
 	public any function init() {
 		if(isNull(variables.countryCode)) {
 			variables.countryCode = "US";
@@ -99,5 +102,12 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 			variables.stateCodeOptions = smartList.getRecords();
 		}
 		return variables.stateCodeOptions;
+	}
+	
+	public any function getCountry() {
+		if(!structKeyExists(variables, "country")) {
+			variables.country = getService("addressService").getCountry(getCountryCode());
+		}
+		return variables.country;
 	}
 }
