@@ -163,4 +163,9 @@ component accessors="true" output="false" extends="BaseObject" {
 	public string function setting(required string settingName) {
 		return Super.setting(arguments.settingName);
 	}
+	
+	
+	public string function root() {
+		return "#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#";
+	}
 }

@@ -129,7 +129,7 @@ Notes:
 			</dl>
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_ActionCaller action="admin:setting.listshippingmethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_ActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodID=shipping" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 				<cfif !rc.shippingMethod.isNew()>
 					<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
 				</cfif>
