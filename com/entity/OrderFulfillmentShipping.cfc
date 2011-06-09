@@ -41,10 +41,18 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	// Persistant Properties
 	property name="orderFilfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
+	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
 	property name="orderShippingMethodOptions" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID";
+
+	public any function init() {
+		if(isNull(variables.orderShippingMethodOptions)) {
+			variables.orderShippingMethodOptions = [];
+		}
+		
+		return super.init();
+	}
 
 	public boolean function isProcessable() {
 		if(!super.isProcessable()) {
@@ -64,15 +72,22 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		return true;
 	}
 	
+	public array function getOrderShippingMethodOptions(boolean autoPopulate=true) {
+		if(autoPopulate) {
+			populateOrderShippingMethodOptionsIfEmpty();
+		}
+		return variables.orderShippingMethodOptions;
+	}
+	
 	public void function populateOrderShippingMethodOptionsIfEmpty() {
-		if(!isNull(variables.address) && arrayLen(variables.orderShippingItems) && !arrayLen(variables.orderShippingMethodOptions)) {
+		if(!isNull(variables.shippingAddress) && arrayLen(variables.orderFulfillmentItems) && !arrayLen(variables.orderShippingMethodOptions)) {
 			getService("ShippingService").populateOrderShippingMethodOptions(this);
 		}
 	}
 	
-	public void function removeOrderShippingMethodAndMethodOptions() {
+	public void function removeShippingMethodAndMethodOptions() {
 		// remove all existing options
-		for(var i = arrayLen(getOrderShippingMethodOptions()); i >= 1; i--) {
+		for(var i = arrayLen(getOrderShippingMethodOptions(false)); i >= 1; i--) {
 			getOrderShippingMethodOptions()[i].removeOrderShipping(this);
 		}
 		setShippingMethod(javaCast("null", ""));

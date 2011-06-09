@@ -43,7 +43,7 @@ component extends="BaseValidator" {
 	
 	private boolean function validate(any objectValue){
 		var valid = true;
-		if((isSimpleValue(arguments.objectValue) and len(arguments.objectValue) == 0) || isNull(arguments.objectValue)) {
+		if( !structKeyExists(arguments, "objectValue") || (isSimpleValue(arguments.objectValue) and len(arguments.objectValue) == 0) || isNull(arguments.objectValue)) {
 			valid = false;
 		}
 		

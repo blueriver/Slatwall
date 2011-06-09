@@ -47,7 +47,7 @@ Notes:
 
 <cfoutput>
 	<div class="svocheckoutfulfillmentshipping">
-		<form name="fulfillmentShipping" action="?frontend:checkout.saveOrderFulfillment" method="post">
+		<form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveFulfillment" method="post">
 			<div class="shippingAddress">
 				<h4>Shipping Address</h4>
 				<cf_SlatwallAddressDisplay address="#local.address#" edit="true">

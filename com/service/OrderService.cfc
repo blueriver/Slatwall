@@ -161,14 +161,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var address = arguments.orderFulfillment.getShippingAddress();
 			}
 			
-			address.populate(data);
-			
-			getAddressService.validateAddress(address);
-			
-			if(!address.hasErrors()) {
-				arguments.orderFulfillment.setShippingAddress(address);
-			}
-			
+			address = getAddressService().saveAddress(address, arguments.data);
+			arguments.orderFulfillment.setShippingAddress(address);
 		}
 		
 	}

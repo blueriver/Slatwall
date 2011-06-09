@@ -156,7 +156,7 @@ component extends="BaseService" accessors="true" {
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {
 			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+			var productCodeError = getValidator().validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
 			if( !structIsEmpty(productCodeError) ) {
 				arguments.product.addError(argumentCollection=productCodeError);
 			}
@@ -164,7 +164,7 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist
 		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		var filenameError = getService("validator").validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		var filenameError = getValidator().validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
 		if( !structIsEmpty(filenameError) ) {
 			arguments.product.addError(argumentCollection=filenameError);
 		}

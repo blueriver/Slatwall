@@ -87,8 +87,8 @@ Notes:
 								},
 								dataType: "json",
 								context: document.body,
-								success: function(data) {
-									jQuery('div.addressForm').replaceWith(data);
+								success: function(r) {
+									jQuery('div.addressDisplay').replaceWith(r);
 								}
 							});
 						});
