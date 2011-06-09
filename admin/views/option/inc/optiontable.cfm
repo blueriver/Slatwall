@@ -66,6 +66,6 @@ Notes:
 </cfloop>
 </table>
 <cfelse>
-<p>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</p>
+<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
 </cfif>
 </cfoutput>
