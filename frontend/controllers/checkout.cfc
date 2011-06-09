@@ -72,7 +72,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.shippingAddress = rc.$.slatwall.cart().getOrderFulfilments()[1].getShippingAddress();
 		} else {
 			rc.shippingAddress = getAddressService().newAddress();
-		}		
+		}
 		
 		rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
 		
