@@ -49,7 +49,7 @@ Notes:
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
-							<cf_AddressForm address="#rc.shippingAddress#">
+							<cf_SlatwallAddressForm address="#rc.shippingAddress#">
 						</div>
 						<input type="hidden" name="shippingAddressID" value="#rc.shippingAddress.getAddressID()#" />
 						<cf_ActionCaller action="frontend:checkout.saveShippingAddress" type="submit" />
