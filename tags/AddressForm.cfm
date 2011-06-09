@@ -52,6 +52,31 @@ Notes:
 				<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="#attributes.edit#" />
 				<cf_PropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
 			</dl>
+			<script type="text/javascript">
+				jQuery(document).ready(function(){
+					jQuery('select[name="countryCode"]').change(function() {
+						jQuery.ajax({
+							type: "post",
+							url: '/plugins/Slatwall/api/index.cfm/addressDisplay/',
+							data: {
+								countryCode : jQuery('select[name="countryCode"]').val(),
+								name : jQuery('input[name="name"]').val(),
+								company : jQuery('input[name="company"]').val(),
+								streetAddress : jQuery('input[name="streetAddress"]').val(),
+								streetAddress : jQuery('input[name="street2Address"]').val(),
+								city : jQuery('input[name="city"]').val(),
+								stateCode : jQuery('select[name="slateCode"]').val(),
+								postalCode : jQuery('input[name="postalCode"]').val()
+							},
+							dataType: "json",
+							context: document.body,
+							success: function(data) {
+								jQuery('div.addressForm').replaceWith(data);
+							}
+						});
+					});
+				});
+			</script>
 		</div>
 	</cfoutput>
 </cfif>

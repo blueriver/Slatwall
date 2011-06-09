@@ -36,14 +36,13 @@
 	Notes:
 	
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/{data}/">
+<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
 	
-	<cffunction name="get">
-		<cfargument name="data" />
+	<cffunction name="post">
 		
 		<cfset var display = "" />
 		<cfset var address = getService("addressService").newAddress() />
-		<cfset address.populate(deserializeJSON(arguments.data)) />
+		<cfset address.populate(arguments) />
 		<cfsavecontent variable="display">
 			<cf_AddressForm address="#address#" />
 		</cfsavecontent>
