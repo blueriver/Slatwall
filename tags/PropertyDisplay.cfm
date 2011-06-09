@@ -171,8 +171,8 @@ Notes:
 					<cfset local.subEntityMetadata = getMetadata(attributes.value) />
 					<cfset attributes.value = "">
 					<cfloop array="#local.subEntityMetadata.properties#" index="i">
-						<cfif i.name EQ attributes.property & 'name' 
-							  or i.name EQ attributes.propertyObject & 'name'
+						<cfif i.name EQ attributes.property & 'ID' 
+							  or i.name EQ attributes.propertyObject & 'ID'
 							  or i.name EQ attributes.property
 							  or i.name EQ attributes.propertyObject>
 							<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
