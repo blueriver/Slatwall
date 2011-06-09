@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendproductdetail">
+	<div class="svoproductdetail">
 		<div class="image">
 			Image Here
 		</div>

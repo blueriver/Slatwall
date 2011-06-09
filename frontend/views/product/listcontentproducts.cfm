@@ -38,7 +38,7 @@ Notes:
 --->
 
 <cfoutput>
-	<div class="svofrontendlistcontentproducts">
+	<div class="svolistcontentproducts">
 		<cf_smartListPager smartList="#$.slatwall.productList()#">
 		<div class="productList">
 			<cfloop array="#$.slatwall.productList().getPageRecords()#" index="local.product">

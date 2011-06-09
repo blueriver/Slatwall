@@ -44,7 +44,6 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
 	
 	// Special Related Discriminator Property
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";

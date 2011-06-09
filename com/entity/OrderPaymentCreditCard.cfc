@@ -49,6 +49,10 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="amountCharged" ormtype="float";
 	property name="amountSettled" ormtype="float";
 	
+	// Related Properties
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
+	
+	// Non-Persistent properties
 	property name="securityCode" persistent="false";
 	
 	public void function setCreditCardNumber(required string creditCardNumber) {

@@ -64,15 +64,15 @@ Notes:
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
-	<link rel="icon" href="#$.slatwall.root()#/assets/images/favicon.png" type="image/png" />
-	<link rel="shortcut icon" href="#$.slatwall.root()#/assets/images/favicon.png" type="image/png" />
+	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 </head>
 <body>
 	#view("common:toolbar/menu")#
 	<div id="header">
 		<h1>Mura CMS</h1>
 		<cfoutput>
-		<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="#$.slatwall.root()#/assets/images/admin.default.slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
+		<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.default.slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
 		<ul id="navUtility">
 		    <li id="navSiteManager">
 		    	<a href="/admin/index.cfm?fuseaction=cArch.list&siteid=#rc.$.event('siteid')#&moduleid=00000000000000000000000000000000000&topid=00000000000000000000000000000000001">#application.rbFactory.getKeyValue(session.rb,"layout.sitemanager")#</a>

@@ -54,6 +54,9 @@ Notes:
 <!--- hint: This can be used to override the value of a property --->
 <cfparam name="attributes.value" default="" />
 
+<!--- hint: This can be used to override the display value of a property --->
+<cfparam name="attributes.displayValue" default="" />
+
 <!--- hint: This can be used to set a default value for the property IF it hasn't been defined --->
 <!--- NOTE: right now this only works for select boxes --->
 <cfparam name="attributes.defaultValue" default="" />
@@ -176,7 +179,11 @@ Notes:
 							  or i.name EQ attributes.property
 							  or i.name EQ attributes.propertyObject>
 							<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
-							<cfbreak />
+						<cfelseif i.name EQ attributes.property & 'Name' 
+							  or i.name EQ attributes.propertyObject & 'Name'
+							  or i.name EQ attributes.property
+							  or i.name EQ attributes.propertyObject> 
+							<cfset attributes.displayValue = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
 						</cfif>
 					</cfloop>
 				<cfelseif attributes.value eq "" and structKeyExists(local.propertyMetadata, "default")>
@@ -191,6 +198,10 @@ Notes:
 			<cfelse>
 			     <cfset attributes.value = "" />
 			</cfif>
+		</cfif>
+		
+		<cfif attributes.displayValue eq "">
+			<cfset attributes.displayValue = attributes.value />
 		</cfif>
 
 		<cfif attributes.fieldName eq "">
@@ -367,7 +378,7 @@ Notes:
 					<cfelseif attributes.dataType eq "boolean" and attributes.value eq false>
 						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
 					<cfelse>
-						<cfset propertyValue = attributes.Value />
+						<cfset propertyValue = attributes.displayValue />
 					</cfif>
 					<cfif len(attributes.link) gt 0>
 						<a href="#attributes.link#"<cfif len(attributes.linkClass) gt 0> class="#attributes.linkClass#"</cfif><cfif len(attributes.linkID) gt 0> id="#attributes.linkID#"</cfif>>#propertyValue#</a>

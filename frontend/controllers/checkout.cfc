@@ -47,35 +47,20 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="";
 		param name="rc.orderRequirementsList" default="";
-		param name="rc.accountID" default="";
-		param name="rc.shippingAddressID" default="";
-		param name="rc.paymentAddressID" default="";
-		param name="rc.paymentID" default="";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
 			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
 		}
 		
-		if( rc.accountID != "" ) {
-			rc.account = getAccountService().getAccount(rc.accountID, true);
-		} else if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
+		// Setup the order account as its own rc so that we don't automatically save an account to the order
+		if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
 			rc.account = rc.$.slatwall.cart().getAccount();
 		} else {
 			rc.account = getAccountService().newAccount();
 		}
-
-		// TODO: This is currently a hack, because at the end of the day not all fulfillments will require a shipping address  
-		if(rc.shippingAddressID != "") {
-			rc.shippingAddress = getAddressService().getAddress(rc.shippingAddressID, true);	
-		} else if (!isNull(rc.$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())) {
-			rc.shippingAddress = rc.$.slatwall.cart().getOrderFulfilments()[1].getShippingAddress();
-		} else {
-			rc.shippingAddress = getAddressService().newAddress();
-		}
 		
-		rc.payment = getOrderService().getOrderPayment(rc.paymentID, true);
-		
+		// get the list of requirements left for this order to be processed
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 	}
 	
@@ -84,6 +69,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		rc.account = getAccountService().saveAccount(rc.account, rc);
 		
+		// IF the account doesn't have any errors than we can apply it to the order
 		if(!rc.account.hasErrors()) {
 			rc.$.slatwall.cart().setAccount(rc.account);
 		}
@@ -91,27 +77,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:checkout.detail");
 	}
 	
-	public void function saveShippingAddress(required struct rc) {
+	public void function saveFulfillment(required struct rc) {
+		param name="rc.orderFulfillmentID" default="";
+		
 		detail(rc);
 		
-		rc.shippingAddress = getAddressService().save(rc.shippingAddress,rc);
+		// Load the fulfillment
+		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
 		
-		if(!rc.shippingAddress.hasErrors()) {
-			rc.$.slatwall.cart().getOrderShippings()[1].setAddress(rc.shippingAddress);
+		// Verify the fulfillment is part of the cart then proceed
+		if(rc.$.slatwall.cart().hasOrderFulfillment(fulfillment)) {
+			fulfillment = getOrderService().saveOrderFulfillment(fulfillment, rc);
 		}
-		
-		// Populate order Shipping Methods if needed.
-		rc.$.slatwall.cart().getOrderShippings()[1].populateOrderShippingMethodOptionsIfEmpty();
-		
-		getFW().setView("frontend:checkout.detail");
-	}
-	
-	public void function saveShippingMethod(required struct rc) {
-		param name="rc.orderShippingMethodOptionID" default="";
-		
-		detail(rc);
-		
-		getOrderService().setOrderShippingMethodFromMethodOptionID(orderShipping=rc.$.slatwall.cart().getOrderShippings()[1], orderShippingMethodOptionID=rc.orderShippingMethodOptionID);
 		
 		getFW().setView("frontend:checkout.detail");
 	}

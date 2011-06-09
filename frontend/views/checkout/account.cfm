@@ -41,7 +41,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<div class="svofrontendcheckoutaccount">
+	<div class="svocheckoutaccount">
 		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif not listFind(rc.orderRequirementsList, 'account')><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
 		<cfif rc.edit eq "" || rc.edit eq "account">
 			<div id="checkoutAccountContent" class="contentBlock">

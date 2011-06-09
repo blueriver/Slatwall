@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcheckoutitems">
+	<div class="svocheckoutitems">
 		<h3 id="checkoutItemsTitle" class="titleBlick">Order Items</h3>
 		<div id="checkoutItemsContent" class="contentBlock orderItems">
 			<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
