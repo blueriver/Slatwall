@@ -44,7 +44,7 @@
 		<cfset var address = getService("addressService").newAddress() />
 		<cfset address.populate(arguments) />
 		<cfsavecontent variable="display">
-			<cf_AddressForm address="#address#" />
+			<cf_SlatwallAddressForm address="#address#" />
 		</cfsavecontent>
 		
 		<cfreturn representationOF(display) />

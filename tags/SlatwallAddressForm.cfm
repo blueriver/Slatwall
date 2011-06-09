@@ -49,7 +49,11 @@ Notes:
 				<cf_PropertyDisplay object="#attributes.address#" property="streetAddress" edit="#attributes.edit#" />
 				<cf_PropertyDisplay object="#attributes.address#" property="street2Address" edit="#attributes.edit#" />
 				<cf_PropertyDisplay object="#attributes.address#" property="city" edit="#attributes.edit#" />
-				<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="#attributes.edit#" />
+				<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
+					<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="#attributes.edit#" />
+				<cfelse>
+					<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="text" edit="#attributes.edit#" />
+				</cfif>
 				<cf_PropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
 			</dl>
 			<script type="text/javascript">

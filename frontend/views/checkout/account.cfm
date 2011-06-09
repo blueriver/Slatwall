@@ -72,21 +72,15 @@ Notes:
 								<cfif isNull(rc.account.getPrimaryEmailAddress()) >
 									<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
 									<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
-									<dt class="spdemailaddress"><label for="emailAddressConfirm">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddressConfirm')#</label></dt>
-									<dd id="spdemailaddress"><input type="text" name="emailAddressConfirm" value="" /></dd>
 								</cfif>
 								<cfif rc.account.isGuestAccount()>
-									<dt class="guestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
-									<dd id="guestcheckout">
-										<input type="radio" name="createMuraAccount" value="1" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
+									<dt class="spdguestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
+									<dd id="spdguestcheckout">
 										<input type="radio" name="createMuraAccount" value="0" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
+										<input type="radio" name="createMuraAccount" value="1" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
 									</dd>
-									<div class="accountPassword">
-										<dt>Password</dt>
-										<dd><input type="password" name="password" value="" /></dd>
-										<dt>Confirm Password</dt>
-										<dd><input type="password" name="passwordConfirm" value="" /></dd>
-									</div>
+									<dt class="spdpassword guestHide"><label for="password">Password</label></dt>
+									<dd id="spdpassword" class="guestHide"><input type="password" name="password" value="" /></dd>
 								<cfelse>
 									<a href="?doaction=logout">Logout</a>
 								</cfif>
@@ -104,5 +98,16 @@ Notes:
 				</cfif>
 			</div>
 		</cfif>
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery("input[name='createMuraAccount']").change(function(){
+					if(jQuery("input[name='createMuraAccount']:checked").val() == 1) {
+						jQuery(".guestHide").show();
+					} else {
+						jQuery(".guestHide").hide();
+					}
+				});
+			});
+		</script>
 	</div>
 </cfoutput>

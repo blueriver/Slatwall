@@ -85,7 +85,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         if(structKeyExists(arguments,"data")){
             populate(arguments.entity,arguments.data);
         }
-        getValidator().validateObject(entity=arguments.entity);
+        validate(entity=arguments.entity);
         
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(target=arguments.entity);
@@ -93,6 +93,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
             getService("requestCacheService").setValue("ormHasErrors", true);
         }
         return arguments.entity;
+    }
+    
+    public any function validate(required any entity) {
+    	return getValidator().validateObject(entity=arguments.entity);
     }
     
  /**
@@ -133,6 +137,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return onMissingSaveMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'delete' ) )	{
 			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'validate' ) )	{
+			return onMissingValidateMethod( missingMethodName, missingMethodArguments );
 		}
 
 		throw( 'No matching method for #missingMethodName#().' );
@@ -141,7 +147,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 
 	/********** PRIVATE ************************************************************/
-
+	private function onMissingValidateMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		return validate( missingMethodArguments[ 1 ] );
+	}
 
 	private function onMissingDeleteMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		return delete( missingMethodArguments[ 1 ] );

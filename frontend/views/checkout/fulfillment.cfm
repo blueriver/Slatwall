@@ -38,14 +38,36 @@ Notes:
 --->
 <cfparam name="rc.edit" type="string" default="" />
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
-<cfparam name="rc.shippingAddress" type="any">
+<cfparam name="rc.orderFulfillments" type="array">
 
 <cfoutput>
-	<div class="svofrontendcheckoutshippingaddress">
-		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping<cfif not listFind(rc.orderRequirementsList, 'shippingAddress')> <a href="?edit=shippingAddress">Edit</a></cfif></h3>
-		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "shippingAddress")>
-			<div id="checkoutShippingContent" class="contentBlock">
-				<cfif listFind(rc.orderRequirementsList, 'shippingAddress') or rc.edit eq "shippingAddress">
+	<div class="svofrontendcheckoutfulfillment">
+		<h3 id="checkoutFulfillmentTitle" class="titleBlick">Delivery<cfif not listFind(rc.orderRequirementsList, 'fulfillment')> <a href="?edit=fulfillment">Edit</a></cfif></h3>
+		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "fulfillment")>
+			<div id="checkoutFulfillmentContent" class="contentBlock">
+				<cfloop array="#rc.orderFulfillments#" index="local.fulfillment">
+					<div class="fulfillmentOptions">
+						<cfset params = structNew() />
+						<cfset params.orderFullfilment = local.fulfillment />
+						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethod().getFulfillmentMethodName()#", params)# 
+					</div>
+					<div class="fulfillmentItems">
+						<cfloop array="#local.fulfillment.getOrderFulfillmentItems()#" index="local.fulfillmentItem">
+							<dl class="orderItem">
+								<dt class="title"><a href="#local.fulfillmentItem.getSku().getProduct().getProductURL()#" title="#local.fulfillmentItem.getSku().getProduct().getTitle()#">#local.fulfillmentItem.getSku().getProduct().getTitle()#</a></dt>
+								<dd class="options">#local.fulfillmentItem.getSku().displayOptions()#</dd>
+								<dd class="quantity">#NumberFormat(local.fulfillmentItem.getQuantity(),"0")#</dd>
+							</dl>
+						</cfloop>
+					</div>
+				</cfloop>
+			</div>
+		</cfif>
+	</div>
+</cfoutput>
+
+<!---
+<cfif listFind(rc.orderRequirementsList, 'shippingAddress') or rc.edit eq "shippingAddress">
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
@@ -62,7 +84,4 @@ Notes:
 						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCity()# #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStateCode()#, #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getPostalCode()#</dd>
 					</div>
 				</cfif>
-			</div>
-		</cfif>
-	</div>
-</cfoutput>
+--->

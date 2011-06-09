@@ -46,6 +46,18 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	
 	property name="orderShippingMethodOptions" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID";
 
+
+	public boolean function isProcessable() {
+		if(!super.isProcessable()) {
+			return false;
+		}
+		if(getService("addressService").validateAddress(shippingAddress).getErrorBean().hasErrors()) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public void function populateOrderShippingMethodOptionsIfEmpty() {
 		if(!isNull(variables.address) && arrayLen(variables.orderShippingItems) && !arrayLen(variables.orderShippingMethodOptions)) {
 			getService("ShippingService").populateOrderShippingMethodOptions(this);

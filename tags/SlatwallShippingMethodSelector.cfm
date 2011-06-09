@@ -36,18 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="string" default="" />
-<cfparam name="rc.orderRequirementsList" type="string" default="" />
+<cfparam name="attributes.orderFulfillmentShipping" type="any" />
 
-<cfoutput>
-	<div class="svofrontendcheckoutdetail">
-		<cfinclude template="account.cfm" />
-		<cfif not listFind(rc.orderRequirementsList, "account")>
-			<cfinclude template="fulfillment.cfm" />
-			<cfinclude template="items.cfm" />
-		</cfif>
-		<cfif not listFind(rc.orderRequirementsList, "account") and not listFind(rc.orderRequirementsList, "fulfillment")>
-			<cfinclude template="payment.cfm" />
-		</cfif>
-	</div>
-</cfoutput>
+<cfif thisTag.executionMode is "start">
+	<cfoutput>
+		<cfset local.methodOptions = attributes.orderFulfillmentShipping.getOrderShippingMethodOptions() />
+		<cfloop array="#local.methodOptions#" index="option">
+			<cfset local.optionSelected = false />
+			<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
+				<cfset local.optionSelected = true />
+			</cfif>
+			<dl>
+				<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
+				<dd>#DollarFormat(option.getTotalCost())#</dd>
+			</dl>
+		</cfloop>
+	</cfoutput>
+</cfif>
