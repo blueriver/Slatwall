@@ -43,11 +43,20 @@ Notes:
 	<cfoutput>
 		<div class="addressForm">
 			<dl>
-				<cf_PropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="#attributes.edit#" />
-				<cf_PropertyDisplay object="#attributes.address#" property="name" edit="#attributes.edit#" />
-				<cf_PropertyDisplay object="#attributes.address#" property="company" edit="#attributes.edit#" />
-				<cf_PropertyDisplay object="#attributes.address#" property="streetAddress" edit="#attributes.edit#" />
-				<cf_PropertyDisplay object="#attributes.address#" property="street2Address" edit="#attributes.edit#" />
+				<cfif attributes.edit>
+					<cf_PropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" />
+					<cf_PropertyDisplay object="#attributes.address#" property="name" edit="true" />
+					<cf_PropertyDisplay object="#attributes.address#" property="company" edit="true" />
+					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
+						<cf_PropertyDisplay object="#attributes.address#" property="streetAddress" edit="#attributes.edit#" />
+					</cfif>
+					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
+						<cf_PropertyDisplay object="#attributes.address#" property="street2Address" edit="#attributes.edit#" />
+					</cfif>	
+				</cfif>
+				
+				
+				
 				<cf_PropertyDisplay object="#attributes.address#" property="city" edit="#attributes.edit#" />
 				<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
 					<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="#attributes.edit#" />
@@ -55,6 +64,9 @@ Notes:
 					<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="text" edit="#attributes.edit#" />
 				</cfif>
 				<cf_PropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
+				<cfif !attributes.edit>
+					<cf_PropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="#attributes.edit#" />
+				</cfif>
 			</dl>
 			<script type="text/javascript">
 				jQuery(document).ready(function(){

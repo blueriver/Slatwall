@@ -69,8 +69,6 @@ Notes:
 	</div>
 </cfoutput>
 
---->
-
 <!---
 	<div class="svocheckoutshippingmethod">
 	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method <cfif not listFind(rc.orderRequirementsList, "shippingMethod")> <a href="?edit=shippingMethod">Edit</a></cfif></h3>
