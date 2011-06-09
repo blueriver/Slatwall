@@ -131,11 +131,20 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			orderRequirementsList &= "account,";
 		}
 		
-		orderRequirementsList &= "shippingAddress,";
-		orderRequirementsList &= "shippingMethod,";
+		// Check each of the fulfillment methods to see if they are ready to process
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments());i++) {
+			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
+				orderRequirementsList &= "fulfillment,#arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID()#,";		
+			}
+		}
+		
+		// Make sure that the order total is the same as the total payments applied
+		if( arguments.order.getTotal() != arguments.order.getPaymentAmountTotal() ) {
+			orderRequirementsList &= "payment,";
+		}
 		
 		if(len(orderRequirementsList)) {
-			orderRequirementsList = left(orderRequirementsList, len(orderRequirementsList)-1);
+			orderRequirementsList = left(orderRequirementsList,len(orderRequirementsList)-1);
 		}
 		
 		return orderRequirementsList;

@@ -40,10 +40,12 @@ Notes:
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
 
 <cfoutput>
-	<!---
-	<div class="svofrontendcheckoutshippingaddress">
-		<h3 id="checkoutShippingTitle" class="titleBlick">Shipping<cfif not listFind(rc.orderRequirementsList, 'shippingAddress')> <a href="?edit=shippingAddress">Edit</a></cfif></h3>
-		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "shippingAddress")>
+	<div class="svocheckoutfulfillmentshipping">
+		<div class="shippingAddress">
+		</div>
+		<div class="shippingMethod">
+		</div>
+		
 			<div id="checkoutShippingContent" class="contentBlock">
 				<cfif listFind(rc.orderRequirementsList, 'shippingAddress') or rc.edit eq "shippingAddress">
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">

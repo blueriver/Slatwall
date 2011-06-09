@@ -52,6 +52,16 @@ component displayname="Base Object" output="false" {
 		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
 	}
 	
+	// @hint absolute url path from site root
+	public string function getSlatwallRootPath() {
+		return "#application.configBean.getContext()#/plugins/Slatwall";
+	}
+	
+	// @hint the file system directory
+	public string function getSlatwallRootDirectory() {
+		return expandPath("#application.configBean.getContext()#/plugins/Slatwall");
+	}
+	
 	// @hint Private helper function to return the Slatwall RB Factory in any component
 	private any function getRBFactory() {
 		return getPluginConfig().getApplication().getValue("rbFactory");

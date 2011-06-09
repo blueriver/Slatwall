@@ -189,58 +189,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
     /************   END Association Management Methods   *******************/
 	
-	// These Methods are designed to check what still needs to be set before an order is ready to process
-	public boolean function hasValidAccount() {
-		if(isNull(variables.account) || variables.account.isNew()) {
-			return false;
-		} else {
-			return true;	
-		}
-	}
-	
-	/*
-	public boolean function hasValidOrderShippingAddress() {
-		var valid = true;
-		
-		var orderShippings = getOrderShippings();
-		
-		// Loop over all order Shippings to make sure that there is a shipping address asigned
-		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
-				valid = false;
-			}
-		}
-		
-		return valid;
-	}
-	
-	public boolean function hasValidOrderShippingMethod() {
-		var valid = true;
-		
-		var orderShippings = getOrderShippings();
-		
-		// Loop over all order Shippings to make sure that there is a shipping method asigned
-		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getShippingMethod())) {
-				valid = false;
-			}
-		}
-		
-		return valid;
-	}
-	
-	public boolean function hasValidOrderShipping() {
-		var valid = false;
-		
-		if(hasValidOrderShippingAddress() && hasValidOrderShippingMethod()) {
-			valid = true;
-		}
-		
-		return valid;
-	}
-	*/
-	public boolean function hasValidPayment() {
-		var valid = true;
+	// Get the sum of all the payment amounts
+	public boolean function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
 		var orderPayments = getOrderPayments();
@@ -248,22 +198,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			totalPayments += orderPayments[i].getAmount();
 		}
 		
-		if(totalPayments == getTotal()) {
-			valid = true;
-		}
-		
-		return valid;
+		return totalPayments;
 	}
-	
-	/*
-	public boolean function isValidForProcessing() {
-		var valid = false;
-		if(hasValidAccount() && hasValidOrderShippingAddress() && hasValidOrderShippingMethod() && hasValidPayment()) {
-			valid = true;
-		}
-		return valid;
-	}
-	*/
 	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberAndOpenDate() {

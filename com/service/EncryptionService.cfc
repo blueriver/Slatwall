@@ -36,5 +36,16 @@
 Notes:
 
 */
-component {
+component extends="BaseService" {
+	
+	public string function encryptValue(required string value) {
+		// TODO: Encrypt the value
+		return arguments.value;
+	}
+
+	public string function decryptValue(required string value) {
+		// TODO: Decrypt the value
+		return arguments.value;
+	}
+	
 }
