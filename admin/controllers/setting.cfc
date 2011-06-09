@@ -134,7 +134,7 @@ component extends="BaseController" output="false" accessors="true" {
 
 		if( !response.hasErrors() ) {
 			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
-			getFW().redirect(action="admin:setting.listShippingServices", queryString="reload=true", preserve="message");
+			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
 		} else {
 			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
 			rc.messageType = "error";
@@ -168,7 +168,7 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:setting.listshippingmethods", queryString="reload=true", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping&reload=true", preserve="message,messagetype");
 	}
 	
 	public void function createShippingMethod(required struct rc) {
@@ -184,7 +184,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function saveShippingMethod(required struct rc) {
 		detailShippingMethod(rc);
 		
-		if(rc.shippingProvider == "RateTable") {
+		if(structKeyExists(rc,"shippingProvider") && rc.shippingProvider == "RateTable") {
 			var formStruct = getFormUtilities().buildFormCollections(rc);
 			if(structKeyExists(formStruct, "shippingRates")) {
 				rc.shippingRates = formStruct.shippingRates;	
@@ -194,10 +194,12 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.shippingMethod = getShippingService().saveShippingMethod(entity=rc.shippingMethod, data=rc);
 
 		if(!rc.shippingMethod.hasErrors()) {
-			getFW().redirect(action="admin:setting.listshippingmethods", querystring="reload=true&message=admin.setting.saveshippingmethod_success");
+			rc.message=rc.$.slatwall.rbKey("admin.setting.saveshippingmethod_success");
+			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
 		} else {
 			rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
-	   		getFW().setView(action="admin:setting.editshippingmethod");
+	   		rc.edit=true;
+	   		getFW().setView(action="admin:setting.detailshippingmethod");
 		}
 	}
 	
