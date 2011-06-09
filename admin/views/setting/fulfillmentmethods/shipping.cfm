@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<dl class="oneColumn">
-		<dt>Shipping Services</dt>
+		<dt>#$.slatwall.rbKey("admin.setting.listshippingservices_nav")#</dt>
 		<table id="shippingServiceList" class="stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
@@ -58,7 +58,7 @@ Notes:
 				</tr>
 			</cfloop>
 		</table>
-		<dt>Shipping Methods</dt>
+		<dt>#$.slatwall.rbKey("admin.setting.listshippingmethods_nav")#</dt>
 		<dd>
 			<cf_ActionCaller action="admin:setting.createshippingmethod" type="link">
 		</dd>

@@ -44,8 +44,8 @@ Notes:
 <cfoutput>
 	<div class="svoadmindetailshippingmethod">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
+			<cfif !rc.edit><cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingmethodid=#rc.shippingmethod.getshippingmethodid()#" type="list"></cfif>
+	    	<cf_ActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodid=shipping" text="#$.slatwall.rbKey('admin.setting.fulfillmentmethod.shippingsettings')#" type="list">
 		</ul>
 		
 		<cfif rc.edit>
@@ -75,7 +75,7 @@ Notes:
 					<dt class="spdshippingmethod">Shipping Rates</dt>
 					<dd id="spdshippingmethod">
 						<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
-						<table class="stripe" id="shippingRateTable" <cfif not arrayLen(local.shippingRates)>style="display:none;"</cfif>>
+						<table id="shippingRateTable" class="stripe">
 							<thead>
 								<tr>
 									<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.shippingZone')#</th>
