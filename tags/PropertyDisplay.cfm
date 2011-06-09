@@ -326,7 +326,7 @@ Notes:
 							<cfloop array="#attributes.editOptions#" index="i">
 								<!--- if there is a key named "label" use that as the displayed label for the option, if not, default to the "name" key value --->
 								<cfset label = structKeyExists(i,"label") ? i['label'] : i['name'] />
-								<option value="#i['id']#" <cfif attributes.value eq i['name']>selected="selected"</cfif>>#label#</option>	
+								<option value="#i['id']#" <cfif attributes.value eq i['id']>selected="selected"</cfif>>#label#</option>	
 							</cfloop>
 						</select>
 <!---						<cfelse>

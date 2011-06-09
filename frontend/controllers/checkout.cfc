@@ -57,9 +57,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
 		}
 		
-		// Setup all of the objects for their views
-		rc.countriesArray = getSettingService().listCountry();
-		
 		if( rc.accountID != "" ) {
 			rc.account = getAccountService().getAccount(rc.accountID, true);
 		} else if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {

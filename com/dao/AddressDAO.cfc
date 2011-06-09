@@ -33,14 +33,9 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-	Notes:
-	
-*/
-component extends="BaseResource" taffy_uri="/product/{productID}/" {
+Notes:
 
-	public any function get(string productID) {
-		var product = getService("productService").getProduct(arguments.productID);
-		return representationOf(product).withStatus(200);
-	}
+*/
+component extends="BaseDAO" output="false" accessors="true" {
 	
-} 
+}

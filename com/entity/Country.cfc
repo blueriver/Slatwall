@@ -42,4 +42,5 @@ component displayname="Country" entityname="SlatwallCountry" table="SlatwallCoun
 	property name="countryCode" type="string" fieldtype="id";
 	property name="countryName" type="string";
 	
+	
 }

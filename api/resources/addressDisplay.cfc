@@ -33,22 +33,21 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+	Notes:
+	
 --->
-<cfparam name="attributes.countriesArray" type="array" />
-<cfparam name="attributes.selectName" type="string" default="country" />
-<cfparam name="attributes.selectID" type="string" default="" />
-<cfparam name="attributes.selectedCountryCode" type="string" default="US" />
-
-<cfset variables.fw = caller.this />
-
-<cfif thisTag.executionMode is "start">
-	<cfoutput>
-		<select <cfif len(attributes.selectID)>id="#attributes.selectID#"</cfif> name="#attributes.selectName#">
-			<cfloop array="#attributes.countriesArray#" index="country">
-				<option value="#country.getCountryCode()#" <cfif country.getCountryCode() eq attributes.selectedCountryCode>selected="selected"</cfif>>#country.getCountryName()#</option>
-			</cfloop>
-		</select>
-	</cfoutput>
-</cfif>
+<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
+	
+	<cffunction name="post">
+		
+		<cfset var display = "" />
+		<cfset var address = getService("addressService").newAddress() />
+		<cfset address.populate(arguments) />
+		<cfsavecontent variable="display">
+			<cf_AddressForm address="#address#" />
+		</cfsavecontent>
+		
+		<cfreturn representationOF(display) />
+	</cffunction>
+	
+</cfcomponent>

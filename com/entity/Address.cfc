@@ -57,6 +57,17 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	// Non persistent cached properties
+	property name="country" persistent="false";
+	
+	public any function init() {
+		if(isNull(variables.countryCode)) {
+			variables.countryCode = "US";
+		}
+		
+		return super.init();
+	}
+	
 	public string function getFullAddress() {
 		var address = "";
 		address = listAppend(address,getCompany());
@@ -68,5 +79,35 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		address = listAppend(address,getCountryCode());
 		address = listChangeDelims(address,", ",",","no");
 		return address;
+	}
+	
+	public array function getCountryCodeOptions() {
+		if(!structKeyExists(variables, "countryCodeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallCountry");
+			smartList.addSelect(propertyIdentifier="countryName", alias="name");
+			smartList.addSelect(propertyIdentifier="countryCode", alias="id");
+			smartList.addOrder("countryName|ASC");
+			variables.countryCodeOptions = smartList.getRecords();
+		}
+		return variables.countryCodeOptions;
+	}
+	
+	public array function getStateCodeOptions() {
+		if(!structKeyExists(variables, "stateCodeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallState");
+			smartList.addSelect(propertyIdentifier="stateName", alias="name");
+			smartList.addSelect(propertyIdentifier="stateCode", alias="id");
+			smartList.addFilter("countryCode", getCountryCode()); 
+			smartList.addOrder("stateName|ASC");
+			variables.stateCodeOptions = smartList.getRecords();
+		}
+		return variables.stateCodeOptions;
+	}
+	
+	public any function getCountry() {
+		if(!structKeyExists(variables, "country")) {
+			variables.country = getService("addressService").getCountry(getCountryCode());
+		}
+		return variables.country;
 	}
 }

@@ -36,27 +36,11 @@
 	Notes:
 	
 */
+component extends="BaseResource" taffy_uri="/product/{productID}/" {
 
-component extends="taffy.core.api" {
-	
-	// This file gets updated by the onApplicationLoad of the slatwall plugin.  It doesn't exist until the app is reloaded
-	include "../../../config/applicationSettings.cfm";
-	include "../../../config/mappings.cfm";
-	include "../../mappings.cfm";
-	
-	this.mappings["/taffy"] = getDirectoryFromPath(getCurrentTemplatePath()) & "taffy";
-	
-	//use this instead of onApplicationStart()
-	public void function applicationStartEvent(){
-		
-	}
-	
-	//use this instead of onRequestStart()
-	public void function requestStartEvent(){
-		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		url.slatAction = "frontend:event.blank";
-		slatwallFW.onRequestStart(cgi.script_nume);
-		slatwallFW.onRequest(cgi.script_nume);
+	public any function get(string productID) {
+		var product = getService("productService").getProduct(arguments.productID);
+		return representationOf(product).withStatus(200);
 	}
 	
 }

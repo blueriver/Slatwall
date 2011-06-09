@@ -38,7 +38,6 @@ Notes:
 --->
 <cfparam name="rc.edit" type="string" default="" />
 <cfparam name="rc.orderRequirementsList" type="string" default="" />
-<cfparam name="rc.countriesArray" type="array">
 <cfparam name="rc.shippingAddress" type="any">
 
 <cfoutput>
@@ -50,17 +49,7 @@ Notes:
 					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
 						<div class="shippingAddress">
 							<h4>Shipping Address</h4>
-							<dl>
-								<dt class="spdcountry"><label for="country">#$.slatwall.rbKey('entity.address.countryCode')#</label></dt>
-								<dd id="spdcountry"><cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="countryCode"></dd>
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="name" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="company" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="streetAddress" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="street2Address" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="city" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="stateCode" edit="true" />
-								<cf_PropertyDisplay object="#rc.shippingAddress#" property="postalCode" edit="true" />
-							</dl>
+							<cf_AddressForm address="#rc.shippingAddress#">
 						</div>
 						<input type="hidden" name="shippingAddressID" value="#rc.shippingAddress.getAddressID()#" />
 						<cf_ActionCaller action="frontend:checkout.saveShippingAddress" type="submit" />
