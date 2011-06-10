@@ -96,6 +96,12 @@ div.svoadminproductdetail form {
 	padding: 0;
 }
 
+div.svoadminorderdetail #shippingAddress,
+div.svoadminorderdetail #shippingMethod {
+	float: left;
+	margin: 0 20px;
+}
+
 div#buttons {
 	margin-bottom: 10px;	
 }
@@ -161,6 +167,12 @@ table#productTypes ul.neston, table#productPages ul.neston {
 table#productTypeSettings {
 	width: 600px;
 }
+
+td.property {
+	text-align: left;
+	font-weight: bold;
+}
+
 div.dashboardSection {
 	width:500px;
 	float:left;

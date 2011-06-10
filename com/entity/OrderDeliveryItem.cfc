@@ -48,16 +48,16 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	
    /******* Association management methods for bidirectional relationships **************/
 	
-	// OrderShipment (many-to-one)
+	// OrderDelivery (many-to-one)
 	
 	public void function setOrderDelivery(required OrderDelivery orderDelivery) {
 	   variables.orderDelivery = arguments.orderDelivery;
-	   if(!arguments.orderDelivery.hasOrderShipmentItem(this)) {
+	   if(!arguments.orderDelivery.hasOrderDeliveryItem(this)) {
 	       arrayAppend(arguments.orderDelivery.getOrderDeliveryItems(),this);
 	   }
 	}
 	
-	public void function removeOrderDelivery(required OrderShipment orderDelivery) {
+	public void function removeOrderDelivery(required OrderDelivery orderDelivery) {
        var index = arrayFind(arguments.orderDelivery.getOrderDeliveryItems(),this);
        if(index > 0) {
            arrayDeleteAt(arguments.orderDelivery.getOrderDeliveryItems(),index);

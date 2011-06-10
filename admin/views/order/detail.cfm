@@ -47,21 +47,26 @@ Notes:
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
 		<h3>#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</h3>
-		<dl class="twoColumn">
-			<cf_PropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#">
-			<dt>
-				#rc.$.Slatwall.rbKey("entity.order.account")#
-			</dt>
-			<dd>
-				<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">#rc.Order.getAccount().getFullName()#</a>
-			</dd>
-			<cf_PropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#">
-	 		<cf_PropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Order#" property="filename" edit="#rc.edit#">
-		</dl>
+		<table class="stripe" id="basicOrderInfo">
+			<cf_PropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
+			<cf_PropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
+			<tr>
+				<td class="property">
+					#rc.$.Slatwall.rbKey("entity.order.account")#
+				</td>
+				<td>
+					#rc.Order.getAccount().getFullName()#  
+					<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">
+						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.user.png" height="16" width="16" alt="" />
+					</a>
+				</td>
+			</tr>
+			<cf_PropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#" displayType="table">
+	 		<cf_PropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#" displayType="table">
+			<cf_PropertyDisplay object="#rc.Order#" property="filename" edit="#rc.edit#" displayType="table">
+		</table>
 	</div>
 	<div class="paymentInfo">
 		<h3 class="tableheader">#$.Slatwall.rbKey("admin.order.detail.payments")#</h3>
@@ -89,24 +94,41 @@ Notes:
 			</ul>
 		
 			<div id="tabOrderFulfillments">
-				<table class="stripe">
-					<tr>
-						<th>#$.slatwall.rbKey('entity.brand.brandname')#</th>
-						<th class="varWidth">#$.slatwall.rbKey('entity.product.productname')#</th>
-						<th>Options</th>
-						<th>#$.slatwall.rbKey('entity.sku.skuCode')#</th>
-						<th>#$.slatwall.rbKey('entity.orderitem.quantity')#</th>
-					</tr>
-					<cfloop array="#rc.Order.getOrderItems()#" index="local.orderItem">
-						<tr>
-							<td>#local.orderItem.getSku().getProduct().getBrand().getBrandName()#</td>
-							<td class="varWidth">#local.orderItem.getSku().getProduct().getProductName()#</td>
-							<td>#local.orderItem.getSku().displayOptions()#</td>
-							<td>#local.orderItem.getSku().getSkuCode()#</td>
-							<td>#local.orderItem.getQuantity()#</td>
-						</tr>
-					</cfloop>
-				</table>
+				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
+					<cfswitch expression="#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#">
+						<cfcase value="shipping">
+							<table class="stripe">
+								<tr>
+									<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
+									<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
+									<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
+									<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
+									<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
+									<th>#$.slatwall.rbKey("admin.order.detail.priceextended")#</th>
+								</tr>
+									
+								<cfloop array="#local.thisOrderFulfillment.getOrderFulfillmentItems()#" index="local.orderItem">
+									<tr>
+										<td>#local.orderItem.getSku().getSkuCode()#</td>
+										<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
+										<td>#dollarFormat(local.orderItem.getPrice())#</td>
+										<td>#local.orderItem.getQuantity()#</td>
+										<td></td>
+										<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
+									</tr>
+								</cfloop>
+							</table>
+							<div id="shippingAddress">
+								<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
+								#local.thisOrderFulfillment.getShippingAddress().getFullAddress()#	
+							</div>
+							<div id="shippingMethod">
+								<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
+								#local.thisOrderFulfillment.getShippingMethod().getShippingMethodName()#	
+							</div>
+						</cfcase>
+					</cfswitch>
+				</cfloop>
 			</div>
 			
 			<div id="tabOrderDeliveries">

@@ -259,7 +259,7 @@ Notes:
 				<dt class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
 			<cfelseif attributes.displaytype eq "table">
 				<tr class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
-				<td class="property varWidth">
+				<td class="property">
 			</cfif>
 	        
 	        <cfif attributes.displaytype neq "plain">
