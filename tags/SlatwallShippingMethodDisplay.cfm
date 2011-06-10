@@ -37,31 +37,41 @@ Notes:
 
 --->
 <cfparam name="attributes.orderFulfillmentShipping" type="any" />
+<cfparam name="attributes.edit" type="boolean" default="true" />
 
 <cfset local.methodOptions = attributes.orderFulfillmentShipping.getOrderShippingMethodOptions() />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<cfif arrayLen(local.methodOptions)>
-			<cfset local.noneSelected = false />
-			<cfif isNull(attributes.orderFulfillmentShipping.getShippingMethod())>
-				<cfset local.noneSelected = true />
-			</cfif>
-			<cfloop array="#local.methodOptions#" index="option">
-				<cfset local.optionSelected = false />
-				<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodID() eq option.getShippingMethod().getShippingMethodID()>
-					<cfset local.optionSelected = true />
-				<cfelseif local.noneSelected>
-					<cfset local.noneSelected = false />
-					<cfset local.optionSelected = true />
+		<cfif attributes.edit>
+			<cfif arrayLen(local.methodOptions)>
+				<cfset local.noneSelected = false />
+				<cfif isNull(attributes.orderFulfillmentShipping.getShippingMethod())>
+					<cfset local.noneSelected = true />
 				</cfif>
-				<dl>
-					<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
-					<dd>#DollarFormat(option.getTotalCost())#</dd>
-				</dl>
-			</cfloop>
+				<cfloop array="#local.methodOptions#" index="option">
+					<cfset local.optionSelected = false />
+					<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodID() eq option.getShippingMethod().getShippingMethodID()>
+						<cfset local.optionSelected = true />
+					<cfelseif local.noneSelected>
+						<cfset local.noneSelected = false />
+						<cfset local.optionSelected = true />
+					</cfif>
+					<dl>
+						<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
+						<dd>#DollarFormat(option.getTotalCost())#</dd>
+					</dl>
+				</cfloop>
+			<cfelse>
+				<p class="noOptions">No Shipping options available, please update your address to proceed.</p>
+			</cfif>
 		<cfelse>
-			<p class="noOptions">No Shipping options available, please update your address to proceed.</p>
+			<cfif not isNull(attributes.orderFulfillmentShipping.getShippingMethod())>
+				<dl>
+					<dt>#DollarFormat(attributes.orderFulfillmentShipping.getFulfillmentCharge())#</dt>
+					<dd>#attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodName()#</dd>
+				</dl>
+			</cfif>
 		</cfif>
 	</cfoutput>
 </cfif>
