@@ -148,7 +148,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// OrderDeliveries (one-to-many)
 	
 	public void function addOrderDelivery(required OrderDelivery orderDelivery) {
-	   arguments.orderShipment.setOrder(this);
+	   arguments.orderDelivery.setOrder(this);
 	}
 	
 	public void function removeOrderDelivery(required OrderDelivery orderDelivery) {

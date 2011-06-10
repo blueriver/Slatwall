@@ -47,6 +47,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
+
+	// Non Persistent
+	property name="fullName" persistent="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

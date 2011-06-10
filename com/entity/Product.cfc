@@ -477,7 +477,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 
 	public any function getSkuBySelectedOptions(string selectedOptions="") {
-		return getService("productService").getProductSkuBySelectedOptions(arguments.selectedOptions,this.getProductID());
+		if(len(arguments.selectedOptions) > 0) {
+			return getService("productService").getProductSkuBySelectedOptions(arguments.selectedOptions,this.getProductID());
+		} else {
+			return getDefaultSku();
+		}
 	}
 	
 	

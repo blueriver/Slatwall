@@ -63,27 +63,44 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	
 	public void function setOrder(required Order Order) {
 	   variables.order = arguments.order;
-	   if(!arguments.order.hasOrderShipment(this)) {
-	       arrayAppend(arguments.order.getOrderShipments(),this);
+	   if(!arguments.order.hasOrderDelivery(this)) {
+	       arrayAppend(arguments.order.getOrderDeliveries(),this);
 	   }
 	}
 	
 	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderShipments(),this);
+       var index = arrayFind(arguments.order.getOrderDeliveries(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderShipments(),index);
+           arrayDeleteAt(arguments.order.getOrderDeliveries(),index);
        }    
        structDelete(variables,"order");
     }
+    
+   	// OrderFulfillment (many-to-one)
 	
-	// OrderShipmentItems (one-to-many)
-	
-	public void function addOrderShipmentItem(required orderShipmentItem orderShipmentItem) {
-	   arguments.orderShipmentItem.setOrderShipment(this);
+	public void function setOrderFulfillment(required OrderFulfillment OrderFulfillment) {
+	   variables.orderFulfillment = arguments.orderFulfillment;
+	   if(!arguments.orderFulfillment.hasOrderDelivery(this)) {
+	       arrayAppend(arguments.orderFulfillment.getOrderDeliveries(),this);
+	   }
 	}
 	
-	public void function removeOrderShipmentItem(required OrderShipmentItem OrderShipmentItem) {
-	   arguments.orderShipmentItem.removeOrderShipment(this);
+	public void function removeOrderFulfillment(required OrderFulfillment OrderFulfillment) {
+       var index = arrayFind(arguments.orderFulfillment.getOrderDeliveries(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.orderFulfillment.getOrderDeliveries(),index);
+       }    
+       structDelete(variables,"orderFulfillment");
+    }
+	
+	// OrderDeliveryItems (one-to-many)
+	
+	public void function addOrderDeliveryItem(required orderDeliveryItem orderDeliveryItem) {
+	   arguments.orderDeliveryItem.setOrderDelivery(this);
+	}
+	
+	public void function removeOrderDeliveryItem(required OrderDeliveryItem OrderDeliveryItem) {
+	   arguments.orderDeliveryItem.removeOrderDelivery(this);
 	}
     /************   END Association Management Methods   *******************/
 }
