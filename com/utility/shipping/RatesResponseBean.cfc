@@ -37,18 +37,12 @@ Notes:
 
 */
 
-component accessors="true" output="false" {
+component extends="Slatwall.com.utility.ResponseBean" accessors="true" output="false" {
 
 	property name="methodRateResponseBeans" type="array";
-	property name="messageBeans" type="array";
-	property name="errorMessageBeans" type="array";
-	property name="rawRequestData" type="any";
-	property name="rawResponseData" type="any";
 	
 	public any function init() {
 		setMethodRateResponseBeans([]);
-		setMessageBeans([]);
-		setErrorMessageBeans([]);
 	}
 	
 	public any function getNewMethodRateResponseBean() {
@@ -57,22 +51,6 @@ component accessors="true" output="false" {
 	
 	public any function addMethodRateResponseBean(required any methodRateResponseBean) {
 		arrayAppend(getMethodRateResponseBeans(), arguments.methodRateResponseBean);
-	}
-	
-	public any function getNewMessageBean() {
-		return new MessageBean(); 
-	}
-	
-	public any function addMessageBean(required any messageBean) {
-		arrayAppend(getMessageBeans(), arguments.messageBean);
-	}
-	
-	public any function addErrorMessageBean(required any messageBean) {
-		arrayAppend(getErrorMessageBeans(), arguments.messageBean);
-	}
-	
-	public boolean function hasErrors() {
-		return arrayLen(getErrorMessageBeans());
 	}
 	
 }

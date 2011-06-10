@@ -243,7 +243,7 @@ component extends="BaseService" accessors="true" {
 	
 	public any function deleteProductType(required any productType) {
 		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
-			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
+			getValidationService().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
 		if( !arguments.productType.hasErrors() ) {
 	   		// clear cached product type tree so that it's refreshed on the next request

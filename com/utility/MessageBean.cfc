@@ -42,4 +42,17 @@ component accessors="true" {
 	property name="messageType" type="string";
 	property name="message" type="string";
 	
+	public any function init(struct data={}) {
+		if(structKeyExists(arguments.data, "messageCode")) {
+			setMessageCode(arguments.data.messageCode);
+		}
+		if(structKeyExists(arguments.data, "messageType")) {
+			setMessageCode(arguments.data.messageType);
+		}
+		if(structKeyExists(arguments.data, "message")) {
+			setMessageCode(arguments.data.message);
+		}
+		return this;
+	}
+	
 }

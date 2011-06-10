@@ -2,31 +2,32 @@
 
 <beans default-autowire="byName">
 	
-	<bean id="accountDAO" class="slatwall.com.dao.AccountDAO" />
-	<bean id="addressDAO" class="slatwall.com.dao.AddressDAO" />
-	<bean id="attributeDAO" class="slatwall.com.dao.AttributeDAO" />
-	<bean id="brandDAO" class="slatwall.com.dao.BrandDAO" />
-	<bean id="fulfillmentDAO" class="slatwall.com.dao.FulfillmentDAO" />
-	<bean id="productDAO" class="slatwall.com.dao.ProductDAO" />
-	<bean id="productTypeDAO" class="slatwall.com.dao.ProductTypeDAO" />
-	<bean id="sessionDAO" class="slatwall.com.dao.sessionDAO" />
-	<bean id="orderDAO" class="slatwall.com.dao.orderDAO" />
-	<bean id="settingDAO" class="slatwall.com.dao.SettingDAO" />
-	<bean id="skuDAO" class="slatwall.com.dao.SkuDAO" />
-    <bean id="optionDAO" class="slatwall.com.dao.OptionDAO" />
-    <bean id="optionGroupDAO" class="slatwall.com.dao.OptionGroupDAO" />
-	<bean id="typeDAO" class="slatwall.com.dao.TypeDAO" />
-	<bean id="shippingDAO" class="slatwall.com.dao.ShippingDAO" />
-	<bean id="paymentDAO" class="slatwall.com.dao.PaymentDAO" />
-	<bean id="vendorDAO" class="slatwall.com.dao.VendorDAO" />
-	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
-	<bean id="FileService" class="slatwall.com.service.FileService" />
-	<bean id="TagProxyService" class="slatwall.com.service.TagProxyService" />
-	<bean id="Validator" class="slatwall.com.utility.Validator" />
-	<bean id="Utilities" class="slatwall.com.utility.Utilities" />
-	<bean id="requestCacheService" class="slatwall.com.service.requestCacheService" />
+	<bean id="accountDAO" class="Slatwall.com.dao.AccountDAO" />
+	<bean id="addressDAO" class="Slatwall.com.dao.AddressDAO" />
+	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
+	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
+	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
+	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
+	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
+	<bean id="sessionDAO" class="Slatwall.com.dao.sessionDAO" />
+	<bean id="orderDAO" class="Slatwall.com.dao.orderDAO" />
+	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
+	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
+    <bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
+    <bean id="optionGroupDAO" class="Slatwall.com.dao.OptionGroupDAO" />
+	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
+	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
+	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
+	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
 	
-	<bean id="validationService" class="slatwall.com.service.validationService" />
+	<bean id="dataService" class="Slatwall.com.service.DataService" />
+	<bean id="fileService" class="Slatwall.com.service.FileService" />
+	<bean id="requestCacheService" class="Slatwall.com.service.RequestCacheService" />
+	<bean id="tagProxyService" class="Slatwall.com.service.TagProxyService" />
+	<bean id="validationService" class="Slatwall.com.service.ValidationService" />
+	
+	<bean id="formUtilities" class="slatwall.com.utility.FormUtilities" />
+	<bean id="utilities" class="slatwall.com.utility.Utilities" />
 		
     <bean id="accountService" class="slatwall.com.service.accountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
@@ -85,7 +86,7 @@
 
     <bean id="typeService" class="slatwall.com.service.typeService">
         <property name="DAO"><ref bean="TypeDAO" /></property>
-		<property name="validationService"><ref bean="Validator" /></property>
+		<property name="validationService"><ref bean="validationService" /></property>
     </bean>
 
     <bean id="sessionService" class="slatwall.com.service.sessionService">

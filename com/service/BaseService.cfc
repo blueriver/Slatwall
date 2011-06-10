@@ -96,7 +96,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
     }
     
     public any function validate(required any entity) {
-    	return getValidator().validateObject(entity=arguments.entity);
+    	return getValidationService().validateObject(entity=arguments.entity);
     }
     
  /**

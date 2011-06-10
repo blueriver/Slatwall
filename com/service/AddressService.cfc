@@ -99,6 +99,6 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
-		return getValidator().validateObject(entity=arguments.address);
+		return getValidationService().validateObject(entity=arguments.address);
 	}
 }

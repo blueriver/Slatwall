@@ -38,8 +38,8 @@ Notes:
 */
 component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 
-	// @hint constructor for the validator class
-	public Validator function init(){
+	// @hint constructor for the validation class
+	public any function init(){
 		return this;
 	}
 	

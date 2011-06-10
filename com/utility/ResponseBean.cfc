@@ -40,23 +40,23 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	
 	property name="data" type="any";
 	property name="statusCode" type="numeric";
+	property name="errorBean" type="any";
 	property name="messageBeans" type="array";
-	property name="errorMessageBeans" type="array";
 	
 	public any function init() {
 		this.setData("");
 		this.setMessageBeans([]);
-		this.setErrorBeans([]);
+		this.setErrorBean(new Slatwall.com.utility.errorBean());
 		this.setStatusCode(0);
 		return this;
 	} 
 	
 	public boolean function hasErrors() {
-		if(arrayLen(getErrorMessageBeans())) {
-			return true;
-		}
-		
-		return false;
-	}   
-
+		return getErrorBean().hasErrors();
+	}
+	
+	public any function addMessage(struct data={}) {
+		arrayAppend(getMessageBeans(), new messageBean(arguments.data));
+	}
+	
 } 
