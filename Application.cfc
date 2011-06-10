@@ -75,9 +75,6 @@ component extends="framework" output="false" {
 			setPluginConfig(request.PluginConfig);	
 		}
 		
-		// Set the setup confirmed to false
-		getPluginConfig().getApplication().getValue('applicationSetupConfirmend') = false;
-		
 		// Set this in the application scope to be used on the frontend
 		getPluginConfig().getApplication().setValue( "fw", this);
 		
