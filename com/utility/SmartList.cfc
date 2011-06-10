@@ -335,12 +335,18 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					joinType = "inner";
 				}
 				
+				if(joinType == "none") {
+					joinType = "";
+				} else {
+					joinType &= " join";
+				}
+				
 				var fetch = "";
 				if(variables.entities[i].fetch) {
 					fetch = "fetch";
 				}
 				
-				hqlFrom &= " #joinType# join #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";	
+				hqlFrom &= " #joinType# #fetch# #variables.entities[i].parentAlias#.#variables.entities[i].parentRelatedProperty# as #variables.entities[i].entityAlias#";	
 			}
 		}
 		return hqlFrom;
