@@ -79,13 +79,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(isNew() || !arguments.order.hasOrderItem(this)) {
 			arrayAppend(arguments.order.getOrderItems(),this);
 		}
-		
-		// Remove order shipping method and options
-		/*
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
-		*/
 	}
 	
 	public void function removeOrder(Order order) {
@@ -98,12 +91,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}    
 		structDelete(variables,"order");
 		
-		// Remove order shipping method and options
-		/* Needs to be refactored
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
-		*/
+		// Remove from order fulfillment to trigger those actions
+		removeOrderFulfillment();
     }
     
     // Order Shipping (many-to-one)
@@ -114,12 +103,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(),this);
 		}
 		
-		// Remove order shipping method and options
-		/* Needs to be refactored
-		if(!isNull(variables.orderFulfillment)) {
-			variables.orderFulfillment.removeOrderShippingMethodAndMethodOptions();
-		}
-		*/
+		// Run Item's Changed Function
+		variables.orderFulfillment.orderFulfillmentItemsChanged();
     }
     
     public void function removeOrderFulfillment(OrderFulfillment orderFulfillment) {
@@ -130,14 +115,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	if(index > 0) {
     		arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
     	}
+    	
+    	// Run Item's Changed Function
+		variables.orderFulfillment.orderFulfillmentItemsChanged();
+		
     	structDelete(variables, "orderFulfillment");
     	
-    	// Remove order shipping method and options
-    	/* Needs to be refactored
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
-		*/
+    	
     }
 	
 	/************   END Association Management Methods   *******************/

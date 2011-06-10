@@ -78,7 +78,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 				totalItemsWeight +=	arguments.ratesRequestBean.getShippingItemRequestBeans()[i].getWeight();
 			}
 			 
-			totalItemsValue += arguments.ratesRequestBean.getShippingItemRequestBeans().getValue();
+			totalItemsValue += arguments.ratesRequestBean.getShippingItemRequestBeans()[i].getValue();
 		}
 		
 		if(totalItemsWeight < 1) {
@@ -129,7 +129,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 			
 			if(!ratesResponseBean.hasErrors()) {
 				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
-					ratesResponseBean.addShippingMethodRate(
+					ratesResponseBean.addShippingMethod(
 						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
 						totalCost=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
 					);

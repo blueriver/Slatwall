@@ -61,14 +61,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint This function is utilized by the fw1 populate method to only update persistent properties in the entity.
 	public string function getUpdateKeys() {
-		
-		if(!isDefined("variables.updateKeys")) {
-			
+		if(!structKeyExists(variables, "updateKeys")) {
 			var metaData = getMetaData(this);
 			variables.updateKeys = "";
 			
 			// Loop over properties and any persitant properties to the updateKeys
-			for(i=1; i <= arrayLen(metaData.Properties); i++ ) {
+			for(var i=1; i <= arrayLen(metaData.Properties); i++ ) {
 				var propertyStruct = metaData.Properties[i];
 				if(!isDefined("propertyStruct.Persistent") or (isDefined("propertyStruct.Persistent") && propertyStruct.Persistent == true && !isDefined("propertyStruct.FieldType"))) {
 					variables.updateKeys = "#variables.updateKeys##propertyStruct.Name#,";
@@ -182,8 +180,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return sortedArray;
 	}
 
-	public any function isNew() {
-		var identifierColumns = ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
+	public boolean function isNew() {
+		var identifierColumns = getIdenentifierColumns();
 		var returnNew = true;
 		for(var i=1; i <= arrayLen(identifierColumns); i++){
 			if(structKeyExists(variables, identifierColumns[i]) && (!isNull(variables[identifierColumns[i]]) && variables[identifierColumns[i]] != "" )) {
@@ -191,6 +189,21 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		return returnNew;
+	}
+	
+	public any function getIdenentifierColumns() {
+		return ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
+	}
+	
+	public any function getIdentifierValue() {
+		var identifierColumns = getIdenentifierColumns();
+		var idValue = "";
+		for(var i=1; i <= arrayLen(identifierColumns); i++){
+			if(structKeyExists(variables, identifierColumns[i])) {
+				idValue &= variables[identifierColumns[i]];
+			}
+		}
+		return idValue;
 	}
 	
 	public string function getClassName(){
@@ -219,6 +232,16 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// @hint A way to see if the entity has any errors.
 	public boolean function hasErrors() {
 		return this.getErrorBean().hasErrors();
+	}
+	
+	public string function simpleValueSerialize() {
+		var data = {};
+		for(var key in variables) {
+			if(isSimpleValue(variables[key]) && key != "updateKeys") {
+				data[key] = variables[key];
+			}
+		}
+		return serializeJSON(data);
 	}
 	
 	// These private methods are used by the populate() method

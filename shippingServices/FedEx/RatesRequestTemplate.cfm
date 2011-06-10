@@ -26,7 +26,7 @@
 	        </ns:TotalWeight>
 	        <ns:TotalInsuredValue>
 	            <ns:Currency>USD</ns:Currency>
-	            <ns:Amount>#totalItemsPrice#</ns:Amount>
+	            <ns:Amount>#totalItemsValue#</ns:Amount>
 	        </ns:TotalInsuredValue>
 	        <ns:Shipper>
 	            <ns:Address>
@@ -54,7 +54,7 @@
 	            <ns:SequenceNumber>1</ns:SequenceNumber>
 	            <ns:InsuredValue>
 	                <ns:Currency>USD</ns:Currency>
-	                <ns:Amount>#totalItemsPrice#</ns:Amount>
+	                <ns:Amount>#totalItemsValue#</ns:Amount>
 	            </ns:InsuredValue>
 	            <ns:Weight>
 	                <ns:Units>LB</ns:Units>

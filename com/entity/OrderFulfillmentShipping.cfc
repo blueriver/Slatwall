@@ -44,7 +44,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
-	property name="orderShippingMethodOptions" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID";
+	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="orderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 
 	public any function init() {
 		if(isNull(variables.orderShippingMethodOptions)) {
@@ -72,6 +72,10 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		return true;
 	}
 	
+	public void function orderFulfillmentItemsChanged() {
+		removeShippingMethodAndMethodOptions();
+	}
+	
 	public array function getOrderShippingMethodOptions(boolean autoPopulate=true) {
 		if(autoPopulate) {
 			populateOrderShippingMethodOptionsIfEmpty();
@@ -88,16 +92,15 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	public void function removeShippingMethodAndMethodOptions() {
 		// remove all existing options
 		for(var i = arrayLen(getOrderShippingMethodOptions(false)); i >= 1; i--) {
-			getOrderShippingMethodOptions()[i].removeOrderShipping(this);
+			getOrderShippingMethodOptions()[i].removeOrderFulfillmentShipping(this);
 		}
 		setShippingMethod(javaCast("null", ""));
-		setShippingCharge(0);
+		setFulfillmentCharge(0);
 	}
 	
 	// Any time a new Address gets set, we need to adjust the order shipping options
 	public void function setAddress(required Address address) {
 		variables.address = arguments.address;
-		removeOrderShippingMethodAndMethodOptions();
 	}
 		
     // Order Shipping Method Options (one-to-many)

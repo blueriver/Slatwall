@@ -37,16 +37,20 @@ Notes:
 
 */
 
-component extends="Slatwall.com.utility.ResponseBean" accessors="true" output="false" {
+component accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
 
-	property name="ShippingMethodRateResponseBeans" type="array";
+	property name="ShippingMethodResponseBeans" type="array";
 	
 	public any function init() {
-		setMethodRateResponseBeans([]);
+		// Set Defaults
+		setShippingMethodResponseBeans([]);
+		
+		// Return the Base entity init and pass arguments
+		return super.init(argumentcollection=arguments);
 	}
 	
-	public any function addShippingMethodRate(struct data={}) {
-		arrayAppend(getMethodRateResponseBeans(), new MethodRateResponseBean(arguments.data));
+	public any function addShippingMethod() {
+		arrayAppend(getShippingMethodResponseBeans(), new ShippingMethodResponseBean(argumentcollection=arguments));
 	}
 	
 	

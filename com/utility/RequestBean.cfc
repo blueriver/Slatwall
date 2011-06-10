@@ -41,6 +41,7 @@ component output="false" accessors="true" {
 	property name="data" type="any";
 	
 	public any function init() {
+		// Set Defaults
 		this.setData({});
 		
 		// Populate all keys passed in

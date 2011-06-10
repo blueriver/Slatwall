@@ -40,7 +40,7 @@ component displayname="Order Item Status Action" entityname="SlatwallOrderItemSt
 
 	property name="orderItemStatusActionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	property name="fulfillmentMethod" fieldtype="many-to-one" cfc="FulfillmentMethod" fkcolumn="fullfilmentMethodID";
+	property name="fulfillmentMethod" fieldtype="many-to-one" cfc="FulfillmentMethod" fkcolumn="fulfillmentMethodID";
 	
 	property name="orderItemStatusType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderItemStatusTypeID";
 	property name="orderItemActionType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderItemActionTypeID";

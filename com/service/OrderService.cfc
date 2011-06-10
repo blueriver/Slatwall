@@ -154,16 +154,51 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
 		arguments.orderFulfillment.populate(arguments.data);
 		
+		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
+			
+			// Get Address
 			if( isNull(arguments.orderFulfillment.getShippingAddress()) ) {
 				var address = getAddressService().newAddress();
 			} else {
 				var address = arguments.orderFulfillment.getShippingAddress();
 			}
 			
-			address = getAddressService().saveAddress(address, arguments.data);
+			// Set the address in the order Fulfillment
 			arguments.orderFulfillment.setShippingAddress(address);
+			
+			// Populate Address And check if it has changed
+			var serializedAddressBefore = address.simpleValueSerialize();
+			address.populate(data);
+			var serializedAddressAfter = address.simpleValueSerialize();
+			
+			if(serializedAddressBefore != serializedAddressAfter) {
+				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
+			}
+			
+			// Validate & Save Address
+			address = getAddressService().saveAddress(address);
+			
+			// Check for a shipping method option selected
+			if(structKeyExists(arguments.data, "orderShippingMethodOptionID")) {
+				var methodOption = this.getOrderShippingMethodOption(arguments.data.orderShippingMethodOptionID);
+				
+				// Verify that the method option is one for this fulfillment
+				if(arguments.orderFulfillment.hasOrderShippingMethodOption(methodOption)) {
+					// Update the orderFulfillment to have this option selected
+					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethod());
+					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCost());
+				}
+				
+			}
+			
+			// Validate the order Fulfillment
+			this.validateOrderFulfillmentShipping(arguments.orderFulfillment);
 		}
 		
+		// Save the order Fulfillment
+		getDAO().save(arguments.orderFulfillment);
 	}
+	
+	
 }
