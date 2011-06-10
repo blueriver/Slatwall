@@ -36,21 +36,21 @@
 Notes:
 
 */
-component accessors="true" {
+component accessors="true" output="false" {
 
 	property name="messageCode" type="string";
 	property name="messageType" type="string";
 	property name="message" type="string";
 	
-	public any function init(struct data={}) {
-		if(structKeyExists(arguments.data, "messageCode")) {
-			setMessageCode(arguments.data.messageCode);
+	public any function init() {
+		if(structKeyExists(arguments, "messageCode")) {
+			setMessageCode(arguments.messageCode);
 		}
-		if(structKeyExists(arguments.data, "messageType")) {
-			setMessageCode(arguments.data.messageType);
+		if(structKeyExists(arguments, "messageType")) {
+			setMessageCode(arguments.messageType);
 		}
-		if(structKeyExists(arguments.data, "message")) {
-			setMessageCode(arguments.data.message);
+		if(structKeyExists(arguments, "message")) {
+			setMessageCode(arguments.message);
 		}
 		return this;
 	}

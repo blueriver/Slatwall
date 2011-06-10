@@ -41,9 +41,9 @@ component output="false" accessors="true" extends="Slatwall.com.utility.RequestB
 	
 	property name="value" type="numeric";
 	property name="weight" type="numeric";
-	property name="weightUnitOfMeasure" type="string" default="lb";
+	property name="weightUnitOfMeasure" type="string";
 	property name="cubicDimension" type="numeric";
-	property name="cubicUnitOfMeasure" type="string" default="ft";
+	property name="cubicUnitOfMeasure" type="string";
 	property name="quantity" type="numeric";
 	
 	/* wightUnitOfMeasure Options
@@ -58,4 +58,21 @@ component output="false" accessors="true" extends="Slatwall.com.utility.RequestB
 		m	= cubic meter
 		cm	= cubic centimeter
 	*/
+	
+	public any function init() {
+		
+		// Set Defaults
+		setValue(0);
+		setWeight(0);
+		setWeightUnitOfMeasure("lb");
+		setCubicDimension(0);
+		setCubicUnitOfMeasure("ft");
+		setQuantity(1);
+		
+		// Return Super Init to populate field with values 
+		return super.init(argumentcollection=arguments);
+		
+	}
+	
+	
 }

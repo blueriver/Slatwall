@@ -101,13 +101,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
 					
 					// Loop over the rates return by the provider to match with a shipping method
-					for(var r=1; r<=arrayLen(ratesResponseBean.getMethodRateResponseBeans()); r++) {
-						if(ratesResponseBean.getMethodRateResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
+					for(var r=1; r<=arrayLen(ratesResponseBean.getShippingMethodResponseBeans()); r++) {
+						if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
 							var option = this.newOrderShippingMethodOption();
 							option.setShippingMethod(shippingMethods[m]);
-							option.setTotalCost(ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost());
-							option.setEstimatedArrivalDate(ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate());
-							option.setOrderShipping(arguments.orderShipping);
+							option.setTotalCost(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCost());
+							option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
+							option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
 							getDAO().save(option);
 						}
 					}

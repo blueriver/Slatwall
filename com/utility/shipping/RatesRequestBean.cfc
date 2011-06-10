@@ -67,8 +67,8 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		return super.init();
 	}
 	
-	public void function addShippingItem(struct data={}) {
-		arrayAppend(getShippingItemRequestBeans(), new ShippingItemRequestBean(arguments.data));
+	public void function addShippingItem() {
+		arrayAppend(getShippingItemRequestBeans(), new ShippingItemRequestBean(argumentcollection=arguments));
 	}
 	
 	public void function setShipToWithAddress(required Slatwall.com.entity.Address address) {
@@ -92,6 +92,9 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		}
 		if(!isNull(arguments.address.getStateCode())) {
 			setShipToStateCode(arguments.address.getStateCode());
+		}
+		if(!isNull(arguments.address.getPostalCode())) {
+			setShipToPostalCode(arguments.address.getPostalCode());
 		}
 		if(!isNull(arguments.address.getCountryCode())) {
 			setShipToCountryCode(arguments.address.getCountryCode());
@@ -119,6 +122,9 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		}
 		if(!isNull(arguments.address.getStateCode())) {
 			setShipFromStateCode(arguments.address.getStateCode());
+		}
+		if(!isNull(arguments.address.getPostalCode())) {
+			setShipFromPostalCode(arguments.address.getPostalCode());
 		}
 		if(!isNull(arguments.address.getCountryCode())) {
 			setShipFromCountryCode(arguments.address.getCountryCode());

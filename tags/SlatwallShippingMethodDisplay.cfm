@@ -43,10 +43,16 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<cfif arrayLen(local.methodOptions)>
+			<cfif isNull(attributes.orderFulfillmentShipping.getShippingMethod())>
+				<cfset local.noneSelected = true />
+			</cfif>
 			<cfloop array="#local.methodOptions#" index="option">
 				<cfset local.optionSelected = false />
-				<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
+				<cfif !isNull(attributes.orderFulfillmentShipping.getShippingMethod()) and attributes.orderFulfillmentShipping.getShippingMethod() eq option.getShippingMethod()>
 					<cfset local.optionSelected = true />
+				<cfelseif local.noneSelected>
+					 <cfset local.noneSelected = false />
+					 <cfset local.optionSelected = true />
 				</cfif>
 				<dl>
 					<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>

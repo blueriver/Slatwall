@@ -44,10 +44,11 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	property name="messageBeans" type="array";
 	
 	public any function init() {
+		// Set Defaults
+		this.setStatusCode(0);
 		this.setData({});
 		this.setMessageBeans([]);
 		this.setErrorBean(new Slatwall.com.utility.errorBean());
-		this.setStatusCode(0);
 		
 		// Populate all keys passed in
 		for(var key in arguments) {
@@ -64,8 +65,8 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		return getErrorBean().hasErrors();
 	}
 	
-	public void function addMessage(struct data={}) {
-		arrayAppend(getMessageBeans(), new messageBean(arguments.data));
+	public void function addMessage() {
+		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
 	}
 	
 } 
