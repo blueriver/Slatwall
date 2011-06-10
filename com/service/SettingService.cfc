@@ -253,7 +253,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		for( var item in arguments.data ) {
 			evaluate("shippingService.set#item#(data[item])");
 		}
-		var response = getValidator().validate(shippingService);
+		var response = getValidationService().validate(shippingService);
 		if(!response.hasErrors()) {
 			//save service as individual setting entities
 			for(var item in arguments.data) {
@@ -292,7 +292,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		for( var item in arguments.data ) {
 			evaluate("paymentService.set#item#(data[item])");
 		}
-		var response = getValidator().validate(paymentService);
+		var response = getValidationService().validate(paymentService);
 		if(!response.hasErrors()) {
 			//save service as individual setting entities
 			for(var item in arguments.data) {

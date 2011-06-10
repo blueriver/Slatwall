@@ -105,8 +105,7 @@ component extends="framework" output="false" {
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		var dataPopulator = new Slatwall.com.utility.DataPopulator();
-		dataPopulator.loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
+		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 	}
 	
 	public void function setupRequest() {

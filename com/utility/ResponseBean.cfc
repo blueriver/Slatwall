@@ -37,21 +37,26 @@ Notes:
 
 */
 component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" {
+	
 	property name="data" type="any";
-	property name="message" type="any";
-	property name="errorBean" type="any";       
 	property name="statusCode" type="numeric";
+	property name="messageBeans" type="array";
+	property name="errorMessageBeans" type="array";
 	
 	public any function init() {
 		this.setData("");
-		this.setMessage("");
-		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
+		this.setMessageBeans([]);
+		this.setErrorBeans([]);
 		this.setStatusCode(0);
 		return this;
 	} 
 	
 	public boolean function hasErrors() {
-		return getErrorBean().hasErrors();
+		if(arrayLen(getErrorMessageBeans())) {
+			return true;
+		}
+		
+		return false;
 	}   
 
 } 

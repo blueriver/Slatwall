@@ -40,7 +40,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 	property name="entityName" type="string";
 	property name="DAO" type="any";
-	property name="Validator" type="Slatwall.com.utility.Validator";
+	property name="validationService" type="any";
 	property name="fileService" type="any";
 	
 	public any function init() {

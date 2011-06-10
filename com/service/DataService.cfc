@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Data Populator" {
+component displayname="Data Service" {
 	
 	public any function init() {
 		return this;

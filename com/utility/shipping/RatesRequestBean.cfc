@@ -36,33 +36,43 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-	property name="settingService" type="any";
+component accessors="true" output="false" {
 
-	public any function savePaymentMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") ) {
-			// save paymentMethod-specific settings
-			for(var item in arguments.data) {
-				if(!isObject(arguments.data[item]) && listFirst(item,"_") == "paymentMethod") {
-					var setting = getSettingService().getBySettingName(item);
-					setting.setSettingName(item);
-					setting.setSettingValue(arguments.data[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		return save(argumentcollection=arguments);
+	property name="shippingItemBeans" type="array";
+	property name="messageBeans" type="array";
+	property name="errorMessageBeans" type="array";
+	property name="rawRequestData" type="any";
+	property name="rawResponseData" type="any";
+	
+	public any function init() {
+		setMethodRateResponseBeans([]);
+		setMessageBeans([]);
+		setErrorMessageBeans([]);
 	}
 	
-	public any function populateAndValidateOrderPayment(required any orderPayment, struct data={}) {
-		arguments.orderPayment.populate(arguments.data);
-		getValidationService().validateObject(entity=arguments.orderPayment);
-		
-		return arguments.orderPayment;
+	public any function getNewMethodRateResponseBean() {
+		return new MethodRateResponseBean(); 
 	}
 	
-	public boolean function processPayment() {
-		return true;
+	public any function addMethodRateResponseBean(required any methodRateResponseBean) {
+		arrayAppend(getMethodRateResponseBeans(), arguments.methodRateResponseBean);
 	}
+	
+	public any function getNewMessageBean() {
+		return new MessageBean(); 
+	}
+	
+	public any function addMessageBean(required any messageBean) {
+		arrayAppend(getMessageBeans(), arguments.messageBean);
+	}
+	
+	public any function addErrorMessageBean(required any messageBean) {
+		arrayAppend(getErrorMessageBeans(), arguments.messageBean);
+	}
+	
+	public boolean function hasErrors() {
+		return arrayLen(getErrorMessageBeans());
+	}
+	
 }

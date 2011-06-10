@@ -58,42 +58,42 @@ component extends="BaseService" accessors="true" output="false" {
 		var country = arguments.address.getCountry();
 		
 		if(country.getStreetAddressRequiredFlag()) {
-			var error = getValidator().validateValue(rule="required",objectValue=arguments.address.getStreetAddress(),objectName="streetAddress",message=rbKey("entity.address.streetAddress_validateRequired"));
+			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getStreetAddress(),objectName="streetAddress",message=rbKey("entity.address.streetAddress_validateRequired"));
 			if( !structIsEmpty(error) ) {
 				arguments.address.addError(argumentCollection=error);
 			}
 		}
 		
 		if(country.getStreet2AddressRequiredFlag()) {
-			var error = getValidator().validateValue(rule="required",objectValue=arguments.address.getStreet2Address(),objectName="street2Address",message=rbKey("entity.address.street2Address_validateRequired"));
+			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getStreet2Address(),objectName="street2Address",message=rbKey("entity.address.street2Address_validateRequired"));
 			if( !structIsEmpty(error) ) {
 				arguments.address.addError(argumentCollection=error);
 			}
 		}
 		
 		if(country.getLocalityRequiredFlag()) {
-			var error = getValidator().validateValue(rule="required",objectValue=arguments.address.getLocality(),objectName="locality",message=rbKey("entity.address.locality_validateRequired"));
+			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getLocality(),objectName="locality",message=rbKey("entity.address.locality_validateRequired"));
 			if( !structIsEmpty(error) ) {
 				arguments.address.addError(argumentCollection=error);
 			}
 		}
 		
 		if(country.getCityRequiredFlag()) {
-			var error = getValidator().validateValue(rule="required",objectValue=arguments.address.getCity(),objectName="city",message=rbKey("entity.address.city_validateRequired"));
+			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getCity(),objectName="city",message=rbKey("entity.address.city_validateRequired"));
 			if( !structIsEmpty(error) ) {
 				arguments.address.addError(argumentCollection=error);
 			}
 		}
 		
 		if(country.getStateCodeRequiredFlag()) {
-			var error = getValidator().validateValue(rule="required",objectValue=arguments.address.getStateCode(),objectName="stateCode",message=rbKey("entity.address.stateCode_validateRequired"));
+			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getStateCode(),objectName="stateCode",message=rbKey("entity.address.stateCode_validateRequired"));
 			if( !structIsEmpty(error) ) {
 				arguments.address.addError(argumentCollection=error);
 			}
 		}
 		
 		if(country.getPostalCodeRequiredFlag()) {
-			var error = getValidator().validateValue(rule="required",objectValue=arguments.address.getPostalCode(),objectName="postalCode",message=rbKey("entity.address.postalCode_validateRequired"));
+			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getPostalCode(),objectName="postalCode",message=rbKey("entity.address.postalCode_validateRequired"));
 			if( !structIsEmpty(error) ) {
 				arguments.address.addError(argumentCollection=error);
 			}
