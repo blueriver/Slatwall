@@ -39,13 +39,13 @@ Notes:
 
 component extends="Slatwall.com.utility.ResponseBean" accessors="true" output="false" {
 
-	property name="methodRateResponseBeans" type="array";
+	property name="ShippingMethodRateResponseBeans" type="array";
 	
 	public any function init() {
 		setMethodRateResponseBeans([]);
 	}
 	
-	public any function addMethodRateResponse(struct data={}) {
+	public any function addShippingMethodRate(struct data={}) {
 		arrayAppend(getMethodRateResponseBeans(), new MethodRateResponseBean(arguments.data));
 	}
 	

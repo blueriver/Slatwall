@@ -51,8 +51,10 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		
 		// Populate all keys passed in
 		for(var key in arguments) {
-			var setterMethod = this["set" & key];
-			setterMethod(arguments[key]);
+			if(structKeyExists(this, "set#key#")) {
+				var setterMethod = this["set" & key];
+				setterMethod(arguments[key]);	
+			}
 		}
 		
 		return this;
@@ -62,7 +64,7 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		return getErrorBean().hasErrors();
 	}
 	
-	public any function addMessage(struct data={}) {
+	public void function addMessage(struct data={}) {
 		arrayAppend(getMessageBeans(), new messageBean(arguments.data));
 	}
 	

@@ -56,7 +56,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public array function populateOrderShippingMethodOptions(required any orderShipping) {
+	public array function populateOrderShippingMethodOptions(required Slatwall.com.entity.OrderFulfillmentShipping orderFulfillmentShipping) {
 		var shippingMethods = getDAO().list(entityName="SlatwallShippingMethod");
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
@@ -76,7 +76,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
 			
 			// Query the Provider For Rates
-			var ratesResponseBean = providerService.getRates(arguments.orderShipping);
+			var ratesRequestBean = new Slatwall.com.utility.shipping.RatesRequestBean();
+			ratesRequestBean.setShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
+			ratesRequestBean.setShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
+			
+			// TODO: This is a hack until we setup each order fulfillment to have it's own "ship from" 
+			ratesRequestBean.setShipFromCompany("Nytro Multisport");
+			ratesRequestBean.setShipFromStreetAddress("137 2ND Street");
+			ratesRequestBean.setShipFromCity("Encinitas");
+			ratesRequestBean.setShipFromStateCode("CA");
+			ratesRequestBean.setShipFromPostalCode("92024");
+			ratesRequestBean.setShipFromCountryCode("US");
+			
+			//ratesRequestBean.setShipFromWithAddress();
+			
+			// END HACK
+			
+			var ratesResponseBean = providerService.getRates(ratesRequestBean);
 			
 			// Loop Over Shipping Methods
 			for(var m=1; m<=arrayLen(shippingMethods); m++) {

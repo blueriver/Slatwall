@@ -45,8 +45,10 @@ component output="false" accessors="true" {
 		
 		// Populate all keys passed in
 		for(var key in arguments) {
-			var setterMethod = this["set" & key];
-			setterMethod(arguments[key]);
+			if(structKeyExists(this, "set#key#")) {
+				var setterMethod = this["set" & key];
+				setterMethod(arguments[key]);
+			}
 		}
 		
 		return this;

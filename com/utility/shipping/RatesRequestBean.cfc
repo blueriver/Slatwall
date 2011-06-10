@@ -39,28 +39,100 @@ Notes:
 
 component accessors="true" output="false" extends="Slatwall.com.utility.RequestBean" {
 
-	property name="shipToName" type="string";
-	property name="shipToCompany" type="string";
-	property name="shipToStreetAddress" type="string";
-	property name="shipToStreet2Address" type="string";
-	property name="shipToLocality" type="string";
-	property name="shipToCity" type="string";
-	property name="shipToState" type="string";
-	property name="shipToPostalCode" type="string";
+	property name="shipToName" type="string" default="";
+	property name="shipToCompany" type="string" default="";
+	property name="shipToStreetAddress" type="string" default="";
+	property name="shipToStreet2Address" type="string" default="";
+	property name="shipToLocality" type="string" default="";
+	property name="shipToCity" type="string" default="";
+	property name="shipToStateCode" type="string" default="";
+	property name="shipToPostalCode" type="string" default="";
+	property name="shipToCountryCode" type="string" default="";
 	
-	property name="shipFromName" type="string";
-	property name="shipFromCompany" type="string";
-	property name="shipFromStreetAddress" type="string";
-	property name="shipFromStreet2Address" type="string";
-	property name="shipFromLocality" type="string";
-	property name="shipFromCity" type="string";
-	property name="shipFromState" type="string";
-	property name="shipFromPostalCode" type="string";
+	property name="shipFromName" type="string" default="";
+	property name="shipFromCompany" type="string" default="";
+	property name="shipFromStreetAddress" type="string" default="";
+	property name="shipFromStreet2Address" type="string" default="";
+	property name="shipFromLocality" type="string" default="";
+	property name="shipFromCity" type="string" default="";
+	property name="shipFromStateCode" type="string" default="";
+	property name="shipFromPostalCode" type="string" default="";
+	property name="shipFromCountryCode" type="string" default="";
 	
 	property name="shippingItemRequestBeans" type="array";
 	
-	public any function addShippingItem(struct data={}) {
-		return arrayAppend(getShippingItemRequestBeans(), new ShippingItemRequestBean(argument.data));
+	public any function init() {
+		variables.shippingItemRequestBeans = [];
+		
+		return super.init();
+	}
+	
+	public void function addShippingItem(struct data={}) {
+		arrayAppend(getShippingItemRequestBeans(), new ShippingItemRequestBean(arguments.data));
+	}
+	
+	public void function setShipToWithAddress(required Slatwall.com.entity.Address address) {
+		if(!isNull(arguments.address.getName())) {
+			setShipToName(arguments.address.getName());
+		}
+		if(!isNull(arguments.address.getCompany())) {
+			setShipToCompany(arguments.address.getCompany());
+		}
+		if(!isNull(arguments.address.getStreetAddress())) {
+			setShipToStreetAddress(arguments.address.getStreetAddress());
+		}
+		if(!isNull(arguments.address.getStreet2Address())) {
+			setShipToStreet2Address(arguments.address.getStreet2Address());
+		}
+		if(!isNull(arguments.address.getLocality())) {
+			setShipToLocality(arguments.address.getLocality());
+		}
+		if(!isNull(arguments.address.getCity())) {
+			setShipToCity(arguments.address.getCity());
+		}
+		if(!isNull(arguments.address.getStateCode())) {
+			setShipToStateCode(arguments.address.getStateCode());
+		}
+		if(!isNull(arguments.address.getCountryCode())) {
+			setShipToCountryCode(arguments.address.getCountryCode());
+		}
+	}
+	
+	public void function setShipFromWithAddress(required Slatwall.com.entity.Address address) {
+		if(!isNull(arguments.address.getName())) {
+			setShipFromName(arguments.address.getName());
+		}
+		if(!isNull(arguments.address.getCompany())) {
+			setShipFromCompany(arguments.address.getCompany());
+		}
+		if(!isNull(arguments.address.getStreetAddress())) {
+			setShipFromStreetAddress(arguments.address.getStreetAddress());
+		}
+		if(!isNull(arguments.address.getStreet2Address())) {
+			setShipFromStreet2Address(arguments.address.getStreet2Address());
+		}
+		if(!isNull(arguments.address.getLocality())) {
+			setShipFromLocality(arguments.address.getLocality());
+		}
+		if(!isNull(arguments.address.getCity())) {
+			setShipFromCity(arguments.address.getCity());
+		}
+		if(!isNull(arguments.address.getStateCode())) {
+			setShipFromStateCode(arguments.address.getStateCode());
+		}
+		if(!isNull(arguments.address.getCountryCode())) {
+			setShipFromCountryCode(arguments.address.getCountryCode());
+		}
+	}
+	
+	public void function setShippingItemsWithOrderFulfillmentItems(required array orderFulfillmentItems) {
+		for(var i=1; i <= arrayLen(arguments.orderFulfillmentItems); i++) {
+			addShippingItem(
+				value=arguments.orderFulfillmentItems[i].getSku().getPrice(),
+				weight=arguments.orderFulfillmentItems[i].getSku().getShippingWeight(),
+				quantity=arguments.orderFulfillmentItems[i].getQuantity()
+			);
+		}
 	}
 	
 }
