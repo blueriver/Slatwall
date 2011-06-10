@@ -50,13 +50,13 @@ Notes:
 		<form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveFulfillment" method="post">
 			<div class="shippingAddress">
 				<h4>Shipping Address</h4>
-				<cf_SlatwallAddressDisplay address="#local.address#" edit="true">
+				<cf_SlatwallAddressDisplay address="#local.address#" edit="#params.edit#">
 				<input type="hidden" name="orderFulfillmentID" value="#params.orderFulfillment.getOrderFulfillmentID()#" />
 			</div>
 			<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
 				<div class="shippingMethod">
 					<h4>Shipping Method</h4>
-					<cf_SlatwallShippingMethodDisplay orderFulfillmentShipping="#params.orderFulfillment#">
+					<cf_SlatwallShippingMethodDisplay orderFulfillmentShipping="#params.orderFulfillment#" edit="#params.edit#">
 				</div>
 			</cfif>
 			<button type="submit">Save & Continue</button>

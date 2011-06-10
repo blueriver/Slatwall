@@ -48,7 +48,11 @@ Notes:
 					<div class="fulfillmentOptions">
 						<cfset params = structNew() />
 						<cfset params.orderFulfillment = local.fulfillment />
-						<cfset params.edit = true />
+						<cfif listFind(rc.orderRequirementsList, local.fulfillment.getOrderFulfillmentID()) or rc.edit eq local.fulfillment.getOrderFulfillmentID()>
+							<cfset params.edit = true />
+						<cfelse>
+							<cfset params.edit = false />
+						</cfif>
 						#view("frontend:checkout/fulfillment/#local.fulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", params)# 
 					</div>
 					<cfif arrayLen($.slatwall.cart().getOrderFulfillments()) gt 1>
