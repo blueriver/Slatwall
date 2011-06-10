@@ -66,6 +66,11 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 		return true;
 	}
 	
+	//@ hint this method fires any time that there is a change to the orderFulfillmentItems.  It is designed to be overridden by the fulfillment method specific entities to adjust accordingly
+	public void function orderFulfillmentItemsChanged() {
+		
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)

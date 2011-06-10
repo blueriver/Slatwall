@@ -42,7 +42,7 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	property name="totalCost" ormtype="float";
 	property name="estimatedArrivalDate" ormtype="date";
 	
-	property name="orderFulfillmentShipping" cfc="OrderFulfillmentShipping" fieldtype="many-to-one" fkcolumn="orderFulfilmentID";
+	property name="orderFulfillmentShipping" cfc="OrderFulfillmentShipping" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
 	/******* Association management methods for bidirectional relationships **************/

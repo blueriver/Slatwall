@@ -167,12 +167,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Set the address in the order Fulfillment
 			arguments.orderFulfillment.setShippingAddress(address);
 			
-			// Populate, Validate & Save Address
-			address = getAddressService().saveAddress(address, arguments.data);
+			// Populate Address And check if it has changed
+			var serializedAddressBefore = address.simpleValueSerialize();
+			address.populate(data);
+			var serializedAddressAfter = address.simpleValueSerialize();
+			
+			if(serializedAddressBefore != serializedAddressAfter) {
+				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
+			}
+			
+			// Validate & Save Address
+			address = getAddressService().saveAddress(address);
 			
 			// Check for a shipping method option selected
 			if(structKeyExists(arguments.data, "orderShippingMethodOptionID")) {
-				var methodOption = getOrderShippingMethodOption(arguments.data.orderShippingMethodOptionID);
+				var methodOption = this.getOrderShippingMethodOption(arguments.data.orderShippingMethodOptionID);
 				
 				// Verify that the method option is one for this fulfillment
 				if(arguments.orderFulfillment.hasOrderShippingMethodOption(methodOption)) {
@@ -182,13 +191,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 				
 			}
+			
+			// Validate the order Fulfillment
+			this.validateOrderFulfillmentShipping(arguments.orderFulfillment);
 		}
 		
-		// Validate the order Fulfillment
-		validateOrderFulfillment(arguments.orderFulfillment);
-		
 		// Save the order Fulfillment
-		getDAO().save(arguments.orderFulfillment());
+		getDAO().save(arguments.orderFulfillment);
 	}
 	
 	
