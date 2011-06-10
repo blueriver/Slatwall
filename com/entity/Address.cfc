@@ -68,16 +68,17 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		return super.init();
 	}
 	
-	public string function getFullAddress() {
+	public string function getFullAddress(string delimiter = ", ") {
 		var address = "";
 		address = listAppend(address,getCompany());
 		address = listAppend(address, getStreetAddress());
 		address = listAppend(address,getStreet2Address());
-		address = listAppend(address,getCity(),", ");
+		address = listAppend(address,getCity());
 		address = listAppend(address,getStateCode());
 		address = listAppend(address,getPostalCode());
 		address = listAppend(address,getCountryCode());
-		address = listChangeDelims(address,", ",",","no");
+		// this will remove any empty elements and insert any passed-in delimiter
+		address = listChangeDelims(address,arguments.delimiter,",","no");
 		return address;
 	}
 	
