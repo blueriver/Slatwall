@@ -39,8 +39,32 @@ Notes:
 component displayname="Country" entityname="SlatwallCountry" table="SlatwallCountry" persistent="true" extends="BaseEntity" {
 	
 	// Persistant Properties
-	property name="countryCode" type="string" fieldtype="id";
-	property name="countryName" type="string";
+	property name="countryCode" ormtype="string" fieldtype="id";
+	property name="countryName" ormtype="string";
+	property name="activeFlag" ormtype="boolean";
 	
+	property name="streetAddressLabel" ormtype="string";
+	property name="streetAddressShowFlag" ormtype="boolean";
+	property name="streetAddressRequiredFlag" ormtype="boolean";
+	
+	property name="street2AddressLabel" ormtype="string";
+	property name="street2AddressShowFlag" ormtype="boolean";
+	property name="street2AddressRequiredFlag" ormtype="boolean";
+	
+	property name="localityLabel" ormtype="string";
+	property name="localityShowFlag" ormtype="boolean";
+	property name="localityRequiredFlag" ormtype="boolean";
+	
+	property name="cityLabel" ormtype="string";
+	property name="cityShowFlag" ormtype="boolean";
+	property name="cityRequiredFlag" ormtype="boolean";
+	
+	property name="stateCodeLabel" ormtype="string";
+	property name="stateCodeShowFlag" ormtype="boolean";
+	property name="stateCodeRequiredFlag" ormtype="boolean";
+	
+	property name="postalCodeLabel" ormtype="string";
+	property name="postalCodeShowFlag" ormtype="boolean";
+	property name="postalCodeRequiredFlag" ormtype="boolean";
 	
 }

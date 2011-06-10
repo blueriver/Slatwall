@@ -36,70 +36,85 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="string" default="" />
-<cfparam name="rc.orderRequirementsList" type="string" default="" />
+<cfparam name="params.orderFulfillment" type="any" />
+<cfparam name="params.edit" type="boolean" />
+
+<cfif not isNull(params.orderFulfillment.getShippingAddress())>
+	<cfset local.address = params.orderFulfillment.getShippingAddress() />
+<cfelse>
+	<cfset local.address = $.slatwall.getService("addressService").newAddress() />
+</cfif>
 
 <cfoutput>
 	<div class="svocheckoutfulfillmentshipping">
-		<div class="shippingAddress">
-		</div>
-		<div class="shippingMethod">
-		</div>
-		
-			<div id="checkoutShippingContent" class="contentBlock">
-				<cfif listFind(rc.orderRequirementsList, 'shippingAddress') or rc.edit eq "shippingAddress">
-					<form name="orderShipping" method="post" action="?slatAction=frontend:checkout.saveShippingAddress">
-						<div class="shippingAddress">
-							<h4>Shipping Address</h4>
-							<cf_SlatwallAddressForm address="#rc.shippingAddress#">
-						</div>
-						<input type="hidden" name="shippingAddressID" value="#rc.shippingAddress.getAddressID()#" />
-						<cf_ActionCaller action="frontend:checkout.saveShippingAddress" type="submit" />
-					</form>
-				<cfelse>
-					<div class="shippingAddress">
-						<dt>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getName()#</dt>
-						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCompany()#</dd>
-						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStreetAddress()#</dd>
-						<dd>#$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getCity()# #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getStateCode()#, #$.slatwall.cart().getOrderFulfillments()[1].getShippingAddress().getPostalCode()#</dd>
-					</div>
-				</cfif>
+		<form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveFulfillment" method="post">
+			<div class="shippingAddress">
+				<h4>Shipping Address</h4>
+				<cf_SlatwallAddressDisplay address="#local.address#" edit="true">
+				<input type="hidden" name="orderFulfillmentID" value="#params.orderFulfillment.getOrderFulfillmentID()#" />
 			</div>
-		</cfif>
-	</div>
-</cfoutput>
-
---->
-
-<!---
-	<div class="svocheckoutshippingmethod">
-	<h3 id="checkoutShippingMethodTitle" class="titleBlick">Shipping Method <cfif not listFind(rc.orderRequirementsList, "shippingMethod")> <a href="?edit=shippingMethod">Edit</a></cfif></h3>
-	<cfif not listFind(rc.orderRequirementsList, "account") and not listFind(rc.orderRequirementsList, "shippingAddress") and (rc.edit eq "" || rc.edit eq "shippingMethod")>
-		<div id="checkoutShippingMethodContent" class="contentBlock">
-			<cfif listFind(rc.orderRequirementsList, "shippingMethod") or rc.edit eq "shippingMethod">
-				<form action="?slatAction=frontend:checkout.saveshippingmethod" method="post">
-				<cfset $.slatwall.cart().getOrderFulfillments()[1].populateOrderShippingMethodOptionsIfEmpty() />
-				<cfset local.methodOptions = $.slatwall.cart().getOrderFulfillments()[1].getOrderShippingMethodOptions() />
-				<cfloop array="#local.methodOptions#" index="option">
-					<cfset local.optionSelected = false />
-					<cfif $.slatwall.cart().hasValidOrderShippingMethod() && $.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodID() eq option.getOrderShippingMethodOptionID()>
-						<cfset local.optionSelected = true />
-					</cfif>
-					<dl>
-						<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>selected="selected"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
-						<dd>#DollarFormat(option.getTotalCost())#</dd>
-					</dl>
-				</cfloop>
-					<cf_ActionCaller action="frontend:checkout.saveShippingMethod" type="submit" />
-				</form>
-			<cfelse>
-				<dl class="shippingMethod">
-					<dt>#$.slatwall.cart().getOrderShippings()[1].getShippingMethod().getShippingMethodName()#</dt>
-					<dd>#$.slatwall.cart().getOrderShippings()[1].getShippingCharge()#</dd>
-				</dl>
+			<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
+				<div class="shippingMethod">
+					<h4>Shipping Method</h4>
+					<cf_SlatwallShippingMethodDisplay orderFulfillmentShipping="#params.orderFulfillment#">
+				</div>
 			</cfif>
-		</div>
-	</cfif>
+			<button type="submit">Save & Continue</button>
+		</form>
+		<!---
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery('form[name="fulfillmentShipping"]').submit(function(e) {
+					if(!jQuery('input[name=shippingMethodOptionID]').size()) {
+						e.preventDefault();
+						
+						// Save Order Fulfilling Address and Update That Element
+						jQuery.ajax({
+							type: "PUT",
+							url: '/plugins/Slatwall/api/index.cfm/AddressMember/',
+							data: {
+								addressID : jQuery('input[name="addressID"]').val(),
+								countryCode : jQuery('select[name="countryCode"]').val(),
+								name : jQuery('input[name="name"]').val(),
+								company : jQuery('input[name="company"]').val(),
+								streetAddress : jQuery('input[name="streetAddress"]').val(),
+								street2Address : jQuery('input[name="street2Address"]').val(),
+								city : jQuery('input[name="city"]').val(),
+								stateCode : jQuery('select[name="slateCode"]').val(),
+								postalCode : jQuery('input[name="postalCode"]').val()
+							},
+							dataType: "json",
+							context: document.body,
+							success: function(data) {
+								jQuery('div.addressForm').replaceWith(data);
+							}
+						});
+						
+						jQuery.ajax({
+							type: "post",
+							url: '/plugins/Slatwall/api/index.cfm/ShippingMethodDisplay/',
+							data: {
+								orderFulfillmentID : '#params.orderFulfillment.getOrderFulfillmentID()#',
+								countryCode : jQuery('select[name="countryCode"]').val(),
+								name : jQuery('input[name="name"]').val(),
+								company : jQuery('input[name="company"]').val(),
+								streetAddress : jQuery('input[name="streetAddress"]').val(),
+								street2Address : jQuery('input[name="street2Address"]').val(),
+								city : jQuery('input[name="city"]').val(),
+								stateCode : jQuery('select[name="slateCode"]').val(),
+								postalCode : jQuery('input[name="postalCode"]').val()
+							},
+							dataType: "json",
+							context: document.body,
+							success: function(data) {
+								jQuery('div.addressForm').replaceWith(data);
+							}
+						});
+					}
+				});
+			});
+		</script>
+		--->
 	</div>
---->
 </cfoutput>
+

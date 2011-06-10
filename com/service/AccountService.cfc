@@ -73,7 +73,7 @@ component extends="BaseService" accessors="true" output="false" {
 		arguments.account.populate(arguments.data);
 		
 		// Validate Account
-		getValidator().validateObject(entity=arguments.account);
+		getValidationService().validateObject(entity=arguments.account);
 		
 		// Account Email
 		if( structKeyExists(arguments.data, "emailAddress") ) {
@@ -88,7 +88,7 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Validate This Object
-			getValidator().validateObject(entity=accountEmailAddress);
+			getValidationService().validateObject(entity=accountEmailAddress);
 			if(accountEmailAddress.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryEmailAddress", "The Account E-Mail Address Has Errors");
 			}
@@ -107,7 +107,7 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Validate This Object
-			getValidator().validateObject(entity=accountPhoneNumber);
+			getValidationService().validateObject(entity=accountPhoneNumber);
 			if(accountPhoneNumber.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryPhoneNumber", "The Account Phone Number Has Errors");
 			}

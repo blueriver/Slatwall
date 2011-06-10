@@ -47,7 +47,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		// if this is an option, make sure the option code is unique
 		if( arguments.entity.getClassName() =="SlatwallOption" ) {
 			var checkOptionCode = getDAO().isDuplicateOptionCode(arguments.entity);
-			var optionCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
+			var optionCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
 			if( !structIsEmpty(optionCodeError) ) {
 				arguments.entity.addError(argumentCollection=optionCodeError);
 			}
@@ -77,7 +77,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	public any function delete(required any option) {
 		if(arguments.option.hasSkus()) {
-			getValidator().setError(entity=arguments.option,errorName="delete",rule="hasSkus");
+			getValidationService().setError(entity=arguments.option,errorName="delete",rule="hasSkus");
 		} else {
 			removeImage(arguments.option);
 		}
@@ -86,7 +86,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 	
 	public any function deleteOptionGroup(required any optionGroup) {
 		if(arguments.optionGroup.hasOption()) {
-			getValidator().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
+			getValidationService().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
 		} else {
 			removeImage(arguments.optionGroup);
 		}
@@ -141,7 +141,7 @@ component extends="slatwall.com.service.BaseService" accessors="true" {
 		} else {
 			// set error in the option group object
 			var errorName = arguments.entity.getClassName() == "SlatwallOption" ? "optionImage" : "optionGroupImage";
-			getValidator().setError(entity=arguments.entity,errorName=errorName,rule="imageFile");
+			getValidationService().setError(entity=arguments.entity,errorName=errorName,rule="imageFile");
 		}	
 	}	
 }

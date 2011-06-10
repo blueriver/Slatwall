@@ -44,15 +44,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function delete(required any sku) {
 		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
-			getValidator().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
+			getValidationService().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
 		}
 		
 		if(arguments.sku.getSkuID() == arguments.sku.getProduct().getDefaultSku().getSkuID()) {
-			getValidator().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
+			getValidationService().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
 		}
 		
 		if(arguments.sku.getOrderedFlag() == true) {
-			getValidator().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
+			getValidationService().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
 		}
 		if(!arguments.sku.hasErrors()) {
 			arguments.sku.removeProduct();
@@ -168,7 +168,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if( isDuplicate == false ) {
 			isDuplicate = getDAO().isDuplicateProperty("skuCode", arguments.sku);
 		}
-		var skuCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
+		var skuCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
 		if( !structIsEmpty(skuCodeError) ) {
 			arguments.sku.addError(argumentCollection=skuCodeError);
 			getService("requestCacheService").setValue("ormHasErrors", true);

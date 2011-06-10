@@ -37,21 +37,35 @@ Notes:
 
 */
 component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" {
+	
 	property name="data" type="any";
-	property name="message" type="any";
-	property name="errorBean" type="any";       
 	property name="statusCode" type="numeric";
+	property name="errorBean" type="any";
+	property name="messageBeans" type="array";
 	
 	public any function init() {
-		this.setData("");
-		this.setMessage("");
-		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
+		this.setData({});
+		this.setMessageBeans([]);
+		this.setErrorBean(new Slatwall.com.utility.errorBean());
 		this.setStatusCode(0);
+		
+		// Populate all keys passed in
+		for(var key in arguments) {
+			if(structKeyExists(this, "set#key#")) {
+				var setterMethod = this["set" & key];
+				setterMethod(arguments[key]);	
+			}
+		}
+		
 		return this;
 	} 
 	
 	public boolean function hasErrors() {
 		return getErrorBean().hasErrors();
-	}   
-
+	}
+	
+	public void function addMessage(struct data={}) {
+		arrayAppend(getMessageBeans(), new messageBean(arguments.data));
+	}
+	
 } 

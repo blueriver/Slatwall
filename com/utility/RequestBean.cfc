@@ -36,10 +36,22 @@
 Notes:
 
 */
-component accessors="true" {
-
-	property name="messageCode" type="string";
-	property name="messageType" type="string";
-	property name="message" type="string";
+component output="false" accessors="true" {
+	
+	property name="data" type="any";
+	
+	public any function init() {
+		this.setData({});
+		
+		// Populate all keys passed in
+		for(var key in arguments) {
+			if(structKeyExists(this, "set#key#")) {
+				var setterMethod = this["set" & key];
+				setterMethod(arguments[key]);
+			}
+		}
+		
+		return this;
+	} 
 	
 }

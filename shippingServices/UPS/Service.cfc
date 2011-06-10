@@ -66,7 +66,7 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		return this;
 	}
 	
-	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
+	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required Slatwall.com.utility.shipping.RatesRequestBean ratesRequestBean) {
 		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
 		
 		// Insert Custom Logic Here

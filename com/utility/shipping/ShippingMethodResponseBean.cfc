@@ -33,28 +33,13 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-	Notes:
-	
-*/
+Notes:
 
-component extends="taffy.core.api" {
-	
-	// This file gets updated by the onApplicationLoad of the slatwall plugin.  It doesn't exist until the app is reloaded
-	include "../../../config/applicationSettings.cfm";
-	include "../../../config/mappings.cfm";
-	include "../../mappings.cfm";
-	
-	this.mappings["/taffy"] = getDirectoryFromPath(getCurrentTemplatePath()) & "taffy";
-	
-	//use this instead of onApplicationStart()
-	public void function applicationStartEvent(){
-		
-	}
-	
-	//use this instead of onRequestStart()
-	public void function requestStartEvent(){
-		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		slatwallFW.onRequestStart(cgi.script_nume);
-	}
+*/
+component accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
+
+	property name="shippingProviderMethod" type="string";
+	property name="totalCost" type="numeric";
+	property name="estimatedArrivalDate" type="date";
 	
 }

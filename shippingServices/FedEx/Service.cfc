@@ -66,19 +66,19 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		return this;
 	}
 	
-	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required any orderShipping) {
+	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required Slatwall.com.utility.shipping.RatesRequestBean ratesRequestBean) {
 		
 		// Insert Custom Logic Here
 		var totalItemsWeight = 0;
-		var totalItemsPrice = 0;
+		var totalItemsValue = 0;
 		
 		// Loop over all items to get a price and weight for shipping
-		for(var i=1; i<=arrayLen(arguments.orderShipping.getOrderShippingItems()); i++) {
-			if(!isNull(arguments.orderShipping.getOrderShippingItems()[i].getSku().getShippingWeight()) && isNumeric(arguments.orderShipping.getOrderShippingItems()[i].getSku().getShippingWeight())) {
-				totalItemsWeight +=	arguments.orderShipping.getOrderShippingItems()[i].getSku().getShippingWeight();
+		for(var i=1; i<=arrayLen(arguments.ratesRequestBean.getShippingItemRequestBeans()); i++) {
+			if(isNumeric(arguments.ratesRequestBean.getShippingItemRequestBeans()[i].getWeight())) {
+				totalItemsWeight +=	arguments.ratesRequestBean.getShippingItemRequestBeans()[i].getWeight();
 			}
 			 
-			totalItemsPrice += arguments.orderShipping.getOrderShippingItems()[i].getSku().getPrice();
+			totalItemsValue += arguments.ratesRequestBean.getShippingItemRequestBeans().getValue();
 		}
 		
 		if(totalItemsWeight < 1) {
@@ -108,39 +108,31 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		var xmlResponse = XmlParse(httpRequest.send().getPrefix().fileContent);
 		
 		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
-		ratesResponseBean.setRawRequestData(XmlParse(xmlPacket));
-		ratesResponseBean.setRawResponseData(xmlResponse);
+		ratesResponseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
+			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
-			var message = ratesResponseBean.getNewMessageBean();
-			message.setMessageCode("0");
-			message.setMessageType("Unexpected");
-			message.setMessage("An unexpected programming error occured, please notify system administrator.");
-			ratesResponseBean.addErrorMessageBean(message);
+			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
-			
 			// Log all messages from FedEx into the response bean
 			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
-				
-				var message = ratesResponseBean.getNewMessageBean();
-				message.setMessageCode(xmlResponse.RateReply.Notifications[i].Code.xmltext);
-				message.setMessageType(xmlResponse.RateReply.Notifications[i].Severity.xmltext);
-				message.setMessage(xmlResponse.RateReply.Notifications[i].Message.xmltext);
+				ratesResponseBean.addMessage(
+					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
+					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
+					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
+				);
 				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					ratesResponseBean.addErrorMessageBean(message);
-				} else {
-					ratesResponseBean.addMessageBean(message);
+					ratesResponseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
 				}
-				
 			}
 			
 			if(!ratesResponseBean.hasErrors()) {
 				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
-					var rate = ratesResponseBean.getNewMethodRateResponseBean();
-					rate.setShippingProviderMethod(xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext);
-					rate.setTotalCost(xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext);
-					ratesResponseBean.addMethodRateResponseBean(rate);
+					ratesResponseBean.addShippingMethodRate(
+						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
+						totalCost=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
+					);
 				}
 			}
 		}

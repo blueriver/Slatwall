@@ -40,6 +40,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	property name="sessionService";
 	property name="paymentService";
+	property name="addressService";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
 		// Check to see if the order has a status
@@ -148,5 +149,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		
 		return orderRequirementsList;
+	}
+	
+	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
+		arguments.orderFulfillment.populate(arguments.data);
+		
+		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
+			if( isNull(arguments.orderFulfillment.getShippingAddress()) ) {
+				var address = getAddressService().newAddress();
+			} else {
+				var address = arguments.orderFulfillment.getShippingAddress();
+			}
+			
+			address = getAddressService().saveAddress(address, arguments.data);
+			arguments.orderFulfillment.setShippingAddress(address);
+		}
+		
 	}
 }

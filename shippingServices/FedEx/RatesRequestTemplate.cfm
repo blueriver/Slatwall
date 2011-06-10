@@ -38,12 +38,12 @@
 	            </ns:Address>
 	        </ns:Shipper>
 	        <ns:Recipient>
-	            <ns:Address>
-	                <ns:StreetLines>#arguments.orderShipping.getAddress().getStreetAddress()#</ns:StreetLines>
-	                <ns:City>#arguments.orderShipping.getAddress().getCity()#</ns:City>
-	                <ns:StateOrProvinceCode>#arguments.orderShipping.getAddress().getStateCode()#</ns:StateOrProvinceCode>
-	                <ns:PostalCode>#arguments.orderShipping.getAddress().getPostalCode()#</ns:PostalCode>
-	                <ns:CountryCode>#arguments.orderShipping.getAddress().getCountryCode()#</ns:CountryCode>
+	        	<ns:Address>
+	                <ns:StreetLines>#arguments.ratesRequestBean.getShipToStreetAddress()#</ns:StreetLines>
+	                <ns:City>#arguments.ratesRequestBean.getShipToCity()#</ns:City>
+	                <ns:StateOrProvinceCode>#arguments.ratesRequestBean.getShipToStateCode()#</ns:StateOrProvinceCode>
+	                <ns:PostalCode>#arguments.ratesRequestBean.getShipToPostalCode()#</ns:PostalCode>
+	                <ns:CountryCode>#arguments.ratesRequestBean.getShipToCountryCode()#</ns:CountryCode>
 					<ns:Residential>false</ns:Residential>
 	            </ns:Address>
 	        </ns:Recipient>

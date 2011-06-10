@@ -33,9 +33,14 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+	Notes:
+	
 */
+component extends="BaseResource" taffy_uri="/address/{addressID}/" {
 
-component accessors="true" output="false" {
+	public any function get(string addressID="") {
+		var address = getService("addressService").getAddress(arguments.addressID);
+		return representationOf(address).withStatus(200);
+	}
+	
 }

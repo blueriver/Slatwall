@@ -156,7 +156,7 @@ component extends="BaseService" accessors="true" {
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {
 			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+			var productCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
 			if( !structIsEmpty(productCodeError) ) {
 				arguments.product.addError(argumentCollection=productCodeError);
 			}
@@ -164,7 +164,7 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist
 		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		var filenameError = getService("validator").validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		var filenameError = getValidationService().validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
 		if( !structIsEmpty(filenameError) ) {
 			arguments.product.addError(argumentCollection=filenameError);
 		}
@@ -182,7 +182,7 @@ component extends="BaseService" accessors="true" {
 	public any function delete( required any product ) {
 		// make sure this product isn't in the order history
 		if( arguments.product.getOrderedFlag() ) {
-			getValidator().setError(entity=arguments.product,errorName="delete",rule="Ordered");
+			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
 		}
 		var deleteResponse = Super.delete( arguments.product );
 		if( !deleteResponse.hasErrors() ) {
@@ -243,7 +243,7 @@ component extends="BaseService" accessors="true" {
 	
 	public any function deleteProductType(required any productType) {
 		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
-			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
+			getValidationService().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
 		if( !arguments.productType.hasErrors() ) {
 	   		// clear cached product type tree so that it's refreshed on the next request
