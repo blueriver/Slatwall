@@ -37,42 +37,30 @@ Notes:
 
 */
 
-component accessors="true" output="false" {
+component accessors="true" output="false" extends="Slatwall.com.utility.RequestBean" {
 
-	property name="shippingItemBeans" type="array";
-	property name="messageBeans" type="array";
-	property name="errorMessageBeans" type="array";
-	property name="rawRequestData" type="any";
-	property name="rawResponseData" type="any";
+	property name="shipToName" type="string";
+	property name="shipToCompany" type="string";
+	property name="shipToStreetAddress" type="string";
+	property name="shipToStreet2Address" type="string";
+	property name="shipToLocality" type="string";
+	property name="shipToCity" type="string";
+	property name="shipToState" type="string";
+	property name="shipToPostalCode" type="string";
 	
-	public any function init() {
-		setMethodRateResponseBeans([]);
-		setMessageBeans([]);
-		setErrorMessageBeans([]);
-	}
+	property name="shipFromName" type="string";
+	property name="shipFromCompany" type="string";
+	property name="shipFromStreetAddress" type="string";
+	property name="shipFromStreet2Address" type="string";
+	property name="shipFromLocality" type="string";
+	property name="shipFromCity" type="string";
+	property name="shipFromState" type="string";
+	property name="shipFromPostalCode" type="string";
 	
-	public any function getNewMethodRateResponseBean() {
-		return new MethodRateResponseBean(); 
-	}
+	property name="shippingItemRequestBeans" type="array";
 	
-	public any function addMethodRateResponseBean(required any methodRateResponseBean) {
-		arrayAppend(getMethodRateResponseBeans(), arguments.methodRateResponseBean);
-	}
-	
-	public any function getNewMessageBean() {
-		return new MessageBean(); 
-	}
-	
-	public any function addMessageBean(required any messageBean) {
-		arrayAppend(getMessageBeans(), arguments.messageBean);
-	}
-	
-	public any function addErrorMessageBean(required any messageBean) {
-		arrayAppend(getErrorMessageBeans(), arguments.messageBean);
-	}
-	
-	public boolean function hasErrors() {
-		return arrayLen(getErrorMessageBeans());
+	public any function addShippingItem(struct data={}) {
+		return arrayAppend(getShippingItemRequestBeans(), new ShippingItemRequestBean(argument.data));
 	}
 	
 }

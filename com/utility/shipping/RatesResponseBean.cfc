@@ -45,12 +45,9 @@ component extends="Slatwall.com.utility.ResponseBean" accessors="true" output="f
 		setMethodRateResponseBeans([]);
 	}
 	
-	public any function getNewMethodRateResponseBean() {
-		return new MethodRateResponseBean(); 
+	public any function addMethodRateResponse(struct data={}) {
+		arrayAppend(getMethodRateResponseBeans(), new MethodRateResponseBean(arguments.data));
 	}
 	
-	public any function addMethodRateResponseBean(required any methodRateResponseBean) {
-		arrayAppend(getMethodRateResponseBeans(), arguments.methodRateResponseBean);
-	}
 	
 }

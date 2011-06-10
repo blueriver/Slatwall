@@ -37,5 +37,25 @@ Notes:
 
 */
 
-component accessors="true" output="false" {
+component output="false" accessors="true" extends="Slatwall.com.utility.RequestBean" {
+	
+	property name="value" type="numeric";
+	property name="weight" type="numeric";
+	property name="weightUnitOfMeasure" type="string" default="lb";
+	property name="cubicDimension" type="numeric";
+	property name="cubicUnitOfMeasure" type="string" default="ft";
+	property name="quantity" type="numeric";
+	
+	/* wightUnitOfMeasure Options
+		lb	= pounds
+		kg	= kilograms
+		oz	= ounces
+	*/
+	
+	/* cubicUnitOfMeasure Options
+		ft	= cubic feet
+		in	= cubic inch
+		m	= cubic meter
+		cm	= cubic centimeter
+	*/
 }

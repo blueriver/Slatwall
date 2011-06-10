@@ -40,4 +40,16 @@ component output="false" accessors="true" {
 	
 	property name="data" type="any";
 	
+	public any function init() {
+		this.setData({});
+		
+		// Populate all keys passed in
+		for(var key in arguments) {
+			var setterMethod = this["set" & key];
+			setterMethod(arguments[key]);
+		}
+		
+		return this;
+	} 
+	
 }

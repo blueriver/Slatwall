@@ -44,10 +44,17 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	property name="messageBeans" type="array";
 	
 	public any function init() {
-		this.setData("");
+		this.setData({});
 		this.setMessageBeans([]);
 		this.setErrorBean(new Slatwall.com.utility.errorBean());
 		this.setStatusCode(0);
+		
+		// Populate all keys passed in
+		for(var key in arguments) {
+			var setterMethod = this["set" & key];
+			setterMethod(arguments[key]);
+		}
+		
 		return this;
 	} 
 	
