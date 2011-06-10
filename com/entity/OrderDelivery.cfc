@@ -51,7 +51,6 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
 
 	// Special Related Discriminator Property
@@ -76,26 +75,10 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
        structDelete(variables,"order");
     }
     
-   	// OrderFulfillment (many-to-one)
-	
-	public void function setOrderFulfillment(required OrderFulfillment OrderFulfillment) {
-	   variables.orderFulfillment = arguments.orderFulfillment;
-	   if(!arguments.orderFulfillment.hasOrderDelivery(this)) {
-	       arrayAppend(arguments.orderFulfillment.getOrderDeliveries(),this);
-	   }
-	}
-	
-	public void function removeOrderFulfillment(required OrderFulfillment OrderFulfillment) {
-       var index = arrayFind(arguments.orderFulfillment.getOrderDeliveries(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.orderFulfillment.getOrderDeliveries(),index);
-       }    
-       structDelete(variables,"orderFulfillment");
-    }
 	
 	// OrderDeliveryItems (one-to-many)
 	
-	public void function addOrderDeliveryItem(required orderDeliveryItem orderDeliveryItem) {
+	public void function addOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
 	   arguments.orderDeliveryItem.setOrderDelivery(this);
 	}
 	

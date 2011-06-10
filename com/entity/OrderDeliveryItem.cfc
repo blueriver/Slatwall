@@ -64,6 +64,24 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
        }    
        structDelete(variables,"orderDelivery");
 	}
+	
+	// OrderItem (many-to-one)
+	
+	public void function setOrderItem(required OrderItem OrderItem) {
+	   variables.orderItem = arguments.orderItem;
+	   if(!arguments.orderItem.hasOrderDeliveryItem(this)) {
+	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(),this);
+	   }
+	}
+	
+	public void function removeOrderItem(required OrderItem OrderItem) {
+       var index = arrayFind(arguments.orderItem.getOrderDeliveryItems(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.orderItem.getOrderDeliveryItems(),index);
+       }    
+       structDelete(variables,"orderItem");
+	}	
+	
     /************   END Association Management Methods   *******************/
 	
 }

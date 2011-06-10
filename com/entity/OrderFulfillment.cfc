@@ -45,7 +45,6 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	// Related Object Properties
 	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillmentItems" validateRequired singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
-	property name="orderDeliveries" singularname="orderDelivery" fieldtype="one-to-many" cfc="OrderDelivery" fkcolumn="orderFulfillmentID" inverse="true" cascade="all";
 	
 	// Special Related Discriminator Property
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
@@ -94,21 +93,12 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
     
     // Order Fulfillment Items (one-to-many)
-    public void function addOrderFulfillmentItem(required OrderFulfillmentItem orderFulfillmentItem) {
-    	arguments.orderFulfillmentItem.addOrderFulfillment(this);
+    public void function addOrderFulfillmentItem(required OrderItem orderFulfillmentItem) {
+    	arguments.orderFulfillmentItem.setOrderFulfillment(this);
     }
     
-    public void function removeOrderFulfillmentItem(required OrderFulfillmentItem orderFulfillmentItem) {
+    public void function removeOrderFulfillmentItem(required OrderItem orderFulfillmentItem) {
     	arguments.orderFulfillmentItem.removeOrderFulfillment(this);
-    }
-    
-    // Order Deliveries (one-to-many)
-    public void function addOrderDelivery(required OrderDelivery OrderDelivery) {
-    	arguments.orderDelivery.addOrderFulfillment(this);
-    }
-    
-    public void function removeOrderDelivery(required OrderDelivery OrderDelivery) {
-    	arguments.orderDelivery.removeOrderFulfillment(this);
     }
     
     /******* END Association management methods */ 
