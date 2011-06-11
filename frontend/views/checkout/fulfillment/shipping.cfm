@@ -47,7 +47,7 @@ Notes:
 
 <cfoutput>
 	<div class="svocheckoutfulfillmentshipping">
-		<form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveFulfillment" method="post">
+		<cfif params.edit><form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveFulfillment" method="post"></cfif>
 			<div class="shippingAddress">
 				<h4>Shipping Address</h4>
 				<cf_SlatwallAddressDisplay address="#local.address#" edit="#params.edit#">
@@ -59,8 +59,10 @@ Notes:
 					<cf_SlatwallShippingMethodDisplay orderFulfillmentShipping="#params.orderFulfillment#" edit="#params.edit#">
 				</div>
 			</cfif>
+			<cfif params.edit>
 			<button type="submit">Save & Continue</button>
 		</form>
+		</cfif>
 		<!---
 		<script type="text/javascript">
 			jQuery(document).ready(function(){

@@ -48,7 +48,9 @@ Notes:
 					<div class="fulfillmentOptions">
 						<cfset params = structNew() />
 						<cfset params.orderFulfillment = local.fulfillment />
-						<cfif listFind(rc.orderRequirementsList, local.fulfillment.getOrderFulfillmentID()) or rc.edit eq local.fulfillment.getOrderFulfillmentID()>
+						<cfif listFind(rc.orderRequirementsList, local.fulfillment.getOrderFulfillmentID())
+							OR rc.edit eq local.fulfillment.getOrderFulfillmentID()
+							OR (rc.edit eq "fulfillment" and arrayLen($.slatwall.cart().getOrderFulfillments())) eq 1>
 							<cfset params.edit = true />
 						<cfelse>
 							<cfset params.edit = false />

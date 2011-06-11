@@ -41,7 +41,12 @@ Notes:
 
 <cfoutput>
 	<div class="svoorderpayment">
-		<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
-		#view("frontend:checkout/payment/creditCard")#
+		<cfif not listFind(rc.orderRequirementsList, 'account') and not listFind(rc.orderRequirementsList, 'fulfillment')>
+			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder" method="post">
+				<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
+				#view("frontend:checkout/payment/creditCard")#
+				<cf_ActionCaller action="frontend:checkout.processOrder" type="submit">
+			</form>
+		</cfif>
 	</div>
 </cfoutput>

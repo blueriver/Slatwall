@@ -43,61 +43,59 @@ Notes:
 <cfoutput>
 	<div class="svocheckoutaccount">
 		<h3 id="checkoutAccountTitle" class="titleBlock">Account <cfif not listFind(rc.orderRequirementsList, 'account')><a href="?edit=account" class="editLink">Edit</a></cfif></h3>
-		<cfif rc.edit eq "" || rc.edit eq "account">
-			<div id="checkoutAccountContent" class="contentBlock">
-				<cfif listFind(rc.orderRequirementsList, 'account') || rc.edit eq "account">
-					<cfif listFind(rc.orderRequirementsList, 'account')>
-						<div class="loginAccount">
-							<form name="loginAccount" method="post" action="?nocache=1">
-								<h4>Account Login</h4>
-								<dl>
-									<dt>E-Mail Address</dt>
-									<dd><input type="text" name="username" value="" /></dd>
-									<dt>Password</dt>
-									<dd><input type="password" name="password" value="" /></dd>
-								</dl>
-								<input type="hidden" name="doaction" value="login" />
-								<button type="submit">Login & Continue</button>
-							</form>
-						</div>
-					</cfif>
-					<div class="accountDetails">
-						<form name="account" method="post" action="?slatAction=frontend:checkout.saveaccount">
-							<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
-							<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
+		<div id="checkoutAccountContent" class="contentBlock">
+			<cfif listFind(rc.orderRequirementsList, 'account') || rc.edit eq "account">
+				<cfif listFind(rc.orderRequirementsList, 'account')>
+					<div class="loginAccount">
+						<form name="loginAccount" method="post" action="?nocache=1">
+							<h4>Account Login</h4>
 							<dl>
-								<cf_PropertyDisplay object="#rc.account#" property="firstName" edit="true">
-								<cf_PropertyDisplay object="#rc.account#" property="lastName" edit="true">
-								<cf_PropertyDisplay object="#rc.account#" property="company" edit="true">
-								<cfif isNull(rc.account.getPrimaryEmailAddress()) >
-									<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
-									<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
-								</cfif>
-								<cfif rc.account.isGuestAccount()>
-									<dt class="spdguestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
-									<dd id="spdguestcheckout">
-										<input type="radio" name="createMuraAccount" value="0" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
-										<input type="radio" name="createMuraAccount" value="1" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
-									</dd>
-									<dt class="spdpassword guestHide"><label for="password">Password</label></dt>
-									<dd id="spdpassword" class="guestHide"><input type="password" name="password" value="" /></dd>
-								<cfelse>
-									<a href="?doaction=logout">Logout</a>
-								</cfif>
+								<dt>E-Mail Address</dt>
+								<dd><input type="text" name="username" value="" /></dd>
+								<dt>Password</dt>
+								<dd><input type="password" name="password" value="" /></dd>
 							</dl>
-							<cf_ActionCaller action="frontend:checkout.saveaccount" type="submit">
+							<input type="hidden" name="doaction" value="login" />
+							<button type="submit">Login & Continue</button>
 						</form>
 					</div>
-				<cfelseif not listFind(rc.orderRequirementsList, 'account')>
-					<div class="accountDetails">
-						<dl class="accountInfo">
-							<dt class="fullName">#rc.account.getFullName()#</dt>
-							<dd class="primaryEmail">#rc.account.getPrimaryEmailAddress().getEmailAddress()#</dd>
-						</dl>
-					</div>
 				</cfif>
-			</div>
-		</cfif>
+				<div class="accountDetails">
+					<form name="account" method="post" action="?slatAction=frontend:checkout.saveaccount">
+						<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
+						<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
+						<dl>
+							<cf_PropertyDisplay object="#rc.account#" property="firstName" edit="true">
+							<cf_PropertyDisplay object="#rc.account#" property="lastName" edit="true">
+							<cf_PropertyDisplay object="#rc.account#" property="company" edit="true">
+							<cfif isNull(rc.account.getPrimaryEmailAddress()) >
+								<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
+								<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
+							</cfif>
+							<cfif rc.account.isGuestAccount()>
+								<dt class="spdguestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
+								<dd id="spdguestcheckout">
+									<input type="radio" name="createMuraAccount" value="0" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
+									<input type="radio" name="createMuraAccount" value="1" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
+								</dd>
+								<dt class="spdpassword guestHide"><label for="password">Password</label></dt>
+								<dd id="spdpassword" class="guestHide"><input type="password" name="password" value="" /></dd>
+							<cfelse>
+								<a href="?doaction=logout">Logout</a>
+							</cfif>
+						</dl>
+						<cf_ActionCaller action="frontend:checkout.saveaccount" type="submit">
+					</form>
+				</div>
+			<cfelseif not listFind(rc.orderRequirementsList, 'account')>
+				<div class="accountDetails">
+					<dl class="accountInfo">
+						<dt class="fullName">#rc.account.getFullName()#</dt>
+						<dd class="primaryEmail">#rc.account.getPrimaryEmailAddress().getEmailAddress()#</dd>
+					</dl>
+				</div>
+			</cfif>
+		</div>
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
 				jQuery("input[name='createMuraAccount']").change(function(){

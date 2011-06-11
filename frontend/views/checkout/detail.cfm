@@ -41,6 +41,7 @@ Notes:
 
 <cfoutput>
 	<div class="svocheckoutdetail">
+		<cfdump var="#rc.orderRequirementsList#" />
 		<cfinclude template="account.cfm" />
 		<cfif not listFind(rc.orderRequirementsList, "account")>
 			<cfinclude template="fulfillment.cfm" />

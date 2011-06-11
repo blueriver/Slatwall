@@ -65,7 +65,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function saveAccount(required struct rc) {
-		detail(rc);
+		// Setup the order account as its own rc so that we don't automatically save an account to the order
+		if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
+			rc.account = rc.$.slatwall.cart().getAccount();
+		} else {
+			rc.account = getAccountService().newAccount();
+		}
 		
 		rc.account = getAccountService().saveAccount(rc.account, rc);
 		
@@ -74,13 +79,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.slatwall.cart().setAccount(rc.account);
 		}
 		
+		// get the list of requirements left for this order to be processed
+		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		getFW().setView("frontend:checkout.detail");
 	}
 	
 	public void function saveFulfillment(required struct rc) {
 		param name="rc.orderFulfillmentID" default="";
-		
-		detail(rc);
 		
 		// Load the fulfillment
 		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID, true);
@@ -90,6 +95,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			fulfillment = getOrderService().saveOrderFulfillment(fulfillment, rc);
 		}
 		
+		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}
 	
