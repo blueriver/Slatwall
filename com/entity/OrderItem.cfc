@@ -70,6 +70,20 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getPrice()*getQuantity();
 	}
 	
+	public numeric function getQuantityDelivered() {
+		var deliveryItems = getOrderDeliveryItems();
+		if( arrayLen(deliveryItems) == 0 ) {
+			return 0;
+		} else {
+			var quantityDelivered = 0;
+			for( var i=1; i<=arrayLen(deliveryItems);i++ ) {
+				local.thisDeliveryItem = deliveryItems[i];
+				quantityDelivered += local.thisDeliveryItem;				
+			}
+			return quantityDelivered;
+		}
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)

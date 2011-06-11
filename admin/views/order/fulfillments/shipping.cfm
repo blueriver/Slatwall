@@ -54,7 +54,7 @@ Notes:
 				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#local.orderItem.getQuantity()#</td>
-				<td></td>
+				<td>#local.orderItem.getQuantityDelivered()#</td>
 				<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
 			</tr>
 		</cfloop>

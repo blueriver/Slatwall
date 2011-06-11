@@ -47,7 +47,7 @@ Notes:
 	</form>
 	
 	<form name="OrderActions" action="#buildURL(action='admin:order.saveActions')#" method="post">
-		<cf_ActionCaller action="admin:order.saveactions" type="submit" class="button">
+		<cf_ActionCaller action="admin:order.applyactions" type="submit" class="button">
 		<table id="OrderList" class="stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
