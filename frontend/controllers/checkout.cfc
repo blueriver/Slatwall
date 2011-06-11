@@ -99,28 +99,43 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:checkout.detail");
 	}
 	
-	public void function processOrder(required struct rc) {
+	public void function saveOrderPayment(required struct rc) {
+		param name="rc.paymentMethodID" default="creditCard";
+		
+		// Create new Payment Entity
+		var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+		
+		// Attempt to Validate & Save Order Payment
+		payment = getOrderService().saveOrderPayment(rc.payment, rc);
+		
+		// Add payment to order
+		rc.$.slatwall.cart().addOrderPayment(rc.payment);
+		
 		detail(rc);
-		
-		var orderProcessOK = false;
-		
-		if(rc.payment.isNew()) {
-			rc.payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+		getFW().setView("frontend:checkout.detail");
+	}
+	
+	public void function processOrder(required struct rc) {
+		// If there aren't enough payments applied to this order then attempt to add a payment
+		if(rc.$.slatwall.cart().getTotal() != rc.$.slatwall.cart().getPaymentAmountTotal()) {
+			// Create new Payment Entity
+			var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+			
+			// Attempt to Validate & Save Order Payment
+			payment = getOrderService().saveOrderPayment(rc.payment, rc);
+			
+			// Add payment to order
+			rc.$.slatwall.cart().addOrderPayment(rc.payment);
 		}
-		
-		// Populate and Validate Payment
-		rc.payment = getPaymentService().populateAndValidateOrderPayment(rc.payment, rc);
 		
 		// If Payment has no errors than attach to order and process the order
-		if(!rc.payment.hasErrors()) {
-			rc.payment.setAmount(rc.$.slatwall.cart().getTotal());
-			rc.$.slatwall.cart().addOrderPayment(rc.payment);
-			orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
-		}
-		
-		if(orderProcessOK) {
-			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='my-account'), false);
+		if(!payment.hasErrors()) {
+			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
+			
+			if(orderProcessOK) {
+				// Redirect to order Confirmation
+				getFW().redirectExact($.createHREF(filename='my-account'), false);
+			}
 		}
 		
 		getFW().setView("frontend:checkout.detail");

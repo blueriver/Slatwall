@@ -55,13 +55,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public any function populateAndValidateOrderPayment(required any orderPayment, struct data={}) {
-		arguments.orderPayment.populate(arguments.data);
-		getValidationService().validateObject(entity=arguments.orderPayment);
-		
-		return arguments.orderPayment;
-	}
-	
 	public boolean function processPayment() {
 		return true;
 	}
