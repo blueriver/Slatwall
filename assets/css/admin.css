@@ -143,6 +143,10 @@ a.buttonOff:hover {
 	color: #FF3A00;
 }
 
+input.adminordersaveactions {
+	float: right;
+	margin-bottom: 10px;
+}
 
 div.modalContainer {
 	height: 200px;
