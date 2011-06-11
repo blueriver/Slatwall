@@ -73,6 +73,7 @@
 		
 		<Record typeID="444df2c6ad38850e66a1f3151c05ac3e" type="Order Action Types" systemCode="orderActionType" />
 		<Record typeID="444df2c8cce9f1417627bd164a65f133" parentTypeID="444df2c6ad38850e66a1f3151c05ac3e" type="Cancel Order" systemCode="oatCancel" />
+		<Record typeID="444df34eefaa97ddfcfa51b8cc53b06c" parentTypeID="444df2c6ad38850e66a1f3151c05ac3e" type="Refund Order" systemCode="oatRefund" />
 		
 	</Records>
 </Table>
@@ -213,9 +214,4 @@ Below Are UUID's to use... delete after using
 444df34bcafb2e904eefff689e4c52ab
 444df34ca92fb3f629be3e0974bb9ba9
 444df34da0509d8867573fee9b9e19f1
-444df34eefaa97ddfcfa51b8cc53b06c
-444df34fd15efc7e926d97a7a6ad24b5
-444df350e8c8512a97c4779a86b7bf58
-444df351c26e9982f7fc0adc50bce872
-444df3529360c30645abc64d858ef70f
 -->

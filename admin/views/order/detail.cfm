@@ -38,16 +38,25 @@ Notes:
 --->
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.Order" type="any" />
+<!---
+<cfset request.layout = false />
+<cfdump var="#rc.Order.getActionOptions()#" abort=true>--->
 
 <cfset local.account = rc.Order.getAccount() />
 <cfset local.payments = rc.Order.getOrderPayments() />
 
 <cfoutput>
 
+<ul id="navTask">
+	<cf_ActionCaller action="admin:order.list" type="list">
+</ul>
+
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
-		<h3>#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</h3>
 		<table class="stripe" id="basicOrderInfo">
+			<tr>
+				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
+			</tr>
 			<cf_PropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
 			<cf_PropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
 			<cf_PropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
@@ -95,39 +104,9 @@ Notes:
 		
 			<div id="tabOrderFulfillments">
 				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
-					<cfswitch expression="#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#">
-						<cfcase value="shipping">
-							<table class="stripe">
-								<tr>
-									<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
-									<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
-									<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
-									<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
-									<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
-									<th>#$.slatwall.rbKey("admin.order.detail.priceextended")#</th>
-								</tr>
-									
-								<cfloop array="#local.thisOrderFulfillment.getOrderFulfillmentItems()#" index="local.orderItem">
-									<tr>
-										<td>#local.orderItem.getSku().getSkuCode()#</td>
-										<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
-										<td>#dollarFormat(local.orderItem.getPrice())#</td>
-										<td>#local.orderItem.getQuantity()#</td>
-										<td></td>
-										<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
-									</tr>
-								</cfloop>
-							</table>
-							<div id="shippingAddress">
-								<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
-								#local.thisOrderFulfillment.getShippingAddress().getFullAddress()#	
-							</div>
-							<div id="shippingMethod">
-								<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
-								#local.thisOrderFulfillment.getShippingMethod().getShippingMethodName()#	
-							</div>
-						</cfcase>
-					</cfswitch>
+					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
+					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
+					#view("order/fulfillments/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#
 				</cfloop>
 			</div>
 			

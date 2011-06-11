@@ -55,7 +55,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="sku" cfc="sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
-	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderitemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	
 	public string function getStatus(){
@@ -95,7 +95,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		removeOrderFulfillment();
     }
     
-    // Order Shipping (many-to-one)
+    // Order Fulfillment (many-to-one)
     
     public void function setOrderFulfillment(required OrderFulfillment orderFulfillment) {
 		variables.orderFulfillment = arguments.orderFulfillment;

@@ -201,6 +201,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return totalPayments;
 	}
 	
+	public any function getActionOptions() {
+		var smartList = getSmartList("SlatwallOrderStatusAction");
+		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
+		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
+		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");
+		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="id");
+		//return smartList.getHQL();
+		return smartList.getRecords(); 
+	}
+ 	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberAndOpenDate() {
 		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
