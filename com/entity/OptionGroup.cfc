@@ -53,7 +53,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan";
+	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
 
 	public OptionGroup function init(){
        // set default collections for association management methods
