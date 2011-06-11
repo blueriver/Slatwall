@@ -65,7 +65,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function saveAccount(required struct rc) {
-		detail(rc);
+		// Setup the order account as its own rc so that we don't automatically save an account to the order
+		if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
+			rc.account = rc.$.slatwall.cart().getAccount();
+		} else {
+			rc.account = getAccountService().newAccount();
+		}
 		
 		rc.account = getAccountService().saveAccount(rc.account, rc);
 		
@@ -74,13 +79,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.slatwall.cart().setAccount(rc.account);
 		}
 		
+		// get the list of requirements left for this order to be processed
+		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		getFW().setView("frontend:checkout.detail");
 	}
 	
 	public void function saveFulfillment(required struct rc) {
 		param name="rc.orderFulfillmentID" default="";
-		
-		detail(rc);
 		
 		// Load the fulfillment
 		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID, true);
@@ -90,31 +95,47 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			fulfillment = getOrderService().saveOrderFulfillment(fulfillment, rc);
 		}
 		
+		detail(rc);
+		getFW().setView("frontend:checkout.detail");
+	}
+	
+	public void function saveOrderPayment(required struct rc) {
+		param name="rc.paymentMethodID" default="creditCard";
+		
+		// Create new Payment Entity
+		var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+		
+		// Attempt to Validate & Save Order Payment
+		payment = getOrderService().saveOrderPayment(rc.payment, rc);
+		
+		// Add payment to order
+		rc.$.slatwall.cart().addOrderPayment(rc.payment);
+		
+		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}
 	
 	public void function processOrder(required struct rc) {
-		detail(rc);
-		
-		var orderProcessOK = false;
-		
-		if(rc.payment.isNew()) {
-			rc.payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+		// If there aren't enough payments applied to this order then attempt to add a payment
+		if(rc.$.slatwall.cart().getTotal() != rc.$.slatwall.cart().getPaymentAmountTotal()) {
+			// Create new Payment Entity
+			var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+			
+			// Attempt to Validate & Save Order Payment
+			payment = getOrderService().saveOrderPayment(rc.payment, rc);
+			
+			// Add payment to order
+			rc.$.slatwall.cart().addOrderPayment(rc.payment);
 		}
-		
-		// Populate and Validate Payment
-		rc.payment = getPaymentService().populateAndValidateOrderPayment(rc.payment, rc);
 		
 		// If Payment has no errors than attach to order and process the order
-		if(!rc.payment.hasErrors()) {
-			rc.payment.setAmount(rc.$.slatwall.cart().getTotal());
-			rc.$.slatwall.cart().addOrderPayment(rc.payment);
-			orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
-		}
-		
-		if(orderProcessOK) {
-			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='my-account'), false);
+		if(!payment.hasErrors()) {
+			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
+			
+			if(orderProcessOK) {
+				// Redirect to order Confirmation
+				getFW().redirectExact($.createHREF(filename='my-account'), false);
+			}
 		}
 		
 		getFW().setView("frontend:checkout.detail");
