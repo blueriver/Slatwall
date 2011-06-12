@@ -144,7 +144,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function detailOptionGroup(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
 		} else {
