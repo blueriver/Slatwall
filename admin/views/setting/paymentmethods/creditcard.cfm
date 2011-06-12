@@ -38,17 +38,32 @@ Notes:
 --->
 
 <cfset local.typeOptions = $.Slatwall.setting("paymentMethod_creditCard_creditCardTypeOptions") />
+<cfset local.checkoutActionOptions = $.Slatwall.setting("paymentMethod_creditCard_checkoutActionOptions") />
 
 <cfoutput>
-<dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
-
-<dd id="spdcreditcardsaccepted">
-<cfif rc.edit>
-	<cfloop list="#local.typeOptions#" index="local.thisTypeOption" >
-		<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"<cfif listFind($.Slatwall.setting("paymentmethod_creditCard_creditCardTypes"),local.thisTypeOption)> checked="checked"</cfif>> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
-	</cfloop>
-<cfelse>
-	#$.Slatwall.setting("paymentmethod_creditCard_creditCardTypes")#
-</cfif>
-</dd>
+<dl>
+	<dt class="spdcreditcardactiononcheckout">
+		#$.slatwall.rbKey("admin.setting.paymentMethod.creditcardActionOnCheckout")#:
+	</dt>
+	<dd id="spdcreditcardactiononcheckout">
+		<cfif rc.edit>
+			<cfloop list="#local.checkoutActionOptions#" index="local.thisActionOption" >
+				<input type="radio" name="paymentmethod_creditCard_checkoutAction" value="#local.thisActionOption#" id="#local.thisActionOption#"<cfif $.Slatwall.setting("paymentmethod_creditCard_checkoutAction") eq local.thisActionOption> checked="checked"</cfif>> <label for="#local.thisActionOption#">#$.slatwall.rbKey("admin.setting.paymentMethod.creditCard.checkoutAction." & local.thisActionOption)#</label> <br>
+			</cfloop>
+		<cfelse>
+			#$.slatwall.rbKey("admin.setting.paymentMethod.creditCard.checkoutAction." & $.Slatwall.setting("paymentMethod_creditCard_checkoutAction"))#
+		</cfif>
+	</dd>
+	<dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
+	
+	<dd id="spdcreditcardsaccepted">
+	<cfif rc.edit>
+		<cfloop list="#local.typeOptions#" index="local.thisTypeOption" >
+			<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"<cfif listFind($.Slatwall.setting("paymentmethod_creditCard_creditCardTypes"),local.thisTypeOption)> checked="checked"</cfif>> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
+		</cfloop>
+	<cfelse>
+		#$.Slatwall.setting("paymentmethod_creditCard_creditCardTypes")#
+	</cfif>
+	</dd>	
+</dl>
 </cfoutput>
