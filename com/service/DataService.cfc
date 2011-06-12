@@ -45,12 +45,32 @@ component displayname="Data Service" {
 	public boolean function loadDataFromXMLDirectory(required string xmlDirectory) {
 		var dirList = directoryList(arguments.xmlDirectory);
 		
-		for(var i=1; i<= arrayLen(dirList); i++) {
-			if(listLast(dirList[i],".") == "xml"){
-				var xmlRaw = FileRead(dirList[i]);
-				loadDataFromXMLRaw(xmlRaw);
-			}
-		}
+		
+		// Because some records might depend on other records already being in the DB (fk constraints) we catch errors and re-loop over records
+		var retryCount=0;
+		var runPopulation = true;
+		
+		do{
+			// Set to false so that it will only rerun if an error occurs
+			runPopulation = false;
+			
+			// Loop over files, read them, and send to loadData function 
+			for(var i=1; i<= arrayLen(dirList); i++) {
+				if(listLast(dirList[i],".") == "xml"){
+					var xmlRaw = FileRead(dirList[i]);
+					try{
+						loadDataFromXMLRaw(xmlRaw);	
+					} catch (any e) {
+						// If we haven't retried 3 times, then incriment the retry counter and re-run the population
+						if(retryCount <= 3) {
+							retryCount += 1;
+							runPopulation = true;
+						}
+					}
+				}
+			}	
+		} while (runPopulation);
+		
 		return true;
 	}
 	
