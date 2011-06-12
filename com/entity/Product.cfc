@@ -154,11 +154,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     }
     	
 	
-    public array function getSkus(sortby, sortType="text", direction="asc") {
-        if(!structKeyExists(arguments,"sortby")) {
+    public array function getSkus(orderby, sortType="text", direction="asc") {
+        if(!structKeyExists(arguments,"orderby")) {
             return variables.Skus;
         } else {
-            return sortObjectArray(variables.Skus,arguments.sortby,arguments.sortType,arguments.direction);
+            return sortObjectArray(variables.Skus,arguments.orderby,arguments.sortType,arguments.direction);
         }
     }
 	
