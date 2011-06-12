@@ -55,7 +55,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public boolean function processPayment() {
+	public boolean function processPayment(required any orderPayment) {
+		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
+		var paymentProviderGateway = paymentMethod.getProviderGateway();
+		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
+		
+		// TODO: Charge Card
+		
+		
 		return true;
 	}
 }
