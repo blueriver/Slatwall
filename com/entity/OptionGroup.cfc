@@ -53,7 +53,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan";
+	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
 
 	public OptionGroup function init(){
        // set default collections for association management methods
@@ -68,11 +68,11 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
 	
-	public array function getOptions(sortby, sortType="text", direction="asc") {
-		if(!structKeyExists(arguments,"sortby")) {
+	public array function getOptions(orderby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"orderby")) {
 			return variables.Options;
 		} else {
-			return sortObjectArray(variables.Options,arguments.sortby,arguments.sortType,arguments.direction);
+			return sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
     

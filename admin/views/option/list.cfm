@@ -36,8 +36,9 @@
 Notes:
 
 --->
-<cfparam name="rc.options" type="any" />
-<cfparam name="rc.optionGroups" type="any" />
+
+<cfparam name="rc.options" type="any" default="#arrayNew(1)#" />
+<cfparam name="rc.optionGroups" type="any"  />
 
 <cfoutput>
 <ul id="navTask">

@@ -43,7 +43,7 @@ Notes:
 <cfparam name="rc.attributeSet" type="any" />
 <cfparam name="rc.newAttributeFormOpen" type="boolean" default="false" />
 
-<cfset local.attributes = rc.attributeSet.getAttributes(sortby="sortOrder",sortType="numeric") />
+<cfset local.attributes = rc.attributeSet.getAttributes() />
 
 <ul id="navTask">
 	<cfif request.action eq "admin:attribute.edit">
@@ -138,7 +138,7 @@ Notes:
 <ul id="attributeList" class="orderList">
 <cfloop from="1" to="#arraylen(local.attributes)#" index="local.i">
 <cfset local.thisAttribute = local.attributes[local.i] />
-<cfset local.attributeOptions = local.thisAttribute.getAttributeOptions(sortBy="sortOrder",sortType="numeric") />
+<cfset local.attributeOptions = local.thisAttribute.getAttributeOptions() />
 <!--- see if this is the attribute to be actively edited --->
 <cfif isObject(rc.activeAttribute) and local.thisAttribute.getAttributeID() eq rc.activeAttribute.getAttributeID()>
 	<cfset local.thisAttribute = rc.activeAttribute />
