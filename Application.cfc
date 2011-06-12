@@ -259,7 +259,7 @@ component extends="framework" output="false" {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
 			ormClearSession();
 		} else {
-			transaction{}
+			ormFlush();
 		}
 	}
 	
