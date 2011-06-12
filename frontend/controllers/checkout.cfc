@@ -122,10 +122,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
 			
 			// Attempt to Validate & Save Order Payment
-			payment = getOrderService().saveOrderPayment(rc.payment, rc);
+			payment = getOrderService().saveOrderPayment(payment, rc);
 			
 			// Add payment to order
-			rc.$.slatwall.cart().addOrderPayment(rc.payment);
+			rc.$.slatwall.cart().addOrderPayment(payment);
 		}
 		
 		// If Payment has no errors than attach to order and process the order

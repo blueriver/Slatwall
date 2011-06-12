@@ -88,7 +88,7 @@ Notes:
 			</tr>
 			<cfloop array="#local.payments#" index="local.thisPayment">
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#local.thisPayment.getBillingAddress().getFullAddress()#</td>
+				<td><cfif !isNull(local.thisPayment.getBillingAddress())>#local.thisPayment.getBillingAddress().getFullAddress()#</cfif></td>
 				<td>#local.thisPayment.getAmountAuthorized()#</td>
 				<td>#local.thisPayment.getAmountCharged()#</td>
 			</cfloop>
@@ -106,7 +106,7 @@ Notes:
 				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
-					#view("order/fulfillments/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#
+					#view("order/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#
 				</cfloop>
 			</div>
 			

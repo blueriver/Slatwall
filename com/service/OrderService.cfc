@@ -197,7 +197,34 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		
 		// Save the order Fulfillment
-		getDAO().save(arguments.orderFulfillment);
+		return getDAO().save(arguments.orderFulfillment);
+	}
+	
+	public any function saveOrderPayment(required any orderPayment, struct data={}) {
+		// Populate Order Payment	
+		arguments.orderPayment.populate(arguments.data);
+		
+		// Get Address
+		if( isNull(arguments.orderPayment.getBillingAddress()) ) {
+			var address = getAddressService().newAddress();
+		} else {
+			var address = arguments.orderPayment.getBillingAddress();
+		}
+		
+		// Set the address in the order Fulfillment
+		arguments.orderPayment.setBillingAddress(address);
+		
+		// Populate Address
+		address.populate(data);
+		
+		// Validate & Save Address
+		address = getAddressService().saveAddress(address);
+		
+		// Validate the order Fulfillment
+		this.validateOrderPaymentCreditCard(arguments.orderPayment);
+		
+		// Save the order Fulfillment
+		return getDAO().save(arguments.orderPayment);
 	}
 	
 	
