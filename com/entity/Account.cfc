@@ -40,8 +40,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Persistant Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="firstName" validateRequired ormtype="string" hint="This Value is only Set if a MuraID does not exist";
-	property name="lastName" validateRequired ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="firstName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="muraUserID" ormtype="string";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
