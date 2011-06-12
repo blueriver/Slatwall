@@ -48,6 +48,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Special Related Discriminator Property
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
+	property name="fulfillmentMethodID" insert="false" update="false";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillmentItems)) {

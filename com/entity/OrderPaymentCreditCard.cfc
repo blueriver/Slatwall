@@ -55,6 +55,12 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	// Non-Persistent properties
 	property name="securityCode" persistent="false";
 	
+	public any function init(){
+		setPaymentMethodID("creditCard");
+		
+		return super.init();
+	}
+	
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
