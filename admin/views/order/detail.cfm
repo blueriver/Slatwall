@@ -106,7 +106,7 @@ Notes:
 				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
-					#view("order/fulfillments/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#
+					#view("order/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#
 				</cfloop>
 			</div>
 			
