@@ -66,7 +66,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		return this;
 	}
 	
-	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required Slatwall.com.utility.shipping.RatesRequestBean ratesRequestBean) {
+	public Slatwall.com.utility.shipping.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.shipping.ShippingRatesRequestBean ratesRequestBean) {
 		
 		// Insert Custom Logic Here
 		var totalItemsWeight = 0;
@@ -138,22 +138,6 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		}
 		
 		return ratesResponseBean;
-	}
-	
-	public Slatwall.com.utility.shipping.TrackingResponseBean function getTracking(required string trackingNumber) {
-		var trackingResponseBean = new com.utility.shipping.TrackingResponseBean();
-		
-		// Insert Custom Logic Here
-		
-		return trackingResponseBean;
-	}
-	
-	public Slatwall.com.utility.shipping.ShipmentResponseBean function createShipment(required any orderShipment) {
-		var shipmentResponseBean = new com.utility.shipping.ShipmentResponseBean();
-		
-		// Insert Custom Logic Here
-		
-		return shipmentResponseBean;
 	}
 	
 	public struct function getShippingMethods() {

@@ -58,7 +58,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		return this;
 	}
 	
-	public any function getSupportedPaymentMethods() {
+	public any function getPaymentMethods() {
 		return "creditCard";
 	}
 	

@@ -55,12 +55,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public boolean function processPayment(required any orderPayment) {
+	public boolean function processPayment(required any orderPayment, string processAction="authOnly") {
 		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
 		var paymentProviderGateway = paymentMethod.getProviderGateway();
 		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 		
-		// TODO: Charge Card
+		// Generate Process Request Bean
+		
+		
+		// Get Response Bean from provider service
+		
 		
 		
 		return true;

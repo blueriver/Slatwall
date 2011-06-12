@@ -42,13 +42,13 @@ Notes:
 	<cffunction name="init" access="public" returntype="any">
 	</cffunction>
 	
-	<cffunction name="processTransaction" access="public" returntype="Slatwall.com.utility.payment.ResponseBean">
-		<cfargument name="requestBean" type="Slatwall.com.utility.payment.RequestBean" required="true" />
-		<cfargument name="transactionType" type="string" required="true" /> 
+	<cffunction name="processPayment" access="public" returntype="Slatwall.com.utility.payment.ProcessResponseBean">
+		<cfargument name="processRequestBean" type="Slatwall.com.utility.payment.ProcessRequestBean" required="true" />
 		
 	</cffunction>
 	
-	<cffunction name="getSupportedPaymentMethods">
+	<cffunction name="getPaymentMethods">
+		
 	</cffunction>
 		
 </cfinterface>

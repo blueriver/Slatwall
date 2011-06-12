@@ -62,6 +62,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 	property name="shippingItemRequestBeans" type="array";
 	
 	public any function init() {
+		// Set defaults
 		variables.shippingItemRequestBeans = [];
 		
 		return super.init();
@@ -71,7 +72,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		arrayAppend(getShippingItemRequestBeans(), new ShippingItemRequestBean(argumentcollection=arguments));
 	}
 	
-	public void function setShipToWithAddress(required Slatwall.com.entity.Address address) {
+	public void function populateShipToWithAddress(required Slatwall.com.entity.Address address) {
 		if(!isNull(arguments.address.getName())) {
 			setShipToName(arguments.address.getName());
 		}
@@ -101,7 +102,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		}
 	}
 	
-	public void function setShipFromWithAddress(required Slatwall.com.entity.Address address) {
+	public void function populateShipFromWithAddress(required Slatwall.com.entity.Address address) {
 		if(!isNull(arguments.address.getName())) {
 			setShipFromName(arguments.address.getName());
 		}
@@ -131,7 +132,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		}
 	}
 	
-	public void function setShippingItemsWithOrderFulfillmentItems(required array orderFulfillmentItems) {
+	public void function populateShippingItemsWithOrderFulfillmentItems(required array orderFulfillmentItems) {
 		for(var i=1; i <= arrayLen(arguments.orderFulfillmentItems); i++) {
 			addShippingItem(
 				value=arguments.orderFulfillmentItems[i].getSku().getPrice(),
