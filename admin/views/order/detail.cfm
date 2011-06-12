@@ -88,7 +88,7 @@ Notes:
 			</tr>
 			<cfloop array="#local.payments#" index="local.thisPayment">
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#local.thisPayment.getBillingAddress().getFullAddress()#</td>
+				<td><cfif !isNull(local.thisPayment.getBillingAddress())>#local.thisPayment.getBillingAddress().getFullAddress()#</cfif></td>
 				<td>#local.thisPayment.getAmountAuthorized()#</td>
 				<td>#local.thisPayment.getAmountCharged()#</td>
 			</cfloop>

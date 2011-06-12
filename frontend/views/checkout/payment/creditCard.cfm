@@ -37,18 +37,28 @@ Notes:
 
 --->
 
+<cfset local.sameAsShipping = false>
+<cfif arrayLen($.slatwall.cart().getOrderFulfillments()) eq 1 and not isNull($.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())>
+	<cfset local.sameAsShipping = true />
+	<cfset local.address = $.slatwall.cart().getOrderFulfillments()[1].getShippingAddress() />
+<cfelse>
+	<cfset local.address = getBeanFactory().getBean("addressBean").newAddress() />
+</cfif>
+
 <cfoutput>
 	<div class="svocheckoutpaymentcreditcard">
 		<div id="checkoutPaymentContent" class="contentBlock">
 			<div class="paymentAddress">
 				<h4>Billing Address</h4>
-				<dl>
-					<dt>Same As Shipping</dt>
-					<dd><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
-				</dl>
-				<div class="hideElement">
-					
-				</div>
+				<cfif local.sameAsShipping>
+					<dl>
+						<dt>Same As Shipping</dt>
+						<dd><input type="hidden" name="sameAsShipping" value="" /><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
+					</dl>
+					<cf_SlatwallAddressDisplay address="#local.address#" edit="true">
+				<cfelse>
+					<cf_SlatwallAddressDisplay address="#local.address#" edit="true">
+				</cfif>
 			</div>
 			<div class="paymentMethod">
 				<h4>Payment Method</h4>
@@ -94,5 +104,42 @@ Notes:
 			</div>
 		</div>
 		<input type="hidden" name="paymentMethodID" value="creditCard" />
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				
+				jQuery('input[name="sameAsShipping"]').click(function(){
+					var shippingAddress = {
+						name : '#local.address.getName()#',
+						company : '#local.address.getCompany()#',
+						streetAddress :  '#local.address.getStreetAddress()#',
+						street2Address : '#local.address.getStreet2Address()#',
+						city : '#local.address.getCity()#',
+						stateCode : '#local.address.getStateCode()#',
+						postalCode : '#local.address.getPostalCode()#',
+						countryCode : '#local.address.getCountryCode()#',
+					};
+					if(jQuery(this).is(':checked')){
+						jQuery('input[name="name"]').val(shippingAddress['name']);
+						jQuery('input[name="company"]').val(shippingAddress['company']);
+						jQuery('input[name="streetAddress"]').val(shippingAddress['streetAddress']);
+						jQuery('input[name="street2Address"]').val(shippingAddress['street2Address']);
+						jQuery('input[name="city"]').val(shippingAddress['city']);
+						jQuery('input[name="postalCode"]').val(shippingAddress['postalCode']);
+						jQuery('input[name="stateCode"]').val(shippingAddress['stateCode']);
+						jQuery('select[name="stateCode"]').val(shippingAddress['stateCode']);
+						jQuery('select[name="countryCode"]').val(shippingAddress['countryCode']);
+					} else {
+						jQuery('input[name="name"]').val('');
+						jQuery('input[name="company"]').val('');
+						jQuery('input[name="streetAddress"]').val('');
+						jQuery('input[name="street2Address"]').val('');
+						jQuery('input[name="city"]').val('');
+						jQuery('input[name="postalCode"]').val('');
+						jQuery('input[name="stateCode"]').val('');
+						jQuery('select[name="stateCode"]').val('');
+					};
+				});
+			});
+		</script>
 	</div>
 </cfoutput>
