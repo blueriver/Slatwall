@@ -39,10 +39,10 @@ Notes:
 
 component displayname="Gateway Request"  accessors="true" output="false" extends="Slatwall.com.utility.RequestBean" {
 	
-	// Transaction Info
-	property name="transactionType" type="string" ;
-	property name="transactionAmount" ormtype="float";
-	property name="transactionCurrency" ormtype="float";
+	// Process Info
+	property name="processType" type="string" ;
+	property name="processAmount" ormtype="float";
+	property name="processCurrency" ormtype="float";
 	
 	// Credit Card Info
 	property name="nameOnCreditCard" ormType="string";
