@@ -66,12 +66,12 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		return this;
 	}
 	
-	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean shippingRatesRequestBean) {
-		var shippingRatesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
+		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		
 		// Insert Custom Logic Here
 		
-		return shippingRatesResponseBean;
+		return responseBean;
 	}
 	
 	public struct function getShippingMethods() {

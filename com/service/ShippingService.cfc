@@ -76,7 +76,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
 			
 			// Query the Provider For Rates
-			var ratesRequestBean = new Slatwall.com.utility.shipping.RatesRequestBean();
+			var ratesRequestBean = new Slatwall.com.utility.fulfillment.ShippingRatesRequestBean();
 			ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
 			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
 			

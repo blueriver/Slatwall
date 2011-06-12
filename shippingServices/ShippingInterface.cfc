@@ -42,8 +42,8 @@ Notes:
 	<cffunction name="init" access="public" returntype="any">
 	</cffunction>
 	
-	<cffunction name="getRates" access="public" returntype="Slatwall.com.utility.shipping.ShippingRatesResponseBean">
-		<cfargument name="ratesRequestBean" type="Slatwall.com.utility.shipping.ShippingRatesRequestBean" required="true" />
+	<cffunction name="getRates" access="public" returntype="Slatwall.com.utility.fulfillment.ShippingRatesResponseBean">
+		<cfargument name="requestBean" type="Slatwall.com.utility.fulfillment.ShippingRatesRequestBean" required="true" />
 		
 		<!---
 			This method should take in a given order shipment and based

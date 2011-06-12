@@ -39,11 +39,11 @@
 	        </ns:Shipper>
 	        <ns:Recipient>
 	        	<ns:Address>
-	                <ns:StreetLines>#arguments.ratesRequestBean.getShipToStreetAddress()#</ns:StreetLines>
-	                <ns:City>#arguments.ratesRequestBean.getShipToCity()#</ns:City>
-	                <ns:StateOrProvinceCode>#arguments.ratesRequestBean.getShipToStateCode()#</ns:StateOrProvinceCode>
-	                <ns:PostalCode>#arguments.ratesRequestBean.getShipToPostalCode()#</ns:PostalCode>
-	                <ns:CountryCode>#arguments.ratesRequestBean.getShipToCountryCode()#</ns:CountryCode>
+	                <ns:StreetLines>#arguments.requestBean.getShipToStreetAddress()#</ns:StreetLines>
+	                <ns:City>#arguments.requestBean.getShipToCity()#</ns:City>
+	                <ns:StateOrProvinceCode>#arguments.requestBean.getShipToStateCode()#</ns:StateOrProvinceCode>
+	                <ns:PostalCode>#arguments.requestBean.getShipToPostalCode()#</ns:PostalCode>
+	                <ns:CountryCode>#arguments.requestBean.getShipToCountryCode()#</ns:CountryCode>
 					<ns:Residential>false</ns:Residential>
 	            </ns:Address>
 	        </ns:Recipient>

@@ -36,19 +36,14 @@
 Notes:
 
 --->
-
 <cfinterface>
 	
-	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
-	
-	<cffunction name="processPayment" access="public" returntype="Slatwall.com.utility.payment.ProcessResponseBean">
-		<cfargument name="processRequestBean" type="Slatwall.com.utility.payment.ProcessRequestBean" required="true" />
+	<cffunction name="processCreditCard" access="public" returntype="Slatwall.com.utility.payment.CreditCardProcessResponseBean">
+		<cfargument name="requestBean" type="Slatwall.com.utility.payment.CreditCardProcessRequestBean" required="true" />
 		
 	</cffunction>
 	
 	<cffunction name="getPaymentMethods">
-		
 	</cffunction>
 		
 </cfinterface>

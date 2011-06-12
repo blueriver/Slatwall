@@ -55,30 +55,35 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public boolean function processPaymentCreditCard(required any orderPayment, required string processType, numeric processAmount) {
+	public boolean function processPayment(required any orderPayment, required string processType, numeric processAmount) {
 		// Get the relavent info and objects for this order payment
 		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
 		var paymentProviderGateway = paymentMethod.getProviderGateway();
 		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 		
-		// Generate Process Request Bean
-		var request = new Slatwall.com.utility.payment.CreditCardProcessRequestBean();
-		
-		// Move all of the info into the new request bean
-		request.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
-		
-		// Setup the actuall processing information
-		if(!structKeyExists(argument, "processAmount")) {
-			arguments.processAmount = arguments.orderPayment.getAmount();
+		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
+			// Generate Process Request Bean
+			var request = new Slatwall.com.utility.payment.CreditCardProcessRequestBean();
+			
+			// Move all of the info into the new request bean
+			request.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
+			
+			// Setup the actuall processing information
+			if(!structKeyExists(argument, "processAmount")) {
+				arguments.processAmount = arguments.orderPayment.getAmount();
+			}
+			request.setProcessType(arguments.processType);
+			request.setProcessAmount(arguments.processAmount);
+			request.setProcessCurrency("USD"); // TODO: This is a hack that should be fixed at some point
+			
+			// Get Response Bean from provider service
+			var response = providerService.processPayment(request);
+			
+			// Update the Order Payment entity
+			
+			
 		}
-		request.setProcessType(arguments.processType);
-		request.setProcessAmount(arguments.processAmount);
-		request.setProcessCurrency("USD"); // TODO: This is a hack that should be fixed at some point
 		
-		// Get Response Bean from provider service
-		var response = providerService.processPayment(request);
-		
-		// Update the Order Payment entity
 		
 		return response;
 	}
