@@ -77,12 +77,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     
     public void function list(required struct rc) {
         param name="rc.listby" default="optiongroups";
-        rc.orderby="optiongroup_optiongroupname|ASC^sortOrder|ASC";
-        if(structKeyExists(rc,"F:optiongroup_optiongroupname") && !len(rc["F:optiongroup_optiongroupname"])) {
-        	structDelete(rc,"F:optiongroup_optiongroupname");
-        }
-        rc.options = getOptionService().getSmartList(entityName="SlatwallOption", data=arguments.rc);
         rc.optionGroups = getOptionService().listOptionGroupOrderBySortOrder();
+        if( rc.listby  == "options" ) {
+        	// if the option group filter is blank, remove the filter
+	        if(structKeyExists(rc,"F:optiongroup_optiongroupname") && !len(rc["F:optiongroup_optiongroupname"])) {
+	        	structDelete(rc,"F:optiongroup_optiongroupname");
+	        }
+        	rc.orderby="optiongroup_optiongroupname|ASC,sortOrder|ASC";
+        	rc.options = getOptionService().getSmartList(entityName="SlatwallOption", data=arguments.rc);
+        } 
     }
 	
 	public void function save(required struct rc) {

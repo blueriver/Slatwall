@@ -68,11 +68,11 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
 	
-	public array function getOptions(sortby, sortType="text", direction="asc") {
-		if(!structKeyExists(arguments,"sortby")) {
+	public array function getOptions(orderby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"orderby")) {
 			return variables.Options;
 		} else {
-			return sortObjectArray(variables.Options,arguments.sortby,arguments.sortType,arguments.direction);
+			return sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
     

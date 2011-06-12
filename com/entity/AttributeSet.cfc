@@ -66,11 +66,11 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
        return Super.init();
     }
 	
-	public array function getAttributes(sortby, sortType="text", direction="asc") {
-		if(!structKeyExists(arguments,"sortby")) {
+	public array function getAttributes(orderby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"orderby")) {
 			return variables.Attributes;
 		} else {
-			return sortObjectArray(variables.Attributes,arguments.sortby,arguments.sortType,arguments.direction);
+			return sortObjectArray(variables.Attributes,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
 	

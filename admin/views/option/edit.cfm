@@ -43,7 +43,7 @@ Notes:
 <cfparam name="rc.optionGroup" type="any" />
 <cfparam name="rc.newOptionFormOpen" type="boolean" default="false" />
 
-<cfset local.options = rc.optionGroup.getOptions(sortby="sortOrder",sortType="numeric") />
+<cfset local.options = rc.optionGroup.getOptions() />
 
 <ul id="navTask">
 	<cfif request.action eq "admin:option.edit">
