@@ -43,8 +43,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
 	property name="filename" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" hint="This is the Template to use for product display";
-	property name="productName" ormtype="string" validateRequired hint="Primary Notation for the Product to be Called By";
-	property name="productCode" ormtype="string" unique="true" validateRequired hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productName" ormtype="string" validateRequired="true" hint="Primary Notation for the Product to be Called By";
+	property name="productCode" ormtype="string" unique="true" validateRequired="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
@@ -65,8 +65,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="brand" validateRequired cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="productType" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="brand" validateRequired="true" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="productType" validateRequired="true" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
 	
@@ -82,9 +82,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="dateFirstReceived" type="date" persistent="false";
 	property name="dateLastReceived" type="date" persistent="false";
 	property name="livePrice" type="numeric" persistent="false";
-	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
-	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
-	property name="shippingWeight" type="numeric" validateNumeric persistent="false";
+	property name="price" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
+	property name="listPrice" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
+	property name="shippingWeight" type="numeric" validateNumeric="true" persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;

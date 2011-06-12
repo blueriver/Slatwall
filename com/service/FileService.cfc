@@ -165,17 +165,17 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		arguments.destination = replace(arguments.destination,"\","/","all");
 		
 		if(isNull(arguments.baseSourceDir)){
-			var baseSourceDir = source;
+			arguments.baseSourceDir = arguments.source;
 		}
 		
 		var dirList = directoryList(arguments.source,false,"query");
 		for(var i = 1; i <= dirList.recordCount; i++){
 			if(dirList.type[i] == "File" && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
 				var copyFrom = "#replace(dirList.directory[i],'\','/','all')#/#dirList.name[i]#";
-				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),baseSourceDir,'')#/#dirList.name[i]#";
+				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
 			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
-				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=baseSourceDir);
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=arguments.baseSourceDir);
 			}
 		}
 	}

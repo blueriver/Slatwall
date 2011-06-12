@@ -44,8 +44,7 @@ component displayname="Data Service" {
 	
 	public boolean function loadDataFromXMLDirectory(required string xmlDirectory) {
 		var dirList = directoryList(arguments.xmlDirectory);
-		
-		
+				
 		// Because some records might depend on other records already being in the DB (fk constraints) we catch errors and re-loop over records
 		var retryCount=0;
 		var runPopulation = true;
@@ -65,6 +64,8 @@ component displayname="Data Service" {
 						if(retryCount <= 3) {
 							retryCount += 1;
 							runPopulation = true;
+						} else {
+							throw(e);
 						}
 					}
 				}
