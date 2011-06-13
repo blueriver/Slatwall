@@ -112,9 +112,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public any function populate(required struct data, string propList=getUpdateKeys(),boolean cleanseInput=false) {
-		var md = getMetaData(this);
-		for( var i=1;i<=arrayLen(md.properties);i++ ) {
-			local.theProperty = md.properties[i];
+			var props = getProperties();
+			for( var i=1;i<=arrayLen(props);i++ ) {
+			local.theProperty = props[i];
 			// If a propList was passed in, use it to filter
 			if( !listLen(arguments.propList) || listContains(arguments.propList,local.theProperty.name) ) {
 				// do columns (not related properties)
@@ -157,6 +157,18 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		return this;
+	}
+	
+	public array function getProperties(struct metaData=getMetaData(this)) {
+		var properties = arguments.metaData["properties"];
+		var parentProperties = "";
+		// recursively get properties of any super classes
+		if(structKeyExists(arguments.metaData.extends,"properties")) {
+			parentProperties = getProperties(arguments.metaData["extends"]);
+			return arrayConcat(parentProperties,properties);
+		} else {
+			return properties;
+		}
 	}
 	
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 
@@ -259,6 +271,33 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		_setProperty(arguments.name);
 	}
 	
+	private array function arrayConcat(required array a1, required array a2) {
+	/**
+		* Concatenates two arrays.
+		*
+		* @param a1      The first array.
+		* @param a2      The second array.
+		* @return Returns an array.
+		* @author Craig Fisher (craig@altainetractive.com)
+		* @version 1, September 13, 2001
+		* Modified by Tony Garcia 18Oct09 to deal with metadata arrays, which don't act like normal arrays
+		*/
+			var newArr = [];
+		    var i=1;
+		    if ((!isArray(a1)) || (!isArray(a2))) {
+		        writeoutput("Error in <Code>ArrayConcat()</code>! Correct usage: ArrayConcat(<I>Array1</I>, <I>Array2</I>) -- Concatenates Array2 to the end of Array1");
+		        return arrayNew(1);
+		    }
+		    /*we have to copy the array elements to a new array because the properties array in ColdFusion 
+		      is a "read only" array (see http://www.bennadel.com/blog/760-Converting-A-Java-Array-To-A-ColdFusion-Array.htm)*/
+		    for (i=1;i <= ArrayLen(a1);i++) {
+		        newArr[i] = a1[i];
+		    }
+		    for (i=1;i <= ArrayLen(a2);i++) {
+		        newArr[arrayLen(a1)+i] = a2[i];
+		    }
+		    return newArr;
+	}
 	
 	// Start: ORM functions
 	public void function preInsert(){
