@@ -46,8 +46,8 @@ Notes:
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
 	</form>
 	
-	<form name="OrderActions" action="#buildURL(action='admin:order.saveActions')#" method="post">
-		<cf_ActionCaller action="admin:order.applyactions" type="submit" class="button">
+	<form name="OrderActions" action="#buildURL(action='admin:order.applyOrderActions')#" method="post">
+		<cf_ActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
 		<table id="OrderList" class="stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
@@ -66,13 +66,17 @@ Notes:
 					<td>#Local.Order.getOrderStatusType().getType()#</td>
 					<td>#DollarFormat(local.order.getTotal())#</td>
 					<td>
-						<select name="orderStatus">
-							<cfset local.orderActionOptions = local.order.getActionOptions() />
-							<option value="">#$.slatwall.rbKey("define.select")#</option>
-							<cfloop array = #local.orderActionOptions# index="local.thisAction">
-								<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
-							</cfloop>
-						</select>
+						<cfset local.orderActionOptions = local.order.getActionOptions() />
+						<cfif arrayLen(local.orderActionOptions) gt 0>
+							<select name="orderActions">
+								<option value="">#$.slatwall.rbKey("define.select")#</option>
+								<cfloop array = #local.orderActionOptions# index="local.thisAction">
+									<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
+								</cfloop>
+							</select>
+						<cfelse>
+							#$.slatwall.rbKey("define.notApplicable")#
+						</cfif>
 					</td>
 					<td class="administration">
 						<ul class="one">

@@ -63,5 +63,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	       getFW().redirect("admin:order.list");
 	   }
 	}
+	
+	public void function applyOrderActions(required struct rc) {
+		for( var i=1; i<=listLen(rc.orderActions); i++ ) {
+			local.thisOrderID = listFirst(listGetAt(rc.orderActions,i),"_");
+			local.thisOrderActionTypeID = listLast(listGetAt(rc.orderActions,i),"_");
+			getOrderService().applyOrderAction(local.thisOrderID,local.thisOrderActionTypeID);
+		}
+		rc.message = rc.$.slatwall.rbKey("admin.order.applyOrderActions_success");
+		getFW().redirect(action="admin:order.list", preserve="message"); 
+	}
 
 }
