@@ -112,5 +112,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
     	arguments.orderShippingMethodOption.removeOrderShipping(this);
     }
 
-
+	public numeric function getShippingCharge() {
+		return getFulfillmentCharge();
+	}
 }
