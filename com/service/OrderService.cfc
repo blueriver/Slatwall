@@ -41,6 +41,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
+	property name="settingService";
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
 		// Check to see if the order has a status
@@ -232,6 +233,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Save the order Fulfillment
 		return getDAO().save(arguments.orderPayment);
+	}
+	
+	public any function applyOrderAction(required string orderID, required string orderActionTypeID) {
+		var order = this.getOrder(arguments.orderID);
+		var orderAction = replaceNoCase(this.getType(arguments.orderActionTypeID).getSystemCode(),"oat","");
+		evaluate("order.#orderAction#()");		
 	}
 	
 	

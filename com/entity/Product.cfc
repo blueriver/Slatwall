@@ -89,7 +89,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";     
+	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
+	property name="searchScore" default="0" type="numeric" persistent="false";   
 	
 	// Calculated Properties
 	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
@@ -399,7 +400,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public array function getOptionGroups() {
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
-			var smartList = getSmartList("SlatwallOptionGroup");
+			var smartList = getService("OptionService").getOptionGroupSmartList();
 			smartList.addFilter("options_skus_product_productID",this.getProductID());
 			smartList.addOrder("sortOrder|ASC");
 			variables.optionGroups = smartList.getRecords();
@@ -469,7 +470,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
-		var smartList = getSmartList("SlatwallOption");
+		var smartList = getService("optionService").getOptionSmartList();
 		smartList.addFilter("optionGroup_optionGroupID",arguments.optionGroupID);
 		smartList.addFilter("skus_product_productID",this.getProductID());
 		smartList.addOrder("sortOrder|ASC");

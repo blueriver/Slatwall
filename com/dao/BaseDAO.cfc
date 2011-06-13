@@ -104,13 +104,13 @@ component output="false" {
 		entityDelete(target);
 	}
 
-	public any function getSmartList(required string entityName, struct data={}){
+	public any function getSmartList(required string entityName, struct data={},numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL=""){
 		// Adds the Slatwall Prefix to the entityName when needed.
 		if(left(arguments.entityName,8) != "Slatwall") {
 			arguments.entityName = "Slatwall#arguments.entityName#";
 		}
 		
-		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
+		var smartList = new Slatwall.com.utility.SmartList(argumentCollection=arguments);
 	
 		return smartList;
 	}

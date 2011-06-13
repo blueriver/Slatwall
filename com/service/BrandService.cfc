@@ -37,6 +37,14 @@ Notes:
 
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+
+	public any function getBrandSmartList(struct data={}){
+		var smartList = getDAO().getSmartList("SlatwallBrand",arguments.data);
+	
+		smartList.addKeywordProperty(propertyIdentifier="brandName", weight=1);
+	
+		return smartList;
+	}
 	
 	public any function delete(required any Brand){
 		if( arguments.Brand.hasProduct() ) {

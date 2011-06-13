@@ -116,7 +116,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		for(var i = 1; i <= arrayLen(paymentMethodsList); i++) {
 			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodID() ] = paymentMethodsList[i];
 		}
-		// Load FulFillment Methods Methods
+		// Load FulFillment Methods 
 		for(var i = 1; i <= arrayLen(fulfillmentMethodsList); i++) {
 			variables.fulfillmentMethods[ fulfillmentMethodsList[i].getfulfillmentMethodID() ] = fulfillmentMethodsList[i];
 		}
