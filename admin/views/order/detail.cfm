@@ -103,7 +103,10 @@ Notes:
 			</ul>
 		
 			<div id="tabOrderFulfillments">
+				<cfset local.fulfillmentNumber = 0 />
 				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
+					<cfset local.fulfillmentNumber++ />
+					<h4>#$.Slatwall.rbKey("entity.fulfillment")# #local.fulfillmentNumber#</h4>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
 					#view("order/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#

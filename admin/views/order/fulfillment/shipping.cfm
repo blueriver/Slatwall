@@ -42,6 +42,7 @@ Notes:
 		<tr>
 			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
+			<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>
 			<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
 			<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
 			<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
@@ -52,19 +53,60 @@ Notes:
 			<tr>
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
+				<td>
+<!---					<cfset local.orderActionOptions = local.order.getActionOptions() />
+					<cfif arrayLen(local.orderActionOptions) gt 0>
+						<select name="orderActions">
+							<option value="">#$.slatwall.rbKey("define.select")#</option>
+							<cfloop array = #local.orderActionOptions# index="local.thisAction">
+								<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
+							</cfloop>
+						</select>
+					<cfelse>
+						#$.slatwall.rbKey("define.notApplicable")#
+					</cfif>--->
+				</td>				
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
-				<td>#local.orderItem.getQuantity()#</td>
+				<td>#int(local.orderItem.getQuantity())#</td>
 				<td>#local.orderItem.getQuantityDelivered()#</td>
 				<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
 			</tr>
 		</cfloop>
 	</table>
-	<div id="shippingAddress">
+	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
 		#local.orderFulfillment.getShippingAddress().getFullAddress("<br />")#	
 	</div>
-	<div id="shippingMethod">
+	<div class="shippingMethod">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
 		#local.orderFulfillment.getShippingMethod().getShippingMethodName()#	
+	</div>
+	<div class="totals">
+		<dl class="fulfillmentTotals">
+			<dt>
+				#$.slatwall.rbKey("entity.orderFulfillment.subtotal")#:
+			</dt>
+			<dd>
+				#dollarFormat( local.orderFulfillment.getSubTotal() )#
+			</dd>
+			<dt>
+				#$.slatwall.rbKey("entity.orderFulfillment.shippingCharge")#:
+			</dt>
+			<dd>
+				#dollarFormat( local.orderFulfillment.getShippingCharge() )#
+			</dd>
+			<dt>
+				#$.slatwall.rbKey("entity.orderFulfillment.tax")#:
+			</dt>
+			<dd>
+				#dollarFormat( local.orderFulfillment.getTax() )#
+			</dd>
+			<dt>
+				#$.slatwall.rbKey("entity.orderFulfillment.total")#:
+			</dt>
+			<dd>
+				#dollarFormat( local.orderFulfillment.getTotalCharge() )#
+			</dd>
+		</dl>
 	</div>
 </cfoutput>
