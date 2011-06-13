@@ -202,7 +202,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public any function getActionOptions() {
-		var smartList = getSmartList("SlatwallOrderStatusAction");
+		var smartList = getService("orderService").getOrderStatusActionSmartList();
 		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
 		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
 		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");
@@ -210,6 +210,37 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		//return smartList.getHQL();
 		return smartList.getRecords(); 
 	}
+	
+	
+	/*********  Order Actions ***************/
+	
+	public any function cancel() {
+		var validateCancel = checkStatusAction("cancel");
+		if(validateCancel) {
+			var statusType = getService("OrderService").getTypeBySystemCode("ostCanceled");
+			this.setOrderStatusType(statusType);	
+		}
+	}
+	
+	public any function refund() {
+		var validateRefund = checkStatusAction("refund");
+		if(validateRefund) {
+			//TODO: logic for refunding order
+		}
+	}
+	
+	public boolean function checkStatusAction(required string action) {
+		var actionOptions = getActionOptions();
+		var isValid = false;
+		for( var i=1; i<=arrayLen(actionOptions);i++ ) {
+			if( actionOptions[i].getOrderActionType().getSystemCode() == "oat" & arguments.action ) {
+				isValid = true;
+				break;
+			}
+		}
+		return isValid;
+	}
+	
  	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberAndOpenDate() {
