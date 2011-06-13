@@ -40,6 +40,6 @@ component extends="slatwall.com.dao.BaseDAO" {
 
 	
 	public any function clearProductContent(required any product) {
-		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
+		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = :pid", {pid=arguments.product.getProductID()});
 	}
 }

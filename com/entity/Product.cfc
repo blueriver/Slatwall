@@ -89,7 +89,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";     
+	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
+	property name="searchScore" default="0" type="numeric" persistent="false";   
 	
 	// Calculated Properties
 	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
