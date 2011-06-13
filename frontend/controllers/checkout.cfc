@@ -131,18 +131,18 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			
 			// Add payment to order
 			rc.$.slatwall.cart().addOrderPayment(payment);
-		}
-		
-		// If Payment has no errors than attach to order and process the order
-		if(!payment.hasErrors()) {
-			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 			
-			if(orderProcessOK) {
-				// Redirect to order Confirmation
-				getFW().redirectExact($.createHREF(filename='my-account'), false);
-			}
+			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
+		} else {
+			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 		}
 		
+		if(orderProcessOK) {
+			// Redirect to order Confirmation
+			getFW().redirectExact($.createHREF(filename='my-account'), false);
+		}
+		
+		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}
 }

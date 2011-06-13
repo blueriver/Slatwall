@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,15 +35,37 @@
 
 Notes:
 
---->
-<cfinterface>
+*/
+component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTransaction" table="SlatwallCreditCardTransaction" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	<cffunction name="processCreditCard" access="public" returntype="Slatwall.com.utility.payment.CreditCardTransactionResponseBean">
-		<cfargument name="requestBean" type="Slatwall.com.utility.payment.CreditCardTransactionRequestBean" required="true" />
-		
-	</cffunction>
+	property name="creditCardTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="transactionType" ormtype="string";
+	property name="transactionAmount" ormtype="float";
+	property name="providerTransactionID" ormtype="string";
+	property name="authorizationCode" ormtype="string";
 	
-	<cffunction name="getPaymentMethods">
-	</cffunction>
-		
-</cfinterface>
+	// Related Object Properties
+	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
+	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Order Payment (many-to-one)
+	public void function setOrderPayment(required any orderPayment) {
+	   variables.orderPayment = arguments.orderPayment;
+	   if(!arguments.orderPayment.hasCreditCardTransaction(this)) {
+	       arrayAppend(arguments.orderPayment.getCreditCardTransactions(),this);
+	   }
+	}
+	
+	public void function removeOrder(required any orderPayment) {
+       var index = arrayFind(arguments.orderPayment.getCreditCardTransactions(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.orderPayment.getCreditCardTransactions(),index);
+       }    
+       structDelete(variables,"orderPayment");
+    }
+	
+    /************   END Association Management Methods   *******************/
+	
+}

@@ -55,36 +55,69 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public boolean function processPayment(required any orderPayment, required string processType, numeric processAmount) {
+	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount) {
 		// Get the relavent info and objects for this order payment
+		var processOK = false;
 		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
 		var paymentProviderGateway = paymentMethod.getProviderGateway();
 		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 		
 		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
 			// Generate Process Request Bean
-			var request = new Slatwall.com.utility.payment.CreditCardProcessRequestBean();
+			var request = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
 			
 			// Move all of the info into the new request bean
 			request.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
 			
 			// Setup the actuall processing information
-			if(!structKeyExists(arguments, "processAmount")) {
-				arguments.processAmount = arguments.orderPayment.getAmount();
+			if(!structKeyExists(arguments, "transactionAmount")) {
+				arguments.transactionAmount = arguments.orderPayment.getAmount();
 			}
 			
-			request.setProcessType(arguments.processType);
-			request.setProcessAmount(arguments.processAmount);
-			request.setProcessCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+			request.setTransactionType(arguments.transactionType);
+			request.setTransactionAmount(arguments.transactionAmount);
+			request.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
 			
 			// Get Response Bean from provider service
 			var response = providerService.processCreditCard(request);
 			
-			// TODO: Update the Order Payment entity
-			
+			if(!response.hasErrors()) {
+				processOK = true;
+				
+				// Log this transaction
+				var transaction = this.newCreditCardTransaction();
+				transaction.setTransactionType(arguments.transactionType);
+				transaction.setTransactionAmount(arguments.transactionAmount);
+				transaction.setProviderTransactionID(response.getTransactionID());
+				transaction.setAuthorizationCode(response.getAuthorizationCode());
+				transaction.setOrderPayment(arguments.orderPayment);
+				
+				// Save the Transaction to the DB
+				this.saveCreditCardTransaction(transaction);
+				
+				// Update the order Payment
+				if(arguments.transactionType eq "authorize") {
+					var authAmount = arguments.orderPayment.getAmountAuthorized() + arguments.transactionAmount;
+					arguments.orderPayment.setAmountAuthorized(authAmount);
+				} else if (arguments.transactionType eq "authorizeAndCharge") {
+					var authAmount = arguments.orderPayment.getAmountAuthorized() + arguments.transactionAmount;
+					var chargeAmount = arguments.orderPayment.getAmountCharged() + arguments.transactionAmount;
+					arguments.orderPayment.setAmountAuthorized(authAmount);
+					arguments.orderPayment.setAmountCharged(chargeAmount);
+				} else if (arguments.transactionType eq "chargePreAuthorization") {
+					var chargeAmount = arguments.orderPayment.getAmountCharged() + arguments.transactionAmount;
+					arguments.orderPayment.setAmountCharged(arguments.transactionAmount);
+				}
+			} else {
+				// Populate the orderPayment with the processing error
+				
+				writeDump(response.getData());
+				writeDump(response.getMessageBeans());
+				writeDump(response.getErrorBean());
+				abort;
+			}
 		}
 		
-		
-		return response;
+		return processOK;
 	}
 }

@@ -42,7 +42,7 @@ component accessors="true" output="false" displayname="PayPal Express" implement
 		return this;
 	}
 	
-	public Slatwall.com.utility.payment.CreditCardProcessResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardProcessRequestBean requestBean){
+	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
 		
 	}
 	

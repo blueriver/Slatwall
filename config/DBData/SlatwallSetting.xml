@@ -24,7 +24,7 @@
 		<Record settingID="dbb32798ffe388844546d7457612a6c7" settingName="product_allowDropshipFlag" settingValue="0" />
 		
 		<Record settingID="dbb3279def932d8ce05d3405228630fe" settingName="paymentMethod_creditCard_creditCardTypes" settingValue="Mastercard,Visa,Amex,Discover" />
-		<Record settingID="dbb3284bc75ab4d26fed36b9027f4587" settingName="paymentMethod_creditCard_checkoutAction" settingValue="authorize" />
+		<Record settingID="dbb3284bc75ab4d26fed36b9027f4587" settingName="paymentMethod_creditCard_checkoutTransactionType" settingValue="authorize" />
 		
 		<Record settingID="dbb32786b330315f7869d11b78bd7222" settingName="order_notificationEmailTo" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb32787e840bb61c8fde17a08a0ea9a" settingName="order_notificationEmailFrom" settingValue="info@mySlatwallStore.com" />
