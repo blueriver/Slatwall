@@ -87,18 +87,6 @@ component displayname="Base Object" output="false" {
 		return getPluginConfig().getApplication().getValue('fw');
 	}
 	
-	// @hint Public helper function for returning the smartlist
-	public any function getSmartList(required string entityName, struct data={}){
-		// Adds the Slatwall Prefix to the entityName when needed.
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
-		}
-		
-		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
-	
-		return smartList;
-	}
-	
 	public any function inject(required string property, required any value) {
 		variables[ arguments.property ] = arguments.value;
 	}

@@ -128,7 +128,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var lCaseMissingMethodName = lCase( missingMethodName );
 
 		if ( lCaseMissingMethodName.startsWith( 'get' ) ) {
-			return onMissingGetMethod( missingMethodName, missingMethodArguments );
+			if(right(lCaseMissingMethodName,9) == "smartlist") {
+				return onMissingGetSmartListMethod( missingMethodName, missingMethodArguments );
+			} else {
+				return onMissingGetMethod( missingMethodName, missingMethodArguments );
+			}
 		} else if ( lCaseMissingMethodName.startsWith( 'new' ) ) {
 			return onMissingNewMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'list' ) ) {
@@ -183,6 +187,38 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 
+	/**
+	 * Provides dynamic getSmarList method, by convention, on missing method:
+	 *
+	 *   getXXXSmartList( struct data )
+	 *
+	 * ...in which XXX is an ORM entity name
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	 
+	private function onMissingGetSmartListMethod( required string missingMethodName, required struct missingMethodArguments ){
+		var smartListArgs = {};
+		var entityNameLength = len(arguments.missingMethodName) - 12;
+		var smartListArgs["entityName"] = missingMethodName.substring( 3,entityNameLength + 3 );
+		if( structKeyExists(arguments.missingMethodArguments, "1") ) {
+			smartListArgs["data"] = arguments.missingMethodArguments[ "1" ];
+			
+			if( structKeyExists( arguments.missingMethodArguments, "2" ) ) {
+				smartListArgs["pageRecordsStart"] = arguments.missingMethodArguments[ "2" ];
+				
+				if( structKeyExists( arguments.missingMethodArguments, "3" ) ) {
+					smartListArgs["pageRecordsShow"] = arguments.missingMethodArguments[ "3" ];
+					
+					if( structKeyExists( arguments.missingMethodArguments, "4" ) ) {
+						smartListArgs["currentURL"] = arguments.missingMethodArguments[ "4" ];	
+					}					
+				}
+			}
+		}
+		return getSmartList(argumentCollection=smartListArgs);
+	} 
+	 
 
 	/**
 	 * Provides dynamic list methods, by convention, on missing method:

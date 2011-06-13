@@ -53,7 +53,7 @@ component extends="baseController" output="false" {
 	}
 	
 	public void function list(required struct rc) {
-		rc.vendorSmartList = getVendorService().getSmartList(entityName="Vendor", data=arguments.rc);
+		rc.vendorSmartList = getVendorService().getVendorSmartList(data=arguments.rc);
 	}
 	
 }

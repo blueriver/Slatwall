@@ -202,7 +202,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public any function getActionOptions() {
-		var smartList = getSmartList("SlatwallOrderStatusAction");
+		var smartList = getService("orderService").getOrderStatusActionSmartList();
 		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
 		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
 		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");

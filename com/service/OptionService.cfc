@@ -37,6 +37,17 @@ Notes:
 
 */
 component extends="slatwall.com.service.BaseService" accessors="true" {
+
+	public any function getOptionSmartList(struct data={}){
+		var smartList = getDAO().getSmartList("SlatwallOption",arguments.data);
+		
+		smartList.addKeywordProperty(propertyIdentifier="optionCode", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="optionName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="optionGroup_optionGroupName", weight="4");
+		smartList.addKeywordProperty(propertyIdentifier="optionDescription", weight=1);
+		
+		return smartList;
+	}
 	
 	public any function save(required any entity, required struct data) {	
 		arguments.entity.populate(arguments.data);

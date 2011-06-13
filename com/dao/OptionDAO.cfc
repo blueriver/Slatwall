@@ -37,17 +37,6 @@ Notes:
 
 */
 component extends="slatwall.com.dao.BaseDAO" {
-
-	public any function getSmartList(required string entityName, struct data={}){
-		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
-		
-		smartList.addKeywordProperty(propertyIdentifier="optionCode", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="optionName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="optionGroup_optionGroupName", weight="4");
-		smartList.addKeywordProperty(propertyIdentifier="optionDescription", weight=1);
-		
-		return smartList;
-	}
 	
 	// @hint checks if the passed if the option code of the passed in option is already in use within its option group
 	public any function isDuplicateOptionCode( required any option ) {

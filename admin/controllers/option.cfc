@@ -84,7 +84,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	        	structDelete(rc,"F:optiongroup_optiongroupname");
 	        }
         	rc.orderby="optiongroup_optiongroupname|ASC,sortOrder|ASC";
-        	rc.options = getOptionService().getSmartList(entityName="SlatwallOption", data=arguments.rc);
+        	rc.options = getOptionService().getOptionSmartList(data=arguments.rc);
         } 
     }
 	

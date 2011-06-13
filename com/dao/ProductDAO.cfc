@@ -38,39 +38,6 @@ Notes:
 */
 component extends="slatwall.com.dao.BaseDAO" {
 
-	public any function getProductSmartList(struct data={}){
-		
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data);
-		
-		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
-		
-		smartList.joinRelatedProperty("SlatwallProduct","productType");
-		
-		return smartList;
-	}
-	
-	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL=""){
-		
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
-		
-		if( structKeyExists(arguments.data, "showSubPageProducts") && arguments.data.showSubPageProducts) {
-			smartList.addLikeFilter(propertyIdentifier="productContent_contentPath", value="%#arguments.contentID#%");
-		} else {
-			smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);	
-		}
-		
-		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
-		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
-		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
-		
-		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
-		
-		return smartList;	
-	}
 	
 	public any function clearProductContent(required any product) {
 		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
