@@ -73,6 +73,18 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="orderID" type="string" ;
 	property name="accountID" type="string";
 	
+	/*
+	Process Types
+	-------------
+	authorize
+	authorizeAndCharge
+	chargePreAuthorization
+	credit
+	void
+	inquirey
+	
+	*/
+	
 	public void function populatePaymentInfoWithOrderPayment(required Slatwall.com.entity.OrderPaymentCreditCard orderPaymentCreditCard) {
 		
 		// Populate Credit Card Info
@@ -89,7 +101,7 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 			setAccountPrimaryPhoneNumber(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryPhoneNumber().getPhoneNumber());	
 		}
 		if(!isNull(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryEmailAddress())) {
-			setAccountPrimaryEmailAddress(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryPhoneNumber().getPrimaryEmailAddress());	
+			setAccountPrimaryEmailAddress(arguments.orderPaymentCreditCard.getOrder().getAccount().getPrimaryEmailAddress().getEmailAddress());	
 		}
 		
 		// Populate Billing Address Info

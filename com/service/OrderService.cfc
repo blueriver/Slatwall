@@ -99,9 +99,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Process All Payments and Save the ones that were successful
 		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i]);
-			if(!paymentOK) {
-				allPaymentsOK = false;
+			var processType = setting('paymentMethod_creditCard_checkoutAction');
+			if(processType != 'none') {
+				var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], processType);
+				if(!paymentOK) {
+					allPaymentsOK = false;
+				}	
 			}
 		}
 		
@@ -201,8 +204,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}) {
+		
 		// Populate Order Payment	
 		arguments.orderPayment.populate(arguments.data);
+		
+		// TODO: This is a hack until [issue 124] gets resolved.
+		arguments.orderPayment.setAmount(arguments.data.amount);
 		
 		// Get Address
 		if( isNull(arguments.orderPayment.getBillingAddress()) ) {

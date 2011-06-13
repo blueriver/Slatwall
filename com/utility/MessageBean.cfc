@@ -47,10 +47,10 @@ component accessors="true" output="false" {
 			setMessageCode(arguments.messageCode);
 		}
 		if(structKeyExists(arguments, "messageType")) {
-			setMessageCode(arguments.messageType);
+			setMessageType(arguments.messageType);
 		}
 		if(structKeyExists(arguments, "message")) {
-			setMessageCode(arguments.message);
+			setMessage(arguments.message);
 		}
 		return this;
 	}
