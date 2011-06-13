@@ -42,6 +42,10 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentCharge" ormtype="float";
 	
+	//non-persistent Properties
+	property name="subTotal" type="numeric" persistent="false";
+	property name="taxAmount" type="numeric" persistent="false";
+	
 	// Related Object Properties
 	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillmentItems" validateRequired="true" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
@@ -103,4 +107,30 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
     
     /******* END Association management methods */ 
+    
+    public numeric function getSubTotal() {
+  		if( !structKeyExists(variables,"subTotal") ) {
+	    	variables.subTotal = 0;
+	    	var items = getOrderFulfillmentItems();
+	    	for( var i=1; i<=arrayLen(items); i++ ) {
+	    		variables.subTotal += items[i].getExtendedPrice();
+	    	}			
+  		}
+    	return variables.subTotal;
+    }
+    
+    public numeric function getTax() {
+    	if( !structkeyExists(variables,"taxAmount") ) {
+    		variables.taxAmount = 0;
+	    	var items = getOrderFulfillmentItems();
+	    	for( var i=1; i<=arrayLen(items); i++ ) {
+	    		variables.taxAmount += items[i].getTaxAmount();
+	    	}
+    	}
+    	return variables.taxAmount;
+    }
+    
+    public numeric function getTotalCharge() {
+    	return getSubTotal() + getTax() + getFulfillmentCharge();
+    }
 }

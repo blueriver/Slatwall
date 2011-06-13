@@ -96,10 +96,15 @@ div.svoadminproductdetail form {
 	padding: 0;
 }
 
-div.svoadminorderdetail #shippingAddress,
-div.svoadminorderdetail #shippingMethod {
+div.svoadminorderdetail .shippingAddress,
+div.svoadminorderdetail .shippingMethod {
 	float: left;
 	margin: 0 20px;
+}
+
+div.svoadminorderdetail .totals {
+	float: right;
+	margin: 0 0 0 20px;
 }
 
 div#buttons {
@@ -229,6 +234,23 @@ dl.productPrice dd {
 
 ul.orderList {
 	margin: 20px 0 0 10px;
+}
+
+dl.fulfillmentTotals dt {
+	float: left;
+	width: 160px;
+	text-align: right;
+	padding: 2px;
+	margin: 0 0 0 0;
+	line-height: 22px;
+	clear: left;
+}
+
+dl.fulfillmentTotals dd {
+	margin: 0 0 0 170px;
+	text-align: right;
+	padding: 2px;
+	line-height: 22px;
 }
 
 ul#optionList li {

@@ -70,6 +70,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getPrice()*getQuantity();
 	}
 	
+	public numeric function getTaxAmount() {
+		return structKeyExists(variables,"taxAmount") ? variables.taxAmount : 0;
+	}
+	
 	public numeric function getQuantityDelivered() {
 		var deliveryItems = getOrderDeliveryItems();
 		if( arrayLen(deliveryItems) == 0 ) {
