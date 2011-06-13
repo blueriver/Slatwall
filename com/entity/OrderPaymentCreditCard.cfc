@@ -48,16 +48,22 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="expirationYear" ormType="string";
 	property name="amountAuthorized" ormtype="float";
 	property name="amountCharged" ormtype="float";
-	property name="amountSettled" ormtype="float";
 	
 	// Related Properties
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
+	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fkcolumn="orderPaymentID" fieldtype="one-to-many" cascade="all" inverse="true";
 	
 	// Non-Persistent properties
 	property name="securityCode" persistent="false";
 	
 	public any function init(){
 		setPaymentMethodID("creditCard");
+		if(isNull(variables.amountAuthorized)) {
+			variables.amountAuthorized = 0;
+		}
+		if(isNull(variables.amountCharged)) {
+			variables.amountCharged = 0;
+		}
 		
 		return super.init();
 	}
@@ -72,6 +78,19 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 			variables.creditCardNumber = getService("encryptionService").encryptValue(getCreditCardNumber());
 		}
 	}
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// OrderItems (one-to-many)
+	
+	public void function addCreditCardTransaction(required CreditCardTransaction creditCardTransaction) {
+	   arguments.creditCardTransaction.setOrderPayment(this);
+	}
+	
+	public void function removeOrderItem(required CreditCardTransaction creditCardTransaction) {
+	   arguments.creditCardTransaction.removeOrderPayment(this);
+	}
+	/************   END Association Management Methods   *******************/
 	
 	private void function preInsert() {
 		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity

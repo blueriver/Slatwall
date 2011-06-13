@@ -42,8 +42,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	// Custom Properties that need to be set by the end user
 	property name="vendorID" displayname="Vendor ID (Merchant ID)" type="string";
 	property name="partnerID" displayname="Partner ID (leave blank if no partner)" type="string";
-	property name="username" displayname="API Username" type="string";
-	property name="password" displayname="API Password" type="string";
+	property name="username" displayname="Username" type="string";
+	property name="password" displayname="Password" type="string";
 	property name="liveModeFlag" displayname="Live Mode" type="boolean";
 	
 	//Global variables
@@ -77,21 +77,19 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		return "creditCard";
 	}
 	
-	public Slatwall.com.utility.payment.CreditCardProcessResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardProcessRequestBean requestBean){
-		var rawResponse = "";
+	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
 		var requestData = getRequestData(requestBean);
-		var requestID = requestBean.getOrderPaymentID();
-		rawResponse = postRequest(requestData,requestID);
+		var rawResponse = postRequest(requestData);
 		return getResponseBean(rawResponse, requestData);
 	}
 	
 	private string function getRequestData(required any requestBean){
 		var requestData = "";
-		requestData = "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getProcessType()]#&TENDER=C&VERBOSITY=#variables.verbosity#";
+		requestData = "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&TENDER=C&VERBOSITY=#variables.verbosity#";
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
-		requestData = listAppend(requestData,"ORIGID=#requestBean.getOrderPaymentID()#","&");
+		//requestData = listAppend(requestData,"ORIGID=#requestBean.getOrderPaymentID()#","&");
 		
 		return requestData;
 	}
@@ -110,7 +108,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
 		arrayAppend(paymentData,"EXPDATE[4]=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
 		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
-		arrayAppend(paymentData,"AMT[#len(requestBean.getProcessAmount())#]=#requestBean.getProcessAmount()#");
+		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
 		return arrayToList(paymentData,"&");
 	}
 	
@@ -128,7 +126,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		return arrayToList(customerData,"&");
 	}
 	
-	private any function postRequest(required string requestData,required string requestID){
+	private any function postRequest(required string requestData){
 		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
@@ -140,7 +138,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/namevalue");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#Len(requestData)#");
 		httpRequest.addParam(type="header",name="Host",value="#getGatewayAddress()#");
-		httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="#requestID#");
+		//httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="");
 		httpRequest.addParam(type="header",name="X-VPS-CLIENT-TIMEOUT",VALUE="#variables.timeout#");
 		httpRequest.addParam(type="header",name="X-VPS-VIT-INTEGRATION-PRODUCT",VALUE="Slatwall");
 		httpRequest.addParam(type="body",value="#requestData#");
@@ -165,7 +163,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	}
 	
 	private any function getResponseBean(required struct rawResponse, required any requestData){
-		var response = new Slatwall.com.utility.payment.CreditCardProcessResponseBean();
+		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
 		var responseDataArray = listToArray(rawResponse.fileContent,"&");
 		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
 		for(var item in responseDataArray){
@@ -186,7 +184,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		response.setStatusCode(responseData["result"]);
 		
 		// Check to see if it was successful
-		if(response.getStatusCode != 0) {
+		if(responseData["result"] != 0) {
 			// Transaction did not go through
 			response.getErrorBean().addError(name=responseData["result"], message=responseData["respmsg"]);
 		}
