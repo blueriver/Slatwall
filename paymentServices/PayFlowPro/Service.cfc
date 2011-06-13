@@ -40,7 +40,7 @@ Notes:
 component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.paymentServices.PaymentInterface" {
 	
 	// Custom Properties that need to be set by the end user
-	property name="vendor" displayname="Vendor ID (Merchant ID)" type="string";
+	property name="vendorID" displayname="Vendor ID (Merchant ID)" type="string";
 	property name="partnerID" displayname="Partner ID (leave blank if no partner)" type="string";
 	property name="username" displayname="API Username" type="string";
 	property name="password" displayname="API Password" type="string";
@@ -54,6 +54,13 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	variables.transactionCodes = {};
 
 	public any function init(){
+		// Set Defaults
+		setPartnerID("");
+		setVendorID("");
+		setUsername("");
+		setPassword("");
+		setLiveModeFlag(false);
+		
 		variables.transactionCodes = {
 			authorize="A",
 			authorizeAndCharge="S",
@@ -75,7 +82,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		var requestData = getRequestData(requestBean);
 		var requestID = requestBean.getOrderPaymentID();
 		rawResponse = postRequest(requestData,requestID);
-		return getResponseBean(rawResponse);
+		return getResponseBean(rawResponse, requestData);
 	}
 	
 	private string function getRequestData(required any requestBean){
@@ -92,8 +99,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	private string function getLoginNVP(){
 		var loginData = [];
 		arrayAppend(loginData,"USER=#getUserName()#");
-		arrayAppend(loginData,"PARTNER=#getPartner()#");
-		arrayAppend(loginData,"VENDOR=#getVENDOR()#");
+		arrayAppend(loginData,"PARTNER=#getPartnerID()#");
+		arrayAppend(loginData,"VENDOR=#getVendorID()#");
 		arrayAppend(loginData,"PWD=#getPassword()#");
 		return arrayToList(loginData,"&");
 	}
@@ -157,7 +164,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		}
 	}
 	
-	private any function getResponseBean(required struct rawResponse){
+	private any function getResponseBean(required struct rawResponse, required any requestData){
 		var response = new Slatwall.com.utility.payment.CreditCardProcessResponseBean();
 		var responseDataArray = listToArray(rawResponse.fileContent,"&");
 		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
@@ -165,8 +172,12 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			responseData[listFirst(item,"=")] = listRest(item,"=");
 		}
 		
-		// Populate the data with the raw response
-		response.setData(rawResponse);
+		// Populate the data with the raw response & request
+		var data = {
+			responseData = arguments.rawResponse,
+			requestData = arguments.requestData
+		};
+		response.setData(data);
 		
 		// Add message for what happened
 		response.addMessage(messageCode=responseData["result"], message=responseData["respmsg"]);

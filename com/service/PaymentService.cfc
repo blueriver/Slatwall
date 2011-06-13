@@ -80,16 +80,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Get Response Bean from provider service
 			var response = providerService.processCreditCard(request);
 			
-			// Update the Order Payment entity
-			if(!response.hasErrors()) {
-				writeDump(response);
-				abort;
-			} else {
-				writeDump(response.getMessageBeans());
-				writeDump(response.getErrorBean());
-				writeDump(response.hasErrors());
-				abort;	
-			}
+			// TODO: Update the Order Payment entity
+			
 		}
 		
 		

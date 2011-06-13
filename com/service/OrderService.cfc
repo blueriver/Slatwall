@@ -102,10 +102,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
 			var processType = setting('paymentMethod_creditCard_checkoutAction');
 			if(processType != 'none') {
-				var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], processType);
-				if(!paymentOK) {
+				var response = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], processType);
+				if(response.hasErrors()) {
 					allPaymentsOK = false;
-				}	
+				}
 			}
 		}
 		
