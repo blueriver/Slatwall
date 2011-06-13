@@ -66,28 +66,12 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		return this;
 	}
 	
-	public Slatwall.com.utility.shipping.RatesResponseBean function getRates(required Slatwall.com.utility.shipping.RatesRequestBean ratesRequestBean) {
-		var ratesResponseBean = new Slatwall.com.utility.shipping.RatesResponseBean();
+	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
+		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		
 		// Insert Custom Logic Here
 		
-		return ratesResponseBean;
-	}
-	
-	public Slatwall.com.utility.shipping.TrackingResponseBean function getTracking(required string trackingNumber) {
-		var trackingResponseBean = new Slatwall.com.utility.shipping.TrackingResponseBean();
-		
-		// Insert Custom Logic Here
-		
-		return trackingResponseBean;
-	}
-	
-	public Slatwall.com.utility.shipping.ShipmentResponseBean function createShipment(required any orderShipment) {
-		var shipmentResponseBean = new Slatwall.com.utility.shipping.ShipmentResponseBean();
-		
-		// Insert Custom Logic Here
-		
-		return shipmentResponseBean;
+		return responseBean;
 	}
 	
 	public struct function getShippingMethods() {

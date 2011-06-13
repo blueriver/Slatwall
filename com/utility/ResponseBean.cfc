@@ -39,13 +39,13 @@ Notes:
 component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" {
 	
 	property name="data" type="any";
-	property name="statusCode" type="numeric";
+	property name="statusCode" type="string";
 	property name="errorBean" type="any";
 	property name="messageBeans" type="array";
 	
 	public any function init() {
 		// Set Defaults
-		this.setStatusCode(0);
+		this.setStatusCode("");
 		this.setData({});
 		this.setMessageBeans([]);
 		this.setErrorBean(new Slatwall.com.utility.errorBean());
@@ -67,6 +67,10 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	
 	public void function addMessage() {
 		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
+	}
+	
+	public void function addError() {
+		getErrorBean().addError(argumentcollection=arguments);
 	}
 	
 } 

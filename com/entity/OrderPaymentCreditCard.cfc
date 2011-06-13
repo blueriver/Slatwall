@@ -41,6 +41,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	// Persistant Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
+	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardNumber" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="expirationMonth" ormType="string";

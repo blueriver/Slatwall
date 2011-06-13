@@ -76,9 +76,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
 			
 			// Query the Provider For Rates
-			var ratesRequestBean = new Slatwall.com.utility.shipping.RatesRequestBean();
-			ratesRequestBean.setShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
-			ratesRequestBean.setShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
+			var ratesRequestBean = new Slatwall.com.utility.fulfillment.ShippingRatesRequestBean();
+			ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
+			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
 			
 			// TODO: This is a hack until we setup each order fulfillment to have it's own "ship from" 
 			ratesRequestBean.setShipFromCompany("Nytro Multisport");

@@ -121,8 +121,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			// Create new Payment Entity
 			var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
 			
+			// If no amount was passed in from the data, add the amount as the order total
+			if(!structKeyExists(arguments.rc, "amount")) {
+				arguments.rc.amount = $.slatwall.cart().getTotal();
+			}
+			
 			// Attempt to Validate & Save Order Payment
-			payment = getOrderService().saveOrderPayment(payment, rc);
+			payment = getOrderService().saveOrderPayment(payment, arguments.rc);
 			
 			// Add payment to order
 			rc.$.slatwall.cart().addOrderPayment(payment);

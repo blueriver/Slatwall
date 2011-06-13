@@ -55,14 +55,36 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public boolean function processPayment(required any orderPayment) {
+	public boolean function processPayment(required any orderPayment, required string processType, numeric processAmount) {
+		// Get the relavent info and objects for this order payment
 		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
 		var paymentProviderGateway = paymentMethod.getProviderGateway();
 		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 		
-		// TODO: Charge Card
+		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
+			// Generate Process Request Bean
+			var request = new Slatwall.com.utility.payment.CreditCardProcessRequestBean();
+			
+			// Move all of the info into the new request bean
+			request.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
+			
+			// Setup the actuall processing information
+			if(!structKeyExists(arguments, "processAmount")) {
+				arguments.processAmount = arguments.orderPayment.getAmount();
+			}
+			
+			request.setProcessType(arguments.processType);
+			request.setProcessAmount(arguments.processAmount);
+			request.setProcessCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+			
+			// Get Response Bean from provider service
+			var response = providerService.processCreditCard(request);
+			
+			// TODO: Update the Order Payment entity
+			
+		}
 		
 		
-		return true;
+		return response;
 	}
 }
