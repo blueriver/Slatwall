@@ -73,7 +73,7 @@ component extends="BaseService" accessors="true" {
 	}
 
 	public any function getProductSmartList(struct data={}) {
-		var smartList = getDAO.getSmartList(entityName="SlatwallProduct", data=arguments.data);
+		var smartList = getDAO().getSmartList(entityName="SlatwallProduct", data=arguments.data);
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
