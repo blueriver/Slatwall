@@ -39,27 +39,37 @@ Notes:
 
 component displayname="Gateway Response"  accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
 
-	property name="transactionID" type="string" ;   
-	property name="authorizationCode" type="string" ;   
+	property name="transactionID" type="string";   
+	property name="authorizationCode" type="string";
+	property name="authorizedAmount" type="numeric";
+	property name="chargedAmount" type="numeric";
+	property name="creditedAmount" type="numeric";
 	property name="avsCode" type="string";
-	property name="avsAddressMatch" type="boolean";
-	property name="avsPostalCodeMatch" type="boolean";
 	property name="securityCodeMatch" type="boolean";
 	
 	public function init(){
+		// Set Defaults
+		setTransactionID("");
+		setAuthorizationCode("");
+		setAuthorizedAmount(0);
+		setChargedAmount(0);
+		setCreditedAmount(0);
+		setAVSCode("E");
+		setSecurityCodeMatch(false);
+		
 		return super.init();
 	}
 
 	public string function setAVSCode(required string avsCode){
 		if(structKeyExists(getAVSCodes(), arguments.avsCode)){
-			variables.AVSCode = avsCode;
+			variables.AVSCode = arguments.avsCode;
 		} else {
 			throw("Returned AVS code not allowed by the system","Slatwall");
 		}
 	}
 	
 	// Private methods
-	private array function getAVSCodes(){
+	private struct function getAVSCodes(){
 		var allowedAVSCodes = {
 			A = "Street address matches, but 5-digit and 9-digit postal code do not match.",	
 			B = "Street address matches, but postal code not verified."	,
@@ -103,7 +113,7 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 	F	American Express only	Card member's name does not match, but billing postal code matches.
 	G	Standard international	Non-U.S. issuing bank does not support AVS.
 	H	American Express only	Card member's name does not match. Street address and postal code match.
-	I	Address not verified.	Standard international
+	I	Standard international	Address not verified.	
 	J	American Express only	Card member's name, billing address, and postal code match.
 	K	American Express only	Card member's name matches but billing address and billing postal code do not match.
 	L	American Express only	Card member's name and billing postal code match, but billing address does not match.	
