@@ -42,7 +42,7 @@ Notes:
 		<tr>
 			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
-			<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>
+			<!---<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>--->
 			<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
 			<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
 			<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
@@ -53,7 +53,7 @@ Notes:
 			<tr>
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
-				<td>
+<!---				<td>
 					<cfset local.orderItemActionOptions = local.orderItem.getActionOptions() />
 					<cfif arrayLen(local.orderItemActionOptions) gt 0>
 						<select name="orderItemActions">
@@ -62,7 +62,7 @@ Notes:
 								<option value="#local.orderItem.getOrderItemID()#_#local.thisAction.getOrderItemActionType().getTypeID()#">#local.thisAction.getOrderItemActionType().getType()#</option>
 							</cfloop>
 						</select>
-	<!---					<cfif local.orderItem.getQuantity() gt 1>
+						<cfif local.orderItem.getQuantity() gt 1>
 							<div>
 								<label for="qtyFulFilled#local.orderItem.getOrderItemID()#">Qty:</label>
 								<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
@@ -71,11 +71,11 @@ Notes:
 									</cfloop>
 								</select>
 							</div>
-						</cfif>--->
+						</cfif>
 					<cfelse>
 						#$.slatwall.rbKey("define.notApplicable")#
 					</cfif>
-				</td>				
+				</td>--->				
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
 				<td>#local.orderItem.getQuantityDelivered()#</td>
@@ -85,7 +85,7 @@ Notes:
 	</table>
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
-		#local.orderFulfillment.getShippingAddress().getFullAddress("<br />")#	
+		<cf_SlatwallAddressDisplay address="#local.orderFulfillment.getShippingAddress()#" edit="false" />
 	</div>
 	<div class="shippingMethod">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
@@ -119,4 +119,5 @@ Notes:
 			</dd>
 		</dl>
 	</div>
+	<div class="clear"></div>
 </cfoutput>

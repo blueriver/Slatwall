@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Item Status Action Product Type" entityname="SlatwallOrderItemStatusActionProductType" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" extends="OrderItemStatusAction" discriminatorvalue="productType" {
+component displayname="Order Item Status Action Product Type" entityname="SlatwallOrderItemStatusActionProductType" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" extends="OrderItemStatusActionAbstract" discriminatorvalue="productType" {
 
 	property name="orderItemStatusActionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	

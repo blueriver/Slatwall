@@ -235,11 +235,50 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return getDAO().save(arguments.orderPayment);
 	}
 	
+	/*********  Order Actions ***************/
+	
 	public any function applyOrderAction(required string orderID, required string orderActionTypeID) {
 		var order = this.getOrder(arguments.orderID);
-		var orderAction = replaceNoCase(this.getType(arguments.orderActionTypeID).getSystemCode(),"oat","");
-		evaluate("order.#orderAction#()");		
+		var orderActionType = this.getType(arguments.orderActionTypeID);
+		switch(orderActionType.getSystemCode()) {
+			case "oatCancel": {
+				return cancelOrder(order,orderActionType);
+			}
+			case "oatRefund": {
+				return refundOrder(order,orderActionType);
+			}
+		}		
 	}
 	
 	
+	public any function cancelOrder(required any order, required any orderActionType) {
+		// see if this action is allowed for this status
+		var validateCancel = checkStatusAction(argumentCollection=arguments);
+		if(validateCancel) {
+			var statusType = this.getTypeBySystemCode("ostCanceled");
+			arguments.order.setOrderStatusType(statusType);	
+		}
+		return validateCancel;
+	}
+	
+	public any function refundOrder(required any order, required any orderActionType) {
+		// see if this action is allowed for this status
+		var validateRefund = checkStatusAction(argumentCollection=arguments);
+		if(validateRefund) {
+			//TODO: logic for refunding order
+		}
+		return validateRefund;
+	}
+	
+	public boolean function checkStatusAction(required any order, required any orderActionType) {
+		var actionOptions = arguments.order.getActionOptions();
+		var isValid = false;
+		for( var i=1; i<=arrayLen(actionOptions);i++ ) {
+			if( actionOptions[i].getOrderActionType().getTypeID() == arguments.orderActionType.getTypeID() ) {
+				isValid = true;
+				break;
+			}
+		}
+		return isValid;
+	}	
 }
