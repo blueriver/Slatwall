@@ -62,7 +62,7 @@ Notes:
 								<option value="#local.orderItem.getOrderItemID()#_#local.thisAction.getOrderItemActionType().getTypeID()#">#local.thisAction.getOrderItemActionType().getType()#</option>
 							</cfloop>
 						</select>
-	<!---					<cfif local.orderItem.getQuantity() gt 1>
+						<cfif local.orderItem.getQuantity() gt 1>
 							<div>
 								<label for="qtyFulFilled#local.orderItem.getOrderItemID()#">Qty:</label>
 								<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
@@ -71,7 +71,7 @@ Notes:
 									</cfloop>
 								</select>
 							</div>
-						</cfif>--->
+						</cfif>
 					<cfelse>
 						#$.slatwall.rbKey("define.notApplicable")#
 					</cfif>
@@ -119,4 +119,5 @@ Notes:
 			</dd>
 		</dl>
 	</div>
+	<div class="clear"></div>
 </cfoutput>
