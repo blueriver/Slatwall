@@ -57,7 +57,11 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="securityCode" persistent="false";
 	
 	public any function init(){
+		// Set Defaults
 		setPaymentMethodID("creditCard");
+		if(isNull(variables.creditCardTransactions)) {
+			variables.creditCardTransactions = [];
+		}
 		if(isNull(variables.amountAuthorized)) {
 			variables.amountAuthorized = 0;
 		}

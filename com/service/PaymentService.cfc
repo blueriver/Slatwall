@@ -110,10 +110,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			} else {
 				// Populate the orderPayment with the processing error
-				
-				writeDump(response.getData());
 				writeDump(response.getMessageBeans());
-				writeDump(response.getErrorBean());
+				writeDump(response.getData());
 				abort;
 			}
 		}
