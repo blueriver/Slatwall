@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,51 +35,39 @@
 
 Notes:
 
-*/
-component extends="BaseController" persistent="false" accessors="true" output="false" {
+--->
 
-	// fw1 Auto-Injected Service Properties
-	property name="orderService" type="any";
-	
-	public void function before(required struct rc) {
-		param name="rc.orderID" default="";
-		param name="rc.keyword" default="";
-	}
-	
-	public void function dashboard(required struct rc) {
-		getFW().redirect("admin:order.list");
-	}
+<cfoutput>
 
-    public void function list(required struct rc) {
-		param name="rc.orderby" default="orderOpenDateTime|DESC";
-		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
-    }
+<cfset local.creditcardTransactions = local.orderPayment.getCreditCardTransactions() />
+<table class="paymentDetails">
+	<tr>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.creditCardType")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.creditCardLastFour")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.expirationDate")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.billingAddress")#</th>
+		<th>#$.Slatwall.rbKey("entity.creditcardtransaction.authorizationcode")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.amountAuthorized")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.amountCharged")#</th>
+	</tr>
+	<tr>
+		<td><!---#local.orderPayment.getCreditCardType()#---></td>
+		<td>#local.orderPayment.getCreditCardLastFour()#</td>
+		<td>#local.orderPayment.getExpirationDate()#</td>
+		<td><cfif !isNull(local.orderPayment.getBillingAddress())><cf_SlatwallAddressDisplay address="#local.orderPayment.getBillingAddress()#" edit="false" /></cfif></td>
+		<td>
+			<cfloop array = "#local.creditcardTransactions#" index="local.thistransaction">
+				#local.thistransaction.getAuthorizationCode()#<br>
+			</cfloop>
+		</td>
+		<td>#local.orderPayment.getAmountAuthorized()#</td>
+		<td>#local.orderPayment.getAmountCharged()#</td>		
+	</tr>
+</table>
 
-	public void function detail(required struct rc) {
-	   rc.order = getOrderService().getOrder(rc.orderID);
-	   if(!isNull(rc.order) and !rc.order.isNew()) {
-	       rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
-	   } else {
-	       getFW().redirect("admin:order.list");
-	   }
-	}
+<!--- display link to charge card if full authorized amount hasn't been charged yet --->
+<cfif local.orderPayment.getAmountAuthorized() gt local.orderpayment.getAmountCharged()>
+	<cf_ActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
+</cfif>
 	
-	public void function applyOrderActions(required struct rc) {
-		for( var i=1; i<=listLen(rc.orderActions); i++ ) {
-			local.thisOrderID = listFirst(listGetAt(rc.orderActions,i),"_");
-			local.thisOrderActionTypeID = listLast(listGetAt(rc.orderActions,i),"_");
-			var applied = getOrderService().applyOrderAction(local.thisOrderID,local.thisOrderActionTypeID);
-		}
-		if( applied ) {
-			rc.message = rc.$.slatwall.rbKey("admin.order.applyOrderActions_success");
-			getFW().redirect(action="admin:order.list", preserve="message");
-		} 
-	}
-	
-	/****** Order Fulfillments *****/
-	
-	public void function listOrderFulfillments(required struct rc) {
-		rc.fulfillmentSmartList = getOrderService().getOrderFulfillmentSmartList(data=arguments.rc);
-	}
-
-}
+</cfoutput>

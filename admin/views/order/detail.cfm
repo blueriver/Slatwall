@@ -82,15 +82,33 @@ Notes:
 		<table class="stripe">
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
-				<th>#$.Slatwall.rbKey("entity.orderPayment.billingAddress")#</th>
-				<th>#$.Slatwall.rbKey("entity.orderPayment.amountAuthorized")#</th>
-				<th>#$.Slatwall.rbKey("entity.orderPayment.amountCharged")#</th>
+				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>
+				<th>&nbsp</th>
 			</tr>
 			<cfloop array="#local.payments#" index="local.thisPayment">
+			<tr>
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td><cfif !isNull(local.thisPayment.getBillingAddress())>#local.thisPayment.getBillingAddress().getFullAddress()#</cfif></td>
 				<td>#local.thisPayment.getAmountAuthorized()#</td>
-				<td>#local.thisPayment.getAmountCharged()#</td>
+				<td class="administration">
+		          <ul class="one">
+		          	<li class="zoomIn">           
+						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+					</li>
+					<li class="zoomOut">           
+						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+					</li>
+		          </ul>     						
+				</td>
+			</tr>
+			<tr id="orderDetail_#local.thisPayment.getOrderPaymentID()#" style="display:none;">
+				<td colspan="3">
+					<!--- set up order payment in params struct to pass into view which shows information specific to the payment method --->
+					<cfset local.params.orderPayment = local.thisPayment />
+					<div class="paymentDetails">
+					#view("order/payment/#lcase(local.thisPayment.getPaymentMethod().getPaymentMethodID())#", local.params)#
+					</div>
+				</td>
+			</tr>
 			</cfloop>
 		</table>
 	</div>
@@ -107,9 +125,12 @@ Notes:
 				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
 					<cfset local.fulfillmentNumber++ />
 					<h4>#$.Slatwall.rbKey("entity.fulfillment")# #local.fulfillmentNumber#</h4>
+					<div class="buttons">
+						<cf_ActionCaller action="admin:order.detailorderfulfillment" text="#$.slatwall.rbKey('admin.orderfulfillment.process')#" queryString="orderfulfillmentid=#local.thisOrderFulfillment.getOrderFulfillmentID()#" class="button" />
+					</div>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
-					#view("order/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethod().getFulfillmentMethodID()#", local.params)#
+					#view("order/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
 				</cfloop>
 			</div>
 			

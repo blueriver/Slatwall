@@ -39,7 +39,7 @@ Notes:
 
 <cfoutput>
 <cfif rc.edit>
-<div id="buttons">
+<div class="buttons">
 	<cfif rc.Product.getOptionGroupCount() gt 0>
 	<a class="button" id="addSKU">#rc.$.Slatwall.rbKey("admin.product.edit.addsku")#</a>
 	</cfif>

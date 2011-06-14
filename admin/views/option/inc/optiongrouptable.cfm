@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 
 <cfif arrayLen(rc.optionGroups) gt 1>
-	<div id="buttons">
+	<div class="buttons">
 	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
 	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
 	</div>
