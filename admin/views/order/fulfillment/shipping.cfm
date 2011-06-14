@@ -42,7 +42,7 @@ Notes:
 		<tr>
 			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
-			<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>
+			<!---<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>--->
 			<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
 			<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
 			<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
@@ -53,7 +53,7 @@ Notes:
 			<tr>
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
-				<td>
+<!---				<td>
 					<cfset local.orderItemActionOptions = local.orderItem.getActionOptions() />
 					<cfif arrayLen(local.orderItemActionOptions) gt 0>
 						<select name="orderItemActions">
@@ -75,7 +75,7 @@ Notes:
 					<cfelse>
 						#$.slatwall.rbKey("define.notApplicable")#
 					</cfif>
-				</td>				
+				</td>--->				
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
 				<td>#local.orderItem.getQuantityDelivered()#</td>
