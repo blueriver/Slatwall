@@ -36,7 +36,16 @@
 Notes:
 
 */
-component displayname="Order Item Status Action" entityname="SlatwallOrderItemStatusAction" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" extends="OrderItemStatusActionAbstract" discriminatorvalue="global" {
+component displayname="Order Item Status Action Abstract" entityname="SlatwallOrderItemStatusActionAbstract" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" discriminatorcolumn="orderItemStatusActionType" {
 
+	property name="orderItemStatusActionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	property name="fulfillmentMethod" fieldtype="many-to-one" cfc="FulfillmentMethod" fkcolumn="fulfillmentMethodID";
+	
+	property name="orderItemStatusType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderItemStatusTypeID";
+	property name="orderItemActionType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderItemActionTypeID";
+	
+	// Special Related Discriminator Property
+	property name="orderItemStatusActionType" insert="false" update="false";
 	
 }
