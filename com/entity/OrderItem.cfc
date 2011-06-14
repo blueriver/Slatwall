@@ -143,4 +143,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     }
 	
 	/************   END Association Management Methods   *******************/
+	
+	public any function getActionOptions() {
+		var smartList = getService("orderService").getOrderItemStatusActionSmartList();
+		smartList.addFilter("orderItemStatusType_typeID", getOrderItemStatusType().getTypeID());
+		return smartList.getRecords();
+	}
 }
