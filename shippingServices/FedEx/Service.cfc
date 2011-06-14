@@ -105,7 +105,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		httpRequest.setResolveurl(false);
 		httpRequest.addParam(type="XML", name="name",value=xmlPacket);
 		
-		var xmlResponse = XmlParse(httpRequest.send().getPrefix().fileContent);
+		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "all"));
 		
 		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		ratesResponseBean.setData(xmlResponse);
