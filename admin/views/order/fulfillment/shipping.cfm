@@ -54,17 +54,27 @@ Notes:
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
 				<td>
-<!---					<cfset local.orderActionOptions = local.order.getActionOptions() />
-					<cfif arrayLen(local.orderActionOptions) gt 0>
-						<select name="orderActions">
+					<cfset local.orderItemActionOptions = local.orderItem.getActionOptions() />
+					<cfif arrayLen(local.orderItemActionOptions) gt 0>
+						<select name="orderItemActions">
 							<option value="">#$.slatwall.rbKey("define.select")#</option>
-							<cfloop array = #local.orderActionOptions# index="local.thisAction">
-								<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
+							<cfloop array = #local.orderItemActionOptions# index="local.thisAction">
+								<option value="#local.orderItem.getOrderItemID()#_#local.thisAction.getOrderItemActionType().getTypeID()#">#local.thisAction.getOrderItemActionType().getType()#</option>
 							</cfloop>
 						</select>
+	<!---					<cfif local.orderItem.getQuantity() gt 1>
+							<div>
+								<label for="qtyFulFilled#local.orderItem.getOrderItemID()#">Qty:</label>
+								<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
+									<cfloop from="#local.orderItem.getQuantity()#" to="1" step="-1" index="local.i">
+										<option value="#local.i#"<cfif local.i eq local.orderItem.getQuantity()> selected="selected"</cfif>>#local.i#</option>
+									</cfloop>
+								</select>
+							</div>
+						</cfif>--->
 					<cfelse>
 						#$.slatwall.rbKey("define.notApplicable")#
-					</cfif>--->
+					</cfif>
 				</td>				
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
