@@ -59,8 +59,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 
 	public any function init() {
-		var statusType = getService("orderService").getTypeBySystemCode("oistNew");
-		setOrderItemStatusType(statusType);
+		if( !structKeyExists(variables,"orderItemStatusType") ) {
+			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
+			setOrderItemStatusType(statusType);	
+		}
 		return Super.init();
 	}
 	
