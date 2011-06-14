@@ -62,7 +62,7 @@ Notes:
 				<tr>
 					<td>#Local.Order.getOrderNumber()#</td>
 					<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "MM/DD/YYYY")#</td>
-					<td class="varWidth">#Local.Order.getAccount().getFullName()#</td>
+					<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
 					<td>#Local.Order.getOrderStatusType().getType()#</td>
 					<td>#DollarFormat(local.order.getTotal())#</td>
 					<td>
