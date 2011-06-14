@@ -65,7 +65,7 @@ Notes:
 						<tbody>
 							<cfloop array="#rc.addressZone.getAddressZoneLocations()#" index="local.addressZoneLocation" >
 								<tr>
-									<td><cfif rc.edit><cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="addressZoneLocations.new.countryCode" selectedCountryCode="#local.addressZoneLocation.getCountryCode()#"><cfelse>#local.addressZoneLocation.getCountryCode()#</cfif></td>
+									<!--- <td><cfif rc.edit><cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="addressZoneLocations.new.countryCode" selectedCountryCode="#local.addressZoneLocation.getCountryCode()#"><cfelse>#local.addressZoneLocation.getCountryCode()#</cfif></td> --->
 									<td><cfif rc.edit><input name="addressZoneLocations.#local.addressZoneLocation.getAddressZoneLocationID()#.stateCode" value="#local.addressZoneLocation.getStateCode()#"><cfelse>#local.addressZoneLocation.getStateCode()#</cfif></td>
 									<td><cfif rc.edit><input name="addressZoneLocations.#local.addressZoneLocation.getAddressZoneLocationID()#.postalCode" value="#local.addressZoneLocation.getPostalCode()#"><cfelse>#local.addressZoneLocation.getPostalCode()#</cfif></td>
 								</tr>
@@ -85,7 +85,7 @@ Notes:
 			<tbody class="template">
 				<tr>
 					<td>
-						<cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="addressZoneLocations.new.countryCode">
+						<!---<cf_CountrySelector countriesArray="#rc.countriesArray#" selectName="addressZoneLocations.new.countryCode"> --->
 					</td>
 					<td><input type="text" name="addressZoneLocations.new.stateCode"></td>
 					<td><input type="text" name="addressZoneLocations.new.postalCode"></td>

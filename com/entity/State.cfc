@@ -43,7 +43,7 @@ component displayname="State" entityname="SlatwallState" table="SlatwallState" p
 	property name="stateName" ormtype="string";
 	
 	// Related Object Properties
-	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
+	property name="country" cfc="Country" fieldtype="id,many-to-one" fkcolumn="countryCode";
 	
 	// This property allows us to get states based on country code without joining the country table.  Basically it is just a reference to the actual ID column
 	property name="countryCode" insert="false" update="false"; 

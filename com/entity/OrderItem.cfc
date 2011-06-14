@@ -61,9 +61,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	public any function init() {
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
 			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
-			setOrderItemStatusType(statusType);	
+			setOrderItemStatusType(statusType);
 		}
-		return Super.init();
+		return super.init();
 	}
 	
 	public string function getStatus(){
