@@ -39,10 +39,9 @@ Notes:
 <cfoutput>
 	<div class="svoproductdetail">
 		<div class="image">
-			Image Here
+			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(size="M")#</a>
 		</div>
 		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productCode">
-		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productYear">
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
