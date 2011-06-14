@@ -112,6 +112,10 @@ Notes:
 				<cf_ActionCaller action="admin:product" type="link">
 			</li>
 			<li id="navOrders">
+				<ul class="addMenuNav">
+					<cf_ActionCaller action="admin:order.list" type="list">
+					<cf_ActionCaller action="admin:order.listorderfulfillments" type="list">
+				</ul>
 				<cf_ActionCaller action="admin:order" type="link">
 			</li>
 			<li id="navAccounts">

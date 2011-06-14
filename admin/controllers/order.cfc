@@ -75,5 +75,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().redirect(action="admin:order.list", preserve="message");
 		} 
 	}
+	
+	/****** Order Fulfillments *****/
+	
+	public void function listOrderFulfillments(required struct rc) {
+		rc.fulfillmentSmartList = getOrderService().getOrderFulfillmentSmartList(data=arguments.rc);
+	}
 
 }
