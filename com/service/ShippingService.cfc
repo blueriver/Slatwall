@@ -95,24 +95,31 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var ratesResponseBean = providerService.getRates(ratesRequestBean);
 			
 			// Loop Over Shipping Methods
-			for(var m=1; m<=arrayLen(shippingMethods); m++) {
+			if(ratesResponseBean.hasErrors()) {
+				writeDump(ratesResponseBean.getMessageBeans());
+				writeDump(ratesResponseBean.getData());
+				abort;
+			} else {
+				for(var m=1; m<=arrayLen(shippingMethods); m++) {
 				
-				// Check the method to see if it is from this provider
-				if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
-					
-					// Loop over the rates return by the provider to match with a shipping method
-					for(var r=1; r<=arrayLen(ratesResponseBean.getShippingMethodResponseBeans()); r++) {
-						if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
-							var option = this.newOrderShippingMethodOption();
-							option.setShippingMethod(shippingMethods[m]);
-							option.setTotalCost(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCost());
-							option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
-							option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
-							getDAO().save(option);
+					// Check the method to see if it is from this provider
+					if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
+						
+						// Loop over the rates return by the provider to match with a shipping method
+						for(var r=1; r<=arrayLen(ratesResponseBean.getShippingMethodResponseBeans()); r++) {
+							if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
+								var option = this.newOrderShippingMethodOption();
+								option.setShippingMethod(shippingMethods[m]);
+								option.setTotalCost(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCost());
+								option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
+								option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
+								getDAO().save(option);
+							}
 						}
 					}
 				}
 			}
+			
 		}
 		
 		return methodOptions;
