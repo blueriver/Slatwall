@@ -85,7 +85,7 @@ Notes:
 	</table>
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
-		#local.orderFulfillment.getShippingAddress().getFullAddress("<br />")#	
+		<cf_SlatwallAddressDisplay address="#local.orderFulfillment.getShippingAddress()#" edit="false" />
 	</div>
 	<div class="shippingMethod">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>

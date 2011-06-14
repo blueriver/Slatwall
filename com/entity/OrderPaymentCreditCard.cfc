@@ -55,6 +55,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	
 	// Non-Persistent properties
 	property name="securityCode" persistent="false";
+	property name="expirationDate" persistent="false";
 	
 	public any function init(){
 		// Set Defaults
@@ -83,6 +84,13 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		}
 	}
 	
+	public string function getExpirationDate() {
+		if(!structKeyExists(variables,"expirationDate")) {
+			variables.expirationDate = getExpirationMonth() & "/" & getExpirationYear();
+		}
+		return variables.expirationDate;
+	}
+		
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)

@@ -177,6 +177,17 @@ table#productTypeSettings {
 	width: 600px;
 }
 
+table td.administration li.zoomIn {
+	background: url(../images/admin.ui.zoom_in.png) no-repeat;
+	width: 16px;
+}
+
+table td.administration li.zoomOut {
+	background: url(../images/admin.ui.zoom_out.png) no-repeat;
+	width: 16px;
+	display: none;
+}
+
 td.property {
 	text-align: left;
 	font-weight: bold;
@@ -195,10 +206,16 @@ div.basicOrderInfo {
 }
 
 div.paymentInfo {
-	width: 600px;
+	width: 700px;
 	float: left;
 	margin: 10px;
 }
+
+div.paymentDetails {
+	padding: 5px;
+	text-align: right;	
+}
+
 /*
 table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands, table#AttributeSets {
 	width: 800px;
