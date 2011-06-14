@@ -57,6 +57,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderitemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+
+	public any function init() {
+		var statusType = getService("orderService").getTypeBySystemCode("oistNew");
+		setOrderItemStatusType(statusType);
+		return Super.init();
+	}
 	
 	public string function getStatus(){
 		return getOrderItemStatusType().getType();
