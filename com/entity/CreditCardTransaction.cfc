@@ -40,9 +40,11 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	
 	property name="creditCardTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="transactionType" ormtype="string";
-	property name="transactionAmount" ormtype="float";
 	property name="providerTransactionID" ormtype="string";
 	property name="authorizationCode" ormtype="string";
+	property name="authorizedAmount" ormtype="float";
+	property name="chargedAmount" ormtype="float";
+	property name="creditedAmount" ormtype="float";
 	
 	// Related Object Properties
 	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";

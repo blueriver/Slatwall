@@ -84,30 +84,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			if(!response.hasErrors()) {
 				processOK = true;
 				
-				// Log this transaction
+				// Populate a new Credit Card Transaction
 				var transaction = this.newCreditCardTransaction();
 				transaction.setTransactionType(arguments.transactionType);
-				transaction.setTransactionAmount(arguments.transactionAmount);
 				transaction.setProviderTransactionID(response.getTransactionID());
 				transaction.setAuthorizationCode(response.getAuthorizationCode());
+				transaction.setAuthorizedAmount(response.getAuthorizedAmount());
+				transaction.setChargedAmount(response.getChargedAmount());
+				transaction.setCreditedAmount(response.getCreditedAmount());
+				
+				// Relate to order Payment
 				transaction.setOrderPayment(arguments.orderPayment);
 				
 				// Save the Transaction to the DB
 				this.saveCreditCardTransaction(transaction);
 				
 				// Update the order Payment
-				if(arguments.transactionType eq "authorize") {
-					var authAmount = arguments.orderPayment.getAmountAuthorized() + arguments.transactionAmount;
-					arguments.orderPayment.setAmountAuthorized(authAmount);
-				} else if (arguments.transactionType eq "authorizeAndCharge") {
-					var authAmount = arguments.orderPayment.getAmountAuthorized() + arguments.transactionAmount;
-					var chargeAmount = arguments.orderPayment.getAmountCharged() + arguments.transactionAmount;
-					arguments.orderPayment.setAmountAuthorized(authAmount);
-					arguments.orderPayment.setAmountCharged(chargeAmount);
-				} else if (arguments.transactionType eq "chargePreAuthorization") {
-					var chargeAmount = arguments.orderPayment.getAmountCharged() + arguments.transactionAmount;
-					arguments.orderPayment.setAmountCharged(arguments.transactionAmount);
-				}
+				var authAmount = arguments.orderPayment.getAmountAuthorized() + response.getAuthorizedAmount();
+				var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
+				arguments.orderPayment.setAmountAuthorized(authAmount);
+				arguments.orderPayment.setAmountCharged(chargeAmount);
 			} else {
 				// Populate the orderPayment with the processing error
 				writeDump(response.getMessageBeans());

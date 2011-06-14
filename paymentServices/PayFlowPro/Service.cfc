@@ -80,7 +80,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
 		var requestData = getRequestData(requestBean);
 		var rawResponse = postRequest(requestData);
-		return getResponseBean(rawResponse, requestData);
+		return getResponseBean(rawResponse, requestData, arguments.requestBean);
 	}
 	
 	private string function getRequestData(required any requestBean){
@@ -162,7 +162,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		}
 	}
 	
-	private any function getResponseBean(required struct rawResponse, required any requestData){
+	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
 		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
 		var responseDataArray = listToArray(rawResponse.fileContent,"&");
 		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
@@ -187,23 +187,35 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		if(responseData["result"] != 0) {
 			// Transaction did not go through
 			response.getErrorBean().addError(name=responseData["result"], message=responseData["respmsg"]);
+		} else {
+			if(requestBean.getTransactionType() == "authorize") {
+				response.setAuthorizedAmount(requestBean.getTransactionAmount());
+			} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
+				response.setAuthorizedAmount(requestBean.getTransactionAmount());
+				response.setChargedAmount(requestBean.getTransactionAmount());
+			} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
+				response.setChargedAmount(requestBean.getTransactionAmount());
+			} else if(requestBean.getTransactionType() == "credit") {
+				response.setCreditedAmount(requestBean.getTransactionAmount());
+			}
 		}
 		
 		response.setTransactionID(responseData["pnref"]);
 		response.setAuthorizationCode(responseData["authcode"]);
-		if(responseData["avsaddr"] == 'Y') {
-			response.setAVSAddressMatch(true);
-		} else if(responseData["avsaddr"] == 'N') {
-			response.setAVSAddressMatch(false);
+		
+		if(responseData["avsaddr"] == 'Y' && responseData["avszip"] == 'Y') {
+			response.setAVSCode("Y");
+		} else if(responseData["avsaddr"] == 'N' && responseData["avszip"] == 'Y') {
+			response.setAVSCode("Z");
+		} else if(responseData["avsaddr"] == 'N' && responseData["avszip"] == 'N') {
+			response.setAVSCode("N");
+		} else {
+			response.setAVSCode("E");
 		}
-		if(responseData["avszip"] == 'Y') {
-			response.setAVSPostalCodeMatch(true);
-		} else if(responseData["avszip"] == 'N') {
-			response.setAVSPostalCodeMatch(false);
-		}
-		if(responseData["cvv2Match"] == 'Y') {
+		
+		if(responseData["cvv2match"] == 'Y') {
 			response.setSecurityCodeMatch(true);
-		} else if(responseData["cvv2Match"] == 'N') {
+		} else {
 			response.setSecurityCodeMatch(false);
 		}
 		
