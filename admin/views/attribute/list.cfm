@@ -46,7 +46,7 @@ Notes:
 <cfif arrayLen(rc.attributeSets) GT 0>
 
 <!---<cfif arrayLen(rc.attributeSets) gt 1>
-	<div id="buttons">
+	<div class="buttons">
 	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.attribute.saveorder")#</a>
 	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.attribute.reorder')#</a>	
 	</div>

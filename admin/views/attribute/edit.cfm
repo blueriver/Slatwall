@@ -58,7 +58,7 @@ Notes:
 <cfif rc.create>
 <cfset local.thisOpen = rc.newAttributeFormOpen />
 
-<div id="buttons">
+<div class="buttons">
 <a class="button" id="newFrmopen" href="javascript:;" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##newFrmcontainer').slideDown();this.style.display='none';jQuery('##newFrmclose').show();return false;">#rc.$.Slatwall.rbKey('admin.attribute.addAttribute')#</a>
 <a class="button" href="javascript:;" <cfif !local.thisOpen>style="display:none;"</cfif> id="newFrmclose" onclick="jQuery('##newFrmcontainer').slideUp();this.style.display='none';jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('admin.attribute.closeform')#</a>
 </div>
