@@ -110,7 +110,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getFulfillmentTotal() {
-		return 0;
+		var fulfillmentTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			fulfillmentTotal += getOrderFulfillments()[1].getFulfillmentCharge();
+		}
+		return fulfillmentTotal;
 	}
 	
 	public numeric function getTotal() {
