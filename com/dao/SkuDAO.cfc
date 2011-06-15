@@ -38,16 +38,6 @@ Notes:
 */
 component extends="slatwall.com.dao.BaseDAO" {
 
-	public any function getSkuSmartList(string productID, struct data={}){
-		
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallSku", data=arguments.data);
-		
-		if( structKeyExists(arguments,"productID") ) {
-			smartList.addFilter(propertyIdentifier="product_productID", value=arguments.productID);
-		}
-		
-		return smartList;
-	}
 	
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
 	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
