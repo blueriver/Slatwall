@@ -94,5 +94,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function listOrderFulfillments(required struct rc) {
 		rc.fulfillmentSmartList = getOrderService().getOrderFulfillmentSmartList(data=arguments.rc);
 	}
+	
+	public void function detailOrderFulfillment(required struct rc) {
+		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderfulfillmentID);
+		if(isNull(rc.orderFulfillment)) {
+			getFW().redirect(action="admin:order.listOrderFulfillments");
+		}
+	}
 
 }

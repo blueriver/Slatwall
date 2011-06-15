@@ -97,12 +97,15 @@ div.svoadminproductdetail form {
 }
 
 div.svoadminorderdetail .shippingAddress,
-div.svoadminorderdetail .shippingMethod {
+div.svoadminorderdetail .shippingMethod,
+div.svoadminorderfulfillmentdetail .shippingAddress,
+div.svoadminorderfulfillmentdetail .shippingMethod {
 	float: left;
 	margin: 0 20px;
 }
 
-div.svoadminorderdetail .totals {
+div.svoadminorderdetail .totals,
+div.svoadminorderfulfillmentdetail .totals {
 	float: right;
 	margin: 0 0 0 20px;
 }
@@ -139,7 +142,7 @@ a.buttonOff:hover {
 	text-decoration: none;
 }
 
-a.adminorderdetailorderfulfillment {
+.buttons a.adminorderdetailorderfulfillment {
 	float:right;
 }
 

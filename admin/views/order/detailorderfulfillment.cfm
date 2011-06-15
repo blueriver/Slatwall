@@ -36,38 +36,13 @@
 Notes:
 
 --->
-<cfparam name="rc.fulfillmentSmartList" type="any" />
+<cfparam name="rc.orderFulfillment" type="any" />
 
+<cfset local.method = rc.orderfulfillment.getFulfillmentMethodID() />
+
+<cfset local.params.orderFulfillment = rc.orderFulfillment />
+<div class="svoadminorderfulfillmentdetail">
 <cfoutput>
-	
-<div class="svoadminorderfulfillmentlist">
-	<form action="#buildURL('admin:order.listorderfulfillments')#" method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
-	</form>
-	
-	<table id="OrderFulfillmentList" class="stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.orderFulfillment.fulfillmentMethod")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.account.accountName")#</th>
-			<th>#$.slatwall.rbKey("entity.orderFulfillment.total")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.fulfillmentSmartList.getPageRecords()#" index="local.fulfillment">
-			<cfset local.thisOrder = local.fulfillment.getOrder() />
-			<cfset local.thisAccount = local.thisOrder.getAccount() />
-			<tr>
-				<td>#dateFormat(local.thisOrder.getOrderOpenDateTime(),"medium")#</td>
-				<td>#local.thisOrder.getOrderNumber()#</td>
-				<td>#$.slatwall.rbKey("entity.orderfulfillment.fulfillmentmethod." & local.fulfillment.getfulfillmentMethodID())#</td>
-				<td><cf_PropertyDisplay object="#local.thisAccount#" property="fullName" displayType="plain" link="?slatAction=admin:account.detail&accountID=#local.thisAccount.getAccountID()#">
-				<td>#dollarFormat(local.fulfillment.getTotalCharge())#</td>
-				<td>
-					<cf_ActionCaller action="admin:order.detailorderfulfillment" querystring="orderfulfillmentID=#local.fulfillment.getorderfulfillmentID()#" type="link" text="#rc.$.slatwall.rbKey('admin.order.processorderfulfillment_nav')#" />
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-</div>
+	#view("order/fulfillment/#local.method#",local.params)#
 </cfoutput>
+</div>
