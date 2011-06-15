@@ -134,7 +134,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	
 	private void function preInsert() {
 		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
-		
+		setCreditCardNumber(javaCast("null",""));
 		
 		// Call Super Pre-Insert
 		super.preInsert();
@@ -142,6 +142,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	
 	private void function preUpdate(Struct oldData) {
 		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
+		setCreditCardNumber(javaCast("null",""));
 		
 		// Call Super Pre-Update
 		super.preUpdate();
