@@ -62,6 +62,9 @@ Notes:
 			</div>
 			<div class="paymentMethod">
 				<h4>Payment Method</h4>
+				<cfif arrayLen($.slatwall.cart().getOrderPayments()) and $.slatwall.cart().getOrderPayments()[1].getErrorBean().hasErrors() and $.slatwall.cart().getOrderPayments()[1].getErrorBean().hasError('processing')>
+				<div class="error">#$.slatwall.cart().getOrderPayments()[1].getErrorBean().getError('processing')#</div>
+				</cfif> 
 				<dl>
 					<dt>Name On Card</dt>
 					<dd><input type="text" name="nameOnCreditCard" /></dd>
