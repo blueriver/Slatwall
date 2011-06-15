@@ -59,7 +59,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.orderFulfillment = this.newOrderFulfillmentShipping();
 				
 				arguments.orderFulfillment.setOrder(arguments.order);
-				save(arguments.orderFulfillment);
+				this.saveOrderFulfillment(arguments.orderFulfillment);
 			} else {
 				arguments.orderFulfillment = osArray[1];
 			}
@@ -208,9 +208,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// Populate Order Payment	
 		arguments.orderPayment.populate(arguments.data);
+		
+		// Manually Set the scurity code because it isn't a persistent property
 		arguments.orderPayment.setSecurityCode(arguments.data.securityCode);
-		// TODO: This is a hack until [issue 124] gets resolved.
-		arguments.orderPayment.setAmount(arguments.data.amount);
 		
 		// Get Address
 		if( isNull(arguments.orderPayment.getBillingAddress()) ) {
