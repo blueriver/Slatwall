@@ -64,7 +64,7 @@ Notes:
 				<h4>Payment Method</h4>
 				<dl>
 					<dt>Name On Card</dt>
-					<dd><input type="text" name="nameOnCart" /></dd>
+					<dd><input type="text" name="nameOnCreditCard" /></dd>
 					<dt>Credit Card Number</dt>
 					<dd><input type="text" name="creditCardNumber" /></dd>
 					<dt>CVV Code</dt>

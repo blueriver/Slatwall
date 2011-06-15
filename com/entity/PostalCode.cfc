@@ -51,7 +51,7 @@ component displayname="Postal Code" entityname="SlatwallPostalCode" table="Slatw
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	property name="state" cfc="State" fieldtype="many-to-one" fkcolumn="stateCode";   
+	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" insert="false" update="false";
+	property name="state" cfc="State" fieldtype="many-to-one" fkcolumn="stateCode,countryCode";
 	
 }
