@@ -43,6 +43,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="addressService";
 	property name="settingService";
 	
+	public any function getOrderFulfillmentSmartList(struct data = {}) {
+		arguments.entityName = "SlatwallOrderFulfillment";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		smartList.addOrder("order_orderOpenDateTime|DESC");
+		return smartList;
+	}
+	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
 		// Check to see if the order has a status
 		if(isNull(arguments.order.getOrderStatusType())) {
@@ -244,43 +251,48 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var orderActionType = this.getType(arguments.orderActionTypeID);
 		switch(orderActionType.getSystemCode()) {
 			case "oatCancel": {
-				return cancelOrder(order,orderActionType);
+				return cancelOrder(order);
 			}
 			case "oatRefund": {
-				return refundOrder(order,orderActionType);
+				return refundOrder(order);
 			}
 		}		
 	}
 	
-	
-	public any function cancelOrder(required any order, required any orderActionType) {
+	public any function cancelOrder(required any order) {
 		// see if this action is allowed for this status
-		var validateCancel = checkStatusAction(argumentCollection=arguments);
-		if(validateCancel) {
+		var response = checkStatusAction(arguments.order,"cancel");
+		if(!response.hasErrors()) {
 			var statusType = this.getTypeBySystemCode("ostCanceled");
 			arguments.order.setOrderStatusType(statusType);	
-		}
-		return validateCancel;
+		} 
+		return response;
 	}
 	
-	public any function refundOrder(required any order, required any orderActionType) {
+	public any function refundOrder(required any order) {
 		// see if this action is allowed for this status
-		var validateRefund = checkStatusAction(argumentCollection=arguments);
-		if(validateRefund) {
+		var response = checkStatusAction(arguments.order,"refund");
+		if(!response.hasErrors()) {
 			//TODO: logic for refunding order
 		}
-		return validateRefund;
+		return response;
 	}
 	
-	public boolean function checkStatusAction(required any order, required any orderActionType) {
+	public any function checkStatusAction(required any order, required string action) {
+		var response = new com.utility.ResponseBean();
 		var actionOptions = arguments.order.getActionOptions();
 		var isValid = false;
 		for( var i=1; i<=arrayLen(actionOptions);i++ ) {
-			if( actionOptions[i].getOrderActionType().getTypeID() == arguments.orderActionType.getTypeID() ) {
+			if( actionOptions[i].getOrderActionType().getSystemCode() == "oat" & arguments.action ) {
 				isValid = true;
 				break;
 			}
 		}
-		return isValid;
+		if(!isValid) {
+			rc.message = rbKey("entity.order.#arguments.action#_validatestatus");
+			rc.message = replaceNocase(rc.message,"{statusValue}",arguments.order.getStatus());
+			response.addError(arguments.action,rc.message);
+		}
+		return response;
 	}	
 }

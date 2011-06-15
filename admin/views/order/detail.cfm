@@ -38,10 +38,8 @@ Notes:
 --->
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.Order" type="any" />
-<!---
-<cfset request.layout = false />
-<cfdump var="#rc.Order.getActionOptions()#" abort=true>--->
 
+<cfset local.orderActionOptions = rc.Order.getActionOptions() />
 <cfset local.account = rc.Order.getAccount() />
 <cfset local.payments = rc.Order.getOrderPayments() />
 
@@ -50,6 +48,12 @@ Notes:
 <ul id="navTask">
 	<cf_ActionCaller action="admin:order.list" type="list">
 </ul>
+
+<!--- Display buttons of available order actions --->
+<cfloop array="#local.orderActionOptions#" index="local.thisAction">
+<cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
+	<cf_ActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
+</cfloop>
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">

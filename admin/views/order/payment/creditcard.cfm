@@ -51,7 +51,7 @@ Notes:
 		<th>#$.Slatwall.rbKey("entity.orderPayment.amountCharged")#</th>
 	</tr>
 	<tr>
-		<td><!---#local.orderPayment.getCreditCardType()#---></td>
+		<td>#local.orderPayment.getCreditCardType()#</td>
 		<td>#local.orderPayment.getCreditCardLastFour()#</td>
 		<td>#local.orderPayment.getExpirationDate()#</td>
 		<td><cfif !isNull(local.orderPayment.getBillingAddress())><cf_SlatwallAddressDisplay address="#local.orderPayment.getBillingAddress()#" edit="false" /></cfif></td>

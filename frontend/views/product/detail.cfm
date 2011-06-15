@@ -51,7 +51,7 @@ Notes:
 				<dl>
 					<dt>Select Option</dt>
 					<dd>
-						<select name="selectedOptions">
+						<select name="skuID">
 							<cfloop array="#$.slatwall.product().getSkus()#" index="local.sku">
 								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
 							</cfloop>
@@ -59,6 +59,7 @@ Notes:
 					</dd>
 				</dl>
 			</cfif>
+			<label for="productQuantity">Quantity: </label><input type="text" name="quantity" value="1" size="2" id="productQuantity" />
 			<button type="submit">Add To Cart</button>
 		</form>
 	</div>

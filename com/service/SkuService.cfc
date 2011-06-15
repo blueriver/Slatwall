@@ -38,8 +38,15 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-	public any function getSkuSmartList(string productID, struct data={}) {
-		return getDAO().getSkuSmartList(argumentCollection=arguments);
+	public any function getSkuSmartList(string productID, struct data={}){
+		arguments.entityName = "SlatwallSku";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		if( structKeyExists(arguments,"productID") ) {
+			smartList.addFilter(propertyIdentifier="product_productID", value=arguments.productID);
+		}
+		
+		return smartList;
 	}
 	
 	public any function delete(required any sku) {
