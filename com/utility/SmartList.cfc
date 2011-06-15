@@ -655,4 +655,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 		return left(modifiedURL, len(modifiedURL)-1);
 	}
+	
+	public boolean function isFilterApplied(required string filter,required string value){
+		var exists = false;
+		if(structKeyExists(url,"F#variables.dataKeyDelimiter##arguments.filter#") && listFindNoCase(url["F#variables.dataKeyDelimiter##arguments.filter#"],arguments.value,variables.valueDelimiter)){
+			exists = true;
+		}
+		return exists;
+	}
 }
