@@ -44,6 +44,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardNumber" ormType="string";
 	property name="creditCardLastFour" ormType="string";
+	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string";
 	property name="expirationYear" ormType="string";
 	property name="amountAuthorized" ormtype="float";
@@ -76,6 +77,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardType(getCreditCardTypeFromNumber(arguments.creditCardNumber));
 	}
 	
 	public void function encryptCreditCardNumber() {
@@ -89,6 +91,32 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 			variables.expirationDate = getExpirationMonth() & "/" & getExpirationYear();
 		}
 		return variables.expirationDate;
+	}
+	
+	private string function getCreditCardTypeFromNumber(required string creditCardNumber) {
+		if(isNumeric(arguments.creditCardNumber)) {
+			var n = arguments.creditCardNumber;
+			var l = len(trim(arguments.creditCardNumber));
+			if( (l == 13 || l == 16) && left(n,1) == 4 ) {
+				return 'Visa';
+			} else if ( l == 16 && (left(n,2) == 51 || left(n,2) == 55) ) {
+				return 'Mastercard';
+			} else if ( (l == 15 && (left(n,4) == 2131 || left(n,4) == 1800)) || (l == 16 && left(n,1) == 3) ) {
+				return 'JCB';
+			} else if ( l == 15 && (left(n,4) == 2014 || left(n,4) == 2149) ) {
+				return 'EnRoute';
+			} else if ( l == 15 && left(n,4) == 6011) {
+				return 'Discover';
+			} else if ( l == 14 && left(n,2) == 38) {
+				return 'CarteBlanche';
+			} else if ( l == 14 && (left(n,2) == 36 || (left(n,3) >= 300 && left(n,3) <= 305)) ) {
+				return 'Diners Club';
+			} else if ( l == 15 && (left(n,2) == 34 || left(n,2) == 34) ) {
+				return 'Amex';
+			}
+		}
+		
+		return 'Invalid';
 	}
 		
 	/******* Association management methods for bidirectional relationships **************/
