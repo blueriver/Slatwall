@@ -69,8 +69,12 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
 	}
 	
-	public void function addError() {
+	public void function addError(required string name,required string message) {
 		getErrorBean().addError(argumentcollection=arguments);
+	}
+	
+	public string function getError(required string name) {
+		return getErrorBean().getError(arguments.name);
 	}
 	
 } 

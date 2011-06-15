@@ -38,8 +38,9 @@ Notes:
 */
 component extends="slatwall.com.service.BaseService" accessors="true" {
 
-	public any function getOptionSmartList(struct data={}){
-		var smartList = getDAO().getSmartList("SlatwallOption",arguments.data);
+	public any function getOptionSmartList(struct data={}){;
+		arguments.entityName = "SlatwallOption";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
 		smartList.addKeywordProperty(propertyIdentifier="optionCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="optionName", weight=3);

@@ -39,7 +39,8 @@ Notes:
 component extends="BaseService" {
 
 	public any function getVendorSmartList(struct data={}){
-		var smartList = getDAO().getSmartList(entityName="SlatwallVendor", data=arguments.data);
+		arguments.entityName = "SlatwallVendor";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 	
 		smartList.addKeywordColumn(propertyIdentifier="vendorName", weight=1);
 	

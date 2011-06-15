@@ -93,7 +93,7 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	}
 		
 	public any function getAttributeSets(array systemCode) {
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeSet");
+		var smartList = this.getAttributeSetSmartList();
 		if(structKeyExists(arguments,"systemCode")){
 			for(var i = 1; i <= arrayLen(systemCode); i++){
 				smartList.addFilter("attributeSetType_systemCode",systemCode[i],i);

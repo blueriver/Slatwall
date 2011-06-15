@@ -59,6 +59,7 @@ Notes:
 					</dd>
 				</dl>
 			</cfif>
+			<label for="productQuantity">Quantity: </label><input type="text" name="quantity" value="1" size="2" id="productQuantity" />
 			<button type="submit">Add To Cart</button>
 		</form>
 	</div>
