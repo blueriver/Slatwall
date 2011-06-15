@@ -61,7 +61,7 @@ Notes:
 			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
 				<tr>
 					<td>#Local.Order.getOrderNumber()#</td>
-					<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium)#</td>
+					<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
 					<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
 					<td>#Local.Order.getOrderStatusType().getType()#</td>
 					<td>#DollarFormat(local.order.getTotal())#</td>
