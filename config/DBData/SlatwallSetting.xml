@@ -24,6 +24,8 @@
 		<Record settingID="dbb32798ffe388844546d7457612a6c7" settingName="product_allowDropshipFlag" settingValue="0" />
 		
 		<Record settingID="dbb3279def932d8ce05d3405228630fe" settingName="paymentMethod_creditCard_creditCardTypes" settingValue="Mastercard,Visa,Amex,Discover" />
+		<Record settingID="dbb327a1fa414362a2934a72ea77eb03" settingName="paymentMethod_creditCard_storeCreditCardWithOrderPayment" settingValue="0" />
+		<Record settingID="dbb327a2c663e36317b216ebc09ee385" settingName="paymentMethod_creditCard_storeCreditCardWithAccount" settingValue="0" />
 		<Record settingID="dbb3284bc75ab4d26fed36b9027f4587" settingName="paymentMethod_creditCard_checkoutTransactionType" settingValue="authorize" />
 		
 		<Record settingID="dbb32786b330315f7869d11b78bd7222" settingName="order_notificationEmailTo" settingValue="info@mySlatwallStore.com" />
@@ -33,8 +35,8 @@
 <!--
 Below Are UUID's to use... delete after using
 	
-	dbb327a1fa414362a2934a72ea77eb03
-	dbb327a2c663e36317b216ebc09ee385
+	
+	
 	dbb327a3e256e78458125906a2f8c05a
 	dbb327a4d656c212e50ddc136e8577cd
 	dbb327a50c418cf3764398a164f677c1

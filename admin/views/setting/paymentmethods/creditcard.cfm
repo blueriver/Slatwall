@@ -36,6 +36,7 @@
 Notes:
 
 --->
+<cfparam name="rc.allSettings" type="struct" />
 
 <cfoutput>
 <dl>
@@ -51,11 +52,12 @@ Notes:
 			#$.slatwall.rbKey("admin.setting.paymentMethod.creditCard.checkoutTransactionType." & $.Slatwall.setting("paymentMethod_creditCard_checkoutTransactionType"))#
 		</cfif>
 	</dd>
+	<cf_PropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithOrderPayment#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithOrderPayment')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithOrderPayment" edit="#rc.edit#" dataType="boolean" editType="radiogroup">
+	<cf_PropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithAccount#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithAccount')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithAccount" edit="#rc.edit#" dataType="boolean" editType="radiogroup">
 	<dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
-	
 	<dd id="spdcreditcardsaccepted">
 	<cfif rc.edit>
-		<cfloop list="Mastercard,Visa,Amex,Discover" index="local.thisTypeOption" >
+		<cfloop list="Mastercard,Visa,Amex,Discover,Diners Club,JCB,EnRoute,CarteBlanche" index="local.thisTypeOption" >
 			<input type="checkbox" name="paymentmethod_creditCard_creditCardTypes" value="#local.thisTypeOption#" id="#local.thisTypeOption#"<cfif listFind($.Slatwall.setting("paymentmethod_creditCard_creditCardTypes"),local.thisTypeOption)> checked="checked"</cfif>> <label for="#local.thisTypeOption#">#local.thisTypeOption#</label> <br>
 		</cfloop>
 	<cfelse>

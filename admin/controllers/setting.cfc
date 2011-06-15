@@ -211,6 +211,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function detailPaymentService(required struct rc) {
 		param name="rc.edit" default="false";
+		
 		rc.paymentService = getSettingService().getByPaymentServicePackage(rc.paymentServicePackage);
 		local.serviceName = getMetaData(rc.paymentService)["displayName"];
 		rc.itemTitle = rc.itemTitle & ": " & local.serviceName;
@@ -254,8 +255,11 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.paymentMethod = getSettingService().getPaymentMethod(rc.paymentMethodID);
 		if(isNull(rc.paymentMethod)) {
 			getFW().redirect(action="admin:setting.listPaymentMethods");
-		}	
+		}
 		rc.paymentServices = getSettingService().getPaymentServices();
+		
+		rc.allSettings = getSettingService().getSettings();
+		
 		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodID());
 	}
 	
