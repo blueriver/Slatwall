@@ -73,7 +73,20 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if( applied ) {
 			rc.message = rc.$.slatwall.rbKey("admin.order.applyOrderActions_success");
 			getFW().redirect(action="admin:order.list", preserve="message");
-		} 
+		}
+	}
+	
+	public void function cancelorder(required struct rc) {
+		rc.order = getOrderService().getOrder(rc.orderID);
+		var response = getOrderService().cancelOrder(rc.order);
+		if( !response.hasErrors() ) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.cancelorder_success");
+		} else {
+			rc.message = response.getError("cancel");
+			rc.messageType = "error";
+		}
+		rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+		getFW().setView(action="admin:order.detail");
 	}
 	
 	/****** Order Fulfillments *****/
