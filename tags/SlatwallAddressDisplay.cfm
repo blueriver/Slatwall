@@ -72,7 +72,7 @@ Notes:
 					jQuery(document).ready(function(){
 						jQuery('select[name="countryCode"]').change(function() {
 							jQuery.ajax({
-								type: "post",
+								type: "put",
 								url: '/plugins/Slatwall/api/index.cfm/addressDisplay/',
 								data: {
 									addressID : jQuery('input[name="addressID"]').val(),

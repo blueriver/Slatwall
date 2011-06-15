@@ -59,7 +59,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.orderFulfillment = this.newOrderFulfillmentShipping();
 				
 				arguments.orderFulfillment.setOrder(arguments.order);
-				this.saveOrderFulfillment(arguments.orderFulfillment);
+				
+				// Push the fulfillment into the hibernate scope
+				getDAO().save(arguments.orderFulfillment);
 			} else {
 				arguments.orderFulfillment = osArray[1];
 			}
