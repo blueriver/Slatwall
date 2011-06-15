@@ -95,11 +95,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var ratesResponseBean = providerService.getRates(ratesRequestBean);
 			
 			// Loop Over Shipping Methods
-			if(ratesResponseBean.hasErrors()) {
-				writeDump(ratesResponseBean.getMessageBeans());
-				writeDump(ratesResponseBean.getData());
-				abort;
-			} else {
+			if(!ratesResponseBean.hasErrors()) {
 				for(var m=1; m<=arrayLen(shippingMethods); m++) {
 				
 					// Check the method to see if it is from this provider
@@ -118,6 +114,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						}
 					}
 				}
+			} else {
+				// Populate the orderFulfillment with the processing error
+				arguments.orderFulfillmentShipping.getErrorBean().addError('processing', ratesResponseBean.getErrorBean().getAllErrorMessages());
 			}
 			
 		}
