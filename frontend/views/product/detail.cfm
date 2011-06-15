@@ -45,20 +45,20 @@ Notes:
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
-			<cfset local.productOptionGroups = $.slatwall.Product().getOptionGroups() />
-			<dl>
-			<cfloop array="#local.productOptionGroups#" index="local.group">
-				<dt>#local.group.getOptionGroupName()#</dt>
-				<dd>
-				<select name="selectedOptions">
-					<cfset local.availableOptions = $.slatwall.Product().getOptionsByOptionGroup(optionGroupID=local.group.getOptionGroupID()) />
-					<cfloop array="#local.availableOptions#" index="local.option">
-						<option value="#local.option.getOptionID()#">#local.option.getOptionName()#</option>
-					</cfloop>
-				</select>
-				</dd>
-			</cfloop>
-			</dl>
+			<cfif arrayLen($.slatwall.product().getSkus()) eq 1>
+				<input type="hidden" name="skuID" value="#$.slatwall.Product().getSkus()[1].getSkuID()#" />
+			<cfelse>
+				<dl>
+					<dt>Select Option</dt>
+					<dd>
+						<select name="selectedOptions">
+							<cfloop array="#$.slatwall.product().getSkus()#" index="local.sku">
+								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+							</cfloop>
+						</select>
+					</dd>
+				</dl>
+			</cfif>
 			<button type="submit">Add To Cart</button>
 		</form>
 	</div>
