@@ -53,11 +53,18 @@ Notes:
 				<cf_SlatwallAddressDisplay address="#local.address#" edit="#params.edit#">
 				<input type="hidden" name="orderFulfillmentID" value="#params.orderFulfillment.getOrderFulfillmentID()#" />
 			</div>
-			<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
-				<div class="shippingMethod">
-					<h4>Shipping Method</h4>
+			<cfif not isNull(params.orderFulfillment.getShippingAddress())>
+			<div class="shippingMethod">
+				<h4>Shipping Method</h4>
+				<cfif params.orderFulfillment.getErrorBean().hasErrors() and $.slatwall.cart().getOrderFulfillments()[1].getErrorBean().hasError('processing')>
+				<div class="error">#params.orderFulfillment.getErrorBean().getError('processing')#</div>
+				</cfif>
+				<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
 					<cf_SlatwallShippingMethodDisplay orderFulfillmentShipping="#params.orderFulfillment#" edit="#params.edit#">
-				</div>
+				<cfelse>
+					<p>Please enter a valid Shipping Address so shipping rates can be calculated.</p>
+				</cfif>
+			</div>
 			</cfif>
 			<cfif params.edit>
 			<button type="submit">Save & Continue</button>

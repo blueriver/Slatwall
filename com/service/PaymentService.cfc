@@ -106,7 +106,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.orderPayment.setAmountCharged(chargeAmount);
 			} else {
 				// Populate the orderPayment with the processing error
-				arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getErrors()[listGetAt(structKeyList(response.getErrorBean().getErrors()),1)]);
+				arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
 			}
 		}
 		
