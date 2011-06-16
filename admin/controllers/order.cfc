@@ -101,5 +101,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().redirect(action="admin:order.listOrderFulfillments");
 		}
 	}
+	
+	public void function processOrderFulfillment(required struct rc) {
+		var orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);	
+		var orderDeliveryItemsStruct = getService("formUtilities").buildFormCollections(rc)['orderItems'];
+		getOrderService().processOrderFulfillment(orderfulfillment,orderDeliveryItemsStruct);
+		getFW().redirect(action="admin:order.listorderfulfillments");
+	}
 
 }

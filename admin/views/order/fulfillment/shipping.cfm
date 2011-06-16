@@ -60,7 +60,7 @@ Notes:
 			<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
 			<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
 			<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
-			<th>#$.slatwall.rbKey("admin.order.detail.priceextended")#</th>
+			<th>#$.slatwall.rbKey("entity.orderItem.extendedPrice")#</th>
 			<th>Qty. to Ship</th>
 		</tr>
 			
@@ -71,15 +71,19 @@ Notes:
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
 				<td>#local.orderItem.getQuantityDelivered()#</td>
-				<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
+				<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
 				<td>
+				<cfif local.orderItem.getQuantityUndelivered() gt 0>
 					<div>
-						<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
-							<cfloop from="#local.orderItem.getQuantity()#" to="0" step="-1" index="local.i">
+						<select name="orderItems.#local.orderItem.getOrderItemID()#" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
+							<cfloop from="#local.orderItem.getQuantityUndelivered()#" to="0" step="-1" index="local.i">
 								<option value="#local.i#"<cfif local.i eq local.orderItem.getQuantity()> selected="selected"</cfif>>#local.i#</option>
 							</cfloop>
 						</select>
-					</div>			
+					</div>
+				<cfelse>
+					#$.slatwall.rbKey('define.notapplicable')#
+				</cfif>			
 				</td>
 			</tr>
 		</cfloop>
