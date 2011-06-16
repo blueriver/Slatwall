@@ -52,7 +52,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	
 	public void function setOrderDelivery(required OrderDelivery orderDelivery) {
 	   variables.orderDelivery = arguments.orderDelivery;
-	   if(!arguments.orderDelivery.hasOrderDeliveryItem(this)) {
+	   if(isNew() or !arguments.orderDelivery.hasOrderDeliveryItem(this)) {
 	       arrayAppend(arguments.orderDelivery.getOrderDeliveryItems(),this);
 	   }
 	}
@@ -69,7 +69,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	
 	public void function setOrderItem(required OrderItem OrderItem) {
 	   variables.orderItem = arguments.orderItem;
-	   if(!arguments.orderItem.hasOrderDeliveryItem(this)) {
+	   if(isNew() or !arguments.orderItem.hasOrderDeliveryItem(this)) {
 	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(),this);
 	   }
 	}

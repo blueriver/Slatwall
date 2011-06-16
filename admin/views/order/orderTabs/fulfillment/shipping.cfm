@@ -46,7 +46,7 @@ Notes:
 			<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
 			<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
 			<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
-			<th>#$.slatwall.rbKey("admin.order.detail.priceextended")#</th>
+			<th>#$.slatwall.rbKey("entity.orderitem.extendedprice")#</th>
 		</tr>
 			
 		<cfloop array="#local.orderFulfillment.getOrderFulfillmentItems()#" index="local.orderItem">
@@ -79,7 +79,7 @@ Notes:
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
 				<td>#local.orderItem.getQuantityDelivered()#</td>
-				<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
+				<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
 			</tr>
 		</cfloop>
 	</table>

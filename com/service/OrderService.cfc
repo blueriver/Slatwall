@@ -213,6 +213,47 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return getDAO().save(arguments.orderFulfillment);
 	}
 	
+	/**
+	/*@param data  struct of orderItemID keys with values that represent quantities to be processed (delivered)
+	*/
+	public any function processOrderFulfillment(required any orderFulfillment, struct data={}) {
+		var order = arguments.orderFulfillment.getOrder();
+		
+		//construct array of orderDeliveryItems
+		var orderDeliveryItems = [];
+		for( var orderItemID in arguments.data ) {
+			local.thisQuantity = arguments.data[orderItemID];
+				if(local.thisQuantity > 0) {
+				local.thisOrderItem = this.getOrderItem(orderItemID);
+				local.thisOrderDeliveryItem = this.newOrderDeliveryItem();
+				local.thisOrderDeliveryItem.setOrderItem(local.thisOrderItem);
+				local.thisOrderDeliveryItem.setQuantityDelivered(local.thisQuantity);
+				arrayAppend(orderDeliveryItems,local.thisOrderDeliveryItem);	
+			}
+		}
+		// create orderDelivery specific to fulfillment method
+		if(arrayLen(orderDeliveryItems) > 0) {
+			return createOrderDelivery(order,orderDeliveryItems,arguments.orderFulfillment);
+		}
+	}
+	
+	public any function createOrderDelivery(required any order, required array orderDeliveryItems, required any orderFulfillment) {
+		var fulfillmentMethodID = arguments.orderFulfillment.getFulfillmentMethodID();
+		var orderDelivery = evaluate('this.newOrderDelivery#fulfillmentMethodID#()');
+		orderDelivery.setOrder(arguments.order);
+		for( var orderDeliveryItem in arguments.orderDeliveryItems ) {
+			orderDelivery.addOrderDeliveryItem(orderDeliveryItem);
+		}
+		// carry out logic specific to fulfillment method
+		switch(fulfillmentMethodID) {
+			case("shipping"): {
+				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
+			}
+			default:{}
+		}
+		return orderDelivery;
+	}
+	
 	public any function saveOrderPayment(required any orderPayment, struct data={}) {
 		
 		// Populate Order Payment	
@@ -289,9 +330,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		if(!isValid) {
-			rc.message = rbKey("entity.order.#arguments.action#_validatestatus");
-			rc.message = replaceNocase(rc.message,"{statusValue}",arguments.order.getStatus());
-			response.addError(arguments.action,rc.message);
+			var message = rbKey("entity.order.#arguments.action#_validatestatus");
+			var message = replaceNocase(rc.message,"{statusValue}",arguments.order.getStatus());
+			response.addError(arguments.action,message);
 		}
 		return response;
 	}
