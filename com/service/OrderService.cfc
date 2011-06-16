@@ -217,41 +217,49 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/*@param data  struct of orderItemID keys with values that represent quantities to be processed (delivered)
 	*/
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}) {
+		// Get the Order from the fulfillment
 		var order = arguments.orderFulfillment.getOrder();
 		
-		//construct array of orderDeliveryItems
-		var orderDeliveryItems = [];
-		for( var orderItemID in arguments.data ) {
-			local.thisQuantity = arguments.data[orderItemID];
-				if(local.thisQuantity > 0) {
-				local.thisOrderItem = this.getOrderItem(orderItemID);
-				local.thisOrderDeliveryItem = this.newOrderDeliveryItem();
-				local.thisOrderDeliveryItem.setOrderItem(local.thisOrderItem);
-				local.thisOrderDeliveryItem.setQuantityDelivered(local.thisQuantity);
-				arrayAppend(orderDeliveryItems,local.thisOrderDeliveryItem);	
-			}
-		}
-		// create orderDelivery specific to fulfillment method
-		if(arrayLen(orderDeliveryItems) > 0) {
-			return createOrderDelivery(order,orderDeliveryItems,arguments.orderFulfillment);
-		}
-	}
-	
-	public any function createOrderDelivery(required any order, required array orderDeliveryItems, required any orderFulfillment) {
+		// Figure out the Fulfillment Method
 		var fulfillmentMethodID = arguments.orderFulfillment.getFulfillmentMethodID();
-		var orderDelivery = evaluate('this.newOrderDelivery#fulfillmentMethodID#()');
-		orderDelivery.setOrder(arguments.order);
-		for( var orderDeliveryItem in arguments.orderDeliveryItems ) {
-			orderDelivery.addOrderDeliveryItem(orderDeliveryItem);
-		}
-		// carry out logic specific to fulfillment method
+		
+		// Create A New Order Delivery Type Based on fulfillment method
+		var orderDelivery = this.new("SlatwallOrderDelivery#fulfillmentMethodID#");
+		
+		// Set the Order As the Order for this Delivery
+		orderDelivery.setOrder(order);
+		
+		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
 			case("shipping"): {
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
 			}
 			default:{}
 		}
-		return orderDelivery;
+		
+		// Loop over the items in the fulfillment
+		for( var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
+			
+			// Check to see if this fulfillment item has any quantity passed to it
+			if(structKeyExists(arguments.data, arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID())) {
+				var thisQuantity = arguments.data[arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID()];
+				
+				// Make sure that the quantity is greater than 1, and that this fulfillment item needs at least that many to be delivered
+				if(thisQuantity > 0 && thisQuantity <= arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()) {
+					
+					// Create and Populate the delivery item
+					var orderDeliveryItem = this.newOrderDeliveryItem();
+					orderDeliveryItem.setQuantityDelivered(thisQuantity);
+					orderDeliveryItem.setOrderItem(arguments.orderFulfillment.getOrderFulfillmentItems()[i]);
+					orderDeliveryItem.setOrderDelivery(orderDelivery);	
+				}
+			}
+		}
+		
+		// If Items have been added to the delivery then save it.
+		if(arrayLen(orderDelivery.getOrderDeliveryItems())) {
+			getDAO().save(orderDelivery);
+		}
 	}
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}) {
