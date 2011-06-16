@@ -294,5 +294,22 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			response.addError(arguments.action,rc.message);
 		}
 		return response;
-	}	
+	}
+	
+	public void function updateOrderItems(required any order, required struct data) {
+		var fu = new Slatwall.com.utility.FormUtilities();
+		var dataCollections = fu.buildFormCollections(arguments.data);
+		var orderItems = arguments.order.getOrderItems();
+		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID())) {
+				if(structKeyExists(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ], "quantity")) {
+					if(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity <= 0) {
+						arguments.order.getOrderItems()[i].removeOrder(arguments.order);
+					} else {
+						arguments.order.getOrderItems()[i].setQuantity(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity);		
+					}
+				}
+			}
+		}
+	}
 }

@@ -48,6 +48,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function update(required struct rc) {
+		getOrderService().updateOrderItems(order=$.slatwall.cart(), data=rc);
+		
 		getFW().setView("frontend:cart.detail");
 	}
 	
