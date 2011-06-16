@@ -1145,12 +1145,14 @@ component {
 	}
 	
 	private string function internalView( string viewPath, struct args = { } ) {
+		var local = { };
 		var rc = request.context;
 		var $ = { };
 		// integration point with Mura:
 		if ( structKeyExists( rc, '$' ) ) {
 			$ = rc.$;
 		}
+		
 		structAppend( local, args );
 		if ( !structKeyExists( request, 'controllerExecutionComplete' ) ) {
 			raiseException( type="FW1.viewExecutionFromController", message="Invalid to call the view method at this point.",

@@ -42,13 +42,13 @@ Notes:
 <cfset local.creditcardTransactions = local.orderPayment.getCreditCardTransactions() />
 <table class="paymentDetails">
 	<tr>
-		<th>#$.Slatwall.rbKey("entity.orderPayment.creditCardType")#</th>
-		<th>#$.Slatwall.rbKey("entity.orderPayment.creditCardLastFour")#</th>
-		<th>#$.Slatwall.rbKey("entity.orderPayment.expirationDate")#</th>
-		<th>#$.Slatwall.rbKey("entity.orderPayment.billingAddress")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.creditCardType")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.creditCardLastFour")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.expirationDate")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.billingAddress")#</th>
 		<th>#$.Slatwall.rbKey("entity.creditcardtransaction.authorizationcode")#</th>
-		<th>#$.Slatwall.rbKey("entity.orderPayment.amountAuthorized")#</th>
-		<th>#$.Slatwall.rbKey("entity.orderPayment.amountCharged")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.amountAuthorized")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.amountCharged")#</th>
 	</tr>
 	<tr>
 		<td>#local.orderPayment.getCreditCardType()#</td>

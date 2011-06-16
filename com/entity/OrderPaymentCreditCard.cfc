@@ -42,7 +42,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	property name="nameOnCreditCard" ormType="string";
-	property name="creditCardNumber" ormType="string";
+	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string";
@@ -55,6 +55,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fkcolumn="orderPaymentID" fieldtype="one-to-many" cascade="all" inverse="true";
 	
 	// Non-Persistent properties
+	property name="creditCardNumber" persistent="false";
 	property name="securityCode" persistent="false";
 	property name="expirationDate" persistent="false";
 	
@@ -78,6 +79,9 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
 		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment")) {
+			setCreditCardNumberEncrypted(encryptCreditCardNumber(arguments.creditCardNumber));
+		}
 	}
 	
 	public void function encryptCreditCardNumber() {
@@ -105,20 +109,5 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	   arguments.creditCardTransaction.removeOrderPayment(this);
 	}
 	/************   END Association Management Methods   *******************/
-	
-	private void function preInsert() {
-		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
-		setCreditCardNumber(javaCast("null",""));
-		
-		// Call Super Pre-Insert
-		super.preInsert();
-	}
-	
-	private void function preUpdate(Struct oldData) {
-		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
-		setCreditCardNumber(javaCast("null",""));
-		
-		// Call Super Pre-Update
-		super.preUpdate();
-	}
+
 }
