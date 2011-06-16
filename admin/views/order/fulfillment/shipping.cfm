@@ -73,20 +73,13 @@ Notes:
 				<td>#local.orderItem.getQuantityDelivered()#</td>
 				<td>#dollarFormat(local.orderItem.getPrice() * local.orderItem.getQuantity())#</td>
 				<td>
-					<cfif local.orderItem.getQuantity() gt 1>
-						<div>
-							<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
-								<cfloop from="#local.orderItem.getQuantity()#" to="1" step="-1" index="local.i">
-									<option value="#local.i#"<cfif local.i eq local.orderItem.getQuantity()> selected="selected"</cfif>>#local.i#</option>
-								</cfloop>
-							</select>
-						</div>
-					<cfelseif local.orderItem.getQuantity() eq 1>
-						<input type="hidden" name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#" value="1" />
-						1
-					<cfelse>
-						#$.slatwall.rbKey("define.notApplicable")#
-					</cfif>				
+					<div>
+						<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
+							<cfloop from="#local.orderItem.getQuantity()#" to="0" step="-1" index="local.i">
+								<option value="#local.i#"<cfif local.i eq local.orderItem.getQuantity()> selected="selected"</cfif>>#local.i#</option>
+							</cfloop>
+						</select>
+					</div>			
 				</td>
 			</tr>
 		</cfloop>
