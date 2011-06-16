@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Item" entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Order Item" entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistant Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -55,7 +55,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="sku" cfc="sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderitemID" inverse="true" cascade="all";
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 
 	public any function init() {

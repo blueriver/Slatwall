@@ -62,6 +62,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// get the list of requirements left for this order to be processed
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
+		
+		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
 	}
 	
 	public void function saveAccount(required struct rc) {
@@ -116,26 +118,30 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function processOrder(required struct rc) {
-		// If there aren't enough payments applied to this order then attempt to add a payment
-		if(rc.$.slatwall.cart().getTotal() != rc.$.slatwall.cart().getPaymentAmountTotal()) {
-			// Create new Payment Entity
-			var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+		param name="rc.orderPaymentID" default="";
+		
+		var payment = getPaymentService().getOrderPayment(rc.orderPaymentID);
+		
+		if(isNull(payment)) {
+			if(rc.$.slatwall.cart().getTotal() != rc.$.slatwall.cart().getPaymentAmountTotal()) {
+				payment = getPaymentService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+			} else {
+				payment = getPaymentService().rc.$.slatwall.cart().getOrderPayments()[1];
+			}
 			
 			// If no amount was passed in from the data, add the amount as the order total
 			if(!structKeyExists(arguments.rc, "amount")) {
-				arguments.rc.amount = $.slatwall.cart().getTotal();
+				arguments.rc.amount = $.slatwall.cart().getTotal() - rc.$.slatwall.cart().getPaymentAmountTotal();
 			}
-			
-			// Attempt to Validate & Save Order Payment
-			payment = getOrderService().saveOrderPayment(payment, arguments.rc);
-			
-			// Add payment to order
-			rc.$.slatwall.cart().addOrderPayment(payment);
-			
-			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
-		} else {
-			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 		}
+		
+		// Attempt to Validate & Save Order Payment
+		payment = getOrderService().saveOrderPayment(payment, arguments.rc);
+		
+		// Add payment to order
+		payment.setOrder(rc.$.slatwall.cart());
+		
+		var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 		
 		if(orderProcessOK) {
 			// Redirect to order Confirmation
