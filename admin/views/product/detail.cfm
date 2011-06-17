@@ -78,20 +78,20 @@ Notes:
 	</ul>
 
 	<div id="tabSkus">
-		#view("product/productTabs/skuTab")#
+		#view("product/producttabs/skus")#
 	</div>
 	
 	<div id="tabDescription">
 		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
 	</div>
 	<div id="tabProductSettings">
-		#view("product/productTabs/settingsTab")#
+		#view("product/producttabs/settings")#
 	</div>
 	<div id="tabProductPages">
-		#view("product/productTabs/productPagesTab")#
+		#view("product/producttabs/productpages")#
 	</div>
 	<div id="tabCustomAttributes">
-		#view("product/productTabs/customAttributesTab")#
+		#view("product/producttabs/customattributes")#
 	</div>
 <!---	<div id="tabAlternateImages">
 	
