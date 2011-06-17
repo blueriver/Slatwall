@@ -123,7 +123,7 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 	}
 	
-	public any function getValue(required string property, string defaultValue) {
+	public any function getValue(required string property, any defaultValue) {
 		if(structKeyExists(session.slatwall,arguments.property)) {
 			return session.slatwall[arguments.property];
 		} else if (structKeyExists(arguments, "defaultValue")) {
