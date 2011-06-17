@@ -140,12 +140,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Add payment to order
 		payment.setOrder(rc.$.slatwall.cart());
-		
+		var orderID = rc.$.slatwall.cart().getOrderID();
 		var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
 		
 		if(orderProcessOK) {
 			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='my-account'), false);
+			getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#orderID#"), false);
 		}
 		
 		detail(rc);
