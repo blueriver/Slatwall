@@ -160,19 +160,23 @@ component accessors="true" output="false" extends="BaseObject" {
 	
 	public any function productList(string property, string value, string contentID) {
 		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			if(structKeyExists(arguments.contentID)) {
+			if(structKeyExists(arguments, "contentID")) {
 				return evaluate("getProductList(arguments.contentID).set#arguments.property#(#arguments.value#)");	
 			} else {
 				return evaluate("getCurrentProductList().set#arguments.property#(#arguments.value#)");
 			}
 		} else if (structKeyExists(arguments, "property")) {
-			if(structKeyExists(arguments.contentID)) {
+			if(structKeyExists(arguments, "contentID")) {
 				return evaluate("getProductList(arguments.contentID).get#arguments.property#()");
 			} else {
 				return evaluate("getCurrentProductList().get#arguments.property#()");
 			}
 		} else {
-			return getProductList(argumentcollection=arguments);	
+			if(structKeyExists(arguments, "contentID")) {
+				return getProductList(arguments.contentID);
+			} else {
+				return getCurrentProductList();
+			}
 		}
 	}
 	
