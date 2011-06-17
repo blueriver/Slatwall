@@ -83,4 +83,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		rc.accountSmartList = getAccountService().getAccountSmartList(data=arguments.rc);
 	}
+	
+	public void function save(required struct rc) {
+		param name="rc.accountID" default="";
+		
+		rc.account = getAccountService().getAccount(rc.accountID, true);
+		rc.account = getAccountService().saveAccount(rc.account, rc);
+		
+		if(rc.account.hasErrors()) {
+			setView("admin:account.detail");
+		} else {
+			rc.message = "admin.account.save_success";
+        	getFW().redirect(action="admin:account.list",preserve="message");	
+		}
+	}
 }

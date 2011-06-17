@@ -39,19 +39,41 @@ Notes:
 <cfparam name="rc.account" type="any" />
 <cfparam name="rc.edit" type="boolean" />
 
+<ul id="navTask">
+	<cf_ActionCaller action="admin:account.list" type="list">
+	<cfif !rc.edit>
+	<cf_ActionCaller action="admin:account.edit" queryString="accountID=#rc.account.getAccountID()#" type="list">
+	</cfif>
+</ul>
+
 <cfoutput>
 	<div class="svoadminaccountdetail">
-		<dl class="oneColumn">
-			<cf_PropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
+		<cfif rc.edit>
+			<form name="accountEdit" action="#buildURL(action='admin:account.save')#" method="post">
+				<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
+		</cfif>
+		<dl class="twoColumn">
 			<cf_PropertyDisplay object="#rc.Account#" property="lastName" edit="#rc.edit#">
+			<cf_PropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
 			<cf_PropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
 		</dl>
-		<div id="actionButtons" class="clearfix">
-			<cf_ActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cfif !rc.account.isNew()>
-				<cf_ActionCaller action="admin:account.delete" querystring="accountID=#rc.account.getAccountID()#" class="button" type="link" confirmrequired="true">
-			</cfif>
-			<cf_ActionCaller action="admin:account.save" type="submit"  class="button">
+		
+		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+			<ul>
+				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>	
+			</ul>
+		
+			<div id="tabOrders">
+				#view("admin:account/accounttabs/orders")#
+			</div>
 		</div>
+		
+		<cfif rc.edit>
+			<div id="actionButtons" class="clearfix">
+				<cf_ActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_ActionCaller action="admin:account.save" type="submit" class="button">
+			</div>
+			</form>
+		</cfif>
 	</div>
 </cfoutput>
