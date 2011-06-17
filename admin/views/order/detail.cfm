@@ -78,7 +78,6 @@ Notes:
 			<cf_PropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#" displayType="table">
 			<cf_PropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#" displayType="table">
 	 		<cf_PropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#" displayType="table">
-			<cf_PropertyDisplay object="#rc.Order#" property="filename" edit="#rc.edit#" displayType="table">
 		</table>
 	</div>
 	<div class="paymentInfo">
