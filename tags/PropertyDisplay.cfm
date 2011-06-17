@@ -121,6 +121,7 @@ Notes:
 	radiogroup
 	wysiwyg
 	file
+	password
 --->
 
 <!---
@@ -320,8 +321,8 @@ Notes:
 			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
-					<cfif attributes.editType eq "text">
-						<input type="text" name="#attributes.fieldName#" id="#attributes.fieldName#" value="#attributes.value#" />
+					<cfif attributes.editType eq "text" or attributes.editType eq "password">
+						<input type="#attributes.editType#" name="#attributes.fieldName#" id="#attributes.fieldName#" value="#attributes.value#" />
 					<cfelseif attributes.editType eq "textarea">
 						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "checkbox">

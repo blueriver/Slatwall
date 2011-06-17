@@ -74,7 +74,11 @@ Notes:
 					<cfelse>
 						<cfset local.propertyTitle = local.property.name />
 					</cfif>
-					<cf_PropertyDisplay object="#rc.paymentService#" fieldName="paymentService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+					<cfset local.propertyEditType = "" />
+					<cfif structKeyExists(local.property, "editType")>
+						<cfset local.propertyEditType = local.property.editType />
+					</cfif>
+					<cf_PropertyDisplay object="#rc.paymentService#" fieldName="paymentService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
 				</cfloop>
 			</dl>
 		</cfif>
