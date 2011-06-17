@@ -72,7 +72,7 @@ component extends="BaseService" accessors="true" {
 		
 	}
 
-	public any function getProductSmartList(struct data={}) {
+	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
