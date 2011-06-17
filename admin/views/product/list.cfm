@@ -45,10 +45,11 @@ Notes:
 </ul>
 
 <div class="svoadminproductlist">
-<cfif rc.productSmartList.getRecordsCount()>
+
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
+<cfif rc.productSmartList.getRecordsCount()>
 	<table id="ProductList" class="stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
