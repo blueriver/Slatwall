@@ -231,6 +231,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// Set the Order As the Order for this Delivery
 		orderDelivery.setOrder(order);
 		
+		orderDelivery.setDeliveryOpenDateTime(now());
+		// TODO: change close date to indicate when item was received, downloaded, picked up, etc.
+		orderDelivery.setDeliveryCloseDateTime(now());
+		
+		
 		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
 			case("shipping"): {
