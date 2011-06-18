@@ -42,6 +42,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="paymentService";
 	property name="addressService";
 	property name="settingService";
+	property name="validationService";
 	
 	public any function getOrderFulfillmentSmartList(struct data = {}) {
 		arguments.entityName = "SlatwallOrderFulfillment";
@@ -215,6 +216,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	/**
 	/*@param data  struct of orderItemID keys with values that represent quantities to be processed (delivered)
+	/*@returns orderDelivery entity
 	*/
 	public any function processOrderFulfillment(required any orderFulfillment, struct data={}) {
 		// Get the Order from the fulfillment
@@ -256,10 +258,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		
-		// If Items have been added to the delivery then save it.
-		if(arrayLen(orderDelivery.getOrderDeliveryItems())) {
-			getDAO().save(orderDelivery);
+		// If items have not been added to the delivery, set an error so that it doesn't get persisted
+		if(arrayLen(orderDelivery.getOrderDeliveryItems()) == 0) {
+			getValidationService().setError(entity=orderDelivery, entityName="OrderDelivery", errorName="orderDeliveryItems",rule="hasOrderDeliveryItems");
 		}
+		
+		return this.save(orderDelivery);
 	}
 	
 	public any function saveOrderPayment(required any orderPayment, struct data={}) {
