@@ -103,10 +103,19 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function processOrderFulfillment(required struct rc) {
-		var orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);	
+		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);	
 		var orderDeliveryItemsStruct = getService("formUtilities").buildFormCollections(rc)['orderItems'];
-		getOrderService().processOrderFulfillment(orderfulfillment,orderDeliveryItemsStruct);
-		getFW().redirect(action="admin:order.listorderfulfillments");
+		// call service to process fulfillment. Returns an orderDelivery
+		var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
+		if(!orderDelivery.hasErrors()) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
+			getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
+		} else {
+			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
+			rc.message = orderDelivery.getErrorBean().getError("orderDeliveryItems");
+			rc.messagetype = "warning";
+			getFW().setView("admin:order.detailOrderFulfillment");
+		}
 	}
 
 }

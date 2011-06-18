@@ -114,8 +114,8 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 
 
 	//@hint method for setting errors in the entity that come from outside the property value (i.e. file uploads)
-	public void function setError(required any entity, string errorName, string rule) {
-		var message=getMessageByRule(entity=arguments.entity,propertyName=arguments.errorName,rule=arguments.rule);
+	public void function setError(required any entity, string errorName, string rule, string entityName) {
+		var message=getMessageByRule(argumentCollection=arguments);
 		arguments.entity.addError(name=arguments.errorName,message=message);
 	}
 		
@@ -155,13 +155,17 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	}
 	
 	// @hint returns error message by validation rule from the resource bundle
-	private string function getMessageByRule(required string rule, required string propertyName, any entity){
+	private string function getMessageByRule(required string rule, required string errorName, any entity, string entityName){
 		var message = "";
-		if(structKeyExists(arguments,"entity")) {
+		// if the entityName is passed in as an argument, use that
+		if(structKeyExists(arguments,"entityName")) {
+			var eName = arguments.entityName;
+			message = rbKey("entity.#eName#.#arguments.errorName#_validate#arguments.rule#");
+		} else if(structKeyExists(arguments,"entity")) {
 			//if this is an entity-related error, first remove the "Slatwall" prefix from the entity name
 			if(structKeyExists(arguments.entity,"getClassName")) {
-				var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
-				message = rbKey("entity.#entityName#.#arguments.propertyName#_validate#arguments.rule#");
+				var eName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+				message = rbKey("entity.#eName#.#arguments.errorName#_validate#arguments.rule#");
 			}
 			if(right(message,8) == "_missing" || !structKeyExists(arguments.entity,"getClassName") ) {
 				message = rbKey("validator.#arguments.rule#");
