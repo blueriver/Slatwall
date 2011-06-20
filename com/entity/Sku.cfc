@@ -56,8 +56,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="product";
-	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
+	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
+	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="Stock" inverse="true" cascade="all";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
 	// Non-Persistent Properties

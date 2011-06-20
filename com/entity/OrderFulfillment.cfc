@@ -47,7 +47,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="taxAmount" type="numeric" persistent="false";
 	
 	// Related Object Properties
-	property name="order" cfc="order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillmentItems" validateRequired="true" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
 	
 	// Special Related Discriminator Property
