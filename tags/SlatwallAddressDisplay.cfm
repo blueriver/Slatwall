@@ -38,6 +38,8 @@ Notes:
 --->
 <cfparam name="attributes.address" type="any" />
 <cfparam name="attributes.edit" type="boolean" default="true" />
+<cfparam name="attributes.showName" type="boolean" default="true" />
+<cfparam name="attributes.showCompany" type="boolean" default="true" />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
@@ -45,8 +47,8 @@ Notes:
 			<cfif attributes.edit>
 				<dl>
 					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" />
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="name" edit="true" />
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="company" edit="true" />
+					<cfif attributes.showName><cf_SlatwallPropertyDisplay object="#attributes.address#" property="name" edit="true" /></cfif>
+					<cfif attributes.showCompany><cf_SlatwallPropertyDisplay object="#attributes.address#" property="company" edit="true" /></cfif>
 					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="streetAddress" edit="true" />
 					</cfif>
@@ -71,26 +73,35 @@ Notes:
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
 						jQuery('select[name="countryCode"]').change(function() {
+							
+							var addressData = {
+								addressID : jQuery('input[name="addressID"]').val(),
+								showName : '#attributes.showName#',
+								showCompany : '#attributes.showCompany#',
+								countryCode : jQuery('select[name="countryCode"]').val(),
+								name : jQuery('input[name="name"]').val(),
+								company : jQuery('input[name="company"]').val(),
+								streetAddress : jQuery('input[name="streetAddress"]').val(),
+								street2Address : jQuery('input[name="street2Address"]').val(),
+								city : jQuery('input[name="city"]').val(),
+								postalCode : jQuery('input[name="postalCode"]').val()
+							};
+							
+							if( jQuery('input[name="stateCode"]').val() != undefined ) {
+								addressData["stateCode"] = jQuery('input[name="stateCode"]').val();
+							}
+							
 							jQuery.ajax({
-								type: "put",
+								type: "post",
 								url: '/plugins/Slatwall/api/index.cfm/addressDisplay/',
-								data: {
-									addressID : jQuery('input[name="addressID"]').val(),
-									countryCode : jQuery('select[name="countryCode"]').val(),
-									name : jQuery('input[name="name"]').val(),
-									company : jQuery('input[name="company"]').val(),
-									streetAddress : jQuery('input[name="streetAddress"]').val(),
-									street2Address : jQuery('input[name="street2Address"]').val(),
-									city : jQuery('input[name="city"]').val(),
-									stateCode : jQuery('select[name="slateCode"]').val(),
-									postalCode : jQuery('input[name="postalCode"]').val()
-								},
+								data: addressData,
 								dataType: "json",
 								context: document.body,
 								success: function(r) {
 									jQuery('div.addressDisplay').replaceWith(r);
 								}
 							});
+							
 						});
 					});
 				</script>

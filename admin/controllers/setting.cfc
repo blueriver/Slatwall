@@ -40,6 +40,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Slatwall Service Injection		
 	property name="settingService" type="any";
+	property name="addressService" type="any";
 	property name="productService" type="any";
 	property name="shippingService" type="any";
 	property name="paymentService" type="any";
@@ -333,7 +334,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.edit" default="false";
 		
 		rc.addressZone = getSettingService().getAddressZone(rc.addressZoneID, true);
-		rc.countriesArray = getSettingService().listCountry();
+		rc.newAddress = getAddressService().newAddress();
 	}
 	
 	public void function editAddressZone(required struct rc) {
@@ -361,6 +362,22 @@ component extends="BaseController" output="false" accessors="true" {
 		} else {
 			getFW().setView("admin:setting.detailaddresszone");
 			rc.edit = true;
+		}
+	}
+	
+	public void function saveAddressZoneLocation(required struct rc) {
+		param name="rc.addressZoneID" default="";
+		param name="rc.addressID" default="";
+		
+		// Check to see if it is already in rc because of taffy api
+		if(isNull(rc.addressZone)) {
+			rc.addressZone = getAddressService().getAddressZone(rc.addressZoneID);
+		}
+		
+		if(!isNull(rc.addressZone)) {
+			var address = getAddressService().getAddress(rc.addressID, true);
+			address.populate(rc);
+			rc.addressZone.addAddressZoneLocation(address);
 		}
 	}
 	

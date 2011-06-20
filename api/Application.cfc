@@ -54,7 +54,7 @@ component extends="taffy.core.api" {
 	//use this instead of onRequestStart()
 	public void function requestStartEvent(){
 		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		slatwallFW.onRequestStart(cgi.script_nume);
+		slatwallFW.onRequestStart(cgi.script_name);
 	}
 	
 }
