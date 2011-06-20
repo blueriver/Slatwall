@@ -39,7 +39,7 @@ Notes:
 component displayname="Country" entityname="SlatwallCountry" table="SlatwallCountry" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="countryCode" ormtype="string" fieldtype="id";
+	property name="countryCode" length="2" ormtype="string" fieldtype="id";
 	property name="countryName" ormtype="string";
 	property name="activeFlag" ormtype="boolean";
 	
