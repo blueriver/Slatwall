@@ -64,7 +64,7 @@ Notes:
 						#view("frontend:checkout/payment/creditCard", params)#
 					</cfloop>
 				</cfif>
-				<cf_ActionCaller action="frontend:checkout.processOrder" type="submit">
+				<cf_SlatwallActionCaller action="frontend:checkout.processOrder" type="submit">
 			</form>
 		</cfif>
 	</div>

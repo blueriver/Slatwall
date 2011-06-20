@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionCaller action="admin:attribute.createAttributeSet" type="list">
+    <cf_SlatwallActionCaller action="admin:attribute.createAttributeSet" type="list">
 </ul>
 
 <cfif arrayLen(rc.attributeSets) GT 0>
@@ -70,9 +70,9 @@ Notes:
 		<td class="administration">
 		  <ul class="three">
 		  	  <cfset local.deleteDisabled = local.thisAttributeSet.getAttributeCount() gt 0 ? true : false />
-		      <cf_ActionCaller action="admin:attribute.create" querystring="AttributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="edit" type="list">
-              <cf_ActionCaller action="admin:attribute.detailAttributeSet" querystring="attributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="viewDetails" type="list">
-			  <cf_ActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
+		      <cf_SlatwallActionCaller action="admin:attribute.create" querystring="AttributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="edit" type="list">
+              <cf_SlatwallActionCaller action="admin:attribute.detailAttributeSet" querystring="attributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="viewDetails" type="list">
+			  <cf_SlatwallActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetid=#local.thisAttributeSet.getAttributeSetID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
 		  </ul>		
 		
 		</td>

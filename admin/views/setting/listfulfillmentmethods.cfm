@@ -63,8 +63,8 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethodID#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethodID#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethodID#" class="edit" type="list">
 						</ul> 						
 					</td>
 				</tr>

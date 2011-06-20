@@ -45,10 +45,10 @@ Notes:
 			<p class="error">The order details that you have requested either can't be found in our system, or your account doesn't have access to those order details.</p>
 		<cfelse>
 			<dl>
-				<cf_PropertyDisplay object="#rc.order#" property="OrderNumber">
-				<cf_PropertyDisplay object="#rc.order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type">
-				<cf_PropertyDisplay object="#rc.order#" property="orderOpenDateTime">
-				<cf_PropertyDisplay object="#rc.order#" property="orderTotal">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="OrderNumber">
+				<cf_SlatwallPropertyDisplay object="#rc.order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderTotal">
 			</dl>
 			<table>
 				<tr>

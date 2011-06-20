@@ -45,7 +45,7 @@ Notes:
 <cfoutput>
 	<div class="svoadmineditpermissions">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.editpermissions" type="list">
+	    	<cf_SlatwallActionCaller action="admin:setting.editpermissions" type="list">
 		</ul>
 		
 		<form action="#buildURL(action='admin:setting.savepermissions')#" method="post">
@@ -125,7 +125,7 @@ Notes:
 				</cfloop>
 			</table>
 			<cfif rc.edit>
-			<cf_ActionCaller type="submit" action="admin:setting.savepermissions" class="button">
+			<cf_SlatwallActionCaller type="submit" action="admin:setting.savepermissions" class="button">
 			</cfif>
 		</form>
 	</div>

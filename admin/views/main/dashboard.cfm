@@ -57,7 +57,7 @@ Notes:
 				</tr>
 			</cfloop>
 		</table>
-		<cf_actionCaller action="admin:product.list" />
+		<cf_SlatwallActionCaller action="admin:product.list" />
 	</div>
 	<div class="orders dashboardSection">
 		<h3>New Orders</h3>
@@ -79,13 +79,13 @@ Notes:
 					</cfif>
 					<td class="administration">
 						<ul class="one">
-						  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
 						</ul>     						
 					</td>
 				</tr>
 			</cfloop>
 		</table>
-		<cf_actionCaller action="admin:order.list" />
+		<cf_SlatwallActionCaller action="admin:order.list" />
 	</div>
 	<div class="started dashboardSection">
 		<h3>Getting Started</h3>

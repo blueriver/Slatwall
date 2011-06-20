@@ -65,9 +65,9 @@ Notes:
 						<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
 						<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
 						<dl>
-							<cf_PropertyDisplay object="#rc.account#" property="firstName" edit="true">
-							<cf_PropertyDisplay object="#rc.account#" property="lastName" edit="true">
-							<cf_PropertyDisplay object="#rc.account#" property="company" edit="true">
+							<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="true">
+							<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="true">
+							<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="true">
 							<cfif isNull(rc.account.getPrimaryEmailAddress()) >
 								<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
 								<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
@@ -84,7 +84,7 @@ Notes:
 								<a href="?doaction=logout">Logout</a>
 							</cfif>
 						</dl>
-						<cf_ActionCaller action="frontend:checkout.saveaccount" type="submit">
+						<cf_SlatwallActionCaller action="frontend:checkout.saveaccount" type="submit">
 					</form>
 				</div>
 			<cfelseif not listFind(rc.orderRequirementsList, 'account')>

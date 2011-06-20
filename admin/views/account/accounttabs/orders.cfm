@@ -71,7 +71,7 @@ Notes:
 				</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
 					</ul>     						
 				</td>
 			</tr>

@@ -47,8 +47,8 @@ Notes:
 <cfoutput>
 	<div class="svoadminsettingdetailPaymentService">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
-			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
+	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
+			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 
 		<cfif !structIsEmpty(rc.errors)>
@@ -78,13 +78,13 @@ Notes:
 					<cfif structKeyExists(local.property, "editType")>
 						<cfset local.propertyEditType = local.property.editType />
 					</cfif>
-					<cf_PropertyDisplay object="#rc.paymentService#" fieldName="paymentService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+					<cf_SlatwallPropertyDisplay object="#rc.paymentService#" fieldName="paymentService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
 				</cfloop>
 			</dl>
 		</cfif>
 		<cfif rc.edit>
-			<cf_ActionCaller action="admin:setting.listPaymentServices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.savePaymentService" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:setting.savePaymentService" type="submit" class="button">
 			</form>
 		</cfif>
 	</div>

@@ -46,16 +46,16 @@ Notes:
 			<input type="hidden" name="BrandID" value="#rc.Brand.getBrandID()#" />
 		</cfif>
 			<dl class="oneColumn">
-				<cf_PropertyDisplay object="#rc.Brand#" property="BrandName" edit="#rc.edit#" first="true">
-				<cf_PropertyDisplay object="#rc.Brand#" property="BrandWebsite" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="BrandName" edit="#rc.edit#" first="true">
+				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="BrandWebsite" edit="#rc.edit#">
 			</dl>
 			<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_ActionCaller action="admin:brand.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:brand.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 				<cfif !rc.brand.isNew() and !rc.brand.hasProduct()>
-				<cf_ActionCaller action="admin:brand.delete" querystring="brandid=#rc.brand.getBrandID()#" class="button" type="link" confirmrequired="true">
+				<cf_SlatwallActionCaller action="admin:brand.delete" querystring="brandid=#rc.brand.getBrandID()#" class="button" type="link" confirmrequired="true">
 				</cfif>
-				<cf_ActionCaller action="admin:brand.save" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:brand.save" type="submit" class="button">
 			</div>
 			</cfif>
 		</form>

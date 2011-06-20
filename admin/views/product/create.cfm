@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.optionGroups" type="any" />
 
 <ul id="navTask">
-	<cf_ActionCaller action="admin:product.list" type="list">
+	<cf_SlatwallActionCaller action="admin:product.list" type="list">
 </ul>
 
 <cfoutput>
@@ -49,18 +49,18 @@ Notes:
 <div id="createProductForm">
 	<form name="CreateProduct" action="#buildURL(action='admin:product.save')#" method="post">
 		<dl class="oneColumn">
-		    <cf_PropertyDisplay object="#rc.Product#" first="true" property="productName" edit="true">
-		    <cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="true">
-		    <cf_PropertyDisplay object="#rc.Product#" property="brand" edit="true">
-			     <cf_ActionCaller action="admin:brand.create" type="link">
-			<cf_PropertyDisplay object="#rc.Product#" property="productType" edit="true">
-		      <cf_ActionCaller action="admin:product.createproducttype" type="link">
+		    <cf_SlatwallPropertyDisplay object="#rc.Product#" first="true" property="productName" edit="true">
+		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="true">
+		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
+			     <cf_SlatwallActionCaller action="admin:brand.create" type="link">
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
+		      <cf_SlatwallActionCaller action="admin:product.createproducttype" type="link">
 		</dl>
 		<br />
 		<dl class="twoColumn productPrice">
-			<cf_PropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
-			<cf_PropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
 		</dl>
 		<br />
 		<br />
@@ -82,29 +82,29 @@ Notes:
 				<cfelse>
 					<!--- no options in this optiongroup defined --->
 					<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsingroup")#</em></p>
-					<cf_ActionCaller action="admin:option.create" queryString="optionGroupID=#local.thisOptionGroup.getOptionGroupID()#">
+					<cf_SlatwallActionCaller action="admin:option.create" queryString="optionGroupID=#local.thisOptionGroup.getOptionGroupID()#">
 				</cfif>
 				</div>
 				</cfloop>
-				<cf_ActionCaller action="admin:option.createoptiongroup" type="link">
+				<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="link">
 			<cfelse>
 				 <!--- no options defined --->
 				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
 			</cfif>
 			<input type="hidden" name="contentID" value="" /> 
 		<div id="actionButtons" class="clearfix">
-			<cf_actionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:product.save" type="submit" class="button" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
+			<cf_SlatwallActionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
 		</div>
 	</form>
 </div>
 <cfelse>
 	<p><em>#rc.$.Slatwall.rbKey("admin.product.create.disabled")#</em></p>
 	<cfif arrayLen(rc.product.getBrandOptions()) eq 0>
-		<p><cf_ActionCaller action="admin:brand.create" type="link"></p>
+		<p><cf_SlatwallActionCaller action="admin:brand.create" type="link"></p>
 	</cfif>
 	<cfif arrayLen(rc.product.getProductTypeOptions()) eq 0>
-		<p><cf_ActionCaller action="admin:product.createProductType" type="link"></p>
+		<p><cf_SlatwallActionCaller action="admin:product.createProductType" type="link"></p>
 	</cfif>
 </cfif>
 

@@ -42,11 +42,11 @@ Notes:
 
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionCaller action="admin:option.createoptiongroup" type="list">
+    <cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="list">
 	<cfif rc.listby EQ "optiongroups">
-		<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptions')#" querystring="listby=options" type="list">
+		<cf_SlatwallActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptions')#" querystring="listby=options" type="list">
 	<cfelseif rc.listby EQ "options">
-		<cf_ActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptiongroups')#" querystring="listby=optiongroups" type="list">
+		<cf_SlatwallActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptiongroups')#" querystring="listby=optiongroups" type="list">
 	</cfif>
 </ul>
 
@@ -63,7 +63,7 @@ Notes:
 			<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F:optiongroup_optiongroupname") and rc["F:optiongroup_optiongroupname"] eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
 		</cfloop>
 		</select>
-		<cf_ActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#" class="button">
+		<cf_SlatwallActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#" class="button">
 	</form>
 	#view("option/inc/optiontable")#
 	<cfelse>

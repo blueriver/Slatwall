@@ -67,7 +67,7 @@ Notes:
 
 <!--- display link to charge card if full authorized amount hasn't been charged yet --->
 <cfif local.orderPayment.getAmountAuthorized() gt local.orderpayment.getAmountCharged()>
-	<cf_ActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
+	<cf_SlatwallActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
 </cfif>
 	
 </cfoutput>

@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionCaller action="admin:product.createproducttype" type="list">
+    <cf_SlatwallActionCaller action="admin:product.createproducttype" type="list">
 </ul>
 <table class="stripe" id="productTypes">
     <tr>
@@ -62,10 +62,10 @@ Notes:
 			  <!--- if this is currently a leaf node in the product type tree, its products will be reassigned to any child types that are added, so indicate whether
 			  	to show modal dialog to alert the user --->
 			  <cfset local.productsReassigned = not rc.productTypes.childCount />
-		      <cf_ActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
-			  <cf_ActionCaller action="admin:product.detailproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="viewDetails" type="list">
-              <cf_ActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" confirmRequired="#local.productsReassigned#" class="add" type="list">
-			  <cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#rc.$.Slatwall.rbKey('entity.producttype.delete_validateisassigned')#" confirmrequired="true">
+		      <cf_SlatwallActionCaller action="admin:product.editproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="edit" type="list">
+			  <cf_SlatwallActionCaller action="admin:product.detailproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="viewDetails" type="list">
+              <cf_SlatwallActionCaller action="admin:product.createproducttype" querystring="parentProductTypeID=#rc.productTypes.productTypeID#" confirmRequired="#local.productsReassigned#" class="add" type="list">
+			  <cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeID=#rc.productTypes.productTypeID#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#rc.$.Slatwall.rbKey('entity.producttype.delete_validateisassigned')#" confirmrequired="true">
 		  </ul>
 		</td>
     </tr>

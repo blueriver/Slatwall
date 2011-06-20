@@ -42,8 +42,8 @@ Notes:
 <cfoutput>
 	<div class="svoadminlistPaymentServices">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
-			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
+	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
+			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
 		<table id="paymentServicesList" class="stripe">
@@ -59,8 +59,8 @@ Notes:
 					<td class="varWidth">#local.paymentServiceMetaData.displayName#</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailPaymentService" querystring="paymentServicePackage=#local.paymentServicePackage#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editPaymentService" querystring="paymentServicePackage=#local.paymentServicePackage#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailPaymentService" querystring="paymentServicePackage=#local.paymentServicePackage#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editPaymentService" querystring="paymentServicePackage=#local.paymentServicePackage#" class="edit" type="list">
 						</ul>     						
 					</td>
 				</tr>
