@@ -43,9 +43,9 @@ Notes:
 <cfoutput>
 	<div class="svoadmindetailpaymentmethod">
 		<ul id="navTask">
-			<cfif not rc.edit><cf_ActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#rc.paymentMethod.getPaymentMethodID()#" type="list"></cfif>
-	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
-			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
+			<cfif not rc.edit><cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#rc.paymentMethod.getPaymentMethodID()#" type="list"></cfif>
+	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
+			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -60,7 +60,7 @@ Notes:
 					<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 				</cfif>
 				<dl class="oneColumn">
-					<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
+					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
 					<dt class="spdprovidergateway">
 						#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
 					</dt>
@@ -90,8 +90,8 @@ Notes:
 		</div>	
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_ActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_ActionCaller action="admin:setting.savePaymentMethod" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:setting.savePaymentMethod" type="submit" class="button">
 			</div>
 		</form>
 	</cfif>

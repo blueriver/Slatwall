@@ -53,9 +53,9 @@ Notes:
 				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
 				<td class="administration">
 		          <ul class="three">
-                      <cf_ActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
-					  <cf_ActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">
-					  <cf_ActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.getAssignedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.brand.delete_validateisassigned')#" confirmrequired="true">
+                      <cf_SlatwallActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
+					  <cf_SlatwallActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.getAssignedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.brand.delete_validateisassigned')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>

@@ -61,10 +61,10 @@ Notes:
 				<td>#dateFormat(local.thisOrder.getOrderOpenDateTime(),"medium")#</td>
 				<td>#local.thisOrder.getOrderNumber()#</td>
 				<td>#$.slatwall.rbKey("entity.orderfulfillment.fulfillmentmethod." & local.fulfillment.getfulfillmentMethodID())#</td>
-				<td><cf_PropertyDisplay object="#local.thisAccount#" property="fullName" displayType="plain" link="?slatAction=admin:account.detail&accountID=#local.thisAccount.getAccountID()#">
+				<td><cf_SlatwallPropertyDisplay object="#local.thisAccount#" property="fullName" displayType="plain" link="?slatAction=admin:account.detail&accountID=#local.thisAccount.getAccountID()#">
 				<td>#dollarFormat(local.fulfillment.getTotalCharge())#</td>
 				<td>
-					<cf_ActionCaller action="admin:order.detailorderfulfillment" querystring="orderfulfillmentID=#local.fulfillment.getorderfulfillmentID()#" type="link" text="#rc.$.slatwall.rbKey('admin.order.processorderfulfillment_nav')#" />
+					<cf_SlatwallActionCaller action="admin:order.detailorderfulfillment" querystring="orderfulfillmentID=#local.fulfillment.getorderfulfillmentID()#" type="link" text="#rc.$.slatwall.rbKey('admin.order.processorderfulfillment_nav')#" />
 				</td>
 			</tr>
 		</cfloop>

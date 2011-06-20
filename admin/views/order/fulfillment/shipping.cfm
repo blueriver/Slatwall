@@ -88,7 +88,7 @@ Notes:
 			</tr>
 		</cfloop>
 	</table>
-	<cf_ActionCaller action="admin:order.processorderfulfillment" class="button" type="submit">
+	<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" class="button" type="submit">
 	<div class="totals">
 		<dl class="fulfillmentTotals">
 			<dt>

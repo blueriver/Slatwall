@@ -43,7 +43,7 @@ Notes:
 <cfoutput>
 	<div class="svoadminsettingdetailaddresszone">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listaddresszones" type="list">
+	    	<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="list">
 		</ul>
 		
 		<cfif rc.edit>
@@ -51,7 +51,7 @@ Notes:
 			<input type="hidden" name="addressZoneID" value="#rc.addressZone.getAddressZoneID()#" />
 		</cfif>
 			<dl class="oneColumn">
-				<cf_PropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
+				<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
 				<dt>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</dt>
 				<dd>
 					<table id="addressZoneLocations" class="stripe">
@@ -76,8 +76,8 @@ Notes:
 				</dd>
 			</dl>
 		<cfif rc.edit>
-			<cf_actionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
 		</form>
 		</cfif>
 		

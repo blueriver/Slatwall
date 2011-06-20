@@ -44,27 +44,27 @@ Notes:
 		<div class="addressDisplay">
 			<cfif attributes.edit>
 				<dl>
-					<cf_PropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" />
-					<cf_PropertyDisplay object="#attributes.address#" property="name" edit="true" />
-					<cf_PropertyDisplay object="#attributes.address#" property="company" edit="true" />
+					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" />
+					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="name" edit="true" />
+					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="company" edit="true" />
 					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
-						<cf_PropertyDisplay object="#attributes.address#" property="streetAddress" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="streetAddress" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
-						<cf_PropertyDisplay object="#attributes.address#" property="street2Address" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="street2Address" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getCityShowFlag()>
-						<cf_PropertyDisplay object="#attributes.address#" property="city" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="city" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getStateCodeShowFlag()>
 						<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
-							<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="true" />
 						<cfelse>
-							<cf_PropertyDisplay object="#attributes.address#" property="stateCode" editType="text" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#attributes.address#" property="stateCode" editType="text" edit="true" />
 						</cfif>
 					</cfif>
 					<cfif attributes.address.getCountry().getPostalCodeShowFlag()>
-						<cf_PropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
 					</cfif>
 					<input type="hidden" name="addressID" value="#attributes.address.getAddressID()#" />
 				</dl>

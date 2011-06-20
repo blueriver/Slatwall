@@ -41,20 +41,20 @@ Notes:
  
 <cfoutput>
 <ul id="navTask">
-	<cfif !rc.optionGroup.isNew()><cf_ActionCaller action="admin:option.create" querystring="optiongroupid=#rc.optiongroup.getoptiongroupid()#" type="list"></cfif>
-    <cfif !rc.edit><cf_ActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list"></cfif>
-	<cf_ActionCaller action="admin:option.list" type="list">
+	<cfif !rc.optionGroup.isNew()><cf_SlatwallActionCaller action="admin:option.create" querystring="optiongroupid=#rc.optiongroup.getoptiongroupid()#" type="list"></cfif>
+    <cfif !rc.edit><cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list"></cfif>
+	<cf_SlatwallActionCaller action="admin:option.list" type="list">
 </ul>
 <cfif rc.edit>
 <form name="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" action="#buildURL(action='admin:option.saveoptiongroup')#" method="post">
 <input type="hidden" id="optionGroupID" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 </cfif>
     <dl class="oneColumn optionDetail">
-    	<cf_PropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
-		<cf_PropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" tooltip=true />
+    	<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" tooltip=true />
 		<cfif rc.edit>
 		<!--- if editing, display field for image uploading --->
-		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" editType="file" tooltip=true>
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" editType="file" tooltip=true>
 		</cfif>
 		<cfif len(rc.OptionGroup.getOptionGroupImage())>
 		<!--- if editing, and optiongroup has an image, display it  --->
@@ -68,15 +68,15 @@ Notes:
 		</cfif>
 		</dd>
 		</cfif>
-		<cf_PropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
 	</dl>
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
-	<cf_actionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+	<cf_SlatwallActionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 	<cfif rc.optiongroup.getOptionsCount() eq 0 and !rc.optionGroup.isNew()>
-	<cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
+	<cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
 	</cfif>
-	<cf_ActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
+	<cf_SlatwallActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
 </div>
 </form>
 <cfelse>

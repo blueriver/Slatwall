@@ -70,9 +70,9 @@ Notes:
 				<div class="error">#params.orderPayment.getErrorBean().getError('processing')#</div>
 			</cfif> 
 			<dl>
-				<cf_PropertyDisplay object="#params.orderPayment#" property="nameOnCreditCard" edit="#params.edit#" /> 
-				<cf_PropertyDisplay object="#params.orderPayment#" property="CreditCardNumber" edit="#params.edit#" />
-				<cf_PropertyDisplay object="#params.orderPayment#" property="SecurityCode" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="nameOnCreditCard" edit="#params.edit#" /> 
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="CreditCardNumber" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="SecurityCode" edit="#params.edit#" />
 				<dt class="spdcreditcardexperationdate"><label for="experationMonth">Expires</label></dt>
 				<dd id="spdcreditcardexpirationdate">
 					<select name="expirationMonth">

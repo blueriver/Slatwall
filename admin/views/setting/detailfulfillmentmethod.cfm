@@ -42,8 +42,8 @@ Notes:
 <cfoutput>
 	<div class="svoadmindetailfulfillmentmethod">
 		<ul id="navTask">
-			<cfif not rc.edit><cf_ActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#rc.fulfillmentMethod.getfulfillmentMethodID()#" type="list"></cfif>
-	    	<cf_ActionCaller action="admin:setting.listFulfillmentMethods" type="list">
+			<cfif not rc.edit><cf_SlatwallActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#rc.fulfillmentMethod.getfulfillmentMethodID()#" type="list"></cfif>
+	    	<cf_SlatwallActionCaller action="admin:setting.listFulfillmentMethods" type="list">
 		</ul>
 		
 		<cfif rc.edit>
@@ -52,7 +52,7 @@ Notes:
 		</cfif>
 		
 		<dl class="oneColumn">
-			<cf_PropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
+			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
 		</dl>
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -75,8 +75,8 @@ Notes:
 		</div>
 		<cfif rc.edit>
 				<div id="actionButtons" class="clearfix">
-					<cf_ActionCaller action="admin:setting.listFulfillmentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-					<cf_ActionCaller action="admin:setting.saveFulfillmentMethod" type="submit" class="button">
+					<cf_SlatwallActionCaller action="admin:setting.listFulfillmentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+					<cf_SlatwallActionCaller action="admin:setting.saveFulfillmentMethod" type="submit" class="button">
 				</div>
 			</form>
 		</cfif>

@@ -47,10 +47,10 @@ Notes:
 
 <ul id="navTask">
 	<cfif request.action eq "admin:attribute.edit">
-	<cf_ActionCaller action="admin:attribute.create" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="list">
+	<cf_SlatwallActionCaller action="admin:attribute.create" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="list">
 	</cfif>
-    <cf_ActionCaller action="admin:attribute.list" type="list">
-	<cf_ActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="list">
+    <cf_SlatwallActionCaller action="admin:attribute.list" type="list">
+	<cf_SlatwallActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="list">
 </ul>
 
 <cfoutput>
@@ -69,10 +69,10 @@ Notes:
     <input type="hidden" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
 	<input type="hidden" name="sortOrder" value="#arrayLen(local.attributes)+1#" />
     <dl class="oneColumn">
-        <cf_PropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
+        <cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
 		<div id="attributeTypenew" style="display:none;">
 		<dt>
 			Attribute Options
@@ -112,15 +112,15 @@ Notes:
 			<a href="##" attribID="new" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="new" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>
 		</dd>
 		</div>
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="defaultValue" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="requiredFlag" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationType" propertyObject="Type" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationRegex" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="validationMessage" edit="true">
-		<cf_PropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="defaultValue" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="requiredFlag" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationType" propertyObject="Type" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationRegex" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationMessage" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-	<cf_ActionCaller action="admin:attribute.save" type="submit" class="button">
+	<cf_SlatwallActionCaller action="admin:attribute.save" type="submit" class="button">
 </form>
 </div>
 </cfif>
@@ -154,7 +154,7 @@ Notes:
 		#local.thisAttribute.getAttributeName()# 
 		<a title="#rc.$.Slatwall.rbKey('sitemanager.edit')#" href="javascript:;" id="editFrm#local.i#open" <cfif local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##editFrm#local.i#container').slideDown();this.style.display='none';jQuery('##editFrm#local.i#close').show();return false;">[#rc.$.Slatwall.rbKey("sitemanager.edit")#]</a> 
 		<a title="#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" href="javascript:;" id="editFrm#local.i#close" <cfif !local.thisOpen>style="display:none;"</cfif> onclick="jQuery('##editFrm#local.i#container').slideUp();this.style.display='none';jQuery('##editFrm#local.i#open').show();return false;">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
-		<cf_ActionCaller type="link" action="admin:attribute.delete" querystring="attributeid=#local.thisAttribute.getAttributeID()#" text="[#rc.$.Slatwall.rbKey("sitemanager.delete")#]" confirmrequired="true">
+		<cf_SlatwallActionCaller type="link" action="admin:attribute.delete" querystring="attributeid=#local.thisAttribute.getAttributeID()#" text="[#rc.$.Slatwall.rbKey("sitemanager.delete")#]" confirmrequired="true">
 		<div<cfif !local.thisOpen> style="display:none;"</cfif> id="editFrm#local.i#container">
 
 		<form name="editFrm#local.i#" enctype="multipart/form-data" action="#buildURL('admin:attribute.save')#" method="post">
@@ -162,10 +162,10 @@ Notes:
 			<input type="hidden" name="attributeID" value="#local.thisAttribute.getAttributeID()#" />
 			<input type="hidden" name="sortOrder" value="#local.thisAttribute.getSortOrder()#" />
 		    <dl class="oneColumn">
-		        <cf_PropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
-				<cf_PropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
-				<cf_PropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_PropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
+		        <cf_SlatwallPropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
+				<cf_SlatwallPropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
+				<cf_SlatwallPropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
+				<cf_SlatwallPropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
 				<div id="attributeType#local.thisAttribute.getAttributeID()#" style="display:none;">
 				<dt>
 					Attribute Options
@@ -226,15 +226,15 @@ Notes:
 					<a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="addOption">#rc.$.Slatwall.rbKey("admin.attribute.addOption")#</a>  <a href="##" attribID="#local.thisAttribute.getAttributeID()#" class="remOption" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.removeOption")#</a>				
 				</dd>
 				</div>
-				<cf_PropertyDisplay id="defaultValue#local.i#" object="#local.thisAttribute#" property="defaultValue" edit="true">
-				<cf_PropertyDisplay id="requiredFlag#local.i#" object="#local.thisAttribute#" property="requiredFlag" edit="true">
-				<cf_PropertyDisplay id="validationType#local.i#" object="#local.thisAttribute#" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" propertyObject="Type" edit="true">
-				<cf_PropertyDisplay id="validationRegex#local.i#" object="#local.thisAttribute#" property="validationRegex" edit="true">
-				<cf_PropertyDisplay id="validationMessage#local.i#" object="#local.thisAttribute#" property="validationMessage" edit="true">
-				<cf_PropertyDisplay id="activeFlag#local.i#" object="#local.thisAttribute#" property="activeFlag" edit="true">
+				<cf_SlatwallPropertyDisplay id="defaultValue#local.i#" object="#local.thisAttribute#" property="defaultValue" edit="true">
+				<cf_SlatwallPropertyDisplay id="requiredFlag#local.i#" object="#local.thisAttribute#" property="requiredFlag" edit="true">
+				<cf_SlatwallPropertyDisplay id="validationType#local.i#" object="#local.thisAttribute#" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" propertyObject="Type" edit="true">
+				<cf_SlatwallPropertyDisplay id="validationRegex#local.i#" object="#local.thisAttribute#" property="validationRegex" edit="true">
+				<cf_SlatwallPropertyDisplay id="validationMessage#local.i#" object="#local.thisAttribute#" property="validationMessage" edit="true">
+				<cf_SlatwallPropertyDisplay id="activeFlag#local.i#" object="#local.thisAttribute#" property="activeFlag" edit="true">
 		    </dl>
 			<a class="button" href="javascript:;" onclick="jQuery('##editFrm#local.i#container').slideUp();jQuery('##editFrm#local.i#open').show();jQuery('##editFrm#local.i#close').hide();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
-			<cf_ActionCaller action="admin:attribute.save" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:attribute.save" type="submit" class="button">
 		</form>  
 		</div>
 	</li>

@@ -41,7 +41,7 @@ Notes:
 		<div class="image">
 			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(size="M")#</a>
 		</div>
-		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productCode">
+		<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productCode">
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />

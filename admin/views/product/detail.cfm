@@ -45,9 +45,9 @@ Notes:
 </cfif>
 
 <ul id="navTask">
-	<cf_ActionCaller action="admin:product.list" type="list">
+	<cf_SlatwallActionCaller action="admin:product.list" type="list">
 	<cfif !rc.edit>
-	<cf_ActionCaller action="admin:product.edit" queryString="productID=#rc.product.getProductID()#" type="list">
+	<cf_SlatwallActionCaller action="admin:product.edit" queryString="productID=#rc.product.getProductID()#" type="list">
 	</cfif>
 </ul>
 
@@ -59,12 +59,12 @@ Notes:
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 	</cfif>
 	<dl class="twoColumn">
-		<cf_PropertyDisplay object="#rc.Product#" property="activeFlag" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#">
-		<cf_PropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="activeFlag" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 	</dl>
 
 <div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -82,7 +82,7 @@ Notes:
 	</div>
 	
 	<div id="tabDescription">
-		<cf_PropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
 	</div>
 	<div id="tabProductSettings">
 		#view("product/producttabs/settings")#
@@ -99,11 +99,11 @@ Notes:
 </div>
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
-	<cf_ActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+	<cf_SlatwallActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 	<cfif !rc.product.getOrderedFlag()>
-	<cf_ActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
+	<cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
 	</cfif>
-	<cf_ActionCaller action="admin:product.save" type="submit" class="button">
+	<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button">
 </div>
 </form>
 </cfif>

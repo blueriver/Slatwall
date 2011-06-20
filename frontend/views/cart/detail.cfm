@@ -65,8 +65,8 @@ Notes:
 				</dl>
 			</div>
 			<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
-			<cf_ActionCaller action="frontend:cart.clearItems" type="link" class="button">
-			<cf_ActionCaller action="frontend:cart.update" type="submit">
+			<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
+			<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
 		</cfif>
 		</form>
 	</div>

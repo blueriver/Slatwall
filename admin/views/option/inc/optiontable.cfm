@@ -57,8 +57,8 @@ Notes:
 		<td>#local.thisOption.getSortOrder()#</td>
 		<td class="administration">
 		  <ul class="two">
-              <cf_ActionCaller action="admin:option.edit" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">
-              <cf_ActionCaller action="admin:option.delete" querystring="optionid=#local.thisOption.getOptionID()#" class="delete" type="list" disabled="#local.thisOption.getAssignedFlag()#" confirmrequired="true">
+              <cf_SlatwallActionCaller action="admin:option.edit" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">
+              <cf_SlatwallActionCaller action="admin:option.delete" querystring="optionid=#local.thisOption.getOptionID()#" class="delete" type="list" disabled="#local.thisOption.getAssignedFlag()#" confirmrequired="true">
 		  </ul>		
 		
 		</td>

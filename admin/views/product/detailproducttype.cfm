@@ -47,8 +47,8 @@ Notes:
 
 <cfoutput>
 	<ul id="navTask">
-	    <cf_ActionCaller action="admin:product.listproducttypes" type="list">
-		<cfif !rc.edit><cf_ActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
+	    <cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
+		<cfif !rc.edit><cf_SlatwallActionCaller action="admin:product.editproducttype" querystring="productTypeID=#rc.productType.getProductTypeID()#" type="list"></cfif>
 	</ul>
 	
 	<cfif rc.edit>
@@ -57,7 +57,7 @@ Notes:
 	</cfif>
 
     <dl class="twoColumn">
-    	<cf_PropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
+    	<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
 		<cfif rc.edit>
 		<cfset local.tree = rc.productType.getProductTypeTree() />
 		<dt>
@@ -79,7 +79,7 @@ Notes:
 		</dd>
 		<cfelse>
 			<cfset local.parentLink = rc.productType.hasParentProductType() ? buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.productType.getParentProductType().getProductTypeID()#') : "" />
-			<cf_PropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
+			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
 		</cfif>
 	</dl>
 	<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -89,7 +89,7 @@ Notes:
 			<li><a href="##tabAttributeSets" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.product.detailProductType.tabAttributeSets')#</span></a></li>
 		</ul>
 		<div id="tabDescription">
-			<cf_PropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg">
+			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg">
 		</div>
 		<div id="tabSettings">
 			<table class="stripe" id="productTypeSettings">
@@ -106,7 +106,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)">
+						<cf_SlatwallPropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("trackInventoryFlag") />
 					<td>
@@ -127,7 +127,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)">
+						<cf_SlatwallPropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("callToOrderFlag") />
 					<td>
@@ -148,7 +148,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)">
+						<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowShippingFlag") />
 					<td>
@@ -169,7 +169,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)">
+						<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowPreorderFlag") />
 					<td>
@@ -190,7 +190,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)">
+						<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowBackorderFlag") />
 					<td>
@@ -211,7 +211,7 @@ Notes:
 						</a>
 					</td>
 					<td>
-						<cf_PropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)">
+						<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" editType="select" nullLabel="#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropshipFlag'))#)">
 					</td>
 					<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowDropShipFlag") />
 					<td>
@@ -242,10 +242,10 @@ Notes:
 				<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 					<tr>
 						<td class="property varWidth">
-							<cf_PropertyDisplay object="#attributeSet#" property="attributeSetName" edit="false" displaytype="plain">
+							<cf_SlatwallPropertyDisplay object="#attributeSet#" property="attributeSetName" edit="false" displaytype="plain">
 						</td>
 						<td>
-							<cf_PropertyDisplay object="#attributeSet.getAttributeSetType()#" property="type" edit="false" displaytype="plain">
+							<cf_SlatwallPropertyDisplay object="#attributeSet.getAttributeSetType()#" property="type" edit="false" displaytype="plain">
 						</td>
 						<td>
 							<cfif attributeSet.getGlobalFlag()>
@@ -266,11 +266,11 @@ Notes:
 	</div>
 	<cfif rc.edit>
 		<div id="actionButtons" class="clearfix">
-			<cf_ActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
-			<cf_ActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
+			<cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 			</cfif>
-			<cf_ActionCaller action="admin:product.saveproducttype" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:product.saveproducttype" type="submit" class="button">
 		</div>
 	</form>
 	</cfif>
