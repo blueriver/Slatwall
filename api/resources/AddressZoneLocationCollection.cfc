@@ -33,41 +33,34 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+	Notes:
+	
 --->
-<cfparam name="rc.addressZone" type="any" />
-<cfparam name="rc.newAddress" type="any" />
-<cfparam name="rc.edit" type="boolean" /> 
-
-<cfoutput>
-	<div class="svoadminsettingdetailaddresszone">
-		<ul id="navTask">
-	    	<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="list">
-			<cfif not rc.edit>
-				<cf_SlatwallActionCaller action="admin:setting.editaddresszone" queryString="addressZoneID=#rc.addressZone.getAddressZoneID()#" type="list">
-			</cfif>
-		</ul>
+<cfcomponent extends="BaseResource" taffy_uri="/addressZoneLocations/{addressZoneID}/">
+	
+	<cffunction name="post">
+		<cfset var display = "" />
+		<cfset var params = structNew() />
 		
-		<cfif rc.edit>
-			<form name="addressZone" action="#buildURL(action='admin:setting.saveaddresszone')#" method="post">
-			<input type="hidden" name="addressZoneID" value="#rc.addressZone.getAddressZoneID()#" />
-		</cfif>
+		<cfdump var="#arguments#" output="console" />
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
-		</dl>
+		<cfset params.addressZone = getService("addressService").getAddressZone(arguments.addressZoneID) />
 		
-		<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
-		<cfset params = structNew() />
-		<cfset params.addressZone = rc.addressZone />
-		<cfset params.edit = rc.edit />
-		#view("admin:setting/ajax/addresszonelocation", params)#
-			
-		<cfif rc.edit>
-			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
-			</form>
-		</cfif>
-	</div>
-</cfoutput>
+		<cfset var address = getService("addressService").newAddress() />
+		<cfset address.populate(arguments) />
+		<cfset params.addressZone.addAddressZoneLocation(address) />
+		
+		<cfset params.edit = true />
+		
+		<cfset $ = request.context.$ />
+		
+		<cfsavecontent variable="display">
+			<cfinclude template="/plugins/Slatwall/admin/views/setting/ajax/addresszonelocation.cfm" >
+		</cfsavecontent>
+		
+		<cfset ormFlush() />
+		
+		<cfreturn representationOF(display) />
+	</cffunction>
+	
+</cfcomponent>
