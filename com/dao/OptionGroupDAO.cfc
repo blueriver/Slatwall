@@ -36,5 +36,5 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
+component extends="BaseDAO" {
 }

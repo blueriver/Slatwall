@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
+component extends="BaseDAO" {
 
 	
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
