@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
+component extends="BaseDAO" {
 
 	
 	public any function clearProductContent(required any product) {

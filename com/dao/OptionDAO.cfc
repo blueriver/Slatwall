@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
+component extends="BaseDAO" {
 	
 	// @hint checks if the passed if the option code of the passed in option is already in use within its option group
 	public any function isDuplicateOptionCode( required any option ) {

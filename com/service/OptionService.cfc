@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="slatwall.com.service.BaseService" accessors="true" {
+component extends="BaseService" accessors="true" {
 
 	public any function getOptionSmartList(struct data={}){;
 		arguments.entityName = "SlatwallOption";

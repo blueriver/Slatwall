@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
+component extends="BaseDAO" {
 			
 	public any function readByMuraUserID(required string muraUserID) {
 		return ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.muraUserID=:muraUserID", {muraUserID=arguments.muraUserID}, true);
