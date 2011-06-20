@@ -334,11 +334,11 @@ Notes:
 							<cfif attributes.allowNullOption>
 								<option value="">#attributes.nullLabel eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullLabel#</option>
 							</cfif>
-                            <cfset attributes.value = (len(attributes.defaultValue) gt 0 AND attributes.value eq "") ? attributes.defaultValue : attributes.value />
-							<cfloop array="#attributes.editOptions#" index="i">
+                            <cfset attributes.displayValue = (len(attributes.defaultValue) gt 0 AND attributes.displayValue eq "") ? attributes.defaultValue : attributes.displayValue />
+ 							<cfloop array="#attributes.editOptions#" index="i">
 								<!--- if there is a key named "label" use that as the displayed label for the option, if not, default to the "name" key value --->
 								<cfset label = structKeyExists(i,"label") ? i['label'] : i['name'] />
-								<option value="#i['id']#" <cfif attributes.value eq i['id']>selected="selected"</cfif>>#label#</option>	
+								<option value="#i['id']#" <cfif attributes.value eq i['id'] or attributes.displayValue eq label>selected="selected"</cfif>>#label#</option>	
 							</cfloop>
 						</select>
 <!---						<cfelse>
