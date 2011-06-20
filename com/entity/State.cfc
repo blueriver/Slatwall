@@ -39,8 +39,8 @@ Notes:
 component displayname="State" entityname="SlatwallState" table="SlatwallState" persistent="true" extends="BaseEntity" {
 	
 	// Persistant Properties
-	property name="stateCode" ormtype="string" fieldtype="id";
-	property name="countryCode" ormtype="string" fieldtype="id";
+	property name="stateCode" length="5" ormtype="string" fieldtype="id";
+	property name="countryCode" length="10" ormtype="string" fieldtype="id";
 	
 	property name="stateName" ormtype="string";
 	
