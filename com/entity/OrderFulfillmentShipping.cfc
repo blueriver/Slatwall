@@ -44,7 +44,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
-	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="orderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
+	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 
 	public any function init() {
 		if(isNull(variables.orderShippingMethodOptions)) {
