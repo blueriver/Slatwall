@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Location" entityname="SlatwallLocation" table="SlatwallLocation" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="locationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="locationName" ormtype="string";
 	property name="sellStockOnWebFlag" ormtype="boolean";

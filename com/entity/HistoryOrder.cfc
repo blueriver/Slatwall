@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="History Order" entityname="SlatwallHistoryOrder" table="SlatwallHistoryOrder" persistent="true" extends="BaseEntity" {
 			
-	// Persistant Properties
+	// Persistent Properties
 	property name="historyOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Audit properties

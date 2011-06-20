@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Product Type" entityname="SlatwallProductType" table="SlatwallProductType" persistent="true" extends="BaseEntity" {
 			
-	// Persistant Properties
+	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productTypeName" ormtype="string" validateRequired="true";
     property name="productTypeDescription" ormtype="string" length="2000";

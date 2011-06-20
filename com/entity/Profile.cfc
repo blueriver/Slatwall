@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Profile" entityname="SlatwallProfile" table="SlatwallProfile" persistent="true" extends="BaseEntity" {
 			
-	// Persistant Properties
+	// Persistent Properties
 	property name="profileID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="profileName" ormtype="string";
 	

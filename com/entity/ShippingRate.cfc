@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="SlatwallShippingRate" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="shippingRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="minWeight" validateNumeric="true" ormtype="float";
 	property name="maxWeight" validateNumeric="true" ormtype="float";

@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddress" table="SlatwallVendorEmailAddress" persistent="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="vendorEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailAddress" ormtype="string";
 	

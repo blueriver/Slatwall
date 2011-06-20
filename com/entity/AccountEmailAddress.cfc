@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Account Email Address" entityname="SlatwallAccountEmailAddress" table="SlatwallAccountEmailAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailAddress" validateRequired="true" validateEmail="true" ormtype="string" inverse="true";
 	

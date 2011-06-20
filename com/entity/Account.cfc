@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Account" entityname="SlatwallAccount" table="SlatwallAccount" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="firstName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="lastName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";

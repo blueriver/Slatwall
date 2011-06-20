@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Option" entityname="SlatwallOption" table="SlatwallOption" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="optionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="optionCode" validateRequired="true" ormtype="string";
 	property name="optionName" validateRequired="true" ormtype="string";

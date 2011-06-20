@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired="true";
 	property name="listPrice" ormtype="float" default="0";
@@ -60,7 +60,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
-	// Non-Persistant Properties
+	// Non-Persistent Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
 	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
 	property name="qc" persistent="false" type="numeric" hint="quantity committed";

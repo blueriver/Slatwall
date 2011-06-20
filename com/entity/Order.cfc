@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="orderNumber" ormtype="string"; 
 	property name="orderOpenDateTime" ormtype="timestamp";

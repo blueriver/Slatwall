@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" discriminatorcolumn="attributeSetAssignmentType" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties

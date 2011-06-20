@@ -75,7 +75,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
-	// Non-Persistant Properties
+	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
 	property name="onTermSaleFlag" type="boolean" persistent="false";
 	property name="onClearanceSaleFlag" type="boolean" persistent="false";
@@ -179,7 +179,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.templateOptions;
 	}
 	
-	// Non-Persistant Helpers
+	// Non-Persistent Helpers
 	
 	public string function getContentIDs() { 
 		var contentIDs = "";

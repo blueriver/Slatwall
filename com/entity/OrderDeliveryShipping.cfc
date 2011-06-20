@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order Delivery Shipping" entityname="SlatwallOrderDeliveryShipping" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="OrderDelivery" discriminatorvalue="shipping" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="trackingNumber" ormtype="string";
 	

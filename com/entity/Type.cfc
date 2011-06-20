@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Type" entityname="SlatwallType" table="SlatwallType" persistent="true" accessors="true" output="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="typeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="type" ormtype="string";
 	property name="systemCode" ormtype="string";

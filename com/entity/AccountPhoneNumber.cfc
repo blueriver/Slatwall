@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNumber" table="SlatwallAccountPhoneNumber" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="accountPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="phoneNumber" validateRequired="true" type="string";
 	

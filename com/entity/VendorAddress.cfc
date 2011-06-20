@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Vendor Address" entityname="SlatwallVendorAddress" table="SlatwallVendorAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="vendorAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 		
 	// Related Object Properties

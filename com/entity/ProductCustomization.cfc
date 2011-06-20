@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Product Customization" entityname="SlatwallProductCustomization" table="SlatwallProductCustomization" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='attributeSet'}" missingrowignored="true";
 	property name="requiredFlag" ormtype="boolean" ;
 	property name="accountSaveFlag" ormtype="boolean" ;

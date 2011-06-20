@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	// @hint the paymentMethodID is intentionally 255 length because the values we store for the ID are NOT uuid's.  Checkout the Data for this table in the /config folder to know more.
 	property name="paymentMethodID" ormtype="string" length="255" fieldtype="id" unsavedvalue="" default="";
 	property name="providerGateway" ormtype="string";

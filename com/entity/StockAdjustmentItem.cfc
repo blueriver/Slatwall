@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmentItem" table="SlatwallStockAdjustmentItem" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="stockAdjustmentItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="adjustmentQuantity" ormtype="integer";
 	property name="newQuantity" ormtype="integer";

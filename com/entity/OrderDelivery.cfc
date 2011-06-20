@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table="SlatwallOrderDelivery" persistent="true" accessors="true" output="false" extends="BaseEntity" discriminatorcolumn="fulfillmentMethodID" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="deliveryOpenDateTime" ormtype="timestamp";
 	property name="deliveryCloseDateTime" ormtype="timestamp";

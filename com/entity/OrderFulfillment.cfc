@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" table="SlatwallOrderFulfillment" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="fulfillmentMethodID" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentCharge" ormtype="float";
 	

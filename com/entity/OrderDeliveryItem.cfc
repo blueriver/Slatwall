@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryItem" table="SlatwallOrderDeliveryItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderDeliveryItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantityDelivered" ormtype="integer";
 	

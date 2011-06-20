@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order Payment Credit Card" entityname="SlatwallOrderPaymentCreditCard" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="OrderPayment" discriminatorvalue="creditCard" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	property name="nameOnCreditCard" ormType="string";

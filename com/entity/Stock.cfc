@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="qoh" ormtype="integer" hint="Quantity On Hand, This gets decrimented when an item is Shipped, and incrimented when an item is received or transfered in";
 	property name="qc" ormtype="integer" hint="Quantity Committed, This gets incrimented when an order is placed, and decremented when an order ships.  It is used to calculated availability";

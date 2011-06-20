@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="SlatwallAttributeSet" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeSetName" validateRequired="true" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;

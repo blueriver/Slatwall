@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="History Sku" entityname="SlatwallHistorySku" table="SlatwallHistorySku" persistent="true" extends="BaseEntity" {
 			
-	// Persistant Properties
+	// Persistent Properties
 	property name="historySkuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="float";
 	property name="listPrice" ormtype="float";
