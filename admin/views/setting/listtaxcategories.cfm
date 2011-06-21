@@ -36,11 +36,33 @@
 Notes:
 
 --->
+
+<cfparam name="rc.taxCategories" type="any" />
+
 <cfoutput>
-	<div class="svoadminsettingdetailviewupdate">
-		<form action="#buildURL(action='admin:setting.updatefrontendviews')#" method="post">
-			<p>Only Click this button if you are 100% sure that you want to updated all of the views in you the <strong>#rc.$.event('siteid')#</strong> site directory</p>
-			<cf_SlatwallActionCaller action="admin:setting.updatefrontendviews" type="submit" class="button" confirmRequired="true">
-		</form>
+	<div class="svoadminlisttaxcategories">
+		<ul id="navTask">
+	    	<cf_SlatwallActionCaller action="admin:setting.listTaxCategories" type="list">
+			<cf_SlatwallActionCaller action="admin:setting.listAddressZones" type="list">
+		</ul>
+		
+		<table id="taxCategories" class="stripe">
+			<tr>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.taxCategory.taxCategoryName")#</th>
+				<th>&nbsp;</th>
+			</tr>
+				
+			<cfloop array="#rc.taxCategories#" index="local.taxCategory">
+				<tr>
+					<td class="varWidth">#local.taxCategory.getTaxCategoryName()#</td>
+					<td class="administration">
+						<ul class="two">
+							<cf_SlatwallActionCaller action="admin:setting.detailTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="edit" type="list">
+						</ul> 						
+					</td>
+				</tr>
+			</cfloop>
+		</table>
 	</div>
 </cfoutput>

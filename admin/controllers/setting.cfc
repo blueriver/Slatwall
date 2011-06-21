@@ -395,11 +395,42 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
 	}
 	
+	// Frontend Views
 	public void function updateFrontendViews(required struct rc) {
 		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
 		
 		getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
+	}
+	
+	// Tax Categories
+	
+	public void function listTaxCategories(required struct rc) {
+		rc.taxCategories = getSettingService().listTaxCategory();
+	}
+	
+	public void function detailTaxCategory(required struct rc) {
+		param name="rc.taxCategoyID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.taxCategory = getSettingService().getTaxCategory(rc.taxCategoryID);
+	}
+	
+	public void function editTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
+	}
+	
+	public void function createTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
+		
+	}
+	
+	public void function saveTaxCategory(required struct rc) {
+		
 	}
 }

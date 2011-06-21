@@ -128,6 +128,7 @@ Notes:
 				<ul class="addMenuNav">
 					<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
 					<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="list">
 					<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="list">
 					<cf_SlatwallActionCaller action="admin:setting.listpaymentmethods" type="list">
 					<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethods" type="list">

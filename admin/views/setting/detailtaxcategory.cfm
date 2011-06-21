@@ -36,11 +36,41 @@
 Notes:
 
 --->
+<cfparam name="rc.taxCategory" type="any" />
+<cfparam name="rc.edit" type="boolean" /> 
+
 <cfoutput>
-	<div class="svoadminsettingdetailviewupdate">
-		<form action="#buildURL(action='admin:setting.updatefrontendviews')#" method="post">
-			<p>Only Click this button if you are 100% sure that you want to updated all of the views in you the <strong>#rc.$.event('siteid')#</strong> site directory</p>
-			<cf_SlatwallActionCaller action="admin:setting.updatefrontendviews" type="submit" class="button" confirmRequired="true">
-		</form>
+	<div class="svoadminsettingdetailtaxcategory">
+		<ul id="navTask">
+	    	<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="list">
+			<cfif not rc.edit>
+				<cf_SlatwallActionCaller action="admin:setting.edittaxcategory" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list">
+			</cfif>
+		</ul>
+		<dl class="twoColumn">
+			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
+		</dl>
+		<!---
+		<cfif rc.edit>
+			<form name="addressZone" action="#buildURL(action='admin:setting.saveaddresszone')#" method="post">
+			<input type="hidden" name="addressZoneID" value="#rc.addressZone.getAddressZoneID()#" />
+		</cfif>
+		
+		<dl class="twoColumn">
+			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
+		</dl>
+		
+		<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
+		<cfset params = structNew() />
+		<cfset params.addressZone = rc.addressZone />
+		<cfset params.edit = rc.edit />
+		#view("admin:setting/ajax/addresszonelocation", params)#
+			
+		<cfif rc.edit>
+			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
+			</form>
+		</cfif>
+		--->
 	</div>
 </cfoutput>
