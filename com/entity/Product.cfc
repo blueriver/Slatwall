@@ -417,7 +417,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     	return getDefaultSku().getImageDirectory();	
     }
     
-	public string function getImage(string size, numeric width, numeric height, string class, string alt) {
+	public string function getImage(string size, numeric width, numeric height, string class, string alt, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		return getDefaultSku().getImage(argumentCollection = arguments);
 	}
 	
@@ -425,7 +425,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getImagePath();
 	}
 	
-	public string function getResizedImagePath(string size, numeric width, numeric height) {
+	public string function getResizedImagePath(string size, numeric width, numeric height, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
