@@ -39,7 +39,7 @@ Notes:
 <cfoutput>
 	<div class="svoproductdetail">
 		<div class="image">
-			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(size="M")#</a>
+			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(height="100",width="100",crop="true",cropLeftStart="100",cropTopStart="100")#</a>
 		</div>
 		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productCode">
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>

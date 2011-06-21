@@ -133,12 +133,20 @@ Notes:
 					</div>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
-					#view("order/orderTabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
+					#view("order/ordertabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
 				</cfloop>
 			</div>
 			
 			<div id="tabOrderDeliveries">
-				
+				<cfset local.orderDeliveries = rc.order.getOrderDeliveries() />
+				<cfif arrayLen(local.orderDeliveries)>
+					<cfloop array="#local.orderDeliveries#" index="local.thisOrderDelivery">
+						<cfset local.params.orderDelivery = local.thisOrderDelivery />
+						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)#
+					</cfloop>
+				<cfelse>
+					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#
+				</cfif>
 			</div>
 			<div id="tabOrderActivityLog">
 				
