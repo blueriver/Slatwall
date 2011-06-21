@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,12 +35,21 @@
 
 Notes:
 
---->
-<cfoutput>
-	<div class="svoadminsettingdetailviewupdate">
-		<form action="#buildURL(action='admin:setting.updatefrontendviews')#" method="post">
-			<p>Only Click this button if you are 100% sure that you want to updated all of the views in you the <strong>#rc.$.event('siteid')#</strong> site directory</p>
-			<cf_SlatwallActionCaller action="admin:setting.updatefrontendviews" type="submit" class="button" confirmRequired="true">
-		</form>
-	</div>
-</cfoutput>
+*/
+component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" table="SlatwallTaxCategoryRate" persistent="true" output="false" accessors="true" extends="BaseEntity" {
+	
+	// Persistent Properties
+	property name="taxCategoryRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="taxRate" ormtype="float";
+	
+	// Related Object Properties
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
+	property name="taxCategory" cfc="TaxCategory" fieldtype="many-to-one" fkcolumn="taxCategoryID";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
+}
