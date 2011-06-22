@@ -39,12 +39,8 @@ Notes:
 component displayname="Base Object" output="false" {
 	
 	public any function init() {
-		if(!structKeyExists(request, "muraScope")) {
-			request.muraScope = new mura.MuraScope('default');
-		}
-		variables.$ = request.muraScope;
 		
-		return this;	
+		return this;
 	}
 	
 	// @hint helper function for returning the any of the services in the application

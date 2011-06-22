@@ -49,8 +49,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	public void function subSystemBefore(required struct rc) {
 		
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
-		if (!structKeyExists(session, "mura") || !len($.currentUser().getMemberships())) {
-			var loginURL = $.createHREF(filename=$.siteConfig().getLoginURL());
+		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
+			var loginURL = rc.$.createHREF(filename=$.siteConfig().getLoginURL());
 			if(find("?",loginURL)) {
 				loginURL &= "&";	
 			} else {

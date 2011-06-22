@@ -74,7 +74,7 @@
         <property name="skuDAO"><ref bean="SkuDAO" /></property>
         <constructor-arg name="productTypeDAO"><ref bean="ProductTypeDAO" /></constructor-arg>
 		<property name="skuService"><ref bean="SkuService" /></property>
-        <property name="ContentManager"><ref bean="ContentManager" /></property>
+        <property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="feedManager" /></property>
     </bean>
 

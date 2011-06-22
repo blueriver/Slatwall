@@ -52,7 +52,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function save(required struct rc) {
-		getAccountService().saveAccount(rc.$.Slatwall.getCurrentAccount(), rc);
+		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
 		getFW().setView("frontend:account.detail");
 	}
 	

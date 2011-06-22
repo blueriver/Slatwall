@@ -80,10 +80,9 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// Setup account here
-		if($.currentUser().isLoggedIn()) {
-			// Load the mura User
-			var muraUser = $.currentUser();
-			
+		var muraUser = getRequestCacheService().getValue("muraScope").currentUser();
+		
+		if(muraUser.isLoggedIn()) {
 			// Load the account
 			var slatwallAccount = getAccountService().getAccountByMuraUser(muraUser);
 			
