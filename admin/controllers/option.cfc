@@ -129,7 +129,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
 		var deleteResponse = getOptionService().delete(option);
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.option.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -196,7 +196,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
 		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();
+			rc.message = rbKey("admin.account.deleteOptionGroup_success");
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";

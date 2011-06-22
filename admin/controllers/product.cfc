@@ -145,7 +145,7 @@ component extends="BaseController" output=false accessors=true {
 		var product = getProductService().getProduct(rc.productID);
 		var deleteResponse = getProductService().delete(product);
 		if(deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();		
+			rc.message = rbKey("admin.product.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -160,7 +160,7 @@ component extends="BaseController" output=false accessors=true {
 		var productID = sku.getProduct().getProductID();
 		var deleteResponse = getSkuService().delete(sku);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteSku_success");
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
@@ -244,7 +244,7 @@ component extends="BaseController" output=false accessors=true {
 		var productType = getProductService().getProductType(rc.productTypeID);
 		var deleteResponse = getProductService().deleteProductType(productType);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();		
+			rc.message = rbKey("admin.product.deleteProductType_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";

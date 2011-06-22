@@ -164,7 +164,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.shippingMethod);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteShippingMethod_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -386,7 +386,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.addressZone);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteAddressZone_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
