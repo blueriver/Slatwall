@@ -90,7 +90,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		
 		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/xml;charset=utf-8");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#Len(xmlPacket)#");
-		httpRequest.addParam(type="header",name="SOAPAction",value="www.envmgr.com/LabelService/CalculatePostageRates");
+		httpRequest.addParam(type="header",name="SOAPAction",value="https://www.envmgr.com/LabelService/CalculatePostageRates");
 		//httpRequest.addParam(type="header",name="accept-encoding",value="no-compression");
 		//httpRequest.addParam(type="header",name="mimetype",value="text/xml");
 		httpRequest.addParam(type="body",value="#xmlPacket#");

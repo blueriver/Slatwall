@@ -68,7 +68,7 @@ component extends="BaseService" accessors="true" output="false" {
 		return account;
 	}
 	
-	public any function saveAccount(required any account, required struct data) {
+	public any function saveAccount(required any account, required struct data, required string siteID) {
 		// Populate the account from the data
 		arguments.account.populate(arguments.data);
 		
@@ -127,7 +127,7 @@ component extends="BaseService" accessors="true" output="false" {
 				// Setup a new mura user
 				muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
 				muraUser.setPassword(arguments.data.password);
-				muraUser.setSiteID($.event('siteid'));
+				muraUser.setSiteID(arguments.siteID);
 				
 				// Update mura user with values from account
 				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
@@ -151,8 +151,10 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Re-Login the current user so that the new values are saved.
-			if($.currentUser().getUserID() == muraUser.getUserID()) {
-				getUserUtility().loginByUserID(muraUser.getUserID(), $.event('siteid'));	
+			var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+			
+			if(currentUser.getUserID() == muraUser.getUserID()) {
+				getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 			}
 			
 		} else if ( !isNull(arguments.account.getMuraUserID()) && arguments.account.getMuraUserID() != "") {

@@ -128,7 +128,7 @@ component extends="framework" output="false" {
 				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
 			}
 			
-			// Look for mura Scope.  If it doens't exist add it.
+			// Look for mura Scope in the request context.  If it doens't exist add it.
 			if (!structKeyExists(request.context,"$")){
 				if (!structKeyExists(request, "muraScope")) {
 					request.muraScope = getBeanFactory().getBean("muraScope").init(session.siteid);
@@ -141,6 +141,7 @@ component extends="framework" output="false" {
 				request.context.$.event('siteid', session.siteid);
 			}
 			
+			
 			// Setup slatwall scope in request cache If it doesn't already exist
 			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
 				getBeanFactory().getBean("requestCacheService").setValue(key="slatwallScope", value= new Slatwall.com.utility.SlatwallScope());	
@@ -150,6 +151,9 @@ component extends="framework" output="false" {
 			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
 				request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
 			}
+			
+			// Add a reference to the mura scope to the request cache service
+			getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.context.$);
 			
 			// Confirm Session Setup
 			getBeanFactory().getBean("SessionService").confirmSession();

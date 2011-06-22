@@ -47,7 +47,7 @@ component extends="BaseService" accessors="true" {
 	// Mura Service Injection
 	property name="contentManager" type="any";
 	property name="feedManager" type="any";
-		
+	
 	public any function getProductTemplates(required string siteID) {
 		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
 		return getContentManager().getNest(parentID=productTemplatesID, siteid=arguments.siteid);
@@ -57,8 +57,8 @@ component extends="BaseService" accessors="true" {
 		return getFeedManager().getBean();
 	}
 	
-	public any function getProductPages(returnFormat="iterator") {
-		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
+	public any function getProductPages(required string siteID, string returnFormat="iterator") {
+		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc" });
 		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
 		
@@ -67,7 +67,7 @@ component extends="BaseService" accessors="true" {
 		} else if( arguments.returnFormat == "query" ) {
 			return pageFeed.getQuery();
 		} else if( arguments.returnFormat == "nestedIterator" ) {
-			return $.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
+			return application.serviceFactory.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
 		}
 		
 	}
@@ -123,12 +123,12 @@ component extends="BaseService" accessors="true" {
 		arguments.product.setProductContent(productContentArray);
 	}
 	
-	public void function updateProductContentPaths(required string contentID) {
+	public void function updateProductContentPaths(required string contentID, required string siteID) {
 		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++) {
 			local.thisPC = pcArray[i];
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
-				var newPath = getContentManager().read(contentID=local.thisPC.getContentID(),siteID=$.event("siteID")).getPath();
+				var newPath = getContentManager().read(contentID=local.thisPC.getContentID(),siteID=arguments.siteID).getPath();
 				local.thisPC.setContentPath(newPath);
 			}
 		} 

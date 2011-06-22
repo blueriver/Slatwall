@@ -72,7 +72,7 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.list");
 		}
-		rc.productPages = getProductService().getProductPages("nestedIterator");
+		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 	}
@@ -132,7 +132,7 @@ component extends="BaseController" output=false accessors=true {
 				getFW().setView(action="admin:product.create");
 			} else {
 				rc.edit = true;
-				rc.productPages = getProductService().getProductPages("nestedIterator");
+				rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 				rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";

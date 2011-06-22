@@ -122,8 +122,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// If all payments were successful, then change the order status and clear the cart.
 		if(allPaymentsOK) {
 			// Set the current cart to None
-			if(arguments.order.getOrderID() == $.slatwall.cart().getOrderID()) {
-				$.slatwall.getCurrentSession().setOrder(JavaCast("null",""));
+			if(arguments.order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
+				getSessionService().getCurrent().setOrder(JavaCast("null",""));
 			}
 			
 			// Update the order status

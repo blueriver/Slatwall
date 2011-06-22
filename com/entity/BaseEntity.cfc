@@ -43,6 +43,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	property name="updateKeys" type="string";
 	
 	public any function init() {
+		// Place reference to mura scope in entity
+		if(!structKeyExists(request, "muraScope")) {
+			request.muraScope = new mura.MuraScope('default');
+		}
+		variables.$ = request.muraScope;
 		
 		// Create a new errorBean for all entities
 		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
