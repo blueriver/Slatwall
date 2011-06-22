@@ -87,7 +87,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var brand = getBrandService().getBrand(rc.brandID);
 		var deleteResponse = getBrandService().delete(brand);
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.brand.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";

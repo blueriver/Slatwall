@@ -70,7 +70,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var account = getAccountService().getAccount(rc.accountID);
 		var deleteResponse = getAccountService().delete(account);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();		
+			rc.message = rbKey("admin.account.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
