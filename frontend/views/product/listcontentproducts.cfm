@@ -39,7 +39,7 @@ Notes:
 
 <cfoutput>
 	<div class="svolistcontentproducts">
-		<cf_smartListPager smartList="#$.slatwall.productList()#">
+		<cf_SlatwallSmartListPager smartList="#$.slatwall.productList()#">
 		<div class="productList">
 			<cfloop array="#$.slatwall.productList().getPageRecords()#" index="local.product">
 				<a href="#local.product.getProductURL()#">
@@ -51,6 +51,6 @@ Notes:
 				</a>
 			</cfloop>
 		</div>
-		<cf_smartListPager smartList="#$.slatwall.productList()#">
+		<cf_SlatwallSmartListPager smartList="#$.slatwall.productList()#">
 	</div>
 </cfoutput>

@@ -40,9 +40,9 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 
 <ul id="navTask">
-	<cf_ActionCaller action="admin:account.list" type="list">
+	<cf_SlatwallActionCaller action="admin:account.list" type="list">
 	<cfif !rc.edit>
-	<cf_ActionCaller action="admin:account.edit" queryString="accountID=#rc.account.getAccountID()#" type="list">
+	<cf_SlatwallActionCaller action="admin:account.edit" queryString="accountID=#rc.account.getAccountID()#" type="list">
 	</cfif>
 </ul>
 
@@ -53,9 +53,9 @@ Notes:
 				<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
 		</cfif>
 		<dl class="twoColumn">
-			<cf_PropertyDisplay object="#rc.Account#" property="lastName" edit="#rc.edit#">
-			<cf_PropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
-			<cf_PropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="lastName" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
+			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
 		</dl>
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
@@ -70,8 +70,8 @@ Notes:
 		
 		<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_ActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_ActionCaller action="admin:account.save" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:account.save" type="submit" class="button">
 			</div>
 			</form>
 		</cfif>

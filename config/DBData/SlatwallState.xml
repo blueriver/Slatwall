@@ -56,5 +56,8 @@
 		<Record stateCode="WI" stateName="Wisconsin" countryCode="US" />
 		<Record stateCode="WV" stateName="West Virginia" countryCode="US" />
 		<Record stateCode="WY" stateName="Wyoming" countryCode="US" />
+		<Record stateCode="AA" stateName="AA (Armed Forces Americas)" countryCode="US" />
+		<Record stateCode="AE" stateName="AE (Armed Forces Europe)" countryCode="US" />
+		<Record stateCode="AP" stateName="AP (Armed Forces Pacific)" countryCode="US" />
 	</Records>
 </Table>

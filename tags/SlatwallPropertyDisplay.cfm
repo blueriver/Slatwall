@@ -204,7 +204,7 @@ Notes:
 		<cfif attributes.displayValue eq "">
 			<cfset attributes.displayValue = attributes.value />
 		</cfif>
-
+		
 		<cfif attributes.fieldName eq "">
 			<cfset attributes.fieldName = local.propertyMetadata.name />
 		</cfif>

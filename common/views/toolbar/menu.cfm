@@ -44,46 +44,46 @@ Notes:
 				<a href="javascript:void;" class="logo">Main Menu</a>
 				<ul class="menu hideElement">
 					<cfif secureDisplay("admin:main")>
-						<cf_ActionCaller action="admin:main" type="list">
+						<cf_SlatwallActionCaller action="admin:main" type="list">
 						<li>
-							<cf_ActionCaller action="admin:product">
+							<cf_SlatwallActionCaller action="admin:product">
 							<div class="MenuSubOne">
 								<ul>
-									<cf_ActionCaller action="admin:product" type="list">
-									<cf_ActionCaller action="admin:product.listproducttypes" type="list">
-									<cf_ActionCaller action="admin:option" type="list">
-									<cf_ActionCaller action="admin:brand" type="list">
+									<cf_SlatwallActionCaller action="admin:product" type="list">
+									<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
+									<cf_SlatwallActionCaller action="admin:option" type="list">
+									<cf_SlatwallActionCaller action="admin:brand" type="list">
 								</ul>
 							</div>
 						</li>
 					</cfif>
 					<cfif secureDisplay("admin:account")>
 						<li>
-							<cf_ActionCaller action="admin:account">
+							<cf_SlatwallActionCaller action="admin:account">
 							<div class="MenuSubOne">
 								<ul>
-									<cf_ActionCaller action="admin:account.list" type="list">
+									<cf_SlatwallActionCaller action="admin:account.list" type="list">
 								</ul>
 							</div>
 						</li>
 					</cfif>
 					<cfif secureDisplay("admin:setting")>
 						<li>
-							<cf_ActionCaller action="admin:setting">
+							<cf_SlatwallActionCaller action="admin:setting">
 							<div class="MenuSubOne">
 								<ul>
-									<cf_ActionCaller action="admin:setting.detail" type="list">
-									<cf_ActionCaller action="admin:setting.editpermissions" type="list">
+									<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
+									<cf_SlatwallActionCaller action="admin:setting.editpermissions" type="list">
 								</ul>
 							</div>
 						</li>
 					</cfif>
 					<cfif secureDisplay("admin:help")>
 						<li>
-							<cf_ActionCaller action="admin:help">
+							<cf_SlatwallActionCaller action="admin:help">
 							<div class="MenuSubOne">
 								<ul>
-									<cf_ActionCaller action="admin:help.about" type="list">
+									<cf_SlatwallActionCaller action="admin:help.about" type="list">
 								</ul>
 							</div>
 						</li>
@@ -99,44 +99,45 @@ Notes:
 		</ul>
 		<ul class="favorites">
 			<li id="navDashboard">
-				<cf_ActionCaller action="admin:main" type="link">
+				<cf_SlatwallActionCaller action="admin:main" type="link">
 			</li>
 			<li id="navProducts">
 				<ul class="addMenuNav">
-					<cf_ActionCaller action="admin:product.list" type="list">
-					<cf_ActionCaller action="admin:product.create" type="list">
-					<cf_ActionCaller action="admin:product.listproducttypes" type="list">
-					<cf_ActionCaller action="admin:option" type="list">
-					<cf_ActionCaller action="admin:brand" type="list" class="last">
+					<cf_SlatwallActionCaller action="admin:product.list" type="list">
+					<cf_SlatwallActionCaller action="admin:product.create" type="list">
+					<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
+					<cf_SlatwallActionCaller action="admin:option" type="list">
+					<cf_SlatwallActionCaller action="admin:brand" type="list" class="last">
 				</ul>
-				<cf_ActionCaller action="admin:product" type="link">
+				<cf_SlatwallActionCaller action="admin:product" type="link">
 			</li>
 			<li id="navOrders">
 				<ul class="addMenuNav">
-					<cf_ActionCaller action="admin:order.list" type="list">
-					<cf_ActionCaller action="admin:order.listorderfulfillments" type="list">
+					<cf_SlatwallActionCaller action="admin:order.list" type="list">
+					<cf_SlatwallActionCaller action="admin:order.listorderfulfillments" type="list">
 				</ul>
-				<cf_ActionCaller action="admin:order" type="link">
+				<cf_SlatwallActionCaller action="admin:order" type="link">
 			</li>
 			<li id="navAccounts">
 				<ul class="addMenuNav">
-					<cf_ActionCaller action="admin:account.list" type="list" class="last">
+					<cf_SlatwallActionCaller action="admin:account.list" type="list" class="last">
 				</ul>
-				<cf_ActionCaller action="admin:account" type="link">
+				<cf_SlatwallActionCaller action="admin:account" type="link">
 			</li>
 			<li id="navSettings">
 				<ul class="addMenuNav">
-					<cf_ActionCaller action="admin:setting.detail" type="list">
-					<cf_ActionCaller action="admin:setting.detailpermissions" type="list">
-					<cf_ActionCaller action="admin:setting.listaddresszones" type="list">
-					<cf_ActionCaller action="admin:setting.listpaymentmethods" type="list">
-					<cf_ActionCaller action="admin:setting.listfulfillmentmethods" type="list">
-					<cf_ActionCaller action="admin:setting.listintegrationservices" type="list">
-					<cf_ActionCaller action="admin:attribute" type="list">
-					<cf_ActionCaller action="admin:setting.detailviewupdate" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.listpaymentmethods" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethods" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.listintegrationservices" type="list">
+					<cf_SlatwallActionCaller action="admin:attribute" type="list">
+					<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 					<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true">Reload</a></li>
 				</ul>
-				<cf_ActionCaller action="admin:setting" type="link">
+				<cf_SlatwallActionCaller action="admin:setting" type="link">
 			</li>
 		</ul>
 	</div>

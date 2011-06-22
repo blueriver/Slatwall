@@ -46,13 +46,13 @@ Notes:
 <cfoutput>
 
 <ul id="navTask">
-	<cf_ActionCaller action="admin:order.list" type="list">
+	<cf_SlatwallActionCaller action="admin:order.list" type="list">
 </ul>
 
 <!--- Display buttons of available order actions --->
 <cfloop array="#local.orderActionOptions#" index="local.thisAction">
 <cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
-	<cf_ActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
+	<cf_SlatwallActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
 </cfloop>
 
 <div class="svoadminorderdetail">
@@ -61,9 +61,9 @@ Notes:
 			<tr>
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
-			<cf_PropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
-			<cf_PropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
-			<cf_PropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
+			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
+			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
 			<tr>
 				<td class="property">
 					#rc.$.Slatwall.rbKey("entity.order.account")#
@@ -75,9 +75,9 @@ Notes:
 					</a>
 				</td>
 			</tr>
-			<cf_PropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#" displayType="table">
-			<cf_PropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#" displayType="table">
-	 		<cf_PropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#" displayType="table">
+	 		<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#" displayType="table">
 		</table>
 	</div>
 	<div class="paymentInfo">
@@ -129,16 +129,24 @@ Notes:
 					<cfset local.fulfillmentNumber++ />
 					<h4>#$.Slatwall.rbKey("entity.fulfillment")# #local.fulfillmentNumber#</h4>
 					<div class="buttons">
-						<cf_ActionCaller action="admin:order.detailorderfulfillment" text="#$.slatwall.rbKey('admin.orderfulfillment.process')#" queryString="orderfulfillmentid=#local.thisOrderFulfillment.getOrderFulfillmentID()#" class="button" />
+						<cf_SlatwallActionCaller action="admin:order.detailorderfulfillment" text="#$.slatwall.rbKey('admin.orderfulfillment.process')#" queryString="orderfulfillmentid=#local.thisOrderFulfillment.getOrderFulfillmentID()#" class="button" />
 					</div>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
-					#view("order/orderTabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
+					#view("order/ordertabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
 				</cfloop>
 			</div>
 			
 			<div id="tabOrderDeliveries">
-				
+				<cfset local.orderDeliveries = rc.order.getOrderDeliveries() />
+				<cfif arrayLen(local.orderDeliveries)>
+					<cfloop array="#local.orderDeliveries#" index="local.thisOrderDelivery">
+						<cfset local.params.orderDelivery = local.thisOrderDelivery />
+						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)#
+					</cfloop>
+				<cfelse>
+					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#
+				</cfif>
 			</div>
 			<div id="tabOrderActivityLog">
 				

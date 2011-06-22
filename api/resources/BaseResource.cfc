@@ -39,7 +39,15 @@
 component extends="taffy.core.resource" {
 	
 	public any function getService(required string service) {
-		return application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean(arguments.service);
+		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
+	}
+	
+	public any function getFW() {
+		return getPluginConfig().getApplication().getValue("fw");
+	}
+	
+	public any function getPluginConfig() {
+		return application.slatwall.pluginConfig;
 	}
 	
 	//use this instead of onRequestStart()

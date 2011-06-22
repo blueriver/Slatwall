@@ -56,8 +56,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="product";
-	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
+	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
+	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="Stock" inverse="true" cascade="all";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
 	// Non-Persistent Properties
@@ -203,7 +203,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return (getQOH() - getQC()) + getQEXP();
 	}
 	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="") {
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", boolean crop=false, cropleftStart=0, croptopStart=0) {
 		// Get the expected Image Path
 		var path=getImagePath();
 		
@@ -230,7 +230,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
-	public string function getResizedImagePath(string size, numeric width=0, numeric height=0) {
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {
@@ -243,7 +243,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.width = setting("product_imagewidth#arguments.size#");
 			arguments.height = setting("product_imageheight#arguments.size#");
 		}
-		return getService("FileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
+		arguments.imagePath=getImagePath();
+		return getService("FileService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
 	public boolean function imageExists() {

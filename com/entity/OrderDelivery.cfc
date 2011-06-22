@@ -55,6 +55,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 
 	// Special Related Discriminator Property
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
+	property name="fulfillmentMethodID" insert="false" update="false";
 	
 	public OrderDelivery function init(){
 	   // set default collections for association management methods

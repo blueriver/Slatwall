@@ -120,7 +120,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var attributeSetID = attribute.getAttributeSet().getAttributeSetID();
 		var deleteResponse = getAttributeService().delete(attribute);
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.attribute.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -184,7 +184,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		var deleteResponse = getAttributeService().deleteAttributeSet(attributeSet);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();
+			rc.message = rbKey("admin.attribute.deleteAttributeSet_success");
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
@@ -199,7 +199,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			var deleteResponse = getAttributeService().delete(attributeOption);
 			if( !deleteResponse.hasErrors() ) {
 				rc.success=1;
-				rc.message=deleteResponse.getMessage();
+				rc.message = rbKey("admin.attribute.deleteAttributeOption_success");
 			} else {
 				rc.success=0;
 				rc.message=deleteResponse.getData().getErrorBean().getError("delete");

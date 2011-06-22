@@ -1,0 +1,10 @@
+<Table tableName="SlatwallTaxCategory">
+	<Columns>
+		<column name="taxCategoryID" fieldtype="id" />
+		<column name="taxCategoryName" update="false" />
+		<column name="taxRate" update="false" />
+	</Columns>
+	<Records>
+		<Record taxCategoryID="444df2c8cce9f1417627bd164a65f133" taxCategoryName="Default" taxRate="0" />
+	</Records>
+</Table>

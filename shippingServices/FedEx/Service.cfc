@@ -41,7 +41,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 
 	// Custom Properties that need to be set by the end user
 	property name="accountNo" validateRequired displayname="FedEx Account Number" type="string";
-	property name="password" displayname="FedEx Password" type="string";
+	property name="password" displayname="FedEx Password" type="string" editType="password";
 	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
 	property name="meterNo" displayname="FedEx Meter Number" type="string";
 	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";

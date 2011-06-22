@@ -160,7 +160,7 @@ Notes:
 								<cfelseif local.deleteDisabled and local.thisSku.getOrderedFlag()>
 									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOrdered') />
 								</cfif>
-								<cf_ActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
+								<cf_SlatwallActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
 							</ul>
 						</cfif>
 					</td>
@@ -170,7 +170,7 @@ Notes:
 	</tbody>
 </table>
 
-<cf_smartListPager smartList="#rc.SkuSmartList#">
+<cf_SlatwallSmartListPager smartList="#rc.SkuSmartList#">
 
 <cfif rc.edit>
 <table id="tableTemplate" class="hideElement">

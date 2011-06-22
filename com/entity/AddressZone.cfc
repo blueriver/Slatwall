@@ -49,7 +49,8 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="addressZoneLocations" singularname="addressZoneLocation" type="array" cfc="AddressZoneLocation" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all";
+	//property name="addressZoneLocations" singularname="addressZoneLocation" type="array" cfc="AddressZoneLocation" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all";
+	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="save-update";
 	
 	public array function getAddressZoneLocations() {
 		if(isNull(variables.addressZoneLocations)) {

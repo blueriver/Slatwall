@@ -47,7 +47,7 @@ Notes:
 	</form>
 	
 	<form name="OrderActions" action="#buildURL(action='admin:order.applyOrderActions')#" method="post">
-		<cf_ActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
+		<cf_SlatwallActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
 		<table id="OrderList" class="stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
@@ -80,7 +80,7 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="one">
-						  <cf_ActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
 						</ul>     						
 					</td>
 				</tr>

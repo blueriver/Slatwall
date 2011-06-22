@@ -44,7 +44,7 @@ Notes:
 	<div class="svoadminsettingdetail">
 		<cfif rc.edit eq false>
 	        <ul id="navTask">
-	            <cf_ActionCaller action="admin:setting.edit" type="list">
+	            <cf_SlatwallActionCaller action="admin:setting.edit" type="list">
 	        </ul>
 		<cfelse>
 			<form action="#buildURL(action='admin:setting.save')#" method="post">
@@ -75,21 +75,21 @@ Notes:
 							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_defaultTemplate.getSettingValue()#</td>	
 						</cfif>
 					</tr>
-					<cf_PropertyDisplay object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" property="settingValue" fieldName="product_urlKey" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" property="settingValue" fieldName="product_missingimagepath" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" property="settingValue" fieldName="product_imageextension" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imagewidthsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthsmall')#" property="settingValue" fieldName="product_imagewidthsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imageheightsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightsmall')#" property="settingValue" fieldName="product_imageheightsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imagewidthmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthmedium')#" property="settingValue" fieldName="product_imagewidthmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imageheightmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightmedium')#" property="settingValue" fieldName="product_imageheightmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imagewidthlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthlarge')#" property="settingValue" fieldName="product_imagewidthlarge" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_imageheightlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightlarge')#" property="settingValue" fieldName="product_imageheightlarge" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" property="settingValue" fieldName="product_trackInventoryFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" property="settingValue" fieldName="product_callToOrderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" property="settingValue" fieldName="product_allowShippingFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_PropertyDisplay object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" property="settingValue" fieldName="product_allowPreorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_allowBackorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorderFlag')#" property="settingValue" fieldName="product_allowBackorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.product_allowDropshipFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropshipFlag')#" property="settingValue" fieldName="product_allowDropshipFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" property="settingValue" fieldName="product_urlKey" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" property="settingValue" fieldName="product_missingimagepath" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" property="settingValue" fieldName="product_imageextension" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imagewidthsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthsmall')#" property="settingValue" fieldName="product_imagewidthsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageheightsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightsmall')#" property="settingValue" fieldName="product_imageheightsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imagewidthmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthmedium')#" property="settingValue" fieldName="product_imagewidthmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageheightmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightmedium')#" property="settingValue" fieldName="product_imageheightmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imagewidthlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthlarge')#" property="settingValue" fieldName="product_imagewidthlarge" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageheightlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightlarge')#" property="settingValue" fieldName="product_imageheightlarge" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" property="settingValue" fieldName="product_trackInventoryFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_SlatwallPropertyDisplay object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" property="settingValue" fieldName="product_callToOrderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" property="settingValue" fieldName="product_allowShippingFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+				    <cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" property="settingValue" fieldName="product_allowPreorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowBackorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorderFlag')#" property="settingValue" fieldName="product_allowBackorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowDropshipFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropshipFlag')#" property="settingValue" fieldName="product_allowDropshipFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 				</table>
 			</div>
 			<div id="tabOrder">
@@ -98,8 +98,8 @@ Notes:
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
-					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailTo#" title="#rc.$.Slatwall.rbKey('setting.order.newOrderNotifyTo')#" property="settingValue" fieldName="order_notificationEmailTo" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_PropertyDisplay object="#rc.allSettings.order_notificationEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.newOrderNotifyFrom')#" property="settingValue" fieldName="order_notificationEmailFrom" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_notificationEmailTo#" title="#rc.$.Slatwall.rbKey('setting.order.newOrderNotifyTo')#" property="settingValue" fieldName="order_notificationEmailTo" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_notificationEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.newOrderNotifyFrom')#" property="settingValue" fieldName="order_notificationEmailFrom" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 				</table>
 			</div>
 			<div id="tabAccount">
@@ -109,8 +109,8 @@ Notes:
 		
 		<cfif rc.edit eq true>
 			<div id="actionButtons" class="clearfix">
-				<cf_actionCaller action="admin:setting.detail" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_ActionCaller action="admin:setting.save" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:setting.detail" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:setting.save" type="submit" class="button">
 			</div>
 		</form>
 		</cfif>

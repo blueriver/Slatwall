@@ -52,8 +52,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="sku" cfc="sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";

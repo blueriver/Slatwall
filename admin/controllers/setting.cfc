@@ -40,6 +40,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Slatwall Service Injection		
 	property name="settingService" type="any";
+	property name="addressService" type="any";
 	property name="productService" type="any";
 	property name="shippingService" type="any";
 	property name="paymentService" type="any";
@@ -163,7 +164,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.shippingMethod);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteShippingMethod_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -333,7 +334,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.edit" default="false";
 		
 		rc.addressZone = getSettingService().getAddressZone(rc.addressZoneID, true);
-		rc.countriesArray = getSettingService().listCountry();
+		rc.newAddress = getAddressService().newAddress();
 	}
 	
 	public void function editAddressZone(required struct rc) {
@@ -364,12 +365,28 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
+	public void function saveAddressZoneLocation(required struct rc) {
+		param name="rc.addressZoneID" default="";
+		param name="rc.addressID" default="";
+		
+		// Check to see if it is already in rc because of taffy api
+		if(isNull(rc.addressZone)) {
+			rc.addressZone = getAddressService().getAddressZone(rc.addressZoneID);
+		}
+		
+		if(!isNull(rc.addressZone)) {
+			var address = getAddressService().getAddress(rc.addressID, true);
+			address.populate(rc);
+			rc.addressZone.addAddressZoneLocation(address);
+		}
+	}
+	
 	public void function deleteAddressZone(required struct rc) {
 		detailAddressZone(rc);
 		var deleteResponse = getSettingService().delete(rc.addressZone);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteAddressZone_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -378,11 +395,42 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
 	}
 	
+	// Frontend Views
 	public void function updateFrontendViews(required struct rc) {
 		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
 		
 		getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
+	}
+	
+	// Tax Categories
+	
+	public void function listTaxCategories(required struct rc) {
+		rc.taxCategories = getSettingService().listTaxCategory();
+	}
+	
+	public void function detailTaxCategory(required struct rc) {
+		param name="rc.taxCategoyID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.taxCategory = getSettingService().getTaxCategory(rc.taxCategoryID);
+	}
+	
+	public void function editTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
+	}
+	
+	public void function createTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
+		
+	}
+	
+	public void function saveTaxCategory(required struct rc) {
+		
 	}
 }

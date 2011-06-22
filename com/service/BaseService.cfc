@@ -68,7 +68,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(target=arguments.entity);
-			response.setMessage(rbKey("entity.#entityName#.delete_success"));
+			response.addMessage(messageCode="01", message=rbKey("entity.#entityName#.delete_success"));
 		} else {
 			// set entity into the response
 			response.setData(arguments.entity);

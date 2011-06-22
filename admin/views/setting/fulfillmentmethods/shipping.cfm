@@ -51,8 +51,8 @@ Notes:
 					<td class="varWidth">#local.shippingServiceMetaData.displayName#</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="edit" type="list">
 						</ul>     						
 					</td>
 				</tr>
@@ -60,7 +60,7 @@ Notes:
 		</table>
 		<dt>#$.slatwall.rbKey("admin.setting.listshippingmethods_nav")#</dt>
 		<dd>
-			<cf_ActionCaller action="admin:setting.createshippingmethod" type="link">
+			<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" type="link">
 		</dd>
 		<cfif structCount(rc.shippingMethods) gt 0>
 			<table id="shippingMethodList" class="stripe">
@@ -73,9 +73,9 @@ Notes:
 						<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
 						<td class="administration">
 							<ul class="three">
-								<cf_ActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
-								<cf_ActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
-								<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
+								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
 							</ul>     						
 						</td>
 					</tr>
