@@ -39,6 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="settingService" type="any";
+	property name="addressService" type="any";
 
 	public any function saveShippingMethod(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"shippingRates") ) {
@@ -62,16 +63,60 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var providerRateResponseBeans = [];
 		var methodOptions = [];
 		
-		// Loop over all methods and organize them by provider
+		// Loop over all possible methods
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
-			if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
-				arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+			if(shippingMethods[i].getShippingProvider() == "RateTable") {
+				// Get the Rate for this method and add it to the
+				var methodCharge = 0;
+				var rateExists = false;
+				var rates = shippingMethods[i].getShippingRates();
+				for(var r=1;r <= arrayLen(rates); r++) {
+					// Make sure that the shipping address is in the zone of this rate
+					if(getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
+						
+						var rateApplies = true;
+						
+						var minPrice = IIF(isNull(rates[r].getMinPrice()), 0, rates[r].getMinPrice());
+						var maxPrice = IIF(isNull(rates[r].getMaxPrice()), 10000000000000000, rates[r].getMaxPrice());
+						var minWeight = IIF(isNull(rates[r].getMinWeight()), 0, rates[r].getMinWeight());
+						var maxWeight = IIF(isNull(rates[r].getMaxWeight()), 10000000000000000, rates[r].getMaxWeight());
+						
+						var fullfillmentWeight = arguments.orderFulfillmentShipping.getTotalShippingWeight();
+						var fullfillmentPrice = arguments.orderFulfillmentShipping.getSubtotal();
+						
+						//Check Min/Max Price
+						if( fullfillmentPrice < minPrice || fullfillmentPrice > maxPrice ) {
+							rateApplies = false;
+						}
+						
+						//Check Min/Max Weight
+						if( fullfillmentWeight < minWeight || fullfillmentWeight > maxWeight ) {
+							rateApplies = false;
+						}
+						
+						if(rateApplies && (rates[r].getCost() < methodCharge || methodCharge == 0)) {
+							rateExists = true;
+							methodCharge = rates[r].getCost();
+						}
+					}
+				}
+				if(rateExists) {
+					var option = this.newOrderShippingMethodOption();
+					option.setShippingMethod(shippingMethods[i]);
+					option.setTotalCost(methodCharge);
+					option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
+					getDAO().save(option);
+				}
+			} else {
+				if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
+					arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+				}	
 			}
 		}
 		
 		// Loop over Shipping Providers
 		for(var p=1; p<=arrayLen(shippingProviders); p++) {
-			
+
 			// Get Provider Service
 			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
 			

@@ -115,4 +115,15 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	public numeric function getShippingCharge() {
 		return getFulfillmentCharge();
 	}
+	
+	public numeric function getTotalShippingWeight() {
+    	if( !structKeyExists(variables, "totalShippingWeight") ) {
+	    	variables.totalShippingWeight = 0;
+	    	var items = getOrderFulfillmentItems();
+	    	for( var i=1; i<=arrayLen(items); i++ ) {
+	    		variables.totalShippingWeight += (items[i].getSku().getShippingWeight() * items[i].getQuantity());
+	    	}			
+  		}
+    	return variables.totalShippingWeight;
+    }
 }

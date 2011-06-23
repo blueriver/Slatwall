@@ -100,6 +100,7 @@
         <property name="DAO"><ref bean="shippingDAO" /></property>
 		<property name="validationService"><ref bean="validationService" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
 	
 	<bean id="paymentService" class="Slatwall.com.service.PaymentService">

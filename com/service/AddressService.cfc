@@ -101,4 +101,31 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return getValidationService().validateObject(entity=arguments.address);
 	}
+	
+	public boolean function isAddressInZone(required any address, required any addressZone) {
+		var addressInZone = false;
+		
+		for(var i=1; i <= arrayLen(arguments.addressZone.getAddressZoneLocations()); i++) {
+			var location = arguments.addressZone.getAddressZoneLocations()[i];
+			var inLocation = true;
+			if(!isNull(location.getPostalCode()) && location.getPostalCode() != arguments.address.getPostalCode()) {
+				inLocation = false;
+			}
+			if(!isNull(location.getCity()) && location.getCity() != arguments.address.getCity()) {
+				inLocation = false;
+			}
+			if(!isNull(location.getStateCode()) && location.getStateCode() != arguments.address.getStateCode()) {
+				inLocation = false;
+			}
+			if(!isNull(location.getCountryCode()) && location.getCountryCode() != arguments.address.getCountryCode()) {
+				inLocation = false;
+			}
+			if(inLocation) {
+				addressInZone = true;
+				break;
+			}
+		}
+		
+		return addressInZone;
+	}
 }
