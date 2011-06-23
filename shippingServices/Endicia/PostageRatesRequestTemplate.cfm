@@ -48,19 +48,10 @@
 					<PassPhrase>#variables.passPhrase#</PassPhrase>
 				</CertifiedIntermediary>
 				<MailClass></MailClass>
-				<WeightOZ>#totalItemsWeight#</WeightOZ>
+				<WeightOz>#totalItemsWeight#</WeightOZ>
 				<MailpieceShape>Parcel</MailpieceShape>
 				<Machineable>TRUE</Machineable>
-				<Services>
-					<CertifiedMail>OFF</CertifiedMail>
-					<COD>OFF</COD>
-					<DeliveryConfirmation>OFF</DeliveryConfirmation>
-					<ElectronicReturnReceipt>OFF</ElectronicReturnReceipt>
-					<InsuredMail>OFF</InsuredMail>
-					<RestrictedDelivery>OFF</RestrictedDelivery>
-					<ReturnReceipt>OFF</ReturnReceipt>
-					<SignatureConfirmation>OFF</SignatureConfirmation>
-				</Services>
+				<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
 				<InsuredValue>#totalItemsValue#</InsuredValue>
 				<FromPostalCode>#variables.fromPostalCode#</FromPostalCode>
 				<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>

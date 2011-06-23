@@ -80,7 +80,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 			include "PostageRatesRequestTemplate.cfm";
         }
         
-        // Setup Request to push to FedEx
+        // Setup Request to push to Endicia
         var httpRequest = new http();
         httpRequest.setMethod("POST");
 		httpRequest.setPort("443");
@@ -91,9 +91,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/xml;charset=utf-8");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#len(xmlPacket)#");
 		httpRequest.addParam(type="header",name="SOAPAction",value="https://www.envmgr.com/LabelService/CalculatePostageRatesXML");
-		//httpRequest.addParam(type="header",name="accept-encoding",value="no-compression");
-		//httpRequest.addParam(type="header",name="mimetype",value="text/xml");
-		httpRequest.addParam(type="body",value="#xmlPacket#");
+		httpRequest.addParam(type="xml",value="#xmlPacket#");
 		
 		writeDump(httpRequest);
 		writeDump(xmlPacket);
