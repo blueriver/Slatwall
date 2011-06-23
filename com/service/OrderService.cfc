@@ -83,6 +83,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
 				itemExists = true;
 				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+				orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
 			}
 		}
 		
@@ -361,11 +362,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
 			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID())) {
 				if(structKeyExists(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ], "quantity")) {
+					arguments.order.getOrderItems()[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+					
 					if(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity <= 0) {
 						arguments.order.getOrderItems()[i].removeOrder(arguments.order);
 					} else {
 						arguments.order.getOrderItems()[i].setQuantity(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity);		
 					}
+					
 				}
 			}
 		}

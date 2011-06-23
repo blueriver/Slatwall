@@ -120,7 +120,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     }
     
     public numeric function getTax() {
-    	if( !structkeyExists(variables,"taxAmount") ) {
+    	if( !structkeyExists(variables, "taxAmount") ) {
     		variables.taxAmount = 0;
 	    	var items = getOrderFulfillmentItems();
 	    	for( var i=1; i<=arrayLen(items); i++ ) {
@@ -133,4 +133,5 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     public numeric function getTotalCharge() {
     	return getSubTotal() + getTax() + getFulfillmentCharge();
     }
+    
 }
