@@ -134,15 +134,15 @@ component extends="BaseController" output="false" accessors="true" {
 		var response = getSettingService().saveShippingService(rc.shippingServicePackage,rc.serviceProperties);
 
 		if( !response.hasErrors() ) {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.saveShippingService_success");
 			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
 		} else {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.saveShippingService_error");
 			rc.messageType = "error";
 			rc.shippingService = response.getData();
 			rc.errors = response.getErrorBean().getErrors();
 			local.serviceName = getMetaData(rc.shippingService)["displayName"];
-			rc.itemTitle = $.Slatwall.rbKey("admin.setting.editshippingservice") & ": " & local.serviceName;
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editshippingservice") & ": " & local.serviceName;
 			rc.edit = true;
 			getFW().setView(action="admin:setting.detailShippingService");
 		}
@@ -230,15 +230,15 @@ component extends="BaseController" output="false" accessors="true" {
 		var response = getSettingService().savePaymentService(rc.paymentServicePackage,rc.serviceProperties);
 
 		if( !response.hasErrors() ) {
-			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_success");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.savePaymentService_success");
 			getFW().redirect(action="admin:setting.listPaymentServices", queryString="reload=true", preserve="message");
 		} else {
-			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_error");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.savePaymentService_error");
 			rc.messageType = "error";
 			rc.paymentService = response.getData();
 			rc.errors = response.getErrorBean().getErrors();
 			local.serviceName = getMetaData(rc.paymentService)["displayName"];
-			rc.itemTitle = $.Slatwall.rbKey("admin.setting.editpaymentservice") & ": " & local.serviceName;
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentservice") & ": " & local.serviceName;
 			rc.edit = true;
 			getFW().setView(action="admin:setting.detailPaymentService");
 		}
@@ -261,7 +261,7 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		rc.allSettings = getSettingService().getSettings();
 		
-		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodID());
+		rc.itemTitle = rc.itemTitle & ": " & rc.$.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodID());
 	}
 	
 	public void function editPaymentMethod(required struct rc) {
@@ -296,7 +296,7 @@ component extends="BaseController" output="false" accessors="true" {
 		if(isNull(rc.fulfillmentMethod)) {
 			getFW().redirect(action="admin:setting.listFulfillmentMethods");
 		}	
-		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
+		rc.itemTitle = rc.itemTitle & ": " & rc.$.slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
 		
 		rc.shippingMethods = getSettingService().getShippingMethods();
 		rc.shippingServices = getSettingService().getShippingServices();

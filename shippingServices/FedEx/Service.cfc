@@ -107,29 +107,29 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
-		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
-		ratesResponseBean.setData(xmlResponse);
+		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+		responseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
-			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
+			responseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
-			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
+			responseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from FedEx into the response bean
 			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
-				ratesResponseBean.addMessage(
+				responseBean.addMessage(
 					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
 					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
 					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
 				);
 				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					ratesResponseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
+					responseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
 				}
 			}
 			
-			if(!ratesResponseBean.hasErrors()) {
+			if(!responseBean.hasErrors()) {
 				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
-					ratesResponseBean.addShippingMethod(
+					responseBean.addShippingMethod(
 						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
 						totalCost=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
 					);
@@ -137,7 +137,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 			}
 		}
 		
-		return ratesResponseBean;
+		return responseBean;
 	}
 	
 	public struct function getShippingMethods() {
