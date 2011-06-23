@@ -230,7 +230,6 @@ Copyright 2006 Raymond Camden
 	</CustomerClassification>
 	</cfif>
 	<Shipment>
-	
 		<Shipper>
 			<cfif structKeyExists(arguments, "shippernumber")>
 			<ShipperNumber>#arguments.shippernumber#</ShipperNumber>

@@ -37,55 +37,35 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="UPS" implements="Slatwall.shippingServices.ShippingInterface" {
+component accessors="true" output="false" displayname="USPS" implements="Slatwall.shippingServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
-	property name="apiKey" validateRequired displayname="API Key" type="string";
-	property name="username" displayname="UPS Username" type="string";
-	property name="password" displayname="UPS Password" type="string" editType="password";
-	property name="testingFlag" displayname="Testing Mode" type="boolean";
-	property name="shipperNumber" displayname="Shipper Number" type="string";
-	property name="shipFromCity" displayname="Ship From City" type="string";
-	property name="shipFromStateCode" displayname="Ship From City" type="string";
-	property name="shipFromPostalCode" displayname="Ship From State Code" type="string";
-	property name="shipFromCountryCode" displayname="Ship From Country Code" type="string";
+	/*
+	property name="accountNo" validateRequired displayname="FedEx Account Number" type="string";
+	property name="password" displayname="FedEx Password" type="string" editType="password";
+	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
+	property name="meterNo" displayname="FedEx Meter Number" type="string";
+	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";
+	property name="shipperStreet" displayname="Shipper Street Address" type="string";
+	property name="shipperCity" displayname="Shipper City" type="string";
+	property name="shipperStateCode" displayname="Shipper State Code" type="string";
+	property name="shipperPostalCode" displayname="Shipper Postal Code" type="string";
+	property name="shipperCountryCode" displayname="Shipper Country Code" type="string";
+	*/
 	
-	variables.testRateURL = "https://wwwcie.ups.com/ups.app/xml/Rate";
-	variables.liveRateURL = "https://www.ups.com/ups.app/xml/Rate";
-	
-	// Variables Saved in this application scope, but not set by end user
-	variables.shippingMethods = {};
-
 	public any function init() {
-		setAPIKey("");
-		setUsername("");
-		setPassword("");
-		setTestingFlag(true);
-		setShipperNumber("");
-		setShipFromCity("");
-		setShipFromStateCode("");
-		setShipFromPostalCode("");
-		setShipFromCountryCode("");
-		
+		// Insert Custom Logic Here 
 		variables.shippingMethods = {
-			01="UPS Next Day Air",
-			02="UPS 2nd Day Air",
-			03="UPS Ground",
-			07="UPS Worldwide Express",
-			08="UPS Worldwide Express Expedited",
-			11="UPS Standard",
-			12="UPS 3 Day Select",
-			13="UPS Next Day Air Saver",
-			14="UPS Next Day Air Early A.M.",
-			54="UPS Worldwide Express Plus",
-			59="UPS 2nd Day Air A.M.",
-			65="UPS Saver"
+			
 		};
 		return this;
 	}
 	
+	public struct function getShippingMethods() {
+		return variables.shippingMethods;
+	}
+	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
-		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		
 		// Insert Custom Logic Here
 		var totalItemsWeight = 0;
@@ -111,50 +91,44 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 			include "RatesRequestTemplate.cfm";
         }
         
-        // Setup Request to push to UPS
-        
+        // Setup Request to push to FedEx
         var httpRequest = new http();
         httpRequest.setMethod("POST");
 		httpRequest.setPort("443");
 		httpRequest.setTimeout(45);
-		
 		if(variables.testingFlag) {
-			httpRequest.setUrl(variables.testRateURL);
+			httpRequest.setUrl("https://gatewaybeta.fedex.com/xml");
 		} else {
-			httpRequest.setUrl(variables.liveRateURL);
+			httpRequest.setUrl("https://gateway.fedex.com/xml");
 		}
-		
 		httpRequest.setResolveurl(false);
-		httpRequest.addParam(type="xml", name="data",value=xmlPacket);
+		httpRequest.addParam(type="XML", name="name",value=xmlPacket);
 		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
-		writeDump(xmlResponse);
-		abort;
-		
-		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
-		responseBean.setData(xmlResponse);
+		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+		ratesResponseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
-			responseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
+			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
-			responseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
+			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from FedEx into the response bean
 			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
-				responseBean.addMessage(
+				ratesResponseBean.addMessage(
 					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
 					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
 					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
 				);
 				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					responseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
+					ratesResponseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
 				}
 			}
 			
-			if(!responseBean.hasErrors()) {
+			if(!ratesResponseBean.hasErrors()) {
 				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
-					responseBean.addShippingMethod(
+					ratesResponseBean.addShippingMethod(
 						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
 						totalCost=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
 					);
@@ -162,11 +136,7 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 			}
 		}
 		
-		
-		return responseBean;
+		return ratesResponseBean;
 	}
 	
-	public struct function getShippingMethods() {
-		return variables.shippingMethods;
-	}
 }
