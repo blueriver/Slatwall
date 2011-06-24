@@ -43,10 +43,10 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	}
 	
 	// Image File Methods
-	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0) {
+	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		var resizedImagePath = "";
 		if(!fileExists(expandPath(arguments.imagePath))) {
-			arguments.imagePath = "/plugins/Slatwall/assets/images/missingimage.jpg";
+			arguments.imagePath = "#application.configBean.getContext()#/plugins/Slatwall/assets/images/missingimage.jpg";
 		}
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
@@ -54,20 +54,34 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		} else {
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
 			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
+			// if the image was resized by cropping, the name will reflect that
+			if(arguments.crop) {
+				imageNameSuffix &= "_c_#arguments.cropleftStart#x_#arguments.croptopStart#y";
+			}
 			var imageExt = listLast(arguments.imagePath,".");
 			var resizedImagePath = replaceNoCase(arguments.imagePath,".#imageExt#","#imageNameSuffix#.#imageExt#");
 			if(!fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
-				if(arguments.width && arguments.height) {
-					imageScaleToFit(img,arguments.width,arguments.height);
+				if(!arguments.crop) {
+					if(arguments.width && arguments.height) {
+						imageScaleToFit(img,arguments.width,arguments.height);
+					} else {
+						if(!arguments.width) {
+							arguments.width = "";
+						} else if(!arguments.height) {
+							arguments.height = "";
+						}
+						imageResize(img,arguments.width,arguments.height);
+					}
 				} else {
 					if(!arguments.width) {
-						arguments.width = "";
-					} else if(!arguments.height) {
-						arguments.height = "";
+						arguments.width = arguments.height;
 					}
-					imageResize(img,arguments.width,arguments.height);
+					if(!arguments.height) {
+						arguments.height = arguments.width;
+					}
+					imageCrop(img,arguments.cropLeftStart,arguments.cropTopStart,arguments.width,arguments.height);
 				}
 				imageWrite(img,expandPath(resizedImagePath));
 			}
@@ -165,17 +179,17 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		arguments.destination = replace(arguments.destination,"\","/","all");
 		
 		if(isNull(arguments.baseSourceDir)){
-			var baseSourceDir = source;
+			arguments.baseSourceDir = arguments.source;
 		}
 		
 		var dirList = directoryList(arguments.source,false,"query");
 		for(var i = 1; i <= dirList.recordCount; i++){
 			if(dirList.type[i] == "File" && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
 				var copyFrom = "#replace(dirList.directory[i],'\','/','all')#/#dirList.name[i]#";
-				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),baseSourceDir,'')#/#dirList.name[i]#";
+				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
 			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
-				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=baseSourceDir);
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=arguments.baseSourceDir);
 			}
 		}
 	}

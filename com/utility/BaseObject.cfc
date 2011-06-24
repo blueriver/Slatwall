@@ -39,17 +39,23 @@ Notes:
 component displayname="Base Object" output="false" {
 	
 	public any function init() {
-		if(!structKeyExists(request, "muraScope")) {
-			request.muraScope = new mura.MuraScope('default');
-		}
-		variables.$ = request.muraScope;
 		
-		return this;	
+		return this;
 	}
 	
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string service) {
 		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
+	}
+	
+	// @hint absolute url path from site root
+	public string function getSlatwallRootPath() {
+		return "#application.configBean.getContext()#/plugins/Slatwall";
+	}
+	
+	// @hint the file system directory
+	public string function getSlatwallRootDirectory() {
+		return expandPath("#application.configBean.getContext()#/plugins/Slatwall");
 	}
 	
 	// @hint Private helper function to return the Slatwall RB Factory in any component
@@ -75,18 +81,6 @@ component displayname="Base Object" output="false" {
 	// @hint Private helper function for returning the fw
 	private any function getFW() {
 		return getPluginConfig().getApplication().getValue('fw');
-	}
-	
-	// @hint Public helper function for returning the smartlist
-	public any function getSmartList(required string entityName, struct data={}){
-		// Adds the Slatwall Prefix to the entityName when needed.
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
-		}
-		
-		var smartList = new Slatwall.com.utility.SmartList(entityName=arguments.entityName, data=arguments.data);
-	
-		return smartList;
 	}
 	
 	public any function inject(required string property, required any value) {

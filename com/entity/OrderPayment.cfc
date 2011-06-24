@@ -38,15 +38,18 @@ Notes:
 */
 component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="paymentMethodID" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="float";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" insert="false" update="false";
-
+	
+	// Special Related Discriminator Property
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
+	property name="paymentMethodID" insert="false" update="false";
+	
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 

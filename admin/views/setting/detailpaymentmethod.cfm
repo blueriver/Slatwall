@@ -43,45 +43,57 @@ Notes:
 <cfoutput>
 	<div class="svoadmindetailpaymentmethod">
 		<ul id="navTask">
-			<cfif not rc.edit><cf_ActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#rc.paymentMethod.getPaymentMethodID()#" type="list"></cfif>
-	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
-			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
+			<cfif not rc.edit><cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#rc.paymentMethod.getPaymentMethodID()#" type="list"></cfif>
+	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
+			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
-		<cfif rc.edit>
-		<form name="ShippingMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
-			<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
-		</cfif>
-			<dl class="oneColumn">
-				<cf_PropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
-				<!--- include any payment method-specific settings --->
-				<cfif fileExists(expandPath("paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
-					#view("setting/paymentMethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
+		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+			<ul>
+				<li><a href="##tabBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
+				<li><a href="##tabWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
+			</ul>
+
+			<div id="tabBasicSettings">
+				<cfif rc.edit>
+				<form name="PaymentMethodEdit" action="#buildURL('admin:setting.savePaymentMethod')#" method="post">
+					<input type="hidden" name="paymentMethodID" value="#rc.paymentMethod.getPaymentMethodID()#" />
 				</cfif>
-				<dt class="spdprovidergateway">
-					#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
-				</dt>
-				<dd id="spdprovidergateway">
-					<cfif rc.edit>
-						<select id="providerGateway" name="providerGateway">
-							<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
-								<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
-								<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
-								<cfif listFind( local.paymentService.getSupportedPaymentMethods(),rc.paymentMethod.getPaymentMethodID() )>
-									<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
-								</cfif>
-							</cfloop>
-						</select>
-					<cfelse>
-						#rc.paymentMethod.getProviderGateway()#
+				<dl class="oneColumn">
+					<cf_SlatwallPropertyDisplay object="#rc.paymentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
+					<dt class="spdprovidergateway">
+						#rc.$.slatwall.rbKey('entity.paymentMethod.providergateway')#
+					</dt>
+					<dd id="spdprovidergateway">
+						<cfif rc.edit>
+							<select id="providerGateway" name="providerGateway">
+								<cfloop collection="#rc.paymentServices#" item="local.paymentServicePackage">
+									<cfset local.paymentService = rc.paymentServices[local.paymentServicePackage] />
+									<cfset local.paymentServiceMetaData = getMetaData(local.paymentService) />
+									<cfif listFind( local.paymentService.getPaymentMethods(),rc.paymentMethod.getPaymentMethodID() )>
+										<option value="#local.paymentServicePackage#" <cfif rc.paymentMethod.getProviderGateway() eq local.paymentServicePackage>selected="selected"</cfif>>#local.paymentServiceMetaData.displayName#</option>
+									</cfif>
+								</cfloop>
+							</select>
+						<cfelse>
+							#rc.paymentMethod.getProviderGateway()#
+						</cfif>
+					</dd>
+					<!--- include any payment method-specific settings --->
+					<cfif fileExists(expandPath("admin/views/setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#.cfm"))>
+						#view("setting/paymentmethods/#lcase(rc.paymentMethod.getPaymentMethodID())#")#
 					</cfif>
-				</dd>
-			</dl>
+				</dl>			
+			</div>
+			
+			<div id="tabWorkflowSettings"></div>
+		</div>	
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_ActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_ActionCaller action="admin:setting.savePaymentMethod" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:setting.savePaymentMethod" type="submit" class="button">
 			</div>
 		</form>
 	</cfif>
+	</div>
 </cfoutput>

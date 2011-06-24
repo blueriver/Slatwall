@@ -55,14 +55,87 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public any function populateAndValidateOrderPayment(required any orderPayment, struct data={}) {
-		arguments.orderPayment.populate(arguments.data);
-		getValidator().validateObject(entity=arguments.orderPayment);
+	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount) {
+		// Get the relavent info and objects for this order payment
+		var processOK = false;
+		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
+		var paymentProviderGateway = paymentMethod.getProviderGateway();
+		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 		
-		return arguments.orderPayment;
+		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
+			// Generate Process Request Bean
+			var request = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
+			
+			// Move all of the info into the new request bean
+			request.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
+			
+			// Setup the actuall processing information
+			if(!structKeyExists(arguments, "transactionAmount")) {
+				arguments.transactionAmount = arguments.orderPayment.getAmount();
+			}
+			
+			request.setTransactionType(arguments.transactionType);
+			request.setTransactionAmount(arguments.transactionAmount);
+			request.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+			
+			// Get Response Bean from provider service
+			var response = providerService.processCreditCard(request);
+			
+			if(!response.hasErrors()) {
+				processOK = true;
+				
+				// Populate a new Credit Card Transaction
+				var transaction = this.newCreditCardTransaction();
+				transaction.setTransactionType(arguments.transactionType);
+				transaction.setProviderTransactionID(response.getTransactionID());
+				transaction.setAuthorizationCode(response.getAuthorizationCode());
+				transaction.setAuthorizedAmount(response.getAuthorizedAmount());
+				transaction.setChargedAmount(response.getChargedAmount());
+				transaction.setCreditedAmount(response.getCreditedAmount());
+				
+				// Relate to order Payment
+				transaction.setOrderPayment(arguments.orderPayment);
+				
+				// Save the Transaction to the DB
+				this.saveCreditCardTransaction(transaction);
+				
+				// Update the order Payment
+				var authAmount = arguments.orderPayment.getAmountAuthorized() + response.getAuthorizedAmount();
+				var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
+				arguments.orderPayment.setAmountAuthorized(authAmount);
+				arguments.orderPayment.setAmountCharged(chargeAmount);
+			} else {
+				// Populate the orderPayment with the processing error
+				arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
+			}
+		}
+		
+		return processOK;
 	}
 	
-	public boolean function processPayment() {
-		return true;
+	public string function getCreditCardTypeFromNumber(required string creditCardNumber) {
+		if(isNumeric(arguments.creditCardNumber)) {
+			var n = arguments.creditCardNumber;
+			var l = len(trim(arguments.creditCardNumber));
+			if( (l == 13 || l == 16) && left(n,1) == 4 ) {
+				return 'Visa';
+			} else if ( l == 16 && (left(n,2) == 51 || left(n,2) == 55) ) {
+				return 'Mastercard';
+			} else if ( (l == 15 && (left(n,4) == 2131 || left(n,4) == 1800)) || (l == 16 && left(n,1) == 3) ) {
+				return 'JCB';
+			} else if ( l == 15 && (left(n,4) == 2014 || left(n,4) == 2149) ) {
+				return 'EnRoute';
+			} else if ( l == 15 && left(n,4) == 6011) {
+				return 'Discover';
+			} else if ( l == 14 && left(n,2) == 38) {
+				return 'CarteBlanche';
+			} else if ( l == 14 && (left(n,2) == 36 || (left(n,3) >= 300 && left(n,3) <= 305)) ) {
+				return 'Diners Club';
+			} else if ( l == 15 && (left(n,2) == 34 || left(n,2) == 34) ) {
+				return 'Amex';
+			}
+		}
+		
+		return 'Invalid';
 	}
 }

@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 
 <cfif arrayLen(rc.optionGroups) gt 1>
-	<div id="buttons">
+	<div class="buttons">
 	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
 	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
 	</div>
@@ -59,15 +59,15 @@ Notes:
 	<tbody id="OptionGroupList">
 <cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
 	<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
-		<td class="handle" style="display:none;"><img src="#application.configBean.getContext()#/plugins/#getPluginConfig().getDirectory()#/images/icons/draghandle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
+		<td class="handle" style="display:none;"><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
 		<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
 		<td>#local.thisOptionGroup.getOptionsCount()#</td>
 		<td class="administration">
 		  <ul class="three">
 		  	  <cfif local.thisOptionGroup.getOptionsCount() gt 0><cfset local.deleteDisabled=true><cfelse><cfset local.deleteDisabled=false></cfif>
-		      <cf_ActionCaller action="admin:option.create" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
-              <cf_ActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="viewDetails" type="list">
-			  <cf_ActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
+		      <cf_SlatwallActionCaller action="admin:option.create" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
+              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="viewDetails" type="list">
+			  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
 		  </ul>		
 		
 		</td>

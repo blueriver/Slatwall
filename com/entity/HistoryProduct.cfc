@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="History Product" entityname="SlatwallHistoryProduct" table="SlatwallHistoryProduct" persistent="true" extends="BaseEntity" {
 			
-	// Persistant Properties
+	// Persistent Properties
 	property name="historyProductID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productName" ormtype="string";
 	property name="productDescription" ormtype="string" length="4000" ;

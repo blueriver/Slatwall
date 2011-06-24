@@ -38,9 +38,9 @@ Notes:
 */
 component displayname="Attribute" entityname="SlatwallAttribute" table="SlatwallAttribute" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeName" ormtype="string" validateRequired;
+	property name="attributeName" ormtype="string" validateRequired="true";
 	property name="attributeDescription" ormtype="string" length="4000" ;
 	property name="attributeHint" ormtype="string";
 	property name="defaultValue" ormtype="string";
@@ -57,7 +57,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" validateRequired hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
+	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" validateRequired="true" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder" ;
 	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
@@ -71,11 +71,11 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	   return Super.init();
 	}
 
-	public array function getAttributeOptions(sortby, sortType="text", direction="asc") {
-		if(!structKeyExists(arguments,"sortby")) {
+	public array function getAttributeOptions(orderby, sortType="text", direction="asc") {
+		if(!structKeyExists(arguments,"orderby")) {
 			return variables.AttributeOptions;
 		} else {
-			return sortObjectArray(variables.AttributeOptions,arguments.sortby,arguments.sortType,arguments.direction);
+			return sortObjectArray(variables.AttributeOptions,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
 	

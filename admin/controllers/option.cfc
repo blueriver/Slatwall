@@ -77,9 +77,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     
     public void function list(required struct rc) {
         param name="rc.listby" default="optiongroups";
-        rc.orderby="optiongroup_optiongroupname|ASC^sortOrder|ASC";
-        rc.options = getOptionService().getSmartList(entityName="SlatwallOption", data=arguments.rc);
         rc.optionGroups = getOptionService().listOptionGroupOrderBySortOrder();
+        if( rc.listby  == "options" ) {
+        	// if the option group filter is blank, remove the filter
+	        if(structKeyExists(rc,"F:optiongroup_optiongroupname") && !len(rc["F:optiongroup_optiongroupname"])) {
+	        	structDelete(rc,"F:optiongroup_optiongroupname");
+	        }
+        	rc.orderby="optiongroup_optiongroupname|ASC,sortOrder|ASC";
+        	rc.options = getOptionService().getOptionSmartList(data=arguments.rc);
+        } 
     }
 	
 	public void function save(required struct rc) {
@@ -123,7 +129,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
 		var deleteResponse = getOptionService().delete(option);
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.option.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -138,7 +144,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function detailOptionGroup(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID,"SlatwallOptionGroup");
+		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
 			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
 		} else {
@@ -190,7 +196,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
 		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();
+			rc.message = rbKey("admin.account.deleteOptionGroup_success");
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";

@@ -38,10 +38,10 @@ Notes:
 */
 component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="brandName" ormtype="string" validateRequired persistent="true" hint="This is the common name that the brand goes by.";
-	property name="brandWebsite" ormtype="string" validateURL persistent="true" hint="This is the Website of the brand";
+	property name="brandName" ormtype="string" validateRequired="true" persistent="true" hint="This is the common name that the brand goes by.";
+	property name="brandWebsite" ormtype="string" validateURL="true" persistent="true" hint="This is the Website of the brand";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -50,8 +50,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";    
-	property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
+	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";    
+	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallBrand sb on sp.brandID = sb.brandID where sp.brandID=brandID";

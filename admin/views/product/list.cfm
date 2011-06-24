@@ -41,14 +41,15 @@ Notes:
 
 <cfoutput>
 <ul id="navTask">
-    <cf_ActionCaller action="admin:product.create" type="list">
+    <cf_SlatwallActionCaller action="admin:product.create" type="list">
 </ul>
 
 <div class="svoadminproductlist">
-<cfif rc.productSmartList.getRecordsCount()>
+
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
+<cfif rc.productSmartList.getRecordsCount()>
 	<table id="ProductList" class="stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
@@ -80,16 +81,16 @@ Notes:
 				<td class="administration">
 					<cfset local.ProductID = local.Product.getProductID() />
 		          <ul class="four">
-                      <cf_ActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
-					  <cf_ActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
+                      <cf_SlatwallActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
+					  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
 					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-					  <cf_ActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
+					  <cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
 		</cfloop>
 	</table>
-	<cf_smartListPager smartList="#rc.ProductSmartList#">
+	<cf_SlatwallSmartListPager smartList="#rc.ProductSmartList#">
 <cfelse>
 	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
 </cfif>

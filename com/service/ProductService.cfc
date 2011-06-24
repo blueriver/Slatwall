@@ -47,7 +47,7 @@ component extends="BaseService" accessors="true" {
 	// Mura Service Injection
 	property name="contentManager" type="any";
 	property name="feedManager" type="any";
-		
+	
 	public any function getProductTemplates(required string siteID) {
 		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
 		return getContentManager().getNest(parentID=productTemplatesID, siteid=arguments.siteid);
@@ -57,8 +57,8 @@ component extends="BaseService" accessors="true" {
 		return getFeedManager().getBean();
 	}
 	
-	public any function getProductPages(returnFormat="iterator") {
-		var pageFeed = getContentFeed().set({ siteID=$.event("siteID"),sortBy="title",sortDirection="asc" });
+	public any function getProductPages(required string siteID, string returnFormat="iterator") {
+		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc" });
 		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
 		
@@ -67,17 +67,46 @@ component extends="BaseService" accessors="true" {
 		} else if( arguments.returnFormat == "query" ) {
 			return pageFeed.getQuery();
 		} else if( arguments.returnFormat == "nestedIterator" ) {
-			return $.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
+			return application.serviceFactory.getBean("contentIterator").setQuery(treeSort(pageFeed.getQuery()));
 		}
 		
 	}
 
-	public any function getProductSmartList(struct data={}) {
-		return getDAO().getProductSmartList(arguments.data);
+	public any function getProductSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallProduct";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
+		
+		smartList.joinRelatedProperty("SlatwallProduct","productType");
+		
+		return smartList;
 	}
 	
 	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL="") {
-		return getDAO().getProductContentSmartList(contentID=arguments.contentID, data=arguments.data, currentURL=arguments.currentURL);
+		var smartList = getDAO().getSmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
+		
+		if( structKeyExists(arguments.data, "showSubPageProducts") && arguments.data.showSubPageProducts) {
+			smartList.addLikeFilter(propertyIdentifier="productContent_contentPath", value="%#arguments.contentID#%");
+		} else {
+			smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);	
+		}
+		
+		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
+		
+		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
+		
+		return smartList;	
+	}
+	
+	public any function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
+		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
 	}
 
 	/**
@@ -94,12 +123,12 @@ component extends="BaseService" accessors="true" {
 		arguments.product.setProductContent(productContentArray);
 	}
 	
-	public void function updateProductContentPaths(required string contentID) {
+	public void function updateProductContentPaths(required string contentID, required string siteID) {
 		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++) {
 			local.thisPC = pcArray[i];
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
-				var newPath = getContentManager().read(contentID=local.thisPC.getContentID(),siteID=$.event("siteID")).getPath();
+				var newPath = getContentManager().read(contentID=local.thisPC.getContentID(),siteID=arguments.siteID).getPath();
 				local.thisPC.setContentPath(newPath);
 			}
 		} 
@@ -152,7 +181,7 @@ component extends="BaseService" accessors="true" {
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {
 			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getService("validator").validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
+			var productCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
 			if( !structIsEmpty(productCodeError) ) {
 				arguments.product.addError(argumentCollection=productCodeError);
 			}
@@ -160,7 +189,7 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist
 		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		var filenameError = getService("validator").validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
+		var filenameError = getValidationService().validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
 		if( !structIsEmpty(filenameError) ) {
 			arguments.product.addError(argumentCollection=filenameError);
 		}
@@ -178,7 +207,7 @@ component extends="BaseService" accessors="true" {
 	public any function delete( required any product ) {
 		// make sure this product isn't in the order history
 		if( arguments.product.getOrderedFlag() ) {
-			getValidator().setError(entity=arguments.product,errorName="delete",rule="Ordered");
+			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
 		}
 		var deleteResponse = Super.delete( arguments.product );
 		if( !deleteResponse.hasErrors() ) {
@@ -239,7 +268,7 @@ component extends="BaseService" accessors="true" {
 	
 	public any function deleteProductType(required any productType) {
 		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
-			getValidator().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
+			getValidationService().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
 		}
 		if( !arguments.productType.hasErrors() ) {
 	   		// clear cached product type tree so that it's refreshed on the next request

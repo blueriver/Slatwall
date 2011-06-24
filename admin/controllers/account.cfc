@@ -70,7 +70,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var account = getAccountService().getAccount(rc.accountID);
 		var deleteResponse = getAccountService().delete(account);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();		
+			rc.message = rbKey("admin.account.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -81,6 +81,20 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function list(required struct rc) {
 		param name="rc.keyword" default="";
 		
-		rc.accountSmartList = getAccountService().getSmartList(entityName="SlatwallAccount", data=arguments.rc);
+		rc.accountSmartList = getAccountService().getAccountSmartList(data=arguments.rc);
+	}
+	
+	public void function save(required struct rc) {
+		param name="rc.accountID" default="";
+		
+		rc.account = getAccountService().getAccount(rc.accountID, true);
+		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteid'));
+		
+		if(rc.account.hasErrors()) {
+			setView("admin:account.detail");
+		} else {
+			rc.message = "admin.account.save_success";
+        	getFW().redirect(action="admin:account.list",preserve="message");	
+		}
 	}
 }

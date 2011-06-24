@@ -37,27 +37,29 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendproductdetail">
+	<div class="svoproductdetail">
 		<div class="image">
-			Image Here
+			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(height="100",width="100",crop="true",cropLeftStart="100",cropTopStart="100")#</a>
 		</div>
-		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productCode">
-		<cf_PropertyDisplay object="#$.slatwall.Product()#" property="productYear">
+		<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productCode">
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
-			<cfset local.productOptionGroups = $.slatwall.Product().getOptionGroupsStruct() />
-			<cfloop collection="#local.productOptionGroups#" item="local.groupID">
-				<dt>#local.productOptionGroups[local.groupID].getOptionGroupName()#</dt>
-				<dd>
-				<select name="selectedOptions">
-					<cfset local.availableOptions = $.slatwall.Product().getAvailableGroupOptionsBySelectedOptions(optionGroupID=local.groupID) />
-					<cfloop collection="#local.availableOptions#" item="local.optionID">
-						<option selected="selected" value="#local.availableOptions[local.optionID].getOptionID()#">#local.availableOptions[local.optionID].getOptionName()#</option>
-					</cfloop>
-				</select>
-				</dd>
-			</cfloop>
+			<cfif arrayLen($.slatwall.product().getSkus()) eq 1>
+				<input type="hidden" name="skuID" value="#$.slatwall.Product().getSkus()[1].getSkuID()#" />
+			<cfelse>
+				<dl>
+					<dt>Select Option</dt>
+					<dd>
+						<select name="skuID">
+							<cfloop array="#$.slatwall.product().getSkus()#" index="local.sku">
+								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
+							</cfloop>
+						</select>
+					</dd>
+				</dl>
+			</cfif>
+			<label for="productQuantity">Quantity: </label><input type="text" name="quantity" value="1" size="2" id="productQuantity" />
 			<button type="submit">Add To Cart</button>
 		</form>
 	</div>

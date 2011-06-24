@@ -40,11 +40,11 @@ Notes:
 component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.paymentServices.PaymentInterface" {
 	
 	// Custom Properties that need to be set by the end user
-	property name="vendor" displayname="Vendor" type="string";
-	property name="partner" displayname="Partner" type="string";
+	property name="vendorID" displayname="Vendor ID (Merchant ID)" type="string";
+	property name="partnerID" displayname="Partner ID (leave blank if no partner)" type="string";
 	property name="username" displayname="Username" type="string";
-	property name="password" displayname="Password" type="string";
-	property name="liveModeFlag" displayname="Live Mode" type="boolean" ;
+	property name="password" displayname="Password" type="string" editType="password";
+	property name="liveModeFlag" displayname="Live Mode" type="boolean";
 	
 	//Global variables
 	variables.liveGatewayAddress = "payflowpro.paypal.com";
@@ -54,98 +54,95 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	variables.transactionCodes = {};
 
 	public any function init(){
-		variables.transactionCodes = getTransactionCodes();
+		// Set Defaults
+		setPartnerID("");
+		setVendorID("");
+		setUsername("");
+		setPassword("");
+		setLiveModeFlag(false);
+		
+		variables.transactionCodes = {
+			authorize="A",
+			authorizeAndCharge="S",
+			chargePreAuthorization="D",
+			credit="C",
+			void="V",
+			inquiry="I"
+		};
+		
 		return this;
 	}
 	
-	public any function getSupportedPaymentMethods() {
+	public any function getPaymentMethods() {
 		return "creditCard";
 	}
 	
-	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required Slatwall.com.utility.payment.RequestBean requestBean, required string transactionType){
-		var rawResponse = "";
-		var requestData = getRequestData(requestBean,transactionType);
-		var requestID = getRequestID(requestBean);
-		rawResponse = postRequest(requestData,requestID);
-		return getResponseBean(rawResponse);
+	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
+		var requestData = getRequestData(requestBean);
+		var rawResponse = postRequest(requestData);
+		return getResponseBean(rawResponse, requestData, arguments.requestBean);
 	}
 	
-	private string function getRequestData(required any requestBean,required string transactionType){
+	private string function getRequestData(required any requestBean){
 		var requestData = "";
-		requestData = "TRXTYPE=#variables.transactionCodes[transactionType]#&TENDER=C&VERBOSITY=#variables.verbosity#";
+		requestData = "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&TENDER=C&VERBOSITY=#variables.verbosity#";
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
-		requestData = listAppend(requestData,getExtraNVP(requestBean),"&");
-		requestData = listAppend(requestData,"ORIGID=#getOriginalTransactionID()#","&");
+		//requestData = listAppend(requestData,"ORIGID=#requestBean.getOrderPaymentID()#","&");
 		
 		return requestData;
 	}
 
-	private string function getRequestID(required any requestBean){
-		return requestbean.getOrderID();
-	}
-	
-	private string function getOriginalTransactionID(required any requestBean){
-		return requestbean.getOriginalTransactionID();
-	}
-	
-	private string function getLoginNVP(required any requestBean){
+	private string function getLoginNVP(){
 		var loginData = [];
 		arrayAppend(loginData,"USER=#getUserName()#");
-		arrayAppend(loginData,"PARTNER=#getPartner()#");
-		arrayAppend(loginData,"VENDOR=#getVENDOR()#");
+		arrayAppend(loginData,"PARTNER=#getPartnerID()#");
+		arrayAppend(loginData,"VENDOR=#getVendorID()#");
 		arrayAppend(loginData,"PWD=#getPassword()#");
 		return arrayToList(loginData,"&");
 	}
 	
 	private string function getPaymentNVP(required any requestBean){
 		var paymentData = [];
-		arrayAppend(paymentData,"ACCT[#len(requestBean.getccNumber())#]=#requestBean.getccNumber()#");
-		arrayAppend(paymentData,"EXPDATE[4]=#Left(requestBean.getExpMonth(),2)##Right(requestBean.getExpYear(),2)#");
-		arrayAppend(paymentData,"CVV2[#len(requestBean.getCVV())#]=#requestBean.getCVV()#");
-		arrayAppend(paymentData,"AMT[#len(requestBean.getAmount())#]=#requestBean.getAmount()#");
+		arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
+		arrayAppend(paymentData,"EXPDATE[4]=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
+		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
+		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
 		return arrayToList(paymentData,"&");
 	}
 	
 	private string function getCustomerNVP(required any requestBean){
 		var customerData = [];
 		arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
-		arrayAppend(customerData,"FIRSTNAME[#len(requestBean.getFirstName())#]=#requestBean.getFirstName()#");
-		arrayAppend(customerData,"LASTNAME[#len(requestBean.getLastName())#]=#requestBean.getLastName()#");
-		arrayAppend(customerData,"STREET[#len(requestBean.getStreetAddress())#]=#requestBean.getStreetAddress()#");
-		arrayAppend(customerData,"CITY[#len(requestBean.getCity())#]=#requestBean.getCity()#");
-		arrayAppend(customerData,"STATE[#len(requestBean.getStateCode())#]=#requestBean.getStateCode()#");
-		arrayAppend(customerData,"ZIP[#len(requestBean.getPostalCode())#]=#requestBean.getPostalCode()#");
-		arrayAppend(customerData,"EMAIL[#len(requestBean.getEmail())#]=#requestBean.getEmail()#");
-		arrayAppend(customerData,"PHONENUM[#len(requestBean.getPhone())#]=#requestBean.getPhone()#");
+		arrayAppend(customerData,"FIRSTNAME[#len(requestBean.getAccountFirstName())#]=#requestBean.getAccountFirstName()#");
+		arrayAppend(customerData,"LASTNAME[#len(requestBean.getAccountLastName())#]=#requestBean.getAccountLastName()#");
+		arrayAppend(customerData,"STREET[#len(requestBean.getBillingStreetAddress())#]=#requestBean.getBillingStreetAddress()#");
+		arrayAppend(customerData,"CITY[#len(requestBean.getBillingCity())#]=#requestBean.getBillingCity()#");
+		arrayAppend(customerData,"STATE[#len(requestBean.getBillingStateCode())#]=#requestBean.getBillingStateCode()#");
+		arrayAppend(customerData,"ZIP[#len(requestBean.getBillingPostalCode())#]=#requestBean.getBillingPostalCode()#");
+		arrayAppend(customerData,"EMAIL[#len(requestBean.getAccountPrimaryEmailAddress())#]=#requestBean.getAccountPrimaryEmailAddress()#");
+		arrayAppend(customerData,"PHONENUM[#len(requestBean.getAccountPrimaryPhoneNumber())#]=#requestBean.getAccountPrimaryPhoneNumber()#");
 		return arrayToList(customerData,"&");
 	}
 	
-	private string function getExtraNVP(required any requestBean){
-		var extraData = [];
-		arrayAppend(extraData,"COMMENT[#len(requestBean.getComment())#]=#requestBean.getComment()#");
-		return arrayToList(extraData,"&");
-	}
-	
-	private struct function getTransactionCodes(){
-		return {Charge="S",Auth="A",Credit="C",Capture="D",Void="V",Inquiry="I"};
-	}
-	
-	private any function postRequest(required string requestData,required string requestID){
+	private any function postRequest(required string requestData){
+		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
 		httpRequest.setUrl(getGatewayURL());
 		httpRequest.setPort(getGatewayPort());
 		httpRequest.setTimeout(variables.timeout);
 		httpRequest.setResolveurl(false);
+		
 		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/namevalue");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#Len(requestData)#");
 		httpRequest.addParam(type="header",name="Host",value="#getGatewayAddress()#");
-		httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="#requestID#");
+		//httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="");
 		httpRequest.addParam(type="header",name="X-VPS-CLIENT-TIMEOUT",VALUE="#variables.timeout#");
 		httpRequest.addParam(type="header",name="X-VPS-VIT-INTEGRATION-PRODUCT",VALUE="Slatwall");
 		httpRequest.addParam(type="body",value="#requestData#");
+		
 		return httpRequest.send().getPrefix();
 	}
 	
@@ -158,27 +155,69 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	}
 	
 	private string function getGatewayAddress(){
-		if(liveModeFlag){
+		if(getLiveModeFlag()){
 			return variables.liveGatewayAddress;
 		} else {
 			return variables.testGatewayAddress;
 		}
 	}
 	
-	private any function getResponseBean(required string rawResponse){
-		var response = new Slatwall.com.utility.payment.ResponseBean();
-		var responseDataArray = listToArray(rawResponse,"&");
+	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
+		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		var responseDataArray = listToArray(rawResponse.fileContent,"&");
 		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
 		for(var item in responseDataArray){
 			responseData[listFirst(item,"=")] = listRest(item,"=");
 		}
-		response.setResult(rawResponse);
-		response.setStatus(responseData["result"]);
-		response.setMessage(responseData["respmsg"]);
-		response.setAuthCode(responseData["authcode"]);
+		
+		// Populate the data with the raw response & request
+		var data = {
+			responseData = arguments.rawResponse,
+			requestData = arguments.requestData
+		};
+		response.setData(data);
+		
+		// Add message for what happened
+		response.addMessage(messageCode=responseData["result"], message=responseData["respmsg"]);
+		
+		// Set the status Code
+		response.setStatusCode(responseData["result"]);
+		
+		// Check to see if it was successful
+		if(responseData["result"] != 0) {
+			// Transaction did not go through
+			response.getErrorBean().addError(name=responseData["result"], message=responseData["respmsg"]);
+		} else {
+			if(requestBean.getTransactionType() == "authorize") {
+				response.setAuthorizedAmount(requestBean.getTransactionAmount());
+			} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
+				response.setAuthorizedAmount(requestBean.getTransactionAmount());
+				response.setChargedAmount(requestBean.getTransactionAmount());
+			} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
+				response.setChargedAmount(requestBean.getTransactionAmount());
+			} else if(requestBean.getTransactionType() == "credit") {
+				response.setCreditedAmount(requestBean.getTransactionAmount());
+			}
+		}
+		
 		response.setTransactionID(responseData["pnref"]);
-		response.setAVSCode(responseData["avsaddr"]&responseData["avszip"]);
-		response.setCVVCode(responseData["cvv2Match"]);
+		response.setAuthorizationCode(responseData["authcode"]);
+		
+		if(responseData["avsaddr"] == 'Y' && responseData["avszip"] == 'Y') {
+			response.setAVSCode("Y");
+		} else if(responseData["avsaddr"] == 'N' && responseData["avszip"] == 'Y') {
+			response.setAVSCode("Z");
+		} else if(responseData["avsaddr"] == 'N' && responseData["avszip"] == 'N') {
+			response.setAVSCode("N");
+		} else {
+			response.setAVSCode("E");
+		}
+		
+		if(responseData["cvv2match"] == 'Y') {
+			response.setSecurityCodeMatch(true);
+		} else {
+			response.setSecurityCodeMatch(false);
+		}
 		
 		return response;
 	}

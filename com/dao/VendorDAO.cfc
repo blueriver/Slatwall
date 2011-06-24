@@ -36,14 +36,5 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
-	
-	public any function getSmartList(struct data={}){
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallVendor", data=arguments.data);
-	
-		smartList.addKeywordColumn(propertyIdentifier="vendorName", weight=1);
-	
-		return smartList;
-	}
-
+component extends="BaseDAO" {
 }

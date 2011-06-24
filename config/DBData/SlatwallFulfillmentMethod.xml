@@ -1,0 +1,9 @@
+<Table tableName="SlatwallFulfillmentMethod">
+	<Columns>
+		<column name="fulfillmentMethodID" fieldtype="id" />
+		<column name="activeFlag" update="false" />
+	</Columns>
+	<Records>
+		<Record fulfillmentMethodID="shipping" activeFlag="0" />
+	</Records>
+</Table>

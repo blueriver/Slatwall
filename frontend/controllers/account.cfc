@@ -39,21 +39,32 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
 	property name="accountService" type="any";
+	property name="orderService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="false";
 		
-		rc.account = rc.$.Slatwall.getCurrentAccount();
 	}
 	
 	public void function edit(required struct rc) {
 		rc.edit = true;
 		getFW().setView("frontend:account.detail");
-		detail(rc);
 	}
 	
 	public void function save(required struct rc) {
+		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
+		getFW().setView("frontend:account.detail");
+	}
+	
+	public void function detailOrder(required struct rc) {
+		param name="rc.orderID" default="";
 		
+		rc.order = getOrderService().getOrder(rc.orderID);
+		
+		// Check to make sure that the order being requested is actually the customers
+		if(!isNull(rc.order.getAccount()) && rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
+			rc.order = getOrderService().newOrder();
+		}
 	}
 	
 }

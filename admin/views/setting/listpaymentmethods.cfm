@@ -42,8 +42,8 @@ Notes:
 <cfoutput>
 	<div class="svoadminListPaymentMethods">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listPaymentMethods" type="list">
-			<cf_ActionCaller action="admin:setting.listPaymentServices" type="list">
+	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
+			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
 		<table id="paymentMethodList" class="stripe">
@@ -60,15 +60,15 @@ Notes:
 					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodID())#</td>
 					<td>
 						<cfif local.thisPaymentMethod.getActiveFlag()>
-							<img src="/plugins/Slatwall/images/icons/tick.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
 						<cfelse>
-							<img src="/plugins/Slatwall/images/icons/cross.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
+							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
 						</cfif>
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_ActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="edit" type="list">
 						</ul> 						
 					</td>
 				</tr>

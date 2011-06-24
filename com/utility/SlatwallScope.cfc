@@ -73,6 +73,41 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
+	private any function getProductList(string contentID) {
+		if(!structKeyExists(arguments,"contentID")) {
+			return getCurrentProductList();
+		} else if (arguments.contentID == "" || arguments.contentID == "00000000000000000000000000000000001") {
+			if(!getService("requestCacheService").keyExists("allProductList")) {
+				var data = {};
+				if(structKeyExists(request, "context")) {
+					data = request.context;
+				}
+				var currentURL = $.createHREF(filename=$.content('filename'));
+				if(len(CGI.QUERY_STRING)) {
+					currentURL &= "?" & CGI.QUERY_STRING;
+				}
+				getService("requestCacheService").setValue("allProductList", getService("productService").getProductSmartList(data=data, currentURL=currentURL));
+			}
+			return getService("requestCacheService").getValue("allProductList");
+		} else {
+			if(!getService("requestCacheService").keyExists("contentProductList#arguments.contentID#")) {
+				var content = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
+				var data = {};
+				if(content.getExtendedAttribute("showSubPageProducts") eq "") {
+					data.showSubPageProducts = 0;
+				} else {
+					data.showSubPageProducts = content.getExtendedAttribute("showSubPageProducts");	
+				}
+				var currentURL = $.createHREF(filename=content.getFileName());
+				if(len(CGI.QUERY_STRING)) {
+					currentURL &= "?" & CGI.QUERY_STRING;
+				}
+				getService("requestCacheService").setValue("contentProductList#arguments.contentID#", getService("productService").getProductContentSmartList(contentID=arguments.contentID, data=data, currentURL=currentURL));
+			}
+			return getService("requestCacheService").getValue("contentProductList#arguments.contentID#");
+		}
+	}
+	
 	private any function getCurrentProductList() {
 		if(!getService("requestCacheService").keyExists("currentProductList")) {
 			var data = {};
@@ -88,7 +123,7 @@ component accessors="true" output="false" extends="BaseObject" {
 			if(len(CGI.QUERY_STRING)) {
 				currentURL &= "?" & CGI.QUERY_STRING;
 			}
-			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL, subContentProducts=$.content("showSubPageProducts")));
+			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL));
 		}
 		return getService("requestCacheService").getValue("currentProductList");
 	}
@@ -119,17 +154,29 @@ component accessors="true" output="false" extends="BaseObject" {
 		} else if (isDefined("arguments.property")) {
 			return evaluate("getCurrentProduct().get#arguments.property#()");
 		} else {
-			return getCurrentProduct();	
+			return getCurrentProduct();
 		}
 	}
 	
-	public any function productList(string property, string value) {
+	public any function productList(string property, string value, string contentID) {
 		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			return evaluate("getCurrentProductList().set#arguments.property#(#arguments.value#)");
+			if(structKeyExists(arguments, "contentID")) {
+				return evaluate("getProductList(arguments.contentID).set#arguments.property#(#arguments.value#)");	
+			} else {
+				return evaluate("getCurrentProductList().set#arguments.property#(#arguments.value#)");
+			}
 		} else if (structKeyExists(arguments, "property")) {
-			return evaluate("getCurrentProductList().get#arguments.property#()");
+			if(structKeyExists(arguments, "contentID")) {
+				return evaluate("getProductList(arguments.contentID).get#arguments.property#()");
+			} else {
+				return evaluate("getCurrentProductList().get#arguments.property#()");
+			}
 		} else {
-			return getCurrentProductList();	
+			if(structKeyExists(arguments, "contentID")) {
+				return getProductList(arguments.contentID);
+			} else {
+				return getCurrentProductList();
+			}
 		}
 	}
 	
@@ -163,4 +210,5 @@ component accessors="true" output="false" extends="BaseObject" {
 	public string function setting(required string settingName) {
 		return Super.setting(arguments.settingName);
 	}
+
 }

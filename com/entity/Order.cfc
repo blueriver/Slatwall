@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="orderNumber" ormtype="string"; 
 	property name="orderOpenDateTime" ormtype="timestamp";
@@ -53,19 +53,18 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
-	property name="orderShippings" singularname="orderShipping" cfc="OrderShipping" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderShipments" singularname="orderShipment" cfc="OrderShipment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
-		if(isNull(variables.orderShippings)) {
-			variables.orderShippings = [];
+		if(isNull(variables.orderFulfillments)) {
+			variables.orderFulfillments = [];
 		}
-		if(isNull(variables.orderShipments)) {
-			variables.orderShipments = [];
+		if(isNull(variables.orderDeliveries)) {
+			variables.orderDeliveries = [];
 		}
 		if(isNull(variables.orderItems)) {
 			variables.orderItems = [];
@@ -110,12 +109,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return 0;
 	}
 	
-	public numeric function getShippingTotal() {
-		return 0;
+	public numeric function getFulfillmentTotal() {
+		var fulfillmentTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			fulfillmentTotal += getOrderFulfillments()[1].getFulfillmentCharge();
+		}
+		return fulfillmentTotal;
 	}
 	
 	public numeric function getTotal() {
-		return getSubtotal() + getTaxTotal() + getShippingTotal();
+		return getSubtotal() + getTaxTotal() + getFulfillmentTotal();
 	}
 	
 	public void function removeAllOrderItems() {
@@ -136,24 +139,24 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	   arguments.orderItem.removeOrder(this);
 	}
 	
-	// OrderShippings (one-to-many)
+	// OrderFulfillments (one-to-many)
 	
-	public void function addOrderShipping(required OrderShipment orderShipping) {
-	   arguments.orderShipping.setOrder(this);
+	public void function addOrderFulfillment(required OrderFulfillment orderFulfillment) {
+	   arguments.orderFulfillment.setOrder(this);
 	}
 	
-	public void function removeOrderShipping(required OrderShipment orderShipping) {
-	   arguments.orderShipping.removeOrder(this);
+	public void function removeOrderFulfillment(required OrderFulfillment orderFulfillment) {
+	   arguments.orderFulfillment.removeOrder(this);
 	}
 	
-	// OrderShipments (one-to-many)
+	// OrderDeliveries (one-to-many)
 	
-	public void function addOrderShipment(required OrderShipment OrderShipment) {
-	   arguments.orderShipment.setOrder(this);
+	public void function addOrderDelivery(required OrderDelivery orderDelivery) {
+	   arguments.orderDelivery.setOrder(this);
 	}
 	
-	public void function removeOrderShipment(required OrderShipment OrderShipment) {
-	   arguments.orderShipment.removeOrder(this);
+	public void function removeOrderDelivery(required OrderDelivery orderDelivery) {
+	   arguments.orderDelivery.removeOrder(this);
 	}
 	
 	// OrderPayments (one-to-many)
@@ -190,57 +193,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
     /************   END Association Management Methods   *******************/
 	
-	// These Methods are designed to check what still needs to be set before an order is ready to process
-	public boolean function hasValidAccount() {
-		if(isNull(variables.account) || variables.account.isNew()) {
-			return false;
-		} else {
-			return true;	
-		}
-	}
-	
-	public boolean function hasValidOrderShippingAddress() {
-		var valid = true;
-		
-		var orderShippings = getOrderShippings();
-		
-		// Loop over all order Shippings to make sure that there is a shipping address asigned
-		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getAddress()) || orderShippings[i].getAddress().isNew()) {
-				valid = false;
-			}
-		}
-		
-		return valid;
-	}
-	
-	public boolean function hasValidOrderShippingMethod() {
-		var valid = true;
-		
-		var orderShippings = getOrderShippings();
-		
-		// Loop over all order Shippings to make sure that there is a shipping method asigned
-		for( var i=1; i<=arrayLen(orderShippings); i++ ) {
-			if(isNull(orderShippings[i].getShippingMethod())) {
-				valid = false;
-			}
-		}
-		
-		return valid;
-	}
-	
-	public boolean function hasValidOrderShipping() {
-		var valid = false;
-		
-		if(hasValidOrderShippingAddress() && hasValidOrderShippingMethod()) {
-			valid = true;
-		}
-		
-		return valid;
-	}
-	
-	public boolean function hasValidPayment() {
-		var valid = true;
+	// Get the sum of all the payment amounts
+	public boolean function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
 		var orderPayments = getOrderPayments();
@@ -248,26 +202,29 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			totalPayments += orderPayments[i].getAmount();
 		}
 		
-		if(totalPayments == getTotal()) {
-			valid = true;
-		}
-		
-		return valid;
+		return totalPayments;
 	}
 	
-	public boolean function isValidForProcessing() {
-		var valid = false;
-		if(hasValidAccount() && hasValidOrderShippingAddress() && hasValidOrderShippingMethod() && hasValidPayment()) {
-			valid = true;
-		}
-		return valid;
+	public any function getActionOptions() {
+		var smartList = getService("orderService").getOrderStatusActionSmartList();
+		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
+		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
+		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");
+		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="id");
+		//return smartList.getHQL();
+		return smartList.getRecords(); 
 	}
 	
+ 	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberAndOpenDate() {
 		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-			var maxOrderNumber = ormExecuteQuery("SELECT isNull(max(aslatwallorder.orderNumber), 0) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
-			setOrderNumber(maxOrderNumber[1] + 1);
+			var maxOrderNumber = ormExecuteQuery("SELECT max(aslatwallorder.orderNumber) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+			if( arrayIsDefined(maxOrderNumber,1) ){
+				setOrderNumber(maxOrderNumber[1] + 1);
+			} else {
+				setOrderNumber(1);
+			}
 			setOrderOpenDateTime(now());
 		}
 	} 

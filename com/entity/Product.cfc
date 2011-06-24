@@ -43,8 +43,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
 	property name="filename" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" hint="This is the Template to use for product display";
-	property name="productName" ormtype="string" validateRequired hint="Primary Notation for the Product to be Called By";
-	property name="productCode" ormtype="string" unique="true" validateRequired hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productName" ormtype="string" validateRequired="true" hint="Primary Notation for the Product to be Called By";
+	property name="productCode" ormtype="string" unique="true" validateRequired="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
@@ -65,8 +65,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="brand" validateRequired cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="productType" validateRequired cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="brand" validateRequired="true" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="productType" validateRequired="true" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
 	
@@ -75,21 +75,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
-	// Non-Persistant Properties
+	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
 	property name="onTermSaleFlag" type="boolean" persistent="false";
 	property name="onClearanceSaleFlag" type="boolean" persistent="false";
 	property name="dateFirstReceived" type="date" persistent="false";
 	property name="dateLastReceived" type="date" persistent="false";
 	property name="livePrice" type="numeric" persistent="false";
-	property name="price" type="numeric" validateRequired validateNumeric persistent="false";
-	property name="listPrice" type="numeric" validateRequired validateNumeric persistent="false";
-	property name="shippingWeight" type="numeric" validateNumeric persistent="false";
+	property name="price" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
+	property name="listPrice" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
+	property name="shippingWeight" type="numeric" validateNumeric="true" persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";     
+	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
+	property name="searchScore" default="0" type="numeric" persistent="false";   
 	
 	// Calculated Properties
 	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
@@ -154,11 +155,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     }
     	
 	
-    public array function getSkus(sortby, sortType="text", direction="asc") {
-        if(!structKeyExists(arguments,"sortby")) {
+    public array function getSkus(orderby, sortType="text", direction="asc") {
+        if(!structKeyExists(arguments,"orderby")) {
             return variables.Skus;
         } else {
-            return sortObjectArray(variables.Skus,arguments.sortby,arguments.sortType,arguments.direction);
+            return sortObjectArray(variables.Skus,arguments.orderby,arguments.sortType,arguments.direction);
         }
     }
 	
@@ -178,7 +179,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.templateOptions;
 	}
 	
-	// Non-Persistant Helpers
+	// Non-Persistent Helpers
 	
 	public string function getContentIDs() { 
 		var contentIDs = "";
@@ -399,7 +400,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public array function getOptionGroups() {
 		if( !structKeyExists(variables, "optionGroups") ) {
 			variables.optionGroups = [];
-			var smartList = getSmartList("SlatwallOptionGroup");
+			var smartList = getService("OptionService").getOptionGroupSmartList();
 			smartList.addFilter("options_skus_product_productID",this.getProductID());
 			smartList.addOrder("sortOrder|ASC");
 			variables.optionGroups = smartList.getRecords();
@@ -411,12 +412,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return arrayLen(getOptionGroups());
 	}
 	
-	// Start: Functions that deligate to the default sku
+	// Start: Functions that delegate to the default sku
     public string function getImageDirectory() {
     	return getDefaultSku().getImageDirectory();	
     }
     
-	public string function getImage(string size, numeric width, numeric height, string class, string alt) {
+	public string function getImage(string size, numeric width, numeric height, string class, string alt, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		return getDefaultSku().getImage(argumentCollection = arguments);
 	}
 	
@@ -424,7 +425,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getImagePath();
 	}
 	
-	public string function getResizedImagePath(string size, numeric width, numeric height) {
+	public string function getResizedImagePath(string size, numeric width, numeric height, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
@@ -458,72 +459,32 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public numeric function getShippingWeight() {
 		// brand new products won't have a default SKU yet but need this method for create form
 		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getShippingWeight();
+			if(isNumeric(getDefaultSku().getShippingWeight())) {
+				return getDefaultSku().getShippingWeight();	
+			} else {
+				return 0;
+			}
 		} else {
 			return 0;
 		}
 	}
 	
-	// Start Functions for determining different option combinations
-	public array function getAvaiableSkusBySelectedOptions(required string selectedOptions) {
-		var availableSkus = arrayNew(1);
-		var skus = getSkus();
-		
-		for(var i = 1; i<=arrayLen(skus); i++) {
-			var skuOptions = skus[i].getOptions();
-			var matchCount = 0;
-			for(var ii = 1; ii <= arrayLen(skuOptions); ii++) {
-				var option = skuOptions[ii];
-				for(var iii = 1; iii <= listLen(arguments.selectedOptions); iii++) {
-					if(option.getOptionID() == listGetAt(arguments.selectedOptions, iii)) {
-						matchCount += 1;
-					}
-				}
-			}
-			if(matchCount == listLen(arguments.selectedOptions)) {
-				arrayAppend(availableSkus, skus[i]);
-			}
-		}
-		return availableSkus;
+	public array function getOptionsByOptionGroup(required string optionGroupID) {
+		var smartList = getService("optionService").getOptionSmartList();
+		smartList.addFilter("optionGroup_optionGroupID",arguments.optionGroupID);
+		smartList.addFilter("skus_product_productID",this.getProductID());
+		smartList.addOrder("sortOrder|ASC");
+		return smartList.getRecords();
 	}
-	
-	public struct function getAvailableOptionsBySelectedOptions(required string selectedOptions) {
-		var availableGroupOptions = structNew();
-		var availableSkus = getAvaiableSkusBySelectedOptions(arguments.selectedOptions);
-		for(var i = 1; i<=arrayLen(availableSkus); i++) {
-			var options = availableSkus[i].getOptions();
-			for(var ii = 1; ii <= arrayLen(options); ii++) {
-				if(!listFind(arguments.selectedOptions, options[ii].getOptionID())) {
-					if(!structKeyExists(availableGroupOptions, options[ii].getOptionGroup().getOptionGroupID())) {
-						availableGroupOptions[options[ii].getOptionGroup().getOptionGroupID()] = structNew();
-					}
-					if(!structKeyExists(availableGroupOptions[options[ii].getOptionGroup().getOptionGroupID()], options[ii].getOptionID())){
-						availableGroupOptions[options[ii].getOptionGroup().getOptionGroupID()][options[ii].getOptionID()] = options[ii];
-					}
-				}
-			}	
-		}
-		return availableGroupOptions;
-	}
-	
-	public struct function getAvailableGroupOptionsBySelectedOptions(required string optionGroupID, string selectedOptions="") {
-		var availableGroupOptions = getAvailableOptionsBySelectedOptions(arguments.selectedOptions);
-		if(structKeyExists(availableGroupOptions, arguments.optionGroupID)) {
-			return availableGroupOptions[arguments.optionGroupID];
-		} else {
-			return structNew();
-		}
-	}
-	// End Functions for determining different option combinations
-	
+
 	public any function getSkuBySelectedOptions(string selectedOptions="") {
-		var availableSkus = getAvaiableSkusBySelectedOptions(arguments.selectedOptions);
-		if(arrayLen(availableSkus) == 1) {
-			return availableSkus[1];
+		if(len(arguments.selectedOptions) > 0) {
+			return getService("productService").getProductSkuBySelectedOptions(arguments.selectedOptions,this.getProductID());
 		} else {
-			return availableSkus;
+			return getDefaultSku();
 		}
 	}
+	
 	
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array systemCode){

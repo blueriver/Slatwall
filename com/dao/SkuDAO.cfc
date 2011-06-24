@@ -36,17 +36,31 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" {
+component extends="BaseDAO" {
 
-	public any function getSkuSmartList(string productID, struct data={}){
-		
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallSku", data=arguments.data);
-		
-		if( structKeyExists(arguments,"productID") ) {
-			smartList.addFilter(propertyIdentifier="product_productID", value=arguments.productID);
+	
+	// returns product skus which matches ALL options (list of optionIDs) that are passed in
+	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
+		var params = [];
+		var hql = "select distinct sku from SlatwallSku as sku 
+					inner join sku.options as opt 
+					where 
+					0 = 0 ";
+		for(var i=1; i<=listLen(arguments.selectedOptions); i++) {
+			var thisOptionID = listGetat(arguments.selectedOptions,i);
+			hql &= "and exists (
+						from SlatwallOption o
+						join o.skus s where s.id = sku.id
+						and o.optionID = ?
+					) ";
+			arrayAppend(params,thisOptionID);
 		}
-		
-		return smartList;
+		// if product ID is passed in, limit query to the product
+		if(structKeyExists(arguments,"productID")) {
+			hql &= "and sku.product.id = ?";
+			arrayAppend(params,arguments.productID);	
+		}
+		return ormExecuteQuery(hql,params);
 	}
 
 }

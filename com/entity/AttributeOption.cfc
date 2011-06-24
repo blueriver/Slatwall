@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Attribute Option" entityname="SlatwallAttributeOption" table="SlatwallAttributeOption" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="attributeOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeOptionValue" ormtype="string";
 	property name="attributeOptionLabel" ormtype="string";
@@ -74,5 +74,12 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
     }
 	
 	/************   END Association Management Methods   *******************/
-
+	
+	public string function getAttributeOptionLabel() {
+		if(structkeyExists(variables,"attributeOptionLabel")) {
+			return variables["attributeOptionLabel"];
+		} else {
+			return htmlEditFormat( getAttributeOptionValue() );
+		}
+	}
 }

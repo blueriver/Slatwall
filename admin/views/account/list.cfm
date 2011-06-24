@@ -39,7 +39,7 @@ Notes:
 <cfoutput>
 <div class="svoadminaccountlist">
 	<ul id="navTask">
-    	<cf_ActionCaller action="admin:account.create" type="list">
+    	<cf_SlatwallActionCaller action="admin:account.create" type="list">
 	</ul>
 	
 	<table class="stripe">
@@ -59,8 +59,8 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_ActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:account.edit" querystring="accountID=#local.account.getAccountID()#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:account.edit" querystring="accountID=#local.account.getAccountID()#" class="edit" type="list">
 						</ul>
 					</td>
 				</tr>

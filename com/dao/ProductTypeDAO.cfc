@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="slatwall.com.dao.BaseDAO" accessors="true" {
+component extends="BaseDAO" accessors="true" {
 
 	//@hint for caching product types as a tree-sorted query
     public query function getProductTypeQuery() {

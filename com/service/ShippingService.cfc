@@ -39,6 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="settingService" type="any";
+	property name="addressService" type="any";
 
 	public any function saveShippingMethod(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"shippingRates") ) {
@@ -56,47 +57,113 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public array function populateOrderShippingMethodOptions(required any orderShipping) {
+	public array function populateOrderShippingMethodOptions(required Slatwall.com.entity.OrderFulfillmentShipping orderFulfillmentShipping) {
 		var shippingMethods = getDAO().list(entityName="SlatwallShippingMethod");
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
 		var methodOptions = [];
 		
-		// Loop over all methods and organize them by provider
+		// Loop over all possible methods
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
-			if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
-				arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+			if(shippingMethods[i].getShippingProvider() == "RateTable") {
+				// Get the Rate for this method and add it to the
+				var methodCharge = 0;
+				var rateExists = false;
+				var rates = shippingMethods[i].getShippingRates();
+				for(var r=1;r <= arrayLen(rates); r++) {
+					// Make sure that the shipping address is in the zone of this rate
+					if(getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
+						
+						var rateApplies = true;
+						
+						var minPrice = IIF(isNull(rates[r].getMinPrice()), 0, rates[r].getMinPrice());
+						var maxPrice = IIF(isNull(rates[r].getMaxPrice()), 10000000000000000, rates[r].getMaxPrice());
+						var minWeight = IIF(isNull(rates[r].getMinWeight()), 0, rates[r].getMinWeight());
+						var maxWeight = IIF(isNull(rates[r].getMaxWeight()), 10000000000000000, rates[r].getMaxWeight());
+						
+						var fullfillmentWeight = arguments.orderFulfillmentShipping.getTotalShippingWeight();
+						var fullfillmentPrice = arguments.orderFulfillmentShipping.getSubtotal();
+						
+						//Check Min/Max Price
+						if( fullfillmentPrice < minPrice || fullfillmentPrice > maxPrice ) {
+							rateApplies = false;
+						}
+						
+						//Check Min/Max Weight
+						if( fullfillmentWeight < minWeight || fullfillmentWeight > maxWeight ) {
+							rateApplies = false;
+						}
+						
+						if(rateApplies && (rates[r].getCost() < methodCharge || methodCharge == 0)) {
+							rateExists = true;
+							methodCharge = rates[r].getCost();
+						}
+					}
+				}
+				if(rateExists) {
+					var option = this.newOrderShippingMethodOption();
+					option.setShippingMethod(shippingMethods[i]);
+					option.setTotalCost(methodCharge);
+					option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
+					getDAO().save(option);
+				}
+			} else {
+				if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
+					arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+				}	
 			}
 		}
 		
 		// Loop over Shipping Providers
 		for(var p=1; p<=arrayLen(shippingProviders); p++) {
-			
+
 			// Get Provider Service
 			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
 			
 			// Query the Provider For Rates
-			var ratesResponseBean = providerService.getRates(arguments.orderShipping);
+			var ratesRequestBean = new Slatwall.com.utility.fulfillment.ShippingRatesRequestBean();
+			ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
+			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
+			
+			// TODO: This is a hack until we setup each order fulfillment to have it's own "ship from" 
+			ratesRequestBean.setShipFromCompany("Nytro Multisport");
+			ratesRequestBean.setShipFromStreetAddress("137 2ND Street");
+			ratesRequestBean.setShipFromCity("Encinitas");
+			ratesRequestBean.setShipFromStateCode("CA");
+			ratesRequestBean.setShipFromPostalCode("92024");
+			ratesRequestBean.setShipFromCountryCode("US");
+			
+			//ratesRequestBean.setShipFromWithAddress();
+			
+			// END HACK
+			
+			var ratesResponseBean = providerService.getRates(ratesRequestBean);
 			
 			// Loop Over Shipping Methods
-			for(var m=1; m<=arrayLen(shippingMethods); m++) {
+			if(!ratesResponseBean.hasErrors()) {
+				for(var m=1; m<=arrayLen(shippingMethods); m++) {
 				
-				// Check the method to see if it is from this provider
-				if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
-					
-					// Loop over the rates return by the provider to match with a shipping method
-					for(var r=1; r<=arrayLen(ratesResponseBean.getMethodRateResponseBeans()); r++) {
-						if(ratesResponseBean.getMethodRateResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
-							var option = this.newOrderShippingMethodOption();
-							option.setShippingMethod(shippingMethods[m]);
-							option.setTotalCost(ratesResponseBean.getMethodRateResponseBeans()[r].getTotalCost());
-							option.setEstimatedArrivalDate(ratesResponseBean.getMethodRateResponseBeans()[r].getEstimatedArrivalDate());
-							option.setOrderShipping(arguments.orderShipping);
-							getDAO().save(option);
+					// Check the method to see if it is from this provider
+					if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
+						
+						// Loop over the rates return by the provider to match with a shipping method
+						for(var r=1; r<=arrayLen(ratesResponseBean.getShippingMethodResponseBeans()); r++) {
+							if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
+								var option = this.newOrderShippingMethodOption();
+								option.setShippingMethod(shippingMethods[m]);
+								option.setTotalCost(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCost());
+								option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
+								option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
+								getDAO().save(option);
+							}
 						}
 					}
 				}
+			} else {
+				// Populate the orderFulfillment with the processing error
+				arguments.orderFulfillmentShipping.getErrorBean().addError('processing', ratesResponseBean.getErrorBean().getAllErrorMessages());
 			}
+			
 		}
 		
 		return methodOptions;

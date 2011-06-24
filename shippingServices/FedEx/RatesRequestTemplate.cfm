@@ -1,3 +1,41 @@
+<!---
+
+    Slatwall - An e-commerce plugin for Mura CMS
+    Copyright (C) 2011 ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    Linking this library statically or dynamically with other modules is
+    making a combined work based on this library.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+ 
+    As a special exception, the copyright holders of this library give you
+    permission to link this library with independent modules to produce an
+    executable, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting executable under
+    terms of your choice, provided that you also meet, for each linked
+    independent module, the terms and conditions of the license of that
+    module.  An independent module is a module which is not derived from
+    or based on this library.  If you modify this library, you may extend
+    this exception to your version of the library, but you are not
+    obligated to do so.  If you do not wish to do so, delete this
+    exception statement from your version.
+
+	Notes:
+	
+--->
 <cfoutput>
 	<ns:RateRequest xmlns:ns="http://fedex.com/ws/rate/v7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	    <ns:WebAuthenticationDetail>
@@ -26,7 +64,7 @@
 	        </ns:TotalWeight>
 	        <ns:TotalInsuredValue>
 	            <ns:Currency>USD</ns:Currency>
-	            <ns:Amount>#totalItemsPrice#</ns:Amount>
+	            <ns:Amount>#totalItemsValue#</ns:Amount>
 	        </ns:TotalInsuredValue>
 	        <ns:Shipper>
 	            <ns:Address>
@@ -38,12 +76,12 @@
 	            </ns:Address>
 	        </ns:Shipper>
 	        <ns:Recipient>
-	            <ns:Address>
-	                <ns:StreetLines>#arguments.orderShipping.getAddress().getStreetAddress()#</ns:StreetLines>
-	                <ns:City>#arguments.orderShipping.getAddress().getCity()#</ns:City>
-	                <ns:StateOrProvinceCode>#arguments.orderShipping.getAddress().getStateCode()#</ns:StateOrProvinceCode>
-	                <ns:PostalCode>#arguments.orderShipping.getAddress().getPostalCode()#</ns:PostalCode>
-	                <ns:CountryCode>#arguments.orderShipping.getAddress().getCountryCode()#</ns:CountryCode>
+	        	<ns:Address>
+	                <ns:StreetLines>#arguments.requestBean.getShipToStreetAddress()#</ns:StreetLines>
+	                <ns:City>#arguments.requestBean.getShipToCity()#</ns:City>
+	                <ns:StateOrProvinceCode>#arguments.requestBean.getShipToStateCode()#</ns:StateOrProvinceCode>
+	                <ns:PostalCode>#arguments.requestBean.getShipToPostalCode()#</ns:PostalCode>
+	                <ns:CountryCode>#arguments.requestBean.getShipToCountryCode()#</ns:CountryCode>
 					<ns:Residential>false</ns:Residential>
 	            </ns:Address>
 	        </ns:Recipient>
@@ -54,7 +92,7 @@
 	            <ns:SequenceNumber>1</ns:SequenceNumber>
 	            <ns:InsuredValue>
 	                <ns:Currency>USD</ns:Currency>
-	                <ns:Amount>#totalItemsPrice#</ns:Amount>
+	                <ns:Amount>#totalItemsValue#</ns:Amount>
 	            </ns:InsuredValue>
 	            <ns:Weight>
 	                <ns:Units>LB</ns:Units>

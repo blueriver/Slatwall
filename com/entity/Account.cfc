@@ -38,15 +38,18 @@ Notes:
 */
 component displayname="Account" entityname="SlatwallAccount" table="SlatwallAccount" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="firstName" validateRequired ormtype="string" hint="This Value is only Set if a MuraID does not exist";
-	property name="lastName" validateRequired ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="firstName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="muraUserID" ormtype="string";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
+
+	// Non Persistent
+	property name="fullName" persistent="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -105,8 +108,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Account (one-to-many)
 	
-	public void function addAccountEmail(required AccountEmail accountEmail) {
-	   arguments.accountEmail.setAccount(this);
+	public void function addAccountEmailAddress(required AccountEmailAddress accountEmailAddress) {
+	   arguments.accountEmailAddress.setAccount(this);
 	}
 	
 	public void function addAccountPhoneNumber(required AccountPhoneNumber accountPhoneNumber) {

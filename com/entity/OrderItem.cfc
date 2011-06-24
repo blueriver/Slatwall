@@ -36,9 +36,9 @@
 Notes:
 
 */
-component displayname="Order Item" entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Order Item" entityname="SlatwallOrderItem" table="SlatwallOrderItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="float";
 	property name="quantity" ormtype="float";
@@ -52,11 +52,23 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="sku" cfc="sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="profile" cfc="Profile" fieldtype="many-to-one" fkcolumn="profileID";
-	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
-	property name="orderShipment" cfc="OrderShipment" fieldtype="many-to-one" fkcolumn="orderShipmentID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+
+	public any function init() {
+		// set status to new by default
+		if( !structKeyExists(variables,"orderItemStatusType") ) {
+			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
+			setOrderItemStatusType(statusType);
+		}
+	   // set default collections for association management methods
+	   if(isNull(variables.orderDeliveryItems)) {
+	       variables.orderDeliveryItems = [];
+	   }    
+		return Super.init();
+	}
 	
 	public string function getStatus(){
 		return getOrderItemStatusType().getType();
@@ -70,6 +82,27 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getPrice()*getQuantity();
 	}
 	
+	public numeric function getTaxAmount() {
+		return structKeyExists(variables,"taxAmount") ? variables.taxAmount : 0;
+	}
+	
+	public numeric function getQuantityDelivered() {
+		if(!structKeyExists(variables,"quantityDelivered")) {
+			variables.quantityDelivered = 0;
+			var deliveryItems = getOrderDeliveryItems();
+			//writeDump(getOrderDeliveryItems());
+			//abort;
+			for( var thisDeliveryItem in deliveryItems ) {
+				variables.quantityDelivered += thisDeliveryItem.getQuantityDelivered();				
+			}			
+		}
+		return variables.quantityDelivered;
+	}
+	
+	public numeric function getQuantityUndelivered() {
+		return getQuantity() - getQuantityDelivered();
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)
@@ -78,11 +111,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		variables.order = arguments.order;
 		if(isNew() || !arguments.order.hasOrderItem(this)) {
 			arrayAppend(arguments.order.getOrderItems(),this);
-		}
-		
-		// Remove order shipping method and options
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
 		}
 	}
 	
@@ -96,41 +124,53 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}    
 		structDelete(variables,"order");
 		
-		// Remove order shipping method and options
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
+		// Remove from order fulfillment to trigger those actions
+		removeOrderFulfillment();
     }
     
-    // Order Shipping (many-to-one)
+    // Order Fulfillment (many-to-one)
     
-    public void function setOrderShipping(required OrderShipping orderShipping) {
-		variables.orderShipping = arguments.orderShipping;
-		if(isNew() || !arguments.orderShipping.hasOrderShippingItems(this)) {
-			arrayAppend(arguments.orderShipping.getOrderShippingItems(),this);
+    public void function setOrderFulfillment(required OrderFulfillment orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() || !arguments.orderFulfillment.hasOrderFulfillmentItems(this)) {
+			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(),this);
 		}
 		
-		// Remove order shipping method and options
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
+		// Run Item's Changed Function
+		variables.orderFulfillment.orderFulfillmentItemsChanged();
     }
     
-    public void function removeOrderShipping(OrderShipping orderShipping) {
-    	if(!structKeyExists(arguments, "orderShipping")) {
-    		arguments.orderShipping = variables.orderShipping;
+    public void function removeOrderFulfillment(OrderFulfillment orderFulfillment) {
+    	if(!structKeyExists(arguments, "orderFulfillment")) {
+    		arguments.orderFulfillment = variables.orderFulfillment;
     	}
-    	var index = arrayFind(arguments.orderShipping.getOrderShippingItems(), this);
+    	var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
     	if(index > 0) {
-    		arrayDeleteAt(arguments.orderShipping.getOrderShippingItems(), index);
+    		arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
     	}
-    	structDelete(variables, "orderShipping");
     	
-    	// Remove order shipping method and options
-		if(!isNull(variables.orderShipping)) {
-			variables.orderShipping.removeOrderShippingMethodAndMethodOptions();
-		}
+    	// Run Item's Changed Function
+		variables.orderFulfillment.orderFulfillmentItemsChanged();
+		
+    	structDelete(variables, "orderFulfillment");
     }
+    
+    // Order Delivery Item (one-to-many)
+    
+    public void function addOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
+    	arguments.orderDeliveryItem.setOrderItem(this);
+    }
+    
+    public void function removeOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
+    	arguments.orderDeliveryItem.removeOrderItem(this);
+    }
+    
 	
 	/************   END Association Management Methods   *******************/
+	
+	public any function getActionOptions() {
+		var smartList = getService("orderService").getOrderItemStatusActionSmartList();
+		smartList.addFilter("orderItemStatusType_typeID", getOrderItemStatusType().getTypeID());
+		return smartList.getRecords();
+	}
 }

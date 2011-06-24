@@ -58,11 +58,11 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		return this;
 	}
 	
-	public any function getSupportedPaymentMethods() {
+	public any function getPaymentMethods() {
 		return "creditCard";
 	}
 	
-	public Slatwall.com.utility.payment.ResponseBean function processTransaction(required Slatwall.com.utility.payment.RequestBean requestBean, required string transactionType){
+	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
 		var rawResponse = "";
 		var requestData = getRequestData(requestBean);
 		rawResponse = postRequest(requestData);

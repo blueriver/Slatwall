@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Account Relationship" entityname="SlatwallAccountRelationship" table="SlatwallAccountRelationship" persistent=true output=false accessors=true extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="accountRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties

@@ -80,10 +80,9 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// Setup account here
-		if($.currentUser().isLoggedIn()) {
-			// Load the mura User
-			var muraUser = $.currentUser();
-			
+		var muraUser = getRequestCacheService().getValue("muraScope").currentUser();
+		
+		if(muraUser.isLoggedIn()) {
 			// Load the account
 			var slatwallAccount = getAccountService().getAccountByMuraUser(muraUser);
 			
@@ -117,14 +116,24 @@ component extends="BaseService" accessors="true" output="false" {
 		return currentSession;
 	}
 	
-	public void function setValue(property, value) {
+	public void function setValue(required string property, required any value) {
 		if(!arguments.property == "sessionID") {
 			session.slatwall[arguments.property] = arguments.value;	
 		}
 	}
 	
-	public any function getValue(property) {
-		return session.slatwall[arguments.property];
+	public any function getValue(required string property, any defaultValue) {
+		if(structKeyExists(session.slatwall,arguments.property)) {
+			return session.slatwall[arguments.property];
+		} else if (structKeyExists(arguments, "defaultValue")) {
+			return arguments.defaultValue;
+		} else {
+			return javaCast("null","");
+		}
+	}
+	
+	public any function hasValue(required string property) {
+		return structKeyExists(session.slatwall,arguments.property);
 	}
 	
 }

@@ -68,12 +68,12 @@ component extends="BaseService" accessors="true" output="false" {
 		return account;
 	}
 	
-	public any function saveAccount(required any account, required struct data) {
+	public any function saveAccount(required any account, required struct data, required string siteID) {
 		// Populate the account from the data
 		arguments.account.populate(arguments.data);
 		
 		// Validate Account
-		getValidator().validateObject(entity=arguments.account);
+		getValidationService().validateObject(entity=arguments.account);
 		
 		// Account Email
 		if( structKeyExists(arguments.data, "emailAddress") ) {
@@ -88,7 +88,7 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Validate This Object
-			getValidator().validateObject(entity=accountEmailAddress);
+			getValidationService().validateObject(entity=accountEmailAddress);
 			if(accountEmailAddress.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryEmailAddress", "The Account E-Mail Address Has Errors");
 			}
@@ -107,7 +107,7 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Validate This Object
-			getValidator().validateObject(entity=accountPhoneNumber);
+			getValidationService().validateObject(entity=accountPhoneNumber);
 			if(accountPhoneNumber.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryPhoneNumber", "The Account Phone Number Has Errors");
 			}
@@ -127,7 +127,7 @@ component extends="BaseService" accessors="true" output="false" {
 				// Setup a new mura user
 				muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
 				muraUser.setPassword(arguments.data.password);
-				muraUser.setSiteID($.event('siteid'));
+				muraUser.setSiteID(arguments.siteID);
 				
 				// Update mura user with values from account
 				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
@@ -151,8 +151,10 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Re-Login the current user so that the new values are saved.
-			if($.currentUser().getUserID() == muraUser.getUserID()) {
-				getUserUtility().loginByUserID(muraUser.getUserID(), $.event('siteid'));	
+			var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+			
+			if(currentUser.getUserID() == muraUser.getUserID()) {
+				getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 			}
 			
 		} else if ( !isNull(arguments.account.getMuraUserID()) && arguments.account.getMuraUserID() != "") {
@@ -202,16 +204,16 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			// Attempt to find that e-mail address in all of our emails
 			for(var i=1; i<=arrayLen(arguments.account.getAccountEmailAddresses()); i++) {
-				if(agruments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
-					primaryEmail = agruments.account.getAccountEmailAddresses()[i];
+				if(arguments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
+					primaryEmail = arguments.account.getAccountEmailAddresses()[i];
 				}
 			}
 			if( isNull(primaryEmail) ) {
-				primaryEmail = this.newAccountEmail();
+				primaryEmail = this.newAccountEmailAddress();
 				primaryEmail.setEmailAddress(arguments.muraUser.getEmail());
 				primaryEmail.setAccount(arguments.account);
 			}
-			arguments.account.setPrimaryEmail(primaryEmail);
+			arguments.account.setPrimaryEmailAddress(primaryEmail);
 		}
 		
 		// TODO: Sync the mobile phone number

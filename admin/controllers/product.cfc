@@ -72,7 +72,7 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.list");
 		}
-		rc.productPages = getProductService().getProductPages("nestedIterator");
+		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 	}
@@ -84,7 +84,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 
 	public void function list(required struct rc) {
-		rc.productSmartList = getProductService().getSmartList(entityName="Product", data=arguments.rc);
+		rc.productSmartList = getProductService().getProductSmartList(data=arguments.rc);
 	}
 	
 	public void function save(required struct rc) {
@@ -124,7 +124,7 @@ component extends="BaseController" output=false accessors=true {
             	getFW().redirect(action="admin:product.list",preserve="message");
             }
 		} else {
-			rc.message = $.Slatwall.rbKey("admin.product.save_error");
+			rc.message = rc.$.Slatwall.rbKey("admin.product.save_error");
 			rc.messageType = "error";
 			if(isNew) {
 				rc.optionGroups = getProductService().listOptionGroupOrderByOptionGroupName();
@@ -132,7 +132,7 @@ component extends="BaseController" output=false accessors=true {
 				getFW().setView(action="admin:product.create");
 			} else {
 				rc.edit = true;
-				rc.productPages = getProductService().getProductPages("nestedIterator");
+				rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 				rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
@@ -145,7 +145,7 @@ component extends="BaseController" output=false accessors=true {
 		var product = getProductService().getProduct(rc.productID);
 		var deleteResponse = getProductService().delete(product);
 		if(deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();		
+			rc.message = rbKey("admin.product.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
@@ -160,7 +160,7 @@ component extends="BaseController" output=false accessors=true {
 		var productID = sku.getProduct().getProductID();
 		var deleteResponse = getSkuService().delete(sku);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteSku_success");
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
@@ -244,7 +244,7 @@ component extends="BaseController" output=false accessors=true {
 		var productType = getProductService().getProductType(rc.productTypeID);
 		var deleteResponse = getProductService().deleteProductType(productType);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = deleteResponse.getMessage();		
+			rc.message = rbKey("admin.product.deleteProductType_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";

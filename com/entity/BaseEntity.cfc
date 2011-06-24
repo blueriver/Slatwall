@@ -43,6 +43,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	property name="updateKeys" type="string";
 	
 	public any function init() {
+		// Place reference to mura scope in entity
+		if(!structKeyExists(request, "muraScope")) {
+			request.muraScope = new mura.MuraScope('default');
+		}
+		variables.$ = request.muraScope;
 		
 		// Create a new errorBean for all entities
 		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
@@ -61,14 +66,12 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint This function is utilized by the fw1 populate method to only update persistent properties in the entity.
 	public string function getUpdateKeys() {
-		
-		if(!isDefined("variables.updateKeys")) {
-			
+		if(!structKeyExists(variables, "updateKeys")) {
 			var metaData = getMetaData(this);
 			variables.updateKeys = "";
 			
 			// Loop over properties and any persitant properties to the updateKeys
-			for(i=1; i <= arrayLen(metaData.Properties); i++ ) {
+			for(var i=1; i <= arrayLen(metaData.Properties); i++ ) {
 				var propertyStruct = metaData.Properties[i];
 				if(!isDefined("propertyStruct.Persistent") or (isDefined("propertyStruct.Persistent") && propertyStruct.Persistent == true && !isDefined("propertyStruct.FieldType"))) {
 					variables.updateKeys = "#variables.updateKeys##propertyStruct.Name#,";
@@ -114,9 +117,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public any function populate(required struct data, string propList=getUpdateKeys(),boolean cleanseInput=false) {
-		var md = getMetaData(this);
-		for( var i=1;i<=arrayLen(md.properties);i++ ) {
-			local.theProperty = md.properties[i];
+			var props = getProperties();
+			for( var i=1;i<=arrayLen(props);i++ ) {
+			local.theProperty = props[i];
 			// If a propList was passed in, use it to filter
 			if( !listLen(arguments.propList) || listContains(arguments.propList,local.theProperty.name) ) {
 				// do columns (not related properties)
@@ -161,10 +164,22 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return this;
 	}
 	
+	public array function getProperties(struct metaData=getMetaData(this)) {
+		var properties = arguments.metaData["properties"];
+		var parentProperties = "";
+		// recursively get properties of any super classes
+		if(structKeyExists(arguments.metaData.extends,"properties")) {
+			parentProperties = getProperties(arguments.metaData["extends"]);
+			return arrayConcat(parentProperties,properties);
+		} else {
+			return properties;
+		}
+	}
+	
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 
 	// From Aaron Greenlee http://cookbooks.adobe.com/post_How_to_sort_an_array_of_objects_or_entities_with_C-17958.html
-	public array function sortObjectArray(required array objects, required string sortby, string sorttype="text", string direction = "asc") {
-		var property = arguments.sortby;
+	public array function sortObjectArray(required array objects, required string orderby, string sorttype="text", string direction = "asc") {
+		var property = arguments.orderby;
 		var sortedStruct = {};
 		var sortedArray = [];
         for (var i=1; i <= arrayLen(arguments.objects); i++) {
@@ -182,8 +197,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return sortedArray;
 	}
 
-	public any function isNew() {
-		var identifierColumns = ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
+	public boolean function isNew() {
+		var identifierColumns = getIdenentifierColumns();
 		var returnNew = true;
 		for(var i=1; i <= arrayLen(identifierColumns); i++){
 			if(structKeyExists(variables, identifierColumns[i]) && (!isNull(variables[identifierColumns[i]]) && variables[identifierColumns[i]] != "" )) {
@@ -191,6 +206,21 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		return returnNew;
+	}
+	
+	public any function getIdenentifierColumns() {
+		return ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
+	}
+	
+	public any function getIdentifierValue() {
+		var identifierColumns = getIdenentifierColumns();
+		var idValue = "";
+		for(var i=1; i <= arrayLen(identifierColumns); i++){
+			if(structKeyExists(variables, identifierColumns[i])) {
+				idValue &= variables[identifierColumns[i]];
+			}
+		}
+		return idValue;
 	}
 	
 	public string function getClassName(){
@@ -221,6 +251,16 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return this.getErrorBean().hasErrors();
 	}
 	
+	public string function simpleValueSerialize() {
+		var data = {};
+		for(var key in variables) {
+			if(isSimpleValue(variables[key]) && key != "updateKeys") {
+				data[key] = variables[key];
+			}
+		}
+		return serializeJSON(data);
+	}
+	
 	// These private methods are used by the populate() method
 	
 	private void function _setProperty( required any name, any value ) {
@@ -236,6 +276,33 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		_setProperty(arguments.name);
 	}
 	
+	private array function arrayConcat(required array a1, required array a2) {
+	/**
+		* Concatenates two arrays.
+		*
+		* @param a1      The first array.
+		* @param a2      The second array.
+		* @return Returns an array.
+		* @author Craig Fisher (craig@altainetractive.com)
+		* @version 1, September 13, 2001
+		* Modified by Tony Garcia 18Oct09 to deal with metadata arrays, which don't act like normal arrays
+		*/
+			var newArr = [];
+		    var i=1;
+		    if ((!isArray(a1)) || (!isArray(a2))) {
+		        writeoutput("Error in <Code>ArrayConcat()</code>! Correct usage: ArrayConcat(<I>Array1</I>, <I>Array2</I>) -- Concatenates Array2 to the end of Array1");
+		        return arrayNew(1);
+		    }
+		    /*we have to copy the array elements to a new array because the properties array in ColdFusion 
+		      is a "read only" array (see http://www.bennadel.com/blog/760-Converting-A-Java-Array-To-A-ColdFusion-Array.htm)*/
+		    for (i=1;i <= ArrayLen(a1);i++) {
+		        newArr[i] = a1[i];
+		    }
+		    for (i=1;i <= ArrayLen(a2);i++) {
+		        newArr[arrayLen(a1)+i] = a2[i];
+		    }
+		    return newArr;
+	}
 	
 	// Start: ORM functions
 	public void function preInsert(){

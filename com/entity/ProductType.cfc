@@ -38,9 +38,9 @@ Notes:
 */
 component displayname="Product Type" entityname="SlatwallProductType" table="SlatwallProductType" persistent="true" extends="BaseEntity" {
 			
-	// Persistant Properties
+	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="productTypeName" ormtype="string" validateRequired;
+	property name="productTypeName" ormtype="string" validateRequired="true";
     property name="productTypeDescription" ormtype="string" length="2000";
     property name="trackInventoryFlag" ormtype="boolean";
     property name="callToOrderFlag" ormtype="boolean";
@@ -106,7 +106,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public array function getInheritedAttributeSetAssignments(){
 		//Todo get by all the parent productTypeIDs
-		var attributeSetAssignments = getService("AttributeService").getSmartList(entityName="SlatwallAttributeSetAssignment", data={}).getRecords();
+		var attributeSetAssignments = getService("AttributeService").getAttributeSetAssignmentSmartList().getRecords();
 		if(!arrayLen(attributeSetAssignments)){
 			attributeSetAssignments = [];
 		}

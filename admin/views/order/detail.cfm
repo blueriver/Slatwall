@@ -39,35 +39,119 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.Order" type="any" />
 
+<cfset local.orderActionOptions = rc.Order.getActionOptions() />
+<cfset local.account = rc.Order.getAccount() />
+<cfset local.payments = rc.Order.getOrderPayments() />
+
 <cfoutput>
+
+<ul id="navTask">
+	<cf_SlatwallActionCaller action="admin:order.list" type="list">
+</ul>
+
+<!--- Display buttons of available order actions --->
+<cfloop array="#local.orderActionOptions#" index="local.thisAction">
+<cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
+	<cf_SlatwallActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
+</cfloop>
+
 <div class="svoadminorderdetail">
-	<dl class="twoColumn">
-		<cf_PropertyDisplay object="#rc.Order#" property="OrderID" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Order.getAccount()#" property="fullName" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Order.getOrderStatusType()#" property="Type" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#">
-		<cf_PropertyDisplay object="#rc.Order#" property="filename" edit="#rc.edit#">
-	</dl>
-	<h3 class="tableheader">Order Items</h3>
-	<table class="stripe">
-		<tr>
-			<th>#$.slatwall.rbKey('entity.brand.brandname')#</th>
-			<th class="varWidth">#$.slatwall.rbKey('entity.product.productname')#</th>
-			<th>Options</th>
-			<th>#$.slatwall.rbKey('entity.sku.skuCode')#</th>
-			<th>#$.slatwall.rbKey('entity.orderitem.quantity')#</th>
-		</tr>
-		<cfloop array="#rc.Order.getOrderItems()#" index="local.orderItem">
+	<div class="basicOrderInfo">
+		<table class="stripe" id="basicOrderInfo">
 			<tr>
-				<td>#local.orderItem.getSku().getProduct().getBrand().getBrandName()#</td>
-				<td class="varWidth">#local.orderItem.getSku().getProduct().getProductName()#</td>
-				<td>#local.orderItem.getSku().displayOptions()#</td>
-				<td>#local.orderItem.getSku().getSkuCode()#</td>
-				<td>#local.orderItem.getQuantity()#</td>
+				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
-		</cfloop>
-	</table>
+			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
+			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
+			<tr>
+				<td class="property">
+					#rc.$.Slatwall.rbKey("entity.order.account")#
+				</td>
+				<td>
+					#rc.Order.getAccount().getFullName()#  
+					<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">
+						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.user.png" height="16" width="16" alt="" />
+					</a>
+				</td>
+			</tr>
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#" displayType="table">
+	 		<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#" displayType="table">
+		</table>
+	</div>
+	<div class="paymentInfo">
+		<h3 class="tableheader">#$.Slatwall.rbKey("admin.order.detail.payments")#</h3>
+		<table class="stripe">
+			<tr>
+				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
+				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>
+				<th>&nbsp</th>
+			</tr>
+			<cfloop array="#local.payments#" index="local.thisPayment">
+			<tr>
+				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
+				<td>#local.thisPayment.getAmountAuthorized()#</td>
+				<td class="administration">
+		          <ul class="one">
+		          	<li class="zoomIn">           
+						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+					</li>
+					<li class="zoomOut">           
+						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+					</li>
+		          </ul>     						
+				</td>
+			</tr>
+			<tr id="orderDetail_#local.thisPayment.getOrderPaymentID()#" style="display:none;">
+				<td colspan="3">
+					<!--- set up order payment in params struct to pass into view which shows information specific to the payment method --->
+					<cfset local.params.orderPayment = local.thisPayment />
+					<div class="paymentDetails">
+					#view("order/payment/#lcase(local.thisPayment.getPaymentMethod().getPaymentMethodID())#", local.params)#
+					</div>
+				</td>
+			</tr>
+			</cfloop>
+		</table>
+	</div>
+	<div class="clear">
+		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+			<ul>
+				<li><a href="##tabOrderFulfillments" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderFulfillments")#</span></a></li>	
+				<li><a href="##tabOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderDeliveries")#</span></a></li>
+				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>
+			</ul>
+		
+			<div id="tabOrderFulfillments">
+				<cfset local.fulfillmentNumber = 0 />
+				<cfloop array="#rc.order.getOrderFulfillments()#" index="local.thisOrderFulfillment">
+					<cfset local.fulfillmentNumber++ />
+					<h4>#$.Slatwall.rbKey("entity.fulfillment")# #local.fulfillmentNumber#</h4>
+					<div class="buttons">
+						<cf_SlatwallActionCaller action="admin:order.detailorderfulfillment" text="#$.slatwall.rbKey('admin.orderfulfillment.process')#" queryString="orderfulfillmentid=#local.thisOrderFulfillment.getOrderFulfillmentID()#" class="button" />
+					</div>
+					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
+					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
+					#view("order/ordertabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
+				</cfloop>
+			</div>
+			
+			<div id="tabOrderDeliveries">
+				<cfset local.orderDeliveries = rc.order.getOrderDeliveries() />
+				<cfif arrayLen(local.orderDeliveries)>
+					<cfloop array="#local.orderDeliveries#" index="local.thisOrderDelivery">
+						<cfset local.params.orderDelivery = local.thisOrderDelivery />
+						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)#
+					</cfloop>
+				<cfelse>
+					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#
+				</cfif>
+			</div>
+			<div id="tabOrderActivityLog">
+				
+			</div>
+		</div> <!-- tabs -->
 	</div>
 </div>
 </cfoutput>

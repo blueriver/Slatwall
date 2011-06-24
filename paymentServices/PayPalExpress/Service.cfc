@@ -36,7 +36,22 @@
 Notes:
 
 */
-
+component accessors="true" output="false" displayname="PayPal Express" implements="Slatwall.paymentServices.PaymentInterface" {
+	
+	public any function init() {
+		return this;
+	}
+	
+	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
+		
+	}
+	
+	public any function getPaymentMethods() {
+		return "paypalExpress";
+	}
+	
+}
+/*
 component accessors="true" output="false" displayname="PayPal Express" implements="Slatwall.paymentServices.PaymentInterface" {
 	
 	// Custom Properties that need to be set by the end user
@@ -186,3 +201,4 @@ component accessors="true" output="false" displayname="PayPal Express" implement
 	}
 	
 }
+*/

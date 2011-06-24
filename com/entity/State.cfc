@@ -38,10 +38,13 @@ Notes:
 */
 component displayname="State" entityname="SlatwallState" table="SlatwallState" persistent="true" extends="BaseEntity" {
 	
-	// Persistant Properties
-	property name="stateCode" ormtype="string" fieldtype="id";
+	// Persistent Properties
+	property name="stateCode" length="40" ormtype="string" fieldtype="id";
+	property name="countryCode" length="2" ormtype="string" fieldtype="id";
+	
 	property name="stateName" ormtype="string";
 	
 	// Related Object Properties
-	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
+	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" insert="false" update="false";
+	 
 }

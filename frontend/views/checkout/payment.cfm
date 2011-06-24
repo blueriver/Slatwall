@@ -36,66 +36,35 @@
 Notes:
 
 --->
+<cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.orderRequirementsList" type="string" default="" />
+<cfparam name="rc.activePaymentMethods" type="array" />
+
+<cfset local.paymentShown = false />
 <cfoutput>
-	<div class="svofrontendorderpayment">
-		<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
-		
-		<cfif $.slatwall.cart().isValidForProcessing() and (rc.edit eq "" || rc.edit eq "payment")>
+	<div class="svoorderpayment">
+		<cfif not listFind(rc.orderRequirementsList, 'account') and not listFind(rc.orderRequirementsList, 'fulfillment')>
 			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder" method="post">
-				<div id="checkoutPaymentContent" class="contentBlock">
-					<div class="paymentAddress">
-						<h4>Payment Address</h4>
-						<dl>
-							<dt>Same As Shipping</dt>
-							<dd><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
-						</dl>
-					</div>
-					<div class="paymentMethod">
-						<h4>Payment Method</h4>
-						<dl>
-							<dt>Name On Card</dt>
-							<dd><input type="text" name="nameOnCart" /></dd>
-							<dt>Credit Card Number</dt>
-							<dd><input type="text" name="creditCardNumber" /></dd>
-							<dt>CVV Code</dt>
-							<dd><input type="text" name="securityCode" /></dd>
-							<dt>Expires</dt>
-							<dd>
-								<select name="experationMonth">
-									<option value="01">01</option>
-									<option value="02">02</option>
-									<option value="03">03</option>
-									<option value="04">04</option>
-									<option value="05">05</option>
-									<option value="06">06</option>
-									<option value="07">07</option>
-									<option value="08">08</option>
-									<option value="09">09</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-								</select> / 
-								<select name="experationYear">
-									<option value="01">2011</option>
-									<option value="02">2012</option>
-									<option value="03">2013</option>
-									<option value="04">2014</option>
-									<option value="05">2015</option>
-									<option value="06">2016</option>
-									<option value="07">2017</option>
-									<option value="08">2018</option>
-									<option value="09">2019</option>
-									<option value="10">2020</option>
-									<option value="11">2021</option>
-									<option value="12">2022</option>
-								</select>
-							</dd>
-						</dl>
-					</div>
-				</div>
-				<input type="hidden" name="paymentMethodID" value="CreditCard" />
-				<input type="hidden" name="paymentID" value="#rc.payment.getOrderPaymentID()#" />
-				<cf_ActionCaller action="frontend:checkout.processOrder" type="submit">
+				<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
+				<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="local.orderPayment">
+					<cfset params = structNew() />
+					<cfset params.orderPayment = local.orderPayment />
+					<cfif local.orderPayment.hasErrors() or (local.orderPayment.getAmountAuthorized() neq local.orderPayment.getAmount() and $.slatwall.setting("paymentMethod_creditCard_checkoutTransactionType") neq "none")>
+						<cfset local.paymentShown = true />
+						<cfset params.edit = true />
+					<cfelse>
+						<cfset params.edit = false />
+					</cfif> 
+					#view("frontend:checkout/payment/#local.orderPayment.getPaymentMethodID()#", params)# 
+				</cfloop>
+				<cfif not local.paymentShown>
+					<cfloop array="#rc.activePaymentMethods#" index="local.paymentMethod">
+						<cfset params = structNew() />
+						<cfset params.edit = true />
+						#view("frontend:checkout/payment/creditCard", params)#
+					</cfloop>
+				</cfif>
+				<cf_SlatwallActionCaller action="frontend:checkout.processOrder" type="submit">
 			</form>
 		</cfif>
 	</div>

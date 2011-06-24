@@ -36,23 +36,18 @@
 Notes:
 
 --->
+<cfparam name="rc.edit" type="string" default="" />
+<cfparam name="rc.orderRequirementsList" type="string" default="" />
+
 <cfoutput>
-	<div class="svofrontendcheckoutdetail">
+	<div class="svocheckoutdetail">
 		<cfinclude template="account.cfm" />
-		<cfinclude template="shippingaddress.cfm" />
-		<cfinclude template="shippingmethod.cfm" />
-		<cfinclude template="items.cfm" />
-		<cfinclude template="payment.cfm" />
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$("input[name='createMuraAccount']").change(function(){
-					if($("input[name='createMuraAccount']:checked").val() == 1) {
-						$("div.accountPassword").show();
-					} else {
-						$("div.accountPassword").hide();
-					}
-				});
-			});
-		</script>
+		<cfif not listFind(rc.orderRequirementsList, "account")>
+			<cfinclude template="fulfillment.cfm" />
+			<cfinclude template="items.cfm" />
+		</cfif>
+		<cfif not listFind(rc.orderRequirementsList, "account") and not listFind(rc.orderRequirementsList, "fulfillment")>
+			<cfinclude template="payment.cfm" />
+		</cfif>
 	</div>
 </cfoutput>

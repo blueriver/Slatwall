@@ -37,5 +37,14 @@ Notes:
 
 */
 component extends="BaseService" {
+
+	public any function getVendorSmartList(struct data={}){
+		arguments.entityName = "SlatwallVendor";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+	
+		smartList.addKeywordColumn(propertyIdentifier="vendorName", weight=1);
+	
+		return smartList;
+	}
 	
 }

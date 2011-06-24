@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component  extends="slatwall.com.service.BaseService" accessors="true" {
+component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
 	public void function saveAttributeSort(required string attributeIDs) {
 		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
@@ -74,7 +74,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 					if(len(thisOptionStruct.attributeOptionID)) {
 						var thisAttributeOption = this.getAttributeOption(thisOptionStruct.attributeOptionID);
 					} else {
-						var thisAttributeOption = newAttributeOption();
+						var thisAttributeOption = this.newAttributeOption();
 					}
 					thisAttributeOption.setAttributeOptionValue(trim(thisOptionStruct.value));
 					optionValueList = listAppend(optionValueList, thisAttributeOption.getAttributeOptionValue());
@@ -93,7 +93,7 @@ component  extends="slatwall.com.service.BaseService" accessors="true" {
 	}
 		
 	public any function getAttributeSets(array systemCode) {
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeSet");
+		var smartList = this.getAttributeSetSmartList();
 		if(structKeyExists(arguments,"systemCode")){
 			for(var i = 1; i <= arrayLen(systemCode); i++){
 				smartList.addFilter("attributeSetType_systemCode",systemCode[i],i);

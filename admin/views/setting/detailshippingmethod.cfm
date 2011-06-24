@@ -44,8 +44,8 @@ Notes:
 <cfoutput>
 	<div class="svoadmindetailshippingmethod">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
+			<cfif !rc.edit><cf_SlatwallActionCaller action="admin:setting.editshippingmethod" querystring="shippingmethodid=#rc.shippingmethod.getshippingmethodid()#" type="list"></cfif>
+	    	<cf_SlatwallActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodid=shipping" text="#$.slatwall.rbKey('admin.setting.fulfillmentmethod.shippingsettings')#" type="list">
 		</ul>
 		
 		<cfif rc.edit>
@@ -53,7 +53,7 @@ Notes:
 			<input type="hidden" name="shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />
 		</cfif>
 			<dl class="oneColumn">
-				<cf_PropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#" first="true">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#" first="true">
 				<dt class="spdshippingprovider">
 					#rc.$.slatwall.rbKey('entity.shippingmethod.shippingprovider')#
 				</dt>
@@ -75,7 +75,7 @@ Notes:
 					<dt class="spdshippingmethod">Shipping Rates</dt>
 					<dd id="spdshippingmethod">
 						<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
-						<table class="stripe" id="shippingRateTable" <cfif not arrayLen(local.shippingRates)>style="display:none;"</cfif>>
+						<table id="shippingRateTable" class="stripe">
 							<thead>
 								<tr>
 									<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.shippingZone')#</th>
@@ -93,7 +93,7 @@ Notes:
 										<td class="varWidth">
 											<cfif rc.edit>
 												<input type="hidden" name="shippingRates[#local.rateCount#].shippingRateID" value="#local.shippingRates[rateCount].getShippingRateID()#" />
-												<cf_propertyDisplay object="#local.shippingRates[rateCount]#" property="addressZone" edit="#rc.edit#" displaytype="plain" />
+												<cf_SlatwallPropertyDisplay object="#local.shippingRates[rateCount]#" property="addressZone" edit="#rc.edit#" displaytype="plain" />
 											<cfelse>
 												#local.shippingRates[rateCount].getAddressZone().getAddressZoneName()#
 											</cfif>
@@ -129,11 +129,11 @@ Notes:
 			</dl>
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_ActionCaller action="admin:setting.listshippingmethods" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodID=shipping" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 				<cfif !rc.shippingMethod.isNew()>
-					<cf_ActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
+					<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
 				</cfif>
-				<cf_ActionCaller action="admin:setting.saveshippingmethod" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:setting.saveshippingmethod" type="submit" class="button">
 			</div>
 		</form>
 	</cfif>
@@ -142,7 +142,7 @@ Notes:
 			<table id="tableTemplate" class="hideElement">
 				<tbody>
 				    <tr id="temp">
-				        <td><input type="hidden" name="shippingRateID" value="" /><cf_propertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" displaytype="plain" /></td>
+				        <td><input type="hidden" name="shippingRateID" value="" /><cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" displaytype="plain" /></td>
 				        <td><input type="text" name="minWeight"></td>
 						<td><input type="text" name="maxWeight"></td>
 						<td><input type="text" name="minPrice"></td>

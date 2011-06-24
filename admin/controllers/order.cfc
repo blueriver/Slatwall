@@ -51,8 +51,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
     public void function list(required struct rc) {
-		param name="rc.orderby" default="orderOpenDateTime|DESC";
-		rc.orderSmartList = getOrderService().getSmartList(entityName="SlatwallOrder", data=arguments.rc);
+		//param name="rc.orderby" default="orderOpenDateTime|DESC";
+		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
     }
 
 	public void function detail(required struct rc) {
@@ -62,6 +62,60 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   } else {
 	       getFW().redirect("admin:order.list");
 	   }
+	}
+	
+	public void function applyOrderActions(required struct rc) {
+		for( var i=1; i<=listLen(rc.orderActions); i++ ) {
+			local.thisOrderID = listFirst(listGetAt(rc.orderActions,i),"_");
+			local.thisOrderActionTypeID = listLast(listGetAt(rc.orderActions,i),"_");
+			var applied = getOrderService().applyOrderAction(local.thisOrderID,local.thisOrderActionTypeID);
+		}
+		if( applied ) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.applyOrderActions_success");
+			getFW().redirect(action="admin:order.list", preserve="message");
+		}
+	}
+	
+	public void function cancelorder(required struct rc) {
+		rc.order = getOrderService().getOrder(rc.orderID);
+		var response = getOrderService().cancelOrder(rc.order);
+		if( !response.hasErrors() ) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.cancelorder_success");
+		} else {
+			rc.message = response.getError("cancel");
+			rc.messageType = "error";
+		}
+		rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+		getFW().setView(action="admin:order.detail");
+	}
+	
+	/****** Order Fulfillments *****/
+	
+	public void function listOrderFulfillments(required struct rc) {
+		rc.fulfillmentSmartList = getOrderService().getOrderFulfillmentSmartList(data=arguments.rc);
+	}
+	
+	public void function detailOrderFulfillment(required struct rc) {
+		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderfulfillmentID);
+		if(isNull(rc.orderFulfillment)) {
+			getFW().redirect(action="admin:order.listOrderFulfillments");
+		}
+	}
+	
+	public void function processOrderFulfillment(required struct rc) {
+		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);	
+		var orderDeliveryItemsStruct = getService("formUtilities").buildFormCollections(rc)['orderItems'];
+		// call service to process fulfillment. Returns an orderDelivery
+		var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
+		if(!orderDelivery.hasErrors()) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
+			getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
+		} else {
+			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
+			rc.message = orderDelivery.getErrorBean().getError("orderDeliveryItems");
+			rc.messagetype = "warning";
+			getFW().setView("admin:order.detailOrderFulfillment");
+		}
 	}
 
 }

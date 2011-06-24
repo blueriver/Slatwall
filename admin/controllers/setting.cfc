@@ -40,9 +40,11 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Slatwall Service Injection		
 	property name="settingService" type="any";
+	property name="addressService" type="any";
 	property name="productService" type="any";
 	property name="shippingService" type="any";
 	property name="paymentService" type="any";
+	property name="fulfillmentService" type="any";
 	property name="formUtilities" type="any";
 	property name="fileService" type="any";
 	
@@ -114,10 +116,6 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	// Shipping Services
-	public void function listShippingServices(required struct rc) {
-		rc.shippingServices = getSettingService().getShippingServices();	
-	}
-	
 	public void function detailShippingService(required struct rc) {
 		param name="rc.edit" default="false";
 		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
@@ -131,43 +129,26 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = true;
 	}
 	
-/*	public void function saveShippingService(required struct rc) {
-		rc.settingsStruct = getSettingService().saveShippingService(rc);
-
-		if( !getService("requestCacheService").getValue("ormHasErrors") ) {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
-			getFW().redirect(action="admin:setting.listShippingServices", queryString="reload=true", preserve="message");
-		} else {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
-			rc.messageType = "error";
-			getFW().redirect(action="admin:setting.editShippingService", queryString="shippingServicePackage=#rc.shippingServicePackage#", preserve="settingsStruct,message,messageType");
-		}
-	}*/
-	
 	public void function saveShippingService(required struct rc) {
 		rc.serviceProperties = getService("formUtilities").buildFormCollections(rc).shippingService;
 		var response = getSettingService().saveShippingService(rc.shippingServicePackage,rc.serviceProperties);
 
 		if( !response.hasErrors() ) {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_success");
-			getFW().redirect(action="admin:setting.listShippingServices", queryString="reload=true", preserve="message");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.saveShippingService_success");
+			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
 		} else {
-			rc.message = $.Slatwall.rbKey("admin.setting.saveShippingService_error");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.saveShippingService_error");
 			rc.messageType = "error";
 			rc.shippingService = response.getData();
 			rc.errors = response.getErrorBean().getErrors();
 			local.serviceName = getMetaData(rc.shippingService)["displayName"];
-			rc.itemTitle = $.Slatwall.rbKey("admin.setting.editshippingservice") & ": " & local.serviceName;
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editshippingservice") & ": " & local.serviceName;
 			rc.edit = true;
 			getFW().setView(action="admin:setting.detailShippingService");
 		}
 	}
 	
 	// Shipping Methods
-	public void function listShippingMethods(required struct rc) {
-		rc.shippingMethods = getSettingService().getShippingMethods();
-	}
-	
 	public void function detailShippingMethod(required struct rc) {
 		param name="rc.shippingMethodID" default="";
 		param name="rc.edit" default="false";
@@ -183,12 +164,12 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.shippingMethod);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteShippingMethod_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:setting.listshippingmethods", queryString="reload=true", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping&reload=true", preserve="message,messagetype");
 	}
 	
 	public void function createShippingMethod(required struct rc) {
@@ -204,7 +185,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function saveShippingMethod(required struct rc) {
 		detailShippingMethod(rc);
 		
-		if(rc.shippingProvider == "RateTable") {
+		if(structKeyExists(rc,"shippingProvider") && rc.shippingProvider == "RateTable") {
 			var formStruct = getFormUtilities().buildFormCollections(rc);
 			if(structKeyExists(formStruct, "shippingRates")) {
 				rc.shippingRates = formStruct.shippingRates;	
@@ -214,10 +195,12 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.shippingMethod = getShippingService().saveShippingMethod(entity=rc.shippingMethod, data=rc);
 
 		if(!rc.shippingMethod.hasErrors()) {
-			getFW().redirect(action="admin:setting.listshippingmethods", querystring="reload=true&message=admin.setting.saveshippingmethod_success");
+			rc.message=rc.$.slatwall.rbKey("admin.setting.saveshippingmethod_success");
+			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
 		} else {
 			rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
-	   		getFW().setView(action="admin:setting.editshippingmethod");
+	   		rc.edit=true;
+	   		getFW().setView(action="admin:setting.detailshippingmethod");
 		}
 	}
 	
@@ -229,6 +212,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function detailPaymentService(required struct rc) {
 		param name="rc.edit" default="false";
+		
 		rc.paymentService = getSettingService().getByPaymentServicePackage(rc.paymentServicePackage);
 		local.serviceName = getMetaData(rc.paymentService)["displayName"];
 		rc.itemTitle = rc.itemTitle & ": " & local.serviceName;
@@ -246,15 +230,15 @@ component extends="BaseController" output="false" accessors="true" {
 		var response = getSettingService().savePaymentService(rc.paymentServicePackage,rc.serviceProperties);
 
 		if( !response.hasErrors() ) {
-			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_success");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.savePaymentService_success");
 			getFW().redirect(action="admin:setting.listPaymentServices", queryString="reload=true", preserve="message");
 		} else {
-			rc.message = $.Slatwall.rbKey("admin.setting.savePaymentService_error");
+			rc.message = rc.$.Slatwall.rbKey("admin.setting.savePaymentService_error");
 			rc.messageType = "error";
 			rc.paymentService = response.getData();
 			rc.errors = response.getErrorBean().getErrors();
 			local.serviceName = getMetaData(rc.paymentService)["displayName"];
-			rc.itemTitle = $.Slatwall.rbKey("admin.setting.editpaymentservice") & ": " & local.serviceName;
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentservice") & ": " & local.serviceName;
 			rc.edit = true;
 			getFW().setView(action="admin:setting.detailPaymentService");
 		}
@@ -272,9 +256,12 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.paymentMethod = getSettingService().getPaymentMethod(rc.paymentMethodID);
 		if(isNull(rc.paymentMethod)) {
 			getFW().redirect(action="admin:setting.listPaymentMethods");
-		}	
+		}
 		rc.paymentServices = getSettingService().getPaymentServices();
-		rc.itemTitle = rc.itemTitle & ": " & $.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodID());
+		
+		rc.allSettings = getSettingService().getSettings();
+		
+		rc.itemTitle = rc.itemTitle & ": " & rc.$.Slatwall.rbKey("admin.setting.paymentMethod." & rc.paymentMethod.getPaymentMethodID());
 	}
 	
 	public void function editPaymentMethod(required struct rc) {
@@ -295,6 +282,45 @@ component extends="BaseController" output="false" accessors="true" {
 	   		getFW().setView(action="admin:setting.editpaymentmethod");
 		}
 	}
+
+	// Fulfillment Methods
+	public void function listFulfillmentMethods(required struct rc) {
+		rc.fulfillmentMethods = getSettingService().getFulfillmentMethods();	
+	}
+
+	public void function detailFulfillmentMethod(required struct rc) {
+		param name="rc.fulfillmentMethodID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.fulfillmentMethod = getSettingService().getFulfillmentMethod(rc.fulfillmentMethodID);
+		if(isNull(rc.fulfillmentMethod)) {
+			getFW().redirect(action="admin:setting.listFulfillmentMethods");
+		}	
+		rc.itemTitle = rc.itemTitle & ": " & rc.$.slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
+		
+		rc.shippingMethods = getSettingService().getShippingMethods();
+		rc.shippingServices = getSettingService().getShippingServices();
+	}
+	
+	public void function editFulfillmentMethod(required struct rc) {
+		detailFulfillmentMethod(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailFulfillmentMethod");
+	}
+	
+	public void function saveFulfillmentMethod(required struct rc) {
+		rc.fulfillmentMethod = getSettingService().getFulfillmentMethod(rc.fulfillmentMethodID, true);
+		//writeDump(rc.fulfillmentMethod);
+		//abort;
+		rc.fulfillmentMethod = getFulfillmentService().saveFulfillmentMethod(entity=rc.fulfillmentMethod, data=rc);
+
+		if(!rc.fulfillmentMethod.hasErrors()) {
+			getFW().redirect(action="admin:setting.listfulfillmentmethods", querystring="reload=true&message=#rc.$.Slatwall.rbKey('admin.setting.savefulfillmentmethod_success')#");
+		} else {
+			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editfulfillmentmethod") & ": #rc.$.Slatwall.rbKey('rc.fulfillmentMethod.getFulfillmentMethodID()')#";
+	   		getFW().setView(action="admin:setting.editfulfillmentmethod");
+		}
+	}
 		
 	// Integrations Services
 	
@@ -308,7 +334,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.edit" default="false";
 		
 		rc.addressZone = getSettingService().getAddressZone(rc.addressZoneID, true);
-		rc.countriesArray = getSettingService().listCountry();
+		rc.newAddress = getAddressService().newAddress();
 	}
 	
 	public void function editAddressZone(required struct rc) {
@@ -331,11 +357,27 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		rc.addressZone = getSettingService().saveAddressZone(rc.addressZone, rc);
 		
-		if(!rc.addressZone.hasErrors()) {
-			getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");
-		} else {
-			getFW().setView("admin:setting.detailaddresszone");
+		if(rc.addressZone.hasErrors() || rc.addressZone.isNew()) {
 			rc.edit = true;
+			getFW().setView("admin:setting.detailaddresszone");
+		} else {
+			getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");
+		}
+	}
+	
+	public void function saveAddressZoneLocation(required struct rc) {
+		param name="rc.addressZoneID" default="";
+		param name="rc.addressID" default="";
+		
+		// Check to see if it is already in rc because of taffy api
+		if(isNull(rc.addressZone)) {
+			rc.addressZone = getAddressService().getAddressZone(rc.addressZoneID);
+		}
+		
+		if(!isNull(rc.addressZone)) {
+			var address = getAddressService().getAddress(rc.addressID, true);
+			address.populate(rc);
+			rc.addressZone.addAddressZoneLocation(address);
 		}
 	}
 	
@@ -344,20 +386,61 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.addressZone);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message=deleteResponse.getMessage();
+			rc.message = rbKey("admin.product.deleteAddressZone_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
 		
-		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.listaddresszones", preserve="message,messagetype");
 	}
 	
+	public void function deleteAddressZoneLocation(required struct rc) {
+		detailAddressZone(rc);
+		
+		var address = getAddressService().getAddress(rc.addressID);
+		
+		rc.addressZone.removeAddressZoneLocation(address);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailaddresszone");
+	}
+	
+	// Frontend Views
 	public void function updateFrontendViews(required struct rc) {
 		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
 		
 		getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
+	}
+	
+	// Tax Categories
+	
+	public void function listTaxCategories(required struct rc) {
+		rc.taxCategories = getSettingService().listTaxCategory();
+	}
+	
+	public void function detailTaxCategory(required struct rc) {
+		param name="rc.taxCategoyID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.taxCategory = getSettingService().getTaxCategory(rc.taxCategoryID);
+	}
+	
+	public void function editTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
+	}
+	
+	public void function createTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
+		
+	}
+	
+	public void function saveTaxCategory(required struct rc) {
+		
 	}
 }

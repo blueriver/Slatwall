@@ -42,7 +42,7 @@ Notes:
 <cfoutput>
 	<div class="svoadminsettinglistshippingzones">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.createaddresszone" type="list">
+	    	<cf_SlatwallActionCaller action="admin:setting.createaddresszone" type="list">
 		</ul>
 		
 		<table class="stripe">
@@ -55,9 +55,9 @@ Notes:
 					<td class="varWidth">#local.addressZone.getAddressZoneName()#</td>
 					<td class="administration">
 						<ul class="three">
-							<cf_ActionCaller action="admin:setting.detailaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="viewDetails" type="list">
-							<cf_ActionCaller action="admin:setting.editaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="edit" type="list">
-							<cf_ActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="delete" type="list" confirmRequired="true">
+							<cf_SlatwallActionCaller action="admin:setting.detailaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="delete" type="list" confirmRequired="true">
 						</ul>
 					</td>
 				</tr>

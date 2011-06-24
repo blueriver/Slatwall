@@ -40,7 +40,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 	property name="entityName" type="string";
 	property name="DAO" type="any";
-	property name="Validator" type="Slatwall.com.utility.Validator";
+	property name="validationService" type="any";
 	property name="fileService" type="any";
 	
 	public any function init() {
@@ -68,9 +68,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(target=arguments.entity);
-			response.setMessage(rbKey("entity.#entityName#.delete_success"));
+			response.addMessage(messageCode="01", message=rbKey("entity.#entityName#.delete_success"));
 		} else {
+			// set entity into the response
 			response.setData(arguments.entity);
+			// set errors in the response error bean (from the entity error bean)
 			response.getErrorBean().setErrors(arguments.entity.getErrorBean().getErrors());
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
@@ -85,7 +87,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
         if(structKeyExists(arguments,"data")){
             populate(arguments.entity,arguments.data);
         }
-        getValidator().validateObject(entity=arguments.entity);
+        validate(entity=arguments.entity);
         
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(target=arguments.entity);
@@ -93,6 +95,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
             getService("requestCacheService").setValue("ormHasErrors", true);
         }
         return arguments.entity;
+    }
+    
+    public any function validate(required any entity) {
+    	return getValidationService().validateObject(entity=arguments.entity);
     }
     
  /**
@@ -124,7 +130,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		var lCaseMissingMethodName = lCase( missingMethodName );
 
 		if ( lCaseMissingMethodName.startsWith( 'get' ) ) {
-			return onMissingGetMethod( missingMethodName, missingMethodArguments );
+			if(right(lCaseMissingMethodName,9) == "smartlist") {
+				return onMissingGetSmartListMethod( missingMethodName, missingMethodArguments );
+			} else {
+				return onMissingGetMethod( missingMethodName, missingMethodArguments );
+			}
 		} else if ( lCaseMissingMethodName.startsWith( 'new' ) ) {
 			return onMissingNewMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'list' ) ) {
@@ -133,6 +143,8 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return onMissingSaveMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'delete' ) )	{
 			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
+		} else if ( lCaseMissingMethodName.startsWith( 'validate' ) )	{
+			return onMissingValidateMethod( missingMethodName, missingMethodArguments );
 		}
 
 		throw( 'No matching method for #missingMethodName#().' );
@@ -141,7 +153,9 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 
 	/********** PRIVATE ************************************************************/
-
+	private function onMissingValidateMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		return validate( missingMethodArguments[ 1 ] );
+	}
 
 	private function onMissingDeleteMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		return delete( missingMethodArguments[ 1 ] );
@@ -175,6 +189,38 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		}
 	}
 
+	/**
+	 * Provides dynamic getSmarList method, by convention, on missing method:
+	 *
+	 *   getXXXSmartList( struct data )
+	 *
+	 * ...in which XXX is an ORM entity name
+	 *
+	 * NOTE: Ordered arguments only--named arguments not supported.
+	 */
+	 
+	private function onMissingGetSmartListMethod( required string missingMethodName, required struct missingMethodArguments ){
+		var smartListArgs = {};
+		var entityNameLength = len(arguments.missingMethodName) - 12;
+		var smartListArgs["entityName"] = missingMethodName.substring( 3,entityNameLength + 3 );
+		if( structKeyExists(arguments.missingMethodArguments, "1") ) {
+			smartListArgs["data"] = arguments.missingMethodArguments[ "1" ];
+			
+			if( structKeyExists( arguments.missingMethodArguments, "2" ) ) {
+				smartListArgs["pageRecordsStart"] = arguments.missingMethodArguments[ "2" ];
+				
+				if( structKeyExists( arguments.missingMethodArguments, "3" ) ) {
+					smartListArgs["pageRecordsShow"] = arguments.missingMethodArguments[ "3" ];
+					
+					if( structKeyExists( arguments.missingMethodArguments, "4" ) ) {
+						smartListArgs["currentURL"] = arguments.missingMethodArguments[ "4" ];	
+					}					
+				}
+			}
+		}
+		return getSmartList(argumentCollection=smartListArgs);
+	} 
+	 
 
 	/**
 	 * Provides dynamic list methods, by convention, on missing method:

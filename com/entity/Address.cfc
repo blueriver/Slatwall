@@ -38,15 +38,15 @@ Notes:
 */
 component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddress" persistent="true" output="false" accessors="true" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="addressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="name" ormtype="string" validateRequired;
+	property name="name" ormtype="string";
 	property name="company" ormtype="string";
 	property name="phone" ormtype="string";
-	property name="streetAddress" ormtype="string" validateRequired;
+	property name="streetAddress" ormtype="string";
 	property name="street2Address" ormtype="string";
 	property name="locality" ormtype="string";
-	property name="city" ormtype="string" validateRequired;
+	property name="city" ormtype="string";
 	property name="stateCode" ormtype="string";
 	property name="postalCode" ormtype="string";
 	property name="countryCode" ormtype="string";
@@ -57,4 +57,58 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	// Non persistent cached properties
+	property name="country" persistent="false";
+	
+	public any function init() {
+		if(isNull(variables.countryCode)) {
+			variables.countryCode = "US";
+		}
+		
+		return super.init();
+	}
+	
+	public string function getFullAddress(string delimiter = ", ") {
+		var address = "";
+		address = listAppend(address,getCompany());
+		address = listAppend(address, getStreetAddress());
+		address = listAppend(address,getStreet2Address());
+		address = listAppend(address,getCity());
+		address = listAppend(address,getStateCode());
+		address = listAppend(address,getPostalCode());
+		address = listAppend(address,getCountryCode());
+		// this will remove any empty elements and insert any passed-in delimiter
+		address = listChangeDelims(address,arguments.delimiter,",","no");
+		return address;
+	}
+	
+	public array function getCountryCodeOptions() {
+		if(!structKeyExists(variables, "countryCodeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallCountry");
+			smartList.addSelect(propertyIdentifier="countryName", alias="name");
+			smartList.addSelect(propertyIdentifier="countryCode", alias="id");
+			smartList.addOrder("countryName|ASC");
+			variables.countryCodeOptions = smartList.getRecords();
+		}
+		return variables.countryCodeOptions;
+	}
+	
+	public array function getStateCodeOptions() {
+		if(!structKeyExists(variables, "stateCodeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallState");
+			smartList.addSelect(propertyIdentifier="stateName", alias="name");
+			smartList.addSelect(propertyIdentifier="stateCode", alias="id");
+			smartList.addFilter("countryCode", getCountryCode()); 
+			smartList.addOrder("stateName|ASC");
+			variables.stateCodeOptions = smartList.getRecords();
+		}
+		return variables.stateCodeOptions;
+	}
+	
+	public any function getCountry() {
+		if(!structKeyExists(variables, "country")) {
+			variables.country = getService("addressService").getCountry(getCountryCode());
+		}
+		return variables.country;
+	}
 }

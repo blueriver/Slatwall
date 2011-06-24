@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Vendor Brand" entityname="SlatwallVendorBrand" table="SlatwallVendorBrand" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="vendorBrandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties

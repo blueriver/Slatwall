@@ -38,7 +38,7 @@ Notes:
 */
 component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" table="SlatwallVendorSkuStock" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="vendorSkuStockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="cost" ormtype="float";
 	property name="quantity" ormtype="integer";

@@ -38,14 +38,13 @@ Notes:
 */
 component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired;
+	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired="true";
 	property name="listPrice" ormtype="float" default="0";
 	property name="price" ormtype="float" default="0";
 	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
-	//property name="defaultFlag" ormtype="boolean" default="false";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -57,11 +56,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="product";
-	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="stock" inverse="true" cascade="all";
+	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
+	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="Stock" inverse="true" cascade="all";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
 	
-	// Non-Persistant Properties
+	// Non-Persistent Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
 	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
 	property name="qc" persistent="false" type="numeric" hint="quantity committed";
@@ -204,7 +203,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return (getQOH() - getQC()) + getQEXP();
 	}
 	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="") {
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", boolean crop=false, cropleftStart=0, croptopStart=0) {
 		// Get the expected Image Path
 		var path=getImagePath();
 		
@@ -223,7 +222,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		
 		// Setup Alt & Class for the image
 		if(arguments.alt == "") {
-			arguments.alt = "#getProduct().getTitle()# #displayOptions()#";
+			arguments.alt = "#getProduct().getTitle()#";
 		}
 		if(arguments.class == "") {
 			arguments.class = "skuImage";	
@@ -231,7 +230,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
-	public string function getResizedImagePath(string size, numeric width=0, numeric height=0) {
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, boolean crop=false, cropleftStart=0, croptopStart=0) {
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {
@@ -244,7 +243,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			arguments.width = setting("product_imagewidth#arguments.size#");
 			arguments.height = setting("product_imageheight#arguments.size#");
 		}
-		return getService("FileService").getResizedImagePath(imagePath=getImagePath(), width=arguments.width, height=arguments.height);
+		arguments.imagePath=getImagePath();
+		return getService("FileService").getResizedImagePath(argumentCollection=arguments);
 	}
 	
 	public boolean function imageExists() {

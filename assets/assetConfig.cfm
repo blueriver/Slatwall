@@ -1,7 +1,7 @@
 <cfscript>
 	
 // Required Values
-variables.assetConfig.baseAssetPath = "/plugins/Slatwall/assets/";
+variables.assetConfig.baseAssetPath = "#application.configBean.getContext()#/plugins/Slatwall/assets/";
 
 // Optional Dependencies
 variables.assetDependencies["js/admin.js"] = [

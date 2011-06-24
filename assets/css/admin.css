@@ -40,11 +40,25 @@ Notes:
 
 body	{background-image:none;}
 
+h1 {
+    background: url("../images/admin.default.mura_logo.png") no-repeat scroll 0 0 transparent;
+    color: #FEE100;
+    float: left;
+    height: 53px;
+    margin: 0 0 0 6px;
+    text-indent: -999em;
+    width: 58px;
+}
+
 div.admincontainer		{margin: 5px 20px 60px;}
 div.admincontainer h1	{position:relative; background:none; color:#000000; text-indent: 0px; clear:both; float:none;}
 img.slatwallLogo	{
 	float: left;
- 	margin: 4px 100px 0 50px;
+ 	margin: 8px 0px 0 5px;
+}
+
+.clear {
+	clear: both;
 }
 
 .ui-widget-content a  {
@@ -82,7 +96,22 @@ div.svoadminproductdetail form {
 	padding: 0;
 }
 
-div#buttons {
+div.svoadminorderdetail .shippingAddress,
+div.svoadminorderdetail .shippingMethod,
+div.svoadminorderfulfillmentdetail .shippingAddress,
+div.svoadminorderfulfillmentdetail .shippingMethod {
+	float: left;
+	margin: 0 20px;
+}
+
+div.svoadminorderdetail .totals,
+div.svoadminorderfulfillmentdetail .totals {
+	float: right;
+	margin: 0 0 0 20px;
+}
+
+div.buttons {
+	height: 15px;
 	margin-bottom: 10px;	
 }
 
@@ -113,6 +142,10 @@ a.buttonOff:hover {
 	text-decoration: none;
 }
 
+.buttons a.adminorderdetailorderfulfillment {
+	float:right;
+}
+
 .admincontainer fieldset {
 	background-color: #fff;
 }
@@ -123,6 +156,10 @@ a.buttonOff:hover {
 	color: #FF3A00;
 }
 
+input.adminorderapplyOrderActions {
+	float: right;
+	margin-bottom: 10px;
+}
 
 div.modalContainer {
 	height: 200px;
@@ -147,11 +184,46 @@ table#productTypes ul.neston, table#productPages ul.neston {
 table#productTypeSettings {
 	width: 600px;
 }
+
+table td.administration li.zoomIn {
+	background: url(../images/admin.ui.zoom_in.png) no-repeat;
+	width: 16px;
+}
+
+table td.administration li.zoomOut {
+	background: url(../images/admin.ui.zoom_out.png) no-repeat;
+	width: 16px;
+	display: none;
+}
+
+td.property {
+	text-align: left;
+	font-weight: bold;
+}
+
 div.dashboardSection {
 	width:500px;
 	float:left;
 	margin:20px;
 }
+
+div.basicOrderInfo {
+	width: 400px;
+	float: left;
+	margin: 10px;
+}
+
+div.paymentInfo {
+	width: 700px;
+	float: left;
+	margin: 10px;
+}
+
+div.paymentDetails {
+	padding: 5px;
+	text-align: right;	
+}
+
 /*
 table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands, table#AttributeSets {
 	width: 800px;
@@ -189,6 +261,23 @@ ul.orderList {
 	margin: 20px 0 0 10px;
 }
 
+dl.fulfillmentTotals dt {
+	float: left;
+	width: 160px;
+	text-align: right;
+	padding: 2px;
+	margin: 0 0 0 0;
+	line-height: 22px;
+	clear: left;
+}
+
+dl.fulfillmentTotals dd {
+	margin: 0 0 0 170px;
+	text-align: right;
+	padding: 2px;
+	line-height: 22px;
+}
+
 ul#optionList li {
 	margin-bottom: 5px;
 }
@@ -215,15 +304,15 @@ p.messagebox {
 }
 
 p.info_message {
-	background: #D1E6EF url(../../images/icons/cmsg.gif) no-repeat scroll .5em 50%;
+	background: #D1E6EF url(../images/admin.ui.msg_redcheck.gif) no-repeat scroll .5em 50%;
 }
 
 p.warning_message {
-	background: #FFF2CF url(../../images/icons/wmsg.gif) no-repeat scroll .5em 50%;
+	background: #FFF2CF url(../images/admin.ui.msg_warning.gif) no-repeat scroll .5em 50%;
 }
 
 p.error_message {
-	background: #FFFFE0 url(../../images/icons/emsg.gif) no-repeat scroll .5em 50%;
+	background: #FFFFE0 url(../images/admin.ui.msg_error.gif) no-repeat scroll .5em 50%;
 }
 
 /**************************************************************/
@@ -274,3 +363,35 @@ p.error_message {
 }
 
 div.svoadminproductdetail img.skuImage {float:right;}
+
+.smartListPager {
+	float: right;
+}
+
+.smartListPager ul.pages {
+	margin: 1em 0 !important;
+	padding: 0;
+	list-style: none;
+}
+
+.smartListPager li {
+	display: inline;
+	margin: 0 !important;
+	padding: 0;
+	text-align: center;
+}
+
+.smartListPager li.current {
+	font-weight: bold;
+}
+
+.smartListPager a {
+	color: #6699CC;
+	text-decoration: none;
+}
+
+.smartListPager a,
+.smartListPager li span {
+	border: 1px solid #E4E4E4;
+	padding: 0.2em 0.3em;
+}

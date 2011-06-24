@@ -38,22 +38,50 @@ Notes:
 */
 component displayname="Order Payment Credit Card" entityname="SlatwallOrderPaymentCreditCard" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="OrderPayment" discriminatorvalue="creditCard" {
 	
-	// Persistant Properties
+	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	property name="creditCardNumber" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
+	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
-	property name="experationMonth" ormType="string";
-	property name="experationYear" ormType="string";
+	property name="creditCardType" ormType="string";
+	property name="expirationMonth" ormType="string";
+	property name="expirationYear" ormType="string";
 	property name="amountAuthorized" ormtype="float";
 	property name="amountCharged" ormtype="float";
-	property name="amountSettled" ormtype="float";
 	
+	// Related Properties
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
+	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fkcolumn="orderPaymentID" fieldtype="one-to-many" cascade="all" inverse="true";
+	
+	// Non-Persistent properties
+	property name="creditCardNumber" persistent="false";
 	property name="securityCode" persistent="false";
+	property name="expirationDate" persistent="false";
+	
+	public any function init(){
+		// Set Defaults
+		setPaymentMethodID("creditCard");
+		if(isNull(variables.creditCardTransactions)) {
+			variables.creditCardTransactions = [];
+		}
+		if(isNull(variables.amountAuthorized)) {
+			variables.amountAuthorized = 0;
+		}
+		if(isNull(variables.amountCharged)) {
+			variables.amountCharged = 0;
+		}
+		
+		return super.init();
+	}
 	
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
+		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
+		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment")) {
+			setCreditCardNumberEncrypted(encryptCreditCardNumber(arguments.creditCardNumber));
+		}
 	}
 	
 	public void function encryptCreditCardNumber() {
@@ -62,18 +90,24 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		}
 	}
 	
-	private void function preInsert() {
-		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
-		
-		
-		// Call Super Pre-Insert
-		super.preInsert();
+	public string function getExpirationDate() {
+		if(!structKeyExists(variables,"expirationDate")) {
+			variables.expirationDate = getExpirationMonth() & "/" & getExpirationYear();
+		}
+		return variables.expirationDate;
 	}
 	
-	private void function preUpdate(Struct oldData) {
-		// If save Credit Card Data is turend on then Encrypt Card, otherwise remove it from the entity
-		
-		// Call Super Pre-Update
-		super.preUpdate();
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// OrderItems (one-to-many)
+	
+	public void function addCreditCardTransaction(required CreditCardTransaction creditCardTransaction) {
+	   arguments.creditCardTransaction.setOrderPayment(this);
 	}
+	
+	public void function removeOrderItem(required CreditCardTransaction creditCardTransaction) {
+	   arguments.creditCardTransaction.removeOrderPayment(this);
+	}
+	/************   END Association Management Methods   *******************/
+
 }

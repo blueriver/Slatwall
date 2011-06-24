@@ -46,8 +46,8 @@ Notes:
 <cfoutput>
 	<div class="svoadminsettingdetailshippingservice">
 		<ul id="navTask">
-	    	<cf_ActionCaller action="admin:setting.listshippingmethods" type="list">
-			<cf_ActionCaller action="admin:setting.listshippingservices" type="list">
+			<cfif !rc.edit><cf_SlatwallActionCaller action="admin:setting.editshippingservice" querystring="shippingservicepackage=#rc.shippingservicepackage#" type="list"></cfif>
+			<cf_SlatwallActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodid=shipping" text="#$.slatwall.rbKey('admin.setting.fulfillmentmethod.shippingsettings')#" type="list">
 		</ul>
 		
 		<cfif !structIsEmpty(rc.errors)>
@@ -73,13 +73,13 @@ Notes:
 					<cfelse>
 						<cfset local.propertyTitle = local.property.name />
 					</cfif>
-					<cf_PropertyDisplay object="#rc.shippingService#" fieldName="shippingService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
+					<cf_SlatwallPropertyDisplay object="#rc.shippingService#" fieldName="shippingService.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#">
 				</cfloop>
 			</dl>
 		</cfif>
 		<cfif rc.edit>
-			<cf_ActionCaller action="admin:setting.listshippingservices" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_ActionCaller action="admin:setting.saveshippingservice" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodID=shipping" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:setting.saveshippingservice" type="submit" class="button">
 			</form>
 		</cfif>
 	</div>

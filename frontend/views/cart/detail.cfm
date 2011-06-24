@@ -37,8 +37,8 @@ Notes:
 
 --->
 <cfoutput>
-	<div class="svofrontendcartdetail">
-		<form name="updateCart" action="#buildURL(action='frontend:cart.update')#" method="post">
+	<div class="svocartdetail">
+		<form name="updateCart" action="?slatAction=frontend:cart.update" method="post">
 		<cfif not arrayLen($.slatwall.cart().getOrderItems())>
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
 		<cfelse>
@@ -48,16 +48,16 @@ Notes:
 						<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
 						<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
 						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
-						<dd class="price">#local.orderItem.getPrice()#</dd>
-						<dd class="quantity">#local.orderItem.getQuantity()#</dd>
-						<dd class="extended">#local.orderItem.getExtendedPrice()#</dd>
+						<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
+						<dd class="quantity"><input name="orderItem.#local.orderItem.getOrderItemID()#.quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" /></dd>
+						<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
 					</dl>
 				</cfloop>
 				<dl class="totals">
 					<dt class="subtotal">Subtotal</dt>
 					<dd class="subtotal">#DollarFormat($.slatwall.cart().getSubtotal())#</dd>
-					<dt class="shipping">Shipping</dt>
-					<dd class="shipping">#DollarFormat($.slatwall.cart().getShippingTotal())#</dd>
+					<dt class="shipping">Delivery</dt>
+					<dd class="shipping">#DollarFormat($.slatwall.cart().getFulfillmentTotal())#</dd>
 					<dt class="tax">Tax</dt>
 					<dd class="tax">#DollarFormat($.slatwall.cart().getTaxTotal())#</dd>
 					<dt class="total">Total</dt>
@@ -65,8 +65,8 @@ Notes:
 				</dl>
 			</div>
 			<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
-			<cf_ActionCaller action="frontend:cart.clearItems" type="link" class="button">
-			<cf_ActionCaller action="frontend:cart.update" type="submit">
+			<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
+			<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
 		</cfif>
 		</form>
 	</div>

@@ -42,28 +42,28 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	property name="totalCost" ormtype="float";
 	property name="estimatedArrivalDate" ormtype="date";
 	
-	property name="orderShipping" cfc="OrderShipping" fieldtype="many-to-one" fkcolumn="orderShippingID";
+	property name="orderFulfillmentShipping" cfc="OrderFulfillmentShipping" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order Shipping (many-to-one)
-	public void function setOrderShipping(required OrderShipping orderShipping) {
-		variables.orderShipping = arguments.orderShipping;
-		if(isNew() || !arguments.orderShipping.hasOrderShippingMethodOption(this)) {
-			arrayAppend(arguments.orderShipping.getOrderShippingMethodOptions(),this);
+	public void function setOrderFulfillmentShipping(required OrderFulfillmentShipping orderFulfillmentShipping) {
+		variables.orderFulfillmentShipping = arguments.orderFulfillmentShipping;
+		if(isNew() || !arguments.orderFulfillmentShipping.hasOrderShippingMethodOption(this)) {
+			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(false),this);
 		}
 	}
 	
-	public void function removeOrderShipping(OrderShipping orderShipping) {
-	   if(!structKeyExists(arguments,"orderShipping")) {
-	   		arguments.orderShipping = variables.orderShipping;
+	public void function removeOrderFulfillmentShipping(OrderFulfillmentShipping orderFulfillmentShipping) {
+	   if(!structKeyExists(arguments,"orderFulfillmentShipping")) {
+	   		arguments.orderFulfillmentShipping = variables.orderFulfillmentShipping;
 	   }
-       var index = arrayFind(arguments.orderShipping.getOrderShippingMethodOptions(),this);
+       var index = arrayFind(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(false),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.orderShipping.getOrderShippingMethodOptions(), index);
+           arrayDeleteAt(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(false), index);
        }
-       structDelete(variables,"orderShipping");
+       structDelete(variables,"orderFulfillmentShipping");
     }
     
     /******* END Association management methods */ 
