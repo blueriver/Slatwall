@@ -127,11 +127,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 	}
 	
-	public void function orderAccountChanged() {
-		
-	}
-	
-	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
@@ -177,10 +172,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Account (many-to-one)
 	
 	public void function setAccount(required Account account) {
-	   variables.account = arguments.account;
-	   if(!arguments.account.hasOrder(this)) {
-	       arrayAppend(arguments.account.getOrders(),this);
-	   }
+		variables.account = arguments.account;
+		if(!arguments.account.hasOrder(this)) {
+			arrayAppend(arguments.account.getOrders(),this);
+		}
 	}
 	
 	public void function removeAccount(Account account) {
@@ -194,8 +189,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			}    
 			structDelete(variables,"account");
 		}
-		// Remove all shipping info
-		orderAccountChanged();
+		// If this is an order that hasn't been placed... remove any account specific aspects
+		if(getOrderStatusType().getSystemCode() == "ostNotPlaced") {
+			getService("orderService").removeAccountSpecificOrderDetails(this);	
+		}
     }
 	
     /************   END Association Management Methods   *******************/
