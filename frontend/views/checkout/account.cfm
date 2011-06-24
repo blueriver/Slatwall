@@ -68,8 +68,8 @@ Notes:
 							<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="true">
 							<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="true">
 							<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="true">
-							<cfif isNull(rc.account.getPrimaryEmailAddress()) >
-								<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label></dt>
+							<cfif isNull(rc.account.getPrimaryEmailAddress()) or rc.account.getPrimaryEmailAddress().hasErrors() >
+								<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')# *</label></dt>
 								<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
 							</cfif>
 							<cfif rc.account.isGuestAccount()>

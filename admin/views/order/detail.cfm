@@ -81,7 +81,6 @@ Notes:
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<h3 class="tableheader">#$.Slatwall.rbKey("admin.order.detail.payments")#</h3>
 		<table class="stripe">
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>

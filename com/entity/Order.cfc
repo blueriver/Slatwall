@@ -127,6 +127,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 	}
 	
+	public void function orderAccountChanged() {
+		
+	}
+	
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
@@ -189,6 +194,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			}    
 			structDelete(variables,"account");
 		}
+		// Remove all shipping info
+		orderAccountChanged();
     }
 	
     /************   END Association Management Methods   *******************/
