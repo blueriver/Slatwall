@@ -355,9 +355,11 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.addressZoneLocations = formStruct.addressZoneLocations;	
 		}
 		
+		var wasNew = rc.addressZone.isNew();
+		
 		rc.addressZone = getSettingService().saveAddressZone(rc.addressZone, rc);
 		
-		if(rc.addressZone.hasErrors() || rc.addressZone.isNew()) {
+		if(rc.addressZone.hasErrors() || wasNew) {
 			rc.edit = true;
 			getFW().setView("admin:setting.detailaddresszone");
 		} else {
