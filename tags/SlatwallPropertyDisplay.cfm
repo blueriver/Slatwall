@@ -195,7 +195,7 @@ Notes:
 			<cfelseif isNull(attributes.value) and len(attributes.nullLabel)>
 				<cfset attributes.value = attributes.nullLabel />
 			<cfelseif isNull(attributes.value) and !len(attributes.nullLabel) and attributes.dataType eq "boolean">
-				<cfset attributes.value = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
+				<cfset attributes.value = 0 />
 			<cfelse>
 			     <cfset attributes.value = "" />
 			</cfif>
@@ -348,8 +348,8 @@ Notes:
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#yes" value="1"<cfif yesnoformat(attributes.value)> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#no" value="0"<cfif not yesnoformat(attributes.value)> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#yes" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#no" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
 						<cfelse>
 							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
 							<cfloop array="#attributes.editOptions#" index="i">
