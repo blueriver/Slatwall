@@ -172,6 +172,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Account (many-to-one)
 	
 	public void function setAccount(required Account account) {
+		// If this is an order that hasn't been placed... remove any account specific aspects
+		if(getOrderStatusType().getSystemCode() == "ostNotPlaced" && (isNull(variables.account) || variables.account.getAccountID() != arguments.account.getAccountID())) {
+			getService("orderService").removeAccountSpecificOrderDetails(this);	
+		}
 		variables.account = arguments.account;
 		if(!arguments.account.hasOrder(this)) {
 			arrayAppend(arguments.account.getOrders(),this);
@@ -188,10 +192,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 				arrayDeleteAt(arguments.account.getOrders(),index);
 			}    
 			structDelete(variables,"account");
-		}
-		// If this is an order that hasn't been placed... remove any account specific aspects
-		if(getOrderStatusType().getSystemCode() == "ostNotPlaced") {
-			getService("orderService").removeAccountSpecificOrderDetails(this);	
 		}
     }
 	
