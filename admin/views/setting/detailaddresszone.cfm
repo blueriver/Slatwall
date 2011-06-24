@@ -57,13 +57,13 @@ Notes:
 		<dl class="twoColumn">
 			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
 		</dl>
-		
+		<cfif not rc.addressZone.isNew()>
 		<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
 		<cfset params = structNew() />
 		<cfset params.addressZone = rc.addressZone />
 		<cfset params.edit = rc.edit />
 		#view("admin:setting/ajax/addresszonelocation", params)#
-			
+		</cfif>
 		<cfif rc.edit>
 			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
