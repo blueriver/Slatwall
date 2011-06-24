@@ -374,4 +374,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 	}
+	
+	public void function removeAccountSpecificOrderDetails(required any order) {
+		
+		// Loop over fulfillments and remove any account specific details
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
+			if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodID() == "shipping") {
+				arguments.order.getOrderFulfillments()[i].setShippingAddress(javaCast("null",""));
+			}
+		}
+		
+		// TODO: Loop over payments and remove any account specific details 
+	}
+	
 }
