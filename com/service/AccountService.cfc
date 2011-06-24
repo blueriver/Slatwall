@@ -146,13 +146,13 @@ component extends="BaseService" accessors="true" output="false" {
 				// Set the mura userID in the account
 				arguments.account.setMuraUserID(muraUser.getUserID());
 				
-				// Re-Login the current user so that the new values are saved.
-				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
 				
-				if(currentUser.getUserID() == muraUser.getUserID()) {
+				// If there currently isn't a user logged in, then log in this new account
+				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+				if(!currentUser.isLoggedIn()) {
+					writeDump(var="LogInCalled", output="console");
 					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 				}
-				
 			// If the account already has a mura user, make sure that the mura user gets updated
 			} else if ( !isNull(arguments.account.getMuraUserID()) ) {
 				
@@ -165,9 +165,8 @@ component extends="BaseService" accessors="true" output="false" {
 					muraUser.save();
 				}
 				
-				// Re-Login the current user so that the new values are saved.
+				// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
 				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
-				
 				if(currentUser.getUserID() == muraUser.getUserID()) {
 					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 				}
