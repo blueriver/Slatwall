@@ -39,7 +39,6 @@ Notes:
 component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="errorBean" type="Slatwall.com.utility.ErrorBean";
-	property name="searchScore" type="numeric";
 	property name="updateKeys" type="string";
 	
 	public any function init() {
@@ -51,9 +50,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 		// Create a new errorBean for all entities
 		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
-		
-		// Automatically set the default search score to 0
-		this.setSearchScore(0);
 		
 		// When called from newXXX() within base service a struct or query record can be passed to pre-populate;
 		if(!structIsEmpty(arguments)){
