@@ -36,11 +36,11 @@
 Notes:
 
 */
-component displayname="Sku Alternate" entityname="SlatwallSkuAlternate" table="SlatwallSkuAlternate" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Alternate Sku Code" entityname="AlternateSkuCode" table="AlternateSkuCode" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="skuAlternateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="skuValue" ormtype="string";
+	property name="alternateSkuCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="alternateSkuCode" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -50,6 +50,6 @@ component displayname="Sku Alternate" entityname="SlatwallSkuAlternate" table="S
 	
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="skuType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
+	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
 	
 }

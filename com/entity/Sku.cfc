@@ -58,7 +58,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="Stock" inverse="true" cascade="all";
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update";
+	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="SkuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan"; 
 	
 	// Non-Persistent Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
