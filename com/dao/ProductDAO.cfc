@@ -42,4 +42,23 @@ component extends="BaseDAO" {
 	public any function clearProductContent(required any product) {
 		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
 	}
+	
+	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs){
+		var params = {};
+		params.attributeSetTypeCode = arguments.attributeSetTypeCode;
+		var hql = " FROM SlatwallAttributeSet sas
+					WHERE (exists(FROM sas.attributes sa WHERE sa.activeFlag = 1)
+						AND sas.attributeSetType.systemCode IN (:attributeSetTypeCode)) ";
+		if(arrayLen(arguments.productTypeIDs)){
+			hql &= " AND (sas.globalFlag = 1
+						OR exists(FROM sas.attributeSetAssignments asa WHERE asa.productTypeID IN (:productTypeIDs)))";
+			params.productTypeIDs = arguments.productTypeIDs;
+		} else {
+			hql &= " AND sas.globalFlag = 1";
+		}			 
+		hql &= " ORDER BY sas.attributeSetType.systemCode ASC, sas.sortOrder ASC";
+
+		return ormExecuteQuery(hql,params);
+	}
+	
 }

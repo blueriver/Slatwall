@@ -485,29 +485,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	
 	// get all the assigned attribute sets
-	public array function getAttributeSets(array systemCode){
+	public array function getAttributeSets(array attributeSetTypeCode){
 		var attributeSets = [];
 		// get all the parent product types
 		var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeSet");
-		/*
-		smartList.addFilter("attributes_activeFlag",1);
-		smartList.addFilter("globalFlag",1);
-		smartList.addFilter("attributes_activeFlag",1,2);
-		smartList.addFilter("attributeSetAssignments_baseItemID",productTypeIDs,2);
-		*/
 		
-		if(structKeyExists(arguments,"systemCode")){
-			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode),1);
-			//smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode),2);
-		}
-		smartList.addOrder("attributeSetType_systemCode|ASC");
-		smartList.addOrder("sortOrder|ASC");
-		
-		var attributeSets = smartList.getRecords();
-		return attributeSets;
+		return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
 	}
 	
 	//get attribute value

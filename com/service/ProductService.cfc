@@ -347,4 +347,9 @@ component extends="BaseService" accessors="true" {
     	);
 		return productPagesTree;
 	}
+
+	/* get the attribute sets for a product */
+	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs = []){
+		return getDAO().getAttributeSets(arguments.attributeSetTypeCode,arguments.productTypeIDs);
+	}
 }

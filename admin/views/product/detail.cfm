@@ -73,8 +73,10 @@ Notes:
 		<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.webdescription")#</span></a></li>
 		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
 		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
-		<li><a href="##tabCustomAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.customattributes")#</span></a></li>
 		<!---<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>--->
+		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
+			<li><a href="##tabCustomAttributes_#local.attributeSet.getAttributeSetID()#" onclick="return false;"><span>#local.attributeSet.getAttributeSetName()#</span></a></li>
+		</cfloop>
 	</ul>
 
 	<div id="tabSkus">
@@ -90,10 +92,8 @@ Notes:
 	<div id="tabProductPages">
 		#view("product/producttabs/productpages")#
 	</div>
-	<div id="tabCustomAttributes">
-		#view("product/producttabs/customattributes")#
-	</div>
-<!---	<div id="tabAlternateImages">
+	#view("product/producttabs/customattributes")#
+	<!---	<div id="tabAlternateImages">
 	
 	</div>--->
 </div>
