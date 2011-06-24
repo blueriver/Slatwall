@@ -66,6 +66,17 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
 	}
 	
+	public void function loginAccount(required struct rc) {
+		var loginSuccess = getAccountService().loginMuraUser(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
+		
+		if(!loginSuccess) {
+			request.status = "failed";
+		}
+		
+		detail(rc);
+		getFW().setView("frontend:checkout.detail");
+	}
+	
 	public void function saveAccount(required struct rc) {
 		// Setup the order account as its own rc so that we don't automatically save an account to the order
 		if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
