@@ -47,22 +47,34 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="";
 		param name="rc.orderRequirementsList" default="";
+		param name="rc.guestAccountOK" default="false";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
 			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
 		}
 		
-		// Setup the order account as its own rc so that we don't automatically save an account to the order
-		if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
-			rc.account = rc.$.slatwall.cart().getAccount();
-		} else {
-			rc.account = getAccountService().newAccount();
-		}
-		
 		// get the list of requirements left for this order to be processed
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		
+		// Account Setup Logic
+		if ( isNull(rc.$.slatwall.cart().getAccount()) ) {
+			// When no account is in the order then just set a new account in the rc so it works
+			// We don't need to put account in the rc.orderRequirementsList because it will already be there
+			rc.account = getAccountService().newAccount();
+		} else {
+			// If the account on cart is the same as the one logged in then set the rc.account from cart
+			// OR If the cart is using a guest account, and this method was called from a different controller that says guest accounts are ok, then pass in the cart account
+			if( rc.$.slatwall.cart().getAccount().getAccountID() == rc.$.slatwall.account().getAccountID() || (rc.$.slatwall.cart().getAccount().isGuestAccount() && rc.guestAccountOK) ) {
+				rc.account = rc.$.slatwall.cart().getAccount();
+			} else {
+				rc.account = getAccountService().newAccount();
+				// Here we need to add it to the requirements list because the cart already had an account
+				rc.orderRequirementsList = listPrepend(rc.orderRequirementsList,"account");
+			}
+		}
+		
+		// Setup some elements to be used by different views
 		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
 	}
 	
@@ -78,12 +90,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function saveAccount(required struct rc) {
-		// Setup the order account as its own rc so that we don't automatically save an account to the order
-		if ( !isNull(rc.$.slatwall.cart().getAccount()) ) {
-			rc.account = rc.$.slatwall.cart().getAccount();
-		} else {
-			rc.account = getAccountService().newAccount();
-		}
+		detail(rc);
 		
 		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteID'));
 		
@@ -92,13 +99,17 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.slatwall.cart().setAccount(rc.account);
 		}
 		
-		// get the list of requirements left for this order to be processed
+		// Reload the order Requirements list
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
+		
+		// get the list of requirements left for this order to be processed
 		getFW().setView("frontend:checkout.detail");
 	}
 	
 	public void function saveFulfillment(required struct rc) {
 		param name="rc.orderFulfillmentID" default="";
+		
+		rc.guestAccountOK = true;
 		
 		// Load the fulfillment
 		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID, true);
@@ -115,6 +126,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function saveOrderPayment(required struct rc) {
 		param name="rc.paymentMethodID" default="creditCard";
 		
+		rc.guestAccountOK = true;
+		
 		// Create new Payment Entity
 		var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
 		
@@ -130,6 +143,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function processOrder(required struct rc) {
 		param name="rc.orderPaymentID" default="";
+		
+		rc.guestAccountOK = true;
 		
 		var payment = getPaymentService().getOrderPayment(rc.orderPaymentID);
 		
@@ -161,5 +176,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
+	}
+	
+	private void function requireAccountSetup() {
+		
 	}
 }

@@ -99,11 +99,6 @@ component extends="BaseService" accessors="true" output="false" {
 		} else {
 			// Remove any account associated with the session
 			currentSession.removeAccount();
-			
-			// If the account associated with the current order is not a guest account, then remove it.
-			if(!isNull(currentSession.getOrder()) && !isNull(currentSession.getOrder().getAccount()) && !currentSession.getOrder().getAccount().isGuestAccount()) {
-				currentSession.getOrder().removeAccount();
-			}
 		}
 		
 		// Save the session
