@@ -51,7 +51,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
     public void function list(required struct rc) {
-		//param name="rc.orderby" default="orderOpenDateTime|DESC";
+		param name="rc.orderby" default="orderOpenDateTime|DESC";
+		
 		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
     }
 
