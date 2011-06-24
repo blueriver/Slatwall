@@ -50,6 +50,14 @@ component extends="taffy.core.resource" {
 		return application.slatwall.pluginConfig;
 	}
 	
+	public any function secureDisplay() {
+		return getFW().secureDisplay(argumentcollection=arguments);
+	}
+	
+	public any function buildURL() {
+		return getFW().buildURL(argumentcollection=arguments);
+	}
+	
 	//use this instead of onRequestStart()
 	public void function controllerProxy(required string action, struct rc={}){
 		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");

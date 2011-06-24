@@ -357,11 +357,11 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		rc.addressZone = getSettingService().saveAddressZone(rc.addressZone, rc);
 		
-		if(!rc.addressZone.hasErrors()) {
-			getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");
-		} else {
-			getFW().setView("admin:setting.detailaddresszone");
+		if(rc.addressZone.hasErrors() || rc.addressZone.isNew()) {
 			rc.edit = true;
+			getFW().setView("admin:setting.detailaddresszone");
+		} else {
+			getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");
 		}
 	}
 	
@@ -392,7 +392,17 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.messagetype="error";
 		}
 		
-		getFW().redirect(action="admin:setting.listaddresszones", queryString="reload=true", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.listaddresszones", preserve="message,messagetype");
+	}
+	
+	public void function deleteAddressZoneLocation(required struct rc) {
+		detailAddressZone(rc);
+		
+		var address = getAddressService().getAddress(rc.addressID);
+		
+		rc.addressZone.removeAddressZoneLocation(address);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailaddresszone");
 	}
 	
 	// Frontend Views

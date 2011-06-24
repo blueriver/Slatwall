@@ -42,13 +42,13 @@
 		<cfset var display = "" />
 		<cfset var params = structNew() />
 		
-		<cfdump var="#arguments#" output="console" />
-		
 		<cfset params.addressZone = getService("addressService").getAddressZone(arguments.addressZoneID) />
 		
 		<cfset var address = getService("addressService").newAddress() />
 		<cfset address.populate(arguments) />
+		
 		<cfset params.addressZone.addAddressZoneLocation(address) />
+		<cfset ormFlush() />
 		
 		<cfset params.edit = true />
 		
@@ -58,7 +58,7 @@
 			<cfinclude template="/plugins/Slatwall/admin/views/setting/ajax/addresszonelocation.cfm" >
 		</cfsavecontent>
 		
-		<cfset ormFlush() />
+		
 		
 		<cfreturn representationOF(display) />
 	</cffunction>

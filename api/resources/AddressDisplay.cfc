@@ -39,30 +39,15 @@
 <cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
 
 	<cffunction name="post">
+		
 		<cfset var display = "" />
 		
-		<cfset var address = getService("addressService").newAddress() />
+		<cfset arguments.address = getService("addressService").newAddress() />
 		
-		<cfset address.populate(arguments) />
-		
-		<cfset var edit = true />
-		<cfset var showName = true />
-		<cfset var showCompany = true />
-		
-		<cfif structKeyExists(arguments, "edit")>
-			<cfset var edit = arguments.edit />
-		</cfif>
-		
-		<cfif structKeyExists(arguments, "showName")>
-			<cfset var showName = arguments.showName />
-		</cfif>
-		
-		<cfif structKeyExists(arguments, "showCompany")>
-			<cfset var showCompany = arguments.showCompany />
-		</cfif>
+		<cfset arguments.address.populate(arguments) />
 		
 		<cfsavecontent variable="display">
-			<cf_SlatwallAddressDisplay address="#address#" edit="#edit#" showName="#showName#" showCompany="#showCompany#" />
+			<cf_SlatwallAddressDisplay attributeCollection="#arguments#" />
 		</cfsavecontent>
 
 		<cfreturn representationOF(display) />

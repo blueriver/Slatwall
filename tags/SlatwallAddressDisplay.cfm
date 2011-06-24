@@ -40,32 +40,39 @@ Notes:
 <cfparam name="attributes.edit" type="boolean" default="true" />
 <cfparam name="attributes.showName" type="boolean" default="true" />
 <cfparam name="attributes.showCompany" type="boolean" default="true" />
+<cfparam name="attributes.showStreetAddress" type="boolean" default="true" />
+<cfparam name="attributes.showStreet2Address" type="boolean" default="true" />
+<cfparam name="attributes.showLocality" type="boolean" default="true" />
+<cfparam name="attributes.showCity" type="boolean" default="true" />
+<cfparam name="attributes.showState" type="boolean" default="true" />
+<cfparam name="attributes.showPostalCode" type="boolean" default="true" />
+<cfparam name="attributes.showCountry" type="boolean" default="true" />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<div class="addressDisplay">
 			<cfif attributes.edit>
 				<dl>
-					<cf_SlatwallPropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" />
+					<cfif attributes.showCountry><cf_SlatwallPropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" /></cfif>
 					<cfif attributes.showName><cf_SlatwallPropertyDisplay object="#attributes.address#" property="name" edit="true" /></cfif>
 					<cfif attributes.showCompany><cf_SlatwallPropertyDisplay object="#attributes.address#" property="company" edit="true" /></cfif>
-					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
+					<cfif attributes.address.getCountry().getStreetAddressShowFlag() and attributes.showStreetAddress>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="streetAddress" edit="true" />
 					</cfif>
-					<cfif attributes.address.getCountry().getStreetAddressShowFlag()>
+					<cfif attributes.address.getCountry().getStreet2AddressShowFlag() and attributes.showStreet2Address>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="street2Address" edit="true" />
 					</cfif>
-					<cfif attributes.address.getCountry().getCityShowFlag()>
+					<cfif attributes.address.getCountry().getCityShowFlag() and attributes.showCity>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="city" edit="true" />
 					</cfif>
-					<cfif attributes.address.getCountry().getStateCodeShowFlag()>
+					<cfif attributes.address.getCountry().getStateCodeShowFlag() and attributes.showState>
 						<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
 							<cf_SlatwallPropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="true" />
 						<cfelse>
 							<cf_SlatwallPropertyDisplay object="#attributes.address#" property="stateCode" editType="text" edit="true" />
 						</cfif>
 					</cfif>
-					<cfif attributes.address.getCountry().getPostalCodeShowFlag()>
+					<cfif attributes.address.getCountry().getPostalCodeShowFlag() and attributes.showPostalCode>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
 					</cfif>
 					<input type="hidden" name="addressID" value="#attributes.address.getAddressID()#" />
@@ -78,6 +85,13 @@ Notes:
 								addressID : jQuery('input[name="addressID"]').val(),
 								showName : '#attributes.showName#',
 								showCompany : '#attributes.showCompany#',
+								showStreetAddress : '#attributes.showStreetAddress#',
+								showStreet2Address : '#attributes.showStreet2Address#',
+								showLocality : '#attributes.showLocality#',
+								showCity : '#attributes.showCity#',
+								showState : '#attributes.showState#',
+								showPostalCode : '#attributes.showPostalCode#',
+								showCountry : '#attributes.showCountry#',
 								countryCode : jQuery('select[name="countryCode"]').val(),
 								name : jQuery('input[name="name"]').val(),
 								company : jQuery('input[name="company"]').val(),

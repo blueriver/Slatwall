@@ -7,29 +7,33 @@
 			<thead>
 				<tr>
 					<th>#$.slatwall.rbKey('entity.address.countryCode')#</th>
-					<th>#$.slatwall.rbKey('entity.address.streetAddress')#</th>
-					<th>#$.slatwall.rbKey('entity.address.street2Address')#</th>
-					<th>#$.slatwall.rbKey('entity.address.city')#</th>
+					<th class="varWidth">#$.slatwall.rbKey('entity.address.city')#</th>
 					<th>#$.slatwall.rbKey('entity.address.stateCode')#</th>
 					<th>#$.slatwall.rbKey('entity.address.postalCode')#</th>
+					<cfif params.edit><th class="administration">&nbsp;</th></cfif>
 				</tr>
 			</thead>
 			<tbody>
 				<cfloop array="#params.addressZone.getAddressZoneLocations()#" index="local.address" >
 					<tr>
 						<td>#local.address.getCountry().getCountryName()#</td>
-						<td>#local.address.getStreetAddress()#</td>
-						<td>#local.address.getStreet2Address()#</td>
-						<td>#local.address.getCity()#</td>
+						<td class="varWidth">#local.address.getCity()#</td>
 						<td>#local.address.getStateCode()#</td>
 						<td>#local.address.getPostalCode()#</td>
+						<cfif params.edit>
+						<td class="administration">
+							<ul class="one">
+								<cf_SlatwallActionCaller action="admin:setting.deleteaddresszonelocation" querystring="addressZoneID=#params.addressZone.getAddressZoneID()#&addressID=#local.address.getAddressID()#" class="delete" type="list">
+							</ul>
+						</td>
+						</cfif>
 					</tr>
 				</cfloop>
 			</tbody>
 		</table>
 		<cfif params.edit>
 			<strong>Add Location To Zone</strong>
-			<cf_SlatwallAddressDisplay address="#entityNew('SlatwallAddress')#" edit="true" showName="false" showCompany="false" />
+			<cf_SlatwallAddressDisplay address="#entityNew('SlatwallAddress')#" edit="true" showName="false" showCompany="false" showStreetAddress="false" showStreet2Address="false" />
 			<a id="addAddressZoneLocation" class="button">Add Location</a>
 
 			<script type="text/javascript">
