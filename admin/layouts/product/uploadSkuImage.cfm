@@ -40,7 +40,6 @@ Notes:
 <cfset request.layout = false />
 <cfoutput>
 	<div class="modalContainer">
-		#view("utility/messageBox")#
 		#body#
 	</div>
 </cfoutput>
