@@ -228,6 +228,82 @@ Notes:
 		//return the struct
 		return stReturn;
 	}
+
+	/**
+	* exports the given query/array to file.
+	* 
+	* @param data      Data to export. (Required) (Currently only supports query).
+	* @param columns      list of columns to export. (optional, default: all)
+	* @param columnNames      list of column headers to export. (optional, default: none)
+	* @param fileName      file name for export. (default: guid)
+	* @param fileType      file type for export. (default: csv)
+	* @param download      download the file. (default: true)
+	* @return struct with file info. 
+	*/
+	public struct function export(required any data, string columns, string columnNames, string fileName, string fileType = 'csv', boolean download = true ) {
+		var result = {};
+		var supportedFileTypes = "csv,txt";
+		if(!structKeyExists(arguments,"fileName")){
+			arguments.fileName = createUUID() ;
+		}
+		if(!listFindNoCase(supportedFileTypes,arguments.fileType)){
+			throw("File type not supported in export. Only supported file types are #supportedFileTypes#");
+		}
+		var fileNameWithExt = arguments.fileName & "." & arguments.fileType;
+		if(structKeyExists(application,"tempDir")){
+			var filePath = application.tempDir & "/" & fileNameWithExt;
+		} else {
+			var filePath = GetTempDirectory() & fileNameWithExt;
+		}
+		if(isQuery(data) && !structKeyExists(arguments,"columns")){
+			arguments.columns = arguments.data.columnList;
+		}
+		if(structKeyExists(arguments,"columns") && !structKeyExists(arguments,"columnNames")){
+			arguments.columnNames = arguments.columns;
+		}
+		var columnArray = listToArray(arguments.columns);
+		var columnCount = arrayLen(columnArray);
+		
+		var listQualifier = "";
+		var delimiter = "";
+		if(arguments.fileType == 'csv'){
+			delimiter = chr(44);
+			listQualifier = '"';
+		} else if(arguments.fileType == 'txt'){
+			delimiter = chr(9);
+		}
+		
+		var dataArray=[listChangeDelims(arguments.columnNames,delimiter,",")];
+		for(var i=1; i <= data.recordcount; i++){
+			var row = [];
+			for(var j=1; j <= columnCount; j++){
+				arrayAppend(row,'#listQualifier##data[columnArray[j]][i]##listQualifier#');
+			}
+			arrayAppend(dataArray,arrayToList(row));
+		}
+		var outputData = arrayToList(dataArray,"#chr(13)##chr(10)#");
+		fileWrite(filePath,outputData);
+		
+		if(arguments.download){
+			download(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
+		} else{
+			result.fileName = fileNameWithExt;
+			result.fileType = fileType;
+			result.filePath = filePath;
+			return result;
+		}
+	}
+	
 	</cfscript>	
+	
+	<cffunction name="download" access="public" returntype="void" output="false">
+		<cfargument name="fileName" type="string" required="true" />
+		<cfargument name="filePath" type="string" required="true" />
+		<cfargument name="contentType" type="string" required="false" default="application/unknown" />
+		<cfargument name="deleteFile" type="boolean" required="false" default="false" />
+	
+		<cfheader name="Content-Disposition" value="inline; filename=#arguments.fileName#" />
+		<cfcontent type="#arguments.contentType#" file="#arguments.filePath#" deletefile="#arguments.deleteFile#" />
+	</cffunction>
 	
 </cfcomponent>
