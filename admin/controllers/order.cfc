@@ -52,7 +52,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
-		
+		param name="rc['F:orderstatustype_systemcode']" default="ostNew";
+		if(rc['F:orderstatustype_systemcode'] == "All") {
+			structDelete(rc,"F:orderstatustype_systemcode");
+		}
 		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
     }
 

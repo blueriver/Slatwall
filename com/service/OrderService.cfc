@@ -43,6 +43,20 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="addressService";
 	property name="settingService";
 	property name="validationService";
+
+
+	public any function getOrderSmartList(struct data={}) {
+		arguments.entityName = "SlatwallOrder";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);
+		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);
+		
+		smartList.joinRelatedProperty("SlatwallOrder","account");
+		
+		return smartList;
+	}
 	
 	public any function getOrderFulfillmentSmartList(struct data = {}) {
 		arguments.entityName = "SlatwallOrderFulfillment";
