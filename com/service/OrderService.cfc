@@ -43,12 +43,36 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="addressService";
 	property name="settingService";
 	property name="validationService";
+
+
+	public any function getOrderSmartList(struct data={}) {
+		arguments.entityName = "SlatwallOrder";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);
+		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);
+		
+		smartList.joinRelatedProperty("SlatwallOrder","account");
+		
+		return smartList;
+	}
 	
 	public any function getOrderFulfillmentSmartList(struct data = {}) {
 		arguments.entityName = "SlatwallOrderFulfillment";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		smartList.addOrder("order_orderOpenDateTime|DESC");
 		return smartList;
+	}
+	
+	public any function getOrderStatusOptions(struct data={}) {
+		arguments.entityName = "SlatwallType";
+		var smartlist = getDAO().getSmartList(argumentCollection=arguments);
+		smartList.addSelect("systemCode","id");
+		smartList.addSelect("type","name");
+		smartList.addFilter("parentType_systemCode","orderStatusType");
+		smartList.addFilter("systemCode","ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled");
+		return smartlist.getPageRecords();
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {

@@ -38,16 +38,30 @@ Notes:
 --->
 <cfparam name="rc.$" type="any" />
 <cfparam name="rc.orderSmartList" type="any" />
+<cfparam name="rc.orderStatusOptions" type="array" />
 
 <cfoutput>
 	
 <div class="svoadminorderlist">
 	<form action="#buildURL('admin:order.list')#" method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
+		<input name="Keyword" value="#rc.Keyword#" /> 
+<!---		<div id="advancedSearchOptions" style="display:none;">
+			#$.Slatwall.rbKey("entity.order.orderOpenDateTime")#: 
+			<input type="date" name="orderDateStart" class="date" /> to <input type="date" name="orderDateEnd" class="date" /><br>
+			#$.Slatwall.rbKey("entity.order.orderStatusType")#:
+				<select name="F:orderStatusType_systemCode">
+					<option value="All">#$.slatwall.rbKey('define.all')#</option>
+					<cfloop array="#rc.orderStatusOptions#" index="thisStatus" >
+						<option value="#thisStatus['id']#">#thisStatus['name']#</option>
+					</cfloop>
+				</select>
+		</div>--->		
+		<button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>&nbsp;&nbsp;
+		<!---<a href="##" id="showAdvancedSearch">#$.slatwall.rbKey("admin.order.list.showAdvancedSearch")#</a>--->
+
 	</form>
 	
 	<form name="OrderActions" action="#buildURL(action='admin:order.applyOrderActions')#" method="post">
-		<cf_SlatwallActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
 		<table id="OrderList" class="stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
@@ -86,6 +100,7 @@ Notes:
 				</tr>
 			</cfloop>
 		</table>
+		<cf_SlatwallActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
 	</form>
 </div>
 </cfoutput>
