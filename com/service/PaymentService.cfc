@@ -92,6 +92,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				transaction.setAuthorizedAmount(response.getAuthorizedAmount());
 				transaction.setChargedAmount(response.getChargedAmount());
 				transaction.setCreditedAmount(response.getCreditedAmount());
+				transaction.setAVSCode(response.getAVSCode());
+				transaction.setStatusCode(response.getStatusCode());
+				transaction.setMessage(response.getMessageString());
 				
 				// Relate to order Payment
 				transaction.setOrderPayment(arguments.orderPayment);
