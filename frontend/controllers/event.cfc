@@ -107,7 +107,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onAfterPageSlatwallProductListingSave(required any rc) {
-		getProductService().updateProductContentPaths(contentID=rc.$.content("contentID"));
+		getProductService().updateProductContentPaths(contentID=rc.$.content("contentID"), siteID=rc.$.event('siteID'));
 	}
 	
 	public void function onAfterPageSlatwallProductListingDelete(required any rc) {
