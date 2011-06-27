@@ -49,6 +49,12 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
 	property name="paymentMethodID" insert="false" update="false";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
 	
     /******* Association management methods for bidirectional relationships **************/
 	

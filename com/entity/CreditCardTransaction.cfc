@@ -38,6 +38,7 @@ Notes:
 */
 component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTransaction" table="SlatwallCreditCardTransaction" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
+	// Persistent Properties
 	property name="creditCardTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="transactionType" ormtype="string";
 	property name="providerTransactionID" ormtype="string";
@@ -49,6 +50,11 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	// Related Object Properties
 	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
