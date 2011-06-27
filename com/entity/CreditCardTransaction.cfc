@@ -46,6 +46,9 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	property name="authorizedAmount" ormtype="float";
 	property name="chargedAmount" ormtype="float";
 	property name="creditedAmount" ormtype="float";
+	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
+	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
+	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
 	
 	// Related Object Properties
 	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";

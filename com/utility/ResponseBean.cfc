@@ -77,4 +77,17 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		return getErrorBean().getError(arguments.name);
 	}
 	
+	public string function getMessageString() {
+		var messageString = "";
+		
+		for(var i=1; i<=arrayLen(getMessageBeans()); i++) {
+			if(i>1) {
+				messageString &= "~";
+			}
+			messageString &= "#getMessageBeans()[1].getMessageCode()#|#getMessageBeans()[1].getMessageType()#|#getMessageBeans()[1].getMessage()#";
+		}
+		
+		return messageString;
+	}
+	
 } 
