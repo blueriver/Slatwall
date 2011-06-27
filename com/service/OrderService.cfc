@@ -65,6 +65,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return smartList;
 	}
 	
+	public any function getOrderStatusOptions(struct data={}) {
+		arguments.entityName = "SlatwallType";
+		var smartlist = getDAO().getSmartList(argumentCollection=arguments);
+		smartList.addSelect("systemCode","id");
+		smartList.addSelect("type","name");
+		smartList.addFilter("parentType_systemCode","orderStatusType");
+		smartList.addFilter("systemCode","ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled");
+		return smartlist.getPageRecords();
+	}
+	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
 		// Check to see if the order has a status
 		if(isNull(arguments.order.getOrderStatusType())) {
