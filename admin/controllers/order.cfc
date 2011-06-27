@@ -52,9 +52,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
+		// only view new orders by default
 		param name="rc['F:orderstatustype_systemcode']" default="ostNew";
+		// if "all" is the type filter, show all but carts (not placed) we have to do it this way until
+		// the SmartList can do "negative filtering"
 		if(rc['F:orderstatustype_systemcode'] == "All") {
-			structDelete(rc,"F:orderstatustype_systemcode");
+			rc["F:orderstatustype_systemcode"] = "ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled";
+		}
+		// if someone tries to filter for carts using URL, override the filter
+		if(rc['F:orderstatustype_systemcode'] == "ostNotPlaced") {
+			rc["F:orderstatustype_systemcode"] = "ostNew";
 		}
 		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
     }
