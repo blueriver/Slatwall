@@ -72,7 +72,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var rates = shippingMethods[i].getShippingRates();
 				for(var r=1;r <= arrayLen(rates); r++) {
 					// Make sure that the shipping address is in the zone of this rate
-					if(getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
+					if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
 						
 						var rateApplies = true;
 						
