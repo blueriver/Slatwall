@@ -50,6 +50,6 @@ component displayname="Alternate Sku Code" entityname="AlternateSkuCode" table="
 	
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="alternativeSkuCodeTypeID";
+	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
 	
 }
