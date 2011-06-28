@@ -58,8 +58,8 @@
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="tagProxyService"><ref bean="tagProxyService" /></property>
     </bean>
-
 
     <bean id="optionService" class="Slatwall.com.service.OptionService">
         <property name="DAO"><ref bean="OptionDAO" /></property>

@@ -98,8 +98,10 @@ Notes:
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_notificationEmailTo#" title="#rc.$.Slatwall.rbKey('setting.order.newOrderNotifyTo')#" property="settingValue" fieldName="order_notificationEmailTo" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_notificationEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.newOrderNotifyFrom')#" property="settingValue" fieldName="order_notificationEmailFrom" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailFrom')#" property="settingValue" fieldName="order_orderPlacedEmailFrom" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailCC')#" property="settingValue" fieldName="order_orderPlacedEmailCC" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailBCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailBCC')#" property="settingValue" fieldName="order_orderPlacedEmailBCC" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailSubject#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailSubject')#" property="settingValue" fieldName="order_orderPlacedEmailSubject" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 				</table>
 			</div>
 			<div id="tabAccount">

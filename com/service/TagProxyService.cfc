@@ -76,4 +76,17 @@ Notes:
 	
 	</cffunction>
 	
+	<cffunction name="cfmail" output="false">
+		<cfargument name="from" default="" />
+		<cfargument name="to" default="" />
+		<cfargument name="cc" default="" />
+		<cfargument name="bcc" default="" />
+		<cfargument name="subject" default="" />
+		<cfargument name="body" default="" />
+		
+		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#">
+			#arguments.body#
+		</cfmail>
+	</cffunction>
+	
 </cfcomponent>
