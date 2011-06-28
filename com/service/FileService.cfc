@@ -56,12 +56,12 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
 			// image name will reflect that resize method (defaults to "scale" so that one isn't indicated)
 			if(arguments.resizeMethod == "scaleAndCrop") {
-				imageNameSuffix &= "_sc";
+				imageNameSuffix &= "_sc_#arguments.cropLocation#";
 			} else if(arguments.resizeMethod == "crop") {
-				if(len.arguments.cropLocation) {
-					imageNameSuffix &= "_c_#arguments.cropLocation#";
-				} else {
+				if(arguments.cropXStart || arguments.cropYStart) {
 					imageNameSuffix &= "_c_#arguments.cropXStart#x_#arguments.cropYStart#y";
+				} else {
+					imageNameSuffix &= "_c_#arguments.cropLocation#";
 				}
 				if(arguments.scaleWidth != 100) {
 					imageNameSuffix &= "_#arguments.scaleWidth#sw";
@@ -75,7 +75,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 			if(!fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
-				if(!arguments.resizeMethod == "scale") {
+				if(arguments.resizeMethod == "scale") {
 					if(arguments.width && arguments.height) {
 						imageScaleToFit(img,arguments.width,arguments.height);
 					} else {
@@ -87,7 +87,18 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 						imageResize(img,arguments.width,arguments.height);
 					}
 				} else if(arguments.resizeMethod == "scaleAndCrop") {
-					
+					if(!arguments.width) {
+						arguments.width = arguments.height;
+					}
+					if(!arguments.height) {
+						arguments.height = arguments.width;
+					}
+					// default location of scale and crop to center of image
+					if(len(arguments.cropLocation) == 0) {
+						arguments.cropLocation = "center";
+					}
+					// use aspectCrop() method for scale and crop
+					img = aspectCrop(img,arguments.width,arguments.height,arguments.cropLocation);
 				} else if(arguments.resizeMethod == "crop") {
 					if(!arguments.width) {
 						arguments.width = arguments.height;
@@ -95,7 +106,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 					if(!arguments.height) {
 						arguments.height = arguments.width;
 					}
-					imageCrop(img,arguments.cropLeftStart,arguments.cropTopStart,arguments.width,arguments.height);
+					img = customCrop(img,arguments.width,arguments.height,arguments.cropLocation,arguments.cropXStart,arguments.cropYStart,arguments.scaleWidth,arguments.scaleHeight);
 				}
 				imageWrite(img,expandPath(resizedImagePath));
 			}
@@ -218,6 +229,109 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		if(arguments.overwrite || !fileExists(arguments.destination)) {
 			fileCopy(arguments.source,arguments.destination);
 		}
+	}
+
+	/*
+	Function: aspectCrop
+	Author: Emmet McGovern
+	http://www.illequipped.com/blog
+	emmet@fullcitymedia.com
+	2/29/2008 - Leap Day!
+	Part of ImageUtils.cfc library (http://imageutils.riaforge.org/)
+	Adapted for Slatwall by Tony Garcia 6/28/11
+	*/
+	public any function aspectCrop(required any image, required numeric cropWidth, required numeric cropHeight, required position="center") {
+		
+		// Define local variables.
+		var nPercent = "";
+		var wPercent = "";
+		var hPercent = "";
+		var px = "";
+		var ycrop = "";
+		var xcrop = "";
+		
+		// if not image, assume path
+		if( !isImage(arguments.image) && !isImageFile(arguments.image) ) {
+			throw(message="The value passed to aspectCrop was not an image.");
+		}
+		
+		//  If we were given a path to an image, read the image into a ColdFusion image object. 
+		if(isImageFile(arguments.image)) {
+			arguments.image = imageRead(arguments.image);
+		}
+		
+		// Resize image without going over crop dimensions
+		wPercent = arguments.cropwidth / arguments.image.width;
+		hPercent = arguments.cropheight / arguments.image.height;
+		
+		if(wPercent > hPercent) {
+			nPercent = wPercent;
+			px = arguments.image.width * nPercent + 1;
+			imageResize(arguments.image,px,"");
+		} else {
+			nPercent = hPercent;
+			px = arguments.image.height * nPercent + 1;
+			imageResize(arguments.image,"",px);	
+		}
+		
+		//Set the xy offset for cropping, if not provided defaults to center 
+		if(listfindnocase("topleft,left,bottomleft", arguments.position)) {
+			xcrop = 0;
+		} else if( listfindnocase("topcenter,center,bottomcenter", arguments.position) ) {
+			xcrop = (arguments.image.width - arguments.cropwidth)/2;
+		} else if( listfindnocase("topright,right,bottomright", arguments.position) ) {
+			xcrop = arguments.image.width - arguments.cropwidth;
+		} else {
+			xcrop = (arguments.image.width - arguments.cropwidth)/2;
+		}
+	
+		if( listfindnocase("topleft,topcenter,topright", arguments.position) ) {
+			ycrop = 0;
+		} else if( listfindnocase("left,center,right", arguments.position) ) {
+			ycrop = (arguments.image.height - arguments.cropheight)/2;
+		} else if( listfindnocase("bottomleft,bottomcenter,bottomright", arguments.position) ) {
+			ycrop = arguments.image.height - arguments.cropheight;
+		} else {
+			ycrop = (arguments.image.height - arguments.cropheight)/2;
+		}
+	
+		// Return new cropped image.
+		imageCrop(arguments.image,xcrop,ycrop,arguments.cropwidth,arguments.cropheight);
+		
+		return arguments.image;
+	}
+	
+	public any function customCrop(required any image, required numeric width, required numeric height, string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
+		
+		// Set the xy offset for cropping from location, if passed in
+		if(len(arguments.cropLocation) > 0) {
+			if(listfindnocase("topleft,left,bottomleft", arguments.croplocation)) {
+				arguments.cropXStart = 0;
+			} else if( listfindnocase("topcenter,center,bottomcenter", arguments.croplocation) ) {
+				arguments.cropXStart = (arguments.image.width - arguments.width)/2;
+			} else if( listfindnocase("topright,right,bottomright", arguments.croplocation) ) {
+				arguments.cropXStart = arguments.image.width - arguments.width;
+			} 
+		
+			if( listfindnocase("topleft,topcenter,topright", arguments.croplocation) ) {
+				arguments.cropYStart = 0;
+			} else if( listfindnocase("left,center,right", arguments.croplocation) ) {
+				arguments.cropYStart = (arguments.image.height - arguments.height)/2;
+			} else if( listfindnocase("bottomleft,bottomcenter,bottomright", arguments.position) ) {
+				arguments.cropYStart = arguments.image.height - arguments.height;
+			}
+		}
+		
+		// get the height and width of the crop on the original image fro the scale arguments
+		var cropWidth = arguments.image.width * (arguments.scaleWidth/100);
+		var cropHeight = arguments.image.height * (arguments.scaleHeight/100);
+		
+		//crop the original image
+		imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,cropWidth,cropHeight);
+		
+		// resize the cropped image to the passed in dimensions
+		// in case the aspect ratio of the size of the desired image is different than the aspect ratio calculated from scale arguments, we use the aspectCrop() method from the center of the image
+		return aspectCrop(arguments.image,arguments.width,arguments.height,"center");
 	}
 
 }
