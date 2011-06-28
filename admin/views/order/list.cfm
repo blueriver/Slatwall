@@ -86,5 +86,6 @@ Notes:
 			</tr>
 		</cfloop>
 	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.orderSmartList#">
 </div>
 </cfoutput>
