@@ -42,6 +42,8 @@ Notes:
 	<div class="svoaccountdetail">
 		<p>Welcome, #$.slatwall.account('firstName')# #$.slatwall.account('lastName')#</p>
 		<hr />
+		<cfif arrayLen($.slatwall.account().getOrders())>
 		#view("frontend:account/listorder")#
+		</cfif>
 	</div>
 </cfoutput>
