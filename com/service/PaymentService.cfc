@@ -107,6 +107,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
 				arguments.orderPayment.setAmountAuthorized(authAmount);
 				arguments.orderPayment.setAmountCharged(chargeAmount);
+				
+				// Update the order Status
+				if(arguments.transactionType == "chargePreAuthorization") {
+					var order = arguments.orderPayment.getOrder();
+					if(order.getQuantityUndelivered() gt 0) {
+						order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+					} else {
+						order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+					}
+				}
 			} else {
 				// Populate the orderPayment with the processing error
 				arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());

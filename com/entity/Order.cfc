@@ -114,10 +114,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return this.getTotalQuantity() - this.getQuantityDelivered();
 	}
 	
-	public boolean function isPartiallyFulfilled() {
-		return (this.getQuantityDelivered() > 0 && this.getQuantityDelivered() < this.getTotalQuantity());
-	}
-	
 	public numeric function getSubtotal() {
 		var subtotal = 0;
 		var orderItems = getOrderItems();

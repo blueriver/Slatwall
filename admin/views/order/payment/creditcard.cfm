@@ -43,16 +43,18 @@ Notes:
 <table class="paymentDetails">
 	<tr>
 		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.creditCardType")#</th>
-		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.creditCardLastFour")#</th>
 		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.expirationDate")#</th>
 		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.billingAddress")#</th>
 		<th>#$.Slatwall.rbKey("entity.creditcardtransaction.authorizationcode")#</th>
 		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.amountAuthorized")#</th>
 		<th>#$.Slatwall.rbKey("entity.orderPaymentCreditCard.amountCharged")#</th>
+		<th>#$.Slatwall.rbKey("entity.orderPayment.amountRefunded")#</th>
 	</tr>
 	<tr>
-		<td>#local.orderPayment.getCreditCardType()#</td>
-		<td>#local.orderPayment.getCreditCardLastFour()#</td>
+		<td>
+			#local.orderPayment.getCreditCardType()#<br>
+			#$.slatwall.rbKey("entity.orderPaymentCreditCard.CreditCardLastFour")#: #local.orderPayment.getCreditCardLastFour()#
+		</td>
 		<td>#local.orderPayment.getExpirationDate()#</td>
 		<td><cfif !isNull(local.orderPayment.getBillingAddress())><cf_SlatwallAddressDisplay address="#local.orderPayment.getBillingAddress()#" edit="false" /></cfif></td>
 		<td>
@@ -60,10 +62,15 @@ Notes:
 				#local.thistransaction.getAuthorizationCode()#<br>
 			</cfloop>
 		</td>
-		<td>#local.orderPayment.getAmountAuthorized()#</td>
-		<td>#local.orderPayment.getAmountCharged()#</td>		
+		<td>#dollarFormat(local.orderPayment.getAmountAuthorized())#</td>
+		<td>#dollarFormat(local.orderPayment.getAmountCharged())#</td>
+		<td>#dollarFormat(local.orderPayment.getAmountRefunded())#</td>		
 	</tr>
 </table>
+<!--- display link to refund payment if amount has been charged --->
+<cfif local.orderPayment.getAmountCharged() gt 0>
+	<cf_SlatwallActionCaller action="admin:order.refundOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
+</cfif>
 
 <!--- display link to charge card if full authorized amount hasn't been charged yet --->
 <cfif local.orderPayment.getAmountAuthorized() gt local.orderpayment.getAmountCharged()>

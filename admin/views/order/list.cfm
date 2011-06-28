@@ -60,31 +60,31 @@ Notes:
 		<!---<a href="##" id="showAdvancedSearch">#$.slatwall.rbKey("admin.order.list.showAdvancedSearch")#</a>--->
 	</form>
 	
-	<form name="OrderActions" action="#buildURL(action='admin:order.applyOrderActions')#" method="post">
-		<table id="OrderList" class="stripe">
+	<table id="OrderList" class="stripe">
+		<tr>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
+			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
+			<th>&nbsp</th>
+		</tr>
+		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
 			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-				<th>&nbsp</th>
+				<td>#Local.Order.getOrderNumber()#</td>
+				<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
+				<td class="varWidth">
+					#Local.Order.getAccount().getFullName()# <cfif local.order.getAccount().isGuestAccount()>(#$.slatwall.rbKey('admin.order.account.isguestaccount')#)</cfif>
+				</td>
+				<td>#Local.Order.getOrderStatusType().getType()#</td>
+				<td>#DollarFormat(local.order.getTotal())#</td>
+				<td class="administration">
+					<ul class="one">
+					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					</ul>     						
+				</td>
 			</tr>
-			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
-				<tr>
-					<td>#Local.Order.getOrderNumber()#</td>
-					<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
-					<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
-					<td>#Local.Order.getOrderStatusType().getType()#</td>
-					<td>#DollarFormat(local.order.getTotal())#</td>
-					<td class="administration">
-						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</form>
+		</cfloop>
+	</table>
 </div>
 </cfoutput>

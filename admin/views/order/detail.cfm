@@ -45,6 +45,15 @@ Notes:
 
 <cfoutput>
 
+<cfif structKeyExists(rc,"errorBean")>
+	<cfset local.errors = rc.errorBean.getErrors() />
+	<div class="error">
+		<cfloop collection="#local.errors#" item="local.thisError">
+			#local.errors[local.thisError]#
+		</cfloop>
+	</div>
+</cfif>
+
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:order.list" type="list">
 </ul>
@@ -52,7 +61,7 @@ Notes:
 <!--- Display buttons of available order actions --->
 <cfloop array="#local.orderActionOptions#" index="local.thisAction">
 <cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
-	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.order.isPartiallyFulfilled())>
+	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.order.getQuantityDelivered())>
 	<cf_SlatwallActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
 	</cfif>
 </cfloop>
