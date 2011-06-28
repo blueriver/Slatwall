@@ -107,6 +107,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
 				arguments.orderPayment.setAmountAuthorized(authAmount);
 				arguments.orderPayment.setAmountCharged(chargeAmount);
+				if(arguments.transactionType == "credit") {
+					var refundAmount = arguments.orderPayment.getAmountRefunded() + arguments.transactionAmount;
+					arguments.orderPayment.getAmountRefunded(refundAmount);
+				}
 				
 				// Update the order Status
 				if(arguments.transactionType == "chargePreAuthorization") {

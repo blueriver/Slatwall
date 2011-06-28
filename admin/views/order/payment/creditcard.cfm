@@ -67,10 +67,10 @@ Notes:
 		<td>#dollarFormat(local.orderPayment.getAmountRefunded())#</td>		
 	</tr>
 </table>
-<!--- display link to refund payment if amount has been charged --->
-<cfif local.orderPayment.getAmountCharged() gt 0>
+<!--- display link to refund payment if amount has been charged 
+<cfif local.orderPayment.getAmountCharged() gt 0>--->
 	<cf_SlatwallActionCaller action="admin:order.refundOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
-</cfif>
+<!---</cfif>--->
 
 <!--- display link to charge card if full authorized amount hasn't been charged yet --->
 <cfif local.orderPayment.getAmountAuthorized() gt local.orderpayment.getAmountCharged()>

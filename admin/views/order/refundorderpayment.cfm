@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -37,15 +37,17 @@ Notes:
 
 --->
 
+<cfparam name="rc.orderpayment" type="any" />
+<cfparam name="rc.orderpaymentID" type="string" /> 
+
 <cfoutput>
-	<form class="modal" method="post" enctype="multipart/form-data" action="#buildURL('admin:product.uploadSkuImage')#">
-		<input type="hidden" name="skuID" value="#rc.skuID#" />
-		<p>#rc.$.Slatwall.rbKey("admin.product.selectImageForSku")#<br>#rc.sku.getSkuCode()#</p>
-		<input type="file" id="skuImageFile" name="skuImageFile" accept="image/gif, image/jpeg, image/jpg, image/png" />
+	<form class="modal" method="post" action="#buildURL('admin:order.processOrderPaymentRefund')#">
+		<input type="hidden" name="orderPaymentID" value="#rc.orderPaymentID#" />
+		<p>#rc.$.Slatwall.rbKey("admin.order.enterPaymentRefundAmount")#: #dollarformat(rc.orderpayment.getAmountCharged())#</p>
+		$ <input class="refundAmount" type="text" name="refundAmount" value="0" size="10" />
 		<br><br>
 		<div id="actionButtons" class="clearfix">
-			<input type="submit" class="button" id="adminproductuploadSkuImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadSkuImage')#" disabled="true" />
-			<!---<button id="adminproductuploadSkuImage" title="Upload Image" value="admin:product.uploadSkuImage" name="slatAction" type="submit" disabled="true">#rc.$.Slatwall.rbKey("admin.product.uploadSkuImage")#</button>--->
+			<cf_SlatwallActionCaller action="admin:order.processOrderPaymentRefund" class="button" type="submit" />
 		</div>
 	</form>
 </cfoutput>

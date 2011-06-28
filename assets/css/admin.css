@@ -241,7 +241,7 @@ table .alignLeft {
 	text-align: left;
 }
 
-form#uploadSkuImage {
+form.modal {
 	width: auto;
 }
 

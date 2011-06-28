@@ -117,9 +117,47 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message,messagetype,errorBean");
 			}
 		} else {
-			rc.message = rc.$.slatwall.rbKey("admin.order.chargeorderpayment_notexists");
+			rc.message = rc.$.slatwall.rbKey("admin.order.orderpayment_notexists");
 			rc.messageType = "error";
 			getFW().redirect(action="admin:order.list",preserve="message,messagetype");
+		}
+	}
+	
+	public void function refundOrderPayment(required struct rc) {
+		rc.orderPayment = getOrderService().getOrderPayment(rc.orderPaymentID);
+		if(isNull(rc.orderPayment)) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.orderpayment_notexists");
+			rc.messageType = "error";
+			getFW().redirect(action="admin:order.list",preserve="message,messagetype");		
+		}
+	}
+	
+	public void function processOrderPaymentRefund(required struct rc) {
+		var orderPayment = getOrderService().getOrderPayment(rc.orderPaymentID);
+		var refundOK = false;
+		if(!isNull(orderPayment)) {
+			// make sure that the refund amount entered is within the limits
+			if(isNumeric(rc.refundAmount) && rc.refundAmount > 0 && rc.refundAmount <= orderPayment.getAmountCharged()) {
+				refundOK = getPaymentService().processPayment(orderPayment,"credit",rc.refundAmount);
+				if(refundOK) {
+					rc.message = rc.$.slatwall.rbKey("admin.order.refundOrderPayment_success");
+					getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
+				} else {
+					rc.errorBean = orderPayment.getErrorBean();
+					rc.messagetype = "error";
+					rc.message = rc.$.slatwall.rbKey("admin.order.refundOrderPayment_error");
+					getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message,messagetype,errorBean");
+				}	
+			} else {
+				rc.message = rc.$.slatwall.rbKey("admin.order.refundorderpayment_invalidAmount");
+				rc.message = replaceNoCase(rc.message,"{amountCharged}",dollarFormat(orderPayment.getAmountCharged()),"one");
+				rc.messageType = "error";
+				getFW().redirect(action="admin:order.detail",querystring="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message,messagetype");
+			}
+		} else {
+			rc.message = rc.$.slatwall.rbKey("admin.order.orderpayment_notexists");
+			rc.messageType = "error";
+			getFW().redirect(action="admin:order.list",preserve="message,messagetype");				
 		}
 	}
 	
