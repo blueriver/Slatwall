@@ -55,10 +55,9 @@ Notes:
 						<option value="#thisStatus['id']#">#thisStatus['name']#</option>
 					</cfloop>
 				</select>
-		</div>--->		
+		</div>	--->
 		<button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>&nbsp;&nbsp;
 		<!---<a href="##" id="showAdvancedSearch">#$.slatwall.rbKey("admin.order.list.showAdvancedSearch")#</a>--->
-
 	</form>
 	
 	<form name="OrderActions" action="#buildURL(action='admin:order.applyOrderActions')#" method="post">
@@ -69,7 +68,6 @@ Notes:
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-				<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>
 				<th>&nbsp</th>
 			</tr>
 			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
@@ -79,19 +77,6 @@ Notes:
 					<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
 					<td>#Local.Order.getOrderStatusType().getType()#</td>
 					<td>#DollarFormat(local.order.getTotal())#</td>
-					<td>
-						<cfset local.orderActionOptions = local.order.getActionOptions() />
-						<cfif arrayLen(local.orderActionOptions) gt 0>
-							<select name="orderActions">
-								<option value="">#$.slatwall.rbKey("define.select")#</option>
-								<cfloop array = #local.orderActionOptions# index="local.thisAction">
-									<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
-								</cfloop>
-							</select>
-						<cfelse>
-							#$.slatwall.rbKey("define.notApplicable")#
-						</cfif>
-					</td>
 					<td class="administration">
 						<ul class="one">
 						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
@@ -100,7 +85,6 @@ Notes:
 				</tr>
 			</cfloop>
 		</table>
-		<cf_SlatwallActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
 	</form>
 </div>
 </cfoutput>

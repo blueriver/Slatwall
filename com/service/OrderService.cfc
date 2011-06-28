@@ -287,26 +287,37 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
 			case("shipping"): {
+				// copy the shipping address from the order fulfillment and set it in the delivery
+				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
 			}
 			default:{}
 		}
 		
+		var totalQuantity = 0;
 		// Loop over the items in the fulfillment
 		for( var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
 			
+			var thisOrderItem = arguments.orderFulfillment.getOrderFulfillmentItems()[i];
 			// Check to see if this fulfillment item has any quantity passed to it
-			if(structKeyExists(arguments.data, arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID())) {
-				var thisQuantity = arguments.data[arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID()];
+			if(structKeyExists(arguments.data, thisOrderItem.getOrderItemID())) {
+				var thisQuantity = arguments.data[thisOrderItem.getOrderItemID()];
 				
 				// Make sure that the quantity is greater than 1, and that this fulfillment item needs at least that many to be delivered
-				if(thisQuantity > 0 && thisQuantity <= arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()) {
-					
+				if(thisQuantity > 0 && thisQuantity <= thisOrderItem.getQuantityUndelivered()) {
+					// keep track of the total quantity fulfilled
+					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
 					var orderDeliveryItem = this.newOrderDeliveryItem();
 					orderDeliveryItem.setQuantityDelivered(thisQuantity);
-					orderDeliveryItem.setOrderItem(arguments.orderFulfillment.getOrderFulfillmentItems()[i]);
-					orderDeliveryItem.setOrderDelivery(orderDelivery);	
+					orderDeliveryItem.setOrderItem(thisOrderItem);
+					orderDeliveryItem.setOrderDelivery(orderDelivery);
+					// change status of the order item
+					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
+						//order item was fulfilled
+						local.statusType = this.getTypeBySystemCode("oistFulfilled");
+						thisOrderItem.setOrderItemStatusType(local.statusType);		
+					}
 				}
 			}
 		}
@@ -314,6 +325,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// If items have not been added to the delivery, set an error so that it doesn't get persisted
 		if(arrayLen(orderDelivery.getOrderDeliveryItems()) == 0) {
 			getValidationService().setError(entity=orderDelivery, entityName="OrderDelivery", errorName="orderDeliveryItems",rule="hasOrderDeliveryItems");
+		}
+		
+		// update the status of the order
+		if(totalQuantity < order.getQuantityUndelivered()) {
+			order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+		} else {
+			if(order.isPaid()) {
+				order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+			} else {
+				order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+			}
 		}
 		
 		return this.save(orderDelivery);

@@ -87,11 +87,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	}
 	
 	public numeric function getQuantityDelivered() {
-		if(!structKeyExists(variables,"quantityDelivered")) {
+		if(!structKeyExists(variables,"quantityDelivered") || !isNumeric(variables.quantityDelivered)) {
 			variables.quantityDelivered = 0;
 			var deliveryItems = getOrderDeliveryItems();
-			//writeDump(getOrderDeliveryItems());
-			//abort;
 			for( var thisDeliveryItem in deliveryItems ) {
 				variables.quantityDelivered += thisDeliveryItem.getQuantityDelivered();				
 			}			
