@@ -41,10 +41,8 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	// Persistent Properties
 	property name="taxCategoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="taxCategoryName" ormtype="string";
-	property name="taxRate" ormtype="float";
 	
-	// Related Object Properties
-	property name="addressZones" singularname="addressZone" cfc="AddressZone" fieldtype="many-to-many" linktable="SlatwallTaxCategoryAddressZone" fkcolumn="taxCategoryID" inversejoincolumn="addressZoneID" cascade="save-update";
+	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" inverse="true" cascade="all-delete-orphan";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -52,4 +50,24 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	public any function init() {
+		if(isNull(getTaxCategoryRates())) {
+			setTaxCategoryRates(arrayNew(1));
+		}
+		
+		return super.init();
+	}
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Tax Category Rates
+	public void function addTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
+	   arguments.taxCategoryRate.setTaxCategory(this);
+	}
+	
+	public void function removeTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
+	   arguments.taxCategoryRate.removeTaxCategory(this);
+	}
+	
+	/******* END Association management methods for bidirectional relationships **************/
 }
