@@ -323,10 +323,17 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		}
 		
 		if(!arguments.scaleHeight && !arguments.scaleWidth) {
+		// if no scaling arguments are passed in, we simply crop the image using imageCrop
 			imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,arguments.width,arguments.height);
 			return arguments.image;
-		} else {	
-			// get the height and width of the crop on the original image fro the scale arguments
+		} else {
+			// handle setting the scaling on the other dimension if only one was passed in.
+			if(!arguments.scaleHeight) {
+				arguments.scaleHeight = arguments.scaleWidth;
+			} else if (!arguments.scaleWidth) {
+				arguments.scaleWidth = arguments.scaleHeight;
+			}
+			// get the height and width of the crop on the original image from the scale arguments
 			var cropWidth = arguments.image.width * (arguments.scaleWidth/100);
 			var cropHeight = arguments.image.height * (arguments.scaleHeight/100);
 			
