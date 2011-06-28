@@ -45,4 +45,10 @@ $(document).ready(function(){
 		$('#orderDetail_' + id).toggle();
 		return false;
 	});
+	
+    $(".adminorderrefundOrderPayment").colorbox({
+		onComplete: function() {
+            $('input.refundAmount').focus();         
+        }
+	});
 });

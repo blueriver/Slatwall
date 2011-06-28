@@ -25,4 +25,9 @@ variables.assetDependencies["js/admin-product.detail.js"] =	[
 	"js/tools/imgPreview-min.js"
 	];
 
+variables.assetDependencies["js/admin-order.detail.js"] =	[
+	"js/tools/jquery.colorbox-min.js",
+	"css/tools/colorbox/colorbox.css"
+	];
+
 </cfscript>
