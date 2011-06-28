@@ -38,7 +38,7 @@ Notes:
 --->
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 	
-	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses">
+	<cfset variables.preserveKeyList="context,base,cfcbase,subsystem,subsystembase,section,item,services,action,controllerExecutionStarted,generateses,view,layout">
 	
 	<!--- Include FW/1 configuration that is shared between then adapter and the application. --->
 	<cfinclude template="fw1Config.cfm">
