@@ -15,6 +15,7 @@
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
     <bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
     <bean id="optionGroupDAO" class="Slatwall.com.dao.OptionGroupDAO" />
+	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
 	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
@@ -120,6 +121,11 @@
 		<property name="validationService"><ref bean="validationService" /></property>
 		<property name="configBean"><ref bean="configBean" /></property>
 		<property name="contentManager"><ref bean="contentManager" /></property>
+    </bean>
+	
+	<bean id="taxService" class="Slatwall.com.service.TaxService">
+        <property name="DAO"><ref bean="taxDAO" /></property>
+		<property name="validationService"><ref bean="validationService" /></property>
     </bean>
 
     <bean id="vendorService" class="Slatwall.com.service.VendorService">

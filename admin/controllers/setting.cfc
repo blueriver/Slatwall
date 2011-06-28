@@ -427,6 +427,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.edit" default="false";
 		
 		rc.taxCategory = getSettingService().getTaxCategory(rc.taxCategoryID);
+		rc.blankTaxCategoryRate = getSettingService().newTaxCategoryRate();
 	}
 	
 	public void function editTaxCategory(required struct rc) {
@@ -443,6 +444,20 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function saveTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
 		
+		rc.taxCategory = getSettingService().saveTaxCategory(rc.taxCategory, rc);
+		
+		if(structKeyExists(rc, "addRate") && rc.addRate) {
+			var rate = getSettingService().newTaxCategoryRate();
+			rate.setAddressZone(getAddressService().getAddressZone(rc.addressZoneID));
+			rate.setTaxRate(rc.taxRate);
+			rate = getSettingService().saveTaxCategoryRate(rate);
+			if(!rate.hasErrors()) {
+				rate.setTaxCategory(rc.taxCategory);
+			}
+		}
 	}
 }
