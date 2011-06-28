@@ -36,15 +36,15 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+component extends="BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
-	property name="settingService";
-	property name="validationService";
-
-
+	
+	// Mura Injected services
+	property name="tagProxyService";
+	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
@@ -157,10 +157,33 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Save the order to the database
 			getDAO().save(arguments.order);
 			
+			// Do a flush so that the order is commited to the DB
+			ormFlush();
+			
+			// Send out the e-mail
+			sendOrderConfirmationEmail(arguments.order);
+			
 			return true;
 		}
 		
 		return false;
+	}
+
+	function sendOrderConfirmationEmail (required any order) {
+		
+		var emailTo = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>';
+		var emailFrom = setting('order_orderPlacedEmailFrom');
+		var emailCC = setting('order_orderPlacedEmailCC');
+		var emailBCC = setting('order_orderPlacedEmailBCC');
+		var emailSubject = setting('order_orderPlacedEmailSubject');
+		var emailBody = "";
+		
+		savecontent variable="emailBody" {
+			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
+		}
+		
+		getTagProxyService().cfmail(to = emailTo, from = emailFrom, cc = emailCC, bcc = emailBCC, subject = emailSubject, body = emailBody);
+		
 	}
 	
 	public any function getOrderRequirementsList(required any order) {
