@@ -116,15 +116,18 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	public numeric function getSubtotal() {
 		var subtotal = 0;
-		var orderItems = getOrderItems();
-		for(var i=1; i<=arrayLen(orderItems); i++) {
-			subtotal += orderItems[i].getExtendedPrice();
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			subtotal += getOrderItems()[i].getExtendedPrice();
 		}
 		return subtotal;
 	}
 	
 	public numeric function getTaxTotal() {
-		return 0;
+		var taxTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			taxTotal += getOrderItems()[i].getTaxAmount();
+		}
+		return taxTotal;
 	}
 	
 	public numeric function getFulfillmentTotal() {
