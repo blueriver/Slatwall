@@ -209,7 +209,10 @@ component extends="BaseService" accessors="true" {
 		if( arguments.product.getOrderedFlag() ) {
 			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
 		}
-		var deleteResponse = Super.delete( arguments.product );
+		// Removed default sku
+		arguments.product.setDefaultSku(javaCast("null",""));
+		
+		var deleteResponse = super.delete( arguments.product );
 		if( !deleteResponse.hasErrors() ) {
 			// clear cached product type tree so that it's refreshed on the next request
 	   		clearProductTypeTree();
