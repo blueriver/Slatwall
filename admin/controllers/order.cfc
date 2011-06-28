@@ -40,6 +40,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="orderService" type="any";
+	property name="paymentService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.orderID" default="";
@@ -100,6 +101,26 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
 		getFW().setView(action="admin:order.detail");
+	}
+	
+	public void function chargeOrderPayment(required struct rc) {
+		var orderPayment = getOrderService().getOrderPayment(rc.orderPaymentID);
+		if(!isNull(orderPayment)) {
+			var chargeOK = getPaymentService().processPayment(orderPayment,"chargePreAuthorization",orderPayment.getAmount());
+			if(chargeOK) {
+				rc.message = rc.$.slatwall.rbKey("admin.order.chargeOrderPayment_success");
+				getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
+			} else {
+				rc.errorBean = orderPayment.getErrorBean();
+				rc.messagetype = "error";
+				rc.message = rc.$.slatwall.rbKey("admin.order.chargeOrderPayment_error");
+				getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message,messagetype,errorBean");
+			}
+		} else {
+			rc.message = rc.$.slatwall.rbKey("admin.order.chargeorderpayment_notexists");
+			rc.messageType = "error";
+			getFW().redirect(action="admin:order.list",preserve="message,messagetype");
+		}
 	}
 	
 	/****** Order Fulfillments *****/
