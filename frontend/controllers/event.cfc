@@ -48,7 +48,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="contentManager" type="any";
 	
 	public void function before(required any rc) {
-		variables.fw.setView("frontend:event.blank");
+		getFW().setView("frontend:event.blank");
 	}
 	
 	public void function onSiteRequestStart(required any rc) {
