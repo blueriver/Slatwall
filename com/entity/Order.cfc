@@ -87,13 +87,35 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arrayLen(getOrderItems());
 	}
 	
+	// TODO: may need to refactor the next 4 methods to more efficient HQL
 	public numeric function getTotalQuantity() {
-		var orderItems = getOrderItems();
-		var totalQuantity = 0;
-		for(var i=1; i<=arrayLen(orderItems); i++) {
-			totalQuantity += orderItems[i].getQuantity(); 
+		if(!structKeyExists(variables,"totalQuantity")) {
+			var orderItems = getOrderItems();
+			variables.totalQuantity = 0;
+			for(var i=1; i<=arrayLen(orderItems); i++) {
+				variables.totalQuantity += orderItems[i].getQuantity(); 
+			}			
 		}
-		return totalQuantity;
+		return variables.totalQuantity;
+	}
+	
+	public numeric function getQuantityDelivered() {
+		if(!structKeyExists(variables,"quantityDelivered")) {
+			var orderItems = getOrderItems();
+			var variables.quantityDelivered = 0;
+			for(var i=1; i<=arrayLen(orderitems); i++) {
+				variables.quantityDelivered += orderItems[i].getQuantityDelivered();
+			}
+		}
+		return variables.quantityDelivered;
+	}
+	
+	public numeric function getQuantityUndelivered() {
+		return this.getTotalQuantity() - this.getQuantityDelivered();
+	}
+	
+	public boolean function isPartiallyFulfilled() {
+		return (this.getQuantityDelivered() > 0 && this.getQuantityDelivered() < this.getTotalQuantity());
 	}
 	
 	public numeric function getSubtotal() {
@@ -112,7 +134,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public numeric function getFulfillmentTotal() {
 		var fulfillmentTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			fulfillmentTotal += getOrderFulfillments()[1].getFulfillmentCharge();
+			fulfillmentTotal += getOrderFulfillments()[i].getFulfillmentCharge();
 		}
 		return fulfillmentTotal;
 	}
@@ -198,7 +220,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     /************   END Association Management Methods   *******************/
 	
 	// Get the sum of all the payment amounts
-	public boolean function getPaymentAmountTotal() {
+	public numeric function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
 		var orderPayments = getOrderPayments();
@@ -207,6 +229,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		
 		return totalPayments;
+	}
+	
+	public boolean function isPaid() {
+		if(this.getPaymentAmountTotal() < getTotal()) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	public any function getActionOptions() {
