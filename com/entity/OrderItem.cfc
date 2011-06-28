@@ -58,16 +58,22 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 
 	public any function init() {
+		
+		if(isNull(getTaxAmount())) {
+			setTaxAmount(0);
+		}
+		
 		// set status to new by default
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
 			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
 			setOrderItemStatusType(statusType);
 		}
-	   // set default collections for association management methods
-	   if(isNull(variables.orderDeliveryItems)) {
-	       variables.orderDeliveryItems = [];
-	   }    
-		return Super.init();
+		// set default collections for association management methods
+		if(isNull(variables.orderDeliveryItems)) {
+		   variables.orderDeliveryItems = [];
+		}
+		
+		return super.init();
 	}
 	
 	public string function getStatus(){
@@ -80,10 +86,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	public numeric function getExtendedPrice() {
 		return getPrice()*getQuantity();
-	}
-	
-	public numeric function getTaxAmount() {
-		return structKeyExists(variables,"taxAmount") ? variables.taxAmount : 0;
 	}
 	
 	public numeric function getQuantityDelivered() {

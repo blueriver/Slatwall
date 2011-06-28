@@ -60,6 +60,7 @@
 		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="tagProxyService"><ref bean="tagProxyService" /></property>
+		<property name="taxService"><ref bean="taxService" /></property>
     </bean>
 
     <bean id="optionService" class="Slatwall.com.service.OptionService">
@@ -126,6 +127,7 @@
 	<bean id="taxService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>
 		<property name="validationService"><ref bean="validationService" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
 
     <bean id="vendorService" class="Slatwall.com.service.VendorService">

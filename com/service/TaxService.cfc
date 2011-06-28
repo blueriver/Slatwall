@@ -38,5 +38,26 @@ Notes:
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="addressService" type="any";
+
+	public numeric function calculateOrderItemTax(required any orderItem) {
+		var taxAmount = 0;
+		
+		var fulfillment = arguments.orderItem.getOrderFulfillment();
+		
+		if(fulfillment.getFulfillmentMethodID() == "shipping") {
+			var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
+			var address = fulfillment.getShippingAddress();
+			if(!isNull(address)) {
+				for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
+					if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
+						taxAmount += arguments.orderItem.getPrice() * taxCategory.getTaxCategoryRates()[i].getTaxRate();
+					}
+				}
+			}
+		}
+		
+		return taxAmount;
+	}
 	
 }
