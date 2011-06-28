@@ -43,7 +43,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	}
 	
 	// Image File Methods
-	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, boolean crop=false, cropleftStart=0, croptopStart=0) {
+	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
 		var resizedImagePath = "";
 		if(!fileExists(expandPath(arguments.imagePath))) {
 			arguments.imagePath = "#application.configBean.getContext()#/plugins/Slatwall/assets/images/missingimage.jpg";
@@ -54,16 +54,28 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		} else {
 			// if dimensions are passed in, check to see if the image has already been created. If so, display it, if not create it first and then display it
 			var imageNameSuffix = (arguments.width && arguments.height) ? "_#arguments.width#w_#arguments.height#h" : (arguments.width ? "_#arguments.width#w" : "_#arguments.height#h");
-			// if the image was resized by cropping, the name will reflect that
-			if(arguments.crop) {
-				imageNameSuffix &= "_c_#arguments.cropleftStart#x_#arguments.croptopStart#y";
+			// image name will reflect that resize method (defaults to "scale" so that one isn't indicated)
+			if(arguments.resizeMethod == "scaleAndCrop") {
+				imageNameSuffix &= "_sc";
+			} else if(arguments.resizeMethod == "crop") {
+				if(len.arguments.cropLocation) {
+					imageNameSuffix &= "_c_#arguments.cropLocation#";
+				} else {
+					imageNameSuffix &= "_c_#arguments.cropXStart#x_#arguments.cropYStart#y";
+				}
+				if(arguments.scaleWidth != 100) {
+					imageNameSuffix &= "_#arguments.scaleWidth#sw";
+				}
+				if(arguments.scaleHeight != 100) {
+					imageNameSuffix &= "_#arguments.scaleHeight#sh";
+				}
 			}
 			var imageExt = listLast(arguments.imagePath,".");
 			var resizedImagePath = replaceNoCase(arguments.imagePath,".#imageExt#","#imageNameSuffix#.#imageExt#");
 			if(!fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
-				if(!arguments.crop) {
+				if(!arguments.resizeMethod == "scale") {
 					if(arguments.width && arguments.height) {
 						imageScaleToFit(img,arguments.width,arguments.height);
 					} else {
@@ -74,7 +86,9 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 						}
 						imageResize(img,arguments.width,arguments.height);
 					}
-				} else {
+				} else if(arguments.resizeMethod == "scaleAndCrop") {
+					
+				} else if(arguments.resizeMethod == "crop") {
 					if(!arguments.width) {
 						arguments.width = arguments.height;
 					}
