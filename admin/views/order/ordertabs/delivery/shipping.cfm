@@ -40,10 +40,12 @@ Notes:
 <cfoutput>
 	<div class="orderDelivery">
 	<h4>#$.Slatwall.rbKey("entity.orderDelivery")# #local.deliveryNumber#</h4>
+	<cfif not isNull(local.orderDelivery.getShippingAddress())>
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
 		<cf_SlatwallAddressDisplay address="#local.orderDelivery.getShippingAddress()#" edit="false" />
 	</div>
+	</cfif>
 	<div class="shippingMethod">
 		<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />
 		<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
