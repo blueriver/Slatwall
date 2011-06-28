@@ -204,7 +204,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return (getQOH() - getQC()) + getQEXP();
 	}
 	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		// Get the expected Image Path
 		var path=getImagePath();
 		
@@ -231,7 +231,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
-	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {

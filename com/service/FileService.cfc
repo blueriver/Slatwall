@@ -301,7 +301,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		return arguments.image;
 	}
 	
-	public any function customCrop(required any image, required numeric width, required numeric height, string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
+	public any function customCrop(required any image, required numeric width, required numeric height, string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		
 		// Set the xy offset for cropping from location, if passed in
 		if(len(arguments.cropLocation) > 0) {
@@ -322,16 +322,21 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 			}
 		}
 		
-		// get the height and width of the crop on the original image fro the scale arguments
-		var cropWidth = arguments.image.width * (arguments.scaleWidth/100);
-		var cropHeight = arguments.image.height * (arguments.scaleHeight/100);
-		
-		//crop the original image
-		imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,cropWidth,cropHeight);
-		
-		// resize the cropped image to the passed in dimensions
-		// in case the aspect ratio of the size of the desired image is different than the aspect ratio calculated from scale arguments, we use the aspectCrop() method from the center of the image
-		return aspectCrop(arguments.image,arguments.width,arguments.height,"center");
+		if(!arguments.scaleHeight && !arguments.scaleWidth) {
+			imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,arguments.width,arguments.height);
+			return arguments.image;
+		} else {	
+			// get the height and width of the crop on the original image fro the scale arguments
+			var cropWidth = arguments.image.width * (arguments.scaleWidth/100);
+			var cropHeight = arguments.image.height * (arguments.scaleHeight/100);
+			
+			//crop the original image
+			imageCrop(arguments.image,arguments.cropXStart,arguments.cropYStart,cropWidth,cropHeight);
+			
+			// resize the cropped image to the passed in dimensions
+			// in case the aspect ratio of the size of the desired image is different than the aspect ratio calculated from scale arguments, we use the aspectCrop() method from the center of the image
+			return aspectCrop(arguments.image,arguments.width,arguments.height,"center");			
+		}
 	}
 
 }
