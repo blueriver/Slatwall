@@ -61,4 +61,273 @@ component extends="BaseDAO" {
 		return ormExecuteQuery(hql,params);
 	}
 	
+	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
+		var fileType = listLast(arguments.fileURL,".");
+		var delimiter = "";
+		if(fileType == 'csv'){
+			delimiter = chr(44);
+		} else if(arguments.fileType == 'txt'){
+			delimiter = chr(9);
+		}
+		
+		var data = queryNew("");
+		if(fileType == "xls"){
+			//Read xls
+		} else{
+			var http = new http();
+			http.setUrl(fileURL);
+			http.setMethod("get");
+			http.setDelimiter(delimiter);
+			http.setTextqualifier(textqualifier);
+			http.setFirstrowasheaders(true);
+			http.setName("data");
+			data = http.send().getResult();
+		}
+		var productLookupColumns = ['product_remoteID','product_productID','product_productCode','product_productName'];
+		var productLookupColumn = "";
+		//set up lookup column
+		for(var i=1; i <= arrayLen(productLookupColumns); i++){
+			if(listFindNoCase(data.columnList,productLookupColumns[i])){
+				productLookupColumn = productLookupColumns[i];
+				break;
+			}
+		}
+		var skuLookupColumn = "sku_skucode";
+
+		//get db info for the table
+		/*
+		var dbinfo = new dbinfo();
+		dbinfo.setDataSource(application.configBean.getDatasource());
+		dbinfo.setUsername(application.configBean.getUsername());
+		dbinfo.setPassword(application.configBean.getPassword());
+		dbinfo.setTable("SlatwallProduct");
+		var productMetaData = dbinfo.columns();
+		dbinfo.setTable("SlatwallSku");
+		var skuMetaData = dbinfo.columns();
+		*/
+		
+		var columnList = listToArray(data.columnList);
+		// columns will be specified as [tableName].[columnName]
+		var productColumns = [];
+		var skuColumns = [];
+		var optionGroups = [];
+		var customAttributes = [];
+		for(var column in columnList) {
+			if(listFirst(column,"_") == "product"){
+				arrayAppend(productColumns,column);
+			} else if(listFirst(column,"_") == "sku"){
+				arrayAppend(skuColumns,column);
+			} else if(listFirst(column,"_") == "option"){
+				arrayAppend(optionGroups,column);
+			} else if(listFirst(column,"_") == "attribute"){
+				arrayAppend(customAttributes,column);
+			}
+		}
+		//set required fields that are not in import
+		var productExtraData = [];
+		if(!arrayFind(columnList,"product_activeFlag")){
+			arrayAppend(productExtraData,{name="activeFlag",value="1"});
+		}
+		if(!arrayFind(columnList,"product_publishedFlag")){
+			arrayAppend(productExtraData,{name="publishedFlag",value="1"});
+		}
+		if(!arrayFind(columnList,"product_manufactureDiscontinuedFlag")){
+			arrayAppend(productExtraData,{name="manufactureDiscontinuedFlag",value="0"});
+		}
+		if(!arrayFind(columnList,"product_template")){
+			arrayAppend(productExtraData,{name="template",value=setting('product_defaultTemplate')});
+		}
+
+		var skuExtraData = [];
+		if(!arrayFind(columnList,"sku_shippingWeight")){
+			arrayAppend(skuExtraData,{name="shippingWeight",value="0"});
+		}
+		
+		//TODO: product pages, sku image
+		
+		var timeStamp = now();
+		var administratorID = getService("SessionService").getCurrentAccount().getAccountID();
+		
+		var dataQuery = new Query();
+		dataQuery.setDatasource(application.configBean.getDatasource());
+		dataQuery.setUsername(application.configBean.getUsername());
+		dataQuery.setPassword(application.configBean.getPassword());
+		
+		//loop through all the option groups and check if it exists
+		for(var i=arrayLen(optionGroups); i >= 1; i--){
+			var optionGroup = optionGroups[i];
+			dataQuery.setSql("
+				SELECT optionGroupID FROM SlatwallOptionGroup WHERE optionGroupName = '#ListLast(optionGroup,"_")#';
+			");
+			var lookupResult = dataQuery.execute().getResult();
+			if(!lookupResult.recordcount){
+				arrayDelete(optionGroups,optionGroup);
+			}
+		}
+		
+		// Loop over each record to insert or update
+		for(var r=1; r <= data.recordcount; r++) {
+			transaction{
+				// set up brandID and productTypeID, these are required in the import
+				dataQuery.setSql("
+						SELECT brandID FROM SlatwallBrand WHERE brandName = '#data['brand_brandname'][r]#';
+					");
+				var brandID = dataQuery.execute().getResult()['brandID'];
+				dataQuery.setSql("
+						SELECT productTypeID FROM SlatwallProductType WHERE productTypeName = '#data['productType_productTypeName'][r]#';
+					");
+				var productTypeID = dataQuery.execute().getResult()['productTypeID'];
+				//Create array of extra data to be saved with product
+				var thisExtraData = [];
+				thisExtraData.addAll(productExtraData);
+				arrayAppend(thisExtraData,{name="brandID",value=brandID});
+				arrayAppend(thisExtraData,{name="productTypeID",value=productTypeID});
+				//save product
+				var productID = saveImportData(data,r,"SlatwallProduct",productColumns,productLookupColumn,"productID",thisExtraData);
+
+				//Create array of extra data to be saved with sku
+				var thisExtraData = [];
+				thisExtraData.addAll(skuExtraData);
+				arrayAppend(thisExtraData,{name="productID",value=productID});
+				//save sku
+				var skuID = saveImportData(data,r,"SlatwallSku",skuColumns,skuLookupColumn,"skuID",thisExtraData);
+				//loop through all the option groups and assign options to sku
+				for(var optionGroup in optiongroups){
+					var optionCode = data[optionGroup][r];
+					dataQuery.setSql("
+						SELECT SlatwallOption.optionID,SlatwallOptionGroup.optionGroupID FROM SlatwallOptionGroup LEFT JOIN SlatwallOption ON SlatwallOptionGroup.optionGroupID = SlatwallOption.optionGroupID AND SlatwallOption.optionCode = '#optionCode#' WHERE SlatwallOptionGroup.optionGroupName = '#ListLast(optionGroup,"_")#';
+					");
+					var lookupResult = dataQuery.execute().getResult();
+					var optionID = lookupResult.optionID;
+					if(optionID !=  ""){
+						dataQuery.setSql("
+							SELECT optionID FROM SlatwallSkuOption WHERE optionID = '#optionID#' AND skuID = '#skuID#';
+						");
+						var exists = dataQuery.execute().getResult().recordcount;
+					} else {
+						var optionID = lcase(replace(createUUID(),"-","","all"));
+						dataQuery.setSql("
+							INSERT INTO SlatwallOption (optionID,optionGroupID,optionCode,optionName,createdDatetime,modifiedDatetime,CreatedByAccountID,modifiedByAccountID) VALUES ('#optionID#','#lookupResult.optionGroupID#','#optionCode#','#optionCode#',#timeStamp#,#timeStamp#,'#administratorID#','#administratorID#');
+						");
+						dataQuery.execute();
+						var exists = false;
+					}
+					if(!exists){
+						dataQuery.setSql("
+							INSERT INTO SlatwallSkuOption (optionID,skuID) VALUES ('#optionID#','#skuID#');
+						");
+						dataQuery.execute();
+					}
+				}
+				//loop through all the custom attributes and add it to product
+				for(var customAttribute in customAttributes){
+					var attributeID = ListLast(customAttribute,"_");
+					var attributeValue = data[customAttribute][r];
+					if(attributeValue != ""){
+						dataQuery.setSql("
+							UPDATE SlatwallAttributeValue SET attributeValue = :attributeValue WHERE attributeID = '#attributeID#' AND productID = '#productID#';
+						");
+						dataQuery.addParam(name="attributeValue", value="#attributeValue#");
+						if(!dataQuery.execute().getPrefix().recordcount){
+							var attributeValueID = lcase(replace(createUUID(),"-","","all"));
+							dataQuery.setSql("
+								INSERT INTO SlatwallAttributeValue (attributeValueID,attributeValueType,attributeValue,attributeID,productID) VALUES ('#attributeValueID#','Product',,'#attributeID#','#productID#');
+							");
+							dataQuery.execute();
+						}
+						dataQuery.clearParams();
+					}
+				}
+			}
+		}
+		
+		//set default sku for all the new products to the first sku
+		dataQuery.setSql("
+			UPDATE SlatwallProduct
+			SET defaultSkuID = (SELECT top 1 skuID FROM SlatwallSku WHERE SlatwallSku.productID = SlatwallProduct.productID)
+			FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
+			WHERE SlatwallProduct.defaultSkuID IS NULL
+		");
+		dataQuery.execute();
+		//set sku image to product default image
+		dataQuery.setSql("
+			UPDATE SlatwallSku
+			SET imageFile = (SELECT productCode + '.' + '#setting("product_imageExtension")#' FROM SlatwallProduct WHERE SlatwallSku.productID = SlatwallProduct.productID)
+			FROM SlatwallProduct INNER JOIN SlatwallSku ON SlatwallProduct.productID = SlatwallSku.productID
+			WHERE SlatwallSku.imageFile IS NULL
+		");
+		dataQuery.execute();
+	}
+	
+	private string function saveImportData(required query data,required numeric rowNumber,required string tableName,required array columnList,required string lookupColumn,required string idColumn,array extraData = []){
+		var lookupColumnValue = createObject( "java", "java.lang.StringBuilder" ).init();
+		var updateSetString = createObject( "java", "java.lang.StringBuilder" ).init();
+		var insertColumns = createObject( "java", "java.lang.StringBuilder" ).init();
+		var insertValues = createObject( "java", "java.lang.StringBuilder" ).init();
+		var value = createObject( "java", "java.lang.StringBuilder" ).init();
+
+		var timeStamp = now();
+		var administratorID = getService("SessionService").getCurrentAccount().getAccountID();
+
+		lookupColumnValue = arguments.data[arguments.lookupColumn][arguments.rowNumber];
+		//loop through column and prepare save statement
+		for(var thisColumn in arguments.columnList) {
+			value = arguments.data[thisColumn][arguments.rowNumber];
+			
+			if(isNumeric(value)) {
+				updateSetString &= " #listLast(thisColumn,'_')#='#value#',";
+			} else {
+				updateSetString &= " #listLast(thisColumn,'_')#='#value#',";
+			}
+			insertColumns &= " #listLast(thisColumn,'_')#,";
+			if(isNumeric(value)) {
+				insertValues &= " '#value#',";	
+			} else {
+				insertValues &= " '#value#',";
+			}
+		}
+		//set audit fields
+		updateSetString &= " modifiedDatetime=#timeStamp#,";
+		updateSetString &= " modifiedByAccountID='#administratorID#',";
+		insertColumns &= " createdDatetime,modifiedDatetime,CreatedByAccountID,modifiedByAccountID,";
+		insertValues &= " #timeStamp#,#timeStamp#,'#administratorID#','#administratorID#',";
+		
+		for(var item in extraData){
+			insertColumns &= " #item.name#,";
+			insertValues &= " '#item.value#',";
+		}
+		if(arguments.tableName == "SlatwallProduct"){
+			insertColumns &= " filename,";
+			insertValues &= " '#getService('FileService').filterFileName(arguments.data['product_productName'][arguments.rowNumber])#',";
+		}
+		
+		//Remove the last , from the update string, for insert we will append primary key
+		if(len(updateSetString)) {
+			updateSetString = left(updateSetString, len(updateSetString)-1);
+		}
+
+		var dataQuery = new Query();
+		dataQuery.setDataSource(application.configBean.getDatasource());
+		dataQuery.setUsername(application.configBean.getUsername());
+		dataQuery.setPassword(application.configBean.getPassword());
+		dataQuery.setSql("
+				SELECT #arguments.idColumn# FROM #arguments.tableName# WHERE #listLast(arguments.lookupColumn,'_')# = '#lookupColumnValue#';
+			");
+		var lookupResult = dataQuery.execute().getResult();
+		var exists = lookupResult.recordcount;
+		var idColumnValue = lookupResult[arguments.idColumn];
+		if(exists){
+			dataQuery.setSql("
+				UPDATE #arguments.tableName# SET #updateSetString# WHERE #arguments.idColumn# = '#idColumnValue#';
+			");
+			dataQuery.execute();
+		} else {
+			idColumnValue = lcase(replace(createUUID(),"-","","all"));
+			dataQuery.setSql("
+				INSERT INTO #arguments.tableName# (#insertColumns##arguments.idColumn#) VALUES (#insertValues#'#idColumnValue#');
+			");
+			dataQuery.execute();
+		}
+		return idColumnValue;
+	}
 }

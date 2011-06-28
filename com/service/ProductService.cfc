@@ -355,4 +355,9 @@ component extends="BaseService" accessors="true" {
 	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs = []){
 		return getDAO().getAttributeSets(arguments.attributeSetTypeCode,arguments.productTypeIDs);
 	}
+	
+	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
+		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
+	}
+	
 }
