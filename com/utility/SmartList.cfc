@@ -473,8 +473,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		arraySort(scoreArray, "numeric", "desc");
 		var sortedArray = arrayNew(1);
+		arrayResize(sortedArray, arrayLen(scoreArray));
+		
 		for(var i=1; i <= arrayLen(scoreArray); i++) {
-			arrayAppend(sortedArray, structSort[scoreArray[i]]);
+			sortedArray[i] = structSort[scoreArray[i]];
 		}
 		
 		setSearchTime(getTickCount()-searchStart);
