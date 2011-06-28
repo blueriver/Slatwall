@@ -69,6 +69,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function detail(required struct rc) {
 	   rc.order = getOrderService().getOrder(rc.orderID);
+	   rc.shippingServices = getService("settingService").getShippingServices();
 	   if(!isNull(rc.order) and !rc.order.isNew()) {
 	       rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
 	   } else {

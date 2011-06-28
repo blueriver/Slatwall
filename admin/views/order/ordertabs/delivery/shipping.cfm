@@ -35,89 +35,43 @@
 
 Notes:
 
-
+--->
 
 <cfoutput>
-	<table class="stripe">
-		<tr>
-			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
-			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
-			<!---<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>--->
-			<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
-			<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
-			<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
-			<th>#$.slatwall.rbKey("entity.orderitem.extendedprice")#</th>
-		</tr>
-			
-		<cfloop array="#local.orderFulfillment.getOrderFulfillmentItems()#" index="local.orderItem">
-			<tr>
-				<td>#local.orderItem.getSku().getSkuCode()#</td>
-				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
-<!---				<td>
-					<cfset local.orderItemActionOptions = local.orderItem.getActionOptions() />
-					<cfif arrayLen(local.orderItemActionOptions) gt 0>
-						<select name="orderItemActions">
-							<option value="">#$.slatwall.rbKey("define.select")#</option>
-							<cfloop array = #local.orderItemActionOptions# index="local.thisAction">
-								<option value="#local.orderItem.getOrderItemID()#_#local.thisAction.getOrderItemActionType().getTypeID()#">#local.thisAction.getOrderItemActionType().getType()#</option>
-							</cfloop>
-						</select>
-						<cfif local.orderItem.getQuantity() gt 1>
-							<div>
-								<label for="qtyFulFilled#local.orderItem.getOrderItemID()#">Qty:</label>
-								<select name="qtyFulfilled" id="qtyFulFilled#local.orderItem.getOrderItemID()#">
-									<cfloop from="#local.orderItem.getQuantity()#" to="1" step="-1" index="local.i">
-										<option value="#local.i#"<cfif local.i eq local.orderItem.getQuantity()> selected="selected"</cfif>>#local.i#</option>
-									</cfloop>
-								</select>
-							</div>
-						</cfif>
-					<cfelse>
-						#$.slatwall.rbKey("define.notApplicable")#
-					</cfif>
-				</td>--->				
-				<td>#dollarFormat(local.orderItem.getPrice())#</td>
-				<td>#int(local.orderItem.getQuantity())#</td>
-				<td>#local.orderItem.getQuantityDelivered()#</td>
-				<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
-			</tr>
-		</cfloop>
-	</table>
+	<div class="orderDelivery">
+	<h4>#$.Slatwall.rbKey("entity.orderDelivery")# #local.deliveryNumber#</h4>
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
-		<cf_SlatwallAddressDisplay address="#local.orderFulfillment.getShippingAddress()#" edit="false" />
+		<cf_SlatwallAddressDisplay address="#local.orderDelivery.getOrderFulfillment().getShippingAddress()#" edit="false" />
 	</div>
 	<div class="shippingMethod">
+		<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />
+		<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
-		#local.orderFulfillment.getShippingMethod().getShippingMethodName()#	
+		#local.orderDelivery.getShippingMethod().getShippingMethodName()#<br>
+		(#local.shippingServiceMethods[local.orderDelivery.getShippingMethod().getShippingProviderMethod()]#)<br>
+		#$.slatwall.rbKey("entity.orderDeliveryShipping.trackingNumber")#: #local.orderDelivery.getTrackingNumber()#
 	</div>
-	<div class="totals">
-		<dl class="fulfillmentTotals">
-			<dt>
-				#$.slatwall.rbKey("entity.orderFulfillment.subtotal")#:
-			</dt>
-			<dd>
-				#dollarFormat( local.orderFulfillment.getSubTotal() )#
-			</dd>
-			<dt>
-				#$.slatwall.rbKey("entity.orderFulfillment.shippingCharge")#:
-			</dt>
-			<dd>
-				#dollarFormat( local.orderFulfillment.getShippingCharge() )#
-			</dd>
-			<dt>
-				#$.slatwall.rbKey("entity.orderFulfillment.tax")#:
-			</dt>
-			<dd>
-				#dollarFormat( local.orderFulfillment.getTax() )#
-			</dd>
-			<dt>
-				#$.slatwall.rbKey("entity.orderFulfillment.total")#:
-			</dt>
-			<dd>
-				#dollarFormat( local.orderFulfillment.getTotalCharge() )#
-			</dd>
-		</dl>
+	<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryOpenDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryOpenDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryOpenDateTime())#</p>
+	<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryCloseDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryCloseDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryCloseDateTime())#</p>
+		<table class="stripe">
+			<tr>
+				<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
+				<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
+				<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
+				<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
+				<th>#$.slatwall.rbKey("entity.orderitem.extendedprice")#</th>
+			</tr>
+				
+			<cfloop array="#local.orderDelivery.getOrderDeliveryItems()#" index="local.thisOrderDeliveryItem">
+				<tr>
+					<td>#local.thisOrderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
+					<td class="varWidth">#local.thisOrderDeliveryItem.getOrderItem().getSku().getProduct().getBrand().getBrandName()# #local.thisOrderDeliveryItem.getOrderItem().getSku().getProduct().getProductName()#</td>				
+					<td>#dollarFormat(local.thisOrderDeliveryItem.getOrderItem().getPrice())#</td>
+					<td>#local.thisOrderDeliveryItem.getQuantityDelivered()#</td>
+					<td>#dollarFormat(local.thisOrderDeliveryItem.getOrderItem().getExtendedPrice())#</td>
+				</tr>
+			</cfloop>
+		</table>
 	</div>
-	<div class="clear"></div>
-</cfoutput>--->
+</cfoutput>

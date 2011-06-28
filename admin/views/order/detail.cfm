@@ -90,7 +90,7 @@ Notes:
 			<cfloop array="#local.payments#" index="local.thisPayment">
 			<tr>
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#local.thisPayment.getAmountAuthorized()#</td>
+				<td>#dollarFormat(local.thisPayment.getAmountAuthorized())#</td>
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
@@ -119,7 +119,7 @@ Notes:
 			<ul>
 				<li><a href="##tabOrderFulfillments" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderFulfillments")#</span></a></li>	
 				<li><a href="##tabOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderDeliveries")#</span></a></li>
-				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>
+<!---				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>--->
 			</ul>
 		
 			<div id="tabOrderFulfillments">
@@ -138,18 +138,23 @@ Notes:
 			
 			<div id="tabOrderDeliveries">
 				<cfset local.orderDeliveries = rc.order.getOrderDeliveries() />
+				<cfset local.deliveryNumber = 0 />
 				<cfif arrayLen(local.orderDeliveries)>
 					<cfloop array="#local.orderDeliveries#" index="local.thisOrderDelivery">
+						<cfset local.deliveryNumber++ />
+						<!--- set up order delivery in params struct to pass into view which shows information specific to the fulfillment method--->
 						<cfset local.params.orderDelivery = local.thisOrderDelivery />
-						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)#
+						<cfset local.params.orderID = rc.order.getOrderID() />
+						<cfset local.params.deliveryNumber = local.deliveryNumber />
+						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)# 
 					</cfloop>
 				<cfelse>
 					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#
 				</cfif>
 			</div>
-			<div id="tabOrderActivityLog">
+		<!---	<div id="tabOrderActivityLog">
 				
-			</div>
+			</div>--->
 		</div> <!-- tabs -->
 	</div>
 </div>
