@@ -238,4 +238,16 @@ component extends="BaseService" accessors="true" output="false" {
 		return arguments.account;
 	}
 	
+	public any function getAccountSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallAccount";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="firstName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="lastName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="company", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="primaryEmailAddress_emailAddress", weight=3);
+		
+		return smartList;
+	}
+	
 }

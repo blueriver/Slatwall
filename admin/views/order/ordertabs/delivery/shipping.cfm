@@ -47,11 +47,11 @@ Notes:
 	</div>
 	</cfif>
 	<div class="shippingMethod">
-		<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />
-		<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
+		<!---<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />--->
+		<!---<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />--->
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
 		#local.orderDelivery.getShippingMethod().getShippingMethodName()#<br>
-		(#local.shippingServiceMethods[local.orderDelivery.getShippingMethod().getShippingProviderMethod()]#)<br>
+		<!---(#local.shippingServiceMethods[local.orderDelivery.getShippingMethod().getShippingProviderMethod()]#)<br>--->
 		#$.slatwall.rbKey("entity.orderDeliveryShipping.trackingNumber")#: #local.orderDelivery.getTrackingNumber()#
 	</div>
 	<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryOpenDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryOpenDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryOpenDateTime())#</p>
