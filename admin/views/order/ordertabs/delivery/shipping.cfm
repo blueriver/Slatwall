@@ -42,7 +42,7 @@ Notes:
 	<h4>#$.Slatwall.rbKey("entity.orderDelivery")# #local.deliveryNumber#</h4>
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
-		<cf_SlatwallAddressDisplay address="#local.orderDelivery.getOrderFulfillment().getShippingAddress()#" edit="false" />
+		<cf_SlatwallAddressDisplay address="#local.orderDelivery.getShippingAddress()#" edit="false" />
 	</div>
 	<div class="shippingMethod">
 		<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />

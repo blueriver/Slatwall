@@ -287,6 +287,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
 			case("shipping"): {
+				// copy the shipping address from the order fulfillment and set it in the delivery
+				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
 			}
 			default:{}
@@ -315,6 +317,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(arrayLen(orderDelivery.getOrderDeliveryItems()) == 0) {
 			getValidationService().setError(entity=orderDelivery, entityName="OrderDelivery", errorName="orderDeliveryItems",rule="hasOrderDeliveryItems");
 		}
+		
+		// update the status of the order
+		
 		
 		return this.save(orderDelivery);
 	}
