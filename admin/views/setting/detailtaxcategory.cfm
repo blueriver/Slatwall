@@ -50,6 +50,11 @@ Notes:
 		<dl class="twoColumn">
 			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
 		</dl>
+		<table class="stripe">
+			<th>Address Zone</th>
+			<th>Rate</th>
+			
+		</table>
 		<!---
 		<cfif rc.edit>
 			<form name="addressZone" action="#buildURL(action='admin:setting.saveaddresszone')#" method="post">
