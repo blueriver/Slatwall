@@ -155,33 +155,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		if(!listFind(rc.orderRequirementsList,"account") && !listFind(rc.orderRequirementsList,"fulfillment")) {
 			
-			var payment = getPaymentService().getOrderPayment(rc.orderPaymentID);
+			var tempOrderID = rc.$.slatwall.cart().getOrderID();
 			
-			if(isNull(payment)) {
-				if(rc.$.slatwall.cart().getTotal() != rc.$.slatwall.cart().getPaymentAmountTotal()) {
-					payment = getPaymentService().new("SlatwallOrderPayment#rc.paymentMethodID#");
-				} else {
-					payment = getPaymentService().rc.$.slatwall.cart().getOrderPayments()[1];
-				}
-				
-				// If no amount was passed in from the data, add the amount as the order total
-				if(!structKeyExists(arguments.rc, "amount")) {
-					arguments.rc.amount = $.slatwall.cart().getTotal() - rc.$.slatwall.cart().getPaymentAmountTotal();
-				}
-			}
+			var results = getOrderService().setupPaymentAndProcessOrder(order=rc.$.slatwall.cart(), data=rc);
 			
-			// Attempt to Validate & Save Order Payment
-			payment = getOrderService().saveOrderPayment(payment, arguments.rc);
-			
-			// Add payment to order
-			payment.setOrder(rc.$.slatwall.cart());
-			var orderID = rc.$.slatwall.cart().getOrderID();
-			var orderProcessOK = getOrderService().processOrder(rc.$.slatwall.cart());
-			
-			if(orderProcessOK) {
+			if(result) {
 				// Redirect to order Confirmation
 				getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#orderID#"), false);
 			}
+			
 		}
 		
 		detail(rc);

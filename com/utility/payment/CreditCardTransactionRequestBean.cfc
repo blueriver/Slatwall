@@ -43,6 +43,7 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="transactionType" type="string" ;
 	property name="transactionAmount" ormtype="float";
 	property name="transactionCurrency" ormtype="float";
+	property name="providerTransactionID" type="string";
 	
 	// Credit Card Info
 	property name="nameOnCreditCard" ormType="string";
@@ -134,7 +135,7 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 		}
 		
 		// Populate relavent Misc Info
-		setOrderPaymentID(arguments.orderPaymentCreditCard.getOrder().getOrderID());
+		setOrderPaymentID(arguments.orderPaymentCreditCard.getOrderPaymentID());
 		setOrderID(arguments.orderPaymentCreditCard.getOrder().getOrderID());
 		setAccountID(arguments.orderPaymentCreditCard.getOrder().getAccount().getAccountID());
 	}

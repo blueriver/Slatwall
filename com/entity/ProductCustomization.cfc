@@ -42,7 +42,7 @@ component displayname="Product Customization" entityname="SlatwallProductCustomi
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='attributeSet'}" missingrowignored="true";
 	property name="requiredFlag" ormtype="boolean" ;
 	property name="accountSaveFlag" ormtype="boolean" ;
-	property name="cost" ormtype="float" ;
+	property name="additionalCharge" ormtype="big_decimal";
 	
 	// Related Object Properties
 	property name="attributeSet" cfc="AttributeSet" fieldtype="one-to-one" constrained="true";

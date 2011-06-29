@@ -41,9 +41,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired="true";
-	property name="listPrice" ormtype="float" default="0";
-	property name="price" ormtype="float" default="0";
-	property name="shippingWeight" ormtype="float" dbdefault="0"  default="0" hint="This Weight is used to calculate shipping charges";
+	property name="listPrice" ormtype="big_decimal" default="0";
+	property name="price" ormtype="big_decimal" default="0";
+	property name="shippingWeight" ormtype="big_decimal" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
 	 
 	// Remote properties

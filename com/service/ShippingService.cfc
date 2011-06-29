@@ -94,16 +94,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							rateApplies = false;
 						}
 						
-						if(rateApplies && (rates[r].getCost() < methodCharge || methodCharge == 0)) {
+						if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
 							rateExists = true;
-							methodCharge = rates[r].getCost();
+							methodCharge = rates[r].getShippingRate();
 						}
 					}
 				}
 				if(rateExists) {
 					var option = this.newOrderShippingMethodOption();
 					option.setShippingMethod(shippingMethods[i]);
-					option.setTotalCost(methodCharge);
+					option.setTotalCharge(methodCharge);
 					option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
 					getDAO().save(option);
 				}
@@ -151,7 +151,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
 								var option = this.newOrderShippingMethodOption();
 								option.setShippingMethod(shippingMethods[m]);
-								option.setTotalCost(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCost());
+								option.setTotalCharge(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge());
 								option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
 								option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
 								getDAO().save(option);

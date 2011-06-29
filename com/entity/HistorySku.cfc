@@ -40,8 +40,8 @@ component displayname="History Sku" entityname="SlatwallHistorySku" table="Slatw
 			
 	// Persistent Properties
 	property name="historySkuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="price" ormtype="float";
-	property name="listPrice" ormtype="float";
+	property name="price" ormtype="big_decimal";
+	property name="listPrice" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

@@ -126,7 +126,63 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function setOrderShippingMethodFromMethodOptionID(required any orderShipping, required string orderShippingMethodOptionID) {
 		var selectedOption = this.getOrderShippingMethodOption(arguments.orderShippingMethodOptionID);
 		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
-		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
+		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCharge());
+	}
+	
+	public boolean function setupPaymentAndProcessOrder(required any order, required struct data) {
+		var result = false;
+		
+		// Place all of this code in a try catch so that if it errors we release the okToProcessOrder lock
+		try {
+			// Lock down this determination so that the values getting called and set don't overlap
+			lock scope="Session" timeout="45" {
+				// Get okToProcessOrder out of the session scope, and if it doesn't exist set it to true
+				var okToProcessOrder = getSessionService().getValue("okToProcessOrder", true);
+				
+				// If okToProcessOrder was true, update the session variable to false because we are about to try an process
+				if(okToProcessOrder) {
+					getSessionService().setValue("okToProcessOrder", false);
+				}
+			}
+			
+			if(okToProcessOrder) {
+				var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
+			
+				if(isNull(payment)) {
+					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
+						payment = getPaymentService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+					} else {
+						payment = arguments.order.getOrderPayments()[arrayLen(arguments.order.getOrderPayments())];
+					}
+					
+					// If no amount was passed in from the data, add the amount as the order total minus and previous payments
+					if(!structKeyExists(arguments.data, "amount")) {
+						arguments.data.amount = argument.order.getTotal() - argument.order.getPaymentAmountTotal();
+					}
+					
+					// Add new Payment to the order
+					payment.setOrder(arguments.order);
+				}
+				
+				// Attempt to Validate & Save Order Payment
+				payment = this.saveOrderPayment(payment, arguments.data);
+				
+				// If the payment has errors do not proceed with the order processing
+				if(payment.hasErrors()) {
+					result = false;
+				} else {
+					result = this.processOrder(arguments.order);
+				}
+				
+				// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
+				getSessionService().setValue("okToProcessOrder", true);
+			}
+		} catch (any e) {
+			// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
+			getSessionService().setValue("okToProcessOrder", true);
+		}
+
+		return result;
 	}
 	
 	public any function processOrder(required any order) {

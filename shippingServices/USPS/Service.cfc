@@ -130,7 +130,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
 					ratesResponseBean.addShippingMethod(
 						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
-						totalCost=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
+						totalCharge=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
 					);
 				}
 			}
