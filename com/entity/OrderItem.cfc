@@ -40,9 +40,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Persistent Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="price" ormtype="float";
-	property name="quantity" ormtype="float";
-	property name="taxAmount" ormtype="float";
+	property name="price" ormtype="big_decimal";
+	property name="quantity" ormtype="integer";
+	property name="taxAmount" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

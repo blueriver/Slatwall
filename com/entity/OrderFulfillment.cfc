@@ -40,7 +40,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="fulfillmentCharge" ormtype="float";
+	property name="fulfillmentCharge" ormtype="big_decimal";
 	
 	//non-persistent Properties
 	property name="subTotal" type="numeric" persistent="false";

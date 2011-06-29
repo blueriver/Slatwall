@@ -47,8 +47,9 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string";
 	property name="expirationYear" ormType="string";
-	property name="amountAuthorized" ormtype="float";
-	property name="amountCharged" ormtype="float";
+	property name="amountAuthorized" ormtype="big_decimal";
+	property name="amountCharged" ormtype="big_decimal";
+	property name="amountRefunded" ormtype="big_decimal";
 	
 	// Related Properties
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";

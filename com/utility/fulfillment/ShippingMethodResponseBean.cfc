@@ -39,7 +39,7 @@ Notes:
 component accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
 
 	property name="shippingProviderMethod" type="string";
-	property name="totalCost" type="numeric";
+	property name="totalCharge" type="numeric";
 	property name="estimatedArrivalDate" type="date";
 	
 }
