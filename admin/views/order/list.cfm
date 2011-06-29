@@ -39,26 +39,35 @@ Notes:
 <cfparam name="rc.$" type="any" />
 <cfparam name="rc.orderSmartList" type="any" />
 <cfparam name="rc.orderStatusOptions" type="array" />
+<cfparam name="rc.isSearch" default=0 />
+<cfparam name="rc.showAdvancedSearch" default=false />
 
 <cfoutput>
-	
 <div class="svoadminorderlist">
 	<form action="#buildURL('admin:order.list')#" method="post">
+		<input type="hidden" name="isSearch" value="1" />
 		<input name="Keyword" value="#rc.Keyword#" /> 
-<!---		<div id="advancedSearchOptions" style="display:none;">
+		<div id="advancedSearchOptions" <cfif !rc.showAdvancedSearch>style="display:none;"</cfif>>
 			#$.Slatwall.rbKey("entity.order.orderOpenDateTime")#: 
-			<input type="date" name="orderDateStart" class="date" /> to <input type="date" name="orderDateEnd" class="date" /><br>
+			<input type="date" value="#rc.orderDateStart#" name="orderDateStart" class="date" /> to <input type="date" value="#rc.orderDateEnd#" name="orderDateEnd" class="date" /> 
+			<cfif len(rc.orderDateStart) gt 0 or len(rc.orderDateEnd) gt 0>
+				<a href="##" id="clearDates">#$.slatwall.rbKey('admin.search.cleardates')#</a><br>
+			</cfif>
+			<div id="statusSelections">
 			#$.Slatwall.rbKey("entity.order.orderStatusType")#:
-				<select name="F:orderStatusType_systemCode">
-					<option value="All">#$.slatwall.rbKey('define.all')#</option>
-					<cfloop array="#rc.orderStatusOptions#" index="thisStatus" >
-						<option value="#thisStatus['id']#">#thisStatus['name']#</option>
-					</cfloop>
-				</select>
-		</div>	--->
+			<cfloop array="#rc.orderStatusOptions#" index="thisStatus" >
+				<input type="checkbox" name="F:orderstatustype_systemcode" id="#thisStatus['id']#" class="statusOption" value="#thisStatus['id']#"<cfif listFindNoCase(rc['F:orderstatustype_systemcode'],thisStatus['id'])> checked="checked"</cfif> /> <label for="#thisStatus['id']#">#thisStatus['name']#</label>
+			</cfloop>
+			<a href="##" id="selectAllStatuses">#$.slatwall.rbKey('define.selectall')#</a>
+			</div>
+		</div>
 		<button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>&nbsp;&nbsp;
-		<!---<a href="##" id="showAdvancedSearch">#$.slatwall.rbKey("admin.order.list.showAdvancedSearch")#</a>--->
+		<a href="##" id="showAdvancedSearch"<cfif rc.showAdvancedSearch> style="display:none;"</cfif>>#$.slatwall.rbKey("admin.order.list.showAdvancedSearch")#</a>
 	</form>
+	
+	<cfif rc.isSearch>
+		<h4>#rc.orderSmartList.getRecordsCount()# #$.slatwall.rbKey("admin.order.list.searchresultsfound")#</h4>
+	</cfif>
 	
 	<table id="OrderList" class="stripe">
 		<tr>

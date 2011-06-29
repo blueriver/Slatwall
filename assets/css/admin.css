@@ -123,6 +123,14 @@ div.optionsSelector {
 	margin-bottom: 10px;
 }
 
+div#advancedSearchOptions {
+	margin: 20px 0px;
+}
+
+div#statusSelections {
+	margin: 5px 0;
+}
+
 a.buttonOff {
 	background-color: #cccccc;
 	vertical-align: middle;
