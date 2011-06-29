@@ -157,7 +157,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			
 			var tempOrderID = rc.$.slatwall.cart().getOrderID();
 			
-			var results = getOrderService().setupPaymentAndProcessOrder(order=rc.$.slatwall.cart(), data=rc);
+			var result = getOrderService().setupPaymentAndProcessOrder(order=rc.$.slatwall.cart(), data=rc);
 			
 			if(result) {
 				// Redirect to order Confirmation
