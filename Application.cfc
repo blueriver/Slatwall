@@ -46,6 +46,9 @@ component extends="framework" output="false" {
 	}
 	
 	include "fw1Config.cfm";
+	variables.slatwallVfsRoot = "ram:///" & this.name;
+	this.mappings[ "/slatwallVfsRoot" ] = variables.slatwallVfsRoot;
+	
 	
 	public void function setPluginConfig(required any pluginConfig) {
 		application.slatwall.pluginConfig = arguments.pluginConfig; 
@@ -80,6 +83,9 @@ component extends="framework" output="false" {
 		
 		// Set the setup confirmed as false
 		getPluginConfig().getApplication().setValue('applicationSetupConfirmend', false);
+		
+		// Set vfs root for slatwall
+		getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
 		
 		// Make's sure that our entities get updated
 		ormReload();

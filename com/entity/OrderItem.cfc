@@ -40,9 +40,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Persistent Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="price" ormtype="float";
-	property name="quantity" ormtype="float";
-	property name="taxAmount" ormtype="float";
+	property name="price" ormtype="big_decimal";
+	property name="quantity" ormtype="integer";
+	property name="taxAmount" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -58,16 +58,22 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 
 	public any function init() {
+		
+		if(isNull(getTaxAmount())) {
+			setTaxAmount(0);
+		}
+		
 		// set status to new by default
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
 			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
 			setOrderItemStatusType(statusType);
 		}
-	   // set default collections for association management methods
-	   if(isNull(variables.orderDeliveryItems)) {
-	       variables.orderDeliveryItems = [];
-	   }    
-		return Super.init();
+		// set default collections for association management methods
+		if(isNull(variables.orderDeliveryItems)) {
+		   variables.orderDeliveryItems = [];
+		}
+		
+		return super.init();
 	}
 	
 	public string function getStatus(){
@@ -82,16 +88,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getPrice()*getQuantity();
 	}
 	
-	public numeric function getTaxAmount() {
-		return structKeyExists(variables,"taxAmount") ? variables.taxAmount : 0;
-	}
-	
 	public numeric function getQuantityDelivered() {
-		if(!structKeyExists(variables,"quantityDelivered")) {
+		if(!structKeyExists(variables,"quantityDelivered") || !isNumeric(variables.quantityDelivered)) {
 			variables.quantityDelivered = 0;
 			var deliveryItems = getOrderDeliveryItems();
-			//writeDump(getOrderDeliveryItems());
-			//abort;
 			for( var thisDeliveryItem in deliveryItems ) {
 				variables.quantityDelivered += thisDeliveryItem.getQuantityDelivered();				
 			}			

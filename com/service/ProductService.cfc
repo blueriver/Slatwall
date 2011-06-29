@@ -166,6 +166,16 @@ component extends="BaseService" accessors="true" {
 		// if filename wasn't set in bean, default it to the product's name.
 		if(arguments.Product.getFileName() == "") {
 			arguments.Product.setFileName(getFileService().filterFileName(arguments.Product.getProductName()));
+		} 
+		// if weight and/or prices (values passed on to populate SKU entities) are blank or not numeric, default them to zero
+		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
+			arguments.data.price = 0;
+		}
+		if(!isNumeric(arguments.data.listPrice) || len(trim(arguments.data.listPrice)) == 0) {
+			arguments.data.listPrice = 0;
+		}
+		if(!isNumeric(arguments.data.shippingWeight) || len(trim(arguments.data.shippingWeight)) == 0) {
+			arguments.data.shippingWeight = 0;
 		}
 		
 		// set up sku(s) if this is a new product
@@ -209,7 +219,10 @@ component extends="BaseService" accessors="true" {
 		if( arguments.product.getOrderedFlag() ) {
 			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
 		}
-		var deleteResponse = Super.delete( arguments.product );
+		// Removed default sku
+		arguments.product.setDefaultSku(javaCast("null",""));
+		
+		var deleteResponse = super.delete( arguments.product );
 		if( !deleteResponse.hasErrors() ) {
 			// clear cached product type tree so that it's refreshed on the next request
 	   		clearProductTypeTree();
@@ -347,4 +360,14 @@ component extends="BaseService" accessors="true" {
     	);
 		return productPagesTree;
 	}
+
+	/* get the attribute sets for a product */
+	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs = []){
+		return getDAO().getAttributeSets(arguments.attributeSetTypeCode,arguments.productTypeIDs);
+	}
+	
+	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
+		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
+	}
+	
 }

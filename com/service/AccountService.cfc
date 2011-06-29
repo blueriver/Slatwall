@@ -42,6 +42,16 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="userManager" type="any";
 	property name="userUtility" type="any";
 	
+	public boolean function loginMuraUser(required string username, required string password, required string siteID) {
+		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);
+		
+		if(loginResult) {
+			getService("requestCacheService").clearCache(keys="currentSession");
+		}
+		
+		return loginResult;
+	}
+	
 	public any function getAccountByMuraUser(required any muraUser) {
 		// Load Account based upon the logged in muraUserID
 		var account = getDAO().readByMuraUserID(muraUserID = arguments.muraUser.getUserID());
@@ -136,6 +146,13 @@ component extends="BaseService" accessors="true" output="false" {
 				// Set the mura userID in the account
 				arguments.account.setMuraUserID(muraUser.getUserID());
 				
+				
+				// If there currently isn't a user logged in, then log in this new account
+				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+				if(!currentUser.isLoggedIn()) {
+					writeDump(var="LogInCalled", output="console");
+					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
+				}
 			// If the account already has a mura user, make sure that the mura user gets updated
 			} else if ( !isNull(arguments.account.getMuraUserID()) ) {
 				
@@ -148,16 +165,15 @@ component extends="BaseService" accessors="true" output="false" {
 					muraUser.save();
 				}
 				
+				// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
+				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+				if(currentUser.getUserID() == muraUser.getUserID()) {
+					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
+				}
+				
 			}
-			
-			// Re-Login the current user so that the new values are saved.
-			var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
-			
-			if(currentUser.getUserID() == muraUser.getUserID()) {
-				getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
-			}
-			
-		} else if ( !isNull(arguments.account.getMuraUserID()) && arguments.account.getMuraUserID() != "") {
+
+		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
 		
@@ -220,6 +236,18 @@ component extends="BaseService" accessors="true" output="false" {
 		// TODO: Loop over addresses and set those up as well.
 		
 		return arguments.account;
+	}
+	
+	public any function getAccountSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallAccount";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="firstName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="lastName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="company", weight=1);
+		smartList.addKeywordProperty(propertyIdentifier="primaryEmailAddress_emailAddress", weight=3);
+		
+		return smartList;
 	}
 	
 }

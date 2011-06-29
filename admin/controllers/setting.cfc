@@ -47,6 +47,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="fulfillmentService" type="any";
 	property name="formUtilities" type="any";
 	property name="fileService" type="any";
+	property name="taxService" type="any";
 	
 	// Mura Service Injection
 	property name="userManager" type="any";
@@ -355,9 +356,11 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.addressZoneLocations = formStruct.addressZoneLocations;	
 		}
 		
+		var wasNew = rc.addressZone.isNew();
+		
 		rc.addressZone = getSettingService().saveAddressZone(rc.addressZone, rc);
 		
-		if(rc.addressZone.hasErrors() || rc.addressZone.isNew()) {
+		if(rc.addressZone.hasErrors() || wasNew) {
 			rc.edit = true;
 			getFW().setView("admin:setting.detailaddresszone");
 		} else {
@@ -417,14 +420,15 @@ component extends="BaseController" output="false" accessors="true" {
 	// Tax Categories
 	
 	public void function listTaxCategories(required struct rc) {
-		rc.taxCategories = getSettingService().listTaxCategory();
+		rc.taxCategories = getTaxService().listTaxCategory();
 	}
 	
 	public void function detailTaxCategory(required struct rc) {
 		param name="rc.taxCategoyID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.taxCategory = getSettingService().getTaxCategory(rc.taxCategoryID);
+		rc.taxCategory = getTaxService().getTaxCategory(rc.taxCategoryID);
+		rc.blankTaxCategoryRate = getTaxService().newTaxCategoryRate();
 	}
 	
 	public void function editTaxCategory(required struct rc) {
@@ -441,6 +445,20 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function saveTaxCategory(required struct rc) {
+		detailTaxCategory(rc);
+		rc.edit = true;
+		getFW().setView("admin:setting.detailtaxcategory");
 		
+		rc.taxCategory = getTaxService().saveTaxCategory(rc.taxCategory, rc);
+		
+		if(structKeyExists(rc, "addRate") && rc.addRate) {
+			var rate = getTaxService().newTaxCategoryRate();
+			rate.setAddressZone(getAddressService().getAddressZone(rc.addressZoneID));
+			rate.setTaxRate(rc.taxRate);
+			rate = getTaxService().saveTaxCategoryRate(rate);
+			if(!rate.hasErrors()) {
+				rate.setTaxCategory(rc.taxCategory);
+			}
+		}
 	}
 }

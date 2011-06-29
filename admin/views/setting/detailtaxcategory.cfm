@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.taxCategory" type="any" />
+<cfparam name="rc.blankTaxCategoryRate" type="any" />
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
@@ -47,30 +48,40 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:setting.edittaxcategory" queryString="taxCategoryID=#rc.taxCategory.getTaxCategoryID()#" type="list">
 			</cfif>
 		</ul>
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
-		</dl>
-		<!---
+		
 		<cfif rc.edit>
-			<form name="addressZone" action="#buildURL(action='admin:setting.saveaddresszone')#" method="post">
-			<input type="hidden" name="addressZoneID" value="#rc.addressZone.getAddressZoneID()#" />
+			<form name="taxCategory" action="#buildURL(action='admin:setting.savetaxcategory')#" method="post">
+			<input type="hidden" name="taxCategoryID" value="#rc.taxCategory.getTaxCategoryID()#" />
 		</cfif>
 		
 		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
+			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
 		</dl>
 		
-		<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
-		<cfset params = structNew() />
-		<cfset params.addressZone = rc.addressZone />
-		<cfset params.edit = rc.edit />
-		#view("admin:setting/ajax/addresszonelocation", params)#
-			
+		<table class="stripe">
+			<tr>
+				<th class="varWidth">Address Zone</th>
+				<th>Rate</th>
+			</tr>
+			<cfloop array="#rc.taxCategory.getTaxCategoryRates()#" index="local.tcr">
+				<tr>
+					<td class="varWidth">#local.tcr.getAddressZone().getAddressZoneName()#</td>
+					<td>#local.tcr.getTaxRate()#</td>
+				</tr>
+			</cfloop>
+		</table>
+		
 		<cfif rc.edit>
+			<hr />
+			<strong>Add Rate</strong>
+			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="addressZone" fieldName="addressZoneID" edit="#rc.edit#" first="true">	
+			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="taxRate" edit="#rc.edit#" first="true">
+			<button type="submit" name="addRate" value="true">Add</button>
+			<br /><br />	
 			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
 			</form>
 		</cfif>
-		--->
+		
 	</div>
 </cfoutput>

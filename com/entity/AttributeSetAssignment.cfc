@@ -44,6 +44,10 @@ component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSe
 	// Related Object Properties
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 
+	// Special Related Discriminator Property
+	property name="attributeSetAssignmentType" insert="false" update="false";
+	property name="productTypeID" insert="false" update="false";
+
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Attribute Set (many-to-one)

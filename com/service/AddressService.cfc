@@ -128,4 +128,19 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return addressInZone;
 	}
+	
+	public any function copyAddress(required any address) {
+		var addressCopy = this.newAddress();
+		addressCopy.setName(arguments.address.getName());
+		addressCopy.setCompany(arguments.address.getCompany());
+		addressCopy.setPhone(arguments.address.getPhone());
+		addressCopy.setStreetAddress(arguments.address.getStreetAddress());
+		addressCopy.setStreet2Address(arguments.address.getStreet2Address());
+		addressCopy.setLocality(arguments.address.getLocality());
+		addressCopy.setCity(arguments.address.getCity());
+		addressCopy.setStateCode(arguments.address.getStateCode());
+		addressCopy.setPostalCode(arguments.address.getPostalCode());
+		addressCopy.setCountryCode(arguments.address.getCountryCode());
+		return addressCopy;
+	}
 }

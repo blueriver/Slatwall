@@ -38,54 +38,63 @@ Notes:
 --->
 <cfparam name="rc.$" type="any" />
 <cfparam name="rc.orderSmartList" type="any" />
+<cfparam name="rc.orderStatusOptions" type="array" />
+<cfparam name="rc.isSearch" default=0 />
+<cfparam name="rc.showAdvancedSearch" default=false />
 
 <cfoutput>
-	
 <div class="svoadminorderlist">
 	<form action="#buildURL('admin:order.list')#" method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
+		<input type="hidden" name="isSearch" value="1" />
+		<input name="Keyword" value="#rc.Keyword#" /> 
+		<div id="advancedSearchOptions" <cfif !rc.showAdvancedSearch>style="display:none;"</cfif>>
+			#$.Slatwall.rbKey("entity.order.orderOpenDateTime")#: 
+			<input type="date" value="#rc.orderDateStart#" name="orderDateStart" class="date" /> to <input type="date" value="#rc.orderDateEnd#" name="orderDateEnd" class="date" /> 
+			<cfif len(rc.orderDateStart) gt 0 or len(rc.orderDateEnd) gt 0>
+				<a href="##" id="clearDates">#$.slatwall.rbKey('admin.search.cleardates')#</a><br>
+			</cfif>
+			<div id="statusSelections">
+			#$.Slatwall.rbKey("entity.order.orderStatusType")#:
+			<cfloop array="#rc.orderStatusOptions#" index="thisStatus" >
+				<input type="checkbox" name="F:orderstatustype_systemcode" id="#thisStatus['id']#" class="statusOption" value="#thisStatus['id']#"<cfif listFindNoCase(rc['F:orderstatustype_systemcode'],thisStatus['id'])> checked="checked"</cfif> /> <label for="#thisStatus['id']#">#thisStatus['name']#</label>
+			</cfloop>
+			<a href="##" id="selectAllStatuses">#$.slatwall.rbKey('define.selectall')#</a>
+			</div>
+		</div>
+		<button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>&nbsp;&nbsp;
+		<a href="##" id="showAdvancedSearch"<cfif rc.showAdvancedSearch> style="display:none;"</cfif>>#$.slatwall.rbKey("admin.order.list.showAdvancedSearch")#</a>
 	</form>
 	
-	<form name="OrderActions" action="#buildURL(action='admin:order.applyOrderActions')#" method="post">
-		<cf_SlatwallActionCaller action="admin:order.applyOrderActions" type="submit" class="button" confirmRequired="true">
-		<table id="OrderList" class="stripe">
+	<cfif rc.isSearch>
+		<h4>#rc.orderSmartList.getRecordsCount()# #$.slatwall.rbKey("admin.order.list.searchresultsfound")#</h4>
+	</cfif>
+	
+	<table id="OrderList" class="stripe">
+		<tr>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
+			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
+			<th>&nbsp</th>
+		</tr>
+		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
 			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-				<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>
-				<th>&nbsp</th>
+				<td>#Local.Order.getOrderNumber()#</td>
+				<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
+				<td class="varWidth">
+					#Local.Order.getAccount().getFullName()# <cfif local.order.getAccount().isGuestAccount()>(#$.slatwall.rbKey('admin.order.account.isguestaccount')#)</cfif>
+				</td>
+				<td>#Local.Order.getOrderStatusType().getType()#</td>
+				<td>#DollarFormat(local.order.getTotal())#</td>
+				<td class="administration">
+					<ul class="one">
+					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					</ul>     						
+				</td>
 			</tr>
-			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
-				<tr>
-					<td>#Local.Order.getOrderNumber()#</td>
-					<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
-					<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
-					<td>#Local.Order.getOrderStatusType().getType()#</td>
-					<td>#DollarFormat(local.order.getTotal())#</td>
-					<td>
-						<cfset local.orderActionOptions = local.order.getActionOptions() />
-						<cfif arrayLen(local.orderActionOptions) gt 0>
-							<select name="orderActions">
-								<option value="">#$.slatwall.rbKey("define.select")#</option>
-								<cfloop array = #local.orderActionOptions# index="local.thisAction">
-									<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
-								</cfloop>
-							</select>
-						<cfelse>
-							#$.slatwall.rbKey("define.notApplicable")#
-						</cfif>
-					</td>
-					<td class="administration">
-						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</form>
+		</cfloop>
+	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.orderSmartList#">
 </div>
 </cfoutput>

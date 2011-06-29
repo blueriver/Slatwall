@@ -36,19 +36,22 @@
 	the GNU General Public License version 2  without this exception.  You may, if you choose, apply this exception 
 	to your own modified versions of Mura CMS. */
 
-$(document).ready(function(){
-	
-	$("a.paymentDetails").click(function(){
-		$(this).parent().hide();
-		$(this).parent().siblings().show()
-		var id = $(this).attr("id").substring(5);
-		$('#orderDetail_' + id).toggle();
+jQuery(document).ready(function(){
+	jQuery("a#showAdvancedSearch").click(function(){
+		jQuery("#advancedSearchOptions").show();
+		jQuery("a#showAdvancedSearch").hide();
 		return false;
 	});
 	
-    $(".adminorderrefundOrderPayment").colorbox({
-		onComplete: function() {
-            $('input.refundAmount').focus();         
-        }
+	jQuery("a#selectAllStatuses").click(function(){
+		jQuery(".statusOption").attr("checked","checked");
+		return false;
 	});
+	
+	jQuery("a#clearDates").click(function(){
+		jQuery("input.date").val("");
+		return false;
+	});
+	
+	jQuery("input.date").datepicker();
 });

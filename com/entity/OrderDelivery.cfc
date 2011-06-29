@@ -52,7 +52,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
-
+	
 	// Special Related Discriminator Property
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
 	property name="fulfillmentMethodID" insert="false" update="false";

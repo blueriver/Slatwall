@@ -36,38 +36,28 @@
 Notes:
 
 */
-component displayname="Tax Category" entityname="SlatwallTaxCategory" table="SlatwallTaxCategory" persistent="true" output="false" accessors="true" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="taxCategoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxCategoryName" ormtype="string";
-	
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" inverse="true" cascade="all-delete-orphan";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
-	
-	public any function init() {
-		if(isNull(getTaxCategoryRates())) {
-			setTaxCategoryRates(arrayNew(1));
+component extends="BaseService" persistent="false" accessors="true" output="false" {
+
+	property name="addressService" type="any";
+
+	public numeric function calculateOrderItemTax(required any orderItem) {
+		var taxAmount = 0;
+		
+		var fulfillment = arguments.orderItem.getOrderFulfillment();
+		
+		if(fulfillment.getFulfillmentMethodID() == "shipping") {
+			var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
+			var address = fulfillment.getShippingAddress();
+			if(!isNull(address)) {
+				for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
+					if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
+						taxAmount += arguments.orderItem.getPrice() * taxCategory.getTaxCategoryRates()[i].getTaxRate();
+					}
+				}
+			}
 		}
 		
-		return super.init();
+		return taxAmount;
 	}
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Tax Category Rates
-	public void function addTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
-	   arguments.taxCategoryRate.setTaxCategory(this);
-	}
-	
-	public void function removeTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
-	   arguments.taxCategoryRate.removeTaxCategory(this);
-	}
-	
-	/******* END Association management methods for bidirectional relationships **************/
 }

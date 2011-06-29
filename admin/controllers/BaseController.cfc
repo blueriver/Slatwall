@@ -50,7 +50,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
 		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
-			var loginURL = rc.$.createHREF(filename=$.siteConfig().getLoginURL());
+			var loginURL = rc.$.createHREF(filename=rc.$.siteConfig().getLoginURL());
 			if(find("?",loginURL)) {
 				loginURL &= "&";	
 			} else {

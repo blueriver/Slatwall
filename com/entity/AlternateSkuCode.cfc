@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,58 +36,20 @@
 Notes:
 
 */
-component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" {
+component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode" table="SlatwallAlternateSkuCode" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	property name="data" type="any";
-	property name="statusCode" type="string";
-	property name="errorBean" type="any";
-	property name="messageBeans" type="array";
+	// Persistent Properties
+	property name="alternateSkuCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="alternateSkuCode" ormtype="string";
 	
-	public any function init() {
-		// Set Defaults
-		this.setStatusCode("");
-		this.setData({});
-		this.setMessageBeans([]);
-		this.setErrorBean(new Slatwall.com.utility.errorBean());
-		
-		// Populate all keys passed in
-		for(var key in arguments) {
-			if(structKeyExists(this, "set#key#")) {
-				var setterMethod = this["set" & key];
-				setterMethod(arguments[key]);	
-			}
-		}
-		
-		return this;
-	} 
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	public boolean function hasErrors() {
-		return getErrorBean().hasErrors();
-	}
+	// Related Object Properties
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
 	
-	public void function addMessage() {
-		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
-	}
-	
-	public void function addError(required string name,required string message) {
-		getErrorBean().addError(argumentcollection=arguments);
-	}
-	
-	public string function getError(required string name) {
-		return getErrorBean().getError(arguments.name);
-	}
-	
-	public string function getMessageString() {
-		var messageString = "";
-		
-		for(var i=1; i<=arrayLen(getMessageBeans()); i++) {
-			if(i>1) {
-				messageString &= "~";
-			}
-			messageString &= "#getMessageBeans()[1].getMessageCode()#|#getMessageBeans()[1].getMessageType()#|#getMessageBeans()[1].getMessage()#";
-		}
-		
-		return messageString;
-	}
-	
-} 
+}

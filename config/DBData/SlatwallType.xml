@@ -37,7 +37,7 @@
 		<Record typeID="444df2b8b98441f8e8fc6b5b4266548c" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Closed" systemCode="ostClosed" />
 		<Record typeID="444df2b90f62f72711eb5b3c90848e7e" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Canceled" systemCode="ostCanceled" />
 		
-		<Record typeID="444df2bac3f06e0645cf38f1d6a4e443" type="Order Item Status Types" systemCode="orderItemType" />
+		<Record typeID="444df2bac3f06e0645cf38f1d6a4e443" type="Order Item Status Types" systemCode="orderItemStatusType" />
 		<Record typeID="444df2bbbedeac5c0707d8ec445d1865" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="Not Placed" systemCode="oistNotPlaced" />
 		<Record typeID="444df34998ed6b96c0240c34e3b63914" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="New" systemCode="oistNew" />
 		<Record typeID="444df2bcac18a033c7611b0e046e7de9" parentTypeID="444df2bac3f06e0645cf38f1d6a4e443" type="Picked" systemCode="oistPicked" />
@@ -51,12 +51,11 @@
 		<Record typeID="444df2c390d333aa4eb20892ed6a510f" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Partially Shipped" systemCode="osstPartiallyShipped" />
 		<Record typeID="444df2c40b655fbdfdaf70647b61f9ea" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Shipped" systemCode="osstShipped" />
 
-		<Record typeID="444df294de226e21c4789a8e7a3eec16" type="Sku Types" systemCode="skuType" />
-		<Record typeID="444df2950022c7e106229d49eb36b9e9" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Company Sku" systemCode="stCompany" />
-		<Record typeID="444df296e8aed565328bce7ab1104d5b" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Vendor Sku" systemCode="stVendor" />
-		<Record typeID="444df297a6460beea2cf464e22c2f0d7" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="Manufacture Sku" systemCode="stManufacture" />
-		<Record typeID="444df298afb7beb325cfdc66e0f93c33" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="UPC" systemCode="stUPC" />
-		<Record typeID="444df298afb7beb325cfdc66e0f93c33" parentTypeID="444df294de226e21c4789a8e7a3eec16" type="EAN" systemCode="stEAN" />
+		<Record typeID="444df2c9cddaf8cafd6660ff320aac19" type="Alternate Sku Code Types" systemCode="alternateSkuCodeType" />
+		<Record typeID="444df2cad53c6edae52df82f27efe892" parentTypeID="444df2c9cddaf8cafd6660ff320aac19" type="Vendor Sku" systemCode="asctVendor" />
+		<Record typeID="444df2cb9a2a105fca15316b17287887" parentTypeID="444df2c9cddaf8cafd6660ff320aac19" type="Manufacture Sku" systemCode="asctManufacture" />
+		<Record typeID="444df2ccfcee48604ee3e315b722dea2" parentTypeID="444df2c9cddaf8cafd6660ff320aac19" type="UPC" systemCode="asctUPC" />
+		<Record typeID="444df2cd0aae29785269084d31e5922e" parentTypeID="444df2c9cddaf8cafd6660ff320aac19" type="EAN" systemCode="asctEAN" />
 		
 		<Record typeID="444df299fc1178c71be2f387365b3cd0" type="Stock Adjustment Types" systemCode="stockAdjustmentType" />
 		<Record typeID="444df29a955f8c674152e90c5f18f72f" parentTypeID="444df299fc1178c71be2f387365b3cd0" type="Purchase Order" systemCode="satPurchaseOrder" />
@@ -83,11 +82,11 @@
 <!--
 Below Are UUID's to use... delete after using
 
-444df2c9cddaf8cafd6660ff320aac19
-444df2cad53c6edae52df82f27efe892
-444df2cb9a2a105fca15316b17287887
-444df2ccfcee48604ee3e315b722dea2
-444df2cd0aae29785269084d31e5922e
+
+
+
+
+
 444df2ce9c74fa886435c08706d343db
 444df2cfd2ed41d2bb36b98a714f1dc1
 444df2d0f5bac0123ad513b7c5c59bb2

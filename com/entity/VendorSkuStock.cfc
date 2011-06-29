@@ -40,7 +40,7 @@ component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" tab
 	
 	// Persistent Properties
 	property name="vendorSkuStockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="cost" ormtype="float";
+	property name="cost" ormtype="big_decimal";
 	property name="quantity" ormtype="integer";
 	property name="availableDateTime" ormtype="timestamp";
 	

@@ -104,7 +104,7 @@ component output="false" {
 		entityDelete(target);
 	}
 
-	public any function getSmartList(required string entityName, struct data={},numeric pageRecordsStart=1, numeric pageRecordsShow=10, string currentURL=""){
+	public any function getSmartList(required string entityName, struct data={}){
 		// Adds the Slatwall Prefix to the entityName when needed.
 		if(left(arguments.entityName,8) != "Slatwall") {
 			arguments.entityName = "Slatwall#arguments.entityName#";

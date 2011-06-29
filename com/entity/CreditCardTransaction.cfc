@@ -38,17 +38,26 @@ Notes:
 */
 component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTransaction" table="SlatwallCreditCardTransaction" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
+	// Persistent Properties
 	property name="creditCardTransactionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="transactionType" ormtype="string";
 	property name="providerTransactionID" ormtype="string";
 	property name="authorizationCode" ormtype="string";
-	property name="authorizedAmount" ormtype="float";
-	property name="chargedAmount" ormtype="float";
-	property name="creditedAmount" ormtype="float";
+	property name="amountAuthorized" ormtype="big_decimal";
+	property name="amountCharged" ormtype="big_decimal";
+	property name="amountCredited" ormtype="big_decimal";
+	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
+	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
+	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
 	
 	// Related Object Properties
 	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	

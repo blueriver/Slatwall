@@ -55,7 +55,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return save(argumentcollection=arguments);
 	}
 	
-	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount) {
+	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount, string providerTransactionID="") {
 		// Get the relavent info and objects for this order payment
 		var processOK = false;
 		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
@@ -63,56 +63,110 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 		
 		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
-			// Generate Process Request Bean
-			var request = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
-			
-			// Move all of the info into the new request bean
-			request.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
-			
-			// Setup the actuall processing information
-			if(!structKeyExists(arguments, "transactionAmount")) {
-				arguments.transactionAmount = arguments.orderPayment.getAmount();
+			// Lock down this determination so that the values getting called and set don't overlap
+			lock scope="Session" timeout="45" {
+				// Get okToProcessOrder out of the session scope, and if it doesn't exist set it to true
+				var okToProcessCreditCard = getSessionService().getValue("okToProcessCreditCard", true);
+				
+				// If okToProcessOrder was true, update the session variable to false because we are about to try an process
+				if(okToProcessCreditCard) {
+					getSessionService().setValue("okToProcessCreditCard", false);
+				}
 			}
 			
-			request.setTransactionType(arguments.transactionType);
-			request.setTransactionAmount(arguments.transactionAmount);
-			request.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
-			
-			// Get Response Bean from provider service
-			var response = providerService.processCreditCard(request);
-			
-			if(!response.hasErrors()) {
-				processOK = true;
-				
-				// Populate a new Credit Card Transaction
-				var transaction = this.newCreditCardTransaction();
-				transaction.setTransactionType(arguments.transactionType);
-				transaction.setProviderTransactionID(response.getTransactionID());
-				transaction.setAuthorizationCode(response.getAuthorizationCode());
-				transaction.setAuthorizedAmount(response.getAuthorizedAmount());
-				transaction.setChargedAmount(response.getChargedAmount());
-				transaction.setCreditedAmount(response.getCreditedAmount());
-				
-				// Relate to order Payment
-				transaction.setOrderPayment(arguments.orderPayment);
-				
-				// Save the Transaction to the DB
-				this.saveCreditCardTransaction(transaction);
-				
-				// Update the order Payment
-				var authAmount = arguments.orderPayment.getAmountAuthorized() + response.getAuthorizedAmount();
-				var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
-				arguments.orderPayment.setAmountAuthorized(authAmount);
-				arguments.orderPayment.setAmountCharged(chargeAmount);
-			} else {
-				// Populate the orderPayment with the processing error
-				arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
+			// Wrap this processing of the credit card in a try/catch so that in the event of an error we reset the session value
+			try {
+				if(okToProcessCreditCard) {
+					// Generate Process Request Bean
+					var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
+					
+					// Move all of the info into the new request bean
+					requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
+					
+					// Setup the actuall processing information
+					if(!structKeyExists(arguments, "transactionAmount")) {
+						arguments.transactionAmount = arguments.orderPayment.getAmount();
+					}
+					
+					requestBean.setTransactionType(arguments.transactionType);
+					requestBean.setTransactionAmount(arguments.transactionAmount);
+					requestBean.setProviderTransactionID(arguments.providerTransactionID);
+					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+					
+					
+					// Create a new Credit Card Transaction
+					var transaction = this.newCreditCardTransaction();
+					transaction.setTransactionType(arguments.transactionType);
+					
+					// Make sure that this transaction gets saved to the DB
+					this.saveCreditCardTransaction(transaction);
+					ormFlush();
+					
+					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
+					try {
+						// Get Response Bean from provider service
+						var response = providerService.processCreditCard(requestBean);
+						
+						if(!response.hasErrors()) {
+							processOK = true;
+							
+							// Populate the Credit Card Transaction with the details of this process
+							transaction.setProviderTransactionID(response.getTransactionID());
+							transaction.setAuthorizationCode(response.getAuthorizationCode());
+							transaction.setAmountAuthorized(response.getAuthorizedAmount());
+							transaction.setAmountCharged(response.getChargedAmount());
+							transaction.setAmountCredited(response.getCreditedAmount());
+							transaction.setAVSCode(response.getAVSCode());
+							transaction.setStatusCode(response.getStatusCode());
+							transaction.setMessage(response.getMessageString());
+							transaction.setOrderPayment(arguments.orderPayment);
+							// Make sure that this transaction with all of it's info gets added to the DB
+							ormFlush();
+							
+							// Update the order Payment
+							var authAmount = arguments.orderPayment.getAmountAuthorized() + response.getAuthorizedAmount();
+							var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
+							arguments.orderPayment.setAmountAuthorized(authAmount);
+							arguments.orderPayment.setAmountCharged(chargeAmount);
+							if(arguments.transactionType == "credit") {
+								var refundAmount = arguments.orderPayment.getAmountRefunded() + arguments.transactionAmount;
+								arguments.orderPayment.getAmountRefunded(refundAmount);
+							}
+							
+							// Update the order Status
+							if(arguments.transactionType == "chargePreAuthorization") {
+								var order = arguments.orderPayment.getOrder();
+								if(order.getQuantityUndelivered() gt 0) {
+									order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+								} else {
+									order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+								}
+							}
+						} else {
+							// Populate the orderPayment with the processing error
+							arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
+						}
+					} catch (any e) {
+						transaction.setStatusCode(500);
+						transaction.setMessage(e.message);
+						transaction.setProcessingFlag(true);
+						// Make sure that this transaction with all of it's info gets added to the DB
+						ormFlush();
+						// Populate the orderPayment with the processing error
+						arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
+					}
+				}
+				// Allow for future transaction to come in
+				getSessionService().setValue("okToProcessCreditCard", true);
+			} catch (any e) {
+				// Allow for future transaction to be run
+				getSessionService().setValue("okToProcessCreditCard", true);
 			}
 		}
 		
 		return processOK;
 	}
-	
+
 	public string function getCreditCardTypeFromNumber(required string creditCardNumber) {
 		if(isNumeric(arguments.creditCardNumber)) {
 			var n = arguments.creditCardNumber;

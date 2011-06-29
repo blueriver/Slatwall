@@ -45,4 +45,6 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Related Object Properties
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
 	
+	// Quick Lookup Properties
+	property name="attributeID" insert="false" update="false"; 
 }

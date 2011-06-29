@@ -45,6 +45,15 @@ Notes:
 
 <cfoutput>
 
+<cfif structKeyExists(rc,"errorBean")>
+	<cfset local.errors = rc.errorBean.getErrors() />
+	<div class="error">
+		<cfloop collection="#local.errors#" item="local.thisError">
+			#local.errors[local.thisError]#
+		</cfloop>
+	</div>
+</cfif>
+
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:order.list" type="list">
 </ul>
@@ -52,7 +61,9 @@ Notes:
 <!--- Display buttons of available order actions --->
 <cfloop array="#local.orderActionOptions#" index="local.thisAction">
 <cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
+	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.order.getQuantityDelivered())>
 	<cf_SlatwallActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
+	</cfif>
 </cfloop>
 
 <div class="svoadminorderdetail">
@@ -81,7 +92,6 @@ Notes:
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<h3 class="tableheader">#$.Slatwall.rbKey("admin.order.detail.payments")#</h3>
 		<table class="stripe">
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
@@ -91,7 +101,7 @@ Notes:
 			<cfloop array="#local.payments#" index="local.thisPayment">
 			<tr>
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#local.thisPayment.getAmountAuthorized()#</td>
+				<td>#dollarFormat(local.thisPayment.getAmountAuthorized())#</td>
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
@@ -120,7 +130,7 @@ Notes:
 			<ul>
 				<li><a href="##tabOrderFulfillments" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderFulfillments")#</span></a></li>	
 				<li><a href="##tabOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderDeliveries")#</span></a></li>
-				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>
+<!---				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>--->
 			</ul>
 		
 			<div id="tabOrderFulfillments">
@@ -139,18 +149,23 @@ Notes:
 			
 			<div id="tabOrderDeliveries">
 				<cfset local.orderDeliveries = rc.order.getOrderDeliveries() />
+				<cfset local.deliveryNumber = 0 />
 				<cfif arrayLen(local.orderDeliveries)>
 					<cfloop array="#local.orderDeliveries#" index="local.thisOrderDelivery">
+						<cfset local.deliveryNumber++ />
+						<!--- set up order delivery in params struct to pass into view which shows information specific to the fulfillment method--->
 						<cfset local.params.orderDelivery = local.thisOrderDelivery />
-						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)#
+						<cfset local.params.orderID = rc.order.getOrderID() />
+						<cfset local.params.deliveryNumber = local.deliveryNumber />
+						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)# 
 					</cfloop>
 				<cfelse>
 					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#
 				</cfif>
 			</div>
-			<div id="tabOrderActivityLog">
+		<!---	<div id="tabOrderActivityLog">
 				
-			</div>
+			</div>--->
 		</div> <!-- tabs -->
 	</div>
 </div>

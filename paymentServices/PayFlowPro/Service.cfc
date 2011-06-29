@@ -89,7 +89,9 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
 		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
-		//requestData = listAppend(requestData,"ORIGID=#requestBean.getOrderPaymentID()#","&");
+		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
+			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
+		}
 		
 		return requestData;
 	}
@@ -114,6 +116,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	
 	private string function getCustomerNVP(required any requestBean){
 		var customerData = [];
+		//arrayAppend(customerData,"CUSTREF[#len(requestBean.getOrderID())#]=#requestBean.getOrderID()#");
 		arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
 		arrayAppend(customerData,"FIRSTNAME[#len(requestBean.getAccountFirstName())#]=#requestBean.getAccountFirstName()#");
 		arrayAppend(customerData,"LASTNAME[#len(requestBean.getAccountLastName())#]=#requestBean.getAccountLastName()#");

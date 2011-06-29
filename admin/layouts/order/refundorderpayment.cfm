@@ -1,4 +1,4 @@
-﻿/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,59 +35,11 @@
 
 Notes:
 
-*/
-component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" {
-	
-	property name="data" type="any";
-	property name="statusCode" type="string";
-	property name="errorBean" type="any";
-	property name="messageBeans" type="array";
-	
-	public any function init() {
-		// Set Defaults
-		this.setStatusCode("");
-		this.setData({});
-		this.setMessageBeans([]);
-		this.setErrorBean(new Slatwall.com.utility.errorBean());
-		
-		// Populate all keys passed in
-		for(var key in arguments) {
-			if(structKeyExists(this, "set#key#")) {
-				var setterMethod = this["set" & key];
-				setterMethod(arguments[key]);	
-			}
-		}
-		
-		return this;
-	} 
-	
-	public boolean function hasErrors() {
-		return getErrorBean().hasErrors();
-	}
-	
-	public void function addMessage() {
-		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
-	}
-	
-	public void function addError(required string name,required string message) {
-		getErrorBean().addError(argumentcollection=arguments);
-	}
-	
-	public string function getError(required string name) {
-		return getErrorBean().getError(arguments.name);
-	}
-	
-	public string function getMessageString() {
-		var messageString = "";
-		
-		for(var i=1; i<=arrayLen(getMessageBeans()); i++) {
-			if(i>1) {
-				messageString &= "~";
-			}
-			messageString &= "#getMessageBeans()[1].getMessageCode()#|#getMessageBeans()[1].getMessageType()#|#getMessageBeans()[1].getMessage()#";
-		}
-		
-		return messageString;
-	}
-	
-} 
+--->
+
+<cfset request.layout = false />
+<cfoutput>
+	<div class="modalContainer">
+		#body#
+	</div>
+</cfoutput>

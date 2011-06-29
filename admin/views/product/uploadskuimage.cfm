@@ -38,7 +38,7 @@ Notes:
 --->
 
 <cfoutput>
-	<form id="uploadSkuImage" method="post" enctype="multipart/form-data" action="#buildURL('admin:product.uploadSkuImage')#">
+	<form class="modal" method="post" enctype="multipart/form-data" action="#buildURL('admin:product.uploadSkuImage')#">
 		<input type="hidden" name="skuID" value="#rc.skuID#" />
 		<p>#rc.$.Slatwall.rbKey("admin.product.selectImageForSku")#<br>#rc.sku.getSkuCode()#</p>
 		<input type="file" id="skuImageFile" name="skuImageFile" accept="image/gif, image/jpeg, image/jpg, image/png" />

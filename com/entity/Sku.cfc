@@ -41,11 +41,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="skuCode" ormtype="string" unique="true" length="50" validateRequired="true";
-	property name="listPrice" ormtype="float" default="0";
-	property name="price" ormtype="float" default="0";
-	property name="shippingWeight" ormtype="float" default="0" hint="This Weight is used to calculate shipping charges";
+	property name="listPrice" ormtype="big_decimal" default="0";
+	property name="price" ormtype="big_decimal" default="0";
+	property name="shippingWeight" ormtype="big_decimal" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
-	
+	 
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -58,7 +58,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Related Object Properties
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="Stock" inverse="true" cascade="all";
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update"; 
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update";
+	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="SkuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan"; 
 	
 	// Non-Persistent Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
@@ -203,7 +204,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return (getQOH() - getQC()) + getQEXP();
 	}
 	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", boolean crop=false, cropleftStart=0, croptopStart=0) {
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		// Get the expected Image Path
 		var path=getImagePath();
 		
@@ -230,7 +231,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
 	}
 	
-	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, boolean crop=false, cropleftStart=0, croptopStart=0) {
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		if(structKeyExists(arguments, "size")) {
 			arguments.size = lcase(arguments.size);
 			if(arguments.size eq "l" || arguments.size eq "large") {

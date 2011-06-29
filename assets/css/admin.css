@@ -123,6 +123,14 @@ div.optionsSelector {
 	margin-bottom: 10px;
 }
 
+div#advancedSearchOptions {
+	margin: 20px 0px;
+}
+
+div#statusSelections {
+	margin: 5px 0;
+}
+
 a.buttonOff {
 	background-color: #cccccc;
 	vertical-align: middle;
@@ -241,7 +249,7 @@ table .alignLeft {
 	text-align: left;
 }
 
-form#uploadSkuImage {
+form.modal {
 	width: auto;
 }
 
@@ -250,7 +258,7 @@ dl.optionDetail {
 }
 
 dl.productPrice dt {
-	width: 110px;
+	width: 120px;
 }
 
 dl.productPrice dd {

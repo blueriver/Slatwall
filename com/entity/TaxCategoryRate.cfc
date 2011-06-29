@@ -40,7 +40,7 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	
 	// Persistent Properties
 	property name="taxCategoryRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxRate" ormtype="float";
+	property name="taxRate" ormtype="big_decimal";
 	
 	// Related Object Properties
 	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
@@ -51,5 +51,41 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
+	
+	public array function getAddressZoneOptions() {
+		if(!structKeyExists(variables, "addressZoneOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAddressZone");
+			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
+			smartList.addSelect(propertyIdentifier="addressZoneID", alias="id"); 
+			smartList.addOrder("addressZoneName|ASC");
+			variables.addressZoneOptions = smartList.getRecords();
+		}
+		return variables.addressZoneOptions;
+	}
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Tax Category
+	
+	public void function setTaxCategory(required TaxCategory taxCategory) {
+	   variables.taxCategory = arguments.taxCategory;
+	   if(isNew() or !arguments.taxCategory.hasTaxCategoryRate(this)) {
+	       arrayAppend(arguments.taxCategory.getTaxCategoryRates(),this);
+	   }
+	}
+	
+	public void function removeTaxCategory(TaxCategory taxCategory) {
+	   if(!structKeyExists(arguments,"taxCategory")) {
+	   		arguments.taxCategory = variables.taxCategory;
+	   }
+       var index = arrayFind(arguments.taxCategory.getTaxCategoryRates(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.taxCategory.getTaxCategoryRates(),index);
+       }    
+       structDelete(variables,"taxCategory");
+    }
+	
+	/******* END Association management methods for bidirectional relationships **************/
 	
 }

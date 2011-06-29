@@ -202,23 +202,14 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	private function onMissingGetSmartListMethod( required string missingMethodName, required struct missingMethodArguments ){
 		var smartListArgs = {};
 		var entityNameLength = len(arguments.missingMethodName) - 12;
-		var smartListArgs["entityName"] = missingMethodName.substring( 3,entityNameLength + 3 );
-		if( structKeyExists(arguments.missingMethodArguments, "1") ) {
-			smartListArgs["data"] = arguments.missingMethodArguments[ "1" ];
-			
-			if( structKeyExists( arguments.missingMethodArguments, "2" ) ) {
-				smartListArgs["pageRecordsStart"] = arguments.missingMethodArguments[ "2" ];
-				
-				if( structKeyExists( arguments.missingMethodArguments, "3" ) ) {
-					smartListArgs["pageRecordsShow"] = arguments.missingMethodArguments[ "3" ];
-					
-					if( structKeyExists( arguments.missingMethodArguments, "4" ) ) {
-						smartListArgs["currentURL"] = arguments.missingMethodArguments[ "4" ];	
-					}					
-				}
-			}
+		
+		var entityName = missingMethodName.substring( 3,entityNameLength + 3 );
+		var data = {};
+		if( !isNull(missingMethodArguments[ 1 ]) && isStruct(missingMethodArguments[ 1 ]) ) {
+			data = missingMethodArguments[ 1 ];
 		}
-		return getSmartList(argumentCollection=smartListArgs);
+		
+		return getSmartList(entityName=entityName, data=data);
 	} 
 	 
 

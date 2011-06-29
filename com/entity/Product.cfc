@@ -84,7 +84,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent="false";
 	property name="price" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
 	property name="listPrice" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
-	property name="shippingWeight" type="numeric" validateNumeric="true" persistent="false";
+	property name="shippingWeight" validateRequired="true" type="numeric" validateNumeric="true" persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
@@ -417,7 +417,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     	return getDefaultSku().getImageDirectory();	
     }
     
-	public string function getImage(string size, numeric width, numeric height, string class, string alt, boolean crop=false, cropleftStart=0, croptopStart=0) {
+	public string function getImage(string size, numeric width, numeric height, string class, string alt, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		return getDefaultSku().getImage(argumentCollection = arguments);
 	}
 	
@@ -425,7 +425,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getImagePath();
 	}
 	
-	public string function getResizedImagePath(string size, numeric width, numeric height, boolean crop=false, cropleftStart=0, croptopStart=0) {
+	public string function getResizedImagePath(string size, numeric width, numeric height, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
@@ -485,29 +485,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	
 	// get all the assigned attribute sets
-	public array function getAttributeSets(array systemCode){
+	public array function getAttributeSets(array attributeSetTypeCode){
 		var attributeSets = [];
 		// get all the parent product types
 		var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallAttributeSet");
-		/*
-		smartList.addFilter("attributes_activeFlag",1);
-		smartList.addFilter("globalFlag",1);
-		smartList.addFilter("attributes_activeFlag",1,2);
-		smartList.addFilter("attributeSetAssignments_baseItemID",productTypeIDs,2);
-		*/
 		
-		if(structKeyExists(arguments,"systemCode")){
-			smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode),1);
-			//smartList.addFilter("attributeSetType_systemCode",arrayToList(systemCode),2);
-		}
-		smartList.addOrder("attributeSetType_systemCode|ASC");
-		smartList.addOrder("sortOrder|ASC");
-		
-		var attributeSets = smartList.getRecords();
-		return attributeSets;
+		return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
 	}
 	
 	//get attribute value

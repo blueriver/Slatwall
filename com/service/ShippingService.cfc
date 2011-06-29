@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+component extends="BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="settingService" type="any";
 	property name="addressService" type="any";
@@ -72,7 +72,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var rates = shippingMethods[i].getShippingRates();
 				for(var r=1;r <= arrayLen(rates); r++) {
 					// Make sure that the shipping address is in the zone of this rate
-					if(getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
+					if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
 						
 						var rateApplies = true;
 						
@@ -94,16 +94,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							rateApplies = false;
 						}
 						
-						if(rateApplies && (rates[r].getCost() < methodCharge || methodCharge == 0)) {
+						if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
 							rateExists = true;
-							methodCharge = rates[r].getCost();
+							methodCharge = rates[r].getShippingRate();
 						}
 					}
 				}
 				if(rateExists) {
 					var option = this.newOrderShippingMethodOption();
 					option.setShippingMethod(shippingMethods[i]);
-					option.setTotalCost(methodCharge);
+					option.setTotalCharge(methodCharge);
 					option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
 					getDAO().save(option);
 				}
@@ -151,7 +151,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
 								var option = this.newOrderShippingMethodOption();
 								option.setShippingMethod(shippingMethods[m]);
-								option.setTotalCost(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCost());
+								option.setTotalCharge(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge());
 								option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
 								option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
 								getDAO().save(option);

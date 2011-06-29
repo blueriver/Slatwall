@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,39 +35,26 @@
 
 Notes:
 
-*/
-component displayname="Tax Category" entityname="SlatwallTaxCategory" table="SlatwallTaxCategory" persistent="true" output="false" accessors="true" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="taxCategoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxCategoryName" ormtype="string";
-	
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" inverse="true" cascade="all-delete-orphan";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
-	
-	public any function init() {
-		if(isNull(getTaxCategoryRates())) {
-			setTaxCategoryRates(arrayNew(1));
-		}
-		
-		return super.init();
-	}
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Tax Category Rates
-	public void function addTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
-	   arguments.taxCategoryRate.setTaxCategory(this);
-	}
-	
-	public void function removeTaxCategoryRate(required TaxCategoryRate taxCategoryRate) {
-	   arguments.taxCategoryRate.removeTaxCategory(this);
-	}
-	
-	/******* END Association management methods for bidirectional relationships **************/
-}
+--->
+<cfparam name="order" type="any" />
+
+<cfoutput>
+Order Number: #order.getOrderNumber()#
+Order Placed: #DateFormat(order.getOrderOpenDateTime(), "DD/MM/YYYY")# - #TimeFormat(order.getOrderOpenDateTime(), "short")#
+Customer: #order.getAccount().getFirstName()# #order.getAccount().getLastName()#
+
+Items:
+===========================================================================
+<cfloop array="#order.getOrderItems()#" index="orderItem">
+#orderItem.getSku().getProduct().getTitle()#
+<cfif len(orderItem.getSku().displayOptions())>#orderItem.getSku().displayOptions()#</cfif>
+#DollarFormat(orderItem.getPrice())# | #NumberFormat(orderItem.getQuantity())# | #DollarFormat(orderItem.getExtendedPrice())# 
+---------------------------------------------------------------------------
+</cfloop>
+
+===========================================================================
+Subtotal: #DollarFormat(order.getSubtotal())#
+Delivery Charges: #DollarFormat(order.getFulfillmentTotal())#
+Tax: #DollarFormat(order.getTaxTotal())#
+Total: #DollarFormat(order.getTotal())#
+</cfoutput>

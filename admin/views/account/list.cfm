@@ -42,6 +42,9 @@ Notes:
     	<cf_SlatwallActionCaller action="admin:account.create" type="list">
 	</ul>
 	
+	<form method="post">
+		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
+	</form>
 	<table class="stripe">
 		<thead>
 			<tr>
@@ -67,5 +70,6 @@ Notes:
 			</cfloop>
 		</tbody>
 	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.accountSmartList#">
 </div>
 </cfoutput>

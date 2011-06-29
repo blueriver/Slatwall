@@ -46,6 +46,7 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 	property name="creditedAmount" type="numeric";
 	property name="avsCode" type="string";
 	property name="securityCodeMatch" type="boolean";
+	property name="duplicateFlag" type="boolean";
 	
 	public function init(){
 		// Set Defaults

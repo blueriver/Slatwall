@@ -36,19 +36,42 @@
 Notes:
 
 */
-component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+component extends="BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
-	property name="settingService";
-	property name="validationService";
+	property name="tagProxyService";
+	property name="taxService";
+	
+	public any function getOrderSmartList(struct data={}) {
+		arguments.entityName = "SlatwallOrder";
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
+		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);
+		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);
+		
+		smartList.joinRelatedProperty("SlatwallOrder","account");
+		
+		return smartList;
+	}
 	
 	public any function getOrderFulfillmentSmartList(struct data = {}) {
 		arguments.entityName = "SlatwallOrderFulfillment";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		smartList.addOrder("order_orderOpenDateTime|DESC");
 		return smartList;
+	}
+	
+	public any function getOrderStatusOptions(struct data={}) {
+		arguments.entityName = "SlatwallType";
+		var smartlist = getDAO().getSmartList(argumentCollection=arguments);
+		smartList.addSelect("systemCode","id");
+		smartList.addSelect("type","name");
+		smartList.addFilter("parentType_systemCode","orderStatusType");
+		smartList.addFilter("systemCode","ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled");
+		return smartlist.getPageRecords();
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
@@ -103,7 +126,63 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function setOrderShippingMethodFromMethodOptionID(required any orderShipping, required string orderShippingMethodOptionID) {
 		var selectedOption = this.getOrderShippingMethodOption(arguments.orderShippingMethodOptionID);
 		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
-		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCost());
+		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCharge());
+	}
+	
+	public boolean function setupPaymentAndProcessOrder(required any order, required struct data) {
+		var result = false;
+		
+		// Place all of this code in a try catch so that if it errors we release the okToProcessOrder lock
+		try {
+			// Lock down this determination so that the values getting called and set don't overlap
+			lock scope="Session" timeout="45" {
+				// Get okToProcessOrder out of the session scope, and if it doesn't exist set it to true
+				var okToProcessOrder = getSessionService().getValue("okToProcessOrder", true);
+				
+				// If okToProcessOrder was true, update the session variable to false because we are about to try an process
+				if(okToProcessOrder) {
+					getSessionService().setValue("okToProcessOrder", false);
+				}
+			}
+			
+			if(okToProcessOrder) {
+				var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
+			
+				if(isNull(payment)) {
+					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
+						payment = getPaymentService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+					} else {
+						payment = arguments.order.getOrderPayments()[arrayLen(arguments.order.getOrderPayments())];
+					}
+					
+					// If no amount was passed in from the data, add the amount as the order total minus and previous payments
+					if(!structKeyExists(arguments.data, "amount")) {
+						arguments.data.amount = argument.order.getTotal() - argument.order.getPaymentAmountTotal();
+					}
+					
+					// Add new Payment to the order
+					payment.setOrder(arguments.order);
+				}
+				
+				// Attempt to Validate & Save Order Payment
+				payment = this.saveOrderPayment(payment, arguments.data);
+				
+				// If the payment has errors do not proceed with the order processing
+				if(payment.hasErrors()) {
+					result = false;
+				} else {
+					result = this.processOrder(arguments.order);
+				}
+				
+				// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
+				getSessionService().setValue("okToProcessOrder", true);
+			}
+		} catch (any e) {
+			// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
+			getSessionService().setValue("okToProcessOrder", true);
+		}
+
+		return result;
 	}
 	
 	public any function processOrder(required any order) {
@@ -133,10 +212,33 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Save the order to the database
 			getDAO().save(arguments.order);
 			
+			// Do a flush so that the order is commited to the DB
+			ormFlush();
+			
+			// Send out the e-mail
+			sendOrderConfirmationEmail(arguments.order);
+			
 			return true;
 		}
 		
 		return false;
+	}
+
+	function sendOrderConfirmationEmail (required any order) {
+		
+		var emailTo = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>';
+		var emailFrom = setting('order_orderPlacedEmailFrom');
+		var emailCC = setting('order_orderPlacedEmailCC');
+		var emailBCC = setting('order_orderPlacedEmailBCC');
+		var emailSubject = setting('order_orderPlacedEmailSubject');
+		var emailBody = "";
+		
+		savecontent variable="emailBody" {
+			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
+		}
+		
+		getTagProxyService().cfmail(to = emailTo, from = emailFrom, cc = emailCC, bcc = emailBCC, subject = emailSubject, body = emailBody);
+		
 	}
 	
 	public any function getOrderRequirementsList(required any order) {
@@ -189,6 +291,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
 				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
+				updateOrderTax(arguments.orderFulfillment.getOrder());
 			}
 			
 			// Validate & Save Address
@@ -240,26 +343,37 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
 			case("shipping"): {
+				// copy the shipping address from the order fulfillment and set it in the delivery
+				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
 			}
 			default:{}
 		}
 		
+		var totalQuantity = 0;
 		// Loop over the items in the fulfillment
 		for( var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
 			
+			var thisOrderItem = arguments.orderFulfillment.getOrderFulfillmentItems()[i];
 			// Check to see if this fulfillment item has any quantity passed to it
-			if(structKeyExists(arguments.data, arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID())) {
-				var thisQuantity = arguments.data[arguments.orderFulfillment.getOrderFulfillmentItems()[i].getOrderItemID()];
+			if(structKeyExists(arguments.data, thisOrderItem.getOrderItemID())) {
+				var thisQuantity = arguments.data[thisOrderItem.getOrderItemID()];
 				
 				// Make sure that the quantity is greater than 1, and that this fulfillment item needs at least that many to be delivered
-				if(thisQuantity > 0 && thisQuantity <= arguments.orderFulfillment.getOrderFulfillmentItems()[i].getQuantityUndelivered()) {
-					
+				if(thisQuantity > 0 && thisQuantity <= thisOrderItem.getQuantityUndelivered()) {
+					// keep track of the total quantity fulfilled
+					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
 					var orderDeliveryItem = this.newOrderDeliveryItem();
 					orderDeliveryItem.setQuantityDelivered(thisQuantity);
-					orderDeliveryItem.setOrderItem(arguments.orderFulfillment.getOrderFulfillmentItems()[i]);
-					orderDeliveryItem.setOrderDelivery(orderDelivery);	
+					orderDeliveryItem.setOrderItem(thisOrderItem);
+					orderDeliveryItem.setOrderDelivery(orderDelivery);
+					// change status of the order item
+					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
+						//order item was fulfilled
+						local.statusType = this.getTypeBySystemCode("oistFulfilled");
+						thisOrderItem.setOrderItemStatusType(local.statusType);		
+					}
 				}
 			}
 		}
@@ -267,6 +381,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// If items have not been added to the delivery, set an error so that it doesn't get persisted
 		if(arrayLen(orderDelivery.getOrderDeliveryItems()) == 0) {
 			getValidationService().setError(entity=orderDelivery, entityName="OrderDelivery", errorName="orderDeliveryItems",rule="hasOrderDeliveryItems");
+		}
+		
+		// update the status of the order
+		if(totalQuantity < order.getQuantityUndelivered()) {
+			order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+		} else {
+			if(order.isPaid()) {
+				order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+			} else {
+				order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+			}
 		}
 		
 		return this.save(orderDelivery);
@@ -374,4 +499,24 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 	}
+	
+	public void function removeAccountSpecificOrderDetails(required any order) {
+		
+		// Loop over fulfillments and remove any account specific details
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
+			if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodID() == "shipping") {
+				arguments.order.getOrderFulfillments()[i].setShippingAddress(javaCast("null",""));
+			}
+		}
+		
+		// TODO: Loop over payments and remove any account specific details 
+	}
+	
+	public void function updateOrderTax(required any order) {
+		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
+			var itemTax = getTaxService().calculateOrderItemTax(arguments.order.getOrderItems()[i]);
+			arguments.order.getOrderItems()[i].setTaxAmount(itemTax);
+		}
+	}
+	
 }

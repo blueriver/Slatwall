@@ -28,19 +28,16 @@
 		<Record settingID="dbb327a2c663e36317b216ebc09ee385" settingName="paymentMethod_creditCard_storeCreditCardWithAccount" settingValue="0" />
 		<Record settingID="dbb3284bc75ab4d26fed36b9027f4587" settingName="paymentMethod_creditCard_checkoutTransactionType" settingValue="authorize" />
 		
-		<Record settingID="dbb32786b330315f7869d11b78bd7222" settingName="order_notificationEmailTo" settingValue="info@mySlatwallStore.com" />
-		<Record settingID="dbb32787e840bb61c8fde17a08a0ea9a" settingName="order_notificationEmailFrom" settingValue="info@mySlatwallStore.com" />
+		<Record settingID="dbb327a3e256e78458125906a2f8c05a" settingName="order_orderPlacedEmailFrom" settingValue="info@mySlatwallStore.com" />
+		<Record settingID="dbb327a4d656c212e50ddc136e8577cd" settingName="order_orderPlacedEmailCC" settingValue="" />
+		<Record settingID="dbb327a50c418cf3764398a164f677c1" settingName="order_orderPlacedEmailBCC" settingValue="" />
+		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="order_orderPlacedEmailSubject" settingValue="Thank you for your order" />
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 	
 	
-	
-	dbb327a3e256e78458125906a2f8c05a
-	dbb327a4d656c212e50ddc136e8577cd
-	dbb327a50c418cf3764398a164f677c1
-	dbb327a60fb3a58e2dd6dc93f164d46c
 	dbb327a70153717c73ee75a97ad8e83b
 	dbb327a8b50ef28662b75a32d01ece1d
 	dbb327a9fd041eafabea95800f85d55a

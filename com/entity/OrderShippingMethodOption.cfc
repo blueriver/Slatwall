@@ -39,7 +39,7 @@ Notes:
 component displayname="Order Shipping Method Option" entityname="SlatwallOrderShippingMethodOption" table="SlatwallOrderShippingMethodOption" persistent=true accessors=true output=false extends="BaseEntity" {
 
 	property name="orderShippingMethodOptionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="totalCost" ormtype="float";
+	property name="totalCharge" ormtype="big_decimal";
 	property name="estimatedArrivalDate" ormtype="date";
 	
 	property name="orderFulfillmentShipping" cfc="OrderFulfillmentShipping" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";

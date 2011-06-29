@@ -466,31 +466,29 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 					}
 				}
 			}
-			arguments.records[i].setSearchScore(score);
-			randomID = rand();
-			if(find(".", score)) {
-				randomID = right(randomID, len(randomID)-2);
-			}
-			structSort[ score & randomID ] = arguments.records[i];
+			
+			structSort[ score & i ] = arguments.records[i];
 		}
 		var scoreArray = structKeyArray(structSort);
 		
 		arraySort(scoreArray, "numeric", "desc");
-		variables.records = arrayNew(1);
+		var sortedArray = arrayNew(1);
+		arrayResize(sortedArray, arrayLen(scoreArray));
+		
 		for(var i=1; i <= arrayLen(scoreArray); i++) {
-			arrayAppend(arguments.records, structSort[scoreArray[i]]);
+			sortedArray[i] = structSort[scoreArray[i]];
 		}
 		
 		setSearchTime(getTickCount()-searchStart);
 		
-		return arguments.records;
+		return sortedArray;
 	}
 	
 	public void function setRecords(required any records) {
 		variables.records = arrayNew(1);
 		
 		if(isArray(arguments.records)) {
-			if(arrayLen(variables.keywords)) {
+			if(arrayLen(variables.keywords) && structCount(keywordProperties)) {
 				variables.records = applySearchScore(arguments.records);
 			} else {
 				variables.records = arguments.records;

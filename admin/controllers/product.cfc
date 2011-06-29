@@ -147,7 +147,7 @@ component extends="BaseController" output=false accessors=true {
 		if(deleteResponse.hasErrors()) {
 			rc.message = rbKey("admin.product.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message=deleteResponse.getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
 		getFW().redirect(action="admin:product.list",preserve="message");

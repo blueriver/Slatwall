@@ -40,7 +40,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amount" ormtype="float";
+	property name="amount" ormtype="big_decimal";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -48,6 +48,12 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// Special Related Discriminator Property
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
 	property name="paymentMethodID" insert="false" update="false";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	
     /******* Association management methods for bidirectional relationships **************/

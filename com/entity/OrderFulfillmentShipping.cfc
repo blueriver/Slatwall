@@ -98,11 +98,6 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		setFulfillmentCharge(0);
 	}
 	
-	// Any time a new Address gets set, we need to adjust the order shipping options
-	public void function setAddress(required Address address) {
-		variables.address = arguments.address;
-	}
-		
     // Order Shipping Method Options (one-to-many)
     public void function addOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
     	arguments.orderShippingMethodOption.addOrderShipping(this);

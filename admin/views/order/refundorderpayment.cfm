@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,21 +35,19 @@
 
 Notes:
 
-*/
-component displayname="Sku Alternate" entityname="SlatwallSkuAlternate" table="SlatwallSkuAlternate" persistent=true accessors=true output=false extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="skuAlternateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="skuValue" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
-	
-	// Related Object Properties
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="skuType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
-	
-}
+--->
+
+<cfparam name="rc.orderpayment" type="any" />
+<cfparam name="rc.orderpaymentID" type="string" /> 
+
+<cfoutput>
+	<form class="modal" method="post" action="#buildURL('admin:order.processOrderPaymentRefund')#">
+		<input type="hidden" name="orderPaymentID" value="#rc.orderPaymentID#" />
+		<p>#rc.$.Slatwall.rbKey("admin.order.enterPaymentRefundAmount")#: #dollarformat(rc.orderpayment.getAmountCharged())#</p>
+		$ <input class="refundAmount" type="text" name="refundAmount" value="0" size="10" />
+		<br><br>
+		<div id="actionButtons" class="clearfix">
+			<cf_SlatwallActionCaller action="admin:order.processOrderPaymentRefund" class="button" type="submit" />
+		</div>
+	</form>
+</cfoutput>

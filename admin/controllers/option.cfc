@@ -101,7 +101,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		if(!rc.option.hasErrors()) {
 			// go to the 'manage option group' form to add/edit more options
-			rc.message=$.Slatwall.rbKey("admin.option.save_success");
+			rc.message = rc.$.Slatwall.rbKey("admin.option.save_success");
 			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
 		} else {
 			//put optionGroup in rc for form
