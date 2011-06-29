@@ -46,6 +46,6 @@ component displayname="Order Item Status Action Abstract" entityname="SlatwallOr
 	property name="orderItemActionType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderItemActionTypeID";
 	
 	// Special Related Discriminator Property
-	property name="orderItemStatusActionType" insert="false" update="false";
+	property name="orderItemStatusActionType" length="255" insert="false" update="false";
 	
 }
