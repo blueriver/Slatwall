@@ -134,6 +134,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Place all of this code in a try catch so that if it errors we release the okToProcessOrder lock
 		try {
+			
 			// Lock down this determination so that the values getting called and set don't overlap
 			lock scope="Session" timeout="45" {
 				// Get okToProcessOrder out of the session scope, and if it doesn't exist set it to true
@@ -146,18 +147,19 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			if(okToProcessOrder) {
+				
 				var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
 			
 				if(isNull(payment)) {
 					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
-						payment = getPaymentService().new("SlatwallOrderPayment#rc.paymentMethodID#");
+						payment = getPaymentService().new("SlatwallOrderPayment#data.paymentMethodID#");
 					} else {
 						payment = arguments.order.getOrderPayments()[arrayLen(arguments.order.getOrderPayments())];
 					}
 					
 					// If no amount was passed in from the data, add the amount as the order total minus and previous payments
 					if(!structKeyExists(arguments.data, "amount")) {
-						arguments.data.amount = argument.order.getTotal() - argument.order.getPaymentAmountTotal();
+						arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
 					}
 					
 					// Add new Payment to the order
@@ -173,7 +175,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				} else {
 					result = this.processOrder(arguments.order);
 				}
-				
 				// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
 				getSessionService().setValue("okToProcessOrder", true);
 			}
@@ -181,7 +182,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
 			getSessionService().setValue("okToProcessOrder", true);
 		}
-
 		return result;
 	}
 	
@@ -305,7 +305,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(arguments.orderFulfillment.hasOrderShippingMethodOption(methodOption)) {
 					// Update the orderFulfillment to have this option selected
 					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethod());
-					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCost());
+					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
 				}
 				
 			}

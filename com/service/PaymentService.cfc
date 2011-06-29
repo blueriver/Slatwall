@@ -39,6 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="settingService" type="any";
+	property name="sessionService" type="any";
 
 	public any function savePaymentMethod(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") ) {
