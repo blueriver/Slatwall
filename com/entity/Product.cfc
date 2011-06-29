@@ -84,7 +84,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" persistent="false";
 	property name="price" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
 	property name="listPrice" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
-	property name="shippingWeight" type="numeric" validateNumeric="true" persistent="false";
+	property name="shippingWeight" validateRequired="true" type="numeric" validateNumeric="true" persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
