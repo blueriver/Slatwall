@@ -46,7 +46,7 @@ component displayname="Attribute Set Assignment" entityname="SlatwallAttributeSe
 
 	// Special Related Discriminator Property
 	property name="attributeSetAssignmentType" insert="false" update="false";
-	property name="productTypeID" insert="false" update="false";
+	property name="productTypeID" length="32" insert="false" update="false";
 
 	/******* Association management methods for bidirectional relationships **************/
 	
