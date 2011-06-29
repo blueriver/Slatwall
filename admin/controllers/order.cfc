@@ -53,9 +53,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
-		// for testing only
-		//param name="rc.showAdvancedSearch" default="1";
-		// only view new and processing orders by default
 		param name="rc['F:orderstatustype_systemcode']" default="ostNew,ostProcessing";
 		param name="rc.orderDateStart" default="";
 		param name="rc.orderDateEnd" default="";
@@ -75,11 +72,29 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(len(trim(rc.orderDateStart)) > 0 || len(trim(rc.orderDateEnd)) > 0 || (len(rc['F:orderstatustype_systemcode']) && rc['F:orderstatustype_systemcode'] != "ostNew,ostProcessing" )) {
 			rc.showAdvancedSearch = 1;
 		}
-		// date range (start and end) have been submitted 
-		if(len(trim(rc.orderDateStart)) > 0 && len(trim(rc.orderDateEnd)) > 0) {
-			// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all orders on the last day of the range
-			rc['R:orderOpenDateTime'] = "#rc.orderDateStart#,#dateAdd('s',85399,rc.orderDateEnd)#";
+		// date range (start or end) have been submitted 
+		if(len(trim(rc.orderDateStart)) > 0 || len(trim(rc.orderDateEnd)) > 0) {
+			var dateStart = rc.orderDateStart;
+			var dateEnd = rc.orderDateEnd;
+			// if either the start or end date is blank, default them to a long time ago or now(), respectively
+ 			if(len(trim(rc.orderDateStart)) == 0) {
+ 				dateStart = createDateTime(30,1,1,0,0,0);
+ 			} else if(len(trim(rc.orderDateEnd)) == 0) {
+ 				dateEnd = now();
+ 			}
+ 			// make sure we have valid datetimes
+ 			if(isDate(dateStart) && isDate(dateEnd)) {
+ 				// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all orders on the last day of the range (only if it was entered)
+				if(len(trim(rc.orderDateEnd)) > 0) {
+					dateEnd = dateAdd('s',85399,dateEnd);	
+				}
+				rc['R:orderOpenDateTime'] = "#dateStart#,#dateEnd#";
+ 			} else {
+ 				rc.message = #rc.$.slatwall.rbKey("admin.order.search.invaliddates")#;
+ 				rc.messagetype = "warning";
+ 			}
 		}
+			
 	}
 	
 	public void function detail(required struct rc) {
