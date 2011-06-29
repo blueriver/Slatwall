@@ -47,7 +47,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Special Related Discriminator Property
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
-	property name="paymentMethodID" insert="false" update="false";
+	property name="paymentMethodID" length="255" insert="false" update="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
