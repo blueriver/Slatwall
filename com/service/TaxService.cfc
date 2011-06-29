@@ -51,7 +51,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(!isNull(address)) {
 				for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
 					if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
-						taxAmount += arguments.orderItem.getPrice() * taxCategory.getTaxCategoryRates()[i].getTaxRate();
+						taxAmount += arguments.orderItem.getPrice() * (taxCategory.getTaxCategoryRates()[i].getTaxRate() / 100);
 					}
 				}
 			}
