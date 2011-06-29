@@ -42,4 +42,16 @@ jQuery(document).ready(function(){
 		jQuery("a#showAdvancedSearch").hide();
 		return false;
 	});
+	
+	jQuery("a#selectAllStatuses").click(function(){
+		jQuery(".statusOption").attr("checked","checked");
+		return false;
+	});
+	
+	jQuery("a#clearDates").click(function(){
+		jQuery("input.date").val("");
+		return false;
+	});
+	
+	jQuery("input.date").datepicker();
 });
