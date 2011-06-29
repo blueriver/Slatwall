@@ -53,21 +53,35 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
+		// for testing only
+		//param name="rc.showAdvancedSearch" default="1";
 		// only view new and processing orders by default
 		param name="rc['F:orderstatustype_systemcode']" default="ostNew,ostProcessing";
-		// if "all" is the type filter, show all but carts (not placed) we have to do it this way until
-		// the SmartList can do "negative filtering"
-		if(rc['F:orderstatustype_systemcode'] == "All") {
-			rc["F:orderstatustype_systemcode"] = "ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled";
+		param name="rc.orderDateStart" default="";
+		param name="rc.orderDateEnd" default="";
+		if(structKeyExists(rc,"isSearch")) {
+			processOrderSearch(arguments.rc);
 		}
+		rc.orderStatusOptions = getOrderService().getOrderStatusOptions();
+		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
+    }    
+    
+	private void function processOrderSearch(required struct rc) {
 		// if someone tries to filter for carts using URL, override the filter
 		if(rc['F:orderstatustype_systemcode'] == "ostNotPlaced") {
 			rc["F:orderstatustype_systemcode"] = "ostNew,ostProcessing";
 		}
-		rc.orderStatusOptions = getOrderService().getOrderStatusOptions();
-		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
-    }
-
+		// show advanced search fields if they have been filled
+		if(len(trim(rc.orderDateStart)) > 0 || len(trim(rc.orderDateEnd)) > 0 || (len(rc['F:orderstatustype_systemcode']) && rc['F:orderstatustype_systemcode'] != "ostNew,ostProcessing" )) {
+			rc.showAdvancedSearch = 1;
+		}
+		// date range (start and end) have been submitted 
+		if(len(trim(rc.orderDateStart)) > 0 && len(trim(rc.orderDateEnd)) > 0) {
+			// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all orders on the last day of the range
+			rc['R:orderOpenDateTime'] = "#rc.orderDateStart#,#dateAdd('s',85399,rc.orderDateEnd)#";
+		}
+	}
+	
 	public void function detail(required struct rc) {
 	   rc.order = getOrderService().getOrder(rc.orderID);
 	   rc.shippingServices = getService("settingService").getShippingServices();
