@@ -44,23 +44,36 @@ Notes:
 		<!--- All logic in this method is inside of a cftry so that it doesnt cause an exception ---> 
 		<cftry>
 			<cfif setting("advanced_logExceptionsToDatabaseFlag")>
-				<cfquery name="log" datasource="#application.configBean.getDSN()#"  username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
+				
+				<cfset var logCode = "" />
+				<cfset var logMessage = "" />
+				<cfset var logDetail = "" />
+				
+				<cfif structKeyExists(arguments.exception, "errNumber")>
+					<cfset logCode = arguments.exception.errNumber />
+				</cfif>
+				<cfif structKeyExists(arguments.exception, "message")>
+					<cfset logMessage = left(arguments.exception.message,255) />
+				</cfif>
+				<cfif structKeyExists(arguments.exception, "stackTrace")>
+					<cfset logDetail = left(arguments.exception.stackTrace, 4000) />
+				</cfif>
+				
+				<cfquery name="log" datasource="#application.configBean.getDatasource()#"  username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
 					INSERT INTO SlatwallLog	(
 						logID,
 						logDateTime,
 						logType,
 						logCode,
 						logMessage,
-						logDetail,
-						logTemplate
+						logDetail
 					  ) VALUES (
-						<cfqueryparam  value="#createUUID()#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam  value="#now()#" cfsqltype="cf_sql_timestamp" />,
-						<cfqueryparam  value="exception" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam  value="#arguments.exception.errCode#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam  value="#arguments.exception.message#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam  value="" cfsqltype="cf_sql_blob" />,
-						<cfqueryparam  value="#arguments.templatePath#" cfsqltype="cf_sql_varchar" />
+					  	<cfqueryparam value="#lcase(replace(createUUID(),"-","","all"))#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />,
+						<cfqueryparam value="exception" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#logCode#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#logMessage#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#logDetail#" cfsqltype="cf_sql_varchar" />
 					)
 				</cfquery>
 			</cfif>

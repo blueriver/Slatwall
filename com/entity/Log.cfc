@@ -44,7 +44,6 @@ component displayname="Log" entityname="SlatwallLog" table="SlatwallLog" persist
 	property name="logType" ormtype="string";
 	property name="logCode" ormtype="string";
 	property name="logMessage" ormtype="string";
-	property name="logDetail" ormtype="blob";
-	property name="logTemplate" ormtype="string";
+	property name="logDetail" ormtype="string" length="4000";
 	
 }
