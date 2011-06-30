@@ -32,14 +32,16 @@
 		<Record settingID="dbb327a4d656c212e50ddc136e8577cd" settingName="order_orderPlacedEmailCC" settingValue="" />
 		<Record settingID="dbb327a50c418cf3764398a164f677c1" settingName="order_orderPlacedEmailBCC" settingValue="" />
 		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="order_orderPlacedEmailSubject" settingValue="Thank you for your order" />
+		
+		<Record settingID="dbb327a70153717c73ee75a97ad8e83b" settingName="advanced_logExceptionsToDatabaseFlag" settingValue="1" />
+		<Record settingID="dbb327a8b50ef28662b75a32d01ece1d" settingName="advanced_logDatabaseClearAfterDays" settingValue="30" />
+
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
+
 	
-	
-	dbb327a70153717c73ee75a97ad8e83b
-	dbb327a8b50ef28662b75a32d01ece1d
 	dbb327a9fd041eafabea95800f85d55a
 	dbb327aaf8f644aedaf190b32f3c48e4
 	dbb327abbbe32d31cc7c2b8e1e4c0c4c

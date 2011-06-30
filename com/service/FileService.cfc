@@ -165,34 +165,12 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		}
 		return true;
 	}
-	
-	
-	/*
-	*  This function is part of the Common Function Library Project. An open source
-	*   collection of UDF libraries designed for ColdFusion 5.0 and higher. For more information,
-	*   please see the web site at:
-	*
-	*       http://www.cflib.org
-	*
-	*   License:
-	*   This code may be used freely.
-	*   You may modify this code as you see fit, however, this header, and the header
-	*   for the functions must remain intact.
-	*
-	*   This code is provided as is.  We make no warranty or guarantee.  Use of this code is at your own risk.
-	*
-	*  @hint This function will remove any reserved characters from a filename string and replace any spaces with dashes.
-	*  @param filename   Filename. (Required)
-	*  @return Returns a string. 
-	*  @author Jason Sheedy (jason@jmpj.net) 
-	*  @version 1, January 19, 2006 (transposed to cfscript for Slatwall Mura plugin by Tony Garcia Feb 2011)
-	*/
-	
+		
 	public string function filterFilename(required string filename) {
 		var newFileName = "";
 		newfilename = replace(newfilename,"  "," ","all");
 		newfilename = replace(newfilename," ","-","all");
-		newfilename = reReplace(newfilename, "[^a-z|A-Z|0-9|\-]");
+		newfilename = reReplace(newfilename, "[^a-z|A-Z|0-9|\-]", "", "all");
 		return lcase(newfilename);
 	}
 

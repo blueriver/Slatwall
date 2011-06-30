@@ -201,6 +201,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		} catch (any e) {
 			// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
 			getSessionService().setValue("okToProcessOrder", true);
+			// Log the exception
+			getService("logService").logException(e);
 		}
 		return result;
 	}

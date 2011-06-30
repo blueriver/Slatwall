@@ -156,6 +156,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						ormFlush();
 						// Populate the orderPayment with the processing error
 						arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
+						// Log the exception
+						getService("logService").logException(e);
 					}
 				}
 				// Allow for future transaction to come in
@@ -163,6 +165,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			} catch (any e) {
 				// Allow for future transaction to be run
 				getSessionService().setValue("okToProcessCreditCard", true);
+				// Log the exception
+				getService("logService").logException(e);
 			}
 		}
 		
