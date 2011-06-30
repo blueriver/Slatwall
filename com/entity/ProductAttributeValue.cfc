@@ -36,12 +36,12 @@
 Notes:
 
 */
-component displayname="Product Attribute Value" entityname="SlatwallProductAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="Product" {
+component displayname="Product Attribute Value" entityname="SlatwallProductAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="product" {
 	
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValueType" length="255" insert="false" update="false";
 	
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" inverse="true" cascade="all";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	// Product (many-to-one)

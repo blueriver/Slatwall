@@ -161,7 +161,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			
 			if(result) {
 				// Redirect to order Confirmation
-				getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#orderID#"), false);
+				getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#tempOrderID#"), false);
 			}
 			
 		}

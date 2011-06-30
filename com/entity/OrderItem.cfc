@@ -56,6 +56,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 
 	public any function init() {
 		
@@ -71,6 +72,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		// set default collections for association management methods
 		if(isNull(variables.orderDeliveryItems)) {
 		   variables.orderDeliveryItems = [];
+		}
+		if(isNull(variables.attributeValues)) {
+		   variables.attributeValues = [];
 		}
 		
 		return super.init();
@@ -101,6 +105,17 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	public numeric function getQuantityUndelivered() {
 		return getQuantity() - getQuantityDelivered();
+	}
+	
+	public string function displayCustomizations() {
+		var customizations = "";
+		for(var i=1; i<=arrayLen(getAttributeValues()); i++) {
+			if(len(customizations)) {
+				customizations &= ", ";
+			}
+			customizations &= "#getAttributeValues()[i].getAttribute().getAttributeName()#: #getAttributeValues()[i].getAttributeValue()#";
+		}
+		return customizations;
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/
@@ -163,6 +178,16 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     
     public void function removeOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
     	arguments.orderDeliveryItem.removeOrderItem(this);
+    }
+    
+     // Attribute Values (one-to-many)
+    
+    public void function addAttributeValue(required OrderItemAttributeValue attributeValue) {
+    	arguments.attributeValue.setOrderItem(this);
+    }
+    
+    public void function removeAttributeValue(required OrderItemAttributeValue attributeValue) {
+    	arguments.attributeValue.removeOrderItem(this);
     }
     
 	

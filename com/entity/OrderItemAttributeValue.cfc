@@ -36,29 +36,32 @@
 Notes:
 
 */
-component displayname="Account Attribute Value" entityname="SlatwallAccountAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="account" {
+component displayname="Order Item Attribute Value" entityname="SlatwallOrderItemAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="orderItem" {
 	
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValueType" length="255" insert="false" update="false";
 	
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
-	
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+		
 	/******* Association management methods for bidirectional relationships **************/
-	// Account (many-to-one)
+	// Order Item (many-to-one)
 	
-	public void function setAccount(required Account account) {
-		variables.account = arguments.account;
-		if(isNew() || !arguments.account.hasAttributeValue(this)) {
-		   arrayAppend(arguments.account.getAttributeValues(),this);
+	public void function setOrderItem(required OrderItem orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() || !arguments.orderItem.hasAttributeValue(this)) {
+		   arrayAppend(arguments.orderItem.getAttributeValues(),this);
 		}
 	}
 	
-	public void function removeAccount(required Account account) {
-		var index = arrayFind(arguments.account.getAttributeValues(),this);
+	public void function removeOrderItem(OrderItem orderItem) {
+		if(!structKeyExists(arguments,"orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAttributeValues(),this);
 		if(index > 0) {
-		   arrayDeleteAt(arguments.account.getAttributeValues(),index);
+		   arrayDeleteAt(arguments.orderItem.getAttributeValues(),index);
 		}    
-		structDelete(variables,"account");
+		structDelete(variables,"orderItem");
     }
     
 	/************   END Association Management Methods   *******************/

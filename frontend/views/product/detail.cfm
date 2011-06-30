@@ -45,6 +45,7 @@ Notes:
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
+			<!--- Product Options --->
 			<cfif arrayLen($.slatwall.product().getSkus()) eq 1>
 				<input type="hidden" name="skuID" value="#$.slatwall.Product().getSkus()[1].getSkuID()#" />
 			<cfelse>
@@ -59,8 +60,24 @@ Notes:
 					</dd>
 				</dl>
 			</cfif>
+			<!--- END: Product Options --->
+				
+			<!--- Product Customizations --->
+			<cfloop array="#$.slatwall.product().getAttributeSets(['astProductCustomization'])#" index="local.customizationAttributeSet">
+				<div class="productCustomizationSet #lcase(replace(local.customizationAttributeSet.getAttributeSetName(), ' ', '', 'all'))#">
+					<h4>#local.customizationAttributeSet.getAttributeSetName()#</h4>
+					<dl>
+					<cfloop array="#local.customizationAttributeSet.getAttributes()#" index="local.attribute">
+						<cf_SlatwallAttributeDisplay attribute="#local.attribute#" />
+					</cfloop>
+					</dl>
+				</div>
+			</cfloop>
+			<!--- END: Product Customizations --->
+				
 			<label for="productQuantity">Quantity: </label><input type="text" name="quantity" value="1" size="2" id="productQuantity" />
 			<button type="submit">Add To Cart</button>
 		</form>
+		
 	</div>
 </cfoutput>
