@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Option" entityname="SlatwallOption" table="SlatwallOption" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Log" entityname="SlatwallLog" table="SlatwallLog" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="logID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
