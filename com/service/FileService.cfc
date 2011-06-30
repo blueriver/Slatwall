@@ -188,15 +188,12 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 	*  @version 1, January 19, 2006 (transposed to cfscript for Slatwall Mura plugin by Tony Garcia Feb 2011)
 	*/
 	
-	public string function filterFilename(string filename) {
+	public string function filterFilename(required string filename) {
 		var newFileName = "";
-		if( structKeyExists(arguments,"filename") && len(arguments.fileName) ) {
-		    var filenameRE = "[" & "'" & '"' & "##" & "/\\%&`@~!,:;=<>\+\*\?\[\]\^\$\(\)\{\}\|]";
-		    var newfilename = reReplace(arguments.filename,filenameRE,"","all");
-		    newfilename = replace(newfilename," ","-","all");
-		}
-	    
-	    return lcase(newfilename);
+		newfilename = replace(newfilename,"  "," ","all");
+		newfilename = replace(newfilename," ","-","all");
+		newfilename = reReplace(newfilename, "[^a-z|A-Z|0-9|\-]");
+		return lcase(newfilename);
 	}
 
 	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='' ){
