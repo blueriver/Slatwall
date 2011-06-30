@@ -46,12 +46,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);	
 		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);
-		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);
-		
+		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);	
 		smartList.joinRelatedProperty("SlatwallOrder","account");
 		
 		return smartList;
@@ -72,6 +70,49 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		smartList.addFilter("parentType_systemCode","orderStatusType");
 		smartList.addFilter("systemCode","ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled");
 		return smartlist.getPageRecords();
+	}
+	
+	public any function searchOrders(struct data={}) {
+		//set keyword and orderby
+		var params = {
+			keyword = arguments.data.keyword,
+			orderBy = arguments.data.orderBy
+		};
+
+		// if someone tries to filter for carts using URL, override the filter
+		if(listFindNoCase(arguments.data.statusCode,"ostNotPlaced")) {
+			params.statusCode = "ostNew,ostProcessing";
+		} else {
+			params['F:orderstatustype_systemcode'] = arguments.data.statusCode;	
+		}
+		// date range (start or end) have been submitted 
+		if(len(trim(arguments.data.orderDateStart)) > 0 || len(trim(arguments.data.orderDateEnd)) > 0) {
+			var dateStart = arguments.data.orderDateStart;
+			var dateEnd = arguments.data.orderDateEnd;
+			// if either the start or end date is blank, default them to a long time ago or now(), respectively
+ 			if(len(trim(arguments.data.orderDateStart)) == 0) {
+ 				dateStart = createDateTime(30,1,1,0,0,0);
+ 			} else if(len(trim(arguments.data.orderDateEnd)) == 0) {
+ 				dateEnd = now();
+ 			}
+ 			// make sure we have valid datetimes
+ 			if(isDate(dateStart) && isDate(dateEnd)) {
+ 				// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all orders on the last day of the range (only if it was entered)
+				if(len(trim(arguments.data.orderDateEnd)) > 0) {
+					dateEnd = dateAdd('s',85399,dateEnd);	
+				}
+				params['R:orderOpenDateTime'] = "#dateStart#,#dateEnd#";
+ 			} else {
+ 				arguments.data.message = #arguments.data.$.slatwall.rbKey("admin.order.search.invaliddates")#;
+ 				arguments.data.messagetype = "warning";
+ 			}
+		}
+		return getOrderSmartList(params);
+	}
+	
+	public any function exportOrders(required struct data) {
+		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
+		return getService("Utilities").export(searchQuery);
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
