@@ -98,6 +98,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Create a new Credit Card Transaction
 					var transaction = this.newCreditCardTransaction();
 					transaction.setTransactionType(arguments.transactionType);
+					transaction.setProcessingFlag(true);
 					
 					// Make sure that this transaction gets saved to the DB
 					this.saveCreditCardTransaction(transaction);
@@ -121,6 +122,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							transaction.setStatusCode(response.getStatusCode());
 							transaction.setMessage(response.getMessageString());
 							transaction.setOrderPayment(arguments.orderPayment);
+							transaction.setProcessingFlag(false);
 							// Make sure that this transaction with all of it's info gets added to the DB
 							ormFlush();
 							
@@ -130,8 +132,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							arguments.orderPayment.setAmountAuthorized(authAmount);
 							arguments.orderPayment.setAmountCharged(chargeAmount);
 							if(arguments.transactionType == "credit") {
-								var refundAmount = arguments.orderPayment.getAmountRefunded() + arguments.transactionAmount;
-								arguments.orderPayment.getAmountRefunded(refundAmount);
+								var refundAmount = arguments.orderPayment.getAmountRefunded() + response.getCreditedAmount();
+								arguments.orderPayment.setAmountRefunded(refundAmount);
 							}
 							
 							// Update the order Status
@@ -150,7 +152,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					} catch (any e) {
 						transaction.setStatusCode(500);
 						transaction.setMessage(e.message);
-						transaction.setProcessingFlag(true);
 						// Make sure that this transaction with all of it's info gets added to the DB
 						ormFlush();
 						// Populate the orderPayment with the processing error

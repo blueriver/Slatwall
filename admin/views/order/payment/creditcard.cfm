@@ -69,12 +69,24 @@ Notes:
 </table>
 <!--- display link to refund payment if amount has been charged --->
 <cfif local.orderPayment.getAmountCharged() gt 0>
-	<cf_SlatwallActionCaller action="admin:order.refundOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
+	<!--- get the transactionID for the last charged transaction --->
+	<cfloop array="#local.creditcardTransactions#" index="local.thistransaction">
+		<cfif local.thistransaction.getAmountCharged() GT 0>
+			<cfbreak />
+		</cfif>
+	</cfloop>
+	<cf_SlatwallActionCaller action="admin:order.refundOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#&providerTransactionID=#local.thistransaction.getProviderTransactionID()#" class="button">
 </cfif>
 
 <!--- display link to charge card if full authorized amount hasn't been charged yet --->
 <cfif local.orderPayment.getAmountAuthorized() gt local.orderpayment.getAmountCharged()>
-	<cf_SlatwallActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#" class="button">
+	<!--- get the transactionID for the last authorized transaction --->
+	<cfloop array="#local.creditcardTransactions#" index="local.thistransaction">
+		<cfif local.thistransaction.getAmountAuthorized() GT local.thistransaction.getAmountCharged()>
+			<cfbreak />
+		</cfif>
+	</cfloop>
+	<cf_SlatwallActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#&providerTransactionID=#local.thistransaction.getProviderTransactionID()#" class="button">
 </cfif>
 	
 </cfoutput>

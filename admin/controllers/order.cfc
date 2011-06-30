@@ -135,7 +135,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function chargeOrderPayment(required struct rc) {
 		var orderPayment = getOrderService().getOrderPayment(rc.orderPaymentID);
 		if(!isNull(orderPayment)) {
-			var chargeOK = getPaymentService().processPayment(orderPayment,"chargePreAuthorization",orderPayment.getAmount());
+			var chargeOK = getPaymentService().processPayment(orderPayment,"chargePreAuthorization",orderPayment.getAmount(),rc.providerTransactionID);
 			if(chargeOK) {
 				rc.message = rc.$.slatwall.rbKey("admin.order.chargeOrderPayment_success");
 				getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
@@ -167,7 +167,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!isNull(orderPayment)) {
 			// make sure that the refund amount entered is within the limits
 			if(isNumeric(rc.refundAmount) && rc.refundAmount > 0 && rc.refundAmount <= orderPayment.getAmountCharged()) {
-				refundOK = getPaymentService().processPayment(orderPayment,"credit",rc.refundAmount);
+				refundOK = getPaymentService().processPayment(orderPayment,"credit",rc.refundAmount,rc.providerTransactionID);
 				if(refundOK) {
 					rc.message = rc.$.slatwall.rbKey("admin.order.refundOrderPayment_success");
 					getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
