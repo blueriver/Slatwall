@@ -75,9 +75,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(!isNull(sku)) {
 			// Persist the Current Order by setting it in the session
 			rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
-	
+			
+			// Build up any possible product customizations
+			var cusomtizationData = getService("formUtilities").buildFormCollections(rc);
+			
 			// Add to the cart() order the new sku with quantity and shipping id
-			getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity);
+			getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);
 		}
 		
 		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);

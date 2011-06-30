@@ -74,7 +74,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartlist.getPageRecords();
 	}
 	
-	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
+	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
 		// Check to see if the order has a status
 		if(isNull(arguments.order.getOrderStatusType())) {
 			arguments.order.setOrderStatusType(this.getTypeBySystemCode('ostNotPlaced'));
@@ -99,14 +99,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		var orderItems = arguments.order.getOrderItems();
+		
 		var itemExists = false;
 		
-		// Check the existing order items and increment quantity if possible.
-		for(var i = 1; i <= arrayLen(orderItems); i++) {
-			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
-				itemExists = true;
-				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-				orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+		// If there are no product customizations then we can check for the order item already existing.
+		if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData, "attribute")) {
+			// Check the existing order items and increment quantity if possible.
+			for(var i = 1; i <= arrayLen(orderItems); i++) {
+				if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
+					itemExists = true;
+					orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+					orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+				}
 			}
 		}
 		
@@ -118,8 +122,24 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newItem.setOrder(arguments.order);
 			newItem.setOrderFulfillment(arguments.orderFulfillment);
 			newItem.setPrice(arguments.sku.getPrice());
+			
+			// Check for product customization
+			if(structKeyExists(arguments, "customizatonData") && structKeyExists(arguments.customizatonData, "attribute")) {
+				var pcas = arguments.sku.getProduct().getAttributeSets(['astProductCustomization']);
+				for(var i=1; i<=arrayLen(pcas); i++) {
+					var attributes = pcas[i].getAttributes();
+					for(var a=1; a<=arrayLen(attributes); a++) {
+						if( structKeyExists(arguments.customizatonData.attribute,attributes[a].getAttributeID()) ) {
+							var av = this.newOrderItemAttributeValue();
+							av.setAttribute(attributes[a]);
+							av.setAttributeValue(arguments.customizatonData.attribute[attributes[a].getAttributeID()]);
+							av.setOrderItem(newItem);
+						}
+					}
+				}
+			}
 		}
-		
+				
 		save(arguments.order);
 	}
 	

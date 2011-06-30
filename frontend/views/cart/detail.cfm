@@ -48,6 +48,7 @@ Notes:
 						<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
 						<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
 						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+						<dd class="customizations">#local.orderItem.displayCustomizations()#</dd>
 						<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
 						<dd class="quantity"><input name="orderItem.#local.orderItem.getOrderItemID()#.quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" /></dd>
 						<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
