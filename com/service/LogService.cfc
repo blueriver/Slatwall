@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,24 +35,44 @@
 
 Notes:
 
-*/
-component extends="BaseService" persistent="false" accessors="true" output="false" {
-
-	property name="settingService" type="any";
-
-	public any function saveFulfillmentMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") ) {
-			// save fulfillmentMethod-specific settings
-			for(var item in arguments.data) {
-				if(!isObject(arguments.data[item]) && listFirst(item,"_") == "fulfillmentMethod") {
-					var setting = getSettingService().getBySettingName(item);
-					setting.setSettingName(item);
-					setting.setSettingValue(arguments.data[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		return save(argumentcollection=arguments);
-	}
+--->
+<cfcomponent extends="BaseService" persistent="false" accessors="true" output="false">
 	
-}
+	<cffunction name="logException" returntype="void" access="public">
+		<cfargument name="exception" required="true" />
+		
+		<!--- All logic in this method is inside of a cftry so that it doesnt cause an exception ---> 
+		<cftry>
+			<cfif setting("advanced_logExceptionsToDatabaseFlag")>
+				<cfquery name="log" datasource="#application.configBean.getDSN()#"  username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
+					INSERT INTO SlatwallLog	(
+						logID,
+						logDateTime,
+						logType,
+						logCode,
+						logMessage,
+						logDetail,
+						logTemplate
+					  ) VALUES (
+						<cfqueryparam  value="#createUUID()#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam  value="#now()#" cfsqltype="cf_sql_timestamp" />,
+						<cfqueryparam  value="exception" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam  value="#arguments.exception.errCode#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam  value="#arguments.exception.message#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam  value="" cfsqltype="cf_sql_blob" />,
+						<cfqueryparam  value="#arguments.templatePath#" cfsqltype="cf_sql_varchar" />
+					)
+				</cfquery>
+			</cfif>
+			<cfcatch></cfcatch>
+		</cftry>  		    
+	</cffunction>
+	
+	<cffunction name="logMessage" returntype="void" access="public">
+		<cfargument name="messageCode" default="" />
+		<cfargument name="message" default="" />
+		<cfargument name="messageDetails" default="" />
+		
+	</cffunction>
+	
+</cfcomponent>

@@ -53,7 +53,7 @@ Notes:
 			<ul>
 				<li><a href="##tabProduct" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.product')#</span></a></li>	
 				<li><a href="##tabOrder" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.order')#</span></a></li>
-				<li><a href="##tabAccount" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.account')#</span></a></li>
+				<li><a href="##tabAdvanced" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.advanced')#</span></a></li>
 			</ul>
 			<div id="tabProduct">
 				<table id="ProductSettings" class="stripe">
@@ -104,8 +104,15 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailSubject#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailSubject')#" property="settingValue" fieldName="order_orderPlacedEmailSubject" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 				</table>
 			</div>
-			<div id="tabAccount">
-				
+			<div id="tabAdvanced">
+				<table id="AdvancedSettings" class="stripe">
+					<tr>
+						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
+						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
+					</tr>
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logExceptionsToDatabaseFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.logExceptionsToDatabaseFlag')#" property="settingValue" fieldName="advanced_logExceptionsToDatabaseFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" property="settingValue" fieldName="advanced_logDatabaseClearAfterDays" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+				</table>
 			</div>
 		</div>
 		
