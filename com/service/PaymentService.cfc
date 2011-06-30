@@ -160,8 +160,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						getService("logService").logException(e);
 					}
 				}
-				// Allow for future transaction to come in
-				getSessionService().setValue("okToProcessCreditCard", true);
 			} catch (any e) {
 				// Allow for future transaction to be run
 				getSessionService().setValue("okToProcessCreditCard", true);
