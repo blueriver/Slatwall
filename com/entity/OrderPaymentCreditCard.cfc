@@ -79,6 +79,10 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		return super.init();
 	}
 	
+	public numeric function getAmountReceived() {
+		return getAmountCharged() - getAmountRefunded();
+	}
+	
 	public void function setCreditCardNumber(required string creditCardNumber) {
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
