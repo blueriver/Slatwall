@@ -390,10 +390,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					orderDeliveryItem.setOrderDelivery(orderDelivery);
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
-						//order item was fulfilled
-						local.statusType = this.getTypeBySystemCode("oistFulfilled");
-						thisOrderItem.setOrderItemStatusType(local.statusType);		
+					//order item was fulfilled
+						local.statusType = this.getTypeBySystemCode("oistFulfilled");	
+					} else {
+					// TODO: create setting to make this flexible according to business rules
+						local.statusType = this.getTypeBySystemCode("oistBackordered");					
 					}
+					thisOrderItem.setOrderItemStatusType(local.statusType);	
 				}
 			}
 		}
