@@ -98,9 +98,9 @@ Notes:
 	</table>
 	<cf_SlatwallSmartListPager smartList="#rc.orderSmartList#">
 	<cfif rc.isSearch>
-		<cfset local.exportText = $.slatwall.rbKey("admin:order.list.exportSearchResults") />
+		<cfset local.exportText = $.slatwall.rbKey("admin.order.list.exportSearchResults") />
 	<cfelse>
-		<cfset local.exportText = $.slatwall.rbKey("admin:order.list.exportDisplayedOrders") />
+		<cfset local.exportText = $.slatwall.rbKey("admin.order.list.exportDisplayedOrders") />
 	</cfif>
 	<form name="slatwallOrderExport" action="#buildURL(action='admin:order.exportorders')#" method="post">
 		<input type="hidden" name="keyword" value="#rc.keyword#" />
