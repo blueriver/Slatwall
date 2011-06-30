@@ -43,6 +43,7 @@ Notes:
 <cfparam name="rc.showAdvancedSearch" default=false />
 
 <cfoutput>
+
 <div class="svoadminorderlist">
 	<form action="#buildURL('admin:order.list')#" method="post">
 		<input type="hidden" name="isSearch" value="1" />
@@ -56,7 +57,7 @@ Notes:
 			<div id="statusSelections">
 			#$.Slatwall.rbKey("entity.order.orderStatusType")#:
 			<cfloop array="#rc.orderStatusOptions#" index="thisStatus" >
-				<input type="checkbox" name="F:orderstatustype_systemcode" id="#thisStatus['id']#" class="statusOption" value="#thisStatus['id']#"<cfif listFindNoCase(rc['F:orderstatustype_systemcode'],thisStatus['id'])> checked="checked"</cfif> /> <label for="#thisStatus['id']#">#thisStatus['name']#</label>
+				<input type="checkbox" name="statusCode" id="#thisStatus['id']#" class="statusOption" value="#thisStatus['id']#"<cfif listFindNoCase(rc.statusCode,thisStatus['id'])> checked="checked"</cfif> /> <label for="#thisStatus['id']#">#thisStatus['name']#</label>
 			</cfloop>
 			<a href="##" id="selectAllStatuses">#$.slatwall.rbKey('define.selectall')#</a>
 			</div>
@@ -96,5 +97,18 @@ Notes:
 		</cfloop>
 	</table>
 	<cf_SlatwallSmartListPager smartList="#rc.orderSmartList#">
+	<cfif rc.isSearch>
+		<cfset local.exportText = $.slatwall.rbKey("admin:order.list.exportSearchResults") />
+	<cfelse>
+		<cfset local.exportText = $.slatwall.rbKey("admin:order.list.exportDisplayedOrders") />
+	</cfif>
+	<form name="slatwallOrderExport" action="#buildURL(action='admin:order.exportorders')#" method="post">
+		<input type="hidden" name="keyword" value="#rc.keyword#" />
+		<input type="hidden" name="orderDateStart" value="#rc.orderDateStart#" />
+		<input type="hidden" name="orderDateEnd" value="#rc.orderDateEnd#" />
+		<input type="hidden" name="statusCode" value="#rc.statusCode#" />
+		<input type="hidden" name="orderBy" value="#rc.orderBy#" />
+		<cf_SlatwallActionCaller action="admin:order.exportorders" type="submit" class="button" text="#local.exportText#" />
+	</form>
 </div>
 </cfoutput>
