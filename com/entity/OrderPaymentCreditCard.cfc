@@ -56,8 +56,8 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	
 	// Non-Persistent properties
-	property name="creditCardNumber" persistent="false";
-	property name="securityCode" validateNumeric="true" persistent="false";
+	property name="creditCardNumber" validateRequired="true" persistent="false";
+	property name="securityCode" validateRequired="true" validateNumeric="true" persistent="false";
 	property name="expirationDate" persistent="false";
 	
 	public any function init(){
