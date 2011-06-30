@@ -53,7 +53,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	
 	// Related Properties
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
-	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fkcolumn="orderPaymentID" fieldtype="one-to-many" cascade="all" inverse="true";
+	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	
 	// Non-Persistent properties
 	property name="creditCardNumber" persistent="false";
@@ -71,6 +71,9 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		}
 		if(isNull(variables.amountCharged)) {
 			variables.amountCharged = 0;
+		}
+		if(isNull(variables.amountRefunded)) {
+			variables.amountRefunded = 0;
 		}
 		
 		return super.init();
