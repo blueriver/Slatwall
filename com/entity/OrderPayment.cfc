@@ -55,6 +55,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+
 	// Helper method that gets overriden by payment method-specific orderpayment entities
 	public numeric function getAmountReceived() {
 		return getAmount();

@@ -36,28 +36,17 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false" {
-
-	property name="addressService" type="any";
-
-	public numeric function calculateOrderItemTax(required any orderItem) {
-		var taxAmount = 0;
-		
-		var fulfillment = arguments.orderItem.getOrderFulfillment();
-		
-		if(fulfillment.getFulfillmentMethodID() == "shipping") {
-			var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
-			var address = fulfillment.getShippingAddress();
-			if(!isNull(address)) {
-				for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
-					if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
-						taxAmount += arguments.orderItem.getExtendedPrice() * (taxCategory.getTaxCategoryRates()[i].getTaxRate() / 100);
-					}
-				}
-			}
-		}
-		
-		return decimalFormat(taxAmount);
-	}
+component displayname="Product Image" entityname="SlatwallProductImage" table="SlatwallProductImage" persistent="true" extends="BaseEntity" {
+			
+	// Related Entities
+	property name="product" cfc="Product" fieldtype="id,many-to-one" fkcolumn="productID";
+	property name="image" cfc="Image" fieldtype="id,many-to-one" fkcolumn="imageID";
+	property name="productImageType" cfc="Type" fieldtype="many-to-one" fkcolumn="productImageTypeID";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 }
