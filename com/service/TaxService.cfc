@@ -57,7 +57,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 		
-		return taxAmount;
+		return decimalFormat(taxAmount);
 	}
 	
 }
