@@ -190,100 +190,82 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCharge());
 	}
 	
-	public boolean function setupPaymentAndProcessOrder(required any order, required struct data) {
-		var result = false;
+	public boolean function setupOrderPayment(required any order, required struct data) {
+		var result = true;
 		
-		// Place all of this code in a try catch so that if it errors we release the okToProcessOrder lock
-		try {
-			
-			// Lock down this determination so that the values getting called and set don't overlap
-			lock scope="Session" timeout="45" {
-				// Get okToProcessOrder out of the session scope, and if it doesn't exist set it to true
-				var okToProcessOrder = getSessionService().getValue("okToProcessOrder", true);
-				
-				// If okToProcessOrder was true, update the session variable to false because we are about to try an process
-				if(okToProcessOrder) {
-					getSessionService().setValue("okToProcessOrder", false);
-				}
-			}
-			
-			if(okToProcessOrder) {
-				
-				var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
-			
-				if(isNull(payment)) {
-					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
-						payment = getPaymentService().new("SlatwallOrderPayment#data.paymentMethodID#");
-					} else {
-						payment = arguments.order.getOrderPayments()[arrayLen(arguments.order.getOrderPayments())];
-					}
-					
-					// If no amount was passed in from the data, add the amount as the order total minus and previous payments
-					if(!structKeyExists(arguments.data, "amount")) {
-						arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
-					}
-					
-					// Add new Payment to the order
-					payment.setOrder(arguments.order);
-				}
-				
-				// Attempt to Validate & Save Order Payment
-				payment = this.saveOrderPayment(payment, arguments.data);
-				
-				// If the payment has errors do not proceed with the order processing
-				if(payment.hasErrors()) {
-					result = false;
-				} else {
-					result = this.processOrder(arguments.order);
-				}
-				// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
-				getSessionService().setValue("okToProcessOrder", true);
-			}
-		} catch (any e) {
-			// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
-			getSessionService().setValue("okToProcessOrder", true);
-			// Log the exception
-			getService("logService").logException(e);
+		// If no amount was passed in from the data, add the amount as the order total minus and previous payments
+		if(!structKeyExists(arguments.data, "amount")) {
+			arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
 		}
+		
+		var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
+	
+		if(isNull(payment)) {
+			payment = getPaymentService().new("SlatwallOrderPayment#arguments.data.paymentMethodID#");
+			// Add new Payment to the order
+			payment.setOrder(arguments.order);
+		}
+		
+		// Attempt to Validate & Save Order Payment
+		payment = this.saveOrderPaymentCreditCard(payment, arguments.data);
+		
+		// If the payment has errors do not proceed with the order processing
+		if(payment.hasErrors() || payment.getBillingAddress().hasErrors()) {
+			result = false;
+		}
+		
 		return result;
 	}
 	
-	public any function processOrder(required any order) {
-		var allPaymentsOK = true;
-		
-		// Process All Payments and Save the ones that were successful
-		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = setting('paymentMethod_creditCard_checkoutTransactionType');
-			if(transactionType != 'none') {
-				var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], transactionType);
-				if(!paymentOK) {
-					allPaymentsOK = false;
+	public any function processOrder(required any order, struct data={}) {
+		// Lock down this determination so that the values getting called and set don't overlap
+		lock scope="Session" timeout="60" {
+			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
+				var allPaymentsOK = true;
+				
+				if(arguments.order.getPaymentAmountTotal() < arguments.order.getTotal()) {
+					allPaymentsOK = setupOrderPayment(arguments.order, arguments.data);
+					if(allPaymentsOK && arguments.order.getPaymentAmountTotal() < arguments.order.getTotal()) {
+						allPaymentsOK = false;
+					}
+				}
+				
+				if(allPaymentsOK) {
+					// Process All Payments and Save the ones that were successful
+					for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+						var transactionType = setting('paymentMethod_creditCard_checkoutTransactionType');
+						if(transactionType != 'none') {
+							var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], transactionType);
+							if(!paymentOK) {
+								allPaymentsOK = false;
+							}
+						}
+					}
+				}
+				
+				// If all payments were successful, then change the order status and clear the cart.
+				if(allPaymentsOK) {
+					// Set the current cart to None
+					if(arguments.order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
+						getSessionService().getCurrent().setOrder(JavaCast("null",""));
+					}
+					
+					// Update the order status
+					arguments.order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+					
+					// Save the order to the database
+					getDAO().save(arguments.order);
+					
+					// Do a flush so that the order is commited to the DB
+					ormFlush();
+					
+					// Send out the e-mail
+					sendOrderConfirmationEmail(arguments.order);
+					
+					return true;
 				}
 			}
 		}
-		
-		// If all payments were successful, then change the order status and clear the cart.
-		if(allPaymentsOK) {
-			// Set the current cart to None
-			if(arguments.order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
-				getSessionService().getCurrent().setOrder(JavaCast("null",""));
-			}
-			
-			// Update the order status
-			arguments.order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
-			
-			// Save the order to the database
-			getDAO().save(arguments.order);
-			
-			// Do a flush so that the order is commited to the DB
-			ormFlush();
-			
-			// Send out the e-mail
-			sendOrderConfirmationEmail(arguments.order);
-			
-			return true;
-		}
-		
 		return false;
 	}
 
@@ -463,7 +445,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return this.save(orderDelivery);
 	}
 	
-	public any function saveOrderPayment(required any orderPayment, struct data={}) {
+	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {
 		
 		// Populate Order Payment	
 		arguments.orderPayment.populate(arguments.data);
@@ -471,27 +453,37 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Manually Set the scurity code because it isn't a persistent property
 		arguments.orderPayment.setSecurityCode(arguments.data.securityCode);
 		
-		// Get Address
-		if( isNull(arguments.orderPayment.getBillingAddress()) ) {
-			var address = getAddressService().newAddress();
-		} else {
+		// Validate the order Payment
+		arguments.orderPayment = this.validateOrderPaymentCreditCard(arguments.orderPayment);
+		
+		if(!arguments.orderPayment.hasErrors()) {
 			var address = arguments.orderPayment.getBillingAddress();
+		
+			// Get Address
+			if( isNull(address) ) {
+				// Set a new address in the order payment
+				var address = getAddressService().newAddress();
+			}
+			
+			// Populate Address
+			address.populate(arguments.data);
+			
+			// Validate Address
+			address = getAddressService().validateAddress(address);
+			
+			arguments.orderPayment.setBillingAddress(address);
+			
+			if(!address.hasErrors()) {
+				getDAO().save(address);
+				getDAO().save(arguments.orderPayment);	
+			} else {
+				getService("requestCacheService").setValue("ormHasErrors", true);
+			}
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
-		
-		// Set the address in the order Fulfillment
-		arguments.orderPayment.setBillingAddress(address);
-		
-		// Populate Address
-		address.populate(data);
-		
-		// Validate & Save Address
-		address = getAddressService().saveAddress(address);
-		
-		// Validate the order Fulfillment
-		this.validateOrderPaymentCreditCard(arguments.orderPayment);
-		
-		// Save the order Fulfillment
-		return getDAO().save(arguments.orderPayment);
+			
+		return arguments.orderPayment;
 	}
 	
 	/*********  Order Actions ***************/

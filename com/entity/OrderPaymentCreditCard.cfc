@@ -52,7 +52,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="amountRefunded" ormtype="big_decimal";
 	
 	// Related Properties
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" inverse="true";
 	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	
 	// Non-Persistent properties
