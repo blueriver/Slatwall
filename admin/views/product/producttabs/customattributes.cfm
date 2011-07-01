@@ -46,7 +46,7 @@ it is set to 0
 		<dl class="twoColumn">
 		<cfloop array="#local.attributeSet.getAttributes()#" index="local.attribute">
 			<cfif local.attribute.getactiveFlag()>
-				<cfset local.attributeValue = rc.Product.getAttributeValue(local.attribute.getAttributeID()) />
+				<cfset local.attributeValue = rc.Product.getAttributeValue(local.attribute.getAttributeID(),true) />
 				<cfset local.attributeValueID = local.attributeValue.isNew()?"0":local.attributeValue.getAttributeValueID() />
 				<dt>
 					<label for="attribute.#local.attribute.getAttributeID()#">#local.attribute.getAttributeName()#<cfif local.attribute.getRequiredFlag() EQ 1> *</cfif></label>
