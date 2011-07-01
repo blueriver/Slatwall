@@ -79,8 +79,8 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 	
 	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean){
 		var requestData = getRequestData(requestBean);
-		var rawResponse = postRequest(requestData);
-		return getResponseBean(rawResponse, requestData, arguments.requestBean);
+		var rawResponse = postRequest(requestData, requestBean.getTransactionID());
+		return getResponseBean(rawResponse, requestData, requestBean);
 	}
 	
 	private string function getRequestData(required any requestBean){
@@ -129,7 +129,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		return arrayToList(customerData,"&");
 	}
 	
-	private any function postRequest(required string requestData){
+	private any function postRequest(required string requestData, required string requestID){
 		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
@@ -141,7 +141,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/namevalue");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#Len(requestData)#");
 		httpRequest.addParam(type="header",name="Host",value="#getGatewayAddress()#");
-		//httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="");
+		httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="#arguments.requestID#");
 		httpRequest.addParam(type="header",name="X-VPS-CLIENT-TIMEOUT",VALUE="#variables.timeout#");
 		httpRequest.addParam(type="header",name="X-VPS-VIT-INTEGRATION-PRODUCT",VALUE="Slatwall");
 		httpRequest.addParam(type="body",value="#requestData#");

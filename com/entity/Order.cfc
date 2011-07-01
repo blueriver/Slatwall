@@ -230,8 +230,19 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return totalPayments;
 	}
 	
+	public numeric function getPaymentAmountReceivedTotal() {
+		var totalPaymentsReceived = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPaymentsReceived += orderPayments[i].getAmountReceived();
+		}
+		
+		return totalPaymentsReceived;
+	}
+	
 	public boolean function isPaid() {
-		if(this.getPaymentAmountTotal() < getTotal()) {
+		if(this.getPaymentAmountReceivedTotal() < getTotal()) {
 			return false;
 		} else {
 			return true;

@@ -83,7 +83,7 @@ Notes:
 									<th>#rc.$.slatwall.rbKey('entity.shippingrate.maxWeight')#</th>
 									<th>#rc.$.slatwall.rbKey('entity.shippingrate.minPrice')#</th>
 									<th>#rc.$.slatwall.rbKey('entity.shippingrate.maxPrice')#</th>
-									<th>#rc.$.slatwall.rbKey('entity.shippingrate.cost')#</th>
+									<th>#rc.$.slatwall.rbKey('entity.shippingrate.shippingRate')#</th>
 									<th class="administration">&nbsp;</th>
 								</tr>
 							</thead>
@@ -102,7 +102,7 @@ Notes:
 										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].maxWeight" value="#local.shippingRates[rateCount].getMaxWeight()#"><cfelse>#local.shippingRates[rateCount].getMaxWeight()#</cfif></td>
 										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].minPrice" value="#local.shippingRates[rateCount].getMinPrice()#"><cfelse>#local.shippingRates[rateCount].getMinPrice()#</cfif></td>
 										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].maxPrice" value="#local.shippingRates[rateCount].getMaxPrice()#"><cfelse>#local.shippingRates[rateCount].getMaxPrice()#</cfif></td>
-										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].cost" value="#local.shippingRates[rateCount].getCost()#"><cfelse>#local.shippingRates[rateCount].getCost()#</cfif></td>
+										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].shippingRate" value="#local.shippingRates[rateCount].getShippingRate()#"><cfelse>#local.shippingRates[rateCount].getShippingRate()#</cfif></td>
 										<td class="administration">&nbsp;</td>
 									</tr>
 								</cfloop>

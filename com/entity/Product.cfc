@@ -495,15 +495,29 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	//get attribute value
-	public any function getAttributeValue(required string attributeID){
+	public any function getAttributeValue(required string attribute, returnEntity=false){
 		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductAttributeValue");
-		smartList.addFilter("product_productID",getProductID());
-		smartList.addFilter("attribute_attributeID",attributeID);
+		
+		smartList.addFilter("product_productID",getProductID(),1);
+		smartList.addFilter("attribute_attributeID",attribute,1);
+		
+		smartList.addFilter("product_productID",getProductID(),2);
+		smartList.addFilter("attribute_attributeCode",attribute,2);
+		
 		var attributeValue = smartList.getRecords();
+		
 		if(arrayLen(attributeValue)){
-			return attributeValue[1];
+			if(returnEntity) {
+				return attributeValue[1];	
+			} else {
+				return attributeValue[1].getAttributeValue();
+			}
 		}else{
-			return getService("ProductService").newProductAttributeValue();
+			if(returnEntity) {
+				return getService("ProductService").newProductAttributeValue();	
+			} else {
+				return "";
+			}
 		}
 	}
 	
@@ -525,6 +539,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		super.populate(argumentCollection=arguments);
 	}
+	
 }
 
 

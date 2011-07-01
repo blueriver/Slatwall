@@ -36,23 +36,14 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false" {
-
-	property name="settingService" type="any";
-
-	public any function saveFulfillmentMethod(required any entity, struct data) {
-		if( structKeyExists(arguments, "data") ) {
-			// save fulfillmentMethod-specific settings
-			for(var item in arguments.data) {
-				if(!isObject(arguments.data[item]) && listFirst(item,"_") == "fulfillmentMethod") {
-					var setting = getSettingService().getBySettingName(item);
-					setting.setSettingName(item);
-					setting.setSettingValue(arguments.data[item]);
-					getSettingService().save(entity=setting);
-				}
-			}
-		}
-		return save(argumentcollection=arguments);
-	}
+component displayname="Log" entityname="SlatwallLog" table="SlatwallLog" persistent=true output=false accessors=true extends="BaseEntity" {
+	
+	// Persistent Properties
+	property name="logID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="logDateTime" ormtype="timestamp";
+	property name="logType" ormtype="string";
+	property name="logCode" ormtype="string";
+	property name="logMessage" ormtype="string";
+	property name="logDetail" ormtype="string" length="4000";
 	
 }

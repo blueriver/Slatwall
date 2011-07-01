@@ -285,7 +285,7 @@ Notes:
 		fileWrite(filePath,outputData);
 		
 		if(arguments.download){
-			download(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
+			downloadFile(fileNameWithExt,filePath,"application/#arguments.fileType#",true);
 		} else{
 			result.fileName = fileNameWithExt;
 			result.fileType = fileType;
@@ -296,7 +296,7 @@ Notes:
 	
 	</cfscript>	
 	
-	<cffunction name="download" access="public" returntype="void" output="false">
+	<cffunction name="downloadFile" access="public" returntype="void" output="false">
 		<cfargument name="fileName" type="string" required="true" />
 		<cfargument name="filePath" type="string" required="true" />
 		<cfargument name="contentType" type="string" required="false" default="application/unknown" />

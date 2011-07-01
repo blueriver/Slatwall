@@ -89,12 +89,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						arguments.transactionAmount = arguments.orderPayment.getAmount();
 					}
 					
-					requestBean.setTransactionType(arguments.transactionType);
-					requestBean.setTransactionAmount(arguments.transactionAmount);
-					requestBean.setProviderTransactionID(arguments.providerTransactionID);
-					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
-					
-					
 					// Create a new Credit Card Transaction
 					var transaction = this.newCreditCardTransaction();
 					transaction.setTransactionType(arguments.transactionType);
@@ -103,6 +97,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Make sure that this transaction gets saved to the DB
 					this.saveCreditCardTransaction(transaction);
 					ormFlush();
+					
+					requestBean.setTransactionID(transaction.getTransactionID());
+					requestBean.setTransactionType(arguments.transactionType);
+					requestBean.setTransactionAmount(arguments.transactionAmount);
+					requestBean.setProviderTransactionID(arguments.providerTransactionID);
+					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+					
 					
 					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
 					try {
@@ -156,13 +157,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						ormFlush();
 						// Populate the orderPayment with the processing error
 						arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
+						// Log the exception
+						getService("logService").logException(e);
 					}
+					// Because we are done processing cards we can set the session value back to true
+					getSessionService().getValue("okToProcessCreditCard", true);
 				}
-				// Allow for future transaction to come in
-				getSessionService().setValue("okToProcessCreditCard", true);
 			} catch (any e) {
 				// Allow for future transaction to be run
 				getSessionService().setValue("okToProcessCreditCard", true);
+				// Log the exception
+				getService("logService").logException(e);
 			}
 		}
 		

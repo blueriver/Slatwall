@@ -83,8 +83,9 @@ Notes:
 		<cfargument name="bcc" default="" />
 		<cfargument name="subject" default="" />
 		<cfargument name="body" default="" />
+		<cfargument name="type" default="html" />
 		
-		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#">
+		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#" type="#arguments.type#">
 			#arguments.body#
 		</cfmail>
 	</cffunction>
