@@ -40,6 +40,7 @@ Notes:
 <cfset variables.framework.applicationKey="Slatwall">
 <cfset variables.framework.base="/Slatwall">
 <cfset variables.framework.action="slatAction">
+<cfset variables.framework.error="common:main.error">
 <cfset variables.framework.home="admin:main.dashboard">
 <cfset variables.framework.defaultSection="main">
 <cfset variables.framework.defaultItem="dashboard">
