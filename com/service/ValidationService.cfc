@@ -100,6 +100,7 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		if( !structIsEmpty(errors) ) {
 			response.getErrorBean().setErrors(errors);
 		}
+
 		return response;
 	}
 	
@@ -121,11 +122,13 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		
 	// @hint Checks if entity has an error bean
 	private boolean function hasErrorBean(required any entity) {
-		var objMetadata = getMetadata(arguments.entity);
-		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;	
-		return arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'));
+		try {
+			arguments.entity.getErrorBean();
+			return true;
+		} catch(any e) {
+			return false;
+		}
 	}
-	
 	
 	// @hint returns the validator class name by validation rule.
 	private string function getClassNameByRule(String rule){
