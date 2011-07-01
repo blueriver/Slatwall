@@ -36,8 +36,9 @@
 Notes:
 
 */
-component extends="BaseDAO" {
+component accessors="true" extends="BaseDAO" {
 
+	property name="tagProxyService";
 	
 	public any function clearProductContent(required any product) {
 		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
@@ -66,7 +67,7 @@ component extends="BaseDAO" {
 		var delimiter = "";
 		if(fileType == 'csv'){
 			delimiter = chr(44);
-		} else if(arguments.fileType == 'txt'){
+		} else if(fileType == 'txt'){
 			delimiter = chr(9);
 		}
 		
@@ -74,6 +75,10 @@ component extends="BaseDAO" {
 		if(fileType == "xls"){
 			//Read xls
 		} else{
+			
+			data = getTagProxyService().cfhttp(method="get",url=arguments.fileURL,delimiter=delimiter,textQualifier=arguments.textQualifier);
+			// script based http method doens't work for tab delimiter
+			/*
 			var http = new http();
 			http.setUrl(fileURL);
 			http.setMethod("get");
@@ -82,6 +87,7 @@ component extends="BaseDAO" {
 			http.setFirstrowasheaders(true);
 			http.setName("data");
 			data = http.send().getResult();
+			*/
 		}
 		var productLookupColumns = ['product_remoteID','product_productID','product_productCode','product_productName'];
 		var productLookupColumn = "";
@@ -125,25 +131,23 @@ component extends="BaseDAO" {
 		}
 		//set required fields that are not in import
 		var productExtraData = [];
-		if(!arrayFind(columnList,"product_activeFlag")){
+		if(!arrayFindNoCase(columnList,"product_activeFlag")){
 			arrayAppend(productExtraData,{name="activeFlag",value="1"});
 		}
-		if(!arrayFind(columnList,"product_publishedFlag")){
+		if(!arrayFindNoCase(columnList,"product_publishedFlag")){
 			arrayAppend(productExtraData,{name="publishedFlag",value="1"});
 		}
-		if(!arrayFind(columnList,"product_manufactureDiscontinuedFlag")){
+		if(!arrayFindNoCase(columnList,"product_manufactureDiscontinuedFlag")){
 			arrayAppend(productExtraData,{name="manufactureDiscontinuedFlag",value="0"});
 		}
-		if(!arrayFind(columnList,"product_template")){
+		if(!arrayFindNoCase(columnList,"product_template")){
 			arrayAppend(productExtraData,{name="template",value=setting('product_defaultTemplate')});
 		}
 
 		var skuExtraData = [];
-		if(!arrayFind(columnList,"sku_shippingWeight")){
+		if(!arrayFindNoCase(columnList,"sku_shippingWeight")){
 			arrayAppend(skuExtraData,{name="shippingWeight",value="0"});
 		}
-		
-		//TODO: product pages, sku image
 		
 		var timeStamp = now();
 		var administratorID = getService("SessionService").getCurrentAccount().getAccountID();
@@ -189,6 +193,13 @@ component extends="BaseDAO" {
 				var thisExtraData = [];
 				thisExtraData.addAll(skuExtraData);
 				arrayAppend(thisExtraData,{name="productID",value=productID});
+				if(skuLookupColumn == "sku_skucode" && !arrayFind(columnList,"sku_skucode")){
+					var skuCode = data[productLookupColumn][r];
+					for(var optionGroup in optiongroups){
+						skuCode &= "-" & data[optionGroup][r];
+					}
+					arrayAppend(thisExtraData,{name="skucode",value=skuCode});
+				}
 				//save sku
 				var skuID = saveImportData(data,r,"SlatwallSku",skuColumns,skuLookupColumn,"skuID",thisExtraData);
 				//loop through all the option groups and assign options to sku
@@ -231,11 +242,38 @@ component extends="BaseDAO" {
 						if(!dataQuery.execute().getPrefix().recordcount){
 							var attributeValueID = lcase(replace(createUUID(),"-","","all"));
 							dataQuery.setSql("
-								INSERT INTO SlatwallAttributeValue (attributeValueID,attributeValueType,attributeValue,attributeID,productID) VALUES ('#attributeValueID#','Product',,'#attributeID#','#productID#');
+								INSERT INTO SlatwallAttributeValue (attributeValueID,attributeValueType,attributeValue,attributeID,productID) VALUES ('#attributeValueID#','Product',:attributeValue,'#attributeID#','#productID#');
 							");
 							dataQuery.execute();
 						}
 						dataQuery.clearParams();
+					}
+				}
+				//Assign all the content pages to product
+				if(arrayFindNoCase(columnList,"productcontent_page")){
+					var contentPage = listToArray(data['productcontent_page'][r]);
+					for(var fileName in contentPage){
+						dataQuery.setSql("
+							SELECT contentID,path FROM tContent WHERE fileName = :fileName AND subtype = 'slatwallproductlisting' AND active = 1;
+						");
+						dataQuery.addParam(name="fileName", value="#fileName#");
+						var lookupResult = dataQuery.execute().getResult();
+						var contentID = lookupResult.contentID;
+						var contentPath = lookupResult.path;
+						dataQuery.clearParams();
+						if(lookupResult.recordcount){
+							dataQuery.setSql("
+								SELECT productContentID FROM SlatwallProductContent WHERE contentID = '#contentID#' AND productID = '#productID#';
+							");
+							var exists = dataQuery.execute().getResult().recordcount;
+							if(!exists){
+								var productContentID = lcase(replace(createUUID(),"-","","all"));
+								dataQuery.setSql("
+									INSERT INTO SlatwallProductContent (productContentID,contentID,contentPath,productID) VALUES ('#productContentID#','#contentID#','#contentPath#','#productID#');
+								");
+								dataQuery.execute();
+							}
+						}
 					}
 				}
 			}
@@ -260,6 +298,11 @@ component extends="BaseDAO" {
 	}
 	
 	private string function saveImportData(required query data,required numeric rowNumber,required string tableName,required array columnList,required string lookupColumn,required string idColumn,array extraData = []){
+		var dataQuery = new Query();
+		dataQuery.setDataSource(application.configBean.getDatasource());
+		dataQuery.setUsername(application.configBean.getUsername());
+		dataQuery.setPassword(application.configBean.getPassword());
+
 		var lookupColumnValue = createObject( "java", "java.lang.StringBuilder" ).init();
 		var updateSetString = createObject( "java", "java.lang.StringBuilder" ).init();
 		var insertColumns = createObject( "java", "java.lang.StringBuilder" ).init();
@@ -268,8 +311,10 @@ component extends="BaseDAO" {
 
 		var timeStamp = now();
 		var administratorID = getService("SessionService").getCurrentAccount().getAccountID();
-
-		lookupColumnValue = arguments.data[arguments.lookupColumn][arguments.rowNumber];
+		
+		if(arrayFindNoCase(arguments.columnList,arguments.lookupColumn)){
+			lookupColumnValue = arguments.data[arguments.lookupColumn][arguments.rowNumber];
+		}
 		//loop through column and prepare save statement
 		for(var thisColumn in arguments.columnList) {
 			value = arguments.data[thisColumn][arguments.rowNumber];
@@ -295,33 +340,41 @@ component extends="BaseDAO" {
 		for(var item in extraData){
 			insertColumns &= " #item.name#,";
 			insertValues &= " '#item.value#',";
+			if(item.name == listLast(arguments.lookupColumn,'_')){
+				lookupColumnValue = item.value;
+			}
 		}
-		if(arguments.tableName == "SlatwallProduct"){
-			insertColumns &= " filename,";
-			insertValues &= " '#getService('FileService').filterFileName(arguments.data['product_productName'][arguments.rowNumber])#',";
-		}
-		
+
 		//Remove the last , from the update string, for insert we will append primary key
 		if(len(updateSetString)) {
 			updateSetString = left(updateSetString, len(updateSetString)-1);
 		}
 
-		var dataQuery = new Query();
-		dataQuery.setDataSource(application.configBean.getDatasource());
-		dataQuery.setUsername(application.configBean.getUsername());
-		dataQuery.setPassword(application.configBean.getPassword());
 		dataQuery.setSql("
 				SELECT #arguments.idColumn# FROM #arguments.tableName# WHERE #listLast(arguments.lookupColumn,'_')# = '#lookupColumnValue#';
 			");
 		var lookupResult = dataQuery.execute().getResult();
 		var exists = lookupResult.recordcount;
 		var idColumnValue = lookupResult[arguments.idColumn];
+
 		if(exists){
 			dataQuery.setSql("
 				UPDATE #arguments.tableName# SET #updateSetString# WHERE #arguments.idColumn# = '#idColumnValue#';
 			");
 			dataQuery.execute();
 		} else {
+			if(arguments.tableName == "SlatwallProduct"){
+				var fileName = getService('FileService').filterFileName(arguments.data['product_productName'][arguments.rowNumber]);
+				/* check if the fileName (product url) already exists*/
+				dataQuery.setSql("
+					SELECT productID FROM SlatwallProduct WHERE fileName = '#fileName#';
+				");
+				if(dataQuery.execute().getResult().recordCount){
+					fileName &= "_#arguments.data['product_productCode'][arguments.rowNumber]#"; 
+				}
+				insertColumns &= " filename,";
+				insertValues &= " '#fileName#',";
+			}
 			idColumnValue = lcase(replace(createUUID(),"-","","all"));
 			dataQuery.setSql("
 				INSERT INTO #arguments.tableName# (#insertColumns##arguments.idColumn#) VALUES (#insertValues#'#idColumnValue#');

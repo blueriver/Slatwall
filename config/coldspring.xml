@@ -7,7 +7,9 @@
 	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
-	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
+	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO">
+		<property name="tagProxyService"><ref bean="tagProxyService" /></property>
+	</bean>
 	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
 	<bean id="sessionDAO" class="Slatwall.com.dao.SessionDAO" />
 	<bean id="orderDAO" class="Slatwall.com.dao.OrderDAO" />
@@ -85,6 +87,7 @@
 		<property name="skuService"><ref bean="SkuService" /></property>
         <property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="feedManager" /></property>
+		<property name="tagProxyService"><ref bean="tagProxyService" /></property>
     </bean>
 
     <bean id="skuService" class="Slatwall.com.service.SkuService">

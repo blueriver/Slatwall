@@ -36,7 +36,7 @@
 Notes:
 
 */
-component output="false" {
+component output="false" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 	
 	public any function init() {
 		return this;

@@ -43,6 +43,7 @@ component extends="BaseService" accessors="true" {
 	property name="ProductTypeDAO" type="any";
 	property name="SkuService" type="any";  
 	property name="ProductTypeTree" type="any";
+	property name="tagProxyService" type="any";
 	
 	// Mura Service Injection
 	property name="contentManager" type="any";
@@ -367,6 +368,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
+		getTagProxyService().cfSetting(requesttimeout="600"); 
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	
