@@ -62,7 +62,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
 		var paymentProviderGateway = paymentMethod.getProviderGateway();
 		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
-		
+
 		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
 			// Lock down this determination so that the values getting called and set don't overlap
 			lock scope="Session" timeout="45" {
@@ -80,7 +80,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if(okToProcessCreditCard) {
 					// Generate Process Request Bean
 					var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
-					
+
 					// Move all of the info into the new request bean
 					requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
 					
@@ -157,11 +157,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						ormFlush();
 						// Populate the orderPayment with the processing error
 						arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
+						// Allow for future transaction to be run
+						getSessionService().setValue("okToProcessCreditCard", true);
 						// Log the exception
 						getService("logService").logException(e);
 					}
 					// Because we are done processing cards we can set the session value back to true
-					getSessionService().getValue("okToProcessCreditCard", true);
+					getSessionService().setValue("okToProcessCreditCard", true);
 				}
 			} catch (any e) {
 				// Allow for future transaction to be run
