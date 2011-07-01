@@ -98,7 +98,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					this.saveCreditCardTransaction(transaction);
 					ormFlush();
 					
-					requestBean.setTransactionID(transaction.getTransactionID());
+					requestBean.setTransactionID(transaction.getCreditCardTransactionID());
 					requestBean.setTransactionType(arguments.transactionType);
 					requestBean.setTransactionAmount(arguments.transactionAmount);
 					requestBean.setProviderTransactionID(arguments.providerTransactionID);
