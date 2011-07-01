@@ -86,7 +86,7 @@ Notes:
 			<cfbreak />
 		</cfif>
 	</cfloop>
-	<cf_SlatwallActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#&providerTransactionID=#local.thistransaction.getProviderTransactionID()#" class="button">
+	<cf_SlatwallActionCaller action="admin:order.chargeOrderPayment" querystring="orderPaymentID=#local.orderPayment.getOrderPaymentID()#&providerTransactionID=#local.thistransaction.getProviderTransactionID()#" confirmRequired="true" class="button">
 </cfif>
 	
 </cfoutput>

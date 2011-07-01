@@ -65,9 +65,11 @@ Notes:
 					<dd class="total">#DollarFormat($.slatwall.cart().getTotal())#</dd>
 				</dl>
 			</div>
-			<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
-			<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
-			<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
+			<div class="actionButtons">
+				<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
+				<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
+				<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
+			</div>
 		</cfif>
 		</form>
 	</div>
