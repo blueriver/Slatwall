@@ -325,6 +325,16 @@ p.error_message {
 
 /**************************************************************/
 
+ul.errors {
+	margin: 1em 0 0 1em;
+	list-style-position: inside;
+	color: #ff0000;
+}
+
+ul.errors p {
+	display:inline;
+}
+
 #navUtility li#navDashboard {
 	background: none repeat scroll 0 0 transparent;
 }
