@@ -45,15 +45,6 @@ Notes:
 
 <cfoutput>
 
-<cfif structKeyExists(rc,"errorBean")>
-	<cfset local.errors = rc.errorBean.getErrors() />
-	<div class="error">
-		<cfloop collection="#local.errors#" item="local.thisError">
-			#local.errors[local.thisError]#
-		</cfloop>
-	</div>
-</cfif>
-
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:order.list" type="list">
 </ul>
