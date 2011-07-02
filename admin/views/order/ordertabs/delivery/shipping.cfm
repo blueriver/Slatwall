@@ -47,7 +47,7 @@ Notes:
 	</div>
 	</cfif>
 	<div class="shippingMethod">
-		<cfif local.orderDelivery.getShippingMethod().getShippingProviderMethod() eq "RateTable">
+		<cfif local.orderDelivery.getShippingMethod().getShippingProvider() eq "RateTable">
 			<cfset local.thisShippingProvider = $.slatwall.rbKey("admin.order.detail.shippingProvider.ratetable") />
 		<cfelse>
 			<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />
