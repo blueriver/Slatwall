@@ -82,7 +82,7 @@ component extends="framework" output="false" {
 		getPluginConfig().getApplication().setValue( "fw", this);
 		
 		// Set the setup confirmed as false
-		getPluginConfig().getApplication().setValue('applicationSetupConfirmend', false);
+		getPluginConfig().getApplication().setValue('applicationSetupConfirmed', false);
 		
 		// Set vfs root for slatwall
 		getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
@@ -124,7 +124,7 @@ component extends="framework" output="false" {
 				// Setup run Setting Service reload config
 				getBeanFactory().getBean("settingService").reloadConfiguration();
 				getBeanFactory().getBean("settingService").verifyMuraRequirements();
-				getPluginConfig().getApplication().setValue('applicationSetupConfirmend', true);
+				getPluginConfig().getApplication().setValue('applicationSetupConfirmed', true);
 			}
 			
 			// Enable the request cache service
