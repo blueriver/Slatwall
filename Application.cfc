@@ -120,7 +120,7 @@ component extends="framework" output="false" {
 			setupMuraRequirements();
 			
 			// This will verify that all of the required slatwall elements are in Mura
-			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmend') != true) {
+			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmed') != true) {
 				// Setup run Setting Service reload config
 				getBeanFactory().getBean("settingService").reloadConfiguration();
 				getBeanFactory().getBean("settingService").verifyMuraRequirements();
