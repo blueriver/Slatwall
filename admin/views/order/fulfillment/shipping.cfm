@@ -40,8 +40,10 @@ Notes:
 <cfparam name="local.orderFulfillment" type="any" />
 
 <cfoutput>
+<cfif local.orderFulfillment.isProcessable()>
 <form name="ProcessFulfillment" action=#buildURL(action="admin:order.processorderfulfillment")# method="post">
 	<input type="hidden" name="orderfulfillmentID" value="#local.orderFulfillment.getOrderFulfillmentID()#" />
+</cfif>
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
 		<cf_SlatwallAddressDisplay address="#local.orderFulfillment.getShippingAddress()#" edit="false" />
@@ -90,7 +92,9 @@ Notes:
 			</tr>
 		</cfloop>
 	</table>
+	<cfif local.orderFulfillment.isProcessable()>
 	<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" class="button" type="submit">
+	</cfif>
 	<div class="totals">
 		<dl class="fulfillmentTotals">
 			<dt>
