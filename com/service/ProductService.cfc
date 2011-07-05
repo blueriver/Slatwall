@@ -48,6 +48,7 @@ component extends="BaseService" accessors="true" {
 	// Mura Service Injection
 	property name="contentManager" type="any";
 	property name="feedManager" type="any";
+	property name="categoryManager" type="any";
 	
 	public any function getProductTemplates(required string siteID) {
 		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
@@ -108,6 +109,17 @@ component extends="BaseService" accessors="true" {
 	
 	public any function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
 		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
+	}
+	
+	public any function getProductCategories(required string siteID, string parentID=0) {
+		var categories = getCategoryManager().getCategoriesBySiteID(siteID=arguments.siteID);
+    	var categoryTree = getService("utilities").queryTreeSort(
+    		theQuery = categories,
+    		itemID = "categoryID",
+    		parentID = "parentID",
+    		rootID = "#arguments.parentID#"
+    	);
+    	return categoryTree;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -37,47 +37,46 @@ Notes:
 
 --->
 
+<cfdump var="#rc.categories#" />
+
 <cfoutput>
 	<cfif rc.edit>
-		<input type="hidden" name="contentID" value="" />
-		<cfif rc.productPages.recordCount() gt 0>
-			<table id="productPages" class="stripe">
+		<input type="hidden" name="categoryID" value="" />
+		<cfif rc.categories.recordCount gt 0>
+			<table id="productCategories" class="stripe">
 				<tr>
 					<th></th>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
+					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
 				</tr>
-				<cfloop condition="rc.productPages.hasNext()">
-					<cfset local.thisProductPage = rc.productPages.next() />
+				<cfloop query="rc.categories">
 					<tr>
 						<td>
-							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="contentID" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
+							<input type="checkbox" id="#rc.categories.categoryID#" name="categoryID" value="#listChangeDelims(rc.categories.path,' ')#"<cfif listFind(rc.product.getContentIDs(),rc.categories.categoryID)> checked="checked"</cfif> /> 
 						</td>
-						<cfset local.thisNest = local.thisProductPage.getTreeDepth() eq 0 ? "neston" : "nest" & local.thisProductPage.getTreeDepth() & "on" />
+						<cfset local.thisNest = rc.categories.treeDepth eq 0 ? "neston" : "nest" & rc.categories.treeDepth & "on" />
 						<td class="varWidth">
 							<ul class="#local.thisNest#">
-				                <li class="Category"><label for="#local.thisProductPage.getContentID()#">#local.thisProductPage.getTitle()#</label></li>
+				                <li class="Category"><label for="#rc.categories.categoryID#">#rc.categories.name#</label></li>
 							</ul> 
 						</td>
 					</tr>	
 				</cfloop>
 			</table>
 		<cfelse>
-			<p><em>#rc.$.Slatwall.rbKey("admin.product.noproductpagesdefined")#</em></p>
+			<p><em>#rc.$.Slatwall.rbKey("categorymanager.nocategories")#</em></p>
 		</cfif>
 	<cfelse>
-		<cfif arrayLen(rc.product.getProductContent())>
+	<!---	<cfif arrayLen(rc.product.getProductContent())>
 			<table id="ProductPages" class="stripe">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
-					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.pagePath")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
 				</tr>
 				<cfloop condition="rc.productPages.hasNext()">
 					<cfset local.thisProductPage = rc.productPages.next() />
 					<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())>
 						<tr>
-							<td class="varWidth">#listChangeDelims(local.thisProductPage.getTitle()," &raquo; ")#</td>
-							<td>#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
+							<td class="varWidth">#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
 							<td class="administration">
 								<ul class="one">
 									<li class="preview"><a href="#local.thisProductPage.getURL()#" target="_blank">Preview</a></li>
@@ -89,6 +88,6 @@ Notes:
 			</table>
 		<cfelse>
 			<em>#rc.$.Slatwall.rbKey("admin.product.productPages.noProductPagesAssigned")#</em>
-		</cfif>
+		</cfif>--->
 	</cfif>	
 </cfoutput>

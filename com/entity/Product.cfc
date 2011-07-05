@@ -72,6 +72,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
@@ -353,6 +354,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removeProductContent(required ProductContent ProductContent) {
 	   arguments.ProductContent.removeProduct(this);
+	}
+	
+	// ProductCategories (one-to-many)
+	public void function clearProductCategories() {
+		for( var i=1; i<= arraylen(getProductCategories()); i++ ) {
+			removeProductCategory(getProductCategory()[i]);
+		}
+	}
+	
+	public void function addProductCategory(required any ProductCategory) {    
+	   arguments.ProductCategory.setProduct(this);    
+	}    
+	    
+	public void function removeProductCategory(required any ProductCategory) {    
+	   arguments.ProductCategory.removeProduct(this);    
 	}
 	
 	// Skus (one-to-many)
