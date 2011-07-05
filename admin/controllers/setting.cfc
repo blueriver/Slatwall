@@ -170,7 +170,7 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping&reload=true", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping", preserve="message,messagetype");
 	}
 	
 	public void function createShippingMethod(required struct rc) {
@@ -197,7 +197,7 @@ component extends="BaseController" output="false" accessors="true" {
 
 		if(!rc.shippingMethod.hasErrors()) {
 			rc.message=rc.$.slatwall.rbKey("admin.setting.saveshippingmethod_success");
-			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
+			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping", preserve="message");
 		} else {
 			rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
 	   		rc.edit=true;

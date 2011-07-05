@@ -37,50 +37,35 @@ Notes:
 
 --->
 <cfoutput>
-	<dl class="oneColumn">
-		<dt>#$.slatwall.rbKey("admin.setting.listshippingservices_nav")#</dt>
-		<table id="shippingServiceList" class="stripe">
+	<cfif structCount(rc.shippingMethods) gt 0>
+		<table id="shippingMethodList" class="stripe">
 			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listshippingservices.servicedisplayname")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
 				<th>&nbsp</th>
 			</tr>
-			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
+			<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
 				<tr>
-					<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
-					<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
-					<td class="varWidth">#local.shippingServiceMetaData.displayName#</td>
+					<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
 					<td class="administration">
-						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="viewDetails" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#local.shippingServicePackage#" class="edit" type="list">
-						</ul>     						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-		<dt>#$.slatwall.rbKey("admin.setting.listshippingmethods_nav")#</dt>
-		<dd>
-			<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" type="link">
-		</dd>
-		<cfif structCount(rc.shippingMethods) gt 0>
-			<table id="shippingMethodList" class="stripe">
-				<tr>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
-					<th>&nbsp</th>
-				</tr>
-				<cfloop collection="#rc.shippingMethods#" item="local.shippingMethodID">
-					<tr>
-						<td class="varWidth">#rc.shippingMethods[local.shippingMethodID].getShippingMethodName()#</td>
-						<td class="administration">
+						<cfif rc.edit>
 							<ul class="three">
 								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="edit" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="delete" type="list" confirmRequired="true">
-							</ul>     						
-						</td>
-					</tr>
-				</cfloop>
-			</table>
-		</cfif>
-	</dl>
+							</ul>
+						<cfelse>
+							<ul class="one">
+								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethodID#" class="viewDetails" type="list">
+							</ul>
+						</cfif>						
+					</td>
+				</tr>
+			</cfloop>
+		</table>
+	</cfif>
+	<cfif rc.edit>
+		<cf_SlatwallActionCaller action="admin:setting.createshippingmethod" class="button">
+	</cfif>
+	<br />
+	<br />
 </cfoutput>

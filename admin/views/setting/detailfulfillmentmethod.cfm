@@ -51,10 +51,9 @@ Notes:
 				<input type="hidden" name="fulfillmentMethodID" value="#rc.fulfillmentMethod.getFulfillmentMethodID()#" />
 		</cfif>
 		
-		<dl class="oneColumn">
+		<dl class="twoColumn">
 			<cf_SlatwallPropertyDisplay object="#rc.fulfillmentMethod#" property="activeFlag" edit="#rc.edit#" first="true">
 		</dl>
-		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
 				<li><a href="##tabFulfillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	

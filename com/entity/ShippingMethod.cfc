@@ -43,6 +43,9 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="shippingMethodName" validateRequired="true" ormtype="string";
 	property name="shippingProvider" ormtype="string";
 	property name="shippingProviderMethod" ormtype="string";
+	property name="shippingRateIncreasePercentage" ormtype="big_decimal";
+	property name="shippingRateIncreaseDollar" ormtype="big_decimal";
+	property name="useRateTableFlag" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -57,6 +60,10 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		if(isNull(variables.shippingRates)) {
 			variables.shippingRates = [];
 		}
+		if(isNull(variables.useRateTableFlag)) {
+			variables.useRateTableFlag = false;
+		}
+		
 		
 		return super.init();
 	}

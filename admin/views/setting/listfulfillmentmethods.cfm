@@ -41,6 +41,9 @@ Notes:
 
 <cfoutput>
 	<div class="svoadminListFulfillmentMethods">
+		<ul id="navTask">
+	    	<cf_SlatwallActionCaller action="admin:setting.listFulfillmentMethods" type="list">
+		</ul>
 		
 		<table id="fulfillmentMethodList" class="stripe">
 			<tr>
