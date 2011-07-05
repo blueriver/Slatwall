@@ -54,6 +54,8 @@ Notes:
 <!--- hint: This can be used to override the value of a property --->
 <cfparam name="attributes.value" default="" />
 
+<cfparam name="attributes.noValue" type="boolean" default="false" />
+
 <!--- hint: This can be used to override the display value of a property --->
 <cfparam name="attributes.displayValue" default="" />
 
@@ -167,7 +169,7 @@ Notes:
 		</cfif>
 		
 		<!--- If the value attribute was not set, then try to determine the value from the object, and if that isn't set, then use the objects default. --->
-		<cfif attributes.value eq "">
+		<cfif attributes.value eq "" and not attributes.noValue>
 			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
 	
 			<cfif structKeyExists(attributes,"value")>

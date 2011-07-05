@@ -71,8 +71,8 @@ Notes:
 			</cfif> 
 			<dl>
 				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="nameOnCreditCard" edit="#params.edit#" /> 
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="CreditCardNumber" value="" edit="#params.edit#" />
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="SecurityCode" value="" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="CreditCardNumber" noValue="true" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" property="SecurityCode" noValue="true" edit="#params.edit#" />
 				<dt class="spdcreditcardexperationdate"><label for="experationMonth">Expires</label></dt>
 				<dd id="spdcreditcardexpirationdate">
 					<select name="expirationMonth">
