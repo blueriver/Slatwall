@@ -80,7 +80,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				// Create a new Credit Card Transaction
 				var transaction = this.newCreditCardTransaction();
 				transaction.setTransactionType(arguments.transactionType);
-				transaction.setProcessingFlag(true);
+				transaction.setOrderPayment(arguments.orderPayment);
 				
 				// Make sure that this transaction gets saved to the DB
 				this.saveCreditCardTransaction(transaction);
@@ -91,41 +91,40 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				requestBean.setTransactionAmount(arguments.transactionAmount);
 				requestBean.setProviderTransactionID(arguments.providerTransactionID);
 				requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
-				
-					
+									
 				// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
 				try {
+					
 					// Get Response Bean from provider service
 					var response = providerService.processCreditCard(requestBean);
+					
+					// Populate the Credit Card Transaction with the details of this process
+					transaction.setProviderTransactionID(response.getTransactionID());
+					transaction.setAuthorizationCode(response.getAuthorizationCode());
+					transaction.setAmountAuthorized(response.getAuthorizedAmount());
+					transaction.setAmountCharged(response.getChargedAmount());
+					transaction.setAmountCredited(response.getCreditedAmount());
+					transaction.setAVSCode(response.getAVSCode());
+					transaction.setStatusCode(response.getStatusCode());
+					transaction.setMessage(response.getMessageString());
+										
+					// Make sure that this transaction with all of it's info gets added to the DB
+					ormFlush();
 					
 					if(!response.hasErrors()) {
 						processOK = true;
 						
-						// Populate the Credit Card Transaction with the details of this process
-						transaction.setProviderTransactionID(response.getTransactionID());
-						transaction.setAuthorizationCode(response.getAuthorizationCode());
-						transaction.setAmountAuthorized(response.getAuthorizedAmount());
-						transaction.setAmountCharged(response.getChargedAmount());
-						transaction.setAmountCredited(response.getCreditedAmount());
-						transaction.setAVSCode(response.getAVSCode());
-						transaction.setStatusCode(response.getStatusCode());
-						transaction.setMessage(response.getMessageString());
-						transaction.setOrderPayment(arguments.orderPayment);
-						transaction.setProcessingFlag(false);
-						// Make sure that this transaction with all of it's info gets added to the DB
-						ormFlush();
-						
 						// Update the order Payment
 						var authAmount = arguments.orderPayment.getAmountAuthorized() + response.getAuthorizedAmount();
 						var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
+						var refundAmount = arguments.orderPayment.getAmountRefunded() + response.getCreditedAmount();
+							
 						arguments.orderPayment.setAmountAuthorized(authAmount);
 						arguments.orderPayment.setAmountCharged(chargeAmount);
-						if(arguments.transactionType == "credit") {
-							var refundAmount = arguments.orderPayment.getAmountRefunded() + response.getCreditedAmount();
-							arguments.orderPayment.setAmountRefunded(refundAmount);
-						}
+						arguments.orderPayment.setAmountRefunded(refundAmount);
 						
 						// Update the order Status
+						// THIS NEEDS TO GET MOVED
 						if(arguments.transactionType == "chargePreAuthorization") {
 							var order = arguments.orderPayment.getOrder();
 							if(order.getQuantityUndelivered() gt 0) {
@@ -134,12 +133,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 								order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
 							}
 						}
+						// END: THIS NEEDS TO GET MOVED
 					} else {
 						// Populate the orderPayment with the processing error
 						arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
 					}
 				} catch (any e) {
-					throw(e);
 					transaction.setStatusCode(500);
 					transaction.setMessage(e.message);
 					// Make sure that this transaction with all of it's info gets added to the DB
@@ -148,6 +147,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
 					// Log the exception
 					getService("logService").logException(e);
+					rethrow;
 				}
 			}
 		}
