@@ -210,7 +210,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		payment = this.saveOrderPaymentCreditCard(payment, arguments.data);
 		
 		// If the payment has errors do not proceed with the order processing
-		if(payment.hasErrors() || payment.getBillingAddress().hasErrors()) {
+		if(payment.hasErrors() || payment.getBillingAddress().hasErrors() || payment.getCreditCardType() == "Invalid") {
 			result = false;
 		}
 		
@@ -233,7 +233,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(allPaymentsOK) {
 					// Process All Payments and Save the ones that were successful
 					for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+						// Check to see if the orderPaymentID is in the data, and if so save & validate before proceeding.
+						if( structKeyExists(arguments.data, "orderPaymentID") && arguments.data.orderPaymentID == arguments.order.getOrderPayments()[i].getOrderPaymentID() ) {
+							saveOrderPaymentCreditCard(arguments.order.getOrderPayments()[i], arguments.data);
+							if(arguments.order.getOrderPayments()[i].hasErrors()) {
+								allPaymentsOK = false;
+								break;
+							}
+						}
+						
 						var transactionType = setting('paymentMethod_creditCard_checkoutTransactionType');
+						
 						if(transactionType != 'none') {
 							var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], transactionType);
 							if(!paymentOK) {
@@ -450,11 +460,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Populate Order Payment	
 		arguments.orderPayment.populate(arguments.data);
 		
-		// Manually Set the scurity code because it isn't a persistent property
+		// Manually Set the scurity code & Credit Card Number because it isn't a persistent property
 		arguments.orderPayment.setSecurityCode(arguments.data.securityCode);
+		arguments.orderPayment.setCreditCardNumber(arguments.data.creditCardNumber);
 		
 		// Validate the order Payment
 		arguments.orderPayment = this.validateOrderPaymentCreditCard(arguments.orderPayment);
+		if(arguments.orderPayment.getCreditCardType == "Invalid") {
+			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
+		}
 		
 		if(!arguments.orderPayment.hasErrors()) {
 			var address = arguments.orderPayment.getBillingAddress();

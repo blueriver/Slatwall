@@ -49,7 +49,6 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
 	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
 	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
-	property name="processingFlag" ormtype="boolean";  		// @hint this is the flag that gets set if there was an unexpected error during processing and transaction didn't finish.
 	
 	// Related Object Properties
 	property name="orderPayment" cfc="OrderPayment" fieldtype="many-to-one" fkcolumn="orderPaymentID";
