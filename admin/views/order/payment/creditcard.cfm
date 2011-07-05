@@ -58,9 +58,7 @@ Notes:
 		<td>#local.orderPayment.getExpirationDate()#</td>
 		<td><cfif !isNull(local.orderPayment.getBillingAddress())><cf_SlatwallAddressDisplay address="#local.orderPayment.getBillingAddress()#" edit="false" /></cfif></td>
 		<td>
-			<cfloop array = "#local.creditcardTransactions#" index="local.thistransaction">
-				#local.thistransaction.getAuthorizationCode()#<br>
-			</cfloop>
+			#listChangeDelims(local.orderPayment.getAuthorizationCodes(),"<br>")#
 		</td>
 		<td>#dollarFormat(local.orderPayment.getAmountAuthorized())#</td>
 		<td>#dollarFormat(local.orderPayment.getAmountCharged())#</td>

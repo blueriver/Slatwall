@@ -70,6 +70,17 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		return super.init();
 	}
 	
+	public string function getAuthorizationCodes() {
+		var transactions = getCreditCardTransactions();
+		var authCodes = "";
+		for(var thisTransaction in transactions) {
+			if(!listFind(authCodes,thisTransaction.getAuthorizationCode())) {
+				authCodes = listAppend(authCodes,thisTransaction.getAuthorizationCode());
+			}
+		}
+		return authCodes;
+	}
+	
 	public numeric function getAmountReceived() {
 		return getAmountCharged() - getAmountCredited();
 	}
