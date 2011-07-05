@@ -76,7 +76,7 @@ Notes:
 			<strong>Add Rate</strong>
 			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="addressZone" fieldName="addressZoneID" edit="#rc.edit#" first="true">	
 			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="taxRate" edit="#rc.edit#" first="true">
-			<button type="submit" name="addRate" value="true">Add</button>
+			<button type="submit" name="addRate" value="true">Add Rate</button>
 			<br /><br />	
 			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">

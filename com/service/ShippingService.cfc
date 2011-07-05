@@ -65,7 +65,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Loop over all possible methods
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
-			if(shippingMethods[i].getShippingProvider() == "RateTable") {
+			if(shippingMethods[i].getUseRateTableFlag()) {
 				// Get the Rate for this method and add it to the
 				var methodCharge = 0;
 				var rateExists = false;

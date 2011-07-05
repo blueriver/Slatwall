@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfparam name="rc.paymentMethods" type="struct" />
+<cfparam name="rc.paymentMethods" type="array" />
 
 <cfoutput>
 	<div class="svoadminListPaymentMethods">
@@ -53,8 +53,7 @@ Notes:
 				<th>&nbsp;</th>
 			</tr>
 				
-			<cfloop collection="#rc.paymentMethods#" item="local.thisPaymentMethodID">
-				<cfset local.thisPaymentMethod = rc.paymentMethods[local.thisPaymentMethodID] />
+			<cfloop array="#rc.paymentMethods#" index="local.thisPaymentMethod">
 				<tr>
 					<cfset local.paymentMethodMetaData = getMetaData(local.thisPaymentMethod) />
 					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodID())#</td>
@@ -67,8 +66,8 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="viewDetails" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethodID#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="edit" type="list">
 						</ul> 						
 					</td>
 				</tr>

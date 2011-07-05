@@ -38,6 +38,17 @@ Notes:
 */
 jQuery(document).ready(function() {
 	
+	jQuery("input[name=useRateTableFlag]").change(function() {
+		if(jQuery(this).val() == 1){
+			jQuery('div.rateTable').removeClass("hideElement");
+			jQuery('div.providerOptions').addClass("hideElement");		
+		} else {
+			jQuery('div.rateTable').addClass("hideElement");
+			jQuery('div.providerOptions').removeClass("hideElement");
+		}
+	});
+	
+	/*
     var rateCount = jQuery('tr[id^="Sku"]').length;
 	
     jQuery("#addShippingRate").click(function() {
@@ -83,4 +94,5 @@ jQuery(document).ready(function() {
 			jQuery('#spdshippingmethod').append($shippingProviderMethods);
 		}
 	});
+	*/
 });
