@@ -101,9 +101,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Populate the Credit Card Transaction with the details of this process
 					transaction.setProviderTransactionID(response.getTransactionID());
 					transaction.setAuthorizationCode(response.getAuthorizationCode());
-					transaction.setAmountAuthorized(response.getAuthorizedAmount());
-					transaction.setAmountCharged(response.getChargedAmount());
-					transaction.setAmountCredited(response.getCreditedAmount());
+					transaction.setAmountAuthorized(response.getAmountAuthorized());
+					transaction.setAmountCharged(response.getAmountCharged());
+					transaction.setAmountCredited(response.getAmountCredited());
 					transaction.setAVSCode(response.getAVSCode());
 					transaction.setStatusCode(response.getStatusCode());
 					transaction.setMessage(response.getMessageString());
@@ -115,7 +115,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						processOK = true;
 						
 						// Update the order Status
-						// THIS NEEDS TO GET MOVED
+						// TODO: THIS NEEDS TO GET MOVED
 						if(arguments.transactionType == "chargePreAuthorization") {
 							var order = arguments.orderPayment.getOrder();
 							if(order.getQuantityUndelivered() gt 0) {
