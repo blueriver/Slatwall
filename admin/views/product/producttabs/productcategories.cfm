@@ -74,18 +74,18 @@ Notes:
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryPath")#</th>
-<!---					<th>#$.slatwall.rbKey("admin.product.productCategories.isFeatured")#</th>--->
+					<th>#$.slatwall.rbKey("admin.product.productCategories.isFeatured")#</th>
 				</tr>
 				<cfloop query="rc.categories">
 					<cfif listFindNoCase(rc.product.getCategoryIDs(),rc.categories.categoryID)>
 						<tr>
 							<td class="varWidth">#rc.categories.Name#</td>
 							<td>#listChangeDelims(rc.categories.namePath," &raquo; ")#</td>
-<!---							<td>
-								<cfif local.isfeatured>
+							<td>
+								<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)>
 									<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
 								</cfif>
-							</td>--->
+							</td>
 						</tr>
 					</cfif>
 				</cfloop>
