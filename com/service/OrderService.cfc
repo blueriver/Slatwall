@@ -193,11 +193,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public boolean function setupOrderPayment(required any order, required struct data) {
 		var result = true;
 		
-		// If no amount was passed in from the data, add the amount as the order total minus and previous payments
-		if(!structKeyExists(arguments.data, "amount")) {
-			arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
-		}
-		
 		var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
 	
 		if(isNull(payment)) {
@@ -205,6 +200,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// Add new Payment to the order
 			payment.setOrder(arguments.order);
 		}
+		
+		// If no amount was passed in from the data, add the amount as the order total minus and previous payments
+		if(!structKeyExists(arguments.data, "amount") || arguments.data.amount == 0) {
+			arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
+		}
+		payment.setAmount(arguments.data.amount);
 		
 		// Attempt to Validate & Save Order Payment
 		payment = this.saveOrderPaymentCreditCard(payment, arguments.data);

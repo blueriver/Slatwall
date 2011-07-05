@@ -40,7 +40,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amount" ormtype="big_decimal" notnull="true" dbdefault="0";
+	property name="amount" ormtype="big_decimal" notnull="true";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
