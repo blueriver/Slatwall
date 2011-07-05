@@ -85,7 +85,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	public numeric function getAmountCharged() {
 		var amountCharged = 0;
 		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
-			amountAuthorized += getCreditCardTransactions()[i].getAmountCharged();
+			amountCharged += getCreditCardTransactions()[i].getAmountCharged();
 		}
 		return amountCharged;
 	}
