@@ -130,7 +130,9 @@ Notes:
 					<cfset local.fulfillmentNumber++ />
 					<h4>#$.Slatwall.rbKey("entity.fulfillment")# #local.fulfillmentNumber#</h4>
 					<div class="buttons">
+						<cfif local.thisOrderFulfillment.isProcessable()>
 						<cf_SlatwallActionCaller action="admin:order.detailorderfulfillment" text="#$.slatwall.rbKey('admin.orderfulfillment.process')#" queryString="orderfulfillmentid=#local.thisOrderFulfillment.getOrderFulfillmentID()#" class="button" />
+						</cfif>
 					</div>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />

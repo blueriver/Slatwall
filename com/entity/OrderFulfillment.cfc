@@ -63,11 +63,10 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	}
 	
 	public boolean function isProcessable() {
-		if(!arrayLen(getOrderFulfillmentItems())) {
-			return false;
+		if(arrayLen(getOrderFulfillmentItems()) && getQuantityUndelivered() > 0 ) {
+			return true;
 		}
-		
-		return true;
+		return false;
 	}
 	
 	//@ hint this method fires any time that there is a change to the orderFulfillmentItems.  It is designed to be overridden by the fulfillment method specific entities to adjust accordingly
@@ -132,6 +131,17 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     
     public numeric function getTotalCharge() {
     	return getSubTotal() + getTax() + getFulfillmentCharge();
+    }
+    
+    public numeric function getQuantityUndelivered() {
+    	if(!structKeyExists(variables,"quantityUndelivered")) {
+    		variables.quantityUndelivered = 0;
+    		var items = getOrderFulfillmentItems();
+    		for(var i=1; i<=arrayLen(items);i++) {
+    			variables.quantityUndelivered += items[i].getQuantityUndelivered();
+    		}
+    	}
+    	return variables.quantityUndelivered;
     }
     
 }
