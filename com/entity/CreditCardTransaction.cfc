@@ -43,9 +43,9 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	property name="transactionType" ormtype="string";
 	property name="providerTransactionID" ormtype="string";
 	property name="authorizationCode" ormtype="string";
-	property name="amountAuthorized" ormtype="big_decimal";
-	property name="amountCharged" ormtype="big_decimal";
-	property name="amountCredited" ormtype="big_decimal";
+	property name="amountAuthorized" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCharged" notnull="true" dbdefault="0" ormtype="big_decimal";
+	property name="amountCredited" notnull="true" dbdefault="0" ormtype="big_decimal";
 	property name="avsCode" ormtype="string";				// @hint this is whatever the avs code was that got returned
 	property name="statusCode" ormtype="string";			// @hint this is the status code that was passed back in the response bean
 	property name="message" ormtype="string";  				// @hint this is a pipe and tilda delimited list of any messages that came back in the response.
@@ -58,6 +58,14 @@ component displayname="Credit Card Transaction" entityname="SlatwallCreditCardTr
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
+	public any function init() {
+		setAmountAuthorized(0);
+		setAmountCharged(0);
+		setAmountCredited(0);
+		
+		return Super.init();
+	}
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
