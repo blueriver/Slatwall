@@ -114,15 +114,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					if(!response.hasErrors()) {
 						processOK = true;
 						
-						// Update the order Payment
-						var authAmount = arguments.orderPayment.getAmountAuthorized() + response.getAuthorizedAmount();
-						var chargeAmount = arguments.orderPayment.getAmountCharged() + response.getChargedAmount();
-						var refundAmount = arguments.orderPayment.getAmountRefunded() + response.getCreditedAmount();
-							
-						arguments.orderPayment.setAmountAuthorized(authAmount);
-						arguments.orderPayment.setAmountCharged(chargeAmount);
-						arguments.orderPayment.setAmountRefunded(refundAmount);
-						
 						// Update the order Status
 						// THIS NEEDS TO GET MOVED
 						if(arguments.transactionType == "chargePreAuthorization") {
@@ -139,10 +130,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
 					}
 				} catch (any e) {
-					transaction.setStatusCode(500);
-					transaction.setMessage(e.message);
-					// Make sure that this transaction with all of it's info gets added to the DB
-					ormFlush();
 					// Populate the orderPayment with the processing error
 					arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
 					// Log the exception

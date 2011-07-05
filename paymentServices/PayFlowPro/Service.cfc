@@ -192,14 +192,14 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 			response.getErrorBean().addError(name=responseData["result"], message=responseData["respmsg"]);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
-				response.setAuthorizedAmount(requestBean.getTransactionAmount());
+				response.setAmountAuthorized(requestBean.getTransactionAmount());
 			} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
-				response.setAuthorizedAmount(requestBean.getTransactionAmount());
-				response.setChargedAmount(requestBean.getTransactionAmount());
+				response.setAmountAuthorized(requestBean.getTransactionAmount());
+				response.setAmountCharged(requestBean.getTransactionAmount());
 			} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
-				response.setChargedAmount(requestBean.getTransactionAmount());
+				response.setAmountCharged(requestBean.getTransactionAmount());
 			} else if(requestBean.getTransactionType() == "credit") {
-				response.setCreditedAmount(requestBean.getTransactionAmount());
+				response.setAmountCredited(requestBean.getTransactionAmount());
 			}
 		}
 		
