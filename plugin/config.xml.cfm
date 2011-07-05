@@ -76,7 +76,9 @@ Notes:
 	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onAfterPageSlatwallProductListingSave" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAfterCategoryUpdate" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterCategoryDelete" component="fw1EventAdapter" persist="false"/>	
 </eventHandlers>
 <displayobjects location="global">
 	<displayobject name="Account" displaymethod="account_detail" component="fw1DisplayAdapter" persist="false"/>

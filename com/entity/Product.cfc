@@ -72,6 +72,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
@@ -100,6 +101,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   // set default collections for association management methods
 	   if(isNull(variables.ProductContent)) {
 	       variables.ProductContent = [];
+	   }
+	   if(isNull(variables.ProductCategories)) {
+	       variables.ProductCategories = [];
 	   }
 	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
@@ -187,6 +191,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			contentIDs = listAppend(contentIDs,getProductContent()[i].getContentID());
 		}
 		return contentIDs;
+	}
+	
+	public string function getCategoryIDs(boolean featured=false) { 
+		var categoryIDs = "";
+		for( var i=1; i<= arrayLen(getProductCategories()); i++ ) {
+			local.thisProductCategory = getProductCategories()[i];
+			local.addID = true;
+			if(arguments.featured) {
+				local.addID = local.thisProductCategory.getFeaturedFlag();
+			}
+			if(local.addID) {
+				categoryIDs = listAppend(categoryIDs,getProductCategories()[i].getCategoryID());	
+			}
+		}
+		return categoryIDs;
 	}
 	
 	public string function getTitle() {
@@ -353,6 +372,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removeProductContent(required ProductContent ProductContent) {
 	   arguments.ProductContent.removeProduct(this);
+	}
+	
+	// ProductCategories (one-to-many)
+	public void function clearProductCategories() {
+		for( var i=1; i<= arraylen(getProductCategories()); i++ ) {
+			removeProductCategory(getProductCategory()[i]);
+		}
+	}
+	
+	public void function addProductCategory(required any ProductCategory) {    
+	   arguments.ProductCategory.setProduct(this);    
+	}    
+	    
+	public void function removeProductCategory(required any ProductCategory) {    
+	   arguments.ProductCategory.removeProduct(this);    
 	}
 	
 	// Skus (one-to-many)

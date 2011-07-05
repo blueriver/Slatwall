@@ -44,6 +44,10 @@ component accessors="true" extends="BaseDAO" {
 		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
 	}
 	
+	public any function clearProductCategories(required any product) {
+		ORMExecuteQuery("Delete from SlatwallProductCategory WHERE productID = '#arguments.product.getProductID()#'");
+	}
+	
 	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs){
 		var params = {};
 		params.attributeSetTypeCode = arguments.attributeSetTypeCode;
