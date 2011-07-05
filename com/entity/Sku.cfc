@@ -144,7 +144,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     /************   END Association Management Methods   *******************/
     
     public string function getImageDirectory() {
-    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/products/";	
+    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/default/";	
     }
     
     public string function getImagePath() {

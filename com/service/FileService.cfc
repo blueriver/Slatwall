@@ -71,7 +71,15 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 				}
 			}
 			var imageExt = listLast(arguments.imagePath,".");
-			var resizedImagePath = replaceNoCase(arguments.imagePath,".#imageExt#","#imageNameSuffix#.#imageExt#");
+			
+			var cacheDirectory = replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/");
+			
+			if(!directoryExists(expandPath(cacheDirectory))) {
+				directoryCreate(expandPath(cacheDirectory));
+			}
+			
+			var resizedImagePath = replaceNoCase(replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/#listLast(arguments.imagePath, "/\")#"),".#imageExt#","#imageNameSuffix#.#imageExt#");
+			
 			if(!fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
