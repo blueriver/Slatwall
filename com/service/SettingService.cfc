@@ -54,15 +54,10 @@ component extends="BaseService" output="false" accessors="true"  {
 		
 	public void function reloadConfiguration() {
 		var settingsList = this.listSetting();
-		var shippingMethodsList = this.listShippingMethod();
-		var paymentMethodsList = this.listPaymentMethod();
-		var fulfillmentMethodslist = this.listFulfillmentMethod();
 		
 		variables.permissions = {};
 		variables.settings = {};
-		variables.shippingMethods = {};
 		variables.shippingServices = {};
-		variables.paymentMethods = {};
 		variables.paymentServices = {};
 		
 		getPermissionActions();
@@ -107,19 +102,6 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		}
 		
-		// Load Shipping Methods
-		for(var i = 1; i <= arrayLen(shippingMethodsList); i++) {
-			variables.shippingMethods[ shippingMethodsList[i].getShippingMethodID() ] = shippingMethodsList[i];
-		}
-		
-		// Load Payment Methods
-		for(var i = 1; i <= arrayLen(paymentMethodsList); i++) {
-			variables.paymentMethods[ paymentMethodsList[i].getPaymentMethodID() ] = paymentMethodsList[i];
-		}
-		// Load FulFillment Methods 
-		for(var i = 1; i <= arrayLen(fulfillmentMethodsList); i++) {
-			variables.fulfillmentMethods[ fulfillmentMethodsList[i].getfulfillmentMethodID() ] = fulfillmentMethodsList[i];
-		}
 	}
 	
 	public struct function getSettings(boolean reload=false) {
@@ -134,27 +116,6 @@ component extends="BaseService" output="false" accessors="true"  {
 			reloadConfiguration();
 		}
 		return variables.permissions;
-	}
-	
-	public struct function getShippingMethods(boolean reload=false) {
-		if(!structKeyExists(variables, "shippingMethods") || arguments.reload == true) {
-			reloadConfiguration();
-		}
-		return variables.shippingMethods;
-	}
-	
-	public struct function getPaymentMethods(boolean reload=false) {
-		if(!structKeyExists(variables, "paymentMethods") || arguments.reload == true) {
-			reloadConfiguration();
-		}
-		return variables.paymentMethods;
-	}
-	
-	public struct function getFulfillmentMethods(boolean reload=false) {
-		if(!structKeyExists(variables, "fulfillmentMethods") || arguments.reload == true) {
-			reloadConfiguration();
-		}
-		return variables.fulfillmentMethods;
 	}
 	
 	public any function getSettingValue(required string settingName) {

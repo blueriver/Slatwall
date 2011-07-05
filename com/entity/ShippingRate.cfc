@@ -54,7 +54,7 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 	
 	// Related Object Properties
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
+	property name="addressZone" validateRequired="true" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
 	public array function getAddressZoneOptions() {
 		if(!structKeyExists(variables, "addressZoneOptions")) {
@@ -66,5 +66,30 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 		}
 		return variables.addressZoneOptions;
 	}
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Shipping Method (many-to-one)
+	
+	public void function setShippingMethod(required ShippingMethod shippingMethod) {
+	   variables.shippingMethod = arguments.shippingMethod;
+	   if(isNew() or !arguments.shippingMethod.hasShippingRate(this)) {
+	       arrayAppend(arguments.shippingMethod.getShippingRates(),this);
+	   }
+	}
+	
+	public void function removeShippingMethod(ShippingMethod shippingMethod) {
+	   if(!structKeyExists(arguments,"shippingMethod")) {
+	   		arguments.shippingMethod = variables.shippingMethod;
+	   }
+       var index = arrayFind(arguments.shippingMethod.getShippingRates(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.shippingMethod.getShippingRates(),index);
+       }
+       structDelete(variables,"shippingMethod");
+    }
+    
+    /******* END: Association management methods for bidirectional relationships **************/
+	
 
 }

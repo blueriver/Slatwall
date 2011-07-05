@@ -397,8 +397,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 
 
-	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments )
-	{
-		return save( missingMethodArguments[ 1 ] );
+	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		if ( structKeyExists( missingMethodArguments, '2' ) ) {
+			return save( entity=missingMethodArguments[1], data=missingMethodArguments[2]);
+		} else {
+			return save( entity=missingMethodArguments[1] );
+		}
 	}
 }

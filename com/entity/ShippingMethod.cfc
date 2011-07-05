@@ -54,7 +54,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties 
-	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all";
+	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
 	
 	public any function init() {
 		if(isNull(variables.shippingRates)) {
@@ -64,15 +64,20 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 			variables.useRateTableFlag = false;
 		}
 		
-		
 		return super.init();
 	}
 	
-	public void function addShippingRate(required any shippingRate) {
-		if(!arrayFind(variables.shippingRates, arguments.shippingRate) || arguments.shippingRate.isNew()) {
-			arrayAppend(variables.shippingRates, arguments.shippingRate);
-			arguments.shippingRate.setShippingMethod(this);
-		}
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Shipping Rate (one-to-many)
+	
+	public void function addShippingRate(required any shippingRate) {    
+	   arguments.shippingRate.setShippingMethod(this);    
+	}    
+	    
+	public void function removeShippingRate(required any shippingRate) {    
+	   arguments.shippingRate.removeShippingMethod(this);    
 	}
 	
+	/******* End: Association management methods for bidirectional relationships **************/
 }

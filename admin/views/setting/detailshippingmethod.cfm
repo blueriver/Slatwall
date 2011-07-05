@@ -52,10 +52,10 @@ Notes:
 		<form name="ShippingMethodEdit" action="#buildURL('admin:setting.saveshippingmethod')#" method="post">
 			<input type="hidden" name="shippingMethodID" value="#rc.shippingMethod.getShippingMethodID()#" />
 		</cfif>
-			<dl class="oneColumn">
+			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#" first="true">
 				<dt class="spdshippingprovider">
-					#rc.$.slatwall.rbKey('entity.shippingmethod.shippingprovider')#
+					<label for="shippingProvider">#rc.$.slatwall.rbKey('entity.shippingmethod.shippingprovider')#</label>
 				</dt>
 				<dd id="spdshippingprovider">
 					<cfif rc.edit and rc.shippingMethod.isNew()>
@@ -68,14 +68,11 @@ Notes:
 							<option value="Other">Other</option>
 						</select>
 					<cfelse>
-						#rc.shippingMethod.getShippingProvider()# <cf_SlatwallActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#rc.shippingMethod.getShippingProvider()#" type="link">
+						#rc.shippingMethod.getShippingProvider()# <cfif rc.edit and rc.shippingMethod.getShippingProvider() neq "Other"><cf_SlatwallActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#rc.shippingMethod.getShippingProvider()#" type="link"></cfif>
 					</cfif>
 				</dd>
 				<cfif not rc.shippingMethod.isNew()>
 					<cfif rc.shippingMethod.getShippingProvider() neq "Other">
-						<!--- Use Rate Table? --->
-						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="useRateTableFlag" edit="#rc.edit#">
-						
 						<!--- Provider Method --->
 						<dt class="spdshippingprovidermethod">Shipping Provider Method</dt>
 						<cfset local.shippingService = rc.shippingServices[rc.shippingMethod.getShippingProvider()] />
@@ -89,8 +86,11 @@ Notes:
 								</select>
 							</dd>
 						<cfelse>
-							<dd id="spdshippingprovidermethod">#local.shippingServiceMethods[rc.shippingMethod.getShippingProviderMethod()]#</dd>	
+							<dd id="spdshippingprovidermethod"><cfif rc.shippingMethod.getShippingProviderMethod() neq "">#local.shippingServiceMethods[rc.shippingMethod.getShippingProviderMethod()]#<cfelse>&nbsp;</cfif></dd>	
 						</cfif>
+						
+						<!--- Use Rate Table? --->
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="useRateTableFlag" edit="#rc.edit#">
 						
 						<div class="providerOptions<cfif rc.shippingMethod.getUseRateTableFlag()> hideElement</cfif>">
 							<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingRateIncreasePercentage" edit="#rc.edit#">
@@ -107,7 +107,7 @@ Notes:
 					<table id="shippingRateTable" class="stripe">
 						<thead>
 							<tr>
-								<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.shippingZone')#</th>
+								<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.addressZone')#</th>
 								<th>#rc.$.slatwall.rbKey('entity.shippingrate.minWeight')#</th>
 								<th>#rc.$.slatwall.rbKey('entity.shippingrate.maxWeight')#</th>
 								<th>#rc.$.slatwall.rbKey('entity.shippingrate.minPrice')#</th>
@@ -117,27 +117,34 @@ Notes:
 							</tr>
 						</thead>
 						<tbody>
-							<cfloop from="1" to="#arrayLen(local.shippingRates)#" index="local.rateCount">
-								<tr id="ShippingRate#local.rateCount#" class="rateRow">
-									<td class="varWidth">
-										<cfif rc.edit>
-											<input type="hidden" name="shippingRates[#local.rateCount#].shippingRateID" value="#local.shippingRates[rateCount].getShippingRateID()#" />
-											<cf_SlatwallPropertyDisplay object="#local.shippingRates[rateCount]#" property="addressZone" edit="#rc.edit#" displaytype="plain" />
-										<cfelse>
-											#local.shippingRates[rateCount].getAddressZone().getAddressZoneName()#
-										</cfif>
+							<cfloop array="#rc.shippingMethod.getShippingRates()#" index="local.shippingRate">
+								<tr>
+									<td class="varWidth">#local.shippingRate.getAddressZone().getAddressZoneName()#</td>
+									<td>#local.shippingRate.getMinWeight()#</td>
+									<td>#local.shippingRate.getMaxWeight()#</td>
+									<td>#local.shippingRate.getMinPrice()#</td>
+									<td>#local.shippingRate.getMaxPrice()#</td>
+									<td>#DollarFormat(local.shippingRate.getShippingRate())#</td>
+									<td class="administration">
+										<ul class="one">
+											<cf_SlatwallActionCaller action="admin:setting.deleteshippingrate" querystring="shippingrateid=#local.shippingRate.getShippingRateID()#" class="delete" type="list">
+										</ul>
 									</td>
-									<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].minWeight" value="#local.shippingRates[rateCount].getMinWeight()#"><cfelse>#local.shippingRates[rateCount].getMinWeight()#</cfif></td>
-									<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].maxWeight" value="#local.shippingRates[rateCount].getMaxWeight()#"><cfelse>#local.shippingRates[rateCount].getMaxWeight()#</cfif></td>
-									<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].minPrice" value="#local.shippingRates[rateCount].getMinPrice()#"><cfelse>#local.shippingRates[rateCount].getMinPrice()#</cfif></td>
-									<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].maxPrice" value="#local.shippingRates[rateCount].getMaxPrice()#"><cfelse>#local.shippingRates[rateCount].getMaxPrice()#</cfif></td>
-									<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].shippingRate" value="#local.shippingRates[rateCount].getShippingRate()#"><cfelse>#local.shippingRates[rateCount].getShippingRate()#</cfif></td>
-									<td class="administration">&nbsp;</td>
 								</tr>
 							</cfloop>
 						</tbody>
 					</table>
-					<cfif rc.edit><a class="button" id="addShippingRate">Add Shipping Rate</a></cfif>
+					<cfif rc.edit>
+						<dl class="twoColumn">
+							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="minWeight" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="maxWeight" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="minPrice" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="maxPrice" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="shippingRate" edit="true" />
+						</dl>
+						<button type="submit" name="addRate" value="true">Add Rate</button>
+					</cfif>
 				</div>
 			</cfif>
 	<cfif rc.edit>
@@ -150,98 +157,4 @@ Notes:
 			</div>
 		</form>
 	</cfif>
-		
-		
-		<!---
-				<cfif rc.shippingMethod.isNew() or rc.shippingMethod.getShippingProvider() eq "RateTable">
-					<dt class="spdshippingmethod">Shipping Rates</dt>
-					<dd id="spdshippingmethod">
-						<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
-						<table id="shippingRateTable" class="stripe">
-							<thead>
-								<tr>
-									<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.shippingZone')#</th>
-									<th>#rc.$.slatwall.rbKey('entity.shippingrate.minWeight')#</th>
-									<th>#rc.$.slatwall.rbKey('entity.shippingrate.maxWeight')#</th>
-									<th>#rc.$.slatwall.rbKey('entity.shippingrate.minPrice')#</th>
-									<th>#rc.$.slatwall.rbKey('entity.shippingrate.maxPrice')#</th>
-									<th>#rc.$.slatwall.rbKey('entity.shippingrate.shippingRate')#</th>
-									<th class="administration">&nbsp;</th>
-								</tr>
-							</thead>
-							<tbody>
-								<cfloop from="1" to="#arrayLen(local.shippingRates)#" index="local.rateCount">
-									<tr id="ShippingRate#local.rateCount#" class="rateRow">
-										<td class="varWidth">
-											<cfif rc.edit>
-												<input type="hidden" name="shippingRates[#local.rateCount#].shippingRateID" value="#local.shippingRates[rateCount].getShippingRateID()#" />
-												<cf_SlatwallPropertyDisplay object="#local.shippingRates[rateCount]#" property="addressZone" edit="#rc.edit#" displaytype="plain" />
-											<cfelse>
-												#local.shippingRates[rateCount].getAddressZone().getAddressZoneName()#
-											</cfif>
-										</td>
-										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].minWeight" value="#local.shippingRates[rateCount].getMinWeight()#"><cfelse>#local.shippingRates[rateCount].getMinWeight()#</cfif></td>
-										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].maxWeight" value="#local.shippingRates[rateCount].getMaxWeight()#"><cfelse>#local.shippingRates[rateCount].getMaxWeight()#</cfif></td>
-										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].minPrice" value="#local.shippingRates[rateCount].getMinPrice()#"><cfelse>#local.shippingRates[rateCount].getMinPrice()#</cfif></td>
-										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].maxPrice" value="#local.shippingRates[rateCount].getMaxPrice()#"><cfelse>#local.shippingRates[rateCount].getMaxPrice()#</cfif></td>
-										<td><cfif rc.edit><input name="shippingRates[#local.rateCount#].shippingRate" value="#local.shippingRates[rateCount].getShippingRate()#"><cfelse>#local.shippingRates[rateCount].getShippingRate()#</cfif></td>
-										<td class="administration">&nbsp;</td>
-									</tr>
-								</cfloop>
-							</tbody>
-						</table>
-						<cfif rc.edit><a class="button" id="addShippingRate">Add Shipping Rate</a></cfif>
-					</dd>
-				<cfelse>
-					<dt class="spdshippingprovidermethod">Shipping Provider Method</dt>
-					<cfset local.shippingService = rc.shippingServices[rc.shippingMethod.getShippingProvider()] />
-					<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
-					<cfif rc.edit>
-						<dd id="spdshippingprovidermethod">
-							<select name="shippingProviderMethod">
-								<cfloop collection="#local.shippingServiceMethods#" item="local.shippingMethodID">
-									<option value="#local.shippingMethodID#" <cfif rc.shippingMethod.getShippingProviderMethod() eq local.shippingMethodID>selected="selected"</cfif>>#local.shippingServiceMethods[shippingMethodID]#</option>
-								</cfloop>
-							</select>
-						</dd>
-					<cfelse>
-						<dd id="spdshippingprovidermethod">#local.shippingServiceMethods[rc.shippingMethod.getShippingProviderMethod()]#</dd>	
-					</cfif>
-				</cfif>
-				--->
-				
-				
-<!---				
-		<cfif rc.edit>
-			<table id="tableTemplate" class="hideElement">
-				<tbody>
-				    <tr id="temp">
-				        <td><input type="hidden" name="shippingRateID" value="" /><cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" displaytype="plain" /></td>
-				        <td><input type="text" name="minWeight"></td>
-						<td><input type="text" name="maxWeight"></td>
-						<td><input type="text" name="minPrice"></td>
-						<td><input type="text" name="maxPrice"></td>
-						<td><input type="text" name="cost"></td>
-						<td class="administration">&nbsp;</td>
-					</tr>
-				</tbody>
-			</table>
-		</cfif>
---->
-		
-<!---
-		<!--- This area generates the content that gets used based upon shipping provider --->
-		<div class="hideElement">
-			<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
-				<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
-				<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
-				<select name="shippingProviderMethod" id="#local.shippingServicePackage#">
-					<cfloop collection="#local.shippingServiceMethods#" item="local.shippingMethodID">
-						<option value="#shippingMethodID#" <cfif rc.shippingMethod.getShippingProvider() eq local.shippingServicePackage and rc.shippingMethod.getShippingProviderMethod() eq local.shippingMethodID>selected="selected"</cfif>>#local.shippingServiceMethods[shippingMethodID]#</option>
-					</cfloop>
-				</select>
-			</cfloop>
-		</div>
-	</div>
---->
 </cfoutput>
