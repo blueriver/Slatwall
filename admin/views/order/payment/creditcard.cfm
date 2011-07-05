@@ -64,7 +64,7 @@ Notes:
 		</td>
 		<td>#dollarFormat(local.orderPayment.getAmountAuthorized())#</td>
 		<td>#dollarFormat(local.orderPayment.getAmountCharged())#</td>
-		<td>#dollarFormat(local.orderPayment.getAmountRefunded())#</td>		
+		<td>#dollarFormat(local.orderPayment.getAmountCredited())#</td>		
 	</tr>
 </table>
 <!--- display link to refund payment if amount has been charged --->

@@ -51,6 +51,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Mura Service Injection
 	property name="userManager" type="any";
+	property name="categoryManager" type="any";
 	
 	public void function dashboard() {
 		getFW().redirect(action="admin:setting.detail");
@@ -61,6 +62,13 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
 		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
+		rc.muraCategories = getProductService().getMuraCategories(siteID=rc.$.event('siteID'),parentID=0);
+		var rootCategoryID = rc.$.slatwall.setting("product_rootProductCategory");
+		if(rootCategoryID == "0") {
+			rc.rootCategory = rc.$.slatwall.rbKey("define.all");
+		} else {
+			rc.rootCategory = getCategoryManager().read(categoryID=rootCategoryID).getName();
+		}
 	}
 	
 	public void function edit(required struct rc) {

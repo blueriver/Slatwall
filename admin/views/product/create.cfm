@@ -91,7 +91,6 @@ Notes:
 				 <!--- no options defined --->
 				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
 			</cfif>
-			<input type="hidden" name="contentID" value="" /> 
 		<div id="actionButtons" class="clearfix">
 			<cf_SlatwallActionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />

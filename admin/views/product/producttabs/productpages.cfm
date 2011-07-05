@@ -69,13 +69,15 @@ Notes:
 			<table id="ProductPages" class="stripe">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
+					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.pagePath")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
 				</tr>
 				<cfloop condition="rc.productPages.hasNext()">
 					<cfset local.thisProductPage = rc.productPages.next() />
 					<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())>
 						<tr>
-							<td class="varWidth">#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
+							<td class="varWidth">#listChangeDelims(local.thisProductPage.getTitle()," &raquo; ")#</td>
+							<td>#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
 							<td class="administration">
 								<ul class="one">
 									<li class="preview"><a href="#local.thisProductPage.getURL()#" target="_blank">Preview</a></li>

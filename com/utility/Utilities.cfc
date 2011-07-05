@@ -52,7 +52,7 @@ Notes:
 		<cfargument name="theQuery" type="query" required="true" hint="the query to sort" />
 		<cfargument name="ParentID" type="string" default="ParentID" hint="the name of the column in the table containing the ID of the item's parent" />
 		<cfargument name="ItemID" type="string" default="ItemID" hint="the name of the column in the table containing the item's ID (primary key)" />
-		<cfargument name="rootID" type="numeric" default="0" hint="the ID of the item to use as the root, defaults to the tree root" />
+		<cfargument name="rootID" type="string" default="0" hint="the ID of the item to use as the root, defaults to the tree root" />
 		<cfargument name="levels" type="numeric" default="0" hint="how many levels to return, defaults to all levels when set to 0" />
 		<cfargument name="BaseDepth" type="numeric" default="0" hint="the number to use as the base depth" />
 		<cfargument name="PathColumn" type="string" default="" hint="the name of the column containing the values to use to build paths to the items in the tree" />
@@ -101,7 +101,7 @@ Notes:
 		</cfloop>
         
 		<!--- Find root items --->
-		<cfif not arguments.rootID><!--- if a rootID wasn't specified, use the absolute root --->
+		<cfif arguments.rootID eq "0"><!--- if a rootID wasn't specified, use the absolute root --->
 			<cfloop query="arguments.theQuery">
 				<!--- root items are ones whose parent ID does not exist in the rowfromID struct (parent ID isn't an ID of another item)  --->
 				<cfif NOT StructKeyExists(RowFromID, theQuery[arguments.parentID][theQuery.CurrentRow])>
@@ -154,20 +154,22 @@ Notes:
 				<cfset QuerySetCell(Ret, "NewOrder", ThisOrder) /> <!--- set order info in column --->
 				<!--- set Tree lineage in cell --->
 				<cfset QuerySetCell(Ret,"Lineage", ThisLineage)>
-                <cfif len(arguments.pathColumn)>
-                	<!--- set up path to item to set in path cell --->
-                    <cfloop list="#thisLineage#" index="i">
-                    	<cfset thisPath = listAppend(thisPath,Ret[arguments.pathColumn][i],arguments.pathDelimiter) />
-						<cfset thisIDPath = listAppend(thisIDPath,Ret[arguments.itemID][i],arguments.pathDelimiter) />
-                    </cfloop>
-					<!--- add current item to path --->
+            	<!--- set up path to item to set in path cell --->
+                <cfloop list="#thisLineage#" index="i">
+					<cfif len(arguments.pathColumn)>
+                		<cfset thisPath = listAppend(thisPath,Ret[arguments.pathColumn][i],arguments.pathDelimiter) />
+					</cfif>
+					<cfset thisIDPath = listAppend(thisIDPath,Ret[arguments.itemID][i],arguments.pathDelimiter) />
+                </cfloop>
+				<!--- add current item to path --->
+				<cfif len(arguments.pathColumn)>
 					<cfset thisPath = listAppend(thisPath,theQuery[arguments.pathColumn][RowID],arguments.pathDelimiter) />
-					<cfset thisIDPath = listAppend(thisIDPath,theQuery[arguments.itemID][RowID],arguments.pathDelimiter) />
-                    <cfset querySetCell(Ret,"#arguments.PathColumn#Path", thisPath) />
-					<cfset querySetCell(Ret,"idPath", thisIDPath) />
-                    <cfset thispath = "" /> <!--- resets variable for the next item --->
-					<cfset thisIDPath = "" />
-                </cfif>
+					<cfset querySetCell(Ret,"#arguments.PathColumn#Path", thisPath) />
+	                <cfset thispath = "" /> <!--- resets variable for the next item --->
+				</cfif>
+				<cfset thisIDPath = listAppend(thisIDPath,theQuery[arguments.itemID][RowID],arguments.pathDelimiter) />
+				<cfset querySetCell(Ret,"idPath", thisIDPath) />
+				<cfset thisIDPath = "" /> <!--- resets variable for the next item --->
 				<cfloop list="#theQuery.ColumnList#" index="ColName"><!--- loop over the original querys columns to copy the data to our return query --->
 					<cfset QuerySetCell(Ret, ColName, theQuery[ColName][RowID]) />
 				</cfloop>
