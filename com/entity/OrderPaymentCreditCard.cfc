@@ -47,9 +47,6 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="creditCardType" ormType="string";
 	property name="expirationMonth" ormType="string";
 	property name="expirationYear" ormType="string";
-	property name="amountAuthorized" ormtype="big_decimal";
-	property name="amountCharged" ormtype="big_decimal";
-	property name="amountRefunded" ormtype="big_decimal";
 	
 	// Related Properties
 	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" inverse="true";
@@ -59,6 +56,9 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="creditCardNumber" validateRequired="true" persistent="false";
 	property name="securityCode" validateRequired="true" validateNumeric="true" persistent="false";
 	property name="expirationDate" persistent="false";
+	property name="amountAuthorized" persistent="false";
+	property name="amountCharged" persistent="false";
+	property name="amountCredited" persistent="false";
 	
 	public any function init(){
 		// Set Defaults
@@ -66,21 +66,36 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		if(isNull(variables.creditCardTransactions)) {
 			variables.creditCardTransactions = [];
 		}
-		if(isNull(variables.amountAuthorized)) {
-			variables.amountAuthorized = 0;
-		}
-		if(isNull(variables.amountCharged)) {
-			variables.amountCharged = 0;
-		}
-		if(isNull(variables.amountRefunded)) {
-			variables.amountRefunded = 0;
-		}
 		
 		return super.init();
 	}
 	
 	public numeric function getAmountReceived() {
-		return getAmountCharged() - getAmountRefunded();
+		return getAmountCharged() - getAmountCredited();
+	}
+	
+	public numeric function getAmountAuthorized() {
+		var amountAuthorized = 0;
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			amountAuthorized += getCreditCardTransactions()[i].getAmountAuthorized();
+		}
+		return amountAuthorized;
+	}
+	
+	public numeric function getAmountCharged() {
+		var amountCharged = 0;
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			amountAuthorized += getCreditCardTransactions()[i].getAmountCharged();
+		}
+		return amountCharged;
+	}
+	
+	public numeric function getAmountCredited() {
+		var amountCredited = 0;
+		for(var i=1; i<=arrayLen(getCreditCardTransactions()); i++) {
+			amountCredited += getCreditCardTransactions()[i].getAmountCredited();
+		}
+		return amountCredited;
 	}
 	
 	public void function setCreditCardNumber(required string creditCardNumber) {

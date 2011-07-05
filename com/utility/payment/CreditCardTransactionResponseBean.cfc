@@ -41,9 +41,9 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 
 	property name="transactionID" type="string";   
 	property name="authorizationCode" type="string";
-	property name="authorizedAmount" type="numeric";
-	property name="chargedAmount" type="numeric";
-	property name="creditedAmount" type="numeric";
+	property name="amountAuthorized" type="numeric";
+	property name="amountCharged" type="numeric";
+	property name="amountCredited" type="numeric";
 	property name="avsCode" type="string";
 	property name="securityCodeMatch" type="boolean";
 	property name="duplicateFlag" type="boolean";
@@ -52,9 +52,9 @@ component displayname="Gateway Response"  accessors="true" output="false" extend
 		// Set Defaults
 		setTransactionID("");
 		setAuthorizationCode("");
-		setAuthorizedAmount(0);
-		setChargedAmount(0);
-		setCreditedAmount(0);
+		setAmountAuthorized(0);
+		setAmountCharged(0);
+		setAmountCredited(0);
 		setAVSCode("E");
 		setSecurityCodeMatch(false);
 		
