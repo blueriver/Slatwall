@@ -37,27 +37,30 @@ Notes:
 
 --->
 
-<cfdump var="#rc.categories#" />
-
 <cfoutput>
 	<cfif rc.edit>
 		<input type="hidden" name="categoryID" value="" />
+		<input type="hidden" name="featuredCategories" value="" />
 		<cfif rc.categories.recordCount gt 0>
 			<table id="productCategories" class="stripe">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
+					<th>#$.slatwall.rbKey("admin.product.productCategories.isFeatured")#</th>
 				</tr>
 				<cfloop query="rc.categories">
 					<tr>
 						<td>
-							<input type="checkbox" id="#rc.categories.categoryID#" name="categoryID" value="#listChangeDelims(rc.categories.path,' ')#"<cfif listFind(rc.product.getContentIDs(),rc.categories.categoryID)> checked="checked"</cfif> /> 
+							<input type="checkbox" id="#rc.categories.categoryID#" name="categoryID" value="#listChangeDelims(rc.categories.idPath,' ')#"<cfif listFind(rc.product.getCategoryIDs(),rc.categories.categoryID)> checked="checked"</cfif> /> 
 						</td>
 						<cfset local.thisNest = rc.categories.treeDepth eq 0 ? "neston" : "nest" & rc.categories.treeDepth & "on" />
 						<td class="varWidth">
 							<ul class="#local.thisNest#">
 				                <li class="Category"><label for="#rc.categories.categoryID#">#rc.categories.name#</label></li>
 							</ul> 
+						</td>
+						<td>
+							<input type="checkbox" id="#rc.categories.categoryID#featured" name="featuredCategories" value="#rc.categories.categoryID#"<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)> checked="checked"</cfif> /> 
 						</td>
 					</tr>	
 				</cfloop>
@@ -66,28 +69,29 @@ Notes:
 			<p><em>#rc.$.Slatwall.rbKey("categorymanager.nocategories")#</em></p>
 		</cfif>
 	<cfelse>
-	<!---	<cfif arrayLen(rc.product.getProductContent())>
-			<table id="ProductPages" class="stripe">
+		<cfif arrayLen(rc.product.getProductCategories())>
+			<table id="ProductCategories" class="stripe">
 				<tr>
-					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
-					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.preview")#</th>
+					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
+					<th>#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryPath")#</th>
+<!---					<th>#$.slatwall.rbKey("admin.product.productCategories.isFeatured")#</th>--->
 				</tr>
-				<cfloop condition="rc.productPages.hasNext()">
-					<cfset local.thisProductPage = rc.productPages.next() />
-					<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())>
+				<cfloop query="rc.categories">
+					<cfif listFindNoCase(rc.product.getCategoryIDs(),rc.categories.categoryID)>
 						<tr>
-							<td class="varWidth">#listChangeDelims(local.thisProductPage.getMenuTitlePath()," &raquo; ")#</td>
-							<td class="administration">
-								<ul class="one">
-									<li class="preview"><a href="#local.thisProductPage.getURL()#" target="_blank">Preview</a></li>
-								</ul>
-							</td>
+							<td class="varWidth">#rc.categories.Name#</td>
+							<td>#listChangeDelims(rc.categories.namePath," &raquo; ")#</td>
+<!---							<td>
+								<cfif local.isfeatured>
+									<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+								</cfif>
+							</td>--->
 						</tr>
 					</cfif>
 				</cfloop>
 			</table>
 		<cfelse>
-			<em>#rc.$.Slatwall.rbKey("admin.product.productPages.noProductPagesAssigned")#</em>
-		</cfif>--->
+			<em>#rc.$.Slatwall.rbKey("admin.product.productCategories.noProductCategoriesAssigned")#</em>
+		</cfif>
 	</cfif>	
 </cfoutput>

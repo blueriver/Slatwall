@@ -111,12 +111,13 @@ component extends="BaseService" accessors="true" {
 		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
 	}
 	
-	public any function getProductCategories(required string siteID, string parentID=0) {
+	public any function getMuraCategories(required string siteID, string parentID=0) {
 		var categories = getCategoryManager().getCategoriesBySiteID(siteID=arguments.siteID);
     	var categoryTree = getService("utilities").queryTreeSort(
     		theQuery = categories,
     		itemID = "categoryID",
     		parentID = "parentID",
+    		pathColumn = "name",
     		rootID = "#arguments.parentID#"
     	);
     	return categoryTree;
@@ -154,6 +155,61 @@ component extends="BaseService" accessors="true" {
 			if( listContains(local.thisPC.getContentPath(),arguments.contentID) ) {
 				// when mura content is deleted, so is all content nested underneath, so we delete all productContent records in which we find the passed in content ID in the content path
 				getDAO().delete(local.thisPC);
+			}
+		}
+	}
+
+	/**
+	/* @hint associates this product with Mura categories
+	*/
+	public void function assignProductCategories(required any product,required string categoryID,string featuredCategories) {
+		getDAO().clearProductCategories(arguments.product);
+		for(var i=1;i<=listLen(arguments.categoryID);i++) {
+			local.isFeatured = false;
+			local.thisCategoryID = listGetAt(arguments.categoryID,i);
+			if(listFindNoCase(arguments.featuredCategories,listLast(local.thisCategoryID," "))) {
+				local.isFeatured = true;
+			}
+			local.thisProductCategory = entityNew("SlatwallProductCategory",{categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
+			arguments.product.addProductCategory(local.thisProductCategory);
+		}
+	}
+
+	public void function updateProductCategoryPaths(required string categoryID, required string siteID) {
+		var pcategoryArray = getDAO().list(entityName="SlatwallProductCategory");
+		for( var i=1; i<=arrayLen(pcategoryArray); i++) {
+			local.thisPC = pcategoryArray[i];
+			if( listContains(local.thisPC.getCategoryPath(),arguments.categoryID) ) {
+				var newPath = getCategoryManager().read(categoryID=local.thisPC.getCategoryID(),siteID=arguments.siteID).getPath();
+				// this is just temporary until the Mura bug is fixed which puts single quotes around the categoryID's in the path
+				newPath = cleanPath(newPath);
+				local.thisPC.setCategoryPath(newPath);
+			}
+		} 
+	}
+
+	// this is only here to get around a Mura bug for now (see above)
+	private string function cleanPath (string path) {
+		var cleanedPath = "";
+		for(var i = 1; i<=listLen(arguments.path);i++) {
+			local.thisID = listGetAt(arguments.path,i);
+			local.thisID = replace(local.thisID,"'","","all");
+			cleanedPath = listAppend(cleanedPath,local.thisID);
+		}
+		return cleanedPath;
+	}
+	
+	public void function deleteProductCategory(required string categoryID) {
+		var pcategoryArray = getDAO().list(entityName="SlatwallProductCategory");
+		for( var i=1; i<=arrayLen(pcategoryArray); i++ ) {
+			local.thisPC = pcategoryArray[i];
+			if( listLast(local.thisPC.getCategoryPath()) == arguments.categoryID ) {
+				// if the last element in the path is the same as the ID, the category assigned is the one being deleted, so delete association
+				getDAO().delete(local.thisPC);
+			} else if( listFindNoCase(local.thisPC.getCategoryPath(),arguments.categoryID) ) {
+				local.thisPath = local.thisPC.getCategoryPath();
+				local.newPath = listDeleteAt(local.thisPath,listFind(local.thisPath,arguments.categoryID));
+				local.thisPC.setCategoryPath(local.newPath);
 			}
 		}
 	}
@@ -196,10 +252,11 @@ component extends="BaseService" accessors="true" {
 			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
 		} else {
 			updateSkus(arguments.Product,arguments.data.skuArray);
+			// set up associations between product and content
+			assignProductContent(arguments.Product,arguments.data.contentID);		
+			// set up associations between product and mura categories
+			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
 		}
-		
-		// set up associations between product and content
-		assignProductContent(arguments.Product,arguments.data.contentID);
 		
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {

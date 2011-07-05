@@ -75,6 +75,21 @@ Notes:
 							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_defaultTemplate.getSettingValue()#</td>	
 						</cfif>
 					</tr>
+					<tr class="spdproduct_rootProductCategory">
+						<td class="property varWidth">#rc.$.slatwall.rbKey('setting.product.rootProductCategory')#</td>
+						<cfif rc.edit>
+							<td class="value">
+								<select name="product_rootProductCategory">
+									<option value="0">#$.slatwall.rbKey("define.all")#</option>
+									<cfloop query="rc.muraCategories">
+										<option value="#rc.muraCategories.categoryID#" <cfif rc.allSettings.product_rootProductCategory.getSettingValue() eq rc.muraCategories.categoryID>selected="selected"</cfif>>#repeatString("&nbsp;&nbsp;&nbsp;",rc.muraCategories.treeDepth)#<cfif rc.muraCategories.treeDepth>&lfloor;</cfif>#rc.muraCategories.name#</option>
+									</cfloop>
+								</select>
+							</td>
+						<cfelse>
+							<td class="value">#rc.rootCategory#</td>
+						</cfif>
+					</tr>
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" property="settingValue" fieldName="product_urlKey" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" property="settingValue" fieldName="product_missingimagepath" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" property="settingValue" fieldName="product_imageextension" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">

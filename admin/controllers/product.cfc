@@ -75,7 +75,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
-		rc.categories = getProductService().getProductCategories(siteID=rc.$.event('siteid'));
+		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'),parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 	}
 	
 	public void function edit(required struct rc) {

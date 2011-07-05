@@ -102,6 +102,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.ProductContent)) {
 	       variables.ProductContent = [];
 	   }
+	   if(isNull(variables.ProductCategories)) {
+	       variables.ProductCategories = [];
+	   }
 	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
 	   }
@@ -188,6 +191,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			contentIDs = listAppend(contentIDs,getProductContent()[i].getContentID());
 		}
 		return contentIDs;
+	}
+	
+	public string function getCategoryIDs(boolean featured=false) { 
+		var categoryIDs = "";
+		for( var i=1; i<= arrayLen(getProductCategories()); i++ ) {
+			local.thisProductCategory = getProductCategories()[i];
+			local.addID = true;
+			if(arguments.featured) {
+				local.addID = local.thisProductCategory.getFeaturedFlag();
+			}
+			if(local.addID) {
+				categoryIDs = listAppend(categoryIDs,getProductCategories()[i].getCategoryID());	
+			}
+		}
+		return categoryIDs;
 	}
 	
 	public string function getTitle() {
