@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,16 +35,41 @@
 
 Notes:
 
-*/
-component displayname="Product Image" entityname="SlatwallProductImage" table="SlatwallImage" persistent="true" extends="Image" discriminatorvalue="product" {
-			
-	// Related Entities
-	property name="product" cfc="Product" fieldtype="id,many-to-one" fkcolumn="productID";
-	
-	public any function init() {
-		setDirectory("product");
-		
-		return super.init();
-	}
+--->
 
-}
+<cfoutput>
+	<table class="stripe">
+		<tr>
+			<th>Image Preview</th>
+			<th>Image Type</th>
+			<th>Image Name</th>
+			<th class="varWidth">Image Description</th>
+			<th class="administration">&nbsp;</th>
+		</tr>
+	</table>
+	<cfloop array="#rc.product.getImages()#" index="local.image" >
+		<tr>
+			<td>#local.image.getImage()#</td>
+			<td>#local.image.getImageType().getType()#</td>
+			<td>#local.image.getImageName()#</td>
+			<td class="varWidth">#local.image.getImageDescription()#</td>
+			<td class="administration">
+				<ul class="one">
+					<cf_SlatwallActionCaller action="admin:product.deleteImage" querystring="imageID=#local.image.getImageID()#" class="delete" type="list">
+				</ul>
+			</td>
+		</tr>
+	</cfloop>
+	<cfif rc.edit>
+		<hr />
+		<form name="uploadImage">
+			<h4>Upload Image</h4>
+			<cfset rc.blankImage = entityNew("SlatwallImage") />
+			<cf_SlatwallPropertyDisplay object="#rc.blankImage#" property="imageName" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.blankImage#" property="imageDescription" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.blankImage#" property="imageType" edit="#rc.edit#">
+			
+			<input type="file" id="productImageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
+		</form>
+	</cfif>	
+</cfoutput>

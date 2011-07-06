@@ -36,14 +36,19 @@
 Notes:
 
 */
-component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" persistent="true" extends="BaseEntity" {
+component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" persistent="true" extends="BaseEntity" discriminatorColumn="directory" {
 			
 	// Persistent Properties
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="imageName" ormtype="string";
-	property name="imageDescriptoin" ormtype="string" length="4000";
+	property name="imageDescription" ormtype="string" length="4000";
+	property name="imageExtension" ormtype="string";
 	
+	// Related entity properties
 	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID";
+	
+	// Special helper property
+	property name="directory" insert="false" update="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -51,4 +56,38 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	public string function getImagePath() {
+		return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/#getImageID()#.#getImageExtension()#";	
+	}
+	
+	public string function getResizedImagePath(numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		return getService("FileService").getResizedImagePath(argumentCollection=arguments);
+	}
+	
+	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		// Get the expected Image Path
+		var path=getImagePath();
+		
+		// If no image Exists use the defult missing image 
+		if(!fileExists(expandPath(path))) {
+			path = setting('product_missingimagepath');
+		}
+		
+		// If there were sizes specified, get the resized image path
+		if(arguments.width != 0 || arguments.height != 0) {
+			path = getResizedImagePath(argumentcollection=arguments);	
+		}
+		
+		// Read the Image
+		var img = imageRead(expandPath(path));
+		
+		// Setup Alt & Class for the image
+		if(arguments.alt == "") {
+			arguments.alt = "#getImageName()#";
+		}
+		if(arguments.class == "") {
+			arguments.class = "productImage";	
+		}
+		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
+	}
 }
