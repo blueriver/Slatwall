@@ -66,20 +66,20 @@ Notes:
 	
 	<cffunction name="onGlobalSessionStart" output="false">
 		<cfargument name="$">
-		<cfset var state=preseveInternalState(request)>
+		<cfset var state=preserveInternalState(request)>
 		<cfinvoke component="Application" method="onSessionStart" />
 		<cfset restoreInternalState(request,state)>
 	</cffunction>
 
 	<cffunction name="onApplicationLoad" output="false">
 		<cfargument name="$">
-		<cfset var state=preseveInternalState(request)>
+		<cfset var state=preserveInternalState(request)>
 		<cfset request.pluginConfig=variables.pluginConfig>
 		<cfinvoke component="Application" method="onApplicationStart" />
 		<cfset restoreInternalState(request,state)>
 	</cffunction>
 
-	<cffunction name="preseveInternalState" output="false">
+	<cffunction name="preserveInternalState" output="false">
 		<cfargument name="state">
 		<cfset var preserveKeys=structNew()>
 		<cfset var k="">
@@ -141,7 +141,7 @@ Notes:
 		
 		<cfset url[variables.framework.action] = arguments.action />
 		
-		<cfset state=preseveInternalState(request)>
+		<cfset state=preserveInternalState(request)>
 		
 		<!--- call the frameworks onRequestStart --->
 		<cfset fw1.onRequestStart(CGI.SCRIPT_NAME) />
