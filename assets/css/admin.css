@@ -257,6 +257,10 @@ form.modal {
 	width: auto;
 }
 
+form#alternateImage {
+	width: 600px;
+}
+
 dl.optionDetail {
 	margin-bottom: 20px;
 }

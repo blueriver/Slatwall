@@ -79,13 +79,13 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return response;
 	}
 	
-	public any function populate(required any entity, required struct data) {
-		return arguments.entity.populate(arguments.data);
+	public any function populate(required any entity, required struct data, boolean cleanseInput=false) {
+		return arguments.entity.populate(data=arguments.data, cleanseInput=arguments.cleanseInput);
 	}
 
-    public any function save(required any entity, struct data) {
+    public any function save(required any entity, struct data, boolean cleanseInput=false) {
         if(structKeyExists(arguments,"data")){
-            populate(arguments.entity,arguments.data);
+            populate(argumentCollection=arguments);
         }
         validate(entity=arguments.entity);
         

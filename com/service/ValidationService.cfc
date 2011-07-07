@@ -70,9 +70,14 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	
 	// @hint method to validate entity based on property definition, returns a responseBean 
 	public function validate(required any entity, struct objMD){
-		var objMetadata = isNull(objMD) ? getMetadata(entity) : objMD ;
 		// get the object property array 
-		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
+		// use the getProperties() method if present to get any inherited properties
+		if(structKeyExists(arguments.entity,"getProperties")) {
+			var props = arguments.entity.getProperties();
+		} else {
+			var objMetadata = isNull(objMD) ? getMetadata(entity) : objMD ;
+			var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
+		}
 		var errors = {};
 		//loop through each property;
 		for(var i=1; i <= arrayLen(props); i++) {
