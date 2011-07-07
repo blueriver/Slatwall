@@ -39,7 +39,7 @@ Notes:
 component displayname="Product Image" entityname="SlatwallProductImage" table="SlatwallImage" persistent="true" extends="Image" discriminatorvalue="product" {
 			
 	// Related Entities
-	property name="product" cfc="Product" fieldtype="id,many-to-one" fkcolumn="productID";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	
 	public any function init() {
 		setDirectory("product");

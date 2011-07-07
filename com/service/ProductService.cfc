@@ -227,6 +227,33 @@ component extends="BaseService" accessors="true" {
     public boolean function updateSkus(required any product, required array skus) {
         return getSkuService().updateSkus(argumentCollection=arguments);
     }
+    
+	public any function addAlternateImage(required struct imageUploadResult, required any product, required struct data) {
+		//writeDump(var=arguments.data,top=3);
+		//abort;
+		var alternateImage = this.newProductImage();
+		var imageDirectory = arguments.product.getAlternateImageDirectory();
+		var imageExt = lcase(arguments.imageUploadResult.serverFileExt);
+		alternateImage.setImageExtension(imageExt);
+		arguments.product.addProductImage(alternateImage);
+		alternateImage = Super.save(entity=alternateImage, data=arguments.data, cleanseInput=true);
+		//alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
+		if(!alternateImage.hasErrors()) {
+			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
+			var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
+			if(!imageSaved) {
+				alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
+			}
+		} else {
+			//delete file in the temp directory
+		}
+		return alternateImage;
+	}
+	
+	public boolean function removeAlternateImage(required any image,required any product) {
+		arguments.product.removeProductImage(arguments.image);
+		return getFileService().removeImage(arguments.image.getImagePath());
+	}
 	
 	public any function save(required any Product,required struct data) {
 		// populate bean from values in the data Struct
@@ -256,6 +283,10 @@ component extends="BaseService" accessors="true" {
 			assignProductContent(arguments.Product,arguments.data.contentID);		
 			// set up associations between product and mura categories
 			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
+			//check for errors in the alternate image upload
+			if(structKeyExists(arguments.data,"image") && arguments.data.image.hasErrors()) {
+				arguments.product.addError(name="alternateImage",message=rbKey('entity.product.alternateImage_uploadError'));
+			}
 		}
 		
 		// make sure that the product code doesn't already exist

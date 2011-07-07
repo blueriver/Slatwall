@@ -82,6 +82,7 @@ component extends="BaseController" output=false accessors=true {
 		detail(rc);
 		getFW().setView("admin:product.detail");
 		rc.edit = true;
+		param name="rc.Image" default="#getProductService().newImage()#";
 	}
 
 	public void function list(required struct rc) {
@@ -102,13 +103,18 @@ component extends="BaseController" output=false accessors=true {
 			// set up options struct for generating skus if this is a new product
 			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
 		} else {
-			// set up sku array to handle any skus that were edited and/or added
+			// set up form collections to handle any skus/alternate images that were edited and/or added
 			var formCollections = getService("formUtilities").buildFormCollections(rc);
 			rc.skuArray = formCollections.skus;
+			rc.imageStruct = formCollections.image;
 			if(structKeyExists(formCollections,"attribute")){
 				rc.attributes = formCollections.attribute;
 			} else {
 				rc.attributes = {};
+			}
+			if(structKeyExists(rc, "productImageFile") && rc.productImageFile != "") {
+				var imageUploadResult = fileUpload(getTempDirectory(),"productImageFile","","makeUnique");
+				rc.image = getProductService().addAlternateImage(imageUploadResult,rc.product,rc.imageStruct);
 			}
 		}
 
@@ -137,8 +143,26 @@ component extends="BaseController" output=false accessors=true {
 				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 				rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
+				rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'),parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 				getFW().setView(action="admin:product.detail");
 			}
+		}
+	}
+	
+	public void function deleteImage(required struct rc) {
+		var product = getProductService().getProduct(rc.productID);
+		var image = getProductService().getImage(rc.imageID);
+		if(!isNull(product) && !isNull(image)) {
+			var removed = getProductService().removeAlternateImage(image,product);
+			if(removed) {
+				rc.message = rc.$.Slatwall.rbKey("admin.product.deleteImage_success");
+			} else {
+				rc.message = rc.$.Slatwall.rbKey("admin.product.deleteImage_error");
+				rc.messageType = "error";
+			}
+			getFW().redirect(action="admin:product.detail&productID=#product.getProductID()#",preserve="message,messageType");		
+		} else {
+			getFW().redirect(action="admin:product.detail&productID=#product.getProductID()#");			
 		}
 	}
 	

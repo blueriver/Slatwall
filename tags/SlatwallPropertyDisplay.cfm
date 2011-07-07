@@ -139,8 +139,15 @@ Notes:
 	<cfset local.metadata = getMetadata(attributes.object) />
 	<cfset local.propertyMetadata = structNew() />
 	
+	<!--- If this object has a getProperties() method (defined in the base entity class to also get inherited properties) use that to get the property array --->
+	<cfif structKeyExists(attributes.object,"getProperties")>
+		<cfset local.properties = attributes.object.getProperties() />
+	<cfelse>
+		<cfset local.properties = local.metadata.properties />
+	</cfif>
+	
 	<!--- Loop over properties in object and find metadata for this property --->
-	<cfloop array="#local.metadata.properties#" index="i">
+	<cfloop array="#local.properties#" index="i">
 		<cfif UCASE(i.name) eq UCASE(attributes.property)>
 			<cfset local.propertyMetadata = i />
 			<cfbreak />
@@ -392,6 +399,8 @@ Notes:
 			<!--- If the object has an error Bean, check for errors on this property --->
 			<cftry>
 				<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
+					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
+				<cfelseif len(attributes.object.getErrorBean().getError(attributes.property))>
 					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
 				</cfif>
 				<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
