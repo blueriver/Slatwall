@@ -64,6 +64,7 @@ Notes:
 						#view("frontend:checkout/payment/creditCard", params)#
 					</cfloop>
 				</cfif>
+				<input type="hidden" name="orderID" value="#$.slatwall.cart().getOrderID()#" />
 				<cf_SlatwallActionCaller action="frontend:checkout.processOrder" type="submit">
 			</form>
 		</cfif>
