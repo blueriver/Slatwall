@@ -220,7 +220,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function processOrder(struct data={}) {
 		// Lock down this determination so that the values getting called and set don't overlap
-		lock scope="Session" timeout="60" name="processOrder"  {
+		lock scope="Session" timeout="60" {
 			
 			var order = this.getOrder(arguments.data.orderID);
 			
