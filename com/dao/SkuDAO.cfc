@@ -63,4 +63,16 @@ component extends="BaseDAO" {
 		return ormExecuteQuery(hql,params);
 	}
 
+	public array function getProductSkusInOrderByOptions(required string productID) {
+		var hql = "
+			select distinct sku from SlatwallSku as sku
+			inner join sku.product as prod
+			inner join sku.options as opt
+			inner join opt.optionGroup as opg
+			where prod.productID = '#arguments.productID#'
+			order by opg.sortOrder, opt.sortOrder
+			";
+		
+		return ormExecuteQuery(hql);
+	}
 }

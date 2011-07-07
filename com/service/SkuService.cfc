@@ -239,5 +239,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
+	
+	public array function getProductSkusInOrderByOptions(required string productID) {
+		return getDAO().getProductSkusInOrderByOptions(productID=arguments.productID);
+	}
 
 }
