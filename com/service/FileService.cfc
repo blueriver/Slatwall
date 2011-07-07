@@ -176,7 +176,7 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		
 	public string function filterFilename(required string filename) {
 		var newFileName = "";
-		newfilename = replace(newfilename,"  "," ","all");
+		newfilename = replace(arguments.filename,"  "," ","all");
 		newfilename = replace(newfilename," ","-","all");
 		newfilename = reReplace(newfilename, "[^a-z|A-Z|0-9|\-]", "", "all");
 		return lcase(newfilename);
