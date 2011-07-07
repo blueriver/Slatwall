@@ -184,16 +184,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		save(arguments.order);
 	}
 	
-	public void function setOrderShippingMethodFromMethodOptionID(required any orderShipping, required string orderShippingMethodOptionID) {
-		var selectedOption = this.getOrderShippingMethodOption(arguments.orderShippingMethodOptionID);
-		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
-		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCharge());
+	private boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
+		return true;
 	}
 	
-	public boolean function setupOrderPayment(required any order, required struct data) {
+	private boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
+		return true;
+	}
+	
+	private boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
 		var result = true;
 		
-		var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
+		//var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
+	
+		if(order.getPaymentAmountTotal() < order.getTotal()) {
+			allPaymentsOK = setupOrderPayment(order, arguments.data);
+			if(allPaymentsOK && order.getPaymentAmountTotal() < order.getTotal()) {
+				allPaymentsOK = false;
+			}
+		}
 	
 		if(isNull(payment)) {
 			payment = getPaymentService().new("SlatwallOrderPayment#arguments.data.paymentMethodID#");
@@ -218,6 +227,24 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return result;
 	}
 	
+	private boolean function processOrderPayments(required any order) {
+		var allPaymentsProcessed = true;
+		
+		// Process All Payments and Save the ones that were successful
+		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i]#_checkoutTransactionType');
+			
+			if(transactionType != 'none') {
+				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
+				if(!paymentOK) {
+					allPaymentsProcessed = false;
+				}
+			}
+		}
+		
+		return allPaymentsProcessed;
+	}
+	
 	public any function processOrder(struct data={}) {
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="60" {
@@ -227,58 +254,42 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 				return true;
 			} else {
-				var allPaymentsOK = true;
+				// update and validate all aspects of the order
+				var validAccount = updateAndVerifyOrderAccount(order=order, data=arguments.data);
+				var validPayments = updateAndVerifyOrderPayments(order=order, data=arguments.data);
+				var validFulfillments = updateAndVerifyOrderFulfillments(order=order, data=arguments.data);
 				
-				if(order.getPaymentAmountTotal() < order.getTotal()) {
-					allPaymentsOK = setupOrderPayment(order, arguments.data);
-					if(allPaymentsOK && order.getPaymentAmountTotal() < order.getTotal()) {
-						allPaymentsOK = false;
-					}
-				}
-				
-				if(allPaymentsOK) {
-					// Process All Payments and Save the ones that were successful
-					for(var i=1; i <= arrayLen(order.getOrderPayments()); i++) {
-						// Check to see if the orderPaymentID is in the data, and if so save & validate before proceeding.
-						if( structKeyExists(arguments.data, "orderPaymentID") && arguments.data.orderPaymentID == order.getOrderPayments()[i].getOrderPaymentID() ) {
-							saveOrderPaymentCreditCard(order.getOrderPayments()[i], arguments.data);
-							if(order.getOrderPayments()[i].hasErrors()) {
-								allPaymentsOK = false;
-								break;
-							}
-						}
+				if(validAccount & validPayments & validFulfillments) {
+					// Double check that the order requirements list is blank
+					var orderRequirementsList = getOrderRequirementsList();
+					
+					if( !len(orderRequirementsList) ) {
+						// Process all of the order payments
+						var paymentsProcessed = processOrderPayments(order=order);
 						
-						var transactionType = setting('paymentMethod_creditCard_checkoutTransactionType');
-						
-						if(transactionType != 'none') {
-							var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
-							if(!paymentOK) {
-								allPaymentsOK = false;
+						// If processing was successfull then checkout
+						if(paymentsProcessed) {
+							
+							// If this order is the same as the current cart, then set the current cart to a new order
+							if(order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
+								getSessionService().getCurrent().setOrder(JavaCast("null",""));
 							}
+							
+							// Update the order status
+							order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+							
+							// Save the order to the database
+							getDAO().save(order);
+							
+							// Do a flush so that the order is commited to the DB
+							ormFlush();
+							
+							// Send out the e-mail
+							sendOrderConfirmationEmail(order);
+							
+							return true;
 						}
 					}
-				}
-				
-				// If all payments were successful, then change the order status and clear the cart.
-				if(allPaymentsOK) {
-					// Set the current cart to None
-					if(order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
-						getSessionService().getCurrent().setOrder(JavaCast("null",""));
-					}
-					
-					// Update the order status
-					order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
-					
-					// Save the order to the database
-					getDAO().save(order);
-					
-					// Do a flush so that the order is commited to the DB
-					ormFlush();
-					
-					// Send out the e-mail
-					sendOrderConfirmationEmail(order);
-					
-					return true;
 				}
 			}
 		} // END OF LOCK
@@ -308,21 +319,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Check if the order still requires a valid account
 		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
-			orderRequirementsList &= "account,";
+			orderRequirementsList = listAppend(orderRequirementsList, "account");
 		}
 		
 		// Check each of the fulfillment methods to see if they are ready to process
 		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments());i++) {
 			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
-				orderRequirementsList &= "fulfillment,#arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID()#,";		
+				orderRequirementsList = listAppend(orderRequirementsList, "fulfillment");
+				orderRequirementsList = listAppend(orderRequirementsList, arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID());
 			}
 		}
 		
 		// Make sure that the order total is the same as the total payments applied
 		if( arguments.order.getTotal() != arguments.order.getPaymentAmountTotal() ) {
-			orderRequirementsList &= "payment,";
+			orderRequirementsList = listAppend(orderRequirementsList, "payment");
 		}
 		
+		// Trim the last 
 		if(len(orderRequirementsList)) {
 			orderRequirementsList = left(orderRequirementsList,len(orderRequirementsList)-1);
 		}

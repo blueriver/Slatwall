@@ -38,6 +38,7 @@ Notes:
 --->
 <cfparam name="attributes.address" type="any" />
 <cfparam name="attributes.edit" type="boolean" default="true" />
+<cfparam name="attributes.fieldNamePrefix" type="string" default="" />
 <cfparam name="attributes.showName" type="boolean" default="true" />
 <cfparam name="attributes.showCompany" type="boolean" default="true" />
 <cfparam name="attributes.showStreetAddress" type="boolean" default="true" />
@@ -53,29 +54,35 @@ Notes:
 		<div class="addressDisplay">
 			<cfif attributes.edit>
 				<dl>
-					<cfif attributes.showCountry><cf_SlatwallPropertyDisplay object="#attributes.address#" property="countryCode" editType="select" edit="true" /></cfif>
-					<cfif attributes.showName><cf_SlatwallPropertyDisplay object="#attributes.address#" property="name" edit="true" /></cfif>
-					<cfif attributes.showCompany><cf_SlatwallPropertyDisplay object="#attributes.address#" property="company" edit="true" /></cfif>
+					<cfif attributes.showCountry>
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#countryCode" property="countryCode" editType="select" edit="true" />
+					</cfif>
+					<cfif attributes.showName>
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#name" property="name" edit="true" />
+					</cfif>
+					<cfif attributes.showCompany>
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#company" property="company" edit="true" />
+					</cfif>
 					<cfif attributes.address.getCountry().getStreetAddressShowFlag() and attributes.showStreetAddress>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="streetAddress" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#streetAddress" property="streetAddress" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getStreet2AddressShowFlag() and attributes.showStreet2Address>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="street2Address" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#street2Address" property="street2Address" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getCityShowFlag() and attributes.showCity>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="city" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#city" property="city" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getStateCodeShowFlag() and attributes.showState>
 						<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
-							<cf_SlatwallPropertyDisplay object="#attributes.address#" property="stateCode" editType="select" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#stateCode" property="stateCode" editType="select" edit="true" />
 						<cfelse>
-							<cf_SlatwallPropertyDisplay object="#attributes.address#" property="stateCode" editType="text" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#stateCode" property="stateCode" editType="text" edit="true" />
 						</cfif>
 					</cfif>
 					<cfif attributes.address.getCountry().getPostalCodeShowFlag() and attributes.showPostalCode>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" property="postalCode" edit="#attributes.edit#" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#fieldNamePrefix#postalCode" property="postalCode" edit="#attributes.edit#" />
 					</cfif>
-					<input type="hidden" name="addressID" value="#attributes.address.getAddressID()#" />
+					<input type="hidden" name="#fieldNamePrefix#addressID" value="#attributes.address.getAddressID()#" />
 				</dl>
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
@@ -83,6 +90,7 @@ Notes:
 							
 							var addressData = {
 								addressID : jQuery('input[name="addressID"]').val(),
+								fieldNamePrefix : '#attributes.fieldNamePrefix#',
 								showName : '#attributes.showName#',
 								showCompany : '#attributes.showCompany#',
 								showStreetAddress : '#attributes.showStreetAddress#',

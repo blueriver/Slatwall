@@ -164,6 +164,9 @@ component extends="framework" output="false" {
 			// Confirm Session Setup
 			getBeanFactory().getBean("SessionService").confirmSession();
 			
+			// Setup structured Data
+			request.context.structuredData = getBeanFactory().getBean("formUtilities").buildFormCollections(request.context);
+			
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {
 				controller("admin:BaseController.subSystemBefore");
