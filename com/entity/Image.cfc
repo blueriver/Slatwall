@@ -40,9 +40,9 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 			
 	// Persistent Properties
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="imageName" ormtype="string" persistent="true" validateRequired="true";
-	property name="imageDescription" ormtype="string" persistent="true" length="4000";
-	property name="imageExtension" persistent="true" ormtype="string";
+	property name="imageName" ormtype="string";
+	property name="imageDescription" ormtype="string" length="4000";
+	property name="imageExtension" ormtype="string";
 	
 	// Related entity properties
 	property name="imageType" cfc="Type" validateRequired="true" fieldtype="many-to-one" fkcolumn="imageTypeID";

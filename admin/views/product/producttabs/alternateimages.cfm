@@ -66,16 +66,15 @@ Notes:
 		<em>#$.slatwall.rbKey("admin.product.alternateImages.noAlternateImagesExist")#</em>
 	</cfif>
 	<cfif rc.edit>
-		<hr />
 		<!---<cf_SlatwallActionCaller action="admin:product.uploadAlternateImage" queryString="productID=#rc.product.getProductID()#" type="link" class="button">--->
 		<h4>#$.slatwall.rbKey("admin.product.alternateImages.uploadimage")#</h4>
+		<input type="file" id="productImageFile" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
+		<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="image.imageType" property="imageType" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="image.imageName" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="image.imageDescription" editType="textarea" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="image.imageType" property="imageType" edit="true">
 		
-		<input type="file" id="productImageFile" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
-<!---			<div id="actionButtons" class="clearfix">
-				<input type="submit" class="button uploadImage" id="adminproductuploadProductImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadAlternateImage')#" disabled="true" />
-			</div>--->
+<!---	<div id="actionButtons" class="clearfix">
+			<input type="submit" class="button uploadImage" id="adminproductuploadProductImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadAlternateImage')#" disabled="true" />
+		</div>--->
 	</cfif>	
 </cfoutput>
