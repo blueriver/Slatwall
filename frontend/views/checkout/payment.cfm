@@ -49,6 +49,7 @@ Notes:
 				<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="local.orderPayment">
 					<cfset params = structNew() />
 					<cfset params.orderPayment = local.orderPayment />
+					<cfset params.orderPaymentID = local.orderPayment.getOrderPaymentID() />
 					<cfif local.orderPayment.hasErrors() or (local.orderPayment.getAmountAuthorized() neq local.orderPayment.getAmount() and $.slatwall.setting("paymentMethod_creditCard_checkoutTransactionType") neq "none")>
 						<cfset local.paymentShown = true />
 						<cfset params.edit = true />
@@ -61,6 +62,8 @@ Notes:
 					<cfloop array="#rc.activePaymentMethods#" index="local.paymentMethod">
 						<cfset params = structNew() />
 						<cfset params.edit = true />
+						<cfset params.orderPayment = $.slatwall.getService("paymentService").newOrderPaymentCreditCard() />
+						<cfset params.orderPaymentID = "new1" />
 						#view("frontend:checkout/payment/creditCard", params)#
 					</cfloop>
 				</cfif>
