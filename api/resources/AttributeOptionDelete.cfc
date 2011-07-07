@@ -36,48 +36,21 @@
 	Notes:
 	
 */
-component extends="taffy.core.resource" {
-	
-	public any function getService(required string service) {
-		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
-	}
-	
-	public any function getFW() {
-		return getPluginConfig().getApplication().getValue("fw");
-	}
-	
-	public any function getPluginConfig() {
-		return application.slatwall.pluginConfig;
-	}
+component extends="BaseResource" taffy_uri="/attributeoption/delete/{attributeoptionID}/" {
 
-	
-	public string function rbKey(required string key) {
-		return getPluginConfig().getApplication().getValue("rbFactory").getKeyValue(session.rb,arguments.key);
-	}
-	
-	public any function secureDisplay() {
-		return getFW().secureDisplay(argumentcollection=arguments);
-	}
-	
-	public any function buildURL() {
-		return getFW().buildURL(argumentcollection=arguments);
-	}
-	
-	//use this instead of onRequestStart()
-	public void function controllerProxy(required string action, struct rc={}){
-		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		
-		url.slatAction = arguments.action;
-		
-		for(var key in arguments.rc) {
-			form[key] = arguments.rc[key];
+	public any function post(string attributeOptionID) {
+		var attributeOption = getService("attributeService").getAttributeOption(arguments.attributeOptionID);
+		if(!isNull(attributeOption)) {
+			var deleteResponse = getAttributeService().delete(attributeOption);
+			if( !deleteResponse.hasErrors() ) {
+				data.success=1;
+				data.message = rbKey("admin.attribute.deleteAttributeOption_success");
+			} else {
+				data.success=0;
+				data.message=deleteResponse.getData().getErrorBean().getError("delete");
+			}
 		}
-		
-		slatwallFW.onRequestStart(cgi.script_nume);
-		
-		slatwallFW.setView("frontend:event.blank");
-		
-		slatwallFW.onRequest(cgi.script_nume);
+		return representationOf(data).withStatus(200);
 	}
 	
 }

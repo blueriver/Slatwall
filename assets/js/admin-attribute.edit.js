@@ -141,13 +141,13 @@ function deleteAttributeOption(id){
 	var params = {attributeOptionID: id, asynch: 'true', cacheID: Math.random()};
 	
 	$.post("index.cfm?slatAction=admin:attribute.deleteAttributeOption",params, function(data){
-		if (data.success) {
+		if (data.SUCCESS) {
 			$('tr#' + id).fadeOut('normal', function(){
 				$(this).remove();
 			});
 		}
 		else {
-			$("#message" + id).html(data.message).show("fast");
+			$("#message" + id).html(data.MESSAGE).show("fast");
 		}
 	}, "json");
 }	
