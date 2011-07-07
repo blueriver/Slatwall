@@ -218,26 +218,31 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return result;
 	}
 	
-	public any function processOrder(required any order, struct data={}) {
+	public any function processOrder(struct data={}) {
 		// Lock down this determination so that the values getting called and set don't overlap
-		lock scope="Session" timeout="60" {
-			if(arguments.order.getOrderStatusType().getSystemCode() == "ostNotPlaced") {
+		lock scope="Session" timeout="60" name="processOrder"  {
+			
+			var order = this.getOrder(arguments.data.orderID);
+			
+			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
+				return true;
+			} else {
 				var allPaymentsOK = true;
 				
-				if(arguments.order.getPaymentAmountTotal() < arguments.order.getTotal()) {
-					allPaymentsOK = setupOrderPayment(arguments.order, arguments.data);
-					if(allPaymentsOK && arguments.order.getPaymentAmountTotal() < arguments.order.getTotal()) {
+				if(order.getPaymentAmountTotal() < order.getTotal()) {
+					allPaymentsOK = setupOrderPayment(order, arguments.data);
+					if(allPaymentsOK && order.getPaymentAmountTotal() < order.getTotal()) {
 						allPaymentsOK = false;
 					}
 				}
 				
 				if(allPaymentsOK) {
 					// Process All Payments and Save the ones that were successful
-					for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
+					for(var i=1; i <= arrayLen(order.getOrderPayments()); i++) {
 						// Check to see if the orderPaymentID is in the data, and if so save & validate before proceeding.
-						if( structKeyExists(arguments.data, "orderPaymentID") && arguments.data.orderPaymentID == arguments.order.getOrderPayments()[i].getOrderPaymentID() ) {
-							saveOrderPaymentCreditCard(arguments.order.getOrderPayments()[i], arguments.data);
-							if(arguments.order.getOrderPayments()[i].hasErrors()) {
+						if( structKeyExists(arguments.data, "orderPaymentID") && arguments.data.orderPaymentID == order.getOrderPayments()[i].getOrderPaymentID() ) {
+							saveOrderPaymentCreditCard(order.getOrderPayments()[i], arguments.data);
+							if(order.getOrderPayments()[i].hasErrors()) {
 								allPaymentsOK = false;
 								break;
 							}
@@ -246,7 +251,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						var transactionType = setting('paymentMethod_creditCard_checkoutTransactionType');
 						
 						if(transactionType != 'none') {
-							var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], transactionType);
+							var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
 							if(!paymentOK) {
 								allPaymentsOK = false;
 							}
@@ -257,26 +262,27 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// If all payments were successful, then change the order status and clear the cart.
 				if(allPaymentsOK) {
 					// Set the current cart to None
-					if(arguments.order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
+					if(order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
 						getSessionService().getCurrent().setOrder(JavaCast("null",""));
 					}
 					
 					// Update the order status
-					arguments.order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+					order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
 					
 					// Save the order to the database
-					getDAO().save(arguments.order);
+					getDAO().save(order);
 					
 					// Do a flush so that the order is commited to the DB
 					ormFlush();
 					
 					// Send out the e-mail
-					sendOrderConfirmationEmail(arguments.order);
+					sendOrderConfirmationEmail(order);
 					
 					return true;
 				}
 			}
-		}
+		} // END OF LOCK
+		
 		return false;
 	}
 
