@@ -74,9 +74,9 @@ jQuery(document).ready(function() {
     $(".uploadImage").colorbox({
         onComplete: function() {
 			// upload button is disabled unless file field is filled
-            $('input#skuImageFile').change(function(){
+            $('input.imageFile').change(function(){
                     if($(this).val()) {
-                        $('input#adminproductuploadSkuImage').removeAttr('disabled');
+                        $('input.uploadImage').removeAttr('disabled');
                     } 
             });         
         }

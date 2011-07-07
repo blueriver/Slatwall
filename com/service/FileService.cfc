@@ -165,10 +165,10 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		// get file name without extension
 		var baseFileName = listFirst(fileName,".");
 		var fileList = directoryList(expandPath(getDirectoryFromPath(arguments.filePath)),true,"query");
-		// loop through directory and delete base image and all resized versions
+		// loop through directory and delete base image and all resized versions in the cache subdirectory
 		for(var i = 1; i<= fileList.recordCount; i++) {
 			if(fileList.type[i] == "file" && fileList.name[i].startsWith(baseFileName)) {
-				fileDelete(fileList.directory[1] & "/" & fileList.name[i]);
+				fileDelete(fileList.directory[i] & "/" & fileList.name[i]);
 			}
 		}
 		return true;

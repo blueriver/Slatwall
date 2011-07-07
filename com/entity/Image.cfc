@@ -40,12 +40,12 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 			
 	// Persistent Properties
 	property name="imageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="imageName" ormtype="string";
-	property name="imageDescription" ormtype="string" length="4000";
-	property name="imageExtension" ormtype="string";
+	property name="imageName" ormtype="string" persistent="true" validateRequired="true";
+	property name="imageDescription" ormtype="string" persistent="true" length="4000";
+	property name="imageExtension" persistent="true" ormtype="string";
 	
 	// Related entity properties
-	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID";
+	property name="imageType" cfc="Type" validateRequired="true" fieldtype="many-to-one" fkcolumn="imageTypeID";
 	
 	// Special helper property
 	property name="directory" insert="false" update="false";
@@ -75,6 +75,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		
 		// If there were sizes specified, get the resized image path
 		if(arguments.width != 0 || arguments.height != 0) {
+			arguments.imagePath=path;
 			path = getResizedImagePath(argumentcollection=arguments);	
 		}
 		
@@ -82,12 +83,25 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		var img = imageRead(expandPath(path));
 		
 		// Setup Alt & Class for the image
-		if(arguments.alt == "") {
+		if(arguments.alt == "" && len(getImageName())) {
 			arguments.alt = "#getImageName()#";
 		}
 		if(arguments.class == "") {
 			arguments.class = "productImage";	
 		}
 		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
+	}
+	
+	public array function getImageTypeOptions() {
+		if(!structKeyExists(variables, "imageTypeOptions")) {
+			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallType");
+			smartList.addSelect(propertyIdentifier="type", alias="name");
+			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="itProduct");
+			smartList.addOrder("type|ASC");
+			
+			variables.imageTypeOptions = smartList.getRecords();
+		}
+		return variables.imageTypeOptions;
 	}
 }
