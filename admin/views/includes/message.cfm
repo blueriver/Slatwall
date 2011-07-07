@@ -41,7 +41,7 @@ Message type is in rc.messagetype, which styles the message appropriately. Curre
 --->
 
 <cfoutput>
-<cfif len(trim(rc.message)) gt 0>
+<cfif structKeyExists(rc,"message") && structKeyExists(rc,"messageType") && len(trim(rc.message)) gt 0>
 	<cfset local.message = rc.$.Slatwall.rbKey(rc.message) />
 	<cfif right(local.message,8) eq "_missing">
 		<cfset local.message = rc.message />

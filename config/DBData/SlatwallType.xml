@@ -79,6 +79,12 @@
 		
 		<Record typeID="444df2ce9c74fa886435c08706d343db" type="Image Types" systemCode="imageType" />
 		<Record typeID="444df2cfd2ed41d2bb36b98a714f1dc1" parentTypeID="444df2ce9c74fa886435c08706d343db" type="Product" systemCode="itProduct" />
+		<!-- Product Image Types -->
+		<Record typeID="444df2d1b8fcd2ad08d97e58d534a431" parentTypeID="444df2cfd2ed41d2bb36b98a714f1dc1" type="Front" systemCode="pitFront" />
+		<Record typeID="444df348ba46c18b03339455d9cf24b2" parentTypeID="444df2cfd2ed41d2bb36b98a714f1dc1" type="Back" systemCode="pitBack" />
+		<Record typeID="444df347e6ab9f85738d49cd1c8e7487" parentTypeID="444df2cfd2ed41d2bb36b98a714f1dc1" type="Left" systemCode="pitLeft" />
+		<Record typeID="444df346917b3573c3949f12a89cc9c2" parentTypeID="444df2cfd2ed41d2bb36b98a714f1dc1" type="Right" systemCode="pitRight" />	
+		<!-- ******************* -->	
 		<Record typeID="444df2d0f5bac0123ad513b7c5c59bb2" parentTypeID="444df2ce9c74fa886435c08706d343db" type="Account" systemCode="itAccount" />
 		
 	</Records>
@@ -86,8 +92,6 @@
 <!--
 Below Are UUID's to use... delete after using
 
-
-444df2d1b8fcd2ad08d97e58d534a431
 444df2d2bd86e1f290c2cce99d5ca2d8
 444df2d3c0420d6b13d2baf2a0c7e1f2
 444df2d4cad3af5f4465a21f7d1b5f6c
@@ -204,7 +208,4 @@ Below Are UUID's to use... delete after using
 444df343e718919241014fbed8cad228
 444df344c1e15292945f64866f2c3c11
 444df3450dbdc1e33d01d977dbb96fb7
-444df346917b3573c3949f12a89cc9c2
-444df347e6ab9f85738d49cd1c8e7487
-444df348ba46c18b03339455d9cf24b2
 -->

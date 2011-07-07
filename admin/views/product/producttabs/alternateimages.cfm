@@ -36,40 +36,46 @@
 Notes:
 
 --->
-
 <cfoutput>
+	<cfif arrayLen(rc.product.getImages())>
 	<table class="stripe">
 		<tr>
-			<th>Image Preview</th>
-			<th>Image Type</th>
-			<th>Image Name</th>
-			<th class="varWidth">Image Description</th>
+			<th>#$.slatwall.rbKey("admin.product.alternateImages.preview")#</th>
+			<th>#$.slatwall.rbKey("entity.image.imageType")#</th>
+			<th>#$.slatwall.rbKey("entity.image.imageName")#</th>
+			<th class="varWidth">#$.slatwall.rbKey("entity.image.imageDescription")#</th>
 			<th class="administration">&nbsp;</th>
 		</tr>
-	</table>
 	<cfloop array="#rc.product.getImages()#" index="local.image" >
+		<cfif len(local.image.getImageID())>
 		<tr>
-			<td>#local.image.getImage()#</td>
+			<td>#local.image.getImage(height="120", width="120")#</td>
 			<td>#local.image.getImageType().getType()#</td>
 			<td>#local.image.getImageName()#</td>
 			<td class="varWidth">#local.image.getImageDescription()#</td>
 			<td class="administration">
 				<ul class="one">
-					<cf_SlatwallActionCaller action="admin:product.deleteImage" querystring="imageID=#local.image.getImageID()#" class="delete" type="list">
+					<cf_SlatwallActionCaller action="admin:product.deleteImage" querystring="imageID=#local.image.getImageID()#&productID=#rc.product.getProductID()#" confirmRequired="true" class="delete" type="list">
 				</ul>
 			</td>
 		</tr>
+		</cfif>
 	</cfloop>
+	</table>
+	<cfelse>
+		<em>#$.slatwall.rbKey("admin.product.alternateImages.noAlternateImagesExist")#</em>
+	</cfif>
 	<cfif rc.edit>
 		<hr />
-		<form name="uploadImage">
-			<h4>Upload Image</h4>
-			<cfset rc.blankImage = entityNew("SlatwallImage") />
-			<cf_SlatwallPropertyDisplay object="#rc.blankImage#" property="imageName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.blankImage#" property="imageDescription" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.blankImage#" property="imageType" edit="#rc.edit#">
-			
-			<input type="file" id="productImageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
-		</form>
+		<!---<cf_SlatwallActionCaller action="admin:product.uploadAlternateImage" queryString="productID=#rc.product.getProductID()#" type="link" class="button">--->
+		<h4>#$.slatwall.rbKey("admin.product.alternateImages.uploadimage")#</h4>
+		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="image.imageName" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="image.imageDescription" editType="textarea" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="image.imageType" property="imageType" edit="true">
+		
+		<input type="file" id="productImageFile" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
+<!---			<div id="actionButtons" class="clearfix">
+				<input type="submit" class="button uploadImage" id="adminproductuploadProductImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadAlternateImage')#" disabled="true" />
+			</div>--->
 	</cfif>	
 </cfoutput>
