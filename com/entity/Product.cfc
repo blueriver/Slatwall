@@ -92,7 +92,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
 	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
-	property name="skusInOrderByOption" type="array" persistent="false";   
+	property name="sortedSkus" type="array" persistent="false";   
 	
 	// Calculated Properties
 	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
@@ -159,19 +159,19 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     }
     	
 	
-    public array function getSkus(orderByOptions=false) {
-        if(orderByOptions) {
-        	return getSkusInOrderByOption();
+    public array function getSkus(sorted=false) {
+        if(sorted) {
+        	return getSortedSkus();
         } else {
         	return variables.skus;
         }
     }
     
-    public array function getSkusInOrderByOption() {
-    	if(isNull(variables.skusInOrderByOption)) {
-        	variables.skusInOrderByOption = getService("skuService").getProductSkusInOrderByOptions(skus=variables.skus);
+    public array function getSortedSkus() {
+    	if(isNull(variables.sortedSkus)) {
+        	variables.sortedSkus = getService("skuService").getSortedProductSkus(productID=getProductID(), skus=getSkus());
         }
-        return variables.skusInOrderByOption;
+        return variables.sortedSkus;
     }
 	
 	public any function getSkuByID(required string skuID) {

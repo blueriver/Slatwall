@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,10 +35,10 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-
+--->
+<cfcomponent extends="BaseDAO">
 	
+	<cfscript>
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
 	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
 		var params = [];
@@ -62,17 +62,36 @@ component extends="BaseDAO" {
 		}
 		return ormExecuteQuery(hql,params);
 	}
+	</cfscript>
 
-	public array function getProductSkusInOrderByOptions(required string productID) {
-		var hql = "
-			select distinct sku from SlatwallSku as sku
-			inner join sku.product as prod
-			inner join sku.options as opt
-			inner join opt.optionGroup as opg
-			where prod.productID = '#arguments.productID#'
-			order by opg.sortOrder, opt.sortOrder
-			";
+	<cffunction name="getSortedProductSkusID">
+		<cfargument name="productID" type="string" required="true" />
 		
-		return ormExecuteQuery(hql);
-	}
-}
+		<cfset var sorted = "" />
+		
+		<cfquery name="sorted">
+			SELECT
+				SlatwallSku.skuID
+			FROM
+				SlatwallSku
+			  INNER JOIN
+				SlatwallSkuOption on SlatwallSku.skuID = SlatwallSkuOption.skuID
+			  INNER JOIN
+				SlatwallOption on SlatwallSkuOption.optionID = SlatwallOption.optionID
+			  INNER JOIN
+				SlatwallOptionGroup on SlatwallOption.optionGroupID = SlatwallOptionGroup.optionGroupID
+			WHERE
+				SlatwallSku.productID = <cfqueryparam value="#arguments.productID#" cfsqltype="cf_sql_varchar" />
+			GROUP BY
+				SlatwallSku.skuID, SlatwallSku.skuCode
+			ORDER BY
+				sum(
+					CAST( SlatwallOption.sortOrder as float ) * 
+					POWER( CAST(10000 as float), CAST((20 - SlatwallOptionGroup.sortOrder) as float ) )
+				)
+		</cfquery>
+		
+		<cfreturn sorted />
+	</cffunction>
+	
+</cfcomponent>

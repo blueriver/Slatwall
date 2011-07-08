@@ -242,24 +242,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
 	
-	public array function getProductSkusInOrderByOptions(required array skus) {
-		var orderedStructure = {};
-		var sortedArray = [];
-		var maximumOptionSortOrders = getOptionService().getMaximumOptionSortOrders();
-		
-		for(var i=1; i <= arrayLen(arguments.skus); i++) {
-			var sortValue = 1;
-			for(var s=1; s<=arrayLen(arguments.skus[i].getOptions()); s++) {
-				sortValue += ( arguments.skus[i].getOptions()[s].getSortOrder() * maximumOptionSortOrders[1] ^ (maximumOptionSortOrders[2] - arguments.skus[i].getOptions()[s].getOptionGroup().getSortOrder()) );
-			}
-			orderedStructure[sortValue] = arguments.skus[i];
+	public array function getSortedProductSkus(required string productID, required array skus) {
+		var sortedSkuIDQuery = getDAO().getSortedProductSkusID(arguments.productID);
+		var sortedArray = arrayNew(1);
+
+		for(var i=1; i<=sortedSkuIDQuery.recordCount; i++) {
+			arrayAppend(sortedArray, sortedSkuIDQuery.skuID[i]);
 		}
 		
-		var scoreArray = structKeyArray(orderedStructure);
-		arraySort(scoreArray, "numeric", "asc");
-		
-		for(var i=1; i <= arrayLen(scoreArray); i++) {
-			arrayAppend(sortedArray, orderedStructure[scoreArray[i]]);	
+		for(var i=1; i<=arrayLen(arguments.skus); i++) {
+			sortedArray[arrayFind(sortedArray, arguments.skus[i].getSkuID())] = arguments.skus[i];
 		}
 		
 		return sortedArray;
