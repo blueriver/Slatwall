@@ -108,8 +108,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public any function populate(required struct data, string propList=getUpdateKeys(),boolean cleanseInput=false) {
-			var props = getProperties();
-			for( var i=1;i<=arrayLen(props);i++ ) {
+		var props = getProperties();
+		for( var i=1;i<=arrayLen(props);i++ ) {
 			local.theProperty = props[i];
 			// If a propList was passed in, use it to filter
 			if( !listLen(arguments.propList) || listContains(arguments.propList,local.theProperty.name) ) {
@@ -136,19 +136,21 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				// do many-to-one
 				} else if( local.theProperty.fieldType == "many-to-one" ) {
 					if( structKeyExists(arguments.data,local.theProperty.fkcolumn) ) {
-						local.fkValue = arguments.data[local.theProperty.fkcolumn];
+						var manyToOneData = arguments.data[local.theProperty.fkcolumn];
 					} else if( structKeyExists(arguments.data,local.theProperty.name) ) {
-						local.fkValue = arguments.data[local.theProperty.name];
+						var manyToOneData = arguments.data[local.theProperty.fkcolumn];
+					} else {
+						var manyToOneData = "";
 					}
-					if( structKeyExists(local,"fkValue") ) {
-						local.varValue = EntityLoadByPK("Slatwall" & local.theProperty.cfc,local.fkValue);
-						if( !isNull(local.varValue) ) {
-							_setProperty(local.theProperty.name,local.varValue);
+					if(manyToOneData != "" && isSimpleValue(manyToOneData)) {
+						var fkValue = manyToOneData;
+						var varValue = EntityLoadByPK("Slatwall" & local.theProperty.cfc, fkValue);
+						if( !isNull(varValue) ) {
+							_setProperty(local.theProperty.name, varValue);
 						} else {
 							_setPropertyNull(local.theProperty.name);
 						}
 					}
-				
 				}
 			}
 		}

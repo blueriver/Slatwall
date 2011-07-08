@@ -184,15 +184,32 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		save(arguments.order);
 	}
 	
-	private boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
+	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
 		return true;
 	}
 	
-	private boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
+	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
+		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderFulfillments")) {
+			var fulfillmentsDataArray = data.structuredData.orderFulfillments;
+			for(var i=1; i<= arrayLen(fulfillmentsDataArray); i++) {
+				var fulfillment = this.getOrderFulfillment(fulfillmentsDataArray[i].orderFulfillmentID, true);
+				if(arguments.order.hasOrderFulfillment(fulfillment)) {
+					fulfillment = this.saveOrderFulfillment(fulfillment, fulfillmentsDataArray[i]);
+				}		
+			}
+		}
+		
+		// Check each of the fulfillment methods to see if they are complete
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments());i++) {
+			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
+				return false;
+			}
+		}
+		
 		return true;
 	}
 	
-	private boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
+	public boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
 		var result = true;
 		
 		//var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
@@ -345,6 +362,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
 		arguments.orderFulfillment.populate(arguments.data);
+		
 		
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {

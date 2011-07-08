@@ -38,6 +38,8 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="optionService" type="any";
+
 	public any function getSkuSmartList(string productID, struct data={}){
 		arguments.entityName = "SlatwallSku";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
@@ -240,8 +242,27 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
 	
-	public array function getProductSkusInOrderByOptions(required string productID) {
-		return getDAO().getProductSkusInOrderByOptions(productID=arguments.productID);
+	public array function getProductSkusInOrderByOptions(required array skus) {
+		var orderedStructure = {};
+		var sortedArray = [];
+		var maximumOptionSortOrders = getOptionService().getMaximumOptionSortOrders();
+		
+		for(var i=1; i <= arrayLen(arguments.skus); i++) {
+			var sortValue = 1;
+			for(var s=1; s<=arrayLen(arguments.skus[i].getOptions()); s++) {
+				sortValue += ( arguments.skus[i].getOptions()[s].getSortOrder() * maximumOptionSortOrders[1] ^ (maximumOptionSortOrders[2] - arguments.skus[i].getOptions()[s].getOptionGroup().getSortOrder()) );
+			}
+			orderedStructure[sortValue] = arguments.skus[i];
+		}
+		
+		var scoreArray = structKeyArray(orderedStructure);
+		arraySort(scoreArray, "numeric", "asc");
+		
+		for(var i=1; i <= arrayLen(scoreArray); i++) {
+			arrayAppend(sortedArray, orderedStructure[scoreArray[i]]);	
+		}
+		
+		return sortedArray;
 	}
 
 }

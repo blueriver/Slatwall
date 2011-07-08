@@ -161,8 +161,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
     public array function getSkus(orderByOptions=false) {
         if(orderByOptions) {
-        	// Temporary until i can learn some math: return getSkusInOrderByOption();
-            return variables.skus;
+        	return getSkusInOrderByOption();
         } else {
         	return variables.skus;
         }
@@ -170,7 +169,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     
     public array function getSkusInOrderByOption() {
     	if(isNull(variables.skusInOrderByOption)) {
-        	variables.skusInOrderByOption = getService("skuService").getProductSkusInOrderByOptions(productID=this.getProductID());
+        	variables.skusInOrderByOption = getService("skuService").getProductSkusInOrderByOptions(skus=variables.skus);
         }
         return variables.skusInOrderByOption;
     }
