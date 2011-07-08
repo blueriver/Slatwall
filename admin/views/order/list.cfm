@@ -43,6 +43,10 @@ Notes:
 <cfparam name="rc.showAdvancedSearch" default=false />
 
 <cfoutput>
+	
+<ul id="navTask">
+    <cf_SlatwallActionCaller action="admin:order.listcart" type="list">
+</ul>
 
 <div class="svoadminorderlist">
 	<form action="#buildURL('admin:order.list')#" method="post">

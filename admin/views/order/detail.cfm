@@ -47,6 +47,7 @@ Notes:
 
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:order.list" type="list">
+	<cf_SlatwallActionCaller action="admin:order.listcart" type="list">
 </ul>
 
 <!--- Display buttons of available order actions --->
