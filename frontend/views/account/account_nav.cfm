@@ -37,14 +37,17 @@ Notes:
 
 --->
 <cfoutput>
-<ul>
+<ul id="accountNav">
+	<cfif request.action neq "frontend:account.detail">
 	<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
-<cfif arrayLen($.slatwall.account().getOrders())>
+	</cfif>
+<cfif arrayLen($.slatwall.account().getOrders()) and request.action neq "frontend:account.listorder">
 	<li><a href="?slatAction=frontend:account.listorder">View Orders</a></li>
 </cfif>
+<cfif request.action neq "frontend:account.edit">
 	<li>
 		<a href="?slatAction=frontend:account.edit">Edit Profile</a>
 	</li>
+</cfif>
 </ul>
-#body#
 </cfoutput>

@@ -36,12 +36,14 @@
 Notes:
 
 --->
-
+<cfoutput>
+#view("account/account_nav")#
 <cfset $.event('noCache',1)>
 <cfset $.event('forceSSL',$.getSite().getExtranetSSL())/>
 <cfset local.eventOutput=application.pluginManager.renderEvent("onSiteEditProfileRender",$.event())>
 <cfif len(local.eventOutput)>
-<cfoutput>#local.eventOutput#</cfoutput>
+#local.eventOutput#
 <cfelse>
-<cfoutput>#$.dspObject_Include(thefile='dsp_edit_profile.cfm')#</cfoutput>
+#$.dspObject_Include(thefile='dsp_edit_profile.cfm')#
 </cfif>
+</cfoutput>
