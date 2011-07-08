@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="params.orderFulfillment" type="any" />
+<cfparam name="params.orderFulfillmentIndex" type="string" />
 <cfparam name="params.edit" type="boolean" />
 
 <cfif not isNull(params.orderFulfillment.getShippingAddress())>
@@ -50,8 +51,8 @@ Notes:
 		<cfif params.edit><form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveFulfillment" method="post"></cfif>
 			<div class="shippingAddress">
 				<h4>Shipping Address</h4>
-				<cf_SlatwallAddressDisplay address="#local.address#" fieldNamePrefix="orderFulfillments.#params.orderFulfillment.getOrderFulfillmentID()#.shippingAddress." edit="#params.edit#">
-				<input type="hidden" name="orderFulfillments.#params.orderFulfillment.getOrderFulfillmentID()#.orderFulfillmentID" value="#params.orderFulfillment.getOrderFulfillmentID()#" />
+				<cf_SlatwallAddressDisplay address="#local.address#" fieldNamePrefix="orderFulfillments[#params.orderFulfillmentIndex#].shippingAddress." edit="#params.edit#">
+				<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].orderFulfillmentID" value="#params.orderFulfillment.getOrderFulfillmentID()#" />
 			</div>
 			<cfif not isNull(params.orderFulfillment.getShippingAddress())>
 			<div class="shippingMethod">
