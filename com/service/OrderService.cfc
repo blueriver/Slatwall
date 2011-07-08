@@ -224,6 +224,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			var paymentsDataArray = data.structuredData.orderPayments;
 			for(var i=1; i<= arrayLen(paymentsDataArray); i++) {
 				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
+				
 				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
 					if(payment.isNew() && !structKeyExists(paymentsDataArray[i], "amount")) {
 						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
@@ -256,7 +257,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Process All Payments and Save the ones that were successful
 		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i]#_checkoutTransactionType');
+			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i].getPaymentMethodID()#_checkoutTransactionType');
 			
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
@@ -283,9 +284,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var validPayments = updateAndVerifyOrderPayments(order=order, data=arguments.data);
 				var validFulfillments = updateAndVerifyOrderFulfillments(order=order, data=arguments.data);
 				
-				if(validAccount & validPayments & validFulfillments) {
+				if(validAccount && validPayments && validFulfillments) {
 					// Double check that the order requirements list is blank
-					var orderRequirementsList = getOrderRequirementsList();
+					var orderRequirementsList = getOrderRequirementsList(order);
 					
 					if( !len(orderRequirementsList) ) {
 						// Process all of the order payments
@@ -386,7 +387,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Populate Address And check if it has changed
 			var serializedAddressBefore = address.simpleValueSerialize();
-			address.populate(data);
+			address.populate(data.shippingAddress);
 			var serializedAddressAfter = address.simpleValueSerialize();
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
@@ -525,7 +526,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Populate Address
-			address.populate(arguments.data);
+			address.populate(arguments.data.billingAddress);
 			
 			// Validate Address
 			address = getAddressService().validateAddress(address);

@@ -106,7 +106,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:checkout.detail");
 	}
 	
-	public void function saveFulfillment(required struct rc) {
+	public void function saveOrderFulfillments(required struct rc) {
 		rc.guestAccountOK = true;
 		
 		getOrderService().updateAndVerifyOrderFulfillments(order=$.slatwall.cart(), data=rc);

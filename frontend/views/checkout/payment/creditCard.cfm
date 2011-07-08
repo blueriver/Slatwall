@@ -58,22 +58,22 @@ Notes:
 					<dt>Same As Shipping</dt>
 					<dd><input type="hidden" name="sameAsShipping" value="" /><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
 				</dl>
-				<cf_SlatwallAddressDisplay address="#local.address#" filedNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="true">
+				<cf_SlatwallAddressDisplay address="#local.address#" fieldNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="#params.edit#">
 			<cfelse>
-				<cf_SlatwallAddressDisplay address="#local.address#" filedNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="true">
+				<cf_SlatwallAddressDisplay address="#local.address#" fieldNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="#params.edit#">
 			</cfif>
 		</div>
 		<div class="paymentMethod">
 			<h4>Credit Card Details</h4>
-			<input type="hidden" name="paymentMethods[#params.orderPaymentIndex#].paymentMethodID" value="creditCard" />
-			<input type="hidden" name="paymentMethods[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
+			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodID" value="creditCard" />
+			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
 			<cfif params.orderPayment.getErrorBean().hasError('processing')>
 				<div class="error">#params.orderPayment.getErrorBean().getError('processing')#</div>
 			</cfif> 
 			<dl>
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayments[#params.orderPaymentIndex#].nameOnCreditCard" property="nameOnCreditCard" edit="#params.edit#" /> 
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayments[#params.orderPaymentIndex#].creditCardNumber" property="creditCardNumber" noValue="true" edit="#params.edit#" />
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayments[#params.orderPaymentIndex#].securityCode" property="securityCode" noValue="true" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].nameOnCreditCard" property="nameOnCreditCard" edit="#params.edit#" /> 
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].creditCardNumber" property="creditCardNumber" noValue="true" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].securityCode" property="securityCode" noValue="true" edit="#params.edit#" />
 				<dt class="spdcreditcardexperationdate">
 					<label for="experationMonth">Expires</label>
 				</dt>
