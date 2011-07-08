@@ -207,11 +207,23 @@ table td.administration li.zoomOut {
 	width: 16px;
 	display: none;
 }
-
+  
 td.property {
 	text-align: left;
 	font-weight: bold;
 }
+
+/*******   Forms   ********/
+
+label.required,
+form div.required {
+	font-weight: bold;
+	color: #000000;
+	padding-right: 1em;
+	background: url("../images/admin.ui.required.gif") no-repeat scroll right center transparent;
+}
+
+
 
 div.dashboardSection {
 	width:500px;
