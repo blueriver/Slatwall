@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,32 +35,13 @@
 
 Notes:
 
-*/
-component persistent="false" accessors="true" output="false" extends="BaseController" {
+--->
 
-	property name="accountService" type="any";
-	property name="orderService" type="any";
-	
-	public void function detail(required struct rc) {
-	}
-	
-	public void function edit(required struct rc) {;
-	}
-	
-	public void function save(required struct rc) {
-		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
-		getFW().setView("frontend:account.detail");
-	}
-	
-	public void function detailOrder(required struct rc) {
-		param name="rc.orderID" default="";
-		
-		rc.order = getOrderService().getOrder(rc.orderID);
-		
-		// Check to make sure that the order being requested is actually the customers
-		if(!isNull(rc.order.getAccount()) && rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
-			rc.order = getOrderService().newOrder();
-		}
-	}
-	
-}
+<cfset $.event('noCache',1)>
+<cfset $.event('forceSSL',$.getSite().getExtranetSSL())/>
+<cfset local.eventOutput=application.pluginManager.renderEvent("onSiteEditProfileRender",$.event())>
+<cfif len(local.eventOutput)>
+<cfoutput>#local.eventOutput#</cfoutput>
+<cfelse>
+<cfoutput>#$.dspObject_Include(thefile='dsp_edit_profile.cfm')#</cfoutput>
+</cfif>

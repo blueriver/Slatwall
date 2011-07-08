@@ -49,13 +49,31 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
-	public void function setAccount(required Account account) {
-		variables.account = arguments.account;
-		if(!arguments.account.hasAccountEmailAddress(this)) {
-			arrayAppend(arguments.account.getAccountEmailAddresses(),this);
-		}
-	}
+	
+/******* Association management methods for bidirectional relationships **************/
+	
+	// Account (many-to-one)
+	 
+ 	public void function setAccount(required any Account) {     
+ 	   variables.Account = arguments.Account;     
+ 	   if(!arguments.Account.hasAccountEmailAddress(this)) {     
+ 	       arrayAppend(arguments.Account.getAccountEmailAddresses(),this);     
+ 	   }     
+ 	}    
+ 	     
+  	public void function removeAccount(any Account) {     
+  	   if(!structKeyExists(arguments,"Account")) {     
+  	   		arguments.Account = variables.Account;     
+  	   }     
+        var index = arrayFind(arguments.Account.getAccountEmailAddresses(),this);     
+        if(index > 0) {     
+            arrayDeleteAt(arguments.Account.getAccountEmailAddresses(),index);     
+        }         
+        structDelete(variables,"Account");     
+     }
+	 
+/************   END Association Management Methods   *******************/
 	
 }

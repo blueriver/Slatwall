@@ -49,17 +49,35 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
 	
 	public string function getPhoneType() {
 		return getAccountPhoneType().getType();
 	}
 	
-	public void function setAccount(required Account account) {
-		variables.account = arguments.account;
-		if(!arguments.account.hasAccountPhoneNumber(this)) {
-			arrayAppend(arguments.account.getAccountPhoneNumbers(),this);
-		}
-	}
+ /******* Association management methods for bidirectional relationships **************/
+ 
+ // Account (many-to-one)
+ 
+ 	public void function setAccount(required any Account) { 
+ 	   variables.Account = arguments.Account; 
+ 	   if(!arguments.Account.hasAccountPhoneNumber(this)) { 
+ 	       arrayAppend(arguments.Account.getAccountPhoneNumbers(),this); 
+ 	   } 
+ 	}
+ 	 
+  	public void function removeAccount(any Account) { 
+  	   if(!structKeyExists(arguments,"Account")) { 
+  	   		arguments.Account = variables.Account; 
+  	   } 
+        var index = arrayFind(arguments.Account.getAccountPhoneNumbers(),this); 
+        if(index > 0) { 
+            arrayDeleteAt(arguments.Account.getAccountPhoneNumbers(),index); 
+        }     
+        structDelete(variables,"Account"); 
+     }
+ 
+ 
+ /************   END Association Management Methods   *******************/
 }

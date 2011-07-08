@@ -121,4 +121,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function onAfterCategoryDelete(required any rc) {
 		getProductService().deleteProductCategory(rc.$.event("categoryID"));
 	}
+	
+	public void function onAfterUserUpdate(required any rc) {
+		getAccountService().updateAccountFromMuraUser(rc.$.slatwall.account(),rc.$.currentUser());
+	}
 }

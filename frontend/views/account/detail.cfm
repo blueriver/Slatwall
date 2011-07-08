@@ -36,14 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="boolean" />
-
 <cfoutput>
 	<div class="svoaccountdetail">
-		<p>Welcome, #$.slatwall.account('firstName')# #$.slatwall.account('lastName')#</p>
+		<p>Welcome, #$.slatwall.account('fullName')#</p>
+		<h4>#$.slatwall.rbKey("entity.account.accountdetails")#</h4>
+		<dl>
+			<dt>Primary Email Address</dt>
+			<dd>#$.slatwall.account("primaryEmailAddress").getEmailAddress()#</dd>
+		</dl>
 		<hr />
-		<cfif arrayLen($.slatwall.account().getOrders())>
-		#view("frontend:account/listorder")#
-		</cfif>
 	</div>
 </cfoutput>
