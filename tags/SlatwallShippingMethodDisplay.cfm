@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfparam name="attributes.orderFulfillmentShipping" type="any" />
+<cfparam name="attributes.orderFulfillmentIndex" type="string" />
 <cfparam name="attributes.edit" type="boolean" default="true" />
 
 <cfset local.methodOptions = attributes.orderFulfillmentShipping.getOrderShippingMethodOptions() />
@@ -58,7 +59,7 @@ Notes:
 						<cfset local.optionSelected = true />
 					</cfif>
 					<dl>
-						<dt><input type="radio" name="orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
+						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
 						<dd>#DollarFormat(option.getTotalCharge())#</dd>
 					</dl>
 				</cfloop>

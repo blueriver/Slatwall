@@ -69,7 +69,7 @@ Notes:
 		
 		<cfset var sorted = "" />
 		
-		<cfquery name="sorted">
+		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
 			SELECT
 				SlatwallSku.skuID
 			FROM
@@ -85,6 +85,7 @@ Notes:
 			GROUP BY
 				SlatwallSku.skuID, SlatwallSku.skuCode
 			ORDER BY
+				<!--- This formula came with help from Blar Gibb and Jacob West... their formula was better with varying max optoinSortOrder and optionGroupSortOrder... but it wasn't possible with SQL, well at least I couldn't figure it out -GM --->
 				sum(
 					CAST( SlatwallOption.sortOrder as float ) * 
 					POWER( CAST(10000 as float), CAST((20 - SlatwallOptionGroup.sortOrder) as float ) )

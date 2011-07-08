@@ -42,8 +42,11 @@ Notes:
 <cfoutput>
 	<div class="svocheckoutfulfillment">
 		<h3 id="checkoutFulfillmentTitle" class="titleBlick">Delivery<cfif not listFind(rc.orderRequirementsList, 'fulfillment')> <a href="?edit=fulfillment">Edit</a></cfif></h3>
-		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "fulfillment")>
+		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" or rc.edit eq "fulfillment")>
 			<div id="checkoutFulfillmentContent" class="contentBlock">
+				<cfif listFind(rc.orderRequirementsList, 'fulfillment') || (rc.edit eq "fulfillment")>
+					<form name="fulfillmentShipping" action="?slatAction=frontend:checkout.saveOrderFulfillments" method="post">
+				</cfif>
 				<cfset local.orderFulfillmentIndex = 1 />
 				<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="local.fulfillment">
 					<div class="fulfillmentOptions">
@@ -72,6 +75,10 @@ Notes:
 						</div>
 					</cfif>
 				</cfloop>
+				<cfif listFind(rc.orderRequirementsList, 'fulfillment') || (rc.edit eq "fulfillment")>
+						<button type="submit">Save & Continue</button>
+					</form>
+				</cfif>
 			</div>
 		</cfif>
 	</div>
