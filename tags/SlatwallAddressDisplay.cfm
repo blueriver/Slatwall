@@ -43,7 +43,6 @@ Notes:
 <cfparam name="attributes.showCompany" type="boolean" default="true" />
 <cfparam name="attributes.showStreetAddress" type="boolean" default="true" />
 <cfparam name="attributes.showStreet2Address" type="boolean" default="true" />
-<cfparam name="attributes.showStreet2AddressLabel" type="boolean" default="true" />
 <cfparam name="attributes.showLocality" type="boolean" default="true" />
 <cfparam name="attributes.showCity" type="boolean" default="true" />
 <cfparam name="attributes.showState" type="boolean" default="true" />
@@ -68,7 +67,7 @@ Notes:
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#streetAddress" property="streetAddress" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getStreet2AddressShowFlag() and attributes.showStreet2Address>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" showFormLabel="#attributes.showStreet2AddressLabel#" fieldName="#attributes.fieldNamePrefix#street2Address" property="street2Address" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#street2Address" property="street2Address" edit="true" />
 					</cfif>
 					<cfif attributes.address.getCountry().getCityShowFlag() and attributes.showCity>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#city" property="city" edit="true" />
