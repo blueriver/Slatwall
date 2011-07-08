@@ -271,13 +271,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function processOrder(struct data={}) {
+		var processOK = false;
+		
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="60" {
 			
 			var order = this.getOrder(arguments.data.orderID);
 			
+			reloadEntity(order);
+			
 			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-				return true;
+				processOK = true;
 			} else {
 				// update and validate all aspects of the order
 				var validAccount = updateAndVerifyOrderAccount(order=order, data=arguments.data);
@@ -289,6 +293,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					var orderRequirementsList = getOrderRequirementsList(order);
 					
 					if( !len(orderRequirementsList) ) {
+						
 						// Process all of the order payments
 						var paymentsProcessed = processOrderPayments(order=order);
 						
@@ -312,14 +317,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							// Send out the e-mail
 							sendOrderConfirmationEmail(order);
 							
-							return true;
+							processOK = true;
 						}
 					}
 				}
 			}
+			
 		} // END OF LOCK
 		
-		return false;
+		return processOK;
 	}
 
 	function sendOrderConfirmationEmail (required any order) {
