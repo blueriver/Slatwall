@@ -39,6 +39,7 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
+#view("account/account_nav")#
 	<div class="svoaccountdetailorder">
 		<h3>Order Detail</h3>
 		<cfif rc.order.isNew()>
