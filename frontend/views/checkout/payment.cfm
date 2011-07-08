@@ -46,10 +46,12 @@ Notes:
 		<cfif not listFind(rc.orderRequirementsList, 'account') and not listFind(rc.orderRequirementsList, 'fulfillment')>
 			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder" method="post">
 				<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
+				<cfset local.orderPaymentIndex = 1 />
 				<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="local.orderPayment">
 					<cfset params = structNew() />
 					<cfset params.orderPayment = local.orderPayment />
-					<cfset params.orderPaymentID = local.orderPayment.getOrderPaymentID() />
+					<cfset params.orderPaymentIndex = local.orderPaymentIndex />
+					<cfset local.orderPaymentIndex += 1 />
 					<cfif local.orderPayment.hasErrors() or (local.orderPayment.getAmountAuthorized() neq local.orderPayment.getAmount() and $.slatwall.setting("paymentMethod_creditCard_checkoutTransactionType") neq "none")>
 						<cfset local.paymentShown = true />
 						<cfset params.edit = true />
@@ -63,7 +65,8 @@ Notes:
 						<cfset params = structNew() />
 						<cfset params.edit = true />
 						<cfset params.orderPayment = $.slatwall.getService("paymentService").newOrderPaymentCreditCard() />
-						<cfset params.orderPaymentID = "new1" />
+						<cfset params.orderPaymentIndex = local.orderPaymentIndex />
+						<cfset local.orderPaymentIndex += 1 />
 						#view("frontend:checkout/payment/creditCard", params)#
 					</cfloop>
 				</cfif>

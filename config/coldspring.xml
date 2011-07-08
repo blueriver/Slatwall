@@ -17,7 +17,6 @@
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
     <bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
-    <bean id="optionGroupDAO" class="Slatwall.com.dao.OptionGroupDAO" />
 	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
@@ -55,6 +54,12 @@
         <property name="DAO"><ref bean="BrandDAO" /></property>
 		<property name="validationService"><ref bean="validationService" /></property>
 	</bean>
+	
+	<bean id="fulfillmentService" class="Slatwall.com.service.FulfillmentService">
+        <property name="DAO"><ref bean="fulfillmentDAO" /></property>
+		<property name="validationService"><ref bean="validationService" /></property>
+		<property name="settingService"><ref bean="settingService" /></property>
+    </bean>
 	
 	<bean id="logService" class="Slatwall.com.service.LogService">
         <property name="DAO"><ref bean="LogDAO" /></property>
@@ -99,12 +104,8 @@
     <bean id="skuService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="validationService"><ref bean="validationService" /></property>
-		<property name="fileService"><ref bean="FileService" /></property> 
-    </bean>
-
-    <bean id="typeService" class="Slatwall.com.service.TypeService">
-        <property name="DAO"><ref bean="TypeDAO" /></property>
-		<property name="validationService"><ref bean="validationService" /></property>
+		<property name="fileService"><ref bean="FileService" /></property>
+		<property name="optionService"><ref bean="optionService" /></property> 
     </bean>
 
     <bean id="sessionService" class="Slatwall.com.service.SessionService">
@@ -120,13 +121,6 @@
 		<property name="settingService"><ref bean="settingService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
-	
-	
-	<bean id="fulfillmentService" class="Slatwall.com.service.FulfillmentService">
-        <property name="DAO"><ref bean="fulfillmentDAO" /></property>
-		<property name="validationService"><ref bean="validationService" /></property>
-		<property name="settingService"><ref bean="settingService" /></property>
-    </bean>
 
     <bean id="settingService" class="Slatwall.com.service.SettingService">
         <property name="DAO"><ref bean="settingDAO" /></property>
@@ -141,6 +135,11 @@
 		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
 
+    <bean id="typeService" class="Slatwall.com.service.TypeService">
+        <property name="DAO"><ref bean="TypeDAO" /></property>
+		<property name="validationService"><ref bean="validationService" /></property>
+    </bean>
+	
     <bean id="vendorService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
 		<property name="validationService"><ref bean="validationService" /></property>

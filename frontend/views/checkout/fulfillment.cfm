@@ -44,10 +44,13 @@ Notes:
 		<h3 id="checkoutFulfillmentTitle" class="titleBlick">Delivery<cfif not listFind(rc.orderRequirementsList, 'fulfillment')> <a href="?edit=fulfillment">Edit</a></cfif></h3>
 		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" || rc.edit eq "fulfillment")>
 			<div id="checkoutFulfillmentContent" class="contentBlock">
+				<cfset local.orderFulfillmentIndex = 1 />
 				<cfloop array="#$.slatwall.cart().getOrderFulfillments()#" index="local.fulfillment">
 					<div class="fulfillmentOptions">
 						<cfset params = structNew() />
 						<cfset params.orderFulfillment = local.fulfillment />
+						<cfset params.orderFulfillmentIndex = local.orderFulfillmentIndex />
+						<cfset local.orderFulfillmentIndex += 1 />
 						<cfif listFind(rc.orderRequirementsList, local.fulfillment.getOrderFulfillmentID())
 							OR rc.edit eq local.fulfillment.getOrderFulfillmentID()
 							OR (rc.edit eq "fulfillment" and arrayLen($.slatwall.cart().getOrderFulfillments())) eq 1>

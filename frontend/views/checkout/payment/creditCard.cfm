@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="params.edit" type="boolean" default="true" />
 <cfparam name="params.orderPayment" type="any" />
-<cfparam name="params.orderPaymentID" type="string" />
+<cfparam name="params.orderPaymentIndex" type="string" />
 
 <cfset local.sameAsShipping = false>
 
@@ -58,9 +58,9 @@ Notes:
 					<dt>Same As Shipping</dt>
 					<dd><input type="hidden" name="sameAsShipping" value="" /><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
 				</dl>
-				<cf_SlatwallAddressDisplay address="#local.address#" filedNamePrefix="orderPayment.#params.orderPaymentID#.billingAddress." edit="true">
+				<cf_SlatwallAddressDisplay address="#local.address#" filedNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="true">
 			<cfelse>
-				<cf_SlatwallAddressDisplay address="#local.address#" filedNamePrefix="orderPayment.#params.orderPaymentID#.billingAddress." edit="true">
+				<cf_SlatwallAddressDisplay address="#local.address#" filedNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="true">
 			</cfif>
 		</div>
 		<div class="paymentMethod">
@@ -71,14 +71,14 @@ Notes:
 				<div class="error">#params.orderPayment.getErrorBean().getError('processing')#</div>
 			</cfif> 
 			<dl>
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayment.#params.orderPaymentID#.nameOnCreditCard" property="nameOnCreditCard" edit="#params.edit#" /> 
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayment.#params.orderPaymentID#.creditCardNumber" property="creditCardNumber" noValue="true" edit="#params.edit#" />
-				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayment.#params.orderPaymentID#.securityCode" property="securityCode" noValue="true" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayments[#params.orderPaymentIndex#].nameOnCreditCard" property="nameOnCreditCard" edit="#params.edit#" /> 
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayments[#params.orderPaymentIndex#].creditCardNumber" property="creditCardNumber" noValue="true" edit="#params.edit#" />
+				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" filedName="orderPayments[#params.orderPaymentIndex#].securityCode" property="securityCode" noValue="true" edit="#params.edit#" />
 				<dt class="spdcreditcardexperationdate">
 					<label for="experationMonth">Expires</label>
 				</dt>
 				<dd id="spdcreditcardexpirationdate">
-					<select name="orderPayment.#params.orderPaymentID#.expirationMonth">
+					<select name="orderPayments[#params.orderPaymentIndex#].expirationMonth">
 						<option value="01">01</option>
 						<option value="02">02</option>
 						<option value="03">03</option>
@@ -92,7 +92,7 @@ Notes:
 						<option value="11">11</option>
 						<option value="12">12</option>
 					</select> / 
-					<select name="orderPayment.#params.orderPaymentID#.expirationYear">
+					<select name="orderPayments[#params.orderPaymentIndex#].expirationYear">
 						<option value="11">2011</option>
 						<option value="12">2012</option>
 						<option value="13">2013</option>

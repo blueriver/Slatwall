@@ -107,17 +107,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function saveFulfillment(required struct rc) {
-		param name="rc.orderFulfillmentID" default="";
-		
 		rc.guestAccountOK = true;
 		
-		// Load the fulfillment
-		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID, true);
-		
-		// Verify the fulfillment is part of the cart then proceed
-		if(rc.$.slatwall.cart().hasOrderFulfillment(fulfillment)) {
-			fulfillment = getOrderService().saveOrderFulfillment(fulfillment, rc);
-		}
+		getOrderService().updateAndVerifyOrderFulfillments(order=$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");

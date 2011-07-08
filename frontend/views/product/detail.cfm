@@ -46,14 +46,14 @@ Notes:
 		<form action="?slatAction=frontend:cart.addItem" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
 			<!--- Product Options --->
-			<cfif arrayLen($.slatwall.product().getSkus()) eq 1>
+			<cfif arrayLen($.slatwall.product().getSkus(true)) eq 1>
 				<input type="hidden" name="skuID" value="#$.slatwall.Product().getSkus()[1].getSkuID()#" />
 			<cfelse>
 				<dl>
 					<dt>Select Option</dt>
 					<dd>
 						<select name="skuID">
-							<cfloop array="#$.slatwall.product().getSkus()#" index="local.sku">
+							<cfloop array="#$.slatwall.product().getSkus(true)#" index="local.sku">
 								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
 							</cfloop>
 						</select>

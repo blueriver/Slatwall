@@ -266,9 +266,9 @@ Notes:
 		
 		<cfoutput>
 			<cfif attributes.displaytype eq "dl">
-				<dt class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
+				<dt class="spd#LCASE(attributes.property)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
 			<cfelseif attributes.displaytype eq "table">
-				<tr class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
+				<tr class="spd#LCASE(attributes.property)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
 				<td class="property">
 			</cfif>
 	        
@@ -312,9 +312,9 @@ Notes:
 			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
 			
 			<cfif attributes.displayType eq "dl">
-				<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+				<dd class="spd#LCASE(attributes.property)#" <cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
 			<cfelseif attributes.displayType eq "table">
-				<td id="#attributes.id#" class="value">
+				<td class="value">
 			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
@@ -327,7 +327,7 @@ Notes:
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" id="#attributes.fieldName##attributes.id#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
+						<select name="#attributes.fieldName#" <cfif len(attributes.class)> class="#attributes.class#"</cfif>>
 							<cfif attributes.allowNullOption>
 								<option value="">#attributes.nullLabel eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullLabel#</option>
 							</cfif>
@@ -345,13 +345,13 @@ Notes:
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#yes" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#no" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+							<li><input type="radio" name="#attributes.fieldName#" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
 						<cfelse>
-							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
+							<input type="hidden" name="#attributes.fieldName#" value="" />
 							<cfloop array="#attributes.editOptions#" index="i">
 								<cfset label = structKeyExists(i,"label") ? i.label : i.name />
-								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
+								<li><input type="radio" name="#attributes.fieldName#" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
 							</cfloop>
 						</cfif>
 						</ul>
@@ -372,7 +372,7 @@ Notes:
 							</script>
 					<cfelseif attributes.editType eq "file">
 					<!--- ouptut a file upload field --->
-						<input type="file" name="#attributes.fieldName#File" id="#attributes.fieldName#File" class="file">
+						<input type="file" name="#attributes.fieldName#File" class="file">
 					</cfif>
 				<cfelseif attributes.edit eq true and attributes.editType eq "none">
 					<!-- A Default Edit Type Could not be created -->
