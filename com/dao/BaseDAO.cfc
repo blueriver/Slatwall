@@ -103,6 +103,12 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		}
 		entityDelete(target);
 	}
+	
+	
+	public void function reloadEntity(required any entity) {
+    	entityReload(arguments.entity);
+    }
+	
 
 	public any function getSmartList(required string entityName, struct data={}){
 		// Adds the Slatwall Prefix to the entityName when needed.
@@ -122,4 +128,6 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		var propertyValue = evaluate("arguments.entity.get#arguments.propertyName#()");
 		return arrayLen(ormExecuteQuery("from #entityName# e where e.#arguments.propertyName# = :propValue and e.id != :entityID", {propValue=propertyValue, entityID=idValue}));
 	}
+	
+	
 }
