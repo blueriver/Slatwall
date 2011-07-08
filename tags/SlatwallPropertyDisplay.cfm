@@ -278,28 +278,16 @@ Notes:
 	            </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
-					<label for="#attributes.fieldName#">
+					<label for="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
-						<!--- If this is a required field the add an asterisk --->
-						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
-							*
-						</cfif>
 					</label>
 	 			<cfelseif attributes.edit and attributes.editType EQ "file">
-					<label for="#attributes.fieldName#File">
+					<label for="#attributes.fieldName#File"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
-						<!--- If this is a required field the add an asterisk --->
-						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
-							*
-						</cfif>
 					</label>
 				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
-					<div class="#attributes.fieldName#">
+					<div class="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
-						<!--- If this is a required field the add an asterisk --->
-						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
-							*
-						</cfif>
 					</div>
 				<cfelse>
 					#attributes.title#
@@ -367,12 +355,18 @@ Notes:
 							</cfloop>
 						</cfif>
 						</ul>
-					<cfelseif attributes.editType eq "wysiwyg">
+					<cfelseif left(attributes.editType,7) eq "wysiwyg">
+						<!--- see if this is a default or basic wysiwig --->
+						<cfif right(attributes.editType,5) eq "basic">
+							<cfset local.wysiwygType = "Basic">
+						<cfelse>
+							<cfset local.wysiwygType = "Default">
+						</cfif>
 						<textarea name="#attributes.fieldName#" id="#attributes.id#txt">#attributes.Value#</textarea>
 						<script type="text/javascript" language="Javascript">
 							var loadEditorCount = 0;
 							jQuery('###attributes.id#txt').ckeditor(
-								{ toolbar:'Default',
+								{ toolbar:'#local.wysiwygType#',
 								height:'150',
 								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
 							</script>

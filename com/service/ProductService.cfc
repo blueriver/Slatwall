@@ -236,7 +236,7 @@ component extends="BaseService" accessors="true" {
 		var imageExt = lcase(arguments.imageUploadResult.serverFileExt);
 		alternateImage.setImageExtension(imageExt);
 		arguments.product.addProductImage(alternateImage);
-		alternateImage = Super.save(entity=alternateImage, data=arguments.data, cleanseInput=true);
+		alternateImage = Super.save(entity=alternateImage, data=arguments.data);
 		//alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
 		if(!alternateImage.hasErrors()) {
 			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
