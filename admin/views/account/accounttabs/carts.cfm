@@ -37,47 +37,31 @@ Notes:
 
 --->
 <cfparam name="rc.account" type="any" />
-<cfparam name="rc.edit" type="boolean" />
-
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:account.list" type="list">
-	<cfif !rc.edit>
-	<cf_SlatwallActionCaller action="admin:account.edit" queryString="accountID=#rc.account.getAccountID()#" type="list">
-	</cfif>
-</ul>
 
 <cfoutput>
-	<div class="svoadminaccountdetail">
-		<cfif rc.edit>
-			<form name="accountEdit" action="#buildURL(action='admin:account.save')#" method="post">
-				<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
-		</cfif>
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="lastName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
-		</dl>
-		
-		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-			<ul>
-				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>
-				<li><a href="##tabCarts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.carts")#</span></a></li>	
-			</ul>
-		
-			<div id="tabOrders">
-				#view("admin:account/accounttabs/orders")#
-			</div>
-			<div id="tabCarts">
-				#view("admin:account/accounttabs/carts")#
-			</div>
-		</div>
-		
-		<cfif rc.edit>
-			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:account.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:account.save" type="submit" class="button">
-			</div>
-			</form>
-		</cfif>
-	</div>
+	<table id="CartList" class="stripe">
+		<tr>
+			<th>#rc.$.Slatwall.rbKey("entity.order.createdDateTime")#</th>
+			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
+			<th>&nbsp</th>
+		</tr>
+		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
+			<cfif local.order.getOrderStatusType().getSystemCode() eq "ostNotPlaced">
+			<tr>
+				<td>#DateFormat(Local.Order.getCreatedDateTime(), "medium")#</td>
+				<td class="varWidth">
+					#Local.Order.getAccount().getFullName()# <cfif local.order.getAccount().isGuestAccount()>(#$.slatwall.rbKey('admin.order.account.isguestaccount')#)</cfif>
+				</td>
+				<td>#DollarFormat(local.order.getTotal())#</td>
+				<td class="administration">
+					<ul class="one">
+					  <cf_SlatwallActionCaller action="admin:order.detailcart" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					</ul>     						
+				</td>
+			</tr>
+			</cfif>
+		</cfloop>
+	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.orderSmartList#">
 </cfoutput>
