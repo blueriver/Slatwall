@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,32 +35,16 @@
 
 Notes:
 
-*/
-component persistent="false" accessors="true" output="false" extends="BaseController" {
-
-	property name="accountService" type="any";
-	property name="orderService" type="any";
-	
-	public void function detail(required struct rc) {
-	}
-	
-	public void function edit(required struct rc) {;
-	}
-	
-	public void function save(required struct rc) {
-		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
-		getFW().setView("frontend:account.detail");
-	}
-	
-	public void function detailOrder(required struct rc) {
-		param name="rc.orderID" default="";
-		
-		rc.order = getOrderService().getOrder(rc.orderID);
-		
-		// Check to make sure that the order being requested is actually the customers
-		if(!isNull(rc.order.getAccount()) && rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
-			rc.order = getOrderService().newOrder();
-		}
-	}
-	
-}
+--->
+<cfoutput>
+<ul>
+	<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
+<cfif arrayLen($.slatwall.account().getOrders())>
+	<li><a href="?slatAction=frontend:account.listorder">View Orders</a></li>
+</cfif>
+	<li>
+		<a href="?slatAction=frontend:account.edit">Edit Profile</a>
+	</li>
+</ul>
+#body#
+</cfoutput>
