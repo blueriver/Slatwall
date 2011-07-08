@@ -150,7 +150,6 @@ component extends="BaseService" accessors="true" output="false" {
 				// If there currently isn't a user logged in, then log in this new account
 				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
 				if(!currentUser.isLoggedIn()) {
-					writeDump(var="LogInCalled", output="console");
 					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 				}
 			// If the account already has a mura user, make sure that the mura user gets updated
@@ -216,16 +215,15 @@ component extends="BaseService" accessors="true" output="false" {
 		// Sync the primary email if out of sync
 		if( isNull(arguments.account.getPrimaryEmailAddress()) || arguments.account.getPrimaryEmailAddress().getEmailAddress() != arguments.muraUser.getEmail()) {
 			// Setup the new primary email object
-			var primaryEmail = arguments.account.getPrimaryEmailAddress();
 			
 			// Attempt to find that e-mail address in all of our emails
 			for(var i=1; i<=arrayLen(arguments.account.getAccountEmailAddresses()); i++) {
 				if(arguments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
-					primaryEmail = arguments.account.getAccountEmailAddresses()[i];
+					var primaryEmail = arguments.account.getAccountEmailAddresses()[i];
 				}
 			}
 			if( isNull(primaryEmail) ) {
-				primaryEmail = this.newAccountEmailAddress();
+				var primaryEmail = this.newAccountEmailAddress();
 				primaryEmail.setEmailAddress(arguments.muraUser.getEmail());
 				primaryEmail.setAccount(arguments.account);
 			}
