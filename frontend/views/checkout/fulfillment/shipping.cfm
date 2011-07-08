@@ -61,7 +61,7 @@ Notes:
 				<div class="error">#params.orderFulfillment.getErrorBean().getError('processing')#</div>
 				</cfif>
 				<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
-					<cf_SlatwallShippingMethodDisplay orderFulfillmentShipping="#params.orderFulfillment#" edit="#params.edit#">
+					<cf_SlatwallShippingMethodDisplay orderFulfillmentIndex="#params.orderFulfillmentIndex#" orderFulfillmentShipping="#params.orderFulfillment#" edit="#params.edit#">
 				<cfelse>
 					<p>Please enter a valid Shipping Address so shipping rates can be calculated.</p>
 				</cfif>

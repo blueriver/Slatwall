@@ -65,8 +65,8 @@ Notes:
 		</div>
 		<div class="paymentMethod">
 			<h4>Credit Card Details</h4>
-			<input type="hidden" name="paymentMethods.#params.orderPaymentID#.paymentMethodID" value="creditCard" />
-			<input type="hidden" name="paymentMethods.#params.orderPaymentID#.orderPaymentID" value="#params.orderPaymentID#" />
+			<input type="hidden" name="paymentMethods[#params.orderPaymentIndex#].paymentMethodID" value="creditCard" />
+			<input type="hidden" name="paymentMethods[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
 			<cfif params.orderPayment.getErrorBean().hasError('processing')>
 				<div class="error">#params.orderPayment.getErrorBean().getError('processing')#</div>
 			</cfif> 

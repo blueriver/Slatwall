@@ -135,14 +135,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 					}
 				// do many-to-one
 				} else if( local.theProperty.fieldType == "many-to-one" ) {
-					if( structKeyExists(arguments.data,local.theProperty.fkcolumn) ) {
+					if( structKeyExists(arguments.data, local.theProperty.fkcolumn) ) {
 						var manyToOneData = arguments.data[local.theProperty.fkcolumn];
-					} else if( structKeyExists(arguments.data,local.theProperty.name) ) {
-						var manyToOneData = arguments.data[local.theProperty.fkcolumn];
+					} else if( structKeyExists(arguments.data, local.theProperty.name) ) {
+						var manyToOneData = arguments.data[local.theProperty.name];
 					} else {
 						var manyToOneData = "";
 					}
-					if(manyToOneData != "" && isSimpleValue(manyToOneData)) {
+					if(isSimpleValue(manyToOneData) && manyToOneData != "") {
 						var fkValue = manyToOneData;
 						var varValue = EntityLoadByPK("Slatwall" & local.theProperty.cfc, fkValue);
 						if( !isNull(varValue) ) {
