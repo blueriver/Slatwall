@@ -51,6 +51,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Mura Service Injection
 	property name="userManager" type="any";
+	property name="categoryManager" type="any";
 	
 	public void function dashboard() {
 		getFW().redirect(action="admin:setting.detail");
@@ -61,6 +62,13 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
 		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
+		rc.muraCategories = getProductService().getMuraCategories(siteID=rc.$.event('siteID'),parentID=0);
+		var rootCategoryID = rc.$.slatwall.setting("product_rootProductCategory");
+		if(rootCategoryID == "0") {
+			rc.rootCategory = rc.$.slatwall.rbKey("define.all");
+		} else {
+			rc.rootCategory = getCategoryManager().read(categoryID=rootCategoryID).getName();
+		}
 	}
 	
 	public void function edit(required struct rc) {
@@ -165,12 +173,12 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.shippingMethod);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.product.deleteShippingMethod_success");
+			rc.message = rbKey("admin.setting.deleteShippingMethod_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping&reload=true", preserve="message,messagetype");
+		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping&edit=true", preserve="message,messagetype");
 	}
 	
 	public void function createShippingMethod(required struct rc) {
@@ -184,20 +192,40 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function saveShippingMethod(required struct rc) {
+		param name="rc.addRate" default="false";
+		
 		detailShippingMethod(rc);
 		
-		if(structKeyExists(rc,"shippingProvider") && rc.shippingProvider == "RateTable") {
-			var formStruct = getFormUtilities().buildFormCollections(rc);
-			if(structKeyExists(formStruct, "shippingRates")) {
-				rc.shippingRates = formStruct.shippingRates;	
-			}	
+		var errorsExist = false;
+		var wasNew = rc.shippingMethod.isNew();
+				
+		if(structKeyExists(rc, "shippingProvider") && rc.shippingProvider == "Other") {
+			rc.shippingMethod.setUseRateTableFlag(true);
 		}
 		
 		rc.shippingMethod = getShippingService().saveShippingMethod(entity=rc.shippingMethod, data=rc);
-
-		if(!rc.shippingMethod.hasErrors()) {
+		
+		if(rc.shippingMethod.hasErrors()) {
+			errorsExist = true;
+		} else {
+			if(rc.addRate) {
+				var rate = getSettingService().newShippingRate();
+				rate = getSettingService().saveShippingRate(rate, rc);
+				if(rate.hasErrors()) {
+					errorsExist = true;
+				}
+			}
+		}
+		
+		if(!errorsExist) {
 			rc.message=rc.$.slatwall.rbKey("admin.setting.saveshippingmethod_success");
-			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
+			if(wasNew || rc.addRate) {
+				rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
+	   			rc.edit=true;
+				getFW().setView(action="admin:setting.detailshippingmethod");
+			} else {
+				getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&edit=true", preserve="message");	
+			}
 		} else {
 			rc.itemTitle = rc.shippingMethod.isNew() ? rc.$.Slatwall.rbKey("admin.setting.createshippingmethod") : rc.$.Slatwall.rbKey("admin.setting.editshippingmethod") & ": #rc.shippingMethod.getShippingMethodName()#";
 	   		rc.edit=true;
@@ -205,6 +233,23 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
+	public void function deleteShippingRate() {
+		param name="rc.shippingRateID" default="";
+		
+		var rate = getSettingService().getShippingRate(rc.shippingRateID);
+		var shippingMethodID = rate.getShippingMethod().getShippingMethodID();
+		
+		var deleteResponse = getSettingService().delete(rate);
+		
+		if(!deleteResponse.hasErrors()) {
+			rc.message = rbKey("admin.product.deleteShippingRate_success");
+		} else {
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:setting.detailshippingmethod", querystring="shippingMethodID=#shippingMethodID#&edit=true", preserve="message,messagetype");
+	}
 	
 	// Payment Services
 	public void function listPaymentServices(required struct rc) {
@@ -247,7 +292,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Payment Methods
 	public void function listPaymentMethods(required struct rc) {
-		rc.paymentMethods = getSettingService().getPaymentMethods();	
+		rc.paymentMethods = getSettingService().listPaymentMethod();	
 	}
 
 	public void function detailPaymentMethod(required struct rc) {
@@ -286,7 +331,7 @@ component extends="BaseController" output="false" accessors="true" {
 
 	// Fulfillment Methods
 	public void function listFulfillmentMethods(required struct rc) {
-		rc.fulfillmentMethods = getSettingService().getFulfillmentMethods();	
+		rc.fulfillmentMethods = getSettingService().listFulfillmentMethod();	
 	}
 
 	public void function detailFulfillmentMethod(required struct rc) {
@@ -299,7 +344,7 @@ component extends="BaseController" output="false" accessors="true" {
 		}	
 		rc.itemTitle = rc.itemTitle & ": " & rc.$.slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
 		
-		rc.shippingMethods = getSettingService().getShippingMethods();
+		rc.shippingMethods = getSettingService().listShippingMethod();
 		rc.shippingServices = getSettingService().getShippingServices();
 	}
 	

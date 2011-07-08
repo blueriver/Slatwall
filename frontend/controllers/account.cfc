@@ -42,13 +42,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	
 	public void function detail(required struct rc) {
-		param name="rc.edit" default="false";
-		
 	}
 	
-	public void function edit(required struct rc) {
-		rc.edit = true;
-		getFW().setView("frontend:account.detail");
+	public void function edit(required struct rc) {;
 	}
 	
 	public void function save(required struct rc) {

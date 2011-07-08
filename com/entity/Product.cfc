@@ -41,9 +41,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
-	property name="filename" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
+	property name="filename" ormtype="string" validateRequired="true" unique="true" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" hint="This is the Template to use for product display";
-	property name="productName" ormtype="string" validateRequired="true" hint="Primary Notation for the Product to be Called By";
+	property name="productName" ormtype="string" notNull="true" validateRequired="true" hint="Primary Notation for the Product to be Called By";
 	property name="productCode" ormtype="string" unique="true" validateRequired="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
@@ -70,8 +70,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
 	
-	property name="skus" type="array" cfc="Sku" singularname="SKU" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
@@ -90,16 +92,17 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
 	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
-	property name="searchScore" default="0" type="numeric" persistent="false";   
 	
 	// Calculated Properties
 	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
-	
 	
 	public Product function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.ProductContent)) {
 	       variables.ProductContent = [];
+	   }
+	   if(isNull(variables.ProductCategories)) {
+	       variables.ProductCategories = [];
 	   }
 	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
@@ -155,11 +158,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     }
     	
 	
-    public array function getSkus(orderby, sortType="text", direction="asc") {
-        if(!structKeyExists(arguments,"orderby")) {
-            return variables.Skus;
+    public array function getSkus(boolean sorted=false) {
+        if(!sorted) {
+        	return variables.skus;
         } else {
-            return sortObjectArray(variables.Skus,arguments.orderby,arguments.sortType,arguments.direction);
+        	if(isNull(variables.sortedSkus)) {
+	        	variables.sortedSkus = getService("skuService").getSortedProductSkus(productID=getProductID(), skus=getSkus());
+	        }
+        	return variables.sortedSkus;
         }
     }
 	
@@ -187,6 +193,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			contentIDs = listAppend(contentIDs,getProductContent()[i].getContentID());
 		}
 		return contentIDs;
+	}
+	
+	public string function getCategoryIDs(boolean featured=false) { 
+		var categoryIDs = "";
+		for( var i=1; i<= arrayLen(getProductCategories()); i++ ) {
+			local.thisProductCategory = getProductCategories()[i];
+			local.addID = true;
+			if(arguments.featured) {
+				local.addID = local.thisProductCategory.getFeaturedFlag();
+			}
+			if(local.addID) {
+				categoryIDs = listAppend(categoryIDs,getProductCategories()[i].getCategoryID());	
+			}
+		}
+		return categoryIDs;
 	}
 	
 	public string function getTitle() {
@@ -251,6 +272,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			return variables.template;
 		}
 	}
+	
+	public string function getAlternateImageDirectory() {
+    	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/";	
+    }
 	
 	// Persistent property helpers
 	
@@ -353,6 +378,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removeProductContent(required ProductContent ProductContent) {
 	   arguments.ProductContent.removeProduct(this);
+	}
+	
+	// ProductCategories (one-to-many)
+	public void function clearProductCategories() {
+		for( var i=1; i<= arraylen(getProductCategories()); i++ ) {
+			removeProductCategory(getProductCategory()[i]);
+		}
+	}
+	
+	public void function addProductCategory(required any ProductCategory) {    
+	   arguments.ProductCategory.setProduct(this);    
+	}    
+	    
+	public void function removeProductCategory(required any ProductCategory) {    
+	   arguments.ProductCategory.removeProduct(this);    
 	}
 	
 	// Skus (one-to-many)
@@ -495,15 +535,29 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	//get attribute value
-	public any function getAttributeValue(required string attributeID){
+	public any function getAttributeValue(required string attribute, returnEntity=false){
 		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductAttributeValue");
-		smartList.addFilter("product_productID",getProductID());
-		smartList.addFilter("attribute_attributeID",attributeID);
+		
+		smartList.addFilter("product_productID",getProductID(),1);
+		smartList.addFilter("attribute_attributeID",attribute,1);
+		
+		smartList.addFilter("product_productID",getProductID(),2);
+		smartList.addFilter("attribute_attributeCode",attribute,2);
+		
 		var attributeValue = smartList.getRecords();
+		
 		if(arrayLen(attributeValue)){
-			return attributeValue[1];
+			if(returnEntity) {
+				return attributeValue[1];	
+			} else {
+				return attributeValue[1].getAttributeValue();
+			}
 		}else{
-			return getService("ProductService").newProductAttributeValue();
+			if(returnEntity) {
+				return getService("ProductService").newProductAttributeValue();	
+			} else {
+				return "";
+			}
 		}
 	}
 	
@@ -525,6 +579,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		super.populate(argumentCollection=arguments);
 	}
+	
 }
 
 

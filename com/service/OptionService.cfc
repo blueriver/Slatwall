@@ -65,7 +65,7 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 		
-		arguments.entity = Super.save(arguments.entity);
+		arguments.entity = super.save(arguments.entity);
 		
 		if(!arguments.entity.hasErrors()) {
 			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
@@ -155,5 +155,9 @@ component extends="BaseService" accessors="true" {
 			var errorName = arguments.entity.getClassName() == "SlatwallOption" ? "optionImage" : "optionGroupImage";
 			getValidationService().setError(entity=arguments.entity,errorName=errorName,rule="imageFile");
 		}	
-	}	
+	}
+	
+	public array function getMaximumOptionSortOrders() {
+		return getDAO().getMaximumOptionSortOrders();
+	}
 }

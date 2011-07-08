@@ -54,6 +54,8 @@ Notes:
 <!--- hint: This can be used to override the value of a property --->
 <cfparam name="attributes.value" default="" />
 
+<cfparam name="attributes.noValue" type="boolean" default="false" />
+
 <!--- hint: This can be used to override the display value of a property --->
 <cfparam name="attributes.displayValue" default="" />
 
@@ -137,8 +139,15 @@ Notes:
 	<cfset local.metadata = getMetadata(attributes.object) />
 	<cfset local.propertyMetadata = structNew() />
 	
+	<!--- If this object has a getProperties() method (defined in the base entity class to also get inherited properties) use that to get the property array --->
+	<cfif structKeyExists(attributes.object,"getProperties")>
+		<cfset local.properties = attributes.object.getProperties() />
+	<cfelse>
+		<cfset local.properties = local.metadata.properties />
+	</cfif>
+	
 	<!--- Loop over properties in object and find metadata for this property --->
-	<cfloop array="#local.metadata.properties#" index="i">
+	<cfloop array="#local.properties#" index="i">
 		<cfif UCASE(i.name) eq UCASE(attributes.property)>
 			<cfset local.propertyMetadata = i />
 			<cfbreak />
@@ -167,7 +176,7 @@ Notes:
 		</cfif>
 		
 		<!--- If the value attribute was not set, then try to determine the value from the object, and if that isn't set, then use the objects default. --->
-		<cfif attributes.value eq "">
+		<cfif attributes.value eq "" and not attributes.noValue>
 			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
 	
 			<cfif structKeyExists(attributes,"value")>
@@ -257,9 +266,9 @@ Notes:
 		
 		<cfoutput>
 			<cfif attributes.displaytype eq "dl">
-				<dt class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
+				<dt class="spd#LCASE(attributes.property)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
 			<cfelseif attributes.displaytype eq "table">
-				<tr class="spd#LCASE(attributes.fieldName)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
+				<tr class="spd#LCASE(attributes.property)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
 				<td class="property">
 			</cfif>
 	        
@@ -269,28 +278,16 @@ Notes:
 	            </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
-					<label for="#attributes.fieldName#">
+					<label for="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
-						<!--- If this is a required field the add an asterisk --->
-						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
-							*
-						</cfif>
 					</label>
 	 			<cfelseif attributes.edit and attributes.editType EQ "file">
-					<label for="#attributes.fieldName#File">
+					<label for="#attributes.fieldName#File"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
-						<!--- If this is a required field the add an asterisk --->
-						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
-							*
-						</cfif>
 					</label>
 				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
-					<div class="#attributes.fieldName#">
+					<div class="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
-						<!--- If this is a required field the add an asterisk --->
-						<cfif structKeyExists(local.propertyMetadata, "validateRequired")>
-							*
-						</cfif>
 					</div>
 				<cfelse>
 					#attributes.title#
@@ -315,9 +312,9 @@ Notes:
 			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
 			
 			<cfif attributes.displayType eq "dl">
-				<dd id="#attributes.id#"<cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+				<dd class="spd#LCASE(attributes.property)#" <cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
 			<cfelseif attributes.displayType eq "table">
-				<td id="#attributes.id#" class="value">
+				<td class="value">
 			</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
@@ -330,7 +327,7 @@ Notes:
 						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" id="#attributes.fieldName##attributes.id#"<cfif len(attributes.class)> class="#attributes.class#"</cfif>>
+						<select name="#attributes.fieldName#" <cfif len(attributes.class)> class="#attributes.class#"</cfif>>
 							<cfif attributes.allowNullOption>
 								<option value="">#attributes.nullLabel eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullLabel#</option>
 							</cfif>
@@ -348,28 +345,34 @@ Notes:
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#yes" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.fieldName#no" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+							<li><input type="radio" name="#attributes.fieldName#" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
 						<cfelse>
-							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
+							<input type="hidden" name="#attributes.fieldName#" value="" />
 							<cfloop array="#attributes.editOptions#" index="i">
 								<cfset label = structKeyExists(i,"label") ? i.label : i.name />
-								<li><input type="radio" name="#attributes.fieldName#_#attributes.fieldName#ID" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
+								<li><input type="radio" name="#attributes.fieldName#" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
 							</cfloop>
 						</cfif>
 						</ul>
-					<cfelseif attributes.editType eq "wysiwyg">
+					<cfelseif left(attributes.editType,7) eq "wysiwyg">
+						<!--- see if this is a default or basic wysiwig --->
+						<cfif right(attributes.editType,5) eq "basic">
+							<cfset local.wysiwygType = "Basic">
+						<cfelse>
+							<cfset local.wysiwygType = "Default">
+						</cfif>
 						<textarea name="#attributes.fieldName#" id="#attributes.id#txt">#attributes.Value#</textarea>
 						<script type="text/javascript" language="Javascript">
 							var loadEditorCount = 0;
 							jQuery('###attributes.id#txt').ckeditor(
-								{ toolbar:'Default',
+								{ toolbar:'#local.wysiwygType#',
 								height:'150',
 								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
 							</script>
 					<cfelseif attributes.editType eq "file">
 					<!--- ouptut a file upload field --->
-						<input type="file" name="#attributes.fieldName#File" id="#attributes.fieldName#File" class="file">
+						<input type="file" name="#attributes.fieldName#File" class="file">
 					</cfif>
 				<cfelseif attributes.edit eq true and attributes.editType eq "none">
 					<!-- A Default Edit Type Could not be created -->
@@ -390,6 +393,8 @@ Notes:
 			<!--- If the object has an error Bean, check for errors on this property --->
 			<cftry>
 				<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
+					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
+				<cfelseif len(attributes.object.getErrorBean().getError(attributes.property))>
 					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
 				</cfif>
 				<cfcatch><!-- Object Contains No Error Bean --></cfcatch>

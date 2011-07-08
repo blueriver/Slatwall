@@ -36,16 +36,17 @@
 Notes:
 
 --->
-
+<div id="modalForm">
 <cfoutput>
 	<form class="modal" method="post" enctype="multipart/form-data" action="#buildURL('admin:product.uploadSkuImage')#">
 		<input type="hidden" name="skuID" value="#rc.skuID#" />
 		<p>#rc.$.Slatwall.rbKey("admin.product.selectImageForSku")#<br>#rc.sku.getSkuCode()#</p>
-		<input type="file" id="skuImageFile" name="skuImageFile" accept="image/gif, image/jpeg, image/jpg, image/png" />
+		<input type="file" id="skuImageFile" class="imageFile" name="skuImageFile" accept="image/gif, image/jpeg, image/jpg, image/png" />
 		<br><br>
 		<div id="actionButtons" class="clearfix">
-			<input type="submit" class="button" id="adminproductuploadSkuImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadSkuImage')#" disabled="true" />
+			<input type="submit" class="button uploadImage" id="adminproductuploadSkuImage" title="Upload Image" value="#rc.$.Slatwall.rbKey('admin.product.uploadSkuImage')#" disabled="true" />
 			<!---<button id="adminproductuploadSkuImage" title="Upload Image" value="admin:product.uploadSkuImage" name="slatAction" type="submit" disabled="true">#rc.$.Slatwall.rbKey("admin.product.uploadSkuImage")#</button>--->
 		</div>
 	</form>
 </cfoutput>
+</div>

@@ -63,20 +63,15 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// @hint This function is utilized by the fw1 populate method to only update persistent properties in the entity.
 	public string function getUpdateKeys() {
 		if(!structKeyExists(variables, "updateKeys")) {
-			var metaData = getMetaData(this);
+			var props = getProperties();
 			variables.updateKeys = "";
 			
 			// Loop over properties and any persitant properties to the updateKeys
-			for(var i=1; i <= arrayLen(metaData.Properties); i++ ) {
-				var propertyStruct = metaData.Properties[i];
+			for(var i=1; i <= arrayLen(props); i++ ) {
+				var propertyStruct = props[i];
 				if(!isDefined("propertyStruct.Persistent") or (isDefined("propertyStruct.Persistent") && propertyStruct.Persistent == true && !isDefined("propertyStruct.FieldType"))) {
-					variables.updateKeys = "#variables.updateKeys##propertyStruct.Name#,";
+					variables.updateKeys = listAppend(variables.updateKeys,propertyStruct["name"]);
 				}
-			}
-			
-			// Remove trailing comma
-			if(len(variables.updateKeys)) {
-				variables.updateKeys = left(variables.updateKeys,len(variables.updateKeys)-1);
 			}
 		}
 		
@@ -113,8 +108,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public any function populate(required struct data, string propList=getUpdateKeys(),boolean cleanseInput=false) {
-			var props = getProperties();
-			for( var i=1;i<=arrayLen(props);i++ ) {
+		var props = getProperties();
+		for( var i=1;i<=arrayLen(props);i++ ) {
 			local.theProperty = props[i];
 			// If a propList was passed in, use it to filter
 			if( !listLen(arguments.propList) || listContains(arguments.propList,local.theProperty.name) ) {
@@ -132,28 +127,30 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 						_setPropertyNull( local.theProperty.name );
 					} else {
 						// cleanse input?
-						param name="local.theProperty.cleanseInput" default="#arguments.cleanseInput#";
-						if( local.theProperty.cleanseInput ) {
+						//param name="local.theProperty.cleanseInput" default="#arguments.cleanseInput#";
+						if( arguments.cleanseInput ) {
 							local.varValue =  HTMLEditFormat(local.varValue);
 						}
 						_setProperty(local.theProperty.name,local.varValue); 
 					}
 				// do many-to-one
 				} else if( local.theProperty.fieldType == "many-to-one" ) {
-					if( structKeyExists(arguments.data,local.theProperty.fkcolumn) ) {
-						local.fkValue = arguments.data[local.theProperty.fkcolumn];
-					} else if( structKeyExists(arguments.data,local.theProperty.name) ) {
-						local.fkValue = arguments.data[local.theProperty.name];
+					if( structKeyExists(arguments.data, local.theProperty.fkcolumn) ) {
+						var manyToOneData = arguments.data[local.theProperty.fkcolumn];
+					} else if( structKeyExists(arguments.data, local.theProperty.name) ) {
+						var manyToOneData = arguments.data[local.theProperty.name];
+					} else {
+						var manyToOneData = "";
 					}
-					if( structKeyExists(local,"fkValue") ) {
-						local.varValue = EntityLoadByPK("Slatwall" & local.theProperty.cfc,local.fkValue);
-						if( !isNull(local.varValue) ) {
-							_setProperty(local.theProperty.name,local.varValue);
+					if(isSimpleValue(manyToOneData) && manyToOneData != "") {
+						var fkValue = manyToOneData;
+						var varValue = EntityLoadByPK("Slatwall" & local.theProperty.cfc, fkValue);
+						if( !isNull(varValue) ) {
+							_setProperty(local.theProperty.name, varValue);
 						} else {
 							_setPropertyNull(local.theProperty.name);
 						}
 					}
-				
 				}
 			}
 		}

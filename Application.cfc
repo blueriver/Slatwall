@@ -82,7 +82,7 @@ component extends="framework" output="false" {
 		getPluginConfig().getApplication().setValue( "fw", this);
 		
 		// Set the setup confirmed as false
-		getPluginConfig().getApplication().setValue('applicationSetupConfirmend', false);
+		getPluginConfig().getApplication().setValue('applicationSetupConfirmed', false);
 		
 		// Set vfs root for slatwall
 		getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
@@ -120,11 +120,11 @@ component extends="framework" output="false" {
 			setupMuraRequirements();
 			
 			// This will verify that all of the required slatwall elements are in Mura
-			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmend') != true) {
+			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmed') != true) {
 				// Setup run Setting Service reload config
 				getBeanFactory().getBean("settingService").reloadConfiguration();
 				getBeanFactory().getBean("settingService").verifyMuraRequirements();
-				getPluginConfig().getApplication().setValue('applicationSetupConfirmend', true);
+				getPluginConfig().getApplication().setValue('applicationSetupConfirmed', true);
 			}
 			
 			// Enable the request cache service
@@ -163,6 +163,9 @@ component extends="framework" output="false" {
 			
 			// Confirm Session Setup
 			getBeanFactory().getBean("SessionService").confirmSession();
+			
+			// Setup structured Data
+			request.context.structuredData = getBeanFactory().getBean("formUtilities").buildFormCollections(request.context);
 			
 			// Run subsytem specific logic.
 			if(isAdminRequest()) {

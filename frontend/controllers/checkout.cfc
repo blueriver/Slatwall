@@ -106,66 +106,28 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:checkout.detail");
 	}
 	
-	public void function saveFulfillment(required struct rc) {
-		param name="rc.orderFulfillmentID" default="";
-		
+	public void function saveOrderFulfillments(required struct rc) {
 		rc.guestAccountOK = true;
 		
-		// Load the fulfillment
-		var fulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID, true);
-		
-		// Verify the fulfillment is part of the cart then proceed
-		if(rc.$.slatwall.cart().hasOrderFulfillment(fulfillment)) {
-			fulfillment = getOrderService().saveOrderFulfillment(fulfillment, rc);
-		}
-		
-		detail(rc);
-		getFW().setView("frontend:checkout.detail");
-	}
-	
-	public void function saveOrderPayment(required struct rc) {
-		param name="rc.paymentMethodID" default="creditCard";
-		
-		rc.guestAccountOK = true;
-		
-		// Create new Payment Entity
-		var payment = getOrderService().new("SlatwallOrderPayment#rc.paymentMethodID#");
-		
-		// Attempt to Validate & Save Order Payment
-		payment = getOrderService().saveOrderPayment(rc.payment, rc);
-		
-		// Add payment to order
-		rc.$.slatwall.cart().addOrderPayment(rc.payment);
+		getOrderService().updateAndVerifyOrderFulfillments(order=$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}
 	
 	public void function processOrder(required struct rc) {
-		param name="rc.orderPaymentID" default="";
+		param name="rc.orderID" default="";
 		
 		rc.guestAccountOK = true;
 		
-		// Insure that the cart is not new, and that it has order items in it 
-		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
-			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
-		}
+		// Attemp to process the order 
+		var result = getOrderService().processOrder(data=rc);
 		
-		// Reload the order Requirements list, and make sure that the only thing required is payment
-		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
-		if(!listFind(rc.orderRequirementsList,"account") && !listFind(rc.orderRequirementsList,"fulfillment")) {
-			
-			var tempOrderID = rc.$.slatwall.cart().getOrderID();
-			
-			var result = getOrderService().setupPaymentAndProcessOrder(order=rc.$.slatwall.cart(), data=rc);
-			
-			if(result) {
-				// Redirect to order Confirmation
-				getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#orderID#"), false);
-			}
-			
+		if(result) {
+			// Redirect to order Confirmation
+			getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#rc.orderID#"), false);
 		}
-		
+			
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}

@@ -37,10 +37,13 @@ Notes:
 
 --->
 
-<cfparam name="rc.fulfillmentMethods" type="struct" />
+<cfparam name="rc.fulfillmentMethods" type="array" />
 
 <cfoutput>
 	<div class="svoadminListFulfillmentMethods">
+		<ul id="navTask">
+	    	<cf_SlatwallActionCaller action="admin:setting.listFulfillmentMethods" type="list">
+		</ul>
 		
 		<table id="fulfillmentMethodList" class="stripe">
 			<tr>
@@ -49,8 +52,7 @@ Notes:
 				<th>&nbsp;</th>
 			</tr>
 				
-			<cfloop collection="#rc.fulfillmentMethods#" item="local.thisFulfillmentMethodID">
-				<cfset local.thisFulfillmentMethod = rc.fulfillmentMethods[local.thisFulfillmentMethodID] />
+			<cfloop array="#rc.fulfillmentMethods#" index="local.thisFulfillmentMethod">
 				<tr>
 					<cfset local.fulfillmentMethodMetaData = getMetaData(local.thisFulfillmentMethod) />
 					<td class="varWidth"><a href="#buildURL(action='admin:setting.detailfulfillmentmethod',querystring='fulfillmentmethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#')#">#$.Slatwall.rbKey("admin.setting.fulfillmentMethod." & local.thisFulfillmentMethod.getFulfillmentMethodID())#</a></td>
@@ -63,8 +65,8 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethodID#" class="viewDetails" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethodID#" class="edit" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="edit" type="list">
 						</ul> 						
 					</td>
 				</tr>

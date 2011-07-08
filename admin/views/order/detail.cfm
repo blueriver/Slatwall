@@ -45,15 +45,6 @@ Notes:
 
 <cfoutput>
 
-<cfif structKeyExists(rc,"errorBean")>
-	<cfset local.errors = rc.errorBean.getErrors() />
-	<div class="error">
-		<cfloop collection="#local.errors#" item="local.thisError">
-			#local.errors[local.thisError]#
-		</cfloop>
-	</div>
-</cfif>
-
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:order.list" type="list">
 </ul>
@@ -101,7 +92,7 @@ Notes:
 			<cfloop array="#local.payments#" index="local.thisPayment">
 			<tr>
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#dollarFormat(local.thisPayment.getAmountAuthorized())#</td>
+				<td>#dollarFormat(local.thisPayment.getAmount())#</td>
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
@@ -139,7 +130,9 @@ Notes:
 					<cfset local.fulfillmentNumber++ />
 					<h4>#$.Slatwall.rbKey("entity.fulfillment")# #local.fulfillmentNumber#</h4>
 					<div class="buttons">
+						<cfif local.thisOrderFulfillment.isProcessable()>
 						<cf_SlatwallActionCaller action="admin:order.detailorderfulfillment" text="#$.slatwall.rbKey('admin.orderfulfillment.process')#" queryString="orderfulfillmentid=#local.thisOrderFulfillment.getOrderFulfillmentID()#" class="button" />
+						</cfif>
 					</div>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />

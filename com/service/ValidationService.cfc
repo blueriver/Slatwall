@@ -70,9 +70,14 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 	
 	// @hint method to validate entity based on property definition, returns a responseBean 
 	public function validate(required any entity, struct objMD){
-		var objMetadata = isNull(objMD) ? getMetadata(entity) : objMD ;
 		// get the object property array 
-		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
+		// use the getProperties() method if present to get any inherited properties
+		if(structKeyExists(arguments.entity,"getProperties")) {
+			var props = arguments.entity.getProperties();
+		} else {
+			var objMetadata = isNull(objMD) ? getMetadata(entity) : objMD ;
+			var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;
+		}
 		var errors = {};
 		//loop through each property;
 		for(var i=1; i <= arrayLen(props); i++) {
@@ -100,6 +105,7 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		if( !structIsEmpty(errors) ) {
 			response.getErrorBean().setErrors(errors);
 		}
+
 		return response;
 	}
 	
@@ -121,11 +127,13 @@ component extends="Slatwall.com.utility.BaseObject" accessors="true" {
 		
 	// @hint Checks if entity has an error bean
 	private boolean function hasErrorBean(required any entity) {
-		var objMetadata = getMetadata(arguments.entity);
-		var props = isNULL(objMetadata.properties) ? [] : objMetadata.properties;	
-		return arrayLen(structFindValue({mainprop=props,extendedprop=objMetadata.extends.properties},'errorBean'));
+		try {
+			arguments.entity.getErrorBean();
+			return true;
+		} catch(any e) {
+			return false;
+		}
 	}
-	
 	
 	// @hint returns the validator class name by validation rule.
 	private string function getClassNameByRule(String rule){

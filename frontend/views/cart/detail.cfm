@@ -48,6 +48,7 @@ Notes:
 						<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
 						<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
 						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
+						<dd class="customizations">#local.orderItem.displayCustomizations()#</dd>
 						<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
 						<dd class="quantity"><input name="orderItem.#local.orderItem.getOrderItemID()#.quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" /></dd>
 						<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
@@ -64,9 +65,11 @@ Notes:
 					<dd class="total">#DollarFormat($.slatwall.cart().getTotal())#</dd>
 				</dl>
 			</div>
-			<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
-			<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
-			<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
+			<div class="actionButtons">
+				<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
+				<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
+				<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
+			</div>
 		</cfif>
 		</form>
 	</div>

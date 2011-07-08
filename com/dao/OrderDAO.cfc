@@ -37,5 +37,123 @@ Notes:
 
 */
 component extends="BaseDAO" {
+
+	public query function getExportQuery(string keyword, string orderDateStart, string orderDateEnd, string statusCode, string orderBy) {
+		//initialize search field flags
+		var searchOrderNumber = false;
+		var searchAccount = false;
+		var searchDateStart = false;
+		var searchDateEnd = false;
+		var searchStatusCode = false;
+		
+		var qOrders = new Query();
+		var sql =
+			"SELECT
+				SlatwallOrder.orderNumber,
+				SlatwallOrder.orderOpenDateTime,
+				SlatwallSku.skucode,
+				SlatwallBrand.brandName, 
+				SlatwallProduct.productName,
+				SlatwallOrderItem.price,
+				SlatwallOrderItem.quantity,
+				(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as extendedPrice,
+				SlatwallOrderDeliveryItem.quantityDelivered,
+				SlatwallOrderItem.taxAmount,
+				SlatwallOrderFulfillment.fulfillmentCharge,
+				SlatwallShippingMethod.shippingMethodName,
+				orderItemStatusType.type as status,
+				SlatwallAccount.firstName as accountFirstName,
+				SlatwallAccount.LastName as accountLastName,
+				SlatwallAccount.company as accountCompany,
+				SlatwallAddress.name as shippingName,
+				SlatwallAddress.company as shippingCompany,
+				SlatwallAddress.phone as shippingPhone,
+				SlatwallAddress.streetAddress as shippingStreetAddress,
+				SlatwallAddress.street2Address as shippingStreet2Address,
+				SlatwallAddress.locality as shippingLocality,
+				SlatwallAddress.city as shippingCity,
+				SlatwallAddress.stateCode as shippingStateCode,
+				SlatwallAddress.countryCode as shippingCountryCode
+			 FROM 
+			 	  SlatwallOrder,
+			 	  SlatwallSku,
+			 	  SlatwallBrand,
+			 	  SlatwallProduct,
+			 	  SlatwallOrderFulfillment,
+			 	  SlatwallType orderItemStatusType,
+			 	  SlatwallType orderStatusType,
+			 	  SlatwallAccount,
+			 	  SlatwallShippingMethod,
+			 	  SlatwallAddress,
+			 	  SlatwallOrderItem
+			  LEFT OUTER JOIN SlatwallOrderDeliveryItem
+			  		ON SlatwallOrderItem.orderItemID = SlatwallOrderDeliveryItem.orderItemID
+			  WHERE
+			  		SlatwallOrderItem.orderID = SlatwallOrder.orderID
+			  	AND	SlatwallOrder.accountID = SlatwallAccount.accountID	
+			  	AND SlatwallSku.skuID = SlatwallOrderItem.skuID
+			  	AND SlatwallProduct.productID = SlatwallSku.productID
+			  	AND SlatwallProduct.brandID = SlatwallBrand.brandID
+			  	AND SlatwallOrderFulfillment.orderFulfillmentID = SlatwallOrderItem.orderFulfillmentID
+			  	AND SlatwallShippingMethod.shippingMethodID = SlatwallOrderFulfillment.shippingMethodID
+			  	AND orderItemStatusType.typeID = SlatwallOrderItem.orderItemStatusTypeID
+			  	AND SlatwallAddress.addressID = SlatwallOrderFulfillment.shippingAddressID
+			  	AND SlatwallOrder.orderStatusTypeID = orderStatusType.typeID";		  	
+		
+	// keyword search on order number, or account lastname or company	 	
+		if(structKeyExists(arguments,"keyword") && len(trim(arguments.keyword)) > 0) {
+			if(isNumeric(arguments.keyword)) {
+				sql &= " AND SlatwallOrder.orderNumber = :searchOrderNumber";
+				searchOrderNumber = true;
+			} else if (isSimpleValue(arguments.keyword)) {
+				sql &= " AND SlatwallAccount.lastName like :searchLastName or SlatwallAccount.company like :searchComany";
+				searchAccount = true;
+			}
+		}
+		// date search
+		if(structKeyExists(arguments,"orderDateStart") && len(arguments.orderDateStart) > 0 && isDate(arguments.orderDateStart)) {
+			sql &= " AND SlatwallOrder.orderOpenDateTime >= :searchDateStart";
+			searchDateStart = true;
+		} 
+		// date search
+		if(structKeyExists(arguments,"orderDateEnd") && len(arguments.orderDateEnd) > 0 && isDate(arguments.orderDateEnd)) {
+			orderDateEnd = dateAdd('s',85399,orderDateEnd);
+			sql &= " AND SlatwallOrder.orderOpenDateTime <= :searchDateEnd";
+			searchDateEnd = true;
+		} 
+		// status code
+		if(structKeyExists(arguments,"statusCode") && len(arguments.statusCode) > 0) {
+			sql&= " AND orderStatusType.systemCode in (:searchStatusCode)";
+			searchStatusCode = true;
+		} 
+		// query ordering
+		if(structKeyExists(arguments,"orderBy") && len(arguments.orderby) > 0) {
+			var orderField = listFirst(arguments.orderBy,"|");
+			var direction = listLast(arguments.orderBy,"|");
+			if(direction == orderField) {
+				direction = "ASC";
+			}
+			sql &= " ORDER BY SlatwallOrder.#orderField# #direction#";
+		}
+		
+		qOrders.setSQL(sql);
+		// param values
+		if(searchOrderNumber) {
+			qOrders.addParam(name="searchOrderNumber", value="#arguments.keyword#", cfsqltype="cf_sql_integer");
+		} else if(searchAccount) {
+			qOrders.addParam(name="searchLastName", value="%#arguments.keyword#%", cfsqltype="cf_sql_varchar");
+			qOrders.addParam(name="searchCompany", value="%#arguments.keyword#%", cfsqltype="cf_sql_varchar");
+		}
+		if(searchDateStart) {
+			qOrders.addParam(name="searchDateStart", value="#arguments.orderDateStart#", cfsqltype="cf_sql_timestamp");
+		}
+		if(searchDateEnd) {
+			qOrders.addParam(name="searchDateEnd", value="#arguments.orderDateEnd#", cfsqltype="cf_sql_timestamp");
+		}
+		if(searchStatusCode) {
+			qOrders.addParam(name="searchStatusCode", value="#arguments.statusCode#", cfsqlType="cf_sql_varchar", list="true");
+		}
+		return qOrders.execute().getResult();
+	}
 			
 }

@@ -54,7 +54,19 @@ Notes:
 <ormcfclocation>com/entity</ormcfclocation>
 <customtagpaths>tags</customtagpaths>
 <settings>
-	
+	<setting>
+		<name>sendUsageStats</name>
+		<label>Send Usage Statistics</label>
+		<hint>This option allows Slatwall to automatically sent usage information to the developers in an effort to help them improve the software.</hint>
+		<type>select</type>
+		<required>true</required>
+		<validation></validation>
+		<regex></regex>
+		<message></message>
+		<defaultvalue>anonymous</defaultvalue>
+		<optionlist>none^anonymous^full</optionlist>
+		<optionlabellist>None^Anonymous^With IP, Domain and Site Info</optionlabellist>
+	</setting>	
 </settings>
 
 <eventHandlers>
@@ -64,7 +76,9 @@ Notes:
 	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onAfterPageSlatwallProductListingSave" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAfterCategoryUpdate" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterCategoryDelete" component="fw1EventAdapter" persist="false"/>
 </eventHandlers>
 <displayobjects location="global">
 	<displayobject name="Account" displaymethod="account_detail" component="fw1DisplayAdapter" persist="false"/>

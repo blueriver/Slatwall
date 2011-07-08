@@ -53,49 +53,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function list(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
-		param name="rc['F:orderstatustype_systemcode']" default="ostNew,ostProcessing";
+		param name="rc.statusCode" default="ostNew,ostProcessing";
 		param name="rc.orderDateStart" default="";
 		param name="rc.orderDateEnd" default="";
-		if(structKeyExists(rc,"isSearch")) {
-			processOrderSearch(arguments.rc);
-		}
-		rc.orderStatusOptions = getOrderService().getOrderStatusOptions();
-		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
-    }    
-    
-	private void function processOrderSearch(required struct rc) {
-		// if someone tries to filter for carts using URL, override the filter
-		if(rc['F:orderstatustype_systemcode'] == "ostNotPlaced") {
-			rc["F:orderstatustype_systemcode"] = "ostNew,ostProcessing";
-		}
 		// show advanced search fields if they have been filled
-		if(len(trim(rc.orderDateStart)) > 0 || len(trim(rc.orderDateEnd)) > 0 || (len(rc['F:orderstatustype_systemcode']) && rc['F:orderstatustype_systemcode'] != "ostNew,ostProcessing" )) {
+		if(len(trim(rc.orderDateStart)) > 0 || len(trim(rc.orderDateEnd)) > 0 || (len(rc.statusCode) && rc.statusCode != "ostNew,ostProcessing" )) {
 			rc.showAdvancedSearch = 1;
 		}
-		// date range (start or end) have been submitted 
-		if(len(trim(rc.orderDateStart)) > 0 || len(trim(rc.orderDateEnd)) > 0) {
-			var dateStart = rc.orderDateStart;
-			var dateEnd = rc.orderDateEnd;
-			// if either the start or end date is blank, default them to a long time ago or now(), respectively
- 			if(len(trim(rc.orderDateStart)) == 0) {
- 				dateStart = createDateTime(30,1,1,0,0,0);
- 			} else if(len(trim(rc.orderDateEnd)) == 0) {
- 				dateEnd = now();
- 			}
- 			// make sure we have valid datetimes
- 			if(isDate(dateStart) && isDate(dateEnd)) {
- 				// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all orders on the last day of the range (only if it was entered)
-				if(len(trim(rc.orderDateEnd)) > 0) {
-					dateEnd = dateAdd('s',85399,dateEnd);	
-				}
-				rc['R:orderOpenDateTime'] = "#dateStart#,#dateEnd#";
- 			} else {
- 				rc.message = #rc.$.slatwall.rbKey("admin.order.search.invaliddates")#;
- 				rc.messagetype = "warning";
- 			}
-		}
-			
-	}
+		rc.orderSmartList = getOrderService().searchOrders(data=arguments.rc);
+		rc.orderStatusOptions = getOrderService().getOrderStatusOptions();
+    }    
 	
 	public void function detail(required struct rc) {
 	   rc.order = getOrderService().getOrder(rc.orderID);
@@ -105,6 +72,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   } else {
 	       getFW().redirect("admin:order.list");
 	   }
+	}
+	
+	public void function exportOrders(required struct rc) {
+		getOrderService().exportOrders(data=arguments.rc);
 	}
 	
 	public void function applyOrderActions(required struct rc) {
@@ -135,7 +106,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function chargeOrderPayment(required struct rc) {
 		var orderPayment = getOrderService().getOrderPayment(rc.orderPaymentID);
 		if(!isNull(orderPayment)) {
-			var chargeOK = getPaymentService().processPayment(orderPayment,"chargePreAuthorization",orderPayment.getAmount());
+			var chargeOK = getPaymentService().processPayment(orderPayment,"chargePreAuthorization",orderPayment.getAmount(),rc.providerTransactionID);
 			if(chargeOK) {
 				rc.message = rc.$.slatwall.rbKey("admin.order.chargeOrderPayment_success");
 				getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
@@ -167,7 +138,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!isNull(orderPayment)) {
 			// make sure that the refund amount entered is within the limits
 			if(isNumeric(rc.refundAmount) && rc.refundAmount > 0 && rc.refundAmount <= orderPayment.getAmountCharged()) {
-				refundOK = getPaymentService().processPayment(orderPayment,"credit",rc.refundAmount);
+				refundOK = getPaymentService().processPayment(orderPayment,"credit",rc.refundAmount,rc.providerTransactionID);
 				if(refundOK) {
 					rc.message = rc.$.slatwall.rbKey("admin.order.refundOrderPayment_success");
 					getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
@@ -205,18 +176,25 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function processOrderFulfillment(required struct rc) {
-		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);	
-		var orderDeliveryItemsStruct = getService("formUtilities").buildFormCollections(rc)['orderItems'];
-		// call service to process fulfillment. Returns an orderDelivery
-		var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
-		if(!orderDelivery.hasErrors()) {
-			rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
-			getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
+		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
+		if(rc.orderFulfillment.isProcessable()) {
+			var orderDeliveryItemsStruct = getService("formUtilities").buildFormCollections(rc)['orderItems'];
+			// call service to process fulfillment. Returns an orderDelivery
+			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
+			if(!orderDelivery.hasErrors()) {
+				rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
+				getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
+			} else {
+				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
+				rc.message = orderDelivery.getErrorBean().getError("orderDeliveryItems");
+				rc.messagetype = "warning";
+				getFW().setView("admin:order.detailOrderFulfillment");
+			}
 		} else {
 			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
-			rc.message = orderDelivery.getErrorBean().getError("orderDeliveryItems");
-			rc.messagetype = "warning";
-			getFW().setView("admin:order.detailOrderFulfillment");
+			rc.message = rc.$.slatwall.rbKey("admin.order.processOrderFulfillment.notProcessable");
+			rc.messagetype = "error";
+			getFW().setView("admin:order.detailOrderFulfillment");			
 		}
 	}
 

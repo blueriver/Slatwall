@@ -71,7 +71,15 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 				}
 			}
 			var imageExt = listLast(arguments.imagePath,".");
-			var resizedImagePath = replaceNoCase(arguments.imagePath,".#imageExt#","#imageNameSuffix#.#imageExt#");
+			
+			var cacheDirectory = replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/");
+			
+			if(!directoryExists(expandPath(cacheDirectory))) {
+				directoryCreate(expandPath(cacheDirectory));
+			}
+			
+			var resizedImagePath = replaceNoCase(replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/#listLast(arguments.imagePath, "/\")#"),".#imageExt#","#imageNameSuffix#.#imageExt#");
+			
 			if(!fileExists(expandPath(resizedImagePath))) {
 				var img = imageRead(expandPath(arguments.imagePath));
 				// scale to fit if both height and width are specified, else resize accordingly
@@ -157,46 +165,21 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 		// get file name without extension
 		var baseFileName = listFirst(fileName,".");
 		var fileList = directoryList(expandPath(getDirectoryFromPath(arguments.filePath)),true,"query");
-		// loop through directory and delete base image and all resized versions
+		// loop through directory and delete base image and all resized versions in the cache subdirectory
 		for(var i = 1; i<= fileList.recordCount; i++) {
 			if(fileList.type[i] == "file" && fileList.name[i].startsWith(baseFileName)) {
-				fileDelete(fileList.directory[1] & "/" & fileList.name[i]);
+				fileDelete(fileList.directory[i] & "/" & fileList.name[i]);
 			}
 		}
 		return true;
 	}
-	
-	
-	/*
-	*  This function is part of the Common Function Library Project. An open source
-	*   collection of UDF libraries designed for ColdFusion 5.0 and higher. For more information,
-	*   please see the web site at:
-	*
-	*       http://www.cflib.org
-	*
-	*   License:
-	*   This code may be used freely.
-	*   You may modify this code as you see fit, however, this header, and the header
-	*   for the functions must remain intact.
-	*
-	*   This code is provided as is.  We make no warranty or guarantee.  Use of this code is at your own risk.
-	*
-	*  @hint This function will remove any reserved characters from a filename string and replace any spaces with dashes.
-	*  @param filename   Filename. (Required)
-	*  @return Returns a string. 
-	*  @author Jason Sheedy (jason@jmpj.net) 
-	*  @version 1, January 19, 2006 (transposed to cfscript for Slatwall Mura plugin by Tony Garcia Feb 2011)
-	*/
-	
-	public string function filterFilename(string filename) {
+		
+	public string function filterFilename(required string filename) {
 		var newFileName = "";
-		if( structKeyExists(arguments,"filename") && len(arguments.fileName) ) {
-		    var filenameRE = "[" & "'" & '"' & "##" & "/\\%&`@~!,:;=<>\+\*\?\[\]\^\$\(\)\{\}\|]";
-		    var newfilename = reReplace(arguments.filename,filenameRE,"","all");
-		    newfilename = replace(newfilename," ","-","all");
-		}
-	    
-	    return lcase(newfilename);
+		newfilename = replace(arguments.filename,"  "," ","all");
+		newfilename = replace(newfilename," ","-","all");
+		newfilename = reReplace(newfilename, "[^a-z|A-Z|0-9|\-]", "", "all");
+		return lcase(newfilename);
 	}
 
 	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='' ){

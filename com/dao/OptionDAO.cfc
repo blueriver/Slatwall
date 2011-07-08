@@ -42,4 +42,8 @@ component extends="BaseDAO" {
 	public any function isDuplicateOptionCode( required any option ) {
 		return arrayLen(ormExecuteQuery("from SlatwallOption where optionCode = :code and optionGroup = :group and optionID != :id", {code=arguments.option.getOptionCode(), group=arguments.option.getOptionGroup(), id=arguments.option.getOptionID()}));
 	}
+	
+	public array function getMaximumOptionSortOrders() {
+		return ormExecuteQuery("Select max(o.sortOrder), max(og.sortOrder) from SlatwallOption o inner join o.optionGroup og")[1];
+	}
 }

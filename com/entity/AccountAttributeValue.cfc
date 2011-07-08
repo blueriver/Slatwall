@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Attribute Value" entityname="SlatwallAccountAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="Account" {
+component displayname="Account Attribute Value" entityname="SlatwallAccountAttributeValue" table="SlatwallAttributeValue" output="false" persistent="true" accessors="true" extends="AttributeValue" discriminatorValue="account" {
 	
 	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeValueType" length="255" insert="false" update="false";

@@ -181,11 +181,15 @@ table#productTypes {
 	width: 850px;
 }
 
-table#productTypes ul, table#productPages ul {
+table#productTypes ul, 
+table#productPages ul,
+table#productCategories ul {
 	background-image: none;
 }
 
-table#productTypes ul.neston, table#productPages ul.neston {
+table#productTypes ul.neston, 
+table#productPages ul.neston,
+table#productCategories ul.neston {
 	font-weight: bold;
 }
 
@@ -203,11 +207,23 @@ table td.administration li.zoomOut {
 	width: 16px;
 	display: none;
 }
-
+  
 td.property {
 	text-align: left;
 	font-weight: bold;
 }
+
+/*******   Forms   ********/
+
+label.required,
+form div.required {
+	font-weight: bold;
+	color: #000000;
+	padding-right: 1em;
+	background: url("../images/admin.ui.required.gif") no-repeat scroll right center transparent;
+}
+
+
 
 div.dashboardSection {
 	width:500px;
@@ -251,6 +267,10 @@ table .alignLeft {
 
 form.modal {
 	width: auto;
+}
+
+form#alternateImage {
+	width: 600px;
 }
 
 dl.optionDetail {
@@ -324,6 +344,16 @@ p.error_message {
 }
 
 /**************************************************************/
+
+ul.errors {
+	margin: 1em 0 0 1em;
+	list-style-position: inside;
+	color: #ff0000;
+}
+
+ul.errors p {
+	display:inline;
+}
 
 #navUtility li#navDashboard {
 	background: none repeat scroll 0 0 transparent;

@@ -43,10 +43,12 @@ component extends="BaseService" accessors="true" {
 	property name="ProductTypeDAO" type="any";
 	property name="SkuService" type="any";  
 	property name="ProductTypeTree" type="any";
+	property name="tagProxyService" type="any";
 	
 	// Mura Service Injection
 	property name="contentManager" type="any";
 	property name="feedManager" type="any";
+	property name="categoryManager" type="any";
 	
 	public any function getProductTemplates(required string siteID) {
 		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
@@ -108,6 +110,18 @@ component extends="BaseService" accessors="true" {
 	public any function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
 		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
 	}
+	
+	public any function getMuraCategories(required string siteID, string parentID=0) {
+		var categories = getCategoryManager().getCategoriesBySiteID(siteID=arguments.siteID);
+    	var categoryTree = getService("utilities").queryTreeSort(
+    		theQuery = categories,
+    		itemID = "categoryID",
+    		parentID = "parentID",
+    		pathColumn = "name",
+    		rootID = "#arguments.parentID#"
+    	);
+    	return categoryTree;
+	}
 
 	/**
 	/* @hint associates this product with Mura content objects
@@ -144,6 +158,61 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 	}
+
+	/**
+	/* @hint associates this product with Mura categories
+	*/
+	public void function assignProductCategories(required any product,required string categoryID,string featuredCategories) {
+		getDAO().clearProductCategories(arguments.product);
+		for(var i=1;i<=listLen(arguments.categoryID);i++) {
+			local.isFeatured = false;
+			local.thisCategoryID = listGetAt(arguments.categoryID,i);
+			if(listFindNoCase(arguments.featuredCategories,listLast(local.thisCategoryID," "))) {
+				local.isFeatured = true;
+			}
+			local.thisProductCategory = entityNew("SlatwallProductCategory",{categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
+			arguments.product.addProductCategory(local.thisProductCategory);
+		}
+	}
+
+	public void function updateProductCategoryPaths(required string categoryID, required string siteID) {
+		var pcategoryArray = getDAO().list(entityName="SlatwallProductCategory");
+		for( var i=1; i<=arrayLen(pcategoryArray); i++) {
+			local.thisPC = pcategoryArray[i];
+			if( listContains(local.thisPC.getCategoryPath(),arguments.categoryID) ) {
+				var newPath = getCategoryManager().read(categoryID=local.thisPC.getCategoryID(),siteID=arguments.siteID).getPath();
+				// this is just temporary until the Mura bug is fixed which puts single quotes around the categoryID's in the path
+				newPath = cleanPath(newPath);
+				local.thisPC.setCategoryPath(newPath);
+			}
+		} 
+	}
+
+	// this is only here to get around a Mura bug for now (see above)
+	private string function cleanPath (string path) {
+		var cleanedPath = "";
+		for(var i = 1; i<=listLen(arguments.path);i++) {
+			local.thisID = listGetAt(arguments.path,i);
+			local.thisID = replace(local.thisID,"'","","all");
+			cleanedPath = listAppend(cleanedPath,local.thisID);
+		}
+		return cleanedPath;
+	}
+	
+	public void function deleteProductCategory(required string categoryID) {
+		var pcategoryArray = getDAO().list(entityName="SlatwallProductCategory");
+		for( var i=1; i<=arrayLen(pcategoryArray); i++ ) {
+			local.thisPC = pcategoryArray[i];
+			if( listLast(local.thisPC.getCategoryPath()) == arguments.categoryID ) {
+				// if the last element in the path is the same as the ID, the category assigned is the one being deleted, so delete association
+				getDAO().delete(local.thisPC);
+			} else if( listFindNoCase(local.thisPC.getCategoryPath(),arguments.categoryID) ) {
+				local.thisPath = local.thisPC.getCategoryPath();
+				local.newPath = listDeleteAt(local.thisPath,listFind(local.thisPath,arguments.categoryID));
+				local.thisPC.setCategoryPath(local.newPath);
+			}
+		}
+	}
 	
 	/**
 	/* @hint sets up initial skus when products are created
@@ -158,6 +227,33 @@ component extends="BaseService" accessors="true" {
     public boolean function updateSkus(required any product, required array skus) {
         return getSkuService().updateSkus(argumentCollection=arguments);
     }
+    
+	public any function addAlternateImage(required struct imageUploadResult, required any product, required struct data) {
+		//writeDump(var=arguments.data,top=3);
+		//abort;
+		var alternateImage = this.newProductImage();
+		var imageDirectory = arguments.product.getAlternateImageDirectory();
+		var imageExt = lcase(arguments.imageUploadResult.serverFileExt);
+		alternateImage.setImageExtension(imageExt);
+		arguments.product.addProductImage(alternateImage);
+		alternateImage = Super.save(entity=alternateImage, data=arguments.data);
+		//alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
+		if(!alternateImage.hasErrors()) {
+			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
+			var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
+			if(!imageSaved) {
+				alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
+			}
+		} else {
+			//delete file in the temp directory
+		}
+		return alternateImage;
+	}
+	
+	public boolean function removeAlternateImage(required any image,required any product) {
+		arguments.product.removeProductImage(arguments.image);
+		return getFileService().removeImage(arguments.image.getImagePath());
+	}
 	
 	public any function save(required any Product,required struct data) {
 		// populate bean from values in the data Struct
@@ -183,10 +279,15 @@ component extends="BaseService" accessors="true" {
 			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
 		} else {
 			updateSkus(arguments.Product,arguments.data.skuArray);
+			// set up associations between product and content
+			assignProductContent(arguments.Product,arguments.data.contentID);		
+			// set up associations between product and mura categories
+			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
+			//check for errors in the alternate image upload
+			if(structKeyExists(arguments.data,"image") && arguments.data.image.hasErrors()) {
+				arguments.product.addError(name="alternateImage",message=rbKey('entity.product.alternateImage_uploadError'));
+			}
 		}
-		
-		// set up associations between product and content
-		assignProductContent(arguments.Product,arguments.data.contentID);
 		
 		// make sure that the product code doesn't already exist
 		if( len(data.productCode) ) {
@@ -204,7 +305,7 @@ component extends="BaseService" accessors="true" {
 			arguments.product.addError(argumentCollection=filenameError);
 		}
 		
-		arguments.Product = Super.save(arguments.Product);
+		arguments.Product = super.save(arguments.Product);
 		
 		if( !arguments.Product.hasErrors() ) {
 			// clear cached product type tree so that it's refreshed on the next request
@@ -367,6 +468,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
+		getTagProxyService().cfSetting(requesttimeout="600"); 
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	

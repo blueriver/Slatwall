@@ -113,4 +113,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function onAfterPageSlatwallProductListingDelete(required any rc) {
 		getProductService().deleteProductContent(rc.$.content("contentID"));
 	}
+	
+	public void function onAfterCategoryUpdate(required any rc) {
+		getProductService().updateProductCategoryPaths(categoryID=rc.$.event("categoryID"), siteID=rc.$.event('siteID'));
+	}
+	
+	public void function onAfterCategoryDelete(required any rc) {
+		getProductService().deleteProductCategory(rc.$.event("categoryID"));
+	}
+
 }

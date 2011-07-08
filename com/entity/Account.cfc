@@ -94,6 +94,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
+	public void function setEmail(required string emailAddress) {
+		getPrimaryEmailAddress().setEmailAddress(arguments.emailAddress);
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Orders (one-to-many)
@@ -106,15 +110,28 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	   arguments.order.removeAccount(this);
 	}
 	
-	// Account (one-to-many)
+	// Account Email Addresses (one-to-many)
 	
-	public void function addAccountEmailAddress(required AccountEmailAddress accountEmailAddress) {
-	   arguments.accountEmailAddress.setAccount(this);
+	public void function addAccountEmailAddress(required any AccountEmailAddress) {    
+	   arguments.AccountEmailAddress.setAccount(this);    
+	}    
+
+	public void function removeAccountEmailAddress(required any AccountEmailAddress) {    
+	   arguments.AccountEmailAddress.removeAccount(this);    
 	}
 	
-	public void function addAccountPhoneNumber(required AccountPhoneNumber accountPhoneNumber) {
-	   arguments.accountPhoneNumber.setAccount(this);
+	
+	// Account Phone Numbers (one-to-many)
+	
+	public void function addAccountPhoneNumber(required any AccountPhoneNumber) {
+	   arguments.AccountPhoneNumber.setAccount(this);
 	}
+	
+	public void function removeAccountPhoneNumber(required any AccountPhoneNumber) {
+	   arguments.AccountPhoneNumber.removeAccount(this);
+	}
+	
+
 		
     /************   END Association Management Methods   *******************/
 

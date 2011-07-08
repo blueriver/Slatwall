@@ -46,12 +46,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);	
 		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);
-		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);
-		
+		smartList.addKeywordProperty(propertyIdentifier="account_firstname", weight=3);	
 		smartList.joinRelatedProperty("SlatwallOrder","account");
 		
 		return smartList;
@@ -74,7 +72,50 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartlist.getPageRecords();
 	}
 	
-	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment) {
+	public any function searchOrders(struct data={}) {
+		//set keyword and orderby
+		var params = {
+			keyword = arguments.data.keyword,
+			orderBy = arguments.data.orderBy
+		};
+
+		// if someone tries to filter for carts using URL, override the filter
+		if(listFindNoCase(arguments.data.statusCode,"ostNotPlaced")) {
+			params.statusCode = "ostNew,ostProcessing";
+		} else {
+			params['F:orderstatustype_systemcode'] = arguments.data.statusCode;	
+		}
+		// date range (start or end) have been submitted 
+		if(len(trim(arguments.data.orderDateStart)) > 0 || len(trim(arguments.data.orderDateEnd)) > 0) {
+			var dateStart = arguments.data.orderDateStart;
+			var dateEnd = arguments.data.orderDateEnd;
+			// if either the start or end date is blank, default them to a long time ago or now(), respectively
+ 			if(len(trim(arguments.data.orderDateStart)) == 0) {
+ 				dateStart = createDateTime(30,1,1,0,0,0);
+ 			} else if(len(trim(arguments.data.orderDateEnd)) == 0) {
+ 				dateEnd = now();
+ 			}
+ 			// make sure we have valid datetimes
+ 			if(isDate(dateStart) && isDate(dateEnd)) {
+ 				// since were comparing to datetime objects, I'll add 85,399 seconds to the end date to make sure we get all orders on the last day of the range (only if it was entered)
+				if(len(trim(arguments.data.orderDateEnd)) > 0) {
+					dateEnd = dateAdd('s',85399,dateEnd);	
+				}
+				params['R:orderOpenDateTime'] = "#dateStart#,#dateEnd#";
+ 			} else {
+ 				arguments.data.message = #arguments.data.$.slatwall.rbKey("admin.order.search.invaliddates")#;
+ 				arguments.data.messagetype = "warning";
+ 			}
+		}
+		return getOrderSmartList(params);
+	}
+	
+	public any function exportOrders(required struct data) {
+		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
+		return getService("Utilities").export(searchQuery);
+	}
+	
+	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
 		// Check to see if the order has a status
 		if(isNull(arguments.order.getOrderStatusType())) {
 			arguments.order.setOrderStatusType(this.getTypeBySystemCode('ostNotPlaced'));
@@ -99,14 +140,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		var orderItems = arguments.order.getOrderItems();
+		
 		var itemExists = false;
 		
-		// Check the existing order items and increment quantity if possible.
-		for(var i = 1; i <= arrayLen(orderItems); i++) {
-			if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
-				itemExists = true;
-				orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-				orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+		// If there are no product customizations then we can check for the order item already existing.
+		if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData, "attribute")) {
+			// Check the existing order items and increment quantity if possible.
+			for(var i = 1; i <= arrayLen(orderItems); i++) {
+				if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
+					itemExists = true;
+					orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+					orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+				}
 			}
 		}
 		
@@ -118,108 +163,161 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newItem.setOrder(arguments.order);
 			newItem.setOrderFulfillment(arguments.orderFulfillment);
 			newItem.setPrice(arguments.sku.getPrice());
+			
+			// Check for product customization
+			if(structKeyExists(arguments, "customizatonData") && structKeyExists(arguments.customizatonData, "attribute")) {
+				var pcas = arguments.sku.getProduct().getAttributeSets(['astProductCustomization']);
+				for(var i=1; i<=arrayLen(pcas); i++) {
+					var attributes = pcas[i].getAttributes();
+					for(var a=1; a<=arrayLen(attributes); a++) {
+						if( structKeyExists(arguments.customizatonData.attribute,attributes[a].getAttributeID()) ) {
+							var av = this.newOrderItemAttributeValue();
+							av.setAttribute(attributes[a]);
+							av.setAttributeValue(arguments.customizatonData.attribute[attributes[a].getAttributeID()]);
+							av.setOrderItem(newItem);
+						}
+					}
+				}
+			}
 		}
-		
+				
 		save(arguments.order);
 	}
 	
-	public void function setOrderShippingMethodFromMethodOptionID(required any orderShipping, required string orderShippingMethodOptionID) {
-		var selectedOption = this.getOrderShippingMethodOption(arguments.orderShippingMethodOptionID);
-		arguments.orderShipping.setShippingMethod(selectedOption.getShippingMethod());
-		arguments.orderShipping.setShippingCharge(selectedOption.getTotalCharge());
-	}
-	
-	public boolean function setupPaymentAndProcessOrder(required any order, required struct data) {
-		var result = false;
-		
-		// Place all of this code in a try catch so that if it errors we release the okToProcessOrder lock
-		try {
-			
-			// Lock down this determination so that the values getting called and set don't overlap
-			lock scope="Session" timeout="45" {
-				// Get okToProcessOrder out of the session scope, and if it doesn't exist set it to true
-				var okToProcessOrder = getSessionService().getValue("okToProcessOrder", true);
-				
-				// If okToProcessOrder was true, update the session variable to false because we are about to try an process
-				if(okToProcessOrder) {
-					getSessionService().setValue("okToProcessOrder", false);
-				}
-			}
-			
-			if(okToProcessOrder) {
-				
-				var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
-			
-				if(isNull(payment)) {
-					if(arguments.order.getTotal() != arguments.order.getPaymentAmountTotal()) {
-						payment = getPaymentService().new("SlatwallOrderPayment#data.paymentMethodID#");
-					} else {
-						payment = arguments.order.getOrderPayments()[arrayLen(arguments.order.getOrderPayments())];
-					}
-					
-					// If no amount was passed in from the data, add the amount as the order total minus and previous payments
-					if(!structKeyExists(arguments.data, "amount")) {
-						arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
-					}
-					
-					// Add new Payment to the order
-					payment.setOrder(arguments.order);
-				}
-				
-				// Attempt to Validate & Save Order Payment
-				payment = this.saveOrderPayment(payment, arguments.data);
-				
-				// If the payment has errors do not proceed with the order processing
-				if(payment.hasErrors()) {
-					result = false;
-				} else {
-					result = this.processOrder(arguments.order);
-				}
-				// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
-				getSessionService().setValue("okToProcessOrder", true);
-			}
-		} catch (any e) {
-			// Processing is complete so we set the session variable okToProcessOrder to true so this can run again in the future
-			getSessionService().setValue("okToProcessOrder", true);
+	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
+		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
+			return false;	
 		}
-		return result;
+		return true;
 	}
 	
-	public any function processOrder(required any order) {
-		var allPaymentsOK = true;
+	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
+		var fulfillmentsOK = true;
+		
+		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderFulfillments")) {
+			var fulfillmentsDataArray = data.structuredData.orderFulfillments;
+			for(var i=1; i<= arrayLen(fulfillmentsDataArray); i++) {
+				var fulfillment = this.getOrderFulfillment(fulfillmentsDataArray[i].orderFulfillmentID, true);
+				if(arguments.order.hasOrderFulfillment(fulfillment)) {
+					fulfillment = this.saveOrderFulfillment(fulfillment, fulfillmentsDataArray[i]);
+					if(fulfillment.hasErrors()) {
+						fulfillmentsOK = false;
+					}
+				}		
+			}
+		}
+		
+		// Check each of the fulfillment methods to see if they are complete
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments());i++) {
+			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
+				fulfillmentsOK = false;
+			}
+		}
+		
+		return fulfillmentsOK;
+	}
+	
+	public boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
+		var paymentsOK = true;
+		
+		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderPayments")) {
+			var paymentsDataArray = data.structuredData.orderPayments;
+			for(var i=1; i<= arrayLen(paymentsDataArray); i++) {
+				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
+				
+				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
+					if(payment.isNew() && !structKeyExists(paymentsDataArray[i], "amount")) {
+						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
+					}
+					
+					// Make sure the payment is attached to the order
+					payment.setOrder(arguments.order);
+					
+					// Attempt to Validate & Save Order Payment
+					payment = this.saveOrderPaymentCreditCard(payment, paymentsDataArray[i]);
+					
+					// Check to see if this payment has any errors and if so then don't proceed
+					if(payment.hasErrors() || payment.getBillingAddress().hasErrors() || payment.getCreditCardType() == "Invalid") {
+						paymentsOK = false;
+					}
+				}
+			}
+		}
+		
+		// Verify that there are enough payments applied to the order to proceed
+		if(order.getPaymentAmountTotal() < order.getTotal()) {
+			paymentsOK = false;
+		}
+		
+		return paymentsOK;
+	}
+	
+	private boolean function processOrderPayments(required any order) {
+		var allPaymentsProcessed = true;
 		
 		// Process All Payments and Save the ones that were successful
 		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = setting('paymentMethod_creditCard_checkoutTransactionType');
+			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i].getPaymentMethodID()#_checkoutTransactionType');
+			
 			if(transactionType != 'none') {
-				var paymentOK = getPaymentService().processPayment(arguments.order.getOrderPayments()[i], transactionType);
+				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
 				if(!paymentOK) {
-					allPaymentsOK = false;
+					allPaymentsProcessed = false;
 				}
 			}
 		}
 		
-		// If all payments were successful, then change the order status and clear the cart.
-		if(allPaymentsOK) {
-			// Set the current cart to None
-			if(arguments.order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
-				getSessionService().getCurrent().setOrder(JavaCast("null",""));
+		return allPaymentsProcessed;
+	}
+	
+	public any function processOrder(struct data={}) {
+		// Lock down this determination so that the values getting called and set don't overlap
+		lock scope="Session" timeout="60" {
+			
+			var order = this.getOrder(arguments.data.orderID);
+			
+			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
+				return true;
+			} else {
+				// update and validate all aspects of the order
+				var validAccount = updateAndVerifyOrderAccount(order=order, data=arguments.data);
+				var validPayments = updateAndVerifyOrderPayments(order=order, data=arguments.data);
+				var validFulfillments = updateAndVerifyOrderFulfillments(order=order, data=arguments.data);
+				
+				if(validAccount && validPayments && validFulfillments) {
+					// Double check that the order requirements list is blank
+					var orderRequirementsList = getOrderRequirementsList(order);
+					
+					if( !len(orderRequirementsList) ) {
+						// Process all of the order payments
+						var paymentsProcessed = processOrderPayments(order=order);
+						
+						// If processing was successfull then checkout
+						if(paymentsProcessed) {
+							
+							// If this order is the same as the current cart, then set the current cart to a new order
+							if(order.getOrderID() == getSessionService().getCurrent().getOrder().getOrderID()) {
+								getSessionService().getCurrent().setOrder(JavaCast("null",""));
+							}
+							
+							// Update the order status
+							order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
+							
+							// Save the order to the database
+							getDAO().save(order);
+							
+							// Do a flush so that the order is commited to the DB
+							ormFlush();
+							
+							// Send out the e-mail
+							sendOrderConfirmationEmail(order);
+							
+							return true;
+						}
+					}
+				}
 			}
-			
-			// Update the order status
-			arguments.order.setOrderStatusType(this.getTypeBySystemCode("ostNew"));
-			
-			// Save the order to the database
-			getDAO().save(arguments.order);
-			
-			// Do a flush so that the order is commited to the DB
-			ormFlush();
-			
-			// Send out the e-mail
-			sendOrderConfirmationEmail(arguments.order);
-			
-			return true;
-		}
+		} // END OF LOCK
 		
 		return false;
 	}
@@ -246,21 +344,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Check if the order still requires a valid account
 		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
-			orderRequirementsList &= "account,";
+			orderRequirementsList = listAppend(orderRequirementsList, "account");
 		}
 		
 		// Check each of the fulfillment methods to see if they are ready to process
 		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments());i++) {
 			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
-				orderRequirementsList &= "fulfillment,#arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID()#,";		
+				orderRequirementsList = listAppend(orderRequirementsList, "fulfillment");
+				orderRequirementsList = listAppend(orderRequirementsList, arguments.order.getOrderFulfillments()[i].getOrderFulfillmentID());
 			}
 		}
 		
 		// Make sure that the order total is the same as the total payments applied
 		if( arguments.order.getTotal() != arguments.order.getPaymentAmountTotal() ) {
-			orderRequirementsList &= "payment,";
+			orderRequirementsList = listAppend(orderRequirementsList, "payment");
 		}
 		
+		// Trim the last 
 		if(len(orderRequirementsList)) {
 			orderRequirementsList = left(orderRequirementsList,len(orderRequirementsList)-1);
 		}
@@ -270,6 +370,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
 		arguments.orderFulfillment.populate(arguments.data);
+		
 		
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
@@ -286,7 +387,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Populate Address And check if it has changed
 			var serializedAddressBefore = address.simpleValueSerialize();
-			address.populate(data);
+			address.populate(data.shippingAddress);
 			var serializedAddressAfter = address.simpleValueSerialize();
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
@@ -370,10 +471,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					orderDeliveryItem.setOrderDelivery(orderDelivery);
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
-						//order item was fulfilled
-						local.statusType = this.getTypeBySystemCode("oistFulfilled");
-						thisOrderItem.setOrderItemStatusType(local.statusType);		
+					//order item was fulfilled
+						local.statusType = this.getTypeBySystemCode("oistFulfilled");	
+					} else {
+					// TODO: create setting to make this flexible according to business rules
+						local.statusType = this.getTypeBySystemCode("oistBackordered");					
 					}
+					thisOrderItem.setOrderItemStatusType(local.statusType);	
 				}
 			}
 		}
@@ -397,35 +501,49 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return this.save(orderDelivery);
 	}
 	
-	public any function saveOrderPayment(required any orderPayment, struct data={}) {
+	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {
 		
 		// Populate Order Payment	
 		arguments.orderPayment.populate(arguments.data);
 		
-		// Manually Set the scurity code because it isn't a persistent property
+		// Manually Set the scurity code & Credit Card Number because it isn't a persistent property
 		arguments.orderPayment.setSecurityCode(arguments.data.securityCode);
+		arguments.orderPayment.setCreditCardNumber(arguments.data.creditCardNumber);
 		
-		// Get Address
-		if( isNull(arguments.orderPayment.getBillingAddress()) ) {
-			var address = getAddressService().newAddress();
-		} else {
-			var address = arguments.orderPayment.getBillingAddress();
+		// Validate the order Payment
+		arguments.orderPayment = this.validateOrderPaymentCreditCard(arguments.orderPayment);
+		if(arguments.orderPayment.getCreditCardType == "Invalid") {
+			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
 		}
 		
-		// Set the address in the order Fulfillment
-		arguments.orderPayment.setBillingAddress(address);
+		if(!arguments.orderPayment.hasErrors()) {
+			var address = arguments.orderPayment.getBillingAddress();
 		
-		// Populate Address
-		address.populate(data);
-		
-		// Validate & Save Address
-		address = getAddressService().saveAddress(address);
-		
-		// Validate the order Fulfillment
-		this.validateOrderPaymentCreditCard(arguments.orderPayment);
-		
-		// Save the order Fulfillment
-		return getDAO().save(arguments.orderPayment);
+			// Get Address
+			if( isNull(address) ) {
+				// Set a new address in the order payment
+				var address = getAddressService().newAddress();
+			}
+			
+			// Populate Address
+			address.populate(arguments.data.billingAddress);
+			
+			// Validate Address
+			address = getAddressService().validateAddress(address);
+			
+			arguments.orderPayment.setBillingAddress(address);
+			
+			if(!address.hasErrors()) {
+				getDAO().save(address);
+				getDAO().save(arguments.orderPayment);	
+			} else {
+				getService("requestCacheService").setValue("ormHasErrors", true);
+			}
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
+		}
+			
+		return arguments.orderPayment;
 	}
 	
 	/*********  Order Actions ***************/

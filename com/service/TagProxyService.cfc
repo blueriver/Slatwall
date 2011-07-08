@@ -83,10 +83,32 @@ Notes:
 		<cfargument name="bcc" default="" />
 		<cfargument name="subject" default="" />
 		<cfargument name="body" default="" />
+		<cfargument name="type" default="html" />
 		
-		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#">
+		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#" type="#arguments.type#">
 			#arguments.body#
 		</cfmail>
 	</cffunction>
+	
+	<!--- The script version of http doesn't suppose tab delimiter, it throws error.
+		Use this method only when you want to return a query. --->
+	<cffunction name="cfhttp" output="false">
+		<cfargument name="method" default="" />
+		<cfargument name="url" default="" />
+		<cfargument name="delimiter" default="" />
+		<cfargument name="textqualifier" default="" />
+		
+		<cfhttp method="#arguments.method#" url="#arguments.url#" name="result" firstrowasheaders="true" textqualifier="#arguments.textqualifier#" delimiter="#arguments.delimiter#">
+		
+		<cfreturn result />
+	</cffunction>
+	
+	<cffunction name="cfsetting" output="false">
+		<cfargument name="enablecfoutputonly" type="boolean" default="false" />
+		<cfargument name="requesttimeout" type="numeric" default="30" />
+		<cfargument name="showdebugoutput" type="boolean" default="false" />
+		
+		<cfsetting attributecollection="#arguments#" />
+	</cffunction> 
 	
 </cfcomponent>

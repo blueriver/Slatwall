@@ -79,13 +79,13 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return response;
 	}
 	
-	public any function populate(required any entity, required struct data) {
-		return arguments.entity.populate(arguments.data);
+	public any function populate(required any entity, required struct data, boolean cleanseInput=false) {
+		return arguments.entity.populate(data=arguments.data, cleanseInput=arguments.cleanseInput);
 	}
 
-    public any function save(required any entity, struct data) {
+    public any function save(required any entity, struct data, boolean cleanseInput=false) {
         if(structKeyExists(arguments,"data")){
-            populate(arguments.entity,arguments.data);
+            populate(argumentCollection=arguments);
         }
         validate(entity=arguments.entity);
         
@@ -397,8 +397,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 
 
-	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments )
-	{
-		return save( missingMethodArguments[ 1 ] );
+	private function onMissingSaveMethod( required string missingMethodName, required struct missingMethodArguments ) {
+		if ( structKeyExists( missingMethodArguments, '2' ) ) {
+			return save( entity=missingMethodArguments[1], data=missingMethodArguments[2]);
+		} else {
+			return save( entity=missingMethodArguments[1] );
+		}
 	}
 }

@@ -40,7 +40,7 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="amount" ormtype="big_decimal";
+	property name="amount" ormtype="big_decimal" notnull="true";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -55,6 +55,17 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	public any function init() {
+		if(isNull(variables.amount)) {
+			variables.amount = 0;
+		}
+		return super.init();
+	}
+	
+	// Helper method that gets overriden by payment method-specific orderpayment entities
+	public numeric function getAmountReceived() {
+		return getAmount();
+	}
 	
     /******* Association management methods for bidirectional relationships **************/
 	
