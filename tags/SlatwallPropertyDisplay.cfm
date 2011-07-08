@@ -42,6 +42,9 @@ Notes:
 <!--- hint: This is a required attribute as the property that you want to display" --->
 <cfparam name="attributes.property" type="string" />
 
+<!--- hint: This attribute indicates whether to show the form label (used mainly by AddressDisplay tag) --->
+<cfparam name="attributes.showFormLabel" type="boolean" default="true">
+
 <!--- hint: This is used in case a sub object property has a different name than the property --->
 <cfparam name="attributes.propertyObject" type="string" default="" />
 
@@ -279,15 +282,15 @@ Notes:
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
 					<label for="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
-						#attributes.title#
+						<cfif attributes.showFormLabel>#attributes.title#</cfif>
 					</label>
 	 			<cfelseif attributes.edit and attributes.editType EQ "file">
 					<label for="#attributes.fieldName#File"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
-						#attributes.title#
+						<cfif attributes.showFormLabel>#attributes.title#</cfif>
 					</label>
 				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
 					<div class="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
-						#attributes.title#
+						<cfif attributes.showFormLabel>#attributes.title#</cfif>
 					</div>
 				<cfelse>
 					#attributes.title#
