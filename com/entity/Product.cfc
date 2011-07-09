@@ -163,7 +163,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
         	return variables.skus;
         } else {
         	if(isNull(variables.sortedSkus)) {
-	        	variables.sortedSkus = getService("skuService").getSortedProductSkus(productID=getProductID(), skus=getSkus());
+	        	variables.sortedSkus = getService("skuService").getSortedProductSkus(this);
 	        }
         	return variables.sortedSkus;
         }

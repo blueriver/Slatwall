@@ -94,6 +94,18 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	}
 		return dspOptions;
     }
+    
+    // override generated setter to get options sorted by optiongroup sortorder
+    public array function getOptions() {
+    	var options = ORMExecuteQuery(
+    		"select opt from SlatwallOption opt
+    		join opt.skus s
+    		where s.skuID = :skuID
+    		order by opt.optionGroup.sortOrder",
+    		{skuID = this.getSkuID()}
+    	);
+    	return options;
+    }
 
 	/******* Association management methods for bidirectional relationships **************/
 	
