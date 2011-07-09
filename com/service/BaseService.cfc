@@ -101,6 +101,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
     	return getValidationService().validateObject(entity=arguments.entity);
     }
     
+    public void function reloadEntity(required any entity) {
+    	getDAO().reloadEntity(entity=arguments.entity);
+    }
+    
  /**
 	 * Provides dynamic methods, by convention, on missing method:
 	 *

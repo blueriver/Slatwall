@@ -37,6 +37,7 @@ Notes:
 
 --->
 <cfoutput>
+#view("account/account_nav")#
 	<div class="svoaccountdetail">
 		<p>Welcome, #$.slatwall.account('fullName')#</p>
 		<h4>#$.slatwall.rbKey("entity.account.accountdetails")#</h4>

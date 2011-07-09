@@ -39,6 +39,7 @@ Notes:
 <cfset local.accountOrders = $.slatwall.account().getOrders() />
 
 <cfoutput>
+#view("account/account_nav")#
 	<div class="svoaccountlistorder">
 		<table>
 			<tr>

@@ -305,7 +305,7 @@ component extends="BaseService" accessors="true" {
 			arguments.product.addError(argumentCollection=filenameError);
 		}
 		
-		arguments.Product = Super.save(arguments.Product);
+		arguments.Product = super.save(arguments.Product);
 		
 		if( !arguments.Product.hasErrors() ) {
 			// clear cached product type tree so that it's refreshed on the next request

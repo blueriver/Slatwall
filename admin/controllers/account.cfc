@@ -50,8 +50,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function detail(required struct rc) {
 		param name="rc.accountID" default="";
 		param name="rc.edit" default="false";
-		
+		var orderParams['F:account_accountID'] = rc.accountID;
+		var orderParams.orderBy = "orderOpenDateTime|DESC";
 		rc.account = getAccountService().getAccount(rc.accountID, true);
+		rc.orderSmartList = getAccountService().getOrderSmartList(data=orderParams);
 	}
 	
 	public void function create(required struct rc) {

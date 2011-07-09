@@ -185,16 +185,24 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
+		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
+			return false;	
+		}
 		return true;
 	}
 	
 	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
+		var fulfillmentsOK = true;
+		
 		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderFulfillments")) {
 			var fulfillmentsDataArray = data.structuredData.orderFulfillments;
 			for(var i=1; i<= arrayLen(fulfillmentsDataArray); i++) {
 				var fulfillment = this.getOrderFulfillment(fulfillmentsDataArray[i].orderFulfillmentID, true);
 				if(arguments.order.hasOrderFulfillment(fulfillment)) {
 					fulfillment = this.saveOrderFulfillment(fulfillment, fulfillmentsDataArray[i]);
+					if(fulfillment.hasErrors()) {
+						fulfillmentsOK = false;
+					}
 				}		
 			}
 		}
@@ -202,46 +210,46 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Check each of the fulfillment methods to see if they are complete
 		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments());i++) {
 			if(!arguments.order.getOrderFulfillments()[i].isProcessable()) {
-				return false;
+				fulfillmentsOK = false;
 			}
 		}
 		
-		return true;
+		return fulfillmentsOK;
 	}
 	
 	public boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
-		var result = true;
+		var paymentsOK = true;
 		
-		//var payment = getPaymentService().getOrderPayment(data.orderPaymentID);
-	
-		if(order.getPaymentAmountTotal() < order.getTotal()) {
-			allPaymentsOK = setupOrderPayment(order, arguments.data);
-			if(allPaymentsOK && order.getPaymentAmountTotal() < order.getTotal()) {
-				allPaymentsOK = false;
+		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderPayments")) {
+			var paymentsDataArray = data.structuredData.orderPayments;
+			for(var i=1; i<= arrayLen(paymentsDataArray); i++) {
+				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
+				
+				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
+					if(payment.isNew() && !structKeyExists(paymentsDataArray[i], "amount")) {
+						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
+					}
+					
+					// Make sure the payment is attached to the order
+					payment.setOrder(arguments.order);
+					
+					// Attempt to Validate & Save Order Payment
+					payment = this.saveOrderPaymentCreditCard(payment, paymentsDataArray[i]);
+					
+					// Check to see if this payment has any errors and if so then don't proceed
+					if(payment.hasErrors() || payment.getBillingAddress().hasErrors() || payment.getCreditCardType() == "Invalid") {
+						paymentsOK = false;
+					}
+				}
 			}
 		}
-	
-		if(isNull(payment)) {
-			payment = getPaymentService().new("SlatwallOrderPayment#arguments.data.paymentMethodID#");
-			// Add new Payment to the order
-			payment.setOrder(arguments.order);
+		
+		// Verify that there are enough payments applied to the order to proceed
+		if(order.getPaymentAmountTotal() < order.getTotal()) {
+			paymentsOK = false;
 		}
 		
-		// If no amount was passed in from the data, add the amount as the order total minus and previous payments
-		if(!structKeyExists(arguments.data, "amount") || arguments.data.amount == 0) {
-			arguments.data.amount = arguments.order.getTotal() - arguments.order.getPaymentAmountTotal();
-		}
-		payment.setAmount(arguments.data.amount);
-		
-		// Attempt to Validate & Save Order Payment
-		payment = this.saveOrderPaymentCreditCard(payment, arguments.data);
-		
-		// If the payment has errors do not proceed with the order processing
-		if(payment.hasErrors() || payment.getBillingAddress().hasErrors() || payment.getCreditCardType() == "Invalid") {
-			result = false;
-		}
-		
-		return result;
+		return paymentsOK;
 	}
 	
 	private boolean function processOrderPayments(required any order) {
@@ -249,7 +257,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Process All Payments and Save the ones that were successful
 		for(var i=1; i <= arrayLen(arguments.order.getOrderPayments()); i++) {
-			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i]#_checkoutTransactionType');
+			var transactionType = setting('paymentMethod_#arguments.order.getOrderPayments()[i].getPaymentMethodID()#_checkoutTransactionType');
 			
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
@@ -263,24 +271,29 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function processOrder(struct data={}) {
+		var processOK = false;
+		
 		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="60" {
 			
 			var order = this.getOrder(arguments.data.orderID);
 			
+			reloadEntity(order);
+			
 			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-				return true;
+				processOK = true;
 			} else {
 				// update and validate all aspects of the order
 				var validAccount = updateAndVerifyOrderAccount(order=order, data=arguments.data);
 				var validPayments = updateAndVerifyOrderPayments(order=order, data=arguments.data);
 				var validFulfillments = updateAndVerifyOrderFulfillments(order=order, data=arguments.data);
 				
-				if(validAccount & validPayments & validFulfillments) {
+				if(validAccount && validPayments && validFulfillments) {
 					// Double check that the order requirements list is blank
-					var orderRequirementsList = getOrderRequirementsList();
+					var orderRequirementsList = getOrderRequirementsList(order);
 					
 					if( !len(orderRequirementsList) ) {
+						
 						// Process all of the order payments
 						var paymentsProcessed = processOrderPayments(order=order);
 						
@@ -304,14 +317,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							// Send out the e-mail
 							sendOrderConfirmationEmail(order);
 							
-							return true;
+							processOK = true;
 						}
 					}
 				}
 			}
+			
 		} // END OF LOCK
 		
-		return false;
+		return processOK;
 	}
 
 	function sendOrderConfirmationEmail (required any order) {
@@ -379,7 +393,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Populate Address And check if it has changed
 			var serializedAddressBefore = address.simpleValueSerialize();
-			address.populate(data);
+			address.populate(data.shippingAddress);
 			var serializedAddressAfter = address.simpleValueSerialize();
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
@@ -518,7 +532,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Populate Address
-			address.populate(arguments.data);
+			address.populate(arguments.data.billingAddress);
 			
 			// Validate Address
 			address = getAddressService().validateAddress(address);
