@@ -121,6 +121,7 @@ component accessors="true" extends="BaseDAO" {
 		var productColumns = [];
 		var skuColumns = [];
 		var optionGroups = [];
+		var optionGroupIDs = {};
 		var customAttributes = [];
 		for(var column in columnList) {
 			if(listFirst(column,"_") == "product"){
@@ -164,12 +165,15 @@ component accessors="true" extends="BaseDAO" {
 		//loop through all the option groups and check if it exists
 		for(var i=arrayLen(optionGroups); i >= 1; i--){
 			var optionGroup = optionGroups[i];
+			var optionGroupKey = replaceNoCase(optionGroup,"option_","","one");
 			dataQuery.setSql("
-				SELECT optionGroupID FROM SlatwallOptionGroup WHERE optionGroupName = '#ListLast(optionGroup,"_")#';
+				SELECT optionGroupID FROM SlatwallOptionGroup WHERE optionGroupName = '#optionGroupKey#' OR optionGroupCode = '#optionGroupKey#' OR optionGroupID = '#optionGroupKey#';
 			");
 			var lookupResult = dataQuery.execute().getResult();
 			if(!lookupResult.recordcount){
 				arrayDelete(optionGroups,optionGroup);
+			} else {
+				optionGroupIDs[optionGroup] = lookupResult.optionGroupID;
 			}
 		}
 		
@@ -197,7 +201,7 @@ component accessors="true" extends="BaseDAO" {
 				var thisExtraData = [];
 				thisExtraData.addAll(skuExtraData);
 				arrayAppend(thisExtraData,{name="productID",value=productID});
-				if(skuLookupColumn == "sku_skucode" && !arrayFind(columnList,"sku_skucode")){
+				if(skuLookupColumn == "sku_skucode" && !arrayFindNoCase(columnList,"sku_skucode")){
 					var skuCode = data[productLookupColumn][r];
 					for(var optionGroup in optiongroups){
 						skuCode &= "-" & data[optionGroup][r];
@@ -209,29 +213,31 @@ component accessors="true" extends="BaseDAO" {
 				//loop through all the option groups and assign options to sku
 				for(var optionGroup in optiongroups){
 					var optionCode = data[optionGroup][r];
-					dataQuery.setSql("
-						SELECT SlatwallOption.optionID,SlatwallOptionGroup.optionGroupID FROM SlatwallOptionGroup LEFT JOIN SlatwallOption ON SlatwallOptionGroup.optionGroupID = SlatwallOption.optionGroupID AND SlatwallOption.optionCode = '#optionCode#' WHERE SlatwallOptionGroup.optionGroupName = '#ListLast(optionGroup,"_")#';
-					");
-					var lookupResult = dataQuery.execute().getResult();
-					var optionID = lookupResult.optionID;
-					if(optionID !=  ""){
+					if(optionCode != ""){
 						dataQuery.setSql("
-							SELECT optionID FROM SlatwallSkuOption WHERE optionID = '#optionID#' AND skuID = '#skuID#';
+							SELECT SlatwallOption.optionID,SlatwallOptionGroup.optionGroupID FROM SlatwallOptionGroup LEFT JOIN SlatwallOption ON SlatwallOptionGroup.optionGroupID = SlatwallOption.optionGroupID AND SlatwallOption.optionCode = '#optionCode#' WHERE SlatwallOptionGroup.optionGroupID = '#optionGroupIDs[optionGroup]#';
 						");
-						var exists = dataQuery.execute().getResult().recordcount;
-					} else {
-						var optionID = lcase(replace(createUUID(),"-","","all"));
-						dataQuery.setSql("
-							INSERT INTO SlatwallOption (optionID,optionGroupID,optionCode,optionName,createdDatetime,modifiedDatetime,CreatedByAccountID,modifiedByAccountID) VALUES ('#optionID#','#lookupResult.optionGroupID#','#optionCode#','#optionCode#',#timeStamp#,#timeStamp#,'#administratorID#','#administratorID#');
-						");
-						dataQuery.execute();
-						var exists = false;
-					}
-					if(!exists){
-						dataQuery.setSql("
-							INSERT INTO SlatwallSkuOption (optionID,skuID) VALUES ('#optionID#','#skuID#');
-						");
-						dataQuery.execute();
+						var lookupResult = dataQuery.execute().getResult();
+						var optionID = lookupResult.optionID;
+						if(optionID !=  ""){
+							dataQuery.setSql("
+								SELECT optionID FROM SlatwallSkuOption WHERE optionID = '#optionID#' AND skuID = '#skuID#';
+							");
+							var exists = dataQuery.execute().getResult().recordcount;
+						} else {
+							var optionID = lcase(replace(createUUID(),"-","","all"));
+							dataQuery.setSql("
+								INSERT INTO SlatwallOption (optionID,optionGroupID,optionCode,optionName,createdDatetime,modifiedDatetime,CreatedByAccountID,modifiedByAccountID) VALUES ('#optionID#','#lookupResult.optionGroupID#','#optionCode#','#optionCode#',#timeStamp#,#timeStamp#,'#administratorID#','#administratorID#');
+							");
+							dataQuery.execute();
+							var exists = false;
+						}
+						if(!exists){
+							dataQuery.setSql("
+								INSERT INTO SlatwallSkuOption (optionID,skuID) VALUES ('#optionID#','#skuID#');
+							");
+							dataQuery.execute();
+						}
 					}
 				}
 				//loop through all the custom attributes and add it to product
