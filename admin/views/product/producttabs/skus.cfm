@@ -78,8 +78,8 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-		<cfloop from="1" to="#arrayLen(rc.SkuSmartList.getPageRecords())#" index="local.skuCount">
-			<cfset local.thisSku = rc.SkuSmartList.getPageRecords()[local.skuCount] />
+		<cfloop from="1" to="#arrayLen(rc.skusArray)#" index="local.skuCount">
+			<cfset local.thisSku = rc.skusArray[local.skuCount] />
 			<tr id="Sku#local.skuCount#" class="skuRow">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<td class="alignLeft">
@@ -97,8 +97,8 @@ Notes:
 				<cfelse>
 					<td><cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
 				</cfif>
-				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
-					<td>#local.thisSku.getOptionByOptionGroupID(local.thisOptionGroup.getOptionGroupID()).getOptionName()#</td>
+				<cfloop array="#local.thisSku.getOptions()#" index="local.thisOption">
+					<td>#local.thisOption.getOptionName()#</td>
 				</cfloop>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
