@@ -51,7 +51,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
-			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
+			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 		}
 		
 		// get the list of requirements left for this order to be processed
