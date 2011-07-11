@@ -36,15 +36,13 @@
 		
 		<Record settingID="dbb327a70153717c73ee75a97ad8e83b" settingName="advanced_logExceptionsToDatabaseFlag" settingValue="1" />
 		<Record settingID="dbb327a8b50ef28662b75a32d01ece1d" settingName="advanced_logDatabaseClearAfterDays" settingValue="30" />
-
+		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="advanced_logMessages" settingValue="general" />
+		
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
-	
-	
-	dbb327aaf8f644aedaf190b32f3c48e4
 	dbb327abbbe32d31cc7c2b8e1e4c0c4c
 	dbb327ac9f8ef0c160cd8b5c4f07ddfa
 	dbb327ada425f5cd38dfecb702a7e24e

@@ -62,7 +62,6 @@ component extends="framework" output="false" {
 
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
-		writeLog(file="Slatwall", text="Application Load - Started");
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
@@ -115,11 +114,11 @@ component extends="framework" output="false" {
 		getBeanFactory().getBean("settingService").reloadConfiguration();
 		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 		
-		writeLog(file="Slatwall", text="Application Load - Finished");
+		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", detailLog=false);
 	}
 	
 	public void function setupRequest() {
-		writeLog(file="Slatwall", text="Slatwall Lifecycle Started: #request.context.slatAction#");
+		getBeanFactory().getBean("logService").logMessage(message="Slatwall Lifecycle Started: #request.context.slatAction#");
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
@@ -271,13 +270,13 @@ component extends="framework" output="false" {
 	private void function endSlatwallLifecycle() {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
-			writeLog(file="Slatwall", text="ormClearSession() Called");
 			ormClearSession();
+			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
 		} else {
-			writeLog(file="Slatwall", text="ormFlush() Called");
 			ormFlush();
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
 		}
-		writeLog(file="Slatwall", text="Slatwall Lifecycle Finished: #request.context.slatAction#");
+		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
 	}
 	
 	// This is used to setup the frontend path to pull from the siteid directory

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" {
+component accessors="true" displayname="ResponseBean" hint="bean to encapsulate response from service layer" extends="BaseObject" {
 	
 	property name="data" type="any";
 	property name="statusCode" type="string";
@@ -67,10 +67,12 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	
 	public void function addMessage() {
 		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
+		getService("logService").logMessage(argumentcollection=arguments);
 	}
 	
-	public void function addError(required string name,required string message) {
+	public void function addError(required string name, required string message) {
 		getErrorBean().addError(argumentcollection=arguments);
+		getService("logService").logMessage(messageCode=arguments.name, message=arguments.message, messageType="Response Error");
 	}
 	
 	public string function getError(required string name) {
