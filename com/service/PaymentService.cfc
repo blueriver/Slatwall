@@ -58,19 +58,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount, string providerTransactionID="") {
 		// Lock down this determination so that the values getting called and set don't overlap
-		lock scope="Session" timeout="5" {
-			//Check if a transaction is processing
-			var isTransactionProcessing = getSessionService().getValue("isTransactionProcessing","false");
-			//set the flag to indicate a transaction is processing
-			getSessionService().setValue("isTransactionProcessing","true");
-		}
-		var isTransactionDuplicate = false;
-		if(isTransactionProcessing){
-			//If a transaction is in progress increment duplicate count and set this request as duplicate
-			getSessionService().setValue("duplicateTransactionCount",getSessionService().getValue("duplicateTransactionCount","0") + 1);
-			isTransactionDuplicate = true;
-		}
-		// Lock down this determination so that the values getting called and set don't overlap
 		lock scope="Session" timeout="45" {
 			// Get the relavent info and objects for this order payment
 			var processOK = false;
@@ -79,13 +66,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 			
 			if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
-				if(isTransactionDuplicate){
-					getSessionService().setValue("duplicateTransactionCount",getSessionService().getValue("duplicateTransactionCount") - 1);
-					var transaction = this.getCreditCardTransaction(getSessionService().getValue("processingTransaction[#arguments.orderPayment.getOrderPaymentID()#]","0"));
-					//if we can't find a transaction or a provider transactionID exists then exit processing
-					if(isNull(transaction) || transaction.getProviderTransactionID() != ""){
-						processOK = true;
-					}
+				// Chech if it's a duplicate transaction. Determination is made based on matching
+				// transactionType and transactionAmount for this payment in last 60 sec.
+			
+				var isDuplicateTransaction = getDAO().isDuplicateCreditCardTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(),transactionType=arguments.transactionType,transactionAmount=arguments.transactionAmount);
+				if(isDuplicateTransaction){
+					processOK = true;
+					arguments.orderPayment.getErrorBean().addError('processing', "This transaction is duplicate of an already processed transaction.");
 				} else {
 					// Create a new Credit Card Transaction
 					var transaction = this.newCreditCardTransaction();
@@ -95,10 +82,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					// Make sure that this transaction gets saved to the DB
 					this.saveCreditCardTransaction(transaction);
 					ormFlush();
-					//Set the currently processing transactionID into session
-					getSessionService().setValue("processingTransaction[#arguments.orderPayment.getOrderPaymentID()#]",transaction.getCreditCardTransactionID());
-				}
-				if(!processOK){
+
 					// Generate Process Request Bean
 					var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
 					
@@ -116,11 +100,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					requestBean.setProviderTransactionID(arguments.providerTransactionID);
 					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
 					
-					// set the transaction request to duplicate
-					if(isTransactionDuplicate){
-						requestBean.setIsDuplicateFlag("true");
-					}
-										
 					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
 					try {
 						
@@ -169,11 +148,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					}
 				}
 			}
-			//If there are no more duplicate transactions waiting remove transactionID from session
-			if(!getSessionService().getValue("duplicateTransactionCount","0")){
-				getSessionService().deleteValue("processingTransaction[#arguments.orderPayment.getOrderPaymentID()#]");
-			}
-			getSessionService().setValue("isTransactionProcessing","false");
 		}
 
 		return processOK;

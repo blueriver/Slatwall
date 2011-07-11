@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,6 +35,33 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-}
+--->
+<cfcomponent extends="BaseDAO" output="false">
+	
+	<cffunction name="isDuplicateCreditCardTransaction" access="public" returntype="boolean" output="false">
+		<cfargument name="orderPaymentID" type="string" required="true" />
+		<cfargument name="transactionType" type="string" required="true" />
+		<cfargument name="transactionAmount" type="numeric" required="true" />
+		
+		<cfset var checkDuplicateTransaction = "" />
+		<!--- check for any transaction for this payment in last 60 sec with same type and amount --->
+		<cfquery name="checkDuplicateTransaction" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+			SELECT SlatwallCreditCardTransaction.creditCardTransactionID
+			FROM SlatwallCreditCardTransaction 
+			WHERE SlatwallCreditCardTransaction.orderPaymentID = <cfqueryparam value="#arguments.orderPaymentID#" cfsqltype="cf_sql_varchar" />
+			AND SlatwallCreditCardTransaction.transactionType = <cfqueryparam value="#arguments.transactionType#" cfsqltype="cf_sql_varchar" />
+			AND modifiedDateTime > <cfqueryparam value="#DateAdd("n",-60,now())#" cfsqltype="cf_sql_date" />
+			AND 
+				(
+					SlatwallCreditCardTransaction.amountAuthorized = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+					OR
+					SlatwallCreditCardTransaction.amountCharged = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+					OR
+					SlatwallCreditCardTransaction.amountCredited = <cfqueryparam value="#arguments.transactionAmount#" cfsqltype="cf_sql_numeric" />
+				)
+		</cfquery>
+		
+		<cfreturn checkDuplicateTransaction.recordcount />
+	</cffunction>
+
+</cfcomponent>
