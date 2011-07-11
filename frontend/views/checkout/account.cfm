@@ -59,21 +59,19 @@ Notes:
 							<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
 						</cfif>
 					</cfif>
-					<cfif not request.isBlocked>
-						<div class="loginAccount">
-							<form name="loginAccount" method="post" action="?slatAction=frontend:checkout.loginaccount">
-								<h4>Account Login</h4>
-								<dl>
-									<dt>E-Mail Address</dt>
-									<dd><input type="text" name="username" value="" /></dd>
-									<dt>Password</dt>
-									<dd><input type="password" name="password" value="" /></dd>
-								</dl>
-								<input type="hidden" name="siteid" value="#$.event('siteID')#" />
-								<button type="submit">Login & Continue</button>
-							</form>
-						</div>
-					</cfif>
+					<div class="loginAccount">
+						<form name="loginAccount" method="post" action="?slatAction=frontend:checkout.loginaccount">
+							<h4>Account Login</h4>
+							<dl>
+								<dt>E-Mail Address</dt>
+								<dd><input type="text" name="username" value="" /></dd>
+								<dt>Password</dt>
+								<dd><input type="password" name="password" value="" /></dd>
+							</dl>
+							<input type="hidden" name="siteid" value="#$.event('siteID')#" />
+							<button type="submit">Login & Continue</button>
+						</form>
+					</div>
 				</cfif>
 				<div class="accountDetails">
 					<form name="account" method="post" action="?slatAction=frontend:checkout.saveorderaccount">
