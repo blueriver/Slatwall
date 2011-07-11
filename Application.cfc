@@ -62,6 +62,7 @@ component extends="framework" output="false" {
 
 	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
 	public void function setupApplication(any $) {
+		writeLog(file="Slatwall", text="Application Load - Started");
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
@@ -70,13 +71,10 @@ component extends="framework" output="false" {
 		// This insures that the required session values are setup
 		setupMuraSessionRequirements();
 		
-		// Check to see if the plugin config has been setup in the application
-		if ( isNull(getPluginConfig()) ) {
-			if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
-		  		include "plugin/config.cfm";
-			}
-			setPluginConfig(request.PluginConfig);	
+		if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
+	  		include "plugin/config.cfm";
 		}
+		setPluginConfig(request.PluginConfig);	
 		
 		// Set this in the application scope to be used on the frontend
 		getPluginConfig().getApplication().setValue( "fw", this);
@@ -112,6 +110,12 @@ component extends="framework" output="false" {
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
+		
+		// Call the setup methods in the setting service
+		getBeanFactory().getBean("settingService").reloadConfiguration();
+		getBeanFactory().getBean("settingService").verifyMuraRequirements();
+		
+		writeLog(file="Slatwall", text="Application Load - Finished");
 	}
 	
 	public void function setupRequest() {
@@ -122,14 +126,6 @@ component extends="framework" output="false" {
 		
 		// This verifies that all mura session variables are setup
 		setupMuraSessionRequirements();
-		
-		// This will verify that all of the required slatwall elements are in Mura
-		if( getPluginConfig().getApplication().getValue('applicationSetupConfirmed') != true) {
-			// Setup run Setting Service reload config
-			getBeanFactory().getBean("settingService").reloadConfiguration();
-			getBeanFactory().getBean("settingService").verifyMuraRequirements();
-			getPluginConfig().getApplication().setValue('applicationSetupConfirmed', true);
-		}
 		
 		// Enable the request cache service
 		getBeanFactory().getBean("requestCacheService").enableRequestCache();
@@ -149,8 +145,7 @@ component extends="framework" output="false" {
 		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
 		if(request.context.$.event('siteid') == "") {
 			request.context.$.event('siteid', session.siteid);
-		}
-		
+		}		
 		
 		// Setup slatwall scope in request cache If it doesn't already exist
 		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
