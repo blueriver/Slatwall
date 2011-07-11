@@ -119,6 +119,8 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
+		writeLog(file="Slatwall", text="Slatwall Lifecycle Started: #request.context.slatAction#");
+		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
@@ -269,10 +271,13 @@ component extends="framework" output="false" {
 	private void function endSlatwallLifecycle() {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
+			writeLog(file="Slatwall", text="ormClearSession() Called");
 			ormClearSession();
 		} else {
+			writeLog(file="Slatwall", text="ormFlush() Called");
 			ormFlush();
 		}
+		writeLog(file="Slatwall", text="Slatwall Lifecycle Finished: #request.context.slatAction#");
 	}
 	
 	// This is used to setup the frontend path to pull from the siteid directory
