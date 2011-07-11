@@ -131,4 +131,8 @@ component extends="BaseService" accessors="true" output="false" {
 		return structKeyExists(session.slatwall,arguments.property);
 	}
 	
+	public void function deleteValue(required string property) {
+		structDelete(session.slatwall,arguments.property);
+	}
+	
 }
