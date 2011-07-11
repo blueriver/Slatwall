@@ -75,7 +75,7 @@ Notes:
 		</cfif>
 		
 		<!--- TODO: test to see if this query works with DB's other than MSSQL and MySQL --->
-		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
 			SELECT
 				SlatwallSku.skuID
 			FROM
