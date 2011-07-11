@@ -342,7 +342,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 
 	function sendOrderConfirmationEmail (required any order) {
-		
+		var siteConfig = getService("requestCacheService").getValue("muraScope").siteConfig();
 		var emailBody = "";
 		var messageParams = {
 			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>',
@@ -354,16 +354,34 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
 		}
 		
-		if(len(setting('order_orderPlacedEmailCC'))) {
+		if(len(trim(setting('order_orderPlacedEmailCC')))) {
 			messageParams['cc'] = setting('order_orderPlacedEmailCC');
 		}
-		if(len(setting('order_orderPlacedEmailBCC'))) {
+		if(len(trim(setting('order_orderPlacedEmailBCC')))) {
 			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
 		}
 		messageParams['body'] = emailBody;
 		
-		getTagProxyService().cfmail(argumentCollection=messageParams);
+		// apply email settings defined in Mura if applicable
+		if( !siteConfig.getUseDefaultSMTPServer() ) {
+			var mailServerSettings = getMailServerSettings();
+			structAppend(messageParams, mailServerSettings, false);
+		}
 		
+		getTagProxyService().cfmail(argumentCollection=messageParams);
+	}
+	
+	public struct function getMailServerSettings() {
+		var config = getService("requestCacheService").getValue("muraScope").siteConfig();
+		var settings = {
+			server = config.getMailServerIP(),
+			username = config.getMailServerUsername(),
+			password = config.getMailServerPassword(),
+			port = config.getMailServerSMTPPort(),
+			useSSL = config.getMailServerSSL(),
+			useTLS = config.getMailServerTLS()
+		};
+		return settings;
 	}
 	
 	public any function getOrderRequirementsList(required any order) {
