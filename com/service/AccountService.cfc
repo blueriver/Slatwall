@@ -97,6 +97,7 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			// Setup Email Address
 			var accountEmailAddress = this.getAccountEmailAddress(arguments.data.accountEmailAddressID, true);
+			
 			accountEmailAddress.populate(arguments.data);
 			accountEmailAddress.setAccount(arguments.account);
 			if( isNull(arguments.account.getPrimaryEmailAddress()) ) {
@@ -108,6 +109,7 @@ component extends="BaseService" accessors="true" output="false" {
 			if(accountEmailAddress.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryEmailAddress", "The Account E-Mail Address Has Errors");
 			}
+			
 		}
 		
 		// Account Phone Number
@@ -134,13 +136,14 @@ component extends="BaseService" accessors="true" output="false" {
 			getDAO().save(target=arguments.account);
 			
 			// If this account doesn't have a mura user check to see if we can create one
-			if( !structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false ) {
-				if( ( isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
-					
-					// TODO: Make sure that this user doesn't exist in mura
-					
-					var muraUser = getUserManager().getBean();
-					
+			if( (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) && ( isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
+				
+				var muraUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
+				
+				if(!muraUser.getIsNew()) {
+					getService("requestCacheService").setValue("ormHasErrors", true);
+					arguments.account.getErrorBean().addError("primaryEmailAddress", "This E-Mail Address is already in use with another Account.");
+				} else {
 					// Setup a new mura user
 					muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
 					muraUser.setPassword(arguments.data.password);
@@ -161,26 +164,28 @@ component extends="BaseService" accessors="true" output="false" {
 						// Set the account in the session scope
 						getSessionService().getCurrent().setAccount(arguments.account);
 					}
-				// If the account already has a mura user, make sure that the mura user gets updated
-				} else if ( !isNull(arguments.account.getMuraUserID()) ) {
-					
-					// Load existing mura user
-					var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());
-					
-					// If that user exists, update from account and save
-					if(!muraUser.getIsNew()) {
-						muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
-						muraUser.save();
-					}
-					
-					// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
-					var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
-					if(currentUser.getUserID() == muraUser.getUserID()) {
-						getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
-					}
-					
 				}
+				
+			// If the account already has a mura user, make sure that the mura user gets updated
+			} else if ( !isNull(arguments.account.getMuraUserID()) ) {
+				
+				// Load existing mura user
+				var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());
+				
+				// If that user exists, update from account and save
+				if(!muraUser.getIsNew()) {
+					muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
+					muraUser.save();
+				}
+				
+				// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
+				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+				if(currentUser.getUserID() == muraUser.getUserID()) {
+					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
+				}
+				
 			}
+			
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
