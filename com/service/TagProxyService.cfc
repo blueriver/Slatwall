@@ -77,15 +77,15 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="cfmail" output="false">
-		<cfargument name="from" default="" />
-		<cfargument name="to" default="" />
-		<cfargument name="cc" default="" />
-		<cfargument name="bcc" default="" />
+		<cfargument name="from" type="string" required="true" />
+		<cfargument name="to" type="string" required="true" />
+		<cfargument name="cc" type="string" />
+		<cfargument name="bcc" type="string" />
 		<cfargument name="subject" default="" />
 		<cfargument name="body" default="" />
 		<cfargument name="type" default="html" />
 		
-		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#" type="#arguments.type#">
+		<cfmail attributeCollection=arguments>
 			#arguments.body#
 		</cfmail>
 	</cffunction>

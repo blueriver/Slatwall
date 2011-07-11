@@ -343,18 +343,26 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	function sendOrderConfirmationEmail (required any order) {
 		
-		var emailTo = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>';
-		var emailFrom = setting('order_orderPlacedEmailFrom');
-		var emailCC = setting('order_orderPlacedEmailCC');
-		var emailBCC = setting('order_orderPlacedEmailBCC');
-		var emailSubject = setting('order_orderPlacedEmailSubject');
 		var emailBody = "";
-		
+		var messageParams = {
+			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>',
+			from = setting('order_orderPlacedEmailFrom'),
+			subject = setting('order_orderPlacedEmailSubject')
+		};
+	
 		savecontent variable="emailBody" {
 			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
 		}
 		
-		getTagProxyService().cfmail(to = emailTo, from = emailFrom, cc = emailCC, bcc = emailBCC, subject = emailSubject, body = emailBody);
+		if(len(setting('order_orderPlacedEmailCC'))) {
+			messageParams['cc'] = setting('order_orderPlacedEmailCC');
+		}
+		if(len(setting('order_orderPlacedEmailBCC'))) {
+			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
+		}
+		messageParams['body'] = emailBody;
+		
+		getTagProxyService().cfmail(argumentCollection=messageParams);
 		
 	}
 	
