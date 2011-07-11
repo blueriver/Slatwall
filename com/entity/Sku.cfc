@@ -85,26 +85,33 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        return super.init();
     }
     
-    public string function displayOptions() {
-    	var options = getOptions();
+    public string function displayOptions(delimiter=" ") {
+    	var options = getOptions(sorted=true);
     	var dspOptions = "";
     	for(var i=1;i<=arrayLen(options);i++) {
     		var thisOption = options[i];
-    		dspOptions = listAppend(dspOptions,thisOption.getOptionName()," ");
+    		dspOptions = listAppend(dspOptions,thisOption.getOptionName(),arguments.delimiter);
     	}
 		return dspOptions;
     }
     
     // override generated setter to get options sorted by optiongroup sortorder
-    public array function getOptions() {
-    	var options = ORMExecuteQuery(
-    		"select opt from SlatwallOption opt
-    		join opt.skus s
-    		where s.skuID = :skuID
-    		order by opt.optionGroup.sortOrder",
-    		{skuID = this.getSkuID()}
-    	);
-    	return options;
+    public array function getOptions(boolean sorted = false) {
+    	if(!sorted) {
+    		return variables.options;
+    	} else {
+	    	if(!structKeyExists(variables,"sortedOptions")) {
+		    	var options = ORMExecuteQuery(
+		    		"select opt from SlatwallOption opt
+		    		join opt.skus s
+		    		where s.skuID = :skuID
+		    		order by opt.optionGroup.sortOrder",
+		    		{skuID = this.getSkuID()}
+		    	);
+		    	variables.sortedOptions = options;
+	    	}
+	    	return variables.sortedOptions;
+	    }
     }
 
 	/******* Association management methods for bidirectional relationships **************/
