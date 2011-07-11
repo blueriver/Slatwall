@@ -68,7 +68,7 @@ component extends="framework" output="false" {
 		}
 		
 		// This insures that the required session values are setup
-		setupMuraRequirements();
+		setupMuraSessionRequirements();
 		
 		// Check to see if the plugin config has been setup in the application
 		if ( isNull(getPluginConfig()) ) {
@@ -115,65 +115,69 @@ component extends="framework" output="false" {
 	}
 	
 	public void function setupRequest() {
-		if( structKeyExists(application, "appinitialized") && application.appinitialized == true) {
-			// This verifies that all mura session variables are setup
-			setupMuraRequirements();
-			
-			// This will verify that all of the required slatwall elements are in Mura
-			if( getPluginConfig().getApplication().getValue('applicationSetupConfirmed') != true) {
-				// Setup run Setting Service reload config
-				getBeanFactory().getBean("settingService").reloadConfiguration();
-				getBeanFactory().getBean("settingService").verifyMuraRequirements();
-				getPluginConfig().getApplication().setValue('applicationSetupConfirmed', true);
-			}
-			
-			// Enable the request cache service
-			getBeanFactory().getBean("requestCacheService").enableRequestCache();
-			
-			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
-				getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
-			}
-			
-			// Look for mura Scope in the request context.  If it doens't exist add it.
-			if (!structKeyExists(request.context,"$")){
-				if (!structKeyExists(request, "muraScope")) {
-					request.muraScope = getBeanFactory().getBean("muraScope").init(session.siteid);
-				}
-				request.context.$ = request.muraScope;
-			}
-			
-			// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
-			if(request.context.$.event('siteid') == "") {
-				request.context.$.event('siteid', session.siteid);
-			}
-			
-			
-			// Setup slatwall scope in request cache If it doesn't already exist
-			if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
-				getBeanFactory().getBean("requestCacheService").setValue(key="slatwallScope", value= new Slatwall.com.utility.SlatwallScope());	
-			}
-			
-			// Inject slatwall scope into the mura scope
-			if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-				request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
-			}
-			
-			// Add a reference to the mura scope to the request cache service
-			getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.context.$);
-			
-			// Confirm Session Setup
-			getBeanFactory().getBean("SessionService").confirmSession();
-			
-			// Setup structured Data
-			request.context.structuredData = getBeanFactory().getBean("formUtilities").buildFormCollections(request.context);
-			
-			// Run subsytem specific logic.
-			if(isAdminRequest()) {
-				controller("admin:BaseController.subSystemBefore");
-			} else {
-				controller("frontend:BaseController.subSystemBefore");
-			}
+		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
+		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
+			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
+		
+		// This verifies that all mura session variables are setup
+		setupMuraSessionRequirements();
+		
+		// This will verify that all of the required slatwall elements are in Mura
+		if( getPluginConfig().getApplication().getValue('applicationSetupConfirmed') != true) {
+			// Setup run Setting Service reload config
+			getBeanFactory().getBean("settingService").reloadConfiguration();
+			getBeanFactory().getBean("settingService").verifyMuraRequirements();
+			getPluginConfig().getApplication().setValue('applicationSetupConfirmed', true);
+		}
+		
+		// Enable the request cache service
+		getBeanFactory().getBean("requestCacheService").enableRequestCache();
+		
+		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
+			getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
+		}
+		
+		// Look for mura Scope in the request context.  If it doens't exist add it.
+		if (!structKeyExists(request.context,"$")){
+			if (!structKeyExists(request, "muraScope")) {
+				request.muraScope = getBeanFactory().getBean("muraScope").init(session.siteid);
+			}
+			request.context.$ = request.muraScope;
+		}
+		
+		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
+		if(request.context.$.event('siteid') == "") {
+			request.context.$.event('siteid', session.siteid);
+		}
+		
+		
+		// Setup slatwall scope in request cache If it doesn't already exist
+		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="slatwallScope")) {
+			getBeanFactory().getBean("requestCacheService").setValue(key="slatwallScope", value= new Slatwall.com.utility.SlatwallScope());	
+		}
+		
+		// Inject slatwall scope into the mura scope
+		if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
+			request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
+		}
+		
+		// Add a reference to the mura scope to the request cache service
+		getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.context.$);
+		
+		// Confirm Session Setup
+		getBeanFactory().getBean("SessionService").confirmSession();
+		
+		// Setup structured Data
+		request.context.structuredData = getBeanFactory().getBean("formUtilities").buildFormCollections(request.context);
+		
+		// Run subsytem specific logic.
+		if(isAdminRequest()) {
+			controller("admin:BaseController.subSystemBefore");
+		} else {
+			controller("frontend:BaseController.subSystemBefore");
+		}
+		
 	}
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
@@ -215,7 +219,7 @@ component extends="framework" output="false" {
 		return hasAccess;
 	}
 	
-	private void function setupMuraRequirements() {
+	private void function setupMuraSessionRequirements() {
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		param name="session.locale" default="en";
