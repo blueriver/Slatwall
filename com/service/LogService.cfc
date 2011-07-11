@@ -43,22 +43,23 @@ Notes:
 		
 		<!--- All logic in this method is inside of a cftry so that it doesnt cause an exception ---> 
 		<cftry>
+			<cfset var logCode = "" />
+			<cfset var logMessage = "" />
+			<cfset var logDetail = "" />
+				
+			<cfif structKeyExists(arguments.exception, "errNumber")>
+				<cfset logCode = arguments.exception.errNumber />
+			</cfif>
+			<cfif structKeyExists(arguments.exception, "message")>
+				<cfset logMessage = left(arguments.exception.message,255) />
+			</cfif>
+			<cfif structKeyExists(arguments.exception, "stackTrace")>
+				<cfset logDetail = left(arguments.exception.stackTrace, 4000) />
+			</cfif>
+			
+			<cfset logMessage(messageCode = logCode, messageType="Exception", message = logMessage, logType="Error", detailLogOnly = false) />
+			
 			<cfif setting("advanced_logExceptionsToDatabaseFlag")>
-				
-				<cfset var logCode = "" />
-				<cfset var logMessage = "" />
-				<cfset var logDetail = "" />
-				
-				<cfif structKeyExists(arguments.exception, "errNumber")>
-					<cfset logCode = arguments.exception.errNumber />
-				</cfif>
-				<cfif structKeyExists(arguments.exception, "message")>
-					<cfset logMessage = left(arguments.exception.message,255) />
-				</cfif>
-				<cfif structKeyExists(arguments.exception, "stackTrace")>
-					<cfset logDetail = left(arguments.exception.stackTrace, 4000) />
-				</cfif>
-				
 				<cfquery name="log" datasource="#application.configBean.getDatasource()#"  username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
 					INSERT INTO SlatwallLog	(
 						logID,
@@ -82,9 +83,41 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="logMessage" returntype="void" access="public">
-		<cfargument name="messageCode" default="" />
 		<cfargument name="message" default="" />
-		<cfargument name="messageDetails" default="" />
+		<cfargument name="messageType" default="" />
+		<cfargument name="messageCode" default="" />
+		<cfargument name="templatePath" default="" />
+		<cfargument name="logType" default="Information" /><!--- Information  |  Error  |  Fatal  |  Warning  --->
+		<cfargument name="detailLog" type="boolean" default="true" />
+		
+		<cfif detailLog>
+			<cfset var logText = "Detail Log" />
+		<cfelse>
+			<cfset var logText = "General Log" />
+		</cfif>
+		
+		<cfif setting("advanced_logMessages") neq "none" and (setting("advanced_logMessages") eq "detail" or arguments.detailLog eq false)>
+			<cfif arguments.messageType neq "" and isSimpleValue(arguments.messageType)>
+				<cfset logText &= " - #arguments.messageType#" />
+			</cfif>
+			<cfif arguments.messageCode neq "" and isSimpleValue(arguments.messageCode)>
+				<cfset logText &= " - #arguments.messageCode#" />
+			</cfif>
+			<cfif arguments.templatePath neq "" and isSimpleValue(arguments.templatePath)>
+				<cfset logText &= " - #arguments.templatePath#" />
+			</cfif>
+			<cfif arguments.message neq "" and isSimpleValue(arguments.message)>
+				<cfset logText &= " - #arguments.message#" />
+			</cfif>
+			
+			<!--- Verify that the log type was correct --->
+			<cfif not ListFind("Information,Error,Fatal,Warning", arguments.logType)>
+				<cfset logMessage(messageType="Internal Error", messageCode = "500", message="The Log type that was attempted was not valid", logType="Warning") />
+				<cfset arguments.logType = "Information" />
+			</cfif>
+			
+			<cflog file="Slatwall" text="#logText#" type="#arguments.logType#" />
+		</cfif>
 		
 	</cffunction>
 	

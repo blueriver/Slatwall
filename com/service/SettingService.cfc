@@ -292,19 +292,19 @@ component extends="BaseService" output="false" accessors="true"  {
 	
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraRequirements - Started");
+		getService("logService").logMessage("Setting Service - verifyMuraRequirements - Started");
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
 		verifyMuraFrontendViews();
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraRequirements - Finished");
+		getService("logService").logMessage("Setting Service - verifyMuraRequirements - Started");
 	}
 	
 	private void function verifyMuraClassExtension() {
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraClassExtension - Started");
+		getService("logService").logMessage("Setting Service - verifyMuraClassExtension - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			writeLog(file="Slatwall", text="VerifyMuraClassExtension - Site ID: #assignedSites["siteID"][i]#");
+			getService("logService").logMessage("Verify Mura Class Extension For Site ID: #assignedSites["siteID"][i]#");
 			local.thisSiteID = assignedSites["siteID"][i];
 			local.thisSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
 			local.thisSubType.set( {
@@ -356,11 +356,12 @@ component extends="BaseService" output="false" accessors="true"  {
 			});
 			local.thisAttribute.save();
 		}
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraClassExtension - Finished");
+		getService("logService").logMessage("Setting Service - verifyMuraClassExtension - Finished");
 	}
 	
 	private void function verifyMuraRequiredPages() {
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraRequiredPages - Started");
+		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Started");
+		
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			writeLog(file="Slatwall", text="verifyMuraRequiredPages - Site ID: #assignedSites["siteID"][i]#");
@@ -450,20 +451,20 @@ component extends="BaseService" output="false" accessors="true"  {
 			defaultProductTemplate.setSiteID(thisSiteID);
 			defaultProductTemplate.save();
 		}
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraRequiredPages - Finished");
+		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Finished");
 	}
 	
 	private void function verifyMuraFrontendViews() {
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraFrontendViews - Started");
+		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			writeLog(file="Slatwall", text="verifyMuraFrontendViews - Site ID: #assignedSites["siteID"][i]#");
+			getService("logService").logMessage("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
 			var thisSiteID = assignedSites["siteID"][i];
 			var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/";
 			
 			getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
-		writeLog(file="Slatwall", text="Setting Service - verifyMuraFrontendViews - Finished");
+		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Finished");
 	}
 }

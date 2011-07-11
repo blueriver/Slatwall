@@ -127,6 +127,21 @@ Notes:
 					</tr>
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logExceptionsToDatabaseFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.logExceptionsToDatabaseFlag')#" property="settingValue" fieldName="advanced_logExceptionsToDatabaseFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" property="settingValue" fieldName="advanced_logDatabaseClearAfterDays" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" property="settingValue" fieldName="advanced_logDatabaseClearAfterDays" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<tr class="spdadvanced_logmessages">
+						<td class="property varWidth">#rc.$.slatwall.rbKey('setting.advanced.logmessages')#</td>
+						<cfif rc.edit>
+							<td class="value">
+								<select name="advanced_logmessages">
+									<option value="none">#$.slatwall.rbKey("define.none")#</option>
+									<option value="general">#$.slatwall.rbKey("define.general")#</option>
+									<option value="detail">#$.slatwall.rbKey("define.detail")#</option>
+								</select>
+							</td>
+						<cfelse>
+							<td class="value">#rc.allSettings.advanced_logMessages.getSettingValue()#</td>
+						</cfif>
+					</tr>
 				</table>
 			</div>
 		</div>
