@@ -38,6 +38,7 @@ Notes:
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 	
+	property name="accountService";
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
@@ -185,10 +186,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
-		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
-			return false;	
+		var accountOK = true;
+		
+		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "account")) {
+			var accountData = data.structuredData.account;
+			var account = getAccountService().getAccount(accountData.accountID, true);
+			account = getAccountService().saveAccount(account, accountData, data.siteID);
+			arguments.order.setAccount(account);
 		}
-		return true;
+		
+		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
+			accountOK = false;
+		}
+		
+		return accountOK;
 	}
 	
 	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {

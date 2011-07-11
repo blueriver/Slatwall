@@ -69,6 +69,7 @@
     <bean id="orderService" class="Slatwall.com.service.OrderService">
         <property name="DAO"><ref bean="OrderDAO" /></property>
 		<property name="validationService"><ref bean="validationService" /></property>
+		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>

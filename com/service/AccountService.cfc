@@ -128,50 +128,56 @@ component extends="BaseService" accessors="true" output="false" {
 			getDAO().save(target=arguments.account);
 			
 			// If this account doesn't have a mura user check to see if we can create one
-			if( ( isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
-				
-				// TODO: Make sure that this user doesn't exist in mura
-				
-				var muraUser = getUserManager().getBean();
-				
-				// Setup a new mura user
-				muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
-				muraUser.setPassword(arguments.data.password);
-				muraUser.setSiteID(arguments.siteID);
-				
-				// Update mura user with values from account
-				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
-				muraUser.save();
-				
-				// Set the mura userID in the account
-				arguments.account.setMuraUserID(muraUser.getUserID());
-				
-				
-				// If there currently isn't a user logged in, then log in this new account
-				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
-				if(!currentUser.isLoggedIn()) {
-					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
-				}
-			// If the account already has a mura user, make sure that the mura user gets updated
-			} else if ( !isNull(arguments.account.getMuraUserID()) ) {
-				
-				// Load existing mura user
-				var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());
-				
-				// If that user exists, update from account and save
-				if(!muraUser.getIsNew()) {
+			if( !structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false ) {
+				if( ( isNull(arguments.account.getMuraUserID()) || arguments.account.getMuraUserID() == "") && structKeyExists(arguments.data, "password") && len(arguments.data.password) gt 2 && !isNull(arguments.account.getPrimaryEmailAddress())) {
+					
+					// TODO: Make sure that this user doesn't exist in mura
+					
+					var muraUser = getUserManager().getBean();
+					
+					// Setup a new mura user
+					muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
+					muraUser.setPassword(arguments.data.password);
+					muraUser.setSiteID(arguments.siteID);
+					
+					// Update mura user with values from account
 					muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
 					muraUser.save();
+					
+					// Set the mura userID in the account
+					arguments.account.setMuraUserID(muraUser.getUserID());
+										
+					// If there currently isn't a user logged in, then log in this new account
+					var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+					if(!currentUser.isLoggedIn()) {
+						// Login the mura User
+						getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);
+						// Set the account in the session scope
+						getSessionService().getCurrent().setAccount(arguments.account);
+					}
+				// If the account already has a mura user, make sure that the mura user gets updated
+				} else if ( !isNull(arguments.account.getMuraUserID()) ) {
+					
+					// Load existing mura user
+					var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());
+					
+					// If that user exists, update from account and save
+					if(!muraUser.getIsNew()) {
+						muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
+						muraUser.save();
+					}
+					
+					// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
+					var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+					if(currentUser.getUserID() == muraUser.getUserID()) {
+						getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
+					}
+					
+				} else if (structKeyExists(arguments.data, "password") && len(arguments.data.password) lt 3) {
+					getService("requestCacheService").setValue("ormHasErrors", true);
+					arguments.account.getErrorBean().addError("password", "You must enter a valid password to create this account.");
 				}
-				
-				// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
-				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
-				if(currentUser.getUserID() == muraUser.getUserID()) {
-					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
-				}
-				
 			}
-
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
