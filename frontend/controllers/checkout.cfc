@@ -51,7 +51,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
-			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
+			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 		}
 		
 		// get the list of requirements left for this order to be processed
@@ -76,6 +76,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Setup some elements to be used by different views
 		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
+	}
+	
+	public void function confirmation(required struct rc) {
+		param name="rc.orderID" default="";
+		
+		rc.order = getOrderService().getOrder(rc.orderID, true);
+		
 	}
 	
 	public void function loginAccount(required struct rc) {
@@ -126,7 +133,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		if(result) {
 			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#rc.orderID#"), false);
+			getFW().redirectExact($.createHREF(filename='checkout', querystring="slatAction=frontend:checkout.confirmation&orderID=#rc.orderID#"), false);
 		}
 			
 		detail(rc);
