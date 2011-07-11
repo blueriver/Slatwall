@@ -85,6 +85,12 @@ component extends="BaseService" accessors="true" output="false" {
 		// Validate Account
 		getValidationService().validateObject(entity=arguments.account);
 		
+		// Check for password validation requirement
+		if ((!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) && structKeyExists(arguments.data, "password") && len(arguments.data.password) lt 3) {
+			getService("requestCacheService").setValue("ormHasErrors", true);
+			arguments.account.getErrorBean().addError("password", "You must enter a valid password to create this account.");
+		}
+		
 		// Account Email
 		if( structKeyExists(arguments.data, "emailAddress") ) {
 			param name="arguments.data.accountEmailAddressID" default="";
@@ -173,9 +179,6 @@ component extends="BaseService" accessors="true" output="false" {
 						getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 					}
 					
-				} else if (structKeyExists(arguments.data, "password") && len(arguments.data.password) lt 3) {
-					getService("requestCacheService").setValue("ormHasErrors", true);
-					arguments.account.getErrorBean().addError("password", "You must enter a valid password to create this account.");
 				}
 			}
 		} else {
