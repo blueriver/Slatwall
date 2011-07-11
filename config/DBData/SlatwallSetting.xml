@@ -36,7 +36,7 @@
 		
 		<Record settingID="dbb327a70153717c73ee75a97ad8e83b" settingName="advanced_logExceptionsToDatabaseFlag" settingValue="1" />
 		<Record settingID="dbb327a8b50ef28662b75a32d01ece1d" settingName="advanced_logDatabaseClearAfterDays" settingValue="30" />
-		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="advanced_logMessages" settingValue="general" />
+		<Record settingID="dbb327aaf8f644aedaf190b32f3c48e4" settingName="advanced_logMessages" settingValue="General" />
 		
 	</Records>
 </Table>

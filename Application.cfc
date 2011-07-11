@@ -114,7 +114,7 @@ component extends="framework" output="false" {
 		getBeanFactory().getBean("settingService").reloadConfiguration();
 		getBeanFactory().getBean("settingService").verifyMuraRequirements();
 		
-		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", detailLog=false);
+		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
 	}
 	
 	public void function setupRequest() {

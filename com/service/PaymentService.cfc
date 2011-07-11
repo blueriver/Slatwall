@@ -125,7 +125,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					try {
 						
 						// Get Response Bean from provider service
+						getService("logService").logMessage(message="Payment Processing Request - Started", generalLog=true);
 						var response = providerService.processCreditCard(requestBean);
+						getService("logService").logMessage(message="Payment Processing Request - Finished", generalLog=true);
 						
 						// Populate the Credit Card Transaction with the details of this process
 						transaction.setProviderTransactionID(response.getTransactionID());

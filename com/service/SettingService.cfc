@@ -292,11 +292,11 @@ component extends="BaseService" output="false" accessors="true"  {
 	
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
-		getService("logService").logMessage("Setting Service - verifyMuraRequirements - Started");
+		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Started", generalLog=true);
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
 		verifyMuraFrontendViews();
-		getService("logService").logMessage("Setting Service - verifyMuraRequirements - Started");
+		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Finished", generalLog=true);
 	}
 	
 	private void function verifyMuraClassExtension() {
@@ -364,7 +364,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			writeLog(file="Slatwall", text="verifyMuraRequiredPages - Site ID: #assignedSites["siteID"][i]#");
+			getService("logService").logMessage("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#");
 			var thisSiteID = assignedSites["siteID"][i];
 			
 			// Setup Shopping Cart Page

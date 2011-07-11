@@ -88,15 +88,15 @@ Notes:
 		<cfargument name="messageCode" default="" />
 		<cfargument name="templatePath" default="" />
 		<cfargument name="logType" default="Information" /><!--- Information  |  Error  |  Fatal  |  Warning  --->
-		<cfargument name="detailLog" type="boolean" default="true" />
+		<cfargument name="generalLog" type="boolean" default="false" />
 		
-		<cfif detailLog>
-			<cfset var logText = "Detail Log" />
-		<cfelse>
-			<cfset var logText = "General Log" />
-		</cfif>
-		
-		<cfif setting("advanced_logMessages") neq "none" and (setting("advanced_logMessages") eq "detail" or arguments.detailLog eq false)>
+		<cfif setting("advanced_logMessages") neq "none" and (setting("advanced_logMessages") eq "detail" or arguments.generalLog)>
+			<cfif generalLog>
+				<cfset var logText = "General Log" />
+			<cfelse>
+				<cfset var logText = "Detail Log" />
+			</cfif>
+			
 			<cfif arguments.messageType neq "" and isSimpleValue(arguments.messageType)>
 				<cfset logText &= " - #arguments.messageType#" />
 			</cfif>

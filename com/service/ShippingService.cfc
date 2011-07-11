@@ -137,7 +137,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// END HACK
 			
+			
+			// Query the shipping provider service API to get the rates
+			getService("logService").logMessage(message="Shipping Rates Request - Started", generalLog=true);
 			var ratesResponseBean = providerService.getRates(ratesRequestBean);
+			getService("logService").logMessage(message="Shipping Rates Request - Finished", generalLog=true);
 			
 			// Loop Over Shipping Methods
 			if(!ratesResponseBean.hasErrors()) {
