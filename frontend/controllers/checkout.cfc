@@ -78,6 +78,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
 	}
 	
+	public void function confirmation(required struct rc) {
+		param name="rc.orderID" default="";
+		
+		rc.order = getOrderService().getOrder(rc.orderID, true);
+		
+	}
+	
 	public void function loginAccount(required struct rc) {
 		var loginSuccess = getAccountService().loginMuraUser(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
 		
@@ -126,7 +133,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		if(result) {
 			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#rc.orderID#"), false);
+			getFW().redirectExact($.createHREF(filename='checkout', querystring="slatAction=frontend:checkout.confirmation&orderID=#rc.orderID#"), false);
 		}
 			
 		detail(rc);
