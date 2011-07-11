@@ -69,7 +69,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				rc.account = rc.$.slatwall.cart().getAccount();
 			} else {
 				rc.account = getAccountService().newAccount();
-				// Here we need to add it to the requirements list because the cart already had an account
+				// Here we need to add it to the requirements list because the cart might have already had an account
 				rc.orderRequirementsList = listPrepend(rc.orderRequirementsList,"account");
 			}
 		}
@@ -89,20 +89,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:checkout.detail");
 	}
 	
-	public void function saveAccount(required struct rc) {
+	public void function saveOrderAccount(required struct rc) {
+		rc.guestAccountOK = true;
+		
+		getOrderService().updateAndVerifyOrderAccount(order=$.slatwall.cart(), data=rc);
+		
 		detail(rc);
-		
-		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteID'));
-		
-		// IF the account doesn't have any errors than we can apply it to the order
-		if(!rc.account.hasErrors()) {
-			rc.$.slatwall.cart().setAccount(rc.account);
-		}
-		
-		// Reload the order Requirements list
-		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
-		
-		// get the list of requirements left for this order to be processed
 		getFW().setView("frontend:checkout.detail");
 	}
 	
@@ -110,6 +102,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.guestAccountOK = true;
 		
 		getOrderService().updateAndVerifyOrderFulfillments(order=$.slatwall.cart(), data=rc);
+		
+		detail(rc);
+		getFW().setView("frontend:checkout.detail");
+	}
+	
+	public void function saveOrderPayments(required struct rc) {
+		rc.guestAccountOK = true;
+		
+		getOrderService().updateAndVerifyOrderPayments(order=$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
