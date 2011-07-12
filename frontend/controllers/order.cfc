@@ -52,7 +52,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.order = getOrderService().getOrder(rc.orderID, true);
 		
 			// Check to make sure that the order being requested is actually the customers
-			if(!isNull(rc.order.getAccount()) && rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
+			if(isNull(rc.order.getAccount()) || rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
 				rc.order = getOrderService().newOrder();
 			}	
 		}
@@ -71,7 +71,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function confirmation(required struct rc) {
+		
+		// This pulls the order ID out of the session to find the order, and then removes it so that the confirmation page can't be seen twice.
+		// This is set in session so that we don't have to pass via URL
 		rc.order = getOrderService().getOrder( getSessionService().getValue("orderConfirmationID", ""), true );
+		getSessionService().removeValue("orderConfirmationID");
 	}
 	
 }

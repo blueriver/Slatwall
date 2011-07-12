@@ -33,23 +33,35 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-	Notes:
-	
+Notes:
+
 --->
+<!--- Mura Variables --->
+<cfparam name="request.status" default="">
+<cfparam name="request.isBlocked" default="false">
+
+<cfif request.status eq 'failed'>
+	<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
+		<cfset request.isBlocked=true />
+		<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
+	<cfelse>
+		<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
+	</cfif>
+</cfif>
+	
 <cfoutput>
-	<PostageRatesRequest>
-		<RequesterID>Slatwall</RequesterID>
-		<CertifiedIntermediary>
-			<AccountID>#variables.accountID#</AccountID>
-			<PassPhrase>#variables.passPhrase#</PassPhrase>
-		</CertifiedIntermediary>
-		<MailClass>Domestic</MailClass>
-		<WeightOz>#totalItemsWeight#</WeightOz>
-		<MailpieceShape>Parcel</MailpieceShape>
-		<Machinable>True</Machinable>
-		<InsuredValue>#totalItemsValue#</InsuredValue>
-		<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
-		<FromPostalCode>#variables.fromPostalCode#</FromPostalCode>
-		<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>
-	</PostageRatesRequest>
+	<div class="svoaccountlogin">
+		<form name="loginAccount" method="post" action="?nocache=1">
+			<h4>Account Login</h4>
+			<dl>
+				<dt>E-Mail Address</dt>
+				<dd><input type="text" name="username" value="" /></dd>
+				<dt>Password</dt>
+				<dd><input type="password" name="password" value="" /></dd>
+			</dl>
+			<input type="hidden" name="doaction" value="login" />
+			<input type="hidden" name="siteid" value="#$.event('siteID')#" />
+			<button type="submit">Login & Continue</button>
+		</form>
+	</div>
 </cfoutput>

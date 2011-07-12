@@ -38,15 +38,17 @@ Notes:
 --->
 <cfoutput>
 	<cfif $.currentUser().isLoggedIn()>
-	#view("account/account_nav")#
-	<div class="svoaccountdetail">
-		<p>Welcome, #$.slatwall.account('fullName')#</p>
-		<h4>#$.slatwall.rbKey("entity.account.accountdetails")#</h4>
-		<dl>
-			<dt>Primary Email Address</dt>
-			<dd>#$.slatwall.account("primaryEmailAddress").getEmailAddress()#</dd>
-		</dl>
-		<hr />
-	</div>
+		#view("account/account_nav")#
+		<div class="svoaccountdetail">
+			<p>Welcome, #$.slatwall.account('fullName')#</p>
+			<h4>#$.slatwall.rbKey("entity.account.accountdetails")#</h4>
+			<dl>
+				<dt>Primary Email Address</dt>
+				<dd>#$.slatwall.account("primaryEmailAddress").getEmailAddress()#</dd>
+			</dl>
+			<hr />
+		</div>
+	<cfelse>
+		#view("account/login")#
 	</cfif>
 </cfoutput>
