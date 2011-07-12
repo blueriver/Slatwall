@@ -93,13 +93,6 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		
 		httpRequest.addParam(type="body",value="postageRatesRequestXML=#trim(xmlPacket)#");
 		
-		fileWrite("C:\EndiciaExample.txt",trim(xmlPacket));
-		
-		writeDump(httpRequest);
-		writeDump(xmlPacket);
-		writeDump(httpRequest.send().getPrefix());
-		abort;
-		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
 		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
@@ -108,34 +101,36 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		writeDump(xmlResponse);
 		abort;
 		
-		/*
 		if(isDefined('xmlResponse.Fault')) {
+			// If XML fault then log error message
 			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
-			// If XML fault then log error
 			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
-			// Log all messages from FedEx into the response bean
-			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
+			// Log all messages from Endicia into the response bean
+			/*
+			if(xmlResponse.PostageRatesResponse.Status.xmltext neq "0") {
 				ratesResponseBean.addMessage(
-					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
+					messageCode=xmlResponse.PostageRatesResponse.Status.xmltext,
 					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
 					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
 				);
-				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					ratesResponseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
-				}
+				ratesResponseBean.getErrorBean().addError(
+					xmlResponse.RateReply.Notifications[i].Code.xmltext,
+					xmlResponse.RateReply.Notifications[i].Message.xmltext
+				);
 			}
 			
 			if(!ratesResponseBean.hasErrors()) {
-				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
+				for(var i=1; i<=arrayLen(xmlResponse.PostageRatesResponse.PostagePrice); i++) {
 					ratesResponseBean.addShippingMethod(
 						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
 						totalCharge=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
 					);
 				}
 			}
+			*/
+			
 		}
-		*/
 		return ratesResponseBean;
 	}
 	
