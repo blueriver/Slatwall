@@ -342,7 +342,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 
 	function sendOrderConfirmationEmail (required any order) {
-		var siteConfig = getService("requestCacheService").getValue("muraScope").siteConfig();
 		var emailBody = "";
 		var messageParams = {
 			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>',
@@ -361,27 +360,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
 		}
 		messageParams['body'] = emailBody;
+		var configBean = getService("requestCacheService").getValue("muraScope").siteConfig();
 		
-		// apply email settings defined in Mura if applicable
-		if( !siteConfig.getUseDefaultSMTPServer() ) {
-			var mailServerSettings = getMailServerSettings();
-			structAppend(messageParams, mailServerSettings, false);
-		}
+		getTagProxyService().cfmail(argumentCollection=messageParams, configBean=configBean);
 		
-		getTagProxyService().cfmail(argumentCollection=messageParams);
-	}
-	
-	public struct function getMailServerSettings() {
-		var config = getService("requestCacheService").getValue("muraScope").siteConfig();
-		var settings = {
-			server = config.getMailServerIP(),
-			username = config.getMailServerUsername(),
-			password = config.getMailServerPassword(),
-			port = config.getMailServerSMTPPort(),
-			useSSL = config.getMailServerSSL(),
-			useTLS = config.getMailServerTLS()
-		};
-		return settings;
 	}
 	
 	public any function getOrderRequirementsList(required any order) {
