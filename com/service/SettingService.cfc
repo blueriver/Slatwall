@@ -428,7 +428,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			myAccountPage.setActive(1);
 			myAccountPage.setApproved(1);
 			myAccountPage.setIsLocked(1);
-			myAccountPage.setRestricted(1);
+			//myAccountPage.setRestricted(1); This was disabled because we are going to manage login via the view
 			myAccountPage.setParentID("00000000000000000000000000000000001");
 			myAccountPage.setFilename("my-account");
 			myAccountPage.setSiteID(thisSiteID);

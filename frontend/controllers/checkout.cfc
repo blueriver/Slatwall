@@ -133,7 +133,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var result = getOrderService().processOrder(data=rc);
 		
 		if(result) {
+			// Save the order ID temporarily in the session for the confirmation page.  It will be removed by that controller
 			getSessionService().setValue("orderConfirmationID", rc.orderID);
+			
 			// Redirect to order Confirmation
 			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);
 		}
