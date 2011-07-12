@@ -383,8 +383,40 @@ component extends="BaseService" output="false" accessors="true"  {
 			shoppingCartPage.setSiteID(thisSiteID);
 			shoppingCartPage.save();
 			
+			// Setup Order Status Page
+			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-status", siteid=local.thisSiteID);
+			if(shoppingCartPage.getIsNew()) {
+				shoppingCartPage.setDisplayTitle("Order Status");
+				shoppingCartPage.setHTMLTitle("Order Status");
+				shoppingCartPage.setMenuTitle("Order Status");
+				shoppingCartPage.setIsNav(0);
+			}
+			shoppingCartPage.setActive(1);
+			shoppingCartPage.setApproved(1);
+			shoppingCartPage.setIsLocked(1);
+			shoppingCartPage.setParentID("00000000000000000000000000000000001");
+			shoppingCartPage.setFilename("order-status");
+			shoppingCartPage.setSiteID(thisSiteID);
+			shoppingCartPage.save();
 			
-			// Setup Account Page
+			// Setup Order Confirmation
+			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-confirmation", siteid=local.thisSiteID);
+			if(shoppingCartPage.getIsNew()) {
+				shoppingCartPage.setDisplayTitle("Order Confirmation");
+				shoppingCartPage.setHTMLTitle("Order Confirmation");
+				shoppingCartPage.setMenuTitle("Order Confirmation");
+				shoppingCartPage.setIsNav(0);
+			}
+			shoppingCartPage.setActive(1);
+			shoppingCartPage.setApproved(1);
+			shoppingCartPage.setIsLocked(1);
+			shoppingCartPage.setParentID("00000000000000000000000000000000001");
+			shoppingCartPage.setFilename("order-confirmation");
+			shoppingCartPage.setSiteID(thisSiteID);
+			shoppingCartPage.save();
+			
+			
+			// Setup My Account Page
 			var myAccountPage = getContentManager().getActiveContentByFilename(filename="my-account", siteid=local.thisSiteID);
 			if(myAccountPage.getIsNew()) {
 				myAccountPage.setDisplayTitle("My Account");

@@ -39,8 +39,7 @@ Notes:
 <cfparam name="rc.order" type="any" />
 
 <cfoutput>
-	<div class="svocheckoutconfirmation">
-		<h3>Order Confirmation</h3>
+	<div class="svoorderconfirmation">
 		<cfif rc.order.isNew()>
 			<p class="error">The order details that you have requested either can't be found in our system, or your account doesn't have access to those order details.</p>
 		<cfelse>

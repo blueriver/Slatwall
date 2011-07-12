@@ -43,6 +43,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
 	property name="settingService" type="any";
+	property name="sessionService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="";
@@ -132,8 +133,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var result = getOrderService().processOrder(data=rc);
 		
 		if(result) {
+			getSessionService().setValue("orderConfirmationID", rc.orderID);
 			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='checkout', querystring="slatAction=frontend:checkout.confirmation&orderID=#rc.orderID#"), false);
+			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);
 		}
 			
 		detail(rc);
