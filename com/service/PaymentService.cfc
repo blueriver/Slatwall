@@ -66,6 +66,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
 			
 			if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
+				// Setup the actuall processing information
+				if(!structKeyExists(arguments, "transactionAmount")) {
+					arguments.transactionAmount = arguments.orderPayment.getAmount();
+				}
+					
 				// Chech if it's a duplicate transaction. Determination is made based on matching
 				// transactionType and transactionAmount for this payment in last 60 sec.
 			
@@ -88,11 +93,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					
 					// Move all of the info into the new request bean
 					requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
-					
-					// Setup the actuall processing information
-					if(!structKeyExists(arguments, "transactionAmount")) {
-						arguments.transactionAmount = arguments.orderPayment.getAmount();
-					}
 					
 					requestBean.setTransactionID(transaction.getCreditCardTransactionID());
 					requestBean.setTransactionType(arguments.transactionType);
