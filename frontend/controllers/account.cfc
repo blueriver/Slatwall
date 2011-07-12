@@ -52,15 +52,4 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:account.detail");
 	}
 	
-	public void function detailOrder(required struct rc) {
-		param name="rc.orderID" default="";
-		
-		rc.order = getOrderService().getOrder(rc.orderID);
-		
-		// Check to make sure that the order being requested is actually the customers
-		if(!isNull(rc.order.getAccount()) && rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
-			rc.order = getOrderService().newOrder();
-		}
-	}
-	
 }
