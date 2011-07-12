@@ -45,7 +45,7 @@ Notes:
 		
 		<cfset var checkDuplicateTransaction = "" />
 		<!--- check for any transaction for this payment in last 60 sec with same type and amount --->
-		<cfquery name="checkDuplicateTransaction" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+		<cfquery name="checkDuplicateTransaction" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
 			SELECT SlatwallCreditCardTransaction.creditCardTransactionID
 			FROM SlatwallCreditCardTransaction 
 			WHERE SlatwallCreditCardTransaction.orderPaymentID = <cfqueryparam value="#arguments.orderPaymentID#" cfsqltype="cf_sql_varchar" />

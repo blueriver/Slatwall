@@ -159,8 +159,8 @@ component accessors="true" extends="BaseDAO" {
 		
 		var dataQuery = new Query();
 		dataQuery.setDatasource(application.configBean.getDatasource());
-		dataQuery.setUsername(application.configBean.getUsername());
-		dataQuery.setPassword(application.configBean.getPassword());
+		dataQuery.setUsername(application.configBean.getDBUsername());
+		dataQuery.setPassword(application.configBean.getDBPassword());
 		
 		//loop through all the option groups and check if it exists
 		for(var i=arrayLen(optionGroups); i >= 1; i--){
@@ -310,8 +310,8 @@ component accessors="true" extends="BaseDAO" {
 	private string function saveImportData(required query data,required numeric rowNumber,required string tableName,required array columnList,required string lookupColumn,required string idColumn,array extraData = []){
 		var dataQuery = new Query();
 		dataQuery.setDataSource(application.configBean.getDatasource());
-		dataQuery.setUsername(application.configBean.getUsername());
-		dataQuery.setPassword(application.configBean.getPassword());
+		dataQuery.setUsername(application.configBean.getDBUsername());
+		dataQuery.setPassword(application.configBean.getDBPassword());
 
 		var lookupColumnValue = createObject( "java", "java.lang.StringBuilder" ).init();
 		var updateSetString = createObject( "java", "java.lang.StringBuilder" ).init();

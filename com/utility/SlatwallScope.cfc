@@ -79,8 +79,9 @@ component accessors="true" output="false" extends="BaseObject" {
 		} else if (arguments.contentID == "" || arguments.contentID == "00000000000000000000000000000000001") {
 			if(!getService("requestCacheService").keyExists("allProductList")) {
 				var data = {};
+				data["F:activeFlag"] = 1;
 				if(structKeyExists(request, "context")) {
-					data = request.context;
+					structAppend(data,request.context);
 				}
 				var currentURL = $.createHREF(filename=$.content('filename'));
 				if(len(CGI.QUERY_STRING)) {
@@ -93,6 +94,7 @@ component accessors="true" output="false" extends="BaseObject" {
 			if(!getService("requestCacheService").keyExists("contentProductList#arguments.contentID#")) {
 				var content = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
 				var data = {};
+				data["F:activeFlag"] = 1;
 				if(content.getExtendedAttribute("showSubPageProducts") eq "") {
 					data.showSubPageProducts = 0;
 				} else {
@@ -111,8 +113,9 @@ component accessors="true" output="false" extends="BaseObject" {
 	private any function getCurrentProductList() {
 		if(!getService("requestCacheService").keyExists("currentProductList")) {
 			var data = {};
+			data["F:activeFlag"] = 1;
 			if(structKeyExists(request, "context")) {
-				data = request.context;
+				structAppend(data,request.context);
 			}
 			if($.content("showSubPageProducts") eq "") {
 				data.showSubPageProducts = 0;
