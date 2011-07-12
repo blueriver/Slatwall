@@ -98,6 +98,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public Product function init(){
 	   // set default collections for association management methods
+	   if(isNull(variables.activeFlag)) {
+	       variables.activeFlag = 1;
+	   }
 	   if(isNull(variables.ProductContent)) {
 	       variables.ProductContent = [];
 	   }

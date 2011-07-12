@@ -80,6 +80,7 @@ component accessors="true" output="false" extends="BaseObject" {
 			if(!getService("requestCacheService").keyExists("allProductList")) {
 				var data = {};
 				data["F:activeFlag"] = 1;
+				data["F:publishedFlag"] = 1;
 				if(structKeyExists(request, "context")) {
 					structAppend(data,request.context);
 				}
@@ -95,6 +96,7 @@ component accessors="true" output="false" extends="BaseObject" {
 				var content = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
 				var data = {};
 				data["F:activeFlag"] = 1;
+				data["F:publishedFlag"] = 1;
 				if(content.getExtendedAttribute("showSubPageProducts") eq "") {
 					data.showSubPageProducts = 0;
 				} else {
@@ -114,6 +116,7 @@ component accessors="true" output="false" extends="BaseObject" {
 		if(!getService("requestCacheService").keyExists("currentProductList")) {
 			var data = {};
 			data["F:activeFlag"] = 1;
+			data["F:publishedFlag"] = 1;
 			if(structKeyExists(request, "context")) {
 				structAppend(data,request.context);
 			}
