@@ -93,6 +93,8 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		httpRequest.addParam(type="header",name="SOAPAction",value="https://www.envmgr.com/LabelService/CalculatePostageRatesXML");
 		httpRequest.addParam(type="xml",value="#xmlPacket#");
 		
+		fileWrite("C:\EndiciaExample.txt",xmlPacket);
+		
 		writeDump(httpRequest);
 		writeDump(xmlPacket);
 		writeDump(httpRequest.send().getPrefix());
