@@ -82,11 +82,34 @@ Notes:
 		<cfargument name="subject" default="" />
 		<cfargument name="body" default="" />
 		<cfargument name="type" default="html" />
+		<cfargument name="configBean" type="any" />
+		
+		<!--- apply email settings defined in Mura if applicable --->
+		<cfif isDefined("arguments.configBean") and !arguments.configBean.getUseDefaultSMTPServer()>
+			<cfset var mailServerSettings = getMailServerSettings(arguments.configBean) />
+			<cfset structAppend(arguments,mailServerSettings) />
+		</cfif>
 		
 		<cfmail attributeCollection="#arguments#">
 			#arguments.body#
 		</cfmail>
 	</cffunction>
+	
+	<cfscript>
+		public struct function getMailServerSettings(required any configBean) {
+		var config = arguments.configBean;
+		var settings = {
+			server = config.getMailServerIP(),
+			username = config.getMailServerUsername(),
+			password = config.getMailServerPassword(),
+			port = config.getMailServerSMTPPort(),
+			useSSL = config.getMailServerSSL(),
+			useTLS = config.getMailServerTLS()
+		};
+		return settings;
+	}
+	
+	</cfscript>
 	
 	<!--- The script version of http doesn't suppose tab delimiter, it throws error.
 		Use this method only when you want to return a query. --->
