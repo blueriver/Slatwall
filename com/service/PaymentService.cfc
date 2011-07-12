@@ -57,88 +57,99 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public boolean function processPayment(required any orderPayment, required string transactionType, numeric transactionAmount, string providerTransactionID="") {
-		// Get the relavent info and objects for this order payment
-		var processOK = false;
-		var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
-		var paymentProviderGateway = paymentMethod.getProviderGateway();
-		var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
-		
-		if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
-			// Lock down this determination so that the values getting called and set don't overlap
-			lock scope="Session" timeout="45" {
-				// Generate Process Request Bean
-				var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
-				
-				// Move all of the info into the new request bean
-				requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
-				
+		// Lock down this determination so that the values getting called and set don't overlap
+		lock scope="Session" timeout="45" {
+			// Get the relavent info and objects for this order payment
+			var processOK = false;
+			var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
+			var paymentProviderGateway = paymentMethod.getProviderGateway();
+			var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
+			
+			if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
 				// Setup the actuall processing information
 				if(!structKeyExists(arguments, "transactionAmount")) {
 					arguments.transactionAmount = arguments.orderPayment.getAmount();
 				}
-				
-				// Create a new Credit Card Transaction
-				var transaction = this.newCreditCardTransaction();
-				transaction.setTransactionType(arguments.transactionType);
-				transaction.setOrderPayment(arguments.orderPayment);
-				
-				// Make sure that this transaction gets saved to the DB
-				this.saveCreditCardTransaction(transaction);
-				ormFlush();
-				
-				requestBean.setTransactionID(transaction.getCreditCardTransactionID());
-				requestBean.setTransactionType(arguments.transactionType);
-				requestBean.setTransactionAmount(arguments.transactionAmount);
-				requestBean.setProviderTransactionID(arguments.providerTransactionID);
-				requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
-									
-				// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
-				try {
 					
-					// Get Response Bean from provider service
-					var response = providerService.processCreditCard(requestBean);
+				// Chech if it's a duplicate transaction. Determination is made based on matching
+				// transactionType and transactionAmount for this payment in last 60 sec.
+			
+				var isDuplicateTransaction = getDAO().isDuplicateCreditCardTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(),transactionType=arguments.transactionType,transactionAmount=arguments.transactionAmount);
+				if(isDuplicateTransaction){
+					processOK = true;
+					arguments.orderPayment.getErrorBean().addError('processing', "This transaction is duplicate of an already processed transaction.");
+				} else {
+					// Create a new Credit Card Transaction
+					var transaction = this.newCreditCardTransaction();
+					transaction.setTransactionType(arguments.transactionType);
+					transaction.setOrderPayment(arguments.orderPayment);
 					
-					// Populate the Credit Card Transaction with the details of this process
-					transaction.setProviderTransactionID(response.getTransactionID());
-					transaction.setAuthorizationCode(response.getAuthorizationCode());
-					transaction.setAmountAuthorized(response.getAmountAuthorized());
-					transaction.setAmountCharged(response.getAmountCharged());
-					transaction.setAmountCredited(response.getAmountCredited());
-					transaction.setAVSCode(response.getAVSCode());
-					transaction.setStatusCode(response.getStatusCode());
-					transaction.setMessage(response.getMessageString());
-										
-					// Make sure that this transaction with all of it's info gets added to the DB
+					// Make sure that this transaction gets saved to the DB
+					this.saveCreditCardTransaction(transaction);
 					ormFlush();
+
+					// Generate Process Request Bean
+					var requestBean = new Slatwall.com.utility.payment.CreditCardTransactionRequestBean();
 					
-					if(!response.hasErrors()) {
-						processOK = true;
+					// Move all of the info into the new request bean
+					requestBean.populatePaymentInfoWithOrderPayment(arguments.orderPayment);
+					
+					requestBean.setTransactionID(transaction.getCreditCardTransactionID());
+					requestBean.setTransactionType(arguments.transactionType);
+					requestBean.setTransactionAmount(arguments.transactionAmount);
+					requestBean.setProviderTransactionID(arguments.providerTransactionID);
+					requestBean.setTransactionCurrency("USD"); // TODO: This is a hack that should be fixed at some point.  The currency needs to be more dynamic
+					
+					// Wrap in a try / catch so that the transaction will still get saved to the DB even in error
+					try {
 						
-						// Update the order Status
-						// TODO: THIS NEEDS TO GET MOVED
-						if(arguments.transactionType == "chargePreAuthorization") {
-							var order = arguments.orderPayment.getOrder();
-							if(order.getQuantityUndelivered() gt 0) {
-								order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
-							} else {
-								order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+						// Get Response Bean from provider service
+						getService("logService").logMessage(message="Payment Processing Request - Started", generalLog=true);
+						var response = providerService.processCreditCard(requestBean);
+						getService("logService").logMessage(message="Payment Processing Request - Finished", generalLog=true);
+						
+						// Populate the Credit Card Transaction with the details of this process
+						transaction.setProviderTransactionID(response.getTransactionID());
+						transaction.setAuthorizationCode(response.getAuthorizationCode());
+						transaction.setAmountAuthorized(response.getAmountAuthorized());
+						transaction.setAmountCharged(response.getAmountCharged());
+						transaction.setAmountCredited(response.getAmountCredited());
+						transaction.setAVSCode(response.getAVSCode());
+						transaction.setStatusCode(response.getStatusCode());
+						transaction.setMessage(response.getMessageString());
+											
+						// Make sure that this transaction with all of it's info gets added to the DB
+						ormFlush();
+						
+						if(!response.hasErrors()) {
+							processOK = true;
+							
+							// Update the order Status
+							// TODO: THIS NEEDS TO GET MOVED
+							if(arguments.transactionType == "chargePreAuthorization") {
+								var order = arguments.orderPayment.getOrder();
+								if(order.getQuantityUndelivered() gt 0) {
+									order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+								} else {
+									order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+								}
 							}
+							// END: THIS NEEDS TO GET MOVED
+						} else {
+							// Populate the orderPayment with the processing error
+							arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
 						}
-						// END: THIS NEEDS TO GET MOVED
-					} else {
+					} catch (any e) {
 						// Populate the orderPayment with the processing error
-						arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
+						arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
+						// Log the exception
+						getService("logService").logException(e);
+						rethrow;
 					}
-				} catch (any e) {
-					// Populate the orderPayment with the processing error
-					arguments.orderPayment.getErrorBean().addError('processing', "An Unexpected Error Ocurred");
-					// Log the exception
-					getService("logService").logException(e);
-					rethrow;
 				}
 			}
 		}
-		
+
 		return processOK;
 	}
 

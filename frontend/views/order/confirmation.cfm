@@ -36,30 +36,40 @@
 Notes:
 
 --->
-<cfset local.accountOrders = $.slatwall.account().getOrders() />
+<cfparam name="rc.order" type="any" />
 
 <cfoutput>
-#view("account/account_nav")#
-	<div class="svoaccountlistorder">
-		<table>
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-				<th>Details</th>
-			</tr>
-			<cfloop array="#local.accountOrders#" index="local.order">
-				<cfif local.order.getOrderStatusType().getSystemCode() neq "ostNotPlaced">
+	<div class="svoorderconfirmation">
+		<cfif rc.order.isNew()>
+			<p class="error">The order details that you have requested either can't be found in our system, or your account doesn't have access to those order details.</p>
+		<cfelse>
+			<p class="success">Your order has been placed!</p>
+			<dl>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="OrderNumber">
+				<cf_SlatwallPropertyDisplay object="#rc.order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderTotal">
+			</dl>
+			<table>
+				<tr>
+					<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
+					<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
+					<th>#$.slatwall.rbKey("entity.orderitem.price")#</th>
+					<th>#$.slatwall.rbKey("entity.orderitem.quantity")#</th>
+					<th>#$.slatwall.rbKey("admin.order.detail.quantityshipped")#</th>
+					<th>#$.slatwall.rbKey("entity.orderitem.extendedprice")#</th>
+				</tr>
+				<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem">
 					<tr>
-						<td>#local.order.getOrderNumber()#</td>
-						<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
-						<td>#local.order.getOrderStatusType().getType()#</td>
-						<td>#DollarFormat(local.order.getTotal())#</td>
-						<td><a href="#$.createHREF(filename='order-status', queryString='orderID=#local.order.getOrderID()#')#">View Details</a></td>
+						<td>#local.orderItem.getSku().getSkuCode()#</td>
+						<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
+						<td>#dollarFormat(local.orderItem.getPrice())#</td>
+						<td>#int(local.orderItem.getQuantity())#</td>
+						<td>#local.orderItem.getQuantityDelivered()#</td>
+						<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
 					</tr>
-				</cfif>
-			</cfloop>
-		</table>
+				</cfloop>
+			</table>
+		</cfif>
 	</div>
 </cfoutput>

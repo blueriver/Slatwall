@@ -38,6 +38,7 @@ Notes:
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 	
+	property name="accountService";
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
@@ -185,10 +186,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
-		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
-			return false;	
+		var accountOK = true;
+		
+		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "account")) {
+			var accountData = data.structuredData.account;
+			var account = getAccountService().getAccount(accountData.accountID, true);
+			account = getAccountService().saveAccount(account, accountData, data.siteID);
+			arguments.order.setAccount(account);
 		}
-		return true;
+		
+		if( isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
+			accountOK = false;
+		}
+		
+		return accountOK;
 	}
 	
 	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
@@ -314,6 +325,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							// Do a flush so that the order is commited to the DB
 							ormFlush();
 							
+							getService("logService").logMessage(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
+							
 							// Send out the e-mail
 							sendOrderConfirmationEmail(order);
 							
@@ -329,19 +342,27 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 
 	function sendOrderConfirmationEmail (required any order) {
-		
-		var emailTo = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>';
-		var emailFrom = setting('order_orderPlacedEmailFrom');
-		var emailCC = setting('order_orderPlacedEmailCC');
-		var emailBCC = setting('order_orderPlacedEmailBCC');
-		var emailSubject = setting('order_orderPlacedEmailSubject');
 		var emailBody = "";
-		
+		var messageParams = {
+			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>',
+			from = setting('order_orderPlacedEmailFrom'),
+			subject = setting('order_orderPlacedEmailSubject')
+		};
+	
 		savecontent variable="emailBody" {
 			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
 		}
 		
-		getTagProxyService().cfmail(to = emailTo, from = emailFrom, cc = emailCC, bcc = emailBCC, subject = emailSubject, body = emailBody);
+		if(len(trim(setting('order_orderPlacedEmailCC')))) {
+			messageParams['cc'] = setting('order_orderPlacedEmailCC');
+		}
+		if(len(trim(setting('order_orderPlacedEmailBCC')))) {
+			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
+		}
+		messageParams['body'] = emailBody;
+		var configBean = getService("requestCacheService").getValue("muraScope").siteConfig();
+		
+		getTagProxyService().cfmail(argumentCollection=messageParams, configBean=configBean);
 		
 	}
 	

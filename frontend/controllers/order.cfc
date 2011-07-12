@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,31 +35,47 @@
 
 Notes:
 
---->
-<cfset local.accountOrders = $.slatwall.account().getOrders() />
+*/
+component persistent="false" accessors="true" output="false" extends="BaseController" {
 
-<cfoutput>
-#view("account/account_nav")#
-	<div class="svoaccountlistorder">
-		<table>
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-				<th>Details</th>
-			</tr>
-			<cfloop array="#local.accountOrders#" index="local.order">
-				<cfif local.order.getOrderStatusType().getSystemCode() neq "ostNotPlaced">
-					<tr>
-						<td>#local.order.getOrderNumber()#</td>
-						<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
-						<td>#local.order.getOrderStatusType().getType()#</td>
-						<td>#DollarFormat(local.order.getTotal())#</td>
-						<td><a href="#$.createHREF(filename='order-status', queryString='orderID=#local.order.getOrderID()#')#">View Details</a></td>
-					</tr>
-				</cfif>
-			</cfloop>
-		</table>
-	</div>
-</cfoutput>
+	property name="accountService" type="any";
+	property name="orderService" type="any";
+	property name="sessionService" type="any";
+	
+	public void function detail(required struct rc) {
+		param name="rc.orderID" default="";
+		param name="rc.orderNumber" default="";
+		param name="rc.lastName" default="";
+		param name="rc.emailAddress" default="";
+		
+		if(rc.orderID != "") {
+			rc.order = getOrderService().getOrder(rc.orderID, true);
+		
+			// Check to make sure that the order being requested is actually the customers
+			if(isNull(rc.order.getAccount()) || rc.order.getAccount().getAccountID() != $.slatwall.account().getAccountID()) {
+				rc.order = getOrderService().newOrder();
+			}	
+		}
+		
+		if(rc.orderNumber != "") {
+			rc.order = getOrderService().getOrderByOrderNumber(rc.orderNumber, true);
+			if(rc.order.getAccount().getLastName() != rc.lastName || rc.order.getAccount().getPrimaryEmailAddress().getEmailAddress() != rc.emailAddress) {
+				rc.order = getOrderService().newOrder();	
+			}
+		}
+		
+		if(isNull(rc.order)) {
+			rc.order = getOrderService().newOrder();
+		}
+		
+	}
+	
+	public void function confirmation(required struct rc) {
+		
+		// This pulls the order ID out of the session to find the order, and then removes it so that the confirmation page can't be seen twice.
+		// This is set in session so that we don't have to pass via URL
+		rc.order = getOrderService().getOrder( getSessionService().getValue("orderConfirmationID", ""), true );
+		getSessionService().removeValue("orderConfirmationID");
+	}
+	
+}

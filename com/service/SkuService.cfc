@@ -242,20 +242,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
 	
-	public array function getSortedProductSkus(required string productID, required array skus) {
-		if(arrayLen(arguments.skus) lt 2) {
-			return arguments.skus;
+	public array function getSortedProductSkus(required any product) {
+		var skus = arguments.product.getSkus();
+		if(arrayLen(skus) lt 2) {
+			return skus;
 		}
 		
-		var sortedSkuIDQuery = getDAO().getSortedProductSkusID(arguments.productID);
+		var sortedSkuIDQuery = getDAO().getSortedProductSkusID(arguments.product.getProductID());
 		var sortedArray = arrayNew(1);
 		
 		for(var i=1; i<=sortedSkuIDQuery.recordCount; i++) {
 			arrayAppend(sortedArray, sortedSkuIDQuery.skuID[i]);
 		}
 		
-		for(var i=1; i<=arrayLen(arguments.skus); i++) {
-			sortedArray[arrayFind(sortedArray, arguments.skus[i].getSkuID())] = arguments.skus[i];
+		for(var i=1; i<=arrayLen(skus); i++) {
+			sortedArray[arrayFind(sortedArray, skus[i].getSkuID())] = skus[i];
 		}
 		
 		return sortedArray;

@@ -88,10 +88,23 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			if(rc.$.event('slatAction') == "") {
 				rc.$.event("slatAction", "frontend:checkout.detail");
 			}
+			
 		// Checks for My-Account page
 		} else if (rc.$.content('filename') == 'my-account') {
 			if(rc.$.event('slatAction') == "") {
 				rc.$.event("slatAction", "frontend:account.detail");
+			}
+		
+		// Checks for Order Status page
+		} else if (rc.$.content('filename') == 'order-status') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:order.detail");
+			}
+		
+		// Checks for Order Confirmation page
+		} else if (rc.$.content('filename') == 'order-confirmation') {
+			if(rc.$.event('slatAction') == "") {
+				rc.$.event("slatAction", "frontend:order.confirmation");
 			}
 		}
 	}

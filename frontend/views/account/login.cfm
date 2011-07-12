@@ -36,30 +36,32 @@
 Notes:
 
 --->
-<cfset local.accountOrders = $.slatwall.account().getOrders() />
+<!--- Mura Variables --->
+<cfparam name="request.status" default="">
+<cfparam name="request.isBlocked" default="false">
 
+<cfif request.status eq 'failed'>
+	<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
+		<cfset request.isBlocked=true />
+		<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
+	<cfelse>
+		<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
+	</cfif>
+</cfif>
+	
 <cfoutput>
-#view("account/account_nav")#
-	<div class="svoaccountlistorder">
-		<table>
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-				<th>Details</th>
-			</tr>
-			<cfloop array="#local.accountOrders#" index="local.order">
-				<cfif local.order.getOrderStatusType().getSystemCode() neq "ostNotPlaced">
-					<tr>
-						<td>#local.order.getOrderNumber()#</td>
-						<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
-						<td>#local.order.getOrderStatusType().getType()#</td>
-						<td>#DollarFormat(local.order.getTotal())#</td>
-						<td><a href="#$.createHREF(filename='order-status', queryString='orderID=#local.order.getOrderID()#')#">View Details</a></td>
-					</tr>
-				</cfif>
-			</cfloop>
-		</table>
+	<div class="svoaccountlogin">
+		<form name="loginAccount" method="post" action="?nocache=1">
+			<h4>Account Login</h4>
+			<dl>
+				<dt>E-Mail Address</dt>
+				<dd><input type="text" name="username" value="" /></dd>
+				<dt>Password</dt>
+				<dd><input type="password" name="password" value="" /></dd>
+			</dl>
+			<input type="hidden" name="doaction" value="login" />
+			<input type="hidden" name="siteid" value="#$.event('siteID')#" />
+			<button type="submit">Login & Continue</button>
+		</form>
 	</div>
 </cfoutput>

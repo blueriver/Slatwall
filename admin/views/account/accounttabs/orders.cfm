@@ -46,35 +46,23 @@ Notes:
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
-			<th>#$.slatwall.rbKey("admin.order.list.actions")#</th>
 			<th>&nbsp</th>
 		</tr>
-		<cfloop array="#rc.account.getOrders()#" index="local.order">
+		<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
+			<cfif local.order.getOrderStatusType().getSystemCode() neq "ostNotPlaced">
 			<tr>
 				<td>#Local.Order.getOrderNumber()#</td>
 				<td>#DateFormat(Local.Order.getOrderOpenDateTime(), "medium")#</td>
 				<td class="varWidth"><cfif not isNull(local.order.getAccount())>#Local.Order.getAccount().getFullName()#</cfif></td>
 				<td>#Local.Order.getOrderStatusType().getType()#</td>
 				<td>#DollarFormat(local.order.getTotal())#</td>
-				<td>
-					<cfset local.orderActionOptions = local.order.getActionOptions() />
-					<cfif arrayLen(local.orderActionOptions) gt 0>
-						<select name="orderActions">
-							<option value="">#$.slatwall.rbKey("define.select")#</option>
-							<cfloop array = #local.orderActionOptions# index="local.thisAction">
-								<option value="#local.order.getOrderID()#_#local.thisAction.getOrderActionType().getTypeID()#">#local.thisAction.getOrderActionType().getType()#</option>
-							</cfloop>
-						</select>
-					<cfelse>
-						#$.slatwall.rbKey("define.notApplicable")#
-					</cfif>
-				</td>
 				<td class="administration">
 					<ul class="one">
 					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
 					</ul>     						
 				</td>
 			</tr>
+			</cfif>
 		</cfloop>
 	</table>
 </cfoutput>

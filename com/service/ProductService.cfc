@@ -468,7 +468,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
-		getTagProxyService().cfSetting(requesttimeout="600"); 
+		getTagProxyService().cfSetting(requesttimeout="3600"); 
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	

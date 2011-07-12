@@ -44,18 +44,18 @@ Notes:
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.productsettings')#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.setting.settingValue")#</th>
-			<th>#rc.$.Slatwall.rbKey('admin.product.settingDefinedIn')#</th>
+			<th>#rc.$.Slatwall.rbKey('define.definedin')#</th>
 		</tr>
 		<!--- First two settings can only be set in the product and can't inherit --->
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.publishedFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.publishedFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("entity.product.activeFlag")#
+					<span>#rc.$.Slatwall.rbKey("entity.Product.activeFlag_hint")#</span>
 				</a>
 			</td>
-			<td><cf_SlatwallPropertyDisplay object="#rc.Product#" property="publishedFlag" edit="#rc.edit#" displayType="plain" editType="select" editOptions="#local.Options#" allowNullOption="false"></td>
-			<td>#rc.$.Slatwall.rbKey("admin.product.setting.settingSource.notApplicable")#</td>
+			<td><cf_SlatwallPropertyDisplay object="#rc.Product#" property="activeFlag" edit="#rc.edit#" displayType="plain" editType="select" editOptions="#local.Options#" allowNullOption="false"></td>
+			<td>#rc.$.Slatwall.rbKey("define.na")#</td>
 		</tr>
 		<tr>
 			<td class="property varWidth">
@@ -65,7 +65,7 @@ Notes:
 				</a>
 			</td>
 			<td><cf_SlatwallPropertyDisplay object="#rc.Product#" property="manufactureDiscontinuedFlag" edit="#rc.edit#" displayType="plain" editType="select" editOptions="#local.Options#" allowNullOption="false"></td>
-			<td>#rc.$.Slatwall.rbKey("admin.product.setting.settingSource.notApplicable")#</td>	
+			<td>#rc.$.Slatwall.rbKey("define.na")#</td>	
 		</tr>
 		<tr>
 			<td class="property varWidth">

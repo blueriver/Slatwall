@@ -77,18 +77,39 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="cfmail" output="false">
-		<cfargument name="from" default="" />
-		<cfargument name="to" default="" />
-		<cfargument name="cc" default="" />
-		<cfargument name="bcc" default="" />
+		<cfargument name="from" type="string" required="true" />
+		<cfargument name="to" type="string" required="true" />
 		<cfargument name="subject" default="" />
 		<cfargument name="body" default="" />
 		<cfargument name="type" default="html" />
+		<cfargument name="configBean" type="any" />
 		
-		<cfmail from="#arguments.from#" to="#arguments.to#" cc="#arguments.cc#" bcc="#arguments.bcc#" subject="#arguments.subject#" type="#arguments.type#">
+		<!--- apply email settings defined in Mura if applicable --->
+		<cfif isDefined("arguments.configBean") and !arguments.configBean.getUseDefaultSMTPServer()>
+			<cfset var mailServerSettings = getMailServerSettings(arguments.configBean) />
+			<cfset structAppend(arguments,mailServerSettings) />
+		</cfif>
+		
+		<cfmail attributeCollection="#arguments#">
 			#arguments.body#
 		</cfmail>
 	</cffunction>
+	
+	<cfscript>
+		public struct function getMailServerSettings(required any configBean) {
+		var config = arguments.configBean;
+		var settings = {
+			server = config.getMailServerIP(),
+			username = config.getMailServerUsername(),
+			password = config.getMailServerPassword(),
+			port = config.getMailServerSMTPPort(),
+			useSSL = config.getMailServerSSL(),
+			useTLS = config.getMailServerTLS()
+		};
+		return settings;
+	}
+	
+	</cfscript>
 	
 	<!--- The script version of http doesn't suppose tab delimiter, it throws error.
 		Use this method only when you want to return a query. --->

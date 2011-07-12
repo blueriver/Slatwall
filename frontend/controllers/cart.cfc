@@ -83,7 +83,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);
 		}
 		
-		getFW().redirectExact($.createHREF(filename='shopping-cart'), false);
+		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
 	}
 	
 }

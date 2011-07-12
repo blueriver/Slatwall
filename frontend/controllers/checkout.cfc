@@ -43,6 +43,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
 	property name="settingService" type="any";
+	property name="sessionService" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="";
@@ -51,7 +52,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
 		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
-			getFW().redirectExact(rc.$.createHREF('shopping-cart'));
+			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 		}
 		
 		// get the list of requirements left for this order to be processed
@@ -69,13 +70,20 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				rc.account = rc.$.slatwall.cart().getAccount();
 			} else {
 				rc.account = getAccountService().newAccount();
-				// Here we need to add it to the requirements list because the cart already had an account
+				// Here we need to add it to the requirements list because the cart might have already had an account
 				rc.orderRequirementsList = listPrepend(rc.orderRequirementsList,"account");
 			}
 		}
 		
 		// Setup some elements to be used by different views
 		rc.activePaymentMethods = getPaymentService().listPaymentMethodFilterByActiveFlag(1);
+	}
+	
+	public void function confirmation(required struct rc) {
+		param name="rc.orderID" default="";
+		
+		rc.order = getOrderService().getOrder(rc.orderID, true);
+		
 	}
 	
 	public void function loginAccount(required struct rc) {
@@ -89,20 +97,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:checkout.detail");
 	}
 	
-	public void function saveAccount(required struct rc) {
+	public void function saveOrderAccount(required struct rc) {
+		rc.guestAccountOK = true;
+		
+		getOrderService().updateAndVerifyOrderAccount(order=$.slatwall.cart(), data=rc);
+		
 		detail(rc);
-		
-		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteID'));
-		
-		// IF the account doesn't have any errors than we can apply it to the order
-		if(!rc.account.hasErrors()) {
-			rc.$.slatwall.cart().setAccount(rc.account);
-		}
-		
-		// Reload the order Requirements list
-		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
-		
-		// get the list of requirements left for this order to be processed
 		getFW().setView("frontend:checkout.detail");
 	}
 	
@@ -110,6 +110,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		rc.guestAccountOK = true;
 		
 		getOrderService().updateAndVerifyOrderFulfillments(order=$.slatwall.cart(), data=rc);
+		
+		detail(rc);
+		getFW().setView("frontend:checkout.detail");
+	}
+	
+	public void function saveOrderPayments(required struct rc) {
+		rc.guestAccountOK = true;
+		
+		getOrderService().updateAndVerifyOrderPayments(order=$.slatwall.cart(), data=rc);
 		
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
@@ -124,8 +133,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var result = getOrderService().processOrder(data=rc);
 		
 		if(result) {
+			// Save the order ID temporarily in the session for the confirmation page.  It will be removed by that controller
+			getSessionService().setValue("orderConfirmationID", rc.orderID);
+			
 			// Redirect to order Confirmation
-			getFW().redirectExact($.createHREF(filename='my-account', querystring="slatAction=frontend:account.detailorder&orderID=#rc.orderID#"), false);
+			getFW().redirectExact($.createHREF(filename='order-confirmation'), false);
 		}
 			
 		detail(rc);

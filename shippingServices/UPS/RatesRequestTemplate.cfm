@@ -43,7 +43,6 @@
 		<UserId>#variables.username#</UserId>
 		<Password>#variables.password#</Password>
 	</AccessRequest>
-	<?xml version="1.0"?>
 	<RatingServiceSelectionRequest xml:lang="en-US">
 		<Request>
 			<TransactionReference>

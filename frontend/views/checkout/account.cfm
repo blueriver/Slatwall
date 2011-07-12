@@ -51,50 +51,49 @@ Notes:
 		<div id="checkoutAccountContent" class="contentBlock">
 			<cfif listFind(rc.orderRequirementsList, 'account') || rc.edit eq "account">
 				<cfif listFind(rc.orderRequirementsList, 'account')>
-					<cfif request.status eq 'failed'>
-						<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
-							<cfset request.isBlocked=true />
-							<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
-						<cfelse>
-							<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
-						</cfif>
-					</cfif>
-					<cfif not request.isBlocked>
-						<div class="loginAccount">
-							<form name="loginAccount" method="post" action="?slatAction=frontend:checkout.loginaccount">
-								<h4>Account Login</h4>
-								<dl>
-									<dt>E-Mail Address</dt>
-									<dd><input type="text" name="username" value="" /></dd>
-									<dt>Password</dt>
-									<dd><input type="password" name="password" value="" /></dd>
-								</dl>
-								<input type="hidden" name="siteid" value="#$.event('siteID')#" />
-								<button type="submit">Login & Continue</button>
-							</form>
-						</div>
-					</cfif>
+					#view("account/login")#
 				</cfif>
 				<div class="accountDetails">
-					<form name="account" method="post" action="?slatAction=frontend:checkout.saveaccount">
-						<input type="hidden" name="accountID" value="#rc.account.getAccountID()#" />
+					<form name="account" method="post" action="?slatAction=frontend:checkout.saveorderaccount">
+						<input type="hidden" name="siteID" value="#$.event('siteID')#" />
+						<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />
 						<cfif rc.edit eq "account"><h4>Edit Account Details</h4><cfelse><h4>New Customer</h4></cfif>
 						<dl>
-							<cf_SlatwallPropertyDisplay object="#rc.account#" property="firstName" edit="true">
-							<cf_SlatwallPropertyDisplay object="#rc.account#" property="lastName" edit="true">
-							<cf_SlatwallPropertyDisplay object="#rc.account#" property="company" edit="true">
-							<cfif isNull(rc.account.getPrimaryEmailAddress()) or rc.account.getPrimaryEmailAddress().hasErrors() >
-								<dt class="spdemailaddress"><label for="emailAddress">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')# *</label></dt>
-								<dd id="spdemailaddress"><input type="text" name="emailAddress" value="" /></dd>
+							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.firstName" property="firstName" edit="true">
+							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.lastName" property="lastName" edit="true">
+							<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="account.company" property="company" edit="true">
+							<cfif rc.edit neq "account">
+								<dt class="spdemailaddress">
+									<label for="account.emailAddress" class="required">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label>
+								</dt>
+								<dd id="spdemailaddress">
+									<cfset emailValue = "" />
+									<cfif not isNull(rc.account.getPrimaryEmailAddress()) and not isNull(rc.account.getPrimaryEmailAddress().getEmailAddress())>
+										<cfset emailValue = rc.account.getPrimaryEmailAddress().getEmailAddress() />	
+									</cfif>
+									<input type="text" name="account.emailAddress" value="#emailValue#" />
+									<cfif len(rc.account.getErrorBean().getError("primaryEmailAddress"))>
+										<span class="formError">#rc.account.getErrorBean().getError("primaryEmailAddress")#</span>
+									</cfif>
+								</dd>
 							</cfif>
 							<cfif rc.account.isGuestAccount()>
-								<dt class="spdguestcheckout"><label for="createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label></dt>
+								<dt class="spdguestcheckout">
+									<label for="account.createMuraAccount">#$.slatwall.rbKey('frontend.checkout.detail.guestcheckout')#</label>
+								</dt>
 								<dd id="spdguestcheckout">
-									<input type="radio" name="createMuraAccount" value="0" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
-									<input type="radio" name="createMuraAccount" value="1" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
+									<input type="radio" name="account.guestAccount" value="1" />#$.slatwall.rbKey('frontend.checkout.detail.checkoutAsGuest')#
+									<input type="radio" name="account.guestAccount" value="0" checked="checked" />#$.slatwall.rbKey('frontend.checkout.detail.saveAccount')#<br />
 								</dd>
-								<dt class="spdpassword guestHide"><label for="password">Password</label></dt>
-								<dd id="spdpassword" class="guestHide"><input type="password" name="password" value="" /></dd>
+								<dt class="spdpassword guestHide">
+									<label for="account.password">Password</label>
+								</dt>
+								<dd id="spdpassword" class="guestHide">
+									<input type="password" name="account.password" value="" />
+									<cfif len(rc.account.getErrorBean().getError("password"))>
+										<span class="formError">#rc.account.getErrorBean().getError("password")#</span>
+									</cfif>
+								</dd>
 							<cfelse>
 								<a href="?doaction=logout">Logout</a>
 							</cfif>
@@ -113,8 +112,8 @@ Notes:
 		</div>
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
-				jQuery("input[name='createMuraAccount']").change(function(){
-					if(jQuery("input[name='createMuraAccount']:checked").val() == 1) {
+				jQuery("input[name='account.guestAccount']").change(function(){
+					if(jQuery("input[name='account.guestAccount']:checked").val() == 0) {
 						jQuery(".guestHide").show();
 					} else {
 						jQuery(".guestHide").hide();

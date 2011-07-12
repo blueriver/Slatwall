@@ -40,6 +40,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 
 	// Persistent Properties
 	property name="optionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="optionGroupCode" ormtype="string";
 	property name="optionGroupName" ormtype="string" validateRequired="true";
 	property name="optionGroupImage" ormtype="string";
 	property name="optionGroupDescription" ormtype="string" length="4000";

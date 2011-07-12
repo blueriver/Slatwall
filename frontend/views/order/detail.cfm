@@ -37,12 +37,28 @@ Notes:
 
 --->
 <cfparam name="rc.order" type="any" />
+<cfparam name="rc.orderID" type="string" />
+<cfparam name="rc.orderNumber" type="string" />
 
 <cfoutput>
-	<div class="svoaccountdetailorder">
-		<h3>Order Detail</h3>
-		<cfif rc.order.isNew()>
+	<div class="svoorderdetail">
+		
+		<cfif (rc.orderNumber neq "" or rc.orderID neq "") and rc.order.isNew()>
 			<p class="error">The order details that you have requested either can't be found in our system, or your account doesn't have access to those order details.</p>
+		</cfif>
+		<cfif rc.order.isNew()>
+			<form action="?nocache=1">
+			<p>Look up your order status</p>
+			<dl>
+				<dt>Order Number</dt>
+				<dd><input name="orderNumber" value="#rc.orderNumber#" /></dd>
+				<dt>Last Name on Order</dt>
+				<dd><input name="lastName" value="#rc.lastName#" /></dd>
+				<dt>Email Address on Order</dt>
+				<dd><input name="emailAddress" value="#rc.emailAddress#" /></dd>
+			</dl>
+			<button type="submit">Find Order</button>
+			</form>
 		<cfelse>
 			<dl>
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="OrderNumber">

@@ -36,7 +36,7 @@
 Notes:
 
 --->
-
+<cfset local.skusArray = rc.product.getSkus(sorted=true) />
 <cfoutput>
 <cfif rc.edit>
 <div class="buttons">
@@ -78,8 +78,8 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-		<cfloop from="1" to="#arrayLen(rc.SkuSmartList.getPageRecords())#" index="local.skuCount">
-			<cfset local.thisSku = rc.SkuSmartList.getPageRecords()[local.skuCount] />
+		<cfloop from="1" to="#arrayLen(local.skusArray)#" index="local.skuCount">
+			<cfset local.thisSku = local.skusArray[local.skuCount] />
 			<tr id="Sku#local.skuCount#" class="skuRow">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<td class="alignLeft">

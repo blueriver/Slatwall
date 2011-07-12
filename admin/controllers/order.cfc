@@ -73,7 +73,20 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	       getFW().redirect("admin:order.list");
 	   }
 	}
-	
+
+    public void function listcart(required struct rc) {
+		rc["F:orderStatusType_systemCode"] ="ostNotPlaced";
+		rc.orderby = "createdDateTime|DESC";
+		rc.cartSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
+    } 
+    
+    public void function detailcart(required struct rc) {
+    	rc.order = getOrderService().getOrder(rc.orderID);
+		if(isNull(rc.order)) {
+		   getFW().redirect("admin:order.listcart");
+		}
+    } 
+
 	public void function exportOrders(required struct rc) {
 		getOrderService().exportOrders(data=arguments.rc);
 	}

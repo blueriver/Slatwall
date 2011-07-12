@@ -292,14 +292,19 @@ component extends="BaseService" output="false" accessors="true"  {
 	
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
+		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Started", generalLog=true);
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
 		verifyMuraFrontendViews();
+		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Finished", generalLog=true);
 	}
 	
 	private void function verifyMuraClassExtension() {
+		getService("logService").logMessage("Setting Service - verifyMuraClassExtension - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
+		
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			getService("logService").logMessage("Verify Mura Class Extension For Site ID: #assignedSites["siteID"][i]#");
 			local.thisSiteID = assignedSites["siteID"][i];
 			local.thisSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
 			local.thisSubType.set( {
@@ -351,11 +356,15 @@ component extends="BaseService" output="false" accessors="true"  {
 			});
 			local.thisAttribute.save();
 		}
+		getService("logService").logMessage("Setting Service - verifyMuraClassExtension - Finished");
 	}
 	
 	private void function verifyMuraRequiredPages() {
+		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Started");
+		
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			getService("logService").logMessage("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#");
 			var thisSiteID = assignedSites["siteID"][i];
 			
 			// Setup Shopping Cart Page
@@ -374,8 +383,40 @@ component extends="BaseService" output="false" accessors="true"  {
 			shoppingCartPage.setSiteID(thisSiteID);
 			shoppingCartPage.save();
 			
+			// Setup Order Status Page
+			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-status", siteid=local.thisSiteID);
+			if(shoppingCartPage.getIsNew()) {
+				shoppingCartPage.setDisplayTitle("Order Status");
+				shoppingCartPage.setHTMLTitle("Order Status");
+				shoppingCartPage.setMenuTitle("Order Status");
+				shoppingCartPage.setIsNav(0);
+			}
+			shoppingCartPage.setActive(1);
+			shoppingCartPage.setApproved(1);
+			shoppingCartPage.setIsLocked(1);
+			shoppingCartPage.setParentID("00000000000000000000000000000000001");
+			shoppingCartPage.setFilename("order-status");
+			shoppingCartPage.setSiteID(thisSiteID);
+			shoppingCartPage.save();
 			
-			// Setup Account Page
+			// Setup Order Confirmation
+			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-confirmation", siteid=local.thisSiteID);
+			if(shoppingCartPage.getIsNew()) {
+				shoppingCartPage.setDisplayTitle("Order Confirmation");
+				shoppingCartPage.setHTMLTitle("Order Confirmation");
+				shoppingCartPage.setMenuTitle("Order Confirmation");
+				shoppingCartPage.setIsNav(0);
+			}
+			shoppingCartPage.setActive(1);
+			shoppingCartPage.setApproved(1);
+			shoppingCartPage.setIsLocked(1);
+			shoppingCartPage.setParentID("00000000000000000000000000000000001");
+			shoppingCartPage.setFilename("order-confirmation");
+			shoppingCartPage.setSiteID(thisSiteID);
+			shoppingCartPage.save();
+			
+			
+			// Setup My Account Page
 			var myAccountPage = getContentManager().getActiveContentByFilename(filename="my-account", siteid=local.thisSiteID);
 			if(myAccountPage.getIsNew()) {
 				myAccountPage.setDisplayTitle("My Account");
@@ -387,7 +428,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			myAccountPage.setActive(1);
 			myAccountPage.setApproved(1);
 			myAccountPage.setIsLocked(1);
-			myAccountPage.setRestricted(1);
+			//myAccountPage.setRestricted(1); This was disabled because we are going to manage login via the view
 			myAccountPage.setParentID("00000000000000000000000000000000001");
 			myAccountPage.setFilename("my-account");
 			myAccountPage.setSiteID(thisSiteID);
@@ -442,16 +483,20 @@ component extends="BaseService" output="false" accessors="true"  {
 			defaultProductTemplate.setSiteID(thisSiteID);
 			defaultProductTemplate.save();
 		}
+		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Finished");
 	}
 	
 	private void function verifyMuraFrontendViews() {
+		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			getService("logService").logMessage("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
 			var thisSiteID = assignedSites["siteID"][i];
 			var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/";
 			
 			getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
+		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Finished");
 	}
 }

@@ -98,6 +98,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public Product function init(){
 	   // set default collections for association management methods
+	   if(isNull(variables.activeFlag)) {
+	       variables.activeFlag = 1;
+	   }
 	   if(isNull(variables.ProductContent)) {
 	       variables.ProductContent = [];
 	   }
@@ -163,7 +166,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
         	return variables.skus;
         } else {
         	if(isNull(variables.sortedSkus)) {
-	        	variables.sortedSkus = getService("skuService").getSortedProductSkus(productID=getProductID(), skus=getSkus());
+	        	variables.sortedSkus = getService("skuService").getSortedProductSkus(this);
 	        }
         	return variables.sortedSkus;
         }

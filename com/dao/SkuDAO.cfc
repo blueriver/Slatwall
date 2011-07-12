@@ -68,8 +68,14 @@ Notes:
 		<cfargument name="productID" type="string" required="true" />
 		
 		<cfset var sorted = "" />
+		<cfif application.configBean.getDbType() eq "MySQL">
+			<cfset local.castAs = "decimal" />
+		<cfelse>
+			<cfset local.castAs = "float" />
+		</cfif>
 		
-		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+		<!--- TODO: test to see if this query works with DB's other than MSSQL and MySQL --->
+		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
 			SELECT
 				SlatwallSku.skuID
 			FROM
@@ -87,8 +93,8 @@ Notes:
 			ORDER BY
 				<!--- This formula came with help from Blar Gibb and Jacob West... their formula was better with varying max optoinSortOrder and optionGroupSortOrder... but it wasn't possible with SQL, well at least I couldn't figure it out -GM --->
 				sum(
-					CAST( SlatwallOption.sortOrder as float ) * 
-					POWER( CAST(10000 as float), CAST((20 - SlatwallOptionGroup.sortOrder) as float ) )
+					CAST( SlatwallOption.sortOrder as #local.castAs# ) * 
+					POWER( CAST(10000 as #local.castAs#), CAST((20 - SlatwallOptionGroup.sortOrder) as #local.castAs# ) )
 				)
 		</cfquery>
 		

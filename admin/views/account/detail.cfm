@@ -57,14 +57,18 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="firstName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.Account#" property="company" edit="#rc.edit#">
 		</dl>
-		
-		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+
+		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 			<ul>
-				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>	
+				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>
+				<li><a href="##tabCarts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.carts")#</span></a></li>	
 			</ul>
 		
 			<div id="tabOrders">
 				#view("admin:account/accounttabs/orders")#
+			</div>
+			<div id="tabCarts">
+				#view("admin:account/accounttabs/carts")#
 			</div>
 		</div>
 		

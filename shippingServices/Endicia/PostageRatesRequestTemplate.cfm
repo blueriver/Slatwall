@@ -37,27 +37,19 @@
 	
 --->
 <cfoutput>
-<?xml version="1.0" encoding="utf-8"?>
-<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-	<soap:Body>
-		<CalculatePostageRates xmlns="www.envmgr.com/LabelService">
-			<PostageRatesRequest>
-				<RequesterID>Slatwall</RequesterID>
-				<CertifiedIntermediary>
-					<AccountID>#variables.accountID#</AccountID>
-					<PassPhrase>#variables.passPhrase#</PassPhrase>
-				</CertifiedIntermediary>
-				<MailClass></MailClass>
-				<WeightOz>#totalItemsWeight#</WeightOZ>
-				<MailpieceShape>Parcel</MailpieceShape>
-				<Machineable>TRUE</Machineable>
-				<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
-				<InsuredValue>#totalItemsValue#</InsuredValue>
-				<FromPostalCode>#variables.fromPostalCode#</FromPostalCode>
-				<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>
-				<ToCountryCode>#arguments.requestBean.getShipToCountryCode()#</ToCountryCode>
-			</PostageRatesRequest>
-		</CalculatePostageRates>
-	</soap:Body>
-</soap:Envelope>
+	<PostageRatesRequest>
+		<RequesterID>Slatwall</RequesterID>
+		<CertifiedIntermediary>
+			<AccountID>#variables.accountID#</AccountID>
+			<PassPhrase>#variables.passPhrase#</PassPhrase>
+		</CertifiedIntermediary>
+		<MailClass>Domestic</MailClass>
+		<WeightOz>#totalItemsWeight#</WeightOz>
+		<MailpieceShape>Parcel</MailpieceShape>
+		<Machinable>True</Machinable>
+		<InsuredValue>#totalItemsValue#</InsuredValue>
+		<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
+		<FromPostalCode>#variables.fromPostalCode#</FromPostalCode>
+		<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>
+	</PostageRatesRequest>
 </cfoutput>

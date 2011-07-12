@@ -45,6 +45,7 @@ component displayname="Gateway Request"  accessors="true" output="false" extends
 	property name="transactionAmount" ormtype="float";
 	property name="transactionCurrency" ormtype="float";
 	property name="providerTransactionID" type="string";
+	property name="isDuplicateFlag" type="boolean";
 	
 	// Credit Card Info
 	property name="nameOnCreditCard" ormType="string";

@@ -249,7 +249,7 @@ Notes:
 						</td>
 						<td>
 							<cfif attributeSet.getGlobalFlag()>
-								#rc.$.Slatwall.rbKey('yes')# (#rc.$.Slatwall.rbKey('global')#)
+								#rc.$.Slatwall.rbKey('define.yes')# (#rc.$.Slatwall.rbKey('define.global')#)
 							<cfelse>
 								<cfset local.assignedFlag = listFind(attributeSetIDs,attributeSet.getAttributeSetID()) />
 								<cfif rc.edit>

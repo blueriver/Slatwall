@@ -85,13 +85,15 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
         httpRequest.setMethod("POST");
 		httpRequest.setPort("443");
 		httpRequest.setTimeout(45);
-		httpRequest.setUrl("https://www.envmgr.com/LabelService/EwsLabelService.asmx");
+		httpRequest.setUrl("https://www.envmgr.com/LabelService/EwsLabelService.asmx/CalculatePostageRatesXML");
 		httpRequest.setResolveurl(false);
 		
-		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/xml;charset=utf-8");
+		httpRequest.addParam(type="header",name="Content-Type",VALUE="application/x-www-form-urlencoded");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#len(xmlPacket)#");
-		httpRequest.addParam(type="header",name="SOAPAction",value="https://www.envmgr.com/LabelService/CalculatePostageRatesXML");
-		httpRequest.addParam(type="xml",value="#xmlPacket#");
+		
+		httpRequest.addParam(type="body",value="postageRatesRequestXML=#trim(xmlPacket)#");
+		
+		fileWrite("C:\EndiciaExample.txt",trim(xmlPacket));
 		
 		writeDump(httpRequest);
 		writeDump(xmlPacket);
