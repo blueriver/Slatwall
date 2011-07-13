@@ -45,15 +45,10 @@
 	</AccessRequest>
 	<RatingServiceSelectionRequest xml:lang="en-US">
 		<Request>
-			<TransactionReference>
-				<CustomerContext>CFUPS Package</CustomerContext>
-				<XpciVersion>1.0001</XpciVersion>
-			</TransactionReference>
-			<RequestAction>Rate</RequestAction>
+			<RequestOption>Shop</RequestOption>
 		</Request>
 		<Shipment>
 			<Shipper>
-				<ShipperNumber>#variables.shipperNumber#</ShipperNumber>
 				<Address>
 					<City>#variables.shipFromCity#</City>
 					<StateProvinceCode>#variables.shipFromStateCode#</StateProvinceCode>
@@ -80,39 +75,14 @@
 			<ShipmentWeight>
 				<Weight>#totalItemsWeight#</Weight>
 			</ShipmentWeight>
-			
 			<Package>
 				<PackagingType>
-					<Code>Package</Code>
+					<Code>00</Code>
 				</PackagingType>
 				<PackageWeight>
 					<Weight>#totalItemsWeight#</Weight>
 				</PackageWeight>
-				<PackageServiceOptions>
-					<InsuredValue>
-						<MonetaryValue>#totalItemsValue#</MonetaryValue>
-					</InsuredValue>
-				</PackageServiceOptions>
 			</Package>
-	
-			<ShipmentServiceOptions>
-				<OnCallAir>
-					<Schedule>
-						<PickupDay>01</PickupDay>
-						<Method>01</Method>
-					</Schedule>
-				</OnCallAir>
-			</ShipmentServiceOptions>
-	
-			<HandlingCharge>
-				<FlatRate>0</FlatRate>
-			</HandlingCharge>
-	
-			<!--- TODO, rateinfo/negotiated --->
-	        <!--- Added By Aaron S. Passing an empty NegotiatedRatesIndicator tells the API to validate the shipper number and return discounted rates. Test server returns a 1% Discount --->
-	        <RateInformation>
-	        	<NegotiatedRatesIndicator></NegotiatedRatesIndicator>
-	        </RateInformation>
 		</Shipment>
 	</RatingServiceSelectionRequest>
 </cfoutput>

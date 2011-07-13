@@ -39,7 +39,7 @@ Notes:
 
 component accessors="true" output="false" extends="Slatwall.com.utility.ResponseBean" {
 
-	property name="ShippingMethodResponseBeans" type="array";
+	property name="shippingMethodResponseBeans" type="array";
 	
 	public any function init() {
 		// Set Defaults
