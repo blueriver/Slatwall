@@ -40,17 +40,16 @@ Notes:
 <cfparam name="request.status" default="">
 <cfparam name="request.isBlocked" default="false">
 
-<cfif request.status eq 'failed'>
-	<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
-		<cfset request.isBlocked=true />
-		<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
-	<cfelse>
-		<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
-	</cfif>
-</cfif>
-	
 <cfoutput>
 	<div class="svoaccountlogin">
+		<cfif request.status eq 'failed'>
+			<cfif isDate(session.blockLoginUntil) and session.blockLoginUntil gt now()>
+				<cfset request.isBlocked=true />
+				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginblocked')#</p>
+			<cfelse>
+				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
+			</cfif>
+		</cfif>
 		<form name="loginAccount" method="post" action="?nocache=1">
 			<h4>Account Login</h4>
 			<dl>
@@ -61,6 +60,7 @@ Notes:
 			</dl>
 			<input type="hidden" name="doaction" value="login" />
 			<input type="hidden" name="siteid" value="#$.event('siteID')#" />
+			<input type="hidden" name="returnURL" value="#$.event('returnURL')#" />
 			<button type="submit">Login & Continue</button>
 		</form>
 	</div>
