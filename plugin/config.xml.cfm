@@ -38,7 +38,7 @@ Notes:
 --->
 <cfsilent>
 	<cfset local.version = "Unknown" />
-	<cfset local.versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt" />
+	<cfset local.versionFile = expandPath("/") & "plugins/Slatwall/version.txt" />
 	<cfif fileExists(local.versionFile)>
 		<cfset local.version = fileRead(local.versionFile) />
 	</cfif>
