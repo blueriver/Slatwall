@@ -46,8 +46,8 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 	property name="testingFlag" displayname="Testing Mode" type="boolean";
 	property name="shipperNumber" displayname="Shipper Number" type="string";
 	property name="shipFromCity" displayname="Ship From City" type="string";
-	property name="shipFromStateCode" displayname="Ship From City" type="string";
-	property name="shipFromPostalCode" displayname="Ship From State Code" type="string";
+	property name="shipFromStateCode" displayname="Ship From State Code" type="string";
+	property name="shipFromPostalCode" displayname="Ship From Postal Code" type="string";
 	property name="shipFromCountryCode" displayname="Ship From Country Code" type="string";
 	
 	variables.testRateURL = "https://wwwcie.ups.com/ups.app/xml/Rate";
@@ -125,12 +125,9 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		}
 		
 		httpRequest.setResolveurl(false);
-		httpRequest.addParam(type="xml", name="data",value=xmlPacket);
+		httpRequest.addParam(type="xml", name="data",value="#trim(xmlPacket)#");
 		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
-		
-		writeDump(xmlResponse);
-		abort;
 		
 		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		responseBean.setData(xmlResponse);
@@ -141,28 +138,34 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 			responseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from FedEx into the response bean
-			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
+			for(var i=1; i<=arrayLen(xmlResponse.RatingServiceSelectionResponse.Response); i++) {
 				responseBean.addMessage(
-					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
-					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
-					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
+					messageCode=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusCode.xmltext,
+					message=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusDescription.xmltext
 				);
-				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					responseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
+				if(structKeyExists(xmlResponse.RatingServiceSelectionResponse.Response[i], "Error")) {
+					responseBean.addMessage(
+						messageCode=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorCode.xmltext,
+						messageType=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorSeverity.xmltext,
+						message=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorDescription.xmltext
+					);
+					responseBean.getErrorBean().addError(
+						xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorCode.xmltext,
+						xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorDescription.xmltext
+					);
 				}
 			}
 			
 			if(!responseBean.hasErrors()) {
-				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
+				for(var i=1; i<=arrayLen(xmlResponse.RatingServiceSelectionResponse.RatedShipment); i++) {
 					responseBean.addShippingMethod(
-						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
-						totalCharge=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
+						shippingProviderMethod=xmlResponse.RatingServiceSelectionResponse.RatedShipment[i].Service.code.xmlText,
+						totalCharge=xmlResponse.RatingServiceSelectionResponse.RatedShipment[i].TotalCharges.MonetaryValue.xmlText
 					);
 				}
 			}
 		}
-		
-		
+
 		return responseBean;
 	}
 	
