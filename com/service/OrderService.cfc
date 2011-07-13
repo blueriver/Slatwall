@@ -79,7 +79,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			keyword = arguments.data.keyword,
 			orderBy = arguments.data.orderBy
 		};
-
+		// pass rc params (for paging) to smartlist
+		structAppend(params,arguments.data);
 		// if someone tries to filter for carts using URL, override the filter
 		if(listFindNoCase(arguments.data.statusCode,"ostNotPlaced")) {
 			params.statusCode = "ostNew,ostProcessing";
