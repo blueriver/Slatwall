@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-	Back to eGit
+	Testing Git
 --->
 
 <!--- This File Should be left blank --->
