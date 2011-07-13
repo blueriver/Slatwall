@@ -47,6 +47,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 	public any function init() {
 		// Insert Custom Logic Here 
 		variables.shippingMethods = {
+			FIRST_CLASS_MAIL="First-Class Mail",
 			PRIORITY_MAIL="Priority Mail",
 			EXPRESS_MAIL="Express Mail",
 			LIBRARY_MAIL="Library Mail",
@@ -98,37 +99,38 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		ratesResponseBean.setData(xmlResponse);
 		
-		writeDump(xmlResponse);
-		abort;
-		
 		if(isDefined('xmlResponse.Fault')) {
 			// If XML fault then log error message
 			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
 			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from Endicia into the response bean
-			/*
+			
 			if(xmlResponse.PostageRatesResponse.Status.xmltext neq "0") {
 				ratesResponseBean.addMessage(
 					messageCode=xmlResponse.PostageRatesResponse.Status.xmltext,
-					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
-					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
+					message=xmlResponse.PostageRatesResponse.ErrorMessage.xmltext
 				);
 				ratesResponseBean.getErrorBean().addError(
-					xmlResponse.RateReply.Notifications[i].Code.xmltext,
-					xmlResponse.RateReply.Notifications[i].Message.xmltext
+					xmlResponse.PostageRatesResponse.Status.xmltext,
+					xmlResponse.PostageRatesResponse.ErrorMessage.xmltext
+				);
+			} else {
+				ratesResponseBean.addMessage(
+					messageCode="0",
+					message="Successful"
 				);
 			}
 			
 			if(!ratesResponseBean.hasErrors()) {
 				for(var i=1; i<=arrayLen(xmlResponse.PostageRatesResponse.PostagePrice); i++) {
+					var shippingMethod = UCASE(Replace(Replace(xmlResponse.PostageRatesResponse.PostagePrice[i].Postage.MailService.xmltext, "-", "_", "all")," ", "_", "all"));
 					ratesResponseBean.addShippingMethod(
-						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
-						totalCharge=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
+						shippingProviderMethod=shippingMethod,
+						totalCharge=xmlResponse.PostageRatesResponse.PostagePrice[i].Postage.XmlAttributes.TotalAmount
 					);
 				}
 			}
-			*/
 			
 		}
 		return ratesResponseBean;
