@@ -34,7 +34,7 @@
     exception statement from your version.
 
 Notes:
-	Testing Git
+	
 --->
 
 <!--- This File Should be left blank --->
