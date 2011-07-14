@@ -283,23 +283,27 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return duplicate(variables.hqlParams);
 	}
 
-	public string function getHQLSelect () {
+	public string function getHQLSelect (boolean countOnly=false) {
 		var hqlSelect = "";
 		
-		if(structCount(variables.selects)) {
-			hqlSelect = "SELECT new map(";
-			for(var select in variables.selects) {
-				hqlSelect &= " #select# as #variables.selects[select]#,";
-			}
-			hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
+		if(arguments.countOnly) {
+			hqlSelect &= "SELECT count(*)";
 		} else {
-			hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";
+			if(structCount(variables.selects)) {
+				hqlSelect = "SELECT new map(";
+				for(var select in variables.selects) {
+					hqlSelect &= " #select# as #variables.selects[select]#,";
+				}
+				hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
+			} else {
+				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";	
+			}
 		}
 		
 		return hqlSelect;
 	}
 	
-	public string function getHQLFrom(boolean supressFrom=false) {
+	public string function getHQLFrom(boolean supressFrom=false, boolean allowFetch=true) {
 		var hqlFrom = "";
 		if(!arguments.supressFrom) {
 			hqlFrom &= " FROM";	
@@ -314,7 +318,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				
 				var fetch = "";
-				if(variables.entities[i].fetch) {
+				if(variables.entities[i].fetch && arguments.allowFetch) {
 					fetch = "fetch";
 				}
 				
@@ -487,6 +491,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return sortedArray;
 	}
 	
+	public numeric function getRecordsCount() {
+		if(!structKeyExists(variables,"records")) {
+			var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
+			var recordCount = ormExecuteQuery(HQL, getHQLParams(), false, {ignoreCase="true"});
+			return recordCount[1];
+		} else {
+			return arrayLen(getRecords());	
+		}
+	}
+	
 	public void function setRecords(required any records) {
 		variables.records = arrayNew(1);
 		
@@ -511,18 +525,22 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return variables.records;
 	}
 	
-	public numeric function getRecordsCount() {
-		return arrayLen(getRecords());
-	}
 	
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
-			var records = getRecords(arguments.refresh);
-			variables.pageRecords = arrayNew(1);
-			for(var i=getPageRecordsStart(); i<=getPageRecordsEnd(); i++) {
-				arrayAppend(variables.pageRecords, records[i]);
+			// If there is search criteria then we need to get all of the records and loop over them to create a subset
+			if(arrayLen(variables.keywords) && structCount(keywordProperties)) {
+				var records = getRecords(arguments.refresh);
+				variables.pageRecords = arrayNew(1);
+				for(var i=getPageRecordsStart(); i<=getPageRecordsEnd(); i++) {
+					arrayAppend(variables.pageRecords, records[i]);
+				}
+			// If no search criteria then we can speed up the process by setting the pageRecords using ormExecuteQuery with offset & maxRecords
+			} else {
+				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart(), maxresults=getPageRecordsShow(), ignoreCase="true"});
 			}
+			
 		}
 		return variables.pageRecords;
 	}
