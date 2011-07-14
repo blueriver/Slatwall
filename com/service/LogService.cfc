@@ -44,20 +44,20 @@ Notes:
 		<!--- All logic in this method is inside of a cftry so that it doesnt cause an exception ---> 
 		<cftry>
 			<cfset var logCode = "" />
-			<cfset var logMessage = "" />
+			<cfset var logMsg = "" />
 			<cfset var logDetail = "" />
 				
 			<cfif structKeyExists(arguments.exception, "errNumber")>
 				<cfset logCode = arguments.exception.errNumber />
 			</cfif>
 			<cfif structKeyExists(arguments.exception, "message")>
-				<cfset logMessage = left(arguments.exception.message,255) />
+				<cfset logMsg = left(arguments.exception.message,255) />
 			</cfif>
 			<cfif structKeyExists(arguments.exception, "stackTrace")>
 				<cfset logDetail = left(arguments.exception.stackTrace, 4000) />
 			</cfif>
 			
-			<cfset logMessage(messageCode = logCode, messageType="Exception", message = logMessage, logType="Error", detailLogOnly = false) />
+			<cfset logMessage(messageCode = logCode, messageType="Exception", message = logMsg, logType="Error", detailLogOnly = false) />
 			
 			<cfif setting("advanced_logExceptionsToDatabaseFlag")>
 				<cfquery name="log" datasource="#application.configBean.getDatasource()#"  username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
@@ -73,13 +73,13 @@ Notes:
 						<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />,
 						<cfqueryparam value="exception" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="#logCode#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam value="#logMessage#" cfsqltype="cf_sql_varchar" />,
+						<cfqueryparam value="#logMsg#" cfsqltype="cf_sql_varchar" />,
 						<cfqueryparam value="#logDetail#" cfsqltype="cf_sql_varchar" />
 					)
 				</cfquery>
 			</cfif>
 			<cfcatch></cfcatch>
-		</cftry>  		    
+		</cftry>   
 	</cffunction>
 	
 	<cffunction name="logMessage" returntype="void" access="public">
