@@ -74,9 +74,7 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
-		rc.skuSmartList = getSkuService().getSkuSmartList();
-		rc.skuSmartList.setRecords(rc.product.getSkus(sorted=true));
-		rc.skuSmartList.applyData(data=rc);
+		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
 		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'),parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 	}
 	
