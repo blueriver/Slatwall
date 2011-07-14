@@ -36,7 +36,7 @@
 Notes:
 
 --->
-<cfcomponent output="false">
+<cfcomponent output="false" extends="BaseService">
 	
 	<cffunction name="init">
 		<cfreturn this />
@@ -90,9 +90,16 @@ Notes:
 			<cfset structAppend(arguments,mailServerSettings) />
 		</cfif>
 		
-		<cfmail attributeCollection="#arguments#">
-			#arguments.body#
-		</cfmail>
+
+		<cftry>
+			<cfmail attributeCollection="#arguments#">
+#arguments.body#
+			</cfmail>
+			<cfcatch type="any">
+				<cfset getService("logService").logException(cfcatch) />
+			</cfcatch>
+		</cftry>
+
 	</cffunction>
 	
 	<cfscript>
