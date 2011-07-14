@@ -69,8 +69,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		smartList.addSelect("systemCode","id");
 		smartList.addSelect("type","name");
 		smartList.addFilter("parentType_systemCode","orderStatusType");
-		smartList.addFilter("systemCode","ostNew,ostProcessing,ostOnHold,ostClosed,ostCancelled");
-		return smartlist.getPageRecords();
+		smartList.addFilter("systemCode","ostNew,ostProcessing,ostOnHold,ostClosed,ostCanceled");
+		return smartlist.getRecords();
 	}
 	
 	public any function searchOrders(struct data={}) {

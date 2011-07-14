@@ -538,7 +538,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 			// If no search criteria then we can speed up the process by setting the pageRecords using ormExecuteQuery with offset & maxRecords
 			} else {
-				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart(), maxresults=getPageRecordsShow(), ignoreCase="true"});
+				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true"});
 			}
 			
 		}
@@ -549,6 +549,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		if(variables.currentPageDeclaration > 1) {
 			variables.pageRecordsStart = ((variables.currentPageDeclaration-1)*getPageRecordsShow()) + 1;
 		}
+
 		return variables.pageRecordsStart;
 	}
 	
