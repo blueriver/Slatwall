@@ -282,6 +282,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return allPaymentsProcessed;
 	}
 	
+	public boolean function chargeOrderPayment(any orderPayment, required string transactionID) {
+		var chargeOK = getPaymentService().processPayment(arguments.orderPayment, "chargePreAuthorization", arguments.orderPayment.getAmount(), arguments.transactionID );
+		if(chargeOK) {
+			// set status of the order
+			var order = arguments.orderPayment.getOrder();
+			if(order.getQuantityUndelivered() gt 0) {
+				order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+			} else {
+				order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+			}							
+		}
+		return chargeOK;
+	}
+	
 	public any function processOrder(struct data={}) {
 		var processOK = false;
 		
@@ -361,9 +375,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
 		}
 		messageParams['body'] = emailBody;
-		var configBean = getService("requestCacheService").getValue("muraScope").siteConfig();
 		
-		getTagProxyService().cfmail(argumentCollection=messageParams, configBean=configBean);
+		getTagProxyService().cfmail(argumentCollection=messageParams);
 		
 	}
 	
@@ -493,10 +506,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// keep track of the total quantity fulfilled
 					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
-					var orderDeliveryItem = this.newOrderDeliveryItem();
-					orderDeliveryItem.setQuantityDelivered(thisQuantity);
-					orderDeliveryItem.setOrderItem(thisOrderItem);
-					orderDeliveryItem.setOrderDelivery(orderDelivery);
+					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
 					//order item was fulfilled
@@ -527,6 +537,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		return this.save(orderDelivery);
+	}
+	
+	private any function createOrderDeliveryItem(required any orderItem, required numeric quantity, required any orderDelivery) {
+		var orderDeliveryItem = this.newOrderDeliveryItem();
+		orderDeliveryItem.setOrderItem(arguments.orderItem);
+		orderDeliveryItem.setQuantityDelivered(arguments.quantity);
+		orderDeliveryItem.setOrderDelivery(arguments.orderDelivery);
+		return this.saveOrderDeliveryItem(orderDeliveryItem);
 	}
 	
 	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {

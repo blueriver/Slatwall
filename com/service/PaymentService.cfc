@@ -123,18 +123,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						
 						if(!response.hasErrors()) {
 							processOK = true;
-							
-							// Update the order Status
-							// TODO: THIS NEEDS TO GET MOVED
-							if(arguments.transactionType == "chargePreAuthorization") {
-								var order = arguments.orderPayment.getOrder();
-								if(order.getQuantityUndelivered() gt 0) {
-									order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
-								} else {
-									order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
-								}
-							}
-							// END: THIS NEEDS TO GET MOVED
 						} else {
 							// Populate the orderPayment with the processing error
 							arguments.orderPayment.getErrorBean().addError('processing', response.getErrorBean().getAllErrorMessages());
