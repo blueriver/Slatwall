@@ -36,7 +36,7 @@
 Notes:
 
 */
-component extends="baseController" output="false" {
+component extends="BaseController" output="false" {
 
 	property name="vendorService" type="any";
 	
