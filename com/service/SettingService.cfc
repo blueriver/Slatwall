@@ -290,6 +290,22 @@ component extends="BaseService" output="false" accessors="true"  {
 		return save(argumentcollection=arguments);
 	}
 	
+	public struct function getMailServerSettings() {
+		var config = getConfigBean();
+		var settings = {};
+		if(!config.getUseDefaultSMTPServer()) {
+			settings = {
+				server = config.getMailServerIP(),
+				username = config.getMailServerUsername(),
+				password = config.getMailServerPassword(),
+				port = config.getMailServerSMTPPort(),
+				useSSL = config.getMailServerSSL(),
+				useTLS = config.getMailServerTLS()
+			};
+		}
+		return settings;
+	}
+	
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
 		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Started", generalLog=true);

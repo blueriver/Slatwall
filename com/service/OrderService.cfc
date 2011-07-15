@@ -375,9 +375,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
 		}
 		messageParams['body'] = emailBody;
-		var configBean = getService("requestCacheService").getValue("muraScope").siteConfig();
 		
-		getTagProxyService().cfmail(argumentCollection=messageParams, configBean=configBean);
+		getTagProxyService().cfmail(argumentCollection=messageParams);
 		
 	}
 	
