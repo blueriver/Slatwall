@@ -36,17 +36,13 @@
 Notes:
 
 */
-component displayname="File Service" persistent="false" output="false" hint="This is a utility component which handles common file operations" {
-
-	public any function init() {
-		return this;
-	}
+component displayname="File Service" persistent="false" extends="BaseService" output="false" hint="This is a utility component which handles common file operations" {
 	
 	// Image File Methods
 	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
 		var resizedImagePath = "";
 		if(!fileExists(expandPath(arguments.imagePath))) {
-			arguments.imagePath = "#application.configBean.getContext()#/plugins/Slatwall/assets/images/missingimage.jpg";
+			arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";
 		}
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
@@ -81,42 +77,52 @@ component displayname="File Service" persistent="false" output="false" hint="Thi
 			var resizedImagePath = replaceNoCase(replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/#listLast(arguments.imagePath, "/\")#"),".#imageExt#","#imageNameSuffix#.#imageExt#");
 			
 			if(!fileExists(expandPath(resizedImagePath))) {
-				var img = imageRead(expandPath(arguments.imagePath));
-				// scale to fit if both height and width are specified, else resize accordingly
-				if(arguments.resizeMethod == "scale") {
-					if(arguments.width && arguments.height) {
-						imageScaleToFit(img,arguments.width,arguments.height);
-					} else {
-						if(!arguments.width) {
-							arguments.width = "";
-						} else if(!arguments.height) {
-							arguments.height = "";
+				// wrap image functions in a try-catch in case the image uploaded is "problematic" for CF to work with
+				try{
+					var img = imageRead(expandPath(arguments.imagePath));
+					// scale to fit if both height and width are specified, else resize accordingly
+					if(arguments.resizeMethod == "scale") {
+						if(arguments.width && arguments.height) {
+							imageScaleToFit(img,arguments.width,arguments.height);
+						} else {
+							if(!arguments.width) {
+								arguments.width = "";
+							} else if(!arguments.height) {
+								arguments.height = "";
+							}
+							imageResize(img,arguments.width,arguments.height);
 						}
-						imageResize(img,arguments.width,arguments.height);
+					} else if(arguments.resizeMethod == "scaleAndCrop") {
+						if(!arguments.width) {
+							arguments.width = arguments.height;
+						}
+						if(!arguments.height) {
+							arguments.height = arguments.width;
+						}
+						// default location of scale and crop to center of image
+						if(len(arguments.cropLocation) == 0) {
+							arguments.cropLocation = "center";
+						}
+						// use aspectCrop() method for scale and crop
+						img = aspectCrop(img,arguments.width,arguments.height,arguments.cropLocation);
+					} else if(arguments.resizeMethod == "crop") {
+						if(!arguments.width) {
+							arguments.width = arguments.height;
+						}
+						if(!arguments.height) {
+							arguments.height = arguments.width;
+						}
+						img = customCrop(img,arguments.width,arguments.height,arguments.cropLocation,arguments.cropXStart,arguments.cropYStart,arguments.scaleWidth,arguments.scaleHeight);
 					}
-				} else if(arguments.resizeMethod == "scaleAndCrop") {
-					if(!arguments.width) {
-						arguments.width = arguments.height;
-					}
-					if(!arguments.height) {
-						arguments.height = arguments.width;
-					}
-					// default location of scale and crop to center of image
-					if(len(arguments.cropLocation) == 0) {
-						arguments.cropLocation = "center";
-					}
-					// use aspectCrop() method for scale and crop
-					img = aspectCrop(img,arguments.width,arguments.height,arguments.cropLocation);
-				} else if(arguments.resizeMethod == "crop") {
-					if(!arguments.width) {
-						arguments.width = arguments.height;
-					}
-					if(!arguments.height) {
-						arguments.height = arguments.width;
-					}
-					img = customCrop(img,arguments.width,arguments.height,arguments.cropLocation,arguments.cropXStart,arguments.cropYStart,arguments.scaleWidth,arguments.scaleHeight);
+					imageWrite(img,expandPath(resizedImagePath));					
 				}
-				imageWrite(img,expandPath(resizedImagePath));
+				catch(any e) {
+					// log the error
+					getService("logService").logException(e);
+					// return the "missing image" image
+					arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";
+					return getResizedImagePath(argumentCollection=arguments);
+				}
 			}
 		}
 		return resizedImagePath;
