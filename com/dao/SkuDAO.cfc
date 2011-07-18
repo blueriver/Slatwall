@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,10 +35,9 @@
 
 Notes:
 
---->
-<cfcomponent extends="BaseDAO">
+*/
+component accessors="true" extends="BaseDAO" {
 	
-	<cfscript>
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
 	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
 		var params = [];
@@ -62,43 +61,20 @@ Notes:
 		}
 		return ormExecuteQuery(hql,params);
 	}
-	</cfscript>
-
-	<cffunction name="getSortedProductSkusID">
-		<cfargument name="productID" type="string" required="true" />
-		
-		<cfset var sorted = "" />
-		<cfif application.configBean.getDbType() eq "MySQL">
-			<cfset local.castAs = "decimal" />
-		<cfelse>
-			<cfset local.castAs = "float" />
-		</cfif>
-		
-		<!--- TODO: test to see if this query works with DB's other than MSSQL and MySQL --->
-		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
-			SELECT
-				SlatwallSku.skuID
-			FROM
-				SlatwallSku
-			  INNER JOIN
-				SlatwallSkuOption on SlatwallSku.skuID = SlatwallSkuOption.skuID
-			  INNER JOIN
-				SlatwallOption on SlatwallSkuOption.optionID = SlatwallOption.optionID
-			  INNER JOIN
-				SlatwallOptionGroup on SlatwallOption.optionGroupID = SlatwallOptionGroup.optionGroupID
-			WHERE
-				SlatwallSku.productID = <cfqueryparam value="#arguments.productID#" cfsqltype="cf_sql_varchar" />
-			GROUP BY
-				SlatwallSku.skuID, SlatwallSku.skuCode
-			ORDER BY
-				<!--- This formula came with help from Blar Gibb and Jacob West... their formula was better with varying max optoinSortOrder and optionGroupSortOrder... but it wasn't possible with SQL, well at least I couldn't figure it out -GM --->
-				sum(
-					CAST( SlatwallOption.sortOrder as #local.castAs# ) * 
-					POWER( CAST(10000 as #local.castAs#), CAST((20 - SlatwallOptionGroup.sortOrder) as #local.castAs# ) )
-				)
-		</cfquery>
-		
-		<cfreturn sorted />
-	</cffunction>
 	
-</cfcomponent>
+	public array function getSortedProductSkus(required any product) {
+		var skus = ORMExecuteQuery(
+			"select sku from SlatwallSku sku
+			join sku.options opt
+			join opt.optionGroup og
+			where sku.product.productID = :productID
+			group by sku.skuID, sku.skuCode
+			order by 
+				sum(
+					(opt.sortOrder) * power(1000,(20 - og.sortOrder))
+					)",
+			{productID = arguments.product.getProductID()}
+		);
+		return skus;
+	}
+}
