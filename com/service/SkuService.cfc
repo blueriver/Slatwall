@@ -243,7 +243,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public array function getSortedProductSkus(required any product) {
-		return getDAO().getSortedProductSkus(arguments.product);
+		var skus = arguments.product.getSkus();
+		if(arrayLen(skus) lt 2) {
+			return skus;
+		}
+		
+		var sortedSkuIDQuery = getDAO().getSortedProductSkusID(arguments.product.getProductID());
+		var sortedArray = arrayNew(1);
+		
+		for(var i=1; i<=sortedSkuIDQuery.recordCount; i++) {
+			arrayAppend(sortedArray, sortedSkuIDQuery.skuID[i]);
+		}
+		
+		for(var i=1; i<=arrayLen(skus); i++) {
+			sortedArray[arrayFind(sortedArray, skus[i].getSkuID())] = skus[i];
+		}
+		
+		return sortedArray;
 	}
 
 }

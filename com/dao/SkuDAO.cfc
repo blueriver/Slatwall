@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,9 +35,10 @@
 
 Notes:
 
-*/
-component accessors="true" extends="BaseDAO" {
+--->
+<cfcomponent extends="BaseDAO">
 	
+	<cfscript>	
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
 	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
 		var params = [];
@@ -62,7 +63,7 @@ component accessors="true" extends="BaseDAO" {
 		return ormExecuteQuery(hql,params);
 	}
 	
-	public array function getSortedProductSkus(required any product) {
+/*	public array function getSortedProductSkus(required any product) {
 		var skus = ORMExecuteQuery(
 			"select sku from SlatwallSku sku
 			join sku.options opt
@@ -76,5 +77,38 @@ component accessors="true" extends="BaseDAO" {
 			{productID = arguments.product.getProductID()}
 		);
 		return skus;
-	}
-}
+	}*/
+	</cfscript>
+
+	<cffunction name="getSortedProductSkusID">
+		<cfargument name="productID" type="string" required="true" />
+		
+		<cfset var sorted = "" />
+		
+		<cfquery name="sorted" datasource="#application.configBean.getDatasource()#" username="#application.configBean.getUsername()#" password="#application.configBean.getPassword()#">
+			SELECT
+				SlatwallSku.skuID
+			FROM
+				SlatwallSku
+			  INNER JOIN
+				SlatwallSkuOption on SlatwallSku.skuID = SlatwallSkuOption.skuID
+			  INNER JOIN
+				SlatwallOption on SlatwallSkuOption.optionID = SlatwallOption.optionID
+			  INNER JOIN
+				SlatwallOptionGroup on SlatwallOption.optionGroupID = SlatwallOptionGroup.optionGroupID
+			WHERE
+				SlatwallSku.productID = <cfqueryparam value="#arguments.productID#" cfsqltype="cf_sql_varchar" />
+			GROUP BY
+				SlatwallSku.skuID, SlatwallSku.skuCode
+			ORDER BY
+				<!--- This formula came with help from Blar Gibb and Jacob West... their formula was better with varying max optoinSortOrder and optionGroupSortOrder... but it wasn't possible with SQL, well at least I couldn't figure it out -GM --->
+				sum(
+					CAST( SlatwallOption.sortOrder as float ) * 
+					POWER( CAST(10000 as float), CAST((20 - SlatwallOptionGroup.sortOrder) as float ) )
+				)
+		</cfquery>
+		
+		<cfreturn sorted />
+	</cffunction>
+	
+</cfcomponent>
