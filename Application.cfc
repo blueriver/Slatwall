@@ -110,9 +110,11 @@ component extends="framework" output="false" {
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 		
-		// Call the setup methods in the setting service
+		// Load all Slatwall Settings
 		getBeanFactory().getBean("settingService").reloadConfiguration();
-		getBeanFactory().getBean("settingService").verifyMuraRequirements();
+		
+		// Set the first request to True so that it runs
+		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
 		
 		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
 	}
@@ -123,6 +125,22 @@ component extends="framework" output="false" {
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
+		}
+		
+		getBeanFactory().getBean("logService").logMessage(message="#getPluginConfig().getApplication().getValue("firstRequestOfApplication", true)#", generalLog=true);
+		
+		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
+			// Log that this started
+			getBeanFactory().getBean("logService").logMessage(message="First Request of Application Setup Started", generalLog=true);
+			
+			// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
+			getBeanFactory().getBean("settingService").verifyMuraRequirements();
+			
+			// Set this to false in the application so that it doesn't run again
+			getPluginConfig().getApplication().setValue("firstRequestOfApplication", false);
+			
+			// Log that this finished
+			getBeanFactory().getBean("logService").logMessage(message="First Request of Application Setup Finished", generalLog=true);
 		}
 		
 		// This verifies that all mura session variables are setup
