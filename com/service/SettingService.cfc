@@ -390,14 +390,15 @@ component extends="BaseService" output="false" accessors="true"  {
 				shoppingCartPage.setHTMLTitle("Shopping Cart");
 				shoppingCartPage.setMenuTitle("Shopping Cart");
 				shoppingCartPage.setIsNav(0);
+				shoppingCartPage.setActive(1);
+				shoppingCartPage.setApproved(1);
+				shoppingCartPage.setIsLocked(1);
+				shoppingCartPage.setParentID("00000000000000000000000000000000001");
+				shoppingCartPage.setFilename("shopping-cart");
+				shoppingCartPage.setSiteID(thisSiteID);
+				shoppingCartPage.save();
 			}
-			shoppingCartPage.setActive(1);
-			shoppingCartPage.setApproved(1);
-			shoppingCartPage.setIsLocked(1);
-			shoppingCartPage.setParentID("00000000000000000000000000000000001");
-			shoppingCartPage.setFilename("shopping-cart");
-			shoppingCartPage.setSiteID(thisSiteID);
-			shoppingCartPage.save();
+			
 			
 			// Setup Order Status Page
 			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-status", siteid=local.thisSiteID);
@@ -406,14 +407,15 @@ component extends="BaseService" output="false" accessors="true"  {
 				shoppingCartPage.setHTMLTitle("Order Status");
 				shoppingCartPage.setMenuTitle("Order Status");
 				shoppingCartPage.setIsNav(0);
+				shoppingCartPage.setActive(1);
+				shoppingCartPage.setApproved(1);
+				shoppingCartPage.setIsLocked(1);
+				shoppingCartPage.setParentID("00000000000000000000000000000000001");
+				shoppingCartPage.setFilename("order-status");
+				shoppingCartPage.setSiteID(thisSiteID);
+				shoppingCartPage.save();
 			}
-			shoppingCartPage.setActive(1);
-			shoppingCartPage.setApproved(1);
-			shoppingCartPage.setIsLocked(1);
-			shoppingCartPage.setParentID("00000000000000000000000000000000001");
-			shoppingCartPage.setFilename("order-status");
-			shoppingCartPage.setSiteID(thisSiteID);
-			shoppingCartPage.save();
+			
 			
 			// Setup Order Confirmation
 			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-confirmation", siteid=local.thisSiteID);
@@ -422,15 +424,14 @@ component extends="BaseService" output="false" accessors="true"  {
 				shoppingCartPage.setHTMLTitle("Order Confirmation");
 				shoppingCartPage.setMenuTitle("Order Confirmation");
 				shoppingCartPage.setIsNav(0);
+				shoppingCartPage.setActive(1);
+				shoppingCartPage.setApproved(1);
+				shoppingCartPage.setIsLocked(1);
+				shoppingCartPage.setParentID("00000000000000000000000000000000001");
+				shoppingCartPage.setFilename("order-confirmation");
+				shoppingCartPage.setSiteID(thisSiteID);
+				shoppingCartPage.save();
 			}
-			shoppingCartPage.setActive(1);
-			shoppingCartPage.setApproved(1);
-			shoppingCartPage.setIsLocked(1);
-			shoppingCartPage.setParentID("00000000000000000000000000000000001");
-			shoppingCartPage.setFilename("order-confirmation");
-			shoppingCartPage.setSiteID(thisSiteID);
-			shoppingCartPage.save();
-			
 			
 			// Setup My Account Page
 			var myAccountPage = getContentManager().getActiveContentByFilename(filename="my-account", siteid=local.thisSiteID);
@@ -440,15 +441,16 @@ component extends="BaseService" output="false" accessors="true"  {
 				myAccountPage.setMenuTitle("My Account");
 				myAccountPage.setIsNav(0);
 				myAccountPage.setForceSSL(1);
+				myAccountPage.setActive(1);
+				myAccountPage.setApproved(1);
+				myAccountPage.setIsLocked(1);
+				//myAccountPage.setRestricted(1); This was disabled because we are going to manage login via the view
+				myAccountPage.setParentID("00000000000000000000000000000000001");
+				myAccountPage.setFilename("my-account");
+				myAccountPage.setSiteID(thisSiteID);
+				myAccountPage.save();
 			}
-			myAccountPage.setActive(1);
-			myAccountPage.setApproved(1);
-			myAccountPage.setIsLocked(1);
-			//myAccountPage.setRestricted(1); This was disabled because we are going to manage login via the view
-			myAccountPage.setParentID("00000000000000000000000000000000001");
-			myAccountPage.setFilename("my-account");
-			myAccountPage.setSiteID(thisSiteID);
-			myAccountPage.save();
+			
 			
 			// Setup Checkout Page
 			var checkoutPage = getContentManager().getActiveContentByFilename(filename="checkout", siteid=local.thisSiteID);
@@ -458,14 +460,15 @@ component extends="BaseService" output="false" accessors="true"  {
 				checkoutPage.setMenuTitle("Checkout");
 				checkoutPage.setIsNav(0);
 				checkoutPage.setForceSSL(1);
+				checkoutPage.setActive(1);
+				checkoutPage.setApproved(1);
+				checkoutPage.setIsLocked(1);
+				checkoutPage.setParentID("00000000000000000000000000000000001");
+				checkoutPage.setFilename("checkout");
+				checkoutPage.setSiteID(thisSiteID);
+				checkoutPage.save();
 			}
-			checkoutPage.setActive(1);
-			checkoutPage.setApproved(1);
-			checkoutPage.setIsLocked(1);
-			checkoutPage.setParentID("00000000000000000000000000000000001");
-			checkoutPage.setFilename("checkout");
-			checkoutPage.setSiteID(thisSiteID);
-			checkoutPage.save();
+			
 			
 			// Setup Product Templates Page
 			var productTemplates = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=local.thisSiteID);
@@ -474,14 +477,15 @@ component extends="BaseService" output="false" accessors="true"  {
 				productTemplates.setHTMLTitle("Product Templates");
 				productTemplates.setMenuTitle("Product Templates");
 				productTemplates.setIsNav(0);
+				productTemplates.setActive(1);
+				productTemplates.setApproved(1);
+				productTemplates.setIsLocked(1);
+				productTemplates.setParentID("00000000000000000000000000000000001");
+				productTemplates.setFilename("product-templates");
+				productTemplates.setSiteID(thisSiteID);
+				productTemplates.save();
 			}
-			productTemplates.setActive(1);
-			productTemplates.setApproved(1);
-			productTemplates.setIsLocked(1);
-			productTemplates.setParentID("00000000000000000000000000000000001");
-			productTemplates.setFilename("product-templates");
-			productTemplates.setSiteID(thisSiteID);
-			productTemplates.save();
+			
 			
 			// Setup Default Product Template
 			var defaultProductTemplate = getContentManager().getActiveContentByFilename(filename="product-templates/default", siteid=local.thisSiteID);
@@ -490,14 +494,15 @@ component extends="BaseService" output="false" accessors="true"  {
 				defaultProductTemplate.setHTMLTitle("Default");
 				defaultProductTemplate.setMenuTitle("Default");
 				defaultProductTemplate.setIsNav(0);
+				defaultProductTemplate.setActive(1);
+				defaultProductTemplate.setApproved(1);
+				defaultProductTemplate.setIsLocked(1);
+				defaultProductTemplate.setParentID(productTemplates.getContentID());
+				defaultProductTemplate.setFilename("product-templates/default");
+				defaultProductTemplate.setSiteID(thisSiteID);
+				defaultProductTemplate.save();
 			}
-			defaultProductTemplate.setActive(1);
-			defaultProductTemplate.setApproved(1);
-			defaultProductTemplate.setIsLocked(1);
-			defaultProductTemplate.setParentID(productTemplates.getContentID());
-			defaultProductTemplate.setFilename("product-templates/default");
-			defaultProductTemplate.setSiteID(thisSiteID);
-			defaultProductTemplate.save();
+			
 		}
 		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Finished");
 	}
