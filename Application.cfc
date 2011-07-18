@@ -127,8 +127,6 @@ component extends="framework" output="false" {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
-		getBeanFactory().getBean("logService").logMessage(message="#getPluginConfig().getApplication().getValue("firstRequestOfApplication", true)#", generalLog=true);
-		
 		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
 			// Log that this started
 			getBeanFactory().getBean("logService").logMessage(message="First Request of Application Setup Started", generalLog=true);
