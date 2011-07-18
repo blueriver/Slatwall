@@ -388,11 +388,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			orderRequirementsList = listAppend(orderRequirementsList, "payment");
 		}
 		
-		// Trim the last 
-		if(len(orderRequirementsList)) {
-			orderRequirementsList = left(orderRequirementsList,len(orderRequirementsList)-1);
-		}
-		
 		return orderRequirementsList;
 	}
 	
