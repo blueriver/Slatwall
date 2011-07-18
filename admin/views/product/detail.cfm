@@ -52,13 +52,6 @@ Notes:
 </ul>
 
 <cfoutput>
-	
-<!--- Display of Test Sku Sorting --->
-<h3>Sku Sorting Test:</h3>
-<cfloop array="#rc.sortedSkus#" index="local.thisSku">
-	#local.thisSku.displayOptions()#<br>
-</cfloop>
-
 <div class="svoadminproductdetail">
 	#rc.product.getImage(width="100")#
 	<cfif rc.edit>
