@@ -675,4 +675,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
+	public void function clearCart() {
+		var session = getSessionService().getCurrent();
+		var cart = session.getOrder();
+		
+		if(!cart.isNew()) {
+			session.removeOrder();
+			
+			getDAO().delete(cart.getOrderItems());	
+			getDAO().delete(cart.getOrderFulfillments());	
+			getDAO().delete(cart.getOrderPayments());
+			getDAO().delete(cart);
+		}
+	}
+	
 }

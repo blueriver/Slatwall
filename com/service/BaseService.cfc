@@ -64,7 +64,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function delete(required any entity){
-		var response = new com.utility.ResponseBean();
+		var response = new Slatwall.com.utility.ResponseBean();
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(target=arguments.entity);

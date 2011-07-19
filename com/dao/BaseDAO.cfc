@@ -84,14 +84,7 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 
 
 	function save( required target ) {
-		if ( isArray( target ) ) {
-			for ( var object in target ) {
-				save( object );
-			}
-		}
-
 		entitySave( target );
-		
 		return target;
 	}
 	
@@ -100,8 +93,9 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 			for(var object in target) {
 				delete(object);
 			}
+		} else {
+			entityDelete(target);	
 		}
-		entityDelete(target);
 	}
 	
 	
