@@ -238,7 +238,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
 				
 				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
-					if(payment.isNew() && !structKeyExists(paymentsDataArray[i], "amount")) {
+					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
 						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
 					}
 					
@@ -274,6 +274,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
 				if(!paymentOK) {
+					order.getOrderPayments()[i].setAmount(0);
 					allPaymentsProcessed = false;
 				}
 			}
