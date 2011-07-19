@@ -238,7 +238,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
 				
 				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
-					if(payment.isNew() && !structKeyExists(paymentsDataArray[i], "amount")) {
+					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
 						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
 					}
 					
@@ -274,6 +274,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
 				if(!paymentOK) {
+					order.getOrderPayments()[i].setAmount(0);
 					allPaymentsProcessed = false;
 				}
 			}
@@ -557,33 +558,29 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
 		}
 		
-		if(!arguments.orderPayment.hasErrors()) {
-			var address = arguments.orderPayment.getBillingAddress();
+		var address = arguments.orderPayment.getBillingAddress();
 		
-			// Get Address
-			if( isNull(address) ) {
-				// Set a new address in the order payment
-				var address = getAddressService().newAddress();
-			}
-			
-			// Populate Address
-			address.populate(arguments.data.billingAddress);
-			
-			// Validate Address
-			address = getAddressService().validateAddress(address);
-			
-			arguments.orderPayment.setBillingAddress(address);
-			
-			if(!address.hasErrors()) {
-				getDAO().save(address);
-				getDAO().save(arguments.orderPayment);	
-			} else {
-				getService("requestCacheService").setValue("ormHasErrors", true);
-			}
+		// Get Address
+		if( isNull(address) ) {
+			// Set a new address in the order payment
+			var address = getAddressService().newAddress();
+		}
+		
+		// Populate Address
+		address.populate(arguments.data.billingAddress);
+		
+		// Validate Address
+		address = getAddressService().validateAddress(address);
+		
+		arguments.orderPayment.setBillingAddress(address);
+		
+		if(!arguments.orderPayment.hasErrors() && !address.hasErrors()) {
+			getDAO().save(address);
+			getDAO().save(arguments.orderPayment);	
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
-			
+		
 		return arguments.orderPayment;
 	}
 	
