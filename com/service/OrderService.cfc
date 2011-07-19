@@ -539,33 +539,29 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
 		}
 		
-		if(!arguments.orderPayment.hasErrors()) {
-			var address = arguments.orderPayment.getBillingAddress();
+		var address = arguments.orderPayment.getBillingAddress();
 		
-			// Get Address
-			if( isNull(address) ) {
-				// Set a new address in the order payment
-				var address = getAddressService().newAddress();
-			}
-			
-			// Populate Address
-			address.populate(arguments.data.billingAddress);
-			
-			// Validate Address
-			address = getAddressService().validateAddress(address);
-			
-			arguments.orderPayment.setBillingAddress(address);
-			
-			if(!address.hasErrors()) {
-				getDAO().save(address);
-				getDAO().save(arguments.orderPayment);	
-			} else {
-				getService("requestCacheService").setValue("ormHasErrors", true);
-			}
+		// Get Address
+		if( isNull(address) ) {
+			// Set a new address in the order payment
+			var address = getAddressService().newAddress();
+		}
+		
+		// Populate Address
+		address.populate(arguments.data.billingAddress);
+		
+		// Validate Address
+		address = getAddressService().validateAddress(address);
+		
+		arguments.orderPayment.setBillingAddress(address);
+		
+		if(!arguments.orderPayment.hasErrors() && !address.hasErrors()) {
+			getDAO().save(address);
+			getDAO().save(arguments.orderPayment);	
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
-			
+		
 		return arguments.orderPayment;
 	}
 	
