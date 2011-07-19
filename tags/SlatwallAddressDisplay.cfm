@@ -86,7 +86,7 @@ Notes:
 				</dl>
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
-						jQuery('select[name="countryCode"]').change(function() {
+						jQuery('select[name="#attributes.fieldNamePrefix#countryCode"]').change(function() {
 							
 							var addressData = {
 								addressID : jQuery('input[name="addressID"]').val(),
@@ -100,17 +100,17 @@ Notes:
 								showState : '#attributes.showState#',
 								showPostalCode : '#attributes.showPostalCode#',
 								showCountry : '#attributes.showCountry#',
-								countryCode : jQuery('select[name="countryCode"]').val(),
-								name : jQuery('input[name="name"]').val(),
-								company : jQuery('input[name="company"]').val(),
-								streetAddress : jQuery('input[name="streetAddress"]').val(),
-								street2Address : jQuery('input[name="street2Address"]').val(),
-								city : jQuery('input[name="city"]').val(),
-								postalCode : jQuery('input[name="postalCode"]').val()
+								countryCode : jQuery('select[name="#attributes.fieldNamePrefix#countryCode"]').val(),
+								name : jQuery('input[name="#attributes.fieldNamePrefix#name"]').val(),
+								company : jQuery('input[name="#attributes.fieldNamePrefix#company"]').val(),
+								streetAddress : jQuery('input[name="#attributes.fieldNamePrefix#streetAddress"]').val(),
+								street2Address : jQuery('input[name="#attributes.fieldNamePrefix#street2Address"]').val(),
+								city : jQuery('input[name="#attributes.fieldNamePrefix#city"]').val(),
+								postalCode : jQuery('input[name="#attributes.fieldNamePrefix#postalCode"]').val()
 							};
 							
-							if( jQuery('input[name="stateCode"]').val() != undefined ) {
-								addressData["stateCode"] = jQuery('input[name="stateCode"]').val();
+							if( jQuery('input[name="#attributes.fieldNamePrefix#stateCode"]').val() != undefined ) {
+								addressData["stateCode"] = jQuery('input[name="#attributes.fieldNamePrefix#stateCode"]').val();
 							}
 							
 							jQuery.ajax({

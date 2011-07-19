@@ -42,7 +42,9 @@ Notes:
 
 <cfset local.sameAsShipping = false>
 
-<cfif arrayLen($.slatwall.cart().getOrderFulfillments()) eq 1 and not isNull($.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())>
+<cfif !isNull(params.orderPayment.getBillingAddress())>
+	<cfset local.address = params.orderPayment.getBillingAddress() />
+<cfelseif arrayLen($.slatwall.cart().getOrderFulfillments()) eq 1 and not isNull($.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())>
 	<cfset local.sameAsShipping = true />
 	<cfset local.address = $.slatwall.cart().getOrderFulfillments()[1].getShippingAddress() />
 <cfelse>
@@ -56,7 +58,7 @@ Notes:
 			<cfif local.sameAsShipping>
 				<dl>
 					<dt>Same As Shipping</dt>
-					<dd><input type="hidden" name="sameAsShipping" value="" /><input type="checkbox" name="sameAsShipping" value="1" checked="checked" /></dd>
+					<dd><input type="hidden" name="orderPayments[#params.orderPaymentIndex#].billingAddress.sameAsShipping" value="" /><input type="checkbox" name="orderPayments[#params.orderPaymentIndex#].billingAddress.sameAsShipping" value="1" checked="checked" /></dd>
 				</dl>
 				<cf_SlatwallAddressDisplay address="#local.address#" fieldNamePrefix="orderPayments[#params.orderPaymentIndex#].billingAddress." edit="#params.edit#">
 			<cfelse>
@@ -112,7 +114,7 @@ Notes:
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
 				
-				jQuery('input[name="sameAsShipping"]').click(function(){
+				jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.sameAsShipping"]').click(function(){
 					var shippingAddress = {
 						name : '#local.address.getName()#',
 						company : '#local.address.getCompany()#',
@@ -124,24 +126,24 @@ Notes:
 						countryCode : '#local.address.getCountryCode()#',
 					};
 					if(jQuery(this).is(':checked')){
-						jQuery('input[name="name"]').val(shippingAddress['name']);
-						jQuery('input[name="company"]').val(shippingAddress['company']);
-						jQuery('input[name="streetAddress"]').val(shippingAddress['streetAddress']);
-						jQuery('input[name="street2Address"]').val(shippingAddress['street2Address']);
-						jQuery('input[name="city"]').val(shippingAddress['city']);
-						jQuery('input[name="postalCode"]').val(shippingAddress['postalCode']);
-						jQuery('input[name="stateCode"]').val(shippingAddress['stateCode']);
-						jQuery('select[name="stateCode"]').val(shippingAddress['stateCode']);
-						jQuery('select[name="countryCode"]').val(shippingAddress['countryCode']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.name"]').val(shippingAddress['name']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.company"]').val(shippingAddress['company']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.streetAddress"]').val(shippingAddress['streetAddress']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.street2Address"]').val(shippingAddress['street2Address']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.city"]').val(shippingAddress['city']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.postalCode"]').val(shippingAddress['postalCode']);
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.stateCode"]').val(shippingAddress['stateCode']);
+						jQuery('select[name="orderPayments[#params.orderPaymentIndex#].billingAddress.stateCode"]').val(shippingAddress['stateCode']);
+						jQuery('select[name="orderPayments[#params.orderPaymentIndex#].billingAddress.countryCode"]').val(shippingAddress['countryCode']);
 					} else {
-						jQuery('input[name="name"]').val('');
-						jQuery('input[name="company"]').val('');
-						jQuery('input[name="streetAddress"]').val('');
-						jQuery('input[name="street2Address"]').val('');
-						jQuery('input[name="city"]').val('');
-						jQuery('input[name="postalCode"]').val('');
-						jQuery('input[name="stateCode"]').val('');
-						jQuery('select[name="stateCode"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.name"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.company"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.streetAddress"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.street2Address"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.city"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.postalCode"]').val('');
+						jQuery('input[name="orderPayments[#params.orderPaymentIndex#].billingAddress.stateCode"]').val('');
+						jQuery('select[name="orderPayments[#params.orderPaymentIndex#].billingAddress.stateCode"]').val('');
 					};
 				});
 			});
