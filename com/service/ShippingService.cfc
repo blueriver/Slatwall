@@ -140,7 +140,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Query the shipping provider service API to get the rates
 			getService("logService").logMessage(message="Shipping Rates Request - Started", generalLog=true);
-			var ratesResponseBean = providerService.getRates(ratesRequestBean);
+			try {
+				var ratesResponseBean = providerService.getRates(ratesRequestBean);	
+			} catch (any e) {
+				var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
+				ratesResponseBean.addError('processing', "An Unexpected Error Ocurred");
+			}
 			getService("logService").logMessage(message="Shipping Rates Request - Finished", generalLog=true);
 			
 			// Loop Over Shipping Methods
