@@ -66,9 +66,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true";
 	
-	// Non-Persistent Cached Values
-	variables.primaryEmail = "";
-	
 	public any function init() {
 		if(isNull(variables.accountEmailAddresses)) {
 			variables.accountEmailAddresses = [];
@@ -92,10 +89,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		} else {
 			return false;
 		}
-	}
-	
-	public void function setEmail(required string emailAddress) {
-		getPrimaryEmailAddress().setEmailAddress(arguments.emailAddress);
 	}
 	
     /******* Association management methods for bidirectional relationships **************/
