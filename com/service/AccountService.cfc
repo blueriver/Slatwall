@@ -37,8 +37,11 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" output="false" {
-			
+	
+	property name="requestCacheService" type="any";
 	property name="sessionService" type="any";
+	
+	// Mura Injection
 	property name="userManager" type="any";
 	property name="userUtility" type="any";
 	
@@ -46,7 +49,7 @@ component extends="BaseService" accessors="true" output="false" {
 		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);
 		
 		if(loginResult) {
-			getService("requestCacheService").clearCache(keys="currentSession");
+			getRequestCacheService().clearCache(keys="currentSession");
 		}
 		
 		return loginResult;
@@ -87,7 +90,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Check for password validation requirement
 		if ((!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) && structKeyExists(arguments.data, "password") && len(arguments.data.password) lt 3) {
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			getRequestCacheService().setValue("ormHasErrors", true);
 			arguments.account.getErrorBean().addError("password", "You must enter a valid password to create this account.");
 		}
 		
@@ -141,7 +144,7 @@ component extends="BaseService" accessors="true" output="false" {
 				var muraUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
 				
 				if(!muraUser.getIsNew()) {
-					getService("requestCacheService").setValue("ormHasErrors", true);
+					getRequestCacheService().setValue("ormHasErrors", true);
 					arguments.account.getErrorBean().addError("primaryEmailAddress", "This E-Mail Address is already in use with another Account.");
 				} else {
 					// Setup a new mura user
@@ -157,7 +160,7 @@ component extends="BaseService" accessors="true" output="false" {
 					arguments.account.setMuraUserID(muraUser.getUserID());
 										
 					// If there currently isn't a user logged in, then log in this new account
-					var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+					var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
 					if(!currentUser.isLoggedIn()) {
 						// Login the mura User
 						getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);
@@ -179,7 +182,7 @@ component extends="BaseService" accessors="true" output="false" {
 				}
 				
 				// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
-				var currentUser = getService("requestCacheService").getValue("muraScope").currentUser();
+				var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
 				if(currentUser.getUserID() == muraUser.getUserID()) {
 					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
 				}
@@ -187,7 +190,7 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 		} else {
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			getRequestCacheService().setValue("ormHasErrors", true);
 		}
 		
 		return arguments.account;

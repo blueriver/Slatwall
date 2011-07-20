@@ -516,7 +516,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/";
 			
-			getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
+			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
 		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Finished");
 	}

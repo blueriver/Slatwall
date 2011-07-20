@@ -41,6 +41,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	property name="productService" type="any";
 	property name="skuService" type="any";
+	property name="utilityFormService" type="any";
 	
 	// This method is deprecated as of 7/19/2011, the new method is clearCart
 	public void function clearItems(required struct rc) {
@@ -83,7 +84,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
 			
 			// Build up any possible product customizations
-			var cusomtizationData = getService("formUtilities").buildFormCollections(rc);
+			var cusomtizationData = getUtilityFormService().buildFormCollections(rc);
 			
 			// Add to the cart() order the new sku with quantity and shipping id
 			getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);

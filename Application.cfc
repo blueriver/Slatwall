@@ -108,7 +108,7 @@ component extends="framework" output="false" {
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
+		getBeanFactory().getBean("utilityDataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 		
 		// Load all Slatwall Settings
 		getBeanFactory().getBean("settingService").reloadConfiguration();
@@ -181,7 +181,7 @@ component extends="framework" output="false" {
 		getBeanFactory().getBean("SessionService").confirmSession();
 		
 		// Setup structured Data
-		request.context.structuredData = getBeanFactory().getBean("formUtilities").buildFormCollections(request.context);
+		request.context.structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
 		
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {
@@ -323,7 +323,7 @@ component extends="framework" output="false" {
 		
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
 			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd") {
-				getBeanFactory().getBean("tagProxyService").cfhtmlhead(getAssetWire().getAllAssets());
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead(getAssetWire().getAllAssets());
 			}
 		}
 		return rtn;
