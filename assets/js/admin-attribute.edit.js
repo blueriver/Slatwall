@@ -40,10 +40,9 @@ $(document).ready(function(){
 	
 	// make sure attribute options form is displayed only for the right type of attributes
 	$("select.attributeType").each(function(){
-		var id = $(this).attr("id");
 		var $selectedOption = $(this).find('option:selected').html();
 		if(["Select Box","Radio Group","Check Box"].indexOf($selectedOption) > -1) {
-			$("div#" + id).show();
+			$(this).parents('form').find('.attributeOptions').show();
 		}
 	});
 	
@@ -102,19 +101,17 @@ $(document).ready(function(){
         }
 		return false;
     });
-	
 
 	$('select.attributeType').change(function(){
-		var id = $(this).attr("id");
+		//var id = $(this).attr("id");
 		var $selectedOption = $(this).find('option:selected').html();
 		if(["Select Box","Radio Group","Check Box"].indexOf($selectedOption) > -1) {
-			$("div#" + id).show();
+			$(this).parents('form').find('.attributeOptions').show();
 		} else {
-			$("div#" + id).hide();
+			$(this).parents('form').find('.attributeOptions').hide();
 		}
-	});
+	});	
 
-	
 });
 
 function btnConfirmAttributeOptionDelete(message,link) {
