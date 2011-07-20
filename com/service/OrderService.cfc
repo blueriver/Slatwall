@@ -240,6 +240,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
 					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
 						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
+					} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
+						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
 					}
 					
 					// Make sure the payment is attached to the order
@@ -554,7 +556,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Validate the order Payment
 		arguments.orderPayment = this.validateOrderPaymentCreditCard(arguments.orderPayment);
-		if(arguments.orderPayment.getCreditCardType == "Invalid") {
+		if(arguments.orderPayment.getCreditCardType() == "Invalid") {
 			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
 		}
 		

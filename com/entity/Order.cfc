@@ -230,6 +230,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return totalPayments;
 	}
 	
+	public numeric function getPaymentAmountAuthorizedTotal() {
+		var totalPaymentsAuthorized = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPaymentsAuthorized += orderPayments[i].getAmountAuthorized();
+		}
+		
+		return totalPaymentsAuthorized;
+	}
+	
 	public numeric function getPaymentAmountReceivedTotal() {
 		var totalPaymentsReceived = 0;
 		
