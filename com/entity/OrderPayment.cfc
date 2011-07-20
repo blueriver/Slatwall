@@ -67,6 +67,10 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 		return getAmount();
 	}
 	
+	public numeric function getAmountAuthorized() {
+		return getAmount();
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 
