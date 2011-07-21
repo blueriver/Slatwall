@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.paymentServices.PaymentInterface" {
+component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.integrationServices.PaymentInterface" {
 	
 	// Custom Properties that need to be set by the end user
 	property name="loginID" displayname="Login ID" type="string";

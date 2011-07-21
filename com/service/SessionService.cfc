@@ -38,9 +38,9 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 
-	property name="tagProxyService" type="Slatwall.com.service.TagProxyService";
-	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	property name="accountService" type="Slatwall.com.service.AccountService";
+	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
+	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
 	
 	public void function confirmSession() {
 		getCurrent();
@@ -106,7 +106,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();
-		getTagProxyService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
+		getUtilityTagService().cfcookie(name="slatwallSessionID", value=currentSession.getSessionID(), expires="never");
 		
 		return currentSession;
 	}

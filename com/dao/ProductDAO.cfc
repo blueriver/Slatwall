@@ -38,8 +38,6 @@ Notes:
 */
 component accessors="true" extends="BaseDAO" {
 
-	property name="tagProxyService";
-	
 	public any function clearProductContent(required any product) {
 		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
 	}
@@ -80,7 +78,7 @@ component accessors="true" extends="BaseDAO" {
 			//Read xls
 		} else{
 			
-			data = getTagProxyService().cfhttp(method="get",url=arguments.fileURL,delimiter=delimiter,textQualifier=arguments.textQualifier);
+			data = getService("utilityTagService").cfhttp(method="get",url=arguments.fileURL,delimiter=delimiter,textQualifier=arguments.textQualifier);
 			// script based http method doens't work for tab delimiter
 			/*
 			var http = new http();
@@ -374,7 +372,7 @@ component accessors="true" extends="BaseDAO" {
 			dataQuery.execute();
 		} else {
 			if(arguments.tableName == "SlatwallProduct"){
-				var fileName = getService('FileService').filterFileName(arguments.data['product_productName'][arguments.rowNumber]);
+				var fileName = getService("utilityFileService").filterFileName(arguments.data['product_productName'][arguments.rowNumber]);
 				/* check if the fileName (product url) already exists*/
 				dataQuery.setSql("
 					SELECT productID FROM SlatwallProduct WHERE fileName = '#fileName#';

@@ -42,8 +42,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
-	property name="tagProxyService";
 	property name="taxService";
+	property name="utilityFormService";
+	property name="utilityTagService";
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
@@ -114,7 +115,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function exportOrders(required struct data) {
 		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
-		return getService("Utilities").export(searchQuery);
+		return getService("utilityService").export(searchQuery);
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
@@ -379,7 +380,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		messageParams['body'] = emailBody;
 		
-		getTagProxyService().cfmail(argumentCollection=messageParams);
+		getUtilityTagService().cfmail(argumentCollection=messageParams);
 		
 	}
 	
@@ -639,7 +640,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public void function updateOrderItems(required any order, required struct data) {
-		var fu = new Slatwall.com.utility.FormUtilities();
+		var fu = getService("utilityFormService");
 		var dataCollections = fu.buildFormCollections(arguments.data);
 		var orderItems = arguments.order.getOrderItems();
 		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {

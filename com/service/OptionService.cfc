@@ -106,7 +106,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function removeImage(required any entity) {
-		if(arguments.entity.hasImage() && getFileService().removeImage(arguments.entity.getImagePath())) {
+		if(arguments.entity.hasImage() && getService("utilityFileService").removeImage(arguments.entity.getImagePath())) {
 			if(arguments.entity.getClassName() == "SlatwallOption") {
 				arguments.entity.setOptionImage(javacast('NULL', ''));
 			} else if(arguments.entity.getClassName() == "SlatwallOptionGroup") {
@@ -139,7 +139,7 @@ component extends="BaseService" accessors="true" {
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {
 		var imageName = createUUID() & "." & arguments.imageUploadResult.serverFileExt;
 		var filePath = arguments.entity.getImageDirectory() & imageName;
-		var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=filePath);
+		var imageSaved = getService("utilityFileService").saveImage(uploadResult=arguments.imageUploadResult,filePath=filePath);
 		if(imageSaved) {
 			// if this was a new image where a pre-existing one existed for this object, delete the old image
 			if(arguments.entity.hasImage()) {

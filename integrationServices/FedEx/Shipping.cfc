@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="FedEx" implements="Slatwall.shippingServices.ShippingInterface" {
+component accessors="true" output="false" displayname="FedEx" implements="Slatwall.integrationServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
 	property name="accountNo" validateRequired displayname="FedEx Account Number" type="string";
