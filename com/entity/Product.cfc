@@ -374,8 +374,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public void function clearProductContent() {
-		for( var i=1; i<= arraylen(getProductContent()); i++ ) {
-			removeProductContent(getProductContent()[i]);
+		while(arraylen(getProductContent()) > 0) {
+			removeProductContent(getProductContent()[1]);
 		}
 	}
 	
