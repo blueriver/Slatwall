@@ -42,7 +42,7 @@ Notes:
 		<cf_SlatwallSmartListPager smartList="#$.slatwall.productList()#">
 		<div class="productList">
 			<cfloop array="#$.slatwall.productList().getPageRecords()#" index="local.product">
-				<a href="#local.product.getProductURL()#">
+				<a href="#local.product.getListingProductURL()#">
 					<dl>
 						<dt class="image">#local.product.getImage("s")#</dt>
 						<dt class="title">#local.product.getTitle()#</dt>

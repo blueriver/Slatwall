@@ -458,7 +458,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
 		
-		getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
+		getUtilityFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
 	}
 	
