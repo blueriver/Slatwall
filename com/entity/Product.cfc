@@ -587,6 +587,34 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		super.populate(argumentCollection=arguments);
 	}
 	
+	public struct function getCrumbData(required string path, required string siteID, required array baseCrumbArray) {
+		var productFilename = replace(arguments.path, "/#arguments.siteID#/", "", "all");
+		productFilename = left(productFilename, len(productFilename)-1);
+		
+		var productCrumbData = {
+			contentHistID = "",
+			contentID = "",
+			filename = productFilename,
+			inheritobjects = "Cascade",
+			menuTitle = getTitle(),
+			metaDesc = "",
+			metaKeywords = "",
+			parentArray = arguments.baseCrumbArray[1].parentArray,
+			parentID = "",
+			restricted = 0,
+			retrictgroups = "",
+			siteid = arguments.siteID,
+			sortby = "orderno",
+			sortdirection = "asc",
+			target = "_self",
+			targetPrams = "",
+			template = "",
+			type = "Page"
+		};
+		
+		return productCrumbData;
+	}
+	
 }
 
 
