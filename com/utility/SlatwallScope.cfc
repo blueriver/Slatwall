@@ -125,6 +125,9 @@ component accessors="true" output="false" extends="BaseObject" {
 			} else {
 				data.showSubPageProducts = $.content("showSubPageProducts");	
 			}
+			if($.event("categoryID") != "") {
+				data["F:productCategories_categoryID"] = $.event("categoryID");
+			}
 			var currentURL = $.createHREF(filename=$.content('filename'));
 			if(len(CGI.QUERY_STRING)) {
 				currentURL &= "?" & CGI.QUERY_STRING;
