@@ -194,11 +194,11 @@ component extends="BaseService" output="false" accessors="true"  {
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var fileInfo = getFileInfo(dirList[i]);
-				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
-					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Shipping.cfc") ) {
+					var serviceName = Replace(listLast(dirList[i],"\/"),".cfc","");
 					var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Shipping").init();
 					var serviceMeta = getMetaData(service);
-					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.shippingServices.ShippingInterface")) {
+					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.integrationServices.ShippingInterface")) {
 						variables.shippingServices[ "#serviceName#" ] = service;	
 					}
 					
@@ -237,7 +237,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var fileInfo = getFileInfo(dirList[i]);
-				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Payment.cfc") ) {
 					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
 					var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Payment").init();
 					variables.paymentServices[ "#serviceName#" ] = service;
