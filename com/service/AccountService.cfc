@@ -38,7 +38,6 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	
-	property name="requestCacheService" type="any";
 	property name="sessionService" type="any";
 	
 	// Mura Injection

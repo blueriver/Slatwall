@@ -581,7 +581,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			getDAO().save(address);
 			getDAO().save(arguments.orderPayment);	
 		} else {
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			getRequestCacheService().setValue("ormHasErrors", true);
 		}
 		
 		return arguments.orderPayment;
