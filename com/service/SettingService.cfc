@@ -225,7 +225,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		} else {
 			response.setData(shippingService);
-			getService("requestCacheService").setValue("ormHasErrors",true);
+			getRequestCacheService().setValue("ormHasErrors",true);
 		}
 		return response;
 	}
@@ -264,7 +264,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		} else {
 			response.setData(paymentService);
-			getService("requestCacheService").setValue("ormHasErrors",true);
+			getRequestCacheService().setValue("ormHasErrors",true);
 		}
 		return response;
 	}

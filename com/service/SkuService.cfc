@@ -180,7 +180,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var skuCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
 		if( !structIsEmpty(skuCodeError) ) {
 			arguments.sku.addError(argumentCollection=skuCodeError);
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			getRequestCacheService().setValue("ormHasErrors", true);
 		}
 	}
 	

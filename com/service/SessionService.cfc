@@ -39,7 +39,6 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 
 	property name="accountService" type="Slatwall.com.service.AccountService";
-	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
 	
 	public void function confirmSession() {
