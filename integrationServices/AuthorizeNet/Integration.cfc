@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,11 +35,14 @@
 
 Notes:
 
---->
-
-<cfinterface>
+*/
+component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
-	<cffunction name="init" access="public" returntype="any">
-	</cffunction>
-
-</cfinterface>
+	public any function init() {
+		return this;
+	}
+	
+	public string function getIntegrationTypes() {
+		return "payment";
+	} 
+}
