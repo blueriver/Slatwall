@@ -221,6 +221,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
 	
+	public string function getListingProductURL(string filename=$.content('filename')) {
+		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
+	}
+	
 	public numeric function getQOH() {
 		if(isNull(variables.qoh)) {
     		variables.qoh = 0;
