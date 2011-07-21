@@ -161,7 +161,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		var properties = arguments.metaData["properties"];
 		var parentProperties = "";
 		// recursively get properties of any super classes
-		if(structKeyExists(arguments.metaData.extends,"properties")) {
+		if(structKeyExists(arguments.metaData, "extends") && structKeyExists(arguments.metaData.extends,"properties")) {
 			parentProperties = getProperties(arguments.metaData["extends"]);
 			return arrayConcat(parentProperties,properties);
 		} else {
