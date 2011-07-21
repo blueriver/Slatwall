@@ -69,7 +69,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				rc.$.event('slatAction', 'frontend:product.detail');
 				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(), rc.$.event('siteid'), true));
 				
-				// Setup the correct crumb list
+				// Check if this came from a product listing page and setup the base crumb list array
 				if( keyLocation gt 2) {
 					var listingPageFilename = left(rc.path, find("/#setting('product_urlKey')#/", rc.path)-1);
 					listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
@@ -79,29 +79,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 					var crumbDataArray = getContentManager().getCrumbList(contentID="00000000000000000000000000000000001", siteID=rc.$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
 				}
 				
-				var productCrumb = {
-					contentHistID = "",
-					contentID = "",
-					filename = setting('product_urlKey') & "/" & getRequestCacheService().getValue("currentProductFilename"),
-					inheritobjects = "Cascade",
-					menuTitle = product.getTitle(),
-					metaDesc = "",
-					metaKeywords = "",
-					parentArray = crumbDataArray[1].parentArray,
-					parentID = "",
-					restricted = 0,
-					retrictgroups = "",
-					siteid = rc.$.event('siteID'),
-					sortby = "orderno",
-					sortdirection = "asc",
-					target = "_self",
-					targetPrams = "",
-					template = "",
-					type = "Page"
-				};
+				// add the product to the base crumb list array
+				arrayPrepend(crumbDataArray, product.getCrumbData(path=rc.path, siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
 				
-				arrayPrepend(crumbDataArray, productCrumb);
-				
+				// Push the new crumb list into the event
 				rc.$.event('crumbdata', crumbDataArray);
 			}	
 		}
