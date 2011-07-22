@@ -351,8 +351,8 @@ component extends="BaseService" accessors="true" {
     }
     
     public any function getProductTypeFromTree(string productTypeID) {
-		var productTypeTree = getProductTypeTree();
 		var productType = new Query();
+		productType.setAttributes(productTypeTree = getProductTypeTree());
 		productType.setSQL("select * from productTypeTree where productTypeID = :productTypeID");
 		productType.setDBType("query");
 		productType.addParam(name="productTypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
@@ -396,10 +396,10 @@ component extends="BaseService" accessors="true" {
 	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set
 	*/
 	public any function getProductTypeRecordWhereSettingDefined( required string productTypeID,required string settingName ) {
-		var ptTree = getProductTypeTree();
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
-		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTree where productTypeID = :ptypeID");
+		qoq.setAttributes(ptTable = getProductTypeTree());
+		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
 		qoq.setDBType("query");
 		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
 		var qGetSetting = qoq.execute().getResult();
