@@ -23,6 +23,7 @@
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
 	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
+	<bean id="promotionDAO" class="Slatwall.com.dao.PromotionDAO" />
 	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
 		
 	<!-- Service Components - Utility, these are to be injected where needed for misc tasks -->
@@ -94,6 +95,12 @@
 		<property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="FeedManager" /></property>
     </bean>
+
+	<bean id="promotionService" class="Slatwall.com.service.PromotionService">
+        <property name="DAO"><ref bean="PromotionDAO" /></property>
+		<property name="validationService"><ref bean="validationService" /></property>
+	</bean>
+	
     <bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="optionService"><ref bean="optionService" /></property> 

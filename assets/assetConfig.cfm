@@ -30,4 +30,9 @@ variables.assetDependencies["js/admin-order.detail.js"] =	[
 	"css/tools/colorbox/colorbox.css"
 	];
 
+variables.assetDependencies["js/admin-promotion.detail.js"] =	[
+	"js/tools/timepicker/jquery-ui-timepicker-addon.js",
+	"css/tools/timepicker/jquery-ui-timepicker-addon.css"
+	];
+	
 </cfscript>

@@ -41,7 +41,7 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Entiteis
+	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Audit properties
@@ -50,4 +50,28 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Promotion (many-to-one)
+	
+	public void function setPromotion(required Promotion promotion) {
+		variables.promotion = arguments.promotion;
+		if(!arguments.promotion.hasPromotionReward(this)) {
+			arrayAppend(arguments.promotion.getPromotionRewards(),this);
+		}
+	}
+	
+	public void function removePromotion(Promotion promotion) {
+	   if(!structKeyExists(arguments,"promotion")) {
+	   		arguments.promotion = variables.promotion;
+	   }
+       var index = arrayFind(arguments.promotion.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.promotion.getPromotionRewards(), index);
+       }
+       structDelete(variables,"promotion");
+    }
+    
+    /************   END Association Management Methods   *******************/
+
 }

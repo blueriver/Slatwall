@@ -133,6 +133,7 @@ Notes:
 					<cf_SlatwallActionCaller action="admin:setting.listpaymentmethods" type="list">
 					<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethods" type="list">
 					<cf_SlatwallActionCaller action="admin:attribute" type="list">
+					<cf_SlatwallActionCaller action="admin:promotion" type="list">
 					<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 					<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true">Reload</a></li>
 				</ul>
