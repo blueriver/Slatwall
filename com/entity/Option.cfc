@@ -46,6 +46,9 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="optionDescription" ormtype="string" length="4000";
 	property name="sortOrder" ormtype="integer";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
