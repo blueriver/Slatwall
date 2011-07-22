@@ -44,6 +44,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="sessionService" type="any";
 	property name="requestCacheService" type="any";
 	
+	
 	// Mura Service Injection
 	property name="contentManager" type="any";
 	
@@ -52,18 +53,37 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onSiteRequestStart(required any rc) {
+		
 		// This hook is what enables SEO friendly product URL's... It is also what sets up the product in the slatwall scope, ext
-		if( listLen(rc.path, "/") >= 3 && listGetAt(rc.path, 2, "/") == setting("product_urlKey")) {
-			
+		var keyLocation = listFind(rc.path, setting('product_urlKey'), "/");
+
+		if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
 			// Load Product
-			var product = getProductService().getProductByFilename(listGetAt(rc.path, 3, "/"));
+			getRequestCacheService().setValue("currentProductFilename", listGetAt(rc.path, keyLocation+1, "/"));
+			var product = getProductService().getProductByFilename(getRequestCacheService().getValue("currentProductFilename"));
 			
 			// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
 			if(!isNull(product)) {
 				getRequestCacheService().setValue("currentProduct", product);
 				getRequestCacheService().setValue("currentProductID", product.getProductID());
 				rc.$.event('slatAction', 'frontend:product.detail');
-				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(),rc.$.event('siteid'),true));
+				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(), rc.$.event('siteid'), true));
+				
+				// Check if this came from a product listing page and setup the base crumb list array
+				if( keyLocation gt 2) {
+					var listingPageFilename = left(rc.path, find("/#setting('product_urlKey')#/", rc.path)-1);
+					listingPageFilename = replace(listingPageFilename, "/#$.event('siteID')#/", "", "all");
+					getRequestCacheService().setValue("currentListingPageOfProduct", getContentManager().getActiveContentByFilename(listingPageFilename, rc.$.event('siteid'), true));
+					var crumbDataArray = getRequestCacheService().getValue("currentListingPageOfProduct").getCrumbArray();
+				} else {
+					var crumbDataArray = getContentManager().getCrumbList(contentID="00000000000000000000000000000000001", siteID=rc.$.event('siteID'), setInheritance=false, path="00000000000000000000000000000000001", sort="asc");
+				}
+				
+				// add the product to the base crumb list array
+				arrayPrepend(crumbDataArray, product.getCrumbData(path=rc.path, siteID=$.event('siteID'), baseCrumbArray=crumbDataArray));
+				
+				// Push the new crumb list into the event
+				rc.$.event('crumbdata', crumbDataArray);
 			}	
 		}
 	}

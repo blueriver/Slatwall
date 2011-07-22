@@ -180,7 +180,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var skuCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
 		if( !structIsEmpty(skuCodeError) ) {
 			arguments.sku.addError(argumentCollection=skuCodeError);
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			getRequestCacheService().setValue("ormHasErrors", true);
 		}
 	}
 	
@@ -222,7 +222,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function processImageUpload(required any Sku, required struct imageUploadResult) {
 		var imagePath = arguments.Sku.getImagePath();
-		var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");
+		var imageSaved = getService("utilityFileService").saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath,allowedExtensions="jpg,jpeg,png,gif");
 		if(imageSaved) {
 			return true;
 		} else {

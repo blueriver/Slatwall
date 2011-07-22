@@ -40,15 +40,18 @@ component extends="BaseService" accessors="true" {
 	
 	// Slatwall Service Injection
 	property name="skuDAO" type="any";
-	property name="ProductTypeDAO" type="any";
-	property name="SkuService" type="any";  
-	property name="ProductTypeTree" type="any";
-	property name="tagProxyService" type="any";
+	property name="productTypeDAO" type="any";
+	property name="skuService" type="any";  
+	property name="utilityFileService" type="any";
+	property name="utilityTagService" type="any";
 	
 	// Mura Service Injection
+	property name="categoryManager" type="any";
 	property name="contentManager" type="any";
 	property name="feedManager" type="any";
-	property name="categoryManager" type="any";
+	
+	// Cached Properties
+	property name="productTypeTree" type="any";
 	
 	public any function getProductTemplates(required string siteID) {
 		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
@@ -113,7 +116,7 @@ component extends="BaseService" accessors="true" {
 	
 	public any function getMuraCategories(required string siteID, string parentID=0) {
 		var categories = getCategoryManager().getCategoriesBySiteID(siteID=arguments.siteID);
-    	var categoryTree = getService("utilities").queryTreeSort(
+    	var categoryTree = getService("utilityService").queryTreeSort(
     		theQuery = categories,
     		itemID = "categoryID",
     		parentID = "parentID",
@@ -240,7 +243,7 @@ component extends="BaseService" accessors="true" {
 		//alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
 		if(!alternateImage.hasErrors()) {
 			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
-			var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
+			var imageSaved = getService("utilityFileService").saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
 			if(!imageSaved) {
 				alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
 			}
@@ -252,7 +255,7 @@ component extends="BaseService" accessors="true" {
 	
 	public boolean function removeAlternateImage(required any image,required any product) {
 		arguments.product.removeProductImage(arguments.image);
-		return getFileService().removeImage(arguments.image.getImagePath());
+		return getService("utilityFileService").removeImage(arguments.image.getImagePath());
 	}
 	
 	public any function save(required any Product,required struct data) {
@@ -261,7 +264,7 @@ component extends="BaseService" accessors="true" {
 		
 		// if filename wasn't set in bean, default it to the product's name.
 		if(arguments.Product.getFileName() == "") {
-			arguments.Product.setFileName(getFileService().filterFileName(arguments.Product.getProductName()));
+			arguments.Product.setFileName(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
 		} 
 		// if weight and/or prices (values passed on to populate SKU entities) are blank or not numeric, default them to zero
 		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
@@ -334,7 +337,7 @@ component extends="BaseService" accessors="true" {
 	//   Product Type Methods
 	public void function setProductTypeTree() {
     	var qProductTypes = getProductTypeDAO().getProductTypeQuery();
-    	var productTypeTree = getService("utilities").queryTreeSort(
+    	var productTypeTree = getService("utilityService").queryTreeSort(
     		theQuery = qProductTypes,
     		itemID = "productTypeID",
     		parentID = "parentProductTypeID",
@@ -353,10 +356,10 @@ component extends="BaseService" accessors="true" {
     public any function getProductTypeFromTree(string productTypeID) {
 		var productTypeTree = getProductTypeTree();
 		var productType = new Query();
-		productType.setAttributes(productTypeTable = productTypeTree);
-		productType.setSQL("select * from productTypeTable where productTypeID = :productTypeID");
+		productType.setSQL("select * from productTypeTree where productTypeID = :productTypeID");
+		productType.setDBType("query");
 		productType.addParam(name="productTypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
-		productType = productType.execute(dbtype="query").getResult();
+		productType = productType.execute().getResult();
     	return productType; 
     }
     
@@ -399,10 +402,10 @@ component extends="BaseService" accessors="true" {
 		var ptTree = getProductTypeTree();
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
-		qoq.setAttributes(ptTable = ptTree);
-		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
+		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTree where productTypeID = :ptypeID");
+		qoq.setDBType("query");
 		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
-		var qGetSetting = qoq.execute(dbtype="query").getResult();
+		var qGetSetting = qoq.execute().getResult();
 		if(qGetSetting.recordCount == 1) {
 			local.settingValue = qGetSetting[arguments.settingName];
 			if(local.settingValue != "") {
@@ -453,7 +456,7 @@ component extends="BaseService" accessors="true" {
 		}
 		// add column of parentIDs to query so we can treeSort it
 		queryAddColumn(arguments.productPages, "parentID", "VarChar", parentIDArray );
-    	var productPagesTree = getService("utilities").queryTreeSort(
+    	var productPagesTree = getService("utilityService").queryTreeSort(
     		theQuery = arguments.productPages,
     		itemID = "contentID",
     		parentID = "parentID",
@@ -468,7 +471,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
-		getTagProxyService().cfSetting(requesttimeout="3600"); 
+		getUtilityTagService().cfSetting(requesttimeout="3600"); 
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" output="false" displayname="PayPal Express" implements="Slatwall.paymentServices.PaymentInterface" {
+component accessors="true" output="false" displayname="PayPal Express" implements="Slatwall.integrationServices.PaymentInterface" {
 	
 	public any function init() {
 		return this;

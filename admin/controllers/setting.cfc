@@ -45,8 +45,8 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="shippingService" type="any";
 	property name="paymentService" type="any";
 	property name="fulfillmentService" type="any";
-	property name="formUtilities" type="any";
-	property name="fileService" type="any";
+	property name="utilityFormService" type="any";
+	property name="utilityFileService" type="any";
 	property name="taxService" type="any";
 	
 	// Mura Service Injection
@@ -139,7 +139,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function saveShippingService(required struct rc) {
-		rc.serviceProperties = getService("formUtilities").buildFormCollections(rc).shippingService;
+		rc.serviceProperties = getUtilityFormService().buildFormCollections(rc).shippingService;
 		var response = getSettingService().saveShippingService(rc.shippingServicePackage,rc.serviceProperties);
 
 		if( !response.hasErrors() ) {
@@ -272,7 +272,7 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	
 	public void function savePaymentService(required struct rc) {
-		rc.serviceProperties = getService("formUtilities").buildFormCollections(rc).paymentService;
+		rc.serviceProperties = getUtilityFormService().buildFormCollections(rc).paymentService;
 		var response = getSettingService().savePaymentService(rc.paymentServicePackage,rc.serviceProperties);
 
 		if( !response.hasErrors() ) {
@@ -396,7 +396,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function saveAddressZone(required struct rc) {
 		detailAddressZone(rc);
 		
-		var formStruct = getFormUtilities().buildFormCollections(rc);
+		var formStruct = getUtilityFormService().buildFormCollections(rc);
 		if(structKeyExists(formStruct, "addressZoneLocations")) {
 			rc.addressZoneLocations = formStruct.addressZoneLocations;	
 		}
@@ -458,7 +458,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
 		
-		getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
+		getUtilityFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
 	}
 	

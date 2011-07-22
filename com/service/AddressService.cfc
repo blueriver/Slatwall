@@ -48,7 +48,7 @@ component extends="BaseService" accessors="true" output="false" {
         if(!arguments.address.hasErrors()) {
             arguments.address = getDAO().save(target=arguments.address);
         } else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
+            getRequestCacheService().setValue("ormHasErrors", true);
         }
         
         return arguments.address;

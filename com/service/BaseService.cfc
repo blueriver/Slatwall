@@ -38,10 +38,9 @@ Notes:
 */
 component displayname="Base Service" persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" hint="This is a base service that all services will extend" {
 
-	property name="entityName" type="string";
 	property name="DAO" type="any";
 	property name="validationService" type="any";
-	property name="fileService" type="any";
+	property name="requestCacheService" type="any";
 	
 	public any function init() {
 		return super.init();
@@ -64,7 +63,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function delete(required any entity){
-		var response = new com.utility.ResponseBean();
+		var response = new Slatwall.com.utility.ResponseBean();
 		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
 		if(!arguments.entity.hasErrors()) {
 			getDAO().delete(target=arguments.entity);

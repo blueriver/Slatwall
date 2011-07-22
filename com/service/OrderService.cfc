@@ -42,8 +42,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="sessionService";
 	property name="paymentService";
 	property name="addressService";
-	property name="tagProxyService";
 	property name="taxService";
+	property name="utilityFormService";
+	property name="utilityTagService";
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
@@ -114,7 +115,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function exportOrders(required struct data) {
 		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
-		return getService("Utilities").export(searchQuery);
+		return getService("utilityService").export(searchQuery);
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
@@ -238,8 +239,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
 				
 				if((payment.isNew() && order.getPaymentAmountTotal() < order.getTotal()) || !payment.isNew()) {
-					if(payment.isNew() && !structKeyExists(paymentsDataArray[i], "amount")) {
+					if((payment.isNew() || isNull(payment.getAmount()) || payment.getAmount() <= 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
 						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountTotal();
+					} else if(!payment.isNew() && (isNull(payment.getAmountAuthorized()) || payment.getAmountAuthorized() == 0) && !structKeyExists(paymentsDataArray[i], "amount")) {
+						paymentsDataArray[i].amount = order.getTotal() - order.getPaymentAmountAuthorizedTotal();
 					}
 					
 					// Make sure the payment is attached to the order
@@ -274,6 +277,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			if(transactionType != 'none') {
 				var paymentOK = getPaymentService().processPayment(order.getOrderPayments()[i], transactionType);
 				if(!paymentOK) {
+					order.getOrderPayments()[i].setAmount(0);
 					allPaymentsProcessed = false;
 				}
 			}
@@ -376,7 +380,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		messageParams['body'] = emailBody;
 		
-		getTagProxyService().cfmail(argumentCollection=messageParams);
+		getUtilityTagService().cfmail(argumentCollection=messageParams);
 		
 	}
 	
@@ -553,37 +557,33 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Validate the order Payment
 		arguments.orderPayment = this.validateOrderPaymentCreditCard(arguments.orderPayment);
-		if(arguments.orderPayment.getCreditCardType == "Invalid") {
+		if(arguments.orderPayment.getCreditCardType() == "Invalid") {
 			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
 		}
 		
-		if(!arguments.orderPayment.hasErrors()) {
-			var address = arguments.orderPayment.getBillingAddress();
+		var address = arguments.orderPayment.getBillingAddress();
 		
-			// Get Address
-			if( isNull(address) ) {
-				// Set a new address in the order payment
-				var address = getAddressService().newAddress();
-			}
-			
-			// Populate Address
-			address.populate(arguments.data.billingAddress);
-			
-			// Validate Address
-			address = getAddressService().validateAddress(address);
-			
-			arguments.orderPayment.setBillingAddress(address);
-			
-			if(!address.hasErrors()) {
-				getDAO().save(address);
-				getDAO().save(arguments.orderPayment);	
-			} else {
-				getService("requestCacheService").setValue("ormHasErrors", true);
-			}
-		} else {
-			getService("requestCacheService").setValue("ormHasErrors", true);
+		// Get Address
+		if( isNull(address) ) {
+			// Set a new address in the order payment
+			var address = getAddressService().newAddress();
 		}
-			
+		
+		// Populate Address
+		address.populate(arguments.data.billingAddress);
+		
+		// Validate Address
+		address = getAddressService().validateAddress(address);
+		
+		arguments.orderPayment.setBillingAddress(address);
+		
+		if(!arguments.orderPayment.hasErrors() && !address.hasErrors()) {
+			getDAO().save(address);
+			getDAO().save(arguments.orderPayment);	
+		} else {
+			getRequestCacheService().setValue("ormHasErrors", true);
+		}
+		
 		return arguments.orderPayment;
 	}
 	
@@ -640,7 +640,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public void function updateOrderItems(required any order, required struct data) {
-		var fu = new Slatwall.com.utility.FormUtilities();
+		var fu = getService("utilityFormService");
 		var dataCollections = fu.buildFormCollections(arguments.data);
 		var orderItems = arguments.order.getOrderItems();
 		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
@@ -675,6 +675,20 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
 			var itemTax = getTaxService().calculateOrderItemTax(arguments.order.getOrderItems()[i]);
 			arguments.order.getOrderItems()[i].setTaxAmount(itemTax);
+		}
+	}
+	
+	public void function clearCart() {
+		var session = getSessionService().getCurrent();
+		var cart = session.getOrder();
+		
+		if(!cart.isNew()) {
+			session.removeOrder();
+			
+			getDAO().delete(cart.getOrderItems());	
+			getDAO().delete(cart.getOrderFulfillments());	
+			getDAO().delete(cart.getOrderPayments());
+			getDAO().delete(cart);
 		}
 	}
 	

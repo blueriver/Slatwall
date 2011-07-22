@@ -225,6 +225,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
 	}
 	
+	public string function getListingProductURL(string filename=$.content('filename')) {
+		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
+	}
+	
 	public numeric function getQOH() {
 		if(isNull(variables.qoh)) {
     		variables.qoh = 0;
@@ -374,8 +378,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public void function clearProductContent() {
-		for( var i=1; i<= arraylen(getProductContent()); i++ ) {
-			removeProductContent(getProductContent()[i]);
+		while(arraylen(getProductContent()) > 0) {
+			removeProductContent(getProductContent()[1]);
 		}
 	}
 	
@@ -594,6 +598,34 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			}
 		}
 		super.populate(argumentCollection=arguments);
+	}
+	
+	public struct function getCrumbData(required string path, required string siteID, required array baseCrumbArray) {
+		var productFilename = replace(arguments.path, "/#arguments.siteID#/", "", "all");
+		productFilename = left(productFilename, len(productFilename)-1);
+		
+		var productCrumbData = {
+			contentHistID = "",
+			contentID = "",
+			filename = productFilename,
+			inheritobjects = "Cascade",
+			menuTitle = getTitle(),
+			metaDesc = "",
+			metaKeywords = "",
+			parentArray = arguments.baseCrumbArray[1].parentArray,
+			parentID = "",
+			restricted = 0,
+			retrictgroups = "",
+			siteid = arguments.siteID,
+			sortby = "orderno",
+			sortdirection = "asc",
+			target = "_self",
+			targetPrams = "",
+			template = "",
+			type = "Page"
+		};
+		
+		return productCrumbData;
 	}
 	
 }

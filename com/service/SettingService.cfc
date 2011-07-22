@@ -190,15 +190,15 @@ component extends="BaseService" output="false" accessors="true"  {
 	public struct function getShippingServices(boolean reload=false) {
 		if(!structKeyExists(variables, "shippingServices") || !structCount(variables.shippingServices) || arguments.reload) {
 			variables.shippingServices = structNew();
-			var dirLocation = ExpandPath("/plugins/Slatwall/shippingServices");
+			var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var fileInfo = getFileInfo(dirList[i]);
-				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
-					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-					var service = createObject("component", "Slatwall.shippingServices.#serviceName#.Service").init();
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Shipping.cfc") ) {
+					var serviceName = Replace(listLast(dirList[i],"\/"),".cfc","");
+					var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Shipping").init();
 					var serviceMeta = getMetaData(service);
-					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.shippingServices.ShippingInterface")) {
+					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.integrationServices.ShippingInterface")) {
 						variables.shippingServices[ "#serviceName#" ] = service;	
 					}
 					
@@ -225,7 +225,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		} else {
 			response.setData(shippingService);
-			getService("requestCacheService").setValue("ormHasErrors",true);
+			getRequestCacheService().setValue("ormHasErrors",true);
 		}
 		return response;
 	}
@@ -233,13 +233,13 @@ component extends="BaseService" output="false" accessors="true"  {
 	public any function getPaymentServices(boolean reload=false) {
 		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.paymentServices) || arguments.reload) {
 			variables.paymentServices = structNew();
-			var dirLocation = ExpandPath("/plugins/Slatwall/paymentServices");
+			var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
 			var dirList = directoryList( dirLocation );
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var fileInfo = getFileInfo(dirList[i]);
-				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Service.cfc") ) {
+				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Payment.cfc") ) {
 					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-					var service = createObject("component", "Slatwall.paymentServices.#serviceName#.Service").init();
+					var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Payment").init();
 					variables.paymentServices[ "#serviceName#" ] = service;
 				}
 			}
@@ -264,7 +264,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		} else {
 			response.setData(paymentService);
-			getService("requestCacheService").setValue("ormHasErrors",true);
+			getRequestCacheService().setValue("ormHasErrors",true);
 		}
 		return response;
 	}
@@ -516,7 +516,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
 			var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##thisSiteID#/includes/display_objects/custom/slatwall/";
 			
-			getFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
+			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
 		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Finished");
 	}

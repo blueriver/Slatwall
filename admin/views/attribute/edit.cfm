@@ -72,8 +72,8 @@ Notes:
         <cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" id="new" defaultValue="Text Box" allowNullOption="false" edit="true">
-		<div id="attributeTypenew" style="display:none;">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
+		<div class="attributeOptions" style="display:none;">
 		<dt>
 			Attribute Options
 		</dt>
@@ -165,8 +165,8 @@ Notes:
 		        <cf_SlatwallPropertyDisplay id="attributeName#local.i#" object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_SlatwallPropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
 				<cf_SlatwallPropertyDisplay id="attributeHint#local.i#" object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_SlatwallPropertyDisplay id="#local.thisAttribute.getAttributeID()#" class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
-				<div id="attributeType#local.thisAttribute.getAttributeID()#" style="display:none;">
+				<cf_SlatwallPropertyDisplay class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
+				<div class="attributeOptions" style="display:none;">
 				<dt>
 					Attribute Options
 				</dt>

@@ -66,11 +66,19 @@ Notes:
 				</dl>
 			</div>
 			<div class="actionButtons">
-				<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail button">Checkout</a>
-				<cf_SlatwallActionCaller action="frontend:cart.clearItems" type="link" class="button">
-				<cf_SlatwallActionCaller action="frontend:cart.update" type="submit">
+				<a href="#$.createHREF(filename='shopping-cart', querystring='slatAction=frontend:cart.clearCart')#" title="Clear Cart" class="frontendcartdetail clearCart button">Clear Cart</a>
+				<a href="#$.createHREF(filename='shopping-cart')#" title="Update Cart" class="frontendcartdetail updateCart button">Update Cart</a>
+				<a href="#$.createHREF(filename='checkout')#" title="Checkout" class="frontendcheckoutdetail checkout button">Checkout</a>
 			</div>
 		</cfif>
 		</form>
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery('div.actionButtons a.updateCart').click(function(e){
+					e.preventDefault();
+					jQuery('form[name="updateCart"]').submit();
+				});
+			});
+		</script>
 	</div>
 </cfoutput>

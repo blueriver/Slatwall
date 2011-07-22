@@ -102,10 +102,10 @@ component extends="BaseController" output=false accessors=true {
 		
 		if(isNew) {
 			// set up options struct for generating skus if this is a new product
-			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+			rc.optionsStruct = getService("utilityFormService").buildFormCollections(rc);
 		} else {
 			// set up form collections to handle any skus/alternate images that were edited and/or added
-			var formCollections = getService("formUtilities").buildFormCollections(rc);
+			var formCollections = getService("utilityFormService").buildFormCollections(rc);
 			rc.skuArray = formCollections.skus;
 			rc.imageStruct = formCollections.image;
 			if(structKeyExists(formCollections,"attribute")){
