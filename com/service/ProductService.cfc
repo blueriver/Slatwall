@@ -353,10 +353,10 @@ component extends="BaseService" accessors="true" {
     public any function getProductTypeFromTree(string productTypeID) {
 		var productTypeTree = getProductTypeTree();
 		var productType = new Query();
-		productType.setAttributes(productTypeTable = productTypeTree);
-		productType.setSQL("select * from productTypeTable where productTypeID = :productTypeID");
+		productType.setSQL("select * from productTypeTree where productTypeID = :productTypeID");
+		productType.setDBType("query");
 		productType.addParam(name="productTypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
-		productType = productType.execute(dbtype="query").getResult();
+		productType = productType.execute().getResult();
     	return productType; 
     }
     
@@ -399,10 +399,10 @@ component extends="BaseService" accessors="true" {
 		var ptTree = getProductTypeTree();
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
-		qoq.setAttributes(ptTable = ptTree);
-		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTable where productTypeID = :ptypeID");
+		qoq.setSQL("select productTypeName, productTypeID, productTypeNamePath, #arguments.settingName#, idpath from ptTree where productTypeID = :ptypeID");
+		qoq.setDBType("query");
 		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
-		var qGetSetting = qoq.execute(dbtype="query").getResult();
+		var qGetSetting = qoq.execute().getResult();
 		if(qGetSetting.recordCount == 1) {
 			local.settingValue = qGetSetting[arguments.settingName];
 			if(local.settingValue != "") {
