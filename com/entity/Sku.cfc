@@ -60,6 +60,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="SkuID" cfc="Stock" inverse="true" cascade="all";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" cascade="save-update";
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="SkuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan"; 
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
 	
 	// Non-Persistent Properties
 	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
@@ -81,7 +82,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        if(isNull(variables.Options)) {
        	    variables.options=[];
        }
-       
+ 	   if(isNull(variables.promotionRewards)) {
+	       variables.promotionRewards = [];
+	   }
+      
        return super.init();
     }
     
@@ -160,6 +164,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	       }
 	   }
     }
+    
+	// promotionRewards (one-to-many))
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.setSku(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+	   arguments.promotionReward.removeSku(this);
+	}
+	
     /************   END Association Management Methods   *******************/
     
     public string function getImageDirectory() {

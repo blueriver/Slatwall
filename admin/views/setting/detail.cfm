@@ -141,6 +141,8 @@ Notes:
 					</tr>
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logExceptionsToDatabaseFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.logExceptionsToDatabaseFlag')#" property="settingValue" fieldName="advanced_logExceptionsToDatabaseFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" property="settingValue" fieldName="advanced_logDatabaseClearAfterDays" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_dateFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.dateFormat')#" property="settingValue" fieldName="advanced_dateFormat" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_timeFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.timeFormat')#" property="settingValue" fieldName="advanced_timeFormat" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 				</table>
 			</div>
 		</div>
