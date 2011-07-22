@@ -94,12 +94,22 @@ component extends="framework" output="false" {
 		var xmlPath = "";
 
 	    xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
-		xml = FileRead("#xmlPath#"); 
+		xml = xmlParse(FileRead("#xmlPath#")); 
 		
-		// Build Coldspring factory & Set in FW/1
+		// Build Coldspring factory
 		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
-		serviceFactory.loadBeansFromXmlRaw( xml );
+		serviceFactory.loadBeansFromXmlObj( xml );
+		
+		// Run the base coldspring xml through the data integration to adjust for any overrides of DAO's
+		xml = serviceFactory.getBean("integrationService").injectDataIntegrationToColdspringXML(xml);
+		
+		// Reload the beans with new xml from data integration
+		serviceFactory.loadBeansFromXmlObj( xml );
+		
+		// Set the parent of the factory to mura
 		serviceFactory.setParent(application.servicefactory);
+		
+		// Place the service factory into the required application scopes
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ));
 		

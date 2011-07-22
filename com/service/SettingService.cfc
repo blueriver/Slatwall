@@ -201,7 +201,6 @@ component extends="BaseService" output="false" accessors="true"  {
 					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.integrationServices.ShippingInterface")) {
 						variables.shippingServices[ "#serviceName#" ] = service;	
 					}
-					
 				}
 			}
 		}
