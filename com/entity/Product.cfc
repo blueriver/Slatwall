@@ -76,6 +76,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
@@ -115,6 +116,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }	   
 	   if(isNull(variables.attributeSetAssignments)) {
 	       variables.attributeSetAssignments = [];
+	   }
+	   if(isNull(variables.promotionRewards)) {
+	       variables.promotionRewards = [];
 	   }
 	   return Super.init();
 	}
@@ -426,6 +430,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removeAttributeValue(required any attributeValue) {
 	   arguments.attributeValue.removeProduct(this);
+	}
+	
+	// promotionRewards (one-to-many))
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.setProduct(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+	   arguments.promotionReward.removeProduct(this);
 	}
 	
 	/************   END Association Management Methods   *******************/

@@ -40,11 +40,11 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	
 	// Persistent Properties
 	property name="promotionCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="promotionCode" ormtype="string";
-	property name="startDateTime" ormtype="timestamp";
-	property name="endDateTime" ormtype="timestamp";
+	property name="promotionCode" validateRequired="true" ormtype="string";
+	property name="startDateTime" validateDate="true" ormtype="timestamp";
+	property name="endDateTime" validateDate="true" ormtype="timestamp";
 	
-	// Related Entiteis
+	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Audit properties
@@ -53,4 +53,31 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+
+	/******* Association management methods for bidirectional relationships **************/
+    // Promotion (many-to-one)
+	
+	public void function setPromotion(required Promotion Promotion) {
+	   variables.Promotion = arguments.Promotion;
+	   if(isNew() or !arguments.Promotion.hasPromotionCode(this)) {
+	       arrayAppend(arguments.Promotion.getPromotionCodes(),this);
+	   }
+	}
+	
+	public void function removePromotion(required Promotion Promotion) {
+       var index = arrayFind(arguments.Promotion.getPromotionCodes(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.Promotion.getPromotionCodes(),index);
+       }    
+       structDelete(variables,"Promotion");
+    }
+	
+    /************   END Association Management Methods   *******************/
+	
+	public boolean function isAssigned() {
+		//TODO: add logic for checking if assigned
+		
+		return false;
+	}
+
 }

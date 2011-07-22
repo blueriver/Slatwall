@@ -63,6 +63,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all" ;
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan" inverse="true";
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
@@ -72,9 +73,11 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	   if(isNull(variables.Products)){
 	       variables.Products = [];
 	   }
-	  
 	   if(isNull(variables.attributeSetAssignments)){
 	   		variables.attributeSetAssignments = [];
+	   }
+	   if(isNull(variables.promotionRewards)) {
+	       variables.promotionRewards = [];
 	   }
 	   
 	   return Super.init();
@@ -146,6 +149,15 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		
 		//Todo: not sure why the remove method is not deleting the child entity.  This line makes sure that the record is actually deleted.
 		getService("AttributeService").delete(attributeSetAssignment);
+	}
+	
+	// promotionRewards (one-to-many))
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.setProductType(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+	   arguments.promotionReward.removeProductType(this);
 	}
 	
     /************   END Association Management Methods   *******************/

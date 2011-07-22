@@ -40,10 +40,79 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="itemRewardQuantity" ormType="integer" validateNumeric="true";
+	property name="itemPercentageOff" ormType="integer" validateNumeric="true";
+	property name="itemAmountOff" ormType="big_decimal" validateNumeric="true";
+	property name="itemAmount" ormType="big_decimal" validateNumeric="true";
 	
-	// Related Entiteis
+	// Related Entities
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// sku (many-to-one)
+	
+	public void function setSku(required Sku sku) {
+		variables.sku = arguments.sku;
+		if(!arguments.sku.hasPromotionReward(this)) {
+			arrayAppend(arguments.sku.getPromotionRewards(),this);
+		}
+	}
+	
+	public void function removeSku(Sku sku) {
+	   if(!structKeyExists(arguments,"sku")) {
+	   		arguments.sku = variables.sku;
+	   }
+       var index = arrayFind(arguments.sku.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.sku.getPromotionRewards(), index);
+       }
+       structDelete(variables,"sku");
+    }
+    
+	// product (many-to-one)
+	
+	public void function setProduct(required Product product) {
+		variables.product = arguments.product;
+		if(!arguments.product.hasPromotionReward(this)) {
+			arrayAppend(arguments.product.getPromotionRewards(),this);
+		}
+	}
+	
+	public void function removeProduct(Product product) {
+	   if(!structKeyExists(arguments,"product")) {
+	   		arguments.product = variables.product;
+	   }
+       var index = arrayFind(arguments.product.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.product.getPromotionRewards(), index);
+       }
+       structDelete(variables,"product");
+    }
+    
+	// productType (many-to-one)
+	
+	public void function setProductType(required ProductType productType) {
+		variables.productType = arguments.productType;
+		if(!arguments.productType.hasPromotionReward(this)) {
+			arrayAppend(arguments.productType.getPromotionRewards(),this);
+		}
+	}
+	
+	public void function removeProductType(ProductType productType) {
+	   if(!structKeyExists(arguments,"productType")) {
+	   		arguments.productType = variables.productType;
+	   }
+       var index = arrayFind(arguments.productType.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.productType.getPromotionRewards(), index);
+       }
+       structDelete(variables,"productType");
+    }
+    
+    /************   END Association Management Methods   *******************/
+
 }

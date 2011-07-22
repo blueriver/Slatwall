@@ -40,20 +40,63 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	// Persistent Properties
 	property name="promotionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="activeFlag" ormtype="boolean";
-	property name="promotionName" ormtype="string";
+	property name="promotionName" validateRequired="true" ormtype="string";
 	property name="promotionSummary" ormtype="string" length="1000";
 	property name="promotionDescription" ormtype="string" length="4000";
-	property name="startDateTime" ormtype="timestamp";
-	property name="endDateTime" ormtype="timestamp";
+	property name="startDateTime" validateRequired="true" validateDate="true" ormtype="timestamp";
+	property name="endDateTime" validateRequired="true" validateDate="true" ormtype="timestamp";
+	property name="activeFlag" validateRequired="true" ormtype="boolean";
 	
-	// Related Entiteis
+	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
+	property name="promotionCodes" singularname="promotionCode" cfc="Promotion" fieldtype="one-to-many" fkcolumn="promotionID" inverse="true" cascade="all";    
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	
+	public Promotion function init(){
+		// set default collections for association management methods
+		if(isNull(variables.promotionCodes)){
+		   variables.promotionCodes = [];
+		}
+		if(isNull(variables.promotionRewards)) {
+			variables.promotionRewards = [];
+		}
+	   return Super.init();
+	}
+ 
+
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// promotionCodes (one-to-many)
+	
+	public void function addPromotionCode(required PromotionCode PromotionCode) {
+	   arguments.PromotionCode.setPromotion(this);
+	}
+	
+	public void function removePromotionCode(required PromotionCode PromotionCode) {
+	   arguments.PromotionCode.removePromotion(this);
+	}
+
+	// PromotionRewards (one-to-many)
+	
+	public void function addPromotionReward(required PromotionReward promotionReward) {
+	   arguments.promotionReward.setPromotion(this);
+	}
+	
+	public void function removePromotionReward(required PromotionReward promotionReward) {
+	   arguments.promotionReward.removePromotion(this);
+	}
+	
+    /************   END Association Management Methods   *******************/
+
+	public boolean function isAssigned() {
+		//TODO: add logic for checking if assigned
+		return false;
+	}
 	
 }
