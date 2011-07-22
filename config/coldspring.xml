@@ -2,15 +2,13 @@
 
 <beans default-autowire="byName">
 	
-	<!-- AOP Components -->
-	
-	
 	<!-- DAO Components -->
 	<bean id="accountDAO" class="Slatwall.com.dao.AccountDAO" />
 	<bean id="addressDAO" class="Slatwall.com.dao.AddressDAO" />
 	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
+	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
 	<bean id="logDAO" class="Slatwall.com.dao.LogDAO" />
 	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
 	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
@@ -61,6 +59,9 @@
 	<bean id="fulfillmentService" parent="parentService"  class="Slatwall.com.service.FulfillmentService">
         <property name="DAO"><ref bean="fulfillmentDAO" /></property>
 		<property name="settingService"><ref bean="settingService" /></property>
+    </bean>
+	<bean id="integrationService" parent="parentService"  class="Slatwall.com.service.IntegrationService">
+        <property name="DAO"><ref bean="integrationDAO" /></property>
     </bean>
 	<bean id="logService" parent="parentService"  class="Slatwall.com.service.LogService">
         <property name="DAO"><ref bean="LogDAO" /></property>

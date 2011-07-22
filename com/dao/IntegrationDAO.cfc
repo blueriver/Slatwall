@@ -36,30 +36,6 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false" {
+component extends="BaseDAO" {
 
-	public any function injectDataIntegrationToColdspringXML(required any xml) {
-		var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
-		var dirList = directoryList( dirLocation );
-		for(var i=1; i<= arrayLen(dirList); i++) {
-			var fileInfo = getFileInfo(dirList[i]);
-			if(fileInfo.type == "directory" && directoryExists("#fileInfo.path#/dao") ) {
-				var serviceName = Replace(listLast(dirList[i],"\/"),".cfc","");
-				var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Data").init();
-				var serviceMeta = getMetaData(service);
-				if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.integrationServices.DataInterface")) {
-					var DAOStruct = service.getDAOClasses(); 
-					for(var i=1; i<=arrayLen(arguments.xml.beans.bean); i++) {
-						if(structKeyExists(DAOStruct, arguments.xml.beans.bean[i].XmlAttributes.id)) {
-							arguments.xml.beans.bean[i].XmlAttributes.class = DAOStruct[arguments.xml.beans.bean[i].XmlAttributes.id];
-						}
-					}
-				}
-				
-			}
-		}
-		
-		return arguments.xml;
-	}
-	
 }
