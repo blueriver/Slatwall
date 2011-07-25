@@ -57,7 +57,7 @@ Notes:
 	</cffunction>
 		
 	<cffunction name="processCreditCard" returntype="Slatwall.com.utility.payment.CreditCardTransactionResponseBean">
-		<cfargument name="requestBean" type="Slatwall.com.utility.payment.CreditCardTransactionRequestBean" />
+		<cfargument name="requestBean" type="Slatwall.com.utility.payment.CreditCardTransactionRequestBean" required="true" />
 		
 		<cfset var q_auth = queryNew('empty') />
 		
