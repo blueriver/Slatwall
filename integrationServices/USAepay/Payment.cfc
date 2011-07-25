@@ -149,6 +149,53 @@ Notes:
 		<!--- Setup Response Bean --->
 		<cfset var responseBean = createObject("component", "Slatwall.com.utility.payment.CreditCardTransactionResponseBean").init() />
 		
+		<cfset responseBean.setData(q_auth) />
+		<cfset responseBean.setTransactionID(q_auth.UMrefNum) />
+		<cfset responseBean.setAuthorizationCode(q_auth.UMauthCode) />
+		<cfset responseBean.setStatusCode(q_auth.UMstatus) />
+		<cfset responseBean.addMessage(messageCode=q_auth.UMstatus, message=q_auth.UMresult) />
+		
+		<cfif q_auth.UMstatus neq "Approved">
+			<cfset responseBean.getErrorBean().addError(name=q_auth.UMstatus, message=q_auth.UMresult) />
+		<cfelse>
+			<!--- Place the amounts into the response bean --->
+			<cfswitch expression="#arguments.requestBean.getTransactionType()#" >
+				<cfcase value="authorize">
+					<cfset responseBean.setAmountAuthorized(arguments.requestBean.getTransactionAmount()) />
+				</cfcase>
+				<cfcase value="authorizeAndCharge">
+					<cfset responseBean.setAmountAuthorized(arguments.requestBean.getTransactionAmount()) />
+					<cfset responseBean.setAmountCharged(arguments.requestBean.getTransactionAmount()) />
+				</cfcase>
+				<cfcase value="chargePreAuthorization">
+					<cfset responseBean.setAmountCharged(arguments.requestBean.getTransactionAmount()) />
+				</cfcase>
+				<cfcase value="credit">
+					<cfset responseBean.setAmountCredited(arguments.requestBean.getTransactionAmount()) />
+				</cfcase>
+			</cfswitch>
+		</cfif>
+		
+		<!--- Translate AVS --->
+		<cfif q_auth.UMavsResultCode eq "YYY" or q_auth.UMavsResultCode eq "Y" or q_auth.UMavsResultCode eq "YYA" or q_auth.UMavsResultCode eq "YYD">
+			<cfset responseBean.setAVSCode("Y") />
+		<cfelseif q_auth.UMavsResultCode eq "NYZ" or q_auth.UMavsResultCode eq "Z">
+			<cfset responseBean.setAVSCode("Z") />
+		<cfelseif q_auth.UMavsResultCode eq "YNA" or q_auth.UMavsResultCode eq "A" or q_auth.UMavsResultCode eq "YNY">
+			<cfset responseBean.setAVSCode("A") /> 
+		<cfelseif q_auth.UMavsResultCode eq "NNN" or q_auth.UMavsResultCode eq "N" or q_auth.UMavsResultCode eq "NN">
+			<cfset responseBean.setAVSCode("N") /> 
+		<cfelse>
+			<cfset responseBean.setAVSCode("E") />
+		</cfif>
+		
+		<!--- Translate CVV Matching --->
+		<cfif q_auth.UMcvv2ResultCode eq "M">
+			<cfset responseBean.setSecurityCodeMatch(true) />
+		<cfelse>
+			<cfset responseBean.setSecurityCodeMatch(false) />
+		</cfif>
+		
 		<cfreturn responseBean />
 	</cffunction>
 	
