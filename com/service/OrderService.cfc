@@ -437,7 +437,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
 				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
-				updateOrderTax(arguments.orderFulfillment.getOrder());
+				getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 			}
 			
 			// Validate & Save Address
@@ -709,7 +709,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		getPromotionService().updateOrderAmountsWithPromotions(arguments.order);
 		// Re-Calculate tax now that the new promotions have been applied
 		getTaxService().updateOrderAmountsWithTaxes(arguments.order);
-		//updateOrderTax(arguments.order);
 	}
 
 }

@@ -47,7 +47,13 @@ Notes:
 					<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
 					<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
 					<dd class="quantity">#NumberFormat(local.orderItem.getQuantity(),"0")#</dd>
-					<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
+					<cfif local.orderItem.getDiscountAmount()>
+						<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
+						<dd class="discount">- #DollarFormat(local.orderItem.getDiscountAmount())#</dd>
+						<dd class="extendedAfterDiscount">#DollarFormat(local.orderItem.getExtendedPriceAfterDiscount())#</dd>
+					<cfelse>
+						<dd class="extendedAfterDiscount">#DollarFormat(local.orderItem.getExtendedPriceAfterDiscount())#</dd>
+					</cfif>
 				</dl>
 			</cfloop>
 			<dl class="totals">
@@ -57,6 +63,10 @@ Notes:
 				<dd class="delivery">#DollarFormat($.slatwall.cart().getFulfillmentTotal())#</dd>
 				<dt class="tax">Tax</dt>
 				<dd class="tax">#DollarFormat($.slatwall.cart().getTaxTotal())#</dd>
+				<cfif $.slatwall.cart().getDiscountTotal() gt 0>
+					<dt class="discount">Discount</dt>
+					<dd class="discount">- #DollarFormat($.slatwall.cart().getDiscountTotal())#</dd>
+				</cfif>
 				<dt class="total">Total</dt>
 				<dd class="total">#DollarFormat($.slatwall.cart().getTotal())#</dd>
 			</dl>
