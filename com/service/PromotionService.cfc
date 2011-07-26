@@ -164,4 +164,144 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return deleted;
 	}
 	
+	// ----------------- START: Apply Promotion Logic ------------------------- 
+	
+	public void function updateOrderAmountsWithPromotions(required any order) {
+		// Get All of the active current promotions
+		var promotions = getDAO().getAllActivePromotions();
+		
+		// Clear all previously applied promotions for order items
+		for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
+			for(var pa=1; pa<=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa++) {
+				arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
+			}
+		}
+		// TODO: Clear all previously applied promotions from fulfillments
+		// TODO: Clear all previously applied promotions from order
+							
+		
+		// Loop over each promotion to determine if it applies to this order
+		for(var p=1; p<=arrayLen(promotions); p++) {
+			var promotion = promotions[p];
+			
+			var qc = getPromotionQualificationCount(promotion=promotion, order=arguments.order);
+			
+			if(qc >= 0) {
+				for(var r=1; r<=arrayLen(promotions[p].getPromotionRewards()); r++) {
+					var reward = promotions[p].getPromotionRewards()[r];
+					
+					// If this reward is a product then run this logic
+					if(reward.getRewardType() eq "product") {
+						// Loop over each of the items to see if the promotion gets applied
+						for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+							
+							// Get The order Item
+							var orderItem = arguments.order.getOrderItems()[i];
+							
+							if(
+								( isNull(reward.getProductType()) || orderItem.getProductType().getProductTypeID() eq reward.getProductType().getProductTypeID() )
+								&&
+								( isNull(reward.getProduct()) || orderItem.getSku().getProduct().getProductID() eq reward.getProduct().getProductID() )
+								&&
+								( isNull(reward.getSku()) || orderItem.getSku().getSkuID() eq reward.getSku().getSkuID() )
+							) {
+								// Now that we know that this orderItem gets this reward we can figure out the amount
+								var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+								
+								var addNew = false;
+								
+								// If there aren't any promotions applied to this order item yet, then we can add this one
+								if(!arrayLen(orderItem.getAppliedPromotions())) {
+									addNew = true;
+								// If one has already been set then we just need to check if this new discount amount is greater
+								} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+									// If the promotion is the same, then we just update the amount
+									if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
+										orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+									// If the promotion is a different then remove the original and set addNew to true
+									} else {
+										orderItem.getAppliedPromotions()[1].removeOrderItem();
+										addNew = true;
+									}
+								}
+								
+								// Add the new appliedPromotion
+								if(addNew) {
+									var newAppliedPromotion = this.newOrderItemAppliedPromotion();
+									newAppliedPromotion.setPromotion(promotions[p]);
+									newAppliedPromotion.setOrderItem(orderItem);
+									newAppliedPromotion.setDiscountAmount(discountAmount);
+								}
+							}
+						}
+					} else if(reward.getRewardType() eq "fulfillment") {
+						// TODO: Allow for fulfillment Rewards
+					} else if(reward.getRewardType() eq "order") {
+						// TODO: Allow for order Rewards
+					}
+				}
+			}
+		}
+	}
+	
+	private numeric function getDiscountAmount(required any reward, required any OriginalAmount) {
+		var discountAmount = 0;
+		
+		if(!isNull(reward.getItemAmount())) {
+			discountAmount = reward.getItemAmount();
+		} else if( !isNull(reward.getItemAmountOff()) ) {
+			if(reward.getItemAmountOff() > arguments.originalAmount) {
+				discountAmount = arguments.originalAmount;
+			} else {
+				discountAmount = arguments.originalAmount - reward.getItemAmountOff();
+			}
+		} else if( !isNull(reward.getItemPercentageOff()) ) {
+			discountAmount = arguments.originalAmount * (reward.getItemPercentageOff()/100);
+		}
+		
+		return discountAmount;
+	}
+	
+	private numeric function getPromotionQualificationCount(required any promotion, required any order) {
+		var qc = -1;
+		var codesOK = false;
+		var accountOK = false;
+		
+		
+		// Verify Promo Code Requirements 
+		if(!arrayLen(arguments.promotion.getPromotionCodes())) {
+			codesOK = true;
+		} else {
+			// TODO: Check order for a required promotion code
+		}
+		
+		// TODO: Verify Promo Account Requirements, for now this is just set to true
+		accountOK = true;
+		
+		if(codesOK && accountOK) {
+			qc = 0;
+		}
+		
+		return qc;
+	}
+	
+	// ----------------- END: Apply Promotion Logic -------------------------
+		 
+	/*
+	  I needed a place to write down some notes about how applied promotions will be reset, and this is it.
+	  Promotions applied on orderItem, fulfillment & order are easy because they can be calculated at the time of the order
+	  However we also need to keep a table of promotions applied to products and customers so that on the listing page we can
+	  query a discount amount to order by price
+	  
+	  So now we need a method to reset all of the discount amounts.
+	  
+	  public void function resetPromotionsAppled(string promotionID, string productTypeID, string productID, string skuID, string accountID) {
+	  
+	  		// Whichever of the arguments get passed in, we need to get the promotionID's that are effected by that item, and then re-call this method with that promotions ID
+	  		
+	  		// When this method is called with a promotionID, it will delete everything in the promotionsApplied table that is sku or sku + customer and recalculate the amount
+	  }
+	  
+	*/
+		
 }

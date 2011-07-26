@@ -39,15 +39,22 @@ Notes:
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="accountService";
-	property name="sessionService";
-	property name="paymentService";
 	property name="addressService";
+	property name="paymentService";
+	property name="promotionService";
+	property name="sessionService";
 	property name="taxService";
 	property name="utilityFormService";
 	property name="utilityTagService";
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
+		
+		// Set the defaul showing to 25
+		if(!structKeyExists(arguments.data, "P:Show")) {
+			arguments.data["P:Show"] = 25;
+		}
+		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);	
 		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);
@@ -111,11 +118,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
  			}
 		}
 		return getOrderSmartList(params);
-	}
-	
-	public any function exportOrders(required struct data) {
-		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
-		return getService("utilityService").export(searchQuery);
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
@@ -183,6 +185,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 		}
+		
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
 				
 		save(arguments.order);
 	}
@@ -587,7 +592,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return arguments.orderPayment;
 	}
 	
-	/*********  Order Actions ***************/
+	/********* START: Order Actions ***************/
 	
 	public any function applyOrderAction(required string orderID, required string orderActionTypeID) {
 		var order = this.getOrder(arguments.orderID);
@@ -639,9 +644,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return response;
 	}
 	
+	public any function exportOrders(required struct data) {
+		var searchQuery = getDAO().getExportQuery(argumentCollection=arguments.data);
+		return getService("utilityService").export(searchQuery);
+	}
+	
+	/********* END: Order Actions ***************/
+	
 	public void function updateOrderItems(required any order, required struct data) {
-		var fu = getService("utilityFormService");
-		var dataCollections = fu.buildFormCollections(arguments.data);
+		var dataCollections = arguments.data.structuredData;
 		var orderItems = arguments.order.getOrderItems();
 		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
 			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID())) {
@@ -657,25 +668,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 		}
-	}
-	
-	public void function removeAccountSpecificOrderDetails(required any order) {
 		
-		// Loop over fulfillments and remove any account specific details
-		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
-			if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodID() == "shipping") {
-				arguments.order.getOrderFulfillments()[i].setShippingAddress(javaCast("null",""));
-			}
-		}
-		
-		// TODO: Loop over payments and remove any account specific details 
-	}
-	
-	public void function updateOrderTax(required any order) {
-		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
-			var itemTax = getTaxService().calculateOrderItemTax(arguments.order.getOrderItems()[i]);
-			arguments.order.getOrderItems()[i].setTaxAmount(itemTax);
-		}
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
 	}
 	
 	public void function clearCart() {
@@ -691,5 +686,36 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			getDAO().delete(cart);
 		}
 	}
+	
+	public void function removeAccountSpecificOrderDetails(required any order) {
+		
+		// Loop over fulfillments and remove any account specific details
+		for(var i=1; i<=arrayLen(arguments.order.getOrderFulfillments()); i++) {
+			if(arguments.order.getOrderFulfillments()[i].getFulfillmentMethodID() == "shipping") {
+				arguments.order.getOrderFulfillments()[i].setShippingAddress(javaCast("null",""));
+			}
+		}
+		
+		// TODO: Loop over payments and remove any account specific details 
+		
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
+	}
+	
+	public void function recalculateOrderAmounts(required any order) {
+		// Re-Calculate the 'amounts' based on permotions ext.
+		getPromotionService().updateOrderAmountsWithPromotions(arguments.order);
+		// Re-Calculate tax now that the new promotions have been applied
+		updateOrderTax(arguments.order);
+	}
+	
+	public void function updateOrderTax(required any order) {
+		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
+			var itemTax = getTaxService().calculateOrderItemTax(arguments.order.getOrderItems()[i]);
+			arguments.order.getOrderItems()[i].setTaxAmount(itemTax);
+		}
+	}
+	
+	
 	
 }

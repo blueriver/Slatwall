@@ -57,6 +57,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";  
 
 	public any function init() {
 		
@@ -76,6 +77,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(isNull(variables.attributeValues)) {
 		   variables.attributeValues = [];
 		}
+		if(isNull(variables.appliedPromotions)) {
+		   variables.appliedPromotions = [];
+		}
 		
 		return super.init();
 	}
@@ -90,6 +94,20 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	public numeric function getExtendedPrice() {
 		return getPrice()*getQuantity();
+	}
+	
+	public numeric function getExtendedPriceAfterDiscount() {
+		return getExtendedPrice() - getDiscountAmount();
+	}
+	
+	public numeric function getDiscountAmount() {
+		if(!structKeyExists(variables,"discountAmount")) {
+			variables.discountAmount = 0;
+			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+				variables.discountAmount += getAppliedPromotions()[i].getDiscountAmount();
+			}
+		}
+		return variables.discountAmount;
 	}
 	
 	public numeric function getQuantityDelivered() {
@@ -122,7 +140,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Order (many-to-one)
 	
-	public void function setOrder(required Order Order) {
+	public void function setOrder(required Order order) {
 		variables.order = arguments.order;
 		if(isNew() || !arguments.order.hasOrderItem(this)) {
 			arrayAppend(arguments.order.getOrderItems(),this);
@@ -188,6 +206,16 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     
     public void function removeAttributeValue(required OrderItemAttributeValue attributeValue) {
     	arguments.attributeValue.removeOrderItem(this);
+    }
+    
+    // Applied Promotions (one-to-many)
+    
+    public void function addAppliedPromotion(required AppliedPromotionOrderItem appliedPromotionOrderItem) {
+    	arguments.appliedPromotionOrderItem.setOrderItem(this);
+    }
+    
+    public void function removeAppliedPromotion(required OrderItemAttributeValue appliedPromotionOrderItem) {
+    	arguments.appliedPromotionOrderItem.removeOrderItem(this);
     }
     
 	

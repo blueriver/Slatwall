@@ -79,6 +79,12 @@ component extends="BaseService" accessors="true" {
 
 	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
+		
+		// Set the defaul showing to 25
+		if(!structKeyExists(arguments.data, "P:Show")) {
+			arguments.data["P:Show"] = 25;
+		}
+		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);

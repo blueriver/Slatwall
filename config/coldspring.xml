@@ -74,6 +74,7 @@
 		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
+		<property name="promotionService"><ref bean="promotionService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="taxService"><ref bean="taxService" /></property>
 		<property name="utilityFormService"><ref bean="utilityFormService" /></property>

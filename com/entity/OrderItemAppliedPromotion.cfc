@@ -36,45 +36,35 @@
 Notes:
 
 */
-component displayname="Promotion Reward" entityname="SlatwallPromotionReward" table="SlatwallPromotionReward" persistent="true" extends="BaseEntity" discriminatorColumn="rewardType" {
+component displayname="Promotion Applied Order Item" entityname="SlatwallOrderItemAppliedPromotion" table="SlatwallPromotionApplied" persistent="true" extends="PromotionApplied" discriminatorValue="orderItem" {
 	
 	// Persistent Properties
-	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Entities
-	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
-	// Special Related Discriminator Property
-	property name="rewardType" length="255" insert="false" update="false";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
-	// Promotion (many-to-one)
-	
-	public void function setPromotion(required Promotion promotion) {
-		variables.promotion = arguments.promotion;
-		if(!arguments.promotion.hasPromotionReward(this)) {
-			arrayAppend(arguments.promotion.getPromotionRewards(),this);
+	// Order (many-to-one)
+	public void function setOrderItem(required OrderItem orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() || !arguments.orderItem.hasAppliedPromotion(this)) {
+			arrayAppend(arguments.orderItem.getAppliedPromotions(),this);
 		}
 	}
 	
-	public void function removePromotion(Promotion promotion) {
-	   if(!structKeyExists(arguments,"promotion")) {
-	   		arguments.promotion = variables.promotion;
-	   }
-       var index = arrayFind(arguments.promotion.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.promotion.getPromotionRewards(), index);
-       }
-       structDelete(variables,"promotion");
+	public void function removeOrderItem(OrderItem orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAppliedPromotions(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(),index);
+		}    
+		structDelete(variables,"orderItem");
     }
     
-    /************   END Association Management Methods   *******************/
-
+	/************   END Association Management Methods   *******************/
 }

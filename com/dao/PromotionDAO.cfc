@@ -37,5 +37,9 @@ Notes:
 
 */
 component extends="BaseDAO" {
-			
+	
+	public array function getAllActivePromotions() {
+		return ormExecuteQuery(" from SlatwallPromotion sp where sp.startDateTime < ? and sp.endDateTime > ? and sp.activeFlag = 1", [now(), now()]);
+	}
+		
 }
