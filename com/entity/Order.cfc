@@ -130,6 +130,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return taxTotal;
 	}
 	
+	public numeric function getItemDiscountAmountTotal() {
+		var discountTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			discountTotal += getOrderItems()[i].getDiscountAmount();
+		}
+		return discountTotal;
+	}
+	
+	public numeric function getFulfillmentDiscountAmountTotal() {
+		return 0;
+	}
+	
+	public numeric function getOrderDiscountAmountTotal() {
+		return 0;
+	}
+	
+	public numeric function getDiscountTotal() {
+		return getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal();
+	}
+	
 	public numeric function getFulfillmentTotal() {
 		var fulfillmentTotal = 0;
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
@@ -139,7 +159,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getTotal() {
-		return getSubtotal() + getTaxTotal() + getFulfillmentTotal();
+		return getSubtotal() + getTaxTotal() + getFulfillmentTotal() - getDiscountTotal();
 	}
 	
 	public void function removeAllOrderItems() {

@@ -38,8 +38,8 @@ Notes:
 */
 component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 	
-	property name="errorBean" type="Slatwall.com.utility.ErrorBean";
-	property name="updateKeys" type="string";
+	property name="errorBean" type="Slatwall.com.utility.ErrorBean" persistent="false";
+	property name="updateKeys" type="string" persistent="false";
 	
 	public any function init() {
 		// Place reference to mura scope in entity

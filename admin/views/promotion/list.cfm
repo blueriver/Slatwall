@@ -58,6 +58,7 @@ Notes:
 				<td class="varWidth">#local.Promotion.getPromotionName()#</td>
 				<td>#dateFormat(local.Promotion.getStartDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.Promotion.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#</td>
 				<td>#dateFormat(local.Promotion.getEndDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.Promotion.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#</td>
+				<td>#yesNoFormat(local.Promotion.getActiveFlag())#</td>
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:promotion.edit" querystring="promotionID=#local.promotion.getPromotionID()#" class="edit" type="list">            

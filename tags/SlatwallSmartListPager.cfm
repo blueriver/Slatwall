@@ -5,13 +5,7 @@
 <cfset variables.fw = caller.this />
 
 <cfif attributes.showValue eq "">
-	<cfif structKeyExists(url, "P:Show")>
-		<cfset attributes.showValue = url["P:Show"] />
-	<cfelseif structKeyExists(form, "P:Show")>
-		<cfset attributes.showValue = form["P:Show"] />
-	<cfelse>
-		<cfset attributes.showValue = "10" />
-	</cfif>
+	<cfset attributes.showValue = attributes.smartList.getPageRecordsShow() />
 </cfif>
 
 <cfif thisTag.executionMode is "start">
