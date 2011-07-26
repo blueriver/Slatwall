@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" table="SlatwallPromotionApplied" persistent="true" extends="BaseEntity" discriminatorColumn="rewardType" {
+component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" table="SlatwallPromotionApplied" persistent="true" extends="BaseEntity" discriminatorColumn="appliedType" {
 	
 	// Persistent Properties
 	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -47,7 +47,7 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	property name="promotionCode" cfc="PromotionCode" fieldtype="many-to-one" fkcolumn="promotionCodeID";
 	
 	// Special Related Discriminator Property
-	property name="rewardType" length="255" insert="false" update="false";
+	property name="appliedType" length="255" insert="false" update="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
