@@ -60,7 +60,7 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function getProductPages(required string siteID, string returnFormat="iterator") {
-		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc" });
+		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc",maxItems=0 });
 		
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
 		
