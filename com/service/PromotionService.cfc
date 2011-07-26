@@ -169,7 +169,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function updateOrderAmountsWithPromotions(required any order) {
 		// Get All of the active current promotions
 		var promotions = getDAO().getAllActivePromotions();
-		
+
 		// Clear all previously applied promotions for order items
 		for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
 			for(var pa=1; pa<=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa++) {
@@ -234,11 +234,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 								}
 							}
 						}
+						
 					} else if(reward.getRewardType() eq "fulfillment") {
 						// TODO: Allow for fulfillment Rewards
 					} else if(reward.getRewardType() eq "order") {
 						// TODO: Allow for order Rewards
 					}
+					
 				}
 			}
 		}

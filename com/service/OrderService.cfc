@@ -703,19 +703,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public void function recalculateOrderAmounts(required any order) {
+		//TODO: add a verification to make sure that this doesn't get called from a closed order
+		
 		// Re-Calculate the 'amounts' based on permotions ext.
 		getPromotionService().updateOrderAmountsWithPromotions(arguments.order);
 		// Re-Calculate tax now that the new promotions have been applied
-		updateOrderTax(arguments.order);
+		getTaxService().updateOrderAmountsWithTaxes(arguments.order);
+		//updateOrderTax(arguments.order);
 	}
-	
-	public void function updateOrderTax(required any order) {
-		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
-			var itemTax = getTaxService().calculateOrderItemTax(arguments.order.getOrderItems()[i]);
-			arguments.order.getOrderItems()[i].setTaxAmount(itemTax);
-		}
-	}
-	
-	
-	
+
 }

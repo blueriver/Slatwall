@@ -40,24 +40,39 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	property name="addressService" type="any";
 
-	public numeric function calculateOrderItemTax(required any orderItem) {
-		var taxAmount = 0;
+	public void function updateOrderAmountsWithTaxes(required any order) {
 		
-		var fulfillment = arguments.orderItem.getOrderFulfillment();
+		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
+			var orderItem = arguments.order.getOrderItems()[i];
+			
+			// Remove all existing tax calculations
+			for(var ta=1; ta<=arrayLen(orderItem.getAppliedTaxes()); ta++) {
+				orderItem.getAppliedTaxes()[ta].removeOrderItem();
+			}
+			
+			// Get this items fulfillment
+			var fulfillment = orderItem.getOrderFulfillment();
 		
-		if(fulfillment.getFulfillmentMethodID() == "shipping") {
-			var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
-			var address = fulfillment.getShippingAddress();
-			if(!isNull(address)) {
-				for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
-					if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
-						taxAmount += arguments.orderItem.getExtendedPrice() * (taxCategory.getTaxCategoryRates()[i].getTaxRate() / 100);
+			// If the method is shipping then apply taxes
+			if(fulfillment.getFulfillmentMethodID() == "shipping") {
+				
+				// TODO: This is a hack because we only have one tax category for products right now
+				var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
+				
+				var address = fulfillment.getShippingAddress();
+				if(!isNull(address)) {
+					for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
+						if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
+							var newAppliedTax = this.newOrderItemAppliedTax();
+							newAppliedTax.setTaxAmount(orderItem.getExtendedPriceAfterDiscount() * (taxCategory.getTaxCategoryRates()[i].getTaxRate() / 100));
+							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[i].getTaxRate());
+							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[i]);
+							newAppliedTax.setOrderItem(orderItem);
+						}
 					}
 				}
 			}
 		}
-		
-		return numberFormat(taxAmount,".00");
 	}
-	
+
 }
