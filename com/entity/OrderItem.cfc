@@ -42,7 +42,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="big_decimal";
 	property name="quantity" ormtype="integer";
-	property name="taxAmount" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -57,13 +56,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
-	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";  
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="appliedTaxes" singularname="appliedTax" cfc="OrderItemAppliedTax" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 
 	public any function init() {
-		
-		if(isNull(getTaxAmount())) {
-			setTaxAmount(0);
-		}
 		
 		// set status to new by default
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
@@ -80,6 +76,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(isNull(variables.appliedPromotions)) {
 		   variables.appliedPromotions = [];
 		}
+		if(isNull(variables.appliedTaxes)) {
+		   variables.appliedTaxes = [];
+		}
 		
 		return super.init();
 	}
@@ -93,11 +92,21 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	}
 	
 	public numeric function getExtendedPrice() {
-		return getPrice()*getQuantity();
+		return getPrice() * getQuantity();
 	}
 	
 	public numeric function getExtendedPriceAfterDiscount() {
 		return getExtendedPrice() - getDiscountAmount();
+	}
+	
+	public numeric function getTaxAmount() {
+		if(!structKeyExists(variables,"taxAmount")) {
+			variables.taxAmount = 0;
+			for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
+				variables.taxAmount += getAppliedTaxes()[i].getTaxAmount();
+			}
+		}
+		return variables.taxAmount;
 	}
 	
 	public numeric function getDiscountAmount() {
@@ -134,6 +143,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			customizations &= "#getAttributeValues()[i].getAttribute().getAttributeName()#: #getAttributeValues()[i].getAttributeValue()#";
 		}
 		return customizations;
+	}
+	
+	public any function getActionOptions() {
+		var smartList = getService("orderService").getOrderItemStatusActionSmartList();
+		smartList.addFilter("orderItemStatusType_typeID", getOrderItemStatusType().getTypeID());
+		return smartList.getRecords();
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/
@@ -210,20 +225,24 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     
     // Applied Promotions (one-to-many)
     
-    public void function addAppliedPromotion(required AppliedPromotionOrderItem appliedPromotionOrderItem) {
-    	arguments.appliedPromotionOrderItem.setOrderItem(this);
+    public void function addAppliedPromotion(required OrderItemAppliedPromotion orderItemAppliedPromotion) {
+    	arguments.orderItemAppliedPromotion.setOrderItem(this);
     }
     
-    public void function removeAppliedPromotion(required OrderItemAttributeValue appliedPromotionOrderItem) {
-    	arguments.appliedPromotionOrderItem.removeOrderItem(this);
+    public void function removeAppliedPromotion(required OrderItemAppliedPromotion orderItemAppliedPromotion) {
+    	arguments.orderItemAppliedPromotion.removeOrderItem(this);
     }
     
-	
+    // Applied Promotions (one-to-many)
+    
+    public void function addAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
+    	arguments.orderItemAppliedTax.setOrderItem(this);
+    }
+    
+    public void function removeAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
+    	arguments.orderItemAppliedTax.removeOrderItem(this);
+    }
+    
 	/************   END Association Management Methods   *******************/
 	
-	public any function getActionOptions() {
-		var smartList = getService("orderService").getOrderItemStatusActionSmartList();
-		smartList.addFilter("orderItemStatusType_typeID", getOrderItemStatusType().getTypeID());
-		return smartList.getRecords();
-	}
 }

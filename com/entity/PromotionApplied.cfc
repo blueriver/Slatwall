@@ -46,37 +46,23 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	property name="promotionCode" cfc="PromotionCode" fieldtype="many-to-one" fkcolumn="promotionCodeID";
 	
-	// Special Related Discriminator Property
-	property name="appliedType" length="255" insert="false" update="false";
-	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// Special Related Discriminator Property
+	property name="appliedType" length="255" insert="false" update="false";
 	
-	// Promotion (many-to-one)
+	/*
+	List of Discriminator Values and their respective cfc's
 	
-	public void function setPromotion(required Promotion promotion) {
-		variables.promotion = arguments.promotion;
-		if(!arguments.promotion.hasPromotionReward(this)) {
-			arrayAppend(arguments.promotion.getPromotionRewards(),this);
-		}
-	}
+	orderItem 			| OrderItemAppliedPromotion.cfc
+	orderFulfillment 	| OrderFulfillmentAppliedPromotion.cfc
+	order 				| OrderAppliedPromotion.cfc
+	orderPromotionCode 	| OrderAppliedPromotionCode.cfc
 	
-	public void function removePromotion(Promotion promotion) {
-	   if(!structKeyExists(arguments,"promotion")) {
-	   		arguments.promotion = variables.promotion;
-	   }
-       var index = arrayFind(arguments.promotion.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.promotion.getPromotionRewards(), index);
-       }
-       structDelete(variables,"promotion");
-    }
-    
-    /************   END Association Management Methods   *******************/
+	*/
 
 }

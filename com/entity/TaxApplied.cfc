@@ -36,35 +36,31 @@
 Notes:
 
 */
-component displayname="Order Item Applied Promotion" entityname="SlatwallOrderItemAppliedPromotion" table="SlatwallPromotionApplied" persistent="true" extends="PromotionApplied" discriminatorValue="orderItem" {
+component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="appliedType" {
 	
 	// Persistent Properties
-	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="taxAmount" ormtype="big_decimal";
+	property name="taxRate" ormtype="big_decimal";
 	
-	// Related Entities
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	// Related Properties
+	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRate";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// Special Related Discriminator Property
+	property name="appliedType" length="255" insert="false" update="false";
 	
-	// Order (many-to-one)
-	public void function setOrderItem(required OrderItem orderItem) {
-		variables.orderItem = arguments.orderItem;
-		if(isNew() || !arguments.orderItem.hasAppliedPromotion(this)) {
-			arrayAppend(arguments.orderItem.getAppliedPromotions(),this);
-		}
-	}
+	/*
+	List of Discriminator Values and their respective cfc's
 	
-	public void function removeOrderItem(OrderItem orderItem) {
-		if(!structKeyExists(arguments, "orderItem")) {
-			arguments.orderItem = variables.orderItem;
-		}
-		var index = arrayFind(arguments.orderItem.getAppliedPromotions(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(),index);
-		}    
-		structDelete(variables,"orderItem");
-    }
-    
-	/************   END Association Management Methods   *******************/
+	orderItem 			| OrderItemAppliedTax.cfc
+	orderFulfillment 	| OrderFulfillmentAppliedTax.cfc
+	order 				| OrderAppliedTax.cfc
+	
+	*/
 }

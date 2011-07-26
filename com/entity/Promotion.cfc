@@ -50,7 +50,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" inverse="true" cascade="all";    
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="Order Item Applied Promotion" entityname="SlatwallOrderItemAppliedPromotion" table="SlatwallPromotionApplied" persistent="true" extends="PromotionApplied" discriminatorValue="orderItem" {
+component displayname="Order Item Applied Tax" entityname="SlatwallOrderItemAppliedTax" table="SlatwallTaxApplied" persistent="true" extends="TaxApplied" discriminatorValue="orderItem" {
 	
 	// Persistent Properties
-	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Entities
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
@@ -50,8 +50,8 @@ component displayname="Order Item Applied Promotion" entityname="SlatwallOrderIt
 	// Order (many-to-one)
 	public void function setOrderItem(required OrderItem orderItem) {
 		variables.orderItem = arguments.orderItem;
-		if(isNew() || !arguments.orderItem.hasAppliedPromotion(this)) {
-			arrayAppend(arguments.orderItem.getAppliedPromotions(),this);
+		if(isNew() || !arguments.orderItem.hasAppliedTaxes(this)) {
+			arrayAppend(arguments.orderItem.getAppliedTaxes(),this);
 		}
 	}
 	
@@ -59,9 +59,9 @@ component displayname="Order Item Applied Promotion" entityname="SlatwallOrderIt
 		if(!structKeyExists(arguments, "orderItem")) {
 			arguments.orderItem = variables.orderItem;
 		}
-		var index = arrayFind(arguments.orderItem.getAppliedPromotions(),this);
+		var index = arrayFind(arguments.orderItem.getAppliedTaxes(),this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(),index);
+			arrayDeleteAt(arguments.orderItem.getAppliedTaxes(),index);
 		}    
 		structDelete(variables,"orderItem");
     }
