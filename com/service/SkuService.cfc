@@ -155,6 +155,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	          	if(isNumeric(local.skuStruct.shippingWeight)) {
 	                local.thisSku.setShippingWeight(local.skuStruct.shippingWeight);
 	            }
+	            // set the remoteID if it was passed in
+	            if(len(trim(local.skuStruct.remoteID))) {
+	            	local.thisSku.setRemoteID(local.skuStruct.remoteID);
+	            }
 	            local.thisSku.setImageFile(generateImageFileName(local.thisSku));
 	         } else {
 	         	// this is a new sku added from product.edit form (no skuID yet)
