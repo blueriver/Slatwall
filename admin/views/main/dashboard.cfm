@@ -54,7 +54,7 @@ Notes:
 				<tr>
 					<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
 					<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-					<td>#DateFormat(local.product.getProductType().getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getProductType().getModifiedDateTime(), "HH:MM:SS")#</td>
+					<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 					<td class="administration">
 						<ul class="one">
 						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="viewDetails" type="list">
