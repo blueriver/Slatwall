@@ -64,12 +64,15 @@ Notes:
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
+				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
+					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
+				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.QC")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.QIA")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.QEA")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.sku.QC")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.sku.QIA")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.sku.QEA")#</th>
 				</cfif>
 				<cfif rc.edit>
 				  <th class="administration">&nbsp;</th>
@@ -139,6 +142,9 @@ Notes:
 						#local.thisSku.getShippingWeight()#
 					</cfif>
 				</td>
+				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
+					<td><cf_SlatwallPropertyDisplay object="#local.thisSku#" fieldName="skus[#local.skuCount#].remoteID" property="remoteID" edit="#rc.edit#" displaytype="plain"></td>
+				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
 				<td>#local.thisSku.getQOH()#</td>
 				<td>#local.thisSku.getQEXP()#</td>
