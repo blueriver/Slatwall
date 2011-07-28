@@ -265,14 +265,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				variables.currentPageDeclaration = arguments.data[i];
 			}
 		}
-		if(structKeyExists(arguments.data, "keyword")){
-			var KeywordList = Replace(arguments.data.Keyword," ","^","all");
-			KeywordList = Replace(KeywordList,"%20","^","all");
-			KeywordList = Replace(KeywordList,"+","^","all");
-			for(var i=1; i <= listLen(KeywordList, "^"); i++) {
-				arrayAppend(variables.Keywords, listGetAt(KeywordList, i, "^"));
-			}
+		if(structKeyExists(arguments.data, "keyword")) {
+			arguments.data.keywords = arguments.data.keyword;
 		}
+		if(structKeyExists(arguments.data, "keywords")){
+			var KeywordList = Replace(arguments.data.Keyword," ",",","all");
+			KeywordList = Replace(KeywordList,"%20",",","all");
+			KeywordList = Replace(KeywordList,"+",",","all");
+			variables.Keywords = listToArray(KeywordList);
+		}
+		
 	}
 	
 	public void function addHQLParam(required string paramName, required string paramValue) {
