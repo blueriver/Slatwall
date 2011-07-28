@@ -126,12 +126,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
 			
 			// TODO: This is a hack until we setup each order fulfillment to have it's own "ship from" 
-			ratesRequestBean.setShipFromCompany("Nytro Multisport");
-			ratesRequestBean.setShipFromStreetAddress("137 2ND Street");
-			ratesRequestBean.setShipFromCity("Encinitas");
-			ratesRequestBean.setShipFromStateCode("CA");
-			ratesRequestBean.setShipFromPostalCode("92024");
-			ratesRequestBean.setShipFromCountryCode("US");
+			ratesRequestBean.setShipFromCompany("");
+			ratesRequestBean.setShipFromStreetAddress("");
+			ratesRequestBean.setShipFromCity("");
+			ratesRequestBean.setShipFromStateCode("");
+			ratesRequestBean.setShipFromPostalCode("");
+			ratesRequestBean.setShipFromCountryCode("");
 			
 			//ratesRequestBean.setShipFromWithAddress();
 			
@@ -160,9 +160,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
 								var option = this.newOrderShippingMethodOption();
 								option.setShippingMethod(shippingMethods[m]);
-								option.setTotalCharge(ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge());
 								option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
 								option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
+								
+								// Set the rate
+								if( !isNull( shippingMethods[m].getShippingRateIncreasePercentage() ) && shippingMethods[m].getShippingRateIncreasePercentage() > 0) {
+									option.setTotalCharge( ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() + (ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() * (shippingMethods[m].getShippingRateIncreasePercentage()/100)) );
+								} else if (!isNull( shippingMethods[m].getShippingRateIncreaseDollar() ) && shippingMethods[m].getShippingRateIncreaseDollar() > 0) {
+									option.setTotalCharge( ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() + shippingMethods[m].getShippingRateIncreaseDollar() );
+								} else {
+									option.setTotalCharge( ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() );	
+								}
+								
 								getDAO().save(option);
 							}
 						}
