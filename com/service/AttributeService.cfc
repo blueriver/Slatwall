@@ -47,16 +47,27 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		}
 	}
 	
-	public any function saveAttribute( required any entity, required struct data ) {
-		var attribute = Super.save(arguments.entity,arguments.data);
-		// save attribute options if the saved entity was the correct type
-		var optionsAttributeTypeList = "atSelectBox,atCheckBox,atRadioGroup";
-		if( listFind(optionsAttributeTypeList,attribute.getAttributeType().getSystemCode()) 
-			&& structKeyExists(arguments.data,"optionsArray")
-			&& !attribute.hasErrors() ) {
-			saveAttributeOptions(attribute,arguments.data.optionsArray);
+	public any function saveAttribute( required any attribute, required struct data ) {
+		// generate the attribute code if not specified
+		if(!structKeyExists(arguments.data,"attributeCode") || trim(arguments.data.attributeCode) == "") {
+			arguments.data.attributeCode = replace(getService("fileService").filterFileName(arguments.attribute.getAttributeName()),"-","","all");	
 		}
-		return attribute;
+		arguments.attribute = Super.save(arguments.attribute,arguments.data);
+		
+		// make sure that the attributeCode doesn't already exist
+		var checkAttributeCode = getDAO().isDuplicateProperty("attributeCode", arguments.attribute);
+		var attributeCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkAttributeCode,objectName="attributeCode",message=replace(rbKey("entity.attribute.attributeCode_validateUnique"),"{attributeCode}",arguments.data.attributeCode));
+		if( !structIsEmpty(attributeCodeError) ) {
+			arguments.attribute.addError(argumentCollection=attributeCodeError);
+		}
+		// save attribute options if the saved entity was the correct type and there were no errors
+		var optionsAttributeTypeList = "atSelectBox,atCheckBox,atRadioGroup";
+		if( listFind(optionsAttributeTypeList,arguments.attribute.getAttributeType().getSystemCode()) 
+			&& structKeyExists(arguments.data,"optionsArray")
+			&& !arguments.attribute.hasErrors() ) {
+			saveAttributeOptions(arguments.attribute,arguments.data.optionsArray);
+		}
+		return arguments.attribute;
 	}
 	
 	private void function saveAttributeOptions( required any attribute, required array optionsArray ) {

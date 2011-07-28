@@ -78,17 +78,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     public void function list(required struct rc) {
         rc.attributeSets = getAttributeService().listAttributeSetOrderByAttributeSetName();
     }
-    
-/*   public void function save() {
-    	rc.optionsArray = getService("formUtilities").buildFormCollections(rc);
-    }*/
 	
 	public void function save(required struct rc) {
 		param name="rc.attributeID" default="";
 		
 		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
 		
-		rc.optionsArray = getService("formUtilities").buildFormCollections(rc).options;			
+		rc.optionsArray = rc.structuredData.options;			
 		rc.attribute = getAttributeService().saveAttribute(rc.attribute,rc);
 		
 		if(!rc.attribute.hasErrors()) {
