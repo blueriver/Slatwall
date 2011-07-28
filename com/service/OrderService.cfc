@@ -418,7 +418,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
 				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
-				updateOrderTax(arguments.orderFulfillment.getOrder());
+				getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 			}
 			
 			// Validate & Save Address
@@ -650,13 +650,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		// TODO: Loop over payments and remove any account specific details 
-	}
-	
-	public void function updateOrderTax(required any order) {
-		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
-			var itemTax = getTaxService().calculateOrderItemTax(arguments.order.getOrderItems()[i]);
-			arguments.order.getOrderItems()[i].setTaxAmount(itemTax);
-		}
 	}
 	
 	public void function clearCart() {

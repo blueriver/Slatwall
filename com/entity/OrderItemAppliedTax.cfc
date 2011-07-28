@@ -36,43 +36,35 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false" {
-
-	property name="addressService" type="any";
-
-	public void function updateOrderAmountsWithTaxes(required any order) {
-		
-		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
-			var orderItem = arguments.order.getOrderItems()[i];
-			
-			// Remove all existing tax calculations
-			for(var ta=1; ta<=arrayLen(orderItem.getAppliedTaxes()); ta++) {
-				orderItem.getAppliedTaxes()[ta].removeOrderItem();
-			}
-			
-			// Get this items fulfillment
-			var fulfillment = orderItem.getOrderFulfillment();
-		
-			// If the method is shipping then apply taxes
-			if(fulfillment.getFulfillmentMethodID() == "shipping") {
-				
-				// TODO: This is a hack because we only have one tax category for products right now
-				var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
-				
-				var address = fulfillment.getShippingAddress();
-				if(!isNull(address)) {
-					for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
-						if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
-							var newAppliedTax = this.newOrderItemAppliedTax();
-							newAppliedTax.setTaxAmount(orderItem.getExtendedPrice() * (taxCategory.getTaxCategoryRates()[i].getTaxRate() / 100));
-							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[i].getTaxRate());
-							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[i]);
-							newAppliedTax.setOrderItem(orderItem);
-						}
-					}
-				}
-			}
+component displayname="Order Item Applied Tax" entityname="SlatwallOrderItemAppliedTax" table="SlatwallTaxApplied" persistent="true" extends="TaxApplied" discriminatorValue="orderItem" {
+	
+	// Persistent Properties
+	property name="taxAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Entities
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// Order (many-to-one)
+	public void function setOrderItem(required OrderItem orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() || !arguments.orderItem.hasAppliedTaxes(this)) {
+			arrayAppend(arguments.orderItem.getAppliedTaxes(),this);
 		}
 	}
-
+	
+	public void function removeOrderItem(OrderItem orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getAppliedTaxes(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderItem.getAppliedTaxes(),index);
+		}    
+		structDelete(variables,"orderItem");
+    }
+    
+	/************   END Association Management Methods   *******************/
 }

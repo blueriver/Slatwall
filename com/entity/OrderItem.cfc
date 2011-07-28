@@ -42,7 +42,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="big_decimal";
 	property name="quantity" ormtype="integer";
-	property name="taxAmount" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -57,12 +56,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
-
+	property name="appliedTaxes" singularname="appliedTax" cfc="OrderItemAppliedTax" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	
 	public any function init() {
-		
-		if(isNull(getTaxAmount())) {
-			setTaxAmount(0);
-		}
 		
 		// set status to new by default
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
@@ -75,6 +71,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		if(isNull(variables.attributeValues)) {
 		   variables.attributeValues = [];
+		}
+		if(isNull(variables.appliedTaxes)) {
+		   variables.appliedTaxes = [];
 		}
 		
 		return super.init();
@@ -90,6 +89,18 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	public numeric function getExtendedPrice() {
 		return getPrice()*getQuantity();
+	}
+	
+	public numeric function getTaxAmount() {
+		if(!structKeyExists(variables,"taxAmount")) {
+			variables.taxAmount = 0;
+			if(!isNull(getAppliedTaxes())) {
+				for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
+					variables.taxAmount += getAppliedTaxes()[i].getTaxAmount();
+				}	
+			}
+		}
+		return variables.taxAmount;
 	}
 	
 	public numeric function getQuantityDelivered() {
@@ -190,7 +201,16 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	arguments.attributeValue.removeOrderItem(this);
     }
     
-	
+    // Applied Taxes (one-to-many)
+    
+	public void function addAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
+    	arguments.orderItemAppliedTax.setOrderItem(this);
+    }
+    
+    public void function removeAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
+    	arguments.orderItemAppliedTax.removeOrderItem(this);
+    }
+    
 	/************   END Association Management Methods   *******************/
 	
 	public any function getActionOptions() {
