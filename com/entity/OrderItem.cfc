@@ -135,14 +135,25 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getQuantity() - getQuantityDelivered();
 	}
 	
-	public string function displayCustomizations() {
+	public string function displayCustomizations(format="list") {
 		var customizations = "";
+		if(arguments.format == 'htmlList' && this.hasAttributeValue()) {
+			customizations = "<ul>";
+		}
 		for(var i=1; i<=arrayLen(getAttributeValues()); i++) {
-			if(len(customizations)) {
+			if(len(customizations) && arguments.format == "list") {
 				customizations &= ", ";
+			} else if(arguments.format == "htmlList") {
+				customizations &= "<li>";
 			}
 			customizations &= "#getAttributeValues()[i].getAttribute().getAttributeName()#: #getAttributeValues()[i].getAttributeValue()#";
+			if(arguments.format == "htmlList") {
+				customizations &= "</li>";
+			}
 		}
+		if(arguments.format == "htmlList") {
+			customizations &= "</ul>";
+		}		
 		return customizations;
 	}
 	

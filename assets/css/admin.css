@@ -50,6 +50,10 @@ h1 {
     width: 58px;
 }
 
+table td {
+	vertical-align: text-top;
+}
+
 div.admincontainer		{margin: 5px 20px 60px;}
 div.admincontainer h1	{position:relative; background:none; color:#000000; text-indent: 0px; clear:both; float:none;}
 img.slatwallLogo	{
@@ -197,15 +201,36 @@ table#productTypeSettings {
 	width: 600px;
 }
 
-table td.administration li.zoomIn {
+table td li.zoomIn {
 	background: url(../images/admin.ui.zoom_in.png) no-repeat;
 	width: 16px;
 }
 
-table td.administration li.zoomOut {
+table td li.zoomOut {
 	background: url(../images/admin.ui.zoom_out.png) no-repeat;
 	width: 16px;
 	display: none;
+}
+
+td ul.inlineAdmin, td.varWidth ul.inlineAdmin {
+	float: right;
+	margin: 0 auto;
+}
+
+td ul.inlineAdmin li, td.varWidth ul.inlineAdmin li {
+	list-style: none outside none;
+	overflow: hidden;
+	float: left;
+	margin: 0 5px 0 0;
+    padding: 0;
+}
+
+td ul.inlineAdmin li a, td.varWidth ul.inlineAdmin li a {
+    clear: none;
+	float: left;
+    height: 18px;
+    text-indent: -999em;
+    width: 14px;
 }
   
 td.property {
@@ -434,6 +459,6 @@ div.svoadminproductdetail img.skuImage {float:right;}
 	padding: 0.2em 0.3em;
 }
 
-table.stripe td.varWidth div {float:left; margin-right:20px;}
-table.stripe td.varWidth ul {list-style:none;}
-table.stripe td.varWidth li {padding-left:10px;}
+table td.varWidth div {float:left; margin-right:20px;}
+table td.varWidth ul {list-style:none;}
+table td.varWidth li {padding-left:10px;}

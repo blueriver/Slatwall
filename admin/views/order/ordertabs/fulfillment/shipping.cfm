@@ -55,26 +55,32 @@ Notes:
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">
 					<strong>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</strong>
-					<cfif arrayLen(local.orderItem.getAttributeValues()) or arrayLen(local.orderItem.getSku().getOptions())>
-						<hr />
-					</cfif>
-					<cfif arrayLen(local.orderItem.getSku().getOptions())>
-						<div><strong>Options</strong>
-							<ul>
-							<cfloop array="#local.orderItem.getSku().getOptions()#" index="local.option" >
-								<li>#local.option.getOptionGroup().getOptionGroupName()#: #local.option.getOptionName()#</li>
-							</cfloop>
-							</ul>
-						</div>
-					</cfif>
-					<cfif arrayLen(local.orderItem.getAttributeValues())>
-						<div><strong>Customizations</strong>
-							<ul>
-							<cfloop array="#local.orderItem.getAttributeValues()#" index="local.customizationValue" >
-								<li>#local.customizationValue.getAttribute().getAttributeName()#: #local.customizationValue.getAttributeValue()#</li>
-							</cfloop>
-							</ul>
-						</div>
+					<cfif local.orderItem.hasAttributeValue() or arrayLen(local.orderItem.getSku().getOptions())>
+					  <ul class="inlineAdmin">
+			          	<li class="zoomIn">           
+							<a class="customizations viewDetails" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
+						</li>
+						<li class="zoomOut">           
+							<a class="customizations viewDetails" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
+						</li>
+			          </ul>
+					  <div class="clear" style="display:none;">
+					  <hr>
+						<cfif arrayLen(local.orderItem.getSku().getOptions())>
+							<div><h5>Options</h5>
+								<ul>
+								<cfloop array="#local.orderItem.getSku().getOptions()#" index="local.option" >
+									<li>#local.option.getOptionGroup().getOptionGroupName()#: #local.option.getOptionName()#</li>
+								</cfloop>
+								</ul>
+							</div>
+						</cfif>
+						<cfif arrayLen(local.orderItem.getAttributeValues())>
+							<div><h5>Customizations</h5>
+								#local.orderItem.displayCustomizations(format="htmlList")#
+							</div>
+						</cfif>
+					  </div> 
 					</cfif>
 				</td>				
 				<td>#local.orderItem.getOrderItemStatusType().getType()#</td>				
