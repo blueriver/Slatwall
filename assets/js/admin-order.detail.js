@@ -46,6 +46,13 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	$("a.customizations").click(function(){
+		$(this).parent().hide();
+		$(this).parent().siblings().show()
+		$(this).parents('ul').next('div').toggle();
+		return false;
+	});
+	
     $(".adminorderrefundOrderPayment").colorbox({
 		onComplete: function() {
             $('input.refundAmount').focus();         
