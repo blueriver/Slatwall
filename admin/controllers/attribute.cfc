@@ -84,7 +84,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
 		
-		rc.optionsArray = getService("utilityFormService").buildFormCollections(rc).options;			
+		rc.optionsArray = rc.structuredData.options;			
 		rc.attribute = getAttributeService().saveAttribute(rc.attribute,rc);
 		
 		if(!rc.attribute.hasErrors()) {

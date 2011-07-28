@@ -70,7 +70,7 @@ Notes:
 		</cfif>
 	</dl>
 
-<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 	<ul>
 		<li><a href="##tabSkus" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.skus")#</span></a></li>	
 		<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.webdescription")#</span></a></li>
