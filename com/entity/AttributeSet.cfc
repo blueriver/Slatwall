@@ -41,6 +41,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	// Persistent Properties
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="attributeSetName" validateRequired="true" ormtype="string";
+	property name="attributeSetCode" validateRequired="true" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
 	property name="globalFlag" ormtype="boolean" default="0" ;
 	property name="sortOrder" ormtype="integer";

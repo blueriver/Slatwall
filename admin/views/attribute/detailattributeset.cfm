@@ -55,6 +55,7 @@ Notes:
 	</cfif>
 	<dl class="oneColumn attributeDetail">
 		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#" />
+		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#" />
 		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#" tooltip=true />
 		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" value="#local.attributeSetTypeSelected#" edit="#rc.edit#" />
 		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
