@@ -66,7 +66,7 @@ Notes:
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" nullLabel="#$.slatwall.rbKey('define.none')#" edit="#rc.edit#">	
 		</cfif>
 	</dl>
 
