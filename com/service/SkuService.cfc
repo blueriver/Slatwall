@@ -156,7 +156,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	                local.thisSku.setShippingWeight(local.skuStruct.shippingWeight);
 	            }
 	            // set the remoteID if it was passed in
-	            if(len(trim(local.skuStruct.remoteID))) {
+	            if(structKeyExists(local.skuStruct,"remoteID") && len(trim(local.skuStruct.remoteID))) {
 	            	local.thisSku.setRemoteID(local.skuStruct.remoteID);
 	            }
 	            local.thisSku.setImageFile(generateImageFileName(local.thisSku));
