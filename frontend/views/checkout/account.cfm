@@ -51,6 +51,7 @@ Notes:
 		<div id="checkoutAccountContent" class="contentBlock">
 			<cfif listFind(rc.orderRequirementsList, 'account') || rc.edit eq "account">
 				<cfif listFind(rc.orderRequirementsList, 'account')>
+					<cfset $.event('loginSlatAction', 'frontend:checkout.loginAccount') />
 					#view("account/login")#
 				</cfif>
 				<div class="accountDetails">

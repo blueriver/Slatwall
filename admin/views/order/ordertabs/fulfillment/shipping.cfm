@@ -53,7 +53,30 @@ Notes:
 		<cfloop array="#local.orderFulfillment.getOrderFulfillmentItems()#" index="local.orderItem">
 			<tr>
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
-				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>				
+				<td class="varWidth">
+					<strong>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</strong>
+					<cfif arrayLen(local.orderItem.getAttributeValues()) or arrayLen(local.orderItem.getSku().getOptions())>
+						<hr />
+					</cfif>
+					<cfif arrayLen(local.orderItem.getSku().getOptions())>
+						<div><strong>Options</strong>
+							<ul>
+							<cfloop array="#local.orderItem.getSku().getOptions()#" index="local.option" >
+								<li>#local.option.getOptionGroup().getOptionGroupName()#: #local.option.getOptionName()#</li>
+							</cfloop>
+							</ul>
+						</div>
+					</cfif>
+					<cfif arrayLen(local.orderItem.getAttributeValues())>
+						<div><strong>Customizations</strong>
+							<ul>
+							<cfloop array="#local.orderItem.getAttributeValues()#" index="local.customizationValue" >
+								<li>#local.customizationValue.getAttribute().getAttributeName()#: #local.customizationValue.getAttributeValue()#</li>
+							</cfloop>
+							</ul>
+						</div>
+					</cfif>
+				</td>				
 				<td>#local.orderItem.getOrderItemStatusType().getType()#</td>				
 				<td>#dollarFormat(local.orderItem.getPrice())#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>

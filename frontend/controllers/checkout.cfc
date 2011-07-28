@@ -44,6 +44,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="paymentService" type="any";
 	property name="settingService" type="any";
 	property name="sessionService" type="any";
+	property name="userUtility" type="any";
 	
 	public void function detail(required struct rc) {
 		param name="rc.edit" default="";
@@ -87,10 +88,19 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function loginAccount(required struct rc) {
-		var loginSuccess = getAccountService().loginMuraUser(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
+		param name="rc.username" default="";
+		param name="rc.password" default="";
+		param name="rc.returnURL" default="";
+		param name="rc.forgotPasswordEmail" default="";
 		
-		if(!loginSuccess) {
-			request.status = "failed";
+		if(rc.forgotPasswordEmail != "") {
+			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
+		} else {
+			var loginSuccess = getAccountService().loginMuraUser(username=arguments.rc.username, password=arguments.rc.password, siteID=rc.$.event('siteid'));
+			
+			if(!loginSuccess) {
+				request.status = "failed";
+			}
 		}
 		
 		detail(rc);
