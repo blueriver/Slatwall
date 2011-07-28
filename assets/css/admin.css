@@ -433,3 +433,7 @@ div.svoadminproductdetail img.skuImage {float:right;}
 	border: 1px solid #E4E4E4;
 	padding: 0.2em 0.3em;
 }
+
+table.stripe td.varWidth div {float:left; margin-right:20px;}
+table.stripe td.varWidth ul {list-style:none;}
+table.stripe td.varWidth li {padding-left:10px;}

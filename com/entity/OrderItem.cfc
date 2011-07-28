@@ -82,6 +82,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		
 		return super.init();
 	}
+
 	
 	public string function getStatus(){
 		return getOrderItemStatusType().getType();
@@ -213,8 +214,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	arguments.orderDeliveryItem.removeOrderItem(this);
     }
     
-     // Attribute Values (one-to-many)
-    
+	// Attribute Values (one-to-many)
     public void function addAttributeValue(required OrderItemAttributeValue attributeValue) {
     	arguments.attributeValue.setOrderItem(this);
     }
@@ -224,17 +224,15 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     }
     
     // Applied Promotions (one-to-many)
-    
     public void function addAppliedPromotion(required OrderItemAppliedPromotion orderItemAppliedPromotion) {
     	arguments.orderItemAppliedPromotion.setOrderItem(this);
     }
-    
+
     public void function removeAppliedPromotion(required OrderItemAppliedPromotion orderItemAppliedPromotion) {
     	arguments.orderItemAppliedPromotion.removeOrderItem(this);
     }
     
-    // Applied Promotions (one-to-many)
-    
+    // Applied Taxes (one-to-many)
     public void function addAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
     	arguments.orderItemAppliedTax.setOrderItem(this);
     }

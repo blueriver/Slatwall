@@ -37,8 +37,9 @@ Notes:
 
 --->
 <!--- Mura Variables --->
-<cfparam name="request.status" default="">
-<cfparam name="request.isBlocked" default="false">
+<cfparam name="request.status" default="" />
+<cfparam name="request.isBlocked" default="false" />
+<cfparam name="rc.forgotPasswordResult" default="" />
 
 <cfoutput>
 	<div class="svoaccountlogin">
@@ -50,6 +51,15 @@ Notes:
 				<p id="loginMsg" class="error">#$.slatwall.rbKey('user.loginfailed')#</p>
 			</cfif>
 		</cfif>
+		<cfif len(rc.forgotPasswordResult)>
+			<cfif FindNoCase('is not a valid',rc.forgotPasswordResult)>
+				<div class="error">#$.slatwall.rbKey('user.forgotnotvalid')#
+			<cfelseif FindNoCase('no account',rc.forgotPasswordResult)>
+				<div class="error">#$.slatwall.rbKey('user.forgotnotfound')#
+			<cfelse>
+				<div class="notice">#$.slatwall.rbKey('user.forgotsuccess')#</cfif>
+			</div>
+		</cfif>
 		<form name="loginAccount" method="post" action="?nocache=1">
 			<h4>Account Login</h4>
 			<dl>
@@ -58,10 +68,27 @@ Notes:
 				<dt>Password</dt>
 				<dd><input type="password" name="password" value="" /></dd>
 			</dl>
-			<input type="hidden" name="doaction" value="login" />
-			<input type="hidden" name="siteid" value="#$.event('siteID')#" />
+			<cfif $.event('loginSlatAction') neq "">
+				<cfset loginSlatAction = $.event('loginSlatAction') />
+			<cfelse>
+				<cfset loginSlatAction = "frontend:account.login" />
+			</cfif>
+			<input type="hidden" name="slatAction" value="#loginSlatAction#" />
 			<input type="hidden" name="returnURL" value="#$.event('returnURL')#" />
-			<button type="submit">Login & Continue</button>
+			<button type="submit">Login</button>
+			<a href="##" class="forgotPassword">Forgot Password</a>
+			<div class="forgotPassword" style="display:none;">
+				<p>#$.slatwall.rbKey('user.forgotloginmessage')#</p>
+				Email Address: <input type="text" name="forgotPasswordEmail" value="" /><button type="submit">Submit</button>
+			</div>
 		</form>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				jQuery('a.forgotPassword').click(function(e){
+					e.preventDefault();
+					jQuery('div.forgotPassword').toggle();
+				});
+			});
+		</script>
 	</div>
 </cfoutput>

@@ -63,4 +63,5 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 	order 				| OrderAppliedTax.cfc
 	
 	*/
+
 }

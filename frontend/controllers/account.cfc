@@ -40,15 +40,33 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="accountService" type="any";
 	property name="orderService" type="any";
+	property name="userUtility" type="any";
 	
-	public void function detail(required struct rc) {
-	}
-	
-	public void function edit(required struct rc) {;
-	}
 	
 	public void function save(required struct rc) {
 		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
+		getFW().setView("frontend:account.detail");
+	}
+	
+	public void function login(required struct rc) {
+		param name="rc.username" default="";
+		param name="rc.password" default="";
+		param name="rc.returnURL" default="";
+		param name="rc.forgotPasswordEmail" default="";
+		
+		if(rc.forgotPasswordEmail != "") {
+			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
+		} else {
+			var loginSuccess = getAccountService().loginMuraUser(username=rc.username, password=rc.password, siteID=rc.$.event('siteID'));
+		
+			if(!loginSuccess) {
+				request.status = "failed";
+			} else if ( len(rc.returnURL) > 3) {
+				getFW().redirectExact(returnURL);
+			}
+			
+		}
+		
 		getFW().setView("frontend:account.detail");
 	}
 	
