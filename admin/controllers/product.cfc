@@ -92,6 +92,8 @@ component extends="BaseController" output=false accessors=true {
 	public void function save(required struct rc) {
 		param name="rc.productID" default="";
 		var isNew = 0;
+		// initialize options struct
+		rc.optionsStruct = {};
 		
 		rc.product = getProductService().getProduct(rc.productID, true);
 		
@@ -101,14 +103,15 @@ component extends="BaseController" output=false accessors=true {
 		
 		if(isNew) {
 			// set up options struct for generating skus if this is a new product
-			rc.optionsStruct = getService("formUtilities").buildFormCollections(rc);
+			if(structKeyExists(rc.structuredData,"options")) {
+				rc.optionsStruct = rc.structuredData.options;
+			}
 		} else {
 			// set up form collections to handle any skus/alternate images that were edited and/or added
-			var formCollections = getService("formUtilities").buildFormCollections(rc);
-			rc.skuArray = formCollections.skus;
-			rc.imageStruct = formCollections.image;
-			if(structKeyExists(formCollections,"attribute")){
-				rc.attributes = formCollections.attribute;
+			rc.skuArray = rc.structuredData.skus;
+			rc.imageStruct = rc.structuredData.image;
+			if(structKeyExists(rc.structuredData,"attribute")){
+				rc.attributes = rc.structuredData.attribute;
 			} else {
 				rc.attributes = {};
 			}

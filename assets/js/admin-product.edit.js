@@ -38,7 +38,6 @@ Notes:
 */
 
 jQuery(document).ready(function() {
-
     var skuCount = jQuery('tr[id^="Sku"]').length;
     $("#addSKU").click(function() {
         var current = jQuery('tr[id^="Sku"]').length;
@@ -71,6 +70,36 @@ jQuery(document).ready(function() {
             jQuery('#remSKU').attr('style','display:none;');
         }
     });
+	
+    $("#addImage").click(function() {
+        var current = jQuery('input.imageid').length;
+        current++;
+        var $newImage= jQuery( "#imageUploadTemplate" ).clone(true);
+        $newImage.children("dd").children("input").each(function(i) {
+            var $currentElem= $(this);
+            $currentElem.attr("name", "images[" + current + "]." + $currentElem.attr("name"));
+            if ($currentElem.attr("type") == "hidden") {
+                $currentElem.attr("class", "imageid");
+            }
+        });
+        $newImage.children("dd").children("select").each(function(i) {
+            var $currentElem= $(this);
+            $currentElem.attr("name","images["+current+"]."+$currentElem.attr("name"));
+        });
+        $newImage.children("dd").find("textarea").each(function(i) {
+			var $currentElem = $(this);
+			$currentElem.attr("name","images["+current+"]."+$currentElem.attr("name"));
+			$currentElem.attr("id",$currentElem.attr("id") + current);
+        });
+		if($('.alternateImageUpload').length == 0) {
+			$('.buttons:last').before($newImage);
+		} else {
+			$('.alternateImageUpload:last').after($newImage);	
+		}
+        $newImage.removeAttr("id");
+		$newImage.attr("class","alternateImageUpload");
+    });
+	
     $(".uploadImage").colorbox({
         onComplete: function() {
 			// upload button is disabled unless file field is filled
@@ -81,5 +110,4 @@ jQuery(document).ready(function() {
             });         
         }
     });
-
 });

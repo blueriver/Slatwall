@@ -213,20 +213,6 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 	}
-	
-	/**
-	/* @hint sets up initial skus when products are created
-	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
-		return getSkuService().createSkus(argumentCollection=arguments);
-	}
-	
-    /**
-    /* @hint updates Sku data on product edit
-    */
-    public boolean function updateSkus(required any product, required array skus) {
-        return getSkuService().updateSkus(argumentCollection=arguments);
-    }
     
 	public any function addAlternateImage(required struct imageUploadResult, required any product, required struct data) {
 		//writeDump(var=arguments.data,top=3);
@@ -276,9 +262,9 @@ component extends="BaseService" accessors="true" {
 		
 		// set up sku(s) if this is a new product
 		if(arguments.Product.isNew()) {
-			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
+			getSkuService().createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
 		} else {
-			updateSkus(arguments.Product,arguments.data.skuArray);
+			getSkuService().updateSkus(arguments.Product,arguments.data.skuArray);
 			// set up associations between product and content
 			assignProductContent(arguments.Product,arguments.data.contentID);		
 			// set up associations between product and mura categories

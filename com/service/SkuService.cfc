@@ -75,8 +75,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	*/
 	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
 		// check to see if any options were selected
-		if(len(arguments.optionsStruct.formCollectionsList)) {
-			var options = arguments.optionsStruct.options;
+		if(!structIsEmpty(arguments.optionsStruct)) {
+			var options = arguments.optionsStruct;
 			var comboList = getOptionCombinations(options);
 			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice,arguments.shippingWeight);
 		} else {  // no options were selected so create a default sku

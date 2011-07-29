@@ -101,7 +101,7 @@ Notes:
 				</cfloop>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
-						<a href="#local.thisSku.getImagePath()#" class="preview">#local.thisSku.getImageFile()#</a>
+						<a href="#local.thisSku.getImagePath()#" class="lightbox preview">#local.thisSku.getImageFile()#</a>
 					<cfelse>
 						#local.thisSku.getImageFile()#
 					</cfif>		
