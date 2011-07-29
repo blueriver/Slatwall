@@ -70,7 +70,7 @@ Notes:
 		<input type="file" id="productImageFile" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
 		<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="image.imageType" property="imageType" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="image.imageName" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="image.imageDescription" id="spdimagedescriptiontxt" editType="wysiwygbasic" edit="true" toggle="hide">
+		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="image.imageDescription" editType="wysiwygbasic" edit="true" toggle="hide">
 		
 	</cfif>	
 </cfoutput>
