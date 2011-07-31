@@ -373,7 +373,7 @@ Notes:
 							</script>
 					<cfelseif attributes.editType eq "file">
 					<!--- ouptut a file upload field --->
-						<input type="file" name="#attributes.id#File" class="file">
+						<input type="file" name="#attributes.fieldName#File" class="file">
 					</cfif>
 				<cfelseif attributes.edit eq true and attributes.editType eq "none">
 					<!-- A Default Edit Type Could not be created -->
