@@ -302,7 +302,7 @@ Notes:
 	            </cfif>
 	            <cfif listFindNoCase("show,hide",attributes.toggle)>
 	                <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-	                <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+	                <a  href="##" class="toggleLink" onclick="javascript: toggleDisplay(this,'#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
 	            </cfif>	
 	
 				<cfif attributes.displaytype eq "dl">
@@ -313,10 +313,13 @@ Notes:
 			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
 			
 			<cfif attributes.displayType eq "dl">
-				<dd class="spd#LCASE(attributes.property)#" <cfif listFindNoCase("show,hide",attributes.toggle)> id="#attributes.id#" style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+				<dd class="spd#LCASE(attributes.property)#">
 			<cfelseif attributes.displayType eq "table">
 				<td class="value">
 			</cfif>
+				<cfif listFindNoCase("show,hide",attributes.toggle)>
+					<div style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#">
+				</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
 					<cfif attributes.editType eq "text" or attributes.editType eq "password">
@@ -363,14 +366,7 @@ Notes:
 						<cfelse>
 							<cfset local.wysiwygType = "Default">
 						</cfif>
-						<textarea id="#attributes.id#txt" name="#attributes.fieldName#">#attributes.Value#</textarea>
-						<script type="text/javascript" language="Javascript">
-							var loadEditorCount = 0;
-							jQuery('###attributes.id#txt').ckeditor(
-								{ toolbar:'#local.wysiwygType#',
-								height:'150',
-								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
-							</script>
+						<textarea id="#attributes.id#txt" class="wysiwyg #local.wysiwygType#" name="#attributes.fieldName#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "file">
 					<!--- ouptut a file upload field --->
 						<input type="file" name="#attributes.fieldName#File" class="file">
@@ -400,6 +396,9 @@ Notes:
 				</cfif>
 				<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
 			</cftry>
+			<cfif listFindNoCase("show,hide",attributes.toggle)>
+				</div>
+			</cfif>
 			<cfif attributes.displaytype eq "dl">
 				</dd>
 			<cfelseif attributes.displaytype eq "table">

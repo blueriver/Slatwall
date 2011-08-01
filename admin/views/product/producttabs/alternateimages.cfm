@@ -37,8 +37,9 @@ Notes:
 
 --->
 <cfoutput>
-	<cfif arrayLen(rc.product.getImages())>
-	<table class="stripe">
+	<cfset local.images = rc.product.getImages() />
+	<cfif arrayLen(local.images)>
+	<table id="alternateImages" class="stripe">
 		<tr>
 			<th>#$.slatwall.rbKey("admin.product.alternateImages.preview")#</th>
 			<th>#$.slatwall.rbKey("entity.image.imageType")#</th>
@@ -46,16 +47,18 @@ Notes:
 			<th class="varWidth">#$.slatwall.rbKey("entity.image.imageDescription")#</th>
 			<th class="administration">&nbsp;</th>
 		</tr>
-	<cfloop array="#rc.product.getImages()#" index="local.image" >
-		<cfif len(local.image.getImageID())>
+	<cfloop from="1" to="#arrayLen(local.images)#" index="local.i" >
+		<cfset local.thisImage = local.images[local.i] />
+		<cfif len(local.thisImage.getImageID()) && !len(local.thisImage.getErrorBean().getError("AlternateImage"))>
 		<tr>
-			<td><a href="#local.image.getImagePath()#">#local.image.getImage(height="120", width="120")#</a></td>
-			<td>#local.image.getImageType().getType()#</td>
-			<td>#local.image.getImageName()#</td>
-			<td class="varWidth">#local.image.getImageDescription()#</td>
+			<cfif rc.edit><input type="hidden" class="imageid" name="images[#local.i#].imageID" value="#local.thisImage.getImageID()#" /></cfif>
+			<td><a href="#local.thisImage.getImagePath()#" class="lightbox<cfif !rc.edit> preview</cfif>"><cfif rc.edit>#local.thisImage.getImage(height="120", width="120")#<cfelse>#$.Slatwall.rbKey("admin.product.previewalternateimage")#</cfif></a></td>
+			<td><cf_SlatwallPropertyDisplay id="imageType#local.i#" object="#local.thisImage#" property="imageType" propertyObject="Type" fieldName="images[#local.i#].imageType" displayType="plain" edit="#rc.edit#"></td>
+			<td><cf_SlatwallPropertyDisplay id="imageName#local.i#" object="#local.thisImage#" property="imageName" fieldName="images[#local.i#].imageName" displayType="plain" edit="#rc.edit#"></td>
+			<td class="varWidth"><cf_SlatwallPropertyDisplay id="imageDescription#local.i#" object="#local.thisImage#" property="imageDescription" fieldName="images[#local.i#].imageDescription" displayType="plain" editType="wysiwygbasic" edit="#rc.edit#"></td>
 			<td class="administration">
 				<ul class="one">
-					<cf_SlatwallActionCaller action="admin:product.deleteImage" querystring="imageID=#local.image.getImageID()#&productID=#rc.product.getProductID()#" confirmRequired="true" class="delete" type="list">
+					<cf_SlatwallActionCaller action="admin:product.deleteImage" querystring="imageID=#local.thisImage.getImageID()#&productID=#rc.product.getProductID()#" confirmRequired="true" class="delete" type="list">
 				</ul>
 			</td>
 		</tr>
@@ -66,11 +69,34 @@ Notes:
 		<em>#$.slatwall.rbKey("admin.product.alternateImages.noAlternateImagesExist")#</em>
 	</cfif>
 	<cfif rc.edit>
-		<h4>#$.slatwall.rbKey("admin.product.alternateImages.uploadimage")#</h4>
-		<input type="file" id="productImageFile" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
-		<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="image.imageType" property="imageType" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="image.imageName" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="image.imageDescription" editType="wysiwygbasic" edit="true" toggle="hide">
+		<cfloop from="1" to="#arrayLen(local.images)#" index="local.i">
+			<cfset local.thisImage = local.images[local.i] />
+			<cfif local.thisImage.isNew() || len(local.thisImage.getErrorBean().getError("AlternateImage"))>
+				<dl class="alternateImageUpload">
+					<dt class="spdimagefile"> Upload Image </dt>
+					<dd class="spdimagefile">
+						<input type="hidden" name="images[#local.i#].imageID" value="" />
+						<input type="file" class="imageFile" name="images[#local.i#].productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
+					</dd>
+					<cf_SlatwallPropertyDisplay object="#local.thisImage#" propertyObject="Type" fieldName="images[#local.i#].imageType" property="imageType" edit="true" allowNullOption="false">
+					<cf_SlatwallPropertyDisplay object="#local.thisImage#" property="imageName" fieldName="images[#local.i#].imageName" edit="true">
+					<cf_SlatwallPropertyDisplay id="imageDescription#local.i#" object="#local.thisImage#" property="imageDescription" fieldName="images[#local.i#].imageDescription" editType="wysiwygbasic" edit="true" toggle="hide">
+				</dl>				
+			</cfif>
+		</cfloop>
+		<div class="buttons">
+			<a class="button" id="addImage">#rc.$.Slatwall.rbKey("admin.product.edit.addImage")#</a>
+		</div>
 		
+		<dl id="imageUploadTemplate" class="hideElement">
+			<dt class="spdimagefile"> Upload Image </dt>
+			<dd class="spdimagefile">
+				<input type="hidden" name="imageID" value="" />
+				<input type="file" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
+			</dd>
+			<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="imageType" property="imageType" edit="true" allowNullOption="false">
+			<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="imageName" edit="true">
+			<cf_SlatwallPropertyDisplay id="imageDescription" object="#rc.image#" property="imageDescription" fieldName="imageDescription" editType="textarea" edit="true" toggle="hide">
+		</dl>
 	</cfif>	
 </cfoutput>

@@ -52,7 +52,7 @@ h1 {
 
 table td {
 	vertical-align: text-top;
-}
+} 
 
 div.admincontainer		{margin: 5px 20px 60px;}
 div.admincontainer h1	{position:relative; background:none; color:#000000; text-indent: 0px; clear:both; float:none;}
@@ -116,7 +116,7 @@ div.svoadminorderfulfillmentdetail .totals {
 
 div.buttons {
 	height: 15px;
-	margin-bottom: 10px;	
+	margin: 10px 0;	
 }
 
 div#createProductForm {
@@ -199,6 +199,10 @@ table#productCategories ul.neston {
 
 table#productTypeSettings {
 	width: 600px;
+}
+
+table#alternateImages td img {
+	vertical-align: top;
 }
 
 table td li.zoomIn {
@@ -329,6 +333,11 @@ dl.fulfillmentTotals dd {
 	text-align: right;
 	padding: 2px;
 	line-height: 22px;
+}
+
+dl.alternateImageUpload {
+	padding-top: 10px;
+	border-top: 1px solid #ccc;
 }
 
 ul#optionList li {
