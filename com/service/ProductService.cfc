@@ -214,38 +214,43 @@ component extends="BaseService" accessors="true" {
 		}
 	}
 	
-	/**
-	/* @hint sets up initial skus when products are created
-	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
-		return getSkuService().createSkus(argumentCollection=arguments);
+	public void function saveAlternateImages(required any product, required array imagesArray) {
+		for(var i = 1; i <= arrayLen(arguments.imagesArray); i++) {
+			local.thisImageStruct = arguments.imagesArray[i];
+			// check to see if this is a new image
+			if(trim(local.thisImageStruct.imageID) != "") {
+				local.thisImage = this.getProductImage(local.thisImageStruct.imageID);
+				local.thisImage = Super.save(entity=local.thisImage, data=local.thisImageStruct);
+			} else {
+				if(structKeyExists(local.thisImageStruct, "productImageFile") && trim(local.thisImageStruct.productImageFile) != "") {
+					local.thisImageUploadResult = fileUpload(getTempDirectory(),"images[#i#].productImageFile","","makeUnique");
+					local.thisImage = addAlternateImage(local.thisImageUploadResult,arguments.product,local.thisImageStruct);
+				}
+			}
+		}
 	}
-	
-    /**
-    /* @hint updates Sku data on product edit
-    */
-    public boolean function updateSkus(required any product, required array skus) {
-        return getSkuService().updateSkus(argumentCollection=arguments);
-    }
     
 	public any function addAlternateImage(required struct imageUploadResult, required any product, required struct data) {
-		//writeDump(var=arguments.data,top=3);
-		//abort;
 		var alternateImage = this.newProductImage();
 		var imageDirectory = arguments.product.getAlternateImageDirectory();
 		var imageExt = lcase(arguments.imageUploadResult.serverFileExt);
 		alternateImage.setImageExtension(imageExt);
 		arguments.product.addProductImage(alternateImage);
 		alternateImage = Super.save(entity=alternateImage, data=arguments.data);
-		//alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
 		if(!alternateImage.hasErrors()) {
 			var imagePath = imageDirectory & alternateImage.getImageID() & "." & imageExt;
 			var imageSaved = getFileService().saveImage(uploadResult=arguments.imageUploadResult,filePath=imagePath ,allowedExtensions="jpg,jpeg,png,gif");	
 			if(!imageSaved) {
-				alternateImage.addError(name="AlternateImage", message=rbKey("admin.product.uploadAlternateImage_fileError"));
+				// if there was an error with the file upload, we dont want to set an error because we want all valid image uploads and entity saving to proceed
+				// but we remove the image entity that had the file error and set a flag in the request cache service
+				arguments.product.removeProductImage(alternateImage);
+				getDAO().delete(alternateImage);
+				getService("requestCacheService").setValue("uploadFileError",true);
 			}
 		} else {
 			//delete file in the temp directory
+			var uploadPath = imageUploadResult.serverDirectory & "/" & imageUploadResult.serverFile;
+			fileDelete(uploadPath);
 		}
 		return alternateImage;
 	}
@@ -276,16 +281,16 @@ component extends="BaseService" accessors="true" {
 		
 		// set up sku(s) if this is a new product
 		if(arguments.Product.isNew()) {
-			createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
+			getSkuService().createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
 		} else {
-			updateSkus(arguments.Product,arguments.data.skuArray);
+			getSkuService().updateSkus(arguments.Product,arguments.data.skuArray);
 			// set up associations between product and content
 			assignProductContent(arguments.Product,arguments.data.contentID);		
 			// set up associations between product and mura categories
 			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
-			//check for errors in the alternate image upload
-			if(structKeyExists(arguments.data,"image") && arguments.data.image.hasErrors()) {
-				arguments.product.addError(name="alternateImage",message=rbKey('entity.product.alternateImage_uploadError'));
+			// check for images to upload
+			if(structKeyExists(arguments.data,"imagesArray")) {
+				saveAlternateImages(arguments.Product,arguments.data.imagesArray);
 			}
 		}
 		
