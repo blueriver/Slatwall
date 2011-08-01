@@ -40,23 +40,24 @@ jQuery(document).ready(function(){
 	setDatePickers(".datepicker",dtLocale);
 	setTabs(".tabs",activeTab);
 	setAccordions(".accordion",activePanel);
-
-
-	jQuery('textarea.wysiwyg').each(function(i) {
-		setRTE(jQuery(this));
-	});
+	loadWysiwygs();
 
 });
 
+function loadWysiwygs() {
+	jQuery('textarea.wysiwyg').each(function(i) {
+		setRTE(jQuery(this));
+	});
+}
 
 function setRTE(txtarea) {
-	if( $(txtarea).hasClass("Basic") ) {
+	if( txtarea.hasClass("Basic") ) {
 		var wysiwygType = "Basic";
 	} else {
 		var wysiwygType = "Default";
 	}
 	var loadEditorCount = 0;
-	jQuery(txtarea).ckeditor({ 
+		txtarea.ckeditor({ 
 			toolbar:wysiwygType,
 			height:'150',
 			customConfig : 'config.js.cfm'

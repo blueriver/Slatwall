@@ -90,12 +90,16 @@ jQuery(document).ready(function() {
 			var $currentElem = $(this);
 			$currentElem.attr("name","images["+current+"]."+$currentElem.attr("name"));
 			$currentElem.attr("id",$currentElem.attr("id") + current);
+			$currentElem.addClass("wysiwyg").addClass("Basic");
         });
 		if($('.alternateImageUpload').length == 0) {
 			$('.buttons:last').before($newImage);
 		} else {
 			$('.alternateImageUpload:last').after($newImage);	
 		}
+		$newImage.children("dd").find("textarea.wysiwyg").each(function(i){
+			setRTE($(this));
+		});
         $newImage.removeAttr("id");
 		$newImage.attr("class","alternateImageUpload");
     });

@@ -109,15 +109,13 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			// set up form collections to handle any skus/alternate images that were edited and/or added
 			rc.skuArray = rc.structuredData.skus;
-			rc.imageStruct = rc.structuredData.image;
+			if(structKeyExists(rc.structuredData,"images")) {
+				rc.imagesArray = rc.structuredData.images;
+			}
 			if(structKeyExists(rc.structuredData,"attribute")){
 				rc.attributes = rc.structuredData.attribute;
 			} else {
 				rc.attributes = {};
-			}
-			if(structKeyExists(rc, "productImageFile") && rc.productImageFile != "") {
-				var imageUploadResult = fileUpload(getTempDirectory(),"productImageFile","","makeUnique");
-				rc.image = getProductService().addAlternateImage(imageUploadResult,rc.product,rc.imageStruct);
 			}
 		}
 
@@ -130,8 +128,15 @@ component extends="BaseController" output=false accessors=true {
 			if(isNew) {
 			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
             } else {
-            	rc.message = "admin.product.save_success";
-            	getFW().redirect(action="admin:product.list",preserve="message");
+            	// set a message if there was a file error in an image upload
+            	if(getRequestCacheService().keyExists("uploadFileError") && getRequestCacheService().getValue("uploadFileError") == true ) {
+            		rc.message = rc.$.Slatwall.rbKey("admin.product.uploadAlternateImage_fileError");
+            		rc.messageType = "error";
+            		getFW().redirect(action="admin:product.edit", queryString="productID=#rc.product.getProductID()#", preserve="message,messageType");
+            	} else {
+            		rc.message = rc.$.Slatwall.rbKey("admin.product.save_success");
+            		getFW().redirect(action="admin:product.list",preserve="message");
+            	}   	
             }
 		} else {
 			rc.message = rc.$.Slatwall.rbKey("admin.product.save_error");
@@ -141,12 +146,9 @@ component extends="BaseController" output=false accessors=true {
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
 				getFW().setView(action="admin:product.create");
 			} else {
-				rc.edit = true;
-				rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
-				rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
-				rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
+				edit(rc);
+				param name="rc.Image" default="#getProductService().newImage()#";
 				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
-				rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'),parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 				getFW().setView(action="admin:product.detail");
 			}
 		}
