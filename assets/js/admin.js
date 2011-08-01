@@ -39,9 +39,31 @@ Notes:
 jQuery(document).ready(function(){
 	setDatePickers(".datepicker",dtLocale);
 	setTabs(".tabs",activeTab);
-	setHTMLEditors();
-	setAccordions(".accordion",activePanel)
+	setAccordions(".accordion",activePanel);
+	loadWysiwygs();
+
 });
+
+function loadWysiwygs() {
+	jQuery('textarea.wysiwyg').each(function(i) {
+		setRTE(jQuery(this));
+	});
+}
+
+function setRTE(txtarea) {
+	if( txtarea.hasClass("Basic") ) {
+		var wysiwygType = "Basic";
+	} else {
+		var wysiwygType = "Default";
+	}
+	var loadEditorCount = 0;
+		txtarea.ckeditor({ 
+			toolbar:wysiwygType,
+			height:'150',
+			customConfig : 'config.js.cfm'
+		});
+}
+
 
 function btnConfirmDialog(message,btn){
     
@@ -61,4 +83,15 @@ function btnConfirmDialog(message,btn){
         });
 
     return false;   
+}
+
+
+function toggleDisplay(link,expand,close){
+	var $target = $(link).parent().next().children('div');
+	$target.toggle();
+	if($(link).html() == '[' + expand + ']') {
+		$(link).html('[' + close + ']');
+	} else {
+		$(link).html('[' + expand + ']');
+	}  
 }

@@ -219,7 +219,8 @@ Notes:
 		</cfif>
 		
 		<cfif trim(attributes.id) eq "">
-		  <cfset attributes.id = "spd" & LCASE(attributes.fieldName) />
+			<!--- make id from fieldname (fieldname may have dot or array notation so we'll just take the last part) --->
+		  <cfset attributes.id = "spd" & listLast(LCASE(attributes.fieldName),".]") />
 		</cfif>
 		
 		
@@ -278,11 +279,11 @@ Notes:
 	            </cfif> 			
 	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
 	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
-					<label for="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
+					<label for="#attributes.id#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
 					</label>
 	 			<cfelseif attributes.edit and attributes.editType EQ "file">
-					<label for="#attributes.fieldName#File"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
+					<label for="#attributes.id#File"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
 						#attributes.title#
 					</label>
 				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
@@ -301,7 +302,7 @@ Notes:
 	            </cfif>
 	            <cfif listFindNoCase("show,hide",attributes.toggle)>
 	                <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-	                <a  href="##" id="#attributes.id#Link" onclick="javascript: toggleDisplay('#attributes.id#','#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
+	                <a  href="##" class="toggleLink" onclick="javascript: toggleDisplay(this,'#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
 	            </cfif>	
 	
 				<cfif attributes.displaytype eq "dl">
@@ -312,19 +313,22 @@ Notes:
 			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
 			
 			<cfif attributes.displayType eq "dl">
-				<dd class="spd#LCASE(attributes.property)#" <cfif listFindNoCase("show,hide",attributes.toggle)> style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#"</cfif>>
+				<dd class="spd#LCASE(attributes.property)#">
 			<cfelseif attributes.displayType eq "table">
 				<td class="value">
 			</cfif>
+				<cfif listFindNoCase("show,hide",attributes.toggle)>
+					<div style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#">
+				</cfif>
 				<!--- If in edit mode, then generate necessary form field --->
 				<cfif attributes.edit eq true and attributes.editType neq "none">
 					<cfif attributes.editType eq "text" or attributes.editType eq "password">
-						<input type="#attributes.editType#" name="#attributes.fieldName#" id="#attributes.fieldName#" value="#attributes.value#" />
+						<input type="#attributes.editType#" name="#attributes.fieldName#" id="#attributes.id#" value="#attributes.value#" />
 					<cfelseif attributes.editType eq "textarea">
-						<textarea name="#attributes.fieldName#" id="#attributes.fieldName#">#attributes.Value#</textarea>
+						<textarea name="#attributes.fieldName#" id="#attributes.id#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "checkbox">
-						<input type="hidden" name="#attributes.fieldName#" id="#attributes.fieldName#" value="" />
-						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.fieldName#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
+						<input type="hidden" name="#attributes.fieldName#" id="#attributes.id#" value="" />
+						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.id#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
 					<cfelseif attributes.editType eq "select">
 						<cfif arrayLen(attributes.editOptions) gt 0>
 						<select name="#attributes.fieldName#" <cfif len(attributes.class)> class="#attributes.class#"</cfif>>
@@ -345,8 +349,8 @@ Notes:
 					<cfelseif attributes.editType eq "radiogroup">
 						<ul class="radiogroup">
 						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.fieldName#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.fieldName#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.id#yes" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.id#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
+							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.id#no" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.id#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
 						<cfelse>
 							<input type="hidden" name="#attributes.fieldName#" value="" />
 							<cfloop array="#attributes.editOptions#" index="i">
@@ -362,14 +366,7 @@ Notes:
 						<cfelse>
 							<cfset local.wysiwygType = "Default">
 						</cfif>
-						<textarea name="#attributes.fieldName#" id="#attributes.id#txt">#attributes.Value#</textarea>
-						<script type="text/javascript" language="Javascript">
-							var loadEditorCount = 0;
-							jQuery('###attributes.id#txt').ckeditor(
-								{ toolbar:'#local.wysiwygType#',
-								height:'150',
-								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
-							</script>
+						<textarea id="#attributes.id#txt" class="wysiwyg #local.wysiwygType#" name="#attributes.fieldName#">#attributes.Value#</textarea>
 					<cfelseif attributes.editType eq "file">
 					<!--- ouptut a file upload field --->
 						<input type="file" name="#attributes.fieldName#File" class="file">
@@ -399,6 +396,9 @@ Notes:
 				</cfif>
 				<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
 			</cftry>
+			<cfif listFindNoCase("show,hide",attributes.toggle)>
+				</div>
+			</cfif>
 			<cfif attributes.displaytype eq "dl">
 				</dd>
 			<cfelseif attributes.displaytype eq "table">
