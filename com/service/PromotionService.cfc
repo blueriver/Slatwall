@@ -274,6 +274,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(!arrayLen(arguments.promotion.getPromotionCodes())) {
 			codesOK = true;
 		} else {
+			// Loop over each promotion code in the order
+			for(var i=1; i<=arrayLen(arguments.promotion.getPromotionCodes()); i++) {
+				
+			}
 			// TODO: Check order for a required promotion code
 		}
 		
