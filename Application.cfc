@@ -212,7 +212,7 @@ component extends="framework" output="false" {
 		return buildURL(action='external.site', queryString='es=#arguments.Address#');
 	}
 	
-	public boolean function secureDisplay(required string action, boolean testing=false) {
+	public boolean function secureDisplay(required string action) {
 		var hasAccess = false;
 		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
 		

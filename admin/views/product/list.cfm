@@ -46,8 +46,10 @@ Notes:
 
 <div class="svoadminproductlist">
 
-	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
+	<form method="get">
+		<input name="Keyword" value="#rc.Keyword#" />
+		<input type="hidden" name="slatAction" value="admin:product.list" />
+		<button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
 <cfif rc.productSmartList.getRecordsCount()>
 	<table id="ProductList" class="stripe">
