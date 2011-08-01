@@ -55,6 +55,14 @@ component extends="taffy.core.api" {
 	public void function requestStartEvent(){
 		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
 		slatwallFW.onRequestStart(cgi.script_name);
+		
+		if(structKeyExists(url, "dashboard") && !request.context.$.currentUser().getS2()) {
+			abort;
+		}
+	}
+	
+	public boolean function onTaffyRequest() {
+		return true;
 	}
 	
 }
