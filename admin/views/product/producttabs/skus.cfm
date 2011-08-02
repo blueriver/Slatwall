@@ -213,6 +213,7 @@ Notes:
             </td>
         </tr>
 </tbody>
+</table>
 <cfelse>
 	<div class="clear"></div>
 </cfif>
