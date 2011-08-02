@@ -1,6 +1,7 @@
 <cfparam name="attributes.smartList" type="any" />
 <cfparam name="attributes.showValue" default="" />
 <cfparam name="attributes.showOptions" default="10,25,50,100,250,1000,ALL" />
+<cfparam name="attributes.class" default="smartListPager" />
 
 <cfset variables.fw = caller.this />
 
@@ -10,7 +11,7 @@
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<div class="smartListPager">
+		<div class="#attributes.class#">
 			<cfif attributes.smartList.getTotalPages() gt 1>
 				<span class="showing">Showing #attributes.smartList.getPageRecordsStart()#-#attributes.smartList.getPageRecordsEnd()# (of #attributes.smartList.getRecordsCount()#)</span>
 				<ul class="pages">
