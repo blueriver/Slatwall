@@ -44,7 +44,7 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
-	property name="promotionCode" cfc="PromotionCode" fieldtype="many-to-one" fkcolumn="promotionCodeID";
+	//property name="promotionCode" cfc="PromotionCode" fieldtype="many-to-one" fkcolumn="promotionCodeID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
