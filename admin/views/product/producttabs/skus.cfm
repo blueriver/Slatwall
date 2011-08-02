@@ -220,5 +220,7 @@ Notes:
         </tr>
 </tbody>
 </table>
+<cfelse>
+	<div class="clear"></div>
 </cfif>
 </cfoutput>
