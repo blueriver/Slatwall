@@ -136,7 +136,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getBrandOptions() {
 		if(!structKeyExists(variables, "brandOptions")) {
-			var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallBrand");
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(propertyIdentifier="brandName", alias="name");
 			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
 			smartList.addOrder("brandName|ASC");
@@ -556,7 +556,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	//get attribute value
 	public any function getAttributeValue(required string attribute, returnEntity=false){
-		var smartList = new Slatwall.com.utility.SmartList(entityName="SlatwallProductAttributeValue");
+		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProductAttributeValue");
 		
 		smartList.addFilter("product_productID",getProductID(),1);
 		smartList.addFilter("attribute_attributeID",attribute,1);
