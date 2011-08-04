@@ -65,5 +65,18 @@ Notes:
 			The keys that are provided by this function should match the keys used for
 			getting rates as well as creating shipments.
 		--->
-	</cffunction> 
+	</cffunction>
+	
+	<cffunction name="getTrackingURL" access="public" returntype="string">
+		
+		<!--- 
+			This method should return a string with the providers base tracking URL
+			
+			The string should inclide: ${trackingNumber}
+			That portion of the string will be replaced with the tracking number 
+			
+			For Example:
+			return "http://www.usp.com/tracking/${trackingNumber}/detail";
+		--->
+	</cffunction>
 </cfinterface>
