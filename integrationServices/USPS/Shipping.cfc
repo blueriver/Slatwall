@@ -65,6 +65,10 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		return variables.shippingMethods;
 	}
 	
+	public string function getTrackingURL() {
+		return "http://usps.com/Tracking?tracknumber=${trackingNumber}";
+	}
+	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
 		
 		// Insert Custom Logic Here
@@ -138,5 +142,6 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		
 		return ratesResponseBean;
 	}
+	
 	
 }

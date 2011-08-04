@@ -57,6 +57,14 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		return this;
 	}
 	
+	public struct function getShippingMethods() {
+		return variables.shippingMethods;
+	}
+	
+	public string function getTrackingURL() {
+		return "http://usps.com/Tracking?tracknumber=${trackingNumber}";
+	}
+	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
 		var totalItemsWeight = 0;
 		var totalItemsValue = 0;
@@ -134,10 +142,6 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 			
 		}
 		return ratesResponseBean;
-	}
-	
-	public struct function getShippingMethods() {
-		return variables.shippingMethods;
 	}
 	
 	private numeric function convertPoundsToOunces(required numeric pounds) {

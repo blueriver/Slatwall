@@ -66,6 +66,14 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		return this;
 	}
 	
+	public struct function getShippingMethods() {
+		return variables.shippingMethods;
+	}
+	
+	public string function getTrackingURL() {
+		return "http://www.fedex.com/Tracking?tracknumber_list=${trackingNumber}";
+	}
+	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
 		
 		// Insert Custom Logic Here
@@ -140,7 +148,4 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		return responseBean;
 	}
 	
-	public struct function getShippingMethods() {
-		return variables.shippingMethods;
-	}
 }

@@ -84,6 +84,14 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		return this;
 	}
 	
+	public struct function getShippingMethods() {
+		return variables.shippingMethods;
+	}
+	
+	public string function getTrackingURL() {
+		return "http://wwwapps.ups.com/WebTracking/track?loc=en_US&track.x=Track&trackNums=${trackingNumber}";
+	}
+	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
 		var responseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		
@@ -169,7 +177,5 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		return responseBean;
 	}
 	
-	public struct function getShippingMethods() {
-		return variables.shippingMethods;
-	}
+	
 }
