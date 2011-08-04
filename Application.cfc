@@ -73,7 +73,13 @@ component extends="org.fw1.framework" output="false" {
 		if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
 	  		include "plugin/config.cfm";
 		}
-		setPluginConfig(request.PluginConfig);	
+		setPluginConfig(request.PluginConfig);
+		
+		// Make sure the correct version is in the plugin config
+		var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
+		if( fileExists( versionFile ) ) {
+			getPluginConfig().getApplication().setValue('SlatwallVersion', trim(fileRead(versionFile)));
+		}
 		
 		// Set this in the application scope to be used on the frontend
 		getPluginConfig().getApplication().setValue( "fw", this);

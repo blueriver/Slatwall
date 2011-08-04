@@ -80,7 +80,7 @@ Notes:
 					</cfif>
 					<cfif secureDisplay("admin:help")>
 						<li>
-							<cf_SlatwallActionCaller action="admin:help">
+							<cf_SlatwallActionCaller action="admin:help.about">
 							<div class="MenuSubOne">
 								<ul>
 									<cf_SlatwallActionCaller action="admin:help.about" type="list">
