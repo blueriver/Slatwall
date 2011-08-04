@@ -38,13 +38,15 @@ Notes:
 --->
 <cfoutput>
 <div class="svohelpabout">
-	<dl>
-		<dt>User Roles</dt>
-		<dd>#getUserRoles()#</dd>
-	</dl>
-	<dl>
-		<dt>Remote Address</dt>
-		<dd>#CGI.Remote_addr#</dd>
-	</dl>
+	<strong>Documentation: </strong><a href="http://docs.getslatwall.com">http://docs.getslatwall.com</a><br /><br />
+	<strong>Google Group: </strong><a href="http://groups.google.com/group/slatwallecommerce">http://groups.google.com/group/slatwallecommerce</a><br /><br />
+	<strong>Feature & Bug Tracking: </strong><a href="https://github.com/ten24/Slatwall/issues">https://github.com/ten24/Slatwall/issues</a><br /><br />
+	<strong>Debugging Details: </strong>Please Copy & Paste these debugging details to any issues submitted<br /><br />
+	<textarea name="debugDetails" style="width:100%; height:500px;">
+Slatwall Version:	#getPluginConfig().getApplication().getValue('SlatwallVersion')#
+CFML Server:		#server.coldfusion.productName#
+CFML Server Version:	<cfif structKeyExists(server,"railo")>#server.railo.version#<cfelse>#server.coldfusion.productVersion#</cfif>
+DB Dialect: 		#application.configBean.getDBType()#
+	</textarea>
 </div>
 </cfoutput>
