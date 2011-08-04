@@ -1,7 +1,7 @@
 /*
 	Copyright (c) 2010, Greg Moser
 	
-	Version: 1.1
+	Version: 1.2
 	Documentation: http://www.github.com/gregmoser/entitySmartList/wiki
 
 	Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,6 +81,42 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 				
 		return this;
+	}
+	
+	public void function applyData(required struct data) {
+		var currentPage = 1;
+		
+		for(var i in arguments.data) {
+			if(left(i,2) == "F#variables.dataKeyDelimiter#") {
+				addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+			} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
+				addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+			} else if(i == "OrderBy") {
+				for(var ii=1; ii <= listLen(arguments.data[i], variables.orderPropertyDelimiter); ii++ ) {
+					addOrder(orderStatement=listGetAt(arguments.data[i], ii, variables.orderPropertyDelimiter));
+				}
+			} else if(i == "P#variables.dataKeyDelimiter#Show") {
+				if(arguments.data[i] == "ALL") {
+					setPageRecordsShow(1000000000);
+				} else if (isNumeric(arguments.data[i])) {
+					setPageRecordsShow(arguments.data[i]);	
+				}
+			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i])) {
+				setPageRecordsStart(arguments.data[i]);
+			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i])) {
+				variables.currentPageDeclaration = arguments.data[i];
+			}
+		}
+		if(structKeyExists(arguments.data, "keyword")) {
+			arguments.data.keywords = arguments.data.keyword;
+		}
+		if(structKeyExists(arguments.data, "keywords")){
+			var KeywordList = Replace(arguments.data.Keyword," ",",","all");
+			KeywordList = Replace(KeywordList,"%20",",","all");
+			KeywordList = Replace(KeywordList,"+",",","all");
+			variables.Keywords = listToArray(KeywordList);
+		}
+		
 	}
 		
 	private void function confirmWhereGroup(required numeric whereGroup) {
@@ -239,42 +275,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public void function addKeywordProperty(required string propertyIdentifier, required numeric weight) {
 		variables.keywordProperties[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.weight;
 		variables.searchScoreProperties[arguments.propertyIdentifier] = arguments.weight;
-	}
-	
-	public void function applyData(required struct data) {
-		var currentPage = 1;
-		
-		for(var i in arguments.data) {
-			if(left(i,2) == "F#variables.dataKeyDelimiter#") {
-				addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
-			} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
-				addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
-			} else if(i == "OrderBy") {
-				for(var ii=1; ii <= listLen(arguments.data[i], variables.orderPropertyDelimiter); ii++ ) {
-					addOrder(orderStatement=listGetAt(arguments.data[i], ii, variables.orderPropertyDelimiter));
-				}
-			} else if(i == "P#variables.dataKeyDelimiter#Show") {
-				if(arguments.data[i] == "ALL") {
-					setPageRecordsShow(1000000000);
-				} else if (isNumeric(arguments.data[i])) {
-					setPageRecordsShow(arguments.data[i]);	
-				}
-			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i])) {
-				setPageRecordsStart(arguments.data[i]);
-			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i])) {
-				variables.currentPageDeclaration = arguments.data[i];
-			}
-		}
-		if(structKeyExists(arguments.data, "keyword")) {
-			arguments.data.keywords = arguments.data.keyword;
-		}
-		if(structKeyExists(arguments.data, "keywords")){
-			var KeywordList = Replace(arguments.data.Keyword," ",",","all");
-			KeywordList = Replace(KeywordList,"%20",",","all");
-			KeywordList = Replace(KeywordList,"+",",","all");
-			variables.Keywords = listToArray(KeywordList);
-		}
-		
 	}
 	
 	public void function addHQLParam(required string paramName, required string paramValue) {
