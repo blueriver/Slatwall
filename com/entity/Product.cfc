@@ -501,7 +501,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 				thisImage.originalFilename = getSkus()[i].getImageFile();
 				thisImage.originalPath = getSkus()[i].getImagePath();
 				thisImage.type = "skuDefaultImage";
-				thisImage.skuID = getSkus()[i].getSkuID();
 				thisImage.productID = getProductID();
 				thisImage.name = getTitle();
 				thisImage.description = getProductDescription();
