@@ -46,5 +46,21 @@ component displayname="Product Image" entityname="SlatwallProductImage" table="S
 		
 		return super.init();
 	}
-
+	
+	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		if(structKeyExists(arguments, "size")) {
+			arguments.size = lcase(arguments.size);
+			if(arguments.size eq "l" || arguments.size eq "large") {
+				arguments.size = "large";
+			} else if (arguments.size eq "m" || arguments.size eq "medium") {
+				arguments.size = "medium";
+			} else {
+				arguments.size = "small";
+			}
+			arguments.width = setting("product_imagewidth#arguments.size#");
+			arguments.height = setting("product_imageheight#arguments.size#");
+		}
+		arguments.imagePath = getImagePath();
+		return getService("utilityFileService").getResizedImagePath(argumentCollection=arguments);
+	}
 }
