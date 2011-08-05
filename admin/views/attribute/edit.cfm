@@ -71,7 +71,7 @@ Notes:
     <dl class="oneColumn">
         <cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeCode" edit="true" tooltip="true" tooltipmessage="#$.slatwall.rbKey('entity.attribute.attributeCode_hint')#" />
-		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwyg" />
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwygbasic" />
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
 		<div class="attributeOptions" style="display:none;">
@@ -165,7 +165,7 @@ Notes:
 		    <dl class="oneColumn">
 		        <cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeCode" edit="true" tooltip="true" tooltipmessage="#$.slatwall.rbKey('entity.attribute.attributeCode_hint')#" />
-				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwyg" />
+				<cf_SlatwallPropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwygbasic" />
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeHint" edit="true">
 				<cf_SlatwallPropertyDisplay class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
 				<div class="attributeOptions" style="display:none;">
