@@ -489,26 +489,57 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
-	public array function getAllResizedImagePaths(string size, numeric width, numeric height, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
-		var allResizedImagePaths = arrayNew(1);
+	public array function getImageGalleryArray(array resizeSizes=[{size='s'},{size='m'},{size='l'}]) {
+		var imageGalleryArray = [];
+		var filenames = "";
 		
 		// Add all skus's default images
 		for(var i=1; i<=arrayLen(getSkus()); i++) {
-			var thisResizedImagePath = getSkus()[i].getResizedImagePath(argumentCollection = arguments);
-			if(!arrayFind(allResizedImagePaths, thisResizedImagePath)) {
-				arrayAppend(allResizedImagePaths, thisResizedImagePath);
+			if( !listFind(filenames, getSkus()[i].getImageFile()) ) {
+				filenames = listAppend(filenames, getSkus()[i].getImageFile());
+				var thisImage = {};
+				thisImage.originalFilename = getSkus()[i].getImageFile();
+				thisImage.originalPath = getSkus()[i].getImagePath();
+				thisImage.type = "skuDefaultImage";
+				thisImage.skuID = getSkus()[i].getSkuID();
+				thisImage.productID = getProductID();
+				thisImage.name = getTitle();
+				thisImage.description = getProductDescription();
+				thisImage.resizedImagePaths = [];
+				for(var s=1; s<=arrayLen(arguments.resizeSizes); s++) {
+					arrayAppend(thisImage.resizedImagePaths, getSkus()[i].getResizedImagePath(argumentCollection = arguments.resizeSizes[s]));
+				}
+				arrayAppend(imageGalleryArray, thisImage);
 			}
 		}
 		
 		// Add all alternate image paths
 		for(var i=1; i<=arrayLen(getImages()); i++) {
-			var thisResizedImagePath = getImages()[i].getResizedImagePath(argumentCollection = arguments);
-			if(!arrayFind(allResizedImagePaths, thisResizedImagePath)) {
-				arrayAppend(allResizedImagePaths, thisResizedImagePath);
+			if( !listFind(filenames, getImages()[i].getImageID()) ) {
+				filenames = listAppend(filenames, getImages()[i].getImageID());
+				var thisImage = {};
+				thisImage.originalFilename = getImages()[i].getImageID() & "." & getImages()[i].getImageExtension();
+				thisImage.originalPath = getImages()[i].getImagePath();
+				thisImage.type = "productAlternateImage";
+				thisImage.skuID = "";
+				thisImage.productID = getProductID();
+				thisImage.name = "";
+				if(!isNull(getImages()[i].getImageName())) {
+					thisImage.name = getImages()[i].getImageName();
+				}
+				thisImage.description = "";
+				if(!isNull(getImages()[i].getImageDescription())) {
+					thisImage.name = getImages()[i].getImageDescription();
+				}
+				thisImage.resizedImagePaths = [];
+				for(var s=1; s<=arrayLen(arguments.resizeSizes); s++) {
+					arrayAppend(thisImage.resizedImagePaths, getImages()[i].getResizedImagePath(argumentCollection = arguments.resizeSizes[s]));
+				}
+				arrayAppend(imageGalleryArray, thisImage);
 			}
 		}
 		
-		return allResizedImagePaths;
+		return imageGalleryArray;
 	}
 	
 	public numeric function getPrice() {
