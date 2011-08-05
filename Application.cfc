@@ -314,7 +314,15 @@ component extends="org.fw1.framework" output="false" {
 	// This is used to setup the frontend path to pull from the siteid directory
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
-			arguments.fullPath = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/");
+			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
+			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
+			
+			if(fileExists(expandPath(themeView))) {
+				arguments.fullPath = themeView;	
+			} else if (fileExists(expandPath(siteView))) {
+				arguments.fullPath = siteView;
+			}
+			
 		}
 		return arguments.fullPath;
 	}
