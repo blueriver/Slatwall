@@ -489,6 +489,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getDefaultSku().getResizedImagePath(argumentCollection = arguments);
 	}
 	
+	public array function getAllResizedImagePaths(string size, numeric width, numeric height, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+		var allResizedImagePaths = arrayNew(1);
+		
+		// Add all skus's default images
+		for(var i=1; i<=arrayLen(getSkus()); i++) {
+			var thisResizedImagePath = getSkus()[i].getResizedImagePath(argumentCollection = arguments);
+			if(!arrayFind(allResizedImagePaths, thisResizedImagePath)) {
+				arrayAppend(allResizedImagePaths, thisResizedImagePath);
+			}
+		}
+		
+		// Add all alternate image paths
+		for(var i=1; i<=arrayLen(getImages()); i++) {
+			var thisResizedImagePath = getImages()[i].getResizedImagePath(argumentCollection = arguments);
+			if(!arrayFind(allResizedImagePaths, thisResizedImagePath)) {
+				arrayAppend(allResizedImagePaths, thisResizedImagePath);
+			}
+		}
+		
+		return allResizedImagePaths;
+	}
+	
 	public numeric function getPrice() {
 		// brand new products won't have a default SKU yet but need this method for create form
 		if( structKeyExists(variables,"defaultSku") ) {
