@@ -86,7 +86,10 @@ component extends="BaseController" output=false accessors=true {
 	}
 
 	public void function list(required struct rc) {
-		rc.productSmartList = getProductService().getProductSmartList(data=arguments.rc);
+		if(!structKeyExists(rc, "orderBy")) {
+			rc.orderBy = "productType_productTypeName|ASC,brand_brandName|ASC,productName|ASC";
+		}
+		rc.productSmartList = getProductService().getProductSmartList(data=rc);
 	}
 	
 	public void function save(required struct rc) {
