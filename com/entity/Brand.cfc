@@ -43,6 +43,9 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="brandName" ormtype="string" validateRequired="true" persistent="true" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" validateURL="true" persistent="true" hint="This is the Website of the brand";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
