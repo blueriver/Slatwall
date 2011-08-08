@@ -39,22 +39,19 @@ Notes:
 <cfoutput>
 <div class="svoadminintegrationlist">
 	<ul id="navTask">
-    	<cf_SlatwallActionCaller action="admin:account.create" type="list">
+    	
 	</ul>
 	
-	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
-	</form>
 	<table class="stripe">
 		<thead>
 			<tr>
-				<th class="varWidth">Name</th>
-				<th>Primary Email</th>
+				<th class="varWidth">Integration Service Name</th>
 				<th class="administration">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
-			<cfloop array="#rc.accountSmartList.getPageRecords()#" index="local.account">
+			<!---
+			<cfloop array="#rc.integrationSmartList.getPageRecords()#" index="local.integration">
 				<tr>
 					<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
 					<td>
@@ -68,8 +65,8 @@ Notes:
 					</td>
 				</tr>
 			</cfloop>
+			--->
 		</tbody>
 	</table>
-	<cf_SlatwallSmartListPager smartList="#rc.accountSmartList#">
 </div>
 </cfoutput>
