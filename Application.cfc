@@ -49,7 +49,6 @@ component extends="org.fw1.framework" output="false" {
 	variables.slatwallVfsRoot = "ram:///" & this.name;
 	this.mappings[ "/slatwallVfsRoot" ] = variables.slatwallVfsRoot;
 	
-	
 	public void function setPluginConfig(required any pluginConfig) {
 		application.slatwall.pluginConfig = arguments.pluginConfig; 
 	}
@@ -256,28 +255,15 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	
-	// Override autowire function from fw/1 so that properties work
-	private void function autowire(cfc, beanFactory) {
-		var key = 0;
-		var property = 0;
-		var args = 0;
-		var meta = getMetaData(arguments.cfc); 
-		
-		for(key in arguments.cfc) {
-			if(len(key) > 3 && left(key,3) is "set") {
-				property = right(key, len(key)-3);
-				if(arguments.beanFactory.containsBean(property)) {
-					evaluate("arguments.cfc.#key#(arguments.beanFactory.getBean(property))");
-				}
-			}
+	// Override onRequest function to add some custom logic to the end of the request
+	public any function getSubsystemDirPrefix( string subsystem ) {
+		if ( subsystem eq '' ) {
+			return '';
 		}
-		if(structKeyExists(meta, "accessors") && meta.accessors && structKeyExists(meta, "properties")) {
-			for(var i = 1; i <= arrayLen(meta.properties); i++) {
-				if(arguments.beanFactory.containsBean(meta.properties[i].name)) {
-					evaluate("arguments.cfc.set#meta.properties[i].name#(arguments.beanFactory.getBean(meta.properties[i].name))");
-				}
-			}
+		if ( !listFind('admin,frontend,common', arguments.subsystem) ) {
+			return 'integrationServices/' & subsystem & '/';
 		}
+		return subsystem & '/';
 	}
 	
 	// Override onRequest function to add some custom logic to the end of the request

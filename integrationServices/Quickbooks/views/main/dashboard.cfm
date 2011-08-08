@@ -1,6 +1,3 @@
-<cfdump var="#request.context.$.siteConfig('assetPath')#" />
-<cfabort />
-
 <cfif structKeyExists(form, "processInventoryImport")>
 	<cfset newFilename = createUUID() & ".txt" />
 	<cffile action="upload" filefield="inventoryImport" destination="C:\TempTestFiles" nameConflict="overwrite"  result="uploadedFile">
