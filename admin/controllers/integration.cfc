@@ -39,6 +39,6 @@ Notes:
 component extends="BaseController" output=false accessors=true {
 
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:product.list");
+		getFW().redirect(action="admin:integration.list");
 	}
 }
