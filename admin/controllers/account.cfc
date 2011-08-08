@@ -43,7 +43,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function before(required struct rc) {
 	}
 	
-	public void function dashboard(required struct rc) {
+	public void function default(required struct rc) {
 		getFW().redirect(action="admin:account.list");
 	}
 	

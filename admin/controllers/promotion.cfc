@@ -42,7 +42,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="promotionService" type="any";
 	property name="requestCacheService" type="any";
 	
-	public void function dashboard(required struct rc) {
+	public void function default(required struct rc) {
 		getFW().redirect("admin:promotion.list");
 	}
 

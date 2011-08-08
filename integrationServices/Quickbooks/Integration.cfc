@@ -44,5 +44,6 @@ component accessors="true" output="false" displayname="Quickbooks" implements="S
 	
 	public string function getIntegrationTypes() {
 		return "tool";
-	} 
+	}
+	
 }

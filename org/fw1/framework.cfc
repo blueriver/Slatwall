@@ -23,6 +23,15 @@ component {
 		variables.cgiScriptName = CGI.SCRIPT_NAME;
 		variables.cgiPathInfo = CGI.PATH_INFO;
 	}
+	request._fw1 = { };
+	// do not rely on these, they are meant to be true magic...
+	variables.magicApplicationController = '[]';
+	variables.magicApplicationAction = '__';
+	
+	public void function abortController() {
+		request._fw1.abortController = true;
+		throw( type="FW1.AbortControllerException", message="abortController() called" );
+	}
 
 	public boolean function actionSpecifiesSubsystem( string action ) {
 
@@ -282,6 +291,22 @@ component {
 	
 	
 	/*
+	 * return the current route (if any)
+	 */
+	public string function getRoute() {
+		return structKeyExists( request._fw1, 'route' ) ? request._fw1.route : '';
+	}
+	
+	
+	/*
+	 * return the configured routes
+	 */
+	public array function getRoutes() {
+		return variables.framework.routes;
+	}
+	
+	
+	/*
 	 * return the section part of the action
 	 */
 	public string function getSection( string action = request.action ) {
@@ -484,69 +509,74 @@ component {
 		var n = 0;
 
 		request.controllerExecutionStarted = true;
-		if ( structKeyExists( request, 'controllers' ) ) {
-			n = arrayLen( request.controllers );
+		try {
+			if ( structKeyExists( request, 'controllers' ) ) {
+				n = arrayLen( request.controllers );
+				for ( i = 1; i <= n; i = i + 1 ) {
+					tuple = request.controllers[ i ];
+					// run before once per controller:
+					if ( !structKeyExists( once, tuple.key ) ) {
+						once[ tuple.key ] = i;
+						doController( tuple.controller, 'before' );
+						if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+					}
+					doController( tuple.controller, 'start' & tuple.item );
+					if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+					doController( tuple.controller, tuple.item );
+					if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+				}
+			}
+			n = arrayLen( request.services );
 			for ( i = 1; i <= n; i = i + 1 ) {
-				tuple = request.controllers[ i ];
-				// run before once per controller:
-				if ( !structKeyExists( once, tuple.key ) ) {
-					once[ tuple.key ] = i;
-					doController( tuple.controller, 'before' );
-				}
-				doController( tuple.controller, 'start' & tuple.item );
-				doController( tuple.controller, tuple.item );
-			}
-		}
-		n = arrayLen( request.services );
-		for ( i = 1; i <= n; i = i + 1 ) {
-			tuple = request.services[i];
-			if ( tuple.key == '' ) {
-				// throw the result away:
-				doService( tuple.service, tuple.item, tuple.args, tuple.enforceExistence );
-			} else {
-				_data_fw1 = doService( tuple.service, tuple.item, tuple.args, tuple.enforceExistence );
-				if ( isDefined('_data_fw1') ) {
-					request.context[ tuple.key ] = _data_fw1;
+				tuple = request.services[i];
+				if ( tuple.key == '' ) {
+					// throw the result away:
+					doService( tuple.service, tuple.item, tuple.args, tuple.enforceExistence );
+					if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+				} else {
+					_data_fw1 = doService( tuple.service, tuple.item, tuple.args, tuple.enforceExistence );
+					if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+					if ( isDefined('_data_fw1') ) {
+						request.context[ tuple.key ] = _data_fw1;
+					}
 				}
 			}
-		}
-		request.serviceExecutionComplete = true;
-		if ( structKeyExists( request, 'controllers' ) ) {
-			n = arrayLen( request.controllers );
-			for ( i = n; i >= 1; i = i - 1 ) {
-				tuple = request.controllers[ i ];
-				doController( tuple.controller, 'end' & tuple.item );
-				// run after once per controller:
-				if ( once[ tuple.key ] eq i ) {
-					doController( tuple.controller, 'after' );
+			request.serviceExecutionComplete = true;
+			if ( structKeyExists( request, 'controllers' ) ) {
+				n = arrayLen( request.controllers );
+				for ( i = n; i >= 1; i = i - 1 ) {
+					tuple = request.controllers[ i ];
+					doController( tuple.controller, 'end' & tuple.item );
+					if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+					if ( once[ tuple.key ] eq i ) {
+						doController( tuple.controller, 'after' );
+						if ( structKeyExists( request._fw1, "abortController" ) ) abortController();
+					}
 				}
 			}
+		} catch ( FW1.AbortControllerException e ) {
+			request.serviceExecutionComplete = true;
 		}
 		request.controllerExecutionComplete = true;
 
 		buildViewAndLayoutQueue();
-		
+
+		setupView();
+
 		if ( structKeyExists(request, 'view') ) {
 			out = internalView( request.view );
 		} else {
 			out = onMissingView( request.context );
 		}
-		
 		for ( i = 1; i <= arrayLen(request.layouts); i = i + 1 ) {
 			if ( structKeyExists(request, 'layout') && !request.layout ) {
 				break;
 			}
 			out = internalLayout( request.layouts[i], out );
 		}
-		
-		out = onPreOutput( out );
 		writeOutput( out );
 	}
-	
-	public any function onPreOutput( out ) {
-		return arguments.out;
-	}
-	
+
 	/*
 	 * it is better to set up your request configuration in
 	 * your setupRequest() method
@@ -647,43 +677,40 @@ component {
 			if ( trustKeys ) {
 				// assume everything in the request context can be set into the CFC
 				for ( var property in request.context ) {
-					var key = 'set' & property;
 					try {
 						var args = { };
 						args[ property ] = request.context[ property ];
 						if ( trim && isSimpleValue( args[ property ] ) ) args[ property ] = trim( args[ property ] );
-						// cfc[ key ]( argumentCollection = args ); // ugh! no portable script version of this?!?!
-						evaluate( 'cfc.#key#( argumentCollection = args )' );
+						// cfc[ 'set'&property ]( argumentCollection = args ); // ugh! no portable script version of this?!?!
+						evaluate( 'cfc.set#property#( argumentCollection = args )' );
 					} catch ( any e ) {
 						onPopulateError( cfc, property, request.context );
 					}
 				}
 			} else {
-				for ( var key in cfc ) {
-					if ( len( key ) > 3 && left( key, 3 ) == 'set' ) {
-						var property = right( key, len( key ) - 3 );
-						if ( structKeyExists( request.context, property ) ) {
-							var args = { };
-							args[ property ] = request.context[ property ];
-							if ( trim && isSimpleValue( args[ property ] ) ) args[ property ] = trim( args[ property ] );
-							// cfc[ key ]( argumentCollection = args ); // ugh! no portable script version of this?!?!
-							evaluate( 'cfc.#key#( argumentCollection = args )' );
-						}
+				var setters = findImplicitAndExplicitSetters( cfc );
+				for ( var property in setters.__fw1_setters ) {
+					if ( structKeyExists( request.context, property ) ) {
+						var args = { };
+						args[ property ] = request.context[ property ];
+						if ( trim && isSimpleValue( args[ property ] ) ) args[ property ] = trim( args[ property ] );
+						// cfc[ 'set'&property ]( argumentCollection = args ); // ugh! no portable script version of this?!?!
+						evaluate( 'cfc.set#property#( argumentCollection = args )' );
 					}
 				}
 			}
 		} else {
+			var setters = findImplicitAndExplicitSetters( cfc );
 			var keyArray = listToArray( keys );
 			for ( var property in keyArray ) {
 				var trimProperty = trim( property );
-				var key = 'set' & trimProperty;
-				if ( structKeyExists( cfc, key ) || trustKeys ) {
+				if ( structKeyExists( setters.__fw1_setters, trimProperty ) || trustKeys ) {
 					if ( structKeyExists( request.context, trimProperty ) ) {
 						var args = { };
-						args[ property ] = request.context[ property ];
-						if ( trim && isSimpleValue( args[ property ] ) ) args[ property ] = trim( args[ property ] );
-						// cfc[ key ]( argumentCollection = args ); // ugh! no portable script version of this?!?!
-						evaluate( 'cfc.#key#( argumentCollection = args )' );
+						args[ trimProperty ] = request.context[ trimProperty ];
+						if ( trim && isSimpleValue( args[ trimProperty ] ) ) args[ trimProperty ] = trim( args[ trimProperty ] );
+						// cfc[ 'set'&trimproperty ]( argumentCollection = args ); // ugh! no portable script version of this?!?!
+						evaluate( 'cfc.set#trimProperty#( argumentCollection = args )' );
 					}
 				}
 			}
@@ -782,6 +809,13 @@ component {
 	}
 
 	/*
+	 * use this to override the default layout
+	 */
+	public void function setLayout( string action ) {
+		request.overrideLayoutAction = validateAction( action );
+	}
+	
+	/*
 	 * call this from your setupSubsystem() method to tell the framework
 	 * about your subsystem-specific bean factory - only assumption is that it supports:
 	 * - containsBean(name) - returns true if factory contains that named bean, else false
@@ -826,6 +860,13 @@ component {
 	public void function setupSubsystem( string subsystem ) { }
 	
 	/*
+	 * override this to provide pre-rendering logic, e.g., to
+	 * populate the request context with globally required data
+	 * you do not need to call super.setupView()
+	 */
+	public void function setupView() { }
+	
+	/*
 	 * use this to override the default view
 	 */
 	public void function setView( string action ) {
@@ -851,15 +892,13 @@ component {
 	// THE FOLLOWING METHODS SHOULD ALL BE CONSIDERED PRIVATE / UNCALLABLE
 	
 	private void function autowire( any cfc, any beanFactory ) {
-		for ( var key in cfc ) {
-			if ( len( key ) > 3 && left( key, 3 ) == 'set' ) {
-				var property = right( key, len( key ) - 3 );
-				if ( beanFactory.containsBean( property ) ) {
-					var args = { };
-					args[ property ] = beanFactory.getBean( property );
-					// cfc[key](argumentCollection = args) does not work on ACF9
-					evaluate( 'cfc.#key#( argumentCollection = args )' );
-				}
+		var setters = findImplicitAndExplicitSetters( cfc );
+		for ( var property in setters.__fw1_setters ) {
+			if ( beanFactory.containsBean( property ) ) {
+				var args = { };
+				args[ property ] = beanFactory.getBean( property );
+				// cfc['set'&property](argumentCollection = args) does not work on ACF9
+				evaluate( 'cfc.set#property#( argumentCollection = args )' );
 			}
 		}
 	}
@@ -878,6 +917,7 @@ component {
 			subsystem = getSubsystem( request.overrideViewAction );
 			section = getSection( request.overrideViewAction );
 			item = getItem( request.overrideViewAction );
+			structDelete( request, 'overrideViewAction' );
 		}
 		subsystembase = request.base & getSubsystemDirPrefix( subsystem );
 
@@ -891,6 +931,16 @@ component {
 		}
 
 		request.layouts = [ ];
+		
+		// has layout been overridden?
+		if ( structKeyExists( request, 'overrideLayoutAction' ) ) {
+			subsystem = getSubsystem( request.overrideLayoutAction );
+			section = getSection( request.overrideLayoutAction );
+			item = getItem( request.overrideLayoutAction );
+			structDelete( request, 'overrideLayoutAction' );
+		}
+		subsystembase = request.base & getSubsystemDirPrefix( subsystem );
+
 		// look for item-specific layout:
 		testLayout = parseViewOrLayoutPath( subsystem & variables.framework.subsystemDelimiter &
 													section & '/' & item, 'layout' );
@@ -1003,7 +1053,50 @@ component {
 
 	}
 
+	private struct function findImplicitAndExplicitSetters( any cfc ) {
+		var baseMetadata = getMetadata( cfc );
+		var setters = { };
+		// is it already attached to the CFC metadata?
+		if ( structKeyExists( baseMetadata, '__fw1_setters' ) )  {
+			setters.__fw1_setters = baseMetadata.__fw1_setters;
+		} else {
+			setters.__fw1_setters = [ ];
+			var md = { extends = baseMetadata };
+			do {
+				md = md.extends;
+				var implicitSetters = structKeyExists( md, 'accessors' ) && isBoolean( md.accessors ) && md.accessors;
+				if ( structKeyExists( md, 'properties' ) ) {
+					// due to a bug in ACF9.0.1, we cannot use var property in md.properties,
+					// instead we must use an explicit loop index... ugh!
+					var n = arrayLen( md.properties );
+					for ( var i = 1; i <= n; ++i ) {
+						var property = md.properties[ i ];
+						if ( implicitSetters ||
+								structKeyExists( property, 'setter' ) && isBoolean( property.setter ) && property.setter ) {
+							arrayAppend( setters.__fw1_setters, property.name );
+						}
+					}
+				}
+			} while ( structKeyExists( md, 'extends' ) );
+			// cache it in the metadata (note: in Railo 3.2 metadata cannot be modified
+			// which is why we return the local setters structure - it has to be built
+			// on every controller call; fixed in Railo 3.3)
+			baseMetadata.__fw1_setters = setters;
+		}
+		// gather up explicit setters as well
+		for ( var member in cfc ) {
+			var method = cfc[ member ];
+			var n = len( member );
+			if ( isCustomFunction( method ) && left( member, 3 ) == 'set' && n > 3 ) {
+				var property = right( member, n - 3 );
+				arrayAppend( setters.__fw1_setters, property );
+			}
+		}
+		return setters;
+	}
+
 	private any function getCachedComponent( string type, string subsystem, string section ) {
+
 		setupSubsystemWrapper( subsystem );
 		var cache = application[variables.framework.applicationKey].cache;
 		var types = type & 's';
@@ -1016,45 +1109,40 @@ component {
 		
 		if ( !structKeyExists( cache[ types ], componentKey ) ) {
 			lock name="fw1_#application.applicationName#_#variables.framework.applicationKey#_#type#_#componentKey#" type="exclusive" timeout="30" {
-
 				if ( !structKeyExists( cache[ types ], componentKey ) ) {
-
 					if ( usingSubsystems() && hasSubsystemBeanFactory( subsystem ) && getSubsystemBeanFactory( subsystem ).containsBean( beanName ) ) {
-
 						cfc = getSubsystemBeanFactory( subsystem ).getBean( beanName );
 						if ( type == 'controller' ) injectFramework( cfc );
-
 					} else if ( !usingSubsystems() && hasDefaultBeanFactory() && getDefaultBeanFactory().containsBean( beanName ) ) {
-
 						cfc = getDefaultBeanFactory().getBean( beanName );
 						if ( type == 'controller' ) injectFramework( cfc );
-
-					} else if ( cachedFileExists( expandPath( cfcFilePath( request.cfcbase ) & subsystemDir & types & '/' & section & '.cfc' ) ) ) {
-
-						// we call createObject() rather than new so we can control initialization:
-						if ( request.cfcbase == '' ) {
-							cfc = createObject( 'component', subsystemDot & types & '.' & section );
-						} else {
-							cfc = createObject( 'component', request.cfcbase & '.' & subsystemDot & types & '.' & section );
-						}
-						if ( structKeyExists( cfc, 'init' ) ) {
-							if ( type == 'controller' ) {
-								cfc.init( this );
+					} else {
+						if ( type == 'controller' && section == variables.magicApplicationController ) {
+							// treat this (Application.cfc) as a controller:
+							cfc = this;
+						} else if ( cachedFileExists( expandPath( cfcFilePath( request.cfcbase ) & subsystemDir & types & '/' & section & '.cfc' ) ) ) {
+							// we call createObject() rather than new so we can control initialization:
+							if ( request.cfcbase == '' ) {
+								cfc = createObject( 'component', subsystemDot & types & '.' & section );
 							} else {
-								cfc.init();
+								cfc = createObject( 'component', request.cfcbase & '.' & subsystemDot & types & '.' & section );
+							}
+							if ( structKeyExists( cfc, 'init' ) ) {
+								if ( type == 'controller' ) {
+									cfc.init( this );
+								} else {
+									cfc.init();
+								}
 							}
 						}
-
-						if ( hasDefaultBeanFactory() || hasSubsystemBeanFactory( subsystem ) ) {
-								autowire( cfc, getBeanFactory( subsystem ) );
+						if ( isObject( cfc ) && ( hasDefaultBeanFactory() || hasSubsystemBeanFactory( subsystem ) ) ) {
+							autowire( cfc, getBeanFactory( subsystem ) );
 						}
 					}
-
 					if ( isObject( cfc ) ) {
 						cache[ types ][ componentKey ] = cfc;
 					}
 				}
-
 			}
 		}
 
@@ -1114,7 +1202,7 @@ component {
 
 		return subsystem & '/';
 	}
-
+	
 	private void function injectFramework( any cfc ) {
 		var args = { };
 		if ( structKeyExists( cfc, 'setFramework' ) ) {
@@ -1145,18 +1233,16 @@ component {
 	}
 	
 	private string function internalView( string viewPath, struct args = { } ) {
-		var local = { };
 		var rc = request.context;
 		var $ = { };
 		// integration point with Mura:
 		if ( structKeyExists( rc, '$' ) ) {
 			$ = rc.$;
 		}
-		
 		structAppend( local, args );
-		if ( !structKeyExists( request, 'controllerExecutionComplete' ) ) {
+		if ( !structKeyExists( request, 'serviceExecutionComplete') && arrayLen( request.services ) != 0 ) {
 			raiseException( type="FW1.viewExecutionFromController", message="Invalid to call the view method at this point.",
-				detail="The view method should not be called prior to the completion of the controller execution phase." );
+				detail="The view method should not be called prior to the completion of the service execution phase." );
 		}
 		var response = '';
 		savecontent variable="response" {
@@ -1259,13 +1345,16 @@ component {
 	private string function processRoutes( string path ) {
 		for ( var routePack in variables.framework.routes ) {
 			for ( var route in routePack ) {
-				var routeMatch = processRouteMatch( route, routePack[ route ], path );
-				if ( routeMatch.matched ) {
-					path = rereplace( routeMatch.path, routeMatch.pattern, routeMatch.target );
-					if ( routeMatch.redirect ) {
-						location( path, false, routeMatch.statusCode ); 
-					} else {
-						return path;
+				if ( route != 'hint' ) {
+					var routeMatch = processRouteMatch( route, routePack[ route ], path );
+					if ( routeMatch.matched ) {
+						path = rereplace( routeMatch.path, routeMatch.pattern, routeMatch.target );
+						if ( routeMatch.redirect ) {
+							location( path, false, routeMatch.statusCode ); 
+						} else {
+							request._fw1.route = route;
+							return path;
+						}
 					}
 				}
 			}
@@ -1488,7 +1577,7 @@ component {
 		if ( !structKeyExists( variables.framework, 'routes' ) ) {
 			variables.framework.routes = [ ];
 		}
-		variables.framework.version = '2.0_A_5';
+		variables.framework.version = '2.0_Alpha_2';
 	}
 
 	private void function setupRequestDefaults() {
@@ -1506,6 +1595,7 @@ component {
 		
 		if ( runSetup ) {
 			rc = request.context;
+			controller( variables.magicApplicationController & '.' & variables.magicApplicationAction );
 			setupSubsystemWrapper( request.subsystem );
 			setupRequest();
 		}

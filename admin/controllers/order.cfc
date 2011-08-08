@@ -47,7 +47,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.keyword" default="";
 	}
 	
-	public void function dashboard(required struct rc) {
+	public void function default(required struct rc) {
 		getFW().redirect("admin:order.list");
 	}
 
