@@ -51,7 +51,7 @@ component extends="BaseController" output=false accessors=true {
 		param name="rc.edit" default="false";
 	}
 	
-	public void function dashboard(required struct rc) {
+	public void function default(required struct rc) {
 		getFW().redirect(action="admin:product.list");
 	}
 

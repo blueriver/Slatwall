@@ -53,7 +53,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="userManager" type="any";
 	property name="categoryManager" type="any";
 	
-	public void function dashboard() {
+	public void function default() {
 		getFW().redirect(action="admin:setting.detail");
 	}
 	
