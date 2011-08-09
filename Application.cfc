@@ -309,8 +309,6 @@ component extends="org.fw1.framework" output="false" {
 				arguments.fullPath = siteView;
 			}
 			
-		} else if (arguments.pathInfo.subsystem != "frontend" && arguments.pathInfo.subsystem != "admin") {
-			// TODO: Integration Service Logic
 		}
 		return arguments.fullPath;
 	}
