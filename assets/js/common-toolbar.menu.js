@@ -39,17 +39,44 @@ Notes:
 
 var slatwallMenuShowing = false;
 
-$(document).ready(function(){
-	$('li#mainMenu > a').click(function(e){
+jQuery(document).ready(function(){
+	
+	jQuery('li#mainMenu > a').click(function(e){
+		e.preventDefault();
 		if(slatwallMenuShowing) {
 			toggleToolbarMenu(false);	
 		} else {
 			toggleToolbarMenu(true);
 		}
 	});
+	
+	jQuery('li#mainMenu ul.menu li').hover(
+		function(e){
+			if (!jQuery(this).hasClass('selected')) {
+				
+				var subSelector = 'li#mainMenu div.subMenuWrapper div.' + jQuery(this).attr('class');
+				
+				jQuery('li#mainMenu ul.menu li').removeClass('selected');
+				jQuery(this).addClass('selected');
+				
+				jQuery('li#mainMenu div.subMenuWrapper div.subMenu').hide();
+				jQuery(subSelector).show();
+				
+				jQuery('li#mainMenu div.subMenuWrapper').show();
+				jQuery('li#mainMenu div.subMenuWrapper').height(jQuery('li#mainMenu ul.menu').height() + 100);
+				jQuery('li#mainMenu div.subMenuWrapper').offset(jQuery('li#mainMenu ul.menu').offset());
+			
+			}
+		},
+		function(e){
+			console.log('off');
+		}
+		
+	);
+	
 });
 
-$(document).keydown(function(e) {
+jQuery(document).keydown(function(e) {
 	if (e.keyCode == 27) {
 		e.preventDefault();
 		toggleToolbarMenu(false);
@@ -62,13 +89,15 @@ $(document).keydown(function(e) {
 
 function toggleToolbarMenu(showing) {
 	if(showing) {
-		$('li#search > input').focus();
-		$('li#mainMenu > ul').show('fast');	
+		jQuery('li#search > input').focus();
+		jQuery('li#mainMenu ul.menu').show('fast');	
 		slatwallMenuShowing = true;
 	} else {
-		$('li#search > input').blur();
-		$('li#search > input').val('');
-		$('li#mainMenu > ul').hide('fast');
+		jQuery('li#search > input').blur();
+		jQuery('li#search > input').val('');
+		jQuery('li#mainMenu ul.menu').hide('fast');
 		slatwallMenuShowing = false;
+		jQuery('li#mainMenu div.subMenuWrapper').hide();
+		jQuery('li#mainMenu ul.menu li').removeClass('selected');
 	}
 }

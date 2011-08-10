@@ -64,7 +64,7 @@ div.svocommontoolbarmenu ul {
 	margin:0px;
 	padding:0px;
 }
-div.svocommontoolbarmenu li {
+div.svocommontoolbarmenu ul li {
 	display:inline-block;
 	float:left;
 	position:relative;
@@ -86,7 +86,7 @@ div.svocommontoolbarmenu li:hover a {
 	text-decoration:none;	
 }
 
-div.svocommontoolbarmenu li ul {
+div.svocommontoolbarmenu ul.favorites li ul {
 	display:none;
 }
 
@@ -209,11 +209,21 @@ div.svocommontoolbarmenu li#navSettings>a {
 
 div.svocommontoolbarmenu li#mainMenu ul.menu {
 	position: absolute;
+	display: none;
 	bottom:30px;
 	height: auto;
 	width: 260px;
 	padding:20px 0px 80px 0px;
 	background-color:#666666;
+	-moz-border-radius-topright: 15px;
+	-webkit-border-top-right-radius: 15px;
+	z-index: 499998;
+}
+
+div.svocommontoolbarmenu li#mainMenu div.subMenuWrapper {
+	position: absolute;
+	display: none;
+	background-color:#111;
 	-moz-border-radius-topright: 15px;
 	-webkit-border-top-right-radius: 15px;
 }
@@ -226,16 +236,114 @@ div.svocommontoolbarmenu li#mainMenu ul.menu li {
 	background-repeat:no-repeat;
 }
 
-div.svocommontoolbarmenu li#mainMenu ul.menu li:hover {
-	background-color:#4f4f4f;
+div.svocommontoolbarmenu li#mainMenu ul.menu li.selected {
+	background-color:#777777;
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu li a {
 	display:block;
-	width: 200px;
-	padding: 15px 30px 15px 30px;
-	font-size:16px;
-	color:#ffffff;
-	text-shadow:none;
+	width: 190px;
+	padding: 15px 30px 15px 40px;
+	font-size:14px;
 	font-weight:bold;
+	color:#ffffff;
+	background-position-x:10px;
+	background-position-y:7px;
+	background-repeat:no-repeat;
 }
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminmain {
+	background-image:url(../images/grayIcons32/computer.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminproduct {
+	background-image:url(../images/grayIcons32/edit.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminorder {
+	background-image:url(../images/grayIcons32/shopping_cart.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminaccount {
+	background-image:url(../images/grayIcons32/users.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminsetting {
+	background-image:url(../images/grayIcons32/tools.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminattribute {
+	background-image:url(../images/grayIcons32/process.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminpromotion {
+	background-image:url(../images/grayIcons32/dollar.png);
+}
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminhelp {
+	background-image:url(../images/grayIcons32/help.png);
+}
+
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu {
+	position:relative;
+	margin-left:260px;
+	display:none;
+	width:260px;
+	background: none;
+}
+div.svocommontoolbarmenu div.subMenuWrapper div.adminsetting,
+div.svocommontoolbarmenu div.subMenuWrapper div.adminproduct {
+	width:400px;
+}
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu h3 {
+	font-size:22px;
+	font-weight:normal;
+	margin:25px;
+	padding-bottom:10px;
+	color:#fff;
+	border-bottom:1px solid #fff;
+}
+
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu ul {
+	margin-bottom:25px;
+}
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu ul li {
+	display:block;
+	float:none;
+}
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu ul li.title {
+	display:block;
+	font-size:14px;
+	font-weight:bold;
+	color:#dedede;
+	margin-bottom:10px;
+}
+
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu a {
+	padding:0px;
+	margin:0px;
+	text-indent:0px;
+	font-size:12px;
+	color:#999;
+	font-weight:normal;
+	text-shadow:none;
+}
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu a:hover {
+	color:#dedede;
+}
+
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu div.oneColumn {
+	margin-left:25px;
+	width:160px;
+	float:left;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
