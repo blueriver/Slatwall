@@ -55,7 +55,7 @@
 		<cfset search.orders.setPageRecordsShow(7) />
 		
 		<cfsavecontent variable="display">
-			<cf_SlatwallToolbarSearchResults searchResults="#search#">
+			<cf_SlatwallToolbarSearchResults searchResults="#search#" keywords="#arguments.keywords#">
 		</cfsavecontent>
 
 		<cfreturn representationOF(display) />
