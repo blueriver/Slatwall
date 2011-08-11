@@ -234,8 +234,7 @@ div.svocommontoolbarmenu li#mainMenu div.subMenuWrapper {
 div.svocommontoolbarmenu li#mainMenu ul.menu li {
 	background-color:#666666;
 	background-image:url(../images/common.toolbar.menu.arrow_white.png);
-	background-position-x:240px;
-	background-position-y:18px;
+	background-position:240px 18px;
 	background-repeat:no-repeat;
 }
 
@@ -250,8 +249,7 @@ div.svocommontoolbarmenu li#mainMenu ul.menu li a {
 	font-size:14px;
 	font-weight:bold;
 	color:#ffffff;
-	background-position-x:10px;
-	background-position-y:7px;
+	background-position:7px 10px;
 	background-repeat:no-repeat;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminmain {
