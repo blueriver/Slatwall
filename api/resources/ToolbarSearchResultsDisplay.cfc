@@ -33,38 +33,32 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
-
+	Notes:
+	
 --->
-<cfoutput>
-	<cfif isDefined("rc.toolbarKeyword") and len(rc.toolbarKeyword) gte 2>
-		<div class="svocommontoolbarsearch">
-			<ul class="SearchMenu">
-				<li class="MenuTop">&nbsp;</li>
-				
-				<cfif arrayLen(rc.productSmartList.getEntityArray())>
-					<li class="SearchHeader top"><a href="#buildURL(action='product.list',querystring='Keyword=#rc.toolbarKeyword#')#">Products (#rc.productSmartList.getTotalEntities()#)</a></li>
-					<cfloop array="#rc.productSmartList.getEntityArray()#" index="local.Product">
-						<li class="SearchResult"><a href="#buildURL(action='product.detail',querystring='ProductID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></li>
-					</cfloop>
-					<li class="Spacer">&nbsp;</li>
-				</cfif>
-				
-				<cfif arrayLen(rc.brandSmartList.getEntityArray())>
-					<li class="SearchHeader top"><a href="#buildURL(action='brand.list',querystring='Keyword=#rc.toolbarKeyword#')#">Brands (#rc.brandSmartList.getTotalEntities()#)</a></li>
-					<cfloop array="#rc.brandSmartList.getEntityArray()#" index="local.Brand">
-						<li class="SearchResult"><a href="#buildURL(action='brand.detail',querystring='BrandID=#local.Brand.getBrandID()#')#">#local.Brand.getBrandName()#</a></li>
-					</cfloop>
-					<li class="Spacer">&nbsp;</li>
-				</cfif>
-				<cfif not arrayLen(rc.productSmartList.getEntityArray()) and not arrayLen(rc.brandSmartList.getEntityArray())>
-					<li class="MenuBottom">Nothing Found Matching Your Search</li>
-				<cfelse>
-					<li class="MenuBottom">&nbsp;</li>
-				</cfif>
-			</ul>
-		</div>
-	<cfelse>
-		<div class="svoadminutilitytoolbarsearch" style="display:none;"></div>
-	</cfif>
-</cfoutput>
+<cfcomponent extends="BaseResource" taffy_uri="/toolbarSearchResultsDisplay/{keywords}/">
+
+	<cffunction name="get">
+		<cfset var display = "" />
+		
+		<cfset var search = structNew() />
+		
+		<cfset search.products = getService("productService").getProductSmartList(data=arguments) />
+		<cfset search.products.setPageRecordsShow(14) />
+		<cfset search.productTypes = getService("productService").getProductTypeSmartList(data=arguments) />
+		<cfset search.productTypes.setPageRecordsShow(7) />
+		<cfset search.brands = getService("brandService").getBrandSmartList(data=arguments) />
+		<cfset search.brands.setPageRecordsShow(7) />
+		<cfset search.accounts = getService("accountService").getAccountSmartList(data=arguments) />
+		<cfset search.accounts.setPageRecordsShow(7) />
+		<cfset search.orders = getService("orderService").getOrderSmartList(data=arguments) />
+		<cfset search.orders.setPageRecordsShow(7) />
+		
+		<cfsavecontent variable="display">
+			<cf_SlatwallToolbarSearchResults searchResults="#search#">
+		</cfsavecontent>
+
+		<cfreturn representationOF(display) />
+	</cffunction>
+
+</cfcomponent>

@@ -55,6 +55,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			arguments.data["P:Show"] = 25;
 		}
 		
+		// If nothing was set in the data for a filter on order status, set a default
+		if(!structKeyExists(arguments.data, "F:orderStatusType_systemCode") && !structKeyExists(arguments.data, "F:orderStatusType_typeID")) {
+			arguments.data["F:orderStatusType_systemCode"] = "ostNew,ostProcessing,ostOnHold";	
+		}
+		
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);	
 		smartList.addKeywordProperty(propertyIdentifier="orderNumber", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="account_lastname", weight=4);

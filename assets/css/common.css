@@ -226,6 +226,9 @@ div.svocommontoolbarmenu li#mainMenu div.subMenuWrapper {
 	background-color:#111;
 	-moz-border-radius-topright: 15px;
 	-webkit-border-top-right-radius: 15px;
+	opacity: .96;
+	-moz-opacity: .96;
+	filter: alpha(opacity=96); /* Move to ie.css? */
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu li {
@@ -287,6 +290,9 @@ div.svocommontoolbarmenu div.subMenuWrapper div.adminsetting,
 div.svocommontoolbarmenu div.subMenuWrapper div.adminproduct {
 	width:400px;
 }
+div.svocommontoolbarmenu div.subMenuWrapper div.searchresults {
+	width:800px;
+}
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu h3 {
 	font-size:22px;
 	font-weight:normal;
@@ -327,6 +333,12 @@ div.svocommontoolbarmenu div.subMenuWrapper div.subMenu a:hover {
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu div.oneColumn {
 	margin-left:25px;
 	width:160px;
+	float:left;
+}
+
+div.svocommontoolbarmenu div.subMenuWrapper div.subMenu div.twoColumn {
+	margin-left:25px;
+	width:380px;
 	float:left;
 }
 
