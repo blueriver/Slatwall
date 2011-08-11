@@ -53,7 +53,7 @@ jQuery(document).ready(function(){
 	
 	jQuery('li#mainMenu ul.menu li').hover(
 		function(e){
-			if (!jQuery(this).hasClass('selected') && jQuery('#SlatwallToolbarSearch').val().length == 0) {
+			if (!jQuery(this).hasClass('selected') && jQuery('#SlatwallToolbarSearch').val().length == 0 && slatwallMenuShowing) {
 				
 				var subSelector = 'li#mainMenu div.subMenuWrapper div.' + jQuery(this).attr('class');
 				
