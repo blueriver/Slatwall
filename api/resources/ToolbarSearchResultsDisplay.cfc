@@ -36,9 +36,9 @@
 	Notes:
 	
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/toolbarSearchResultsDisplay/{keywords}/">
+<cfcomponent extends="BaseResource" taffy_uri="/toolbarSearchResultsDisplay/">
 
-	<cffunction name="get">
+	<cffunction name="post">
 		<cfset var display = "" />
 		
 		<cfset var search = structNew() />

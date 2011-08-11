@@ -131,9 +131,10 @@ function displaySubMenu(subSelector) {
 
 function runToolbarSearch(){
 	jQuery.ajax({
-		type: 'get',
-		url: '/plugins/Slatwall/api/index.cfm/toolbarSearchResultsDisplay/' + jQuery('#SlatwallToolbarSearch').val() + '/',
-		data: {},
+		type: 'post',
+		url: '/plugins/Slatwall/api/index.cfm/toolbarSearchResultsDisplay/',
+		data: {keywords: jQuery('#SlatwallToolbarSearch').val()},
+		dataType: "json",
 		context: document.body,
 		success: function(r) {
 			jQuery('div.searchResults').replaceWith(r);
