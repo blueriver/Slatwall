@@ -167,7 +167,7 @@ Notes:
 				</div>
 			</li>
 			<li id="search">
-				<input type="text" class="search" id="SlatwallToolbarSearch" />
+				<input type="text" class="search" id="SlatwallToolbarSearch" tabindex="1" />
 			</li>
 			<li id="pageTools">
 				<a href="/" class="website">Website</a>

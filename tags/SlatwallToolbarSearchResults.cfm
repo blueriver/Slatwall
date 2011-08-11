@@ -68,7 +68,7 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<div class="searchResults">
-			<cfif not local.hasProducts and not local.hasProductTypes and not local.hasBrands and not local.hasOrders and not local.hasAccounts>
+			<cfif not local.hasProducts and not local.hasProductTypes and not local.hasBrands and not local.hasOrders and not local.hasAccounts and len(attributes.keywords)>
 				<div class="twoColumn">
 					<ul>
 						<li class="title">No results for keyword: #attributes.keywords#</li>

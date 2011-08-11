@@ -38,6 +38,7 @@ Notes:
 */
 
 var slatwallMenuShowing = false;
+var slatwallSearchDelay = 0;
 
 jQuery(document).ready(function(){
 	
@@ -65,24 +66,27 @@ jQuery(document).ready(function(){
 	);
 	
 	jQuery('#SlatwallToolbarSearch').keyup(function(e){
+        clearTimeout(slatwallSearchDelay);
 		if(jQuery(this).val().length > 0) {
 			jQuery('li#mainMenu ul.menu').show();
 			slatwallMenuShowing = true;	
 			jQuery('li#mainMenu ul.menu li').removeClass('selected');
 			jQuery('li#mainMenu ul.menu li.adminmain').addClass('selected');
 			displaySubMenu('li#mainMenu div.subMenuWrapper div.searchresults');
-			jQuery.ajax({
-				type: 'get',
-				url: '/plugins/Slatwall/api/index.cfm/toolbarSearchResultsDisplay/' + jQuery(this).val() + '/',
-				data: {},
-				context: document.body,
-				success: function(r) {
-					jQuery('div.searchResults').replaceWith(r);
-				}
-			});
+			slatwallSearchDelay = setTimeout("runToolbarSearch()",200);
 		} else {
 			jQuery('li#mainMenu ul.menu li').removeClass('selected');
 			jQuery('li#mainMenu div.subMenuWrapper div.subMenu').hide();
+		}
+	});
+	
+	jQuery('body').click(function(e){
+		if(slatwallMenuShowing) {
+			if(jQuery('li#mainMenu ul.menu').width() > 100){
+				if((e.pageY < jQuery('div.subMenuWrapper').offset().top && e.pageY < jQuery('li#mainMenu ul.menu').offset().top) || (e.pageX > jQuery('div.subMenuWrapper').width() && e.pageX > jQuery('li#mainMenu ul.menu').width())){
+					toggleToolbarMenu(false);	
+				}
+			}
 		}
 	});
 	
@@ -122,4 +126,16 @@ function displaySubMenu(subSelector) {
 	jQuery('li#mainMenu div.subMenuWrapper').show();
 	jQuery('li#mainMenu div.subMenuWrapper').height(jQuery('li#mainMenu ul.menu').height() + 100);
 	jQuery('li#mainMenu div.subMenuWrapper').offset(jQuery('li#mainMenu ul.menu').offset());
+}
+
+function runToolbarSearch(){
+	jQuery.ajax({
+		type: 'get',
+		url: '/plugins/Slatwall/api/index.cfm/toolbarSearchResultsDisplay/' + jQuery('#SlatwallToolbarSearch').val() + '/',
+		data: {},
+		context: document.body,
+		success: function(r) {
+			jQuery('div.searchResults').replaceWith(r);
+		}
+	});
 }
