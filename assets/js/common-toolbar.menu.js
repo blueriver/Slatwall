@@ -80,41 +80,42 @@ jQuery(document).ready(function(){
 		}
 	});
 	
-	jQuery('body').click(function(e){
+	jQuery(document).click(function(e){
 		if(slatwallMenuShowing) {
-			if(jQuery('li#mainMenu ul.menu').width() > 100){
-				if((e.pageY < jQuery('div.subMenuWrapper').offset().top && e.pageY < jQuery('li#mainMenu ul.menu').offset().top) || (e.pageX > jQuery('div.subMenuWrapper').width() && e.pageX > jQuery('li#mainMenu ul.menu').width())){
-					toggleToolbarMenu(false);	
-				}
+			if(!jQuery(e.target).parents('div.svocommontoolbarmenu').length) {
+				toggleToolbarMenu(false);
+			}
+		}
+	});
+	
+	jQuery(document).keydown(function(e) {
+		if (e.keyCode == 27) {
+			e.preventDefault();
+			if(slatwallMenuShowing) {
+				toggleToolbarMenu(false);	
+			}
+		}
+		if (e.keyCode == 77 && e.ctrlKey) {
+			e.preventDefault();
+			if (!slatwallMenuShowing) {
+				toggleToolbarMenu(true);
 			}
 		}
 	});
 	
 });
 
-jQuery(document).keydown(function(e) {
-	if (e.keyCode == 27) {
-		e.preventDefault();
-		toggleToolbarMenu(false);
-	}
-	if (e.keyCode == 77 && e.ctrlKey) {
-		e.preventDefault();
-		toggleToolbarMenu(true);
-	}
-});
-
 function toggleToolbarMenu(showing) {
 	if(showing) {
 		jQuery('li#search > input').focus();
-		jQuery('li#mainMenu ul.menu').show('fast');
-		slatwallMenuShowing = true;	
+		jQuery('li#mainMenu ul.menu').show('fast', function(e){slatwallMenuShowing = true;});
 	} else {
+		slatwallMenuShowing = false;
 		jQuery('li#search > input').blur();
 		jQuery('li#search > input').val('');
 		jQuery('li#mainMenu ul.menu').hide('fast');
 		jQuery('li#mainMenu div.subMenuWrapper').hide();
 		jQuery('li#mainMenu ul.menu li').removeClass('selected');
-		slatwallMenuShowing = false;
 	}
 }
 
@@ -139,3 +140,4 @@ function runToolbarSearch(){
 		}
 	});
 }
+
