@@ -68,14 +68,7 @@ it is set to 0
 							<textarea name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#">#local.attributeValue.getAttributeValue()#</textarea>
 						</cfcase>
 						<cfcase value="atRichTextEditor">
-							<textarea name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#">#local.attributeValue.getAttributeValue()#</textarea>
-							<script type="text/javascript" language="Javascript">
-								var loadEditorCount = 0;
-								jQuery('##attribute\\.#local.attribute.getAttributeID()#\\.#local.attributeValueID#').ckeditor(
-									{ toolbar:'Default',
-									height:'150',
-									customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
-							</script>
+							<textarea name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" class="wysiwyg" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#">#local.attributeValue.getAttributeValue()#</textarea>
 						</cfcase>
 						<cfcase value="atCheckBox">
 							<input type="hidden" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="" />
