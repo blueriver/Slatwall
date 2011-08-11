@@ -70,7 +70,9 @@ Notes:
 		<div class="searchResults">
 			<cfif not local.hasProducts and not local.hasProductTypes and not local.hasBrands and not local.hasOrders and not local.hasAccounts>
 				<div class="twoColumn">
-					Nothing could be found that matches your search criteria
+					<ul>
+						<li class="title">No results for keyword: #attributes.keywords#</li>
+					</ul>
 				</div>
 			<cfelse>
 				<cfif local.hasProducts>

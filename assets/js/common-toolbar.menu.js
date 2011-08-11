@@ -77,7 +77,6 @@ jQuery(document).ready(function(){
 				data: {},
 				context: document.body,
 				success: function(r) {
-					console.log(r);
 					jQuery('div.searchResults').replaceWith(r);
 				}
 			});
