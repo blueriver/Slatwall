@@ -41,7 +41,7 @@ var slatwallMenuShowing = false;
 
 jQuery(document).ready(function(){
 	
-	jQuery('li#mainMenu > a').click(function(e){
+	jQuery('li#mainMenu a.logo').click(function(e){
 		e.preventDefault();
 		if(slatwallMenuShowing) {
 			toggleToolbarMenu(false);	
@@ -52,27 +52,40 @@ jQuery(document).ready(function(){
 	
 	jQuery('li#mainMenu ul.menu li').hover(
 		function(e){
-			if (!jQuery(this).hasClass('selected')) {
+			if (!jQuery(this).hasClass('selected') && jQuery('#SlatwallToolbarSearch').val().length == 0) {
 				
 				var subSelector = 'li#mainMenu div.subMenuWrapper div.' + jQuery(this).attr('class');
 				
 				jQuery('li#mainMenu ul.menu li').removeClass('selected');
 				jQuery(this).addClass('selected');
 				
-				jQuery('li#mainMenu div.subMenuWrapper div.subMenu').hide();
-				jQuery(subSelector).show();
-				
-				jQuery('li#mainMenu div.subMenuWrapper').show();
-				jQuery('li#mainMenu div.subMenuWrapper').height(jQuery('li#mainMenu ul.menu').height() + 100);
-				jQuery('li#mainMenu div.subMenuWrapper').offset(jQuery('li#mainMenu ul.menu').offset());
-			
+				displaySubMenu(subSelector);
 			}
-		},
-		function(e){
-			console.log('off');
-		}
-		
+		},function(){}
 	);
+	
+	jQuery('#SlatwallToolbarSearch').keyup(function(e){
+		if(jQuery(this).val().length > 0) {
+			jQuery('li#mainMenu ul.menu').show();
+			slatwallMenuShowing = true;	
+			jQuery('li#mainMenu ul.menu li').removeClass('selected');
+			jQuery('li#mainMenu ul.menu li.adminmain').addClass('selected');
+			displaySubMenu('li#mainMenu div.subMenuWrapper div.searchresults');
+			jQuery.ajax({
+				type: 'get',
+				url: '/plugins/Slatwall/api/index.cfm/toolbarSearchResultsDisplay/' + jQuery(this).val() + '/',
+				data: {},
+				context: document.body,
+				success: function(r) {
+					console.log(r);
+					jQuery('div.searchResults').replaceWith(r);
+				}
+			});
+		} else {
+			jQuery('li#mainMenu ul.menu li').removeClass('selected');
+			jQuery('li#mainMenu div.subMenuWrapper div.subMenu').hide();
+		}
+	});
 	
 });
 
@@ -90,14 +103,24 @@ jQuery(document).keydown(function(e) {
 function toggleToolbarMenu(showing) {
 	if(showing) {
 		jQuery('li#search > input').focus();
-		jQuery('li#mainMenu ul.menu').show('fast');	
-		slatwallMenuShowing = true;
+		jQuery('li#mainMenu ul.menu').show('fast');
+		slatwallMenuShowing = true;	
 	} else {
 		jQuery('li#search > input').blur();
 		jQuery('li#search > input').val('');
 		jQuery('li#mainMenu ul.menu').hide('fast');
-		slatwallMenuShowing = false;
 		jQuery('li#mainMenu div.subMenuWrapper').hide();
 		jQuery('li#mainMenu ul.menu li').removeClass('selected');
+		slatwallMenuShowing = false;
 	}
+}
+
+function displaySubMenu(subSelector) {
+	
+	jQuery('li#mainMenu div.subMenuWrapper div.subMenu').hide();
+	jQuery(subSelector).show();
+	
+	jQuery('li#mainMenu div.subMenuWrapper').show();
+	jQuery('li#mainMenu div.subMenuWrapper').height(jQuery('li#mainMenu ul.menu').height() + 100);
+	jQuery('li#mainMenu div.subMenuWrapper').offset(jQuery('li#mainMenu ul.menu').offset());
 }

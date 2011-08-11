@@ -79,6 +79,7 @@ Notes:
 								<li class="title">Products</li>
 								<cf_SlatwallActionCaller action="admin:product.create" type="list">
 								<cf_SlatwallActionCaller action="admin:product.list" type="list">
+								<cf_SlatwallActionCaller action="admin:option.list" type="list">
 								<cf_SlatwallActionCaller action="admin:attribute" type="list">
 							</ul>
 							<ul>
@@ -92,11 +93,6 @@ Notes:
 								<li class="title">Brands</li>
 								<cf_SlatwallActionCaller action="admin:brand.create" type="list">
 								<cf_SlatwallActionCaller action="admin:brand.list" type="list">
-							</ul>
-							<ul>
-								<li class="title">Product Options</li>
-								<cf_SlatwallActionCaller action="admin:option.create" type="list">
-								<cf_SlatwallActionCaller action="admin:option.list" type="list">
 							</ul>
 						</div>
 					</div>
@@ -164,10 +160,14 @@ Notes:
 							</ul>
 						</div>
 					</div>
+					<div class="subMenu searchresults">
+						<h3>Search Results</h3>
+						<cf_SlatwallToolbarSearchResults />
+					</div>
 				</div>
 			</li>
 			<li id="search">
-				<input type="text" class="search" />
+				<input type="text" class="search" id="SlatwallToolbarSearch" />
 			</li>
 			<li id="pageTools">
 				<a href="/" class="website">Website</a>
@@ -218,61 +218,3 @@ Notes:
 		</ul>
 	</div>
 </cfoutput>
-
-<!---
-					<cfif secureDisplay("admin:main")>
-						<li>
-							<cf_SlatwallActionCaller action="admin:product">
-							<div class="subMenu">
-								<ul>
-									<cf_SlatwallActionCaller action="admin:product" type="list">
-									<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
-									<cf_SlatwallActionCaller action="admin:option" type="list">
-									<cf_SlatwallActionCaller action="admin:brand" type="list">
-								</ul>
-							</div>
-						</li>
-					</cfif>
-					<cfif secureDisplay("admin:account")>
-						<li>
-							<cf_SlatwallActionCaller action="admin:account">
-							<div class="subMenu">
-								<ul>
-									<cf_SlatwallActionCaller action="admin:account.list" type="list">
-								</ul>
-							</div>
-						</li>
-					</cfif>
-					<cfif secureDisplay("admin:setting")>
-						<li>
-							<cf_SlatwallActionCaller action="admin:setting">
-							<div class="subMenu">
-								<ul>
-									<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
-									<cf_SlatwallActionCaller action="admin:setting.editpermissions" type="list">
-								</ul>
-							</div>
-						</li>
-					</cfif>
-					<cfif secureDisplay("admin:promotion")>
-						<li>
-							<cf_SlatwallActionCaller action="admin:promotion">
-							<div class="subMenu">
-								<ul>
-									<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
-									<cf_SlatwallActionCaller action="admin:promotion.detail" type="list">
-								</ul>
-							</div>
-						</li>
-					</cfif>
-					<cfif secureDisplay("admin:help")>
-						<li>
-							<cf_SlatwallActionCaller action="admin:help.about">
-							<div class="subMenu">
-								<ul>
-									<cf_SlatwallActionCaller action="admin:help.about" type="list">
-								</ul>
-							</div>
-						</li>
-					</cfif>
-					--->

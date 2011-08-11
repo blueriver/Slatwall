@@ -97,6 +97,22 @@ component extends="BaseService" accessors="true" {
 		return smartList;
 	}
 	
+	public any function getProductTypeSmartList(struct data={}, currentURL="") {
+		arguments.entityName = "SlatwallProductType";
+		
+		// Set the defaul showing to 25
+		if(!structKeyExists(arguments.data, "P:Show")) {
+			arguments.data["P:Show"] = 25;
+		}
+		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="productTypeName", weight=6);
+		smartList.addKeywordProperty(propertyIdentifier="productTypeDescription", weight=1);
+		
+		return smartList;
+	}
+	
 	public any function getProductContentSmartList(required string contentID, struct data={}, currentURL="") {
 		var smartList = getDAO().getSmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
 		

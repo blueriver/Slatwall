@@ -42,9 +42,12 @@ component extends="BaseController" output=false accessors=true {
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	
+	public void function default(required struct rc) {
+		getFW().redirect(action="admin:help.about");
+	}
+	
 	public void function about(required struct rc) {
 		rc.section = "About Slatwall";
 		
 	}
-		
 }
