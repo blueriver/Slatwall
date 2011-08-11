@@ -36,9 +36,9 @@
 	Notes:
 	
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
+<cfcomponent extends="BaseResource" taffy_uri="/address/display/">
 
-	<cffunction name="post">
+	<cffunction name="get">
 		
 		<cfset var display = "" />
 		

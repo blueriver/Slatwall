@@ -34,8 +34,7 @@
     exception statement from your version.
 
 	Notes:
-	
-*/
+	*/
 
 component extends="taffy.core.api" {
 	
@@ -61,8 +60,18 @@ component extends="taffy.core.api" {
 		}
 	}
 	
-	public boolean function onTaffyRequest() {
-		return true;
+	public any function onTaffyRequest(string verb, string cfc, struct requestArguments, string mimeExt, struct headers) {
+		var apiKey = "";
+		
+		if(structKeyExists(arguments.requestArguments, "apiKey")){
+			apiKey = arguments[3].apiKey;
+		}
+		
+		if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
+			return true;
+		}
+		
+		return createObject("component", "taffy.core.nativeJsonRepresentation").noData().withStatus(403);
 	}
 	
 }

@@ -109,4 +109,5 @@ component output="false" {
 	private void function logCacheAction(required string method, string key="") {
 		arrayAppend(request.slatwall.cacheLog, "#arguments.method#::#arguments.key#");
 	}
+	
 }

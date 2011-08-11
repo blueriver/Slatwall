@@ -134,4 +134,26 @@ component extends="BaseService" accessors="true" output="false" {
 		structDelete(session.slatwall,arguments.property);
 	}
 	
+	public string function getAPIKey(required string resource, required string verb) {
+		var apiKey = hash(now() + lcase(arguments.resource) + lcase(arguments.verb));
+		var sessionAPIKeys = getValue("apiKeys", structNew());
+		sessionAPIKeys[ apiKey ] = {resource=arguments.resource, verb=arguments.verb};
+		setValue("apiKeys", sessionAPIKeys);
+		return apiKey;
+	}
+	
+	public boolean function verifyAPIKey(required string resource, required string verb, required string apiKey) {
+		var sessionAPIKeys = getValue("apiKeys", structNew());
+		if(structKeyExists(sessionAPIKeys, arguments.apiKey)) {
+			try {
+				if(sessionAPIKeys[arguments.apiKey].resource == arguments.resource && sessionAPIKeys[arguments.apiKey].verb == arguments.verb) {
+					return true;
+				}
+			} catch(any e){
+				return false;
+			}
+		}
+		return false;
+	}
+	
 }

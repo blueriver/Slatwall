@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,32 +35,22 @@
 
 	Notes:
 	
---->
-<cfcomponent extends="BaseResource" taffy_uri="/addressZoneLocations/{addressZoneID}/">
+*/
+component extends="BaseResource" taffy_uri="/attributeOption/{attributeOptionID}/" {
+
+	public any function delete(string attributeOptionID) {
+		var attributeOption = getService("attributeService").getAttributeOption(arguments.attributeOptionID);
+		if(!isNull(attributeOption)) {
+			var deleteResponse = getAttributeService().delete(attributeOption);
+			if( !deleteResponse.hasErrors() ) {
+				data.success=1;
+				data.message = rbKey("admin.attribute.deleteAttributeOption_success");
+			} else {
+				data.success=0;
+				data.message=deleteResponse.getData().getErrorBean().getError("delete");
+			}
+		}
+		return representationOf(data).withStatus(200);
+	}
 	
-	<cffunction name="post">
-		<cfset var display = "" />
-		<cfset var params = structNew() />
-		
-		<cfset params.addressZone = getService("addressService").getAddressZone(arguments.addressZoneID) />
-		
-		<cfset var address = getService("addressService").newAddress() />
-		<cfset address.populate(arguments) />
-		
-		<cfset params.addressZone.addAddressZoneLocation(address) />
-		<cfset ormFlush() />
-		
-		<cfset params.edit = true />
-		
-		<cfset $ = request.context.$ />
-		
-		<cfsavecontent variable="display">
-			<cfinclude template="/plugins/Slatwall/admin/views/setting/ajax/addresszonelocation.cfm" >
-		</cfsavecontent>
-		
-		
-		
-		<cfreturn representationOF(display) />
-	</cffunction>
-	
-</cfcomponent>
+}
