@@ -121,7 +121,7 @@ component extends="BaseController" output="false" accessors="true" {
 				}
 			}
 		}
-		getFW().redirect(action="admin:main.dashboard", queryString="reload=true");
+		getFW().redirect(action="admin:main.default", queryString="reload=true");
 	}
 	
 	// Shipping Services
