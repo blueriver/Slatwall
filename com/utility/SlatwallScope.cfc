@@ -219,5 +219,9 @@ component accessors="true" output="false" extends="BaseObject" {
 	public string function setting(required string settingName) {
 		return Super.setting(arguments.settingName);
 	}
+	
+	public string function getAPIKey(required string resource, required string verb) {
+		return getService("sessionService").getAPIKey(argumentcollection=arguments);
+	}
 
 }

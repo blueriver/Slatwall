@@ -36,11 +36,21 @@
 	Notes:
 	
 */
-component extends="BaseResource" taffy_uri="/products/" {
+component extends="BaseResource" taffy_uri="/attributeOption/{attributeOptionID}/" {
 
-	public any function get() {
-		var productList = getService("productService").listProduct();
-		return representationOf(productList).withStatus(200);
+	public any function delete(string attributeOptionID) {
+		var attributeOption = getService("attributeService").getAttributeOption(arguments.attributeOptionID);
+		if(!isNull(attributeOption)) {
+			var deleteResponse = getAttributeService().delete(attributeOption);
+			if( !deleteResponse.hasErrors() ) {
+				data.success=1;
+				data.message = rbKey("admin.attribute.deleteAttributeOption_success");
+			} else {
+				data.success=0;
+				data.message=deleteResponse.getData().getErrorBean().getError("delete");
+			}
+		}
+		return representationOf(data).withStatus(200);
 	}
 	
-} 
+}

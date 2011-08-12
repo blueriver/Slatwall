@@ -65,11 +65,17 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 
 
 	public Attribute function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.attributeOptions)) {
-	       variables.attributeOptions = [];
-	   }
-	   return Super.init();
+		// By default new attributes should be active
+		if(isNull(variables.activeFlag)) {
+			variables.activeFlag = 1;
+		}
+		
+		// set default collections for association management methods
+		if(isNull(variables.attributeOptions)) {
+	   	   variables.attributeOptions = [];
+		}
+		
+		return super.init();
 	}
 
 	public array function getAttributeOptions(orderby, sortType="text", direction="asc") {

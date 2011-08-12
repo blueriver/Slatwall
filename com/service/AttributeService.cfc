@@ -50,7 +50,7 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	public any function saveAttribute( required any attribute, required struct data ) {
 		// generate the attribute code if not specified
 		if(!structKeyExists(arguments.data,"attributeCode") || trim(arguments.data.attributeCode) == "") {
-			arguments.data.attributeCode = replace(getService("fileService").filterFileName(arguments.data.attributeName),"-","","all");	
+			arguments.data.attributeCode = replace(getService("utilityFileService").filterFileName(arguments.data.attributeName),"-","","all");	
 		}
 		arguments.attribute = Super.save(arguments.attribute,arguments.data);
 		

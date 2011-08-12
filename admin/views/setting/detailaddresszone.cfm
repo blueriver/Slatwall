@@ -58,11 +58,43 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#" first="true">
 		</dl>
 		<cfif not rc.addressZone.isNew()>
-		<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
-		<cfset params = structNew() />
-		<cfset params.addressZone = rc.addressZone />
-		<cfset params.edit = rc.edit />
-		#view("admin:setting/ajax/addresszonelocation", params)#
+			<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
+		
+			<table id="addressZoneLocations" class="stripe">
+				<thead>
+					<tr>
+						<th>#$.slatwall.rbKey('entity.address.countryCode')#</th>
+						<th class="varWidth">#$.slatwall.rbKey('entity.address.city')#</th>
+						<th>#$.slatwall.rbKey('entity.address.stateCode')#</th>
+						<th>#$.slatwall.rbKey('entity.address.postalCode')#</th>
+						<cfif rc.edit><th class="administration">&nbsp;</th></cfif>
+					</tr>
+				</thead>
+				<tbody>
+					<cfloop array="#rc.addressZone.getAddressZoneLocations()#" index="local.address" >
+						<tr>
+							<td>#local.address.getCountry().getCountryName()#</td>
+							<td class="varWidth">#local.address.getCity()#</td>
+							<td>#local.address.getStateCode()#</td>
+							<td>#local.address.getPostalCode()#</td>
+							<cfif rc.edit>
+							<td class="administration">
+								<ul class="one">
+									<cfif not local.address.isNew()>
+										<cf_SlatwallActionCaller action="admin:setting.deleteaddresszonelocation" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#&addressID=#local.address.getAddressID()#" class="delete" type="list">
+									</cfif>
+								</ul>
+							</td>
+							</cfif>
+						</tr>
+					</cfloop>
+				</tbody>
+			</table>
+			<cfif rc.edit>
+				<strong>Add Location To Zone</strong>
+				<cf_SlatwallAddressDisplay address="#entityNew('SlatwallAddress')#" edit="true" showName="false" showCompany="false" showStreetAddress="false" showStreet2Address="false" />
+				<button type="submit" name="addLocation" value="true">Add Location</button><br /><br />
+			</cfif>
 		</cfif>
 		<cfif rc.edit>
 			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">

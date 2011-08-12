@@ -36,31 +36,20 @@
 	Notes:
 	
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/addressZoneLocations/{addressZoneID}/">
-	
-	<cffunction name="post">
+<cfcomponent extends="BaseResource" taffy_uri="/display/addressDisplay/">
+
+	<cffunction name="get">
 		<cfset var display = "" />
-		<cfset var params = structNew() />
 		
-		<cfset params.addressZone = getService("addressService").getAddressZone(arguments.addressZoneID) />
+		<cfset arguments.address = getService("addressService").newAddress() />
 		
-		<cfset var address = getService("addressService").newAddress() />
-		<cfset address.populate(arguments) />
-		
-		<cfset params.addressZone.addAddressZoneLocation(address) />
-		<cfset ormFlush() />
-		
-		<cfset params.edit = true />
-		
-		<cfset $ = request.context.$ />
+		<cfset arguments.address.populate(arguments) />
 		
 		<cfsavecontent variable="display">
-			<cfinclude template="/plugins/Slatwall/admin/views/setting/ajax/addresszonelocation.cfm" >
+			<cf_SlatwallAddressDisplay attributeCollection="#arguments#" />
 		</cfsavecontent>
-		
-		
-		
+
 		<cfreturn representationOF(display) />
 	</cffunction>
-	
+
 </cfcomponent>

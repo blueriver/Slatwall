@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,12 @@
 
 	Notes:
 	
---->
-<cfcomponent extends="BaseResource" taffy_uri="/addressDisplay/">
+*/
+component extends="BaseResource" taffy_uri="/products/" {
 
-	<cffunction name="post">
-		
-		<cfset var display = "" />
-		
-		<cfset arguments.address = getService("addressService").newAddress() />
-		
-		<cfset arguments.address.populate(arguments) />
-		
-		<cfsavecontent variable="display">
-			<cf_SlatwallAddressDisplay attributeCollection="#arguments#" />
-		</cfsavecontent>
-
-		<cfreturn representationOF(display) />
-	</cffunction>
-
-</cfcomponent>
+	public any function get() {
+		var smartList = getService("productService").getProductSmartList(data=arguments);
+		return representationOf(smartList.getRecords()).withStatus(200);
+	}
+	
+}

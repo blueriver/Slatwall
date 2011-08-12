@@ -84,11 +84,13 @@ Notes:
 					</cfif>
 					<input type="hidden" name="#attributes.fieldNamePrefix#addressID" value="#attributes.address.getAddressID()#" />
 				</dl>
+				
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
 						jQuery('select[name="#attributes.fieldNamePrefix#countryCode"]').change(function() {
 							
 							var addressData = {
+								apiKey: '#request.context.$.slatwall.getAPIKey("DisplayAddressDisplay", "get")#',
 								addressID : jQuery('input[name="addressID"]').val(),
 								fieldNamePrefix : '#attributes.fieldNamePrefix#',
 								showName : '#attributes.showName#',
@@ -113,9 +115,11 @@ Notes:
 								addressData["stateCode"] = jQuery('input[name="#attributes.fieldNamePrefix#stateCode"]').val();
 							}
 							
+							console.log(addressData);
+							
 							jQuery.ajax({
-								type: "post",
-								url: '/plugins/Slatwall/api/index.cfm/addressDisplay/',
+								type: 'get',
+								url: '/plugins/Slatwall/api/index.cfm/display/addressDisplay/',
 								data: addressData,
 								dataType: "json",
 								context: document.body,
