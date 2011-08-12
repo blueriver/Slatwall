@@ -396,11 +396,6 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function saveAddressZone(required struct rc) {
 		detailAddressZone(rc);
 		
-		var formStruct = getUtilityFormService().buildFormCollections(rc);
-		if(structKeyExists(formStruct, "addressZoneLocations")) {
-			rc.addressZoneLocations = formStruct.addressZoneLocations;	
-		}
-		
 		var wasNew = rc.addressZone.isNew();
 		
 		rc.addressZone = getSettingService().saveAddressZone(rc.addressZone, rc);
@@ -409,7 +404,15 @@ component extends="BaseController" output="false" accessors="true" {
 			rc.edit = true;
 			getFW().setView("admin:setting.detailaddresszone");
 		} else {
-			getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");
+			if(structKeyExists(arguments.rc, "addLocation") && arguments.rc.addLocation) {
+				var newAddress = getAddressService().newAddress();
+				newAddress.populate(rc);
+				rc.addressZone.addAddressZoneLocation(newAddress);
+				rc.edit = true;
+				getFW().setView("admin:setting.detailaddresszone");
+			} else {
+				getFW().redirect(action="admin:setting.listaddresszones", querystring="message=admin.setting.saveaddresszone_success");	
+			}
 		}
 	}
 	
