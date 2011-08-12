@@ -50,7 +50,7 @@ Notes:
 	</cfif>
 </ul>
 
-<cfif arrayLen(rc.optionGroups) GT 0>
+<cfif arrayLen(rc.optionGroups.getRecords()) GT 0>
 
 	<cfif rc.listby eq "options">
 	<form name="filterOptions" method="get">
@@ -59,7 +59,7 @@ Notes:
 		<input type="hidden" name="listby" value="options" />
 		<select name="F:optiongroup_optiongroupname">
 			<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
-		<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
+		<cfloop array="#rc.optionGroups.getRecords()#" index="local.thisOptionGroup">
 			<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F:optiongroup_optiongroupname") and rc["F:optiongroup_optiongroupname"] eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
 		</cfloop>
 		</select>

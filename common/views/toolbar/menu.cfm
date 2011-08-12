@@ -80,13 +80,16 @@ Notes:
 								<li class="title">Products</li>
 								<cf_SlatwallActionCaller action="admin:product.create" type="list">
 								<cf_SlatwallActionCaller action="admin:product.list" type="list">
-								<cf_SlatwallActionCaller action="admin:option.list" type="list">
-								<cf_SlatwallActionCaller action="admin:attribute" type="list">
 							</ul>
 							<ul>
 								<li class="title">Product Types</li>
 								<cf_SlatwallActionCaller action="admin:product.createproducttype" type="list">
 								<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
+							</ul>
+							<ul>
+								<li class="title">Product Options</li>
+								<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="list">
+								<cf_SlatwallActionCaller action="admin:option.list" type="list">
 							</ul>
 						</div>
 						<div class="oneColumn">
@@ -94,6 +97,11 @@ Notes:
 								<li class="title">Brands</li>
 								<cf_SlatwallActionCaller action="admin:brand.create" type="list">
 								<cf_SlatwallActionCaller action="admin:brand.list" type="list">
+							</ul>
+							<ul>
+								<li class="title">Related</li>
+								<cf_SlatwallActionCaller action="admin:attribute" type="list">
+								<cf_SlatwallActionCaller action="admin:promotion" type="list">
 							</ul>
 						</div>
 					</div>
@@ -180,11 +188,8 @@ Notes:
 			</li>
 			<li id="navProducts">
 				<ul class="addMenuNav">
-					<cf_SlatwallActionCaller action="admin:product.list" type="list">
 					<cf_SlatwallActionCaller action="admin:product.create" type="list">
-					<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
-					<cf_SlatwallActionCaller action="admin:option" type="list">
-					<cf_SlatwallActionCaller action="admin:brand" type="list" class="last">
+					<cf_SlatwallActionCaller action="admin:product.list" type="list">
 				</ul>
 				<cf_SlatwallActionCaller action="admin:product" type="link">
 			</li>
@@ -197,24 +202,10 @@ Notes:
 			</li>
 			<li id="navAccounts">
 				<ul class="addMenuNav">
+					<cf_SlatwallActionCaller action="admin:account.create" type="list" class="last">
 					<cf_SlatwallActionCaller action="admin:account.list" type="list" class="last">
 				</ul>
 				<cf_SlatwallActionCaller action="admin:account" type="link">
-			</li>
-			<li id="navSettings">
-				<ul class="addMenuNav">
-					<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
-					<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
-					<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="list">
-					<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="list">
-					<cf_SlatwallActionCaller action="admin:setting.listpaymentmethods" type="list">
-					<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethods" type="list">
-					<cf_SlatwallActionCaller action="admin:attribute" type="list">
-					<cf_SlatwallActionCaller action="admin:integration" type="list">
-					<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
-					<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true">Reload</a></li>
-				</ul>
-				<cf_SlatwallActionCaller action="admin:setting" type="link">
 			</li>
 		</ul>
 	</div>

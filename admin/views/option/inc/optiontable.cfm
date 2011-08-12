@@ -65,6 +65,7 @@ Notes:
 	</tr>
 </cfloop>
 </table>
+<cf_SlatwallSmartListPager smartList="#rc.options#">
 <cfelse>
 <p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
 </cfif>
