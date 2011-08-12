@@ -36,7 +36,7 @@
 	Notes:
 	
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/toolbarSearchResults/display/">
+<cfcomponent extends="BaseResource" taffy_uri="/display/toolbarSearchResults/">
 
 	<cffunction name="get">
 		<cfset var display = "" />

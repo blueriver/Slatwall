@@ -36,10 +36,9 @@
 	Notes:
 	
 --->
-<cfcomponent extends="BaseResource" taffy_uri="/address/display/">
+<cfcomponent extends="BaseResource" taffy_uri="/display/addressDisplay/">
 
 	<cffunction name="get">
-		
 		<cfset var display = "" />
 		
 		<cfset arguments.address = getService("addressService").newAddress() />

@@ -135,7 +135,7 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public string function getAPIKey(required string resource, required string verb) {
-		var apiKey = hash(now() + lcase(arguments.resource) + lcase(arguments.verb));
+		var apiKey = hash("#now()##lcase(arguments.resource)##lcase(arguments.verb)#");
 		var sessionAPIKeys = getValue("apiKeys", structNew());
 		sessionAPIKeys[ apiKey ] = {resource=arguments.resource, verb=arguments.verb};
 		setValue("apiKeys", sessionAPIKeys);
