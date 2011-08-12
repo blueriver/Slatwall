@@ -196,7 +196,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
 		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
 		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.account.deleteOptionGroup_success");
+			rc.message = rbKey("admin.option.deleteOptionGroup_success");
 		} else {
 			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype = "error";
