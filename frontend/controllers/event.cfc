@@ -154,5 +154,12 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function onAfterCategoryDelete(required any rc) {
 		getProductService().deleteProductCategory(rc.$.event("categoryID"));
 	}
+	
+	public void function onAdminModuleNav(required any rc) {
+		// Add necessary html to the header
+		if( getFW().secureDisplay("admin:main.dashboard") ){
+			getService("utilityTagService").cfhtmlhead(getFW().view("common:toolbar/menu"));
+		}
+	}
 
 }
