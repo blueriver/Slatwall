@@ -189,20 +189,20 @@ Notes:
 			<li id="navProducts">
 				<ul class="addMenuNav">
 					<cf_SlatwallActionCaller action="admin:product.create" type="list">
-					<cf_SlatwallActionCaller action="admin:product.list" type="list">
+					<cf_SlatwallActionCaller action="admin:product.list" type="list" class="last">
 				</ul>
 				<cf_SlatwallActionCaller action="admin:product" type="link">
 			</li>
 			<li id="navOrders">
 				<ul class="addMenuNav">
 					<cf_SlatwallActionCaller action="admin:order.list" type="list">
-					<cf_SlatwallActionCaller action="admin:order.listorderfulfillments" type="list">
+					<cf_SlatwallActionCaller action="admin:order.listorderfulfillments" type="list" class="last">
 				</ul>
 				<cf_SlatwallActionCaller action="admin:order" type="link">
 			</li>
 			<li id="navAccounts">
 				<ul class="addMenuNav">
-					<cf_SlatwallActionCaller action="admin:account.create" type="list" class="last">
+					<cf_SlatwallActionCaller action="admin:account.create" type="list">
 					<cf_SlatwallActionCaller action="admin:account.list" type="list" class="last">
 				</ul>
 				<cf_SlatwallActionCaller action="admin:account" type="link">
