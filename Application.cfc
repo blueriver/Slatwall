@@ -332,7 +332,7 @@ component extends="org.fw1.framework" output="false" {
 		var rtn = super.internalLayout(argumentcollection=arguments);
 		
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd") {
+			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
 				getBeanFactory().getBean("utilityTagService").cfhtmlhead(getAssetWire().getAllAssets());
 			}
 		}

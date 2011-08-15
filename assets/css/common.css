@@ -38,56 +38,56 @@ Notes:
 */
 
 div.svocommontoolbarmenu {
-	position: fixed;
-	bottom:0px;
-	left:0px;
-	width:100%;
-	height:30px;
-	background: url(../images/common.toolbar.menu_bg.gif) repeat-x bottom left;
-	z-index: 499999;
+	position: fixed !important;
+	bottom:0px !important;
+	left:0px !important;
+	width:100% !important;
+	height:30px !important;
+	background: url(../images/common.toolbar.menu_bg.gif) repeat-x bottom left !important;
+	z-index: 499999 !important;
 }
 
 div.svocommontoolbarmenu ul.home {
-	height:30px;
-	float:left;
+	height:30px !important;
+	float:left !important;
 }
 
 div.svocommontoolbarmenu ul.favorites {
-	height:30px;
-	float:left;
-	background: url(../images/common.toolbar.menu_darkbg.gif) repeat-x bottom left;
+	height:30px !important;
+	float:left !important;
+	background: url(../images/common.toolbar.menu_darkbg.gif) repeat-x bottom left !important;
 }
 
 div.svocommontoolbarmenu ul {
-	list-style:none;
-	position:relative;
-	margin:0px;
-	padding:0px;
+	list-style:none !important;
+	position:relative !important;
+	margin:0px !important;
+	padding:0px !important;
 }
 div.svocommontoolbarmenu ul li {
-	display:inline-block;
-	float:left;
-	position:relative;
-	margin:0px;
-	padding:0px;
+	display:inline-block !important;
+	float:left !important;
+	position:relative !important;
+	margin:0px !important;
+	padding:0px !important;
 }
 div.svocommontoolbarmenu li a {
 	display:block !important;
-	margin:0px;
-	padding:7px 12px 0px 20px;
-	color:#ffffff;
-	text-indent: 14px;
-	text-shadow: rgba(0, 0, 0, .80) 0px -1px 0px;
-	font-size:11px;
+	margin:0px !important;
+	padding:7px 12px 0px 20px !important;
+	color:#ffffff !important;
+	text-indent: 14px !important;
+	text-shadow: rgba(0, 0, 0, .80) 0px -1px 0px !important;
+	font-size:11px !important;
 }
 
 div.svocommontoolbarmenu li:hover a {
-	color:#dedede;
-	text-decoration:none;	
+	color:#dedede !important;
+	text-decoration:none !important;	
 }
 
 div.svocommontoolbarmenu ul.favorites li ul {
-	display:none;
+	display:none !important;
 }
 
 div.svocommontoolbarmenu ul.favorites li ul li {
@@ -95,26 +95,26 @@ div.svocommontoolbarmenu ul.favorites li ul li {
 	width: 100% !important; /* width needed or else Opera goes nuts */
 	padding: 0 !important;
 	margin: 0 !important;
-	border-bottom: 1px dotted #666;
-	background: none;
+	border-bottom: 1px dotted #666 !important;
+	background: none !important;
 	color: #fff !important;
 }
 
 div.svocommontoolbarmenu ul.favorites li ul li a {
-	padding:0px;
+	padding:0px !important;
 	width: 11em !important;
 	padding: 4px 0 4px 14px !important;
-	text-indent: 0px;
+	text-indent: 0px !important;
 	margin: 1px 0 !important;
 	line-height: 1.2 !important;
 	background: url(../images/common.toolbar.menu.arrow_dk_grey.gif) no-repeat 3px center !important;
 	color: #333 !important;
-	text-shadow: rgba(255,255,255,.30) 0px 1px 0px;
+	text-shadow: rgba(255,255,255,.30) 0px 1px 0px !important;
 }
 
 div.svocommontoolbarmenu ul.favorites li:hover ul {
-	display:block;
-	bottom:20px;
+	display:block !important;
+	bottom:20px !important;
 	width: 140px !important;
 	padding: 0.5em 0.5em 0 0.5em !important;
 	margin: 11px 0 0 6px !important;
@@ -124,15 +124,15 @@ div.svocommontoolbarmenu ul.favorites li:hover ul {
 	position: absolute !important;
 	background: #999 !important;
 	height: auto !important;
-	opacity: .98;
-	-moz-opacity: .98;
-	filter: alpha(opacity=98); /* Move to ie.css? */
-	-moz-border-radius-topleft: 5px;
-	-webkit-border-top-left-radius: 5px;
-	-moz-border-radius-topright: 5px;
-	-webkit-border-top-right-radius: 5px;
-	-webkit-box-shadow: 2px -2px 5px #666;
-	-moz-box-shadow: 3px -3px 5px #555;
+	opacity: .98 !important;
+	-moz-opacity: .98 !important;
+	filter: alpha(opacity=98) !important; /* Move to ie.css? */
+	-moz-border-radius-topleft: 5px !important;
+	-webkit-border-top-left-radius: 5px !important;
+	-moz-border-radius-topright: 5px !important;
+	-webkit-border-top-right-radius: 5px !important;
+	-webkit-box-shadow: 2px -2px 5px #666 !important;
+	-moz-box-shadow: 3px -3px 5px #555 !important;
 	box-shadow: 3px -3px 3px #555 !important;
 	color:#fff !important;
 }
@@ -140,18 +140,18 @@ div.svocommontoolbarmenu ul.favorites li:hover ul {
 div.svocommontoolbarmenu ul.favorites li li a:hover {
 	background: url(../images/common.toolbar.menu.arrow_grey.gif) no-repeat 3px center !important;
 	color: #fff !important;
-	text-shadow: rgba(0,0,0,.60) 0px -1px 0px;
+	text-shadow: rgba(0,0,0,.60) 0px -1px 0px !important;
 	
 }
 
 div.svocommontoolbarmenu ul.favorites li:hover ul a:hover, div.svocommontoolbarmenu ul.favorites li.sfhover ul a:hover { 
 	color: #fff !important;
-	text-shadow: rgba(0,0,0,.60) 0px -1px 0px;
+	text-shadow: rgba(0,0,0,.60) 0px -1px 0px !important;
 	background: url(../images/common.toolbar.menu.arrow_grey.gif) no-repeat 3px center !important;
 }
 
 div.svocommontoolbarmenu ul.favorites li ul li.last {
-	border-bottom: none;
+	border-bottom: none !important;
 }
 
 div.svocommontoolbarmenu ul.favorites li:hover ul, div.svocommontoolbarmenu ul.favorites li.sfhover ul {
@@ -164,31 +164,31 @@ div.svocommontoolbarmenu ul.favorites li li:last-child {
 }
 
 div.svocommontoolbarmenu ul li#search input {
-	width:200px;
-	border:1px solid #efefef;
-	height:13px;
-	margin-top:7px;
+	width:200px !important;
+	border:1px solid #efefef !important;
+	height:13px !important;
+	margin-top:7px !important;
 }
 div.svocommontoolbarmenu li#mainMenu>a.logo {
-	display:block;
-	margin:0px;
-	padding:0px;
-	text-indent: -9999px;
-	width:50px;
-	height:30px;
-	background: url(../images/common.toolbar.menu_logo.png) no-repeat;
+	display:block !important;
+	margin:0px !important;
+	padding:0px !important;
+	text-indent: -9999px !important;
+	width:50px !important;
+	height:30px !important;
+	background: url(../images/common.toolbar.menu_logo.png) no-repeat !important;
 }
 div.svocommontoolbarmenu li#mainMenu>a.logo:hover {
-	background: url(../images/common.toolbar.menu_logohover.png) no-repeat;
+	background: url(../images/common.toolbar.menu_logohover.png) no-repeat !important;
 }
 div.svocommontoolbarmenu ul.favorites li {
-	background: url(../images/common.toolbar.menu_libg.gif) no-repeat;
+	background: url(../images/common.toolbar.menu_libg.gif) no-repeat !important;
 }
 div.svocommontoolbarmenu li#pageTools>a.website {
 	background: url("/admin/images/icons/ntwrk_24.png") no-repeat scroll 15px 7px transparent !important;
 }
 div.svocommontoolbarmenu li#navDashboard {
-	background:none;
+	background:none !important;
 }
 div.svocommontoolbarmenu li#navDashboard>a {
 	background: url("/admin/images/icons/dashboard_14.png") no-repeat scroll 15px 7px transparent !important;
@@ -208,136 +208,136 @@ div.svocommontoolbarmenu li#navSettings>a {
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu {
-	position: absolute;
-	display: none;
-	bottom:30px;
-	height: auto;
-	width: 260px;
-	padding:20px 0px 80px 0px;
-	background-color:#666666;
-	-moz-border-radius-topright: 15px;
-	-webkit-border-top-right-radius: 15px;
-	z-index: 499998;
+	position: absolute !important;
+	display: none !important;
+	bottom:30px !important;
+	height: auto !important;
+	width: 260px !important;
+	padding:20px 0px 80px 0px !important;
+	background-color:#666666 !important;
+	-moz-border-radius-topright: 15px !important;
+	-webkit-border-top-right-radius: 15px !important;
+	z-index: 499998 !important;
 }
 
 div.svocommontoolbarmenu li#mainMenu div.subMenuWrapper {
-	position: absolute;
-	display: none;
-	background-color:#111;
-	-moz-border-radius-topright: 15px;
-	-webkit-border-top-right-radius: 15px;
-	opacity: .96;
-	-moz-opacity: .96;
-	filter: alpha(opacity=96); /* Move to ie.css? */
+	position: absolute !important;
+	display: none !important;
+	background-color:#111 !important;
+	-moz-border-radius-topright: 15px !important;
+	-webkit-border-top-right-radius: 15px !important;
+	opacity: .96 !important;
+	-moz-opacity: .96 !important;
+	filter: alpha(opacity=96) !important; /* Move to ie.css? */
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu li {
-	background-color:#666666;
-	background-image:url(../images/common.toolbar.menu.arrow_white.png);
-	background-position:240px 18px;
-	background-repeat:no-repeat;
+	background-color:#666666 !important;
+	background-image:url(../images/common.toolbar.menu.arrow_white.png) !important;
+	background-position:240px 18px !important;
+	background-repeat:no-repeat !important;
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu li.selected {
-	background-color:#777777;
+	background-color:#777777 !important;
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu li a {
-	display:block;
-	width: 190px;
-	padding: 15px 30px 15px 40px;
-	font-size:14px;
-	font-weight:bold;
-	color:#ffffff;
-	background-position:7px 10px;
-	background-repeat:no-repeat;
+	display:block !important;
+	width: 190px !important;
+	padding: 15px 30px 15px 40px !important;
+	font-size:14px !important;
+	font-weight:bold !important;
+	color:#ffffff !important;
+	background-position:7px 10px !important;
+	background-repeat:no-repeat !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminmain {
-	background-image:url(../images/grayIcons32/computer.png);
+	background-image:url(../images/grayIcons32/computer.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminproduct {
-	background-image:url(../images/grayIcons32/edit.png);
+	background-image:url(../images/grayIcons32/edit.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminorder {
-	background-image:url(../images/grayIcons32/shopping_cart.png);
+	background-image:url(../images/grayIcons32/shopping_cart.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminaccount {
-	background-image:url(../images/grayIcons32/users.png);
+	background-image:url(../images/grayIcons32/users.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminsetting {
-	background-image:url(../images/grayIcons32/tools.png);
+	background-image:url(../images/grayIcons32/tools.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminattribute {
-	background-image:url(../images/grayIcons32/process.png);
+	background-image:url(../images/grayIcons32/process.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminpromotion {
-	background-image:url(../images/grayIcons32/dollar.png);
+	background-image:url(../images/grayIcons32/dollar.png) !important;
 }
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminhelp {
-	background-image:url(../images/grayIcons32/help.png);
+	background-image:url(../images/grayIcons32/help.png) !important;
 }
 
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu {
-	position:relative;
-	margin-left:260px;
-	display:none;
-	width:260px;
-	background: none;
+	position:relative !important;
+	margin-left:260px !important;
+	display:none !important;
+	width:260px !important;
+	background: none !important;
 }
 div.svocommontoolbarmenu div.subMenuWrapper div.adminsetting,
 div.svocommontoolbarmenu div.subMenuWrapper div.adminproduct {
-	width:400px;
+	width:400px !important;
 }
 div.svocommontoolbarmenu div.subMenuWrapper div.searchresults {
-	width:800px;
+	width:800px !important;
 }
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu h3 {
-	font-size:22px;
-	font-weight:normal;
-	margin:25px;
-	padding-bottom:10px;
-	color:#fff;
-	border-bottom:1px solid #fff;
+	font-size:22px !important;
+	font-weight:normal !important;
+	margin:25px !important;
+	padding-bottom:10px !important;
+	color:#fff !important;
+	border-bottom:1px solid #fff !important;
 }
 
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu ul {
-	margin-bottom:25px;
+	margin-bottom:25px !important;
 }
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu ul li {
-	display:block;
-	float:none;
+	display:block !important;
+	float:none !important;
 }
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu ul li.title {
-	display:block;
-	font-size:14px;
-	font-weight:bold;
-	color:#dedede;
-	margin-bottom:10px;
+	display:block !important;
+	font-size:14px !important;
+	font-weight:bold !important;
+	color:#dedede !important;
+	margin-bottom:10px !important;
 }
 
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu a {
-	padding:0px;
-	margin:0px;
-	text-indent:0px;
-	font-size:12px;
-	color:#999;
-	font-weight:normal;
-	text-shadow:none;
+	padding:0px !important;
+	margin:0px !important;
+	text-indent:0px !important;
+	font-size:12px !important;
+	color:#999 !important;
+	font-weight:normal !important;
+	text-shadow:none !important;
 }
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu a:hover {
-	color:#dedede;
+	color:#dedede !important;
 }
 
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu div.oneColumn {
-	margin-left:25px;
-	width:160px;
-	float:left;
+	margin-left:25px !important;
+	width:160px !important;
+	float:left !important;
 }
 
 div.svocommontoolbarmenu div.subMenuWrapper div.subMenu div.twoColumn {
-	margin-left:25px;
-	width:380px;
-	float:left;
+	margin-left:25px !important;
+	width:380px !important;
+	float:left !important;
 }
 
 

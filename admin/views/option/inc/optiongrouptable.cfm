@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-<cfif arrayLen(rc.optionGroups) gt 1>
+<cfif arrayLen(rc.optionGroups..getPageRecords()) gt 1>
 	<div class="buttons">
 	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
 	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
@@ -57,7 +57,7 @@ Notes:
 	</tr>
 	</thead>
 	<tbody id="OptionGroupList">
-<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
+<cfloop array="#rc.optionGroups.getPageRecords()#" index="local.thisOptionGroup">
 	<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
 		<td class="handle" style="display:none;"><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
 		<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
@@ -75,4 +75,5 @@ Notes:
 </cfloop>
     </tbody>
 </table>
+<cf_SlatwallSmartListPager smartList="#rc.optionGroups#">
 </cfoutput>
