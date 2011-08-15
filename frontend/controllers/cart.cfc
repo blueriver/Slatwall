@@ -74,7 +74,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				if(rc.selectedOptions != "") {
 					var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
 				} else if (arrayLen(product.getSkus()) == 1) {
-					var sku = product.getDefaultSku();
+					var sku = product.getSkus()[1];
 				}	
 			}
 		}
