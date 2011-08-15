@@ -45,7 +45,7 @@ Notes:
 			<cfinclude template="/muraWRM/config/error.html">
 		</cfif>
 	<cfelse>
-		<cfdump var="#arguments.exception#">
+		<cfdump var="#arguments.exception#" top="3">
 	</cfif>
 </cfif>
 <cfabort>		
