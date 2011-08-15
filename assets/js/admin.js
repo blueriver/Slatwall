@@ -61,7 +61,7 @@ function setRTE(txtarea) {
 			toolbar:wysiwygType,
 			height:'150',
 			customConfig : 'config.js.cfm'
-		});
+		}, htmlEditorOnComplete);
 }
 
 
