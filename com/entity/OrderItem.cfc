@@ -194,10 +194,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		variables.orderFulfillment = arguments.orderFulfillment;
 		if(isNew() || !arguments.orderFulfillment.hasOrderFulfillmentItems(this)) {
 			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(),this);
+			
+			// Run Item's Changed Function
+			variables.orderFulfillment.orderFulfillmentItemsChanged();
 		}
-		
-		// Run Item's Changed Function
-		variables.orderFulfillment.orderFulfillmentItemsChanged();
     }
     
     public void function removeOrderFulfillment(OrderFulfillment orderFulfillment) {
@@ -207,11 +207,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
     	if(index > 0) {
     		arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
+    		
+    		// Run Item's Changed Function
+			variables.orderFulfillment.orderFulfillmentItemsChanged();
     	}
     	
-    	// Run Item's Changed Function
-		variables.orderFulfillment.orderFulfillmentItemsChanged();
-		
     	structDelete(variables, "orderFulfillment");
     }
     

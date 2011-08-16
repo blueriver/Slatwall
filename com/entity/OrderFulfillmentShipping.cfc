@@ -66,6 +66,10 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		}
 		
 		if(isNull(getShippingMethod())) {
+			// Force in new shipping options
+			if(!isNull(variables.shippingAddress) && arrayLen(variables.orderFulfillmentItems) && !arrayLen(variables.orderShippingMethodOptions)) {
+				getService("ShippingService").populateOrderShippingMethodOptions(this);
+			}
 			return false;
 		}
 		
@@ -74,19 +78,6 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	
 	public void function orderFulfillmentItemsChanged() {
 		removeShippingMethodAndMethodOptions();
-	}
-	
-	public array function getOrderShippingMethodOptions(boolean autoPopulate=true) {
-		if(autoPopulate) {
-			populateOrderShippingMethodOptionsIfEmpty();
-		}
-		return variables.orderShippingMethodOptions;
-	}
-	
-	public void function populateOrderShippingMethodOptionsIfEmpty() {
-		if(!isNull(variables.shippingAddress) && arrayLen(variables.orderFulfillmentItems) && !arrayLen(variables.orderShippingMethodOptions)) {
-			getService("ShippingService").populateOrderShippingMethodOptions(this);
-		}
 	}
 	
 	public void function removeShippingMethodAndMethodOptions() {
