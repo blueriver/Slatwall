@@ -51,7 +51,7 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	public void function setOrderFulfillmentShipping(required OrderFulfillmentShipping orderFulfillmentShipping) {
 		variables.orderFulfillmentShipping = arguments.orderFulfillmentShipping;
 		if(isNew() || !arguments.orderFulfillmentShipping.hasOrderShippingMethodOption(this)) {
-			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(false),this);
+			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
 		}
 	}
 	
@@ -59,9 +59,9 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	   if(!structKeyExists(arguments,"orderFulfillmentShipping")) {
 	   		arguments.orderFulfillmentShipping = variables.orderFulfillmentShipping;
 	   }
-       var index = arrayFind(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(false),this);
+       var index = arrayFind(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(false), index);
+           arrayDeleteAt(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(), index);
        }
        structDelete(variables,"orderFulfillmentShipping");
     }
