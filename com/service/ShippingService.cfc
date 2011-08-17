@@ -70,8 +70,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var methodCharge = 0;
 				var rateExists = false;
 				var rates = shippingMethods[i].getShippingRates();
+				
 				for(var r=1;r <= arrayLen(rates); r++) {
 					// Make sure that the shipping address is in the zone of this rate
+				
 					if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
 						
 						var rateApplies = true;
@@ -100,6 +102,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						}
 					}
 				}
+				
 				if(rateExists) {
 					var option = this.newOrderShippingMethodOption();
 					option.setShippingMethod(shippingMethods[i]);
@@ -110,13 +113,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			} else {
 				if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
 					arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
-				}	
+				}
 			}
 		}
 		
 		// Loop over Shipping Providers
 		for(var p=1; p<=arrayLen(shippingProviders); p++) {
-
+			
 			// Get Provider Service
 			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
 			
@@ -134,14 +137,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			ratesRequestBean.setShipFromCountryCode("");
 			
 			//ratesRequestBean.setShipFromWithAddress();
-			
 			// END HACK
-			
 			
 			// Query the shipping provider service API to get the rates
 			getService("logService").logMessage(message="Shipping Rates Request - Started", generalLog=true);
 			try {
-				var ratesResponseBean = providerService.getRates(ratesRequestBean);	
+				var ratesResponseBean = providerService.getRates(ratesRequestBean);
 			} catch (any e) {
 				var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 				ratesResponseBean.addError('processing', "An Unexpected Error Ocurred");
@@ -151,18 +152,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// Loop Over Shipping Methods
 			if(!ratesResponseBean.hasErrors()) {
 				for(var m=1; m<=arrayLen(shippingMethods); m++) {
-				
+			
 					// Check the method to see if it is from this provider
 					if(shippingProviders[p] == shippingMethods[m].getShippingProvider()) {
-						
+				
 						// Loop over the rates return by the provider to match with a shipping method
 						for(var r=1; r<=arrayLen(ratesResponseBean.getShippingMethodResponseBeans()); r++) {
+					
 							if(ratesResponseBean.getShippingMethodResponseBeans()[r].getShippingProviderMethod() == shippingMethods[m].getShippingProviderMethod()) {
 								var option = this.newOrderShippingMethodOption();
 								option.setShippingMethod(shippingMethods[m]);
 								option.setEstimatedArrivalDate(ratesResponseBean.getShippingMethodResponseBeans()[r].getEstimatedArrivalDate());
 								option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
-								
 								// Set the rate
 								if( !isNull( shippingMethods[m].getShippingRateIncreasePercentage() ) && shippingMethods[m].getShippingRateIncreasePercentage() > 0) {
 									option.setTotalCharge( ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() + (ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() * (shippingMethods[m].getShippingRateIncreasePercentage()/100)) );
@@ -171,7 +172,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 								} else {
 									option.setTotalCharge( ratesResponseBean.getShippingMethodResponseBeans()[r].getTotalCharge() );	
 								}
-								
 								getDAO().save(option);
 							}
 						}

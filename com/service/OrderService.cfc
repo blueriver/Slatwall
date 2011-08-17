@@ -126,10 +126,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment, struct customizatonData) {
-		// Check to see if the order has a status
-		if(isNull(arguments.order.getOrderStatusType())) {
-			arguments.order.setOrderStatusType(this.getTypeBySystemCode('ostNotPlaced'));
-		} else if (arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
+		
+		// Check to see if the order has already been closed or canceled
+		if (arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
 			throw("You cannot add an item to an order that has been closed or canceld");
 		}
 		
@@ -150,7 +149,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		var orderItems = arguments.order.getOrderItems();
-		
 		var itemExists = false;
 		
 		// If there are no product customizations then we can check for the order item already existing.
@@ -193,7 +191,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Recalculate the order amounts for tax and promotions
 		recalculateOrderAmounts(arguments.order);
-				
+		
 		save(arguments.order);
 	}
 	
@@ -218,9 +216,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var fulfillmentsOK = true;
 		
 		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderFulfillments")) {
+			
 			var fulfillmentsDataArray = data.structuredData.orderFulfillments;
+			
 			for(var i=1; i<= arrayLen(fulfillmentsDataArray); i++) {
+				
 				var fulfillment = this.getOrderFulfillment(fulfillmentsDataArray[i].orderFulfillmentID, true);
+				
 				if(arguments.order.hasOrderFulfillment(fulfillment)) {
 					fulfillment = this.saveOrderFulfillment(fulfillment, fulfillmentsDataArray[i]);
 					if(fulfillment.hasErrors()) {
@@ -419,8 +421,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
-		arguments.orderFulfillment.populate(arguments.data);
 		
+		arguments.orderFulfillment.populate(arguments.data);
 		
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
