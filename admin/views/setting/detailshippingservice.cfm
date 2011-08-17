@@ -63,7 +63,7 @@ Notes:
 				<input type="hidden" name="shippingServicePackage" value="#rc.shippingServicePackage#" />
 		</cfif>
 		<cfif structKeyExists(local.serviceMeta, "properties")>
-			<dl>
+			<dl class="twoColumn">
 				<cfloop array="#local.serviceMeta.properties#" index="local.property">
 					
 					<!--- Get The Property Title --->
