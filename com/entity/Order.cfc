@@ -72,6 +72,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(isNull(variables.orderPayments)) {
 			variables.orderPayments = [];
 		}
+		
+		// Set the default order status type as not placed
+		if(isNull(getOrderStatusType())) {
+			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
+		}
+		
 		return super.init();
 	}
 	

@@ -41,7 +41,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="addressService" type="any";
 
 	public void function updateOrderAmountsWithTaxes(required any order) {
-		
 		for(var i=1; i <= arrayLen(arguments.order.getOrderItems()); i++) {
 			var orderItem = arguments.order.getOrderItems()[i];
 			
@@ -52,21 +51,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Get this items fulfillment
 			var fulfillment = orderItem.getOrderFulfillment();
-		
+			
 			// If the method is shipping then apply taxes
 			if(fulfillment.getFulfillmentMethodID() == "shipping") {
 				
 				// TODO: This is a hack because we only have one tax category for products right now
 				var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
-				
 				var address = fulfillment.getShippingAddress();
+				
 				if(!isNull(address)) {
-					for(var i=1; i<= arrayLen(taxCategory.getTaxCategoryRates()); i++) {
-						if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[i].getAddressZone())) {
+					for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
+						if(getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone())) {
 							var newAppliedTax = this.newOrderItemAppliedTax();
-							newAppliedTax.setTaxAmount(orderItem.getExtendedPriceAfterDiscount() * (taxCategory.getTaxCategoryRates()[i].getTaxRate() / 100));
-							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[i].getTaxRate());
-							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[i]);
+							newAppliedTax.setTaxAmount(orderItem.getExtendedPriceAfterDiscount() * (taxCategory.getTaxCategoryRates()[r].getTaxRate() / 100));
+							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
+							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
 							newAppliedTax.setOrderItem(orderItem);
 						}
 					}
