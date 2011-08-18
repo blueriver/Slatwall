@@ -52,6 +52,9 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="shippingReadyFlag" ormtype="boolean";
 	property name="shippingActiveFlag" ormtype="boolean";
 	
+	// Non-Persistent properties
+	property name="activeFlag" type="boolean" persistent="false";
+	
 	public any function init() {
 		if(isNull(getDataReadyFlag())) {
 			setDataReadyFlag(0);
@@ -79,6 +82,13 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		}
 		
 		return super.init();
+	}
+	
+	public boolean function getActiveFlag() {
+		if(getDataActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag()) {
+			return true;
+		}
+		return false;
 	}
 	
 	public any function getIntegrationSetting(required string settingName) {

@@ -49,5 +49,4 @@ component accessors="true" output="false" implements="Slatwall.integrationServic
 	public string function getDisplayName() {
 		return "Authorize.Net";
 	}
-	
 }
