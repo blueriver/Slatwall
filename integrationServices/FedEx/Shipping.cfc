@@ -83,10 +83,10 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		// Loop over all items to get a price and weight for shipping
 		for(var i=1; i<=arrayLen(arguments.requestBean.getShippingItemRequestBeans()); i++) {
 			if(isNumeric(arguments.requestBean.getShippingItemRequestBeans()[i].getWeight())) {
-				totalItemsWeight +=	arguments.requestBean.getShippingItemRequestBeans()[i].getWeight();
+				totalItemsWeight +=	arguments.requestBean.getShippingItemRequestBeans()[i].getWeight() * arguments.requestBean.getShippingItemRequestBeans()[i].getQuantity();
 			}
 			 
-			totalItemsValue += arguments.requestBean.getShippingItemRequestBeans()[i].getValue();
+			totalItemsValue += arguments.requestBean.getShippingItemRequestBeans()[i].getValue() * arguments.requestBean.getShippingItemRequestBeans()[i].getQuantity();
 		}
 		
 		if(totalItemsWeight < 1) {
