@@ -49,4 +49,12 @@ component {
 		return "Not Defined";
 	}
 	
+	public xml function getMainMenuLinks() {
+		return xmlNew(false);
+	}
+	
+	public boolean function isFW1Subsystem() {
+		return false;
+	}
+	
 }

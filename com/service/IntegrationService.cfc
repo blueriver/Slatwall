@@ -39,7 +39,38 @@ Notes:
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="DAO" type="any";
+	
+	variables.dataIntegrationCFCs = {};
+	variables.paymentIntegrationCFCs = {};
+	variables.shippingIntegrationCFCs = {};
 
+	public any function getDataIntegrationCFC(required any integration) {
+		if(!structKeyExists(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Data");
+			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
+			variables.dataIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
+		}
+		return variables.dataIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
+	}
+	
+	public any function getPaymentIntegrationCFC(required any integration) {
+		if(!structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Payment");
+			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
+			variables.paymentIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
+		}
+		return variables.paymentIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
+	}
+	
+	public any function getShippingIntegrationCFC(required any integration) {
+		if(!structKeyExists(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Shipping");
+			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
+			variables.shippingIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
+		}
+		return variables.shippingIntegrationCFCs[ arguments.integration.getIntegrationPackage() ];
+	}
+	
 	public any function updateIntegrationsFromDirectory() {
 		
 		var dirList = directoryList( expandPath("/plugins/Slatwall/integrationServices") );
@@ -114,7 +145,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 	}
-
+	
 	public any function injectDataIntegrationToColdspringXML(required any xml) {
 		var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
 		var dirList = directoryList( dirLocation );
@@ -138,5 +169,27 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		return arguments.xml;
 	}
+	
+	public any function populateIntegrationCFCFromIntegration(required any integrationCFC, required any integration) {
+		var integrationSettings = deserializeJSON(arguments.integration.getIntegrationSettings());
+		var integrationProperties = getIntegrationCFCSettings(arguments.integrationCFC);
+		
+		for(var i=1; i<=arrayLen(integrationProperties); i++) {
+			if(structKeyExists(integrationSettings, integrationProperties[i].name)) {
+				evaluate("arguments.integrationCFC.set#integrationProperties[i].name#( integrationSettings[integrationProperties[i].name] )");
+			}
+		}
+		
+		return arguments.integrationCFC;
+	}
+	
+	public any function getIntegrationCFCSettings(required any integrationCFC) {
+		var meta = getMetaData(arguments.integrationCFC);
+		if(structKeyExists(meta, "properties")) {
+			return meta.properties;
+		}
+		return settings;
+	}
+	
 	
 }

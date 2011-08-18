@@ -48,6 +48,7 @@ Notes:
 		<thead>
 			<tr>
 				<th class="varWidth">Integration Service Name</th>
+				<th>Enabled</th>
 				<th class="administration">&nbsp;</th>
 			</tr>
 		</thead>
@@ -55,12 +56,16 @@ Notes:
 			<cfloop array="#rc.integrationsList#" index="local.integration">
 				<tr>
 					<td class="varWidth"><a href="#buildURL(action='admin:integration.detail', queryString='integrationPackage=#local.integration.getIntegrationPackage()#')#">#local.integration.getIntegrationName()#</a></td>
+					<td>
+						<cfif local.integration.getActiveFlag()>
+							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+						<cfelse>
+							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
+						</cfif>
+					</td>
 					<td class="administration">
-						<ul class="two">
-							<!---
-							<cf_SlatwallActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="viewDetails" type="list">
-							<cf_SlatwallActionCaller action="admin:account.edit" querystring="accountID=#local.account.getAccountID()#" class="edit" type="list">
-							--->
+						<ul class="one">
+							<cf_SlatwallActionCaller action="admin:integration.edit" querystring="integrationPackage=#local.integration.getIntegrationPackage()#" class="edit" type="list">
 						</ul>
 					</td>
 				</tr>
