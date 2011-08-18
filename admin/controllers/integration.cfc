@@ -38,7 +38,13 @@ Notes:
 */
 component extends="BaseController" output=false accessors=true {
 
+	property name="integrationService";
+
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:integration.list");
+	}
+	
+	public void function list(required struct rc) {
+		rc.integrationsList = getIntegrationService().listIntegration();
 	}
 }

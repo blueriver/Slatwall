@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" output="false" displayname="Full Circle" implements="Slatwall.integrationServices.IntegrationInterface" {
+component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public any function init() {
 		return this;
@@ -44,5 +44,9 @@ component accessors="true" output="false" displayname="Full Circle" implements="
 	
 	public string function getIntegrationTypes() {
 		return "data";
+	}
+	
+	public string function getDisplayName() {
+		return "Full Circle";
 	} 
 }

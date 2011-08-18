@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" output="false" displayname="Endicia" implements="Slatwall.integrationServices.IntegrationInterface" {
+component accessors="true" output="false" displayname="Endicia" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public any function init() {
 		return this;
@@ -44,5 +44,9 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 	
 	public string function getIntegrationTypes() {
 		return "shipping";
-	} 
+	}
+	
+	public string function getDisplayName() {
+		return "Endicia";
+	}
 }
