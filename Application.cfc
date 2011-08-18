@@ -128,6 +128,9 @@ component extends="org.fw1.framework" output="false" {
 		// Load all Slatwall Settings
 		getBeanFactory().getBean("settingService").reloadConfiguration();
 		
+		// Reload All Integrations
+		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+		
 		// Set the first request to True so that it runs
 		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
 		

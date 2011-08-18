@@ -38,6 +38,83 @@ Notes:
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="DAO" type="any";
+
+	public any function updateIntegrationsFromDirectory() {
+		
+		var dirList = directoryList( expandPath("/plugins/Slatwall/integrationServices") );
+		var integrationList = this.listIntegration();
+		var installedIntegrationList = "";
+		
+		// Turn off the installed and ready flags on any previously setup integration entities
+		for(var i=1; i<=arrayLen(integrationList); i++) {
+			integrationList[i].setInstalledFlag(0);
+			integrationList[i].setDataReadyFlag(0);
+			integrationList[i].setPaymentReadyFlag(0);
+			integrationList[i].setShippingReadyFlag(0);
+		}
+		
+		// Loop over each integration in the integration directory
+		for(var i=1; i<= arrayLen(dirList); i++) {
+			
+			var fileInfo = getFileInfo(dirList[i]);
+			
+			if(fileInfo.type == "directory" && fileExists("#fileInfo.path#/Integration.cfc") ) {
+				
+				var integrationPackage = listLast(dirList[i],"\/");
+				var integrationCFC = createObject("component", "Slatwall.integrationServices.#integrationPackage#.Integration").init();
+				var integrationMeta = getMetaData(integrationCFC);
+				
+				if(structKeyExists(integrationMeta, "Implements") && structKeyExists(integrationMeta.implements, "Slatwall.integrationServices.IntegrationInterface")) {
+					
+					var integration = this.getIntegrationByIntegrationPackage(integrationPackage, true);
+					integration.setInstalledFlag(1);
+					integration.setIntegrationPackage(integrationPackage);
+					integration.setIntegrationName(integrationCFC.getDisplayName());
+					
+					var integrationTypes = integrationCFC.getIntegrationTypes();
+					
+					// Start: Get Integration Types
+					for(var it=1; it<=listLen(integrationTypes); it++) {
+						
+						var thisType = listGetAt(integrationTypes, it);
+						
+						switch (thisType) {
+							case "data": {
+								var dataCFC = createObject("component", "Slatwall.integrationServices.#integrationPackage#.Data").init();
+								var dataMeta = getMetaData(dataCFC);
+								if(structKeyExists(dataMeta, "Implements") && structKeyExists(dataMeta.implements, "Slatwall.integrationServices.DataInterface")) {
+									integration.setDataReadyFlag(1);
+								}
+								break;
+							}
+							case "payment": {
+								var paymentCFC = createObject("component", "Slatwall.integrationServices.#integrationPackage#.Payment").init();
+								var paymentMeta = getMetaData(paymentCFC);
+								if(structKeyExists(paymentMeta, "Implements") && structKeyExists(paymentMeta.implements, "Slatwall.integrationServices.PaymentInterface")) {
+									integration.setPaymentReadyFlag(1);
+								}
+								break;
+							}
+							case "shipping": {
+								var shippingCFC = createObject("component", "Slatwall.integrationServices.#integrationPackage#.Shipping").init();
+								var shippingMeta = getMetaData(shippingCFC);
+								if(structKeyExists(shippingMeta, "Implements") && structKeyExists(shippingMeta.implements, "Slatwall.integrationServices.ShippingInterface")) {
+									integration.setShippingReadyFlag(1);
+								}
+								break;
+							}
+						}
+					}
+					
+					// Call Entity Save so that any new integrations get persisted
+					getDAO().save(integration);
+					
+				}
+			}
+		}
+	}
+
 	public any function injectDataIntegrationToColdspringXML(required any xml) {
 		var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
 		var dirList = directoryList( dirLocation );

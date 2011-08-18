@@ -36,6 +36,8 @@
 Notes:
 
 --->
+<cfparam name="rc.integrationsList" type="array" />
+
 <cfoutput>
 <div class="svoadminintegrationlist">
 	<ul id="navTask">
@@ -50,22 +52,19 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-			<!---
-			<cfloop array="#rc.integrationSmartList.getPageRecords()#" index="local.integration">
+			<cfloop array="#rc.integrationsList#" index="local.integration">
 				<tr>
-					<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
-					<td>
-						<a href="mailto:#local.account.getPrimaryEmailAddress().getEmailAddress()#" title="Email #local.account.getFirstName()# #local.account.getLastName()# (#local.account.getPrimaryEmailAddress().getEmailAddress()#)">#local.account.getPrimaryEmailAddress().getEmailAddress()#</a>
-					</td>
+					<td class="varWidth"><a href="#buildURL(action='admin:integration.detail', queryString='integrationPackage=#local.integration.getIntegrationPackage()#')#">#local.integration.getIntegrationName()#</a></td>
 					<td class="administration">
 						<ul class="two">
+							<!---
 							<cf_SlatwallActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="viewDetails" type="list">
 							<cf_SlatwallActionCaller action="admin:account.edit" querystring="accountID=#local.account.getAccountID()#" class="edit" type="list">
+							--->
 						</ul>
 					</td>
 				</tr>
 			</cfloop>
-			--->
 		</tbody>
 	</table>
 </div>

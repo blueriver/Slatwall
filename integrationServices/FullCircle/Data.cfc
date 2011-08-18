@@ -37,4 +37,13 @@ Notes:
 
 */
 component implements="Slatwall.integrationServices.DataInterface" {
+	
+	public any function init() {
+		return this;
+	}
+	
+	public any function getIntegrationTypes() {
+		return "";
+	}
+	
 }

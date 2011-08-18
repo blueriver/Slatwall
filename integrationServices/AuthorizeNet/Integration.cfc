@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.integrationServices.IntegrationInterface" {
+component accessors="true" output="false" implements="Slatwall.integrationServices.IntegrationInterface" extends="Slatwall.integrationServices.BaseIntegration" {
 	
 	public any function init() {
 		return this;
@@ -44,5 +44,10 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	
 	public string function getIntegrationTypes() {
 		return "payment";
-	} 
+	}
+	
+	public string function getDisplayName() {
+		return "Authorize.Net";
+	}
+	
 }

@@ -36,7 +36,7 @@
 Notes:
 
 */
-component accessors="true" output="false" displayname="Quickbooks" implements="Slatwall.integrationServices.IntegrationInterface" {
+component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
 	public any function init() {
 		return this;
@@ -45,5 +45,8 @@ component accessors="true" output="false" displayname="Quickbooks" implements="S
 	public string function getIntegrationTypes() {
 		return "tool";
 	}
-	
+		
+	public string function getDisplayName() {
+		return "Quickbooks";
+	}
 }

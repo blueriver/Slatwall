@@ -42,7 +42,7 @@ Notes:
 	<cffunction name="init" access="public" returntype="any">
 	</cffunction>
 	
-	<cffunction name="getItegrationTypes" access="public" returntype="string">
+	<cffunction name="getIntegrationTypes" access="public" returntype="string">
 		<!---
 			This method should return a comma seperated list of the integration types
 			that it supports.  Here are the possible integration types:
@@ -50,6 +50,13 @@ Notes:
 			shipping
 			payment
 			data
+		--->
+	</cffunction>
+	
+	<cffunction name="getDisplayName" access="public" returntype="string">
+		<!---
+			This method should return a String with the display name
+			that you would like for the integration to have
 		--->
 	</cffunction>
 

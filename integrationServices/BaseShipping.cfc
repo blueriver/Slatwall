@@ -36,17 +36,18 @@
 Notes:
 
 */
-component accessors="true" output="false" displayname="USA epay" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
-	
+component {
+
 	public any function init() {
 		return this;
 	}
 	
-	public string function getIntegrationTypes() {
-		return "payment";
+	public string function getShippingMethods() {
+		return "";
 	}
-		
-	public string function getDisplayName() {
-		return "USA epay";
-	} 
+	
+	public string function getTrackingURL() {
+		return "";
+	}
+	
 }
