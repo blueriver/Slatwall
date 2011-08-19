@@ -233,7 +233,13 @@ component extends="BaseController" output="false" accessors="true" {
 		if(isNull(rc.paymentMethod)) {
 			getFW().redirect(action="admin:setting.listPaymentMethods");
 		}
-		rc.paymentServices = getSettingService().getPaymentServices();
+		rc.paymentIntegrations = getIntegrationService().listIntegration({paymentActiveFlag=1});
+		
+		for(var i=arrayLen(rc.paymentIntegrations); i>=1; i--) {
+			if( ! listFind( rc.paymentIntegrations[i].getIntegrationCFC('payment').getPaymentMethods(), rc.paymentMethod.getPaymentMethodID() ) ) {
+				arrayDeleteAt(rc.paymentIntegrations,i);
+			}
+		}
 		
 		rc.allSettings = getSettingService().getSettings();
 		
