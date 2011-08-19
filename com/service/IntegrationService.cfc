@@ -191,5 +191,54 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return settings;
 	}
 	
+	public any function saveIntegration(required any integration, struct data) {
+		if(structKeyExists(arguments, "data") && structKeyExists(arguments.data, "structuredData")) {
+			// Populate the Entity Itself
+			arguments.integration.populate(arguments.data);
+			
+			// Populate Data Integration
+			if(arguments.integration.getDataReadyFlag() && structKeyExists(arguments.data.structuredData, "dataIntegration")) {
+				var newData = arguments.data.structuredData.dataIntegration;
+				var settings = arguments.integration.getIntegrationCFCSettings('data');
+				for(var i=1; i<=arrayLen(settings); i++) {
+					if(structKeyExists(newData, settings[i].name)) {
+						arguments.integration.setIntegrationSetting(settings[i].name, newData[settings[i].name]);
+					}
+				}
+				if(structKeyExists(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+					structDelete(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage());
+				}
+			}
+			// Populate Payment Integration
+			if(arguments.integration.getPaymentReadyFlag() && structKeyExists(arguments.data.structuredData, "paymentIntegration")) {
+				var newData = arguments.data.structuredData.paymentIntegration;
+				var settings = arguments.integration.getIntegrationCFCSettings('payment');
+				for(var i=1; i<=arrayLen(settings); i++) {
+					if(structKeyExists(newData, settings[i].name)) {
+						arguments.integration.setIntegrationSetting(settings[i].name, newData[settings[i].name]);
+					}
+				}
+				if(structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+					structDelete(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage());
+				}
+			}
+			// Populate Shipping Integration
+			if(arguments.integration.getShippingReadyFlag() && structKeyExists(arguments.data.structuredData, "shippingIntegration")) {
+				var newData = arguments.data.structuredData.shippingIntegration;
+				var settings = arguments.integration.getIntegrationCFCSettings('shipping');
+				for(var i=1; i<=arrayLen(settings); i++) {
+					if(structKeyExists(newData, settings[i].name)) {
+						arguments.integration.setIntegrationSetting(settings[i].name, newData[settings[i].name]);
+					}
+				}
+				if(structKeyExists(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
+					structDelete(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage());
+				}
+			}
+		}
+		
+		return getDAO().save(arguments.integration);
+	}
+	
 	
 }

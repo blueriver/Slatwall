@@ -106,4 +106,25 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		setIntegrationSettings(serializeJSON(allSettings));
 	}
 	
+	public any function getIntegrationCFC(required string integrationType) {
+		switch (arguments.integrationType) {
+			case "data" : {
+				return getService("integrationService").getDataIntegrationCFC(this);
+				break;
+			}
+			case "payment" : {
+				return getService("integrationService").getPaymentIntegrationCFC(this);
+				break;
+			}
+			case "shipping" : {
+				return getService("integrationService").getShippingIntegrationCFC(this);
+				break;
+			}
+		}
+	}
+	
+	public any function getIntegrationCFCSettings(required string integrationType) {
+		return getService("integrationService").getIntegrationCFCSettings(getIntegrationCFC(arguments.integrationType));
+	}
+	
 }
