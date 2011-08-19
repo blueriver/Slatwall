@@ -24,7 +24,7 @@
 		<cfloop file="#importDirectory##newFilename#" index="fileLine">
 			<cfset var lineArray = listToArray(fileLine, chr(9)) />
 			
-			<cfif arrayLen(lineArray) gt 1 and lineArray[1] eq "INVITEM" and listLen(lineArray[2], ":") eq 4 and listGetAt(lineArray[2], 1, ":") eq "WEBSTORE">
+			<cfif arrayLen(lineArray) gt 1 and lineArray[1] eq "INVITEM" and listLen(lineArray[2], ":") eq 4 and listGetAt(lineArray[2], 1, ":") eq "WEBSTORE" or listGetAt(lineArray[2], 1, ":") eq "WEB STORE">
 				
 				<cfset var remoteSkuID = listGetAt(lineArray[2], 4, ":") />
 				<cfset var remoteProductID = left(remoteSkuID, 11) />
