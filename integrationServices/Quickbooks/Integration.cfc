@@ -43,10 +43,14 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	public string function getIntegrationTypes() {
-		return "tool";
+		return "custom";
 	}
-		
+	
 	public string function getDisplayName() {
 		return "Quickbooks";
+	}
+	
+	public boolean function isFW1Subsystem() {
+		return true;
 	}
 }

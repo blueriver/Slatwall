@@ -58,11 +58,18 @@ Notes:
 		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 			<ul>
+				<cfif rc.integration.getCustomReadyFlag()><li><a href="##tabCustom" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.integration.detail.tab.custom")#</span></a></li></cfif>
 				<cfif rc.integration.getDataReadyFlag()><li><a href="##tabData" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.integration.detail.tab.data")#</span></a></li></cfif>
 				<cfif rc.integration.getPaymentReadyFlag()><li><a href="##tabPayment" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.integration.detail.tab.payment")#</span></a></li></cfif>
 				<cfif rc.integration.getShippingReadyFlag()><li><a href="##tabShipping" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.integration.detail.tab.shipping")#</span></a></li></cfif>
 			</ul>
-			
+			<cfif rc.integration.getCustomReadyFlag()>
+				<div id="tabCustom">
+					<dl class="twoColumn">
+						<cf_SlatwallPropertyDisplay object="#rc.integration#" property="customActiveFlag" edit="#rc.edit#" />
+					</dl>
+				</div>
+			</cfif>
 			<cfif rc.integration.getDataReadyFlag()>
 				<div id="tabData">
 					<dl class="twoColumn">

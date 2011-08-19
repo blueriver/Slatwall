@@ -35,7 +35,7 @@
 
 Notes:
 
---->
+--->			  
 <cfset getAssetWire().addJSVariable("slatwallToolbarSearchKey", $.slatwall.getAPIKey(resource='DisplayToolbarSearchResults', verb='get')) />
 
 <cfoutput>
@@ -160,6 +160,10 @@ Notes:
 							<ul>
 								<li class="title">Integration</li>
 								<cf_SlatwallActionCaller action="admin:integration.list" type="list">
+								<cfset local.integrationSubsystems = $.slatwall.getService('integrationService').getActiveFW1Subsystems() />
+								<cfloop array="#local.integrationSubsystems#" index="local.intsys">
+									<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
+								</cfloop>
 							</ul>
 						</div>
 					</div>

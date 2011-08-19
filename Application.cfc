@@ -207,8 +207,15 @@ component extends="org.fw1.framework" output="false" {
 		} else {
 			controller("frontend:BaseController.subSystemBefore");
 		}
-		
 	}
+	
+	public void function setupView() {
+		// If this is an integration subsystem, then apply add the default layout to the request.layout
+		if( !listFind("admin,frontend,common", getSubsystem(request.context.slatAction))) {
+			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
+		}
+	}
+	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
 	// Helper Functions
@@ -335,7 +342,7 @@ component extends="org.fw1.framework" output="false" {
 		var rtn = super.internalLayout(argumentcollection=arguments);
 		
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			if(getSubsystem(request.action) == "admin" || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
+			if(!listFind("frontend,common", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
 				getBeanFactory().getBean("utilityTagService").cfhtmlhead(getAssetWire().getAllAssets());
 			}
 		}

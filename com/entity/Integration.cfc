@@ -45,6 +45,9 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="integrationSettings" ormtype="string" length="4000";
 	
 	property name="installedFlag" ormtype="boolean";
+	
+	property name="customReadyFlag" ormtype="boolean";
+	property name="customActiveFlag" ormtype="boolean";
 	property name="dataReadyFlag" ormtype="boolean";
 	property name="dataActiveFlag" ormtype="boolean";
 	property name="paymentReadyFlag" ormtype="boolean";
@@ -56,36 +59,42 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 	property name="activeFlag" type="boolean" persistent="false";
 	
 	public any function init() {
-		if(isNull(getDataReadyFlag())) {
-			setDataReadyFlag(0);
+		if(isNull(variables.customReadyFlag)) {
+			variables.customReadyFlag = 0;
 		}
-		if(isNull(getDataActiveFlag())) {
-			setDataActiveFlag(0);
+		if(isNull(variables.customActiveFlag)) {
+			variables.customActiveFlag = 0;
 		}
-		if(isNull(getPaymentReadyFlag())) {
-			setPaymentReadyFlag(0);
+		if(isNull(variables.dataReadyFlag)) {
+			variables.dataReadyFlag = 0;
 		}
-		if(isNull(getPaymentActiveFlag())) {
-			setPaymentActiveFlag(0);
+		if(isNull(variables.dataActiveFlag)) {
+			variables.dataActiveFlag = 0;
 		}
-		if(isNull(getShippingReadyFlag())) {
-			setShippingReadyFlag(0);
+		if(isNull(variables.paymentReadyFlag)) {
+			variables.paymentReadyFlag = 0;
 		}
-		if(isNull(getShippingActiveFlag())) {
-			setShippingActiveFlag(0);
+		if(isNull(variables.paymentActiveFlag)) {
+			variables.paymentActiveFlag = 0;
 		}
-		if(isNull(getInstalledFlag())) {
-			setInstalledFlag(0);
+		if(isNull(variables.shippingReadyFlag)) {
+			variables.shippingReadyFlag = 0;
 		}
-		if(isNull(getIntegrationSettings())) {
-			setIntegrationSettings(serializeJSON(structNew()));
+		if(isNull(variables.shippingActiveFlag)) {
+			variables.shippingActiveFlag = 0;
+		}
+		if(isNull(variable.installedFlag)) {
+			variable.installedFlag = 0;
+		}
+		if(isNull(variables.integrationSettings)) {
+			variables.integrationSettings = serializeJSON(structNew());
 		}
 		
 		return super.init();
 	}
 	
 	public boolean function getActiveFlag() {
-		if(getDataActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag()) {
+		if(getDataActiveFlag() || getPaymentActiveFlag() || getShippingActiveFlag() || getCustomActiveFlag()) {
 			return true;
 		}
 		return false;
