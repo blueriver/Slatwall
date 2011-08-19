@@ -213,6 +213,7 @@ component extends="org.fw1.framework" output="false" {
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
 		if( !listFind("admin,frontend,common", getSubsystem(request.context.slatAction))) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
+			getAssetWire().addViewToAssets("/Slatwall/admin/views/main/default.cfm");
 		}
 	}
 	
@@ -342,7 +343,7 @@ component extends="org.fw1.framework" output="false" {
 		var rtn = super.internalLayout(argumentcollection=arguments);
 		
 		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			if(!listFind("frontend,common", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
+			if( !listFind("frontend,common", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
 				getBeanFactory().getBean("utilityTagService").cfhtmlhead(getAssetWire().getAllAssets());
 			}
 		}

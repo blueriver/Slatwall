@@ -39,6 +39,7 @@ Notes:
 component persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" {
 	
 	property name="fw" type="any";
+	property name="integrationService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
@@ -62,15 +63,21 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().setView("admin:main.noaccess");
 		}
 		
-		// Set default section title and default item title 
-		rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#_title");
-		if(right(rc.sectionTitle, 8) == "_missing") {
-			rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#");
+		if(getFW().getSubsystem(rc.slatAction) == "admin") {
+			// Set default section title and default item title 
+			rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#_title");
+			if(right(rc.sectionTitle, 8) == "_missing") {
+				rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#");
+			}
+			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#_title");
+			if(right(rc.itemTitle, 8) == "_missing") {
+				rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
+			}	
+		} else {
+			rc.sectionTitle = "Integration";
+			rc.itemTitle = getIntegrationService().getIntegrationByIntegrationPackage(getFW().getSubsystem(rc.slatAction)).getIntegrationName();
 		}
-		rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#_title");
-		if(right(rc.itemTitle, 8) == "_missing") {
-			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
-		}
+		
 		
 		
 	}
