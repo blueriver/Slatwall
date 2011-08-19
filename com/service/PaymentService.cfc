@@ -38,8 +38,10 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-	property name="settingService" type="any";
+	property name="integrationService" type="any";
 	property name="sessionService" type="any";
+	property name="settingService" type="any";
+	
 
 	public any function savePaymentMethod(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") ) {
@@ -62,8 +64,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Get the relavent info and objects for this order payment
 			var processOK = false;
 			var paymentMethod = this.getPaymentMethod(arguments.orderPayment.getPaymentMethodID());
-			var paymentProviderGateway = paymentMethod.getProviderGateway();
-			var providerService = getSettingService().getByPaymentServicePackage(paymentProviderGateway);
+			var providerService = getIntegrationService().getPaymentIntegrationCFC(paymentMethod.getIntegration());
 			
 			if(arguments.orderPayment.getPaymentMethodID() eq "creditCard") {
 				// Setup the actuall processing information

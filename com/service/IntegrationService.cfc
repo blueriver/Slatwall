@@ -46,7 +46,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	public any function getDataIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.dataIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Data");
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Data").init();
 			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
 			variables.dataIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
 		}
@@ -55,7 +55,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function getPaymentIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.paymentIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Payment");
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Payment").init();
 			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
 			variables.paymentIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
 		}
@@ -64,7 +64,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function getShippingIntegrationCFC(required any integration) {
 		if(!structKeyExists(variables.shippingIntegrationCFCs, arguments.integration.getIntegrationPackage())) {
-			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Shipping");
+			var integrationCFC = createObject("component", "Slatwall.integrationServices.#arguments.integration.getIntegrationPackage()#.Shipping").init();
 			populateIntegrationCFCFromIntegration(integrationCFC, arguments.integration);
 			variables.shippingIntegrationCFCs[ arguments.integration.getIntegrationPackage() ] = integrationCFC;
 		}

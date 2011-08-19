@@ -50,4 +50,7 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
+	public any function getIntegration() {
+		return getService("integrationService").getIntegrationByIntegrationPackage(getProviderGateway());
+	}
 }

@@ -82,8 +82,9 @@
     </bean>
 	<bean id="paymentService" parent="parentService" class="Slatwall.com.service.PaymentService">
         <property name="DAO"><ref bean="paymentDAO" /></property>
-		<property name="settingService"><ref bean="settingService" /></property>
+		<property name="integrationService"><ref bean="integrationService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="settingService"><ref bean="settingService" /></property>
     </bean>
     <bean id="productService" parent="parentService" class="Slatwall.com.service.ProductService">
         <property name="DAO"><ref bean="ProductDAO" /></property>
@@ -120,7 +121,7 @@
 	<bean id="shippingService" parent="parentService" class="Slatwall.com.service.ShippingService">
         <property name="DAO"><ref bean="shippingDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
-		<property name="settingService"><ref bean="settingService" /></property>
+		<property name="integrationService"><ref bean="integrationService" /></property>
     </bean>
 	<bean id="taxService" parent="parentService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>

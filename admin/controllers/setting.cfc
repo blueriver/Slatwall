@@ -39,15 +39,17 @@ Notes:
 component extends="BaseController" output="false" accessors="true" {
 	
 	// Slatwall Service Injection		
-	property name="settingService" type="any";
 	property name="addressService" type="any";
-	property name="productService" type="any";
-	property name="shippingService" type="any";
-	property name="paymentService" type="any";
+	property name="integrationService" type="any";
 	property name="fulfillmentService" type="any";
+	property name="productService" type="any";
+	property name="paymentService" type="any";
+	property name="settingService" type="any";
+	property name="shippingService" type="any";
+	property name="taxService" type="any";
 	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
-	property name="taxService" type="any";
+	
 	
 	// Mura Service Injection
 	property name="userManager" type="any";
@@ -124,47 +126,14 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:main.default", queryString="reload=true");
 	}
 	
-	// Shipping Services
-	public void function detailShippingService(required struct rc) {
-		param name="rc.edit" default="false";
-		rc.shippingService = getSettingService().getByShippingServicePackage(rc.shippingServicePackage);
-		local.serviceName = getMetaData(rc.shippingService)["displayName"];
-		rc.itemTitle = rc.itemTitle & ": " & local.serviceName;
-	}
-	
-	public void function editShippingService(required struct rc) {
-		detailShippingService(rc);
-		getFW().setView("admin:setting.detailshippingservice");
-		rc.edit = true;
-	}
-	
-	public void function saveShippingService(required struct rc) {
-		rc.serviceProperties = getUtilityFormService().buildFormCollections(rc).shippingService;
-		var response = getSettingService().saveShippingService(rc.shippingServicePackage,rc.serviceProperties);
-
-		if( !response.hasErrors() ) {
-			rc.message = rc.$.Slatwall.rbKey("admin.setting.saveShippingService_success");
-			getFW().redirect(action="admin:setting.detailfulfillmentmethod", querystring="fulfillmentmethodid=shipping&reload=true", preserve="message");
-		} else {
-			rc.message = rc.$.Slatwall.rbKey("admin.setting.saveShippingService_error");
-			rc.messageType = "error";
-			rc.shippingService = response.getData();
-			rc.errors = response.getErrorBean().getErrors();
-			local.serviceName = getMetaData(rc.shippingService)["displayName"];
-			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editshippingservice") & ": " & local.serviceName;
-			rc.edit = true;
-			getFW().setView(action="admin:setting.detailShippingService");
-		}
-	}
-	
 	// Shipping Methods
 	public void function detailShippingMethod(required struct rc) {
 		param name="rc.shippingMethodID" default="";
 		param name="rc.edit" default="false";
 		
 		rc.shippingMethod = getSettingService().getShippingMethod(rc.shippingMethodID, true);
-		
-		rc.shippingServices = getSettingService().getShippingServices();
+		rc.shippingIntegrations = getIntegrationService().listIntegration({shippingActiveFlag=1});
+
 		rc.blankShippingRate = getShippingService().newShippingRate();
 	}
 	
@@ -249,45 +218,6 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		getFW().redirect(action="admin:setting.detailshippingmethod", querystring="shippingMethodID=#shippingMethodID#&edit=true", preserve="message,messagetype");
-	}
-	
-	// Payment Services
-	public void function listPaymentServices(required struct rc) {
-		rc.paymentServices = getSettingService().getPaymentServices();	
-	}
-	
-	public void function detailPaymentService(required struct rc) {
-		param name="rc.edit" default="false";
-		
-		rc.paymentService = getSettingService().getByPaymentServicePackage(rc.paymentServicePackage);
-		local.serviceName = getMetaData(rc.paymentService)["displayName"];
-		rc.itemTitle = rc.itemTitle & ": " & local.serviceName;
-	}
-	
-	public void function editPaymentService(required struct rc) {
-		detailPaymentService(rc);
-		getFW().setView("admin:setting.detailPaymentService");
-		rc.edit = true;
-	}
-	
-	
-	public void function savePaymentService(required struct rc) {
-		rc.serviceProperties = getUtilityFormService().buildFormCollections(rc).paymentService;
-		var response = getSettingService().savePaymentService(rc.paymentServicePackage,rc.serviceProperties);
-
-		if( !response.hasErrors() ) {
-			rc.message = rc.$.Slatwall.rbKey("admin.setting.savePaymentService_success");
-			getFW().redirect(action="admin:setting.listPaymentServices", queryString="reload=true", preserve="message");
-		} else {
-			rc.message = rc.$.Slatwall.rbKey("admin.setting.savePaymentService_error");
-			rc.messageType = "error";
-			rc.paymentService = response.getData();
-			rc.errors = response.getErrorBean().getErrors();
-			local.serviceName = getMetaData(rc.paymentService)["displayName"];
-			rc.itemTitle = rc.$.Slatwall.rbKey("admin.setting.editpaymentservice") & ": " & local.serviceName;
-			rc.edit = true;
-			getFW().setView(action="admin:setting.detailPaymentService");
-		}
 	}
 	
 	// Payment Methods

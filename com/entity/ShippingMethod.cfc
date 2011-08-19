@@ -67,6 +67,10 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		return super.init();
 	}
 	
+	public any function getIntegration() {
+		return getService("integrationService").getIntegrationByIntegrationPackage(getShippingProvider());
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Shipping Rate (one-to-many)

@@ -38,7 +38,7 @@ Notes:
 --->
 <cfparam name="rc.edit" type="boolean" />
 <cfparam name="rc.shippingMethod" type="any" />
-<cfparam name="rc.shippingServices" type="any" />
+<cfparam name="rc.shippingIntegrations" type="array" />
 <cfparam name="rc.blankShippingRate" />
 
 <cfoutput>
@@ -60,23 +60,20 @@ Notes:
 				<dd id="spdshippingprovider">
 					<cfif rc.edit and rc.shippingMethod.isNew()>
 						<select id="shippingProvider" name="shippingProvider">
-							<cfloop collection="#rc.shippingServices#" item="local.shippingServicePackage">
-								<cfset local.shippingService = rc.shippingServices[local.shippingServicePackage] />
-								<cfset local.shippingServiceMetaData = getMetaData(local.shippingService) />
-								<option value="#local.shippingServicePackage#" <cfif rc.shippingMethod.getShippingProvider() eq local.shippingServicePackage>selected="selected"</cfif>>#local.shippingServiceMetaData.displayName#</option>
+							<cfloop collection="#rc.shippingIntegrations#" item="local.integration">
+								<option value="#local.integration.getIntegrationPackage()#">#local.integration.getIntegrationName()#</option>
 							</cfloop>
 							<option value="Other">Other</option>
 						</select>
 					<cfelse>
-						#rc.shippingMethod.getShippingProvider()# <cfif rc.edit and rc.shippingMethod.getShippingProvider() neq "Other"><cf_SlatwallActionCaller action="admin:setting.editshippingservice" querystring="shippingServicePackage=#rc.shippingMethod.getShippingProvider()#" type="link"></cfif>
+						#rc.shippingMethod.getIntegration().getIntegrationName()# <cfif rc.edit and rc.shippingMethod.getShippingProvider() neq "Other"><cf_SlatwallActionCaller action="admin:integration.edit" querystring="integrationPackage=#rc.shippingMethod.getShippingProvider()#" type="link"></cfif>
 					</cfif>
 				</dd>
 				<cfif not rc.shippingMethod.isNew()>
 					<cfif rc.shippingMethod.getShippingProvider() neq "Other">
 						<!--- Provider Method --->
 						<dt class="spdshippingprovidermethod">Shipping Provider Method</dt>
-						<cfset local.shippingService = rc.shippingServices[rc.shippingMethod.getShippingProvider()] />
-						<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
+						<cfset local.shippingServiceMethods = rc.shippingMethod.getIntegration().getIntegrationCFC('shipping').getShippingMethods() />
 						<cfif rc.edit>
 							<dd id="spdshippingprovidermethod">
 								<select name="shippingProviderMethod">
