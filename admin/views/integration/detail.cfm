@@ -48,7 +48,7 @@ Notes:
 		</ul>
 		
 		<cfif rc.edit>
-			<form name="saveIntegration" method="post" action="#buildURL(action='admin:setting.saveshippingservice')#">
+			<form name="saveIntegration" method="post" action="#buildURL(action='admin:integration.save')#">
 				<input type="hidden" name="integrationPackage" value="#rc.integration.getIntegrationPackage()#" />
 		</cfif>
 		
@@ -67,6 +67,21 @@ Notes:
 				<div id="tabData">
 					<dl class="twoColumn">
 						<cf_SlatwallPropertyDisplay object="#rc.integration#" property="dataActiveFlag" edit="#rc.edit#" />
+						
+						<!--- Dynamic Settings --->
+						<cfloop array="#rc.integration.getIntegrationCFCSettings('data')#" index="local.property">
+							<cfset local.propertyTitle = "" />
+							<cfif structKeyExists(local.property, "displayName")>
+								<cfset local.propertyTitle = local.property.displayName />
+							<cfelse>
+								<cfset local.propertyTitle = local.property.name />
+							</cfif>
+							<cfset local.propertyEditType = "" />
+							<cfif structKeyExists(local.property, "editType")>
+								<cfset local.propertyEditType = local.property.editType />
+							</cfif>
+							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('data')#" fieldName="dataIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+						</cfloop>
 					</dl>
 				</div>
 			</cfif>
@@ -74,6 +89,21 @@ Notes:
 				<div id="tabPayment">
 					<dl class="twoColumn">
 						<cf_SlatwallPropertyDisplay object="#rc.integration#" property="paymentActiveFlag" edit="#rc.edit#" />
+						
+						<!--- Dynamic Settings --->
+						<cfloop array="#rc.integration.getIntegrationCFCSettings('payment')#" index="local.property">
+							<cfset local.propertyTitle = "" />
+							<cfif structKeyExists(local.property, "displayName")>
+								<cfset local.propertyTitle = local.property.displayName />
+							<cfelse>
+								<cfset local.propertyTitle = local.property.name />
+							</cfif>
+							<cfset local.propertyEditType = "" />
+							<cfif structKeyExists(local.property, "editType")>
+								<cfset local.propertyEditType = local.property.editType />
+							</cfif>
+							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('payment')#" fieldName="paymentIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+						</cfloop>
 					</dl>
 				</div>
 			</cfif>
@@ -81,6 +111,21 @@ Notes:
 				<div id="tabShipping">
 					<dl class="twoColumn">
 						<cf_SlatwallPropertyDisplay object="#rc.integration#" property="shippingActiveFlag" edit="#rc.edit#" />
+						
+						<!--- Dynamic Settings --->
+						<cfloop array="#rc.integration.getIntegrationCFCSettings('shipping')#" index="local.property">
+							<cfset local.propertyTitle = "" />
+							<cfif structKeyExists(local.property, "displayName")>
+								<cfset local.propertyTitle = local.property.displayName />
+							<cfelse>
+								<cfset local.propertyTitle = local.property.name />
+							</cfif>
+							<cfset local.propertyEditType = "" />
+							<cfif structKeyExists(local.property, "editType")>
+								<cfset local.propertyEditType = local.property.editType />
+							</cfif>
+							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('shipping')#" fieldName="shippingIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+						</cfloop>
 					</dl>
 				</div>
 			</cfif>
