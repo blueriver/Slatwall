@@ -38,8 +38,8 @@ Notes:
 */
 component extends="BaseService" persistent="false" accessors="true" output="false" {
 
-	property name="settingService" type="any";
 	property name="addressService" type="any";
+	property name="integrationService" type="any";
 
 	public any function saveShippingMethod(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"shippingRates") ) {
@@ -121,24 +121,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var p=1; p<=arrayLen(shippingProviders); p++) {
 			
 			// Get Provider Service
-			var providerService = getSettingService().getByShippingServicePackage(shippingProviders[p]);
+			var integration = getIntegrationService().getIntegrationByIntegrationPackage(shippingProviders[p]);
+			var providerService = getIntegrationService().getShippingIntegrationCFC(integration);
 			
 			// Query the Provider For Rates
 			var ratesRequestBean = new Slatwall.com.utility.fulfillment.ShippingRatesRequestBean();
 			ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
 			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
 			
-			// TODO: This is a hack until we setup each order fulfillment to have it's own "ship from" 
-			ratesRequestBean.setShipFromCompany("");
-			ratesRequestBean.setShipFromStreetAddress("");
-			ratesRequestBean.setShipFromCity("");
-			ratesRequestBean.setShipFromStateCode("");
-			ratesRequestBean.setShipFromPostalCode("");
-			ratesRequestBean.setShipFromCountryCode("");
-			
-			//ratesRequestBean.setShipFromWithAddress();
-			// END HACK
-			
+			// TODO: Add this method so that we can populate from the location where the inventory will be shipping from: ratesRequestBean.setShipFromWithAddress(?);
+						
 			// Query the shipping provider service API to get the rates
 			getService("logService").logMessage(message="Shipping Rates Request - Started", generalLog=true);
 			try {

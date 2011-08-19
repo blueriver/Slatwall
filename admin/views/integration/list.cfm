@@ -36,12 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.integrationsList" type="array" />
+<cfparam name="rc.integrationSmartList" type="any" />
 
 <cfoutput>
 <div class="svoadminintegrationlist">
 	<ul id="navTask">
-    	
+		<li><a href="?slatAction=integration.list">Show All Integrations</a></li>
+    	<li><a href="?slatAction=integration.list&F:dataReadyFlag=1">Show Data Integrations</a></li>
+		<li><a href="?slatAction=integration.list&F:paymentReadyFlag=1">Show Payment Integrations</a></li>
+		<li><a href="?slatAction=integration.list&F:shippingReadyFlag=1">Show Shipping Integrations</a></li>
 	</ul>
 	
 	<table class="stripe">
@@ -53,7 +56,7 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-			<cfloop array="#rc.integrationsList#" index="local.integration">
+			<cfloop array="#rc.integrationSmartList.getRecords()#" index="local.integration">
 				<tr>
 					<td class="varWidth"><a href="#buildURL(action='admin:integration.detail', queryString='integrationPackage=#local.integration.getIntegrationPackage()#')#">#local.integration.getIntegrationName()#</a></td>
 					<td>

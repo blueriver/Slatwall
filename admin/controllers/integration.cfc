@@ -45,7 +45,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function list(required struct rc) {
-		rc.integrationsList = getIntegrationService().listIntegration();
+		rc.integrationSmartList = getIntegrationService().getIntegrationSmartList(rc);
 	}
 	
 	public void function detail(required struct rc) {

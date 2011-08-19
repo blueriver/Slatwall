@@ -71,32 +71,6 @@ component extends="BaseService" output="false" accessors="true"  {
 				// Set the permission value in the permissions scop 
 				variables.permissions[ settingsList[i].getSettingName() ] = settingsList[i];
 			} else {
-				// Inject Service Specific Values
-				if ( listFirst( settingsList[i].getSettingName(), "_") == "shippingservice") {
-					// Inject Shipping Service Setting Values
-					var shippingServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
-					if( structKeyExists(variables.shippingServices, shippingServicePackage) ) {
-						var shippingService = getByShippingServicePackage(shippingServicePackage);
-						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						try {
-							evaluate("shippingService.set#propertyName#( settingsList[i].getSettingValue() )");	
-						} catch (any e) {
-							// TODO: Add code to remove that setting from the DB
-						}
-					}
-				} else if ( listFirst( settingsList[i].getSettingName(), "_") == "paymentservice") {
-					// Inject Payment Service Setting Values
-					var paymentServicePackage = listGetAt( settingsList[i].getSettingName(), 2, "_");
-					if( structKeyExists(variables.paymentServices, paymentServicePackage) ) {
-						var paymentService = getByPaymentServicePackage(paymentServicePackage);
-						var propertyName = listGetAt( settingsList[i].getSettingName(), 3, '_');
-						try {
-							evaluate("paymentService.set#propertyName#( settingsList[i].getSettingValue() )");	
-						} catch (any e) {
-							// TODO: Add code to remove that setting from the DB
-						}
-					}
-				}
 				// Set the global setting value in the settings scope
 				variables.settings[ settingsList[i].getSettingName() ] = settingsList[i];	
 			}
@@ -152,18 +126,6 @@ component extends="BaseService" output="false" accessors="true"  {
 		}
 	}
 	
-	public any function getByShippingServicePackage(required string shippingServicePackage) {
-		if(structKeyExists(variables.shippingServices, arguments.shippingServicePackage)) {
-			return variables.shippingServices[ arguments.shippingServicePackage ];
-		}
-	}
-	
-	public any function getByPaymentServicePackage(required string paymentServicePackage) {
-		if(structKeyExists(variables.paymentServices, arguments.paymentServicePackage)) {
-			return variables.paymentServices[ arguments.paymentServicePackage ];
-		}
-	}
-	
 	public struct function getPermissionActions(boolean reload=false) {
 		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
 			variables.permissionActions = structNew();
@@ -187,26 +149,6 @@ component extends="BaseService" output="false" accessors="true"  {
 		return variables.permissionActions;
 	}
 	
-	public struct function getShippingServices(boolean reload=false) {
-		if(!structKeyExists(variables, "shippingServices") || !structCount(variables.shippingServices) || arguments.reload) {
-			variables.shippingServices = structNew();
-			var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
-			var dirList = directoryList( dirLocation );
-			for(var i=1; i<= arrayLen(dirList); i++) {
-				var fileInfo = getFileInfo(dirList[i]);
-				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Shipping.cfc") ) {
-					var serviceName = Replace(listLast(dirList[i],"\/"),".cfc","");
-					var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Shipping").init();
-					var serviceMeta = getMetaData(service);
-					if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.integrationServices.ShippingInterface")) {
-						variables.shippingServices[ "#serviceName#" ] = service;	
-					}
-				}
-			}
-		}
-		return variables.shippingServices;
-	}
-	
 	public any function saveShippingService(required string shippingServicePackage, required struct data) {
 		var shippingService = getByShippingServicePackage(arguments.shippingServicePackage);
 		// populate non-persistent service object for validation
@@ -224,45 +166,6 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		} else {
 			response.setData(shippingService);
-			getRequestCacheService().setValue("ormHasErrors",true);
-		}
-		return response;
-	}
-
-	public any function getPaymentServices(boolean reload=false) {
-		if(!structKeyExists(variables, "paymentServices") || !structCount(variables.paymentServices) || arguments.reload) {
-			variables.paymentServices = structNew();
-			var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
-			var dirList = directoryList( dirLocation );
-			for(var i=1; i<= arrayLen(dirList); i++) {
-				var fileInfo = getFileInfo(dirList[i]);
-				if(fileInfo.type == "directory" && fileExists( "#fileInfo.path#/Payment.cfc") ) {
-					var serviceName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
-					var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Payment").init();
-					variables.paymentServices[ "#serviceName#" ] = service;
-				}
-			}
-		}
-		return variables.paymentServices;
-	}
-	
-	public any function savePaymentService(required string paymentServicePackage, required struct data) {
-		var paymentService = getByPaymentServicePackage(arguments.paymentServicePackage);
-		// populate non-persistent service object for validation
-		for( var item in arguments.data ) {
-			evaluate("paymentService.set#item#(data[item])");
-		}
-		var response = getValidationService().validate(paymentService);
-		if(!response.hasErrors()) {
-			//save service as individual setting entities
-			for(var item in arguments.data) {
-				var settingName = "paymentService_#arguments.paymentServicePackage#_#item#";
-				var thisSetting = getBySettingName(settingName);
-				thisSetting.setSettingValue(arguments.data[item]);
-				thisSetting = save(entity=thisSetting);
-			}
-		} else {
-			response.setData(paymentService);
 			getRequestCacheService().setValue("ormHasErrors",true);
 		}
 		return response;
