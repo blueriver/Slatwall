@@ -46,6 +46,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function list(required struct rc) {
 		rc.integrationSmartList = getIntegrationService().getIntegrationSmartList(rc);
+		rc.integrationSmartList.addOrder("integrationName|ASC");
 	}
 	
 	public void function detail(required struct rc) {
