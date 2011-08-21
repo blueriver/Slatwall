@@ -63,7 +63,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().setView("admin:main.noaccess");
 		}
 		
-		if(getFW().getSubsystem(rc.slatAction) == "admin") {
+		if(getFW().getSubsystem(rc.slatAction) == "admin" || rc.slatAction == "frontend:event.onAdminModuleNav") {
 			// Set default section title and default item title 
 			rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#_title");
 			if(right(rc.sectionTitle, 8) == "_missing") {
