@@ -41,13 +41,13 @@ Notes:
 
 <cfoutput>
 	<div class="svocheckoutdetail">
-		<cfinclude template="account.cfm" />
+		#view('frontend:checkout/account.cfm')#
 		<cfif not listFind(rc.orderRequirementsList, "account")>
-			<cfinclude template="fulfillment.cfm" />
-			<cfinclude template="items.cfm" />
+			#view('frontend:checkout/fulfillment.cfm')#
+			#view('frontend:checkout/items.cfm')#
 		</cfif>
 		<cfif not listFind(rc.orderRequirementsList, "account") and not listFind(rc.orderRequirementsList, "fulfillment")>
-			<cfinclude template="payment.cfm" />
+				#view('frontend:checkout/payment.cfm')#
 		</cfif>
 	</div>
 </cfoutput>
