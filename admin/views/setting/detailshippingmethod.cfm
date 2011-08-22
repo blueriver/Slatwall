@@ -60,7 +60,7 @@ Notes:
 				<dd id="spdshippingprovider">
 					<cfif rc.edit and rc.shippingMethod.isNew()>
 						<select id="shippingProvider" name="shippingProvider">
-							<cfloop collection="#rc.shippingIntegrations#" item="local.integration">
+							<cfloop array="#rc.shippingIntegrations#" index="local.integration">
 								<option value="#local.integration.getIntegrationPackage()#">#local.integration.getIntegrationName()#</option>
 							</cfloop>
 							<option value="Other">Other</option>
