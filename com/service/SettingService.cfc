@@ -245,7 +245,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				label = "Products Per Page",
 				type = "TextBox",
 				validation = "numeric",
-				defaultValue = "16",
+				defaultValue = "10",
 				orderNo = "1"
 			});
 			local.thisAttribute.save();

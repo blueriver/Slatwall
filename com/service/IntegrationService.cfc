@@ -221,7 +221,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(structKeyExists(meta, "properties")) {
 			return meta.properties;
 		}
-		return settings;
+		return [];
 	}
 	
 	public any function saveIntegration(required any integration, struct data) {
