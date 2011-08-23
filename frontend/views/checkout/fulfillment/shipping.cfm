@@ -56,9 +56,6 @@ Notes:
 		<cfif not isNull(params.orderFulfillment.getShippingAddress()) and !params.orderFulfillment.getShippingAddress().isNew()>
 		<div class="shippingMethod">
 			<h4>Shipping Method</h4>
-			<cfif params.orderFulfillment.getErrorBean().hasErrors() and $.slatwall.cart().getOrderFulfillments()[1].getErrorBean().hasError('processing')>
-			<div class="error">#params.orderFulfillment.getErrorBean().getError('processing')#</div>
-			</cfif>
 			<cfif arrayLen(params.orderFulfillment.getOrderShippingMethodOptions())>
 				<cf_SlatwallShippingMethodDisplay orderFulfillmentIndex="#params.orderFulfillmentIndex#" orderFulfillmentShipping="#params.orderFulfillment#" edit="#params.edit#">
 			<cfelse>
