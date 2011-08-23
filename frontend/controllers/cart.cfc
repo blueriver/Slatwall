@@ -93,4 +93,10 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
 	}
 	
+	public void function addPromotionCode(required struct rc) {
+		param name="rc.promotionCode" default="";
+		
+		
+	}
+	
 }

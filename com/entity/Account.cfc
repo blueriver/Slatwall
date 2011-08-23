@@ -91,6 +91,19 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
+	public string function getPhoneNumber() {
+		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
+			return getPrimaryPhoneNumber().getPhoneNumber();
+		}
+		return "";
+	}
+	
+	public string function getEmailAddress() {
+		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
+			return getPrimaryEmailAddress().getEmailAddress();
+		}
+		return "";
+	}
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Orders (one-to-many)
