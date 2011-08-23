@@ -43,7 +43,6 @@ Notes:
 	<div class="svoadminListPaymentMethods">
 		<ul id="navTask">
 	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
-			<cf_SlatwallActionCaller action="admin:setting.listPaymentServices" type="list">
 		</ul>
 		
 		<table id="paymentMethodList" class="stripe">

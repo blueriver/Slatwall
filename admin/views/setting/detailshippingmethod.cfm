@@ -66,7 +66,11 @@ Notes:
 							<option value="Other">Other</option>
 						</select>
 					<cfelse>
-						#rc.shippingMethod.getIntegration().getIntegrationName()# <cfif rc.edit and rc.shippingMethod.getShippingProvider() neq "Other"><cf_SlatwallActionCaller action="admin:integration.edit" querystring="integrationPackage=#rc.shippingMethod.getShippingProvider()#" type="link"></cfif>
+						<cfif rc.shippingMethod.getShippingProvider() eq "other">
+							Other
+						<cfelse> 
+							#rc.shippingMethod.getIntegration().getIntegrationName()# <cfif rc.edit and rc.shippingMethod.getShippingProvider() neq "Other"><cf_SlatwallActionCaller action="admin:integration.edit" querystring="integrationPackage=#rc.shippingMethod.getShippingProvider()#" type="link"></cfif>
+						</cfif>
 					</cfif>
 				</dd>
 				<cfif not rc.shippingMethod.isNew()>
