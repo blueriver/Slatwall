@@ -232,7 +232,7 @@ component extends="org.fw1.framework" output="false" {
 		var hasAccess = false;
 		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
 		
-		if(getSubsystem(arguments.action) eq "frontend") {
+		if(getSubsystem(arguments.action) != "admin") {
 			hasAccess = true;
 		} else {
 			if(request.context.$.currentUser().getS2()) {
