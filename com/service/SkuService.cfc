@@ -234,7 +234,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}	
 	}
 	
-	private string function generateImageFileName( required any sku ) {
+	public string function generateImageFileName( required any sku ) {
 		// Generates the image path based upon product code, and image options for this sku
 		var options = arguments.sku.getOptions();
 		var optionString = "";
