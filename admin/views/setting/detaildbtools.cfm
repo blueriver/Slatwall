@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,11 +35,34 @@
 
 Notes:
 
-*/
-
-component displayname="Product Attribute Set Assignment" entityname="SlatwallProductAttributeSetAssignment" table="SlatwallAttributeSetAssignment" persistent="true" output="false" accessors="true" extends="AttributeSetAssignment" discriminatorvalue="product" {
-
-	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" inverse="true" cascade="all";
-}
+--->
+<cfoutput>
+	<div class="svoadminsettingdetaildbtools">
+		<ul id="navTask">
+			
+		</ul>
+		<h2>Delete All Orders</h2>
+		<form action="#buildURL(action='admin:setting.deleteallorders')#" method="post">
+			<p>This will delete Orders, Carts and all other related data like Payments & Deliveries<br />Only Click this button if you are 100% sure that you want to remove all orders.</p>
+			<br />
+			<br />
+			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
+			<cf_SlatwallActionCaller action="admin:setting.deleteallorders" type="submit" class="button" confirmRequired="true">
+		</form>
+		<hr />
+		<h2>Delete All Products (and Orders)</h2>
+		<form action="#buildURL(action='admin:setting.deleteallproducts')#" method="post">
+			<p>Only Click this button if you are 100% sure that you want to remove all products. <br />This will delete, Orders, Carts, Products, Stock, Skus, Attribute Values, ect.</p>
+			<ul>
+				<li>Delete Brands: <input type="checkbox" name="deleteBrands" value="1" /></li>
+				<li>Delete Product Types: <input type="checkbox" name="deleteProductTypes" value="1" /></li>
+				<li>Delete Product Options: <input type="checkbox" name="deleteOptions" value="1" /></li>
+			</ul>
+			<br />
+			<br />
+			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
+			<cf_SlatwallActionCaller action="admin:setting.deleteallproducts" type="submit" class="button" confirmRequired="true">
+		</form>
+		<hr /><applet></applet>
+	</div>
+</cfoutput>

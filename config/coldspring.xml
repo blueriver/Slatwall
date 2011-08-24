@@ -7,6 +7,7 @@
 	<bean id="addressDAO" class="Slatwall.com.dao.AddressDAO" />
 	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
+	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
 	<bean id="logDAO" class="Slatwall.com.dao.LogDAO" />
@@ -26,7 +27,6 @@
 		
 	<!-- Service Components - Utility, these are to be injected where needed for misc tasks -->
 	<bean id="utilityService" class="Slatwall.com.service.UtilityService" />
-	<bean id="utilityDataService" class="Slatwall.com.service.UtilityDataService" />
 	<bean id="utilityFileService" class="Slatwall.com.service.UtilityFileService" />
 	<bean id="utilityFormService" class="Slatwall.com.service.UtilityFormService" />
 	<bean id="utilityTagService" class="Slatwall.com.service.UtilityTagService" />
@@ -55,6 +55,9 @@
     </bean>
 	<bean id="brandService" parent="parentService"  class="Slatwall.com.service.BrandService">
         <property name="DAO"><ref bean="BrandDAO" /></property>
+	</bean>
+	<bean id="dataService" parent="parentService"  class="Slatwall.com.service.DataService">
+        <property name="DAO"><ref bean="DataDAO" /></property>
 	</bean>
 	<bean id="fulfillmentService" parent="parentService"  class="Slatwall.com.service.FulfillmentService">
         <property name="DAO"><ref bean="fulfillmentDAO" /></property>

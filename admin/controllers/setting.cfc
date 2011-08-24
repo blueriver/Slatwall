@@ -47,6 +47,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="settingService" type="any";
 	property name="shippingService" type="any";
 	property name="taxService" type="any";
+	property name="dataService" type="any";
 	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
 	
@@ -445,4 +446,30 @@ component extends="BaseController" output="false" accessors="true" {
 			}
 		}
 	}
+	
+	// DB Toold
+	public void function deleteAllOrders() {
+		param name="rc.confirmDelete" default="0";
+		
+		if(isBoolean(rc.confirmDelete) && rc.confirmDelete) {
+			getDataService().deleteAllOrders();
+		}
+		
+		getFW().redirect(action='admin:main.default');
+	}
+	
+	public void function deleteAllProducts() {
+		param name="rc.confirmDelete" default="0";
+		param name="rc.deleteBrands" default="0";
+		param name="rc.deleteProductTypes" default="0";
+		param name="rc.deleteOptions" default="0";
+		
+		if(isBoolean(rc.confirmDelete) && rc.confirmDelete) {
+			getDataService().deleteAllProducts(data=rc);
+		}
+		
+		getFW().redirect(action='admin:main.default');
+	}
+	
+	
 }
