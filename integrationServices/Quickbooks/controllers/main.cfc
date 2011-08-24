@@ -138,6 +138,7 @@
 				<cfset product.setProductType(productType) />
 				<cfset product.setBrand(brand) />
 				<cfset product.setProductCode(remoteProductID) />
+				<cfset product.setSortOrder(listLast(remoteProductID, "-")) />
 				
 				<!--- Update the Skus Image --->
 				<cfset sku.setImageFile( getSkuService().generateImageFileName(sku) ) />

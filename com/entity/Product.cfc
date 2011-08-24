@@ -54,6 +54,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
