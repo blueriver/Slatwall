@@ -36,11 +36,7 @@
 Notes:
 
 */
-component displayname="Data Service" {
-	
-	public any function init() {
-		return this;
-	}
+component displayname="Data Service" extends="BaseService" {
 	
 	public boolean function loadDataFromXMLDirectory(required string xmlDirectory) {
 		var dirList = directoryList(arguments.xmlDirectory);
@@ -158,6 +154,24 @@ component displayname="Data Service" {
 				");
 				dataQuery.execute();
 			}
+		}
+	}
+	
+	public void function deleteAllOrders() {
+		getDAO().deleteAllOrders();
+	}
+	
+	public void function deleteAllProducts(struct data={}) {
+		getDAO().deleteAllOrders();
+		getDAO().deleteAllProducts();
+		if(structKeyExists(arguments.data, "deleteBrands") && arguments.data.deleteBrands) {
+			getDAO().deleteAllBrands();
+		}
+		if(structKeyExists(arguments.data, "deleteProductTypes") && arguments.data.deleteProductTypes) {
+			getDAO().deleteAllProductTypes();
+		}
+		if(structKeyExists(arguments.data, "deleteOptions") && arguments.data.deleteOptions) {
+			getDAO().deleteAllOptions();
 		}
 	}
 	

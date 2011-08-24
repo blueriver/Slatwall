@@ -123,7 +123,7 @@ component extends="org.fw1.framework" output="false" {
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		getBeanFactory().getBean("utilityDataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
+		getBeanFactory().getBean("DataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 		
 		// Load all Slatwall Settings
 		getBeanFactory().getBean("settingService").reloadConfiguration();

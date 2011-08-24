@@ -153,6 +153,7 @@ Notes:
 							<ul>
 								<li class="title">Tools</li>
 								<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.detaildbtools" type="list">
 								<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true">Reload</a></li>
 							</ul>
 						</div>
