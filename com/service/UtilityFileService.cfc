@@ -68,10 +68,10 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 			}
 			var imageExt = listLast(arguments.imagePath,".");
 			
-			var cacheDirectory = replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/");
+			var cacheDirectory = replaceNoCase(expandPath(arguments.imagePath), listLast(arguments.imagePath, "/\"), "cache/");
 			
-			if(!directoryExists(expandPath(cacheDirectory))) {
-				directoryCreate(expandPath(cacheDirectory));
+			if(!directoryExists(cacheDirectory)) {
+				directoryCreate(cacheDirectory);
 			}
 			
 			var resizedImagePath = replaceNoCase(replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/#listLast(arguments.imagePath, "/\")#"),".#imageExt#","#imageNameSuffix#.#imageExt#");
