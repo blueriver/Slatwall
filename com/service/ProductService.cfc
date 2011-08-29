@@ -372,6 +372,10 @@ component extends="BaseService" accessors="true" {
 	public any function saveProductType(required any productType, required struct data) {
 		
 		arguments.productType.populate(data=arguments.data);
+
+		if(arguments.data.parentProductType == "") {
+			arguments.productType.removeParentProductType();
+		}
 		
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {

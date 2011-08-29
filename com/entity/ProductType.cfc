@@ -150,6 +150,12 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
     /************   END Association Management Methods   *******************/
     
+    public void function removeParentProductType() {
+    	if(structKeyExists(variables,"parentProductType")) {
+    		structDelete(variables,"parentProductType");
+    	}
+    }
+    
     public boolean function getSetting(required string settingName) {
         if(structKeyExists(variables,arguments.settingName)) {
             return variables[arguments.settingName];
