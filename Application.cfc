@@ -119,7 +119,7 @@ component extends="org.fw1.framework" output="false" {
 		setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ));
 		
 		// Build RB Factory
-		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(),"#getDirectoryFromPath(getCurrentTemplatePath())#resourceBundles/");
+		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
 		
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.

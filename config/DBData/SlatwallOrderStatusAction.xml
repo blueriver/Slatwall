@@ -1,7 +1,6 @@
 <Table tableName="SlatwallOrderStatusAction">
 	<Columns>
 		<column name="orderStatusActionID" fieldtype="id" />
-		<column name="paymentMethodID" />
 		<column name="orderStatusTypeID" />
 		<column name="orderActionTypeID" />
 	</Columns>

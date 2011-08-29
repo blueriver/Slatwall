@@ -39,54 +39,121 @@ Notes:
 <cfcomponent extends="BaseDAO">
 	
 	<cffunction name="deleteAllOrders">
-			<cfquery datasource="#application.configBean.getDataSource()#">
-				UPDATE SlatwallSession SET orderID = null;
-				DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'orderItem';
-				DELETE FROM SlatwallOrderDelivery;
-				DELETE FROM SlatwallOrderDeliveryItem;
-				DELETE FROM SlatwallTaxApplied;
-				DELETE FROM SlatwallPromotionApplied;
-				DELETE FROM SlatwallOrderItem;
-				DELETE FROM SlatwallOrderShippingMethodOption;
-				DELETE FROM SlatwallOrderFulfillment;
-				DELETE FROM SlatwallCreditCardTransaction;
-				DELETE FROM SlatwallOrderPayment;
-				DELETE FROM SlatwallOrder;
-			</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
+			UPDATE SlatwallSession SET orderID = null;
+			DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'orderItem';
+			DELETE FROM SlatwallOrderDelivery;
+			DELETE FROM SlatwallOrderDeliveryItem;
+			DELETE FROM SlatwallTaxApplied;
+			DELETE FROM SlatwallPromotionApplied;
+			DELETE FROM SlatwallOrderItem;
+			DELETE FROM SlatwallOrderShippingMethodOption;
+			DELETE FROM SlatwallOrderFulfillment;
+			DELETE FROM SlatwallCreditCardTransaction;
+			DELETE FROM SlatwallOrderPayment;
+			DELETE FROM SlatwallOrder;
+		</cfquery>
 	</cffunction>
 	
 	<cffunction name="deleteAllProducts">
-			<cfquery datasource="#application.configBean.getDataSource()#">
-				DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'product';
-				DELETE FROM SlatwallPromotionReward WHERE rewardType='product';
-				DELETE FROM SlatwallAttributeSetAssignment WHERE attributeSetAssignmentType='product';
-				DELETE FROM SlatwallProductContent;
-				DELETE FROM SlatwallProductCategory;
-				UPDATE SlatwallProduct SET defaultSkuID = null;
-				DELETE FROM SlatwallSkuOption;
-				DELETE FROM SlatwallSku;
-				DELETE FROM SlatwallProduct;
-			</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
+			DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'product';
+			DELETE FROM SlatwallPromotionReward WHERE rewardType='product';
+			DELETE FROM SlatwallAttributeSetAssignment WHERE attributeSetAssignmentType='product';
+			DELETE FROM SlatwallProductContent;
+			DELETE FROM SlatwallProductCategory;
+			UPDATE SlatwallProduct SET defaultSkuID = null;
+			DELETE FROM SlatwallSkuOption;
+			DELETE FROM SlatwallSku;
+			DELETE FROM SlatwallProduct;
+		</cfquery>
 	</cffunction>
 	
 	<cffunction name="deleteAllBrands">
-			<cfquery datasource="#application.configBean.getDataSource()#">
-				DELETE FROM SlatwallBrand;
-			</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
+			DELETE FROM SlatwallBrand;
+		</cfquery>
 	</cffunction>
 	
 	<cffunction name="deleteAllProductTypes">
-			<cfquery datasource="#application.configBean.getDataSource()#">
-				DELETE FROM SlatwallAttributeSetAssignment WHERE attributeSetAssignmentType='productType';
-				DELETE FROM SlatwallProductType;
-			</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
+			DELETE FROM SlatwallAttributeSetAssignment WHERE attributeSetAssignmentType='productType';
+			DELETE FROM SlatwallProductType;
+		</cfquery>
 	</cffunction>
 	
 	<cffunction name="deleteAllOptions">
-			<cfquery datasource="#application.configBean.getDataSource()#">
-				DELETE FROM SlatwallOption;
-				DELETE FROM SlatwallOptionGroup;
-			</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
+			DELETE FROM SlatwallOption;
+			DELETE FROM SlatwallOptionGroup;
+		</cfquery>
+	</cffunction>
+	
+	<cffunction name="recordExists" returntype="boolean">
+		<cfargument name="tableName" />
+		<cfargument name="idColumn" />
+		<cfargument name="idValue" />
+		
+		<cfset var sqlResult = "" />
+		
+		<cfquery datasource="#application.configBean.getDataSource()#" name="sqlResult"> 
+			SELECT * FROM #arguments.tableName# WHERE #arguments.idColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.idValue#">
+		</cfquery>
+		
+		<cfif sqlResult.recordCount>
+			<cfreturn true />
+		</cfif>
+		
+		<cfreturn false />
+	</cffunction>
+	
+	<cffunction name="recordUpdate" returntype="void">
+		<cfargument name="tableName" />
+		<cfargument name="idColumn" />
+		<cfargument name="idValue" />
+		<cfargument name="updateColumns" />
+		<cfargument name="updateValues" />
+		
+		<cfset var i = 1 />
+		
+		<cfquery datasource="#application.configBean.getDataSource()#" name="sqlResult">
+			UPDATE
+				#arguments.tableName#
+			SET
+				<cfloop from="1" to="#arrayLen(updateColumns)#" index="i">
+					<cfif isNumeric(updateValues[i])>
+						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_numeric" value="#updateValues[i]#">
+					<cfelse>
+						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#updateValues[i]#">
+					</cfif>
+					<cfif arrayLen(updateColumns) gt i>,</cfif> 
+				</cfloop>
+			WHERE
+				#arguments.idColumn# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.idValue#"> 
+		</cfquery>
+	</cffunction>
+	
+	<cffunction name="recordInsert" returntype="void">
+		<cfargument name="tableName" />
+		<cfargument name="insertColumns" />
+		<cfargument name="insertValues" />
+		
+		<cfset var i = 1 />
+		
+		<cfquery datasource="#application.configBean.getDataSource()#" name="sqlResult"> 
+			INSERT INTO	#arguments.tableName# (
+				#arrayToList(insertColumns, ",")#
+			) VALUES (
+				<cfloop from="1" to="#arrayLen(insertValues)#" index="i">
+					<cfif isNumeric(listGetAt(insertValues, i))>
+						<cfqueryparam cfsqltype="cf_sql_numeric" value="#listGetAt(insertValues, i)#">
+					<cfelse>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#listGetAt(insertValues, i)#">
+					</cfif>
+					<cfif arrayLen(insertValues) gt i>,</cfif>
+				</cfloop>
+			)
+		</cfquery>
 	</cffunction>
 	
 </cfcomponent>
