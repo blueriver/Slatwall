@@ -192,26 +192,26 @@ div.svocommontoolbarmenu ul.favorites li {
 	background: url(../images/common.toolbar.menu_libg.gif) no-repeat ;
 }
 div.svocommontoolbarmenu li#pageTools>a.website {
-	background: url("/admin/images/icons/ntwrk_24.png") no-repeat scroll 15px 7px transparent ;
+	background: url("../../../../admin/images/icons/ntwrk_24.png") no-repeat scroll 15px 7px transparent ;
 }
 div.svocommontoolbarmenu li#navDashboard {
 	background:none ;
 }
 div.svocommontoolbarmenu li#navDashboard>a {
-	background: url("/admin/images/icons/dashboard_14.png") no-repeat scroll 15px 7px transparent ;
+	background: url("../../../../admin/images/icons/dashboard_14.png") no-repeat scroll 15px 7px transparent ;
 }
 div.svocommontoolbarmenu li#navProducts>a {
-	background: url("/admin/images/icons/smicn_24.png") no-repeat scroll 15px 7px transparent ;
+	background: url("../../../../admin/images/icons/smicn_24.png") no-repeat scroll 15px 7px transparent ;
 }
 div.svocommontoolbarmenu li#navOrders>a {
 	background: url("../images/common.toolbar.menu.orders_icon.png") no-repeat scroll 14px 6px transparent ;
 }
 div.svocommontoolbarmenu li#navAccounts>a {
-	background: url("/admin/images/icons/permissions_on.png") no-repeat scroll 15px 7px transparent ;
+	background: url("../../../../admin/images/icons/permissions_on.png") no-repeat scroll 15px 7px transparent ;
 }
 
 div.svocommontoolbarmenu li#navSettings>a {
-	background: url("/admin/images/icons/confg_24.png") no-repeat scroll 15px 7px transparent ;
+	background: url("../../../../admin/images/icons/confg_24.png") no-repeat scroll 15px 7px transparent ;
 }
 
 div.svocommontoolbarmenu li#mainMenu ul.menu {

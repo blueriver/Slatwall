@@ -145,6 +145,8 @@ component extends="org.fw1.framework" output="false" {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
+		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
+		
 		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
 			// Log that this started
 			getBeanFactory().getBean("logService").logMessage(message="First Request of Application Setup Started", generalLog=true);
