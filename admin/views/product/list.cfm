@@ -56,8 +56,8 @@ Notes:
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.product.productCode")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-			<!--- <th>#rc.$.Slatwall.rbKey("entity.product.activeFlag")#</th> --->
 			<th>#rc.$.Slatwall.rbKey("entity.product.publishedFlag")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
@@ -70,8 +70,8 @@ Notes:
 			<tr>
 				<td><a href="#buildURL(action='admin:product.detailproducttype', querystring='productTypeID=#local.Product.getProductType().getProductTypeID()#')#">#local.product.getProductType().getProductTypeName()#</a></td>
 				<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
+				<td>#local.Product.getProductCode()#</td>
 				<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-				<!--- <td>#yesNoFormat(local.Product.getActiveFlag())#</td> --->
 				<td>#yesNoFormat(local.Product.getPublishedFlag())#</td>
 				<cfif local.Product.getSetting("trackInventoryFlag")>
 					<td>#local.Product.getQOH()#</td>
