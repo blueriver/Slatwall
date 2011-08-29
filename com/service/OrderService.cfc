@@ -661,7 +661,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function updateOrderItems(required any order, required struct data) {
 		var dataCollections = arguments.data.structuredData;
 		var orderItems = arguments.order.getOrderItems();
-		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+		for(var i=arrayLen(arguments.order.getOrderItems()); i>=1; i--) {
 			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID())) {
 				if(structKeyExists(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ], "quantity")) {
 					arguments.order.getOrderItems()[i].getOrderFulfillment().orderFulfillmentItemsChanged();
