@@ -5,15 +5,15 @@ variables.assetConfig.baseAssetPath = "#application.configBean.getContext()#/plu
 
 // Optional Dependencies
 variables.assetDependencies["js/admin.js"] = [
-	"/admin/js/jquery/jquery.js",
-	"/admin/js/jquery/jquery-ui.js",
-	"/admin/js/jquery/jquery-ui-i18n.js",
-	"/admin/js/admin.js",
-	"/tasks/widgets/ckeditor/ckeditor.js",
-	"/tasks/widgets/ckeditor/adapters/jquery.js",
-	"/tasks/widgets/ckfinder/ckfinder.js",
-	"/admin/css/admin.css",
-	"/admin/css/jquery/default/jquery.ui.all.css"
+	"#application.configBean.getContext()#/admin/js/jquery/jquery.js",
+	"#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js",
+	"#application.configBean.getContext()#/admin/js/jquery/jquery-ui-i18n.js",
+	"#application.configBean.getContext()#/admin/js/admin.js",
+	"#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js",
+	"#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js",
+	"#application.configBean.getContext()#/tasks/widgets/ckfinder/ckfinder.js",
+	"#application.configBean.getContext()#/admin/css/admin.css",
+	"#application.configBean.getContext()#/admin/css/jquery/default/jquery.ui.all.css"
 	];
 	
 variables.assetDependencies["js/admin-product.detail.js"] =	[

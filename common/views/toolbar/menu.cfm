@@ -42,7 +42,7 @@ Notes:
 	<div class="svocommontoolbarmenu">
 		<ul class="home">
 			<li id="mainMenu">
-				<a href="/" class="logo">Main Menu</a>
+				<a href="#application.configBean.getContext()#/" class="logo">Main Menu</a>
 				<ul class="menu">
 					<cf_SlatwallActionCaller action="admin:main" type="list">
 					<cf_SlatwallActionCaller action="admin:product" type="list">
@@ -188,7 +188,7 @@ Notes:
 				<input type="text" class="search" id="SlatwallToolbarSearch" tabindex="1" />
 			</li>
 			<li id="pageTools">
-				<a href="/" class="website">Website</a>
+				<a href="#application.configBean.getContext()#/" class="website">Website</a>
 			</li>
 		</ul>
 		<ul class="favorites">

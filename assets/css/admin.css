@@ -394,27 +394,27 @@ ul.errors p {
 }
 
 #navUtility li#navDashboard>a {
-	background: url("/admin/images/icons/dashboard_14.png") no-repeat scroll left center transparent !important;
+	background: url("../../../../admin/images/icons/dashboard_14.png") no-repeat scroll left center transparent !important;
 	padding-left: 16px;
 }
 
 #navUtility li#navProducts>a {
-	background: url("/admin/images/icons/smicn_24.png") no-repeat scroll left center transparent !important;
+	background: url("../../../../admin/images/icons/smicn_24.png") no-repeat scroll left center transparent !important;
 	padding-left: 16px;
 }
 
 #navUtility li#navAccounts>a {
-	background: url("/admin/images/icons/permissions_on.png") no-repeat scroll left center transparent !important;
+	background: url("../../../../admin/images/icons/permissions_on.png") no-repeat scroll left center transparent !important;
 	padding-left: 16px;
 }
 
 #navUtility li#navSettings>a {
-	background: url("/admin/images/icons/confg_24.png") no-repeat scroll left center transparent !important;
+	background: url("../../../../admin/images/icons/confg_24.png") no-repeat scroll left center transparent !important;
 	padding-left: 16px;
 }
 
 #navUtility li#navSiteManager>a {
-	background: url("/admin/images/icons/ntwrk_24.png") no-repeat scroll left center transparent !important;
+	background: url("../../../../admin/images/icons/ntwrk_24.png") no-repeat scroll left center transparent !important;
 	padding-left: 16px;
 }
 

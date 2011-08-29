@@ -49,8 +49,4 @@ Notes:
 <cfset variables.framework.subsystemdelimiter=":">
 <cfset variables.framework.generateSES = false>
 <cfset variables.framework.SESOmitIndex = true>
-<cfif isDefined("application.configBean")>
-	<cfset variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/" />
-<cfelse>
-	<cfset variables.framework.baseURL = "/plugins/Slatwall/" />	
-</cfif>
+<cfset variables.framework.baseURL = "/plugins/Slatwall/" />
