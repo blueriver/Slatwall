@@ -47,16 +47,9 @@ Notes:
 	</div>
 	</cfif>
 	<div class="shippingMethod">
-		<cfif local.orderDelivery.getShippingMethod().getShippingProvider() eq "RateTable">
-			<cfset local.thisShippingProvider = $.slatwall.rbKey("admin.order.detail.shippingProvider.ratetable") />
-		<cfelse>
-			<cfset local.shippingService = rc.shippingServices[local.orderDelivery.getShippingMethod().getShippingProvider()] />
-			<cfset local.shippingServiceMethods = local.shippingService.getShippingMethods() />
-			<cfset local.thisShippingProvider = local.shippingServiceMethods[local.orderDelivery.getShippingMethod().getShippingProviderMethod()] />
-		</cfif>
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
 		#local.orderDelivery.getShippingMethod().getShippingMethodName()#<br>
-		(#local.thisShippingProvider#)<br>
+		(#local.orderDelivery.getShippingMethod().getShippingProviderMethodName()#)<br>
 		#$.slatwall.rbKey("entity.orderDeliveryShipping.trackingNumber")#: #local.orderDelivery.getTrackingNumber()#
 	</div>
 	<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryOpenDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryOpenDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryOpenDateTime())#</p>

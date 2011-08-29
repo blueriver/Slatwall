@@ -68,9 +68,20 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	}
 	
 	public any function getIntegration() {
-		return getService("integrationService").getIntegrationByIntegrationPackage(getShippingProvider());
+		if(!isNull(getShippingProvider()) && getShippingProvider() neq "Other" && getShippingProvider() neq "") {
+			return getService("integrationService").getIntegrationByIntegrationPackage( getShippingProvider() );	
+		}
 	}
 	
+	public any function getShippingProviderMethodName() {
+		var integration = getIntegration();
+		
+		if(isNull(integration)) {
+			return rbKey("admin.order.detail.shippingProvider.ratetable");
+		} else {
+			return integration.getIntegrationCFC('shipping').getShippingMethods()[ getShippingProviderMethod() ];
+		}
+	}
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Shipping Rate (one-to-many)
