@@ -90,9 +90,12 @@ component displayname="Data Service" extends="BaseService" {
 		for(var r=1; r <= arrayLen(xmlData.Table.Records.xmlChildren); r++) {
 			
 			var idColumnValue = "";
-			var updateSetString = "";
-			var insertColumns = "";
-			var insertValues = "";
+			
+			var updateColumns = [];
+			var updateValues = [];
+			
+			var insertColumns = [];
+			var insertValues = [];
 			
 			for(var rp = 1; rp <= listLen(structKeyList(xmlData.Table.Records.xmlChildren[r].xmlAttributes)); rp ++) {
 				
@@ -104,55 +107,19 @@ component displayname="Data Service" extends="BaseService" {
 					idColumnValue = value;
 				}
 				
-				if(isDefined("columnAttributes.update") && columnAttributes.update == false) {
-					insertColumns &= " #thisColumn#,";
-					if(isNumeric(value)) {
-						insertValues &= " #value#,";	
-					} else {
-						insertValues &= " '#value#',";
-					}
-				} else {
-					if(isNumeric(value)) {
-						updateSetString &= " #thisColumn#=#value#,";
-					} else {
-						updateSetString &= " #thisColumn#='#value#',";
-					}
-					insertColumns &= " #thisColumn#,";
-					if(isNumeric(value)) {
-						insertValues &= " #value#,";	
-					} else {
-						insertValues &= " '#value#',";
-					}
+				arrayAppend(insertColumns, thisColumn);
+				arrayAppend(insertValues, value);
+					
+				if(!isDefined("columnAttributes.update") || columnAttributes.update == true) {
+					arrayAppend(updateColumns, thisColumn);
+					arrayAppend(updateValues, value);
 				}
 			}
-			if(len(updateSetString)) {
-				updateSetString = left(updateSetString, len(updateSetString)-1);
-			}
-			if(len(insertColumns)) {
-				insertColumns = left(insertColumns, len(insertColumns)-1);
-			}
-			if(len(insertValues)) {
-				insertValues = left(insertValues, len(insertValues)-1);
-			}
 			
-			var dataQuery = new Query();
-			dataQuery.setDataSource(application.configBean.getDatasource());
-			dataQuery.setUsername(application.configBean.getUsername());
-			dataQuery.setPassword(application.configBean.getPassword());
-			dataQuery.setSql("
-				SELECT * FROM #xmlData.table.xmlAttributes.tableName# WHERE #idColumn# = '#idColumnValue#';
-			");
-			var exists = dataQuery.execute().getResult().recordcount;
-			if(exists) {
-				dataQuery.setSql("
-					UPDATE #xmlData.table.xmlAttributes.tableName# SET #updateSetString# WHERE #idColumn# = '#idColumnValue#'
-				");
-				dataQuery.execute();
+			if( getDAO().recordExists(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue) ) {
+				getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues);
 			} else {
-				dataQuery.setSql("
-					INSERT INTO #xmlData.table.xmlAttributes.tableName# (#insertColumns#) VALUES (#insertValues#)
-				");
-				dataQuery.execute();
+				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues);
 			}
 		}
 	}
