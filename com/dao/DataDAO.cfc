@@ -146,9 +146,9 @@ Notes:
 			) VALUES (
 				<cfloop from="1" to="#arrayLen(insertValues)#" index="i">
 					<cfif isNumeric(insertValues[i])>
-						<cfqueryparam cfsqltype="cf_sql_numeric" value="#listGetAt(insertValues, i)#">
+						<cfqueryparam cfsqltype="cf_sql_numeric" value="#insertValues[i]#">
 					<cfelse>
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#listGetAt(insertValues, i)#">
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#insertValues[i]#">
 					</cfif>
 					<cfif arrayLen(insertValues) gt i>,</cfif>
 				</cfloop>
