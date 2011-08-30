@@ -145,7 +145,7 @@ Notes:
 				#arrayToList(insertColumns, ",")#
 			) VALUES (
 				<cfloop from="1" to="#arrayLen(insertValues)#" index="i">
-					<cfif isNumeric(listGetAt(insertValues, i))>
+					<cfif isNumeric(insertValues[i])>
 						<cfqueryparam cfsqltype="cf_sql_numeric" value="#listGetAt(insertValues, i)#">
 					<cfelse>
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#listGetAt(insertValues, i)#">
