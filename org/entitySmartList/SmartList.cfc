@@ -64,14 +64,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setPageRecordsStart(arguments.pageRecordsStart);
 		setPageRecordsShow(arguments.pageRecordsShow);
 		
-		var baseEntity = entityNew("#arguments.entityName#");
+		// Temporary Slatwall Specific Bug Fix For Railo
+		
+		var baseEntity = entityNew(arguments.entityName);
 		var baseEntityMeta = getMetaData(baseEntity);
 		
-		setBaseEntityName(arguments.entityName);
+		setBaseEntityName(baseEntityMeta.entityName);
 		
 		addEntity(
-			entityName=arguments.entityName,
-			entityAlias="a#lcase(arguments.entityName)#",
+			entityName=baseEntityMeta.entityName,
+			entityAlias="a#lcase(baseEntityMeta.entityName)#",
 			entityFullName=baseEntityMeta.fullName,
 			entityProperties=getPropertiesStructFromEntityMeta(baseEntityMeta)
 		);
