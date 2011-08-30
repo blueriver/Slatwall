@@ -104,7 +104,15 @@ component displayname="Base Service" persistent="false" accessors="true" output=
     	getDAO().reloadEntity(entity=arguments.entity);
     }
     
- /**
+ 	/**
+	 * Generic ORM CRUD methods and dynamic methods by convention via onMissingMethod.
+	 *
+	 * See all onMissing* method comments and other method signatures for usage.
+	 *
+	 * CREDIT:
+	 *   Heavily influenced by ColdSpring 2.0-pre-alpha's coldspring.orm.hibernate.AbstractGateway.
+ 	 *   So, thank you Mark Mandel and Bob Silverberg :)
+	 *
 	 * Provides dynamic methods, by convention, on missing method:
 	 *
 	 *   newXXX()
@@ -128,7 +136,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	 * ...in which XXX is an ORM entity name, and YYY and ZZZ are entity property names.
 	 *
 	 * NOTE: Ordered arguments only--named arguments not supported.
-	 */
+	*/
 	public any function onMissingMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		var lCaseMissingMethodName = lCase( missingMethodName );
 
