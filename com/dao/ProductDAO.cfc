@@ -46,22 +46,24 @@ component accessors="true" extends="BaseDAO" {
 		ORMExecuteQuery("Delete from SlatwallProductCategory WHERE productID = '#arguments.product.getProductID()#'");
 	}
 	
-	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs){
-		var params = {};
-		params.attributeSetTypeCode = arguments.attributeSetTypeCode;
+	public array function getAttributeSets(required array attributeSetTypeCode,required array productTypeIDs){
 		var hql = " FROM SlatwallAttributeSet sas
 					WHERE (exists(FROM sas.attributes sa WHERE sa.activeFlag = 1)
 						AND sas.attributeSetType.systemCode IN (:attributeSetTypeCode)) ";
 		if(arrayLen(arguments.productTypeIDs)){
 			hql &= " AND (sas.globalFlag = 1
 						OR exists(FROM sas.attributeSetAssignments asa WHERE asa.productTypeID IN (:productTypeIDs)))";
-			params.productTypeIDs = arguments.productTypeIDs;
 		} else {
 			hql &= " AND sas.globalFlag = 1";
 		}			 
 		hql &= " ORDER BY sas.attributeSetType.systemCode ASC, sas.sortOrder ASC";
-
-		return ormExecuteQuery(hql,params);
+		
+		// TODO: This method of writing out the params is used because as of Railo 3.3 it doesn't like just passing in a CF struct.
+		if(arrayLen(arguments.productTypeIDs)){
+			return ormExecuteQuery(hql, {productTypeIDs=arrayToList(arguments.productTypeIDs), attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
+		} else {
+			return ormExecuteQuery(hql, {attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
+		}
 	}
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
