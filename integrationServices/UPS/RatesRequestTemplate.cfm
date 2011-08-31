@@ -47,6 +47,12 @@
 		<Request>
 			<RequestOption>Shop</RequestOption>
 		</Request>
+		<PickupType>
+			<Code>03</Code>
+		</PickupType>
+		<CustomerClassification>
+			<Code>04</Code>
+		</CustomerClassification>
 		<Shipment>
 			<Shipper>
 				<Address>
@@ -62,6 +68,7 @@
 					<StateProvinceCode>#arguments.requestBean.getShipToStateCode()#</StateProvinceCode>
 					<PostalCode>#arguments.requestBean.getShipToPostalCode()#</PostalCode>
 					<CountryCode>#arguments.requestBean.getShipToCountryCode()#</CountryCode>
+					<ResidentialAddressIndicator>1</ResidentialAddressIndicator>
 				</Address>
 			</ShipTo>
 			<ShipFrom>
@@ -77,10 +84,13 @@
 			</ShipmentWeight>
 			<Package>
 				<PackagingType>
-					<Code>00</Code>
+					<Code>02</Code>
 				</PackagingType>
 				<PackageWeight>
 					<Weight>#totalItemsWeight#</Weight>
+					<UnitOfMeasurement>
+						<Code>LBS</Code>
+					</UnitOfMeasurement>
 				</PackageWeight>
 			</Package>
 		</Shipment>
