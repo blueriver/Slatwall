@@ -41,16 +41,38 @@ Notes:
 	<cffunction name="deleteAllOrders">
 		<cfquery datasource="#application.configBean.getDataSource()#">
 			UPDATE SlatwallSession SET orderID = null;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'orderItem';
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrderDelivery;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrderDeliveryItem;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallTaxApplied;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallPromotionApplied;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrderItem;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrderShippingMethodOption;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrderFulfillment;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallCreditCardTransaction;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrderPayment;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOrder;
 		</cfquery>
 	</cffunction>
@@ -58,13 +80,29 @@ Notes:
 	<cffunction name="deleteAllProducts">
 		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'product';
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallPromotionReward WHERE rewardType='product';
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallAttributeSetAssignment WHERE attributeSetAssignmentType='product';
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallProductContent;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallProductCategory;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			UPDATE SlatwallProduct SET defaultSkuID = null;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallSkuOption;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallSku;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallProduct;
 		</cfquery>
 	</cffunction>
@@ -78,6 +116,8 @@ Notes:
 	<cffunction name="deleteAllProductTypes">
 		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallAttributeSetAssignment WHERE attributeSetAssignmentType='productType';
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallProductType;
 		</cfquery>
 	</cffunction>
@@ -85,6 +125,8 @@ Notes:
 	<cffunction name="deleteAllOptions">
 		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOption;
+		</cfquery>
+		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallOptionGroup;
 		</cfquery>
 	</cffunction>
