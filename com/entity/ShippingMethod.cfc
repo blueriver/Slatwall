@@ -53,7 +53,8 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	// Related Object Properties 
+	// Related Object Properties
+	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
 	
 	public any function init() {
@@ -65,6 +66,17 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		}
 		
 		return super.init();
+	}
+	
+	public any function getEligibleAddressZoneOptions() {
+		if(!structKeyExists(variables, "limitedAddressZoneOptins")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
+			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
+			smartList.addSelect(propertyIdentifier="addressZoneID", alias="id"); 
+			smartList.addOrder("addressZoneName|ASC");
+			variables.limitedAddressZoneOptins = smartList.getRecords();
+		}
+		return variables.limitedAddressZoneOptins;
 	}
 	
 	public any function getIntegration() {
@@ -82,6 +94,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 			return integration.getIntegrationCFC('shipping').getShippingMethods()[ getShippingProviderMethod() ];
 		}
 	}
+
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Shipping Rate (one-to-many)
