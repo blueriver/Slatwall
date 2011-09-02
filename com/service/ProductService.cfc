@@ -289,6 +289,21 @@ component extends="BaseService" accessors="true" {
 		// populate bean from values in the data Struct
 		arguments.Product.populate(arguments.data);
 		
+		// populate custom attributes
+		if(structKeyExists(arguments.data,"attributes")){
+			for(var attributeID in arguments.data.attributes){
+				for(var attributeValueID in arguments.data.attributes[attributeID]){
+					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
+					attributeValue.setAttributeValue(arguments.data.attributes[attributeID][attributeValueID]);
+					if(attributeValue.isNew()){
+						var attribute = getService("AttributeService").getAttribute(attributeID);
+						attributeValue.setAttribute(attribute);
+						arguments.product.addAttribtueValue(attributeValue);
+					}
+				}
+			}
+		}
+		
 		// if filename wasn't set in bean, default it to the product's name.
 		if(arguments.Product.getFileName() == "") {
 			arguments.Product.setFileName(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
