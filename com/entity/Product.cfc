@@ -634,25 +634,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 	}
 	
-	//populate the entity with passed data
-	public void function populate(required struct data) {
-		// populate custom attributes
-		if(structKeyExists(data,"attributes")){
-			for(var attributeID in data.attributes){
-				for(var attributeValueID in data.attributes[attributeID]){
-					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
-					attributeValue.setAttributeValue(data.attributes[attributeID][attributeValueID]);
-					if(attributeValue.isNew()){
-						var attribute = getService("AttributeService").getAttribute(attributeID);
-						attributeValue.setAttribute(attribute);
-						addAttribtueValue(attributeValue);
-					}
-				}
-			}
-		}
-		super.populate(argumentCollection=arguments);
-	}
-	
 	public struct function getCrumbData(required string path, required string siteID, required array baseCrumbArray) {
 		var productFilename = replace(arguments.path, "/#arguments.siteID#/", "", "all");
 		productFilename = left(productFilename, len(productFilename)-1);

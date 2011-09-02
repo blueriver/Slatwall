@@ -297,6 +297,20 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		    return newArr;
 	}
 	
+	public any function getCreatedDateTime() {
+		if(isNull(variables.createdDateTime)) {
+			return "";
+		}
+		return variables.createdDateTime;
+	}
+	
+	public any function getModifiedDateTime() {
+		if(isNull(variables.modifiedDateTime)) {
+			return "";
+		}
+		return variables.modifiedDateTime;
+	}
+	
 	// Start: ORM functions
 	public void function preInsert(){
 		var timestamp = now();
