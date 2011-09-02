@@ -5,6 +5,8 @@
 	<cfproperty name="optionService" />
 	<cfproperty name="productService" />
 	<cfproperty name="skuService" />
+	<cfproperty name="utilityFileService" />
+	<cfproperty name="dataService" />
 	
 	<cffunction name="init">
 		<cfargument name="fw" />
@@ -62,6 +64,15 @@
 					<cfset product = getProductService().newProduct() />
 					<cfset product.setRemoteID(remoteProductID) />
 					<cfset product.setProductName(lineArray[6]) />
+					
+					<cfset product.setFilename( getUtilityFileService().filterFileName(product.getProductName()) ) />
+					<cfset var duplicate = getDataService().isDuplicateProperty("filename", product) />
+					<cfset var fileAddon = 1 />
+					<cfloop condition="duplicate eq true">
+						<cfset product.setFilename( getUtilityFileService().filterFileName(product.getProductName()) & fileAddon ) />
+						<cfset var duplicate = getDataService().isDuplicateProperty("filename", product) />
+						<cfset fileAddon++ />
+					</cfloop>
 				</cfif>
 				
 				<cfset var sku = getSkuService().getSkuByRemoteID(remoteSkuID) />
