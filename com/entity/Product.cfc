@@ -153,7 +153,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			for(var i=1; i <= productTypeTree.recordCount; i++) {
 				// only get the leaf nodes of the tree (those with no children)
 				if( productTypeTree.childCount[i] == 0 ) {
-					productTypeOptions[i] = {id=productTypeTree.productTypeID[i], name=productTypeTree.productTypeName[i], label=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")};
+					arrayAppend(productTypeOptions, {id=productTypeTree.productTypeID[i], name=productTypeTree.productTypeName[i], label=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")});
 				}
 			}
 			variables.productTypeOptions = productTypeOptions;
