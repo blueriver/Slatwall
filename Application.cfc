@@ -135,6 +135,8 @@ component extends="org.fw1.framework" output="false" {
 		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
 		
 		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
+		
+		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 	}
 	
 	public void function setupRequest() {
@@ -144,8 +146,6 @@ component extends="org.fw1.framework" output="false" {
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
-		
-		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 		
 		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
 			// Log that this started

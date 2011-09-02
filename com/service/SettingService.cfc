@@ -415,7 +415,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			getService("logService").logMessage("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
 			
-			var baseSlatwallPath = getDirectoryFromPath(expandPath('.')) & 'Slatwall/frontend/views/'; 
+			var baseSlatwallPath = getDirectoryFromPath(expandPath('#application.configBean.getContext()#/')) & 'plugins/Slatwall/frontend/views/'; 
 			var baseSitePath = getDirectoryFromPath(expandPath('#application.configBean.getContext()#/')) & assignedSites["siteID"][i] & '/includes/display_objects/custom/slatwall/';
 			
 			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
