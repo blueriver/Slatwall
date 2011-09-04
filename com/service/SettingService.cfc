@@ -148,28 +148,6 @@ component extends="BaseService" output="false" accessors="true"  {
 		}
 		return variables.permissionActions;
 	}
-	
-	public any function saveShippingService(required string shippingServicePackage, required struct data) {
-		var shippingService = getByShippingServicePackage(arguments.shippingServicePackage);
-		// populate non-persistent service object for validation
-		for( var item in arguments.data ) {
-			evaluate("shippingService.set#item#(data[item])");
-		}
-		var response = getValidationService().validate(shippingService);
-		if(!response.hasErrors()) {
-			//save service as individual setting entities
-			for(var item in arguments.data) {
-				var settingName = "shippingService_#arguments.shippingServicePackage#_#item#";
-				var thisSetting = getBySettingName(settingName);
-				thisSetting.setSettingValue(arguments.data[item]);
-				thisSetting = save(entity=thisSetting);
-			}
-		} else {
-			response.setData(shippingService);
-			getRequestCacheService().setValue("ormHasErrors",true);
-		}
-		return response;
-	}
 
 	public any function saveAddressZone(required any entity, struct data) {
 		if( structKeyExists(arguments, "data") && structKeyExists(arguments.data,"addressZoneLocations") ) {
