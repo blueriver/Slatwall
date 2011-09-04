@@ -65,54 +65,61 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Loop over all possible methods
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
-			if(shippingMethods[i].getUseRateTableFlag()) {
-				// Get the Rate for this method and add it to the
-				var methodCharge = 0;
-				var rateExists = false;
-				var rates = shippingMethods[i].getShippingRates();
+			
+			// Check the shipping methods eligible address zone to make sure that it is eligible
+			if(isNull(shippingMethods[i].getEligibleAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=shippingMethods[i].getEligibleAddressZone())){
 				
-				for(var r=1;r <= arrayLen(rates); r++) {
-					// Make sure that the shipping address is in the zone of this rate
-				
-					if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
-						
-						var rateApplies = true;
-						
-						var minPrice = IIF(isNull(rates[r].getMinPrice()), 0, rates[r].getMinPrice());
-						var maxPrice = IIF(isNull(rates[r].getMaxPrice()), 10000000000000000, rates[r].getMaxPrice());
-						var minWeight = IIF(isNull(rates[r].getMinWeight()), 0, rates[r].getMinWeight());
-						var maxWeight = IIF(isNull(rates[r].getMaxWeight()), 10000000000000000, rates[r].getMaxWeight());
-						
-						var fullfillmentWeight = arguments.orderFulfillmentShipping.getTotalShippingWeight();
-						var fullfillmentPrice = arguments.orderFulfillmentShipping.getSubtotal();
-						
-						//Check Min/Max Price
-						if( fullfillmentPrice < minPrice || fullfillmentPrice > maxPrice ) {
-							rateApplies = false;
-						}
-						
-						//Check Min/Max Weight
-						if( fullfillmentWeight < minWeight || fullfillmentWeight > maxWeight ) {
-							rateApplies = false;
-						}
-						
-						if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
-							rateExists = true;
-							methodCharge = rates[r].getShippingRate();
+				// If this method uses rate tables, get the quote
+				if(shippingMethods[i].getUseRateTableFlag()) {
+					// Get the Rate for this method and add it to the
+					var methodCharge = 0;
+					var rateExists = false;
+					var rates = shippingMethods[i].getShippingRates();
+					
+					for(var r=1;r <= arrayLen(rates); r++) {
+						// Make sure that the shipping address is in the zone of this rate
+					
+						if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
+							
+							var rateApplies = true;
+							
+							var minPrice = IIF(isNull(rates[r].getMinPrice()), 0, rates[r].getMinPrice());
+							var maxPrice = IIF(isNull(rates[r].getMaxPrice()), 10000000000000000, rates[r].getMaxPrice());
+							var minWeight = IIF(isNull(rates[r].getMinWeight()), 0, rates[r].getMinWeight());
+							var maxWeight = IIF(isNull(rates[r].getMaxWeight()), 10000000000000000, rates[r].getMaxWeight());
+							
+							var fullfillmentWeight = arguments.orderFulfillmentShipping.getTotalShippingWeight();
+							var fullfillmentPrice = arguments.orderFulfillmentShipping.getSubtotal();
+							
+							//Check Min/Max Price
+							if( fullfillmentPrice < minPrice || fullfillmentPrice > maxPrice ) {
+								rateApplies = false;
+							}
+							
+							//Check Min/Max Weight
+							if( fullfillmentWeight < minWeight || fullfillmentWeight > maxWeight ) {
+								rateApplies = false;
+							}
+							
+							if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
+								rateExists = true;
+								methodCharge = rates[r].getShippingRate();
+							}
 						}
 					}
-				}
-				
-				if(rateExists) {
-					var option = this.newOrderShippingMethodOption();
-					option.setShippingMethod(shippingMethods[i]);
-					option.setTotalCharge(methodCharge);
-					option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
-					getDAO().save(option);
-				}
-			} else {
-				if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
-					arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+					
+					if(rateExists) {
+						var option = this.newOrderShippingMethodOption();
+						option.setShippingMethod(shippingMethods[i]);
+						option.setTotalCharge(methodCharge);
+						option.setOrderFulfillmentShipping(arguments.orderFulfillmentShipping);
+						getDAO().save(option);
+					}
+				// If this method doesn't use rate tables, then add the provider to the array of providers that we need to get rates for
+				} else {
+					if(!arrayFind(shippingProviders, shippingMethods[i].getShippingProvider())) {
+						arrayAppend(shippingProviders, shippingMethods[i].getShippingProvider());
+					}
 				}
 			}
 		}
