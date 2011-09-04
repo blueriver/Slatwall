@@ -46,10 +46,10 @@ Notes:
 			DELETE FROM SlatwallAttributeValue WHERE attributeValueType = 'orderItem';
 		</cfquery>
 		<cfquery datasource="#application.configBean.getDataSource()#">
-			DELETE FROM SlatwallOrderDelivery;
+			DELETE FROM SlatwallOrderDeliveryItem;
 		</cfquery>
 		<cfquery datasource="#application.configBean.getDataSource()#">
-			DELETE FROM SlatwallOrderDeliveryItem;
+			DELETE FROM SlatwallOrderDelivery;
 		</cfquery>
 		<cfquery datasource="#application.configBean.getDataSource()#">
 			DELETE FROM SlatwallTaxApplied;
