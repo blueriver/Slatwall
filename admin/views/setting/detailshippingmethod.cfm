@@ -74,7 +74,13 @@ Notes:
 					</cfif>
 				</dd>
 				<cfif not rc.shippingMethod.isNew()>
-					<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#">
+					
+					<cfif isNull(rc.shippingMethod.getEligibleAddressZone())>
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#">
+					<cfelse>
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" value="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneID()#" displayValue="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneName()#">
+					</cfif>
+					
 					<cfif rc.shippingMethod.getShippingProvider() neq "Other">
 						<!--- Provider Method --->
 						<dt class="spdshippingprovidermethod">Shipping Provider Method</dt>
