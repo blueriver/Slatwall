@@ -40,23 +40,21 @@ Notes:
 component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.ShippingInterface" {
 
 	// Custom Properties that need to be set by the end user
-	/*
-	property name="accountNo" validateRequired displayname="FedEx Account Number" type="string";
-	property name="password" displayname="FedEx Password" type="string" editType="password";
-	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
-	property name="meterNo" displayname="FedEx Meter Number" type="string";
-	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";
-	property name="shipperStreet" displayname="Shipper Street Address" type="string";
-	property name="shipperCity" displayname="Shipper City" type="string";
-	property name="shipperStateCode" displayname="Shipper State Code" type="string";
-	property name="shipperPostalCode" displayname="Shipper Postal Code" type="string";
-	property name="shipperCountryCode" displayname="Shipper Country Code" type="string";
-	*/
+	property name="userID" validateRequired="true" displayname="USPS Web Tools UserID" type="string";
+	property name="shipFromPostalCode" validateRequired="true" displayname="Ship From Postal Code" type="string";
+	property name="testingFlag" displayname="Testing Mode" type="boolean" default="true";
+	property name="useSSLFlag" displayname="Secure API over SSL" type="boolean" default="true";
+	
+	variables.testingURL = "https://secure.shippingapis.com/ShippingAPITest.dll";
+	variables.liveURL = "https://secure.shippingapis.com/ShippingAPI.dll";
 	
 	public any function init() {
 		// Insert Custom Logic Here 
 		variables.shippingMethods = {
-			
+			FIRST_CLASS = "First Class",
+			PRIORITY = "Priority",
+			EXPRESS = "Express",
+			PARCEL_POST = "Parcel Post"
 		};
 		return this;
 	}
@@ -71,44 +69,52 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 	
 	public Slatwall.com.utility.fulfillment.ShippingRatesResponseBean function getRates(required Slatwall.com.utility.fulfillment.ShippingRatesRequestBean requestBean) {
 		
-		// Insert Custom Logic Here
-		var totalItemsWeight = 0;
-		var totalItemsValue = 0;
-		
-		// Loop over all items to get a price and weight for shipping
-		for(var i=1; i<=arrayLen(arguments.requestBean.getShippingItemRequestBeans()); i++) {
-			if(isNumeric(arguments.requestBean.getShippingItemRequestBeans()[i].getWeight())) {
-				totalItemsWeight +=	arguments.requestBean.getShippingItemRequestBeans()[i].getWeight();
-			}
-			 
-			totalItemsValue += arguments.requestBean.getShippingItemRequestBeans()[i].getValue();
-		}
-		
-		if(totalItemsWeight < 1) {
-			totalItemsWeight = 1;
-		}
-		
-		// Build Request XML
-		var xmlPacket = "";
-		
-		savecontent variable="xmlPacket" {
-			include "RatesRequestTemplate.cfm";
+        var requestURL = "";
+        
+        if(variables.useSSLFlag) {
+	        if(variables.testingFlag) {
+	        	requestURL = "https://secure.shippingapis.com/ShippingAPITest.dll?API=";
+	        } else {
+	        	requestURL = "https://secure.shippingapis.com/ShippingAPI.dll?API=";
+	        }	
+        } else {
+        	if(variables.testingFlag) {
+	        	requestURL = "http://testing.shippingapis.com/ShippingAPITest.dll?API=";
+	        } else {
+	        	requestURL = "http://production.shippingapis.com/ShippingAPI.dll?API=";
+	        }	
+        }        
+        
+        if(arguments.requestBean.getShipToCountryCode() == "US") {
+        	var xmlPacket = "";
+			savecontent variable="xmlPacket" {
+				include "RatesV4RequestTemplate.cfm";
+	        }
+        	requestURL &= "RateV4&XML=#trim(xmlPacket)#";
+        } else {
+        	var xmlPacket = "";
+			savecontent variable="xmlPacket" {
+				include "InternationalRatesV2RequestTemplate.cfm";
+	        }
+        	requestURL &= "IntlRateV2&XML=#trim(xmlPacket)#";
         }
         
         // Setup Request to push to FedEx
         var httpRequest = new http();
-        httpRequest.setMethod("POST");
-		httpRequest.setPort("443");
-		httpRequest.setTimeout(45);
-		if(variables.testingFlag) {
-			httpRequest.setUrl("https://gatewaybeta.fedex.com/xml");
-		} else {
-			httpRequest.setUrl("https://gateway.fedex.com/xml");
+        httpRequest.setMethod("GET");
+        if(variables.useSSLFlag) {
+			httpRequest.setPort("443");
+		}else{
+			httpRequest.setPort("80");
 		}
+		httpRequest.setTimeout(45);
+		httpRequest.setURL(requestURL);
 		httpRequest.setResolveurl(false);
-		httpRequest.addParam(type="XML", name="name",value=xmlPacket);
 		
+		writeDump(httpRequest);
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
+		writeDump(xmlResponse);
+		abort;
 		
 		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		ratesResponseBean.setData(xmlResponse);
