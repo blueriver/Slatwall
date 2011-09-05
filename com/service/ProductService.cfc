@@ -304,10 +304,6 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 		
-		// if filename wasn't set in bean, default it to the product's name.
-		if(arguments.Product.getFileName() == "") {
-			arguments.Product.setFileName(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
-		} 
 		// if weight and/or prices (values passed on to populate SKU entities) are blank or not numeric, default them to zero
 		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
 			arguments.data.price = 0;
@@ -343,11 +339,19 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 		
-		// make sure that the filename (product URL title) doesn't already exist
-		var checkFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		var filenameError = getValidationService().validateValue(rule="assertFalse",objectValue=checkFilename,objectName="filename",message=rbKey("entity.product.filename_validateUnique"));
-		if( !structIsEmpty(filenameError) ) {
-			arguments.product.addError(argumentCollection=filenameError);
+		
+		// if filename wasn't set in bean, default it to the product's name.
+		if(arguments.Product.getFileName() == "") {
+			arguments.Product.setFileName(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
+		}
+		
+		// make sure that the filename (product URL title) doesn't already exist, if it does then just rename with a number until it doesn't
+		var lastAppended = 1;
+		var needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+		while(needsFilename) {
+			arguments.Product.setFileName(arguments.Product.getFileName() & lastAppended);	
+			needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+			lastAppended += 1;
 		}
 		
 		arguments.Product = super.save(arguments.Product);
