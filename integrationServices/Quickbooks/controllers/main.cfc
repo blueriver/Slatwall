@@ -18,7 +18,11 @@
 		<cfargument name="rc" type="struct" />
 		
 		<cfset var newFilename = createUUID() & ".txt" />
-		<cfset var importDirectory = expandPath(rc.$.siteConfig('assetPath')) & '/assets/file/' />
+		<cfset var importDirectory = expandPath(rc.$.siteConfig('assetPath')) & '/assets/file/slatwall/productImport/' />
+		
+		<cfif not directoryExists(importDirectory)>
+			<cfset directoryCreate(importDirectory) />
+		</cfif>
 		
 		<cffile action="upload" filefield="inventoryImport" destination="#importDirectory#" nameConflict="makeunique" result="uploadedFile">
 		<cffile action="rename" destination="#importDirectory##newFilename#" source="#importDirectory##uploadedFile.serverFile#" >
@@ -34,9 +38,11 @@
 				<cfif listLen(lineArray[2], ":") eq 4>
 					<cfset var hasOptions = true>
 					<cfset var remoteSkuID = listGetAt(lineArray[2], 4, ":") />
+					<cfset var fullRemoteSkuID = lineArray[2] />
 				<cfelse>
 					<cfset var hasOptions = false>
 					<cfset var remoteSkuID = listGetAt(lineArray[2], 3, ":") />
+					<cfset var fullRemoteSkuID = lineArray[2] />
 				</cfif>
 				
 				<cfset var remoteProductID = left(remoteSkuID, 11) />
@@ -75,7 +81,15 @@
 					</cfloop>
 				</cfif>
 				
-				<cfset var sku = getSkuService().getSkuByRemoteID(remoteSkuID) />
+				<cfset var sku = getSkuService().getSkuByRemoteID(fullRemoteSkuID) />
+				
+				<cfif isNull(sku)>
+					<cfset sku = getSkuService().getSkuByRemoteID(remoteSkuID) />
+				</cfif>
+				
+				<cfif isNull(sku)>
+					<cfset sku = getSkuService().getSkuBySkuCode(remoteSkuID) />
+				</cfif>
 				
 				<cfif isNull(sku)>
 					<cfset sku = getSkuService().newSku() />
@@ -134,6 +148,9 @@
 					</cfif>
 				</cfif>
 				
+				<!--- Update the skus remoteID --->
+				<cfset sku.setRemoteID(fullRemoteSkuID) />
+				
 				<!--- Update the skus price --->
 				<cfset sku.setPrice(lineArray[13]) />
 				<cfset sku.setListPrice(lineArray[13]) />
@@ -161,5 +178,109 @@
 		
 		<cfset getFW().setView("quickbooks:main.default") />
 	</cffunction>
+	
+	<cffunction name="orderExport">
+		<cfargument name="rc" />
 		
+		<cfset var exportDirectory = expandPath(rc.$.siteConfig('assetPath')) & '/assets/file/slatwall/orderExport/' />
+		
+		<cfif not directoryExists(exportDirectory)>
+			<cfset directoryCreate(exportDirectory) />
+		</cfif>
+		
+		<cfset var orderExportID = "#dateFormat(now(),"YYYY-MM-DD")#_#timeFormat(now(),"HHMMSS")#" />
+		
+		<cfset var exportOrders = ormExecuteQuery("SELECT o FROM SlatwallOrder o WHERE o.orderStatusType.typeID = '444df2b8b98441f8e8fc6b5b4266548c' and o.remoteID is null") />
+		
+		<!--- Var'd variables to use in loops --->
+		<cfset var order = "" />
+		<cfset var item = "" />
+		
+		<cfloop array="#exportOrders#" index="order">
+			<!--- Header --->
+			<cffile output="!TRNS#chr(9)#TRNSID#chr(9)#TRNSTYPE#chr(9)#DATE#chr(9)#ACCNT#chr(9)#NAME#chr(9)#CLASS#chr(9)#AMOUNT#chr(9)#DOCNUM#chr(9)#CLEAR#chr(9)#TOPRINT#chr(9)#NAMEISTAXABLE#chr(9)#ADDR1#chr(9)#ADDR2#chr(9)#ADDR3#chr(9)#ADDR4#chr(9)#ADDR5#chr(9)#DUEDATE#chr(9)#PAID#chr(9)#PAYMETH#chr(9)#SHIPVIA#chr(9)#SHIPDATE#chr(9)#SADDR1#chr(9)#SADDR2#chr(9)#SADDR3#chr(9)#SADDR4#chr(9)#SADDR5#chr(9)#TOSEND#chr(9)#ISAJE" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cffile output="!SPL#chr(9)#SPLID#chr(9)#TRNSTYPE#chr(9)#DATE#chr(9)#ACCNT#chr(9)#NAME#chr(9)#CLASS#chr(9)#AMOUNT#chr(9)#DOCNUM#chr(9)#CLEAR#chr(9)#QNTY#chr(9)#PRICE#chr(9)#INVITEM#chr(9)#PAYMETH#chr(9)#TAXABLE#chr(9)#VALADJ#chr(9)#EXTRA" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cffile output="!ENDTRNS" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			
+			<!--- Order --->
+			<cfset var order_transid = order.getOrderNumber() />
+			<cfset var order_date = dateFormat(order.getOrderOpenDateTime(), "MM/DD/YYYY") />
+			<cfset var order_amount = numberFormat(order.getTotal(),"0.00") />
+			<cfset var order_docnum = order.getOrderNumber() />
+			
+			<cfif len(order.getOrderPayments()[1].getBillingAddress().getStreet2Address())>
+				<cfset var order_addr1 = order.getOrderPayments()[1].getBillingAddress().getName() />
+				<cfset var order_addr2 = order.getOrderPayments()[1].getBillingAddress().getStreetAddress() />
+				<cfset var order_addr3 = order.getOrderPayments()[1].getBillingAddress().getStreet2Address() />
+				<cfset var order_addr4 = "#order.getOrderPayments()[1].getBillingAddress().getCity()#, #order.getOrderPayments()[1].getBillingAddress().getStateCode()# #order.getOrderPayments()[1].getBillingAddress().getPostalCode()#" />
+				<cfset var order_addr5 = order.getOrderPayments()[1].getBillingAddress().getCountryCode() />
+			<cfelse>
+				<cfset var order_addr1 = order.getOrderPayments()[1].getBillingAddress().getName() />
+				<cfset var order_addr2 = order.getOrderPayments()[1].getBillingAddress().getStreetAddress() />
+				<cfset var order_addr3 = "#order.getOrderPayments()[1].getBillingAddress().getCity()#, #order.getOrderPayments()[1].getBillingAddress().getStateCode()# #order.getOrderPayments()[1].getBillingAddress().getPostalCode()#" />
+				<cfset var order_addr4 = order.getOrderPayments()[1].getBillingAddress().getCountryCode() />
+				<cfset var order_addr5 = "" />
+			</cfif>
+			
+			<cfset var order_duedate = dateFormat(order.getOrderCloseDateTime(), "MM/DD/YYYY") />
+			<cfset var order_paymeth = order.getOrderPayments()[1].getCreditCardType() />
+			<cfset var order_shipvia = order.getOrderFulfillments()[1].getShippingMethod().getShippingMethodName() />
+			<cfset var order_shipdate = dateFormat(order.getOrderCloseDateTime(), "MM/DD/YYYY") />
+			
+			<cfif len(order.getOrderFulfillments()[1].getShippingAddress().getStreet2Address())>
+				<cfset var order_saddr1 = order.getOrderFulfillments()[1].getShippingAddress().getName() />
+				<cfset var order_saddr2 = order.getOrderFulfillments()[1].getShippingAddress().getStreetAddress() />
+				<cfset var order_saddr3 = order.getOrderFulfillments()[1].getShippingAddress().getStreet2Address() />
+				<cfset var order_saddr4 = "#order.getOrderFulfillments()[1].getShippingAddress().getCity()#, #order.getOrderFulfillments()[1].getShippingAddress().getStateCode()# #order.getOrderFulfillments()[1].getShippingAddress().getPostalCode()#" />
+				<cfset var order_saddr5 = order.getOrderFulfillments()[1].getShippingAddress().getCountryCode() />
+			<cfelse>
+				<cfset var order_saddr1 = order.getOrderFulfillments()[1].getShippingAddress().getName() />
+				<cfset var order_saddr2 = order.getOrderFulfillments()[1].getShippingAddress().getStreetAddress() />
+				<cfset var order_saddr3 = "#order.getOrderFulfillments()[1].getShippingAddress().getCity()#, #order.getOrderFulfillments()[1].getShippingAddress().getStateCode()# #order.getOrderFulfillments()[1].getShippingAddress().getPostalCode()#" />
+				<cfset var order_saddr4 = order.getOrderFulfillments()[1].getShippingAddress().getCountryCode() />
+				<cfset var order_saddr5 = "" />
+			</cfif>
+						
+			<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Checking#chr(9)#7.62 Design Web Store#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##order_shipvia##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			
+			<!--- Lines --->
+			<cfset var line_splid = 1 />
+			<cfloop array="#order.getOrderItems()#" index="item">
+				
+				<cfset var line_invitem = item.getSku().getRemoteID() />
+				<cfset var line_amount = numberFormat(item.getExtendedPriceAfterDiscount()*-1,"0.00") />
+				<cfset var line_qnty = item.getQuantity()*-1 />
+				<cfset var line_price = item.getPrice() />
+				
+				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Income Account#chr(9)##chr(9)#WEB SALES#chr(9)##line_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##line_qnty##chr(9)##line_price##chr(9)##line_invitem##chr(9)##order_paymeth##chr(9)#Y#chr(9)#N#chr(9)#" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+				
+				<cfset line_splid += 1 />
+			</cfloop>
+			
+			<!--- Add Shipping Line --->
+			<cfset var shipping_price = order.getOrderFulfillments()[1].getFulfillmentCharge() />
+			<cfset var shipping_amount = numberFormat(order.getOrderFulfillments()[1].getFulfillmentCharge()*-1,"0.00") />
+			<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Income Account#chr(9)#shipping#chr(9)#WEB SALES#chr(9)##shipping_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)##shipping_price##chr(9)#Sales Item#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cfset line_splid += 1 />
+			
+			<!--- Add Tax Line --->
+			<cfif order.getOrderFulfillments()[1].getShippingAddress().getCountryCode() eq "US" and order.getOrderFulfillments()[1].getShippingAddress().getStateCode() eq "CA">
+				<cfset var order_taxamount = numberFormat(order.getTaxTotal()*-1,"0.00") />
+				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Sales Tax Payable#chr(9)#California Sales Tax#chr(9)#WEB SALES#chr(9)##order_taxamount##chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)#7.75%#chr(9)#Sales Tax#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#AUTOSTAX" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cfelse>
+				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Sales Tax Payable#chr(9)#Out of State#chr(9)#WEB SALES#chr(9)#0#chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)#0.0%#chr(9)#Sales Tax#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#AUTOSTAX" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			</cfif>
+			
+			<!--- End Trasaction --->
+			<cffile output="ENDTRNS" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			
+			<!--- Set Order Remote ID --->
+		</cfloop>
+
+		<!--- Stream the file to the client. --->		
+		<cfheader name="content-disposition" value="attachment; filename=OrderExport_#orderExportID#.iif" />
+		<cfcontent type="text/plain" file="#exportDirectory#OrderExport_#orderExportID#.iif" /> 
+		
+		<cfset getFW().setView("quickbooks:main.default") />
+	</cffunction>
 </cfcomponent>
