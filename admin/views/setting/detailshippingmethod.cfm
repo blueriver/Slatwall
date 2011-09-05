@@ -76,9 +76,9 @@ Notes:
 				<cfif not rc.shippingMethod.isNew()>
 					
 					<cfif isNull(rc.shippingMethod.getEligibleAddressZone())>
-						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#">
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" nullLabel="#$.slatwall.rbKey('define.all')#">
 					<cfelse>
-						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" value="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneID()#" displayValue="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneName()#">
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" nullLabel="#$.slatwall.rbKey('define.all')#" value="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneID()#" displayValue="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneName()#">
 					</cfif>
 					
 					<cfif rc.shippingMethod.getShippingProvider() neq "Other">

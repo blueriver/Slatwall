@@ -142,4 +142,24 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		}
 	}
 	
+	public numeric function getTotalWeight() {
+		var totalWeight = 0;
+		for(var i=1; i<=arrayLen(getShippingItemRequestBeans()); i++) {
+			if(isNumeric(getShippingItemRequestBeans()[i].getWeight())) {
+				totalWeight +=	(getShippingItemRequestBeans()[i].getWeight() * getShippingItemRequestBeans()[i].getQuantity());
+			}
+		}
+		return totalWeight;
+	}
+	
+	public numeric function getTotalValue() {
+		var totalValue = 0;
+		for(var i=1; i<=arrayLen(getShippingItemRequestBeans()); i++) {
+			if(isNumeric(getShippingItemRequestBeans()[i].getValue())) {
+				totalValue +=	(getShippingItemRequestBeans()[i].getValue() * getShippingItemRequestBeans()[i].getValue());
+			}
+		}
+		return totalValue;
+	}
+	
 }

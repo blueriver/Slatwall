@@ -44,6 +44,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderOpenDateTime" ormtype="timestamp";
 	property name="orderCloseDateTime" ormtype="timestamp";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
@@ -298,7 +301,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
  	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
-	private void function confirmOrderNumberAndOpenDate() {
+	private void function confirmOrderNumberOpenDateCloseDate() {
 		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 			if( arrayIsDefined(maxOrderNumber,1) ){
@@ -308,17 +311,20 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			}
 			setOrderOpenDateTime(now());
 		}
+		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
+			setOrderCloseDateTime(now());
+		}
 	} 
 	
 	//  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){
-		confirmOrderNumberAndOpenDate();
+		confirmOrderNumberOpenDateCloseDate();
 		super.preInsert();
 	}
 	
 	public void function preUpdate(Struct oldData){
-		confirmOrderNumberAndOpenDate();
-		super.preInsert();
+		confirmOrderNumberOpenDateCloseDate();
+		super.preUpdate();
 	}
 	//  -------------------- END: ORM Event Metods -------------------
 	

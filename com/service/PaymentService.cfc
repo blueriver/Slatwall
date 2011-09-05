@@ -149,7 +149,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			if( (l == 13 || l == 16) && left(n,1) == 4 ) {
 				return 'Visa';
 			} else if ( l == 16 && left(n,2) >= 51 && left(n,2) <= 55 ) {
-				return 'Mastercard';
+				return 'MasterCard';
 			} else if ( l == 16 && left(n,2) == 35 ) {
 				return 'JCB';
 			} else if ( l == 15 && (left(n,4) == 2014 || left(n,4) == 2149) ) {
@@ -161,7 +161,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			} else if ( l == 14 && (left(n,2) == 30 || left(n,2) == 36 || left(n,2) == 38) ) {
 				return 'Diners Club';
 			} else if ( l == 15 && (left(n,2) == 34 || left(n,2) == 37) ) {
-				return 'Amex';
+				return 'American Express';
 			}
 		}
 		
