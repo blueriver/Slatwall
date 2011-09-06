@@ -276,7 +276,10 @@
 			
 			<!--- Set Order Remote ID --->
 		</cfloop>
-
+		
+		<!--- Make sure that there is at least one line in the file --->
+		<cffile output="" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+		
 		<!--- Stream the file to the client. --->		
 		<cfheader name="content-disposition" value="attachment; filename=OrderExport_#orderExportID#.iif" />
 		<cfcontent type="text/plain" file="#exportDirectory#OrderExport_#orderExportID#.iif" /> 
