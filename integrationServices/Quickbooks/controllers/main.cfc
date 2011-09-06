@@ -260,7 +260,7 @@
 			<!--- Add Shipping Line --->
 			<cfset var shipping_price = order.getOrderFulfillments()[1].getFulfillmentCharge() />
 			<cfset var shipping_amount = numberFormat(order.getOrderFulfillments()[1].getFulfillmentCharge()*-1,"0.00") />
-			<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Income Account#chr(9)#shipping#chr(9)#WEB SALES#chr(9)##shipping_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)##shipping_price##chr(9)#Sales Item#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Income Account#chr(9)#Shipping#chr(9)#WEB SALES#chr(9)##shipping_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)##shipping_price##chr(9)#Shipping#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			<cfset line_splid += 1 />
 			
 			<!--- Add Tax Line --->
