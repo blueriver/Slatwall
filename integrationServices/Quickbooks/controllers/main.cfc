@@ -275,6 +275,8 @@
 			<cffile output="ENDTRNS" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			
 			<!--- Set Order Remote ID --->
+			<cfset order.setRemoteID("#orderExportID#_#order.getOrderNumber()#") />
+			<cfset ormFlush() />
 		</cfloop>
 		
 		<!--- Make sure that there is at least one line in the file --->
