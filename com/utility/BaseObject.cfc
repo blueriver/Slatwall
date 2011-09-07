@@ -55,7 +55,7 @@ component displayname="Base Object" output="false" {
 	
 	// @hint the file system directory
 	public string function getSlatwallRootDirectory() {
-		return expandPath("#application.configBean.getContext()#/plugins/Slatwall");
+		return expandPath("/plugins/Slatwall");
 	}
 	
 	// @hint Private helper function to return the Slatwall RB Factory in any component
