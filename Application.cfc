@@ -69,6 +69,12 @@ component extends="org.fw1.framework" output="false" {
 		// This insures that the required session values are setup
 		setupMuraSessionRequirements();
 		
+		// This will allow for the Taffy API to reload on next request
+		if(structKeyExists(application, "_taffy")){
+			structDelete(application,"_taffy");	
+		}
+		
+		// This sets up the Plugin Config for later use
 		if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
 	  		include "plugin/config.cfm";
 		}

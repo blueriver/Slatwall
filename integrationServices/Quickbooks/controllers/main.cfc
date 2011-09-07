@@ -198,7 +198,7 @@
 		
 		<cfloop array="#exportOrders#" index="order">
 			<!--- Header --->
-			<cffile output="!TRNS#chr(9)#TRNSID#chr(9)#TRNSTYPE#chr(9)#DATE#chr(9)#ACCNT#chr(9)#NAME#chr(9)#CLASS#chr(9)#AMOUNT#chr(9)#DOCNUM#chr(9)#CLEAR#chr(9)#TOPRINT#chr(9)#NAMEISTAXABLE#chr(9)#ADDR1#chr(9)#ADDR2#chr(9)#ADDR3#chr(9)#ADDR4#chr(9)#ADDR5#chr(9)#DUEDATE#chr(9)#PAID#chr(9)#PAYMETH#chr(9)#SHIPVIA#chr(9)#SHIPDATE#chr(9)#SADDR1#chr(9)#SADDR2#chr(9)#SADDR3#chr(9)#SADDR4#chr(9)#SADDR5#chr(9)#TOSEND#chr(9)#ISAJE" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cffile output="!TRNS#chr(9)#TRNSID#chr(9)#TRNSTYPE#chr(9)#DATE#chr(9)#ACCNT#chr(9)#NAME#chr(9)#CLASS#chr(9)#AMOUNT#chr(9)#DOCNUM#chr(9)#CLEAR#chr(9)#PONUM#chr(9)#TOPRINT#chr(9)#NAMEISTAXABLE#chr(9)#ADDR1#chr(9)#ADDR2#chr(9)#ADDR3#chr(9)#ADDR4#chr(9)#ADDR5#chr(9)#DUEDATE#chr(9)#PAID#chr(9)#PAYMETH#chr(9)#SHIPVIA#chr(9)#SHIPDATE#chr(9)#SADDR1#chr(9)#SADDR2#chr(9)#SADDR3#chr(9)#SADDR4#chr(9)#SADDR5#chr(9)#TOSEND#chr(9)#ISAJE" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			<cffile output="!SPL#chr(9)#SPLID#chr(9)#TRNSTYPE#chr(9)#DATE#chr(9)#ACCNT#chr(9)#NAME#chr(9)#CLASS#chr(9)#AMOUNT#chr(9)#DOCNUM#chr(9)#CLEAR#chr(9)#QNTY#chr(9)#PRICE#chr(9)#INVITEM#chr(9)#PAYMETH#chr(9)#TAXABLE#chr(9)#VALADJ#chr(9)#EXTRA" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			<cffile output="!ENDTRNS" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			
@@ -241,7 +241,7 @@
 				<cfset var order_saddr5 = "" />
 			</cfif>
 						
-			<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Checking#chr(9)#7.62 Design Web Store#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##order_shipvia##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Checking#chr(9)#7.62 Design Web Store#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##order_docnum##chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##order_shipvia##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			
 			<!--- Lines --->
 			<cfset var line_splid = 1 />

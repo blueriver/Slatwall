@@ -66,10 +66,9 @@ Notes:
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
 	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
-	#view("common:toolbar/menu")#
 </head>
 <body>
-	
+	#view("common:toolbar/menu")#
 	<div id="header">
 		<h1>Mura CMS</h1>
 		<cfoutput>

@@ -77,6 +77,19 @@ Notes:
 										<span class="formError">#rc.account.getErrorBean().getError("primaryEmailAddress")#</span>
 									</cfif>
 								</dd>
+								<dt class="spdphonenumber">
+									<label for="account.phoneNumber" class="required">#$.slatwall.rbKey('entity.accountPhoneNumber.phoneNumber')#</label>
+								</dt>
+								<dd id="spdphonenumber">
+									<cfset phoneValue = "" />
+									<cfif not isNull(rc.account.getPrimaryPhoneNumber()) and not isNull(rc.account.getPrimaryPhoneNumber().getPhoneNumber())>
+										<cfset phoneValue = rc.account.getPrimaryPhoneNumber().getPhoneNumber() />	
+									</cfif>
+									<input type="text" name="account.phoneNumber" value="#phoneValue#" />
+									<cfif len(rc.account.getErrorBean().getError("primaryPhoneNumber"))>
+										<span class="formError">#rc.account.getErrorBean().getError("primaryPhoneNumber")#</span>
+									</cfif>
+								</dd>
 							</cfif>
 							<cfif rc.account.isGuestAccount()>
 								<dt class="spdguestcheckout">
