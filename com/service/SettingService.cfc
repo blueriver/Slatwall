@@ -129,7 +129,7 @@ component extends="BaseService" output="false" accessors="true"  {
 	public struct function getPermissionActions(boolean reload=false) {
 		if(!structKeyExists(variables, "permissionActions") || !structCount(variables.permissionActions) || arguments.reload) {
 			variables.permissionActions = structNew();
-			var dirLocation = ExpandPath("/plugins/Slatwall/admin/controllers");
+			var dirLocation = expandPath("/plugins/Slatwall/admin/controllers");
 			var dirList = directoryList(dirLocation,"false","name","*.cfc");
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				var controllerName = Replace(listGetAt(dirList[i],listLen(dirList[i],"\/"),"\/"),".cfc","");
@@ -393,8 +393,8 @@ component extends="BaseService" output="false" accessors="true"  {
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			getService("logService").logMessage("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
 			
-			var baseSlatwallPath = getDirectoryFromPath(expandPath('#application.configBean.getContext()#/')) & 'plugins/Slatwall/frontend/views/'; 
-			var baseSitePath = getDirectoryFromPath(expandPath('#application.configBean.getContext()#/')) & assignedSites["siteID"][i] & '/includes/display_objects/custom/slatwall/';
+			var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
+			var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#assignedSites["siteID"][i]#/includes/display_objects/custom/slatwall/"));
 			
 			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}

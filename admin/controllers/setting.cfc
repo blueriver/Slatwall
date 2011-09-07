@@ -395,8 +395,9 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Frontend Views
 	public void function updateFrontendViews(required struct rc) {
-		var baseSlatwallPath = "#expandPath("#application.configBean.getContext()#/")#plugins/Slatwall/frontend/views/"; 
-		var baseSitePath = "#expandPath("#application.configBean.getContext()#/")##rc.$.event('siteid')#/includes/display_objects/custom/slatwall/";
+		
+		var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
+		var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#rc.$.event('siteid')#/includes/display_objects/custom/slatwall/"));
 		
 		getUtilityFileService().duplicateDirectory(baseSlatwallPath,baseSitePath,true,true,".svn");
 		getFW().redirect(action="admin:main");
