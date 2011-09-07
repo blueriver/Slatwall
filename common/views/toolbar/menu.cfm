@@ -154,7 +154,10 @@ Notes:
 								<li class="title">Tools</li>
 								<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detaildbtools" type="list">
-								<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true">Reload</a></li>
+								<cfif $.currentUser().getS2()>
+									<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/api/index.cfm?dashboard">REST API Dashboard</a></li>
+									<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true">Reload</a></li>
+								</cfif>
 							</ul>
 						</div>
 						<div class="oneColumn">
