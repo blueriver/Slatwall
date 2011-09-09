@@ -224,7 +224,6 @@
 			
 			<cfset var order_duedate = dateFormat(order.getOrderCloseDateTime(), "MM/DD/YYYY") />
 			<cfset var order_paymeth = order.getOrderPayments()[1].getCreditCardType() />
-			<cfset var order_shipvia = order.getOrderFulfillments()[1].getShippingMethod().getShippingMethodName() />
 			<cfset var order_shipdate = dateFormat(order.getOrderCloseDateTime(), "MM/DD/YYYY") />
 			
 			<cfif len(order.getOrderFulfillments()[1].getShippingAddress().getStreet2Address())>
@@ -241,7 +240,7 @@
 				<cfset var order_saddr5 = "" />
 			</cfif>
 						
-			<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Checking#chr(9)#7.62 Design Web Store#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##order_docnum##chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##order_shipvia##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+			<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Undeposited Funds#chr(9)#7.62 Design Web Sales V2#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##order_docnum##chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			
 			<!--- Lines --->
 			<cfset var line_splid = 1 />
@@ -266,9 +265,9 @@
 			<!--- Add Tax Line --->
 			<cfif order.getOrderFulfillments()[1].getShippingAddress().getCountryCode() eq "US" and order.getOrderFulfillments()[1].getShippingAddress().getStateCode() eq "CA">
 				<cfset var order_taxamount = numberFormat(order.getTaxTotal()*-1,"0.00") />
-				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Sales Tax Payable#chr(9)#California Sales Tax#chr(9)#WEB SALES#chr(9)##order_taxamount##chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)#7.75%#chr(9)#Sales Tax#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#AUTOSTAX" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)##chr(9)#California Sales Tax#chr(9)#WEB SALES#chr(9)##order_taxamount##chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)#7.75%#chr(9)#Sales Tax#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#AUTOSTAX" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			<cfelse>
-				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Sales Tax Payable#chr(9)#Out of State#chr(9)#WEB SALES#chr(9)#0#chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)#0.0%#chr(9)#Sales Tax#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#AUTOSTAX" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+				<cffile output="SPL#chr(9)##line_splid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)##chr(9)#Out of State#chr(9)#WEB SALES#chr(9)#0#chr(9)##order_docnum##chr(9)#N#chr(9)##chr(9)#0.0%#chr(9)#Sales Tax#chr(9)##order_paymeth##chr(9)#N#chr(9)#N#chr(9)#AUTOSTAX" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 			</cfif>
 			
 			<!--- End Trasaction --->
