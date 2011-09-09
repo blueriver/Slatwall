@@ -13,6 +13,7 @@
 	<bean id="logDAO" class="Slatwall.com.dao.LogDAO" />
 	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
 	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
+	<bean id="reportDAO" class="Slatwall.com.dao.ReportDAO" />
 	<bean id="sessionDAO" class="Slatwall.com.dao.SessionDAO" />
 	<bean id="orderDAO" class="Slatwall.com.dao.OrderDAO" />
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
@@ -96,17 +97,17 @@
 		<property name="skuService"><ref bean="SkuService" /></property>
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>
-		<!-- Injected From Mua -->
+		<!-- Injected From Mura -->
 		<property name="categoryManager"><ref bean="CategoryManager" /></property>
 		<property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="FeedManager" /></property>
     </bean>
-
-	<bean id="promotionService" class="Slatwall.com.service.PromotionService">
+	<bean id="promotionService" parent="parentService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>
-		<property name="validationService"><ref bean="validationService" /></property>
 	</bean>
-	
+	<bean id="reportService" parent="parentService" class="Slatwall.com.service.ReportService">
+        <property name="DAO"><ref bean="ReportDAO" /></property>
+	</bean>
     <bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="optionService"><ref bean="optionService" /></property> 
