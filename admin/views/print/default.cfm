@@ -47,7 +47,11 @@ Notes:
 		<title>Print Redirect</title>
 		<script type="text/javascript">
 			window.open('#buildURL(action=rc.printAction, queryString=rc.printQueryString)#', '_blank');
-			window.location = '#buildURL(action=rc.returnAction, queryString=rc.returnQueryString)#';
+			setTimeout('redirectME()', 100);
+			
+			function redirectME() {
+				window.location = '#buildURL(action=rc.returnAction, queryString=rc.returnQueryString)#';
+			} 
 		</script>
 	</head>
 	<body>
