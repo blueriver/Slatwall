@@ -195,8 +195,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			// call service to process fulfillment. Returns an orderDelivery
 			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
 			if(!orderDelivery.hasErrors()) {
-				rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
-				getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
+				
+				getFW().redirect(action="admin:print", queryString="returnAction=admin:order.list&printAction=packingSlip&orderDeliveryShippingID=#orderDelivery.getOrderDeliveryID()#");
+				
+				// rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
+				// getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
 			} else {
 				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
 				rc.message = orderDelivery.getErrorBean().getError("orderDeliveryItems");

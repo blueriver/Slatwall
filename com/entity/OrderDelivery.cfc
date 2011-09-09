@@ -64,6 +64,14 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	   }    
 	   return Super.init();
 	}
+	
+	public any function getTotalQuanityDelivered() {
+		var totalDelivered = 0;
+		for(var i=1; i<=arrayLen(getOrderDeliveryItems()); i++) {
+			totalDelivered += getOrderDeliveryItems()[i].getQuantityDelivered();
+		}
+		return totalDelivered;
+	}
    
     /******* Association management methods for bidirectional relationships **************/
 	
