@@ -36,26 +36,30 @@
 Notes:
 
 --->
-<cfparam name="rc.returnAction" />
-<cfparam name="rc.returnQueryString" />
-<cfparam name="rc.printAction" />
-<cfparam name="rc.printQueryString" />
+<cfparam name="rc.orderReport" type="any">
 
 <cfoutput>
-<html>
-	<head>
-		<title>Print Redirect</title>
-		<script type="text/javascript">
-			window.open('#buildURL(action=rc.printAction, queryString=rc.printQueryString)#', '_blank');
-			setTimeout('redirectME()', 100);
-			
-			function redirectME() {
-				window.location = '#buildURL(action=rc.returnAction, queryString=rc.returnQueryString)#';
-			} 
-		</script>
-	</head>
-	<body>
-		<!-- No Content -->
-	</body>
-</html>
+	<div class="svoadminreportorder">
+		<cfchart xaxistitle="Day" yaxistitle="Dollar" chartwidth="800" chartheight="400" format="flash">
+			<cfchartseries type="line" itemcolumn="#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#">
+				<cfchartdata item="#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#" value="#rc.orderReport.SubtotalBeforeDiscounts#" />
+			</cfchartseries>
+		</cfchart>
+		<table class="stripe">
+			<tr>
+				<th>Day</th>
+				<th>Subtotal Before Discounts</th>
+				<th>Discounts</th>
+				<th>Tax</th>
+			</tr>
+			<cfloop query="rc.orderReport">
+				<tr>
+					<td>#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#</td>
+					<td>#dollarFormat(rc.orderReport.SubtotalBeforeDiscounts)#</td>
+					<td>#dollarFormat(0)#</td>
+					<td>#dollarFormat(rc.orderReport.TotalTax)#</td>
+				</tr>
+			</cfloop>
+		</table>
+	</div>
 </cfoutput>

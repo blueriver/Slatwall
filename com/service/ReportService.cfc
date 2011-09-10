@@ -1,18 +1,18 @@
-<!---
-
+/*
+ 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
-
+ 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
+ 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+ 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
@@ -32,30 +32,14 @@
     this exception to your version of the library, but you are not
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
-
+ 
 Notes:
-
---->
-<cfparam name="rc.returnAction" />
-<cfparam name="rc.returnQueryString" />
-<cfparam name="rc.printAction" />
-<cfparam name="rc.printQueryString" />
-
-<cfoutput>
-<html>
-	<head>
-		<title>Print Redirect</title>
-		<script type="text/javascript">
-			window.open('#buildURL(action=rc.printAction, queryString=rc.printQueryString)#', '_blank');
-			setTimeout('redirectME()', 100);
-			
-			function redirectME() {
-				window.location = '#buildURL(action=rc.returnAction, queryString=rc.returnQueryString)#';
-			} 
-		</script>
-	</head>
-	<body>
-		<!-- No Content -->
-	</body>
-</html>
-</cfoutput>
+ 
+*/
+component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+	
+	public query function getOrderReport() {
+		return getDAO().getOrderReport();
+	}
+	
+}

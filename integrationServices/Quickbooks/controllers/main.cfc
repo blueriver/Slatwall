@@ -32,7 +32,7 @@
 			
 			<cfif arrayLen(lineArray) gt 1
 				and lineArray[1] eq "INVITEM"
-				and (listLen(lineArray[2], ":") eq 4 OR ( listLen(lineArray[2], ":") eq 3 and listGetAt(lineArray[2], 2, ":") neq "ALL OVER PRINTS" and listGetAt(lineArray[2], 2, ":") neq "MEN'S PREMIUM T'S"))
+				and (listLen(lineArray[2], ":") eq 4 OR ( listLen(lineArray[2], ":") eq 3 and listGetAt(lineArray[2], 2, ":") neq "ALL OVER PRINTS" and listGetAt(lineArray[2], 2, ":") neq "MEN'S PREMIUM T'S" and listGetAt(lineArray[2], 2, ":") neq "MEGA PACK SPECIAL"))
 				and (listGetAt(lineArray[2], 1, ":") eq "WEBSTORE" or listGetAt(lineArray[2], 1, ":") eq "WEB STORE")>
 				
 				<cfif listLen(lineArray[2], ":") eq 4>

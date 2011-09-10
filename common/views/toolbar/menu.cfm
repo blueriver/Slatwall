@@ -49,6 +49,7 @@ Notes:
 					<cf_SlatwallActionCaller action="admin:order" type="list">
 					<cf_SlatwallActionCaller action="admin:account" type="list">
 					<cf_SlatwallActionCaller action="admin:promotion" type="list">
+					<cf_SlatwallActionCaller action="admin:report" type="list">
 					<cf_SlatwallActionCaller action="admin:setting" type="list">
 					<cf_SlatwallActionCaller action="admin:help" type="list">
 				</ul>
@@ -132,6 +133,15 @@ Notes:
 								<li class="title">Promotions</li>
 								<cf_SlatwallActionCaller action="admin:promotion.create" type="list">
 								<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
+							</ul>
+						</div>
+					</div>
+					<div class="subMenu adminreport">
+						<h3>#$.slatwall.rbkey('admin.report')#</h3>
+						<div class="oneColumn">
+							<ul>
+								<li class="title">General Reports</li>
+								<cf_SlatwallActionCaller action="admin:report.order" type="list">
 							</ul>
 						</div>
 					</div>

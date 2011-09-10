@@ -56,7 +56,7 @@ Notes:
 			th		{border-bottom:2px solid ##cccccc;}
 			td		{border-bottom:1px solid ##cccccc;}
 			
-			dl {margin:0px;}
+			dl {margin:0px; with:230px;}
 			dt {margin:0px; clear:both; float:left; width:120px; padding:4px; font-weight:bold; padding-top:4px; border:1px solid ##cccccc;}
 			dd {margin:0px; float:left; width:100px; padding:4px; border:1px solid ##cccccc;}
 			

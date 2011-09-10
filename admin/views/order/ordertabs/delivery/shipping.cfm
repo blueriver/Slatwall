@@ -39,21 +39,21 @@ Notes:
 
 <cfoutput>
 	<div class="orderDelivery">
-	<h4>#$.Slatwall.rbKey("entity.orderDelivery")# #local.deliveryNumber#</h4>
-	<cfif not isNull(local.orderDelivery.getShippingAddress())>
-	<div class="shippingAddress">
-		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
-		<cf_SlatwallAddressDisplay address="#local.orderDelivery.getShippingAddress()#" edit="false" />
-	</div>
-	</cfif>
-	<div class="shippingMethod">
-		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
-		#local.orderDelivery.getShippingMethod().getShippingMethodName()#<br>
-		(#local.orderDelivery.getShippingMethod().getShippingProviderMethodName()#)<br>
-		#$.slatwall.rbKey("entity.orderDeliveryShipping.trackingNumber")#: #local.orderDelivery.getTrackingNumber()#
-	</div>
-	<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryOpenDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryOpenDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryOpenDateTime())#</p>
-	<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryCloseDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryCloseDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryCloseDateTime())#</p>
+		<h4>#$.Slatwall.rbKey("entity.orderDelivery")# #local.deliveryNumber#</h4>
+		<cfif not isNull(local.orderDelivery.getShippingAddress())>
+		<div class="shippingAddress">
+			<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
+			<cf_SlatwallAddressDisplay address="#local.orderDelivery.getShippingAddress()#" edit="false" />
+		</div>
+		</cfif>
+		<div class="shippingMethod">
+			<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
+			#local.orderDelivery.getShippingMethod().getShippingMethodName()#<br>
+			(#local.orderDelivery.getShippingMethod().getShippingProviderMethodName()#)<br>
+			#$.slatwall.rbKey("entity.orderDeliveryShipping.trackingNumber")#: #local.orderDelivery.getTrackingNumber()#
+		</div>
+		<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryOpenDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryOpenDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryOpenDateTime())#</p>
+		<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryCloseDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryCloseDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryCloseDateTime())#</p>
 		<table class="stripe">
 			<tr>
 				<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
@@ -73,5 +73,6 @@ Notes:
 				</tr>
 			</cfloop>
 		</table>
+		<a href="#buildURL(action="admin:print", queryString="returnAction=admin:order.list&printAction=packingSlip&orderDeliveryShippingID=#local.orderDelivery.getOrderDeliveryID()#")#" title="Reprint Packing Slip" class="button">Reprint Packing Slip</a>
 	</div>
 </cfoutput>

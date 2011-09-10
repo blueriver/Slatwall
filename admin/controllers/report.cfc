@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,27 +35,13 @@
 
 Notes:
 
---->
-<cfparam name="rc.returnAction" />
-<cfparam name="rc.returnQueryString" />
-<cfparam name="rc.printAction" />
-<cfparam name="rc.printQueryString" />
+*/
+component extends="BaseController" persistent="false" accessors="true" output="false" {
 
-<cfoutput>
-<html>
-	<head>
-		<title>Print Redirect</title>
-		<script type="text/javascript">
-			window.open('#buildURL(action=rc.printAction, queryString=rc.printQueryString)#', '_blank');
-			setTimeout('redirectME()', 100);
-			
-			function redirectME() {
-				window.location = '#buildURL(action=rc.returnAction, queryString=rc.returnQueryString)#';
-			} 
-		</script>
-	</head>
-	<body>
-		<!-- No Content -->
-	</body>
-</html>
-</cfoutput>
+	property name="reportService";
+
+	public void function order(required struct rc) {
+		rc.orderReport = getReportService().getOrderReport();
+	}
+	
+}
