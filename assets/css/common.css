@@ -280,6 +280,9 @@ div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminattribute {
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminpromotion {
 	background-image:url(../images/grayIcons32/dollar.png) ;
 }
+div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminreport {
+	background-image:url(../images/grayIcons32/chart.png) ;
+}
 div.svocommontoolbarmenu li#mainMenu ul.menu li a.adminhelp {
 	background-image:url(../images/grayIcons32/help.png) ;
 }

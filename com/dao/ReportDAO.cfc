@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,11 +35,34 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
+--->
+<cfcomponent extends="BaseDAO">
 	
-	public array function getOrderReport() {
-		return ormExecuteQuery(" from SlatwallOrder so");
-	}
+	<cffunction name="getOrderReport" returntype="Query" access="public">
+		<cfset var orderReport = "" />
 		
-}
+		<cfquery name="orderReport">
+			SELECT
+				DATEPART(DD, SlatwallOrder.orderCloseDateTime) as 'Day',
+				DATEPART(MM, SlatwallOrder.orderCloseDateTime) as 'Month',
+				DATEPART(YY, SlatwallOrder.orderCloseDateTime) as 'Year',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TotalTax'
+			FROM
+				SlatwallOrder
+			  INNER JOIN
+			  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
+			  INNER JOIN
+			  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
+			WHERE
+				SlatwallOrder.orderCloseDateTime is not null
+			GROUP BY
+				DATEPART(DD, SlatwallOrder.orderCloseDateTime),
+				DATEPART(MM, SlatwallOrder.orderCloseDateTime),
+				DATEPART(YY, SlatwallOrder.orderCloseDateTime)
+		</cfquery>
+		
+		<cfreturn orderReport />
+	</cffunction>
+		
+</cfcomponent>

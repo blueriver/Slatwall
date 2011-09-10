@@ -38,7 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	public array function getOrderReport() {
+	public query function getOrderReport() {
 		return getDAO().getOrderReport();
 	}
 	
