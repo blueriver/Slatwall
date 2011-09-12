@@ -90,5 +90,6 @@ Notes:
 				});
 			});
 		</script>
+		#view("frontend:cart/promotioncode")#
 	</div>
 </cfoutput>

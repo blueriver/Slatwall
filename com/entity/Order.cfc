@@ -57,10 +57,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID" cascade="save-update";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillments)) {
@@ -74,6 +74,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		if(isNull(variables.orderPayments)) {
 			variables.orderPayments = [];
+		}
+		if(isNull(variables.promotionCodes)) {
+			variables.promotionCodes = [];
 		}
 		
 		// Set the default order status type as not placed
