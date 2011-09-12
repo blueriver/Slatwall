@@ -381,7 +381,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		};
 	
 		savecontent variable="emailBody" {
-			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
+			include "#application.configBean.getContext()#/#request.slatwall.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
 		}
 		
 		if(len(trim(setting('order_orderPlacedEmailCC')))) {

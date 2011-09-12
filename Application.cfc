@@ -146,7 +146,7 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupRequest() {
-		getBeanFactory().getBean("logService").logMessage(message="Slatwall Lifecycle Started: #request.context.slatAction#");
+		getBeanFactory().getBean("logService").logMessage(message="Slatwall Lifecycle Started: #request.slatwall.slatAction#");
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
@@ -178,16 +178,16 @@ component extends="org.fw1.framework" output="false" {
 		}
 		
 		// Look for mura Scope in the request context.  If it doens't exist add it.
-		if (!structKeyExists(request.context,"$")){
+		if (!structKeyExists(request.slatwall,"$")){
 			if (!structKeyExists(request, "muraScope")) {
 				request.muraScope = getBeanFactory().getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
 			}
-			request.context.$ = request.muraScope;
+			request.slatwall.$ = request.muraScope;
 		}
 		
 		// Make sure that the mura Scope has a siteid.  If it doesn't then use the session siteid
-		if(request.context.$.event('siteid') == "") {
-			request.context.$.event('siteid', session.siteid);
+		if(request.slatwall.$.event('siteid') == "") {
+			request.slatwall.$.event('siteid', session.siteid);
 		}		
 		
 		// Setup slatwall scope in request cache If it doesn't already exist
@@ -197,17 +197,17 @@ component extends="org.fw1.framework" output="false" {
 		
 		// Inject slatwall scope into the mura scope
 		if( !structKeyExists(request, "custommurascopekeys") || !structKeyExists(request.custommurascopekeys, "slatwall") ) {
-			request.context.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
+			request.slatwall.$.setCustomMuraScopeKey("slatwall", getBeanFactory().getBean("requestCacheService").getValue(key="slatwallScope"));
 		}
 		
 		// Add a reference to the mura scope to the request cache service
-		getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.context.$);
+		getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.slatwall.$);
 		
 		// Confirm Session Setup
 		getBeanFactory().getBean("SessionService").confirmSession();
 		
 		// Setup structured Data
-		request.context.structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
+		request.slatwall.structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.slatwall);
 		
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {
@@ -219,7 +219,7 @@ component extends="org.fw1.framework" output="false" {
 	
 	public void function setupView() {
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend,common", getSubsystem(request.context.slatAction))) {
+		if( !listFind("admin,frontend,common", getSubsystem(request.slatwall.slatAction))) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
 			getAssetWire().addViewToAssets("/Slatwall/admin/views/main/default.cfm");
 		}
@@ -243,9 +243,9 @@ component extends="org.fw1.framework" output="false" {
 		if(getSubsystem(arguments.action) != "admin") {
 			hasAccess = true;
 		} else {
-			if(request.context.$.currentUser().getS2()) {
+			if(request.slatwall.$.currentUser().getS2()) {
 				hasAccess = true;
-			} else if (listLen( request.context.$.currentUser().getMemberships() ) >= 1) {
+			} else if (listLen( request.slatwall.$.currentUser().getMemberships() ) >= 1) {
 				var rolesWithAccess = "";
 				if(find("save", permissionName)) {
 					rolesWithAccess = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("settingService").getPermissionValue(permissionName=replace(permissionName, "save", "edit")); 
@@ -255,7 +255,7 @@ component extends="org.fw1.framework" output="false" {
 				}
 				
 				for(var i=1; i<= listLen(rolesWithAccess); i++) {
-					if( find( listGetAt(rolesWithAccess, i), request.context.$.currentUser().getMemberships() ) ) {
+					if( find( listGetAt(rolesWithAccess, i), request.slatwall.$.currentUser().getMemberships() ) ) {
 						hasAccess=true;
 						break;
 					}
@@ -313,14 +313,14 @@ component extends="org.fw1.framework" output="false" {
 			ormFlush();
 			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
 		}
-		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
+		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.slatwall.slatAction#");
 	}
 	
 	// This is used to setup the frontend path to pull from the siteid directory
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
-			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
-			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
+			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.slatwall.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
+			var siteView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.slatwall.$.siteConfig('assetPath')#/includes/display_objects/custom/slatwall/");
 			
 			if(fileExists(expandPath(themeView))) {
 				arguments.fullPath = themeView;	

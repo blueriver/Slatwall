@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,17 +35,18 @@
 
 Notes:
 
-*/
-<cfset variables.framework=structNew()>
-<cfset variables.framework.applicationKey="Slatwall">
-<cfset variables.framework.base="/Slatwall">
-<cfset variables.framework.action="slatAction">
-<cfset variables.framework.error="common:main.error">
-<cfset variables.framework.home="admin:main.default">
-<cfset variables.framework.defaultSection="main">
-<cfset variables.framework.defaultItem="default">
-<cfset variables.framework.usingsubsystems=true>
-<cfset variables.framework.defaultSubsystem = "admin">
-<cfset variables.framework.subsystemdelimiter=":">
-<cfset variables.framework.generateSES = false>
-<cfset variables.framework.SESOmitIndex = true>
+--->
+<cfset variables.framework=structNew() />
+<cfset variables.framework.applicationKey="Slatwall" />
+<cfset variables.framework.base="/Slatwall" />
+<cfset variables.framework.action="slatAction" />
+<cfset variables.framework.error="common:main.error" />
+<cfset variables.framework.home="admin:main.default" />
+<cfset variables.framework.defaultSection="main" />
+<cfset variables.framework.defaultItem="default" />
+<cfset variables.framework.usingsubsystems=true />
+<cfset variables.framework.defaultSubsystem = "admin" />
+<cfset variables.framework.subsystemdelimiter=":" />
+<cfset variables.framework.generateSES = false />
+<cfset variables.framework.SESOmitIndex = true />
+<cfset variables.framework.requestContextKey = "Slatwall" />
