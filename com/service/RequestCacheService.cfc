@@ -49,14 +49,14 @@ component output="false" {
 	public void function setValue(required string key, required any value) {
 		verifyInitiation();
 		logCacheAction(method="setValue", key=arguments.key);
-		request.slatwall[arguments.key] = arguments.value;
+		request.slatwallCache[ arguments.key ] = arguments.value;
 	}
 	
 	public any function getValue(required string key) {
 		verifyInitiation();
 		logCacheAction(method="getValue", key=arguments.key);
-		if(structKeyExists(request.slatwall, arguments.key)) {
-			return request.slatwall[arguments.key];
+		if(structKeyExists(request.slatwallCache, arguments.key)) {
+			return request.slatwallCache[ arguments.key ];
 		} else {
 			throw("The value that you are requesting is not setup in the request cache");
 		}
@@ -64,7 +64,7 @@ component output="false" {
 	
 	public boolean function keyExists(required string key) {
 		verifyInitiation();
-		if( structKeyExists(request.slatwall, arguments.key) ) {
+		if( structKeyExists(request.slatwallCache, arguments.key) ) {
 			return true;
 		} else {
 			return false;
@@ -76,8 +76,8 @@ component output="false" {
 		logCacheAction(method="enableRequestCache", key=arguments.keys);
 		if(structKeyExists(arguments, "keys")) {
 			for(var i=1; i<=listLen(arguments.keys); i++) {
-				if( structKeyExists(request.slatwall, listGetAt(arguments.keys, i)) && listGetAt(arguments.keys, i) != "cacheInitiated" && listGetAt(arguments.keys, i) != "cacheLog") {
-					structDelete(request.slatwall, listGetAt(arguments.keys, i));
+				if( structKeyExists(request.slatwallCache, listGetAt(arguments.keys, i)) && listGetAt(arguments.keys, i) != "cacheInitiated" && listGetAt(arguments.keys, i) != "cacheLog") {
+					structDelete(request.slatwallCache, listGetAt(arguments.keys, i));
 				}
 			}
 		} else {
@@ -92,7 +92,7 @@ component output="false" {
 	}
 	
 	private boolean function isInitiated() {
-		if( !structKeyExists(request,"slatwall") || !structKeyExists(request.slatwall, "cacheInitiated") || !request.slatwall.cacheInitiated ) {
+		if( !structKeyExists(request,"slatwallCache") || !structKeyExists(request.slatwallCache, "cacheInitiated") || !request.slatwallCache.cacheInitiated ) {
 			return false;
 		} else {
 			return true;
@@ -100,14 +100,14 @@ component output="false" {
 	}
 	
 	private void function initiate() {
-		request.slatwall = {};
-		request.slatwall.cacheInitiated = true;
-		request.slatwall.cacheLog = arrayNew(1);
+		request.slatwallCache = {};
+		request.slatwallCache.cacheInitiated = true;
+		request.slatwallCache.cacheLog = arrayNew(1);
 		logCacheAction(method="initiate");
 	}
 	
 	private void function logCacheAction(required string method, string key="") {
-		arrayAppend(request.slatwall.cacheLog, "#arguments.method#::#arguments.key#");
+		arrayAppend(request.slatwallCache.cacheLog, "#arguments.method#::#arguments.key#");
 	}
 	
 }
