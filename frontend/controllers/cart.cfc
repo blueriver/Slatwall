@@ -95,8 +95,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function addPromotionCode(required struct rc) {
 		param name="rc.promotionCode" default="";
+		param name="rc.promotionCodeOK" default="true";
 		
+		rc.promotionCodeOK = getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=rc.promotionCode);
 		
+		getFW().setView("frontend:cart.detail");
 	}
 	
 }

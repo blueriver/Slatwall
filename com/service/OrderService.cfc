@@ -717,5 +717,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// Re-Calculate tax now that the new promotions have been applied
 		getTaxService().updateOrderAmountsWithTaxes(arguments.order);
 	}
+	
+	public boolean function addPromotionCode(required any order, required any promotionCode) {
+		var promoCode = getPromotionService().getPromotionCodeByPromotionCode(arguments.promotionCode, true);
+			
+		if(!promoCode.isNew()) {
+			arguments.order.addPromotionCode(promoCode);
+			return true;
+		}
+		
+		return false;
+	}
+	
 
 }

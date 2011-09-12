@@ -275,10 +275,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			codesOK = true;
 		} else {
 			// Loop over each promotion code in the order
-			for(var i=1; i<=arrayLen(arguments.promotion.getPromotionCodes()); i++) {
-				
+			for(var i=1; i<=arrayLen(arguments.order.getPromotionCodes()); i++) {
+				// Check each promotion code available and see if there is a code that applies
+				for(var p=1; p<=arrayLen(arguments.promotion.getPromotionCodes()); p++) {
+					if(arguments.promotion.getPromotionCodes()[p].getPromotionCode() == arguments.order.getPromotionCodes()[i].getPromotionCode()) {
+						codesOK = true;
+					}
+				}
 			}
-			// TODO: Check order for a required promotion code
 		}
 		
 		// TODO: Verify Promo Account Requirements, for now this is just set to true
