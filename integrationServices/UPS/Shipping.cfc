@@ -49,6 +49,8 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 	property name="shipFromStateCode" displayname="Ship From State Code" type="string";
 	property name="shipFromPostalCode" displayname="Ship From Postal Code" type="string";
 	property name="shipFromCountryCode" displayname="Ship From Country Code" type="string";
+	property name="pickupTypeCode" displayname="Pickup Type Code (advanced optional)" type="string";
+	property name="customerClassificationCode" displayname="Pickup Type Code (advanced optional)" type="string";
 	
 	variables.testRateURL = "https://wwwcie.ups.com/ups.app/xml/Rate";
 	variables.liveRateURL = "https://www.ups.com/ups.app/xml/Rate";
@@ -81,6 +83,11 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 			59="UPS 2nd Day Air A.M.",
 			65="UPS Saver"
 		};
+		
+		// Set the defaults for these codes
+		setPickupTypeCode(03);
+		setCustomerClassificationCode(04);
+		
 		return this;
 	}
 	
