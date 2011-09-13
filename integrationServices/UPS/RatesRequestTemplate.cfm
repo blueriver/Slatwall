@@ -48,10 +48,10 @@
 			<RequestOption>Shop</RequestOption>
 		</Request>
 		<PickupType>
-			<Code>03</Code>
+			<Code>#variables.pickupTypeCode#</Code>
 		</PickupType>
 		<CustomerClassification>
-			<Code>04</Code>
+			<Code>#variables.customerClassificationCode#</Code>
 		</CustomerClassification>
 		<Shipment>
 			<Shipper>
