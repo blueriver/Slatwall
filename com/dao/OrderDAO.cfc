@@ -58,7 +58,7 @@ component extends="BaseDAO" {
 				SlatwallOrderItem.quantity,
 				(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as extendedPrice,
 				SlatwallOrderDeliveryItem.quantityDelivered,
-				SlatwallOrderItem.taxAmount,
+				(SELECT sum(taxAmount) From SlatwallTaxApplied where SlatwallTaxApplied.orderItemID = SlatwallOrderItem.orderItemID) as taxAmount,
 				SlatwallOrderFulfillment.fulfillmentCharge,
 				SlatwallShippingMethod.shippingMethodName,
 				orderItemStatusType.type as status,
