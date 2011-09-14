@@ -103,5 +103,27 @@ component displayname="Base Object" output="false" {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
+	public any function getPropertyValueByIdentifier(required string propertyIdentifier) {
+		var value = javaCast("null", "");
+		var pa = listToArray(propertyIdentifier, "._");
+		
+		for(var i=1; i<=arrayLen(pa); i++) {
+			try {
+				if(isNull(value)) {
+					value = evaluate("get#pa[i]#()");
+				} else {
+					value = evaluate("value.get#pa[i]#()");
+				}	
+			} catch (any e) {
+				return "";
+			}
+		}
+		
+		if(isNull(value)) {
+			return "";
+		}
+		
+		return value;
+	}
 	
 }

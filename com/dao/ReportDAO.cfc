@@ -53,7 +53,7 @@ Notes:
 					SlatwallOrder
 				  INNER JOIN
 				  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
-				  INNER JOIN
+				  LEFT JOIN
 				  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
 				WHERE
 					SlatwallOrder.orderCloseDateTime is not null
@@ -74,7 +74,7 @@ Notes:
 					SlatwallOrder
 				  INNER JOIN
 				  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
-				  INNER JOIN
+				  LEFT JOIN
 				  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
 				WHERE
 					SlatwallOrder.orderCloseDateTime is not null
