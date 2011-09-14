@@ -718,17 +718,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		getTaxService().updateOrderAmountsWithTaxes(arguments.order);
 	}
 	
-	public boolean function addPromotionCode(required any order, required any promotionCode) {
-		var promoCode = getPromotionService().getPromotionCodeByPromotionCode(arguments.promotionCode, true);
-			
-		if(!promoCode.isNew()) {
-			arguments.order.addPromotionCode(promoCode);
-			getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
-			return true;
-		}
-		
-		return false;
+	public void function addPromotionCode(required any order, required any promotionCode) {
+		arguments.order.addPromotionCode(arguments.promotionCode);
+		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
-
+	public void function removePromotionCode(required any order, required any promotionCode) {
+		arguments.order.removePromotionCode(arguments.promotionCode);
+		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
+	}
+	
 }
