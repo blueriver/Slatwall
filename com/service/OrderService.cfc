@@ -723,6 +723,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 		if(!promoCode.isNew()) {
 			arguments.order.addPromotionCode(promoCode);
+			getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 			return true;
 		}
 		
