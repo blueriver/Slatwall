@@ -48,7 +48,7 @@ Notes:
 					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime) as 'Month',
 					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime) as 'Year',
 					SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
-					SUM(ISNULL(SlatwallTaxApplied.taxAmount,0)) as 'TotalTax'
+					SUM(SlatwallTaxApplied.taxAmount) as 'TotalTax'
 				FROM
 					SlatwallOrder
 				  INNER JOIN
@@ -69,7 +69,7 @@ Notes:
 					DATEPART(MM, SlatwallOrder.orderCloseDateTime) as 'Month',
 					DATEPART(YY, SlatwallOrder.orderCloseDateTime) as 'Year',
 					SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
-					SUM(ISNULL(SlatwallTaxApplied.taxAmount,0)) as 'TotalTax'
+					SUM(SlatwallTaxApplied.taxAmount) as 'TotalTax'
 				FROM
 					SlatwallOrder
 				  INNER JOIN

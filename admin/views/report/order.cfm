@@ -40,26 +40,34 @@ Notes:
 
 <cfoutput>
 	<div class="svoadminreportorder">
-		<cfchart xaxistitle="Day" yaxistitle="Dollar" chartwidth="800" chartheight="400" format="flash">
-			<cfchartseries type="line" itemcolumn="#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#">
-				<cfchartdata item="#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#" value="#rc.orderReport.SubtotalBeforeDiscounts#" />
-			</cfchartseries>
-		</cfchart>
 		<table class="stripe">
 			<tr>
 				<th>Day</th>
-				<th>Subtotal Before Discounts</th>
 				<th>Discounts</th>
 				<th>Tax</th>
+				<th>Subtotal Before Discounts</th>
 			</tr>
+			
+			<cfset subTotal = 0 />
+			<cfset taxTotal = 0 />
 			<cfloop query="rc.orderReport">
+				<cfset subTotal += rc.orderReport.SubtotalBeforeDiscounts />
+				<cfif isNumeric(rc.orderReport.TotalTax)>
+					<cfset taxTotal += rc.orderReport.TotalTax />
+				</cfif>
 				<tr>
 					<td>#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#</td>
-					<td>#dollarFormat(rc.orderReport.SubtotalBeforeDiscounts)#</td>
 					<td>#dollarFormat(0)#</td>
 					<td>#dollarFormat(rc.orderReport.TotalTax)#</td>
+					<td>#dollarFormat(rc.orderReport.SubtotalBeforeDiscounts)#</td>
 				</tr>
 			</cfloop>
+			<tr>
+				<td><strong>Totals</strong></td>
+				<td><strong>#dollarFormat(0)#</strong></td>
+				<td><strong>#dollarFormat(taxTotal)#</strong></td>
+				<td><strong>#dollarFormat(subTotal)#</strong></td>
+			</tr>
 		</table>
 	</div>
 </cfoutput>
