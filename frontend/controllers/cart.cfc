@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 	property name="orderService" type="any";
 	property name="productService" type="any";
+	property name="promotionService" type="any";
 	property name="skuService" type="any";
 	property name="utilityFormService" type="any";
 	
@@ -97,7 +98,23 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.promotionCode" default="";
 		param name="rc.promotionCodeOK" default="true";
 		
-		rc.promotionCodeOK = getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=rc.promotionCode);
+		var pc = getPromotionService().getPromotionCodeByPromotionCode(rc.promotionCode, true);
+		
+		if(!isNull(pc)) {
+			getOrderService().addPromotionCode(order=rc.$.slatwall.cart(), promotionCode=pc);
+		} else {
+			rc.promotionCodeOK = false;
+		}
+		
+		getFW().setView("frontend:cart.detail");
+	}
+	
+	public void function removePromotionCode(required struct rc) {
+		param name="rc.promotionCodeID" default="";
+		
+		var pc = getPromotionService().getPromotionCode(rc.promotionCodeID, true);
+		
+		getOrderService().removePromotionCode(order=rc.$.slatwall.cart(), promotionCode=pc);
 		
 		getFW().setView("frontend:cart.detail");
 	}

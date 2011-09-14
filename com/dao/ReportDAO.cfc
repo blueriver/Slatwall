@@ -41,26 +41,49 @@ Notes:
 	<cffunction name="getOrderReport" returntype="Query" access="public">
 		<cfset var orderReport = "" />
 		
-		<cfquery name="orderReport">
-			SELECT
-				DATEPART(DD, SlatwallOrder.orderCloseDateTime) as 'Day',
-				DATEPART(MM, SlatwallOrder.orderCloseDateTime) as 'Month',
-				DATEPART(YY, SlatwallOrder.orderCloseDateTime) as 'Year',
-				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
-				SUM(SlatwallTaxApplied.taxAmount) as 'TotalTax'
-			FROM
-				SlatwallOrder
-			  INNER JOIN
-			  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
-			  INNER JOIN
-			  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
-			WHERE
-				SlatwallOrder.orderCloseDateTime is not null
-			GROUP BY
-				DATEPART(DD, SlatwallOrder.orderCloseDateTime),
-				DATEPART(MM, SlatwallOrder.orderCloseDateTime),
-				DATEPART(YY, SlatwallOrder.orderCloseDateTime)
-		</cfquery>
+		<cfif application.configBean.getDBType() eq "mysql">
+			<cfquery name="orderReport">
+				SELECT
+					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime) as 'Day',
+					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime) as 'Month',
+					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime) as 'Year',
+					SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
+					SUM(ISNULL(SlatwallTaxApplied.taxAmount,0)) as 'TotalTax'
+				FROM
+					SlatwallOrder
+				  INNER JOIN
+				  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
+				  LEFT JOIN
+				  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
+				WHERE
+					SlatwallOrder.orderCloseDateTime is not null
+				GROUP BY
+					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime),
+					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime),
+					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime)
+			</cfquery>
+		<cfelse>
+			<cfquery name="orderReport">
+				SELECT
+					DATEPART(DD, SlatwallOrder.orderCloseDateTime) as 'Day',
+					DATEPART(MM, SlatwallOrder.orderCloseDateTime) as 'Month',
+					DATEPART(YY, SlatwallOrder.orderCloseDateTime) as 'Year',
+					SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
+					SUM(ISNULL(SlatwallTaxApplied.taxAmount,0)) as 'TotalTax'
+				FROM
+					SlatwallOrder
+				  INNER JOIN
+				  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
+				  LEFT JOIN
+				  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
+				WHERE
+					SlatwallOrder.orderCloseDateTime is not null
+				GROUP BY
+					DATEPART(DD, SlatwallOrder.orderCloseDateTime),
+					DATEPART(MM, SlatwallOrder.orderCloseDateTime),
+					DATEPART(YY, SlatwallOrder.orderCloseDateTime)
+			</cfquery>
+		</cfif>
 		
 		<cfreturn orderReport />
 	</cffunction>
