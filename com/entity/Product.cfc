@@ -219,7 +219,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public string function getTitle() {
-		return "#getBrandName()# #getProductName()#";
+		return getService("utilityService").replaceStringTemplate(template=setting('product_titleString'), object=this);
 	}
 	
 	public string function getProductURL() {

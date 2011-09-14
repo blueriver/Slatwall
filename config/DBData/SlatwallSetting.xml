@@ -17,6 +17,7 @@
 		<Record settingID="dbb3278fc40b735e096f76d3f6a4037a" settingName="product_imageHeightMedium" settingValue="300" />
 		<Record settingID="dbb32790a3d4fc2a1cec88be34c9dbc6" settingName="product_imageHeightLarge" settingValue="600" />
 		
+		<Record settingID="dbb327ae9d9464c25a229dce1b18a0e5" settingName="product_titleString" settingValue="${brand.brandName} ${productName}" />
 		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventoryFlag" settingValue="0" />
 		<Record settingID="dbb32795f0ad81a6996c60a8e05702a7" settingName="product_callToOrderFlag" settingValue="0" />
 		<Record settingID="dbb32796ef3280029afcc1def271b558" settingName="product_allowShippingFlag" settingValue="1" />
@@ -32,7 +33,7 @@
 		<Record settingID="dbb327a3e256e78458125906a2f8c05a" settingName="order_orderPlacedEmailFrom" settingValue="info@mySlatwallStore.com" />
 		<Record settingID="dbb327a4d656c212e50ddc136e8577cd" settingName="order_orderPlacedEmailCC" settingValue="" />
 		<Record settingID="dbb327a50c418cf3764398a164f677c1" settingName="order_orderPlacedEmailBCC" settingValue="" />
-		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="order_orderPlacedEmailSubject" settingValue="Thank you for your order" />
+		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="order_orderPlacedEmailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" />
 		
 		<Record settingID="dbb327a70153717c73ee75a97ad8e83b" settingName="advanced_logExceptionsToDatabaseFlag" settingValue="1" />
 		<Record settingID="dbb327a8b50ef28662b75a32d01ece1d" settingName="advanced_logDatabaseClearAfterDays" settingValue="30" />
@@ -47,7 +48,7 @@
 Below Are UUID's to use... delete after using
 
 	
-	dbb327ae9d9464c25a229dce1b18a0e5
+	
 	dbb327af9751c77495e36657075299c3
 	dbb327b0b5496521002aa35ab68ab120
 	dbb327b10d50e926dfe4052ecb129cdc
