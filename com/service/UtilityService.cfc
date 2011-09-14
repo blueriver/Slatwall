@@ -296,7 +296,27 @@ Notes:
 		}
 	}
 	
-	</cfscript>	
+	public string function replaceStringTemplate(required string template, required any object) {
+		var templateKeys = reMatchNoCase("\${[^}]+}",arguments.template);
+		var replacementArray = [];
+		var returnString = arguments.template;
+		
+		for(var i=1; i<=arrayLen(templateKeys); i++) {
+			var replaceDetails = {};
+			replaceDetails.key = templateKeys[i];
+			replaceDetails.value = arguments.object.getPropertyValueByIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""));
+			arrayAppend(replacementArray, replaceDetails);
+		}
+		
+		for(var i=1; arrayLen(replacementArray); i++) {
+			returnString = replace(returnString, replacementArray[i].key, replacementArray[i].value, "all");
+		}
+		
+		return returnString;
+	}
+	
+	</cfscript>
+		
 	
 	<cffunction name="downloadFile" access="public" returntype="void" output="false">
 		<cfargument name="fileName" type="string" required="true" />
@@ -307,5 +327,6 @@ Notes:
 		<cfheader name="Content-Disposition" value="inline; filename=#arguments.fileName#" />
 		<cfcontent type="#arguments.contentType#" file="#arguments.filePath#" deletefile="#arguments.deleteFile#" />
 	</cffunction>
+	
 	
 </cfcomponent>
