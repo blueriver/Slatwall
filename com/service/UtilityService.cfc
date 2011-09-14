@@ -308,7 +308,7 @@ Notes:
 			arrayAppend(replacementArray, replaceDetails);
 		}
 		
-		for(var i=1; arrayLen(replacementArray); i++) {
+		for(var i=1; i<=arrayLen(replacementArray); i++) {
 			returnString = replace(returnString, replacementArray[i].key, replacementArray[i].value, "all");
 		}
 		

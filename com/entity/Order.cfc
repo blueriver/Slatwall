@@ -180,6 +180,14 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 	}
 	
+	public any function getOrderNumber() {
+		if(isNull(variables.orderNumber)) {
+			variables.orderNumber = "";
+			confirmOrderNumberOpenDateCloseDate();
+		}
+		return variables.orderNumber;
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
@@ -305,7 +313,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
  	
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberOpenDateCloseDate() {
-		if((isNull(getOrderNumber()) || getOrderNumber() == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
+		if((isNull(variables.orderNumber) || variables.orderNumber == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 			var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
 			if( arrayIsDefined(maxOrderNumber,1) ){
 				setOrderNumber(maxOrderNumber[1] + 1);

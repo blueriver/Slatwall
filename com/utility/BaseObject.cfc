@@ -112,7 +112,7 @@ component displayname="Base Object" output="false" {
 				if(isNull(value)) {
 					value = evaluate("get#pa[i]#()");
 				} else {
-					value = evaluate("value.get#pa#()");
+					value = evaluate("value.get#pa[i]#()");
 				}	
 			} catch (any e) {
 				return "";

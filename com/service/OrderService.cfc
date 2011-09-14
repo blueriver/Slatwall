@@ -46,6 +46,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="taxService";
 	property name="utilityFormService";
 	property name="utilityTagService";
+	property name="utilityService";
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
@@ -377,7 +378,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var messageParams = {
 			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>',
 			from = setting('order_orderPlacedEmailFrom'),
-			subject = setting('order_orderPlacedEmailSubject')
+			subject = getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)
 		};
 	
 		savecontent variable="emailBody" {
