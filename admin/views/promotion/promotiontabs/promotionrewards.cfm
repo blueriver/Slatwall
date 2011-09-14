@@ -42,8 +42,8 @@ Notes:
 	<a class="button" id="addPromotionReward">#rc.$.Slatwall.rbKey("admin.promotion.edit.addPromotionReward")#</a>
 	<a class="button" id="remPromotionReward" style="display:none;">#rc.$.Slatwall.rbKey("admin.promotion.edit.removePromotionReward")#</a>
 </div>
-
 </cfif>
+
 	<table id="promotionRewardTable" class="stripe">
 		<thead>
 			<tr>
