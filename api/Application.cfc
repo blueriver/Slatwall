@@ -44,6 +44,7 @@ component extends="taffy.core.api" {
 	include "../../mappings.cfm";
 	
 	this.mappings["/taffy"] = getDirectoryFromPath(getCurrentTemplatePath()) & "taffy";
+	this.mappings["/resources"] = getDirectoryFromPath(getCurrentTemplatePath()) & "resources";
 	
 	//use this instead of onApplicationStart()
 	public void function applicationStartEvent(){
