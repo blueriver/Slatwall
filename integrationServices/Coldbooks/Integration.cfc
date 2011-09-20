@@ -43,10 +43,14 @@ component accessors="true" output="false" extends="Slatwall.integrationServices.
 	}
 	
 	public string function getIntegrationTypes() {
-		return "data";
+		return "custom";
 	}
-		
+	
 	public string function getDisplayName() {
-		return "Coldbooks for Quickbooks";
-	} 
+		return "Coldbooks For Quickbooks";
+	}
+	
+	public boolean function isFW1Subsystem() {
+		return false;
+	}
 }
