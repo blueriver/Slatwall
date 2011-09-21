@@ -720,7 +720,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public void function addPromotionCode(required any order, required any promotionCode) {
-		arguments.order.addPromotionCode(arguments.promotionCode);
+		if(!arguments.order.hasPromotionCode(arguments.promotionCode)) {
+			arguments.order.addPromotionCode(arguments.promotionCode);
+		}
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
