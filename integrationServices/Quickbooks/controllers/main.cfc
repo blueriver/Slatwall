@@ -218,17 +218,6 @@
 				</cfif>
 				<cfset var order_shipdate = dateFormat(order.getOrderCloseDateTime(), "MM/DD/YYYY") />
 				
-				<cfset var order_addr1 = "" />
-				<cfset var order_addr2 = "" />
-				<cfset var order_addr3 = "" />
-				<cfset var order_addr4 = "" />
-				<cfset var order_addr5 = "" />
-				<cfset var order_saddr1 = "" />
-				<cfset var order_saddr2 = "" />
-				<cfset var order_saddr3 = "" />
-				<cfset var order_saddr4 = "" />
-				<cfset var order_saddr5 = "" />
-				
 				<cfset var billingArray = arrayNew(1) />
 				<cfset var shippingArray = arrayNew(1) />
 				
@@ -268,19 +257,15 @@
 					<cfset arrayAppend(shippingArray, order.getOrderFulfillments()[1].getShippingAddress().getCountryCode()) />
 				</cfif>
 				
-				<cfset var billCount = 1 />
-				<cfloop array="#billingArray#" index="line">
-					<cfset evaluate("order_addr#billCount# = '#line#'") />
-					<cfset billCount += 1 />
+				<cfset var i = 1 />
+				<cfloop from="#arrayLen(billingArray) + 1#" to="5" index="i">
+					<cfset arrayAppend(billingArray, "") />
+				</cfloop>
+				<cfloop from="#arrayLen(shippingArray) + 1#" to="5" index="i">
+					<cfset arrayAppend(shippingArray, "") />
 				</cfloop>
 				
-				<cfset var shipCount = 1 />
-				<cfloop array="#shippingArray#" index="line">
-					<cfset evaluate("order_saddr#shipCount# = '#line#'") />
-					<cfset shipCount += 1 />
-				</cfloop>
-				
-				<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Undeposited Funds#chr(9)#7.62 Design Web Sales V2#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##order_docnum##chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
+				<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Undeposited Funds#chr(9)#7.62 Design Web Sales V2#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##order_docnum##chr(9)#N#chr(9)#Y#chr(9)##billingArray[1]##chr(9)##billingArray[2]##chr(9)##billingArray[3]##chr(9)##billingArray[4]##chr(9)##billingArray[5]##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##chr(9)##order_shipdate##chr(9)##shippingArray[1]##chr(9)##shippingArray[2]##chr(9)##shippingArray[3]##chr(9)##shippingArray[4]##chr(9)##shippingArray[5]##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
 				
 				<!--- Lines --->
 				<cfset var line_splid = 1 />
