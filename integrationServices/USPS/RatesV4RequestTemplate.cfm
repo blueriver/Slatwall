@@ -38,8 +38,9 @@
 --->
 <cfoutput>
 <RateV4Request USERID="#variables.userID#">
-	<package ID="1">
-		<service>ALL</service>
+	<Revision>2</Revision>
+	<Package ID="1">
+		<Service>ALL</Service>
 		<ZipOrigination>#variables.shipFromPostalCode#</ZipOrigination>
 		<ZipDestination>#arguments.requestBean.getShipToPostalCode()#</ZipDestination>
 		<cfif arguments.requestBean.getTotalWeight() gt 0><Pounds>#arguments.requestBean.getTotalWeight()#</Pounds><cfelse><Pounds>1</Pounds></cfif>
@@ -47,6 +48,6 @@
 		<Container/>
 		<Size>REGULAR</Size>
 		<Machinable>true</Machinable>
-	</package>
+	</Package>
 </RateV4Request>
 </cfoutput>
