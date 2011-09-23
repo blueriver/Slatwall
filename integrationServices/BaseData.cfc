@@ -42,4 +42,7 @@ component {
 		return this;
 	}
 	
+	public xml function getColdspringXML() {
+		return xmlNew();
+	}
 }

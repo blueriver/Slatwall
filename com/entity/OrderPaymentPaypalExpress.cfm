@@ -36,17 +36,18 @@
 Notes:
 
 */
-component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+component displayname="Order Payment Paypal Express" entityname="SlatwallOrderPaymentPaypalExpress" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="OrderPayment" discriminatorvalue="paypalExpress" {
 	
-	public any function init() {
-		return this;
-	}
+	// Persistent Properties
+	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	public string function getIntegrationTypes() {
-		return "data";
-	}
-		
-	public string function getDisplayName() {
-		return "Coldbooks for Quickbooks";
-	} 
+	/*
+	property name="nameOnCreditCard" validateRequired="true" ormType="string";
+	property name="creditCardNumberEncrypted" ormType="string";
+	property name="creditCardLastFour" ormType="string";
+	property name="creditCardType" ormType="string";
+	property name="expirationMonth" ormType="string";
+	property name="expirationYear" ormType="string";
+	*/
+	
 }

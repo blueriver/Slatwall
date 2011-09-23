@@ -100,6 +100,7 @@ component extends="org.fw1.framework" output="false" {
 		
 		// Get Coldspring Config
 		var serviceFactory = "";
+		var integrationService = "";
 		var rbFactory = "";
 		var xml = "";
 		var xmlPath = "";
@@ -111,18 +112,16 @@ component extends="org.fw1.framework" output="false" {
 		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
 		serviceFactory.loadBeansFromXmlObj( xml );
 		
-		// Run the base coldspring xml through the data integration to adjust for any overrides of DAO's
-		xml = serviceFactory.getBean("integrationService").injectDataIntegrationToColdspringXML(xml);
+		// Set mura as the parent Bean Factory
+		serviceFactory.setParent( application.serviceFactory );
 		
-		// Reload the beans with new xml from data integration
-		serviceFactory.loadBeansFromXmlObj( xml );
-		
-		// Set the parent of the factory to mura
-		serviceFactory.setParent(application.servicefactory);
+		// Set a data service coldspring as the child factory, with the Slatwall as it's parent
+		integrationService = serviceFactory.getBean("integrationService");
+		serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
 		
 		// Place the service factory into the required application scopes
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
-		setBeanFactory(getPluginConfig().getApplication().getValue( "serviceFactory" ));
+		setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
 		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));

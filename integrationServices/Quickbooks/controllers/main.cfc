@@ -165,7 +165,10 @@
 				
 				<!--- Update the product's details --->
 				<cfset product.setProductType(productType) />
-				<cfset product.setBrand(brand) />
+				<!---
+					Allows for the product Brand to be controlled in Slatwall 
+					<cfset product.setBrand(brand) />
+				--->
 				<cfset product.setProductCode(remoteProductID) />
 				<cfset product.setSortOrder(listLast(remoteProductID, "-")) />
 				
@@ -268,16 +271,45 @@
 					<cfset arrayAppend(shippingArray, order.getOrderFulfillments()[1].getShippingAddress().getCountryCode()) />
 				</cfif>
 				
-				<cfset var billCount = 1 />
-				<cfloop array="#billingArray#" index="line">
-					<cfset evaluate("order_addr#billCount# = '#line#'") />
-					<cfset billCount += 1 />
+				<cfset var i = 1 />
+				<cfloop from="1" to="#arrayLen(billingArray)#" index="i">
+					<cfswitch expression="#i#">
+						<cfcase value="1">
+							<cfset order_addr1 = billingArray[i] />
+						</cfcase>
+						<cfcase value="2">
+							<cfset order_addr2 = billingArray[i] />
+						</cfcase>
+						<cfcase value="3">
+							<cfset order_addr3 = billingArray[i] />
+						</cfcase>
+						<cfcase value="4">
+							<cfset order_addr4 = billingArray[i] />
+						</cfcase>
+						<cfcase value="5">
+							<cfset order_addr5 = billingArray[i] />
+						</cfcase>
+					</cfswitch>
 				</cfloop>
 				
-				<cfset var shipCount = 1 />
-				<cfloop array="#shippingArray#" index="line">
-					<cfset evaluate("order_saddr#shipCount# = '#line#'") />
-					<cfset shipCount += 1 />
+				<cfloop from="1" to="#arrayLen(shippingArray)#" index="i">
+					<cfswitch expression="#i#">
+						<cfcase value="1">
+							<cfset order_saddr1 = shippingArray[i] />
+						</cfcase>
+						<cfcase value="2">
+							<cfset order_saddr2 = shippingArray[i] />
+						</cfcase>
+						<cfcase value="3">
+							<cfset order_saddr3 = shippingArray[i] />
+						</cfcase>
+						<cfcase value="4">
+							<cfset order_saddr4 = shippingArray[i] />
+						</cfcase>
+						<cfcase value="5">
+							<cfset order_saddr5 = shippingArray[i] />
+						</cfcase>
+					</cfswitch>
 				</cfloop>
 				
 				<cffile output="TRNS#chr(9)##order_transid##chr(9)#CASH SALE#chr(9)##order_date##chr(9)#Undeposited Funds#chr(9)#7.62 Design Web Sales V2#chr(9)#WEB SALES#chr(9)##order_amount##chr(9)##order_docnum##chr(9)#N#chr(9)##order_docnum##chr(9)#N#chr(9)#Y#chr(9)##order_addr1##chr(9)##order_addr2##chr(9)##order_addr3##chr(9)##order_addr4##chr(9)##order_addr5##chr(9)##order_duedate##chr(9)#Y#chr(9)##order_paymeth##chr(9)##chr(9)##order_shipdate##chr(9)##order_saddr1##chr(9)##order_saddr2##chr(9)##order_saddr3##chr(9)##order_saddr4##chr(9)##order_saddr5##chr(9)#N#chr(9)#N" action="append" file="#exportDirectory#OrderExport_#orderExportID#.iif" addnewline="yes">
@@ -318,9 +350,10 @@
 				<cfset ormFlush() />
 				
 				<cfcatch>
-					THERE WAS AN ERROR EXPORTING THIS ORDER:
+					There was an error during export... Please copy this entire page and e-mail to greg@gregmoser.com:
 					<cfdump var="#order#" top="3" />
-					<cfbreak>
+					<cfdump var="#cfcatch#" />
+					<cfabort />
 				</cfcatch>
 			</cftry>
 		</cfloop>

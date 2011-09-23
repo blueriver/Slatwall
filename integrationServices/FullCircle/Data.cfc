@@ -36,14 +36,8 @@
 Notes:
 
 */
-component implements="Slatwall.integrationServices.DataInterface" {
+component implements="Slatwall.integrationServices.DataInterface" extends="Slatwall.integrationServices.BaseData" {
 	
-	public any function init() {
-		return this;
-	}
 	
-	public any function getIntegrationTypes() {
-		return "";
-	}
 	
 }

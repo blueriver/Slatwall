@@ -82,7 +82,7 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" propertyObject="productType" link="#local.parentLink#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#" edit="false">
 		</cfif>
 		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
+			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="remoteID" edit="#rc.edit#">	
 		</cfif>
 	</dl>
 	<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
