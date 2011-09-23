@@ -153,5 +153,5 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		detail(rc);
 		getFW().setView("frontend:checkout.detail");
 	}
-
+	
 }
