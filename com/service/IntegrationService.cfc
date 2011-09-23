@@ -179,30 +179,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public any function injectDataIntegrationToColdspringXML(required any xml) {
-		var dirLocation = ExpandPath("/plugins/Slatwall/integrationServices");
-		var dirList = directoryList( dirLocation );
-		for(var i=1; i<= arrayLen(dirList); i++) {
-			var fileInfo = getFileInfo(dirList[i]);
-			if(fileInfo.type == "directory" && directoryExists("#fileInfo.path#/dao") ) {
-				var serviceName = Replace(listLast(dirList[i],"\/"),".cfc","");
-				var service = createObject("component", "Slatwall.integrationServices.#serviceName#.Data").init();
-				var serviceMeta = getMetaData(service);
-				if(structKeyExists(serviceMeta, "Implements") && structKeyExists(serviceMeta.implements, "Slatwall.integrationServices.DataInterface")) {
-					var DAOStruct = service.getDAOClasses(); 
-					for(var i=1; i<=arrayLen(arguments.xml.beans.bean); i++) {
-						if(structKeyExists(DAOStruct, arguments.xml.beans.bean[i].XmlAttributes.id)) {
-							arguments.xml.beans.bean[i].XmlAttributes.class = DAOStruct[arguments.xml.beans.bean[i].XmlAttributes.id];
-						}
-					}
-				}
-				
-			}
-		}
-		
-		return arguments.xml;
-	}
-	
 	public any function populateIntegrationCFCFromIntegration(required any integrationCFC, required any integration) {
 		var integrationSettings = deserializeJSON(arguments.integration.getIntegrationSettings());
 		var integrationProperties = getIntegrationCFCSettings(arguments.integrationCFC);
@@ -278,5 +254,32 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().save(arguments.integration);
 	}
 	
-	
+	public any function updateColdspringWithDataIntegration(required any serviceFactory, required xml originalXML) {
+		var integrations = this.listIntegration();
+		
+		for(var i=1; i<=arrayLen(integrations); i++) {
+
+			if(integrations[i].getDataActiveFlag()) {
+				var dataIntegrationCFC = getDataIntegrationCFC( integrations[i] );
+				var newXML = dataIntegrationCFC.getColdspringXML();
+				
+				for(var x=1; x<=arrayLen(newXML.beans.bean); x++) {
+					var newBean = newXML.beans.bean[x];
+					for(var c=1; c<=arrayLen(arguments.originalXML.beans.bean); c++) {
+						if(arguments.originalXML.beans.bean[c].xmlAttributes.id == newBean.xmlAttributes.id) {
+							arguments.originalXML.beans.bean[c].xmlAttributes.class = newBean.xmlAttributes.class;
+						}
+					}
+				}
+				
+				var newFactory = createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
+				newFactory.loadBeansFromXmlObj( arguments.originalXML );
+				newFactory.setParent( application.serviceFactory );
+				
+				return newFactory;
+			}
+		}
+		
+		return arguments.serviceFactory;
+	}
 }

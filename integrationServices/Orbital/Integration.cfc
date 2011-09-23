@@ -36,14 +36,17 @@
 Notes:
 
 */
-component implements="Slatwall.integrationServices.DataInterface" {
-
+component accessors="true" output="false" displayname="USA epay" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+	
 	public any function init() {
 		return this;
 	}
 	
-	public any function getIntegrationTypes() {
-		return "";
+	public string function getIntegrationTypes() {
+		return "payment";
 	}
-	
+		
+	public string function getDisplayName() {
+		return "Orbital Payment Gateway (Chase Paymentech)";
+	}
 }

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,46 +35,22 @@
 
 Notes:
 
---->
-<cfparam name="rc.orderReport" type="any">
-
-<cfoutput>
-	<div class="svoadminreportorder">
-		<script type="text/javascript">
-			var reportRevenueClosed = [
-				<cfloop query="rc.orderReport">
-					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month#,#rc.orderReport.Day#),#rc.orderReport.SubtotalBeforeDiscounts#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
-			]
-		</script>
-		<div id="container" style="height: 500px"></div>
-		<table class="stripe">
-			<tr>
-				<th>Day</th>
-				<th>Discounts</th>
-				<th>Tax</th>
-				<th>Subtotal Before Discounts</th>
-			</tr>
-			
-			<cfset subTotal = 0 />
-			<cfset taxTotal = 0 />
-			<cfloop query="rc.orderReport">
-				<cfset subTotal += rc.orderReport.SubtotalBeforeDiscounts />
-				<cfif isNumeric(rc.orderReport.TotalTax)>
-					<cfset taxTotal += rc.orderReport.TotalTax />
-				</cfif>
-				<tr>
-					<td>#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#</td>
-					<td>#dollarFormat(0)#</td>
-					<td>#dollarFormat(rc.orderReport.TotalTax)#</td>
-					<td>#dollarFormat(rc.orderReport.SubtotalBeforeDiscounts)#</td>
-				</tr>
-			</cfloop>
-			<tr>
-				<td><strong>Totals</strong></td>
-				<td><strong>#dollarFormat(0)#</strong></td>
-				<td><strong>#dollarFormat(taxTotal)#</strong></td>
-				<td><strong>#dollarFormat(subTotal)#</strong></td>
-			</tr>
-		</table>
-	</div>
-</cfoutput>
+*/
+component accessors="true" output="false" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
+	
+	public any function init() {
+		return this;
+	}
+	
+	public string function getIntegrationTypes() {
+		return "custom";
+	}
+	
+	public string function getDisplayName() {
+		return "Coldbooks For Quickbooks";
+	}
+	
+	public boolean function isFW1Subsystem() {
+		return false;
+	}
+}

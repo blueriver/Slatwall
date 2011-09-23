@@ -41,5 +41,8 @@ Notes:
 	
 	<cffunction name="init" access="public" returntype="any">
 	</cffunction>
+	
+	<cffunction name="getColdspringXML" returntype="xml">
+	</cffunction> 
 
 </cfinterface>
