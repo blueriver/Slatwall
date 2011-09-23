@@ -111,10 +111,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		httpRequest.setURL(requestURL);
 		httpRequest.setResolveurl(false);
 		
-		writeDump(httpRequest);
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
-		writeDump(xmlResponse);
-		abort;
 		
 		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 		ratesResponseBean.setData(xmlResponse);
