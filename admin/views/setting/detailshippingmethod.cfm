@@ -74,11 +74,12 @@ Notes:
 					</cfif>
 				</dd>
 				<cfif not rc.shippingMethod.isNew()>
-					
+					<cfif arrayLen(rc.shippingMethod.getEligibleAddressZoneOptions())>
 					<cfif isNull(rc.shippingMethod.getEligibleAddressZone())>
 						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" nullLabel="#$.slatwall.rbKey('define.all')#">
 					<cfelse>
 						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" nullLabel="#$.slatwall.rbKey('define.all')#" value="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneID()#" displayValue="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneName()#">
+					</cfif>
 					</cfif>
 					
 					<cfif rc.shippingMethod.getShippingProvider() neq "Other">

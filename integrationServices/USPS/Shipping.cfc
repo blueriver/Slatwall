@@ -51,10 +51,28 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 	public any function init() {
 		// Insert Custom Logic Here 
 		variables.shippingMethods = {
-			FIRST_CLASS = "First Class",
-			PRIORITY = "Priority",
-			EXPRESS = "Express",
-			PARCEL_POST = "Parcel Post"
+			1 = "Priority Mail",
+			2 = "Express Mail - Hold For Pickup",
+			3 = "Express Mail",
+			7 = "Liberty Mail",
+			4 = "Parcel Post",
+			6 = "Medial Mail",
+			13 = "Express Mail - Flat Rate Envelope",
+			16 = "Priority Mail - Flat Rate Envelope",
+			17 = "Priority Mail - Medium Flat Rate Box",
+			22 = "Priority Mail - Large Flat Rate Box",
+			23 = "Express Mail - Sunday/Holiday Delivery",
+			25 = "Express Mail - Flat Rate Envelope, Sunday/Holiday Delivery",
+			27 = "Express Mail - Flat Rate Envelope, Hold For Pickup",
+			28 = "Priority Mail - Small Flat Rate Box",
+			29 = "Priority Mail - Padded Flat Rate Envelope",
+			30 = "Express Mail - Legal Flat Rate Evelope",
+			31 = "Express Mail - Legal Flat Rate Envelope, Hold For Pickup",
+			32 = "Express Mail - Legal Flat Rate Envelope, Sunday/Holiday Delivery",
+			38 = "Priority Mail - Gift Card Flat Rate Envelope",
+			40 = "Priority Mail - Window Flat Rate Envelope",
+			42 = "Priority Mail - Small Flat Rate Envelope",
+			44 = "Priority Mail - Legal Flat Rate Envelope"
 		};
 		return this;
 	}
@@ -71,15 +89,15 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		
         var requestURL = "";
         
-        if(variables.useSSLFlag) {
-	        if(variables.testingFlag) {
+        if(variables.testingFlag) {
+        	if(variables.useSSLFlag) {
 	        	requestURL = "https://secure.shippingapis.com/ShippingAPITest.dll?API=";
 	        } else {
-	        	requestURL = "https://secure.shippingapis.com/ShippingAPI.dll?API=";
+	        	requestURL = "http://testing.shippingapis.com/ShippingAPITest.dll?API=";
 	        }	
         } else {
-        	if(variables.testingFlag) {
-	        	requestURL = "http://testing.shippingapis.com/ShippingAPITest.dll?API=";
+        	if(variables.useSSLFlag) {
+	        	requestURL = "https://secure.shippingapis.com/ShippingAPI.dll?API=";
 	        } else {
 	        	requestURL = "http://production.shippingapis.com/ShippingAPI.dll?API=";
 	        }	
@@ -111,6 +129,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		httpRequest.setURL(requestURL);
 		httpRequest.setResolveurl(false);
 		
+		
 		var xmlResponse = XmlParse(REReplace(httpRequest.send().getPrefix().fileContent, "^[^<]*", "", "one"));
 		
 		var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
@@ -121,26 +140,24 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 			// If XML fault then log error
 			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
-			// Log all messages from FedEx into the response bean
-			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
+			if(structKeyExists(xmlResponse.RateV4Response.Package, "Error")) {
 				ratesResponseBean.addMessage(
-					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
-					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
-					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
+					messageCode=xmlResponse.RateV4Response.Package.Error.HelpContext.xmlText,
+					messageType=xmlResponse.RateV4Response.Package.Error.Source.xmlText,
+					message=xmlResponse.RateV4Response.Package.Error.Description.xmlText
 				);
-				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					ratesResponseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
-				}
+				ratesResponseBean.getErrorBean().addError(xmlResponse.RateV4Response.Package.Error.HelpContext.xmlText, xmlResponse.RateV4Response.Package.Error.Description.xmlText);
 			}
 			
 			if(!ratesResponseBean.hasErrors()) {
-				for(var i=1; i<=arrayLen(xmlResponse.RateReply.RateReplyDetails); i++) {
+				for(var i=1; i<=arrayLen(xmlResponse.RateV4Response.Package.Postage); i++) {
 					ratesResponseBean.addShippingMethod(
-						shippingProviderMethod=xmlResponse.RateReply.RateReplyDetails[i].ServiceType.xmltext,
-						totalCharge=xmlResponse.RateReply.RateReplyDetails[i].RatedShipmentDetails.ShipmentRateDetail.TotalNetCharge.Amount.xmltext
+						shippingProviderMethod=xmlResponse.RateV4Response.Package.Postage[i].XmlAttributes.classID,
+						totalCharge=xmlResponse.RateV4Response.Package.Postage[i].Rate.XmlText
 					);
 				}
 			}
+			
 		}
 		
 		return ratesResponseBean;
