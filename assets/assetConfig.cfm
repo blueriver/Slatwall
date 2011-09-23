@@ -32,4 +32,9 @@ variables.assetDependencies["js/admin-promotion.detail.js"] =	[
 	"css/tools/timepicker/jquery-ui-timepicker-addon.css"
 	];
 	
+variables.assetDependencies["js/admin-report.js"] =	[
+	"js/tools/highcharts/highstock.js",
+	"js/tools/highcharts/highstock-exporting.js"
+	];
+	
 </cfscript>

@@ -40,6 +40,13 @@ Notes:
 
 <cfoutput>
 	<div class="svoadminreportorder">
+		<script type="text/javascript">
+			var reportRevenueClosed = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month#,#rc.orderReport.Day#),#rc.orderReport.SubtotalBeforeDiscounts#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+		</script>
+		<div id="container" style="height: 500px"></div>
 		<table class="stripe">
 			<tr>
 				<th>Day</th>
