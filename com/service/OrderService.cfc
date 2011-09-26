@@ -682,11 +682,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public void function clearCart() {
-		var session = getSessionService().getCurrent();
-		var cart = session.getOrder();
+		var currentSession = getSessionService().getCurrent();
+		var cart = currentSession.getOrder();
 		
 		if(!cart.isNew()) {
-			session.removeOrder();
+			currentSession.removeOrder();
 			
 			getDAO().delete(cart.getOrderItems());	
 			getDAO().delete(cart.getOrderFulfillments());	
