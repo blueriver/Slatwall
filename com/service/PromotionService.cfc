@@ -246,19 +246,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	private numeric function getDiscountAmount(required any reward, required any OriginalAmount) {
+	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
 		var discountAmount = 0;
 		
 		if(!isNull(reward.getItemAmount())) {
-			discountAmount = reward.getItemAmount();
+			discountAmount = arguments.originalAmount - reward.getItemAmount();
 		} else if( !isNull(reward.getItemAmountOff()) ) {
-			if(reward.getItemAmountOff() > arguments.originalAmount) {
-				discountAmount = arguments.originalAmount;
-			} else {
-				discountAmount = arguments.originalAmount - reward.getItemAmountOff();
-			}
+			discountAmount = reward.getItemAmountOff();
 		} else if( !isNull(reward.getItemPercentageOff()) ) {
 			discountAmount = arguments.originalAmount * (reward.getItemPercentageOff()/100);
+		}
+		
+		if(reward.getItemAmountOff() > arguments.originalAmount) {
+			discountAmount = arguments.originalAmount;
 		}
 		
 		return discountAmount;
