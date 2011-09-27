@@ -249,7 +249,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							var orderItem = arguments.order.getOrderItems()[i];
 							
 							if(
-								( isNull(reward.getProductType()) || orderItem.getProductType().getProductTypeID() eq reward.getProductType().getProductTypeID() )
+								( isNull(reward.getProductType()) || orderItem.getSku().getProduct().getProductType().getProductTypeID() eq reward.getProductType().getProductTypeID() )
 								&&
 								( isNull(reward.getProduct()) || orderItem.getSku().getProduct().getProductID() eq reward.getProduct().getProductID() )
 								&&
