@@ -36,15 +36,11 @@
 Notes:
 
 */
-component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionRewardShipping" table="SlatwallPromotionReward" persistent="true" extends="PromotionReward" discriminatorValue="shipping" {
+component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewardOrder" table="SlatwallPromotionReward" persistent="true" extends="PromotionReward" discriminatorValue="order" {
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingPercentageOff" ormType="big_decimal" validateNumeric="true";
-	property name="shippingAmountOff" ormType="big_decimal" validateNumeric="true";
-	property name="shippingAmount" ormType="big_decimal" validateNumeric="true";
-	
-	// Related Entities
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="orderPercentageOff" ormType="big_decimal" validateNumeric="true";
+	property name="orderAmountOff" ormType="big_decimal" validateNumeric="true";
 	
 }

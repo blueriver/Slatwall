@@ -261,7 +261,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			discountAmount = arguments.originalAmount;
 		}
 		
-		return discountAmount;
+		return numberFormat(discountAmount, "0.00");
 	}
 	
 	private numeric function getPromotionQualificationCount(required any promotion, required any order) {
