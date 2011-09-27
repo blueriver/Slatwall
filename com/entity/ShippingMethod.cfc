@@ -56,6 +56,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	// Related Object Properties
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="one-to-many" fkcolumn="shippingMethodID" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
 		if(isNull(variables.shippingRates)) {
@@ -105,6 +106,16 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	    
 	public void function removeShippingRate(required any shippingRate) {    
 	   arguments.shippingRate.removeShippingMethod(this);    
+	}
+	
+	// PromotionReward (one-to-many)    
+
+	public void function addPromotionReward(required any promotionReward) {    
+	   arguments.promotionReward.setShippingMethod(this);    
+	}    
+	    
+	public void function removePromotionReward(required any promotionReward) {    
+	   arguments.promotionReward.removeShippingMethod(this);    
 	}
 	
 	/******* End: Association management methods for bidirectional relationships **************/

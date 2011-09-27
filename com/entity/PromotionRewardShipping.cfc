@@ -47,4 +47,28 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	// Related Entities
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
+	/*-----  Relationship Management Methods for bidirectional relationships -----*/
+	
+	// ShippingMethod (many-to-one)
+
+	public void function setShippingMethod(required any ShippingMethod) {
+	   variables.ShippingMethod = arguments.ShippingMethod;
+	   if(!arguments.ShippingMethod.hasPromotionReward(this)) {
+	       arrayAppend(arguments.ShippingMethod.getPromotionRewards(),this);
+	   }
+	}
+	
+ 	public void function removeShippingMethod(any ShippingMethod) {
+ 	   if(!structKeyExists(arguments,"ShippingMethod")) {
+ 	   		arguments.ShippingMethod = variables.ShippingMethod;
+ 	   }
+       var index = arrayFind(arguments.ShippingMethod.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.ShippingMethod.getPromotionRewards(),index);
+       }    
+       structDelete(variables,"ShippingMethod");
+    }
+	
+	/*-----  End Relationship Management Methods  -----*/
+	
 }

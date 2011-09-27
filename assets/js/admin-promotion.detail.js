@@ -37,34 +37,41 @@ Notes:
 
 */
 
-$(function() {
-    $('.dateTime').datetimepicker({
+jQuery(function() {
+	//jQuery('.promotionRewardEdit').hide();
+    jQuery('.dateTime').datetimepicker({
         ampm: true,
      });
-    $('#startDateTime').datetimepicker({
+    jQuery('#startDateTime').datetimepicker({
         ampm: true,
      });
-    $('#endDateTime').datetimepicker({
+    jQuery('#endDateTime').datetimepicker({
         ampm: true,
      });
 	 
+	 jQuery('.editPromotionReward').click(function(){
+	 	var promotionID = jQuery(this).attr("id").substr(4);
+		jQuery('tr#promotionRewardEdit' + promotionID).toggle();
+	 	return false;
+	 });
+	 
 	var promotionCodeCount = jQuery('tr[id^="PromotionCode"]').length;
-    $("#addPromotionCode").click(function() {
+    jQuery("#addPromotionCode").click(function() {
         var current = jQuery('tr[id^="PromotionCode"]').length;
         current++;
         var $newPromotionCode= jQuery( "#promotionCodeTableTemplate tbody>tr:last" ).clone(true);
         $newPromotionCode.children("td").children("input").each(function(i) {
-            var $currentElem= $(this);
+            var $currentElem= jQuery(this);
             if ($currentElem.attr("type") != "radio") {
                 $currentElem.attr("name", "promotionCodes[" + current + "]." + $currentElem.attr("name"));
             }
         });
         $newPromotionCode.children("td").children("select").each(function(i) {
-            var $currentElem= $(this);
+            var $currentElem= jQuery(this);
             $currentElem.attr("name","promotionCodes["+current+"]."+$currentElem.attr("name"));
         });
-        $('#remPromotionCode').attr('style','');
-        $('#promotionCodeTable > tbody:last').append($newPromotionCode);
+        jQuery('#remPromotionCode').attr('style','');
+        jQuery('#promotionCodeTable > tbody:last').append($newPromotionCode);
         $newPromotionCode.attr("id","PromotionCode" + current);
         // add stripe to row
         if(current % 2 == 1) {
@@ -72,46 +79,90 @@ $(function() {
         }
     });
     
-    $('#remPromotionCode').click(function() {
+    jQuery('#remPromotionCode').click(function() {
         var num = jQuery('tr[id^="PromotionCode"]').length;
-        $('#PromotionCode' + num).remove();
+        jQuery('#PromotionCode' + num).remove();
         // can't remove more promotionCodes than were originally present
         if(num-1 == promotionCodeCount) {
             jQuery('#remPromotionCode').attr('style','display:none;');
         }
     });
 	
-	var promotionRewardCount = jQuery('tr[id^="PromotionReward"]').length;
-    $("#addPromotionReward").click(function() {
-        var current = jQuery('tr[id^="PromotionReward"]').length;
+	var promotionRewardCount = jQuery('.promotionRewardForm').length;
+    jQuery("#addPromotionReward").click(function() {
+        var current = jQuery('.promotionRewardForm').length;
         current++;
-        var $newPromotionReward= jQuery( "#promotionRewardTableTemplate tbody>tr:last" ).clone(true);
-        $newPromotionReward.children("td").children("input").each(function(i) {
-            var $currentElem= $(this);
-            if ($currentElem.attr("type") != "radio") {
-                $currentElem.attr("name", "promotionRewards[" + current + "]." + $currentElem.attr("name"));
-            }
+        var $newPromotionReward= jQuery( "#promotionRewardFormTemplate" ).clone(true);
+        $newPromotionReward.children("dl").each(function(i) {
+            var $currentElem= jQuery(this);
+			$currentElem.attr("id", $currentElem.attr("id") + current);
         });
-        $newPromotionReward.children("td").children("select").each(function(i) {
-            var $currentElem= $(this);
+        $newPromotionReward.children("dl").children("dt").children("label").each(function(i) {
+            var $currentElem= jQuery(this);
+			$currentElem.attr("for", $currentElem.attr("for") + current);
+        });
+        $newPromotionReward.children("dl").children("dd").children("input").each(function(i) {
+            var $currentElem= jQuery(this);
+            $currentElem.attr("name", "promotionRewards[" + current + "]." + $currentElem.attr("name"));
+			$currentElem.attr("id", $currentElem.attr("id") + current);
+        });
+        $newPromotionReward.children("dl").children("dd").children("select").each(function(i) {
+            var $currentElem= jQuery(this);
             $currentElem.attr("name","promotionRewards["+current+"]."+$currentElem.attr("name"));
+			$currentElem.attr("id", $currentElem.attr("id") + current);
         });
-        $('#remPromotionReward').attr('style','');
-        $('#promotionRewardTable > tbody:last').append($newPromotionReward);
-        $newPromotionReward.attr("id","PromotionReward" + current);
-        // add stripe to row
-        if(current % 2 == 1) {
-            $newPromotionReward.addClass("alt");
-        }
+        $newPromotionReward.removeAttr("id");
+		$newPromotionReward.removeAttr("class");
+		$newPromotionReward.addClass("promotionRewardForm");
+        jQuery('#rewardButtons').before($newPromotionReward);
+        jQuery('#remPromotionReward').attr('style','');
     });
     
-    $('#remPromotionReward').click(function() {
-        var num = jQuery('tr[id^="PromotionReward"]').length;
-        $('#PromotionReward' + num).remove();
+    jQuery('#remPromotionReward').click(function() {
+        var num = jQuery('.promotionRewardForm').length;
+        jQuery('.promotionRewardForm').last().remove();
         // can't remove more promotionRewards than were originally present
         if(num-1 == promotionRewardCount) {
             jQuery('#remPromotionReward').attr('style','display:none;');
         }
     });
+
+	// ------- AUTOCOMPLETE for Product and SKU
+	
+	jQuery('input.rewardProduct').live("focus",function(event) {
+		var productTypeID = jQuery(this).closest('dl').find('select[id^="productTypeID"]').val();
+		jQuery(this).autocomplete({
+			source: "?slatAction=admin:product.searchProductsByType&productTypeID=" + productTypeID,
+			select: function(event,ui) {
+				jQuery('#product' + jQuery(this).attr("id").substr(11)).val(ui.item.id);
+			}
+		});
+	});
+	
+	jQuery('input.rewardSku').live("focus",function(event) {
+		var productTypeID = jQuery(this).closest('dl').find('select[id^="productTypeID"]').val();
+		jQuery(this).autocomplete({
+			source: "?slatAction=admin:product.searchSkusByProductType&productTypeID=" + productTypeID,
+			select: function(event,ui) {
+				jQuery('#sku' + jQuery(this).attr("id").substr(7)).val(ui.item.id);
+			}			
+		});
+	});
+	
+
+	jQuery('.rewardTypeSelector').change(function() {
+		var selected = jQuery(this).val();
+		var idx = jQuery(this).parents('dl').attr('id').substr(12);
+		//alert(idx);
+		$shippingRewardForm = jQuery('#shippingReward' + idx);
+		$productRewardForm = jQuery('#productReward' + idx);
+		$shippingRewardForm.hide();
+		$productRewardForm.hide();
+		if(selected == "shipping"){
+			$shippingRewardForm.show();
+		} else if(selected == "product"){
+			$productRewardForm.show();
+		}
+	});
 });
 	

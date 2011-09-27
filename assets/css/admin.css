@@ -277,6 +277,10 @@ div.paymentDetails {
 	text-align: right;	
 }
 
+div.promotionRewardForm {
+	border-top: 1px black solid;
+}
+
 /*
 table#Options, table#OptionGroups, table#ProductSettings, table#ProductBrands, table#AttributeSets {
 	width: 800px;

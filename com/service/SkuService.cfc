@@ -265,5 +265,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		return sortedArray;
 	}
+	
+	public any function searchSkusByProductType(string term,string productTypeID) {
+		return getDAO().searchSkusByProductType(argumentCollection=arguments);
+	}	
 
 }

@@ -41,6 +41,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="promotionService" type="any";
 	property name="requestCacheService" type="any";
+	property name="settingService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:promotion.list");
@@ -59,12 +60,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 
     public void function create(required struct rc) {
+		rc.productTypeTree = getService("ProductService").getProductTypeTree();
+		rc.shippingMethods = getSettingService().listShippingMethod();
 		detail(arguments.rc);
 		getFW().setView("admin:promotion.detail");
 		rc.edit = true;
     }
 
 	public void function edit(required struct rc) {
+		rc.productTypeTree = getService("ProductService").getProductTypeTree();
+		rc.shippingMethods = getSettingService().listShippingMethod();
 		detail(arguments.rc);
 		getFW().setView("admin:promotion.detail");
 		rc.edit = true;
@@ -83,6 +88,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.edit = true;
 			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.create") : rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
 			rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
+			rc.productTypeTree = getService("ProductService").getProductTypeTree();
+			rc.shippingMethods = getSettingService().listShippingMethod();
 	   		getFW().setView(action="admin:promotion.detail");
 		}
 	}

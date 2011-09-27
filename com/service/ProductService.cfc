@@ -494,6 +494,39 @@ component extends="BaseService" accessors="true" {
 				name = "Global"
 			};
 		}		
+	}
+
+	public string function getParentProductTypeIDs(string productTypeID) {
+		var qoq = new Query();
+		qoq.setAttributes(ptTable = getProductTypeTree());
+		qoq.setSQL("select idPath from ptTable where productTypeID = :ptypeID");
+		qoq.setDBType("query");
+		qoq.addParam(name="ptypeID", value=arguments.productTypeID, cfsqlType="cf_sql_varchar");
+		var qGetIDPath = qoq.execute().getResult();
+		if(qGetIDPath.recordCount == 1) {
+			return qGetIDPath.idPath[1];
+		} else {
+			return "";
+		}
+	}
+	
+	public string function getChildProductTypeIDs(string productTypeID) {
+		var qoq = new Query();
+		qoq.setAttributes(ptTable = getProductTypeTree());
+		qoq.setSQL("select productTypeID from ptTable where idPath like :ptypeID");
+		qoq.setDBType("query");
+		qoq.addParam(name="ptypeID", value="%#arguments.productTypeID#%", cfsqlType="cf_sql_varchar");
+		var qGetChildIDs = qoq.execute().getResult();
+		if(qGetChildIDs.recordCount > 0) {
+			return valueList(qGetChildIDs.productTypeID);
+		} else {
+			return "";
+		}
+	}
+	
+	public any function searchProductsByProductType(string term,string productTypeID) {
+		var productTypeIDs = getChildProductTypeIDs(arguments.productTypeID);
+		return getDAO().searchProductsByProductType(arguments.term,productTypeIDs);
 	}	
 
 	private query function treeSort(required query productPages) {

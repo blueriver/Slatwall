@@ -393,4 +393,24 @@ component accessors="true" extends="BaseDAO" {
 		}
 		return idColumnValue;
 	}
+	
+	public any function searchProductsByProductType(string term,string productTypeIDs) {
+		var q = new Query();
+		var sql = "select productID,productName from SlatwallProduct where productName like :prodName";
+		q.addParam(name="prodName",value="%#arguments.term#%",cfsqltype="cf_sql_varchar");		
+		if(structKeyExists(arguments,"productTypeIDs") && len(arguments.productTypeIDs)) {
+			sql &= " and productTypeID in (:productTypeIDs)";
+			q.addParam(name="productTypeIDs",value=arguments.productTypeIDs,cfsqltype="cf_sql_varchar",list="true");
+		}
+		q.setSQL(sql);
+		var records = q.execute().getResult();
+		var result = [];
+		for(var i=1;i<=records.recordCount;i++) {
+			result[i] = {
+				"id" = records.productID[i],
+				"value" = records.productName[i]
+			};
+		}
+		return result;
+	}
 }
