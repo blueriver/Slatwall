@@ -63,6 +63,26 @@ Notes:
 		return ormExecuteQuery(hql,params);
 	}
 	
+	public any function searchSkusByProductType(string term,string productTypeID) {
+		var q = new Query();
+		var sql = "select skuID,skuCode from SlatwallSku where skuCode like :code";
+		q.addParam(name="code",value="%#arguments.term#%",cfsqltype="cf_sql_varchar");
+		if(structKeyExists(arguments,"productTypeID") && trim(arguments.productTypeID) != "") {
+			sql &= " and productID in (select productID from SlatwallProduct where productTypeID in (:productTypeIDs))";
+			q.addParam(name="productTypeIDs", value="#arguments.productTypeID#", cfsqltype="cf_sql_varchar", list="true");
+		}
+		q.setSQL(sql);
+		var records = q.execute().getResult();
+		var result = [];
+		for(var i=1;i<=records.recordCount;i++) {
+			result[i] = {
+				"id" = records.skuID[i],
+				"value" = records.skuCode[i]
+			};
+		}
+		return result;
+	}
+	
 /*	public array function getSortedProductSkus(required any product) {
 		var skus = ORMExecuteQuery(
 			"select sku from SlatwallSku sku

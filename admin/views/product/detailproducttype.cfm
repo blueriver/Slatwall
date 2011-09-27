@@ -61,7 +61,7 @@ Notes:
 		<cfif rc.edit>
 		<cfset local.tree = rc.productType.getProductTypeTree() />
 		<dt>
-			<label for="parentProductType_productTypeID">Parent Product Type</label>
+			<label for="parentProductType_productTypeID">#$.Slatwall.rbKey('entity.producttype.parentProductType')#</label>
 		</dt>
 		<dd>
 		<select name="parentProductType" id="parentProductType_productTypeID" onchange="alertDialog('#$.Slatwall.rbKey("admin.product.changeParentProductType_confirm")#');">

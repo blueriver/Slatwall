@@ -46,6 +46,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			savePromotionCodes(arguments.promotion,arguments.data.structuredData.promotionCodes);
 		}
 		if(structKeyExists(arguments.data.structuredData,"promotionRewards")){
+			//writeDump(var=arguments.data.structuredData.promotionRewards,abort=true);
 			savePromotionRewards(arguments.promotion,arguments.data.structuredData.promotionRewards);
 		}
 		
@@ -130,23 +131,72 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public void function savePromotionRewards(required any promotion, required array promotionRewards){
 		for(var promotionRewardData in arguments.promotionRewards){
-			var promotionReward = this.getPromotionRewardProduct(promotionRewardData.promotionRewardID,true);
-			if(promotionReward.isNew()){
-				promotionReward.setPromotion(arguments.promotion);
+			if(isNumeric(promotionRewardData.discountValue)) {
+				if(promotionRewardData.rewardType == "product") {
+					promotionRewardData["itemPercentageOff"] = "";
+					promotionRewardData["itemAmountOff"] = "";
+					promotionRewardData["itemAmount"] = "";
+					var promotionReward = this.getPromotionRewardProduct(promotionRewardData.promotionRewardID,true);
+					promotionRewardData[promotionRewardData.productDiscountType] = promotionRewardData.discountValue;
+					if(trim(promotionRewardData.productName) == ""){
+						promotionRewardData.product = "0";
+					}
+					if(trim(promotionRewardData.skuCode) == ""){
+						promotionRewardData.sku = "0";
+					}
+					//writeDump(var=promotionRewardData,abort=true);
+				} else if(promotionRewardData.rewardType == "shipping") {
+					promotionRewardData["shippingPercentageOff"] = "";
+					promotionRewardData["shippingAmountOff"] = "";
+					promotionRewardData["shippingAmount"] = "";
+					var promotionReward = this.getPromotionRewardShipping(promotionRewardData.promotionRewardID,true);
+					promotionRewardData[promotionRewardData.shippingDiscountType] = promotionRewardData.discountValue;
+					if(trim(promotionRewardData.shippingMethod) == ""){
+						promotionRewardData.shippingMethod = "0";
+					}
+				}
+	/*			else if(promotionRewardData.rewardType == "order") {
+					var promotionReward = this.getPromotionRewardOrder(promotionRewardData.promotionRewardID,true);
+					promotionRewardData[promotionRewardData.orderDiscountType] = promotionRewardData.discountValue;
+				}*/
+				
+				if(promotionReward.isNew()){
+					promotionReward.setPromotion(arguments.promotion);
+				}
+				promotionReward = savePromotionReward(promotionReward,promotionRewardData);			
 			}
-			promotionReward = savePromotionReward(promotionReward,promotionRewardData);
 		}
 	}
 	
 	public any function savePromotionReward(required any promotionReward, required struct data){
 		arguments.promotionReward.populate(arguments.data);
+/*		if(arguments.promotionReward.getRewardType() == "product"){
+			if(arguments.data.product == "" && !isNull(arguments.promotionReward.getProduct())){
+				arguments.promotionReward.setProduct(javaCast("null",""));
+			}
+			if(arguments.data.sku == "" && !isNull(arguments.promotionReward.getSku())) {
+				arguments.promotionReward.setSku(javaCast("null",""));
+			}	
+		}
+		else if(arguments.promotionReward.getRewardType() == "shipping"){
+			if(arguments.data.shippingMethod == "" && !isNull(arguments.promotionReward.getShippingMethod())) {
+				arguments.promotionReward.setShippingMethod(javaCast("null",""));
+			}
+		}*/
 		validatePromotionReward(arguments.promotionReward);
 		arguments.promotionReward = super.save(arguments.promotionReward);
 		return arguments.promotionReward;
 	}
 	
 	public void function validatePromotionReward( required any promotionReward ) {
-		var reward = arguments.promotionReward.getItemRewardQuantity() & arguments.promotionReward.getItemPercentageOff() & arguments.promotionReward.getItemAmountOff() & arguments.promotionReward.getItemAmount();
+		if(arguments.promotionReward.getRewardType() == "product") {
+			var reward = arguments.promotionReward.getItemPercentageOff() & arguments.promotionReward.getItemAmountOff() & arguments.promotionReward.getItemAmount() & arguments.promotionReward.getItemRewardQuantity();
+		} else if(arguments.promotionReward.getRewardType() == "shipping") {
+			var reward = arguments.promotionReward.getShippingPercentageOff() & arguments.promotionReward.getShippingAmountOff() & arguments.promotionReward.getShippingAmount();
+		} 
+	/*	else if(arguments.promotionReward.getRewardType() == "order") {
+			
+		}*/
 		if(trim(reward) EQ ""){
 			getValidationService().setError(entity=arguments.promotionReward,errorName="Reward",rule="required");
 		}

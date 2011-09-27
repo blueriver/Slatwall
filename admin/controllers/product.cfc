@@ -284,5 +284,18 @@ component extends="BaseController" output=false accessors=true {
 		}
 		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
 	}
+
+	public void function searchProductsByType(required struct rc) {
+		rc.productList = getProductService().searchProductsByProductType(term=rc.term,productTypeID=rc.productTypeID);
+	}
+	
+	public void function searchSkusByProductType(required struct rc) {
+		if(structKeyExists(rc,"productTypeID") && rc.productTypeID != "0") {
+			var productTypeIDs = getProductService().getChildProductTypeIDs(rc.productTypeID);
+		} else {
+			var productTypeIDs = "";
+		}
+		rc.skuList = getSkuService().searchSkusByProductType(term=rc.term,productTypeID=productTypeIDs);
+	}
 		
 }

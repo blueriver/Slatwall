@@ -39,6 +39,13 @@ Notes:
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
 
+<ul id="navTask">
+	<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
+	<cfif !rc.edit>
+	<cf_SlatwallActionCaller action="admin:promotion.edit" queryString="promotionID=#rc.promotion.getPromotionID()#" type="list">
+	</cfif>
+</ul>
+
 <cfoutput>
 	<div class="svoadminpromotiondetail">
 		<cfif rc.edit>

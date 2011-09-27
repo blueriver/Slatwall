@@ -67,7 +67,7 @@ Notes:
 
 <form id="newOptionForm" enctype="multipart/form-data" action="#buildURL('admin:option.save')#" method="post">
     <input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
-	<input type="hidden" name="sortOrder" value="#arrayLen(local.options)+1#"
+	<input type="hidden" name="sortOrder" value="#arrayLen(local.options)+1#" />
     <dl class="oneColumn">
         <cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optionname" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optioncode" edit="true">
