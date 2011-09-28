@@ -48,6 +48,10 @@ jQuery(function() {
         ampm: true,
      });
 	 
+	jQuery('.dateTime').datetimepicker({
+        ampm: true,
+     });
+	 
 	 jQuery('.editPromotionReward').click(function(){
 	 	var promotionID = jQuery(this).attr("id").substr(4);
 		jQuery('tr#promotionRewardEdit' + promotionID).toggle();
