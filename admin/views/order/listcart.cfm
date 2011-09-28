@@ -40,13 +40,8 @@ Notes:
 
 
 <cfoutput>
-	
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:order.list" type="list">
-</ul>
 
 <div class="svoadmincartlist">
-	
 	
 	<table id="CartList" class="stripe">
 		<tr>
