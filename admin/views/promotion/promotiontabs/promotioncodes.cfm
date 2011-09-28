@@ -153,10 +153,10 @@ Notes:
 			<input type="hidden" name="promotionCodeID" value="" />
         </td>
         <td>
-            <input type="text" size="30" name="startDateTime" value="" class="dateTime" />
+            <input type="text" size="30" name="startDateTime" value="" />
         </td>
         <td>
-            <input type="text" size="30" name="endDateTime" value="" class="dateTime" />         
+            <input type="text" size="30" name="endDateTime" value="" />         
         </td>
         <td class="administration">
         </td>
