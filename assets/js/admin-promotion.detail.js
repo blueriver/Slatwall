@@ -63,6 +63,12 @@ jQuery(function() {
         var current = jQuery('tr[id^="PromotionCode"]').length;
         current++;
         var $newPromotionCode= jQuery( "#promotionCodeTableTemplate tbody>tr:last" ).clone(true);
+		$newPromotionCode.children("td").children("input[name=startDateTime]").datetimepicker({
+		        ampm: true,
+		     });
+		$newPromotionCode.children("td").children("input[name=endDateTime]").datetimepicker({
+		        ampm: true,
+		     });
         $newPromotionCode.children("td").children("input").each(function(i) {
             var $currentElem= jQuery(this);
             if ($currentElem.attr("type") != "radio") {
