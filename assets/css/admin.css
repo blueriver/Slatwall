@@ -339,6 +339,27 @@ dl.fulfillmentTotals dd {
 	line-height: 22px;
 }
 
+dl.orderTotals {
+	width: 200px;
+}
+
+dl.orderTotals dt {
+	float: left;
+	width: 130px;
+	text-align: left;
+	padding: 2px;
+	margin: 0 0 0 0;
+	line-height: 15px;
+	clear: left;
+}
+
+dl.orderTotals dd {
+	margin: 0 0 0 120px;
+	text-align: right;
+	padding: 2px;
+	line-height: 15px;
+}
+
 dl.alternateImageUpload {
 	padding-top: 10px;
 	border-top: 1px solid #ccc;

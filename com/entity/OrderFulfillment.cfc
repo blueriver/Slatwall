@@ -129,8 +129,24 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	return variables.taxAmount;
     }
     
+    public numeric function getDiscountAmount() {
+    	return 0;
+    }
+    
+   	public numeric function getItemDiscountAmountTotal() {
+		var discountTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillmentItems()); i++) {
+			discountTotal += getOrderFulfillmentItems()[i].getDiscountAmount();
+		}
+		return discountTotal;
+	}
+	
+	public numeric function getDiscountTotal() {
+		return getDiscountAmount() + getItemDiscountAmountTotal();
+	}
+    
     public numeric function getTotalCharge() {
-    	return getSubTotal() + getTax() + getFulfillmentCharge();
+    	return getSubTotal() + getTax() + getFulfillmentCharge() - getDiscountTotal();
     }
     
     public numeric function getQuantityUndelivered() {

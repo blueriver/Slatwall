@@ -119,6 +119,23 @@ Notes:
 			<dd>
 				#dollarFormat( local.orderFulfillment.getTax() )#
 			</dd>
+			<!--- discounts for fulfillment --->
+			<cfif local.orderFulfillment.getItemDiscountAmountTotal() gt 0>
+				<dt>
+					#$.slatwall.rbKey("entity.orderFulfillment.itemDiscountAmountTotal")#:
+				</dt>
+				<dd class="discountAmount">
+					 - #dollarFormat( local.orderFulfillment.getItemDiscountAmountTotal() )#
+				</dd>
+			</cfif>
+			<cfif local.orderFulfillment.getDiscountAmount() gt 0>
+				<dt>
+					#$.slatwall.rbKey("entity.orderFulfillmentShipping.discountAmount")#:
+				</dt>
+				<dd class="discountAmount">
+					 - #dollarFormat( local.orderFulfillment.getDiscountAmount() )#
+				</dd>
+			</cfif>
 			<dt>
 				#$.slatwall.rbKey("entity.orderFulfillment.total")#:
 			</dt>
