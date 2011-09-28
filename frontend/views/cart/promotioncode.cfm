@@ -53,7 +53,7 @@ Notes:
 			<cfif not rc.promotionCodeOK>
 				<p class="error">The promotion code that you entered is invalid, please try again</p>
 			<cfelse>
-				<p>If you have received a promotion code, you can submit it in the forum below to access your rewards.</p>
+				<p>If you have received a promotion code, you can submit it in the form below to access your rewards.</p>
 			</cfif>
 			<dl>
 				<dt>Promotion Code:</dt>

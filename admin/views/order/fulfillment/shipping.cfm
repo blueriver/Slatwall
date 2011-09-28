@@ -93,7 +93,9 @@ Notes:
 		</cfloop>
 	</table>
 	<cfif local.orderFulfillment.isProcessable()>
-	<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" class="button" type="submit">
+		#$.Slatwall.rbKey("admin.order.detailOrderFulfillmentShipping.enterTrackingNumber")#:<br />
+		<input type="text" name="orderItems.trackingNumber" /><br />
+		<cf_SlatwallActionCaller action="admin:order.processorderfulfillment" class="button" type="submit">
 	</cfif>
 	<div class="totals">
 		<dl class="fulfillmentTotals">

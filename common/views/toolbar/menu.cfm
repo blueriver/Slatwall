@@ -123,6 +123,7 @@ Notes:
 								<li class="title">Orders</li>
 								<cf_SlatwallActionCaller action="admin:order.list" type="list">
 								<cf_SlatwallActionCaller action="admin:order.listorderfulfillments" type="list">
+								<cf_SlatwallActionCaller action="admin:order.listcart" type="list">
 							</ul>
 						</div>
 					</div>
