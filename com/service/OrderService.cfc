@@ -503,6 +503,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			default:{}
 		}
+		// set the tracking number
+		if(structkeyExists(arguments.data,"trackingNumber") && len(arguments.data.trackingNumber) > 0) {
+			orderDelivery.setTrackingNumber(arguments.data.trackingNumber);			
+		}
 		
 		var totalQuantity = 0;
 		// Loop over the items in the fulfillment
