@@ -50,7 +50,7 @@ Notes:
 		<input name="Keyword" value="#rc.Keyword#" /> 
 		<div id="advancedSearchOptions" <cfif !rc.showAdvancedSearch>style="display:none;"</cfif>>
 			#$.Slatwall.rbKey("entity.order.orderOpenDateTime")#: 
-			<input type="date" value="#rc.orderDateStart#" name="orderDateStart" class="date" /> to <input type="date" value="#rc.orderDateEnd#" name="orderDateEnd" class="date" /> 
+			<input type="date" value="#rc.orderDateStart#" name="orderDateStart" class="datepicker" /> to <input type="date" value="#rc.orderDateEnd#" name="orderDateEnd" class="datepicker" /> 
 			<cfif len(rc.orderDateStart) gt 0 or len(rc.orderDateEnd) gt 0>
 				<a href="##" id="clearDates">#$.slatwall.rbKey('admin.search.cleardates')#</a><br>
 			</cfif>

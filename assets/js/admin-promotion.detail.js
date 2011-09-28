@@ -38,14 +38,13 @@ Notes:
 */
 
 jQuery(function() {
-	//jQuery('.promotionRewardEdit').hide();
-    jQuery('.dateTime').datetimepicker({
+
+	jQuery.datepicker.setDefaults(jQuery.datepicker.regional[dtLocale]);
+    
+	jQuery('#spdstartdatetime').datetimepicker({
         ampm: true,
      });
-    jQuery('#startDateTime').datetimepicker({
-        ampm: true,
-     });
-    jQuery('#endDateTime').datetimepicker({
+    jQuery('#spdenddatetime').datetimepicker({
         ampm: true,
      });
 	 

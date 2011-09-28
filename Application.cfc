@@ -268,6 +268,7 @@ component extends="org.fw1.framework" output="false" {
 		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		param name="session.locale" default="en";
+		param name="session.dtLocale" default="en-US";
 		param name="session.siteid" default="default";
 		param name="session.dashboardSpan" default="30";
 	}
