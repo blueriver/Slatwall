@@ -57,7 +57,7 @@ Notes:
 <cfset getAssetWire().addJSVariable("dtExample", DateFormat(now(), "MM/DD/YYYY")) />
 <cfset getAssetWire().addJSVariable("dtCh", "/") />
 <cfset getAssetWire().addJSVariable("dtFormat", [0,1,2]) />
-<cfset getAssetWire().addJSVariable("dtLocale", "en-US") />
+<cfset getAssetWire().addJSVariable("dtLocale", "#session.dtLocale#") />
 
 <cfoutput>
 <!DOCTYPE html>

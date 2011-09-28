@@ -7,7 +7,7 @@ variables.assetConfig.baseAssetPath = "#application.configBean.getContext()#/plu
 variables.assetDependencies["js/admin.js"] = [
 	"#application.configBean.getContext()#/admin/js/jquery/jquery.js",
 	"#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js",
-	"#application.configBean.getContext()#/admin/js/jquery/jquery-ui-i18n.js",
+	"js/tools/datepicker/datepicker_localization.js",
 	"#application.configBean.getContext()#/admin/js/admin.js",
 	"#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js",
 	"#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js",

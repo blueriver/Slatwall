@@ -52,6 +52,4 @@ jQuery(document).ready(function(){
 		jQuery("input.date").val("");
 		return false;
 	});
-	
-	jQuery("input.date").datepicker();
 });
