@@ -46,11 +46,12 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="itemAmount" ormType="big_decimal" validateNumeric="true";
 	
 	// Related Entities
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
-	
-	
+	property name="brands" singularname="brand" cfc="Brands" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID" cascade="save-update";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID" cascade="save-update";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID" cascade="save-update";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID" cascade="save-update";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID" cascade="save-update";
+		
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// sku (many-to-one)
