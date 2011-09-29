@@ -104,6 +104,43 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 		return "";
 	}
+	
+	// get all the assigned attribute sets
+	public array function getAttributeSets(array attributeSetTypeCode){
+		var smartList = getService("attributeService").getAttributeSetSmartList();
+		
+		smartList.addFilter("attributeSetType_systemCode","astAccount");
+		
+		return smartList.getRecords();
+	}
+	
+	//get attribute value
+	public any function getAttributeValue(required string attribute, returnEntity=false){
+		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAttributeValue");
+		
+		smartList.addFilter("account_accountID",getAccountID(),1);
+		smartList.addFilter("attribute_attributeID",attribute,1);
+		
+		smartList.addFilter("account_accountID",getAccountID(),2);
+		smartList.addFilter("attribute_attributeCode",attribute,2);
+		
+		var attributeValue = smartList.getRecords();
+		
+		if(arrayLen(attributeValue)){
+			if(returnEntity) {
+				return attributeValue[1];	
+			} else {
+				return attributeValue[1].getAttributeValue();
+			}
+		}else{
+			if(returnEntity) {
+				return getService("ProductService").newAccountAttributeValue();	
+			} else {
+				return "";
+			}
+		}
+	}
+	
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Orders (one-to-many)

@@ -52,7 +52,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.edit" default="false";
 		var orderParams['F:account_accountID'] = rc.accountID;
 		var orderParams.orderBy = "orderOpenDateTime|DESC";
+		
 		rc.account = getAccountService().getAccount(rc.accountID, true);
+		rc.attributeSets = rc.account.getAttributeSets(["astAccount"]);
 		rc.orderSmartList = getAccountService().getOrderSmartList(data=orderParams);
 	}
 	
