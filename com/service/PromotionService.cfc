@@ -249,11 +249,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							var orderItem = arguments.order.getOrderItems()[i];
 							
 							if(
-								( isNull(reward.getProductType()) || orderItem.getSku().getProduct().getProductType().getProductTypeID() eq reward.getProductType().getProductTypeID() )
+								( !arrayLen( reward.getProductTypes() ) || reward.hasProductType( orderItem.getSku().getProduct().getProductType() ) )
 								&&
-								( isNull(reward.getProduct()) || orderItem.getSku().getProduct().getProductID() eq reward.getProduct().getProductID() )
+								( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
 								&&
-								( isNull(reward.getSku()) || orderItem.getSku().getSkuID() eq reward.getSku().getSkuID() )
+								( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
 							) {
 								// Now that we know that this orderItem gets this reward we can figure out the amount
 								var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());

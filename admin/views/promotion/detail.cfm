@@ -71,9 +71,11 @@ Notes:
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
 					</div>
+					<!---
 					<div id="tabPromotionRewards">
 						#view("promotion/promotiontabs/promotionrewards")#
 					</div>
+					--->
 				</div>
 			</dl>
 			<cfif rc.edit>

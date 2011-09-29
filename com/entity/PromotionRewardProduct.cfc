@@ -52,6 +52,27 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID" cascade="save-update";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID" cascade="save-update";
 		
+	public any function init() {
+
+		if(isNull(variables.brands)) {
+			variables.brands = [];
+		}
+		if(isNull(variables.options)) {
+			variables.options = [];
+		}
+		if(isNull(variables.skus)) {
+			variables.skus = [];
+		}
+		if(isNull(variables.products)) {
+			variables.products = [];
+		}	   
+		if(isNull(variables.productTypes)) {
+			variables.productTypes = [];
+		}
+
+		return super.init();
+	}
+		
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// sku (many-to-one)
