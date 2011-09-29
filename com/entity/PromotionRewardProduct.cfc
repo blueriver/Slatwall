@@ -46,11 +46,33 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="itemAmount" ormType="big_decimal" validateNumeric="true";
 	
 	// Related Entities
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
-	
-	
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID" cascade="save-update";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID" cascade="save-update";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID" cascade="save-update";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID" cascade="save-update";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID" cascade="save-update";
+		
+	public any function init() {
+
+		if(isNull(variables.brands)) {
+			variables.brands = [];
+		}
+		if(isNull(variables.options)) {
+			variables.options = [];
+		}
+		if(isNull(variables.skus)) {
+			variables.skus = [];
+		}
+		if(isNull(variables.products)) {
+			variables.products = [];
+		}	   
+		if(isNull(variables.productTypes)) {
+			variables.productTypes = [];
+		}
+
+		return super.init();
+	}
+		
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// sku (many-to-one)

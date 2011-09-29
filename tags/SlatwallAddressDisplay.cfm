@@ -90,7 +90,7 @@ Notes:
 						jQuery('select[name="#attributes.fieldNamePrefix#countryCode"]').change(function() {
 							
 							var addressData = {
-								apiKey: '#request.slatwall.$.slatwall.getAPIKey("DisplayAddressDisplay", "get")#',
+								apiKey: '#request.context.$.slatwall.getAPIKey("DisplayAddressDisplay", "get")#',
 								addressID : jQuery('input[name="addressID"]').val(),
 								fieldNamePrefix : '#attributes.fieldNamePrefix#',
 								showName : '#attributes.showName#',

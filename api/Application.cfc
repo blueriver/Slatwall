@@ -56,7 +56,7 @@ component extends="taffy.core.api" {
 		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
 		slatwallFW.onRequestStart(cgi.script_name);
 		
-		if(structKeyExists(url, "dashboard") && !request.slatwall.$.currentUser().getS2()) {
+		if(structKeyExists(url, "dashboard") && !request.context.$.currentUser().getS2()) {
 			abort;
 		}
 	}
@@ -68,7 +68,7 @@ component extends="taffy.core.api" {
 			apiKey = arguments[3].apiKey;
 		}
 		
-		if(request.slatwall.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
+		if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
 			return true;
 		}
 		
