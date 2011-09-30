@@ -304,7 +304,7 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	// This handels all of the ORM persistece.
-	private void function endSlatwallLifecycle() {
+	public void function endSlatwallLifecycle() {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
 			ormClearSession();

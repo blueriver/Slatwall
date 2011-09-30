@@ -49,7 +49,6 @@ component extends="taffy.core.resource" {
 	public any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
 	}
-
 	
 	public string function rbKey(required string key) {
 		return getPluginConfig().getApplication().getValue("rbFactory").getKeyValue(session.rb,arguments.key);
