@@ -53,26 +53,45 @@ component extends="taffy.core.api" {
 	
 	//use this instead of onRequestStart()
 	public void function requestStartEvent(){
-		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		slatwallFW.onRequestStart(cgi.script_name);
-		
-		if(structKeyExists(url, "dashboard") && !request.context.$.currentUser().getS2()) {
-			abort;
+		if(!isDefined('url.reload')) {
+			
+			// Setup this request with all of the standard Slatwall Stuff including permissions
+			var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
+			slatwallFW.onRequestStart(cgi.script_name);
+			
+			// Make sure that nobody outside of S2 is using the dashboard
+			if(structKeyExists(url, "dashboard") && !request.context.$.currentUser().getS2()) {
+				abort;
+			}
+			
 		}
 	}
 	
 	public any function onTaffyRequest(string verb, string cfc, struct requestArguments, string mimeExt, struct headers) {
-		var apiKey = "";
-		
-		if(structKeyExists(arguments.requestArguments, "apiKey")){
-			apiKey = arguments[3].apiKey;
+		if(!isDefined('url.reload')) {
+			var apiKey = "";
+			
+			if(structKeyExists(arguments.requestArguments, "apiKey")){
+				apiKey = arguments[3].apiKey;
+			}
+			
+			if(request.context.$.currentUser().getS2()) {
+				return true;
+			}
+			if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
+				return true;
+			}
+			
+			return createObject("component", "taffy.core.nativeJsonRepresentation").noData().withStatus(403);
 		}
-		
-		if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
-			return true;
-		}
-		
-		return createObject("component", "taffy.core.nativeJsonRepresentation").noData().withStatus(403);
 	}
 	
+	//override the onRequest so that we can invoke our lifecycle end
+	public void function onRequest( targetPage ){
+		var result = super.onRequest( targetPage );
+		if(!isDefined('url.reload')) {
+			var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
+			slatwallFW.endSlatwallLifecycle();
+		}
+	}
 }

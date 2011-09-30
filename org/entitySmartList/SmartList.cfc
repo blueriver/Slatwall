@@ -37,7 +37,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	property name="searchTime" type="numeric";
 	
 	// Delimiter Settings
-	variables.subEntityDelimiter = "_";
+	variables.subEntityDelimiters = "._";
 	variables.valueDelimiter = ",";
 	variables.orderDirectionDelimiter = "|";
 	variables.orderPropertyDelimiter = ",";
@@ -221,11 +221,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	private string function getAliasedProperty(required string propertyIdentifier) {
 		var entityName = getBaseEntityName();
 		var entityAlias = variables.entities[getBaseEntityName()].entityAlias;
-		for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiter); i++) {
-			entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiter));
+		for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiters); i++) {
+			entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters));
 			entityAlias = variables.entities[entityName].entityAlias;
 		}
-		return "#entityAlias#.#variables.entities[entityName].entityProperties[listLast(propertyIdentifier, variables.subEntityDelimiter)].name#";
+		return "#entityAlias#.#variables.entities[entityName].entityProperties[listLast(propertyIdentifier, variables.subEntityDelimiters)].name#";
 	}
 	
 	public void function addSelect(required string propertyIdentifier, required string alias) {
@@ -495,16 +495,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return sortedArray;
 	}
 	
-	public numeric function getRecordsCount() {
-		if(!structKeyExists(variables,"records")) {
-			var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
-			var recordCount = ormExecuteQuery(HQL, getHQLParams(), false, {ignoreCase="true"});
-			return recordCount[1];
-		} else {
-			return arrayLen(getRecords());	
-		}
-	}
-	
 	public void function setRecords(required any records) {
 		variables.records = arrayNew(1);
 		
@@ -547,6 +537,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 		}
 		return variables.pageRecords;
+	}
+	
+	public numeric function getRecordsCount() {
+		if(!structKeyExists(variables,"records")) {
+			var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
+			var recordCount = ormExecuteQuery(HQL, getHQLParams(), false, {ignoreCase="true"});
+			return recordCount[1];
+		} else {
+			return arrayLen(getRecords());	
+		}
 	}
 	
 	public numeric function getPageRecordsStart() {

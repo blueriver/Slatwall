@@ -49,7 +49,6 @@ component extends="taffy.core.resource" {
 	public any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
 	}
-
 	
 	public string function rbKey(required string key) {
 		return getPluginConfig().getApplication().getValue("rbFactory").getKeyValue(session.rb,arguments.key);
@@ -62,22 +61,4 @@ component extends="taffy.core.resource" {
 	public any function buildURL() {
 		return getFW().buildURL(argumentcollection=arguments);
 	}
-	
-	//use this instead of onRequestStart()
-	public void function controllerProxy(required string action, struct rc={}){
-		var slatwallFW = application.slatwall.pluginConfig.getApplication().getValue("fw");
-		
-		url.slatAction = arguments.action;
-		
-		for(var key in arguments.rc) {
-			form[key] = arguments.rc[key];
-		}
-		
-		slatwallFW.onRequestStart(cgi.script_nume);
-		
-		slatwallFW.setView("frontend:event.blank");
-		
-		slatwallFW.onRequest(cgi.script_nume);
-	}
-	
 }

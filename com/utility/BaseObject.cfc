@@ -83,14 +83,6 @@ component displayname="Base Object" output="false" {
 		return getPluginConfig().getApplication().getValue('fw');
 	}
 	
-	public any function inject(required string property, required any value) {
-		variables[ arguments.property ] = arguments.value;
-	}
-	
-	public any function injectRemove(required string property) {
-		structDelete(variables, arguments.property);
-	}
-	
 	public any function getVariables() {
 		return variables;
 	}
@@ -101,6 +93,11 @@ component displayname="Base Object" output="false" {
 	
 	public string function secureDisplay() {
 		return getFW().secureDisplay(argumentCollection = arguments);
+	}
+	
+	public any function invokeMethod(required string methodName, struct methodArguments={}) {
+		var theMethod = this[ arguments.methodName ];
+		return this.theMethod(argumentCollection = methodArguments);
 	}
 	
 	public any function getPropertyValueByIdentifier(required string propertyIdentifier) {
