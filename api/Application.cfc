@@ -69,15 +69,23 @@ component extends="taffy.core.api" {
 	
 	public any function onTaffyRequest(string verb, string cfc, struct requestArguments, string mimeExt, struct headers) {
 		if(!isDefined('url.reload')) {
-			var apiKey = "";
-			
-			if(structKeyExists(arguments.requestArguments, "apiKey")){
-				apiKey = arguments[3].apiKey;
-			}
-			
 			if(request.context.$.currentUser().getS2()) {
 				return true;
 			}
+			
+			// Identify the API Key and the Resource Requested
+			var apiKey = "";
+			var resource = "";
+			if(structKeyExists(arguments.requestArguments, "apiKey")){
+				apiKey = arguments.requestArguments.apiKey;
+			}
+			if(arguments.cfc == "GenericAbstractResource" && structKeyExists(arguments.requestArguments, "entityNameOrServiceName")) {
+				resource = arguments.requestArguments.entityNameOrServiceName;
+			} else {
+				resource = arguments.cfc;
+			}
+			
+			// Check the session to see if that API Key was granted for that resource
 			if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
 				return true;
 			}
