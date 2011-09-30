@@ -71,7 +71,11 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 			}
 		} else {
 			
-			var entity = evaluate("getService( serviceName ).get#arguments.entityNameOrServiceName#(arguments.idOrFilterOrServiceMethod)");
+			try {
+				var entity = evaluate("getService( serviceName ).get#arguments.entityNameOrServiceName#(arguments.idOrFilterOrServiceMethod)");	
+			} catch(any e){
+				return representationOf("No entity found with the name of: #arguments.entityNameOrServiceName#").withStatus(404);
+			}
 			
 			if( !isNull(entity) ){
 				
@@ -92,7 +96,7 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 			}
 		}
 		
-		return createObject("component", "taffy.core.nativeJsonRepresentation").noData().withStatus(404);
+		return representationOf("No #arguments.entityNameOrServiceName# found with ID or Filter: #arguments.idOrFilterOrServiceMethod#").withStatus(404);
 	}
 	
 	public any function put(string entityNameOrServiceName="", string idOrFilterOrServiceMethod="") {
@@ -102,13 +106,17 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 		}
 		
 		var serviceName = getEntityService(arguments.entityNameOrServiceName);
-		var entity = evaluate("getService( serviceName ).get#arguments.entityNameOrServiceName#(arguments.idOrFilterOrServiceMethod)");
+		try {
+			var entity = evaluate("getService( serviceName ).get#arguments.entityNameOrServiceName#(arguments.idOrFilterOrServiceMethod)");	
+		} catch(any e){
+			return representationOf("No entity found with the name of: #arguments.entityNameOrServiceName#").withStatus(404);
+		}
 		
 		if(!isNull(entity)) {
 			entity.populate(arguments);
 			return representationOf(entity).withStatus(200);
 		} else {
-			return representationOf("Object Not Found").withStatus(404);
+			return representationOf("No #arguments.entityNameOrServiceName# found with ID or Filter: #arguments.idOrFilterOrServiceMethod#").withStatus(404);
 		}
 	}
 	
@@ -120,19 +128,36 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 			structDelete(args, "entityNameOrServiceName");
 			structDelete(args, "idOrFilterOrServiceMethod");
 			
-			var result = getService( arguments.entityNameOrServiceName ).invokeMethod(methodName=arguments.idOrFilterOrServiceMethod, methodArguments=args);
-			return representationOf( result ).withStatus(200);
+			try {
+				var service = getService( arguments.entityNameOrServiceName );
+			} catch(any e) {
+				return representationOf("No Service found with the name: #arguments.entityNameOrServiceName#").withStatus(404);
+			}
+			
+			try {
+				var result = service.invokeMethod(methodName=arguments.idOrFilterOrServiceMethod, methodArguments=args);
+				return representationOf( result ).withStatus(200);
+			} catch (any e) {
+				return representationOf("There was an error in the #arguments.entityNameOrServiceName# invoking the method: #arguments.idOrFilterOrServiceMethod#").withStatus(500);
+			}
+			
 		}
 		
 		// If not a service call then create the new entity
 		var serviceName = getEntityService(arguments.entityNameOrServiceName);
-		var entity = getService( serviceName ).new(entityName=arguments.entityNameOrServiceName);
+		try {
+			var entity = evaluate("getService( serviceName ).get#arguments.entityNameOrServiceName#(arguments.idOrFilterOrServiceMethod)");	
+		} catch(any e){
+			return representationOf("No entity found with the name of: #arguments.entityNameOrServiceName#").withStatus(404);
+		}
 		
-		entity.populate(arguments);
+		if(!isNull(entity)) {
+			entity.populate(arguments);
+			getService( serviceName ).save( entity );
+			return representationOf(entity).withStatus(201);			
+		}
 		
-		getService( serviceName ).save( entity );
-		
-		return representationOf(entity).withStatus(201);
+		return representationOf("No #arguments.entityNameOrServiceName# found with ID or Filter: #arguments.idOrFilterOrServiceMethod#").withStatus(404);
 	}
 	
 	public any function delete(string entityNameOrServiceName="", string idOrFilterOrServiceMethod="") {
@@ -142,15 +167,18 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 		}
 		
 		var serviceName = getEntityService(arguments.entityNameOrServiceName);
-		var entity = getService( serviceName ).invokeMethod(methodName="get#arguments.entityNameOrServiceName#", methodArguments={1=arguments.idOrFilterOrServiceMethod});
+		try {
+			var entity = evaluate("getService( serviceName ).get#arguments.entityNameOrServiceName#(arguments.idOrFilterOrServiceMethod)");	
+		} catch(any e){
+			return representationOf("No entity found with the name of: #arguments.entityNameOrServiceName#").withStatus(404);
+		}
 		
 		if(!isNull(entity)) {
 			var deleteResponse = getService( serviceName ).delete(entity);
-			ormFlush();
 			return representationOf( deleteResponse ).withStatus(200);
 		}
 		
-		return createObject("component", "taffy.core.nativeJsonRepresentation").noData().withStatus(404);
+		return representationOf("No #arguments.entityNameOrServiceName# found with ID or Filter: #arguments.idOrFilterOrServiceMethod#").withStatus(404);
 	}
 	
 	
