@@ -96,7 +96,12 @@ component displayname="Base Object" output="false" {
 	}
 	
 	public any function invokeMethod(required string methodName, struct methodArguments={}) {
-		var theMethod = this[ arguments.methodName ];
+		if(structKeyExists(this, arguments.methodName)) {
+			var theMethod = this[ arguments.methodName ];
+		} else {
+			var theMethod = this.onMissingMethod;
+		}
+		
 		return this.theMethod(argumentCollection = methodArguments);
 	}
 	

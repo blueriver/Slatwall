@@ -80,7 +80,11 @@ component extends="taffy.core.api" {
 				apiKey = arguments.requestArguments.apiKey;
 			}
 			if(arguments.cfc == "GenericAbstractResource" && structKeyExists(arguments.requestArguments, "entityNameOrServiceName")) {
-				resource = arguments.requestArguments.entityNameOrServiceName;
+				if( right(arguments.requestArguments.entityNameOrServiceName, 7) == "service" ) {
+					resource = arguments.requestArguments.entityNameOrServiceName & '/' & arguments.requestArguments.idOrFilterOrServiceMethod;
+				} else {
+					resource = arguments.requestArguments.entityNameOrServiceName;
+				}
 			} else {
 				resource = arguments.cfc;
 			}
