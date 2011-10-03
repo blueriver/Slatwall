@@ -96,18 +96,29 @@ component displayname="Base Object" output="false" {
 	}
 	
 	public any function invokeMethod(required string methodName, struct methodArguments={}) {
-		var theMethod = this[ arguments.methodName ];
+		if(structKeyExists(this, arguments.methodName)) {
+			var theMethod = this[ arguments.methodName ];
+		} else {
+			var theMethod = this.onMissingMethod;
+		}
+		
 		return this.theMethod(argumentCollection = methodArguments);
 	}
 	
 	public any function getPropertyValueByIdentifier(required string propertyIdentifier) {
 		var value = javaCast("null", "");
+		var arrayValue = arrayNew(1);
 		var pa = listToArray(propertyIdentifier, "._");
 		
 		for(var i=1; i<=arrayLen(pa); i++) {
 			try {
 				if(isNull(value)) {
 					value = evaluate("get#pa[i]#()");
+				} else if(isArray(value)) {
+					for(var ii=1; ii<=arrayLen(value); ii++) {
+						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i]));
+					}
+					return arrayValue;
 				} else {
 					value = evaluate("value.get#pa[i]#()");
 				}	

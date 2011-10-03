@@ -153,7 +153,7 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 		
 		if(!isNull(entity)) {
 			entity.populate(arguments);
-			getService( serviceName ).save( entity );
+			entity = evaluate("getService( serviceName ).save#arguments.entityNameOrServiceName#( entity )");
 			return representationOf(entity).withStatus(201);			
 		}
 		
@@ -174,7 +174,7 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 		}
 		
 		if(!isNull(entity)) {
-			var deleteResponse = getService( serviceName ).delete(entity);
+			var deleteResponse = evaluate("getService( serviceName ).delete#arguments.entityNameOrServiceName#( entity )");
 			return representationOf( deleteResponse ).withStatus(200);
 		}
 		
