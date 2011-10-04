@@ -277,7 +277,7 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		rc.fulfillmentMethod = getSettingService().getFulfillmentMethod(rc.fulfillmentMethodID);
 		if(isNull(rc.fulfillmentMethod)) {
-			getFW().redirect(action="admin:setting.listFulfillmentMethods");
+			getFW().redirect(action="admin:setting.listfulfillmentmethods");
 		}	
 		rc.itemTitle = rc.itemTitle & ": " & rc.$.slatwall.rbKey("admin.setting.fulfillmentMethod." & rc.fulfillmentMethod.getFulfillmentMethodID());
 		
@@ -288,7 +288,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function editFulfillmentMethod(required struct rc) {
 		detailFulfillmentMethod(rc);
 		rc.edit = true;
-		getFW().setView("admin:setting.detailFulfillmentMethod");
+		getFW().setView("admin:setting.detailfulfillmentmethod");
 	}
 	
 	public void function saveFulfillmentMethod(required struct rc) {
