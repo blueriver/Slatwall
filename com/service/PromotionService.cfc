@@ -56,7 +56,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public any function delete(required any Promotion){
-		if( arguments.Promotion.isAssgined() ) {
+		if( arguments.Promotion.isAssigned() ) {
 			getValidationService().setError(entity=arguments.Promotion,errorName="delete",rule="isAssigned");
 		}
 		return Super.delete(arguments.Promotion);
