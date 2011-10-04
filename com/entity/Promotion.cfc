@@ -95,8 +95,13 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
     /************   END Association Management Methods   *******************/
 
 	public boolean function isAssigned() {
-		//TODO: add logic for checking if assigned
-		return false;
+		// check on PromotionApplied
+		var params = {promotionID = getPromotionID()};
+		var promotionApplied = ormExecuteQuery("From SlatwallPromotionApplied spa where promotion.promotionID =:promotionID",params);
+		if(arrayLen(promotionApplied)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-	
 }
