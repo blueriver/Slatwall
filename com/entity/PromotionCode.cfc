@@ -75,9 +75,12 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
     /************   END Association Management Methods   *******************/
 	
 	public boolean function isAssigned() {
-		//TODO: add logic for checking if assigned
-		
-		return false;
+		var params = {promotionCodeID = getPromotionCodeID()};
+		var promotionCodeApplied = ormExecuteQuery("select distinct so from SlatwallOrder so join so.promotionCodes pc where pc.promotionCodeID =:promotionCodeID",params);
+		if(arrayLen(promotionCodeApplied)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-
 }
