@@ -71,6 +71,7 @@
 					<cfset product = getProductService().newProduct() />
 					<cfset product.setRemoteID(remoteProductID) />
 					<cfset product.setProductName(lineArray[6]) />
+					<cfset product.setBrand(brand) />
 					
 					<cfset product.setFilename( getUtilityFileService().filterFileName(product.getProductName()) ) />
 					<cfset var duplicate = getDataService().isDuplicateProperty("filename", product) />

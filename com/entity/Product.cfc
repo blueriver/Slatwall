@@ -56,6 +56,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowDropshipFlag" ormtype="boolean";
 	property name="sortOrder" ormtype="integer";
 	
+	// Related Object Properties (many-to-one)
+	property name="brand" validateRequired="true" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="productType" validateRequired="true" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
+	
+	// Related Object Properties (one-to-many)
+	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan";
+	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productRelationships" singlularname="productRelationship" cfc="ProductRelationship" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -64,20 +80,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
-	
-	// Related Object Properties
-	property name="brand" validateRequired="true" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="productType" validateRequired="true" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
-	property name="madeInCountry" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode";
-	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
-	
-	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan";
-	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
@@ -120,6 +122,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
+	   }
+	   if(isNull(variables.productRelationships)) {
+	       variables.productRelationships = [];
+	   }
+	   if(isNull(variables.productReviews)) {
+	       variables.productReviews = [];
 	   }
 	   return Super.init();
 	}

@@ -285,7 +285,7 @@ component extends="BaseService" accessors="true" {
 		return getService("utilityFileService").removeImage(arguments.image.getImagePath());
 	}
 	
-	public any function save(required any Product,required struct data) {
+	public any function saveProduct(required any Product,required struct data) {
 		// populate bean from values in the data Struct
 		arguments.Product.populate(arguments.data);
 		
@@ -425,7 +425,7 @@ component extends="BaseService" accessors="true" {
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
-	   var entity = Super.save(arguments.productType);
+	   var entity = super.save(arguments.productType);
 	   if( !entity.hasErrors() ) {
 	   		// clear cached product type tree so that it's refreshed on the next request
 	   		clearProductTypeTree();
@@ -556,6 +556,11 @@ component extends="BaseService" accessors="true" {
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){
 		getUtilityTagService().cfSetting(requesttimeout="3600"); 
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
+	}
+	
+	public any function addProductReview(required struct data) {
+		var newReview = this.newProductReview();
+		return this.saveProductReview(newReview, arguments.data);
 	}
 	
 }
