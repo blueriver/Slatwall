@@ -61,6 +61,10 @@ Notes:
 					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime),
 					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime),
 					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime)
+				ORDER BY
+					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime) asc,
+					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime) asc,
+					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime) asc
 			</cfquery>
 		<cfelse>
 			<cfquery name="orderReport">
@@ -82,6 +86,10 @@ Notes:
 					DATEPART(DD, SlatwallOrder.orderCloseDateTime),
 					DATEPART(MM, SlatwallOrder.orderCloseDateTime),
 					DATEPART(YY, SlatwallOrder.orderCloseDateTime)
+				ORDER BY
+					DATEPART(YY, SlatwallOrder.orderCloseDateTime) asc,
+					DATEPART(MM, SlatwallOrder.orderCloseDateTime) asc,
+					DATEPART(DD, SlatwallOrder.orderCloseDateTime) asc
 			</cfquery>
 		</cfif>
 		
