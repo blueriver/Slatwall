@@ -123,7 +123,7 @@ component extends="BaseController" output=false accessors=true {
 		}
 
 		// Attempt to Save Product
-		rc.product = getProductService().save( rc.product,rc );
+		rc.product = getProductService().saveProduct( rc.product,rc );
 		
 		// Redirect & Error Handle
 		if(!getRequestCacheService().getValue("ormHasErrors")) {

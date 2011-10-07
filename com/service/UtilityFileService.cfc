@@ -181,11 +181,19 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 	}
 		
 	public string function filterFilename(required string filename) {
-		var newFileName = "";
-		newfilename = replace(arguments.filename,"  "," ","all");
-		newfilename = replace(newfilename," ","-","all");
-		newfilename = reReplace(newfilename, "[^a-z|A-Z|0-9|\-]", "", "all");
-		return lcase(newfilename);
+		// Lower Case The Filename
+		arguments.filename = lcase(trim(arguments.filename));
+		
+		// Remove anything that isn't alphanumeric
+		arguments.filename = reReplace(arguments.filename, "[^a-z|0-9| ]", "", "all");
+		
+		// Remove any spaces that are multiples to a single spaces
+		arguments.filename = reReplace(arguments.filename, "[ ]{1,} ", " ", "all");
+		
+		// Replace any spaces with a dash
+		arguments.filename = replace(arguments.filename, " ", "-", "all");
+		
+		return arguments.filename;
 	}
 
 	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='' ){

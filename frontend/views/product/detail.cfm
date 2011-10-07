@@ -43,8 +43,9 @@ Notes:
 		</div>
 		<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productCode">
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
-		<form action="?slatAction=frontend:cart.addItem" method="post">
+		<form action="?nocache=1" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />
+			<input type="hidden" name="slatAction" value="frontend:cart.addItem" />
 			<!--- Product Options --->
 			<cfif arrayLen($.slatwall.product().getSkus(true)) eq 1>
 				<input type="hidden" name="skuID" value="#$.slatwall.Product().getSkus()[1].getSkuID()#" />
@@ -78,6 +79,16 @@ Notes:
 			<label for="productQuantity">Quantity: </label><input type="text" name="quantity" value="1" size="2" id="productQuantity" />
 			<button type="submit">Add To Cart</button>
 		</form>
-		
+		<div class="reviews">
+			<cfloop array="#$.slatwall.product().getProductReviews()#" index="review">
+				
+			</cfloop>
+			<form action="?nocache=1" method="post">
+				<input type="hidden" name="slatAction" value="frontend:product.addReview" />
+				<input type="hidden" name="productID" value="#$.slatwall.product('productID')#" />
+				<textarea name="review"></textarea>
+				<button type="submit">Add Review</button>
+			</form>
+		</div>
 	</div>
 </cfoutput>

@@ -41,10 +41,15 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	// Persistent Properties
 	property name="productReviewID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean";
-	property name="review" ormtype="string" length="4000" hint="HTML Formated review of the Product";
+	property name="review" validateRequired="true" ormtype="string" length="4000" hint="HTML Formated review of the Product";
 	
 	// Related Object Properties (many-to-one)
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="product" validateRequired="true" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	
+	public any function init() {
+		setActiveFlag(0);
+		
+		return super.init();
+	}
 	
 }

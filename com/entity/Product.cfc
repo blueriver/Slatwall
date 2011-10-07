@@ -70,6 +70,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productRelationships" singlularname="productRelationship" cfc="ProductRelationship" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -121,6 +122,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
+	   }
+	   if(isNull(variables.productRelationships)) {
+	       variables.productRelationships = [];
+	   }
+	   if(isNull(variables.productReviews)) {
+	       variables.productReviews = [];
 	   }
 	   return Super.init();
 	}
