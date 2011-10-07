@@ -42,8 +42,12 @@ component displayname="Product Relationship" entityname="SlatwallProductRelation
 	property name="productRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
-	property name="relatedProduct" cfc="Product" fieldtype="many-to-one" fkcolumn="relatedProductID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="relatedProductTypes" singularname="relatedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProductType" fkcolumn="productRelationshipID" inversejoincolumn="productTypeID" cascade="save-update";
+	property name="relatedProducts" singularname="relatedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProduct" fkcolumn="productRelationshipID" inversejoincolumn="productID" cascade="save-update";
+	property name="relatedSkus" singularname="relatedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallProductRelationshipSku" fkcolumn="productRelationshipID" inversejoincolumn="skuID" cascade="save-update";
 	property name="relationshipType" cfc="Type" fieldtype="many-to-one" fkcolumn="relationshipTypeID";
 	
 }
