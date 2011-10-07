@@ -291,7 +291,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var hqlSelect = "";
 		
 		if(arguments.countOnly) {
-			hqlSelect &= "SELECT count(*)";
+			hqlSelect &= "SELECT count(distinct #variables.entities[getBaseEntityName()].entityAlias#)";
 		} else {
 			if(structCount(variables.selects)) {
 				hqlSelect = "SELECT new map(";
