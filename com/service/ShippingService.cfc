@@ -67,7 +67,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
 			
 			// Check the shipping methods eligible address zone to make sure that it is eligible
-			if(isNull(shippingMethods[i].getEligibleAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=shippingMethods[i].getEligibleAddressZone())){
+			if(shippingMethods[i].getActiveFlag() && (isNull(shippingMethods[i].getEligibleAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=shippingMethods[i].getEligibleAddressZone()))){
 				
 				// If this method uses rate tables, get the quote
 				if(shippingMethods[i].getUseRateTableFlag()) {
