@@ -62,11 +62,17 @@ Notes:
 			<tr>
 				<th class="varWidth">Address Zone</th>
 				<th>Rate</th>
+				<th class="administration">&nbsp;</th>
 			</tr>
 			<cfloop array="#rc.taxCategory.getTaxCategoryRates()#" index="local.tcr">
 				<tr>
 					<td class="varWidth">#local.tcr.getAddressZone().getAddressZoneName()#</td>
 					<td>#local.tcr.getTaxRate()#</td>
+					<td class="administration">
+						<ul class="one">
+							<cf_SlatwallActionCaller action="admin:setting.deletetaxcategoryrate" querystring="taxcategoryrateid=#local.tcr.getTaxCategoryRateID()#" class="delete" type="list">
+						</ul>
+					</td>
 				</tr>
 			</cfloop>
 		</table>
@@ -78,8 +84,8 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="taxRate" edit="#rc.edit#" first="true">
 			<button type="submit" name="addRate" value="true">Add Rate</button>
 			<br /><br />	
-			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:setting.savetaxcategory" type="submit" class="button">
 			</form>
 		</cfif>
 		
