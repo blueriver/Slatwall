@@ -82,14 +82,19 @@ Notes:
 		<div class="reviews">
 			<cfloop array="#$.slatwall.product().getProductReviews()#" index="review">
 				<dl>
-					<dt></dt>
+					<dt>#review.getReviewerName()#</dt>
 					<dd>#review.getReview()#</dd>
 				</dl>
 			</cfloop>
 			<form action="?nocache=1" method="post">
 				<input type="hidden" name="slatAction" value="frontend:product.addReview" />
 				<input type="hidden" name="productID" value="#$.slatwall.product('productID')#" />
-				<textarea name="review"></textarea>
+				<dl>
+					<dt>Name</dt>
+					<dd><input type="text" name="reviewerName" value="#$.slatwall.account('fullname')#" /></dd>
+					<dt>Review</dt>
+					<dd><textarea name="review"></textarea></dd>
+				</dl>
 				<button type="submit">Add Review</button>
 			</form>
 		</div>
