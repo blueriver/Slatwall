@@ -81,7 +81,10 @@ Notes:
 		</form>
 		<div class="reviews">
 			<cfloop array="#$.slatwall.product().getProductReviews()#" index="review">
-				
+				<dl>
+					<dt></dt>
+					<dd>#review.getReview()#</dd>
+				</dl>
 			</cfloop>
 			<form action="?nocache=1" method="post">
 				<input type="hidden" name="slatAction" value="frontend:product.addReview" />

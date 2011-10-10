@@ -52,4 +52,26 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 		return super.init();
 	}
 	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+    // Brand (many-to-one)
+	public void function setProduct(required any product) {
+	   variables.product = arguments.product;
+	   if(isNew() or !arguments.product.hasProductReview(this)) {
+	       arrayAppend(arguments.product.getProductReviews(),this);
+	   }
+	}
+	
+	public void function removeProduct(required any product) {
+       var index = arrayFind(arguments.product.getProductReviews(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.product.getProductReviews(),index);
+       }    
+       structDelete(variables,"product");
+    }
+	
+	
+	/************   END Association Management Methods   *******************/
+	
 }

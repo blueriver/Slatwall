@@ -436,7 +436,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.Sku.removeProduct(this);
 	}
 	
-	// attributeValues (one-to-many))
+	// attributeValues (one-to-many)
 	public void function addAttribtueValue(required any attributeValue) {
 	   arguments.attributeValue.setProduct(this);
 	}
@@ -445,13 +445,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.attributeValue.removeProduct(this);
 	}
 	
-	// promotionRewards (one-to-many))
+	// promotionRewards (one-to-many)
 	public void function addPromotionReward(required any promotionReward) {
 	   arguments.promotionReward.setProduct(this);
 	}
 	
 	public void function removePromotionReward(required any promotionReward) {
 	   arguments.promotionReward.removeProduct(this);
+	}
+	
+	// productReviews (one-to-many)
+	public void function addProductReview(required any productReview) {
+	   arguments.productReview.setProduct(this);
+	}
+	
+	public void function removeProductReview(required any productReview) {
+	   arguments.productReview.removeProduct(this);
 	}
 	
 	/************   END Association Management Methods   *******************/
