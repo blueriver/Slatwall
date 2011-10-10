@@ -41,21 +41,37 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	// Persistent Properties
 	property name="productReviewID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean";
+	property name="reviewerName" validateRequired="true" ormtype="string";
 	property name="review" validateRequired="true" ormtype="string" length="4000" hint="HTML Formated review of the Product";
-	
+	property name="reviewTitle" ormtype="string";
+	property name="rating" ormtpe="int";
+
 	// Related Object Properties (many-to-one)
 	property name="product" validateRequired="true" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	public any function init() {
 		setActiveFlag(0);
 		
+		if(isNull(variables.reviewTitle)) {
+			variables.reviewTitle = "";
+		}
+		if(isNull(variables.rating)) {
+			variables.rating = 0;
+		}
+		
 		return super.init();
 	}
 	
-	
 	/******* Association management methods for bidirectional relationships **************/
 	
-    // Brand (many-to-one)
+    // Product (many-to-one)
 	public void function setProduct(required any product) {
 	   variables.product = arguments.product;
 	   if(isNew() or !arguments.product.hasProductReview(this)) {
@@ -70,8 +86,33 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
        }    
        structDelete(variables,"product");
     }
+    
+    // Account (many-to-one)
+	public void function setAccount(required any account) {
+	   variables.account = arguments.account;
+	   if(isNew() or !arguments.account.hasProductReview(this)) {
+	       arrayAppend(arguments.account.getProductReviews(),this);
+	   }
+	}
 	
+	public void function removeAccount(required any account) {
+       var index = arrayFind(arguments.account.getProductReviews(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.account.getProductReviews(),index);
+       }
+       structDelete(variables,"account");
+    }
 	
 	/************   END Association Management Methods   *******************/
+	
+	
+	// Event Handler Methods	
+	public void function preInsert(){
+		super.preInsert(argumentcollection=arguments);
+		
+		if( isNull(variables.account) && !isNull(getService("SessionService").getCurrentAccount()) ) {
+			setAccount(getService("SessionService").getCurrentAccount());
+		}
+	}
 	
 }

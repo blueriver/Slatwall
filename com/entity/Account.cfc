@@ -44,12 +44,23 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="lastName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="muraUserID" ormtype="string";
+	
+	// Related Object Properties (many-to-one)
+	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
+	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
+	
+	// Related Object Properties (one-to-many)
+	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
+	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
+	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
+	
+	// Remote properties
+	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteCustomerID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteContactID" ormtype="string" hint="Only used when integrated with a remote system";
-
-	// Non Persistent
-	property name="fullName" persistent="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -57,14 +68,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	// Related Object Properties
-	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
-	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
-	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
-	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
-	
-	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
+	// Non Persistent
+	property name="fullName" persistent="false";
 	
 	public any function init() {
 		if(isNull(variables.accountEmailAddresses)) {
@@ -144,17 +149,24 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Orders (one-to-many)
-	
-	public void function addOrder(required Order Order) {
+	public void function addOrder(required any Order) {
 	   arguments.order.setAccount(this);
 	}
 	
-	public void function removeOrder(required Order Order) {
+	public void function removeOrder(required any Order) {
 	   arguments.order.removeAccount(this);
 	}
 	
-	// Account Email Addresses (one-to-many)
+	// Product Reviews (one-to-many)
+	public void function addProductReview(required any productReview) {
+	   arguments.productReview.setAccount(this);
+	}
 	
+	public void function removeProductReview(required any productReview) {
+	   arguments.productReview.removeAccount(this);
+	}
+	
+	// Account Email Addresses (one-to-many)
 	public void function addAccountEmailAddress(required any AccountEmailAddress) {    
 	   arguments.AccountEmailAddress.setAccount(this);    
 	}    
@@ -165,7 +177,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	
 	// Account Phone Numbers (one-to-many)
-	
 	public void function addAccountPhoneNumber(required any AccountPhoneNumber) {
 	   arguments.AccountPhoneNumber.setAccount(this);
 	}
@@ -174,9 +185,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	   arguments.AccountPhoneNumber.removeAccount(this);
 	}
 	
-
-		
-    /************   END Association Management Methods   *******************/
-
+	/************   END Association Management Methods   *******************/
 	
 }

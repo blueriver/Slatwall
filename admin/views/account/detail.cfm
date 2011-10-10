@@ -62,6 +62,7 @@ Notes:
 			<ul>
 				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>
 				<li><a href="##tabCarts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.carts")#</span></a></li>
+				<li><a href="##tabProductReviews" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.productReviews")#</span></a></li>
 				<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 					<li><a href="##tabCustomAttributes_#local.attributeSet.getAttributeSetID()#" onclick="return false;"><span>#local.attributeSet.getAttributeSetName()#</span></a></li>
 				</cfloop>
@@ -72,6 +73,9 @@ Notes:
 			</div>
 			<div id="tabCarts">
 				#view("admin:account/accounttabs/carts")#
+			</div>
+			<div id="tabProductReviews">
+				#view("admin:account/accounttabs/productreviews")#
 			</div>
 			#view("account/accounttabs/customattributes")#
 		</div>

@@ -296,6 +296,20 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public string function getAlternateImageDirectory() {
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/";	
     }
+    
+    public numeric function getProductRating() {
+    	var totalRatingPoints = 0;
+    	var averageRating = 0;
+    	
+    	if(arrayLen(getProductReviews())) {
+	    	for(var i=1; i<=arrayLen(getProductReviews()); i++) {
+	    		var totalRatingPoints += getProductReviews()[1].getRating();
+	    	}
+	    	averageRating = totalRatingPoints / arrayLen(getProductReviews());
+    	}
+    	
+    	return averageRating;
+    }
 	
 	// Persistent property helpers
 	

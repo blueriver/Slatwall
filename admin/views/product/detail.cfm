@@ -78,6 +78,7 @@ Notes:
 		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
 		<li><a href="##tabProductCategories" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productCategoryAssignment")#</span></a></li>
 		<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>
+		<li><a href="##tabProductReviews" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productreviews")#</span></a></li>
 		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 			<li><a href="##tabCustomAttributes_#local.attributeSet.getAttributeSetID()#" onclick="return false;"><span>#local.attributeSet.getAttributeSetName()#</span></a></li>
 		</cfloop>
@@ -101,6 +102,9 @@ Notes:
 	</div>
 	<div id="tabAlternateImages">
 		#view("product/producttabs/alternateimages")#
+	</div>
+	<div id="tabProductReviews">
+		#view("product/producttabs/productreviews")#
 	</div>
 	#view("product/producttabs/customattributes")#
 </div>
