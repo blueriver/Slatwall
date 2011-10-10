@@ -117,7 +117,7 @@ component accessors="true" output="false" extends="BaseObject" {
 			var data = {};
 			data["F:activeFlag"] = 1;
 			data["F:publishedFlag"] = 1;
-			if(structKeyExists(request, "slatwall")) {
+			if(structKeyExists(request, "context")) {
 				structAppend(data,request.context);
 			}
 			if($.content("showSubPageProducts") eq "") {
