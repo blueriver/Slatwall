@@ -54,6 +54,7 @@ Notes:
 		</cfif>
 			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="shippingMethodName" edit="#rc.edit#" first="true">
+				<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="activeFlag" edit="#rc.edit#">
 				<dt class="spdshippingprovider">
 					<label for="shippingProvider">#rc.$.slatwall.rbKey('entity.shippingmethod.shippingprovider')#</label>
 				</dt>
@@ -159,7 +160,7 @@ Notes:
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodID=shipping" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.shippingMethod.isNew()>
+				<cfif !rc.shippingMethod.isNew() AND !rc.shippingMethod.isAssigned()>
 					<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
 				</cfif>
 				<cf_SlatwallActionCaller action="admin:setting.saveshippingmethod" type="submit" class="button">

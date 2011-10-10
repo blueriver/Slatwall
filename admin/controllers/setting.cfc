@@ -445,10 +445,30 @@ component extends="BaseController" output="false" accessors="true" {
 			if(!rate.hasErrors()) {
 				rate.setTaxCategory(rc.taxCategory);
 			}
+		} else {
+			getFW().redirect(action="admin:setting.listtaxcategories", preserve="message");	
 		}
 	}
 	
-	// DB Toold
+	public void function deleteTaxCategoryRate() {
+		param name="rc.taxCategoryRateID" default="";
+		
+		var rate = getSettingService().getTaxCategoryRate(rc.taxCategoryRateID);
+		var taxCategoryID = rate.getTaxCategory().getTaxCategoryID();
+		
+		var deleteResponse = getSettingService().delete(rate);
+		
+		if(!deleteResponse.hasErrors()) {
+			rc.message = rbKey("admin.setting.deleteTaxCategoryRate_success");
+		} else {
+			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:setting.detailtaxcategory", querystring="taxCategoryID=#taxCategoryID#&edit=true", preserve="message,messagetype");
+	}
+	
+	// DB Tool
 	public void function deleteAllOrders() {
 		param name="rc.confirmDelete" default="0";
 		

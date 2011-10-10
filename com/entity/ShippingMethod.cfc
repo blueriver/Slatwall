@@ -46,6 +46,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="shippingRateIncreasePercentage" ormtype="big_decimal";
 	property name="shippingRateIncreaseDollar" ormtype="big_decimal";
 	property name="useRateTableFlag" ormtype="boolean";
+	property name="activeFlag" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -59,6 +60,9 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="one-to-many" fkcolumn="shippingMethodID" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
+		if(isNull(variables.activeFlag)) {
+			variables.activeFlag = 1;
+		}
 		if(isNull(variables.shippingRates)) {
 			variables.shippingRates = [];
 		}
@@ -119,4 +123,11 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	}
 	
 	/******* End: Association management methods for bidirectional relationships **************/
+	
+	public boolean function isAssigned(){
+		var smartList = getService("ShippingService").getSmartList("OrderFulfillmentShipping");
+		smartList.addFilter("shippingMethod_shippingMethodID",this.getShippingMethodID());
+		return smartList.getRecordsCount();
+	}
+	
 }
