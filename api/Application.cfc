@@ -90,7 +90,7 @@ component extends="taffy.core.api" {
 			}
 			
 			// Check the session to see if that API Key was granted for that resource
-			if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=arguments.cfc, verb=arguments.verb, apiKey=apiKey)){
+			if(request.context.$.slatwall.getService("sessionService").verifyAPIKey(resource=resource, verb=arguments.verb, apiKey=apiKey)){
 				return true;
 			}
 			
