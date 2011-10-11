@@ -43,10 +43,10 @@ Notes:
 	<strong>Feature & Bug Tracking: </strong><a href="https://github.com/ten24/Slatwall/issues">https://github.com/ten24/Slatwall/issues</a><br /><br />
 	<strong>Debugging Details: </strong>Please Copy & Paste these debugging details to any issues submitted<br /><br />
 	<textarea name="debugDetails" style="width:100%; height:500px;">
-Slatwall Version:	#getPluginConfig().getApplication().getValue('SlatwallVersion')#
-CFML Server:		#server.coldfusion.productName#
-CFML Server Version:	<cfif structKeyExists(server,"railo")>#server.railo.version#<cfelse>#server.coldfusion.productVersion#</cfif>
+Operating System:	#server.os.name#
+CFML Server:		#server.coldfusion.productName#: <cfif structKeyExists(server,"railo")>#server.railo.version#<cfelse>#server.coldfusion.productVersion#</cfif>
 DB Dialect: 		#application.configBean.getDBType()#
+Slatwall Version:	#getPluginConfig().getApplication().getValue('SlatwallVersion')#
 	</textarea>
 </div>
 </cfoutput>
