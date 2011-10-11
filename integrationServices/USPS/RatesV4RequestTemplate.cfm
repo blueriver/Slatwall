@@ -43,7 +43,7 @@
 		<Service>ALL</Service>
 		<ZipOrigination>#variables.shipFromPostalCode#</ZipOrigination>
 		<ZipDestination>#arguments.requestBean.getShipToPostalCode()#</ZipDestination>
-		<cfif arguments.requestBean.getTotalWeight() gt 0><Pounds>#arguments.requestBean.getTotalWeight()#</Pounds><cfelse><Pounds>1</Pounds></cfif>
+		<cfif arguments.requestBean.getTotalWeight() gt 0><Pounds>#numberFormat(arguments.requestBean.getTotalWeight(),"0")#</Pounds><cfelse><Pounds>1</Pounds></cfif>
 		<Ounces>0</Ounces>
 		<Container/>
 		<Size>REGULAR</Size>
