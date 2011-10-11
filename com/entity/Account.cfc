@@ -81,6 +81,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(isNull(variables.orders)) {
 			variables.orders = [];
 		}
+		if(isNull(variables.productReviews)) {
+			variables.productReviews = [];
+		}
+		if(isNull(variables.attributeSetAssignments)) {
+			variables.attributeSetAssignments = [];
+		}
 		return super.init();
 	}
 	
