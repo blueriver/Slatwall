@@ -201,17 +201,30 @@ component extends="BaseService" output="false" accessors="true"  {
 		
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			getService("logService").logMessage("Verify Mura Class Extension For Site ID: #assignedSites["siteID"][i]#");
+			
 			local.thisSiteID = assignedSites["siteID"][i];
+			
+			// Confirm that there is a SlatwallProductTemplate subtype
+			local.productPageSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
+			local.productPageSubType.set( {
+				type = "Page",
+				subType = "SlatwallProductTemplate",
+				siteID = local.thisSiteID
+			} );
+			local.productPageSubType.load();
+			local.productPageSubType.save();
+			
+			// Confirm that there is SlatwallProductListing subtype
 			local.thisSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
 			local.thisSubType.set( {
 				type = "Page",
 				subType = "SlatwallProductListing",
 				siteID = local.thisSiteID
 			} );
-			// we load the subType (in case it already exists) before it's saved
 			local.thisSubType.load();
 			local.thisSubType.save();
-			// get the extend set. One is created if it doesn't already exist
+						
+			// get the extend set for SlatwallProductListing, One is created if it doesn't already exist
 			local.thisExtendSet = local.thisSubType.getExtendSetByName( "Slatwall Product Listing Attributes" );
 			local.thisExtendSet.setSubTypeID(local.thisSubType.getSubTypeID());
 			local.thisExtendSet.save();
@@ -349,38 +362,21 @@ component extends="BaseService" output="false" accessors="true"  {
 				checkoutPage.save();
 			}
 			
-			
 			// Setup Product Templates Page
-			var productTemplates = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=local.thisSiteID);
-			if(productTemplates.getIsNew()) {
-				productTemplates.setDisplayTitle("Product Templates");
-				productTemplates.setHTMLTitle("Product Templates");
-				productTemplates.setMenuTitle("Product Templates");
-				productTemplates.setIsNav(0);
-				productTemplates.setActive(1);
-				productTemplates.setApproved(1);
-				productTemplates.setIsLocked(1);
-				productTemplates.setParentID("00000000000000000000000000000000001");
-				productTemplates.setFilename("product-templates");
-				productTemplates.setSiteID(thisSiteID);
-				productTemplates.save();
-			}
-			
-			
-			// Setup Default Product Template
-			var defaultProductTemplate = getContentManager().getActiveContentByFilename(filename="product-templates/default", siteid=local.thisSiteID);
-			if(defaultProductTemplate.getIsNew()) {
-				defaultProductTemplate.setDisplayTitle("Default");
-				defaultProductTemplate.setHTMLTitle("Default");
-				defaultProductTemplate.setMenuTitle("Default");
-				defaultProductTemplate.setIsNav(0);
-				defaultProductTemplate.setActive(1);
-				defaultProductTemplate.setApproved(1);
-				defaultProductTemplate.setIsLocked(1);
-				defaultProductTemplate.setParentID(productTemplates.getContentID());
-				defaultProductTemplate.setFilename("product-templates/default");
-				defaultProductTemplate.setSiteID(thisSiteID);
-				defaultProductTemplate.save();
+			var productTemplate = getContentManager().getActiveContentByFilename(filename="default-product-template", siteid=local.thisSiteID);
+			if(productTemplate.getIsNew()) {
+				productTemplate.setDisplayTitle("Default Product Template");
+				productTemplate.setHTMLTitle("Default Product Template");
+				productTemplate.setMenuTitle("Default Product Template");
+				productTemplate.setIsNav(0);
+				productTemplate.setActive(1);
+				productTemplate.setApproved(1);
+				productTemplate.setIsLocked(0);
+				productTemplate.setParentID("00000000000000000000000000000000001");
+				productTemplate.setFilename("default-product-template");
+				productTemplate.setSiteID(thisSiteID);
+				productTemplate.setSubType("SlatwallProductTemplate");
+				productTemplate.save();
 			}
 			
 		}

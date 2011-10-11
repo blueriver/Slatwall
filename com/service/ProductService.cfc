@@ -54,8 +54,11 @@ component extends="BaseService" accessors="true" {
 	property name="productTypeTree" type="any";
 	
 	public any function getProductTemplates(required string siteID) {
-		var productTemplatesID = getContentManager().getActiveContentByFilename(filename="product-templates", siteid=arguments.siteid).getContentID();
-		return getContentManager().getNest(parentID=productTemplatesID, siteid=arguments.siteid);
+		
+		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
+		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductTemplate", dataType="varchar" );
+		
+		return pageFeed.getQuery();
 	}
 	
 	public any function getContentFeed() {
