@@ -10,7 +10,7 @@ jQuery(function() {
 	    },
 	    
 	    title: {
-	        text: 'USD to EUR exchange rate'
+	        text: 'Total Revenue By Date Closed'
 	    },
 	    
 	    xAxis: {

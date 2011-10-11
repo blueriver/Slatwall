@@ -6,7 +6,7 @@
 	</Columns>
 	<Records>
 		<Record settingID="dbb32789cd09d59cf4422d3a64e9e595" settingName="product_urlKey" settingValue="sp" />
-		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="product-templates/default" />
+		<Record settingID="dbb3278adf50ec43022fcfcac1111f4b" settingName="product_defaultTemplate" settingValue="default-product-template" />
 		<Record settingID="dbb327a9fd041eafabea95800f85d55a" settingName="product_rootProductCategory" settingValue="0" />
 		<Record settingID="dbb3279cee21f040e126e9e499710707" settingName="product_missingImagePath" settingValue="/plugins/Slatwall/assets/images/missingimage.jpg" />
 		<Record settingID="dbb3279be8c752977fefc8768918e8df" settingName="product_imageExtension" settingValue="jpg" />
