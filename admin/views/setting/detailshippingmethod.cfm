@@ -129,7 +129,7 @@ Notes:
 						<tbody>
 							<cfloop array="#rc.shippingMethod.getShippingRates()#" index="local.shippingRate">
 								<tr>
-									<td class="varWidth">#local.shippingRate.getAddressZone().getAddressZoneName()#</td>
+									<td class="varWidth"><cfif isNull(local.shippingRate.getAddressZone())>#$.slatwall.rbKey('define.all')#<cfelse>#local.shippingRate.getAddressZone().getAddressZoneName()#</cfif></td>
 									<td>#local.shippingRate.getMinWeight()#</td>
 									<td>#local.shippingRate.getMaxWeight()#</td>
 									<td>#local.shippingRate.getMinPrice()#</td>
@@ -146,7 +146,12 @@ Notes:
 					</table>
 					<cfif rc.edit>
 						<dl class="twoColumn">
-							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" />
+							<cfif arrayLen(rc.blankShippingRate.getAddressZoneOptions())>
+								<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" nullLabel="#$.slatwall.rbKey('define.all')#">
+							<cfelse>
+								<dt>Address Zone</dt>
+								<dd><cf_SlatwallActionCaller action="admin:setting.createaddresszone"></dd>
+							</cfif>
 							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="minWeight" edit="true" />
 							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="maxWeight" edit="true" />
 							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="minPrice" edit="true" />
