@@ -50,7 +50,7 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 	property name="shipFromPostalCode" displayname="Ship From Postal Code" type="string";
 	property name="shipFromCountryCode" displayname="Ship From Country Code" type="string";
 	property name="pickupTypeCode" displayname="Pickup Type Code (advanced optional)" type="string";
-	property name="customerClassificationCode" displayname="Pickup Type Code (advanced optional)" type="string";
+	property name="customerClassificationCode" displayname="Customer Classification Code (advanced optional)" type="string";
 	
 	variables.testRateURL = "https://wwwcie.ups.com/ups.app/xml/Rate";
 	variables.liveRateURL = "https://www.ups.com/ups.app/xml/Rate";
