@@ -179,7 +179,7 @@ component extends="org.fw1.framework" output="false" {
 		// Look for mura Scope in the request context.  If it doens't exist add it.
 		if (!structKeyExists(request.context,"$")){
 			if (!structKeyExists(request, "muraScope")) {
-				request.muraScope = getBeanFactory().getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
+				request.muraScope = application.serviceFactory.getBean("muraScope").init(application.serviceFactory.getBean("contentServer").bindToDomain());
 			}
 			request.context.$ = request.muraScope;
 		}
