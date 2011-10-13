@@ -54,7 +54,7 @@ Notes:
 	</div>
 	#$.slatwall.rbKey("entity.order.orderNumber")#: #local.orderFulfillment.getOrder().getOrderNumber()#<br>
 	#$.slatwall.rbKey("entity.order.orderOpenDateTime")#: #DateFormat(local.orderFulfillment.getOrder().getOrderOpenDateTime(), "medium")#
-	<table class="stripe">
+	<table class="mura-table-grid stripe">
 		<tr>
 			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>

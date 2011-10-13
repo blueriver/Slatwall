@@ -51,7 +51,7 @@ Notes:
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
-		<table class="stripe" id="basicOrderInfo">
+		<table class="mura-table-grid stripe" id="basicOrderInfo">
 			<tr>
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detailcart.basiccaartinfo")#</th>
 			</tr>
@@ -79,7 +79,7 @@ Notes:
 	<div class="clear">
 	<cfif arrayLen(rc.order.getOrderItems()) gt 0>
 		<div id="cartItems">
-			<table class="stripe">
+			<table class="mura-table-grid stripe">
 				<tr>
 					<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 					<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>

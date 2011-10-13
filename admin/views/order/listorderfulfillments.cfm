@@ -45,7 +45,7 @@ Notes:
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
 	</form>
 	
-	<table id="OrderFulfillmentList" class="stripe">
+	<table id="OrderFulfillmentList" class="mura-table-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>

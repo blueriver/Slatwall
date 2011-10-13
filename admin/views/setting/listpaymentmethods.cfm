@@ -45,7 +45,7 @@ Notes:
 	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
 		</ul>
 		
-		<table id="paymentMethodList" class="stripe">
+		<table id="paymentMethodList" class="mura-table-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listPaymentMethods_nav")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.paymentMethod.activeFlag")#</th>
