@@ -43,7 +43,7 @@ Notes:
 <div class="svoadminmaindefault">
 	<div class="products dashboardSection">
 		<h3>Recently Updated Products</h3>
-		<table id="orderList" class="stripe">
+		<table id="orderList" class="mura-table-grid stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
@@ -67,7 +67,7 @@ Notes:
 	</div>
 	<div class="orders dashboardSection">
 		<h3>New Orders</h3>
-		<table id="orderList" class="stripe">
+		<table id="orderList" class="mura-table-grid stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>

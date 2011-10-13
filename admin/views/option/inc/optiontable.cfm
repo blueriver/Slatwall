@@ -41,7 +41,7 @@ Notes:
 
 <cfoutput>
 <cfif arrayLen(rc.options.getPageRecords()) GT 0>
-<table class="stripe" id="Options">
+<table class="mura-table-grid stripe" id="Options">
 	<tr>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.option.optionname")#</th>
 		<th>#rc.$.Slatwall.rbKey("entity.option.optioncode")#</th>

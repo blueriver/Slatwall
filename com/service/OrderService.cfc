@@ -376,7 +376,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	function sendOrderConfirmationEmail (required any order) {
 		var emailBody = "";
 		var messageParams = {
-			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getPrimaryEmailAddress().getEmailAddress()#>',
+			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getEmailAddress()#>',
 			from = setting('order_orderPlacedEmailFrom'),
 			subject = getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)
 		};

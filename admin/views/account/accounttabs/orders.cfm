@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<table id="OrderList" class="stripe">
+	<table id="OrderList" class="mura-table-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>

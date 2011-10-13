@@ -114,7 +114,7 @@ Notes:
 				<div class="rateTable<cfif not rc.shippingMethod.getUseRateTableFlag()> hideElement</cfif>">
 					<strong>Rate Table</strong>
 					<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
-					<table id="shippingRateTable" class="stripe">
+					<table id="shippingRateTable" class="mura-table-grid stripe">
 						<thead>
 							<tr>
 								<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.addressZone')#</th>

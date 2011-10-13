@@ -46,7 +46,7 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:setting.listAddressZones" type="list">
 		</ul>
 		
-		<table id="taxCategories" class="stripe">
+		<table id="taxCategories" class="mura-table-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.taxCategory.taxCategoryName")#</th>
 				<th>&nbsp;</th>
