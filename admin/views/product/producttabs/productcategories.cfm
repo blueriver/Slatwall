@@ -42,7 +42,7 @@ Notes:
 		<input type="hidden" name="categoryID" value="" />
 		<input type="hidden" name="featuredCategories" value="" />
 		<cfif rc.categories.recordCount gt 0>
-			<table id="productCategories" class="mura-table-grid stripe">
+			<table id="productCategories" class="mura-table-grid">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
@@ -70,7 +70,7 @@ Notes:
 		</cfif>
 	<cfelse>
 		<cfif arrayLen(rc.product.getProductCategories())>
-			<table id="ProductCategories" class="mura-table-grid stripe">
+			<table id="ProductCategories" class="mura-table-grid">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryPath")#</th>

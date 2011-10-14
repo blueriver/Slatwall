@@ -52,7 +52,7 @@ Notes:
 	</div>
 </cfif>--->
 
-<table class="mura-table-grid stripe" id="AttributeSets">
+<table class="mura-table-grid" id="AttributeSets">
 	<thead>
 	<tr>
 		<th class="varWidth">#rc.$.Slatwall.rbKey("entity.attributeSet.attributeSetName")#</th>

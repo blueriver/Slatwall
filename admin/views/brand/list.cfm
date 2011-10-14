@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 <div class="svoadminbrandlist">
 <cfif arrayLen(rc.brands) gt 0>
-	<table id="ProductBrands" class="mura-table-grid stripe">
+	<table id="ProductBrands" class="mura-table-grid">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.brand.brandName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.brand.brandWebsite")#</th>

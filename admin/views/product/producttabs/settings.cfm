@@ -40,7 +40,7 @@ Notes:
 <!--- set up options for setting select boxes --->
 <cfset local.Options = [{id="1",name=rc.$.Slatwall.rbKey('sitemanager.yes')},{id="0",name=rc.$.Slatwall.rbKey('sitemanager.no')}] />
 <cfoutput>
-	<table class="mura-table-grid stripe" id="productTypeSettings">
+	<table class="mura-table-grid" id="productTypeSettings">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey('admin.product.productsettings')#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.setting.settingValue")#</th>

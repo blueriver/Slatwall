@@ -96,7 +96,7 @@ Notes:
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="alertDialogMessage"></span></p>
 </div>
 <script type="text/javascript" language="javascript">
-stripe('stripe');
+stripe('mura-table-grid');
 </script>
 </body>
 </html>

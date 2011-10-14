@@ -45,7 +45,7 @@ Notes:
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
-	<table class="mura-table-grid stripe">
+	<table class="mura-table-grid">
 		<thead>
 			<tr>
 				<th class="varWidth">Name</th>
