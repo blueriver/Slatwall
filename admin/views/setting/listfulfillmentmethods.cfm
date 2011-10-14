@@ -45,7 +45,7 @@ Notes:
 	    	<cf_SlatwallActionCaller action="admin:setting.listFulfillmentMethods" type="list">
 		</ul>
 		
-		<table id="fulfillmentMethodList" class="mura-table-grid stripe">
+		<table id="fulfillmentMethodList" class="mura-table-grid">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listFulfillmentMethods")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.fulfillmentMethod.activeFlag")#</th>

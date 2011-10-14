@@ -95,7 +95,7 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeDescription" edit="#rc.edit#" editType="wysiwyg">
 		</div>
 		<div id="tabSettings">
-			<table class="mura-table-grid stripe" id="productTypeSettings">
+			<table class="mura-table-grid" id="productTypeSettings">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey('entity.setting.settingName')#</th>
 					<th>#rc.$.Slatwall.rbKey('entity.setting.settingValue')#</th>
@@ -230,7 +230,7 @@ Notes:
 			</table>
 		</div>
 		<div id="tabAttributeSets">
-			<table id="AttributeSets" class="mura-table-grid stripe">
+			<table id="AttributeSets" class="mura-table-grid">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetName')#</th>
 					<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>

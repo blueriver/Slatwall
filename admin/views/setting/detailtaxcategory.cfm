@@ -58,7 +58,7 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
 		</dl>
 		
-		<table class="mura-table-grid stripe">
+		<table class="mura-table-grid">
 			<tr>
 				<th class="varWidth">Address Zone</th>
 				<th>Rate</th>

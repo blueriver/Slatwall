@@ -47,7 +47,7 @@ Notes:
 </div>
 </cfif>
 <!---<cfset local.skus = rc.SkuSmartList.getPageRecords() />--->
-	<table id="skuTable" class="mura-table-grid stripe">
+	<table id="skuTable" class="mura-table-grid">
 		<thead>
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>

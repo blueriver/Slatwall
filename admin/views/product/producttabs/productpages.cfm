@@ -41,7 +41,7 @@ Notes:
 	<cfif rc.edit>
 		<input type="hidden" name="contentID" value="" />
 		<cfif rc.productPages.recordCount() gt 0>
-			<table id="productPages" class="mura-table-grid stripe">
+			<table id="productPages" class="mura-table-grid">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
@@ -66,7 +66,7 @@ Notes:
 		</cfif>
 	<cfelse>
 		<cfif arrayLen(rc.product.getProductContent())>
-			<table id="ProductPages" class="mura-table-grid stripe">
+			<table id="ProductPages" class="mura-table-grid">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.pagePath")#</th>

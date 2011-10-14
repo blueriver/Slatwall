@@ -38,7 +38,7 @@ Notes:
 --->
 
 <cfoutput>
-	<table class="mura-table-grid stripe">
+	<table class="mura-table-grid">
 		<tr>
 			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>

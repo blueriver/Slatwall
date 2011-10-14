@@ -52,7 +52,7 @@ Notes:
 		<button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
 <cfif rc.productSmartList.getRecordsCount()>
-	<table id="ProductList" class="mura-table-grid stripe">
+	<table id="ProductList" class="mura-table-grid">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.product.productType")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>

@@ -44,7 +44,7 @@ Notes:
 </div>
 </cfif>
 
-	<table id="promotionRewardTable" class="mura-table-grid stripe">
+	<table id="promotionRewardTable" class="mura-table-grid">
 		<thead>
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.promotionReward.product")#</th>

@@ -47,7 +47,7 @@ Notes:
 			]
 		</script>
 		<div id="container" style="height: 500px"></div>
-		<table class="mura-table-grid stripe">
+		<table class="mura-table-grid">
 			<tr>
 				<th>Day</th>
 				<th>Discounts</th>
