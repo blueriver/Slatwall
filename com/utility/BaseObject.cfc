@@ -102,7 +102,7 @@ component displayname="Base Object" output="false" {
 			var theMethod = this.onMissingMethod;
 		}
 		
-		return this.theMethod(argumentCollection = methodArguments);
+		return theMethod(argumentCollection = methodArguments);
 	}
 	
 	public any function getPropertyValueByIdentifier(required string propertyIdentifier) {
