@@ -137,4 +137,15 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
     
     /************   END Association Management Methods   *******************/
 
+	public any function getBrandOptions() {
+		if(!structKeyExists(variables, "brandOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
+			smartList.addSelect(propertyIdentifier="brandName", alias="name");
+			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
+			smartList.addOrder("brandName|ASC");
+			variables.brandOptions = smartList.getRecords();
+		}
+		return variables.brandOptions;
+	}
+	
 }

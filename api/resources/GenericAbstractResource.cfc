@@ -134,12 +134,12 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 				return representationOf("No Service found with the name: #arguments.entityNameOrServiceName#").withStatus(404);
 			}
 			
-			try {
+			/*try {*/
 				var result = service.invokeMethod(methodName=arguments.idOrFilterOrServiceMethod, methodArguments=args);
 				return representationOf( result ).withStatus(200);
-			} catch (any e) {
+	/*		} catch (any e) {
 				return representationOf("There was an error in the #arguments.entityNameOrServiceName# invoking the method: #arguments.idOrFilterOrServiceMethod#").withStatus(500);
-			}
+			}*/
 			
 		}
 		
