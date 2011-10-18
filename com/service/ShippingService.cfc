@@ -103,7 +103,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							
 							if(rateApplies && (rates[r].getShippingRate() < methodCharge || methodCharge == 0)) {
 								rateExists = true;
-								methodCharge = rates[r].getShippingRate();
+								if(!isNull(rates[r].getShippingRate())) {
+									methodCharge = rates[r].getShippingRate();	
+								}
 							}
 						}
 					}

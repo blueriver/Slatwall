@@ -44,7 +44,7 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 	property name="maxWeight" validateNumeric="true" ormtype="int";
 	property name="minPrice" validateNumeric="true" ormtype="big_decimal";
 	property name="maxPrice" validateNumeric="true" ormtype="big_decimal";
-	property name="shippingRate" validateNumeric="true" ormtype="big_decimal";
+	property name="shippingRate" validateNumeric="true" validateRequired="true" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
