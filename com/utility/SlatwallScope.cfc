@@ -81,8 +81,11 @@ component accessors="true" output="false" extends="BaseObject" {
 				var data = {};
 				data["F:activeFlag"] = 1;
 				data["F:publishedFlag"] = 1;
-				if(structKeyExists(request, "slatwall")) {
-					structAppend(data,request.context);
+				if(structKeyExists(request, "context")) {
+					structAppend(data, request.context);
+				} else {
+					structAppend(data, form);
+					structAppend(data, url);
 				}
 				var currentURL = $.createHREF(filename=$.content('filename'));
 				if(len(CGI.QUERY_STRING)) {
@@ -118,7 +121,10 @@ component accessors="true" output="false" extends="BaseObject" {
 			data["F:activeFlag"] = 1;
 			data["F:publishedFlag"] = 1;
 			if(structKeyExists(request, "context")) {
-				structAppend(data,request.context);
+				structAppend(data, request.context);
+			} else {
+				structAppend(data, form);
+				structAppend(data, url);
 			}
 			if($.content("showSubPageProducts") eq "") {
 				data.showSubPageProducts = 0;
