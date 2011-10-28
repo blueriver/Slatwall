@@ -39,7 +39,7 @@ Notes:
 <cfcomponent extends="BaseDAO">
 	
 	<cffunction name="getOrderReport" returntype="Query" access="public">
-		<cfargument name="startDate" default="#now() - 30#" />
+		<cfargument name="startDate" default="" />
 		<cfargument name="endDate" default="#now()#" />
 		
 		<cfset var i = 0 />
@@ -52,6 +52,7 @@ Notes:
 		<cfset var orderClosed = queryNew('empty') />
 		<cfset var queryList = "cartCreated,orderPlaced,orderClosed" />
 		<cfset var columnList = "
+				OrderCount,
 				SubtotalBeforeDiscount,
 				SubtotalAfterDiscount,
 				ItemDiscount,
@@ -75,11 +76,21 @@ Notes:
 		
 		<cfset var orderReport = queryNew(fullColumnList) />
 		
+		<cfif arguments.startDate eq "">
+			<cfquery name="rs">
+				SELECT min(createdDateTime) as 'createdDateTime' FROM SlatwallOrder
+			</cfquery>
+			<cfif rs.recordCount>
+				<cfset startDate = rs.createdDateTime />
+			</cfif>
+		</cfif>
+		
 		<cfquery name="cartCreated">
 			SELECT
 				#MSSQL_DATEPART('DD', 'SlatwallOrder.createdDateTime')# as 'DD',
 				#MSSQL_DATEPART('MM', 'SlatwallOrder.createdDateTime')# as 'MM',
 				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.createdDateTime')# as 'YYYY',
+				COUNT(SlatwallOrder.orderID) as 'OrderCount',
 				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscount',
 				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) - COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
 				SUM(SlatwallPromotionApplied.discountAmount) as 'ItemDiscount',
@@ -108,7 +119,7 @@ Notes:
 			  and
 			  	SlatwallOrder.createdDateTime >= <cfqueryparam cfsqltype="cf_sql_date" value="#startDate#">
 			  and
-			  	SlatwallOrder.createdDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate#">
+			  	SlatwallOrder.createdDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate + 1#">
 			GROUP BY
 				#MSSQL_DATEPART('DD', 'SlatwallOrder.createdDateTime')#,
 				#MSSQL_DATEPART('MM', 'SlatwallOrder.createdDateTime')#,
@@ -123,6 +134,7 @@ Notes:
 				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderOpenDateTime')# as 'DD',
 				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderOpenDateTime')# as 'MM',
 				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderOpenDateTime')# as 'YYYY',
+				COUNT(SlatwallOrder.orderID) as 'OrderCount',
 				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscount',
 				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) - COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
 				SUM(SlatwallPromotionApplied.discountAmount) as 'ItemDiscount',
@@ -151,7 +163,7 @@ Notes:
 			  and
 			  	SlatwallOrder.orderOpenDateTime >= <cfqueryparam cfsqltype="cf_sql_date" value="#startDate#">
 			  and
-			  	SlatwallOrder.orderOpenDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate#">
+			  	SlatwallOrder.orderOpenDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate + 1#">
 			GROUP BY
 				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderOpenDateTime')#,
 				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderOpenDateTime')#,
@@ -166,6 +178,7 @@ Notes:
 				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderCloseDateTime')# as 'DD',
 				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderCloseDateTime')# as 'MM',
 				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderCloseDateTime')# as 'YYYY',
+				COUNT(SlatwallOrder.orderID) as 'OrderCount',
 				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscount',
 				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) - COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
 				SUM(SlatwallPromotionApplied.discountAmount) as 'ItemDiscount',
@@ -194,7 +207,7 @@ Notes:
 			  and
 			  	SlatwallOrder.orderCloseDateTime >= <cfqueryparam cfsqltype="cf_sql_date" value="#startDate#">
 			  and
-			  	SlatwallOrder.orderCloseDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate#">
+			  	SlatwallOrder.orderCloseDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate + 1#">
 			GROUP BY
 				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderCloseDateTime')#,
 				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderCloseDateTime')#,
@@ -223,6 +236,7 @@ Notes:
 			<cfloop list="#queryList#" index="cq" >
 				<cfquery dbtype="query" name="rs">
 					SELECT
+						OrderCount,
 						SubtotalBeforeDiscount,
 						SubtotalAfterDiscount,
 						ItemDiscount,
