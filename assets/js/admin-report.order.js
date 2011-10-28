@@ -6,11 +6,11 @@ jQuery(function() {
 	    },
 	    
 	    rangeSelector: {
-	        selected: 1
+	        selected: 2
 	    },
 	    
 	    title: {
-	        text: 'Total Revenue By Date Closed'
+	        text: 'Order Report'
 	    },
 	    
 	    xAxis: {
@@ -23,7 +23,20 @@ jQuery(function() {
 	    },
 		
 	    series: [
-			{name: 'Orders Closed', data: reportRevenueClosed}
+			{name: 'Orders Closed', data: reportOrderClosed},
+			{name: 'Orders Placed', data: reportOrderPlaced},
+			{name: 'Carts Created', data: reportCartCreated}
 		]
+	});
+	
+	jQuery.ajax({
+		type: 'post',
+		url: '/plugins/Slatwall/api/index.cfm/reportService/getOrderReport/',
+		data: {startDate: '9/1/2011', endDate: '11/1/2011'},
+		dataType: "json",
+		context: document.body,
+		success: function(r) {
+			console.log(r);
+		}
 	});
 });

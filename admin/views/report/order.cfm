@@ -41,9 +41,17 @@ Notes:
 <cfoutput>
 	<div class="svoadminreportorder">
 		<script type="text/javascript">
-			var reportRevenueClosed = [
+			var reportOrderClosed = [
 				<cfloop query="rc.orderReport">
-					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month#,#rc.orderReport.Day#),#rc.orderReport.SubtotalBeforeDiscounts#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.orderClosedSubtotalAfterDiscount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportOrderPlaced = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.orderPlacedSubtotalAfterDiscount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportCartCreated = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.cartCreatedSubtotalAfterDiscount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
 			]
 		</script>
 		<div id="container" style="height: 500px"></div>
@@ -58,23 +66,26 @@ Notes:
 			<cfset subTotal = 0 />
 			<cfset taxTotal = 0 />
 			<cfloop query="rc.orderReport">
-				<cfset subTotal += rc.orderReport.SubtotalBeforeDiscounts />
-				<cfif isNumeric(rc.orderReport.TotalTax)>
-					<cfset taxTotal += rc.orderReport.TotalTax />
-				</cfif>
+				<cfset subTotal += rc.orderReport.orderClosedSubtotalAfterDiscount />
+				<cfset taxTotal += rc.orderReport.orderClosedTaxAfterDiscount />
+				
 				<tr>
 					<td>#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#</td>
 					<td>#dollarFormat(0)#</td>
-					<td>#dollarFormat(rc.orderReport.TotalTax)#</td>
-					<td>#dollarFormat(rc.orderReport.SubtotalBeforeDiscounts)#</td>
+					<td>#dollarFormat(rc.orderReport.orderClosedTaxAfterDiscount)#</td>
+					<td>#dollarFormat(rc.orderReport.orderClosedSubtotalAfterDiscount)#</td>
 				</tr>
 			</cfloop>
+			
+			<!---
 			<tr>
 				<td><strong>Totals</strong></td>
 				<td><strong>#dollarFormat(0)#</strong></td>
 				<td><strong>#dollarFormat(taxTotal)#</strong></td>
 				<td><strong>#dollarFormat(subTotal)#</strong></td>
 			</tr>
+			--->
+			
 		</table>
 	</div>
 </cfoutput>

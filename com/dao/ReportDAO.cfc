@@ -39,61 +39,251 @@ Notes:
 <cfcomponent extends="BaseDAO">
 	
 	<cffunction name="getOrderReport" returntype="Query" access="public">
-		<cfset var orderReport = "" />
+		<cfargument name="startDate" default="#now() - 30#" />
+		<cfargument name="endDate" default="#now()#" />
 		
-		<cfif application.configBean.getDBType() eq "mysql">
-			<cfquery name="orderReport">
-				SELECT
-					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime) as 'Day',
-					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime) as 'Month',
-					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime) as 'Year',
-					SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
-					SUM(SlatwallTaxApplied.taxAmount) as 'TotalTax'
-				FROM
-					SlatwallOrder
-				  INNER JOIN
-				  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
-				  LEFT JOIN
-				  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
-				WHERE
-					SlatwallOrder.orderCloseDateTime is not null
-				GROUP BY
-					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime),
-					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime),
-					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime)
-				ORDER BY
-					EXTRACT(YEAR FROM SlatwallOrder.orderCloseDateTime) asc,
-					EXTRACT(MONTH FROM SlatwallOrder.orderCloseDateTime) asc,
-					EXTRACT(DAY FROM SlatwallOrder.orderCloseDateTime) asc
-			</cfquery>
-		<cfelse>
-			<cfquery name="orderReport">
-				SELECT
-					DATEPART(DD, SlatwallOrder.orderCloseDateTime) as 'Day',
-					DATEPART(MM, SlatwallOrder.orderCloseDateTime) as 'Month',
-					DATEPART(YY, SlatwallOrder.orderCloseDateTime) as 'Year',
-					SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscounts',
-					SUM(SlatwallTaxApplied.taxAmount) as 'TotalTax'
-				FROM
-					SlatwallOrder
-				  INNER JOIN
-				  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
-				  LEFT JOIN
-				  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
-				WHERE
-					SlatwallOrder.orderCloseDateTime is not null
-				GROUP BY
-					DATEPART(DD, SlatwallOrder.orderCloseDateTime),
-					DATEPART(MM, SlatwallOrder.orderCloseDateTime),
-					DATEPART(YY, SlatwallOrder.orderCloseDateTime)
-				ORDER BY
-					DATEPART(YY, SlatwallOrder.orderCloseDateTime) asc,
-					DATEPART(MM, SlatwallOrder.orderCloseDateTime) asc,
-					DATEPART(DD, SlatwallOrder.orderCloseDateTime) asc
-			</cfquery>
-		</cfif>
+		<cfset var i = 0 />
+		<cfset var cd = "" /> <!--- Used in loops for "Current Date" --->
+		<cfset var cc = "" /> <!--- Used in loops for "Current Column" --->
+		<cfset var cq = "" /> <!--- Used in loops for "Current Query" --->
+		<cfset var rs = queryNew('empty') />
+		<cfset var cartCreated = queryNew('empty') />
+		<cfset var orderPlaced = queryNew('empty') />
+		<cfset var orderClosed = queryNew('empty') />
+		<cfset var queryList = "cartCreated,orderPlaced,orderClosed" />
+		<cfset var columnList = "
+				SubtotalBeforeDiscount,
+				SubtotalAfterDiscount,
+				ItemDiscount,
+				FulfillmentBeforeDiscount,
+				FulfillmentAfterDiscount,
+				FulfillmentDiscount,
+				TaxBeforeDiscount,
+				TaxAfterDiscount,
+				TaxDiscount,
+				OrderDiscount,
+				TotalBeforeDiscount,
+				TotalAfterDiscount," />
+				
+		<cfset var fullColumnList = "Day,Month,Year" />
+		
+		<cfloop list="#queryList#" index="cq">
+			<cfloop list="#columnList#" index="cc">
+				<cfset fullColumnList = listAppend(fullColumnList, "#trim(cq)##trim(cc)#") />
+			</cfloop>
+		</cfloop>
+		
+		<cfset var orderReport = queryNew(fullColumnList) />
+		
+		<cfquery name="cartCreated">
+			SELECT
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.createdDateTime')# as 'DD',
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.createdDateTime')# as 'MM',
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.createdDateTime')# as 'YYYY',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscount',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) - COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
+				SUM(SlatwallPromotionApplied.discountAmount) as 'ItemDiscount',
+				SUM(SlatwallOrderFulfillment.fulfillmentCharge) as 'FulfillmentBeforeDiscount',
+				SUM(SlatwallOrderFulfillment.fulfillmentCharge) as 'FulfillmentAfterDiscount',
+				0 as 'FulfillmentDiscount',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TaxBeforeDiscount',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TaxAfterDiscount',
+				0 as 'TaxDiscount',
+				0 as 'OrderDiscount',
+				(SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) + SUM(SlatwallOrderFulfillment.fulfillmentCharge) + SUM(SlatwallTaxApplied.taxAmount)) as 'TotalBeforeDiscount',
+				(SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) + SUM(SlatwallOrderFulfillment.fulfillmentCharge) + SUM(SlatwallTaxApplied.taxAmount)) -
+				  COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'TotalAfterDiscount'
+			FROM
+				SlatwallOrder
+			  INNER JOIN
+			  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
+			  LEFT JOIN
+			  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
+			  LEFT JOIN
+			  	SlatwallPromotionApplied on SlatwallOrderItem.orderItemID = SlatwallPromotionApplied.orderItemID
+			  LEFT JOIN
+			  	SlatwallOrderFulfillment on SlatwallOrder.orderID = SlatwallOrderFulfillment.orderID
+			WHERE
+				SlatwallOrder.createdDateTime is not null
+			  and
+			  	SlatwallOrder.createdDateTime >= <cfqueryparam cfsqltype="cf_sql_date" value="#startDate#">
+			  and
+			  	SlatwallOrder.createdDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate#">
+			GROUP BY
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.createdDateTime')#,
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.createdDateTime')#,
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.createdDateTime')#
+			ORDER BY
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.createdDateTime')# asc,
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.createdDateTime')# asc,
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.createdDateTime')# asc
+		</cfquery>
+		<cfquery name="orderPlaced">
+			SELECT
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderOpenDateTime')# as 'DD',
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderOpenDateTime')# as 'MM',
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderOpenDateTime')# as 'YYYY',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscount',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) - COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
+				SUM(SlatwallPromotionApplied.discountAmount) as 'ItemDiscount',
+				SUM(SlatwallOrderFulfillment.fulfillmentCharge) as 'FulfillmentBeforeDiscount',
+				SUM(SlatwallOrderFulfillment.fulfillmentCharge) as 'FulfillmentAfterDiscount',
+				0 as 'FulfillmentDiscount',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TaxBeforeDiscount',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TaxAfterDiscount',
+				0 as 'TaxDiscount',
+				0 as 'OrderDiscount',
+				(SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) + SUM(SlatwallOrderFulfillment.fulfillmentCharge) + SUM(SlatwallTaxApplied.taxAmount)) as 'TotalBeforeDiscount',
+				(SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) + SUM(SlatwallOrderFulfillment.fulfillmentCharge) + SUM(SlatwallTaxApplied.taxAmount)) -
+				  COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'TotalAfterDiscount'
+			FROM
+				SlatwallOrder
+			  INNER JOIN
+			  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
+			  LEFT JOIN
+			  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
+			  LEFT JOIN
+			  	SlatwallPromotionApplied on SlatwallOrderItem.orderItemID = SlatwallPromotionApplied.orderItemID
+			  LEFT JOIN
+			  	SlatwallOrderFulfillment on SlatwallOrder.orderID = SlatwallOrderFulfillment.orderID
+			WHERE
+				SlatwallOrder.orderOpenDateTime is not null
+			  and
+			  	SlatwallOrder.orderOpenDateTime >= <cfqueryparam cfsqltype="cf_sql_date" value="#startDate#">
+			  and
+			  	SlatwallOrder.orderOpenDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate#">
+			GROUP BY
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderOpenDateTime')#,
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderOpenDateTime')#,
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderOpenDateTime')#
+			ORDER BY
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderOpenDateTime')# asc,
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderOpenDateTime')# asc,
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderOpenDateTime')# asc
+		</cfquery>
+		<cfquery name="orderClosed">
+			SELECT
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderCloseDateTime')# as 'DD',
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderCloseDateTime')# as 'MM',
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderCloseDateTime')# as 'YYYY',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as 'SubtotalBeforeDiscount',
+				SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) - COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'SubtotalAfterDiscount',
+				SUM(SlatwallPromotionApplied.discountAmount) as 'ItemDiscount',
+				SUM(SlatwallOrderFulfillment.fulfillmentCharge) as 'FulfillmentBeforeDiscount',
+				SUM(SlatwallOrderFulfillment.fulfillmentCharge) as 'FulfillmentAfterDiscount',
+				0 as 'FulfillmentDiscount',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TaxBeforeDiscount',
+				SUM(SlatwallTaxApplied.taxAmount) as 'TaxAfterDiscount',
+				0 as 'TaxDiscount',
+				0 as 'OrderDiscount',
+				(SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) + SUM(SlatwallOrderFulfillment.fulfillmentCharge) + SUM(SlatwallTaxApplied.taxAmount)) as 'TotalBeforeDiscount',
+				(SUM(SlatwallOrderItem.price * SlatwallOrderItem.quantity) + SUM(SlatwallOrderFulfillment.fulfillmentCharge) + SUM(SlatwallTaxApplied.taxAmount)) -
+				  COALESCE(SUM(SlatwallPromotionApplied.discountAmount),0) as 'TotalAfterDiscount'
+			FROM
+				SlatwallOrder
+			  INNER JOIN
+			  	SlatwallOrderItem on SlatwallOrder.orderID = SlatwallOrderItem.orderID
+			  LEFT JOIN
+			  	SlatwallTaxApplied on SlatwallOrderItem.orderItemID = SlatwallTaxApplied.orderItemID
+			  LEFT JOIN
+			  	SlatwallPromotionApplied on SlatwallOrderItem.orderItemID = SlatwallPromotionApplied.orderItemID
+			  LEFT JOIN
+			  	SlatwallOrderFulfillment on SlatwallOrder.orderID = SlatwallOrderFulfillment.orderID
+			WHERE
+				SlatwallOrder.orderCloseDateTime is not null
+			  and
+			  	SlatwallOrder.orderCloseDateTime >= <cfqueryparam cfsqltype="cf_sql_date" value="#startDate#">
+			  and
+			  	SlatwallOrder.orderCloseDateTime <= <cfqueryparam cfsqltype="cf_sql_date" value="#endDate#">
+			GROUP BY
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderCloseDateTime')#,
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderCloseDateTime')#,
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderCloseDateTime')#
+			ORDER BY
+				#MSSQL_DATEPART('YYYY', 'SlatwallOrder.orderCloseDateTime')# asc,
+				#MSSQL_DATEPART('MM', 'SlatwallOrder.orderCloseDateTime')# asc,
+				#MSSQL_DATEPART('DD', 'SlatwallOrder.orderCloseDateTime')# asc
+		</cfquery>
+		
+		<cfset queryAddRow(orderReport, dateDiff("d", arguments.startDate, arguments.endDate)+1) />
+		
+		<cfset i=0 />
+		<cfloop from="#arguments.startDate#" to="#arguments.endDate#" index="cd">
+			<cfset i++ />
+			
+			<cfset orderReport['Day'][i] = dateFormat(cd, "DD") />
+			<cfset orderReport['Month'][i] = dateFormat(cd, "MM") />
+			<cfset orderReport['Year'][i] = dateFormat(cd, "YYYY") />
+		</cfloop>
+		
+		<cfset i=0 />
+		<cfloop from="#arguments.startDate#" to="#arguments.endDate#" index="cd">
+			<cfset i++ />
+						
+			<cfloop list="#queryList#" index="cq" >
+				<cfquery dbtype="query" name="rs">
+					SELECT
+						SubtotalBeforeDiscount,
+						SubtotalAfterDiscount,
+						ItemDiscount,
+						FulfillmentBeforeDiscount,
+						FulfillmentAfterDiscount,
+						FulfillmentDiscount,
+						TaxBeforeDiscount,
+						TaxAfterDiscount,
+						TaxDiscount,
+						OrderDiscount,
+						TotalBeforeDiscount,
+						TotalAfterDiscount
+					FROM
+						<cfif cq eq "cartCreated">
+							cartCreated
+						<cfelseif cq eq "orderPlaced">
+							orderPlaced
+						<cfelseif cq eq "orderClosed">
+							orderClosed
+						</cfif>
+					WHERE
+						DD = <cfqueryparam cfsqltype="cf_sql_integer" value="#dateFormat(cd, "DD")#">
+					  AND
+						MM = <cfqueryparam cfsqltype="cf_sql_integer" value="#dateFormat(cd, "MM")#">
+					  AND
+						YYYY = <cfqueryparam cfsqltype="cf_sql_integer" value="#dateFormat(cd, "YYYY")#">
+				</cfquery>
+				
+				<cfloop list="#columnList#" index="cc">
+					<cfif rs.recordCount gt 0 and isNumeric(rs[ "#trim(cc)#" ][1])>
+						<cfset querySetCell(orderReport,'#trim(cq)##trim(cc)#',rs[ "#trim(cc)#" ][1],i) />
+					<cfelse>
+						<cfset querySetCell(orderReport,'#trim(cq)##trim(cc)#',0,i) />
+					</cfif>
+				</cfloop>
+			</cfloop>
+		</cfloop>
 		
 		<cfreturn orderReport />
 	</cffunction>
+	
+	<cffunction name="MSSQL_DATEPART" access="private">
+		<cfargument name="datePart" type="string" hint="Values for this are: DD, MM, YYYY" />
+		<cfargument name="dateColumn" type="string" />
 		
+		<cfif application.configBean.getDBType() eq "mssql">
+			<cfreturn "DATEPART(#arguments.datePart#, #arguments.dateColumn#)" />
+		<cfelseif application.configBean.getDBType() eq "mysql">
+			
+			<cfif arguments.datePart eq "DD">
+				<cfset arguments.datePart = "DAY" />
+			<cfelseif arguments.datePart eq "MM">
+				<cfset arguments.datePart = "MONTH" />
+			<cfelseif arguments.datePart eq "YYYY">
+				<cfset arguments.datePart = "YEAR" />
+			</cfif>
+			
+			<cfreturn "EXTRACT(#arguments.datePart# FROM #arguments.dateColumn#)" />
+		</cfif>
+		
+		<cfreturn "" />
+	</cffunction>
+	
 </cfcomponent>
