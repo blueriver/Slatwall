@@ -41,40 +41,60 @@ Notes:
 <cfoutput>
 	<div class="svoadminreportorder">
 		<script type="text/javascript">
-			var reportRevenueClosed = [
+			var reportOrderClosed = [
 				<cfloop query="rc.orderReport">
-					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month#,#rc.orderReport.Day#),#rc.orderReport.SubtotalBeforeDiscounts#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.orderClosedOrderCount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportOrderPlaced = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.orderPlacedOrderCount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportCartCreated = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.cartCreatedOrderCount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportOrderClosedSubtotal = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.orderClosedSubtotalAfterDiscount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportOrderPlacedSubtotal = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.orderPlacedSubtotalAfterDiscount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
+			]
+			var reportCartCreatedSubtotal = [
+				<cfloop query="rc.orderReport">
+					[Date.UTC(#rc.orderReport.Year#,#rc.orderReport.Month - 1#,#rc.orderReport.Day#),#rc.orderReport.cartCreatedSubtotalAfterDiscount#]<cfif rc.orderReport.currentRow neq rc.orderReport.recordCount>,</cfif></cfloop>
 			]
 		</script>
-		<div id="container" style="height: 500px"></div>
+		<div id="container" style="height: 500px; width: 100%;"></div>
 		<table class="mura-table-grid">
 			<tr>
 				<th>Day</th>
-				<th>Discounts</th>
-				<th>Tax</th>
-				<th>Subtotal Before Discounts</th>
+				<th>New Carts</th>
+				<th>New Carts Subtotal</th>
+				<th>New Orders</th>
+				<th>New Orders Subtotal</th>
+				<th>Closed Orders</th>
+				<th>Closed Orders Subtotal</th>
 			</tr>
 			
 			<cfset subTotal = 0 />
 			<cfset taxTotal = 0 />
 			<cfloop query="rc.orderReport">
-				<cfset subTotal += rc.orderReport.SubtotalBeforeDiscounts />
-				<cfif isNumeric(rc.orderReport.TotalTax)>
-					<cfset taxTotal += rc.orderReport.TotalTax />
-				</cfif>
+				<cfset subTotal += rc.orderReport.orderClosedSubtotalAfterDiscount />
+				<cfset taxTotal += rc.orderReport.orderClosedTaxAfterDiscount />
+				
 				<tr>
-					<td>#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#</td>
-					<td>#dollarFormat(0)#</td>
-					<td>#dollarFormat(rc.orderReport.TotalTax)#</td>
-					<td>#dollarFormat(rc.orderReport.SubtotalBeforeDiscounts)#</td>
+					<td>#DateFormat("#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#", $.slatwall.setting('advanced_dateFormat'))#</td>
+					<td>#rc.orderReport.cartCreatedOrderCount#</td>
+					<td>#dollarFormat(rc.orderReport.cartCreatedSubtotalAfterDiscount)#</td>
+					<td>#rc.orderReport.orderPlacedOrderCount#</td>
+					<td>#dollarFormat(rc.orderReport.orderPlacedSubtotalAfterDiscount)#</td>
+					<td>#rc.orderReport.orderClosedOrderCount#</td>
+					<td>#dollarFormat(rc.orderReport.orderClosedSubtotalAfterDiscount)#</td>
 				</tr>
 			</cfloop>
-			<tr>
-				<td><strong>Totals</strong></td>
-				<td><strong>#dollarFormat(0)#</strong></td>
-				<td><strong>#dollarFormat(taxTotal)#</strong></td>
-				<td><strong>#dollarFormat(subTotal)#</strong></td>
-			</tr>
+			
 		</table>
 	</div>
 </cfoutput>
