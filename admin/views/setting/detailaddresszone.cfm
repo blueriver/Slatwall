@@ -80,7 +80,7 @@ Notes:
 							<cfif rc.edit>
 							<td class="administration">
 								<ul class="one">
-									<cfif not local.address.isNew()>
+									<cfif not local.address.isNew() AND !rc.addressZone.isAssigned()>
 										<cf_SlatwallActionCaller action="admin:setting.deleteaddresszonelocation" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#&addressID=#local.address.getAddressID()#" class="delete" type="list">
 									</cfif>
 								</ul>

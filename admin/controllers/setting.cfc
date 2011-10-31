@@ -374,7 +374,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rc.addressZone);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.product.deleteAddressZone_success");
+			rc.message = rbKey("admin.setting.deleteAddressZone_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";

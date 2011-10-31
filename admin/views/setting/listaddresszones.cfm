@@ -57,7 +57,7 @@ Notes:
 						<ul class="three">
 							<cf_SlatwallActionCaller action="admin:setting.detailaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="viewDetails" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.editaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="edit" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="delete" type="list" confirmRequired="true">
+							<cf_SlatwallActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="delete" type="list" disabled="#local.addressZone.isAssigned()#" disabledText="#rc.$.Slatwall.rbKey('entity.addressZone.delete_validateIsAssigned')#" confirmRequired="true">
 						</ul>
 					</td>
 				</tr>
