@@ -163,6 +163,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	         } else {
 	         	// this is a new sku added from product.edit form (no skuID yet)
 	         	local.thisSku = createSkuFromStruct( local.skuStruct, arguments.product );
+	         	validateDuplicate(local.thisSku);
 	         }
 	         validateSkuCode( local.thisSku, skuCodeList );
 	         skuCodeList = listAppend(skuCodeList, local.thisSku.getSkuCode());
@@ -170,6 +171,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return true;
 	}
 	
+	
+	public any function validateDuplicate( required any sku ) {
+		var isDuplicate = false;
+		var options = "";
+		for(var option in arguments.sku.getOptions()){
+			options = listAppend(options,option.getOptionID());
+		}
+		var skus = getDAO().getSkusBySelectedOptions(options,arguments.sku.getProduct().getProductID());
+		if(arrayLen(skus)){
+			isDuplicate = true;
+		}
+		var skuCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.options_validateUnique"));
+		if( !structIsEmpty(skuCodeError) ) {
+			arguments.sku.addError(argumentCollection=skuCodeError);
+			getRequestCacheService().setValue("ormHasErrors", true);
+		}
+	}
 	
 	public any function validateSkuCode( required any sku, string skuCodeList ) {
 		var isDuplicate = false;
