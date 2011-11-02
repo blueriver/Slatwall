@@ -44,6 +44,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="skuService" type="Slatwall.com.service.SkuService";
 	property name="attributeService" type="Slatwall.com.service.AttributeService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
+	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
 	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -206,7 +207,10 @@ component extends="BaseController" output=false accessors=true {
 		
 		// upload the image and return the result struct if there was an upload
 		if(structKeyExists(rc, "skuImageFile") && rc.skuImageFile != "") {
-			var imageUploadResult = fileUpload(getTempDirectory(),"skuImageFile","","makeUnique");
+			var imageUploadResult = getUtilityTagService().cffile(action="upload", destination=getTempDirectory(), filefield="skuImageFile", accept="", nameconflict="makeUnique");
+			
+			//var temp = fileUpload(getTempDirectory(),"skuImageFile","","makeUnique");
+			
 			rc.uploadSuccess = getSkuService().processImageUpload(rc.sku, imageUploadResult);
 			if(rc.uploadSuccess) {
 				rc.message = rc.$.Slatwall.rbKey("admin.product.uploadSkuImage_success");

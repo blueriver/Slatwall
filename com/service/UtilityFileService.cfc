@@ -41,6 +41,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 	// Image File Methods
 	public string function getResizedImagePath(required string imagePath, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="", numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=100,numeric scaleHeight=100) {
 		var resizedImagePath = "";
+		
 		if(!fileExists(expandPath(arguments.imagePath))) {
 			arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";
 		}
@@ -76,6 +77,18 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 			
 			var resizedImagePath = replaceNoCase(replaceNoCase(arguments.imagePath, listLast(arguments.imagePath, "/\"), "cache/#listLast(arguments.imagePath, "/\")#"),".#imageExt#","#imageNameSuffix#.#imageExt#");
 			
+			// Make sure that if a cached images exists that it is newer than the original
+			if(fileExists(expandPath(resizedImagePath))) {
+				var originalFileObject = createObject("java","java.io.File").init(expandPath(arguments.imagePath));
+				var resizedFileObject = createObject("java","java.io.File").init(expandPath(resizedImagePath));
+				var originalLastModified = createObject("java","java.util.Date").init(originalFileObject.lastModified());
+				var resizedLastModified = createObject("java","java.util.Date").init(resizedFileObject.lastModified());;
+				
+				if(originalLastModified > resizedLastModified) {
+					fileDelete(expandPath(resizedImagePath));
+				}
+			}
+			
 			if(!fileExists(expandPath(resizedImagePath))) {
 				// wrap image functions in a try-catch in case the image uploaded is "problematic" for CF to work with
 				try{
@@ -107,7 +120,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 						img = aspectCrop(img,arguments.width,arguments.height,arguments.cropLocation);
 					} else if(arguments.resizeMethod == "crop") {
 						if(!arguments.width) {
-							arguments.width = arguments.height;
+						arguments.width = arguments.height;
 						}
 						if(!arguments.height) {
 							arguments.height = arguments.width;
