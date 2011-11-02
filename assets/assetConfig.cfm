@@ -29,7 +29,12 @@ variables.assetDependencies["js/admin-order.detail.js"] =	[
 
 variables.assetDependencies["js/admin-promotion.detail.js"] =	[
 	"js/tools/timepicker/jquery-ui-timepicker-addon.js",
-	"css/tools/timepicker/jquery-ui-timepicker-addon.css"
+	"js/tools/chosen/chosen.jquery.min.js",
+	"js/tools/jquery.cookie.js",
+	"css/tools/dynatree/skin-vista/ui.dynatree.css",
+	"js/tools/dynatree/jquery.dynatree.min.js",
+	"css/tools/timepicker/jquery-ui-timepicker-addon.css",
+	"css/tools/chosen/chosen.css"
 	];
 	
 variables.assetDependencies["js/admin-report.js"] =	[

@@ -197,8 +197,114 @@ Notes:
 			<cfreturn altRet />
 		</cfif>
 	</cffunction>
+
+	<cffunction name="HTMLListFromQueryTree" access="public" output="false" returntype="string">
+		<cfargument name="theQuery" type="query" required="true" />
+		<cfargument name="displayColumn" type="string" default="title" />
+		<cfargument name="linkColumn" type="string" default="" hint="query column containing text to be used as links" />
+		<cfargument name="DepthPrefix" default="depth" type="String" required="false" />
+		<cfargument name="innerTag" type="string" default="" />
+        <cfargument name="linkPrefix" type="string" default="" />
+        <cfargument name="linkSuffix" type="string" default="" />
+		<cfargument name="activeItems" type="string" default="" />
+		<cfargument name="homelink" type="string" default="" />
+		<cfargument name="PathColumn" type="string" default="" hint="the name of the column containing the values to use to build paths to the items in the tree" />
+		<cfargument name="activeClass" type="string" default="active" />
+		<cfargument name="ListTag" default="ul" type="String" required="false" />
+		<cfargument name="baseURL" type="string" default="/" />
+		
+		<cfset var Ret = "" />
+		<cfset var MinDepth = 999 />
+		<cfset var Q = arguments.theQuery />
+		<cfset var LastDepth = 0 />
+		<cfset var ThisDepth = 0 />
+		<cfset var d = 0 />
+		<cfset var itemTag = "" />
+		<cfset var thislink = "" />
+        <cfset var innerTagOpen = trim(arguments.innerTag) />
+        <cfset var innerTagClose = "" />
+        
+        <cfif len(arguments.innerTag)>
+        	<cfset innerTagClose = insert("/",arguments.innerTag,"1") />
+        </cfif>
+		
+		<!--- Find the minimum depth of the tree --->
+		<cfloop query="Q">
+			<cfset ThisDepth = Q.TreeDepth />
+			<cfif ThisDepth LT MinDepth>
+				<cfset MinDepth = ThisDepth>
+			</cfif>
+		</cfloop>
+		<cfset LastDepth = MinDepth - 1>
+		
+		<!--- Main loop to  generate list --->
+		<cfloop query="Q">
+			<cfset ThisDepth = Q.TreeDepth /><!--- Get Depth of current item in the query --->
+			<!--- If the depth of the  current item is greater than the previous one, open a new list --->
+			<cfif LastDepth LT ThisDepth>
+				<cfloop from="#IncrementValue(LastDepth)#" to="#ThisDepth#" index="d">
+					<cfset Ret = Ret & '<#arguments.ListTag# class="#Arguments.DepthPrefix##d-MinDepth+1#">'><!--- add as many UL tags as depth of item --->
+				</cfloop>
+			<cfelse>
+				<!--- if the last item was deeper, we need to close off the lists in between --->
+				<cfif LastDepth GT ThisDepth>
+					<cfset Ret = Ret & RepeatString("</li></#Arguments.ListTag#>",LastDepth-ThisDepth) />
+				</cfif>
+				<!--- either way (if the depths are the same or last item was deeper), just close off the current list item --->
+				<cfset Ret = Ret & "</li>" />
+			</cfif>
+			<!--- set up li tag for whether it's active or not (a list of active items can be passed in)--->
+			<cfif len(arguments.pathColumn) and listfindnocase(arguments.activeItems,Q[variables.pathColumn][Q.CurrentRow])>
+				<cfset itemTag = '<li class="' & arguments.activeClass & '">' />
+			<cfelse>
+				<cfset itemTag = '<li>' />
+			</cfif>
+			<!--- associate list items with links if a linkcolumn was given --->
+			<cfif len(arguments.linkColumn)>
+				<!--- set if current link is the home page, set empty link (to go to site root) --->
+                <cfif (Q[arguments.linkColumn][Q.CurrentRow] neq arguments.homelink)>
+                    <cfset thislink = "/" & arguments.linkPrefix & HTMLEditFormat(Q[arguments.linkColumn][Q.CurrentRow]) & arguments.linkSuffix />
+                <cfelse>
+                    <cfset thislink = arguments.baseURL />
+                </cfif>
+				<cfset Ret = Ret & itemTag & '<a href="' &  thislink & '">' & innerTagOpen & HTMLEditFormat(Q[arguments.displayColumn][Q.CurrentRow]) & innerTagClose & '</a>' /><!--- item will be closed in later loop iteration --->
+			<cfelse>
+				<cfset Ret = Ret & itemTag & innerTagOpen & HTMLEditFormat(Q[arguments.displayColumn][Q.CurrentRow]) & innerTagClose /><!--- item will be closed in later loop iteration --->
+			</cfif>
+			<cfset LastDepth = ThisDepth />
+		</cfloop>
+		
+		<!--- Close off all items at once (there must be at least one)--->
+		<cfif Q.RecordCount GT 0>
+			<cfset Ret = Ret & RepeatString("</li></#Arguments.ListTag#>",LastDepth-(MinDepth-1)) />
+		</cfif>
+		<cfreturn Ret>
+		
+	</cffunction>
 	
-	
+	<cffunction name="structFromQueryTree" access="public" output="false" returntype="any">
+		<cfargument name="theQuery" type="query" required="true" />
+		<cfargument name="displayColumn" type="string" default="title" />
+		<cfargument name="parentID" default="" />
+		
+		<cfset var Ret = [] />
+		<cfset var Q = arguments.theQuery />
+			
+		<!--- Main loop to  generate struct --->
+		<cfloop query="Q">
+			<cfif Q.parentProductTypeID eq arguments.parentID>			
+				<cfset local.thisElement = {"title"="#Q[arguments.displayColumn][Q.CurrentRow]#"} />
+				<cfif Q.childCount gt 0>
+					<cfset local.thisElement["isFolder"] = "true" />
+					<cfset local.thisElement["children"] = structFromQueryTree(argumentCollection=arguments,parentID=Q.productTypeID) />
+				</cfif>
+				<cfset arrayAppend(Ret,local.thisElement) />
+			</cfif>
+		</cfloop>
+		
+		<cfreturn Ret>
+		
+	</cffunction>
 
 	<cfscript>
 	/**

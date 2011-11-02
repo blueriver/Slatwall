@@ -61,6 +61,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function create(required struct rc) {
 		rc.productTypeTree = getService("ProductService").getProductTypeTree();
+		rc.brands = getService("BrandService").listBrandorderByBrandName();
+		rc.optionGroups = getService("optionService").listOptionGroup();
 		rc.shippingMethods = getSettingService().listShippingMethod();
 		detail(arguments.rc);
 		getFW().setView("admin:promotion.detail");
@@ -69,6 +71,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function edit(required struct rc) {
 		rc.productTypeTree = getService("ProductService").getProductTypeTree();
+		rc.brands = getService("BrandService").listBrandorderByBrandName();
+		rc.optionGroups = getService("optionService").listOptionGroup();
 		rc.shippingMethods = getSettingService().listShippingMethod();
 		detail(arguments.rc);
 		getFW().setView("admin:promotion.detail");

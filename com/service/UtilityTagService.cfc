@@ -119,6 +119,18 @@ Notes:
 		<cfargument name="showdebugoutput" type="boolean" default="false" />
 		
 		<cfsetting attributecollection="#arguments#" />
+	</cffunction>
+	
+	<cffunction name="cffile" output="false">
+		<cfargument name="action" type="string" />
+		
+		<cfset var result = "" />
+		<cfset var attributes = duplicate(arguments) />
+		<cfset structDelete(attributes, "action") />
+		
+		<cffile attributecollection="#attributes#" action="#arguments.action#" result="result" >
+		
+		<cfreturn result />
 	</cffunction> 
 	
 </cfcomponent>

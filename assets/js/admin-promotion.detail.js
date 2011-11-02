@@ -99,41 +99,15 @@ jQuery(function() {
 	
 	var promotionRewardCount = jQuery('.promotionRewardForm').length;
     jQuery("#addPromotionReward").click(function() {
-        var current = jQuery('.promotionRewardForm').length;
-        current++;
-        var $newPromotionReward= jQuery( "#promotionRewardFormTemplate" ).clone(true);
-        $newPromotionReward.children("dl").each(function(i) {
-            var $currentElem= jQuery(this);
-			$currentElem.attr("id", $currentElem.attr("id") + current);
-        });
-        $newPromotionReward.children("dl").children("dt").children("label").each(function(i) {
-            var $currentElem= jQuery(this);
-			$currentElem.attr("for", $currentElem.attr("for") + current);
-        });
-        $newPromotionReward.children("dl").children("dd").children("input").each(function(i) {
-            var $currentElem= jQuery(this);
-            $currentElem.attr("name", "promotionRewards[" + current + "]." + $currentElem.attr("name"));
-			$currentElem.attr("id", $currentElem.attr("id") + current);
-        });
-        $newPromotionReward.children("dl").children("dd").children("select").each(function(i) {
-            var $currentElem= jQuery(this);
-            $currentElem.attr("name","promotionRewards["+current+"]."+$currentElem.attr("name"));
-			$currentElem.attr("id", $currentElem.attr("id") + current);
-        });
-        $newPromotionReward.removeAttr("id");
-		$newPromotionReward.removeAttr("class");
-		$newPromotionReward.addClass("promotionRewardForm");
-        jQuery('#rewardButtons').before($newPromotionReward);
+  		jQuery("#newPromotionReward").show(300);
         jQuery('#remPromotionReward').attr('style','');
+		return false;
     });
     
     jQuery('#remPromotionReward').click(function() {
-        var num = jQuery('.promotionRewardForm').length;
-        jQuery('.promotionRewardForm').last().remove();
-        // can't remove more promotionRewards than were originally present
-        if(num-1 == promotionRewardCount) {
-            jQuery('#remPromotionReward').attr('style','display:none;');
-        }
+ 		jQuery("#newPromotionReward").hide(300);
+		jQuery(this).hide();
+		return false;
     });
 
 	// ------- AUTOCOMPLETE for Product and SKU
@@ -162,7 +136,6 @@ jQuery(function() {
 	jQuery('.rewardTypeSelector').change(function() {
 		var selected = jQuery(this).val();
 		var idx = jQuery(this).parents('dl').attr('id').substr(12);
-		//alert(idx);
 		$shippingRewardForm = jQuery('#shippingReward' + idx);
 		$productRewardForm = jQuery('#productReward' + idx);
 		$shippingRewardForm.hide();
@@ -172,6 +145,34 @@ jQuery(function() {
 		} else if(selected == "product"){
 			$productRewardForm.show();
 		}
+		return false;
+	});
+	
+	jQuery('.chzn-select').chosen();
+	
+	jQuery('#selectProducts').click(function(){
+		jQuery('#productTree').show(100);
+		showProductTree();
+	});
+	
+	jQuery('#selectProductsAll').click(function(){
+		jQuery('#productTree').hide(100);
 	});
 });
+
+function showProductTree() {
+	jQuery("#productTree").dynatree({
+		initAjax: {
+			url: '/plugins/Slatwall/api/index.cfm/productservice/getproducttypetree/',
+			type: 'post',
+			data: {
+				apiKey: getProductTypeTreeAPIKey, 
+				format: 'struct'
+			}
+		},
+		checkbox: true,
+		selectMode: 3,
+        persist: true
+    });
+}
 	
