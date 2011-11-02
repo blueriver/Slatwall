@@ -38,6 +38,9 @@ Notes:
 --->
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
+<cfif rc.edit>
+	<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />
+</cfif>
 
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
@@ -71,11 +74,9 @@ Notes:
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
 					</div>
-					<!---
 					<div id="tabPromotionRewards">
 						#view("promotion/promotiontabs/promotionrewards")#
 					</div>
-					--->
 				</div>
 			</dl>
 			<cfif rc.edit>

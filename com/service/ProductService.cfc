@@ -395,11 +395,22 @@ component extends="BaseService" accessors="true" {
         variables.productTypeTree = productTypeTree;
     }
     
-    public any function getProductTypeTree() {
+    public any function getProductTypeTree(string format="query") {
     	if( !structKeyExists(variables, "productTypeTree") ) {
     		setProductTypeTree();
     	}
-    	return variables.productTypeTree; 
+    	var treeParams = {theQuery = variables.productTypeTree,displayColumn = "productTypeName"};
+    	if(arguments.format == "query") {    		
+	    	return variables.productTypeTree; 
+    	} else if (arguments.format == "list") {
+    		return getService("utilityService").htmlListFromQueryTree(argumentCollection=treeParams);
+    	} else if (arguments.format == "struct") {
+     		return getService("utilityService").structFromQueryTree(argumentCollection=treeParams);   		
+    	}
+    }
+    
+    public string function getJsonProductTypeTree() {
+    	return getProductTypeTree("json");
     }
     
     public any function getProductTypeFromTree(string productTypeID) {
