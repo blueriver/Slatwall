@@ -253,7 +253,7 @@ Notes:
 			<dd>
 				<select name="brand" id="brandID" multiple="multiple" data-placeholder="All" class="chzn-select" style="width:150px;">
 					<cfloop array="#rc.brands#" index="local.thisBrand">
-						<option value="#local.thisBrand.getBrandID#">#local.thisBrand.getBrandName()#</option>
+						<option value="#local.thisBrand.getBrandID()#">#local.thisBrand.getBrandName()#</option>
 					</cfloop>
 				</select>
 			</dd>
@@ -281,7 +281,7 @@ Notes:
 						<cfset local.options = local.thisOptionGroup.getOptions(orderby="optionName") />
 						<optgroup label="#local.thisOptionGroup.getOptionGroupName()#">
 							<cfloop array="#local.options#" index="local.thisOption">
-								<option value="#local.thisOption.getOptionID#">#local.thisOption.getOptionName()#</option>
+								<option value="#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</option>
 							</cfloop>
 						</optgroup>
 					</cfloop>
