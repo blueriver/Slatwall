@@ -248,7 +248,7 @@ Notes:
 	<div id="productReward">
 		<dl class="twoColumn">
 			<dt>
-				<label for="brandID">#rc.$.Slatwall.rbKey("entity.promotionReward.brand")#</label>
+				<label for="brandID">#rc.$.Slatwall.rbKey("entity.brand")#</label>
 			</dt>
 			<dd>
 				<select name="brand" id="brandID" multiple="multiple" data-placeholder="All" class="chzn-select" style="width:150px;">
@@ -273,7 +273,7 @@ Notes:
 		        </select>	
 			</dd>--->
 			<dt>
-				<label for="optionID">#rc.$.Slatwall.rbKey("admin.promotion.promotionReward.productOptions")#</label>
+				<label for="optionID">#rc.$.Slatwall.rbKey("entity.option")#</label>
 			</dt>
 			<dd>
 				<select name="options" id="optionID" multiple="multiple" data-placeholder="All" class="chzn-select" style="width:150px;">

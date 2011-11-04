@@ -66,7 +66,13 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		if(isNull(variables.promotionRewards)) {
 			variables.promotionRewards = [];
 		}
-	   return Super.init();
+		if(isNull(variables.startDateTime)) {
+			variables.startDateTime = now();
+		}
+		if(isNull(variables.endDateTime)) {
+			variables.endDateTime = now();
+		}
+		return Super.init();
 	}
  
 
