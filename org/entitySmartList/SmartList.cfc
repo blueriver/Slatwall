@@ -100,12 +100,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			} else if(i == "P#variables.dataKeyDelimiter#Show") {
 				if(arguments.data[i] == "ALL") {
 					setPageRecordsShow(1000000000);
-				} else if (isNumeric(arguments.data[i])) {
+				} else if ( isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0 ) {
 					setPageRecordsShow(arguments.data[i]);	
 				}
-			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i])) {
+			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
 				setPageRecordsStart(arguments.data[i]);
-			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i])) {
+			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
 				variables.currentPageDeclaration = arguments.data[i];
 			}
 		}
