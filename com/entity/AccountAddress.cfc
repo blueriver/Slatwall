@@ -40,13 +40,30 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	
 	// Persistent Properties
 	property name="accountAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	// name for this account Address
+	property name="name" ormtype="string";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
-	property name="accountAddressType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountAddressTypeID";
+	//property name="accountAddressType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountAddressTypeID";
 	
+	/*
 	public string function getAddressType() {
 		return getAccountAddressType().getType();
 	}
+	*/
+
+	/******* Association management methods for bidirectional relationships **************/
+	
+    // Account (many-to-one)
+	public void function setAccount(required any account) {
+	   variables.account = arguments.account;
+	   if(isNew() or !arguments.account.hasAccountAddress(this)) {
+	       arrayAppend(arguments.account.getAccountAddresses(),this);
+	   }
+	}
+	
+	/************   END Association Management Methods   *******************/
+	
 }

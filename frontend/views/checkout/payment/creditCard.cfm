@@ -44,9 +44,9 @@ Notes:
 
 <cfif !isNull(params.orderPayment.getBillingAddress())>
 	<cfset local.address = params.orderPayment.getBillingAddress() />
-<cfelseif arrayLen($.slatwall.cart().getOrderFulfillments()) eq 1 and not isNull($.slatwall.cart().getOrderFulfillments()[1].getShippingAddress())>
+<cfelseif arrayLen($.slatwall.cart().getOrderFulfillments()) eq 1 and not isNull($.slatwall.cart().getOrderFulfillments()[1].getAddress())>
 	<cfset local.sameAsShipping = true />
-	<cfset local.address = $.slatwall.cart().getOrderFulfillments()[1].getShippingAddress() />
+	<cfset local.address = $.slatwall.cart().getOrderFulfillments()[1].getAddress() />
 <cfelse>
 	<cfset local.address = getBeanFactory().getBean("addressService").newAddress() />
 </cfif>

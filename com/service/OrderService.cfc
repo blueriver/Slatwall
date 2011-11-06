@@ -336,6 +336,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					var orderRequirementsList = getOrderRequirementsList(order);
 					
 					if( !len(orderRequirementsList) ) {
+						// prepare order for processing
+						// copy shipping address if needed
+						copyFulfillmentAddress(order=order);
 						
 						// Process all of the order payments
 						var paymentsProcessed = processOrderPayments(order=order);
@@ -429,23 +432,42 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
 			
 			// Get Address
-			if( isNull(arguments.orderFulfillment.getShippingAddress()) ) {
-				var address = getAddressService().newAddress();
-			} else {
-				var address = arguments.orderFulfillment.getShippingAddress();
+			if(val(data.accountAddress.accountAddressID) > 0){
+				var address = getAddressService().getAddress(data.accountAddress[data.accountAddress.accountAddressID].address.addressID,true);
+				var newDataStruct = data.accountAddress[data.accountAddress.accountAddressID].address;
+			} else {	
+				var address = getAddressService().getAddress(data.shippingAddress.addressID,true);
+				var newDataStruct = data.shippingAddress;
 			}
-			
-			// Set the address in the order Fulfillment
-			arguments.orderFulfillment.setShippingAddress(address);
 			
 			// Populate Address And check if it has changed
 			var serializedAddressBefore = address.simpleValueSerialize();
-			address.populate(data.shippingAddress);
+			address.populate(newDataStruct);
 			var serializedAddressAfter = address.simpleValueSerialize();
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
 				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
 				getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+			}
+			
+			if(val(data.accountAddress.accountAddressID) > 0 || data.saveAddress == 1){
+				var accountAddress = getAddressService().getAccountAddress(data.accountAddress.accountAddressID,true);
+				accountAddress.setAddress(address);
+				arguments.orderFulfillment.removeShippingAddress();
+				arguments.orderFulfillment.setAccountAddress(accountAddress);
+			} 
+			// if it's a new address to save set the account
+			if(val(data.accountAddress.accountAddressID) == 0 && data.saveAddress == 1){
+				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
+				//ToDo: Add UI for naming an address
+				accountAddress.setName(address.getname());
+			}
+			
+			//if new not a saved address in account and user doesn't want to save
+			if(val(data.accountAddress.accountAddressID) == 0 && data.saveAddress != 1){
+				// Set the address in the order Fulfillment
+				arguments.orderFulfillment.setShippingAddress(address);
+				arguments.orderFulfillment.removeAccountAddress();
 			}
 			
 			// Validate & Save Address
@@ -470,6 +492,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Save the order Fulfillment
 		return getDAO().save(arguments.orderFulfillment);
+	}
+	
+	public any function copyFulfillmentAddress(required any order){
+		for(var orderFulfillment in order.getOrderFulfillments()){
+			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
+				if(!isNull(orderFulfillment.getAccountAddress())){
+					orderFulfillment.setShippingAddress(orderFulfillment.getAccountAddress().getAddress());
+					orderFulfillment.removeAccountAddress();
+					getDAO().save(orderFulfillment);
+				}
+			}
+		}
 	}
 	
 	/**

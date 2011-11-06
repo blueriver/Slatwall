@@ -42,6 +42,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
+	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
 	
 	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
@@ -54,20 +55,37 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		return super.init();
 	}
 
+	public void function removeAccountAddress() {     
+		structDelete(variables,"AccountAddress");     
+	}
+	 
+	public void function removeShippingAddress() {     
+		structDelete(variables,"ShippingAddress");     
+	}
+	 
+	public any function getAccountAddressOptions() {
+		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAddress");
+		smartList.addSelect(propertyIdentifier="name", alias="name");
+		smartList.addSelect(propertyIdentifier="accountAddressID", alias="id"); 
+		smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
+		smartList.addOrder("name|ASC");
+		return smartList.getRecords();
+	}
+	
 	public boolean function isProcessable() {
 		if(!super.isProcessable()) {
 			return false;
 		}
 		
-		if(isNull(getShippingAddress())) {
+		if(isNull(getAddress())) {
 			return false;
-		} else if(getService("addressService").validateAddress(getShippingAddress()).getErrorBean().hasErrors()) {
+		} else if(getService("addressService").validateAddress(getAddress()).getErrorBean().hasErrors()) {
 			return false;
 		}
 		
 		if(isNull(getShippingMethod())) {
 			// Force in new shipping options
-			if(!isNull(variables.shippingAddress) && arrayLen(variables.orderFulfillmentItems) && !arrayLen(variables.orderShippingMethodOptions)) {
+			if(!isNull(getAddress()) && arrayLen(variables.orderFulfillmentItems) && !arrayLen(variables.orderShippingMethodOptions)) {
 				getService("ShippingService").populateOrderShippingMethodOptions(this);
 			}
 			return false;
@@ -111,5 +129,15 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	    	}			
   		}
     	return variables.totalShippingWeight;
+    }
+    
+    public any function getAddress(){
+    	if(!isNull(getShippingAddress())){
+    		return getShippingAddress();
+    	} else if(!isNull(getAccountAddress())) {
+    		return getAccountAddress().getAddress();
+    	} else {
+    		return ;
+    	}
     }
 }
