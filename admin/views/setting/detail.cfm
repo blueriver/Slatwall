@@ -145,6 +145,7 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_showRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.showRemoteIDFields')#" property="settingValue" fieldName="advanced_showRemoteIDFields" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_dateFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.dateFormat')#" property="settingValue" fieldName="advanced_dateFormat" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_timeFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.timeFormat')#" property="settingValue" fieldName="advanced_timeFormat" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_currencyLocale#" title="#rc.$.Slatwall.rbKey('setting.advanced.currencyLocale')#" property="settingValue" fieldName="advanced_currencyLocale" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
 				</table>
 			</div>
 		</div>

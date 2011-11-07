@@ -37,6 +37,71 @@ Notes:
 
 --->
 
-<cfparam name="attributes.fieldType" type="any" />
-<cfparam name="attributes.value" type="any" />
+<cfparam name="attributes.fieldType" type="string" />
+<cfparam name="attributes.fieldName" type="string" />
+<cfparam name="attributes.fieldClass" type="string" />
+<cfparam name="attributes.value" type="any" default="" />
+<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
 
+<!---
+	attributes.fieldType have the following options:
+	
+	checkbox			|	Requires the valueOptions to be an array of structs with the format of {label="", value=""}
+	file				|	No value can be passed in	
+	password			|	No Value can be passed in
+	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {label="", value=""}
+	select      		|	Requires the valueOptions to be an array of structs with the format of {label="", value=""}
+	text				|	Simple Text Field
+	textarea			|	Simple Textarea
+	wysiwyg				|	Value needs to be a string
+	
+--->
+
+<cfset local = structNew() />
+
+<cfif thisTag.executionMode is "start">
+	<cfswitch expression="#attributes.fieldType#">
+		<cfcase value="checkbox">
+			<input type="hidden" name="#attributes.fieldName#" value="" />
+			<cfloop array="#attributes.valueOptions#" index="local.option">
+				<input type="checkbox" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, local.option.value)> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>	
+			</cfloop>
+			<cfbreak />
+		</cfcase>
+		<cfcase value="file">
+			<input type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+			<cfbreak />
+		</cfcase>
+		<cfcase value="password">
+			<input type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="false" />
+			<cfbreak />
+		</cfcase>
+		<cfcase value="radiogroup">
+			<input type="hidden" name="#attributes.fieldName#" value="" />
+			<cfloop array="#attributes.valueOptions#" index="local.option">
+				<input type="radio" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif attributes.value eq local.option.value> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>
+			</cfloop>
+			<cfbreak />
+		</cfcase>
+		<cfcase value="select">
+			<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+				<cfloop array="#attributes.valueOptions#" index="local.option">
+					<option value="#local.option.value#" <cfif attributes.value eq local.option.value> selected="selected"</cfif>>#local.option.label#</option>	
+				</cfloop>
+			</select>
+			<cfbreak />
+		</cfcase>
+		<cfcase value="text">
+			<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" />
+			<cfbreak />
+		</cfcase>
+		<cfcase value="textarea">
+			<textarea name="#attributes.fieldName#" class="#attributes.fieldClass#">#attributes.value#</textarea>
+			<cfbreak />
+		</cfcase>
+		<cfcase value="wysiwyg">
+			<textarea name="#attributes.fieldName#" class="wysiwyg #attributes.fieldClass#">#attributes.value#</textarea>
+			<cfbreak />
+		</cfcase>
+	</cfswitch>
+</cfif>

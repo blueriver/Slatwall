@@ -181,18 +181,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	/*
 	
-	// Removed in favor of alternatives
-	public array function getProperties(struct metaData=getMetaData(this)) {
-		var properties = arguments.metaData["properties"];
-		var parentProperties = "";
-		// recursively get properties of any super classes
-		if(structKeyExists(arguments.metaData, "extends") && structKeyExists(arguments.metaData.extends,"properties")) {
-			parentProperties = getProperties(arguments.metaData["extends"]);
-			return arrayConcat(parentProperties,properties);
-		} else {
-			return properties;
-		}
-	}
 	
 	// Moved to the utility Service
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 

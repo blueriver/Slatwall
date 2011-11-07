@@ -44,9 +44,9 @@ component displayname="Base Object" output="false" {
 		return this;
 	}
 	
-	/********************************************************************************/
-	/******************** Public Methods For Doing Stanrd Tasks *********************/
-	/********************************************************************************/
+	/*********************************************************************************/
+	/********************* Public Methods For Doing Stanrd Tasks *********************/
+	/*********************************************************************************/
 	
 	// Public populate method to utilize a struct of data that follows the standard property identifier format
 	public void function poplulate(required struct data={}) {
@@ -79,6 +79,106 @@ component displayname="Base Object" output="false" {
 			return "";
 		}
 		return value;
+	}
+	
+	public any function getFormatedPropertyValue(required string propertyName, string valueDisplayFormat, any value) {
+		if(!structKeyExists(arguments, "value")) {
+			arguments.value = invokeMethod("get#arguments.propertyName#");
+		}
+		if(!structKeyExists(arguments, "valueDisplayFormat")) {
+			arguments.valueDisplayFormat = getPropertyValueDisplayFormat(arguments.propertyName);
+		}
+		
+		// This is the null format option
+		if(isNull(arguments.value)) {
+			return "";
+		}
+		
+		switch(arguments.valueDisplayFormat) {
+			case "none": {
+				return arguments.value;
+			}
+			case "yesno": {
+				if(isBoolean(arguments.value) && arguments.value) {
+					return rbKey('define.yes');
+				} else {
+					return rbKey('define.no');
+				}
+			}
+			case "truefalse": {
+				if(isBoolean(arguments.value) && arguments.value) {
+					return rbKey('define.true');
+				} else {
+					return rbKey('define.false');
+				}
+			}
+			case "currency": {
+				var oldLocale = getLocale();
+				if(oldLocale != setting('currencyLocale')) {
+					setLocale(setting("advanced_currencyLocale"));
+				}
+				arguments.value = LSCurrencyFormat(arguments.value, setting("advanced_currencyType"));
+				if(oldLocale != setting('currencyLocale')) {
+					setLocale(oldLocale);
+				}
+				return arguments.value;
+			}
+			case "datetime": {
+				return dateFormat(arguments.value, setting("advanced_dateFormat")) & " " & TimeFormat(arguments.value, setting("advanced_timeFormat"));
+			}
+			case "date": {
+				return dateFormat(arguments.value, setting("advanced_dateFormat"));
+			}
+			case "time": {
+				return timeFormat(arguments.value, setting("advanced_timeFormat"));
+			}
+			case "weight": {
+				return arguments.value & " " & setting("advanced_weightFormat");
+			}
+		}
+		
+		var formatedValue = "";
+		
+		return formatedValue;
+	}
+	
+	// @help public method for getting the default display format for a property
+	public string function getPropertyValueDisplayFormat(required string propertyName) {
+		/*
+			Valid Format Strings are:
+		
+			none
+			yesno
+			truefalse
+			currency
+			datetime
+			date
+			time
+			weight
+		*/
+	}
+	
+	// @help public method for getting a recursive list of all the meta data of the properties of an object
+	public array function getProperties(struct metaData=getMetaData(this)) {
+		var properties = arguments.metaData["properties"];
+		var parentProperties = "";
+		// recursively get properties of any super classes
+		if(structKeyExists(arguments.metaData, "extends") && structKeyExists(arguments.metaData.extends,"properties")) {
+			parentProperties = getProperties(arguments.metaData["extends"]);
+			return getService("utilityService").arrayConcat(parentProperties,properties);
+		} else {
+			return properties;
+		}
+	}
+	
+	// @help public method for getting the meta data of a specific property
+	public struct function getPropertyMetaData(sting propertyName) {
+		var properties = getProperties();
+		for(var i=1; i<=arrayLen(properties); i++) {
+			if(properties[i].name eq arguments.propertyName) {
+				return properties[i];
+			}
+		}
 	}
 	
 	// @help Public Method that allows you to get a serialized JSON struct of all the simple values in the variables scope.  This is very useful for compairing objects before and after a populate
