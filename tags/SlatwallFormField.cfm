@@ -37,11 +37,6 @@ Notes:
 
 --->
 
-<cfparam name="attributes.object" type="any" />
-<cfparam name="attributes.propertyIdentifier" type="any" />
-<cfparam name="attributes.displayType" type="string" default="dl" />
-<cfparam name="attributes.edit" type="boolean" default="false" />
+<cfparam name="attributes.fieldType" type="any" />
+<cfparam name="attributes.value" type="any" />
 
-<cfif thisTag.executionMode is "start">
-	
-</cfif>

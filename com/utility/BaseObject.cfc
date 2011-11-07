@@ -38,23 +38,106 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
+	
+	// Constructor Metod
 	public any function init() {
-		
 		return this;
 	}
+	
+	/********************************************************************************/
+	/******************** Public Methods For Doing Stanrd Tasks *********************/
+	/********************************************************************************/
+	
+	// Public populate method to utilize a struct of data that follows the standard property identifier format
+	public void function poplulate(required struct data={}) {
+		
+	}
+	
+	// @help Public method to retrieve a value based on a propertyIdentifier string format
+	public any function getValueByPropertyIdentifier(required string propertyIdentifier) {
+		var value = javaCast("null", "");
+		var arrayValue = arrayNew(1);
+		var pa = listToArray(propertyIdentifier, "._");
+		
+		for(var i=1; i<=arrayLen(pa); i++) {
+			try {
+				if(isNull(value)) {
+					value = evaluate("get#pa[i]#()");
+				} else if(isArray(value)) {
+					for(var ii=1; ii<=arrayLen(value); ii++) {
+						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i]));
+					}
+					return arrayValue;
+				} else {
+					value = evaluate("value.get#pa[i]#()");
+				}	
+			} catch (any e) {
+				return "";
+			}
+		}
+		if(isNull(value)) {
+			return "";
+		}
+		return value;
+	}
+	
+	// @help Public Method that allows you to get a serialized JSON struct of all the simple values in the variables scope.  This is very useful for compairing objects before and after a populate
+	public string function simpleValueSerialize() {
+		var data = {};
+		for(var key in variables) {
+			if(isSimpleValue(variables[key]) && key != "updateKeys") {
+				data[key] = variables[key];
+			}
+		}
+		return serializeJSON(data);
+	}
+		
+	// @help Public Method to invoke any method in the object, If the method is not defined it calls onMissingMethod
+	public any function invokeMethod(required string methodName, struct methodArguments={}) {
+		if(structKeyExists(this, arguments.methodName)) {
+			var theMethod = this[ arguments.methodName ];
+		} else {
+			var theMethod = this.onMissingMethod;
+		}
+		
+		return theMethod(argumentCollection = methodArguments);
+	}
+	
+	// @help Public method to get everything in the variables scope, good for debugging purposes
+	public any function getVariables() {
+		return variables;
+	}
+	
+	/********************************************************************************/
+	/*********************** Private Helper Methods *********************************/
+	/********************************************************************************/
+			
+	// @help private method only used by populate
+	private void function _setProperty( required any name, any value ) {
+		var theMethod = this["set" & arguments.name];
+		if( isNull(arguments.value) ) {
+			structDelete(variables,arguments.name);
+		} else {
+			theMethod(arguments.value);
+		}
+	}
+	
+	/********************************************************************************/
+	/*********************** Private Helper Delegation Methods **********************/
+	/********************************************************************************/
 	
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string service) {
 		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
 	}
 	
-	// @hint absolute url path from site root
-	public string function getSlatwallRootPath() {
+	// @hint Private helper function absolute url path from site root
+	private string function getSlatwallRootPath() {
 		return "#application.configBean.getContext()#/plugins/Slatwall";
 	}
 	
-	// @hint the file system directory
-	public string function getSlatwallRootDirectory() {
+	// @hint Private helper function the file system directory
+	private string function getSlatwallRootDirectory() {
 		return expandPath("/plugins/Slatwall");
 	}
 	
@@ -83,55 +166,14 @@ component displayname="Base Object" output="false" {
 		return getPluginConfig().getApplication().getValue('fw');
 	}
 	
-	public any function getVariables() {
-		return variables;
-	}
-	
-	public string function buildURL() {
+	// @hint Private helper function for building URL's
+	private string function buildURL() {
 		return getFW().buildURL(argumentCollection = arguments);
 	}
 	
-	public string function secureDisplay() {
+	// @hint Private helper function for getting checking security
+	private boolean function secureDisplay() {
 		return getFW().secureDisplay(argumentCollection = arguments);
-	}
-	
-	public any function invokeMethod(required string methodName, struct methodArguments={}) {
-		if(structKeyExists(this, arguments.methodName)) {
-			var theMethod = this[ arguments.methodName ];
-		} else {
-			var theMethod = this.onMissingMethod;
-		}
-		
-		return theMethod(argumentCollection = methodArguments);
-	}
-	
-	public any function getPropertyValueByIdentifier(required string propertyIdentifier) {
-		var value = javaCast("null", "");
-		var arrayValue = arrayNew(1);
-		var pa = listToArray(propertyIdentifier, "._");
-		
-		for(var i=1; i<=arrayLen(pa); i++) {
-			try {
-				if(isNull(value)) {
-					value = evaluate("get#pa[i]#()");
-				} else if(isArray(value)) {
-					for(var ii=1; ii<=arrayLen(value); ii++) {
-						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i]));
-					}
-					return arrayValue;
-				} else {
-					value = evaluate("value.get#pa[i]#()");
-				}	
-			} catch (any e) {
-				return "";
-			}
-		}
-		
-		if(isNull(value)) {
-			return "";
-		}
-		
-		return value;
 	}
 	
 }
