@@ -57,7 +57,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return save(argumentcollection=arguments);
 	}
 	
-	public array function populateOrderShippingMethodOptions(required Slatwall.com.entity.OrderFulfillmentShipping orderFulfillmentShipping) {
+	public array function populateOrderShippingMethodOptions(required any orderFulfillmentShipping) {
 		var shippingMethods = getDAO().list(entityName="SlatwallShippingMethod");
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
@@ -67,7 +67,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var i=1; i<=arrayLen(shippingMethods); i++) {
 			
 			// Check the shipping methods eligible address zone to make sure that it is eligible
-			if(shippingMethods[i].getActiveFlag() && (isNull(shippingMethods[i].getEligibleAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=shippingMethods[i].getEligibleAddressZone()))){
+			if(shippingMethods[i].getActiveFlag() && (isNull(shippingMethods[i].getEligibleAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getAddress(), addressZone=shippingMethods[i].getEligibleAddressZone()))){
 				
 				// If this method uses rate tables, get the quote
 				if(shippingMethods[i].getUseRateTableFlag()) {
@@ -79,7 +79,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					for(var r=1;r <= arrayLen(rates); r++) {
 						// Make sure that the shipping address is in the zone of this rate
 					
-						if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getShippingAddress(), addressZone=rates[r].getAddressZone())){
+						if(isNull(rates[r].getAddressZone()) || getAddressService().isAddressInZone(address=arguments.orderFulfillmentShipping.getAddress(), addressZone=rates[r].getAddressZone())){
 							
 							var rateApplies = true;
 							

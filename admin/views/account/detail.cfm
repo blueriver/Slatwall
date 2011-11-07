@@ -60,6 +60,8 @@ Notes:
 
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 			<ul>
+				<li><a href="##tabAddresses" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.addresses")#</span></a></li>
+				<li><a href="##tabLogin" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.login")#</span></a></li>
 				<li><a href="##tabOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.orders")#</span></a></li>
 				<li><a href="##tabCarts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.carts")#</span></a></li>
 				<li><a href="##tabProductReviews" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.productReviews")#</span></a></li>
@@ -68,6 +70,12 @@ Notes:
 				</cfloop>
 			</ul>
 		
+			<div id="tabAddresses">
+				#view("admin:account/accounttabs/addresses")#
+			</div>
+			<div id="tabLogin">
+				#view("admin:account/accounttabs/login")#
+			</div>
 			<div id="tabOrders">
 				#view("admin:account/accounttabs/orders")#
 			</div>

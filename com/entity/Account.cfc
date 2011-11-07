@@ -48,6 +48,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Related Object Properties (many-to-one)
 	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
+	property name="primaryAccountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAccountAddressID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
@@ -55,6 +56,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
+	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -80,6 +82,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 		if(isNull(variables.orders)) {
 			variables.orders = [];
+		}
+		if(isNull(variables.accountAddresses)) {
+			variables.accountAddresses = [];
 		}
 		if(isNull(variables.productReviews)) {
 			variables.productReviews = [];
@@ -114,6 +119,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 			return getPrimaryEmailAddress().getEmailAddress();
 		}
 		return "";
+	}
+	
+	public string function getAddress() {
+		if(!isNull(getPrimaryAccountAddress()) && !isNull(getPrimaryAccountAddress().getAddress())) {
+			return getPrimaryAccountAddress().getAddress();
+		} else {
+			return getService("addressService").newAddress();
+		}
 	}
 	
 	// get all the assigned attribute sets
@@ -170,6 +183,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	public void function removeProductReview(required any productReview) {
 	   arguments.productReview.removeAccount(this);
+	}
+	
+	// Addresses (one-to-many)
+	public void function addAccountAddress(required any accountAddress) {
+	   arguments.accountAddress.setAccount(this);
 	}
 	
 	// Account Email Addresses (one-to-many)

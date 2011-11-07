@@ -218,11 +218,15 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.entities[arguments.entityName] = duplicate(arguments);
 	}
 	
-	private string function getAliasedProperty(required string propertyIdentifier) {
+	private string function getAliasedProperty(required string propertyIdentifier, boolean fetch) {
 		var entityName = getBaseEntityName();
 		var entityAlias = variables.entities[getBaseEntityName()].entityAlias;
 		for(var i=1; i<listLen(arguments.propertyIdentifier, variables.subEntityDelimiters); i++) {
-			entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters));
+			if(structKeyExists(arguments,"fetch")){
+				entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters),fetch=arguments.fetch);
+			} else {
+				entityName = joinRelatedProperty(parentEntityName=entityName, relatedProperty=listGetAt(arguments.propertyIdentifier, i, variables.subEntityDelimiters));
+			}
 			entityAlias = variables.entities[entityName].entityAlias;
 		}
 		return "#entityAlias#.#variables.entities[entityName].entityProperties[listLast(propertyIdentifier, variables.subEntityDelimiters)].name#";
@@ -232,9 +236,13 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.alias;
 	}
 	
-	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
+	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1, boolean fetch) {
 		confirmWhereGroup(arguments.whereGroup);
-		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		if(structKeyExists(arguments,"fetch")){
+			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=arguments.fetch);
+		} else {
+			var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
+		}
 		
 		if(structKeyExists(variables.whereGroups[arguments.whereGroup].filters, aliasedProperty)) {
 			variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] &= variables.valueDelimiter & arguments.value;
