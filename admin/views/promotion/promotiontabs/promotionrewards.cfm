@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cfif arrayLen(rc.promotion.getPromotionRewards()) gt 0>
-	<table id="promotionRewardTable">
+	<table id="promotionRewardTable" class="mura-table-grid">
 		<thead>
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.promotionReward.rewardType")#</th>
@@ -60,23 +60,25 @@ Notes:
 				</td>
 				<td class="varWidth">
 					<cfset local.itemName = "" />
-	<!---				<cfif local.thisPromotionReward.getRewardType() eq "product">		
-						<cfif !isNull(local.thisPromotionReward.getProductType())>
-							<cfset local.itemName = local.thisPromotionReward.getProductType().getProductTypeName() />
-						</cfif>
-						<cfif !isNull(local.thisPromotionReward.getProduct())>
-							<cfset local.itemName = listAppend(local.itemName,local.thisPromotionReward.getProduct().getProductName(),"-") />
-						</cfif>
-						<cfif !isNull(local.thisPromotionReward.getSKU())>
-							<cfset local.itemName = listAppend(local.itemName, $.Slatwall.rbKey('entity.promotionReward.sku') & ":  " & local.thisPromotionReward.getSKU().getSKUCode(),"-") />
+					<cfif local.thisPromotionReward.getRewardType() eq "product">
+						<cfif arrayLen(local.thisPromotionReward.getSkus())>
+							<cfset local.itemName = arrayLen(local.thisPromotionReward.getSkus()) gt 1 ? "Skus: " : "Sku: " />
+							<cfset local.itemName &= local.thisPromotionReward.displaySkuCodes() />		
+						<cfelseif arrayLen(local.thisPromotionReward.getProducts())>
+							<cfset local.itemName = local.thisPromotionReward.displayProductNames() />
+						<cfelseif arrayLen(local.thisPromotionReward.getProductTypes())>
+							<cfset local.itemName = arrayLen(local.thisPromotionReward.getProductTypes()) gt 1 ? "#$.Slatwall.rbKey('admin.product.product.productTypes')#: " : "#$.Slatwall.rbKey('entity.product.productType')#: " />
+							<cfset local.itemName &= local.thisPromotionReward.displayProductTypeNames() />
+						<cfelse>
+							<cfset local.itemName = $.Slatwall.rbKey("define.all") />
 						</cfif>
 					<cfelseif local.thisPromotionReward.getRewardType() eq "shipping">
-						<cfif !isNull(thisPromotionReward.getShippingMethod())>
-							<cfset local.itemName = thisPromotionReward.getShippingMethod().getShippingMethodName() />
+						<cfif arrayLen(thisPromotionReward.getShippingMethods())>
+							<cfset local.itemName = thisPromotionReward.displayShippingMethodNames() />
 						<cfelse>
-							<cfset local.itemName = "" />
+							<cfset local.itemName = $.Slatwall.rbKey("define.all") />
 						</cfif>
-					</cfif>--->
+					</cfif>
 					#local.itemName#
 				</td>
 				<td>
@@ -134,11 +136,12 @@ Notes:
 									<label for="productTypeID#local.promotionRewardCount#">#rc.$.Slatwall.rbKey("entity.promotionReward.productType")#</label>
 								</dt>
 								<select name="promotionRewards[#local.promotionRewardCount#].productType" id="productTypeID#local.promotionRewardCount#">
-						            <option value="0">N/A</option>
+						            <option value="0">#$.Slatwall.rbKey("define.all")#</option>
 							        <cfloop query="rc.productTypeTree">
+										<cfset local.productTypeIDs = local.thisPromotionReward.getProductTypeIDs() />
 							            <cfset local.thisDepth = rc.productTypeTree.TreeDepth />
 							            <cfif local.thisDepth><cfset local.bullet="-"><cfelse><cfset local.bullet=""></cfif>
-							            <option value="#rc.productTypeTree.productTypeID#">
+							            <option value="#rc.productTypeTree.productTypeID#"<cfif listFindNoCase(local.thisPromotionReward.getProductTypeIDs(), rc.productTypeTree.productTypeID)> selected="selected"</cfif>>
 							                #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##local.bullet##rc.productTypeTree.productTypeName#
 							            </option>
 							        </cfloop>
@@ -148,19 +151,19 @@ Notes:
 									<label for="productName#local.promotionRewardCount#">#rc.$.Slatwall.rbKey("entity.promotionReward.product")#</label>
 								</dt>
 								<dd>
-									<!---<cfset local.productName = !isNull(local.thisPromotionReward.getProduct()) ? local.thisPromotionReward.getProduct().getTitle() : "" />
-									<cfset local.productID = !isNull(local.thisPromotionReward.getProduct()) ? local.thisPromotionReward.getProduct().getProductID() : "" />
+									<cfset local.productName = local.thisPromotionReward.displayProductNames() />
+									<cfset local.productID = local.thisPromotionReward.getProductIDs() />
 									<input type="text" id="productName#local.promotionRewardCount#" class="rewardProduct" name="promotionRewards[#local.promotionRewardCount#].productName" value="#local.productName#" />
-									<input type="hidden" id=product#local.promotionRewardCount# name="promotionRewards[#local.promotionRewardCount#].product" value="#local.productID#" />--->
+									<input type="hidden" id=product#local.promotionRewardCount# name="promotionRewards[#local.promotionRewardCount#].product" value="#local.productID#" />
 								</dd>
 								<dt>
 									<label for="skuCode#local.promotionRewardCount#">#rc.$.Slatwall.rbKey("entity.promotionReward.sku")#</label>
 								</dt>
 								<dd>
-<!---									<cfset local.skuCode = !isNull(local.thisPromotionReward.getSku()) ? local.thisPromotionReward.getSku().getSkuCode() : "" />
-									<cfset local.skuID = !isNull(local.thisPromotionReward.getSku()) ? local.thisPromotionReward.getSku().getSkuID() : "" />
+									<cfset local.skuCode = local.thisPromotionReward.displaySkuCodes() />
+									<cfset local.skuID = local.thisPromotionReward.getSkuIDs() />
 									<input type="text" id="skuCode#local.promotionRewardCount#" class="rewardSku" name="promotionRewards[#local.promotionRewardCount#].skuCode" value="#local.skuCode#" />
-									<input type="hidden" id=sku#local.promotionRewardCount# name="promotionRewards[#local.promotionRewardCount#].sku" value="#local.skuID#" />--->
+									<input type="hidden" id=sku#local.promotionRewardCount# name="promotionRewards[#local.promotionRewardCount#].sku" value="#local.skuID#" />
 								</dd>
 								<dt>
 									<label for="itemRewardQuantity#local.promotionRewardCount#">#rc.$.Slatwall.rbKey("entity.promotionReward.itemRewardQuantity")#</label>
@@ -189,11 +192,12 @@ Notes:
 									<label for="shippingMethod#local.promotionRewardCount#">#rc.$.Slatwall.rbKey("admin.promotion.edit.shippingMethod")#</label>
 								</dt>
 								<dd>
+									<cfset local.shippingMethodIDs = local.thisPromotionReward.getShippingMethodIDs() />
 									<cfif arrayLen(rc.shippingMethods) gt 0>
 									<select name="promotionRewards[#local.promotionRewardCount#].shippingMethod" id="shippingMethod#local.promotionRewardCount#">
 										<option value="">#$.Slatwall.rbKey("define.select")#</option>
 										<cfloop array="#rc.shippingMethods#" index="local.shippingMethod">
-											<option value="#local.shippingMethod.getShippingMethodID()#"<cfif !isNull(local.thisPromotionReward.getShippingMethod()) && local.thisPromotionReward.getShippingMethod().getShippingMethodID() eq local.shippingMethod.getShippingMethodID()> selected="selected"</cfif>>#local.shippingMethod.getShippingMethodName()#</option>
+											<option value="#local.shippingMethod.getShippingMethodID()#"<cfif listFindNoCase(local.shippingMethodIDs,local.shippingMethod.getShippingMethodID())> selected="selected"</cfif>>#local.shippingMethod.getShippingMethodName()#</option>
 										</cfloop>
 									</select>
 									<cfelse>
@@ -228,10 +232,13 @@ Notes:
 		<p><em>#$.Slatwall.rbKey('admin.promotion.detail.noPromotionRewardsDefined')#</em></p>
 	</cfif>
 <cfif rc.edit>
-
+<div class="buttons" id="rewardButtons">
+	<a class="button" id="addPromotionReward">#rc.$.Slatwall.rbKey("admin.promotion.edit.addPromotionReward")#</a>
+	<a class="button" id="remPromotionReward" style="display:none;">#rc.$.Slatwall.rbKey("admin.promotion.edit.removePromotionReward")#</a>
+</div>
 
 <!--- Form for new reward --->
-<div id="newPromotionReward" class="hideElement">
+<div id="promotionRewardFormTemplate" class="hideElement">
 	<dl class="oneColumn" id="typeSelector">
 		<dt>
 			<label for="rewardType">#$.Slatwall.rbKey("admin.promotion.edit.rewardType")#</label>
@@ -244,79 +251,54 @@ Notes:
 			<input type="hidden" name="promotionRewardID" value="" />
 		</dd>
 	</dl>
-	<!--- Product Rewards --->
-	<div id="productReward">
-		<dl class="twoColumn">
-			<dt>
-				<label for="brandID">#rc.$.Slatwall.rbKey("entity.brand")#</label>
-			</dt>
-			<dd>
-				<select name="brand" id="brandID" multiple="multiple" data-placeholder="All" class="chzn-select" style="width:150px;">
-					<cfloop array="#rc.brands#" index="local.thisBrand">
-						<option value="#local.thisBrand.getBrandID()#">#local.thisBrand.getBrandName()#</option>
-					</cfloop>
-				</select>
-			</dd>
-	<!---		<dt>
-				<label for="productTypeID">#rc.$.Slatwall.rbKey("entity.promotionReward.productType")#</label>
-			</dt>
-			<dd>
-				<select name="productType" id="productTypeID">
-		            <option value="0">#rc.$.Slatwall.rbKey("define.all")#</option>
-			        <cfloop query="rc.productTypeTree">
-			            <cfset local.thisDepth = rc.productTypeTree.TreeDepth />
-			            <cfif local.thisDepth><cfset local.bullet="-"><cfelse><cfset local.bullet=""></cfif>
-			            <option value="#rc.productTypeTree.productTypeID#">
-			                #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##local.bullet##rc.productTypeTree.productTypeName#
-			            </option>
-			        </cfloop>
-		        </select>	
-			</dd>--->
-			<dt>
-				<label for="optionID">#rc.$.Slatwall.rbKey("entity.option")#</label>
-			</dt>
-			<dd>
-				<select name="options" id="optionID" multiple="multiple" data-placeholder="All" class="chzn-select" style="width:150px;">
-					<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-						<cfset local.options = local.thisOptionGroup.getOptions(orderby="optionName") />
-						<optgroup label="#local.thisOptionGroup.getOptionGroupName()#">
-							<cfloop array="#local.options#" index="local.thisOption">
-								<option value="#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</option>
-							</cfloop>
-						</optgroup>
-					</cfloop>
-				</select>
-			</dd>
-			<dt>
-				<label for="productName">#rc.$.Slatwall.rbKey("entity.promotionReward.productType")#/#rc.$.Slatwall.rbKey("entity.promotionReward.product")#/#rc.$.Slatwall.rbKey("entity.promotionReward.sku")#</label>
-			</dt>
-			<dd>
-				<input type="radio" name="selectproducts" id="selectProductsAll" value="all" checked="checked" /> <label for="selectProductsAll">#rc.$.Slatwall.rbKey("define.all")#</label>
-				<input type="radio" name="selectproducts" id="selectProducts" value="select" /> <label for="selectProducts">#rc.$.Slatwall.rbKey("define.select")#</label>
-			</dd>
-		</dl>
-		<div id="productTree"></div>
-		<dl class="oneColumn">
-			<dt>
-				<label for="itemRewardQuantity">#rc.$.Slatwall.rbKey("entity.promotionReward.itemRewardQuantity")#</label>
-			</dt>
-			<dd>
-				<input type="text" id="itemRewardQuantity" name="itemRewardQuantity" value="" />
-			</dd>
-			<dt>
-				<label for="discountType">#rc.$.Slatwall.rbKey("admin.promotion.edit.discount")#</label>
-			</dt>
-			<dd>
-				<select name="productDiscountType" id="discountType">
-					<option value="itemAmountOff">#$.Slatwall.rbKey("admin.promotion.promotionRewardType.amountOff")#</option>
-					<option value="itemPercentageOff">#$.Slatwall.rbKey("admin.promotion.promotionRewardType.percentageOff")#</option>
-					<option value="itemAmount">#$.Slatwall.rbKey("admin.promotion.promotionRewardType.fixedAmount")#</option>
-				</select>
-				<input type="text" id="discountValue" name="discountValue" value="" />
-			</dd>
-	    </dl>
-	</div>
-	<!--- Shipping Rewards --->
+	<dl class="oneColumn" id="productReward">
+		<dt>
+			<label for="productTypeID">#rc.$.Slatwall.rbKey("entity.promotionReward.productType")#</label>
+		</dt>
+		<dd>
+			<select name="productType" id="productTypeID">
+	            <option value="0">#$.Slatwall.rbKey("define.all")#</option>
+		        <cfloop query="rc.productTypeTree">
+		            <cfset local.thisDepth = rc.productTypeTree.TreeDepth />
+		            <cfif local.thisDepth><cfset local.bullet="-"><cfelse><cfset local.bullet=""></cfif>
+		            <option value="#rc.productTypeTree.productTypeID#">
+		                #RepeatString("&nbsp;&nbsp;&nbsp;",ThisDepth)##local.bullet##rc.productTypeTree.productTypeName#
+		            </option>
+		        </cfloop>
+	        </select>	
+		</dd>
+		<dt>
+			<label for="productName">#rc.$.Slatwall.rbKey("entity.promotionReward.product")#</label>
+		</dt>
+		<dd>
+			<input id="productName" name="productName" class="rewardProduct" />
+			<input type="hidden" name="product" value="" id="product" />
+		</dd>
+		<dt>
+			<label for="skuCode">#rc.$.Slatwall.rbKey("entity.promotionReward.sku")#</label>
+		</dt>
+		<dd>
+			<input type="text" id="skuCode" class="rewardSku" name="skuCode" value="" />
+			<input type="hidden" name="sku" value="" id="sku" />
+		</dd>
+		<dt>
+			<label for="itemRewardQuantity">#rc.$.Slatwall.rbKey("entity.promotionReward.itemRewardQuantity")#</label>
+		</dt>
+		<dd>
+			<input type="text" id="itemRewardQuantity" name="itemRewardQuantity" value="" />
+		</dd>
+		<dt>
+			<label for="discountType">#rc.$.Slatwall.rbKey("admin.promotion.edit.discount")#</label>
+		</dt>
+		<dd>
+			<select name="productDiscountType" id="discountType">
+				<option value="itemAmountOff">#$.Slatwall.rbKey("admin.promotion.promotionRewardType.amountOff")#</option>
+				<option value="itemPercentageOff">#$.Slatwall.rbKey("admin.promotion.promotionRewardType.percentageOff")#</option>
+				<option value="itemAmount">#$.Slatwall.rbKey("admin.promotion.promotionRewardType.fixedAmount")#</option>
+			</select>
+			<input type="text" id="discountValue" name="discountValue" value="" />
+		</dd>
+    </dl>
 	<dl class="oneColumn hideElement" id="shippingReward">
 		<dt>
 			<label for="shippingMethod">#rc.$.Slatwall.rbKey("admin.promotion.edit.shippingMethod")#</label>
@@ -347,9 +329,6 @@ Notes:
     </dl>	
 </div>
 <!--- // Form for new reward --->
-<div class="buttons" id="rewardButtons">
-	<a class="button" id="addPromotionReward">#rc.$.Slatwall.rbKey("admin.promotion.edit.addPromotionReward")#</a>
-	<a class="button" id="remPromotionReward" style="display:none;">#rc.$.Slatwall.rbKey("define.cancel")#</a>
-</div>
+
 </cfif>
 </cfoutput>

@@ -56,10 +56,10 @@ Notes:
 			<input type="hidden" name="PromotionID" value="#rc.Promotion.getPromotionID()#" />
 		</cfif>
 			<dl class="oneColumn">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_dateFormat'))# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" value="#dateFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_dateFormat'))# #timeFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				
 				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<ul>
@@ -68,7 +68,7 @@ Notes:
 						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
 					</ul>
 					<div id="tabDescription">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" editType="wysiwyg">
+						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" editType="wysiwygbasic">
 						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" editType="wysiwyg">
 					</div>
 					<div id="tabPromotionCodes">

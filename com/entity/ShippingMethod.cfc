@@ -57,8 +57,8 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	// Related Object Properties
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="one-to-many" fkcolumn="shippingMethodID" cascade="all-delete-orphan" inverse="true";
-	
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
+
 	public any function init() {
 		if(isNull(variables.activeFlag)) {
 			variables.activeFlag = 1;
@@ -112,14 +112,13 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	   arguments.shippingRate.removeShippingMethod(this);    
 	}
 	
-	// PromotionReward (one-to-many)    
-
-	public void function addPromotionReward(required any promotionReward) {    
-	   arguments.promotionReward.setShippingMethod(this);    
-	}    
-	    
-	public void function removePromotionReward(required any promotionReward) {    
-	   arguments.promotionReward.removeShippingMethod(this);    
+	// PromotionRewards (many-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.addShippingMethod(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+	   arguments.promotionReward.removeShippingMethod(this);
 	}
 	
 	/******* End: Association management methods for bidirectional relationships **************/
