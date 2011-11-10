@@ -44,7 +44,8 @@ Notes:
 <cfoutput>
 	<div class="svoorderpayment">
 		<cfif not listFind(rc.orderRequirementsList, 'account') and not listFind(rc.orderRequirementsList, 'fulfillment')>
-			<form name="processOrder" action="?slatAction=frontend:checkout.processOrder" method="post">
+			<form name="processOrder" method="post">
+				<input type="hidden" name="slatAction" value="frontend:checkout.processOrder" />
 				<h3 id="checkoutPaymentTitle" class="titleBlick">Payment</h3>
 				<cfset local.orderPaymentIndex = 1 />
 				<cfloop array="#$.slatwall.cart().getOrderPayments()#" index="local.orderPayment">
