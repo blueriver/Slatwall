@@ -218,4 +218,52 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		return variables.brandOptions;
 	}
 	
+	public string function displayProductTypeNames() {
+		var productTypeNames = "";
+		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
+			productTypeNames = listAppend(productTypeNames,this.getProductTypes()[i].getProductTypeName());
+		}
+		return productTypeNames;
+	}
+
+	public string function displayProductNames() {
+		var productNames = "";
+		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
+			productNames = listAppend(productNames,this.getProducts()[i].getProductName());
+		}
+		return productNames;
+	}
+	
+	public string function displaySkuCodes() {
+		var skuCodes = "";
+		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
+			skuCodes = listAppend(skuCodes,this.getSkus()[i].getSkuCode());
+		}
+		return skuCodes;
+	}
+
+	public string function getProductTypeIDs() {
+		var productTypeIDs = "";
+		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
+			productTypeIDs = listAppend(productTypeIDs,this.getProductTypes()[i].getProductTypeID());
+		}
+		return productTypeIDs;
+	}
+	
+	public string function getProductIDs() {
+		var productIDs = "";
+		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
+			productIDs = listAppend(productIDs,this.getProducts()[i].getProductID());
+		}
+		return productIDs;
+	}
+	
+	public string function getSkuIDs() {
+		var skuIDs = "";
+		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
+			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
+		}
+		return skuIDs;
+	}
+	
 }

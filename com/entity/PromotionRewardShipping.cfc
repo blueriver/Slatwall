@@ -47,6 +47,15 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	// Related Entities
 	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID" cascade="save-update";
 	
+
+	public any function init() {
+
+		if(isNull(variables.shippingMethods)) {
+			variables.shippingMethods = [];
+		}
+
+		return super.init();
+	}
 	
 	/*-----  Relationship Management Methods for bidirectional relationships -----*/
 	
@@ -77,5 +86,22 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
     }
 	
 	/*-----  End Relationship Management Methods  -----*/
+
+	public string function displayShippingMethodNames() {
+		var shippingMethodNames = "";
+		for( var i=1; i<=arrayLen(this.getShippingMethods());i++ ) {
+			shippingMethodNames = listAppend(shippingMethodNames,this.getShippingMethods()[i].getShippingMethodName());
+		}
+		return shippingMethodNames;
+	}
+	
+	
+	public string function getShippingMethodIDs() {
+		var shippingMethodIDs = "";
+		for( var i=1; i<=arrayLen(this.getShippingMethods());i++ ) {
+			shippingMethodIDs = listAppend(shippingMethodIDs,this.getShippingMethods()[i].getShippingMethodID());
+		}
+		return shippingMethodIDs;
+	}
 	
 }

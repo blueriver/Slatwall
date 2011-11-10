@@ -47,6 +47,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		if(structKeyExists(arguments.data.structuredData,"promotionRewards")){
 			savePromotionRewards(arguments.promotion,arguments.data.structuredData.promotionRewards);
+			//writeDump(var=arguments.data.structuredData.promotionRewards,abort=true);
 		}
 		
 		arguments.Promotion = super.save(arguments.Promotion);
@@ -174,19 +175,72 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function savePromotionReward(required any promotionReward, required struct data){
 		arguments.promotionReward.populate(arguments.data);
-/*		if(arguments.promotionReward.getRewardType() == "product"){
-			if(arguments.data.product == "" && !isNull(arguments.promotionReward.getProduct())){
-				arguments.promotionReward.setProduct(javaCast("null",""));
+		
+		if(arguments.promotionReward.getRewardType() == "product"){
+			
+			// Clear any skus from promotion reward
+			for( var s=1; s<=arrayLen(arguments.promotionReward.getSkus()); s++ ) {
+				arguments.promotionReward.removeSku(arguments.promotionReward.getSkus()[s]);
 			}
-			if(arguments.data.sku == "" && !isNull(arguments.promotionReward.getSku())) {
-				arguments.promotionReward.setSku(javaCast("null",""));
-			}	
+			
+			// Clear any products from promotion reward
+			for( var p=1; p<=arrayLen(arguments.promotionReward.getProducts()); p++ ) {
+				arguments.promotionReward.removeProduct(arguments.promotionReward.getProducts()[p]);
+			}
+			
+			// Clear any product types from promotion reward
+			for( var pt=1; pt<=arrayLen(arguments.promotionReward.getProductTypes()); pt++ ) {
+				arguments.promotionReward.removeProductType(arguments.promotionReward.getProductTypes()[p]);
+			}
+			
+			if(len(arguments.data.sku) && arguments.data.sku != 0){
+				// loop over sku IDs and set skus into the promotion reward
+				for(var i=1; i<=listLen(arguments.data.sku); i++) {
+					local.thisSku = this.getSku( listGetAt(arguments.data.sku,i) );
+					if( !isNull(local.thisSku) ) {						
+						arguments.promotionReward.addSku(local.thisSku);
+					}
+				}
+				// remove any products or productTypes from the reward
+			}
+			// no sku ids are specified, so check for product ids
+			else if(len(arguments.data.product) && arguments.data.product != 0) {
+				// loop over product IDs and set products into the promotion reward
+				for(var i=1; i<=listLen(arguments.data.product); i++) {
+					local.thisProduct = this.getProduct( listGetAt(arguments.data.product,i) );
+					if( !isNull(local.thisProduct) ) {						
+						arguments.promotionReward.addProduct(local.thisProduct);
+					}
+				}
+			}
+			// no skus or products specified, so check for product type ids
+			else if(len(arguments.data.productType) && arguments.data.productType != 0) {
+				// loop over productType IDs and set product types into the promotion reward
+				for(var i=1; i<=listLen(arguments.data.productType); i++) {
+					local.thisProductType = this.getProductType( listGetAt(arguments.data.productType,i) );
+					if( !isNull(local.thisProductType) ) {						
+						arguments.promotionReward.addProductType(local.thisProductType);
+					}
+				}				
+			}
 		}
 		else if(arguments.promotionReward.getRewardType() == "shipping"){
-			if(arguments.data.shippingMethod == "" && !isNull(arguments.promotionReward.getShippingMethod())) {
-				arguments.promotionReward.setShippingMethod(javaCast("null",""));
+
+			// Clear any shipping methods from promotion reward
+			for( var sm=1; sm<=arrayLen(arguments.promotionReward.getShippingMethods()); sm++ ) {
+				arguments.promotionReward.removeShippingMethod(arguments.promotionReward.getShippingMethods()[sm]);
+			}			
+
+			if(len(arguments.data.shippingMethod) && arguments.data.shippingMethod != 0) {
+				// loop over shippingMethod IDs and set them into the promotion reward
+				for(var i=1; i<=listLen(arguments.data.shippingMethod); i++) {
+					local.thisShippingMethod = this.getShippingMethod( listGetAt(arguments.data.shippingMethod,i) );
+					if( !isNull(local.thisShippingMethod) ) {						
+						arguments.promotionReward.addShippingMethod(local.thisShippingMethod);
+					}
+				}
 			}
-		}*/
+		}
 		validatePromotionReward(arguments.promotionReward);
 		arguments.promotionReward = super.save(arguments.promotionReward);
 		return arguments.promotionReward;
