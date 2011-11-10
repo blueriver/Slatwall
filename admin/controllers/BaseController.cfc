@@ -51,6 +51,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
 		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
+			/*
 			var loginURL = rc.$.createHREF(filename=rc.$.siteConfig().getLoginURL());
 			if(find("?",loginURL)) {
 				loginURL &= "&";	
@@ -59,6 +60,12 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 			loginURL &= "returnURL=" & URLEncodedFormat(getFW().buildURL(action=rc.slatAction, queryString=cgi.query_string));
 			location(url=loginURL, addtoken=false);
+			*/
+			if(left(getLoginURL(), 1) eq "/") {
+				location(url=rc.$.siteConfig().getLoginURL(), addtoken=false);
+			} else {
+				location(url="/#rc.$.siteConfig().getLoginURL()#", addtoken=false);	
+			}
 		} else if( getFW().secureDisplay(rc.slatAction) == false ) {
 			getFW().setView("admin:main.noaccess");
 		}
