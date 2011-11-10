@@ -46,7 +46,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			savePromotionCodes(arguments.promotion,arguments.data.structuredData.promotionCodes);
 		}
 		if(structKeyExists(arguments.data.structuredData,"promotionRewards")){
-			//writeDump(var=arguments.data.structuredData.promotionRewards,abort=true);
 			savePromotionRewards(arguments.promotion,arguments.data.structuredData.promotionRewards);
 		}
 		
@@ -85,6 +84,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public void function savePromotionCodes(required any promotion, required array promotionCodes){
+		// keep track of promotion code list to validate that there are no duplicates
 		var promotionCodeList = "";
 		for(var promotionCodeData in arguments.promotionCodes){
 			var promotionCode = this.getPromotionCode(promotionCodeData.promotionCodeID,true);
@@ -92,7 +92,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				promotionCode.setPromotion(arguments.promotion);
 			}
 			promotionCode = savePromotionCode(promotionCode,promotionCodeData,promotionCodeList);
-			promotionCodeList = listAppend(promotionCodeList,promotionCode.getPromotionCodeID());
+			promotionCodeList = listAppend(promotionCodeList,promotionCode.getPromotionCode());
 		}
 	}
 	
@@ -133,10 +133,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		for(var promotionRewardData in arguments.promotionRewards){
 			if(isNumeric(promotionRewardData.discountValue)) {
 				if(promotionRewardData.rewardType == "product") {
+					// reset all discount values first
 					promotionRewardData["itemPercentageOff"] = "";
 					promotionRewardData["itemAmountOff"] = "";
 					promotionRewardData["itemAmount"] = "";
 					var promotionReward = this.getPromotionRewardProduct(promotionRewardData.promotionRewardID,true);
+					// set discount
 					promotionRewardData[promotionRewardData.productDiscountType] = promotionRewardData.discountValue;
 					if(trim(promotionRewardData.productName) == ""){
 						promotionRewardData.product = "0";
@@ -146,10 +148,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					}
 					//writeDump(var=promotionRewardData,abort=true);
 				} else if(promotionRewardData.rewardType == "shipping") {
+					// reset all discount values first
 					promotionRewardData["shippingPercentageOff"] = "";
 					promotionRewardData["shippingAmountOff"] = "";
 					promotionRewardData["shippingAmount"] = "";
 					var promotionReward = this.getPromotionRewardShipping(promotionRewardData.promotionRewardID,true);
+					// reset all discount values first
 					promotionRewardData[promotionRewardData.shippingDiscountType] = promotionRewardData.discountValue;
 					if(trim(promotionRewardData.shippingMethod) == ""){
 						promotionRewardData.shippingMethod = "0";

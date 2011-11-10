@@ -63,7 +63,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all" ;
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
@@ -151,9 +151,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		getService("AttributeService").delete(attributeSetAssignment);
 	}
 	
-	// promotionRewards (one-to-many))
+	// promotionRewards (many-to-many)
 	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.setProductType(this);
+	   arguments.promotionReward.addProductType(this);
 	}
 	
 	public void function removePromotionReward(required any promotionReward) {

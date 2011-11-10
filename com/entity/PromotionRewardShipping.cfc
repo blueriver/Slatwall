@@ -45,28 +45,35 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	property name="shippingAmount" ormType="big_decimal" validateNumeric="true";
 	
 	// Related Entities
-	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID" cascade="save-update";
+	
 	
 	/*-----  Relationship Management Methods for bidirectional relationships -----*/
 	
-	// ShippingMethod (many-to-one)
-
-	public void function setShippingMethod(required any ShippingMethod) {
-	   variables.ShippingMethod = arguments.ShippingMethod;
-	   if(!arguments.ShippingMethod.hasPromotionReward(this)) {
-	       arrayAppend(arguments.ShippingMethod.getPromotionRewards(),this);
-	   }
-	}
+	// shippingMethod (many-to-many)
 	
- 	public void function removeShippingMethod(any ShippingMethod) {
- 	   if(!structKeyExists(arguments,"ShippingMethod")) {
- 	   		arguments.ShippingMethod = variables.ShippingMethod;
- 	   }
-       var index = arrayFind(arguments.ShippingMethod.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.ShippingMethod.getPromotionRewards(),index);
-       }    
-       structDelete(variables,"ShippingMethod");
+	public void function addShippingMethod(required any ShippingMethod) {
+		if(arguments.shippingMethod.isNew() || !hasShippingMethod(arguments.shippingMethod)) {
+			// first add shippingMethod to this reward
+			arrayAppend(this.getShippingMethods(),arguments.shippingMethod);
+			//add this reward to the shippingMethod
+			arrayAppend(arguments.shippingMethod.getPromotionRewards(),this);
+		}
+	}
+    
+    public void function removeShippingMethod(required any ShippingMethod) {
+       // first remove the shippingMethod from this reward
+       if(this.hasShippingMethod(arguments.shippingMethod)) {
+	       var index = arrayFind(this.getShippingMethods(),arguments.shippingMethod);
+	       if(index>0) {
+	           arrayDeleteAt(this.getShippingMethods(),index);
+	       }
+	      // then remove this reward from the shippingMethod
+	       var index = arrayFind(arguments.shippingMethod.getPromotionRewards(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.shippingMethod.getPromotionRewards(),index);
+	       }
+	   }
     }
 	
 	/*-----  End Relationship Management Methods  -----*/
