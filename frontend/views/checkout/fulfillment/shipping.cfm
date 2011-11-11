@@ -57,19 +57,22 @@ Notes:
 			<h4>Shipping Address</h4>
 			<cfif arrayLen(params.orderFulfillment.getAccountAddressOptions())>
 				<p>Select an Address</p>
-				<select name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.accountAddressID">
+				<select name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex">
 					<option value="0">New Address</option>
-					<cfloop array="#params.orderFulfillment.getAccountAddressOptions()#" index="local.option">
-						<option value="#local.option['id']#" <cfif params.selectedAccountAddressID EQ local.option['id']>Selected</cfif>>#local.option['name']#</option>
+					<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.accountAddressIndex">
+						<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.accountAddressIndex] />
+						<option value="#local.accountAddressIndex#" <cfif params.selectedAccountAddressID EQ local.accountAddress.getAccountAddressID()>Selected</cfif>>#local.accountAddress.getName()#</option>
 					</cfloop>
 				</select>
-				<cfloop array="#$.slatwall.account().getAccountAddresses()#" index="local.accountAddress">
-					<div id="accountAddress_#local.accountAddress.getAccountAddressID()#" class="addressBlock" style="display:none;">
-						<cf_SlatwallAddressDisplay address="#local.accountAddress.getAddress()#" fieldNamePrefix="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.#local.accountAddress.getAccountAddressID()#.address." edit="#params.edit#">
+				<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.accountAddressIndex">
+					<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.accountAddressIndex] />
+					<div id="accountAddress_#local.accountAddressIndex#" class="addressBlock" style="display:none;">
+						<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress[#local.accountAddressIndex#].accountAddressID" value="#local.accountAddress.getAccountAddressID()#" />
+						<cf_SlatwallAddressDisplay address="#local.accountAddress.getAddress()#" fieldNamePrefix="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress[#local.accountAddressIndex#].address." edit="#params.edit#">
 					</div>
 				</cfloop>
 			<cfelse>
-				<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.accountAddressID" value="" />
+				<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.accountAddressIndex" value="0" />
 			</cfif>
 			<div id="shippingAddress" class="addressBlock" style="display:none;">
 				<cf_SlatwallAddressDisplay address="#local.address#" fieldNamePrefix="orderFulfillments[#params.orderFulfillmentIndex#].shippingAddress." edit="#params.edit#">
@@ -93,19 +96,19 @@ Notes:
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
 			jQuery('.addressBlock').hide();
-			jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.accountAddressID"]').change(function(){
+			jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex"]').change(function(){
 				jQuery('.addressBlock').hide();
-				var selectedAccountAddressID = jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.accountAddressID"]').val();
-				if(selectedAccountAddressID == 0){
+				var selectedAccountAddressIndex = jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex"]').val();
+				if(selectedAccountAddressIndex == 0){
 					jQuery('##shippingAddress').show();
 				} else {
-					jQuery('##accountAddress_'+selectedAccountAddressID).show();
+					jQuery('##accountAddress_'+selectedAccountAddressIndex).show();
 				}
 			});
 			<cfif Not arrayLen($.slatwall.account().getAccountAddresses())>
 				jQuery('##shippingAddress').show();
 			<cfelse>
-				jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddress.accountAddressID"]').change();
+				jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex"]').change();
 			</cfif>
 		});
 	</script>
