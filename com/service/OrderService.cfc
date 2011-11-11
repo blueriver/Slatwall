@@ -430,19 +430,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
+			// define some variables for backward compatibility
+			param name="data.saveAddress" default="0";  
+			param name="data.accountAddressIndex" default="0";  
 			
 			// Get Address
-			if(val(data.accountAddress.accountAddressID) > 0){
-				var address = getAddressService().getAddress(data.accountAddress[data.accountAddress.accountAddressID].address.addressID,true);
-				var newDataStruct = data.accountAddress[data.accountAddress.accountAddressID].address;
+			if(data.accountAddressIndex != 0){
+				var address = getAddressService().getAddress(data.accountAddress[data.accountAddressIndex].address.addressID,true);
+				var newAddressDataStruct = data.accountAddress[data.accountAddressIndex].address;
 			} else {	
 				var address = getAddressService().getAddress(data.shippingAddress.addressID,true);
-				var newDataStruct = data.shippingAddress;
+				var newAddressDataStruct = data.shippingAddress;
 			}
 			
 			// Populate Address And check if it has changed
 			var serializedAddressBefore = address.simpleValueSerialize();
-			address.populate(newDataStruct);
+			address.populate(newAddressDataStruct);
 			var serializedAddressAfter = address.simpleValueSerialize();
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
@@ -450,22 +453,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
 			}
 			
-			if(val(data.accountAddress.accountAddressID) > 0 || data.saveAddress == 1){
-				var accountAddress = getAddressService().getAccountAddress(data.accountAddress.accountAddressID,true);
+			// if address needs to get saved in account
+			if(data.saveAddress == 1 || data.accountAddressIndex != 0){
+				// new account address
+				if(data.accountAddressIndex == 0){
+					var accountAddress = getAddressService().newAccountAddress();
+				} else {
+					//Existing address
+					var accountAddress = getAddressService().getAccountAddress(data.accountAddress[data.accountAddressIndex].accountAddressID,true);
+				}
 				accountAddress.setAddress(address);
-				arguments.orderFulfillment.removeShippingAddress();
-				arguments.orderFulfillment.setAccountAddress(accountAddress);
-			} 
-			// if it's a new address to save set the account
-			if(val(data.accountAddress.accountAddressID) == 0 && data.saveAddress == 1){
 				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
 				//ToDo: Add UI for naming an address
 				accountAddress.setName(address.getname());
-			}
-			
-			//if new not a saved address in account and user doesn't want to save
-			if(val(data.accountAddress.accountAddressID) == 0 && data.saveAddress != 1){
-				// Set the address in the order Fulfillment
+				arguments.orderFulfillment.removeShippingAddress();
+				arguments.orderFulfillment.setAccountAddress(accountAddress);
+			} else {
+				// Set the address in the order Fulfillment as shipping address
 				arguments.orderFulfillment.setShippingAddress(address);
 				arguments.orderFulfillment.removeAccountAddress();
 			}
