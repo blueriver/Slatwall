@@ -51,27 +51,26 @@ Notes:
 </ul>
 
 <cfif arrayLen(rc.optionGroups.getRecords()) GT 0>
-
 	<cfif rc.listby eq "options">
-	<form name="filterOptions" method="get">
-		 #rc.$.Slatwall.rbKey("admin.option.optiongroupfilter")#:
-		<input type="hidden" name="slatAction" value="admin:option.list" />
-		<input type="hidden" name="listby" value="options" />
-		<select name="F:optiongroup_optiongroupname">
-			<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
-		<cfloop array="#rc.optionGroups.getRecords()#" index="local.thisOptionGroup">
-			<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F:optiongroup_optiongroupname") and rc["F:optiongroup_optiongroupname"] eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
-		</cfloop>
-		</select>
-		<cf_SlatwallActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#" class="button">
-	</form>
-	#view("option/inc/optiontable")#
+		<form name="filterOptions" method="get">
+			 #rc.$.Slatwall.rbKey("admin.option.optiongroupfilter")#:
+			<input type="hidden" name="slatAction" value="admin:option.list" />
+			<input type="hidden" name="listby" value="options" />
+			<select name="F:optiongroup_optiongroupname">
+				<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
+			<cfloop array="#rc.optionGroups.getRecords()#" index="local.thisOptionGroup">
+				<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F:optiongroup_optiongroupname") and rc["F:optiongroup_optiongroupname"] eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
+			</cfloop>
+			</select>
+			<cf_SlatwallActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#" class="button">
+		</form>
+		#view("option/inc/optiontable")#
 	<cfelse>
-	#view("option/inc/optiongrouptable")#
+		#view("option/inc/optiongrouptable")#
 	</cfif>
-
 <cfelse>
 	<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptiongroupsdefined")#</em></p>
 </cfif>
 
 </cfoutput>
+
