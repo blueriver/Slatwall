@@ -71,7 +71,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	// Special account specific logic to require a user to be logged in
 	public void function after(required struct rc) {
-		if(!rc.$.currentUser().isLoggedIn()) {
+		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.detail") {
 			var loginURL = rc.$.createHREF(filename=rc.$.siteConfig().getLoginURL());
 			if(find("?",loginURL)) {
 				loginURL &= "&";	
