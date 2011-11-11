@@ -55,7 +55,7 @@ Notes:
 	<div class="svocheckoutfulfillmentshipping">
 		<div class="shippingAddress">
 			<h4>Shipping Address</h4>
-			<cfif arrayLen(params.orderFulfillment.getAccountAddressOptions())>
+			<cfif arrayLen($.slatwall.account().getAccountAddresses())>
 				<p>Select an Address</p>
 				<select name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex">
 					<option value="0">New Address</option>
