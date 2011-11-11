@@ -59,7 +59,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true" lazy="extra" cascade="save-update"; 
 
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
 	// Calculated Properties
 	property name="assignedFlag" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
