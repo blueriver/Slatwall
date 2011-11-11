@@ -46,7 +46,7 @@ Notes:
 	<cfset local.address = params.orderFulfillment.getShippingAddress() />
 <cfelseif not isNull(params.orderFulfillment.getAccountAddress())>
 	<cfset params.selectedAccountAddressID = params.orderFulfillment.getAccountAddress().getAccountAddressID() />
-<cfelseif not isNull($.slatwall.account().getAccountAddresses())>
+<cfelseif arrayLen($.slatwall.account().getAccountAddresses())>
 	<!--- Todo: change to primary address --->
 	<cfset params.selectedAccountAddressID = $.slatwall.account().getAccountAddresses()[1].getAccountAddressID() />
 </cfif>
@@ -55,7 +55,7 @@ Notes:
 	<div class="svocheckoutfulfillmentshipping">
 		<div class="shippingAddress">
 			<h4>Shipping Address</h4>
-			<cfif arrayLen(params.orderFulfillment.getAccountAddressOptions())>
+			<cfif arrayLen($.slatwall.account().getAccountAddresses())>
 				<p>Select an Address</p>
 				<select name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex">
 					<option value="0">New Address</option>

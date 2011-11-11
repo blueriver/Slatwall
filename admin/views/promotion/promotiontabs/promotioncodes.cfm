@@ -70,7 +70,7 @@ Notes:
 					</cfif>
 				</td>
 				<td>
-					<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
+					<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 					<cfif rc.edit>
 						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="dateTime" />
 						<cfif local.thisPromotionCode.hasErrors()>
@@ -81,7 +81,7 @@ Notes:
 					</cfif>
 				</td>
 				<td>
-					<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
+					<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 					<cfif rc.edit>
 						 <input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="dateTime" />         
 						<cfif local.thisPromotionCode.hasErrors()>
