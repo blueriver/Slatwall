@@ -49,7 +49,7 @@ Notes:
 				</cfloop>
 			</dl>
 		</cfif>
-		<form name="addPromotionCode" action="?slatAction=frontend:cart.addPromotionCode" method="post">
+		<form name="addPromotionCode" method="post">
 			<cfif not rc.promotionCodeOK>
 				<p class="error">The promotion code that you entered is invalid, please try again</p>
 			<cfelse>
@@ -59,6 +59,7 @@ Notes:
 				<dt>Promotion Code:</dt>
 				<dd><input type="text" name="promotionCode" /></dd>
 			</dl>
+			<input type="hidden" name="slatAction" value="frontend:cart.addPromotionCode" />
 			<button type="submit">Add Promotion Code</button>
 		</form>
 	</div>

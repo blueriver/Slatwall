@@ -43,7 +43,7 @@ Notes:
 	<a class="button" id="remPromotionCode" style="display:none;">#rc.$.Slatwall.rbKey("admin.promotion.edit.removePromotionCode")#</a>
 </div>
 </cfif>
-	<table id="promotionCodeTable" class="mura-table-grid">
+	<table id="promotionCodeTable" class="mura-table-grid stripe">
 		<thead>
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.promotionCode.promotionCode")#</th>

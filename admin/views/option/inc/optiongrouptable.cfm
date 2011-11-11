@@ -47,7 +47,7 @@ Notes:
 	</div>
 </cfif>
 
-<table class="mura-table-grid" id="OptionGroups">
+<table class="mura-table-grid stripe" id="OptionGroups">
 	<thead>
 	<tr>
 		<th class="handle" style="display:none;"></th>

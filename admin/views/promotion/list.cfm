@@ -45,7 +45,7 @@ Notes:
 
 <div class="svoadminpromotionlist">
 <cfif arrayLen(rc.promotions) gt 0>
-	<table id="Promotions" class="mura-table-grid">
+	<table id="Promotions" class="mura-table-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.promotion.promotionName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.promotion.startDateTime")#</th>

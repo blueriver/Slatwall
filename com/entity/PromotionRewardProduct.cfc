@@ -74,65 +74,135 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	}
 		
 	/******* Association management methods for bidirectional relationships **************/
+
+	// brand (many-to-many)
 	
-	// sku (many-to-one)
+	public void function addBrand(required any Brand) {
+		if(arguments.Brand.isNew() || !hasBrand(arguments.Brand)) {
+			// first add brand to this reward
+			arrayAppend(this.getBrands(),arguments.Brand);
+			//add this reward to the brand
+			arrayAppend(arguments.Brand.getPromotionRewards(),this);
+		}
+	}
+    
+    public void function removeBrand(required any Brand) {
+       // first remove the brand from this reward
+       if(this.hasBrand(arguments.Brand)) {
+	       var index = arrayFind(this.getBrands(),arguments.Brand);
+	       if(index>0) {
+	           arrayDeleteAt(this.getBrands(),index);
+	       }
+	      // then remove this reward from the brand
+	       var index = arrayFind(arguments.Brand.getPromotionRewards(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.Brand.getPromotionRewards(),index);
+	       }
+	   }
+    }	
+
+	// options (many-to-many)
 	
-	public void function setSku(required Sku sku) {
-		variables.sku = arguments.sku;
-		if(!arguments.sku.hasPromotionReward(this)) {
+	public void function addOption(required any Option) {
+		if(arguments.Option.isNew() || !hasOption(arguments.Option)) {
+			// first add option to this reward
+			arrayAppend(this.getOptions(),arguments.Option);
+			//add this reward to the option
+			arrayAppend(arguments.Option.getPromotionRewards(),this);
+		}
+	}
+    
+    public void function removeOption(required any Option) {
+       // first remove the option from this reward
+       if(this.hasOption(arguments.Option)) {
+	       var index = arrayFind(this.getOptions(),arguments.Option);
+	       if(index>0) {
+	           arrayDeleteAt(this.getOptions(),index);
+	       }
+	      // then remove this reward from the option
+	       var index = arrayFind(arguments.Option.getPromotionRewards(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.Option.getPromotionRewards(),index);
+	       }
+	   }
+    }
+
+	// sku (many-to-many)
+	
+	public void function addSku(required any Sku) {
+		if(arguments.Sku.isNew() || !hasSku(arguments.Sku)) {
+			// first add sku to this reward
+			arrayAppend(this.getSkus(),arguments.Sku);
+			//add this reward to the sku
 			arrayAppend(arguments.sku.getPromotionRewards(),this);
 		}
 	}
-	
-	public void function removeSku(Sku sku) {
-	   if(!structKeyExists(arguments,"sku")) {
-	   		arguments.sku = variables.sku;
+    
+    public void function removeSku(required any sku) {
+       // first remove the sku from this reward
+       if(this.hasSku(arguments.sku)) {
+	       var index = arrayFind(this.getSkus(),arguments.sku);
+	       if(index>0) {
+	           arrayDeleteAt(this.getSkus(),index);
+	       }
+	      // then remove this reward from the sku
+	       var index = arrayFind(arguments.sku.getPromotionRewards(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.sku.getPromotionRewards(),index);
+	       }
 	   }
-       var index = arrayFind(arguments.sku.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.sku.getPromotionRewards(), index);
-       }
-       structDelete(variables,"sku");
     }
     
-	// product (many-to-one)
+	// product (many-to-many)
 	
-	public void function setProduct(required Product product) {
-		variables.product = arguments.product;
-		if(!arguments.product.hasPromotionReward(this)) {
+	public void function addProduct(required any product) {
+		if(arguments.product.isNew() || !hasProduct(arguments.product)) {
+			// first add product to this reward
+			arrayAppend(this.getProducts(),arguments.product);
+			//add this reward to the product
 			arrayAppend(arguments.product.getPromotionRewards(),this);
 		}
 	}
-	
-	public void function removeProduct(Product product) {
-	   if(!structKeyExists(arguments,"product")) {
-	   		arguments.product = variables.product;
+    
+    public void function removeProduct(required any product) {
+       // first remove the product from this reward
+       if(this.hasProduct(arguments.product)) {
+	       var index = arrayFind(this.getProducts(),arguments.product);
+	       if(index>0) {
+	           arrayDeleteAt(this.getProducts(),index);
+	       }
+	      // then remove this reward from the product
+	       var index = arrayFind(arguments.product.getPromotionRewards(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.product.getPromotionRewards(),index);
+	       }
 	   }
-       var index = arrayFind(arguments.product.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.product.getPromotionRewards(), index);
-       }
-       structDelete(variables,"product");
     }
     
-	// productType (many-to-one)
+	// productType (many-to-many)
 	
-	public void function setProductType(required ProductType productType) {
-		variables.productType = arguments.productType;
-		if(!arguments.productType.hasPromotionReward(this)) {
-			arrayAppend(arguments.productType.getPromotionRewards(),this);
+	public void function addProductType(required any ProductType) {
+		if(arguments.ProductType.isNew() || !hasProductType(arguments.ProductType)) {
+			// first add productType to this reward
+			arrayAppend(this.getProductTypes(),arguments.ProductType);
+			//add this reward to the productType
+			arrayAppend(arguments.ProductType.getPromotionRewards(),this);
 		}
 	}
-	
-	public void function removeProductType(ProductType productType) {
-	   if(!structKeyExists(arguments,"productType")) {
-	   		arguments.productType = variables.productType;
+    
+    public void function removeProductType(required any ProductType) {
+       // first remove the productType from this reward
+       if(this.hasProductType(arguments.ProductType)) {
+	       var index = arrayFind(this.getProductTypes(),arguments.ProductType);
+	       if(index>0) {
+	           arrayDeleteAt(this.getProductTypes(),index);
+	       }
+	      // then remove this reward from the productType
+	       var index = arrayFind(arguments.ProductType.getPromotionRewards(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.ProductType.getPromotionRewards(),index);
+	       }
 	   }
-       var index = arrayFind(arguments.productType.getPromotionRewards(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.productType.getPromotionRewards(), index);
-       }
-       structDelete(variables,"productType");
     }
     
     /************   END Association Management Methods   *******************/
@@ -146,6 +216,54 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			variables.brandOptions = smartList.getRecords();
 		}
 		return variables.brandOptions;
+	}
+	
+	public string function displayProductTypeNames() {
+		var productTypeNames = "";
+		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
+			productTypeNames = listAppend(productTypeNames,this.getProductTypes()[i].getProductTypeName());
+		}
+		return productTypeNames;
+	}
+
+	public string function displayProductNames() {
+		var productNames = "";
+		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
+			productNames = listAppend(productNames,this.getProducts()[i].getProductName());
+		}
+		return productNames;
+	}
+	
+	public string function displaySkuCodes() {
+		var skuCodes = "";
+		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
+			skuCodes = listAppend(skuCodes,this.getSkus()[i].getSkuCode());
+		}
+		return skuCodes;
+	}
+
+	public string function getProductTypeIDs() {
+		var productTypeIDs = "";
+		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
+			productTypeIDs = listAppend(productTypeIDs,this.getProductTypes()[i].getProductTypeID());
+		}
+		return productTypeIDs;
+	}
+	
+	public string function getProductIDs() {
+		var productIDs = "";
+		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
+			productIDs = listAppend(productIDs,this.getProducts()[i].getProductID());
+		}
+		return productIDs;
+	}
+	
+	public string function getSkuIDs() {
+		var skuIDs = "";
+		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
+			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
+		}
+		return skuIDs;
 	}
 	
 }

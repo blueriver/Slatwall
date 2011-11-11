@@ -42,7 +42,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="orderService" type="any";
 	property name="userUtility" type="any";
 	
-	
 	public void function save(required struct rc) {
 		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
 		getFW().setView("frontend:account.detail");
@@ -70,4 +69,17 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:account.detail");
 	}
 	
+	// Special account specific logic to require a user to be logged in
+	public void function after(required struct rc) {
+		if(!rc.$.currentUser().isLoggedIn()) {
+			var loginURL = rc.$.createHREF(filename=rc.$.siteConfig().getLoginURL());
+			if(find("?",loginURL)) {
+				loginURL &= "&";	
+			} else {
+				loginURL &= "?";
+			}
+			//loginURL &= "returnURL=" & URLEncodedFormat(getFW().buildURL(action=rc.slatAction, queryString=cgi.query_string));
+			location(url=rc.$.siteConfig().getLoginURL(), addtoken=false);
+		}
+	}
 }
