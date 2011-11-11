@@ -46,7 +46,7 @@ Notes:
 	<cfset local.address = params.orderFulfillment.getShippingAddress() />
 <cfelseif not isNull(params.orderFulfillment.getAccountAddress())>
 	<cfset params.selectedAccountAddressID = params.orderFulfillment.getAccountAddress().getAccountAddressID() />
-<cfelseif not isNull($.slatwall.account().getAccountAddresses())>
+<cfelseif arrayLen($.slatwall.account().getAccountAddresses())>
 	<!--- Todo: change to primary address --->
 	<cfset params.selectedAccountAddressID = $.slatwall.account().getAccountAddresses()[1].getAccountAddressID() />
 </cfif>
