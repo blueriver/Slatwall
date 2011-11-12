@@ -203,7 +203,7 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
-	public void function deleteShippingRate() {
+	public void function deleteShippingRate(required struct rc) {
 		param name="rc.shippingRateID" default="";
 		
 		var rate = getSettingService().getShippingRate(rc.shippingRateID);
@@ -450,7 +450,7 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
-	public void function deleteTaxCategoryRate() {
+	public void function deleteTaxCategoryRate(required struct rc) {
 		param name="rc.taxCategoryRateID" default="";
 		
 		var rate = getSettingService().getTaxCategoryRate(rc.taxCategoryRateID);
@@ -469,7 +469,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	// DB Tool
-	public void function deleteAllOrders() {
+	public void function deleteAllOrders(required struct rc) {
 		param name="rc.confirmDelete" default="0";
 		
 		if(isBoolean(rc.confirmDelete) && rc.confirmDelete) {
@@ -479,7 +479,7 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action='admin:main.default');
 	}
 	
-	public void function deleteAllProducts() {
+	public void function deleteAllProducts(required struct rc) {
 		param name="rc.confirmDelete" default="0";
 		param name="rc.deleteBrands" default="0";
 		param name="rc.deleteProductTypes" default="0";

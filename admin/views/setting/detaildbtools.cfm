@@ -42,16 +42,19 @@ Notes:
 			
 		</ul>
 		<h2>Delete All Orders</h2>
-		<form action="#buildURL(action='admin:setting.deleteallorders')#" method="post">
+		<form method="post">
+			<input type="hidden" name="slatAction" value="admin:setting.deleteallorders" />
 			<p>This will delete Orders, Carts and all other related data like Payments & Deliveries<br />Only Click this button if you are 100% sure that you want to remove all orders.</p>
 			<br />
 			<br />
+			<input type="hidden" name="confirmDelete" value="" />
 			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
 			<cf_SlatwallActionCaller action="admin:setting.deleteallorders" type="submit" class="button" confirmRequired="true">
 		</form>
 		<hr />
 		<h2>Delete All Products (and Orders)</h2>
-		<form action="#buildURL(action='admin:setting.deleteallproducts')#" method="post">
+		<form method="post">
+			<input type="hidden" name="slatAction" value="admin:setting.deleteallproducts" />
 			<p>Only Click this button if you are 100% sure that you want to remove all products. <br />This will delete, Orders, Carts, Products, Stock, Skus, Attribute Values, ect.</p>
 			<ul>
 				<li>Delete Brands: <input type="checkbox" name="deleteBrands" value="1" /></li>
@@ -60,6 +63,7 @@ Notes:
 			</ul>
 			<br />
 			<br />
+			<input type="hidden" name="confirmDelete" value="" />
 			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
 			<cf_SlatwallActionCaller action="admin:setting.deleteallproducts" type="submit" class="button" confirmRequired="true">
 		</form>
