@@ -282,7 +282,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				shoppingCartPage.setDisplayTitle("Shopping Cart");
 				shoppingCartPage.setHTMLTitle("Shopping Cart");
 				shoppingCartPage.setMenuTitle("Shopping Cart");
-				shoppingCartPage.setIsNav(0);
+				shoppingCartPage.setIsNav(1);
 				shoppingCartPage.setActive(1);
 				shoppingCartPage.setApproved(1);
 				shoppingCartPage.setIsLocked(1);
@@ -294,36 +294,36 @@ component extends="BaseService" output="false" accessors="true"  {
 			
 			
 			// Setup Order Status Page
-			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-status", siteid=local.thisSiteID);
-			if(shoppingCartPage.getIsNew()) {
-				shoppingCartPage.setDisplayTitle("Order Status");
-				shoppingCartPage.setHTMLTitle("Order Status");
-				shoppingCartPage.setMenuTitle("Order Status");
-				shoppingCartPage.setIsNav(0);
-				shoppingCartPage.setActive(1);
-				shoppingCartPage.setApproved(1);
-				shoppingCartPage.setIsLocked(1);
-				shoppingCartPage.setParentID("00000000000000000000000000000000001");
-				shoppingCartPage.setFilename("order-status");
-				shoppingCartPage.setSiteID(thisSiteID);
-				shoppingCartPage.save();
+			var orderStatusPage = getContentManager().getActiveContentByFilename(filename="order-status", siteid=local.thisSiteID);
+			if(orderStatusPage.getIsNew()) {
+				orderStatusPage.setDisplayTitle("Order Status");
+				orderStatusPage.setHTMLTitle("Order Status");
+				orderStatusPage.setMenuTitle("Order Status");
+				orderStatusPage.setIsNav(1);
+				orderStatusPage.setActive(1);
+				orderStatusPage.setApproved(1);
+				orderStatusPage.setIsLocked(1);
+				orderStatusPage.setParentID("00000000000000000000000000000000001");
+				orderStatusPage.setFilename("order-status");
+				orderStatusPage.setSiteID(thisSiteID);
+				orderStatusPage.save();
 			}
 			
 			
 			// Setup Order Confirmation
-			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="order-confirmation", siteid=local.thisSiteID);
-			if(shoppingCartPage.getIsNew()) {
-				shoppingCartPage.setDisplayTitle("Order Confirmation");
-				shoppingCartPage.setHTMLTitle("Order Confirmation");
-				shoppingCartPage.setMenuTitle("Order Confirmation");
-				shoppingCartPage.setIsNav(0);
-				shoppingCartPage.setActive(1);
-				shoppingCartPage.setApproved(1);
-				shoppingCartPage.setIsLocked(1);
-				shoppingCartPage.setParentID("00000000000000000000000000000000001");
-				shoppingCartPage.setFilename("order-confirmation");
-				shoppingCartPage.setSiteID(thisSiteID);
-				shoppingCartPage.save();
+			var orderConfirmationPage = getContentManager().getActiveContentByFilename(filename="order-confirmation", siteid=local.thisSiteID);
+			if(orderConfirmationPage.getIsNew()) {
+				orderConfirmationPage.setDisplayTitle("Order Confirmation");
+				orderConfirmationPage.setHTMLTitle("Order Confirmation");
+				orderConfirmationPage.setMenuTitle("Order Confirmation");
+				orderConfirmationPage.setIsNav(0);
+				orderConfirmationPage.setActive(1);
+				orderConfirmationPage.setApproved(1);
+				orderConfirmationPage.setIsLocked(1);
+				orderConfirmationPage.setParentID("00000000000000000000000000000000001");
+				orderConfirmationPage.setFilename("order-confirmation");
+				orderConfirmationPage.setSiteID(thisSiteID);
+				orderConfirmationPage.save();
 			}
 			
 			// Setup My Account Page
@@ -332,8 +332,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				myAccountPage.setDisplayTitle("My Account");
 				myAccountPage.setHTMLTitle("My Account");
 				myAccountPage.setMenuTitle("My Account");
-				myAccountPage.setIsNav(0);
-				myAccountPage.setForceSSL(1);
+				myAccountPage.setIsNav(1);
 				myAccountPage.setActive(1);
 				myAccountPage.setApproved(1);
 				myAccountPage.setIsLocked(1);
@@ -351,8 +350,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				checkoutPage.setDisplayTitle("Checkout");
 				checkoutPage.setHTMLTitle("Checkout");
 				checkoutPage.setMenuTitle("Checkout");
-				checkoutPage.setIsNav(0);
-				checkoutPage.setForceSSL(1);
+				checkoutPage.setIsNav(1);
 				checkoutPage.setActive(1);
 				checkoutPage.setApproved(1);
 				checkoutPage.setIsLocked(1);
