@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 
-<cfif arrayLen(rc.optionGroups..getPageRecords()) gt 1>
+<cfif arrayLen(rc.optionGroups.getPageRecords()) gt 1>
 	<div class="buttons">
 	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
 	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
