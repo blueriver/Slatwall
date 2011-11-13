@@ -47,12 +47,15 @@ Notes:
 			<dd>
 				<input type="text" id="emailAddress" name="emailAddress" value="#rc.account.getEmailAddress()#" />
 			</dd>
+			<!--- Commenting Out Because this causes validation error if not filled out --->
+			<!---
 			<dt>
 				<label for="password">#rc.$.Slatwall.rbKey("admin.account.detail.tab.login.password")#</label>
 			</dt>
 			<dd>
 				<input type="text" id="password" name="password" value="" />
 			</dd>
+			--->
 		</dl>
 	</div>
 </cfoutput>
