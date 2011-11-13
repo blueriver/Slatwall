@@ -91,7 +91,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function save(required struct rc) {
 		param name="rc.accountID" default="";
 		
-		rc.account = getAccountService().getAccount(rc.accountID, true);
+		detail(rc);
+		
 		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteid'));
 		
 		if(rc.account.hasErrors()) {
