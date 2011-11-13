@@ -492,12 +492,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Validate the order Fulfillment
 			this.validateOrderFulfillmentShipping(arguments.orderFulfillment);
-			
-			// flush orm so, we can get the ID for accountAddress
-			// Greg said he will clean it in version 1.2
-			if(!getRequestCacheService().getValue("ormHasErrors")){
-				ormFlush();
-			}
 		}
 		
 		// Save the order Fulfillment
