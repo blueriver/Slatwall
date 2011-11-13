@@ -431,13 +431,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
 			// define some variables for backward compatibility
-			param name="data.saveAddress" default="0";  
-			param name="data.accountAddressIndex" default="0";  
+			param name="data.saveAccountAddress" default="0";
+			param name="data.saveAccountAddressName" default="";
+			param name="data.addressIndex" default="0";  
 			
 			// Get Address
-			if(data.accountAddressIndex != 0){
-				var address = getAddressService().getAddress(data.accountAddress[data.accountAddressIndex].address.addressID,true);
-				var newAddressDataStruct = data.accountAddress[data.accountAddressIndex].address;
+			if(data.addressIndex != 0){
+				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID,true);
+				var newAddressDataStruct = data.accountAddresses[data.addressIndex].address;
 			} else {	
 				var address = getAddressService().getAddress(data.shippingAddress.addressID,true);
 				var newAddressDataStruct = data.shippingAddress;
@@ -454,18 +455,27 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// if address needs to get saved in account
-			if(data.saveAddress == 1 || data.accountAddressIndex != 0){
+			if(data.saveAccountAddress == 1 || data.addressIndex != 0){
 				// new account address
-				if(data.accountAddressIndex == 0){
+				if(data.addressIndex == 0){
 					var accountAddress = getAddressService().newAccountAddress();
 				} else {
 					//Existing address
-					var accountAddress = getAddressService().getAccountAddress(data.accountAddress[data.accountAddressIndex].accountAddressID,true);
+					var accountAddress = getAddressService().getAccountAddress(data.accountAddresses[data.addressIndex].accountAddressID,true);
 				}
 				accountAddress.setAddress(address);
 				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
-				//ToDo: Add UI for naming an address
-				accountAddress.setName(address.getname());
+				
+				if(address.isNew()) {
+					if(len(data.saveAccountAddressName)) {
+						accountAddress.setAccountAddressName(data.saveAccountAddressName);
+					} else {
+						accountAddress.setAccountAddressName(address.getname());	
+					}	
+				} else if (structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
+					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
+				}
+				
 				arguments.orderFulfillment.removeShippingAddress();
 				arguments.orderFulfillment.setAccountAddress(accountAddress);
 			} else {
@@ -492,6 +502,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Validate the order Fulfillment
 			this.validateOrderFulfillmentShipping(arguments.orderFulfillment);
+			
+			// flush orm so, we can get the ID for accountAddress
+			// Greg said he will clean it in version 1.2
+			if(!getRequestCacheService().getValue("ormHasErrors")){
+				ormFlush();
+			}
 		}
 		
 		// Save the order Fulfillment

@@ -46,11 +46,11 @@ Notes:
 	<cfset local.selectedAccountAddressID = "" />
 <!--- If an Account Shipping Address for this fulfillment is specified, then use it --->
 <cfelseif not isNull(params.orderFulfillment.getAccountAddress())>
-	<cfset local.address = params.orderFulfillment.getAccountAddress().getAddress() />
+	<cfset local.address = $.slatwall.getService("addressService").newAddress() />
 	<cfset local.selectedAccountAddressID = params.orderFulfillment.getAccountAddress().getAccountAddressID() />
 <!--- If the fulfillment has nothing, But this account has addresses the set the current as an account address --->
 <cfelseif arrayLen($.slatwall.account().getAccountAddresses())>
-	<cfset local.address = $.slatwall.account().getAccountAddresses()[1] />
+	<cfset local.address = $.slatwall.getService("addressService").newAddress() />
 	<cfset local.selectedAccountAddressID = $.slatwall.account().getAccountAddresses()[1].getAccountAddressID() /> <!--- Todo: change to primary address --->
 <!--- Defualt case for new customers with nothing setup --->
 <cfelse>
@@ -68,19 +68,30 @@ Notes:
 				
 				<!--- Check For Account Address Options, Loop over and create the various form fields for each --->
 				<cfif arrayLen($.slatwall.account().getAccountAddresses())>
-					<p>Select an Address</p>
-					<select name="orderFulfillments[#params.orderFulfillmentIndex#].addressIndex">
-						<option value="0">New Address</option>
-						<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.addressIndex">
-							<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.addressIndex] />
-							<option value="#local.addressIndex#" <cfif local.selectedAccountAddressID EQ local.accountAddress.getAccountAddressID()>Selected</cfif>>#local.accountAddress.getName()#</option>
-						</cfloop>
-					</select>
-					<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.accountAddressIndex">
-						<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.accountAddressIndex] />
-						<div id="shippingAddress_#local.accountAddressIndex#" class="addressBlock" style="display:none;">
-							<input type="hidden" name="accountAddresses[#local.accountAddressIndex#].accountAddressID" value="#local.accountAddress.getAccountAddressID()#" />
-							<cf_SlatwallAddressDisplay address="#local.accountAddress.getAddress()#" fieldNamePrefix="accountAddresses[#local.accountAddressIndex#].address." edit="true">
+					<dl>
+						<dt><label for="orderFulfillments[#params.orderFulfillmentIndex#].addressIndex">Select an Address</label></dt>
+						<dd>
+							<select name="orderFulfillments[#params.orderFulfillmentIndex#].addressIndex">
+								<option value="0">New Address</option>
+								<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.addressIndex">
+									<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.addressIndex] />
+									<option value="#local.addressIndex#" <cfif local.selectedAccountAddressID EQ local.accountAddress.getAccountAddressID()>Selected</cfif>>#local.accountAddress.getAccountAddressName()#</option>
+								</cfloop>
+							</select>
+						</dd>
+					</dl>
+					<cfloop from="1" to="#arrayLen($.slatwall.account().getAccountAddresses())#" index="local.addressIndex">
+						<cfset local.accountAddress = $.slatwall.account().getAccountAddresses()[local.addressIndex] />
+						<div id="shippingAddress_#local.addressIndex#" class="addressBlock" style="display:none;">
+							<!--- Uncomment if you want to be able to rename address nicknames during checkout --->
+							<!---
+							<dl>
+								<dt><label for="orderFulfillments[#params.orderFulfillmentIndex#].accountAddresses[#local.addressIndex#].accountAddressName">Address Nickname</label></dt>
+								<dd><input type="text" name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddresses[#local.addressIndex#].accountAddressName" value="#local.accountAddress.getAccountAddressName()#" /></dd>	
+							</dl>
+							--->
+							<cf_SlatwallAddressDisplay address="#local.accountAddress.getAddress()#" fieldNamePrefix="orderFulfillments[#params.orderFulfillmentIndex#].accountAddresses[#local.addressIndex#].address." edit="true">
+							<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddresses[#local.addressIndex#].accountAddressID" value="#local.accountAddress.getAccountAddressID()#" />
 						</div>
 					</cfloop>
 				</cfif>
@@ -95,7 +106,13 @@ Notes:
 							<dt><label for="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddress">Save This Address</label></dt>
 							<dd>
 								<input type="hidden" name="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddress" value="" />
-								<input type="checkbox" name="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddress" value="1" checked="checked">
+								<input type="checkbox" name="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddress" value="1" />
+							</dd>
+						</dl>
+						<dl style="display:none;" class="accountAddressName">
+							<dt><label for="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddressName">Address Nickname</label></dt>
+							<dd>
+								<input type="text" name="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddressName" value="" />
 							</dd>
 						</dl>
 					</cfif>
@@ -120,9 +137,21 @@ Notes:
 	<script type="text/javascript">
 		jQuery(document).ready(function(){
 			
-			jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressIndex"]').change(function(){
+			jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].addressIndex"]').change(function(){
 				var selectedAddressIndex = jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].addressIndex"]').val();
 				displayShippingAddress(selectedAddressIndex);
+			});
+			
+			jQuery('input[name="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddress"]').change(function(){
+				if(jQuery(this).attr('checked') == 'checked'){
+					jQuery('.accountAddressName').show();
+					if(!jQuery('.accountAddressName input').val().length) {
+						var name = jQuery('input[name="orderFulfillments[#params.orderFulfillmentIndex#].shippingAddress.name"]').val();
+						jQuery('.accountAddressName input').val(name + ' - Home');
+					}
+				} else {
+					jQuery('.accountAddressName').hide();
+				}
 			});
 			
 			var currentAddressIndex = jQuery('select[name="orderFulfillments[#params.orderFulfillmentIndex#].addressIndex"]').val();
