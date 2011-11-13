@@ -90,41 +90,32 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function onRenderStart(required any rc) {
 		// This checks for Product Listing Pages
-		if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
-			if(rc.$.event('slatAction') == "") {
+		if( rc.$.event('slatAction') == "") {
+			if( rc.$.content().getSubType() == "SlatwallProductListing" ) {
 				rc.$.event("slatAction", "frontend:product.listcontentproducts");
 				if(!structKeyExists(form, "P:Show") && !structKeyExists(url, "P:Show")) {
 					rc.$.slatwall.productList().setPageRecordsShow(rc.$.content('productsPerPage'));	
 				}
-			}
-		// Checks for shopping cart
-		} else if (rc.$.content('filename') == 'shopping-cart') {
-			if(rc.$.event('slatAction') == "") {
+			// Checks for shopping cart
+			} else if (rc.$.content('filename') == 'shopping-cart') {
 				rc.$.event("slatAction", "frontend:cart.detail");
-			}
-			
-		// Checks for Checkout page
-		} else if (rc.$.content('filename') == 'checkout') {
-			if(rc.$.event('slatAction') == "") {
+				
+			// Checks for Checkout page
+			} else if (rc.$.content('filename') == 'checkout') {
 				rc.$.event("slatAction", "frontend:checkout.detail");
-			}
-			
-		// Checks for My-Account page
-		} else if (rc.$.content('filename') == 'my-account') {
-			if(rc.$.event('slatAction') == "") {
+				
+			// Checks for My-Account page
+			} else if (rc.$.content('filename') == 'my-account') {
 				rc.$.event("slatAction", "frontend:account.detail");
-			}
-		
-		// Checks for Order Status page
-		} else if (rc.$.content('filename') == 'order-status') {
-			if(rc.$.event('slatAction') == "") {
+				
+			// Checks for Order Status page
+			} else if (rc.$.content('filename') == 'order-status') {
 				rc.$.event("slatAction", "frontend:order.detail");
-			}
-		
-		// Checks for Order Confirmation page
-		} else if (rc.$.content('filename') == 'order-confirmation') {
-			if(rc.$.event('slatAction') == "") {
+				
+			// Checks for Order Confirmation page
+			} else if (rc.$.content('filename') == 'order-confirmation') {
 				rc.$.event("slatAction", "frontend:order.confirmation");
+
 			}
 		}
 	}

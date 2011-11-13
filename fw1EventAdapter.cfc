@@ -119,6 +119,12 @@ Notes:
 		<cfset var local=structNew()>
 		<cfset var state=structNew()>
 		
+		<!--- Remove any actions that might be in the form scope and place them in the URL scope --->
+		<cfif structKeyExists(form, variables.framework.action)>
+			<cfset url[variables.framework.action] = duplicate(form[variables.framework.action]) />
+			<cfset structDelete(form, variables.framework.action) />
+		</cfif>
+		
 		<!--- Put the event url struct, to be used by FW/1 --->
 		<cfset url.$ = $ />
 		

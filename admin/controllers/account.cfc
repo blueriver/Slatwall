@@ -91,11 +91,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function save(required struct rc) {
 		param name="rc.accountID" default="";
 		
-		rc.account = getAccountService().getAccount(rc.accountID, true);
+		detail(rc);
+		
 		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteid'));
 		
 		if(rc.account.hasErrors()) {
-			setView("admin:account.detail");
+			getFW().setView("admin:account.detail");
 		} else {
 			rc.message = "admin.account.save_success";
         	getFW().redirect(action="admin:account.list",preserve="message");	

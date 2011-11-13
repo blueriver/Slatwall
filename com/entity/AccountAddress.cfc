@@ -41,7 +41,7 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	// Persistent Properties
 	property name="accountAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	// name for this account Address
-	property name="name" ormtype="string";
+	property name="accountAddressName" ormtype="string";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
