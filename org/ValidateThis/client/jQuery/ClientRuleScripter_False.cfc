@@ -23,15 +23,14 @@
 		
 		<!--- JAVASCRIPT VALIDATION METHOD --->
 		<cfsavecontent variable="theCondition">
-			function(value,element,options) { var pattern = /^([0]|(false)|(no))$/; return value.toLowerCase().match( pattern ) == null ? false : true; } 
+			function(v,e,o){ 
+				if (v===''){return true;}
+				var re = /^(0|false|no)$/i; 
+				return re.test(v);
+			}
 		</cfsavecontent>
 		
 		<cfreturn generateAddMethod(theCondition,arguments.defaultMessage) />
-	</cffunction>
-
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-		<cfreturn createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# must be false.") />
 	</cffunction>
 
 </cfcomponent>

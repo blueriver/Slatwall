@@ -21,7 +21,21 @@
 		
 		<!--- JAVASCRIPT VALIDATION METHOD --->
 		<cfsavecontent variable="theCondition">
-			function(value,element,options) { var dBefore = new Date(); var dValue = new Date(value); if (options.before) { dBefore = new Date(options.before); } return (dBefore > dValue); } 
+			function(v,e,o){
+				if(v===''){return true;}
+				var dBefore = new Date();
+				// make sure only date with no time so today is not a valid past date
+				dBefore = new Date(dBefore.toDateString());
+				var dValue = new Date(v);
+				var ok = !/Invalid|NaN/.test(dValue);
+				if(o.before){
+					dBefore = new Date(o.before);
+				}
+				if (ok){
+					ok=dBefore>dValue
+				}
+				return ok;
+			} 
 		</cfsavecontent>
 		
 		<cfreturn generateAddMethod(theCondition,arguments.defaultMessage) />
@@ -37,13 +51,20 @@
 		<cfreturn serializeJSON(options) />
 	</cffunction>
 
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
+	<cffunction name="getGeneratedFailureMessage" returntype="string" access="private" output="false" hint="I return the generated failure message from the resource bundle for this CRS. Override me to customize further.">
 		<cfargument name="validation" type="any"/>
-		<cfset var failureMessage = createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# must be a date in the past.") />
+		<cfargument name="locale" type="string" required="yes" hint="The locale to use to generate the default failure message." />
+		<cfargument name="parameters" type="any" required="yes" hint="The parameters stored in the validation object." />
+
+		<cfset var args = [arguments.validation.getPropertyDesc()] />
+		<cfset var msgKey = "defaultMessage_PastDate" />
+
 		<cfif arguments.validation.hasParameter("before")>
-			<cfset failureMessage = failureMessage & " The date entered must come before #arguments.validation.getParameterValue('before')#." />
+			<cfset theDate = arguments.validation.getParameterValue("before")/>
+			<cfset msgKey = "defaultMessage_PastDate_WithBefore" />
+			<cfset arrayAppend(args,theDate) />
 		</cfif>
-		<cfreturn failureMessage />
+		<cfreturn variables.messageHelper.getGeneratedFailureMessage(msgKey,args,arguments.locale) />
 	</cffunction>
 
 </cfcomponent>

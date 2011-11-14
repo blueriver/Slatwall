@@ -18,14 +18,18 @@
 	<cffunction name="init" returnType="any" access="public" output="false" hint="I build a new ClientScriptWriter">
 		<cfargument name="childObjectFactory" type="any" required="true" />
 		<cfargument name="Translator" type="any" required="true" />
+		<cfargument name="messageHelper" type="any" required="true" />
 		<cfargument name="JSRoot" type="string" required="true" />
 		<cfargument name="extraClientScriptWriterComponentPaths" type="string" required="true" />
 		<cfargument name="defaultFailureMessagePrefix" type="string" required="true" />
+		<cfargument name="vtFolder" type="string" required="true" />
 		<cfset variables.childObjectFactory = arguments.childObjectFactory />
 		<cfset variables.Translator = arguments.Translator />
+		<cfset variables.messageHelper = arguments.messageHelper />
 		<cfset variables.JSRoot = arguments.JSRoot />
 		<cfset variables.extraClientScriptWriterComponentPaths = arguments.extraClientScriptWriterComponentPaths />
 		<cfset variables.defaultFailureMessagePrefix = arguments.defaultFailureMessagePrefix />
+		<cfset variables.vtFolder = arguments.vtFolder />
 
 		<cfset setRuleScripters() />
 		<cfreturn this />
@@ -34,7 +38,7 @@
 	<cffunction name="generateValidationScript" returntype="any" access="public" output="false" hint="I generate the JS script required to implement a validation.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation struct that describes the validation." />
 		<cfargument name="formName" type="Any" required="yes" />
-		<cfargument name="locale" type="Any" required="no" default="" />
+		<cfargument name="locale" type="Any" required="yes" />
 
 		<cfthrow type="validatethis.client.AbstractClientScriptWriter.methodnotdefined"
 				message="I am an abstract object, hence the generateValidationScript method must be overriden in a concrete object." />
@@ -53,6 +57,15 @@
 
 		<cfthrow type="validatethis.client.AbstractClientScriptWriter.methodnotdefined"
 				message="I am an abstract object, hence the generateScriptFooter method must be overriden in a concrete object." />
+
+	</cffunction>
+	
+	<cffunction name="generateJSFieldRefence" returntype="any" access="public" output="false" hint="I generate the JS script that references the field name.">
+		<cfargument name="fieldname" type="any" required="yes" hint="The field name." />
+		<cfargument name="formName" type="Any" required="yes" hint="The form name." />
+
+		<cfthrow type="validatethis.client.AbstractClientScriptWriter.generateJSFieldRefence"
+				message="I am an abstract object, hence the generateJSFieldRefence method must be overriden in a concrete object." />
 
 	</cffunction>
 	
@@ -90,8 +103,8 @@
 	</cffunction>
 	<cffunction name="setRuleScripters" returntype="void" access="private" output="false" hint="I create rule validator objects from a list of component paths">
 		<cfset var dirName = listLast(listLast(getMetadata(this).Name,"."),"_") />
-		<cfset var initArgs = {translator=variables.translator,getSafeFormName=variables.getSafeFormName,defaultFailureMessagePrefix=variables.defaultFailureMessagePrefix} />
-		<cfset variables.RuleScripters = variables.childObjectFactory.loadChildObjects("ValidateThis.client.#dirName#" & "," & variables.extraClientScriptWriterComponentPaths,"ClientRuleScripter_",structNew(),initArgs) />
+		<cfset var initArgs = {translator=variables.translator,messageHelper=variables.messageHelper,defaultFailureMessagePrefix=variables.defaultFailureMessagePrefix,vtFolder=variables.vtFolder} />
+		<cfset variables.RuleScripters = variables.childObjectFactory.loadChildObjects(variables.vtFolder & ".client.#dirName#" & "," & variables.extraClientScriptWriterComponentPaths,"ClientRuleScripter_",structNew(),initArgs) />
 	</cffunction>
 
 </cfcomponent>

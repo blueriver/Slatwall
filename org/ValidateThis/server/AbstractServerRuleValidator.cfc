@@ -16,13 +16,18 @@
 <cfcomponent output="false" name="AbstractServerRuleValidator" hint="I am an abstract validator responsible for performing one specific type of validation.">
 
 	<cffunction name="init" returnType="any" access="public" output="false" hint="I build a new ServerRuleValidator">
+		<cfargument name="messageHelper" type="any" required="true" />
 		<cfargument name="defaultFailureMessagePrefix" type="string" required="true" />
+
+		<cfset variables.messageHelper = arguments.messageHelper />
 		<cfset variables.defaultFailureMessagePrefix = arguments.defaultFailureMessagePrefix />
+
 		<cfreturn this />
 	</cffunction>
 	
 	<cffunction name="validate" returntype="void" access="public" output="false" hint="I perform the validation returning info in the validation object.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation object being used to perform the validation." />
+		<cfargument name="locale" type="string" required="yes" hint="The locale to use to generate the default failure message." />
 
 		<cfthrow type="validatethis.server.AbstractServerRuleValidator.methodnotdefined"
 				message="I am an abstract object, hence the validate method must be overriden in a concrete object." />
@@ -48,17 +53,6 @@
 		<cfset arguments.validation.failWithResult(arguments.result) />
 	</cffunction>
 
-	<cffunction name="createDefaultFailureMessage" returntype="string" access="private" output="false" hint="I prepend the defaultFailureMessagePrefix to a message.">
-		<cfargument name="FailureMessage" type="any" required="yes" hint="A Failure message to add to." />
-		<cfreturn variables.defaultFailureMessagePrefix & arguments.FailureMessage />
-	</cffunction>
-
-	<cffunction name="propertyHasValue" returntype="boolean" access="private" output="false" hint="I determine whether the current property has a value.">
-		<cfargument name="validation" type="any" required="yes" hint="The validation object being used to perform the validation." />
-		 <cfset var theVal = arguments.validation.getObjectValue()>
-		<cfreturn (isSimpleValue(theVal) and len(theVal) gt 0) or (isStruct(theVal) and structCount(theVal) gt 0) or (isArray(theVal) and arrayLen(theVal) gt 0)/>
-	</cffunction>
-
 	<cffunction name="propertyIsRequired" returntype="boolean" access="private" output="false" hint="I determine whether the current property is required.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation object being used to perform the validation." />
 	
@@ -68,7 +62,7 @@
 	<cffunction name="shouldTest" returntype="boolean" access="private" output="false" hint="I determine whether the test should be performed, based on optionality and empty value.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation object being used to perform the validation." />
 	
-		<cfreturn (propertyHasValue(arguments.validation) OR propertyIsRequired(arguments.validation)) />
+		<cfreturn (arguments.validation.propertyHasValue() OR propertyIsRequired(arguments.validation)) />
 	</cffunction>
 
 </cfcomponent>
