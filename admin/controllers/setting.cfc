@@ -212,7 +212,7 @@ component extends="BaseController" output="false" accessors="true" {
 		var deleteResponse = getSettingService().delete(rate);
 		
 		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.product.deleteShippingRate_success");
+			rc.message = rbKey("admin.setting.deleteShippingRate_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
