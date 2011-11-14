@@ -198,7 +198,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getTemplateOptions() {
 		if(!isDefined("variables.templateOptions")){
-			variables.templateOptions = getService(service="ProductService").getProductTemplates();
+			variables.templateOptions = getService("ProductService").getProductTemplates();
 		}
 		return variables.templateOptions;
 	}

@@ -38,14 +38,13 @@ Notes:
 */
 component displayname="Base Object" output="false" {
 	
-	
 	// Constructor Metod
 	public any function init() {
 		return this;
 	}
 	
 	/*********************************************************************************/
-	/********************* Public Methods For Doing Stanrd Tasks *********************/
+	/***************** Public Methods For Doing Standard Object Tasks ****************/
 	/*********************************************************************************/
 	
 	// Public populate method to utilize a struct of data that follows the standard property identifier format
@@ -157,6 +156,18 @@ component displayname="Base Object" output="false" {
 			weight
 		*/
 	}
+	public string function getPropertyTitle(required string propertyName) {
+		return rbKey("entity.#getClassName()#.");
+	}
+	public string function getPropertyFieldName(required string propertyName) {
+		
+	}
+	public string function getPropertyFieldType(required string propertyName) {
+		
+	}
+	public string function getPropertyValueOptions(required string propertyName) {
+		
+	}
 	
 	// @help public method for getting a recursive list of all the meta data of the properties of an object
 	public array function getProperties(struct metaData=getMetaData(this)) {
@@ -208,10 +219,25 @@ component displayname="Base Object" output="false" {
 		return variables;
 	}
 	
-	// @hint Public helper function absolute url path from site root
-	public string function getSlatwallRootPath() {
-		return "#application.configBean.getContext()#/plugins/Slatwall";
+	// @help Public method to get the class name of an object
+	public any function getClassName() {
+		return listLast(getClassFullname(), "."); 
 	}
+	
+	// @help Public method to get the fully qualified dot notation class name
+	public any function getClassFullname() {
+		return getMetaData( this ).fullname;
+	}
+	
+	// @help Public method to determine if this is a persistent object
+	public any function isPersistent() {
+		var metaData = getMetaData( this );
+		if(structKeyExists(metaData, "persistent") && metaData.persistent) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	/********************************************************************************/
 	/*********************** Private Helper Methods *********************************/
@@ -231,9 +257,15 @@ component displayname="Base Object" output="false" {
 	/*********************** Private Helper Delegation Methods **********************/
 	/********************************************************************************/
 	
+	
 	// @hint helper function for returning the any of the services in the application
-	public any function getService(required string service) {
-		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
+	public any function getService(required string serviceName) {
+		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.serviceName);
+	}
+	
+	// @hint Private helper function absolute url path from site root
+	private string function getSlatwallRootPath() {
+		return "#application.configBean.getContext()#/plugins/Slatwall";
 	}
 	
 	// @hint Private helper function the file system directory
@@ -246,6 +278,21 @@ component displayname="Base Object" output="false" {
 		return getPluginConfig().getApplication().getValue("rbFactory");
 	}
 	
+	// @hint Private helper function for returning the plugin config inside of any component in the application
+	private any function getPluginConfig() {
+		return application.slatwall.pluginConfig;
+	}
+	
+	// @hint Private helper function for returning the fw
+	private any function getFW() {
+		return getPluginConfig().getApplication().getValue('fw');
+	}
+	
+	// @hint Private helper function for returning the Validate This Facade Object
+	private any function getValidateThis() {
+		return getPluginConfig().getApplication().getValue('validateThis');
+	}
+	
 	// @hint Private helper function to return the RB Key from RB Factory in any component
 	private string function rbKey(required string key) {
 		return getRBFactory().getKeyValue(session.rb,arguments.key);
@@ -256,14 +303,9 @@ component displayname="Base Object" output="false" {
 		return getService("settingService").getSettingValue(arguments.settingName);
 	}
 	
-	// @hint Private helper function for returning the plugin config inside of any component in the application
-	private any function getPluginConfig() {
-		return application.slatwall.pluginConfig;
-	}
-	
-	// @hint Private helper function for returning the fw
-	private any function getFW() {
-		return getPluginConfig().getApplication().getValue('fw');
+	// @hint Private helper function to validate an object
+	private any function validate(required any object) {
+		return getValidateThis.validate( arguments.object );
 	}
 	
 	// @hint Private helper function for building URL's

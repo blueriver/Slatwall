@@ -38,9 +38,7 @@ Notes:
 */
 component displayname="Base Entity" accessors="true" extends="Slatwall.com.utility.BaseObject" {
 	
-	property name="errorBean" type="Slatwall.com.utility.ErrorBean" persistent="false";
-	property name="updateKeys" type="string" persistent="false";
-	
+	// @hint global constructor arguments.  All Extended entities should call super.init() so that this gets called
 	public any function init() {
 		// Place reference to mura scope in entity
 		if(!structKeyExists(request, "muraScope")) {
@@ -54,6 +52,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return super.init();
 	}
 	
+	// @hint public method that returns if this entity has persisted to the database yet or not.
 	public boolean function isNew() {
 		var identifierColumns = getIdenentifierColumns();
 		var returnNew = true;
@@ -64,11 +63,28 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 		return returnNew;
 	}
+		
+	// @hint public method that returns the primary identifier column.  If there is no primary identifier column it throws an error
+	public string function getPrimaryIDPropertyName() {
+		var idColumnName = getIdentifierColumnsNames();
+		if( arrayLen(idColumnName) == 1) {
+			return idColumnName[1];
+		} else {
+			throw("There is not primary ID property for this entity");
+		}
+	}
 	
-	public any function getIdenentifierColumns() {
+	// @hint public method that returns the value from the primary ID of this entity
+	public string function getPrimaryIDValue() {
+		return this.invokeMethod("get#getPrimaryIDPropertyName()#");
+	}
+	
+	// @hint public method that returns and array of ID columns
+	public any function getIdentifierColumnsNames() {
 		return ormGetSessionFactory().getClassMetadata(getMetaData(this).entityName).getIdentifierColumnNames();
 	}
 	
+	// @hint public method that return the ID of the
 	public any function getIdentifierValue() {
 		var identifierColumns = getIdenentifierColumns();
 		var idValue = "";
@@ -80,34 +96,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return idValue;
 	}
 	
-	public string function getClassName(){
-		return ListLast(GetMetaData(this).entityname, "." );
+	// @hint public method that returns the full entityName as "Slatwallxxx"
+	public string function getEntityName(){
+		return getMetaData(this).entityname;
 	}
 	
-    public string function getPropertyList() {
-        if( !structKeyExists(variables,"propertyList") ) {
-            variables.propertyList = "";
-            var props = getMetadata(this)["properties"];
-            for( var i=1; i<=arrayLen(props); i++ ) {
-                variables.propertyList = listAppend(variables.propertyList,props[i].name);
-            }
-        }
-        return variables.propertyList;
-    }
-	
-	public void function addError(required string name, required string message) {
-		getErrorBean().addError(argumentCollection=arguments);
-	}
-	
-	public void function clearErrors() {
-		structClear(getErrorBean().getErrors());
-	}
-	
-	// @hint A way to see if the entity has any errors.
-	public boolean function hasErrors() {
-		return this.getErrorBean().hasErrors();
-	}
-		
 	public any function getCreatedDateTime() {
 		if(isNull(variables.createdDateTime)) {
 			return "";
@@ -181,6 +174,23 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	/*
 	
+	// Removed in favor of using Validate This going forward
+	
+	property name="errorBean" type="Slatwall.com.utility.ErrorBean" persistent="false";
+	property name="updateKeys" type="string" persistent="false";
+	
+	public void function addError(required string name, required string message) {
+		getErrorBean().addError(argumentCollection=arguments);
+	}
+	
+	public void function clearErrors() {
+		structClear(getErrorBean().getErrors());
+	}
+	
+	// @hint A way to see if the entity has any errors.
+	public boolean function hasErrors() {
+		return this.getErrorBean().hasErrors();
+	}
 	
 	// Moved to the utility Service
 	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 

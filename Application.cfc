@@ -98,6 +98,8 @@ component extends="org.fw1.framework" output="false" {
 		// Make's sure that our entities get updated
 		ormReload();
 		
+		/********************* Coldspring Setup *************************/
+		
 		// Get Coldspring Config
 		var serviceFactory = "";
 		var integrationService = "";
@@ -123,6 +125,8 @@ component extends="org.fw1.framework" output="false" {
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
 		
+		/******************* END: Coldsping Setup **************************/		
+		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
@@ -139,9 +143,28 @@ component extends="org.fw1.framework" output="false" {
 		// Set the first request to True so that it runs
 		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
 		
-		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
-		
+		// Set the frameworks baseURL to be used by the buildURL() method
 		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
+		
+		/******************* ValidateThis Setup *************************/
+		
+		// Setup the ValidateThis Framework
+		
+		var validateThisConfig = {
+			definitionPath = "/Slatwall/com/validation/"
+		};
+		
+		// Create The 
+		var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
+		
+		// Place the validation facade object in the plugin config application scope
+		getPluginConfig().getApplication().setValue("validateThis", vtFacade);
+		
+		/******************* END: ValidateThis Setup **************************/
+		
+		
+		// Log that the application is finished setting up
+		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
 	}
 	
 	public void function setupRequest() {

@@ -126,35 +126,34 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	
 	<cfif attributes.value eq "">
-		<cfset attributes.value = attributes.object.getValueByPropertyIdentifier(arguments.property) />
+		<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
 		<cfif isNull(attributes.value) || attributes.value eq "">
-			<cfset attributes.value = attributes.valueDefailt />
+			<cfset attributes.value = attributes.valueDefault />
 		</cfif>
 	</cfif>
 	<cfif attributes.title eq "">
-		<cfset attributes.title = attributes.object.getPropertyTitle(arguments.property) />
+		<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
 	</cfif>
 	<cfif attributes.fieldName eq "">
-		<cfset attributes.fieldName = attributes.object.getPropertyFieldName(arguments.property) />
+		<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
 	</cfif>
-	<cfif attributes.fieldName eq "">
-		<cfset attributes.fieldType = attributes.object.getPropertyFieldType(arguments.property) />
+	<cfif attributes.fieldType eq "">
+		<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 	</cfif>
-	<cfif not arrayLen(attributes.valueOptions)>
-		<cfset attributes.valueOptions = attributes.object.getPropertyValueOptions(arguments.property) />
+	<cfif listFindNoCase("checkbox,radiogroup,select", attributes.fieldType)>
+		<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 	</cfif>
 	<cfif attributes.valueDisplayFormat eq "">
-		<cfset attributes.valueDisplayFormat = attributes.object.getPropertyValueDisplayFormat(arguments.property) />
+		<cfset attributes.valueDisplayFormat = attributes.object.getPropertyValueDisplayFormat( attributes.property ) />
 	</cfif>
 	
-	<cfset attributes.titleClass = "title #lcase(attributes.propertyName)#title #attributes.titleClass#" />
-	<cfset attributes.valueClass = "value #lcase(attributes.propertyName)#value #attributes.valueClass#" />
-	<cfset attributes.valueLinkClass = "valuelink #lcase(attributes.propertyName)#valuelink #attributes.valueLinkClass#" />
-	<cfset attributes.fieldClass = "field #lcase(attributes.propertyName)#field #attributes.fieldClass#" />
+	<cfset attributes.titleClass = trim("title #lcase(attributes.propertyName)#title #attributes.titleClass#") />
+	<cfset attributes.valueClass = trim("value #lcase(attributes.propertyName)#value #attributes.valueClass#") />
+	<cfset attributes.valueLinkClass = trim("valuelink #lcase(attributes.propertyName)#valuelink #attributes.valueLinkClass#") />
+	<cfset attributes.fieldClass = trim("field #lcase(attributes.propertyName)#field #attributes.fieldClass#") />
 		
 	<cfset local = structNew() />
 	<cfset local.fw = caller.this />
-	<cfset local.displayValue = application.slatwall.pluginConfig.getApplication().getValue("serviceFactory").getBean("utilityService").getDisplayValueByFormat />
 	
 	<cfswitch expression="#attributes.displaytype#">
 		<cfcase value="dl">
@@ -170,11 +169,11 @@ Notes:
 				<td class="#attributes.titleClass#">#attributes.title#</td>
 				<td class="#attributes.valueClass#">#attributes#</td>
 			</tr>
-			<cfbreak />
+			
 		</cfcase>
 		<cfcase value="plain">
 			
-			<cfbreak />
+			
 		</cfcase>
 	</cfswitch>	
 </cfif>
