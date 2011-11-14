@@ -208,6 +208,11 @@ component displayname="Base Object" output="false" {
 		return variables;
 	}
 	
+	// @hint Public helper function absolute url path from site root
+	public string function getSlatwallRootPath() {
+		return "#application.configBean.getContext()#/plugins/Slatwall";
+	}
+	
 	/********************************************************************************/
 	/*********************** Private Helper Methods *********************************/
 	/********************************************************************************/
@@ -229,11 +234,6 @@ component displayname="Base Object" output="false" {
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string service) {
 		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.service);
-	}
-	
-	// @hint Private helper function absolute url path from site root
-	private string function getSlatwallRootPath() {
-		return "#application.configBean.getContext()#/plugins/Slatwall";
 	}
 	
 	// @hint Private helper function the file system directory
