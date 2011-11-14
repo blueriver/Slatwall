@@ -40,14 +40,14 @@ Notes:
 
 <cfoutput>
 
-<cfif arrayLen(rc.optionGroups..getPageRecords()) gt 1>
+<cfif arrayLen(rc.optionGroups.getPageRecords()) gt 1>
 	<div class="buttons">
 	<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
 	<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
 	</div>
 </cfif>
 
-<table class="mura-table-grid" id="OptionGroups">
+<table class="mura-table-grid stripe" id="OptionGroups">
 	<thead>
 	<tr>
 		<th class="handle" style="display:none;"></th>

@@ -272,16 +272,21 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		var sortedSkuIDQuery = getDAO().getSortedProductSkusID(arguments.product.getProductID());
 		var sortedArray = arrayNew(1);
+		var sortedArrayReturn = arrayNew(1);
 		
 		for(var i=1; i<=sortedSkuIDQuery.recordCount; i++) {
 			arrayAppend(sortedArray, sortedSkuIDQuery.skuID[i]);
 		}
 		
+		arrayResize(sortedArrayReturn, arrayLen(sortedArray));
+		
 		for(var i=1; i<=arrayLen(skus); i++) {
-			sortedArray[arrayFind(sortedArray, skus[i].getSkuID())] = skus[i];
+			var skuID = skus[i].getSkuID();
+			var index = arrayFind(sortedArray, skuID);
+			sortedArrayReturn[index] = skus[i];
 		}
 		
-		return sortedArray;
+		return sortedArrayReturn;
 	}
 	
 	public any function searchSkusByProductType(string term,string productTypeID) {

@@ -114,7 +114,7 @@ Notes:
 				<div class="rateTable<cfif not rc.shippingMethod.getUseRateTableFlag()> hideElement</cfif>">
 					<strong>Rate Table</strong>
 					<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
-					<table id="shippingRateTable" class="mura-table-grid">
+					<table id="shippingRateTable" class="mura-table-grid stripe">
 						<thead>
 							<tr>
 								<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.addressZone')#</th>
@@ -150,7 +150,7 @@ Notes:
 								<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="addressZone" edit="true" nullLabel="#$.slatwall.rbKey('define.all')#">
 							<cfelse>
 								<dt>Address Zone</dt>
-								<dd><cf_SlatwallActionCaller action="admin:setting.createaddresszone"></dd>
+								<dd>All - <cf_SlatwallActionCaller action="admin:setting.createaddresszone"></dd>
 							</cfif>
 							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="minWeight" edit="true" />
 							<cf_SlatwallPropertyDisplay object="#rc.blankShippingRate#" property="maxWeight" edit="true" />

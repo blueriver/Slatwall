@@ -60,7 +60,7 @@ Notes:
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
-		<table class="mura-table-grid" id="basicOrderInfo">
+		<table class="mura-table-grid stripe" id="basicOrderInfo">
 			<tr>
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
@@ -84,7 +84,7 @@ Notes:
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<table class="mura-table-grid">
+		<table class="mura-table-grid stripe">
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
 				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>

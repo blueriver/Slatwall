@@ -61,7 +61,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			loginURL &= "returnURL=" & URLEncodedFormat(getFW().buildURL(action=rc.slatAction, queryString=cgi.query_string));
 			location(url=loginURL, addtoken=false);
 			*/
-			if(left(getLoginURL(), 1) eq "/") {
+			if(left(rc.$.siteConfig().getLoginURL(), 1) eq "/") {
 				location(url=rc.$.siteConfig().getLoginURL(), addtoken=false);
 			} else {
 				location(url="/#rc.$.siteConfig().getLoginURL()#", addtoken=false);	

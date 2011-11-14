@@ -68,10 +68,12 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productRelationships" singlularname="productRelationship" cfc="ProductRelationship" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
+	// Related Object Properties (many-to-many)
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
+
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
@@ -459,15 +461,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.attributeValue.removeProduct(this);
 	}
 	
-	// promotionRewards (one-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.setProduct(this);
-	}
-	
-	public void function removePromotionReward(required any promotionReward) {
-	   arguments.promotionReward.removeProduct(this);
-	}
-	
 	// productReviews (one-to-many)
 	public void function addProductReview(required any productReview) {
 	   arguments.productReview.setProduct(this);
@@ -475,6 +468,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removeProductReview(required any productReview) {
 	   arguments.productReview.removeProduct(this);
+	}
+	
+	// promotionRewards (many-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.addProduct(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+	   arguments.promotionReward.removeProduct(this);
 	}
 	
 	/************   END Association Management Methods   *******************/

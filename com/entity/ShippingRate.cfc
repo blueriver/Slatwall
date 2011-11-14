@@ -54,7 +54,7 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 	
 	// Related Object Properties
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
-	property name="addressZone" validateRequired="true" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	
 	public array function getAddressZoneOptions() {
 		if(!structKeyExists(variables, "addressZoneOptions")) {

@@ -56,7 +56,7 @@ Notes:
 				<li><a href="##tabAdvanced" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.advanced')#</span></a></li>
 			</ul>
 			<div id="tabProduct">
-				<table id="ProductSettings" class="mura-table-grid">
+				<table id="ProductSettings" class="mura-table-grid stripe">
 					<tr>
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
@@ -109,7 +109,7 @@ Notes:
 				</table>
 			</div>
 			<div id="tabOrder">
-				<table id="OrderSettings" class="mura-table-grid">
+				<table id="OrderSettings" class="mura-table-grid stripe">
 					<tr>
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
@@ -121,7 +121,7 @@ Notes:
 				</table>
 			</div>
 			<div id="tabAdvanced">
-				<table id="AdvancedSettings" class="mura-table-grid">
+				<table id="AdvancedSettings" class="mura-table-grid stripe">
 					<tr>
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	

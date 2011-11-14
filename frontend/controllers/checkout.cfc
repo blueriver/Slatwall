@@ -56,6 +56,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 		}
 		
+		// Recaluclate Order Totals In Case something has changed
+		getOrderService().recalculateOrderAmounts(rc.$.slatwall.cart());
+		
 		// get the list of requirements left for this order to be processed
 		rc.orderRequirementsList = getOrderService().getOrderRequirementsList(rc.$.slatwall.cart());
 		
