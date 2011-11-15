@@ -156,14 +156,18 @@ Notes:
 	<cfset local.fw = caller.this />
 	
 	<cfswitch expression="#attributes.displaytype#">
+		<!--- DL Case --->
 		<cfcase value="dl">
 			<cfif attributes.edit>
 				<cfoutput>
 					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
 					<dd class="#attributes.valueClass#">
-						<cfif attributes.edit>
-							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						<cfif attributes.object.hasError(attributes.property)>
+							<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
+								<div class="error">#error#</div>
+							</cfloop>
 						</cfif>
+						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
 					</dd>
 				</cfoutput>
 			<cfelse>
@@ -173,6 +177,7 @@ Notes:
 				</cfoutput>
 			</cfif>
 		</cfcase>
+		<!--- TABLE Display --->
 		<cfcase value="table">
 			<cfoutput>
 				<tr>
@@ -181,6 +186,13 @@ Notes:
 				</tr>
 			</cfoutput>
 		</cfcase>
+		<!--- Inline Display --->
+		<cfcase value="span">
+			<cfoutput>
+				<span class="#attributes.titleClass#">#attributes.title#</span><span class="#attributes.valueClass#">#attributes.value#</span>
+			</cfoutput>
+		</cfcase>
+		<!--- Plain Display (value only) --->
 		<cfcase value="plain">
 			<cfoutput>
 				#attributes.value#

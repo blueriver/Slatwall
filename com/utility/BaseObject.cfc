@@ -329,14 +329,14 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Returns a struct of all the errors for this entity
 	public struct function getErrors() {
 		if( !isNull(getVTResult() ) ) {
-			return getVTResult().hasErrors();
+			return getVTResult().getErrors();
 		}
 		
 		return {};
 	}
 	
 	// @hint Returns the error message of a given error name
-	public struct function getError( required string errorName ) {
+	public array function getErrorsByName( required string errorName ) {
 		if( hasError(arguments.errorName) ) {
 			return getErrors()[ arguments.errorName ];
 		}
