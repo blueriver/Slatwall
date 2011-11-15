@@ -147,33 +147,44 @@ Notes:
 		<cfset attributes.valueDisplayFormat = attributes.object.getPropertyValueDisplayFormat( attributes.property ) />
 	</cfif>
 	
-	<cfset attributes.titleClass = trim("title #lcase(attributes.propertyName)#title #attributes.titleClass#") />
-	<cfset attributes.valueClass = trim("value #lcase(attributes.propertyName)#value #attributes.valueClass#") />
-	<cfset attributes.valueLinkClass = trim("valuelink #lcase(attributes.propertyName)#valuelink #attributes.valueLinkClass#") />
-	<cfset attributes.fieldClass = trim("field #lcase(attributes.propertyName)#field #attributes.fieldClass#") />
+	<cfset attributes.titleClass = trim("title #lcase(attributes.property)#title #attributes.titleClass#") />
+	<cfset attributes.valueClass = trim("value #lcase(attributes.property)#value #attributes.valueClass#") />
+	<cfset attributes.valueLinkClass = trim("valuelink #lcase(attributes.property)#valuelink #attributes.valueLinkClass#") />
+	<cfset attributes.fieldClass = trim("field #lcase(attributes.property)#field #attributes.fieldClass#") />
 		
 	<cfset local = structNew() />
 	<cfset local.fw = caller.this />
 	
 	<cfswitch expression="#attributes.displaytype#">
 		<cfcase value="dl">
-			<dt class="#attributes.titleClass#">#attributes.title#</dt>
-			<dd class="#attributes.valueClass#">
-				<cfif rc.edit>
-					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-				</cfif>
-			</dd>
+			<cfif attributes.edit>
+				<cfoutput>
+					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
+					<dd class="#attributes.valueClass#">
+						<cfif attributes.edit>
+							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						</cfif>
+					</dd>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<dt class="#attributes.titleClass#">#attributes.title#</dt>
+					<dd class="#attributes.valueClass#">#attributes.value#</dd>
+				</cfoutput>
+			</cfif>
 		</cfcase>
 		<cfcase value="table">
-			<tr>
-				<td class="#attributes.titleClass#">#attributes.title#</td>
-				<td class="#attributes.valueClass#">#attributes#</td>
-			</tr>
-			
+			<cfoutput>
+				<tr>
+					<td class="#attributes.titleClass#">#attributes.title#</td>
+					<td class="#attributes.valueClass#">#attributes.value#</td>
+				</tr>
+			</cfoutput>
 		</cfcase>
 		<cfcase value="plain">
-			
-			
+			<cfoutput>
+				#attributes.value#
+			</cfoutput>
 		</cfcase>
 	</cfswitch>	
 </cfif>

@@ -36,23 +36,94 @@
 Notes:
 
 */
-component displayname="Base Object" output="false" {
+component displayname="Base Object" accessors="true" output="false" {
+	
+	property name="vtResult";
 	
 	// Constructor Metod
 	public any function init() {
 		return this;
 	}
 	
-	/*********************************************************************************/
-	/***************** Public Methods For Doing Standard Object Tasks ****************/
-	/*********************************************************************************/
-	
-	// Public populate method to utilize a struct of data that follows the standard property identifier format
-	public void function poplulate(required struct data={}) {
-		
+	// @hint pubic method to validate this object
+	public any function validate() {
+		return getValidateThis().validate( this );
 	}
 	
-	// @help Public method to retrieve a value based on a propertyIdentifier string format
+	// Public populate method to utilize a struct of data that follows the standard property form format
+	public any function populate( required struct data={} ) {
+		
+		// Get an array of All the properties for this object
+		var properties = getProperties();
+		
+		// Loop over properties looking for a value in the incomming data
+		for( var i=1;i<=arrayLen(properties);i++ ) {
+			
+			// Set the current property into variable of meta data
+			var currentProperty = properties[i];
+			
+			// Check to see if this property has a key in the data that was passed in
+			if( structKeyExists(arguments.data, currentProperty.name) ) {
+			
+				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
+				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
+					
+						// If the value is blank, then we check to see if the property can be set to NULL.
+						if( arguments.data[ currentProperty.name ] == "" && ( !structKeyExists(currentProperty, "notNull") || !currentProperty.notNull ) ) {
+							_setProperty(currentProperty.name);
+						
+						// If the value isn't blank, or we can't set to null... then we just set the value.
+						} else {
+							_setProperty(currentProperty.name, arguments.data[ currentProperty.name ]);
+						}
+					
+				// (MANY-TO-ONE) Do this logic if this property is a many-to-one relationship, and the data passed in is of type struct
+				} else if( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-one" && isStruct( arguments.data[ currentProperty.name ] ) ) {
+					
+					// Set the data of this Many-To-One relationship into it's own local struct
+					var manyToOneStructData = arguments.data[ currentProperty.name ];
+					
+					// Find the primaryID column Name
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					
+					// If the primaryID exists then we can set the relationship
+					if(structKeyExists(manyToOneStructData, primaryIDPropertyName)) {
+						
+						// If the value passed in for the ID is blank, then set the value of the currentProperty to NULL
+						if(manyToOneStructData[primaryIDPropertyName] == "") {
+							_setProperty(currentProperty.name);
+							
+						// If it was an actual ID, then we will try to load that entity
+						} else {
+							
+							// set the service to use to get the specific entity
+							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+							
+							// attempt to load the entity and set it as the value of the property
+							_setProperty(currentProperty.name, entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]} ) );
+						}
+					}
+					
+				// (ONE-TO-MANY) Do this logic if this property is a one-to-many relationship, and the data passed in is of type array
+				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "one-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
+					
+					// TODO: Setup One-To-Many Logic
+					
+				// (MANY-TO-MANY) Do this logic if this property is a many-to-many relationship, and the data passed in is of type array	
+				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
+					
+					// TODO: Setup Many-To-Many Logic
+					
+				}
+				
+			}
+		}
+		
+		// Return this object
+		return this;
+	}
+	
+	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier) {
 		var value = javaCast("null", "");
 		var arrayValue = arrayNew(1);
@@ -135,13 +206,12 @@ component displayname="Base Object" output="false" {
 				return arguments.value & " " & setting("advanced_weightFormat");
 			}
 		}
-		
 		var formatedValue = "";
 		
 		return formatedValue;
 	}
 	
-	// @help public method for getting the default display format for a property
+	// @hint public method for getting the display format for a given property, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyValueDisplayFormat(required string propertyName) {
 		/*
 			Valid Format Strings are:
@@ -156,17 +226,20 @@ component displayname="Base Object" output="false" {
 			weight
 		*/
 	}
+	
+	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyTitle(required string propertyName) {
-		return rbKey("entity.#getClassName()#.");
+		return rbKey("entity.#getClassName()#.#arguments.propertyName#");
 	}
+	
+	// @hint public method for returning the name of the field for this property, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyFieldName(required string propertyName) {
-		
+		return arguments.propertyName;
 	}
+	
+	// @hint public method for inspecting the property of a given object and determining the most appropriate field type for that property, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyFieldType(required string propertyName) {
-		
-	}
-	public string function getPropertyValueOptions(required string propertyName) {
-		
+		return "text";
 	}
 	
 	// @help public method for getting a recursive list of all the meta data of the properties of an object
@@ -238,25 +311,31 @@ component displayname="Base Object" output="false" {
 		return false;
 	}
 	
-	
-	/********************************************************************************/
-	/*********************** Private Helper Methods *********************************/
-	/********************************************************************************/
+	// @hint A way to see if the object has any errors.
+	public boolean function hasErrors() {
+		if( !isNull(getVTResult() ) ) {
+			return getVTResult().hasErrors();
+		}
+		
+		return false;
+	}
 			
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {
-		var theMethod = this["set" & arguments.name];
-		if( isNull(arguments.value) ) {
-			structDelete(variables,arguments.name);
-		} else {
+		
+		// If a value was passed in, set it
+		if( structKeyExists(arguments, 'value') ) {
+			// Defined the setter method
+			var theMethod = this["set" & arguments.name];
+			
+			// Call Setter
 			theMethod(arguments.value);
+		} else {
+			// Remove the key from variables, represents setting as NULL for persistent entities
+			structDelete(variables, arguments.name);
 		}
+		
 	}
-	
-	/********************************************************************************/
-	/*********************** Private Helper Delegation Methods **********************/
-	/********************************************************************************/
-	
 	
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
@@ -301,11 +380,6 @@ component displayname="Base Object" output="false" {
 	// @hint Private helper function to return a Setting
 	private any function setting(required string settingName) {
 		return getService("settingService").getSettingValue(arguments.settingName);
-	}
-	
-	// @hint Private helper function to validate an object
-	private any function validate(required any object) {
-		return getValidateThis.validate( arguments.object );
 	}
 	
 	// @hint Private helper function for building URL's

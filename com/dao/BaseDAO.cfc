@@ -98,12 +98,14 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		}
 	}
 	
-	
 	public void function reloadEntity(required any entity) {
     	entityReload(arguments.entity);
     }
+    
+    public void function flushORMSession() {
+    	ormFlush();
+    }
 	
-
 	public any function getSmartList(required string entityName, struct data={}){
 		// Adds the Slatwall Prefix to the entityName when needed.
 		if(left(arguments.entityName,8) != "Slatwall") {

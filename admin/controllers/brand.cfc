@@ -49,12 +49,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.brandID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.brand = getBrandService().getBrand(rc.brandID,true);
+		rc.brand = getBrandService().getBrand(rc.brandID, true);
 		if(!rc.brand.isNew()) {
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		}
 	}
-
 
     public void function create(required struct rc) {
 		detail(arguments.rc);
@@ -73,8 +72,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-	   rc.brand = getBrandService().getBrand(rc.brandID,true);
-	   rc.brand = getBrandService().save(rc.brand,rc);
+	   detail(arguments.rc);
+	   
+	   rc.brand = getBrandService().saveBrand(rc.brand, rc);
+	   
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {

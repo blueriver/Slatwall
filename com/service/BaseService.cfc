@@ -78,30 +78,36 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return response;
 	}
 	
+	// @hint this default populate method just delegates to the entity
 	public any function populate(required any entity, required struct data, boolean cleanseInput=false) {
 		return arguments.entity.populate(data=arguments.data, cleanseInput=arguments.cleanseInput);
 	}
-
-    public any function save(required any entity, struct data, boolean cleanseInput=false) {
+	
+	// @hint this default validate method just delegates to the entity
+	public any function validate(required any entity) {
+    	return arguments.entity.validate();
+    }
+	
+	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
+    public any function save(required any entity, struct data) {
+    	
+    	// If data was passed in to this method then populate it with the new data
         if(structKeyExists(arguments,"data")){
             populate(argumentCollection=arguments);
         }
+        
+        // Validate this object
         validate(entity=arguments.entity);
         
+        // If the object passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(target=arguments.entity);
         } else {
             getService("requestCacheService").setValue("ormHasErrors", true);
         }
+        
+        // Return the entity
         return arguments.entity;
-    }
-    
-    public any function validate(required any entity) {
-    	return arguments.entity; //Temprarily disabled this: getValidationService().validateObject(entity=arguments.entity);
-    }
-    
-    public void function reloadEntity(required any entity) {
-    	getDAO().reloadEntity(entity=arguments.entity);
     }
     
  	/**
@@ -154,8 +160,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return onMissingSaveMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'delete' ) )	{
 			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
-		} else if ( lCaseMissingMethodName.startsWith( 'validate' ) )	{
-			return onMissingValidateMethod( missingMethodName, missingMethodArguments );
 		}
 
 		throw( 'No matching method for #missingMethodName#().' );
@@ -164,10 +168,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 
 	/********** PRIVATE ************************************************************/
-	private function onMissingValidateMethod( required string missingMethodName, required struct missingMethodArguments ) {
-		return validate( missingMethodArguments[ 1 ] );
-	}
-
 	private function onMissingDeleteMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		return delete( missingMethodArguments[ 1 ] );
 	}

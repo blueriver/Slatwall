@@ -151,7 +151,9 @@ component extends="org.fw1.framework" output="false" {
 		// Setup the ValidateThis Framework
 		
 		var validateThisConfig = {
-			definitionPath = "/Slatwall/com/validation/"
+			definitionPath = "/Slatwall/com/",
+			injectResultIntoBO = true,
+			defaultFailureMessagePrefix = ""
 		};
 		
 		// Create The 
@@ -229,7 +231,10 @@ component extends="org.fw1.framework" output="false" {
 		getBeanFactory().getBean("SessionService").confirmSession();
 		
 		// Setup structured Data
-		request.context.structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
+		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
+		if(structCount(structuredData)) {
+			structAppend(request.context, structuredData);	
+		}
 		
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {

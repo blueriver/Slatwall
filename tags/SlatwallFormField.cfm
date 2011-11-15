@@ -62,38 +62,54 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	<cfswitch expression="#attributes.fieldType#">
 		<cfcase value="checkbox">
-			<input type="hidden" name="#attributes.fieldName#" value="" />
-			<cfloop array="#attributes.valueOptions#" index="local.option">
-				<input type="checkbox" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, local.option.value)> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>	
-			</cfloop>
+			<cfoutput>
+				<input type="hidden" name="#attributes.fieldName#" value="" />
+				<cfloop array="#attributes.valueOptions#" index="local.option">
+					<input type="checkbox" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, local.option.value)> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>	
+				</cfloop>
+			</cfoutput>
 		</cfcase>
 		<cfcase value="file">
-			<input type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+			<cfoutput>
+				<input type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+			</cfoutput>
 		</cfcase>
 		<cfcase value="password">
-			<input type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="false" />
+			<cfoutput>
+				<input type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="false" />
+			</cfoutput>
 		</cfcase>
 		<cfcase value="radiogroup">
-			<input type="hidden" name="#attributes.fieldName#" value="" />
-			<cfloop array="#attributes.valueOptions#" index="local.option">
-				<input type="radio" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif attributes.value eq local.option.value> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>
-			</cfloop>
+			<cfoutput>
+				<input type="hidden" name="#attributes.fieldName#" value="" />
+				<cfloop array="#attributes.valueOptions#" index="local.option">
+					<input type="radio" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif attributes.value eq local.option.value> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>
+				</cfloop>
+			</cfoutput>
 		</cfcase>
 		<cfcase value="select">
-			<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
-				<cfloop array="#attributes.valueOptions#" index="local.option">
-					<option value="#local.option.value#" <cfif attributes.value eq local.option.value> selected="selected"</cfif>>#local.option.label#</option>	
-				</cfloop>
-			</select>
+			<cfoutput>
+				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+					<cfloop array="#attributes.valueOptions#" index="local.option">
+						<option value="#local.option.value#" <cfif attributes.value eq local.option.value> selected="selected"</cfif>>#local.option.label#</option>	
+					</cfloop>
+				</select>
+			</cfoutput>
 		</cfcase>
 		<cfcase value="text">
-			<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" />
+			<cfoutput>
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass#" />
+			</cfoutput>
 		</cfcase>
 		<cfcase value="textarea">
-			<textarea name="#attributes.fieldName#" class="#attributes.fieldClass#">#attributes.value#</textarea>
+			<cfoutput>
+				<textarea name="#attributes.fieldName#" class="#attributes.fieldClass#">#attributes.value#</textarea>
+			</cfoutput>
 		</cfcase>
 		<cfcase value="wysiwyg">
-			<textarea name="#attributes.fieldName#" class="wysiwyg #attributes.fieldClass#">#attributes.value#</textarea>
+			<cfoutput>
+				<textarea name="#attributes.fieldName#" class="wysiwyg #attributes.fieldClass#">#attributes.value#</textarea>
+			</cfoutput>
 		</cfcase>
 	</cfswitch>
 </cfif>
