@@ -40,6 +40,12 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
+	
+	<!---
+	<cfhtmlhead text="#$.slatwall.getValidateThis().getInitializationScript(JSIncludes=false)#" />
+	#$.slatwall.getValidateThis().getValidationScript(theObject=rc.brand, formName="brandDetail")#
+	--->
+	
 	<div class="svoadminbranddetail">
 		<cfif rc.edit>
 			<form name="brandDetail" action="#buildURL('admin:brand.save')#" method="post">

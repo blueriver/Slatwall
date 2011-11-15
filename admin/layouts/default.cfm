@@ -66,6 +66,7 @@ Notes:
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
 	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+	
 </head>
 <body>
 	#view("common:toolbar/menu")#

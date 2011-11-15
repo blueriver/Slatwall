@@ -233,5 +233,9 @@ component accessors="true" output="false" extends="BaseObject" {
 	public string function getSlatwallRootPath() {
 		return super.getSlatwallRootPath();
 	}
+	
+	public any function getValidateThis() {
+		return super.getValidateThis();
+	}
 
 }
