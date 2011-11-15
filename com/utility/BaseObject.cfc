@@ -38,6 +38,7 @@ Notes:
 */
 component displayname="Base Object" accessors="true" output="false" {
 	
+	// This propery holds the ValidateThis result bean once it has been set
 	property name="vtResult";
 	
 	// Constructor Metod
@@ -311,13 +312,36 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
-	// @hint A way to see if the object has any errors.
+	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
 		if( !isNull(getVTResult() ) ) {
 			return getVTResult().hasErrors();
 		}
 		
 		return false;
+	}
+	
+	// @hint Returns true if a specific error key exists
+	public boolean function hasError( required string errorName ) {
+		return structKeyExists(getErrors(), arguments.errorName);
+	}
+	
+	// @hint Returns a struct of all the errors for this entity
+	public struct function getErrors() {
+		if( !isNull(getVTResult() ) ) {
+			return getVTResult().hasErrors();
+		}
+		
+		return {};
+	}
+	
+	// @hint Returns the error message of a given error name
+	public struct function getError( required string errorName ) {
+		if( hasError(arguments.errorName) ) {
+			return getErrors()[ arguments.errorName ];
+		}
+		
+		return "";
 	}
 			
 	// @help private method only used by populate

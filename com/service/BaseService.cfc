@@ -94,11 +94,11 @@ component displayname="Base Service" persistent="false" accessors="true" output=
     	// If data was passed in to this method then populate it with the new data
         if(structKeyExists(arguments,"data")){
             populate(argumentCollection=arguments);
+            
+            // Validate this object now that it has been populated
+        	validate(entity=arguments.entity);
         }
-        
-        // Validate this object
-        validate(entity=arguments.entity);
-        
+         
         // If the object passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(target=arguments.entity);
