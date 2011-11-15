@@ -151,7 +151,7 @@ component extends="org.fw1.framework" output="false" {
 		// Setup the ValidateThis Framework
 		
 		var validateThisConfig = {
-			definitionPath = "/Slatwall/com/",
+			definitionPath = "/Slatwall/com/validation/",
 			injectResultIntoBO = true,
 			defaultFailureMessagePrefix = ""
 		};

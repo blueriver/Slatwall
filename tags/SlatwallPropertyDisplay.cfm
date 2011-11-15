@@ -186,7 +186,7 @@ Notes:
 				</tr>
 			</cfoutput>
 		</cfcase>
-		<!--- Inline Display --->
+		<!--- INLINE Display --->
 		<cfcase value="span">
 			<cfoutput>
 				<span class="#attributes.titleClass#">#attributes.title#</span><span class="#attributes.valueClass#">#attributes.value#</span>
