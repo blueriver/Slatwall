@@ -36,9 +36,7 @@
 
 	<!-- Parent Main Service & Helper Components -->
 	<bean id="requestCacheService" class="Slatwall.com.service.RequestCacheService" />
-	<bean id="validationService" class="Slatwall.com.service.ValidationService" />
 	<bean id="parentService" abstract="true">
-		<property name="validationService"><ref bean="validationService" /></property>
 		<property name="requestCacheService"><ref bean="requestCacheService" /></property>
 	</bean>
 	

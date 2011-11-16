@@ -110,7 +110,7 @@ Notes:
 			<cfoutput>
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<option value="#structFind(option, 'value')#" <cfif attributes.value eq structFind(option, 'value')> selected="selected"</cfif>>#structFind(option, 'name')#</option>--->	
+						<option value="#option['value']#" <cfif attributes.value eq option['value']> selected="selected"</cfif>>#option['name']#</option>
 					</cfloop>
 				</select>
 			</cfoutput>
