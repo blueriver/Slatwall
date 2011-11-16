@@ -66,7 +66,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	public any function getAccountAddressOptions() {
 		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAddress");
 		smartList.addSelect(propertyIdentifier="name", alias="name");
-		smartList.addSelect(propertyIdentifier="accountAddressID", alias="id"); 
+		smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
 		smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
 		smartList.addOrder("name|ASC");
 		return smartList.getRecords();

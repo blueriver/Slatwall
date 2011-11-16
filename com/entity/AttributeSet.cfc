@@ -103,10 +103,9 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
-			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeSetType");
 			smartList.addOrder("type|ASC");
-			
 			variables.attributeSetTypeOptions = smartList.getRecords();
 		}
 		return variables.attributeSetTypeOptions;

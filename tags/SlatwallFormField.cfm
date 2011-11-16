@@ -46,27 +46,46 @@ Notes:
 <!---
 	attributes.fieldType have the following options:
 	
-	checkbox			|	Requires the valueOptions to be an array of structs with the format of {label="", value=""}
-	file				|	No value can be passed in	
+	checkbox			|	As a single checkbox this doesn't require any options, but it will create a hidden field for you so that the key gets submitted even when not checked.  The value of the checkbox will be 1
+	checkboxgroup		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	date				|	This is still just a textbox, but it adds the jQuery date picker
+	dateTime			|	This is still just a textbox, but it adds the jQuery date & time picker
+	file				|	No value can be passed in
 	password			|	No Value can be passed in
-	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {label="", value=""}
-	select      		|	Requires the valueOptions to be an array of structs with the format of {label="", value=""}
+	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	select      		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
 	text				|	Simple Text Field
 	textarea			|	Simple Textarea
+	time				|	This is still just a textbox, but it adds the jQuery time picker
 	wysiwyg				|	Value needs to be a string
+	yesno				|	This is used by booleans and flags to create a radio group of Yes and No
 	
 --->
-
-<cfset local = structNew() />
 
 <cfif thisTag.executionMode is "start">
 	<cfswitch expression="#attributes.fieldType#">
 		<cfcase value="checkbox">
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
-				<cfloop array="#attributes.valueOptions#" index="local.option">
-					<input type="checkbox" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, local.option.value)> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>	
+				<input type="checkbox" name="#attributes.fieldName#" value="1" class="#attributes.fieldClass#" <cfif attributes.value> checked="checked"</cfif> />
+			</cfoutput>
+		</cfcase>
+		<cfcase value="checkboxgroup">
+			<cfoutput>
+				<input type="hidden" name="#attributes.fieldName#" value="" />
+				<cfloop array="#attributes.valueOptions#" index="option">
+					<input type="checkbox" name="#attributes.fieldName#" value="#structFind(option, 'value')#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, structFind(option, 'value'))> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#structFind(option, 'value')#</span>	
 				</cfloop>
+			</cfoutput>
+		</cfcase>
+		<cfcase value="date">
+			<cfoutput>
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# hasDatepicker" />
+			</cfoutput>
+		</cfcase>
+		<cfcase value="dateTime">
+			<cfoutput>
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# hasDatepicker" />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="file">
@@ -82,16 +101,16 @@ Notes:
 		<cfcase value="radiogroup">
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
-				<cfloop array="#attributes.valueOptions#" index="local.option">
-					<input type="radio" name="#attributes.fieldName#" value="#local.option.value#" class="#attributes.fieldClass#" <cfif attributes.value eq local.option.value> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#local.option.label#</span>
+				<cfloop array="#attributes.valueOptions#" index="option">
+					<input type="radio" name="#attributes.fieldName#" value="#structFind(option, 'value')#" class="#attributes.fieldClass#" <cfif attributes.value eq structFind(option, 'value')> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#structFind(option, 'name')#</span>
 				</cfloop>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="select">
 			<cfoutput>
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
-					<cfloop array="#attributes.valueOptions#" index="local.option">
-						<option value="#local.option.value#" <cfif attributes.value eq local.option.value> selected="selected"</cfif>>#local.option.label#</option>	
+					<cfloop array="#attributes.valueOptions#" index="option">
+						<option value="#structFind(option, 'value')#" <cfif attributes.value eq structFind(option, 'value')> selected="selected"</cfif>>#structFind(option, 'name')#</option>--->	
 					</cfloop>
 				</select>
 			</cfoutput>
@@ -106,9 +125,19 @@ Notes:
 				<textarea name="#attributes.fieldName#" class="#attributes.fieldClass#">#attributes.value#</textarea>
 			</cfoutput>
 		</cfcase>
+		<cfcase value="time">
+			<cfoutput>
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# hasDatepicker" />
+			</cfoutput>
+		</cfcase>
 		<cfcase value="wysiwyg">
 			<cfoutput>
-				<textarea name="#attributes.fieldName#" class="wysiwyg #attributes.fieldClass#">#attributes.value#</textarea>
+				<textarea name="#attributes.fieldName#" class="#attributes.fieldClass# wysiwyg">#attributes.value#</textarea>
+			</cfoutput>
+		</cfcase>
+		<cfcase value="yesno">
+			<cfoutput>
+				<input type="radio" name="#attributes.fieldName#" value="1" /><span class="#attributes.fieldClass# yes">#yesNoFormat(1)#</span><input type="radio" name="#attributes.fieldName#" value="0" /><span class="#attributes.fieldClass# no">#yesNoFormat(0)#</span>
 			</cfoutput>
 		</cfcase>
 	</cfswitch>

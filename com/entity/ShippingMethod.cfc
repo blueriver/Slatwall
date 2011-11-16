@@ -77,9 +77,10 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		if(!structKeyExists(variables, "limitedAddressZoneOptins")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
 			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
-			smartList.addSelect(propertyIdentifier="addressZoneID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="addressZoneID", alias="value"); 
 			smartList.addOrder("addressZoneName|ASC");
 			variables.limitedAddressZoneOptins = smartList.getRecords();
+			arrayPrepend(variables.limitedAddressZoneOptins, {value="", name=rbKey('define.all')});
 		}
 		return variables.limitedAddressZoneOptins;
 	}

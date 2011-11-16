@@ -211,7 +211,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
 		}

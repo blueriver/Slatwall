@@ -225,6 +225,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			date
 			time
 			weight
+			
 		*/
 	}
 	
@@ -235,11 +236,65 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint public method for returning the name of the field for this property, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyFieldName(required string propertyName) {
+		
+		// Get the Meta Data for the property
+		var propertyMeta = getPropertyMetaData( arguments.propertyName );
+		
+		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
+		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
+			
+			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#propertyMeta.cfc#" );
+			return "#arguments.propertyName#.#primaryIDPropertyName#";
+		}
+		
+		// Default case is just to return the property Name
 		return arguments.propertyName;
 	}
 	
 	// @hint public method for inspecting the property of a given object and determining the most appropriate field type for that property, this is used a lot by the SlatwallPropertyDisplay
 	public string function getPropertyFieldType(required string propertyName) {
+		
+		// Get the Meta Data for the property
+		var propertyMeta = getPropertyMetaData( arguments.propertyName );
+		
+		// If this isn't a Relationship property then run the lookup on ormType then type.
+		if( !structKeyExists(propertyMeta, "fieldType") || propertyMeta.fieldType == "column" ) {
+			
+			var dataType = "";
+			
+			// Check if there is an ormType attribute for this property to use first and asign it to the 'dataType' local var.  Otherwise check if the type attribute was set and use that.
+			if( structKeyExists(propertyMeta, "ormType") ) {
+				dataType = propertyMeta.ormType;
+			} else if ( structKeyExists(propertyMeta, "type") ) {
+				dataType = propertyMeta.type;
+			}
+			
+			// Check the dataType against different lists of types for correct fieldType
+			if( listFindNoCase("boolean,yes_no,true_false", dataType) ) {
+				return "yesno";	
+			} else if ( listFindNoCase("date,timestamp", dataType) ) {
+				return "dateTime";
+			} else if ( listFindNoCase("array", dataType) ) {
+				return "select";
+			} else if ( listFindNoCase("struct", dataType) ) {
+				return "checkboxgroup";
+			}
+			
+			// If the propertyName has the word 'password' in it... then use a password field
+			if(findNoCase("password", arguments.propertyName)) {
+				return "password";
+			}
+			
+		// If this is a Relationship property, then determine the relationship type and return the correct fieldType
+		} else if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
+			return "select";
+		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "one-to-many" ) {
+			throw("There is now property field type for one-to-many relationship properties");
+		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-many" ) {
+			return "checkbox";
+		}
+		
+		// Default case if no matches were found is a text field
 		return "text";
 	}
 	
@@ -257,7 +312,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @help public method for getting the meta data of a specific property
-	public struct function getPropertyMetaData(sting propertyName) {
+	public struct function getPropertyMetaData(string propertyName) {
 		var properties = getProperties();
 		for(var i=1; i<=arrayLen(properties); i++) {
 			if(properties[i].name eq arguments.propertyName) {
@@ -270,7 +325,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	public string function simpleValueSerialize() {
 		var data = {};
 		for(var key in variables) {
-			if(isSimpleValue(variables[key]) && key != "updateKeys") {
+			if( isSimpleValue(variables[key]) ) {
 				data[key] = variables[key];
 			}
 		}
@@ -328,20 +383,26 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint Returns a struct of all the errors for this entity
 	public struct function getErrors() {
+		
+		// Check to make sure that this object has been validated and has a VTResult
 		if( !isNull(getVTResult() ) ) {
 			return getVTResult().getErrors();
 		}
 		
+		// Default behavior if this object hasn't been validated is to return a blank struct
 		return {};
 	}
 	
 	// @hint Returns the error message of a given error name
 	public array function getErrorsByName( required string errorName ) {
+		
+		// Check First that the error exists, and if it does return it
 		if( hasError(arguments.errorName) ) {
 			return getErrors()[ arguments.errorName ];
 		}
 		
-		return "";
+		// Default behavior if the error isn't found is to return an empty array
+		return [];
 	}
 			
 	// @help private method only used by populate

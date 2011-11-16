@@ -149,9 +149,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
+			arrayPrepend(variables.brandOptions, {value="", name=rbKey('define.select')});
 		}
 		return variables.brandOptions;
 	}
@@ -160,13 +161,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			var productTypeTree = getProductTypeTree();
 			var productTypeOptions = [];
+			
 			for(var i=1; i <= productTypeTree.recordCount; i++) {
 				// only get the leaf nodes of the tree (those with no children)
 				if( productTypeTree.childCount[i] == 0 ) {
-					arrayAppend(productTypeOptions, {id=productTypeTree.productTypeID[i], name=productTypeTree.productTypeName[i], label=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")});
+					arrayAppend(productTypeOptions, {value=productTypeTree.productTypeID[i], name=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")});
 				}
 			}
+			
 			variables.productTypeOptions = productTypeOptions;
+			arrayPrepend(variables.productTypeOptions, {value="", name=rbKey('define.select')});
 		}
 		return variables.productTypeOptions;
 	}
