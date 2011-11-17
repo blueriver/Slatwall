@@ -42,19 +42,25 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 	// Custom Properties that need to be set by the end user
 	property name="loginID" displayname="Login ID" type="string";
 	property name="transKey" validateRequired="true" displayname="Transaction Key" type="string";
-	property name="developerAccountFlag" displayname="Test Account" type="boolean" default="true";
 	property name="testModeFlag" displayname="Test Mode" type="boolean" default="true";
 	
 	//Global variables
-	variables.liveGatewayURL = "https://secure.authorize.net/gateway/transact.dll";
-	variables.testGatewayURL = "https://test.authorize.net/gateway/transact.dll";
+	variables.gatewayURL = "https://secure.authorize.net/gateway/transact.dll";
 	variables.version = "3.1";
 	variables.timeout = "45";
 	variables.responseDelimiter = "|";
 	variables.transactionCodes = {};
 
 	public any function init(){
-		variables.transactionCodes = getTransactionCodes();
+		variables.transactionCodes = {
+			authorize="AUTH_ONLY",
+			authorizeAndCharge="AUTH_CAPTURE",
+			chargePreAuthorization="PRIOR_AUTH_CAPTURE",
+			credit="CREDIT",
+			void="VOID",
+			inquiry="INQUIRY"
+		};
+		
 		return this;
 	}
 	
@@ -66,39 +72,55 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		var rawResponse = "";
 		var requestData = getRequestData(requestBean);
 		rawResponse = postRequest(requestData);
-		return getResponseBean(rawResponse);
+		return getResponseBean(rawResponse, requestData, requestBean);
 	}
 	
 	private struct function getRequestData(required any requestBean){
 		var requestData = {};
 		requestData["x_version"] = "3.1";
-		requestData["x_login"] = getLogin(); 
+		requestData["x_login"] = getLoginID(); 
 		requestData["x_tran_key"] = getTransKey(); 
 		requestData["x_test_request"] = getTestModeFlag(); 
 		requestData["x_duplicate_window"] = "600";
 		requestData["x_method"] = "CC";
 		requestData["x_type"] = variables.transactionCodes[requestBean.getTransactionType()];
 
-		requestData["x_amount"] = requestBean.getAmount(); 
-		requestData["x_card_num"] = requestBean.getCCNumber(); 
-		requestData["x_card_code"] = requestBean.getCVV(); 
-		requestData["x_exp_date"] = Left(requestBean.getExpMonth(),2) & "" & right(requestBean.getExpYear(),2); 
+		requestData["x_amount"] = requestBean.getTransactionAmount();
+		
+		if(!isNull(requestBean.getCreditCardNumber())) {
+			requestData["x_card_num"] = requestBean.getCreditCardNumber();	
+		}
+		if(!isNull(requestBean.getSecurityCode())) {
+			requestData["x_card_code"] = requestBean.getSecurityCode();	
+		}
+		if(!isNull(requestBean.getExpirationMonth()) && !isNull(requestBean.getExpirationYear())) {
+			requestData["x_exp_date"] = left(requestBean.getExpirationMonth(),2) & "" & right(requestBean.getExpirationYear(),2);	
+		}
 		requestData["x_invoice_num"] = requestBean.getOrderID(); 
-		requestData["x_description"] = requestBean.getComment(); 
+		requestData["x_description"] = ""; 
 		
 		requestData["x_cust_id"] = requestBean.getAccountID(); 
-		requestData["x_first_name"] = requestBean.getFirstName(); 
-		requestData["x_last_name"] = requestBean.getLastName(); 
-		requestData["x_address"] = requestBean.getStreetAddress(); 
-		requestData["x_city"] = requestBean.getCity(); 
-		requestData["x_state"] = requestBean.getStateCode(); 
-		requestData["x_zip"] = requestBean.getPostalCode(); 
-		requestData["x_phone"] = requestBean.getPhone(); 
-		requestData["x_email"] = requestBean.getEmail(); 
+		requestData["x_first_name"] = requestBean.getAccountFirstName(); 
+		requestData["x_last_name"] = requestBean.getAccountLastName(); 
+		requestData["x_address"] = requestBean.getBillingStreetAddress(); 
+		requestData["x_city"] = requestBean.getBillingCity(); 
+		requestData["x_state"] = requestBean.getBillingStateCode(); 
+		requestData["x_zip"] = requestBean.getBillingPostalCode();
+		
+		if(!isNull(requestBean.getAccountPrimaryPhoneNumber())) {
+			requestData["x_phone"] = requestBean.getAccountPrimaryPhoneNumber();	
+		} else {
+			requestData["x_phone"] = "";
+		}
+		
+		if(!isNull(requestBean.getAccountPrimaryEmailAddress())) {
+			requestData["x_email"] = requestBean.getAccountPrimaryEmailAddress(); 	
+		} else {
+			requestData["x_email"] = "";
+		}
+				
 		requestData["x_customer_ip"] = CGI.REMOTE_ADDR; 
-		
-		requestData["x_trans_id"] = requestBean.getOriginalTransactionID();
-		
+		requestData["x_trans_id"] = requestBean.getProviderTransactionID();
 		requestData["x_delim_data"] = "TRUE"; 
 		requestData["x_delim_char"] = variables.responseDelimiter; 
 		requestData["x_relay_response"] = "FALSE"; 
@@ -106,41 +128,118 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		return requestData;
 	}
 	
-	private struct function getTransactionCodes(){
-		return {Charge="AUTH_CAPTURE",Auth="AUTH_ONLY",Credit="CREDIT",Capture="PRIOR_AUTH_CAPTURE",Void="VOID"};
-	}
-	
-	private any function postRequest(required string requestData){
+	private any function postRequest(required struct requestData){
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		httpRequest.setUrl(getGatewayURL());
+		httpRequest.setUrl( variables.gatewayURL );
 		httpRequest.setTimeout(variables.timeout);
 		httpRequest.setResolveurl(false);
 		for(var key in requestData){
 			httpRequest.addParam(type="formfield",name="#key#",value="#requestData[key]#");
 		}
-		return httpRequest.send().getPrefix();
+
+		var response = httpRequest.send().getPrefix();
+		
+		return response;
 	}
 	
-	private string function getGatewayURL(){
-		if(developerAccountFlag){
-			return variables.testGatewayURL;
+	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
+		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		
+		// Parse The Raw Response Data Into a Struct
+		var responseDataArray = listToArray(rawResponse.fileContent,variables.responseDelimiter,true);
+		
+		var responseDate = {};
+		responseData.responseCode = responseDataArray[1];
+		responseData.responseSubCode = responseDataArray[2];
+		responseData.responseReasonCode = responseDataArray[3];
+		responseData.responseReasonText = responseDataArray[4];
+		responseData.authorizationCode = responseDataArray[5];
+		responseData.avsResponse = responseDataArray[6];
+		responseData.transactionID = responseDataArray[7];
+		responseData.invoiceNumber = responseDataArray[8];
+		responseData.description = responseDataArray[9];
+		responseData.amount = responseDataArray[10];
+		responseData.method = responseDataArray[11];
+		responseData.transactionType = responseDataArray[12];
+		responseData.customerID = responseDataArray[13];
+		responseData.firstName = responseDataArray[14];
+		responseData.lastName = responseDataArray[15];
+		responseData.company = responseDataArray[16];
+		responseData.address = responseDataArray[17];
+		responseData.city = responseDataArray[18];
+		responseData.state = responseDataArray[19];
+		responseData.zipCode = responseDataArray[20];
+		responseData.country = responseDataArray[21];
+		responseData.phone = responseDataArray[22];
+		responseData.fax = responseDataArray[23];
+		responseData.emailAddress = responseDataArray[24];
+		responseData.shipToFirstName = responseDataArray[25];
+		responseData.shipToLastName = responseDataArray[26];
+		responseData.shipToCompany = responseDataArray[27];
+		responseData.shipToAddress = responseDataArray[28];
+		responseData.shipToCity = responseDataArray[29];
+		responseData.shipToState = responseDataArray[30];
+		responseData.shipToZipCode = responseDataArray[31];
+		responseData.shipToCountry = responseDataArray[32];
+		responseData.tax = responseDataArray[33];
+		responseData.duty = responseDataArray[34];
+		responseData.freight = responseDataArray[35];
+		responseData.taxExempt = responseDataArray[36];
+		responseData.purchaseOrderNumber = responseDataArray[37];
+		responseData.md5Hash = responseDataArray[38];
+		responseData.cardCodeResponse = responseDataArray[39];
+		responseData.cardholderAuthenticationVerification = responseDataArray[40];
+		// Gap in array here is intential per Authroize.net Spec... they send back blank values in array
+		responseData.response = responseDataArray[51];
+		responseData.accountNumber = responseDataArray[52];
+		// Again array is actually 68 index's long, but they only use the first 52
+				
+		// Populate the data with the raw response & request
+		var data = {
+			responseData = arguments.rawResponse,
+			requestData = arguments.requestData
+		};
+		
+		response.setData(data);
+		
+		// Add message for what happened
+		response.addMessage(messageCode=responseData.responseReasonCode, message=responseData.responseReasonText);
+		
+		// Set the response Code
+		response.setStatusCode( responseData.responseCode );
+		
+		// Check to see if it was successful
+		if(responseData.responseCode != 1) {
+			// Transaction did not go through
+			response.getErrorBean().addError(name=responseData.responseReasonCode, message=responseData.responseReasonText);
 		} else {
-			return variables.liveGatewayURL;
+			if(requestBean.getTransactionType() == "authorize") {
+				response.setAmountAuthorized( responseData.amount );
+			} else if(requestBean.getTransactionType() == "authorizeAndCharge") {
+				response.setAmountAuthorized(  responseData.amount );
+				response.setAmountCharged(  responseData.amount  );
+			} else if(requestBean.getTransactionType() == "chargePreAuthorization") {
+				response.setAmountCharged(  responseData.amount  );
+			} else if(requestBean.getTransactionType() == "credit") {
+				response.setAmountCredited(  responseData.amount  );
+			}
 		}
-	}
-	
-	private any function getResponseBean(required string rawResponse){
-		var response = new Slatwall.com.utility.payment.ResponseBean();
-		var responseDataArray = listToArray(rawResponse,variables.responseDelimiter);
-		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
-		response.setResult(rawResponse);
-		response.setStatus(responseData[1]);
-		response.setMessage(responseData[4]);
-		response.setAuthCode(responseData[5]);
-		response.setAVSCode(responseData[6]);
-		response.setTransactionID(responseData[7]);
-		response.setCVVCode(responseData[39]);
+		
+		response.setTransactionID( responseData.transactionID );
+		response.setAuthorizationCode( responseData.authorizationCode );
+		
+		if( responseData.avsResponse == "B" || responseData.avsResponse == "P" ) {
+			response.setAVSCode( "U" );
+		} else {
+			response.setAVSCode( responseData.avsResponse );
+		}
+		
+		if( responseData.cardCodeResponse == 'M') {
+			response.setSecurityCodeMatch(true);
+		} else {
+			response.setSecurityCodeMatch(false);
+		}
 		
 		return response;
 	}
