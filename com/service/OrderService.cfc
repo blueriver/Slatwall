@@ -466,13 +466,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				accountAddress.setAddress(address);
 				accountAddress.setAccount(arguments.orderFulfillment.getOrder().getAccount());
 				
-				if(address.isNew()) {
-					if(len(data.saveAccountAddressName)) {
+				// Figure out the name for this new account address, or update it if needed
+				if(data.addressIndex == 0) {
+					if(structKeyExists(data, "saveAccountAddressName") && len(data.saveAccountAddressName)) {
 						accountAddress.setAccountAddressName(data.saveAccountAddressName);
 					} else {
 						accountAddress.setAccountAddressName(address.getname());	
 					}	
-				} else if (structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
+				} else if (structKeyExists(data, "accountAddresses") && structKeyExists(data.accountAddresses[data.addressIndex], "accountAddressName")) {
 					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
 				}
 				
