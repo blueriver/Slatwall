@@ -136,7 +136,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// Query the Provider For Rates
 			var ratesRequestBean = new Slatwall.com.utility.fulfillment.ShippingRatesRequestBean();
 			ratesRequestBean.populateShippingItemsWithOrderFulfillmentItems(arguments.orderFulfillmentShipping.getOrderFulfillmentItems());
-			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getShippingAddress());
+			ratesRequestBean.populateShipToWithAddress(arguments.orderFulfillmentShipping.getAddress());
 			
 			// TODO: Add this method so that we can populate from the location where the inventory will be shipping from: ratesRequestBean.setShipFromWithAddress(?);
 						

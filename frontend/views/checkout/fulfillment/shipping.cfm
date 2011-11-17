@@ -40,21 +40,25 @@ Notes:
 <cfparam name="params.orderFulfillmentIndex" type="string" />
 <cfparam name="params.edit" type="boolean" />
 
+<cfset local.address = $.slatwall.getService("addressService").newAddress() />
+
 <!--- If a Shipping Address for this fulfillment is specified, then use it --->
 <cfif not isNull(params.orderFulfillment.getShippingAddress())>
-	<cfset local.address = params.orderFulfillment.getShippingAddress() />
 	<cfset local.selectedAccountAddressID = "" />
+	<!--- override the new local.address with whatever the shipping address is --->
+	<cfset local.address = params.orderFulfillment.getShippingAddress() />
 <!--- If an Account Shipping Address for this fulfillment is specified, then use it --->
 <cfelseif not isNull(params.orderFulfillment.getAccountAddress())>
-	<cfset local.address = $.slatwall.getService("addressService").newAddress() />
 	<cfset local.selectedAccountAddressID = params.orderFulfillment.getAccountAddress().getAccountAddressID() />
+	<!--- If we are not in edit mode then override the local.address with the account address --->
+	<cfif not params.edit>
+		<cfset local.address = params.orderFulfillment.getAccountAddress().getAddress() />
+	</cfif>
 <!--- If the fulfillment has nothing, But this account has addresses the set the current as an account address --->
 <cfelseif arrayLen($.slatwall.account().getAccountAddresses())>
-	<cfset local.address = $.slatwall.getService("addressService").newAddress() />
 	<cfset local.selectedAccountAddressID = $.slatwall.account().getAccountAddresses()[1].getAccountAddressID() /> <!--- Todo: change to primary address --->
 <!--- Defualt case for new customers with nothing setup --->
 <cfelse>
-	<cfset local.address = $.slatwall.getService("addressService").newAddress() />
 	<cfset local.selectedAccountAddressID = "" />
 </cfif>
 
