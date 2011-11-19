@@ -58,6 +58,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	
+	// Related Object Properties (many-to-many)
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID" cascade="save-update";
+		
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -91,6 +94,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 		if(isNull(variables.attributeSetAssignments)) {
 			variables.attributeSetAssignments = [];
+		}
+		if(isNull(variables.priceGroups)) {
+			variables.priceGroups = [];
 		}
 		return super.init();
 	}
