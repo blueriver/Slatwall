@@ -20,17 +20,23 @@
 		<cfargument name="TransientFactory" type="any" required="true" />
 		<cfargument name="ObjectChecker" type="any" required="true" />
 		<cfargument name="EqualsHelper" type="any" required="true" />
+		<cfargument name="messageHelper" type="any" required="true" />
 		<cfargument name="ExtraRuleValidatorComponentPaths" type="string" required="true" />
 		<cfargument name="injectResultIntoBO" type="string" required="true" />
 		<cfargument name="defaultFailureMessagePrefix" type="string" required="true" />
+		<cfargument name="vtFolder" type="string" required="true" />
+		<cfargument name="defaultLocale" type="string" required="true" />
 		
 		<cfset variables.childObjectFactory = arguments.childObjectFactory />
 		<cfset variables.TransientFactory = arguments.TransientFactory />
 		<cfset variables.ObjectChecker = arguments.ObjectChecker />
 		<cfset variables.EqualsHelper = arguments.EqualsHelper />
+		<cfset variables.messageHelper = arguments.messageHelper />
 		<cfset variables.ExtraRuleValidatorComponentPaths = arguments.ExtraRuleValidatorComponentPaths />
 		<cfset variables.injectResultIntoBO = arguments.injectResultIntoBO />
 		<cfset variables.defaultFailureMessagePrefix = arguments.defaultFailureMessagePrefix />
+		<cfset variables.vtFolder = arguments.vtFolder />
+		<cfset variables.defaultLocale = arguments.defaultLocale />
 
 		<cfset setRuleValidators() />
 				
@@ -44,6 +50,8 @@
 		<cfargument name="Result" type="any" required="true" />
 		<cfargument name="objectList" type="array" required="false" default="#arrayNew(1)#" />
 		<cfargument name="debuggingMode" type="string" required="false" default="#arguments.Result.getDebuggingMode()#" />
+		<cfargument name="ignoreMissingProperties" type="boolean" required="false" default="false" />
+		<cfargument name="locale" type="string" required="false" default="#variables.defaultLocale#" />
 
 		<cfset var v = "" />
 		<cfset var theFailure = 0 />
@@ -68,46 +76,50 @@
 				<!--- Loop through the validations array, creating validation objects and using them --->
 				<cfloop Array="#Validations#" index="v">
 					<cfset theVal.load(v) />
-					<cfset conditionPasses = true />
-					<!--- Deal with various conditions --->
-					<cfif StructKeyExists(v.Condition,"ServerTest")>
-						<cfset conditionPasses = arguments.theObject.testCondition(v.Condition.ServerTest) />
-					<cfelseif StructKeyExists(v.Parameters,"DependentPropertyName")>
-						<cfset dependentPropertyExpression = variables.ObjectChecker.findGetter(arguments.theObject,theVal.getParameterValue("DependentPropertyName")) />
-						<cfset dependentPropertyValue = evaluate("arguments.theObject.#dependentPropertyExpression#") />
-						<cfif not isDefined("dependentPropertyValue")>
-							<cfset dependentPropertyValue = "" />
-						</cfif>
-						<cfif StructKeyExists(v.Parameters,"DependentPropertyValue")>
-							<cfset conditionPasses = dependentPropertyValue EQ theVal.getParameterValue("DependentPropertyValue") />
-						<cfelse>
-							<cfset conditionPasses = len(dependentPropertyValue) GT 0 />
-						</cfif>
-					</cfif>
-					<cfif conditionPasses>
-						<cfset theVal.setIsRequired(arguments.BOValidator.propertyIsRequired(v.PropertyName)) />
-						<cfset variables.RuleValidators[v.ValType].validate(theVal) />
-						<cfif NOT theVal.getIsSuccess()>
-							<cfset arguments.Result.setIsSuccess(false) />
-							<cfif not theVal.hasResult()>
-								<cfset theFailure = StructNew() />
-								<cfset theFailure.PropertyName = v.PropertyName />
-								<cfset theFailure.ClientFieldName = v.ClientFieldName />
-								<cfset theFailure.Type = v.ValType />
-								<cfset theFailure.Message = determineFailureMessage(v,theVal) />
-								<cfset theFailure.theObject = arguments.theObject />
-								<cfset theFailure.objectType = arguments.BOValidator.getObjectType() />
-								<cfset arguments.Result.addFailure(theFailure) />
+					<cfif theVal.propertyExists()>
+						<cfset conditionPasses = true />
+						<!--- Deal with various conditions --->
+						<cfif StructKeyExists(v.Condition,"ServerTest")>
+							<cfset conditionPasses = arguments.theObject.testCondition(v.Condition.ServerTest) />
+						<cfelseif StructKeyExists(v.Parameters,"DependentPropertyName")>
+							<cfset dependentPropertyExpression = variables.ObjectChecker.findGetter(arguments.theObject,theVal.getParameterValue("DependentPropertyName")) />
+							<cfset dependentPropertyValue = evaluate("arguments.theObject.#dependentPropertyExpression#") />
+							<cfif not isDefined("dependentPropertyValue")>
+								<cfset dependentPropertyValue = "" />
+							</cfif>
+							<cfif StructKeyExists(v.Parameters,"DependentPropertyValue")>
+								<cfset conditionPasses = dependentPropertyValue EQ theVal.getParameterValue("DependentPropertyValue") />
 							<cfelse>
-								<cfset arguments.Result.addResult(theVal.getResult()) />
+								<cfset conditionPasses = len(dependentPropertyValue) GT 0 />
 							</cfif>
 						</cfif>
+						<cfif conditionPasses>
+							<cfset theVal.setIsRequired(arguments.BOValidator.propertyIsRequired(v.PropertyName)) />
+							<cfset variables.RuleValidators[v.ValType].validate(theVal,arguments.locale) />
+							<cfif NOT theVal.getIsSuccess()>
+								<cfset arguments.Result.setIsSuccess(false) />
+								<cfif not theVal.hasResult()>
+									<cfset theFailure = StructNew() />
+									<cfset theFailure.PropertyName = v.PropertyName />
+									<cfset theFailure.ClientFieldName = v.ClientFieldName />
+									<cfset theFailure.Type = v.ValType />
+									<cfset theFailure.Message = determineFailureMessage(v,theVal) />
+									<cfset theFailure.theObject = arguments.theObject />
+									<cfset theFailure.objectType = arguments.BOValidator.getObjectType() />
+									<cfset arguments.Result.addFailure(theFailure) />
+								<cfelse>
+									<cfset arguments.Result.addResult(theVal.getResult()) />
+								</cfif>
+							</cfif>
+						</cfif>
+						
+						<cfif arguments.debuggingMode neq "none">
+							<cfset arguments.Result.logCriteriaOutcome(classname=classname, context=arguments.context, criteria=v, passed=theVal.getIsSuccess()) />
+						</cfif>
+					<cfelseif NOT arguments.ignoreMissingProperties>
+						<cfthrow type="ValidateThis.core.serverValidator.propertyNotFound"
+							message="The property #theVal.getPropertyName()# was not found in the object passed into the validation object." />
 					</cfif>
-					
-					<cfif arguments.debuggingMode neq "none">
-						<cfset arguments.Result.logCriteriaOutcome(classname=classname, context=arguments.context, criteria=v, passed=theVal.getIsSuccess()) />
-					</cfif>
-					
 				</cfloop>
 				<!--- inject the Result object into the BO if configured to do so --->
 				<cfif variables.injectResultIntoBO and isObject>
@@ -138,8 +150,8 @@
 
 	<cffunction name="setRuleValidators" returntype="void" access="private" output="false" hint="I create rule validator objects from a list of component paths">
 		
-		<cfset var initArgs = {defaultFailureMessagePrefix=variables.defaultFailureMessagePrefix} />
-		<cfset variables.RuleValidators = variables.childObjectFactory.loadChildObjects("ValidateThis.server,#variables.ExtraRuleValidatorComponentPaths#","ServerRuleValidator_",structNew(),initArgs) />
+		<cfset var initArgs = {messageHelper=variables.messageHelper,defaultFailureMessagePrefix=variables.defaultFailureMessagePrefix,vtFolder=variables.vtFolder} />
+		<cfset variables.RuleValidators = variables.childObjectFactory.loadChildObjects(variables.vtFolder & ".server,#variables.ExtraRuleValidatorComponentPaths#","ServerRuleValidator_",structNew(),initArgs) />
 
 	</cffunction>
 	

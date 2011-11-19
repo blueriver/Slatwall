@@ -17,8 +17,8 @@
 
 	<cffunction name="generateRuleScript" returntype="any" access="public" output="false" hint="I generate the JS script required to implement a validation.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation struct that describes the validation." />
+		<cfargument name="locale" type="string" required="yes" />
 		<cfargument name="selector" type="string" required="no" default="" />
-		<cfargument name="locale" type="string" required="no" default="" />
 		
         <cfif arguments.validation.hasParameter('remoteURL')>
 			<cfreturn generateAddRule(argumentCollection=arguments) />
@@ -35,11 +35,6 @@
 	<cffunction name="getParameterDef" returntype="any" access="public" output="false" hint="I override the parameter def because the VT param names do not match those expected by the jQuery plugin.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation object that describes the validation." />
 		<cfreturn '"#arguments.validation.getParameterValue('remoteURL')#"' />
-	</cffunction>
-
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-		<cfreturn createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# custom validation failed.") />
 	</cffunction>
 
 </cfcomponent>

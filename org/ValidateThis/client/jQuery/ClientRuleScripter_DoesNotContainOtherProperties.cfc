@@ -26,40 +26,33 @@ Definition Usage Example:
 		<cfset var theCondition="function(value,element,options) { return true; }"/>
 		<!--- JAVASCRIPT VALIDATION METHOD --->
 		<cfsavecontent variable="theCondition">
-		function(value,element,options) {
-			var isValid = true;
-			$(options).each(function(){		
-				var propertyName = this;			
-				var propertyValue = $(':input[name='+this+']').getValue();
-				if (propertyValue.length){
-					// if this is a mutilple select list, split the value into an array for iteration
-					if (propertyValue.search(",")){
-						propertyValue = propertyValue.split( "," )
-					};
+		function(v,e,o){
+			var ok=true;
+			var $form=$(e).closest("form");
+			$(o).each(function(){
+				var propertyValue = $(':input[name='+this+']',$form).getValue();
+				if(propertyValue.length){
+					// if this is a mutiple select list, split the value into an array for iteration
+					if(propertyValue.search(",")){
+						propertyValue = propertyValue.split(",");
+					}
 					// for each property value in the array to check
 					$(propertyValue).each(function(){
-						var test = value.toString().toLowerCase().search(this.toString().toLowerCase()) == -1;
-						if (!test){ // Only worrie about failures here so we return true if none of the other values fail.
-							isValid = false;
+						var test = v.toString().toLowerCase().search(this.toString().toLowerCase())===-1;
+						if (!test){ // Only worry about failures here so we return true if none of the other values fail.
+							ok = false;
 						}
 					});
 				}
-				return isValid;
+				return ok;
 			});
-			return isValid;
+			return ok;
 		}
 		</cfsavecontent>
 			
 		 <cfreturn generateAddMethod(theCondition,arguments.defaultMessage)/>
 	</cffunction>
 	
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-
-        <cfset var params = arguments.validation.getParameters()/>
-		<cfreturn createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# must not contain the values of properties named: #params.propertyNames#.") />
-	</cffunction>
-
 	<cffunction name="getParameterDef" returntype="string" access="public" output="false" hint="I generate the JS script required to pass the appropriate paramters to the validator method.">
 		<cfargument name="validation" type="any"/>
 		
@@ -67,5 +60,15 @@ Definition Usage Example:
 		<cfreturn serializeJSON(listToArray(trim(params.propertyNames))) />
 		
 	</cffunction>
+	
+	<cffunction name="getFailureArgs" returntype="array" access="private" output="false" hint="I provide arguments needed to generate the failure message.">
+		<cfargument name="parameters" type="any" required="yes" hint="The parameters stored in the validation object." />
+
+		<cfset var args = [arguments.parameters.propertyNames] />
+		<cfreturn args />
+		
+	</cffunction>
+
+
 
 </cfcomponent>

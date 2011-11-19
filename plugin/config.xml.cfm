@@ -54,6 +54,9 @@ Notes:
 <category>Application</category>
 <ormcfclocation>com/entity</ormcfclocation>
 <customtagpaths>tags</customtagpaths>
+<mappings>
+       <mapping name="ValidateThis" directory="org/ValidateThis"/>
+</mappings>
 <settings>
 	<setting>
 		<name>sendUsageStats</name>

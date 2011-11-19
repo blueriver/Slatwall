@@ -86,7 +86,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		if(!structKeyExists(variables, "countryCodeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCountry");
 			smartList.addSelect(propertyIdentifier="countryName", alias="name");
-			smartList.addSelect(propertyIdentifier="countryCode", alias="id");
+			smartList.addSelect(propertyIdentifier="countryCode", alias="value");
 			smartList.addOrder("countryName|ASC");
 			variables.countryCodeOptions = smartList.getRecords();
 		}
@@ -97,10 +97,11 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		if(!structKeyExists(variables, "stateCodeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallState");
 			smartList.addSelect(propertyIdentifier="stateName", alias="name");
-			smartList.addSelect(propertyIdentifier="stateCode", alias="id");
+			smartList.addSelect(propertyIdentifier="stateCode", alias="value");
 			smartList.addFilter("countryCode", getCountryCode()); 
 			smartList.addOrder("stateName|ASC");
 			variables.stateCodeOptions = smartList.getRecords();
+			arrayPrepend(variables.stateCodeOptions, {value="", name=rbKey('define.select')});
 		}
 		return variables.stateCodeOptions;
 	}

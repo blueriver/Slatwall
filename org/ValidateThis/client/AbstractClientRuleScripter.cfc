@@ -17,14 +17,17 @@
 
 	<cffunction name="init" access="Public" returntype="any" output="false" hint="I build a new ClientRuleScripter">
 		<cfargument name="Translator" type="Any" required="yes" />
+		<cfargument name="defaultFailureMessagePrefix" type="string" required="true" />
+
 		<cfset variables.Translator = arguments.Translator />
+		<cfset variables.defaultFailureMessagePrefix = arguments.defaultFailureMessagePrefix />
 		<cfreturn this />
 	</cffunction>
 
 	<cffunction name="generateValidationScript" returntype="any" access="public" output="false" hint="I generate the JS script required to implement a validation.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation struct that describes the validation." />
 		<cfargument name="formName" type="Any" required="yes" />
-		<cfargument name="locale" type="Any" required="no" default="" />
+		<cfargument name="locale" type="Any" required="yes" />
 
 		<cfthrow type="validatethis.client.AbstractClientRuleScripter.methodnotdefined"
 				message="I am an abstract object, hence the generateValidationScript method must be overriden in a concrete object." />

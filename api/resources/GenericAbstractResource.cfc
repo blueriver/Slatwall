@@ -84,7 +84,7 @@ component extends="BaseResource" taffy_uri="/{entityNameOrServiceName}/{idOrFilt
 					var results = {};
 					for(var i=1; i<=listLen(arguments.propertyIdentifiers); i++) {
 						var pid = listGetAt(arguments.propertyIdentifiers, i);
-						results[ pid ] = entity.getPropertyValueByIdentifier(pid);
+						results[ pid ] = entity.getValueByPropertyIdentifier(pid);
 					}
 					
 					return representationOf(results).withStatus(200);

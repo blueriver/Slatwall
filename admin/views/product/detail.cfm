@@ -55,15 +55,16 @@ Notes:
 <div class="svoadminproductdetail">
 	#rc.product.getImage(width="100", height="100")#
 	<cfif rc.edit>
-	<form name="ProductEdit" enctype="multipart/form-data" action="#buildURL(action='admin:product.save')#" method="post">
+	<form name="ProductEdit" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="slatAction" value="admin:product.save" />
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 	</cfif>
 	<dl class="twoColumn">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="publishedFlag" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" valueLink="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" valueLink="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
 			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	

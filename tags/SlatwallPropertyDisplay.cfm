@@ -36,127 +36,175 @@
 Notes:
 
 --->
-<!--- hint: This is a required attribute that defines the object that contains the property to display --->
-<cfparam name="attributes.object" type="any" />
 
-<!--- hint: This is a required attribute as the property that you want to display" --->
-<cfparam name="attributes.property" type="string" />
+<!--- These are required Attributes --->
+<cfparam name="attributes.object" type="any" />										<!--- hint: This is a required attribute that defines the object that contains the property to display --->
+<cfparam name="attributes.property" type="string" /> 								<!--- hint: This is a required attribute as the property that you want to display" --->
 
-<!--- hint: This is used in case a sub object property has a different name than the property --->
-<cfparam name="attributes.propertyObject" type="string" default="" />
+<!--- These are optional Attributes --->
+<cfparam name="attributes.edit" type="boolean" default="false" />					<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 
-<!--- hint: text that is displayed when the property value is null --->
-<cfparam name="attributes.nullLabel" type="string" default="" />
+<cfparam name="attributes.title" type="string" default="" />						<!--- hint: This can be used to override the displayName of a property" --->
 
-<!--- hint: This can be used to override the displayName of a property" --->
-<cfparam name="attributes.title" default="" />
+<cfparam name="attributes.value" type="string" default="" />						<!--- hint: This can be used to override the value of a property --->
+<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />		<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
+<cfparam name="attributes.valueDefault" type="string" default="" />					<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
+<cfparam name="attributes.valueLink" type="string" default="" />					<!--- hint: if specified, will wrap property value with an achor tag using the attribute as the href value --->
+<cfparam name="attributes.valueDisplayFormat" type="string" default="" />			<!--- hint: This can be used to defined the format of this property wehn it is displayed --->
 
-<!--- hint: This can be used to override the value of a property --->
-<cfparam name="attributes.value" default="" />
+<cfparam name="attributes.fieldName" type="string" default="" />					<!--- hint: This can be used to override the default field name" --->
+<cfparam name="attributes.fieldType" type="string" default="" />					<!--- hint: When in edit mode you can override the default type of form object to use" --->
 
-<cfparam name="attributes.noValue" type="boolean" default="false" />
+<cfparam name="attributes.titleClass" default="" />									<!--- hint: Adds class to whatever markup wraps the title element --->
+<cfparam name="attributes.valueClass" default="" />									<!--- hint: Adds class to whatever markup wraps the value element --->
+<cfparam name="attributes.fieldClass" default="" />									<!--- hint: Adds class to the actual field element --->
+<cfparam name="attributes.valueLinkClass" default="" />								<!--- hint: Adds class to whatever markup wraps the value link element --->
 
-<!--- hint: This can be used to override the display value of a property --->
-<cfparam name="attributes.displayValue" default="" />
-
-<!--- hint: This can be used to set a default value for the property IF it hasn't been defined --->
-<!--- NOTE: right now this only works for select boxes --->
-<cfparam name="attributes.defaultValue" default="" />
-
-<!--- hint: This can be used to override the default field name" --->
-<cfparam name="attributes.fieldName" default="" />
-
-<!--- hint: This can be used to override the default data type" --->
-<cfparam name="attributes.dataType" default="" />
-
-<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
-<cfparam name="attributes.edit" default=false type="boolean" />
-
-<!--- hint: When in edit mode you can override the default type of form object to use" --->
-<cfparam name="attributes.editType" default="" type="string"  />
-
-<!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
-<cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
-
-<!--- hint: whether to allow null (empty string) option in select box control --->
-<cfparam name="attributes.allowNullOption" default="true" type="boolean" />
-
-<!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
-<cfparam name="attributes.tooltip" default="false" type="boolean" />
-
-<!--- hint: This attribute contains the content of a mouseover tooltip message to override the value in the rB (entity.entityname.propertyname_hint) --->
-<cfparam name="attributes.tooltipmessage" default="" type="string" />
-
-<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
-<cfparam name="attributes.toggle" default="no" type="string" />
-
-<!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
-<cfparam name="attributes.toggletext" default="Show,Hide" />
-
-<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
-<cfparam name="attributes.displaytype" default="dl" />
+<cfparam name="attributes.toggle" type="string" default="no" />						<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
+<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 
 <!--- Add Custom class --->
-<cfparam name="attributes.class" default="" />
-
-<!--- if specified, will wrap property value with an achor tag using the attribute as the href value --->
-<cfparam name="attributes.link" default="" />
-
-<!--- class for styling link, if specified --->
-<cfparam name="attributes.linkClass" default="" />
+<!--- Removed for more specific class definitions <cfparam name="attributes.class" default="" /> --->
 
 <!--- id for styling link, if specified --->
-<cfparam name="attributes.linkID" default="" />
+<!--- Removed for more specific id definitions <cfparam name="attributes.linkID" default="" /> --->
 
 <!--- overwrite the generated id for the property element (dd or td) --->
-<cfparam name="attributes.id" default="" />
+<!--- Removed for more specific id definitions <cfparam name="attributes.id" default="" /> --->
 
 <!--- if this is a dl displaytype this attribute can be used to designate if this is the first property to be displayed for proper <dt> styling --->
-<cfparam name="attributes.first" default="false" />
+<!--- Removed to use the the titleClass and valueClass <cfparam name="attributes.first" default="false" /> --->
+
+<!--- hint: This can be used to override the default data type" --->
+<!--- Removed in favor of specifying as object meta data <cfparam name="attributes.dataType" default="" /> --->
+
+<!--- hint: text that is displayed when the property value is null --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.nullLabel" type="string" default="" /> --->
+
+<!--- hint: Allows you to set what gets displayed when there is no value --->
+<!--- Removing In Favor of using rbKey convention  <cfparam name="attributes.noValue" type="boolean" default="false" /> --->
+
+<!--- hint: This is used in case a sub object property has a different name than the property --->
+<!--- Removing In Favor of adding method to base object for this  <cfparam name="attributes.propertyObject" type="string" default="" /> --->
+
+<!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.tooltip" default="false" type="boolean" /> --->
+
+<!--- hint: This attribute contains the content of a mouseover tooltip message to override the value in the rB (entity.entityname.propertyname_hint) --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.tooltipmessage" default="" type="string" /> --->
+
+<!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
+<!--- Removing In Favor of using new SlatwallFormTag <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" /> --->
+
+<!--- hint: whether to allow null (empty string) option in select box control --->
+<!--- Removed because a null value should just be added to the getXXXOptions() method in the entity <cfparam name="attributes.allowNullOption" default="true" type="boolean" /> --->
+
+<!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.toggletext" default="Show,Hide" /> --->
 
 <!---
-	attributes.editType have the following options:
-	text
-	textarea
+	attributes.fieldType have the following options:
+	
 	checkbox
-	select
-	radiogroup
-	wysiwyg
 	file
 	password
+	radiogroup
+	select
+	text
+	textarea
+	wysiwyg
+	
 --->
 
 <!---
-	attributes.displaytype have the following options:
+	attributes.displayType have the following options:
 	dl
 	table
 	plain
 --->
 
 <cfif thisTag.executionMode is "start">
-
-	<cfset local = structNew() />
-	<cfset local.metadata = getMetadata(attributes.object) />
-	<cfset local.propertyMetadata = structNew() />
 	
-	<!--- If this object has a getProperties() method (defined in the base entity class to also get inherited properties) use that to get the property array --->
-	<cfif structKeyExists(attributes.object,"getProperties")>
-		<cfset local.properties = attributes.object.getProperties() />
-	<cfelse>
-		<cfset local.properties = local.metadata.properties />
+	<cfif attributes.value eq "">
+		<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
+		<cfif isNull(attributes.value) || attributes.value eq "">
+			<cfset attributes.value = attributes.valueDefault />
+		</cfif>
+	</cfif>
+	<cfif attributes.title eq "">
+		<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
+	</cfif>
+	<cfif attributes.fieldName eq "">
+		<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
+	</cfif>
+	<cfif attributes.fieldType eq "">
+		<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
+	</cfif>
+	<cfif listFindNoCase("checkbox,radiogroup,select", attributes.fieldType)>
+		<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
+	</cfif>
+	<cfif attributes.valueDisplayFormat eq "">
+		<cfset attributes.valueDisplayFormat = attributes.object.getPropertyValueDisplayFormat( attributes.property ) />
 	</cfif>
 	
-	<!--- Loop over properties in object and find metadata for this property --->
-	<cfloop array="#local.properties#" index="i">
-		<cfif UCASE(i.name) eq UCASE(attributes.property)>
-			<cfset local.propertyMetadata = i />
-			<cfbreak />
-		</cfif>
-	</cfloop>
-	
-	<cfif structCount(local.propertyMetadata)>
+	<cfset attributes.titleClass = trim("title #lcase(attributes.property)#title #attributes.titleClass#") />
+	<cfset attributes.valueClass = trim("value #lcase(attributes.property)#value #attributes.valueClass#") />
+	<cfset attributes.valueLinkClass = trim("valuelink #lcase(attributes.property)#valuelink #attributes.valueLinkClass#") />
+	<cfset attributes.fieldClass = trim("field #lcase(attributes.property)#field #attributes.fieldClass#") />
 		
-		<!--- If the title attribute was not set, then set it as the the value in the resource bundle ---> 
+	<cfset local = structNew() />
+	<cfset local.fw = caller.this />
+	
+	<cfswitch expression="#attributes.displaytype#">
+		<!--- DL Case --->
+		<cfcase value="dl">
+			<cfif attributes.edit>
+				<cfoutput>
+					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
+					<dd class="#attributes.valueClass#">
+						<cfif attributes.object.hasError(attributes.property)>
+							<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
+								<div class="error">#error#</div>
+							</cfloop>
+						</cfif>
+						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+					</dd>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<dt class="#attributes.titleClass#">#attributes.title#</dt>
+					<dd class="#attributes.valueClass#">#attributes.value#</dd>
+				</cfoutput>
+			</cfif>
+		</cfcase>
+		<!--- TABLE Display --->
+		<cfcase value="table">
+			<cfoutput>
+				<tr>
+					<td class="#attributes.titleClass#">#attributes.title#</td>
+					<td class="#attributes.valueClass#">#attributes.value#</td>
+				</tr>
+			</cfoutput>
+		</cfcase>
+		<!--- INLINE Display --->
+		<cfcase value="span">
+			<cfoutput>
+				<span class="#attributes.titleClass#">#attributes.title#</span><span class="#attributes.valueClass#">#attributes.value#</span>
+			</cfoutput>
+		</cfcase>
+		<!--- Plain Display (value only) --->
+		<cfcase value="plain">
+			<cfoutput>
+				#attributes.value#
+			</cfoutput>
+		</cfcase>
+	</cfswitch>	
+</cfif>
+
+
+<!---
+
+<!--- If the title attribute was not set, then set it as the the value in the resource bundle ---> 
 		<cfif attributes.title eq "">
 			<!--- remove "Slatwall" prefix from entityname --->
 			<cfset local.entityName = replaceNocase(attributes.object.getClassName(),"Slatwall","","one") />
@@ -406,9 +454,4 @@ Notes:
 				</tr>
 			</cfif>
 	 	</cfoutput>
-	<cfelse>
-		<cfoutput>
-			<!-- The Property #attributes.property# Does not exist in object -->
-		</cfoutput> 	
- 	</cfif>
-</cfif>
+--->

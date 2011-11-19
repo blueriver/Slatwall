@@ -307,6 +307,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return optionsStruct[arguments.optionGroupID];
 	}
 	
+	// This will give the price based on User logged in, current term sales, volume discounts, ect.
 	public numeric function getLivePrice() {
 		return getPrice();
 	}

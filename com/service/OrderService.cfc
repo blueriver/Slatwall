@@ -321,7 +321,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			var order = this.getOrder(arguments.data.orderID);
 			
-			reloadEntity(order);
+			getDAO().reloadEntity(order);
 			
 			if(order.getOrderStatusType().getSystemCode() != "ostNotPlaced") {
 				processOK = true;
@@ -358,7 +358,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							getDAO().save(order);
 							
 							// Do a flush so that the order is commited to the DB
-							ormFlush();
+							getDAO().flushORMSession();
 							
 							getService("logService").logMessage(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
 							
@@ -504,10 +504,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// Validate the order Fulfillment
 			this.validateOrderFulfillmentShipping(arguments.orderFulfillment);
 			
-			// flush orm so, we can get the ID for accountAddress
-			// Greg said he will clean it in version 1.2
 			if(!getRequestCacheService().getValue("ormHasErrors")){
-				ormFlush();
+				getDAO().flushORMSession();
 			}
 		}
 		

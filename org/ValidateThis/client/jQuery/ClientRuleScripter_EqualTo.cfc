@@ -15,8 +15,27 @@
 --->
 <cfcomponent output="false" name="ClientRuleScripter_equalTo" extends="AbstractClientRuleScripter" hint="I am responsible for generating JS code for the equalTo validation.">
 
-	<cffunction name="getValType" returntype="any" access="public" output="false" hint="I override the val type because jQuery requires the valtype to be 'equalTo' with that case.">
-		<cfreturn "equalTo" />
+	<cffunction name="generateInitScript" returntype="any" access="public" output="false" hint="I generate the validation 'method' function for the client during fw initialization.">
+		<cfargument name="defaultMessage" type="string" required="false" default="The value cannot not contain the value of another property.">
+		<!--- TODO: We can probably do away with the defaultMessage in here as it should never be used --->
+		<cfset var theScript="">
+		<cfset var theCondition="function(value, element, param) {return true;}" />
+		
+		<!--- JAVASCRIPT VALIDATION METHOD --->
+		<cfsavecontent variable="theCondition">
+		function(v,e,p){
+			var $parentForm = $(e).closest("form");
+			var $compareto = $(p,$parentForm);
+			// bind to the blur event of the target in order to revalidate whenever the target field is updated
+			// TODO find a way to bind the event just once, avoiding the unbind-rebind overhead
+			var target = $compareto.unbind(".validate-equalTo").bind("blur.validate-equalTo",function(){
+				$(e).valid();
+			});
+			return v==target.getValue();
+		}
+		</cfsavecontent>
+		
+		<cfreturn generateAddMethod(theCondition,arguments.defaultMessage) />
 	</cffunction>	
 
 	<cffunction name="getParameterDef" returntype="any" access="public" output="false" hint="I override the parameter def because the VT param names do not match those expected by the jQuery plugin.">
@@ -25,10 +44,12 @@
 		<cfreturn """:input[name='#params.ComparePropertyName#']""" />
 	</cffunction>
 
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-		<cfset var params = arguments.validation.getParameters() />
-		<cfreturn createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# must be the same as #variables.defaultFailureMessagePrefix##params.ComparePropertyDesc#.") />
+	<cffunction name="getFailureArgs" returntype="array" access="private" output="false" hint="I provide arguments needed to generate the failure message.">
+		<cfargument name="parameters" type="any" required="yes" hint="The parameters stored in the validation object." />
+
+		<cfset var args = [variables.defaultFailureMessagePrefix,arguments.parameters.ComparePropertyDesc] />
+		<cfreturn args />
+		
 	</cffunction>
 
 </cfcomponent>

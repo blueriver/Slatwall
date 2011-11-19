@@ -305,7 +305,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
 		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
 		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");
-		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="id");
+		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="value");
 		//return smartList.getHQL();
 		return smartList.getRecords(); 
 	}

@@ -288,16 +288,17 @@ component extends="BaseService" accessors="true" {
 		return getService("utilityFileService").removeImage(arguments.image.getImagePath());
 	}
 	
-	public any function saveProduct(required any Product,required struct data) {
+	public any function saveProduct(required any product, required struct data) {
+		
 		// populate bean from values in the data Struct
-		arguments.Product.populate(arguments.data);
+		arguments.product.populate(arguments.data);
 		
 		// populate custom attributes
 		if(structKeyExists(arguments.data,"attributes")){
-			for(var attributeID in arguments.data.attributes){
-				for(var attributeValueID in arguments.data.attributes[attributeID]){
+			for(var attributeID in arguments.data.attribute){
+				for(var attributeValueID in arguments.data.attribute[attributeID]){
 					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
-					attributeValue.setAttributeValue(arguments.data.attributes[attributeID][attributeValueID]);
+					attributeValue.setAttributeValue(arguments.data.attribute[attributeID][attributeValueID]);
 					if(attributeValue.isNew()){
 						var attribute = getService("AttributeService").getAttribute(attributeID);
 						attributeValue.setAttribute(attribute);
@@ -311,25 +312,26 @@ component extends="BaseService" accessors="true" {
 		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
 			arguments.data.price = 0;
 		}
-		if(!isNumeric(arguments.data.listPrice) || len(trim(arguments.data.listPrice)) == 0) {
-			arguments.data.listPrice = 0;
-		}
-		if(!isNumeric(arguments.data.shippingWeight) || len(trim(arguments.data.shippingWeight)) == 0) {
-			arguments.data.shippingWeight = 0;
-		}
 		
 		// set up sku(s) if this is a new product
-		if(arguments.Product.isNew()) {
-			getSkuService().createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
+		if(arguments.product.isNew()) {
+			
+			var optionsStruct = {};
+			if(structKeyExists(arguments.data, "options")) {
+				optionsStruct = arguments.data.options;
+			}
+			
+			getSkuService().createSkus(arguments.Product,optionsStruct,arguments.data.price);
+			
 		} else {
-			getSkuService().updateSkus(arguments.Product,arguments.data.skuArray);
+			getSkuService().updateSkus(arguments.Product,arguments.data.skus);
 			// set up associations between product and content
 			assignProductContent(arguments.Product,arguments.data.contentID);		
 			// set up associations between product and mura categories
 			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
 			// check for images to upload
 			if(structKeyExists(arguments.data,"imagesArray")) {
-				saveAlternateImages(arguments.Product,arguments.data.imagesArray);
+				saveAlternateImages(arguments.Product,arguments.data.images);
 			}
 		}
 		
@@ -357,14 +359,19 @@ component extends="BaseService" accessors="true" {
 			lastAppended += 1;
 		}
 		
-		arguments.Product = super.save(arguments.Product);
+		// validate the product
+		arguments.product.validate();
 		
-		if( !arguments.Product.hasErrors() ) {
-			// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-		}
-		
-		return arguments.Product;
+		// If the product passed validation then call save in the DAO, otherwise set the errors flag
+        if(!arguments.product.hasErrors()) {
+        	clearProductTypeTree();
+            arguments.product = getDAO().save(target=arguments.product);
+        } else {
+            getService("requestCacheService").setValue("ormHasErrors", true);
+        }
+        
+        // Return the product
+		return arguments.product;
 	}
 	
 	public any function delete( required any product ) {
