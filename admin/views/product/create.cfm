@@ -47,20 +47,16 @@ Notes:
 	
 <cfif arrayLen(rc.product.getBrandOptions()) gt 0 and arrayLen(rc.product.getProductTypeOptions()) gt 0>
 <div id="createProductForm">
-	<form name="CreateProduct" action="#buildURL(action='admin:product.save')#" method="post">
+	<form name="CreateProduct" method="post">
+		<input type="hidden" name="slatAction" value="admin:product.save" />
 		<dl class="oneColumn">
 		    <cf_SlatwallPropertyDisplay object="#rc.Product#" first="true" property="productName" edit="true">
-		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="true">
-		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
-			     <cf_SlatwallActionCaller action="admin:brand.create" type="link">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
-		      <cf_SlatwallActionCaller action="admin:product.createproducttype" type="link">
-		</dl>
-		<br />
-		<dl class="twoColumn productPrice">
+		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="true" toggle="true">
 			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
+		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
+			<cf_SlatwallActionCaller action="admin:brand.create" type="link">
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
+			<cf_SlatwallActionCaller action="admin:product.createproducttype" type="link">
 		</dl>
 		<br />
 		<br />

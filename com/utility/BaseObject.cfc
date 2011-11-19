@@ -334,13 +334,13 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 	// @help Public Method to invoke any method in the object, If the method is not defined it calls onMissingMethod
 	public any function invokeMethod(required string methodName, struct methodArguments={}) {
+		
 		if(structKeyExists(this, arguments.methodName)) {
 			var theMethod = this[ arguments.methodName ];
-		} else {
-			var theMethod = this.onMissingMethod;
+			return theMethod(argumentCollention = methodArguments);
 		}
 		
-		return theMethod(argumentCollection = methodArguments);
+		return this.onMissingMethod(missingMethodName=arguments.methodName, missingMethodArguments=arguments.methodArguments);
 	}
 	
 	// @help Public method to get everything in the variables scope, good for debugging purposes

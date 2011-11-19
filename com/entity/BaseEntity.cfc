@@ -52,9 +52,9 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// @hint public method that returns if this entity has persisted to the database yet or not.
 	public boolean function isNew() {
 		if(getPrimaryIDValue() == "") {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 		
 	// @hint public method that returns the value from the primary ID of this entity

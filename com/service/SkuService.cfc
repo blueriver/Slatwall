@@ -73,7 +73,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price, required listprice, required shippingWeight) {
+	public boolean function createSkus(required any product, required struct optionsStruct, required price ) {
 		// check to see if any options were selected
 		if(!structIsEmpty(arguments.optionsStruct)) {
 			var options = arguments.optionsStruct;
@@ -83,8 +83,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisSku = this.newSku();
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
-			thisSku.setListPrice(arguments.listprice);
-			thisSku.setShippingWeight(arguments.shippingWeight);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
 			thisSku.setImageFile(generateImageFileName(thisSku));
 			arguments.product.setDefaultSku(thisSku);
@@ -95,11 +93,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint takes a list of optionID combinations and generates skus
 	*/
-	public void function createSkusFromOptions (required string comboList, required any product, required price, required listPrice, required shippingWeight) {
+	public void function createSkusFromOptions (required string comboList, required any product, required price) {
 		for(  i=1; i<=listLen(arguments.comboList,";");i++ ) {
 			//every option combination represents 1 Sku, so we create it
 			var thisCombo = listGetAt(arguments.comboList,i,";");
-			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price,listPrice=arguments.listPrice,shippingWeight=arguments.shippingWeight},arguments.product);
+			var thisSku = createSkuFromStruct({options=thisCombo,price=arguments.price},arguments.product);
 			// set the first sku as the default one
 			if(i==1) {
 				arguments.product.setDefaultSku(thisSku);
@@ -111,8 +109,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var thisSku = this.newSku();
 		thisSku.setProduct(arguments.product);
 		thisSku.setPrice(arguments.data.price);
-		thisSku.setListPrice(arguments.data.listprice);
-		thisSku.setShippingWeight(arguments.data.shippingWeight);
 		var comboCode = "";
 		// loop through optionID's within the option combination and set them into the sku
 		for( j=1;j<=listLen(arguments.data.options);j++ ) {
