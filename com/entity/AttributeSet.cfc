@@ -40,8 +40,8 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Persistent Properties
 	property name="attributeSetID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeSetName" validateRequired="true" ormtype="string";
-	property name="attributeSetCode" validateRequired="true" ormtype="string";
+	property name="attributeSetName" ormtype="string";
+	property name="attributeSetCode" ormtype="string";
 	property name="attributeSetDescription" ormtype="string" length="2000" ;
 	property name="globalFlag" ormtype="boolean" default="0" ;
 	property name="sortOrder" ormtype="integer";
@@ -53,7 +53,7 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="attributeSetType" cfc="Type" validateRequired="true" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
 	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder" ;
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan";
 	property name="productCustomization" fieldtype="one-to-one" cfc="ProductCustomization" cascade="all";     

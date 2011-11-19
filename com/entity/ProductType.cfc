@@ -40,7 +40,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			
 	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="productTypeName" ormtype="string" validateRequired="true";
+	property name="productTypeName" ormtype="string";
     property name="productTypeDescription" ormtype="string" length="2000";
     property name="trackInventoryFlag" ormtype="boolean";
     property name="callToOrderFlag" ormtype="boolean";
