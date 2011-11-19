@@ -40,9 +40,9 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	
 	// Persistent Properties
 	property name="promotionCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="promotionCode" validateRequired="true" ormtype="string";
-	property name="startDateTime" validateDate="true" ormtype="timestamp";
-	property name="endDateTime" validateDate="true" ormtype="timestamp";
+	property name="promotionCode" ormtype="string";
+	property name="startDateTime" ormtype="timestamp";
+	property name="endDateTime" ormtype="timestamp";
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";

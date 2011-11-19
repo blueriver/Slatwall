@@ -45,7 +45,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="imageExtension" ormtype="string";
 	
 	// Related entity properties
-	property name="imageType" cfc="Type" validateRequired="true" fieldtype="many-to-one" fkcolumn="imageTypeID";
+	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID";
 	
 	// Special helper property
 	property name="directory" insert="false" update="false";

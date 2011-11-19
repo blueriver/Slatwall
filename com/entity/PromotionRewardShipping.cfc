@@ -40,9 +40,9 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingPercentageOff" ormType="big_decimal" validateNumeric="true";
-	property name="shippingAmountOff" ormType="big_decimal" validateNumeric="true";
-	property name="shippingAmount" ormType="big_decimal" validateNumeric="true";
+	property name="shippingPercentageOff" ormType="big_decimal";
+	property name="shippingAmountOff" ormType="big_decimal";
+	property name="shippingAmount" ormType="big_decimal";
 	
 	// Related Entities
 	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID" cascade="save-update";

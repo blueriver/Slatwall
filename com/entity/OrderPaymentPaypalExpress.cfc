@@ -42,7 +42,7 @@ component displayname="Order Payment Paypal Express" entityname="SlatwallOrderPa
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	/*
-	property name="nameOnCreditCard" validateRequired="true" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";

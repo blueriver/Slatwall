@@ -40,8 +40,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// Persistent Properties
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="brandName" ormtype="string" validateRequired="true" persistent="true" hint="This is the common name that the brand goes by.";
-	property name="brandWebsite" ormtype="string" validateURL="true" persistent="true" hint="This is the Website of the brand";
+	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
+	property name="brandWebsite" ormtype="string" hint="This is the Website of the brand";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

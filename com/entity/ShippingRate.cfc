@@ -40,11 +40,11 @@ component displayname="Shipping Rate" entityname="SlatwallShippingRate" table="S
 	
 	// Persistent Properties
 	property name="shippingRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="minWeight" validateNumeric="true" ormtype="int";
-	property name="maxWeight" validateNumeric="true" ormtype="int";
-	property name="minPrice" validateNumeric="true" ormtype="big_decimal";
-	property name="maxPrice" validateNumeric="true" ormtype="big_decimal";
-	property name="shippingRate" validateNumeric="true" validateRequired="true" ormtype="big_decimal";
+	property name="minWeight" ormtype="int";
+	property name="maxWeight" ormtype="int";
+	property name="minPrice" ormtype="big_decimal";
+	property name="maxPrice" ormtype="big_decimal";
+	property name="shippingRate" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
