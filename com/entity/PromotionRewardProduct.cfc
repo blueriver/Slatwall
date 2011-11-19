@@ -40,10 +40,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="itemRewardQuantity" ormType="integer" validateNumeric="true";
-	property name="itemPercentageOff" ormType="big_decimal" validateNumeric="true";
-	property name="itemAmountOff" ormType="big_decimal" validateNumeric="true";
-	property name="itemAmount" ormType="big_decimal" validateNumeric="true";
+	property name="itemRewardQuantity" ormType="integer";
+	property name="itemPercentageOff" ormType="big_decimal";
+	property name="itemAmountOff" ormType="big_decimal";
+	property name="itemAmount" ormType="big_decimal";
 	
 	// Related Entities
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID" cascade="save-update";

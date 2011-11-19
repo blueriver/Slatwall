@@ -40,7 +40,7 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	
 	// Persistent Properties
 	property name="taxCategoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxCategoryName" ormtype="string" validateRequired="true";
+	property name="taxCategoryName" ormtype="string";
 	
 	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" inverse="true" cascade="all-delete-orphan";
 	

@@ -40,12 +40,12 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	// Persistent Properties
 	property name="promotionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="promotionName" validateRequired="true" ormtype="string";
+	property name="promotionName" ormtype="string";
 	property name="promotionSummary" ormtype="string" length="1000";
 	property name="promotionDescription" ormtype="string" length="4000";
-	property name="startDateTime" validateRequired="true" validateDate="true" ormtype="timestamp";
-	property name="endDateTime" validateRequired="true" validateDate="true" ormtype="timestamp";
-	property name="activeFlag" validateRequired="true" ormtype="boolean";
+	property name="startDateTime" ormtype="timestamp";
+	property name="endDateTime" ormtype="timestamp";
+	property name="activeFlag" ormtype="boolean";
 	
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
@@ -72,7 +72,10 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		if(isNull(variables.endDateTime)) {
 			variables.endDateTime = now();
 		}
-		return Super.init();
+		if(isNull(variables.activeFlag)) {
+			variables.activeFlag = 1;
+		}
+		return super.init();
 	}
  
 

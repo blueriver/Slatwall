@@ -41,7 +41,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	property name="nameOnCreditCard" validateRequired="true" ormType="string";
+	property name="nameOnCreditCard" ormType="string";
 	property name="creditCardNumberEncrypted" ormType="string";
 	property name="creditCardLastFour" ormType="string";
 	property name="creditCardType" ormType="string";
@@ -53,8 +53,8 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	
 	// Non-Persistent properties
-	property name="creditCardNumber" validateRequired="true" persistent="false";
-	property name="securityCode" validateRequired="true" validateNumeric="true" persistent="false";
+	property name="creditCardNumber" persistent="false";
+	property name="securityCode" persistent="false";
 	property name="expirationDate" persistent="false";
 	property name="amountAuthorized" persistent="false";
 	property name="amountCharged" persistent="false";

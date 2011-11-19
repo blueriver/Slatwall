@@ -79,8 +79,11 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		
 		if(isNull(getAddress())) {
 			return false;
-		} else if(getService("addressService").validateAddress(getAddress()).getErrorBean().hasErrors()) {
-			return false;
+		} else {
+			getAddress().validate();
+			if(getAddress().hasErrors()) {
+				return false;	
+			}
 		}
 		
 		if(isNull(getShippingMethod())) {
