@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="Pricing Group Rate" entityname="SlatwallPricingGroupRate" table="SlatwallPricingGroupRate" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" table="SlatwallPriceGroupRate" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="pricingGroupRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="priceGroupRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="percentageOff" ormType="big_decimal";
 	property name="amountOff" ormType="big_decimal";
 	property name="amount" ormType="big_decimal";
@@ -54,24 +54,24 @@ component displayname="Pricing Group Rate" entityname="SlatwallPricingGroupRate"
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 		
 	// Related Object Properties (many-to-one)
-	property name="pricingGroup" cfc="PricingGroup" fieldtype="many-to-one" fkcolumn="pricingGroupID";
+	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID";
 	
 	// Related Object Properties (many-to-many)
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPricingGroupRateProductType" fkcolumn="pricingGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
 	
 	/*
 	These properties are commented out, until Brian / Greg / Sumit can talk about it (comments by greg :) )
 	
 	We might also want brand and option like in promotion reward
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPricingGroupRateProduct" fkcolumn="pricingGroupRateID" inversejoincolumn="productID" cascade="save-update";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPricingGroupRateSku" fkcolumn="pricingGroupRateID" inversejoincolumn="skuID" cascade="save-update";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID" cascade="save-update";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
 	
 	*/
 	
 	public Brand function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.pricingGroupRates)) {
-	   	   variables.pricingGroupRates = [];
+	   if(isNull(variables.priceGroupRates)) {
+	   	   variables.priceGroupRates = [];
 	   }
 	   if(isNull(variables.productTypes)) {
 	   	   variables.productTypes = [];
@@ -83,20 +83,20 @@ component displayname="Pricing Group Rate" entityname="SlatwallPricingGroupRate"
 	/******* Association management methods for bidirectional relationships **************/
 	
 	
-	// Pricing Group (many-to-one)
-	public void function setPricingGroup(required any pricingGroup) {
-	   variables.pricingGroup = arguments.pricingGroup;
-	   if(isNew() or !arguments.pricingGroup.hasPricingGroupRate(this)) {
-	       arrayAppend(arguments.pricingGroup.getPricingGroupRates(),this);
+	// Price Group (many-to-one)
+	public void function setPriceGroup(required any priceGroup) {
+	   variables.priceGroup = arguments.priceGroup;
+	   if(isNew() or !arguments.priceGroup.hasPriceGroupRate(this)) {
+	       arrayAppend(arguments.priceGroup.getPriceGroupRates(),this);
 	   }
 	}
 	
-	public void function removePricingGroup(required any pricingGroup) {
-       var index = arrayFind(arguments.pricingGroup.getPricingGroupRates(),this);
+	public void function removePriceGroup(required any priceGroup) {
+       var index = arrayFind(arguments.priceGroup.getPriceGroupRates(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.pricingGroup.getPricingGroupRates(),index);
+           arrayDeleteAt(arguments.priceGroup.getPriceGroupRates(),index);
        }
-       structDelete(variables,"pricingGroup");
+       structDelete(variables,"priceGroup");
     }
 	
     /************   END Association Management Methods   *******************/

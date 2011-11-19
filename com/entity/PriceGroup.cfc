@@ -36,13 +36,13 @@
 Notes:
 
 */
-component displayname="Pricing Group" entityname="SlatwallPricingGroup" table="SlatwallPricingGroup" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Price Group" entityname="SlatwallPriceGroup" table="SlatwallPriceGroup" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="pricingGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="priceGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean";
-	property name="pricingGroupName" ormtype="string";
-	property name="pricingGroupCode" ormtype="string";
+	property name="priceGroupName" ormtype="string";
+	property name="priceGroupCode" ormtype="string";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -54,12 +54,12 @@ component displayname="Pricing Group" entityname="SlatwallPricingGroup" table="S
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="pricingGroupRates" singularname="pricingGroupRate" cfc="PricingGroupRate" fieldtype="one-to-many" fkcolumn="pricingGroupID" inverse="true" cascade="all";    
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" inverse="true" cascade="all";    
 	
 	public Brand function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.pricingGroupRates)) {
-	   	   variables.pricingGroupRates = [];
+	   	   variables.priceGroupRates = [];
 	   }
 	   
 	   return super.init();
@@ -69,12 +69,12 @@ component displayname="Pricing Group" entityname="SlatwallPricingGroup" table="S
 	
 	// Pricing Group Rates (one-to-many)
 	
-	public void function addPricingGroupRate(required any pricingGroupRate) {
-	   arguments.pricingGroupRate.setPricingGroup(this);
+	public void function addPriceGroupRate(required any priceGroupRate) {
+	   arguments.priceGroupRate.setPriceGroup(this);
 	}
 	
-	public void function removeProduct(required any pricingGroupRate) {
-	   arguments.pricingGroupRate.setPricingGroup(this);
+	public void function removePriceGroupRate(required any priceGroupRate) {
+	   arguments.priceGroupRate.setPriceGroup(this);
 	}
 	
     /************   END Association Management Methods   *******************/
