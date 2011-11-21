@@ -108,8 +108,8 @@ component displayname="Base Object" accessors="true" output="false" {
 						}
 					}
 					
-				// (ONE-TO-MANY) Do this logic if this property is a one-to-many relationship, and the data passed in is of type array
-				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "one-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
+				// (ONE-TO-MANY) or (MANY-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array
+				} else if ( structKeyExists(currentProperty, "fieldType") && (currentProperty.fieldType == "one-to-many" || currentProperty.fieldType == "many-to-many") && isArray( arguments.data[ currentProperty.name ] ) ) {
 					
 					// Set the data of this One-To-Many relationship into it's own local array
 					var oneToManyArrayData = arguments.data[ currentProperty.name ];
@@ -126,24 +126,20 @@ component displayname="Base Object" accessors="true" output="false" {
 						// Load the specific entity, and if one doesn't exist yet then return a new entity
 						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[i].primaryIDPropertyName, 2=true} );
 						
-						// Populate the entity with the data, this is recursive
-						thisEntity.populate( oneToManyArrayData[i] );
-						
-						// Validate the entity
-						thisEntity.validate();
+						// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
+						if(structCount(oneToManyArrayData[i]) gt 1) {
+							
+							// Populate the entity with the data, this is recursive
+							thisEntity.populate( oneToManyArrayData[i] );
+							
+							// Validate the entity
+							thisEntity.validate();
+						}
 						
 						// Add the entity to the existing objects properties
 						this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
 					}
-					
-					
-				// (MANY-TO-MANY) Do this logic if this property is a many-to-many relationship, and the data passed in is of type array	
-				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
-					
-					// TODO: Setup Many-To-Many Logic
-					
 				}
-				
 			}
 		}
 		
