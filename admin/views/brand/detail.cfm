@@ -48,7 +48,7 @@ Notes:
 	
 	<div class="svoadminbranddetail">
 		<cfif rc.edit>
-			<form name="brandDetail" action="#buildURL('admin:brand.save')#" method="post">
+			<form name="brandDetail" method="post">
 				<input type="hidden" name="slatAction" value="admin:brand.save" />
 				<input type="hidden" name="BrandID" value="#rc.Brand.getBrandID()#" />
 		</cfif>
