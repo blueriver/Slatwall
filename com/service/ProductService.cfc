@@ -41,7 +41,8 @@ component extends="BaseService" accessors="true" {
 	// Slatwall Service Injection
 	property name="skuDAO" type="any";
 	property name="productTypeDAO" type="any";
-	property name="skuService" type="any";  
+	property name="skuService" type="any";
+	property name="dataService" type="any";  
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
 	
@@ -335,16 +336,6 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 		
-		// make sure that the product code doesn't already exist
-		if( len(data.productCode) ) {
-			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
-			if( !structIsEmpty(productCodeError) ) {
-				arguments.product.addError(argumentCollection=productCodeError);
-			}
-		}
-		
-		
 		// if filename wasn't set in bean, default it to the product's name.
 		if(arguments.Product.getFileName() == "") {
 			arguments.Product.setFileName(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
@@ -352,10 +343,10 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist, if it does then just rename with a number until it doesn't
 		var lastAppended = 1;
-		var needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		while(needsFilename) {
+		var uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
+		while(!uniqueFilename) {
 			arguments.Product.setFileName(arguments.Product.getFileName() & lastAppended);	
-			needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+			uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
 			lastAppended += 1;
 		}
 		

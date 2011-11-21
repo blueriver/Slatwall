@@ -404,6 +404,10 @@ component displayname="Base Object" accessors="true" output="false" {
 		return structKeyExists(getErrors(), arguments.errorName);
 	}
 	
+	public void function addError( ) {
+		
+	}
+	
 	// @hint Returns a struct of all the errors for this entity
 	public struct function getErrors() {
 		
@@ -500,4 +504,5 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
+		
 }

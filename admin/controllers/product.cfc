@@ -113,7 +113,7 @@ component extends="BaseController" output=false accessors=true {
 		
 		// If the product doesn't have any errors then redirect to detail or list
 		if(!rc.product.hasErrors()) {
-			if( wasNewProduct ) {
+			if( productWasNew ) {
 				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
 			} else {
 				getFW().redirect(action="admin:product.list");
