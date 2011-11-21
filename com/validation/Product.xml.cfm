@@ -9,6 +9,9 @@
 		</property>
 		<property name="productCode">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Product Code is Not Unique">
+				<param name="methodName" value="hasUniqueProductCode" />
+			</rule>
 		</property>
 		<property name="brand">
 			<rule type="required" contexts="*" />

@@ -63,56 +63,22 @@ Notes:
 <cfparam name="attributes.toggle" type="string" default="no" />						<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
 <cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 
-<!--- Add Custom class --->
-<!--- Removed for more specific class definitions <cfparam name="attributes.class" default="" /> --->
-
-<!--- id for styling link, if specified --->
-<!--- Removed for more specific id definitions <cfparam name="attributes.linkID" default="" /> --->
-
-<!--- overwrite the generated id for the property element (dd or td) --->
-<!--- Removed for more specific id definitions <cfparam name="attributes.id" default="" /> --->
-
-<!--- if this is a dl displaytype this attribute can be used to designate if this is the first property to be displayed for proper <dt> styling --->
-<!--- Removed to use the the titleClass and valueClass <cfparam name="attributes.first" default="false" /> --->
-
-<!--- hint: This can be used to override the default data type" --->
-<!--- Removed in favor of specifying as object meta data <cfparam name="attributes.dataType" default="" /> --->
-
-<!--- hint: text that is displayed when the property value is null --->
-<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.nullLabel" type="string" default="" /> --->
-
-<!--- hint: Allows you to set what gets displayed when there is no value --->
-<!--- Removing In Favor of using rbKey convention  <cfparam name="attributes.noValue" type="boolean" default="false" /> --->
-
-<!--- hint: This is used in case a sub object property has a different name than the property --->
-<!--- Removing In Favor of adding method to base object for this  <cfparam name="attributes.propertyObject" type="string" default="" /> --->
-
-<!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
-<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.tooltip" default="false" type="boolean" /> --->
-
-<!--- hint: This attribute contains the content of a mouseover tooltip message to override the value in the rB (entity.entityname.propertyname_hint) --->
-<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.tooltipmessage" default="" type="string" /> --->
-
-<!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
-<!--- Removing In Favor of using new SlatwallFormTag <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" /> --->
-
-<!--- hint: whether to allow null (empty string) option in select box control --->
-<!--- Removed because a null value should just be added to the getXXXOptions() method in the entity <cfparam name="attributes.allowNullOption" default="true" type="boolean" /> --->
-
-<!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
-<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.toggletext" default="Show,Hide" /> --->
-
 <!---
 	attributes.fieldType have the following options:
 	
-	checkbox
-	file
-	password
-	radiogroup
-	select
-	text
-	textarea
-	wysiwyg
+	checkbox			|	As a single checkbox this doesn't require any options, but it will create a hidden field for you so that the key gets submitted even when not checked.  The value of the checkbox will be 1
+	checkboxgroup		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	date				|	This is still just a textbox, but it adds the jQuery date picker
+	dateTime			|	This is still just a textbox, but it adds the jQuery date & time picker
+	file				|	No value can be passed in
+	password			|	No Value can be passed in
+	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	select      		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	text				|	Simple Text Field
+	textarea			|	Simple Textarea
+	time				|	This is still just a textbox, but it adds the jQuery time picker
+	wysiwyg				|	Value needs to be a string
+	yesno				|	This is used by booleans and flags to create a radio group of Yes and No
 	
 --->
 
@@ -120,6 +86,7 @@ Notes:
 	attributes.displayType have the following options:
 	dl
 	table
+	span
 	plain
 --->
 
@@ -127,7 +94,7 @@ Notes:
 	
 	<cfif attributes.value eq "">
 		<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
-		<cfif isNull(attributes.value) || attributes.value eq "">
+		<cfif isNull(attributes.value)>
 			<cfset attributes.value = attributes.valueDefault />
 		</cfif>
 	</cfif>
@@ -201,6 +168,46 @@ Notes:
 	</cfswitch>	
 </cfif>
 
+
+
+<!--- Add Custom class --->
+<!--- Removed for more specific class definitions <cfparam name="attributes.class" default="" /> --->
+
+<!--- id for styling link, if specified --->
+<!--- Removed for more specific id definitions <cfparam name="attributes.linkID" default="" /> --->
+
+<!--- overwrite the generated id for the property element (dd or td) --->
+<!--- Removed for more specific id definitions <cfparam name="attributes.id" default="" /> --->
+
+<!--- if this is a dl displaytype this attribute can be used to designate if this is the first property to be displayed for proper <dt> styling --->
+<!--- Removed to use the the titleClass and valueClass <cfparam name="attributes.first" default="false" /> --->
+
+<!--- hint: This can be used to override the default data type" --->
+<!--- Removed in favor of specifying as object meta data <cfparam name="attributes.dataType" default="" /> --->
+
+<!--- hint: text that is displayed when the property value is null --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.nullLabel" type="string" default="" /> --->
+
+<!--- hint: Allows you to set what gets displayed when there is no value --->
+<!--- Removing In Favor of using rbKey convention  <cfparam name="attributes.noValue" type="boolean" default="false" /> --->
+
+<!--- hint: This is used in case a sub object property has a different name than the property --->
+<!--- Removing In Favor of adding method to base object for this  <cfparam name="attributes.propertyObject" type="string" default="" /> --->
+
+<!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.tooltip" default="false" type="boolean" /> --->
+
+<!--- hint: This attribute contains the content of a mouseover tooltip message to override the value in the rB (entity.entityname.propertyname_hint) --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.tooltipmessage" default="" type="string" /> --->
+
+<!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
+<!--- Removing In Favor of using new SlatwallFormTag <cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" /> --->
+
+<!--- hint: whether to allow null (empty string) option in select box control --->
+<!--- Removed because a null value should just be added to the getXXXOptions() method in the entity <cfparam name="attributes.allowNullOption" default="true" type="boolean" /> --->
+
+<!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
+<!--- Removing In Favor of using rbKey convention <cfparam name="attributes.toggletext" default="Show,Hide" /> --->
 
 <!---
 

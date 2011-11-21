@@ -178,8 +178,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();
     }
-    	
-	
+    
     public array function getSkus(boolean sorted=false) {
         if(!sorted) {
         	return variables.skus;

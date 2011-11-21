@@ -101,10 +101,10 @@ component displayname="Base Object" accessors="true" output="false" {
 							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
 							
 							// Load the specifiv entity, if one doesn't exist... this will be null
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]} );
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
 							
 							// Set the value of the property as the newly loaded entity
-							_setProperty(currentProperty.name, entityService.invokeMethod( "get#currentProperty.cfc#", thisEntity ) );
+							_setProperty(currentProperty.name, thisEntity );
 						}
 					}
 					
@@ -124,7 +124,7 @@ component displayname="Base Object" accessors="true" output="false" {
 						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
 						
 						// Load the specific entity, and if one doesn't exist yet then return a new entity
-						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[i].primaryIDPropertyName, 2=true} );
+						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
 						
 						// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
 						if(structCount(oneToManyArrayData[i]) gt 1) {
@@ -356,7 +356,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 		
 	// @help Public Method to invoke any method in the object, If the method is not defined it calls onMissingMethod
-	public any function invokeMethod(required string methodName, struct methodArguments={}) {
+	public any function invokeMethod(required string methodName, struct methodArguments={}, boolean testing=false) {
 		
 		if(structKeyExists(this, arguments.methodName)) {
 			var theMethod = this[ arguments.methodName ];
@@ -402,6 +402,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Returns true if a specific error key exists
 	public boolean function hasError( required string errorName ) {
 		return structKeyExists(getErrors(), arguments.errorName);
+	}
+	
+	public void function addError( ) {
+		
 	}
 	
 	// @hint Returns a struct of all the errors for this entity
@@ -500,4 +504,5 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
+		
 }

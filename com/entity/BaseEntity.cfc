@@ -56,7 +56,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 		return false;
 	}
-		
+	
 	// @hint public method that returns the value from the primary ID of this entity
 	public string function getPrimaryIDValue() {
 		return this.invokeMethod("get#getPrimaryIDPropertyName()#");
@@ -82,6 +82,26 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 		}
 		return idValue;
+	}
+	
+	// @hint return a simple representation of this entity
+	public string function getSimpleRepresentation() {
+		var representation = this.invokeMethod("get#getRepresentationPropertyName()#");
+		if(!isNull(representation) && isSimpleValue(representation)) {
+			return representation;
+		}
+		return "";
+	}
+	
+	// @hint returns the propety who's value is a simple representation of this entity
+	public string function getSimpleRepresentationPropertyName() {
+		var properties = getProperties();
+		for(var i=1; i<=arrayLen(properties); i++) {
+			if(right(properties[i].name, 4) == "name") {
+				
+			}
+		}
+		return "";
 	}
 	
 	// @hint public method that returns the full entityName as "Slatwallxxx"
@@ -160,5 +180,47 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 
 	}
 	// End: ORM EventHandler Methods
+	
+	
+	
+	
+	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
+	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
+		
+		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
+		if( left(arguments.missingMethodName, 9) == "hasUnique") {
+			
+			return getService("dataService").isUniqueProperty(propertyName=right(arguments.missingMethodName, len(arguments.missingMethodName) - 9), entity=this);
+		
+		// getXXXOptions()		Where XXX is a many-to-one or many-to-many property that we need an array of valid options returned 		
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "Options") {
+			
+			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			
+			if(!structKeyExists(variables, cacheKey)) {
+				variables[ cacheKey ] = [];
+				
+				var propertyName = left(cacheKey, len(cacheKey)-7);
+				var entityName = "Slatwall" & getPropertyMetaData( propertyName ).cfc;
+				
+				var entityService = getService("utilityORMService").getEntityServiceByEntityName( entityName );
+				var smartList = entityService.invokeMethod("get#entityName#SmartList");
+				
+				smartList.addSelect(propertyIdentifier=getSimpleRepresentationPropertyName(), alias="name");
+				smartList.addSelect(propertyIdentifier=getPrimaryIDPropertyName(), alias="value"); 
+				smartList.addOrder("#getSimpleRepresentationPropertyName()#|ASC");
+				
+				variables[ cacheKey ] = smartList.getRecords();
+				
+				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});
+			}
+			
+			return variables[ cacheKey ];
+			
+		}
+		
+		throw( 'No matching method for #missingMethodName#().' );
+	}
+	
 	
 }

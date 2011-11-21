@@ -142,8 +142,8 @@ component displayname="Data Service" extends="BaseService" {
 		}
 	}
 	
-	public boolean function isDuplicateProperty( required string propertyName, required any entity ) {
-		return getDAO().isDuplicateProperty(argumentcollection=arguments);
+	public boolean function isUniqueProperty( required string propertyName, required any entity ) {
+		return getDAO().isUniqueProperty(argumentcollection=arguments);
 	}
 	
 }
