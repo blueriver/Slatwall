@@ -445,9 +445,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Populate Address And check if it has changed
-			var serializedAddressBefore = address.simpleValueSerialize();
+			var serializedAddressBefore = address.getSimpleValuesSerialized();
 			address.populate(newAddressDataStruct);
-			var serializedAddressAfter = address.simpleValueSerialize();
+			var serializedAddressAfter = address.getSimpleValuesSerialized();
 			
 			if(serializedAddressBefore != serializedAddressAfter) {
 				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();

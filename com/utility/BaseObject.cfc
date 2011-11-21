@@ -344,8 +344,47 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 	}
 	
+	// @hint return a simple representation of this entity
+	public string function getSimpleRepresentation() {
+		
+		// get the representation propertyName
+		var representationProperty = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
+		
+		// Make sure it wasn't blank
+		if(representationProperty != "") {
+			
+			// Try to get the actual value of that property
+			var representation = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
+			
+			// If the value isn't null, and it is simple, then return it.
+			if(!isNull(representation) && isSimpleValue(representation)) {
+				return representation;
+			}	
+		}
+		
+		// Default case is to return a blank value
+		return "";
+	}
+	
+	// @hint returns the propety who's value is a simple representation of this entity.  This can be overridden when necessary
+	public string function getSimpleRepresentationPropertyName() {
+		
+		// Get the meta data for all of the porperties
+		var properties = getProperties();
+		
+		// Look for a property that's last 4 is "name"
+		for(var i=1; i<=arrayLen(properties); i++) {
+			if(right(properties[i].name, 4) == "name") {
+				return properties[i].name;
+			}
+		}
+		
+		// If no properties could be identified as a simpleRepresentaition 
+		return "";
+	}
+	
 	// @help Public Method that allows you to get a serialized JSON struct of all the simple values in the variables scope.  This is very useful for compairing objects before and after a populate
-	public string function simpleValueSerialize() {
+	public string function getSimpleValuesSerialized() {
 		var data = {};
 		for(var key in variables) {
 			if( isSimpleValue(variables[key]) ) {
