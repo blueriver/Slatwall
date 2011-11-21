@@ -132,7 +132,7 @@ Notes:
 	<cfif attributes.fieldType eq "">
 		<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 	</cfif>
-	<cfif listFindNoCase("checkboxgroup,radiogroup,select", attributes.fieldType)>
+	<cfif listFindNoCase("checkboxgroup,radiogroup,select", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
 		<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 	</cfif>
 	<cfif attributes.valueDisplayFormat eq "">
@@ -171,24 +171,61 @@ Notes:
 		</cfcase>
 		<!--- TABLE Display --->
 		<cfcase value="table">
-			<cfoutput>
-				<tr>
-					<td class="#attributes.titleClass#">#attributes.title#</td>
-					<td class="#attributes.valueClass#">#attributes.value#</td>
-				</tr>
-			</cfoutput>
+			<cfif attributes.edit>
+				<cfoutput>
+					<tr>
+						<td class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></td>
+						<td class="#attributes.valueClass#">
+							<cfif attributes.object.hasError(attributes.property)>
+								<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
+									<div class="error">#error#</div>
+								</cfloop>
+							</cfif>
+							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						</td>
+					</tr>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<tr>
+						<td class="#attributes.titleClass#">#attributes.title#</td>
+						<td class="#attributes.valueClass#">#attributes.value#</td>
+					</tr>
+				</cfoutput>
+			</cfif>
 		</cfcase>
 		<!--- INLINE Display --->
 		<cfcase value="span">
-			<cfoutput>
-				<span class="#attributes.titleClass#">#attributes.title#</span><span class="#attributes.valueClass#">#attributes.value#</span>
-			</cfoutput>
+			<cfif attributes.edit>
+				<cfoutput>
+					<span class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></span>
+					<span class="#attributes.valueClass#">
+						<cfif attributes.object.hasError(attributes.property)>
+							<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
+								<div class="error">#error#</div>
+							</cfloop>
+						</cfif>
+						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+					</span>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<span class="#attributes.titleClass#">#attributes.title#: </span>
+					<span class="#attributes.valueClass#">#attributes.value#</span>
+				</cfoutput>
+			</cfif>
 		</cfcase>
 		<!--- Plain Display (value only) --->
 		<cfcase value="plain">
-			<cfoutput>
-				#attributes.value#
-			</cfoutput>
+			<cfif attributes.edit>
+				<cfoutput>
+					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					#attributes.value#	
+				</cfoutput>
+			</cfif>
 		</cfcase>
 	</cfswitch>	
 </cfif>
