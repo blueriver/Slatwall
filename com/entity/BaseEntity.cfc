@@ -84,26 +84,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return idValue;
 	}
 	
-	// @hint return a simple representation of this entity
-	public string function getSimpleRepresentation() {
-		var representation = this.invokeMethod("get#getRepresentationPropertyName()#");
-		if(!isNull(representation) && isSimpleValue(representation)) {
-			return representation;
-		}
-		return "";
-	}
-	
-	// @hint returns the propety who's value is a simple representation of this entity
-	public string function getSimpleRepresentationPropertyName() {
-		var properties = getProperties();
-		for(var i=1; i<=arrayLen(properties); i++) {
-			if(right(properties[i].name, 4) == "name") {
-				
-			}
-		}
-		return "";
-	}
-	
 	// @hint public method that returns the full entityName as "Slatwallxxx"
 	public string function getEntityName(){
 		return getMetaData(this).entityname;

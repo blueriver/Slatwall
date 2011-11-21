@@ -93,10 +93,35 @@ Notes:
 <cfif thisTag.executionMode is "start">
 	
 	<cfif attributes.value eq "">
+		
 		<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
-		<cfif isNull(attributes.value)>
+		
+		<cfif isNull(attributes.value) || (isSimpleValue(attributes.value) && attributes.value eq "")>
 			<cfset attributes.value = attributes.valueDefault />
 		</cfif>
+		
+		<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
+		<cfif isObject(attributes.value)>
+			<cfif attributes.edit>
+				<cfif attributes.object.isPersistent()>
+					<cfset attributes.value = attributes.value.getIdentifierValue() />
+				<cfelse>
+					<cfset attributes.value = attributes.valueDefault />
+				</cfif>
+			<cfelse>
+				<cfset attributes.value = attributes.value.getSimpleRepresentation() />
+			</cfif>
+		</cfif>
+		
+		<!--- Final check to make sure that the value is simple --->
+		<cfif not isSimpleValue(attributes.value)>
+			<cfif isSimpleValue(attributes.valueDefault)>
+				<cfset attributes.value = attributes.valueDefault />
+			<cfelse>
+				<cfset attributes.value = "" />
+			</cfif>
+		</cfif>
+		
 	</cfif>
 	<cfif attributes.title eq "">
 		<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
@@ -107,7 +132,7 @@ Notes:
 	<cfif attributes.fieldType eq "">
 		<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 	</cfif>
-	<cfif listFindNoCase("checkbox,radiogroup,select", attributes.fieldType)>
+	<cfif listFindNoCase("checkboxgroup,radiogroup,select", attributes.fieldType)>
 		<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 	</cfif>
 	<cfif attributes.valueDisplayFormat eq "">
