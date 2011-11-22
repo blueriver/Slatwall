@@ -55,6 +55,7 @@ Notes:
 				</a>
 			</td>
 			<td>
+				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('trackInventoryFlag'))#)" />
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="trackInventoryFlag" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#local.valueOptions#">
 			</td>
 			<td>
@@ -76,6 +77,7 @@ Notes:
 				</a>
 			</td>
 			<td>
+				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('callToOrderFlag'))#)" />
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="callToOrderFlag" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#local.valueOptions#">
 			</td>
 			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("callToOrderFlag") />
@@ -97,6 +99,7 @@ Notes:
 				</a>
 			</td>
 			<td>
+				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowShippingFlag'))#)" />
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowShippingFlag" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#local.valueOptions#">
 			</td>
 			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowShippingFlag") />
@@ -118,6 +121,7 @@ Notes:
 				</a>
 			</td>
 			<td>
+				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowPreorderFlag'))#)" />
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowPreorderFlag" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#local.valueOptions#">
 			</td>
 			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowPreorderFlag") />
@@ -139,6 +143,7 @@ Notes:
 				</a>
 			</td>
 			<td>
+				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowBackorderFlag'))#)" />
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowBackorderFlag" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#local.valueOptions#">
 			</td>
 			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowBackorderFlag") />
@@ -160,6 +165,7 @@ Notes:
 				</a>
 			</td>
 			<td>
+				<cfset local.valueOptions[1].name = "#rc.$.Slatwall.rbKey('setting.inherit')# (#yesNoFormat(rc.productType.getInheritedSetting('allowDropShipFlag'))#)" />
 				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="allowDropShipFlag" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#local.valueOptions#">
 			</td>
 			<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("allowDropShipFlag") />
