@@ -111,11 +111,11 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	}
 	
     // Order Shipping Method Options (one-to-many)
-    public void function addOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    public void function addOrderShippingMethodOption(required any orderShippingMethodOption) {
     	arguments.orderShippingMethodOption.addOrderShipping(this);
     }
     
-    public void function removeOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    public void function removeOrderShippingMethodOption(required any orderShippingMethodOption) {
     	arguments.orderShippingMethodOption.removeOrderShipping(this);
     }
 
