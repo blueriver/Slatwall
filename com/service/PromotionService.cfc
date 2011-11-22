@@ -384,9 +384,24 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else {
 			// Loop over each promotion code in the order
 			for(var i=1; i<=arrayLen(arguments.order.getPromotionCodes()); i++) {
+				
 				// Check each promotion code available and see if there is a code that applies
 				for(var p=1; p<=arrayLen(arguments.promotion.getPromotionCodes()); p++) {
-					if(arguments.promotion.getPromotionCodes()[p].getPromotionCode() == arguments.order.getPromotionCodes()[i].getPromotionCode()) {
+					
+					// Set the promotionCode start and end time into local variables
+					var promotionCodeStartDateTime = arguments.promotion.getPromotionCodes()[p].getStartDateTime();
+					var promotionCodeEndDateTime = arguments.promotion.getPromotionCodes()[p].getStartDateTime();
+					
+					// If start and end aren't set, then use the promotions start and end.
+					if(isNull(promotionCodeStartDateTime)) {
+						promotionCodeStartDateTime = arguments.promotion.getStartDateTime();
+					}
+					if(isNull(promotionCodeEndDateTime)) {
+						promotionCodeEndDateTime = arguments.promotion.getEndDateTime();
+					}
+					
+					// Check if the promotion code meets all of the requirements
+					if(arguments.promotion.getPromotionCodes()[p].getPromotionCode() == arguments.order.getPromotionCodes()[i].getPromotionCode() && promotionCodeStartDateTime <= now() && promotionCodeEndDateTime >= now()) {
 						codesOK = true;
 					}
 				}
