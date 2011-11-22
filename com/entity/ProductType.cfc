@@ -212,6 +212,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	}
     }
     
+    /*
     public void function populate(required any data){
     	// remove the ones not selected, loop in reverse to prevent shifting of array items
     	var attributeSetAssignmentCount = arrayLen(getAttributeSetAssignments());
@@ -238,4 +239,5 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	}
     	super.populate(argumentCollection=arguments);
     }
+    */
 }
