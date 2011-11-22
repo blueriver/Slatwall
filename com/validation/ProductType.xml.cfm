@@ -3,6 +3,10 @@
 	<objectProperties>
 		<property name="productTypeName">
 			<rule type="required" contexts="*" />
+			<rule type="collectionSize" contexts="*">
+				<param name="min" value="1" />
+				<param name="max" value="1" />
+			</rule>
 		</property>
 	</objectProperties>
 </validateThis>

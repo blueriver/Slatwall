@@ -429,20 +429,22 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.productType.populate(data=arguments.data);
 
-		if(arguments.data.parentProductType == "") {
-			arguments.productType.removeParentProductType();
-		}
-		
+		arguments.productType.validate();
+
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
-	   var entity = super.save(arguments.productType);
-	   if( !entity.hasErrors() ) {
-	   		// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-	   }
-	   return entity;
+		
+		if( !arguments.productType.hasErrors() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+			clearProductTypeTree();
+			
+			// Call entitySave on the productType 
+			getDAO().save(target=arguments.productType);
+		}
+		
+		return arguments.productType;
 	}
 	
 	public any function deleteProductType(required any productType) {

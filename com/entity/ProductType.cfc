@@ -104,7 +104,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 				if(!listFindNoCase(ptt.idpath[i], this.getProductTypeID())) {
 					var option = {};
 					option.value = ptt.productTypeID[i];
-					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;");
+					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;", "all");
 					arrayAppend(variables.parentProductTypeOptions, option);
 				}
 			}
