@@ -86,6 +86,32 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public any function getProductTypeTree() {
 		return getService("ProductService").getProductTypeTree();
 	}
+	
+	public any function getParentProductTypeOptions() {
+		if(!structKeyExists(variables, "parentProductTypeOptions")) {
+			variables.parentProductTypeOptions=[];
+			
+			// Add a null value to the options for none.
+			arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
+			
+			// Get product type tree query
+			var ptt = getProductTypeTree();
+			
+			// Loop over all records in product type tree
+			for(var i=1; i<=ptt.recordCount; i++) {
+				
+				// This logic makes it so that it can't be child of itself or any of its children
+				if(!listFindNoCase(ptt.idpath[i], this.getProductTypeID())) {
+					var option = {};
+					option.value = ptt.productTypeID[i];
+					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;");
+					arrayAppend(variables.parentProductTypeOptions, option);
+				}
+			}
+		}
+		
+		return variables.parentProductTypeOptions;
+	}
 
 	private array function getSettingOptions(required string settingName) {
 		var settingOptions = [
