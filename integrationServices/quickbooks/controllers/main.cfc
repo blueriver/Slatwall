@@ -17,10 +17,12 @@
 	<cffunction name="productImport" returntype="void">
 		<cfargument name="rc" type="struct" />
 		
+		<!--- Set the request timeout to 5 min --->
+		<cfsetting requesttimeout="300" >
+		
 		<cfset var newFilename = createUUID() & ".txt" />
 		<cfset var importDirectory = expandPath(rc.$.siteConfig('assetPath')) & '/assets/file/slatwall/productImport/' />
-		
-		
+				
 		<cfif not directoryExists(importDirectory)>
 			<cfset directoryCreate(importDirectory) />
 		</cfif>

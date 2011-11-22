@@ -51,17 +51,17 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getValidateThis().validate( this );
 	}
 	
-	// Public populate method to utilize a struct of data that follows the standard property form format
+	// @hint Public populate method to utilize a struct of data that follows the standard property form format
 	public any function populate( required struct data={} ) {
 		
 		// Get an array of All the properties for this object
 		var properties = getProperties();
 		
 		// Loop over properties looking for a value in the incomming data
-		for( var i=1;i<=arrayLen(properties);i++ ) {
+		for( var p=1; p <= arrayLen(properties); p++ ) {
 			
 			// Set the current property into variable of meta data
-			var currentProperty = properties[i];
+			var currentProperty = properties[p];
 			
 			// Check to see if this property has a key in the data that was passed in
 			if( structKeyExists(arguments.data, currentProperty.name) ) {
@@ -118,26 +118,30 @@ component displayname="Base Object" accessors="true" output="false" {
 					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
 					
 					// Loop over the array of objects in the data... Then load, populate, and validate each one
-					for(var i=1; i<=arrayLen(oneToManyArrayData); i++) {
+					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
 						
-						// set the service to use to get the specific entity
-						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
-						
-						// Load the specific entity, and if one doesn't exist yet then return a new entity
-						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
-						
-						// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
-						if(structCount(oneToManyArrayData[i]) gt 1) {
+						// Check to make sure that this array has the primary ID property in it, otherwise we can't do a populate
+						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName)) {
 							
-							// Populate the entity with the data, this is recursive
-							thisEntity.populate( oneToManyArrayData[i] );
+							// set the service to use to get the specific entity
+							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
 							
-							// Validate the entity
-							thisEntity.validate();
+							// Load the specific entity, and if one doesn't exist yet then return a new entity
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
+							
+							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
+							if(structCount(oneToManyArrayData[a]) gt 1) {
+								
+								// Populate the entity with the data, this is recursive
+								thisEntity.populate( oneToManyArrayData[a] );
+								
+								// Validate the entity
+								thisEntity.validate();
+							}
+							
+							// Add the entity to the existing objects properties
+							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
 						}
-						
-						// Add the entity to the existing objects properties
-						this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
 					}
 				}
 			}
@@ -399,7 +403,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		if(structKeyExists(this, arguments.methodName)) {
 			var theMethod = this[ arguments.methodName ];
-			return theMethod(argumentCollention = methodArguments);
+			return theMethod(argumentCollection = methodArguments);
 		}
 		
 		return this.onMissingMethod(missingMethodName=arguments.methodName, missingMethodArguments=arguments.methodArguments);

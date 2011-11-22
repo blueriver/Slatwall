@@ -291,8 +291,10 @@ component extends="BaseService" accessors="true" {
 	
 	public any function saveProduct(required any product, required struct data) {
 		
+		
 		// populate bean from values in the data Struct
 		arguments.product.populate(arguments.data);
+		
 		
 		// populate custom attributes
 		if(structKeyExists(arguments.data,"attributes")){
@@ -313,6 +315,7 @@ component extends="BaseService" accessors="true" {
 		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
 			arguments.data.price = 0;
 		}
+		
 		
 		// set up sku(s) if this is a new product
 		if(arguments.product.isNew()) {
@@ -350,8 +353,10 @@ component extends="BaseService" accessors="true" {
 			lastAppended += 1;
 		}
 		
+		
 		// validate the product
 		arguments.product.validate();
+		
 		
 		// If the product passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.product.hasErrors()) {
