@@ -36,18 +36,28 @@
 Notes:
 
 */
-component {
 
-	public any function init() {
+component accessors="true" output="false" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
+	
+	// Custom Properties that need to be set by the end user
+	property name="apiKey" displayname="API Key" type="string";
+	property name="transKey" displayname="API Code" type="string";
+	property name="testModeFlag" displayname="Test Mode" type="boolean" default="true";
+	
+	//Global variables
+	variables.gatewayURL = "https://secure.authorize.net/gateway/transact.dll";
+	
+	public any function init(){
 		return this;
 	}
 	
-	public string function getPaymentMethods() {
-		return "";
+	public any function getPaymentMethods() {
+		return "dwolla";
 	}
 	
-	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean) {
-		throw("The processCreditCard() Method was not setup for this integration service");	
+	public any function getDwollaSecureKey() {
+		
 	}
+	
 	
 }

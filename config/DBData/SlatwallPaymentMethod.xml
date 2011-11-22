@@ -6,5 +6,6 @@
 	<Records>
 		<Record paymentMethodID="creditCard" activeFlag="0" />
 		<Record paymentMethodID="paypalExpress" activeFlag="0" />
+		<Record paymentMethodID="dwolla" activeFlag="0" />
 	</Records>
 </Table>
