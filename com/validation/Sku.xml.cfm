@@ -3,6 +3,9 @@
 	<objectProperties>
 		<property name="skuCode">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Sku Code is Not Unique">
+				<param name="methodName" value="hasUniqueSkuCode" />
+			</rule>
 		</property>
 	</objectProperties>
 </validateThis>

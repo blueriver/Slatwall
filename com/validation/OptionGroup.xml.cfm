@@ -6,6 +6,9 @@
 		</property>
 		<property name="optionGroupCode">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Option Group Code is Not Unique">
+				<param name="methodName" value="hasUniqueOptionGroupCode" />
+			</rule>
 		</property>
 	</objectProperties>
 </validateThis>
