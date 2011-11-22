@@ -3,6 +3,9 @@
 	<objectProperties>
 		<property name="optionCode">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Option Code is Not Unique">
+				<param name="methodName" value="hasUniqueOptionCode" />
+			</rule>
 		</property>
 		<property name="optionName">
 			<rule type="required" contexts="*" />

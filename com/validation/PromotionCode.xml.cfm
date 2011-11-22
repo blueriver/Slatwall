@@ -3,6 +3,9 @@
 	<objectProperties>
 		<property name="promotionCode">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Promotion Code is Not Unique">
+				<param name="methodName" value="hasUniquePromotionCode" />
+			</rule>
 		</property>
 		<property name="startDateTime">
 			<rule type="date" contexts="*" />

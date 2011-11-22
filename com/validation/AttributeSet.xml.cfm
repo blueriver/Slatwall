@@ -6,6 +6,9 @@
 		</property>
 		<property name="attributeSetCode">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Attribute Set Code is Not Unique">
+				<param name="methodName" value="hasUniqueAttributeSetCode" />
+			</rule>
 		</property>
 		<property name="attributeSetType">
 			<rule type="required" contexts="*" />
