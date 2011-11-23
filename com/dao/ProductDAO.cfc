@@ -38,14 +38,6 @@ Notes:
 */
 component accessors="true" extends="BaseDAO" {
 
-	public any function clearProductContent(required any product) {
-		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
-	}
-	
-	public any function clearProductCategories(required any product) {
-		ORMExecuteQuery("Delete from SlatwallProductCategory WHERE productID = '#arguments.product.getProductID()#'");
-	}
-	
 	public array function getAttributeSets(required array attributeSetTypeCode,required array productTypeIDs){
 		var hql = " FROM SlatwallAttributeSet sas
 					WHERE (exists(FROM sas.attributes sa WHERE sa.activeFlag = 1)
