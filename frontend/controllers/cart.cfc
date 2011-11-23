@@ -97,7 +97,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function removeItem(required struct rc) {
 		param name="rc.orderItemID" default="";
 		
-		getOrderService().removeOrderItem(order=rc.$.slatwall.cart(), orderItem=rc.orderItemID);
+		getOrderService().removeOrderItem(order=rc.$.slatwall.cart(), orderItemID=rc.orderItemID);
 		
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
 	}

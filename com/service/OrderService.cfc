@@ -199,7 +199,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function removeOrderItem(required any order, required string orderItemID) {
 		
 		// Loop over all of the items in this order
-		for(var=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+		for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
 			
 			// Check to see if this item is the same ID as the one passed in to remove
 			if(arguments.order.getOrderItems()[i].getOrderItemID() == arguments.orderItemID) {
