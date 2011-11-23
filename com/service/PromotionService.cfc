@@ -38,7 +38,9 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	public any function save(required any Promotion,required struct data) {
+	/*
+	public any function savePromotion(required any Promotion,required struct data) {
+		
 		// populate bean from values in the data Struct
 		arguments.Promotion.populate(arguments.data);
 		
@@ -54,12 +56,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		return arguments.Promotion;
 	}
+	*/
 	
 	public any function delete(required any Promotion){
 		if( arguments.Promotion.isAssigned() ) {
 			getValidationService().setError(entity=arguments.Promotion,errorName="delete",rule="isAssigned");
 		}
-		return Super.delete(arguments.Promotion);
+		return super.delete(arguments.Promotion);
 	}
 	
 	public any function getPromotionCodeSmartList(string promotionID, struct data={}){
