@@ -36,18 +36,17 @@
 Notes:
 
 */
-component {
-
+component accessors="true" output="false" implements="Slatwall.integrationServices.IntegrationInterface" extends="Slatwall.integrationServices.BaseIntegration" {
+	
 	public any function init() {
 		return this;
 	}
 	
-	public string function getPaymentMethods() {
-		return "";
+	public string function getIntegrationTypes() {
+		return "payment";
 	}
 	
-	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean) {
-		throw("The processCreditCard() Method was not setup for this integration service");	
+	public string function getDisplayName() {
+		return "Dwolla";
 	}
-	
 }

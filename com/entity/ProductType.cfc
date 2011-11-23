@@ -86,19 +86,33 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public any function getProductTypeTree() {
 		return getService("ProductService").getProductTypeTree();
 	}
-
 	
-    // @hint use this to implement get{setting}Options() calls for PropertyDisplay tags for settings
-	public function onMissingMethod(missingMethodName, missingMethodArguments) {
-		// first look to see if the method name follows the get{SettingName}Options naming convention and that {setting} is a valid property
-		if( left(arguments.missingMethodName,3) == "get" 
-		    && right(arguments.missingMethodName,7) == "options"
-		    && listFindNoCase( getPropertyList(),mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10) ) ) {
-		    	var settingName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10);
-		    	return getSettingOptions(settingName);
-		    }
+	public any function getParentProductTypeOptions() {
+		if(!structKeyExists(variables, "parentProductTypeOptions")) {
+			variables.parentProductTypeOptions=[];
+			
+			// Add a null value to the options for none.
+			arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
+			
+			// Get product type tree query
+			var ptt = getProductTypeTree();
+			
+			// Loop over all records in product type tree
+			for(var i=1; i<=ptt.recordCount; i++) {
+				
+				// This logic makes it so that it can't be child of itself or any of its children
+				if(!listFindNoCase(ptt.idpath[i], this.getProductTypeID())) {
+					var option = {};
+					option.value = ptt.productTypeID[i];
+					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;", "all");
+					arrayAppend(variables.parentProductTypeOptions, option);
+				}
+			}
+		}
+		
+		return variables.parentProductTypeOptions;
 	}
-	
+
 	private array function getSettingOptions(required string settingName) {
 		var settingOptions = [
 		  {id="1", name=rbKey("sitemanager.yes")},
@@ -198,6 +212,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	}
     }
     
+    /*
     public void function populate(required any data){
     	// remove the ones not selected, loop in reverse to prevent shifting of array items
     	var attributeSetAssignmentCount = arrayLen(getAttributeSetAssignments());
@@ -224,4 +239,5 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	}
     	super.populate(argumentCollection=arguments);
     }
+    */
 }

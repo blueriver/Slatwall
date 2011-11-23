@@ -39,7 +39,7 @@ Notes:
 
 <cfoutput>
 	<cfif rc.edit>
-		<input type="hidden" name="contentID" value="" />
+		<input type="hidden" name="productContentIDPaths" value="" />
 		<cfif rc.productPages.recordCount() gt 0>
 			<table id="productPages" class="mura-table-grid stripe">
 				<tr>
@@ -50,7 +50,7 @@ Notes:
 					<cfset local.thisProductPage = rc.productPages.next() />
 					<tr>
 						<td>
-							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="contentID" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
+							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="productContentIDPaths" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
 						</td>
 						<cfset local.thisNest = local.thisProductPage.getTreeDepth() eq 0 ? "neston" : "nest" & local.thisProductPage.getTreeDepth() & "on" />
 						<td class="varWidth">

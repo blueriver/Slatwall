@@ -51,17 +51,17 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getValidateThis().validate( this );
 	}
 	
-	// Public populate method to utilize a struct of data that follows the standard property form format
+	// @hint Public populate method to utilize a struct of data that follows the standard property form format
 	public any function populate( required struct data={} ) {
 		
 		// Get an array of All the properties for this object
 		var properties = getProperties();
 		
 		// Loop over properties looking for a value in the incomming data
-		for( var i=1;i<=arrayLen(properties);i++ ) {
+		for( var p=1; p <= arrayLen(properties); p++ ) {
 			
 			// Set the current property into variable of meta data
-			var currentProperty = properties[i];
+			var currentProperty = properties[p];
 			
 			// Check to see if this property has a key in the data that was passed in
 			if( structKeyExists(arguments.data, currentProperty.name) ) {
@@ -100,23 +100,50 @@ component displayname="Base Object" accessors="true" output="false" {
 							// set the service to use to get the specific entity
 							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
 							
-							// attempt to load the entity and set it as the value of the property
-							_setProperty(currentProperty.name, entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]} ) );
+							// Load the specifiv entity, if one doesn't exist... this will be null
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
+							
+							// Set the value of the property as the newly loaded entity
+							_setProperty(currentProperty.name, thisEntity );
 						}
 					}
 					
-				// (ONE-TO-MANY) Do this logic if this property is a one-to-many relationship, and the data passed in is of type array
-				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "one-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
+				// (ONE-TO-MANY) or (MANY-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array
+				} else if ( structKeyExists(currentProperty, "fieldType") && (currentProperty.fieldType == "one-to-many" || currentProperty.fieldType == "many-to-many") && isArray( arguments.data[ currentProperty.name ] ) ) {
 					
-					// TODO: Setup One-To-Many Logic
+					// Set the data of this One-To-Many relationship into it's own local array
+					var oneToManyArrayData = arguments.data[ currentProperty.name ];
 					
-				// (MANY-TO-MANY) Do this logic if this property is a many-to-many relationship, and the data passed in is of type array	
-				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
+					// Find the primaryID column Name for the related object
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
 					
-					// TODO: Setup Many-To-Many Logic
-					
+					// Loop over the array of objects in the data... Then load, populate, and validate each one
+					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
+						
+						// Check to make sure that this array has the primary ID property in it, otherwise we can't do a populate
+						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName)) {
+							
+							// set the service to use to get the specific entity
+							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+							
+							// Load the specific entity, and if one doesn't exist yet then return a new entity
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName]});
+							
+							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
+							if(structCount(oneToManyArrayData[a]) gt 1) {
+								
+								// Populate the entity with the data, this is recursive
+								thisEntity.populate( oneToManyArrayData[a] );
+								
+								// Validate the entity
+								thisEntity.validate();
+							}
+							
+							// Add the entity to the existing objects properties
+							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
+						}
+					}
 				}
-				
 			}
 		}
 		
@@ -321,8 +348,47 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 	}
 	
+	// @hint return a simple representation of this entity
+	public string function getSimpleRepresentation() {
+		
+		// get the representation propertyName
+		var representationProperty = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
+		
+		// Make sure it wasn't blank
+		if(representationProperty != "") {
+			
+			// Try to get the actual value of that property
+			var representation = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
+			
+			// If the value isn't null, and it is simple, then return it.
+			if(!isNull(representation) && isSimpleValue(representation)) {
+				return representation;
+			}	
+		}
+		
+		// Default case is to return a blank value
+		return "";
+	}
+	
+	// @hint returns the propety who's value is a simple representation of this entity.  This can be overridden when necessary
+	public string function getSimpleRepresentationPropertyName() {
+		
+		// Get the meta data for all of the porperties
+		var properties = getProperties();
+		
+		// Look for a property that's last 4 is "name"
+		for(var i=1; i<=arrayLen(properties); i++) {
+			if(right(properties[i].name, 4) == "name") {
+				return properties[i].name;
+			}
+		}
+		
+		// If no properties could be identified as a simpleRepresentaition 
+		return "";
+	}
+	
 	// @help Public Method that allows you to get a serialized JSON struct of all the simple values in the variables scope.  This is very useful for compairing objects before and after a populate
-	public string function simpleValueSerialize() {
+	public string function getSimpleValuesSerialized() {
 		var data = {};
 		for(var key in variables) {
 			if( isSimpleValue(variables[key]) ) {
@@ -333,11 +399,11 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 		
 	// @help Public Method to invoke any method in the object, If the method is not defined it calls onMissingMethod
-	public any function invokeMethod(required string methodName, struct methodArguments={}) {
+	public any function invokeMethod(required string methodName, struct methodArguments={}, boolean testing=false) {
 		
 		if(structKeyExists(this, arguments.methodName)) {
 			var theMethod = this[ arguments.methodName ];
-			return theMethod(argumentCollention = methodArguments);
+			return theMethod(argumentCollection = methodArguments);
 		}
 		
 		return this.onMissingMethod(missingMethodName=arguments.methodName, missingMethodArguments=arguments.methodArguments);
@@ -379,6 +445,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Returns true if a specific error key exists
 	public boolean function hasError( required string errorName ) {
 		return structKeyExists(getErrors(), arguments.errorName);
+	}
+	
+	public void function addError( ) {
+		
 	}
 	
 	// @hint Returns a struct of all the errors for this entity
@@ -477,4 +547,5 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
+		
 }

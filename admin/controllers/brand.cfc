@@ -80,7 +80,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {
 			rc.itemTitle = rc.brand.isNew() ? rc.$.Slatwall.rbKey("admin.brand.create") : rc.$.Slatwall.rbKey("admin.brand.edit") & ": #rc.brand.getBrandName()#";
-	   		getFW().setView(action="admin:brand.edit");
+	   		getFW().setView(action="admin:brand.detail");
+	   		rc.edit = true;
 		}
 	}
 	

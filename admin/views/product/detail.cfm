@@ -88,9 +88,8 @@ Notes:
 	<div id="tabSkus">
 		#view("product/producttabs/skus")#
 	</div>
-	
 	<div id="tabDescription">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productDescription" edit="#rc.edit#" fieldType="wysiwyg">
 	</div>
 	<div id="tabProductSettings">
 		#view("product/producttabs/settings")#

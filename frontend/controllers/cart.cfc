@@ -94,6 +94,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
 	}
 	
+	public void function removeItem(required struct rc) {
+		param name="rc.orderItemID" default="";
+		
+		getOrderService().removeOrderItem(order=rc.$.slatwall.cart(), orderItemID=rc.orderItemID);
+		
+		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
+	}
+	
 	public void function addPromotionCode(required struct rc) {
 		param name="rc.promotionCode" default="";
 		param name="rc.promotionCodeOK" default="true";

@@ -4,6 +4,12 @@
 		<property name="attributeName">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="attributeCode">
+			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="Attribute Code is Not Unique">
+				<param name="methodName" value="hasUniqueAttributeCode" />
+			</rule>
+		</property>
 		<property name="attributeType">
 			<rule type="required" contexts="*" />
 		</property>

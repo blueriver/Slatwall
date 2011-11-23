@@ -117,13 +117,4 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		return smartList;
 	}
 	
-	// @hint checks whether another entity has the same value for the given property
-	public boolean function isDuplicateProperty( required string propertyName, required any entity ) {
-		var entityName = arguments.entity.getClassName();
-		var idValue = evaluate("arguments.entity.get#replaceNoCase(entityName,'Slatwall','','one')#ID()");
-		var propertyValue = evaluate("arguments.entity.get#arguments.propertyName#()");
-		return arrayLen(ormExecuteQuery("from #entityName# e where e.#arguments.propertyName# = :propValue and e.id != :entityID", {propValue=propertyValue, entityID=idValue}));
-	}
-	
-	
 }

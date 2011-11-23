@@ -41,7 +41,8 @@ component extends="BaseService" accessors="true" {
 	// Slatwall Service Injection
 	property name="skuDAO" type="any";
 	property name="productTypeDAO" type="any";
-	property name="skuService" type="any";  
+	property name="skuService" type="any";
+	property name="dataService" type="any";  
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
 	
@@ -151,20 +152,6 @@ component extends="BaseService" accessors="true" {
     	return categoryTree;
 	}
 
-	/**
-	/* @hint associates this product with Mura content objects
-	*/
-	public void function assignProductContent(required any product,required string contentID) {
-		var productContentArray = [];
-		getDAO().clearProductContent(arguments.product);
-		for(var i=1;i<=listLen(arguments.contentID);i++) {
-			local.thisContentID = listGetAt(arguments.contentID,i);
-			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=listLast(local.thisContentID," "),contentPath=listChangeDelims(local.thisContentID,","," ")});
-			arrayAppend(productContentArray,local.thisProductContent);
-		}
-		arguments.product.setProductContent(productContentArray);
-	}
-	
 	public void function updateProductContentPaths(required string contentID, required string siteID) {
 		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++) {
@@ -191,14 +178,13 @@ component extends="BaseService" accessors="true" {
 	/* @hint associates this product with Mura categories
 	*/
 	public void function assignProductCategories(required any product,required string categoryID,string featuredCategories) {
-		getDAO().clearProductCategories(arguments.product);
 		for(var i=1;i<=listLen(arguments.categoryID);i++) {
 			local.isFeatured = false;
 			local.thisCategoryID = listGetAt(arguments.categoryID,i);
 			if(listFindNoCase(arguments.featuredCategories,listLast(local.thisCategoryID," "))) {
 				local.isFeatured = true;
 			}
-			local.thisProductCategory = entityNew("SlatwallProductCategory",{categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
+			local.thisProductCategory = this.newSlatwallProductCategory({categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
 			arguments.product.addProductCategory(local.thisProductCategory);
 		}
 	}
@@ -312,38 +298,47 @@ component extends="BaseService" accessors="true" {
 		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
 			arguments.data.price = 0;
 		}
-		
+				
 		// set up sku(s) if this is a new product
 		if(arguments.product.isNew()) {
-			
+
 			var optionsStruct = {};
 			if(structKeyExists(arguments.data, "options")) {
 				optionsStruct = arguments.data.options;
 			}
 			
 			getSkuService().createSkus(arguments.Product,optionsStruct,arguments.data.price);
+		}
+		
+		// set up associations between product and content
+		if(structKeyExists(arguments.data, "productContentIDPaths")) {
 			
-		} else {
-			getSkuService().updateSkus(arguments.Product,arguments.data.skus);
-			// set up associations between product and content
-			assignProductContent(arguments.Product,arguments.data.contentID);		
-			// set up associations between product and mura categories
+			// Remove Existing product Content
+			for(var i=arrayLen(arguments.product.getProductContent()); i >= 1; i--) {
+				arguments.product.getProductContent()[i].removeProduct();
+			}
+			
+			// Assign all new product Content
+			for(var i=1; i<=listLen(arguments.data.productContentIDPaths); i++) {
+				var thisPath = listGetAt(arguments.data.productContentIDPaths, i);
+				var thisProductContent = this.newProductContent();
+				thisProductContent.setProduct(arguments.product);
+				thisProductContent.setContentID(listLast(thisPath, " "));
+				thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
+			}
+		}
+		
+		// set up associations between product and mura categories
+		/*		
+		if(structKeyExists(arguments.data, "categoryID")) {
 			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
-			// check for images to upload
-			if(structKeyExists(arguments.data,"imagesArray")) {
-				saveAlternateImages(arguments.Product,arguments.data.images);
-			}
 		}
+		*/
 		
-		// make sure that the product code doesn't already exist
-		if( len(data.productCode) ) {
-			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
-			if( !structIsEmpty(productCodeError) ) {
-				arguments.product.addError(argumentCollection=productCodeError);
-			}
+		// check for images to upload
+		if(structKeyExists(arguments.data,"images")) {
+			saveAlternateImages(arguments.Product,arguments.data.images);
 		}
-		
 		
 		// if filename wasn't set in bean, default it to the product's name.
 		if(arguments.Product.getFileName() == "") {
@@ -352,13 +347,13 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist, if it does then just rename with a number until it doesn't
 		var lastAppended = 1;
-		var needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		while(needsFilename) {
+		var uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
+		while(!uniqueFilename) {
 			arguments.Product.setFileName(arguments.Product.getFileName() & lastAppended);	
-			needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+			uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
 			lastAppended += 1;
 		}
-		
+				
 		// validate the product
 		arguments.product.validate();
 		
@@ -438,20 +433,22 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.productType.populate(data=arguments.data);
 
-		if(arguments.data.parentProductType == "") {
-			arguments.productType.removeParentProductType();
-		}
-		
+		arguments.productType.validate();
+
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
-	   var entity = super.save(arguments.productType);
-	   if( !entity.hasErrors() ) {
-	   		// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-	   }
-	   return entity;
+		
+		if( !arguments.productType.hasErrors() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+			clearProductTypeTree();
+			
+			// Call entitySave on the productType 
+			getDAO().save(target=arguments.productType);
+		}
+		
+		return arguments.productType;
 	}
 	
 	public any function deleteProductType(required any productType) {

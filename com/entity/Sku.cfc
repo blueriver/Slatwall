@@ -122,16 +122,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Product (many-to-one)
 	
-	public void function setProduct(required Product Product) {
-	   variables.product = arguments.Product;
-	   if(isNew() or !arguments.Product.hasSku(this)) {
-	       arrayAppend(arguments.Product.getSkus(),this);
+	public void function setProduct(required any Product) {
+	   variables.product = arguments.product;
+	   if(isNew() or !arguments.product.hasSku(this)) {
+	       arrayAppend(arguments.product.getSkus(),this);
 	   }
 	}
 	
-	public void function removeProduct(Product Product) {
+	public void function removeProduct(any Product) {
 	   if(!structKeyExists(arguments,"Product")) {
-	   		arguments.Product = variables.Product;
+	   		arguments.Product = variables.product;
 	   }
        var index = arrayFind(arguments.Product.getSkus(),this);
        if(index > 0) {
@@ -141,7 +141,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     
     // Option (many-to-many)
-    public void function addOption(required Option Option) {
+    public void function addOption(required any Option) {
         if(!hasOption(arguments.option)) {
         	// first add option to this Sku
         	arrayAppend(this.getOptions(),arguments.option);
@@ -150,7 +150,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
         }	
     }
     
-    public void function removeOption(required Option Option) {
+    public void function removeOption(required any Option) {
        // first remove the option from this Sku
        if(hasOption(arguments.option)) {
 	       var index = arrayFind(this.getOptions(),arguments.option);

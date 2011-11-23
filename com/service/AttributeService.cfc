@@ -54,12 +54,6 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		}
 		arguments.attribute = Super.save(arguments.attribute,arguments.data);
 		
-		// make sure that the attributeCode doesn't already exist
-		var checkAttributeCode = getDAO().isDuplicateProperty("attributeCode", arguments.attribute);
-		var attributeCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkAttributeCode,objectName="attributeCode",message=replace(rbKey("entity.attribute.attributeCode_validateUnique"),"{attributeCode}",arguments.data.attributeCode));
-		if( !structIsEmpty(attributeCodeError) ) {
-			arguments.attribute.addError(argumentCollection=attributeCodeError);
-		}
 		// save attribute options if the saved entity was the correct type and there were no errors
 		var optionsAttributeTypeList = "atSelectBox,atCheckBox,atRadioGroup";
 		if( listFind(optionsAttributeTypeList,arguments.attribute.getAttributeType().getSystemCode()) 

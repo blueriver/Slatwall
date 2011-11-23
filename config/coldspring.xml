@@ -97,6 +97,7 @@
         <property name="DAO"><ref bean="ProductDAO" /></property>
 		<property name="skuDAO"><ref bean="SkuDAO" /></property>
 		<property name="productTypeDAO"><ref bean="ProductTypeDAO" /></property>
+		<property name="dataService"><ref bean="dataService" /></property>
 		<property name="skuService"><ref bean="SkuService" /></property>
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>

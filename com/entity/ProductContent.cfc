@@ -42,7 +42,6 @@ component displayname="Product Content" entityname="SlatwallProductContent" tabl
 	property name="productContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
 	property name="contentID" ormtype="string" length="35";
 	property name="contentPath" ormtype="string";
-	 
 	
 	// Related Object Properties
 	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
@@ -53,19 +52,22 @@ component displayname="Product Content" entityname="SlatwallProductContent" tabl
 	
 	// Product (many-to-one)
 	
-	public void function setProduct(required Product Product) {
+	public void function setProduct(required any Product) {
 	   variables.product = arguments.Product;
 	   if(isNew() or !arguments.Product.hasProductContent(this)) {
 	       arrayAppend(arguments.Product.getProductContent(),this);
 	   }
 	}
 	
-	public void function removeProduct(required Product Product) {
-       var index = arrayFind(arguments.Product.getProductContent(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.Product.getProductContent(),index);
-       }    
-       entityDelete(this);
+	public void function removeProduct(any Product) {
+		if(!structKeyExists(arguments, 'product')) {
+			arguments.product = variables.product;
+		}
+		var index = arrayFind(arguments.Product.getProductContent(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.Product.getProductContent(),index);
+		}    
+		structDelete(variables, "product");
     }
     
 	/************   END Association Management Methods   *******************/

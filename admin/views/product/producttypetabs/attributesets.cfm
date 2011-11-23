@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,19 +35,42 @@
 
 Notes:
 
-*/
-component {
+--->
 
-	public any function init() {
-		return this;
-	}
-	
-	public string function getPaymentMethods() {
-		return "";
-	}
-	
-	public Slatwall.com.utility.payment.CreditCardTransactionResponseBean function processCreditCard(required Slatwall.com.utility.payment.CreditCardTransactionRequestBean requestBean) {
-		throw("The processCreditCard() Method was not setup for this integration service");	
-	}
-	
-}
+<cfoutput>
+	<table id="AttributeSets" class="mura-table-grid stripe">
+		<tr>
+			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetName')#</th>
+			<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>
+			<th>#rc.$.Slatwall.rbKey('admin.product.detailProductType.attributeSetAssigned')#</th>	
+		</tr>
+		<!--- assigned attributeSetIDs --->
+		<input type="hidden" name="attributeSetIDs" value="" />
+		<cfset local.attributeSetIDs = "" />
+		<cfloop array="#rc.productType.getAttributeSetAssignments()#" index="local.AttributeSetAssignment">
+			<cfset local.attributeSetIDs = listAppend(local.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) />
+		</cfloop>	
+		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
+			<tr>
+				<td class="property varWidth">
+					<cf_SlatwallPropertyDisplay object="#attributeSet#" property="attributeSetName" edit="false" displaytype="plain">
+				</td>
+				<td>
+					<cf_SlatwallPropertyDisplay object="#attributeSet.getAttributeSetType()#" property="type" edit="false" displaytype="plain">
+				</td>
+				<td>
+					<cfif attributeSet.getGlobalFlag()>
+						#rc.$.Slatwall.rbKey('define.yes')# (#rc.$.Slatwall.rbKey('define.global')#)
+					<cfelse>
+						<cfset local.assignedFlag = listFind(attributeSetIDs,attributeSet.getAttributeSetID()) />
+						<cfif rc.edit>
+							<input type="checkbox" name="attributeSetIDs" value="#attributeSet.getAttributeSetID()#" <cfif assignedFlag>checked </cfif>>
+						<cfelse>
+							#yesNoFormat(assignedFlag)#
+						</cfif>
+					</cfif>
+				</td>
+			</tr>
+		</cfloop>
+	</table>
+</cfoutput>
