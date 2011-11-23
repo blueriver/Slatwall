@@ -57,6 +57,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return false;
 	}
 	
+	public boolean function canBeDeleted() {
+		
+	}
+	
 	// @hint public method that returns the value from the primary ID of this entity
 	public string function getPrimaryIDValue() {
 		return this.invokeMethod("get#getPrimaryIDPropertyName()#");

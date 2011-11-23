@@ -127,7 +127,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
 							
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName]});
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
 							
 							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
 							if(structCount(oneToManyArrayData[a]) gt 1) {
