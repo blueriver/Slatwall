@@ -84,17 +84,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-	   rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-	   rc.promotion = getPromotionService().save(rc.promotion,rc);
-	   if(!getRequestCacheService().getValue("ormHasErrors")) {
-	   		getFW().redirect(action="admin:promotion.list",querystring="message=admin.promotion.save_success");
+		
+		// Get the promotion from the DB, and return a new promotion if necessary
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
+		
+		// Call the promotion service save method (this is standard)
+		rc.promotion = getPromotionService().savePromotion(rc.promotion,rc);
+		
+		// If no errors, then redirect to the list page, otherwise go back to edit
+		if(!rc.promotion.hasErrors()) {
+			getFW().redirect(action="admin:promotion.list",querystring="message=admin.promotion.save_success");
 		} else {
-			rc.edit = true;
-			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.create") : rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
-			rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
-			rc.productTypeTree = getService("ProductService").getProductTypeTree();
-			rc.shippingMethods = getSettingService().listShippingMethod();
-	   		getFW().setView(action="admin:promotion.detail");
+			edit( rc );
 		}
 	}
 	
