@@ -47,8 +47,16 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint pubic method to validate this object
-	public any function validate() {
-		return getValidateThis().validate( this );
+	public any function validate( string context) {
+		
+		// Set up the validation arguments as a mirror of the arguments struct
+		var valdationArguments = arguments;
+		
+		// Add this as "theObject" to the validation arguments
+		validationArguments.theObject = this;
+		
+		// Call the fecade object and pass the results back
+		return getValidateThis().validate( argumentCollection=validationArguments );
 	}
 	
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format
