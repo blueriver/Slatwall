@@ -68,7 +68,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	*/
 	
-	public Brand function init(){
+	public PriceGroupRate function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.priceGroupRates)) {
 	   	   variables.priceGroupRates = [];

@@ -24,6 +24,7 @@
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
 	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
+	<bean id="priceGroupDAO" class="Slatwall.com.dao.PriceGroupDAO" />
 	<bean id="promotionDAO" class="Slatwall.com.dao.PromotionDAO" />
 	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
 		
@@ -106,6 +107,9 @@
 		<property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="FeedManager" /></property>
     </bean>
+	<bean id="priceGroupService" parent="parentService" class="Slatwall.com.service.priceGroupService">
+        <property name="DAO"><ref bean="PriceGroupDAO" /></property>
+	</bean>
 	<bean id="promotionService" parent="parentService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>
 	</bean>

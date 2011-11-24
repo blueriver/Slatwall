@@ -48,7 +48,7 @@ Notes:
 	<table id="PriceGroups" class="mura-table-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.code")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupCode")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.activeFlag")#</th>
 			<th>&nbsp;</th>
 		</tr>

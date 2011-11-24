@@ -47,6 +47,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect("admin:pricegroup.list");
 	}
 
+	// Common functionalty of Add/Edit/View
 	public void function detail(required struct rc) {
 		param name="rc.priceGroupID" default="";
 		param name="rc.edit" default="false";
@@ -61,9 +62,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
     public void function create(required struct rc) {
 		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		rc.brands = getService("BrandService").listBrandorderByBrandName();
-		rc.optionGroups = getService("optionService").listOptionGroup();
-		rc.shippingMethods = getSettingService().listShippingMethod();
 		detail(arguments.rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
@@ -71,16 +69,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function edit(required struct rc) {
 		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		rc.brands = getService("BrandService").listBrandorderByBrandName();
-		rc.optionGroups = getService("optionService").listOptionGroup();
-		rc.shippingMethods = getSettingService().listShippingMethod();
 		detail(arguments.rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
 	}
 	 
-    public void function list(required struct rc) {
-		rc.priceGroups = getPriceGroupService().listPriceGroup();
+    public void function list(required struct rc) {	
+		rc.priceGroups = getService("PriceGroupService").listPriceGroup();
     }
 
 	public void function save(required struct rc) {

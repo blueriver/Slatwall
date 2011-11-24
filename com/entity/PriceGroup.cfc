@@ -56,13 +56,17 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	// Related Object Properties
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" inverse="true" cascade="all";    
 	
-	public Brand function init(){
+	public PriceGroup function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.pricingGroupRates)) {
 	   	   variables.priceGroupRates = [];
 	   }
 	   
-	   return super.init();
+		if(isNull(variables.activeFlag)) {
+			variables.activeFlag = true;
+		}
+
+		return super.init();
 	}
  
 	/******* Association management methods for bidirectional relationships **************/

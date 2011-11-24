@@ -36,56 +36,37 @@
 Notes:
 
 --->
-<cfparam name="rc.promotion" type="any">
+<cfparam name="rc.priceGroup" type="any">
 <cfparam name="rc.edit" type="boolean">
 <cfif rc.edit>
-	<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />
+	<!---<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />--->
 </cfif>
 
 <ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
+	<cf_SlatwallActionCaller action="admin:priceGroup.list" type="list">
 	<cfif !rc.edit>
-	<cf_SlatwallActionCaller action="admin:promotion.edit" queryString="promotionID=#rc.promotion.getPromotionID()#" type="list">
+	<cf_SlatwallActionCaller action="admin:priceGroup.edit" queryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" type="list">
 	</cfif>
 </ul>
 
 <cfoutput>
-	<div class="svoadminpromotiondetail">
+	<div class="svoadminpriceGroupdetail">
 		<cfif rc.edit>
-		<form name="PromotionEdit" action="#buildURL('admin:promotion.save')#" method="post">
-			<input type="hidden" name="PromotionID" value="#rc.Promotion.getPromotionID()#" />
+		<form name="PriceGroupEdit" action="#buildURL('admin:priceGroup.save')#" method="post">
+			<input type="hidden" name="PriceGroupID" value="#rc.PriceGroup.getPriceGroupID()#" />
 		</cfif>
 			<dl class="oneColumn">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" value="#dateFormat(rc.promotion.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
-				
-				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-					<ul>
-						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
-						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>	
-						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
-					</ul>
-					<div id="tabDescription">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-					</div>
-					<div id="tabPromotionCodes">
-						#view("promotion/promotiontabs/promotioncodes")#
-					</div>
-					<div id="tabPromotionRewards">
-						#view("promotion/promotiontabs/promotionrewards")#
-					</div>
-				</div>
+				<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="activeFlag" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupName" edit="#rc.edit#" first="true">
+				<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
 			</dl>
 			<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:promotion.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.promotion.isNew() and !rc.promotion.isAssigned()>
-				<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" confirmrequired="true">
+				<cf_SlatwallActionCaller action="admin:priceGroup.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cfif !rc.priceGroup.isNew()>
+				<cf_SlatwallActionCaller action="admin:priceGroup.delete" querystring="priceGroupid=#rc.priceGroup.getPriceGroupID()#" class="button" type="link" confirmrequired="true">
 				</cfif>
-				<cf_SlatwallActionCaller action="admin:promotion.save" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:priceGroup.save" type="submit" class="button">
 			</div>
 			</cfif>
 		</form>
