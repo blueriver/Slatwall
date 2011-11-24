@@ -63,18 +63,33 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	public any function delete(required any entity){
+		
+		// Create A Response Bean for this delete
 		var response = new Slatwall.com.utility.ResponseBean();
-		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+		
+		// Get the short Entity name (basically the name without "slatwall")
+		var shortEntityName = replaceNoCase(arguments.entity.getEntityName(),"Slatwall","","one");
+		
+		// Validate that this entity can be deleted
+		arguments.entity.validate(context="delete");
+		
+		// If the entity Passes validation
 		if(!arguments.entity.hasErrors()) {
+			
+			// Call delete in the DAO
 			getDAO().delete(target=arguments.entity);
+			
+			// Add the proper response message
 			response.addMessage(messageCode="01", message=rbKey("entity.#entityName#.delete_success"));
 		} else {
+			
 			// set entity into the response
 			response.setData(arguments.entity);
-			// set errors in the response error bean (from the entity error bean)
-			response.getErrorBean().setErrors(arguments.entity.getErrorBean().getErrors());
+			
+			// Setup ormHasErrors because it didn't pass validation
 			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
+		
 		return response;
 	}
 	

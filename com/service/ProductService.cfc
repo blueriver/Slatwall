@@ -369,7 +369,7 @@ component extends="BaseService" accessors="true" {
 		return arguments.product;
 	}
 	
-	public any function delete( required any product ) {
+	public any function deleteProduct( required any product ) {
 		// make sure this product isn't in the order history
 		if( arguments.product.getOrderedFlag() ) {
 			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
@@ -451,6 +451,7 @@ component extends="BaseService" accessors="true" {
 		return arguments.productType;
 	}
 	
+	/*
 	public any function deleteProductType(required any productType) {
 		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
 			getValidationService().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
@@ -462,6 +463,7 @@ component extends="BaseService" accessors="true" {
 		var deleted = Super.delete(arguments.productType);
 		return deleted;
 	}
+	*/
 	
 	/**
 	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set
