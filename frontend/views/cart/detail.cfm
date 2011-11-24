@@ -44,14 +44,20 @@ Notes:
 			<p class="noitems">#$.slatwall.rbKey('frontend.cart.detail.noitems')#</p>
 		<cfelse>
 			<div class="orderItems">
+				<cfset formIndex = 0 />
 				<cfloop array="#$.slatwall.cart().getOrderItems()#" index="local.orderItem">
+					<cfset formIndex ++ />
 					<dl class="orderItem">
 						<dt class="image">#local.orderItem.getSku().getImage(size="small")#</dt>
 						<dt class="title"><a href="#local.orderItem.getSku().getProduct().getProductURL()#" title="#local.orderItem.getSku().getProduct().getTitle()#">#local.orderItem.getSku().getProduct().getTitle()#</a></dt>
 						<dd class="options">#local.orderItem.getSku().displayOptions()#</dd>
 						<dd class="customizations">#local.orderItem.displayCustomizations()#</dd>
 						<dd class="price">#DollarFormat(local.orderItem.getPrice())#</dd>
-						<dd class="quantity"><input name="orderItem.#local.orderItem.getOrderItemID()#.quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" /><a href="?slatAction=frontend:cart.removeItem&orderItemID=#local.orderItem.getOrderItemID()#">Remove</a></dd>
+						<dd class="quantity">
+							<input type="hidden" name="orderItems[#formIndex#].orderItemID" value="#local.orderItem.getOrderItemID()#" />
+							<input name="orderItems[#formIndex#].quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" />
+							<a href="?slatAction=frontend:cart.removeItem&orderItemID=#local.orderItem.getOrderItemID()#">Remove</a>
+						</dd>
 						<cfif local.orderItem.getDiscountAmount()>
 							<dd class="extended">#DollarFormat(local.orderItem.getExtendedPrice())#</dd>
 							<dd class="discount">- #DollarFormat(local.orderItem.getDiscountAmount())#</dd>

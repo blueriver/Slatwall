@@ -38,44 +38,6 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	/*
-	public any function savePromotion(required any Promotion,required struct data) {
-		
-		// populate bean from values in the data Struct
-		arguments.Promotion.populate(arguments.data);
-		
-		if(structKeyExists(arguments.data.structuredData,"promotionCodes")){
-			savePromotionCodes(arguments.promotion,arguments.data.structuredData.promotionCodes);
-		}
-		if(structKeyExists(arguments.data.structuredData,"promotionRewards")){
-			savePromotionRewards(arguments.promotion,arguments.data.structuredData.promotionRewards);
-			//writeDump(var=arguments.data.structuredData.promotionRewards,abort=true);
-		}
-		
-		arguments.Promotion = super.save(arguments.Promotion);
-		
-		return arguments.Promotion;
-	}
-	*/
-	
-	public any function delete(required any Promotion){
-		if( arguments.Promotion.isAssigned() ) {
-			getValidationService().setError(entity=arguments.Promotion,errorName="delete",rule="isAssigned");
-		}
-		return super.delete(arguments.Promotion);
-	}
-	
-	public any function getPromotionCodeSmartList(string promotionID, struct data={}){
-		arguments.entityName = "SlatwallPromotionCode";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		if( structKeyExists(arguments,"promotionID") ) {
-			smartList.addFilter(propertyIdentifier="promotion_promotionID", value=arguments.promotionID);
-		}
-		
-		return smartList;
-	}
-	
 	public any function deletePromotionCode(required any promotionCode) {
 		if(arguments.promotionCode.isAssigned() == true) {
 			getValidationService().setError(entity=arguments.promotionCode,errorname="delete",rule="isAssigned");	
