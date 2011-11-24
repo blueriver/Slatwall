@@ -80,11 +80,14 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			getDAO().delete(target=arguments.entity);
 			
 			// Add the proper response message
-			response.addMessage(messageCode="01", message=rbKey("entity.#entityName#.delete_success"));
+			response.addMessage(messageCode="01", message=rbKey("entity.#shortEntityName#.delete_success"));
 		} else {
 			
 			// set entity into the response
 			response.setData(arguments.entity);
+			
+			// Add the proper response message
+			response.addMessage(messageCode="00", message=rbKey("entity.#shortEntityName#.delete_failure"));
 			
 			// Setup ormHasErrors because it didn't pass validation
 			getService("requestCacheService").setValue("ormHasErrors", true);
