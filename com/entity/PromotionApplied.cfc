@@ -64,5 +64,29 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	orderPromotionCode 	| OrderAppliedPromotionCode.cfc
 	
 	*/
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+		
+	// promotion (many-to-one)
+	public void function setPromotion(required any promotion) {
+	   variables.promotion = arguments.promotion;
+	   if(isNew() or !arguments.promotion.hasAppliedPromotion(this)) {
+	       arrayAppend(arguments.promotion.getAppliedPromotions(),this);
+	   }
+	}
+	
+	public void function removePromotion(any promotion) {
+		if(!structKeyExists(arguments, "promotion")) {
+			arguments.promotion = variables.promotion;
+		}
+		var index = arrayFind(arguments.promotion.getProducts(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.promotion.getProducts(),index);
+		}
+		structDelete(variables,"promotion");
+    }
+	
+    /************   END Association Management Methods   *******************/
 
 }

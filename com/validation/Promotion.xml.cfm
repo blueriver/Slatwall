@@ -12,5 +12,10 @@
 			<rule type="required" contexts="*" />
 			<rule type="date" contexts="*" />
 		</property>
+		<property name="products">
+			<rule type="collectionSize" context="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
