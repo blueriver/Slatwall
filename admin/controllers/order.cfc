@@ -189,9 +189,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function processOrderFulfillment(required struct rc) {
+		
 		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
+		
 		if(rc.orderFulfillment.isProcessable()) {
-			var orderDeliveryItemsStruct = rc.structuredData['orderItems'];
+			var orderDeliveryItemsStruct = rc.orderItems;
 			// call service to process fulfillment. Returns an orderDelivery
 			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
 			if(!orderDelivery.hasErrors()) {

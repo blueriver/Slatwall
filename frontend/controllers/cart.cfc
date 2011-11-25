@@ -56,8 +56,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function update(required struct rc) {
-		getOrderService().updateOrderItems(order=rc.$.slatwall.cart(), data=rc);
 		
+		// Conditional logic to see if we should use the deprecated method
+		if(isArray(rc.orderItems)) {
+			getOrderService().saveOrder(order=rc.$.slatwall.cart(), data=rc);
+		} else if (isStruct(rc.orderItems)) {
+			// This is the deprecated method
+			getOrderService().updateOrderItems(order=rc.$.slatwall.cart(), data=rc);	
+		}
+				
 		getFW().setView("frontend:cart.detail");
 	}
 	
