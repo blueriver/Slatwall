@@ -44,8 +44,6 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="priceGroupName" ormtype="string";
 	property name="priceGroupCode" ormtype="string";
 	
-	// Remote properties
-	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

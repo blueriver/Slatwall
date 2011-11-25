@@ -105,9 +105,6 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	   arguments.promotionApplied.setPromotion(this);
 	}
 	
-	public void function removePromotionReward(required any promotionApplied) {
-		arguments.promotionApplied.removePromotion(this);
-	}
 	
     /************   END Association Management Methods   *******************/
 
