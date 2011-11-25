@@ -51,25 +51,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return smartList;
 	}
 	
-	public any function delete(required any sku) {
-		if(arrayLen(arguments.sku.getProduct().getSkus()) == 1) {
-			getValidationService().setError(entity=arguments.sku,errorname="delete",rule="oneSku");
-		}
-		
-		if(arguments.sku.getSkuID() == arguments.sku.getProduct().getDefaultSku().getSkuID()) {
-			getValidationService().setError(entity=arguments.sku,errorname="delete",rule="isDefault");	
-		}
-		
-		if(arguments.sku.getOrderedFlag() == true) {
-			getValidationService().setError(entity=arguments.sku,errorname="delete",rule="Ordered");	
-		}
-		if(!arguments.sku.hasErrors()) {
-			arguments.sku.removeProduct();
-		}
-		var deleted = Super.delete(arguments.sku);
-		return deleted;
-	}
-
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
@@ -165,41 +146,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	         skuCodeList = listAppend(skuCodeList, local.thisSku.getSkuCode());
 		}
 		return true;
-	}
-	
-	
-	public any function validateDuplicate( required any sku ) {
-		var isDuplicate = false;
-		var options = "";
-		for(var option in arguments.sku.getOptions()){
-			options = listAppend(options,option.getOptionID());
-		}
-		var skus = getDAO().getSkusBySelectedOptions(options,arguments.sku.getProduct().getProductID());
-		if(arrayLen(skus)){
-			isDuplicate = true;
-		}
-		var skuCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.options_validateUnique"));
-		if( !structIsEmpty(skuCodeError) ) {
-			arguments.sku.addError(argumentCollection=skuCodeError);
-			getRequestCacheService().setValue("ormHasErrors", true);
-		}
-	}
-	
-	public any function validateSkuCode( required any sku, string skuCodeList ) {
-		var isDuplicate = false;
-		// first check if there was a duplicate among the Skus that are being created with this one
-		if(structKeyExists(arguments,"skuCodeList")) {
-			isDuplicate = listFindNoCase( arguments.skuCodeList, arguments.sku.getSkuCode() );
-		}
-		// then check the database (only if a duplicate wasn't already found)
-		if( isDuplicate == false ) {
-			isDuplicate = getDAO().isDuplicateProperty("skuCode", arguments.sku);
-		}
-		var skuCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="skuCode",message=rbKey("entity.sku.skuCode_validateUnique"));
-		if( !structIsEmpty(skuCodeError) ) {
-			arguments.sku.addError(argumentCollection=skuCodeError);
-			getRequestCacheService().setValue("ormHasErrors", true);
-		}
 	}
 	
 	
