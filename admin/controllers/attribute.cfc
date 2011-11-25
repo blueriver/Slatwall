@@ -84,7 +84,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
 		
-		rc.optionsArray = rc.structuredData.options;			
+		rc.optionsArray = rc.options;			
 		rc.attribute = getAttributeService().saveAttribute(rc.attribute,rc);
 		
 		if(!rc.attribute.hasErrors()) {
