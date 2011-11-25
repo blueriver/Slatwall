@@ -200,11 +200,26 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 			
 			return variables[ cacheKey ];
+		
+		// getXXXStruct()		Where XXX is a one-to-many or many-to-many property where we want a key delimited struct
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 6) == "Struct") {
+			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
 			
+			if(!structKeyExists(variables, cacheKey)) {
+				variables[ cacheKey ] = {};
+				
+				var propertyName = left(cacheKey, len(cacheKey)-7);
+				var values = this.invokeMethod("get#propertyName#");
+				
+				for(var i=1; i<=arrayLen(values); i++) {
+					variables[cacheKey][ values[i].getPrimaryIDValue() ] = values[i];
+				}
+			}
+			
+			return variables[ cacheKey ];
 		}
 		
 		throw( 'No matching method for #missingMethodName#().' );
-	}
-	
+	}	
 	
 }

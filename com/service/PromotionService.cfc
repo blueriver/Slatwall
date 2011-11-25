@@ -38,17 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	public any function deletePromotionCode(required any promotionCode) {
-		if(arguments.promotionCode.isAssigned() == true) {
-			getValidationService().setError(entity=arguments.promotionCode,errorname="delete",rule="isAssigned");	
-		}
-		if(!arguments.promotionCode.hasErrors()) {
-			arguments.promotionCode.removePromotion(arguments.promotionCode.getPromotion());
-		}
-		var deleted = Super.delete(arguments.promotionCode);
-		return deleted;
-	}
-	
+
 	public void function savePromotionCodes(required any promotion, required array promotionCodes){
 		// keep track of promotion code list to validate that there are no duplicates
 		var promotionCodeList = "";
@@ -211,31 +201,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return arguments.promotionReward;
 	}
 	
-	public void function validatePromotionReward( required any promotionReward ) {
-		if(arguments.promotionReward.getRewardType() == "product") {
-			var reward = arguments.promotionReward.getItemPercentageOff() & arguments.promotionReward.getItemAmountOff() & arguments.promotionReward.getItemAmount() & arguments.promotionReward.getItemRewardQuantity();
-		} else if(arguments.promotionReward.getRewardType() == "shipping") {
-			var reward = arguments.promotionReward.getShippingPercentageOff() & arguments.promotionReward.getShippingAmountOff() & arguments.promotionReward.getShippingAmount();
-		} 
-	/*	else if(arguments.promotionReward.getRewardType() == "order") {
-			
-		}*/
-		if(trim(reward) EQ ""){
-			getValidationService().setError(entity=arguments.promotionReward,errorName="Reward",rule="required");
-		}
-	}
 
-	public any function deletePromotionReward(required any promotionReward) {
-		//TODO: are we assigning the reward anywhere or is it save to delete it anytime
-		/*if(arguments.promotionReward.isAssigned() == true) {
-			getValidationService().setError(entity=arguments.promotionReward,errorname="delete",rule="isAssigned");	
-		}*/
-		if(!arguments.promotionReward.hasErrors()) {
-			arguments.promotionReward.removePromotion(arguments.promotionReward.getPromotion());
-		}
-		var deleted = Super.delete(arguments.promotionReward);
-		return deleted;
-	}
 	
 	// ----------------- START: Apply Promotion Logic ------------------------- 
 	

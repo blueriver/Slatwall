@@ -155,7 +155,6 @@ Notes:
 	<cfset attributes.fieldClass = trim("field #lcase(attributes.property)#field #attributes.fieldClass#") />
 	
 	<cfset local = structNew() />
-	<cfset local.fw = caller.this />
 	
 	<cfswitch expression="#attributes.displaytype#">
 		<!--- DL Case --->

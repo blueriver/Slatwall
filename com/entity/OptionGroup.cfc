@@ -99,7 +99,6 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 		return arrayLen(this.getOptions());
 	}
 	
-	
 	// Image Management methods
 	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
 		if( this.hasImage() ) {
@@ -135,5 +134,5 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
     public string function getImagePath() {
         return getImageDirectory() & getOptionGroupImage();
-    }  
+    } 
 }

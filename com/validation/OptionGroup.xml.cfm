@@ -10,5 +10,10 @@
 				<param name="methodName" value="hasUniqueOptionGroupCode" />
 			</rule>
 		</property>
+		<property name="options">
+			<rule type="collectionSize" context="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
