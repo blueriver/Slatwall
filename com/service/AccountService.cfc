@@ -85,7 +85,7 @@ component extends="BaseService" accessors="true" output="false" {
 		arguments.account.populate(arguments.data);
 		
 		// Validate Account
-		getValidationService().validateObject(entity=arguments.account);
+		arguments.account.validate();
 		
 		// Check for password validation requirement
 		if ((!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) && structKeyExists(arguments.data, "password") && len(arguments.data.password) lt 3) {
@@ -107,7 +107,8 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Validate This Object
-			getValidationService().validateObject(entity=accountEmailAddress);
+			accountEmailAddress.validate();
+			
 			if(accountEmailAddress.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryEmailAddress", "The Account E-Mail Address Has Errors");
 			}
@@ -127,7 +128,8 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 			
 			// Validate This Object
-			getValidationService().validateObject(entity=accountPhoneNumber);
+			accountPhoneNumber.validate();
+			
 			if(accountPhoneNumber.hasErrors()) {
 				arguments.account.getErrorBean().addError("primaryPhoneNumber", "The Account Phone Number Has Errors");
 			}

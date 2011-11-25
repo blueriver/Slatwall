@@ -55,7 +55,7 @@ Notes:
 			<cfif attributes.edit>
 				<dl>
 					<cfif attributes.showCountry>
-						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#countryCode" property="countryCode" editType="select" edit="true" />
+						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#countryCode" property="countryCode" fieldType="select" edit="true" />
 					</cfif>
 					<cfif attributes.showName>
 						<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#name" property="name" edit="true" />

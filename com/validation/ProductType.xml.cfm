@@ -12,5 +12,10 @@
 				<param name="max" value="0" />
 			</rule>
 		</property>
+		<property name="subProductTypes">
+			<rule type="collectionSize" context="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
