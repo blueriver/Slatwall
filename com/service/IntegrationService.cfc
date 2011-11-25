@@ -201,13 +201,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public any function saveIntegration(required any integration, struct data) {
-		if(structKeyExists(arguments, "data") && structKeyExists(arguments.data, "structuredData")) {
+		if(structKeyExists(arguments, "data")) {
 			// Populate the Entity Itself
 			arguments.integration.populate(arguments.data);
 			
 			// Populate Data Integration
-			if(arguments.integration.getDataReadyFlag() && structKeyExists(arguments.data.structuredData, "dataIntegration")) {
-				var newData = arguments.data.structuredData.dataIntegration;
+			if(arguments.integration.getDataReadyFlag() && structKeyExists(arguments.data, "dataIntegration")) {
+				var newData = arguments.data.dataIntegration;
 				var settings = arguments.integration.getIntegrationCFCSettings('data');
 				for(var i=1; i<=arrayLen(settings); i++) {
 					if(structKeyExists(newData, settings[i].name)) {
@@ -219,8 +219,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 			// Populate Payment Integration
-			if(arguments.integration.getPaymentReadyFlag() && structKeyExists(arguments.data.structuredData, "paymentIntegration")) {
-				var newData = arguments.data.structuredData.paymentIntegration;
+			if(arguments.integration.getPaymentReadyFlag() && structKeyExists(arguments.data, "paymentIntegration")) {
+				var newData = arguments.data.paymentIntegration;
 				var settings = arguments.integration.getIntegrationCFCSettings('payment');
 				for(var i=1; i<=arrayLen(settings); i++) {
 					if(structKeyExists(newData, settings[i].name)) {
@@ -232,8 +232,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 			// Populate Shipping Integration
-			if(arguments.integration.getShippingReadyFlag() && structKeyExists(arguments.data.structuredData, "shippingIntegration")) {
-				var newData = arguments.data.structuredData.shippingIntegration;
+			if(arguments.integration.getShippingReadyFlag() && structKeyExists(arguments.data, "shippingIntegration")) {
+				var newData = arguments.data.shippingIntegration;
 				var settings = arguments.integration.getIntegrationCFCSettings('shipping');
 				for(var i=1; i<=arrayLen(settings); i++) {
 					if(structKeyExists(newData, settings[i].name)) {

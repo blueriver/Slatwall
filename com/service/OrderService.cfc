@@ -214,8 +214,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public boolean function updateAndVerifyOrderAccount(required any order, required struct data) {
 		var accountOK = true;
 		
-		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "account")) {
-			var accountData = data.structuredData.account;
+		if( structKeyExists(data, "account")) {
+			var accountData = data.account;
 			var account = getAccountService().getAccount(accountData.accountID, true);
 			account = getAccountService().saveAccount(account, accountData, data.siteID);
 			arguments.order.setAccount(account);
@@ -231,9 +231,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public boolean function updateAndVerifyOrderFulfillments(required any order, required struct data) {
 		var fulfillmentsOK = true;
 		
-		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderFulfillments")) {
+		if( structKeyExists(data, "orderFulfillments")) {
 			
-			var fulfillmentsDataArray = data.structuredData.orderFulfillments;
+			var fulfillmentsDataArray = data.orderFulfillments;
 			
 			for(var i=1; i<= arrayLen(fulfillmentsDataArray); i++) {
 				
@@ -261,8 +261,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public boolean function updateAndVerifyOrderPayments(required any order, required struct data) {
 		var paymentsOK = true;
 		
-		if( structKeyExists(data,"structuredData") && structKeyExists(data.structuredData, "orderPayments")) {
-			var paymentsDataArray = data.structuredData.orderPayments;
+		if( structKeyExists(data, "orderPayments")) {
+			var paymentsDataArray = data.orderPayments;
 			for(var i=1; i<= arrayLen(paymentsDataArray); i++) {
 				var payment = this.getOrderPaymentCreditCard(paymentsDataArray[i].orderPaymentID, true);
 				
@@ -731,27 +731,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	/********* END: Order Actions ***************/
 	
-	public void function updateOrderItems(required any order, required struct data) {
-		var dataCollections = arguments.data.structuredData;
-		var orderItems = arguments.order.getOrderItems();
-		for(var i=arrayLen(arguments.order.getOrderItems()); i>=1; i--) {
-			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID())) {
-				if(structKeyExists(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ], "quantity")) {
-					arguments.order.getOrderItems()[i].getOrderFulfillment().orderFulfillmentItemsChanged();
-					
-					if(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity <= 0) {
-						arguments.order.getOrderItems()[i].removeOrder(arguments.order);
-					} else {
-						arguments.order.getOrderItems()[i].setQuantity(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity);		
-					}
-					
-				}
-			}
-		}
-		
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
-	}
 	
 	public void function clearCart() {
 		var currentSession = getSessionService().getCurrent();
@@ -801,6 +780,36 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	public void function removePromotionCode(required any order, required any promotionCode) {
 		arguments.order.removePromotionCode(arguments.promotionCode);
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
+	}
+	
+	/**************** LEGACY DEPRECATED METHOD ****************************/
+	/*
+	 * This method is only called from the cart controller if the data passed in for 'orderItems'
+	 * was passed in as orderItems.{orderItemID}.property which is the old format that we no longer use.
+	 * Now to accomplish the same task we are calling saveOrder() from the controller and letting populate
+	 * and validation take care of it.
+	*/
+	public void function updateOrderItems(required any order, required struct data) {
+		
+		var dataCollections = arguments.data;
+		var orderItems = arguments.order.getOrderItems();
+		for(var i=arrayLen(arguments.order.getOrderItems()); i>=1; i--) {
+			if(structKeyExists(dataCollections.orderItem, arguments.order.getOrderItems()[i].getOrderItemID())) {
+				if(structKeyExists(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ], "quantity")) {
+					arguments.order.getOrderItems()[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+					
+					if(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity <= 0) {
+						arguments.order.getOrderItems()[i].removeOrder(arguments.order);
+					} else {
+						arguments.order.getOrderItems()[i].setQuantity(dataCollections.orderItem[ "#arguments.order.getOrderItems()[i].getOrderItemID()#" ].quantity);		
+					}
+					
+				}
+			}
+		}
+		
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
 	}
 	
 }
