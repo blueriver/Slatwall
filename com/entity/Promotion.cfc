@@ -105,7 +105,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	   arguments.promotionApplied.setPromotion(this);
 	}
 	
-	public void function removePromotionReward(required any promotionApplied) {
+	public void function removeAppliedPromotion(required any promotionApplied) {
 		arguments.promotionApplied.removePromotion(this);
 	}
 	
