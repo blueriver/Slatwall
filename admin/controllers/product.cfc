@@ -153,7 +153,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function delete(required struct rc) {
 		var product = getProductService().getProduct(rc.productID);
-		var deleteResponse = getProductService().delete(product);
+		var deleteResponse = getProductService().deleteProduct(product);
 		if(deleteResponse.hasErrors()) {
 			rc.message = rbKey("admin.product.delete_success");
 		} else {

@@ -51,8 +51,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionID" default="";
 		param name="rc.edit" default="false";
 		
+		// Get the promotion
 		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
+		
+		// Put the promotion ID in the data so that the SmartList works
+		rc["F:promotion.promotionID"] = rc.promotion.getPromotionID();
+		
+		// Get a smart list of Promotion Codes for the view
+		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
+		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
 		}
@@ -60,23 +67,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 
     public void function create(required struct rc) {
-		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		rc.brands = getService("BrandService").listBrandorderByBrandName();
-		rc.optionGroups = getService("optionService").listOptionGroup();
-		rc.shippingMethods = getSettingService().listShippingMethod();
-		detail(arguments.rc);
-		getFW().setView("admin:promotion.detail");
-		rc.edit = true;
+    	edit( rc );
     }
 
 	public void function edit(required struct rc) {
+		
+		detail(arguments.rc);
+		getFW().setView("admin:promotion.detail");
+		rc.edit = true;
+		
+		// Set up additional values that the view needs when in edit mode
 		rc.productTypeTree = getService("ProductService").getProductTypeTree();
 		rc.brands = getService("BrandService").listBrandorderByBrandName();
 		rc.optionGroups = getService("optionService").listOptionGroup();
 		rc.shippingMethods = getSettingService().listShippingMethod();
-		detail(arguments.rc);
-		getFW().setView("admin:promotion.detail");
-		rc.edit = true;
+		
 	}
 	 
     public void function list(required struct rc) {
@@ -100,14 +105,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
+		
 		var promotion = getPromotionService().getPromotion(rc.promotionID);
-		var deleteResponse = getPromotionService().delete(promotion);
+		
+		var deleteResponse = getPromotionService().deletePromotion(promotion);
+		
 		if(!deleteResponse.hasErrors()) {
 			rc.message = rbKey("admin.promotion.delete_success");
 		} else {
 			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
 			rc.messagetype="error";
-		}	   
+		}
+			   
 		getFW().redirect(action="admin:promotion.list",preserve="message,messagetype");
 	}
 

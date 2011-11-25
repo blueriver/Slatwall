@@ -49,8 +49,9 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
-	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" inverse="true" cascade="all";    
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -82,35 +83,32 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// promotionCodes (one-to-many)
-	
-	public void function addPromotionCode(required PromotionCode PromotionCode) {
-	   arguments.PromotionCode.setPromotion(this);
+	public void function addPromotionCode(required any promotionCode) {
+		arguments.promotionCode.setPromotion(this);
 	}
 	
-	public void function removePromotionCode(required PromotionCode PromotionCode) {
-	   arguments.PromotionCode.removePromotion(this);
+	public void function removePromotionCode(required any promotionCode) {
+	   arguments.promotionCode.removePromotion(this);
 	}
 
-	// PromotionRewards (one-to-many)
-	
-	public void function addPromotionReward(required PromotionReward promotionReward) {
+	// promotionRewards (one-to-many)
+	public void function addPromotionReward(required any promotionReward) {
 	   arguments.promotionReward.setPromotion(this);
 	}
 	
-	public void function removePromotionReward(required PromotionReward promotionReward) {
-	   arguments.promotionReward.removePromotion(this);
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removePromotion(this);
+	}
+	
+	// appliedPromotions (one-to-many)
+	public void function addAppliedPromotion(required any promotionApplied) {
+	   arguments.promotionApplied.setPromotion(this);
+	}
+	
+	public void function removePromotionReward(required any promotionApplied) {
+		arguments.promotionApplied.removePromotion(this);
 	}
 	
     /************   END Association Management Methods   *******************/
 
-	public boolean function isAssigned() {
-		// check on PromotionApplied
-		var params = {promotionID = getPromotionID()};
-		var promotionApplied = ormExecuteQuery("From SlatwallPromotionApplied spa where promotion.promotionID =:promotionID",params);
-		if(arrayLen(promotionApplied)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 }
