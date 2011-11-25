@@ -220,7 +220,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 		
 		throw( 'No matching method for #missingMethodName#().' );
-		
+	}	
 	
 	
 	
