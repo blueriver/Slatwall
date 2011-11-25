@@ -153,28 +153,35 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function delete(required struct rc) {
 		var product = getProductService().getProduct(rc.productID);
-		var deleteResponse = getProductService().deleteProduct(product);
-		if(deleteResponse.hasErrors()) {
+		
+		var deleteOK = getProductService().deleteProduct(product);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.product.delete_success");
 		} else {
-			rc.message=deleteResponse.getErrorBean().getError("delete");
+			rc.message = rbKey("admin.product.delete_error");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:product.list",preserve="message");
+		
+		getFW().redirect(action="admin:product.list",preserve="message,messageType");
 	}
 	
 	// SKU actions
 	
 	public void function deleteSku(required struct rc) {
+		
 		var sku = getSkuService().getSku(rc.skuID);
 		var productID = sku.getProduct().getProductID();
+		
 		var deleteOK = getSkuService().deleteSku( sku );
+		
 		if( deleteOK ) {
 			rc.message = rbKey("admin.product.deleteSku_success");
 		} else {
 			rc.message = rbKey("admin.product.deleteSku_error");
 			rc.messageType = "error";
 		}
+		
 		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messageType");
 	}
 	
