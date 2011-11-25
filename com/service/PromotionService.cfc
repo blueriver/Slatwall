@@ -68,23 +68,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return arguments.promotionCode;
 	}
 	
-	public void function validatePromotionCode( required any promotionCode, string promotionCodeList ) {
-		var isDuplicate = false;
-		// first check if there was a duplicate among the PromotionCodes that are being created with this one
-		if(structKeyExists(arguments,"promotionCodeList")) {
-			isDuplicate = listFindNoCase( arguments.promotionCodeList, arguments.promotionCode.getPromotionCode() );
-		}
-		// then check the database (only if a duplicate wasn't already found)
-		if( isDuplicate == false ) {
-			isDuplicate = getDAO().isDuplicateProperty("promotionCode", arguments.promotionCode);
-		}
-		var promotionCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=isDuplicate,objectName="promotionCode",message=rbKey("entity.promotionCode.promotionCode_validateUnique"));
-		if( !structIsEmpty(promotionCodeError) ) {
-			arguments.promotionCode.addError(argumentCollection=promotionCodeError);
-			getService("requestCacheService").setValue("ormHasErrors", true);
-		}
-	}
-	
 	public void function savePromotionRewards(required any promotion, required array promotionRewards){
 		for(var promotionRewardData in arguments.promotionRewards){
 			if(isNumeric(promotionRewardData.discountValue)) {
