@@ -43,8 +43,8 @@ component extends="BaseService" accessors="true" output="false" {
 			arguments.address.populate(arguments.data);
         }
         
-        this.validateAddress(arguments.address);
-        
+        arguments.address.validate();
+                
         if(!arguments.address.hasErrors()) {
             arguments.address = getDAO().save(target=arguments.address);
         } else {
@@ -52,54 +52,6 @@ component extends="BaseService" accessors="true" output="false" {
         }
         
         return arguments.address;
-	}
-	
-	public any function validateAddress(required any address) {
-		var country = arguments.address.getCountry();
-		
-		if(country.getStreetAddressRequiredFlag()) {
-			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getStreetAddress(),objectName="streetAddress",message=rbKey("entity.address.streetAddress_validateRequired"));
-			if( !structIsEmpty(error) ) {
-				arguments.address.addError(argumentCollection=error);
-			}
-		}
-		
-		if(country.getStreet2AddressRequiredFlag()) {
-			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getStreet2Address(),objectName="street2Address",message=rbKey("entity.address.street2Address_validateRequired"));
-			if( !structIsEmpty(error) ) {
-				arguments.address.addError(argumentCollection=error);
-			}
-		}
-		
-		if(country.getLocalityRequiredFlag()) {
-			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getLocality(),objectName="locality",message=rbKey("entity.address.locality_validateRequired"));
-			if( !structIsEmpty(error) ) {
-				arguments.address.addError(argumentCollection=error);
-			}
-		}
-		
-		if(country.getCityRequiredFlag()) {
-			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getCity(),objectName="city",message=rbKey("entity.address.city_validateRequired"));
-			if( !structIsEmpty(error) ) {
-				arguments.address.addError(argumentCollection=error);
-			}
-		}
-		
-		if(country.getStateCodeRequiredFlag()) {
-			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getStateCode(),objectName="stateCode",message=rbKey("entity.address.stateCode_validateRequired"));
-			if( !structIsEmpty(error) ) {
-				arguments.address.addError(argumentCollection=error);
-			}
-		}
-		
-		if(country.getPostalCodeRequiredFlag()) {
-			var error = getValidationService().validateValue(rule="required",objectValue=arguments.address.getPostalCode(),objectName="postalCode",message=rbKey("entity.address.postalCode_validateRequired"));
-			if( !structIsEmpty(error) ) {
-				arguments.address.addError(argumentCollection=error);
-			}
-		}
-		
-		return getValidationService().validateObject(entity=arguments.address);
 	}
 	
 	public boolean function isAddressInZone(required any address, required any addressZone) {

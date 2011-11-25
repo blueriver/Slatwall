@@ -68,6 +68,36 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		return super.init();
 	}
 	
+	// This overrides the base validation method to dynamically add rules based on country specific requirements
+	public any function validate() {
+		
+		// Get the country of this address
+		var country = getCountry();
+		
+		// Check each of the contries required fields
+		if ( country.getStreetAddressRequiredFlag() ) {
+			getValidateThis().addRule(theObject=this, propertyName="streetAddress", valType="required", contexts="full");
+		}
+		if ( country.getStreet2AddressRequiredFlag() ) {
+			getValidateThis().addRule(theObject=this, propertyName="street2Address", valType="required", contexts="full");
+		}
+		if ( country.getLocalityRequiredFlag() ) {
+			getValidateThis().addRule(theObject=this, propertyName="locality", valType="required", contexts="full");
+		}
+		if ( country.getCityRequiredFlag() ) {
+			getValidateThis().addRule(theObject=this, propertyName="city", valType="required", contexts="full");
+		}
+		if ( country.getStateCodeRequiredFlag() ) {
+			getValidateThis().addRule(theObject=this, propertyName="stateCode", valType="required", contexts="full");
+		}
+		if ( country.getPostalCodeRequiredFlag() ) {
+			getValidateThis().addRule(theObject=this, propertyName="postalCode", valType="required", contexts="full");
+		}
+		
+		// Call the base method validate with any additional arguments passed in
+		super.validate(argumentCollection=arguments);
+	}
+	
 	public string function getFullAddress(string delimiter = ", ") {
 		var address = "";
 		address = listAppend(address,getCompany());
