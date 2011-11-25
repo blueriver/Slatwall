@@ -369,20 +369,38 @@ component extends="BaseService" accessors="true" {
 		return arguments.product;
 	}
 	
-	public any function deleteProduct( required any product ) {
-		// make sure this product isn't in the order history
-		if( arguments.product.getOrderedFlag() ) {
-			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
-		}
-		// Removed default sku
+	public boolean function deleteProduct( required any product ) {
+		
+		// Set the default sku temporarily in this local so we can reset if delete fails
+		var defaultSku = arguments.product.getDefaultSku();
+		
+		// Remove the default sku so that we can delete this entity
 		arguments.product.setDefaultSku(javaCast("null",""));
 		
-		var deleteResponse = super.delete( arguments.product );
-		if( !deleteResponse.hasErrors() ) {
-			// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
+		// Use the base delete method to check validation
+		var deleteOK = super.delete( arguments.product );
+		
+		// If the delete failed, then we just reset the default sku into the product and return false
+		if( !deleteOK ) {
+			arguments.product.setDefaultSku(defaultSku);
+			
+			return false;
 		}
-		return deleteResponse;
+		
+		return true;
+	}
+	
+	public boolean function deleteProductType(required any productType) {
+		
+		// Use the base delete method to check validation
+		var deleteOK = super.delete(arguments.productType);
+		
+		if( deleteOK ) {
+	   		// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+	   	}
+		
+		return deleteOK;
 	}
 
 	//   Product Type Methods
@@ -451,19 +469,19 @@ component extends="BaseService" accessors="true" {
 		return arguments.productType;
 	}
 	
-	/*
+	
 	public any function deleteProductType(required any productType) {
-		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
-			getValidationService().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
-		}
+		
+		// Use the base delete method to check validation
+		var deleted = super.delete(arguments.productType);
+		
 		if( !arguments.productType.hasErrors() ) {
 	   		// clear cached product type tree so that it's refreshed on the next request
 	   		clearProductTypeTree();
-	   }
-		var deleted = Super.delete(arguments.productType);
+	   	}
+		
 		return deleted;
 	}
-	*/
 	
 	/**
 	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set

@@ -61,13 +61,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().getSmartList(argumentcollection=arguments);
 	}
 	
-	public any function delete(required any entity){
-		
-		// Create A Response Bean for this delete
-		var response = new Slatwall.com.utility.ResponseBean();
-		
-		// Get the short Entity name (basically the name without "slatwall")
-		var shortEntityName = replaceNoCase(arguments.entity.getEntityName(),"Slatwall","","one");
+	public boolean function delete(required any entity){
 		
 		// Validate that this entity can be deleted
 		arguments.entity.validate(context="delete");
@@ -78,21 +72,15 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			// Call delete in the DAO
 			getDAO().delete(target=arguments.entity);
 			
-			// Add the proper response message
-			response.addMessage(messageCode="01", message=rbKey("entity.#shortEntityName#.delete_success"));
-		} else {
+			// Return that the delete was sucessful
+			return true;
 			
-			// set entity into the response
-			response.setData(arguments.entity);
-			
-			// Add the proper response message
-			response.addMessage(messageCode="00", message=rbKey("entity.#shortEntityName#.delete_failure"));
-			
-			// Setup ormHasErrors because it didn't pass validation
-			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
-		
-		return response;
+			
+		// Setup ormHasErrors because it didn't pass validation
+		getService("requestCacheService").setValue("ormHasErrors", true);
+
+		return false;
 	}
 	
 	// @hint this default populate method just delegates to the entity

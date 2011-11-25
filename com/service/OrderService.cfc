@@ -558,10 +558,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		orderDelivery.setOrder(order);
 		
 		orderDelivery.setDeliveryOpenDateTime(now());
+		
 		// TODO: change close date to indicate when item was received, downloaded, picked up, etc.
 		orderDelivery.setDeliveryCloseDateTime(now());
-		
-		
+				
 		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
 			case("shipping"): {
@@ -571,12 +571,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			default:{}
 		}
+		
 		// set the tracking number
 		if(structkeyExists(arguments.data,"trackingNumber") && len(arguments.data.trackingNumber) > 0) {
 			orderDelivery.setTrackingNumber(arguments.data.trackingNumber);			
 		}
 		
 		var totalQuantity = 0;
+		
 		// Loop over the items in the fulfillment
 		for( var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
 			
@@ -604,23 +606,25 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 		
-		// If items have not been added to the delivery, set an error so that it doesn't get persisted
-		if(arrayLen(orderDelivery.getOrderDeliveryItems()) == 0) {
-			getValidationService().setError(entity=orderDelivery, entityName="OrderDelivery", errorName="orderDeliveryItems",rule="hasOrderDeliveryItems");
-		}
+		orderDelivery.validate();
 		
-		// update the status of the order
-		if(totalQuantity < order.getQuantityUndelivered()) {
-			order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
-		} else {
-			if(order.isPaid()) {
-				order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
-			} else {
+		if(!orderDelivery.hasErrors()) {
+			// update the status of the order
+			if(totalQuantity < order.getQuantityUndelivered()) {
 				order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+			} else {
+				if(order.isPaid()) {
+					order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+				} else {
+					order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+				}
 			}
+			arguments.entity = getDAO().save(target=orderDelivery);
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
 		}
-		
-		return this.save(orderDelivery);
+				
+		return orderDelivery;
 	}
 	
 	private any function createOrderDeliveryItem(required any orderItem, required numeric quantity, required any orderDelivery) {

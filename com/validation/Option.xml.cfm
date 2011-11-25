@@ -10,5 +10,10 @@
 		<property name="optionName">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="skus">
+			<rule type="collectionSize" context="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>

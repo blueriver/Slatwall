@@ -77,14 +77,6 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
     
-    public boolean function hasSkus() {
-    	if(arrayLen(getSkus()) gt 0) {
-    		return true;
-    	} else {
-    		return false;
-    	}
-    }
-
     /******* Association management methods for bidirectional relationships **************/
     
     // OptionGroup (many-to-one)
