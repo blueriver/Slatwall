@@ -252,17 +252,33 @@ component extends="org.fw1.framework" output="false" {
 		}
 	}
 	
+	public void function setupResponse() {
+		endSlatwallLifecycle();
+	}
+	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
-	// Helper Functions
+	// This handels all of the ORM persistece.
+	public void function endSlatwallLifecycle() {
+		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
+			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
+			ormClearSession();
+			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
+		} else {
+			ormFlush();
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
+		}
+		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
+	}
+
+	/********************** APPLICATION HELPER FUNCTIONS ***************************/
+	
+	// Checks if the request is an admin request or not
 	public boolean function isAdminRequest() {
 		return not structKeyExists(request,"servletEvent");
 	}
 	
-	public string function getExternalSiteLink(required String Address) {
-		return buildURL(action='external.site', queryString='es=#arguments.Address#');
-	}
-	
+	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action) {
 		var hasAccess = false;
 		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
@@ -292,8 +308,8 @@ component extends="org.fw1.framework" output="false" {
 		return hasAccess;
 	}
 	
+	// Sets default mura session variables when needed
 	private void function setupMuraSessionRequirements() {
-		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		param name="session.locale" default="en";
 		param name="session.dtLocale" default="en-US";
@@ -301,8 +317,7 @@ component extends="org.fw1.framework" output="false" {
 		param name="session.dashboardSpan" default="30";
 	}
 	
-	
-	// Override onRequest function to add some custom logic to the end of the request
+	// Allows for integration services to have a seperate directory structure
 	public any function getSubsystemDirPrefix( string subsystem ) {
 		if ( subsystem eq '' ) {
 			return '';
@@ -313,38 +328,13 @@ component extends="org.fw1.framework" output="false" {
 		return subsystem & '/';
 	}
 	
-	// Override onRequest function to add some custom logic to the end of the request
-	public any function onRequest() {
-		super.onRequest(argumentCollection=arguments);
-		endSlatwallLifecycle();
-	}
-	
-	// Override redirect function to flush the ORM when needed
-	public void function redirect() {
-		endSlatwallLifecycle();
-		super.redirect(argumentCollection=arguments);
-	}
-	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
 	public void function redirectExact(required string location, boolean addToken=false) {
 		endSlatwallLifecycle();
 		location(arguments.location, arguments.addToken);
 	}
 	
-	// This handels all of the ORM persistece.
-	public void function endSlatwallLifecycle() {
-		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
-			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
-			ormClearSession();
-			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
-		} else {
-			ormFlush();
-			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
-		}
-		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
-	}
-	
-	// This is used to setup the frontend path to pull from the siteid directory
+	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
 			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
