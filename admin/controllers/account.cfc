@@ -39,6 +39,7 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
 	property name="accountService";
+	property name="priceGroupService";
 	
 	public void function before(required struct rc) {
 	}
@@ -59,12 +60,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function create(required struct rc) {
-		detail(arguments.rc);
-		getFW().setView("admin:account.detail");
-		rc.edit = true;
+		edit(rc);
 	}
 	
 	public void function edit(required struct rc) {
+		rc.priceGroups = getPriceGroupService().listPriceGroup();
 		detail(arguments.rc);
 		getFW().setView("admin:account.detail");
 		rc.edit = true;

@@ -217,8 +217,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	/************   END Association Management Methods   *******************/
 	
-	public boolean function isPriceGroupAssigned(required string priceGroupID) {
-		return structKeyExists(getPriceGroupsStruct(), arguments.priceGroupID);	
+	public struct function isPriceGroupAssigned() {
+		var priceGroupStruct = getPriceGroupsStruct();
+		return structKeyExists(priceGroupStruct, arguments.priceGroupID);	
 	}
 	
 }
