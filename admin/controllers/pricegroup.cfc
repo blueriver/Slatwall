@@ -40,6 +40,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="priceGroupService" type="any";
+	property name="productService" type="any";
 	property name="requestCacheService" type="any";
 	property name="settingService" type="any";
 	
@@ -61,33 +62,30 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 
     public void function create(required struct rc) {
-		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		detail(arguments.rc);
-		getFW().setView("admin:priceGroup.detail");
-		rc.edit = true;
+		edit(rc);
     }
 
 	public void function edit(required struct rc) {
-		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		detail(arguments.rc);
+		rc.productTypeTree = getProductService().getProductTypeTree();
+		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
 	}
 	 
     public void function list(required struct rc) {	
-		rc.priceGroups = getService("PriceGroupService").listPriceGroup();
+		rc.priceGroups = getPriceGroupService().listPriceGroup();
     }
 
 	public void function save(required struct rc) {
 	   rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
 	   rc.priceGroup = getPriceGroupService().save(rc.priceGroup,rc);
-	   if(!getRequestCacheService().getValue("ormHasErrors")) {
+	   if(!rc.priceGroup.hasErrors()) {
 	   		getFW().redirect(action="admin:priceGroup.list",querystring="message=admin.priceGroup.save_success");
 		} else {
 			rc.edit = true;
 			rc.itemTitle = rc.priceGroup.isNew() ? rc.$.Slatwall.rbKey("admin.priceGroup.create") : rc.$.Slatwall.rbKey("admin.priceGroup.edit") & ": #rc.priceGroup.getPriceGroupName()#";
 			rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
-			rc.productTypeTree = getService("ProductService").getProductTypeTree();
+			rc.productTypeTree = getProductService().getProductTypeTree();
 			rc.shippingMethods = getSettingService().listShippingMethod();
 	   		getFW().setView(action="admin:priceGroup.detail");
 		}
