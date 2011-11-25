@@ -112,15 +112,19 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
+		
 		var attribute = getAttributeService().getAttribute(rc.attributeID);
 		var attributeSetID = attribute.getAttributeSet().getAttributeSetID();
-		var deleteResponse = getAttributeService().delete(attribute);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getAttributeService().deleteAttribute(attribute);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.attribute.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.attribute.delete_error");
 			rc.messagetype="error";
 		}
+		
 		getFW().redirect(action="admin:attribute.edit", querystring="attributeSetID=#attributeSetID#",preserve="message,messagetype");
 	}
 	
@@ -177,28 +181,33 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteAttributeSet(required struct rc) {
+		
 		var attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		var deleteResponse = getAttributeService().deleteAttributeSet(attributeSet);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getAttributeService().deleteAttributeSet(attributeSet);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.attribute.deleteAttributeSet_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
+			rc.message = rbKey("admin.attribute.deleteAttributeSet_failure");
+			rc.messageType = "error";
 		}
-		getFW().redirect(action="admin:attribute.list",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:attribute.list",preserve="message,messageType");
 	}
 	
 	public void function deleteAttributeOption(required struct rc) {
 		param name="rc.asynch" default="false";
+		
 		var attributeOption = getAttributeService().getAttributeOption(rc.attributeOptionID);
+		
 		if(!isNull(attributeOption)) {
-			var deleteResponse = getAttributeService().delete(attributeOption);
-			if( !deleteResponse.hasErrors() ) {
+			var deleteOK = getAttributeService().deleteAttributeOption(attributeOption);
+			if( deleteOK ) {
 				rc.success=1;
 				rc.message = rbKey("admin.attribute.deleteAttributeOption_success");
 			} else {
 				rc.success=0;
-				rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+				rc.message = rbKey("admin.attribute.deleteAttributeOption_failure");
 			}
 		}
 	}

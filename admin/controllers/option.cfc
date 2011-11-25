@@ -126,15 +126,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
+		
 		var option = getOptionService().getOption(rc.optionid);
 		var optiongroupID = option.getOptionGroup().getOptionGroupID();
-		var deleteResponse = getOptionService().delete(option);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getOptionService().delete(option);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.option.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.option.delete_failure");
 			rc.messagetype="error";
 		}
+		
 		getFW().redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
 	}
 	
@@ -194,15 +197,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteOptionGroup(required struct rc) {
+		
 		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
-		var deleteResponse = getOptionService().deleteOptionGroup(optionGroup);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getOptionService().deleteOptionGroup(optionGroup);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.option.deleteOptionGroup_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
+			rc.message = rbKey("admin.option.deleteOptionGroup_failure");
+			rc.messageType = "error";
 		}
-		getFW().redirect(action="admin:option.list",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:option.list",preserve="message,messageType");
 	}
 	
 }
