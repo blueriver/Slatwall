@@ -470,19 +470,6 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	
-	public any function deleteProductType(required any productType) {
-		
-		// Use the base delete method to check validation
-		var deleted = super.delete(arguments.productType);
-		
-		if( !arguments.productType.hasErrors() ) {
-	   		// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-	   	}
-		
-		return deleted;
-	}
-	
 	/**
 	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set
 	*/
