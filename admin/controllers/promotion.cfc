@@ -108,12 +108,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		var promotion = getPromotionService().getPromotion(rc.promotionID);
 		
-		var deleteResponse = getPromotionService().deletePromotion(promotion);
+		var deleteOK = getPromotionService().deletePromotion(promotion);
 		
-		if(!deleteResponse.hasErrors()) {
+		if( deleteOK ) {
 			rc.message = rbKey("admin.promotion.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.promotion.delete_error");
 			rc.messagetype="error";
 		}
 			   
@@ -121,35 +121,36 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function deletePromotionCode(required struct rc) {
+		
 		var promotionCode = getPromotionService().getPromotionCode(rc.promotionCodeID);
 		rc.promotionID = promotionCode.getPromotion().getPromotionID();
-		var deleteResponse = getPromotionService().deletePromotionCode(promotionCode);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getPromotionService().deletePromotionCode(promotionCode);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.promotion.deletePromotionCode_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.promotion.deletePromotionCode_error");
 			rc.messagetype = "error";
 		}
-		rc.edit = true;
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
-		rc.itemTitle = rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
+		
 		getFW().redirect(action="admin:promotion.detail",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionReward(required struct rc) {
+		
 		var promotionReward = getPromotionService().getPromotionReward(rc.promotionRewardID);
 		rc.promotionID = promotionReward.getPromotion().getPromotionID();
-		var deleteResponse = getPromotionService().deletePromotionReward(promotionReward);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getPromotionService().deletePromotionReward(promotionReward);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.promotion.deletePromotionReward_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.promotion.deletePromotionReward_error");
 			rc.messagetype = "error";
 		}
-		rc.edit = true;
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		rc.itemTitle = rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
+		
 		getFW().redirect(action="admin:promotion.detail",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	

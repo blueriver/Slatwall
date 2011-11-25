@@ -72,14 +72,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function delete(required struct rc) {
 		var account = getAccountService().getAccount(rc.accountID);
-		var deleteResponse = getAccountService().delete(account);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getAccountService().deleteAccount(account);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.account.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype="error";
+			rc.message = rbKey("admin.account.delete_error");
+			rc.messageType="error";
 		}
-		getFW().redirect(action="admin:account.list",preserve="message");
+		
+		getFW().redirect(action="admin:account.list",preserve="message,messageType");
 	}
 
 	public void function list(required struct rc) {

@@ -109,8 +109,4 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		return smartList.getRecords();
 	}
 	
-	public any function deleteAttributeSet( required any attributeSet ) {
-		//TODO: delete validation
-		return super.delete(attributeSet);
-	}
 }

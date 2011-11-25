@@ -168,14 +168,14 @@ component extends="BaseController" output=false accessors=true {
 	public void function deleteSku(required struct rc) {
 		var sku = getSkuService().getSku(rc.skuID);
 		var productID = sku.getProduct().getProductID();
-		var deleteResponse = getSkuService().delete(sku);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getSkuService().deleteSku( sku );
+		if( deleteOK ) {
 			rc.message = rbKey("admin.product.deleteSku_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
+			rc.message = rbKey("admin.product.deleteSku_error");
+			rc.messageType = "error";
 		}
-		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messageType");
 	}
 	
 	public void function uploadSkuImage(required struct rc) {
@@ -254,15 +254,18 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function deleteProductType(required struct rc) {
+		
 		var productType = getProductService().getProductType(rc.productTypeID);
-		var deleteResponse = getProductService().deleteProductType(productType);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getProductService().deleteProductType(productType);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.product.deleteProductType_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype="error";
+			rc.message = rbKey("admin.product.deleteProductType_error");
+			rc.messageType="error";
 		}
-		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messageType");
 	}
 
 	public void function searchProductsByType(required struct rc) {
