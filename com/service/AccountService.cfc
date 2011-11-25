@@ -39,6 +39,7 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 	
 	property name="sessionService" type="any";
+	property name="validationService" type="any";
 	
 	// Mura Injection
 	property name="userManager" type="any";
@@ -83,6 +84,8 @@ component extends="BaseService" accessors="true" output="false" {
 	public any function saveAccount(required any account, required struct data, required string siteID) {
 		// Populate the account from the data
 		arguments.account.populate(arguments.data);
+		
+		writeDump(var=getValidationService(), abort=true);
 		
 		// Validate Account
 		getValidationService().validateObject(entity=arguments.account);
