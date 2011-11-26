@@ -90,6 +90,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function save(required struct rc) {
 		param name="rc.accountID" default="";
+		param name="rc.priceGroupIdsAssigned" default="";
+		
+		// Assign price groups selcted to Account
+		/*var priceGroupIdsArr = listToArray(rc.priceGroupIdsAssigned);
+		for( priceGroupId in rc.priceGroupIdsAssigned ){
+		    form[fieldName]  = qry[fieldName][1];
+		}*/
 		
 		detail(rc);
 		

@@ -39,6 +39,7 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 	
 	property name="sessionService" type="any";
+	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
 	
 	// Mura Injection
@@ -85,7 +86,23 @@ component extends="BaseService" accessors="true" output="false" {
 		// Populate the account from the data
 		arguments.account.populate(arguments.data);
 		
-		writeDump(var=getValidationService(), abort=true);
+		// Set up associations between Account PriceGroup
+		if(structKeyExists(arguments.data, "priceGroupIdsAssigned")) {
+			
+			// Remove Existing PriceGroup associations
+			/*for(var i=arrayLen(arguments.account.getPriceGroups()); i >= 1; i--) {
+				arguments.account.getPriceGroup()[i].removePriceGroup();
+			}*/
+			
+			// Assign all new PriceGroup associations
+			var newPriceGroupArr = [];
+			for(var i=1; i<=listLen(arguments.data.priceGroupIdsAssigned); i++) {
+				var thisPriceGroupId= listGetAt(arguments.data.priceGroupIdsAssigned, i);
+				arrayAppend(newPriceGroupArr, getPriceGroupService().getPriceGroup(thisPriceGroupId));
+			}
+			
+			arguments.account.setPriceGroups(newPriceGroupArr);
+		}
 		
 		// Validate Account
 		arguments.account.validate();

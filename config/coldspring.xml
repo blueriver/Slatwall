@@ -45,6 +45,7 @@
 	<bean id="accountService" parent="parentService" class="Slatwall.com.service.AccountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
 		<!-- Injected From Mua -->
 		<property name="userManager"><ref bean="userManager" /></property>
 		<property name="userUtility"><ref bean="userUtility" /></property>
