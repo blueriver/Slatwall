@@ -53,7 +53,9 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-
+	// Related Object Properties (Many-To-Many)
+	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" cascade="save-update";
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
     // Promotion (many-to-one)
@@ -78,13 +80,5 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
     }
 	
     /************   END Association Management Methods   *******************/
-	public boolean function isAssigned() {
-		var params = {promotionCodeID = getPromotionCodeID()};
-		var promotionCodeApplied = ormExecuteQuery("select distinct so from SlatwallOrder so join so.promotionCodes pc where pc.promotionCodeID =:promotionCodeID",params);
-		if(arrayLen(promotionCodeApplied)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+
 }

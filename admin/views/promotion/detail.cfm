@@ -82,7 +82,7 @@ Notes:
 			<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:promotion.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.promotion.isNew() and !rc.promotion.isAssigned()>
+				<cfif !rc.promotion.isNew() and !arrayLen(rc.promotion.getAppliedPromotions())>
 				<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" confirmrequired="true">
 				</cfif>
 				<cf_SlatwallActionCaller action="admin:promotion.save" type="submit" class="button">
