@@ -140,14 +140,16 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function deleteShippingMethod(required struct rc) {
 		detailShippingMethod(rc);
-		var deleteResponse = getSettingService().delete(rc.shippingMethod);
 		
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getSettingService().deleteShippingMethod(rc.shippingMethod);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.setting.deleteShippingMethod_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.setting.deleteShippingMethod_error");
 			rc.messagetype="error";
 		}
+		
 		getFW().redirect(action="admin:setting.detailfulfillmentmethod", queryString="fulfillmentmethodid=shipping&edit=true", preserve="message,messagetype");
 	}
 	
@@ -207,14 +209,15 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.shippingRateID" default="";
 		
 		var rate = getSettingService().getShippingRate(rc.shippingRateID);
+		
 		var shippingMethodID = rate.getShippingMethod().getShippingMethodID();
 		
-		var deleteResponse = getSettingService().delete(rate);
+		var deleteOK = getSettingService().delete(rate);
 		
-		if(!deleteResponse.hasErrors()) {
+		if( deleteOK ) {
 			rc.message = rbKey("admin.setting.deleteShippingRate_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.setting.deleteShippingRate_error");
 			rc.messagetype="error";
 		}
 		
@@ -370,13 +373,15 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function deleteAddressZone(required struct rc) {
-		detailAddressZone(rc);
-		var deleteResponse = getSettingService().delete(rc.addressZone);
 		
-		if(!deleteResponse.hasErrors()) {
+		detailAddressZone(rc);
+		
+		var deleteOK = getSettingService().deleteAddressZone(rc.addressZone);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.setting.deleteAddressZone_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.setting.deleteAddressZone_error");
 			rc.messagetype="error";
 		}
 		
@@ -456,12 +461,12 @@ component extends="BaseController" output="false" accessors="true" {
 		var rate = getSettingService().getTaxCategoryRate(rc.taxCategoryRateID);
 		var taxCategoryID = rate.getTaxCategory().getTaxCategoryID();
 		
-		var deleteResponse = getSettingService().delete(rate);
+		var deleteOK = getSettingService().deleteTaxCategoryRate(rate);
 		
-		if(!deleteResponse.hasErrors()) {
+		if( deleteOK ) {
 			rc.message = rbKey("admin.setting.deleteTaxCategoryRate_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.setting.deleteTaxCategoryRate_error");
 			rc.messagetype="error";
 		}
 		

@@ -86,14 +86,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function delete(required struct rc) {
+		
 		var brand = getBrandService().getBrand(rc.brandID);
-		var deleteResponse = getBrandService().delete(brand);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getBrandService().deleteBrand(brand);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.brand.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.brand.delete_failure");
 			rc.messagetype="error";
-		}	   
+		}
+		
 		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
 	}
 }
