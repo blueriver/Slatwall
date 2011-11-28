@@ -71,6 +71,7 @@ Notes:
 	date				|	This is still just a textbox, but it adds the jQuery date picker
 	dateTime			|	This is still just a textbox, but it adds the jQuery date & time picker
 	file				|	No value can be passed in
+	multiselect			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
 	password			|	No Value can be passed in
 	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
 	select      		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
