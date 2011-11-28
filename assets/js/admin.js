@@ -37,10 +37,16 @@ Notes:
 
 */
 jQuery(document).ready(function(){
+	
 	setDatePickers(".datepicker",dtLocale);
+	
 	setTabs(".tabs",activeTab);
+	
 	setAccordions(".accordion",activePanel);
+	
 	loadWysiwygs();
+	
+	jQuery('.multiselect').multiselect();
 
 });
 

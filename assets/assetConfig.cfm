@@ -8,6 +8,7 @@ variables.assetDependencies["js/admin.js"] = [
 	"#application.configBean.getContext()#/admin/js/jquery/jquery.js",
 	"#application.configBean.getContext()#/admin/js/jquery/jquery-ui.js",
 	"js/tools/datepicker/datepicker_localization.js",
+	"js/tools/multiselect/js/ui.multiselect.js",
 	"#application.configBean.getContext()#/admin/js/admin.js",
 	"#application.configBean.getContext()#/tasks/widgets/ckeditor/ckeditor.js",
 	"#application.configBean.getContext()#/tasks/widgets/ckeditor/adapters/jquery.js",
@@ -15,7 +16,8 @@ variables.assetDependencies["js/admin.js"] = [
 	"#application.configBean.getContext()#/plugins/Slatwall/org/ValidateThis/client/jQuery/JS/jquery.validate.min.js",
 	"#application.configBean.getContext()#/plugins/Slatwall/org/ValidateThis/client/jQuery/JS/jquery.field.min.js",
 	"#application.configBean.getContext()#/admin/css/admin.css",
-	"#application.configBean.getContext()#/admin/css/jquery/default/jquery.ui.all.css"
+	"#application.configBean.getContext()#/admin/css/jquery/default/jquery.ui.all.css",
+	"js/tools/multiselect/css/ui.multiselect.css"
 	];
 	
 variables.assetDependencies["js/admin-product.detail.js"] =	[
