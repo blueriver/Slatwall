@@ -51,7 +51,7 @@ Notes:
 		</tr>
 		<cfloop array="#rc.account.getAccountAddresses()#" index="local.accountAddress">
 			<tr>
-				<td class="varWidth">#Local.accountAddress.getName()#</td>
+				<td class="varWidth">#Local.accountAddress.getAccountAddressName()#</td>
 				<td>#Local.accountAddress.getAddress().getStreetAddress()#</td>
 				<td>#Local.accountAddress.getAddress().getStreet2Address()#</td>
 				<td>#Local.accountAddress.getAddress().getCity()#</td>
