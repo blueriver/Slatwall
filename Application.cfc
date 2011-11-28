@@ -148,20 +148,17 @@ component extends="org.fw1.framework" output="false" {
 		
 		/******************* CFStatic Setup *************************/
 		
-		// Setup the ValidateThis Framework
-		var cfStaticConfig = {
-			staticDirectory = "/Slatwall/assets/",
-			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
-			checkForUpdates = true,
-			includeAllByDefault = false
-		};
-		
 		// Create The cfStatic object
-		var cfStatic = new org.cfstatic.cfstatic(cfStaticConfig);
+		/*
+		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
+			staticDirectory = expandPath( '/plugins/Slatwall/assets' ),
+			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
+			checkForUpdates = true
+		);
 		
 		// Place the validation facade object in the plugin config application scope
 		getPluginConfig().getApplication().setValue("cfStatic", cfStatic);
-		
+		*/
 		/******************* END: CFStatic Setup **************************/
 		
 		/******************* ValidateThis Setup *************************/
