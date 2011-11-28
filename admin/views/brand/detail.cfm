@@ -40,11 +40,12 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	
-	<!---
-	<cfhtmlhead text="#$.slatwall.getValidateThis().getInitializationScript(JSIncludes=false)#" />
-	#$.slatwall.getValidateThis().getValidationScript(theObject=rc.brand, formName="brandDetail")#
-	--->
+	<ul id="navTask">
+		<cfif not rc.edit>
+	    	<cf_SlatwallActionCaller action="admin:brand.edit" querystring="brandID=#rc.brand.getbrandID()#" type="list">
+	    </cfif>
+	    <cf_SlatwallActionCaller action="admin:brand.list" type="list">
+	</ul>
 	
 	<div class="svoadminbranddetail">
 		<cfif rc.edit>

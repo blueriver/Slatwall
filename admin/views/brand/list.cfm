@@ -39,6 +39,9 @@ Notes:
 <cfparam name="rc.brands" type="any" />
 
 <cfoutput>
+	<ul id="navTask">
+    	<cf_SlatwallActionCaller action="admin:brand.create" type="list">
+	</ul>
 <div class="svoadminbrandlist">
 <cfif arrayLen(rc.brands) gt 0>
 	<table id="ProductBrands" class="mura-table-grid stripe">
