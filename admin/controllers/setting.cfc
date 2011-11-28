@@ -415,7 +415,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function detailTaxCategory(required struct rc) {
-		param name="rc.taxCategoyID" default="";
+		param name="rc.taxCategoryID" default="";
 		param name="rc.edit" default="false";
 		
 		rc.taxCategory = getTaxService().getTaxCategory(rc.taxCategoryID);
