@@ -46,7 +46,7 @@ jQuery(document).ready(function(){
 	
 	loadWysiwygs();
 	
-	jQuery('.multiselect').multiselect();
+	//jQuery('.multiselect').multiselect();
 
 });
 
