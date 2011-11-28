@@ -54,9 +54,13 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
-	// Related Object Properties
+	// Related Object Properties (Many-to-One)
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
+	
+	// Related Object Properties (One-to-Many)
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
+	
+	// Related Object Properties (Many-to-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
 
 	public any function init() {

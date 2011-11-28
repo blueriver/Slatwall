@@ -56,11 +56,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 		return false;
 	}
-	
-	public boolean function canBeDeleted() {
 		
-	}
-	
 	// @hint public method that returns the value from the primary ID of this entity
 	public string function getPrimaryIDValue() {
 		return this.invokeMethod("get#getPrimaryIDPropertyName()#");
@@ -186,12 +182,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				var propertyName = left(cacheKey, len(cacheKey)-7);
 				var entityName = "Slatwall" & getPropertyMetaData( propertyName ).cfc;
 				
-				var entityService = getService("utilityORMService").getEntityServiceByEntityName( entityName );
-				var smartList = entityService.invokeMethod("get#entityName#SmartList");
+				var entityService = getService("utilityORMService").getServiceByEntityName( entityName );
+				var smartList = entityService.invokeMethod("get#entityName#SmartList", {1={}});
 				
-				smartList.addSelect(propertyIdentifier=getSimpleRepresentationPropertyName(), alias="name");
-				smartList.addSelect(propertyIdentifier=getPrimaryIDPropertyName(), alias="value"); 
-				smartList.addOrder("#getSimpleRepresentationPropertyName()#|ASC");
+				var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
+				
+				smartList.addSelect(propertyIdentifier=exampleEntity.getSimpleRepresentationPropertyName(), alias="name");
+				smartList.addSelect(propertyIdentifier=exampleEntity.getPrimaryIDPropertyName(), alias="value"); 
+				smartList.addOrder("#exampleEntity.getSimpleRepresentationPropertyName()#|ASC");
 				
 				variables[ cacheKey ] = smartList.getRecords();
 				

@@ -128,11 +128,6 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			// Validate This Object
 			accountEmailAddress.validate();
-			
-			if(accountEmailAddress.hasErrors()) {
-				arguments.account.getErrorBean().addError("primaryEmailAddress", "The Account E-Mail Address Has Errors");
-			}
-			
 		}
 		
 		// Account Phone Number
@@ -149,10 +144,6 @@ component extends="BaseService" accessors="true" output="false" {
 			
 			// Validate This Object
 			accountPhoneNumber.validate();
-			
-			if(accountPhoneNumber.hasErrors()) {
-				arguments.account.getErrorBean().addError("primaryPhoneNumber", "The Account Phone Number Has Errors");
-			}
 		}
 		
 		if( !arguments.account.hasErrors() ) {

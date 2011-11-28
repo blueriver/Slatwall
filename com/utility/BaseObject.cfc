@@ -38,25 +38,16 @@ Notes:
 */
 component displayname="Base Object" accessors="true" output="false" {
 	
-	// This propery holds the ValidateThis result bean once it has been set
-	property name="vtResult";
+	
+	property name="vtResult" type="any"; // This propery holds the ValidateThis result bean once it has been set
+	property name="populatedSubProperties" type="array";
 	
 	// Constructor Metod
 	public any function init() {
+		// Sets the populated sub properties array to a new array
+		setPopulatedSubProperties([]);
+		
 		return this;
-	}
-	
-	// @hint pubic method to validate this object
-	public any function validate( string context) {
-		
-		// Set up the validation arguments as a mirror of the arguments struct
-		var valdationArguments = arguments;
-		
-		// Add this as "theObject" to the validation arguments
-		validationArguments.theObject = this;
-		
-		// Call the fecade object and pass the results back
-		return getValidateThis().validate( argumentCollection=validationArguments );
 	}
 	
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format
@@ -143,8 +134,11 @@ component displayname="Base Object" accessors="true" output="false" {
 								// Populate the entity with the data, this is recursive
 								thisEntity.populate( oneToManyArrayData[a] );
 								
-								// Validate the entity
-								thisEntity.validate();
+								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
+								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
+									arrayAppend(getPopulatedSubProperties(), currentProperty.name);
+								}
+
 							}
 							
 							// Add the entity to the existing objects properties
@@ -157,6 +151,43 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		// Return this object
 		return this;
+	}
+	
+	// @hint pubic method to validate this object
+	public any function validate( string context) {
+		
+		// Set up the validation arguments as a mirror of the arguments struct
+		var valdationArguments = arguments;
+		
+		// Add this as "theObject" to the validation arguments
+		validationArguments.theObject = this;
+		
+		// Validate This object
+		getValidateThis().validate( argumentCollection=validationArguments );
+		
+		// Validate each of the objects that are in the populatedSubProperties array, This array has properties added to it during the populate method
+		for(var p=1; p<=arrayLen(getPopulatedSubProperties()); p++) {
+			
+			// Get the values of this sub property
+			var subPropertyValuesArray = invokeMethod("get#getPopulatedSubProperties()[p]#");
+			
+			// Loop over each object in the subProperty array and validate it
+			for(var e=1; e<=arrayLen(subPropertyValuesArray); e++ ) {
+			
+				// pass in all of the same validationArguments, 'theObject' will be overwritten anyway
+				subPropertyValuesArray[e].validate( argumentCollection=validationArguments );
+				
+				// If after validation that sub object has errors, add a failure to this object
+				if(subPropertyValuesArray[e].hasErrors()) {
+					getVTResult().addFailure({propertyName=getPopulatedSubProperties()[p], message="One or more items had invalid data"});
+				}
+			}
+			
+		}
+		
+		
+		// Return the VTResult object that was populated by ValidateThis
+		return getVTResult();
 	}
 	
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format

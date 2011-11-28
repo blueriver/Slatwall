@@ -63,7 +63,7 @@ Notes:
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:promotion.edit" querystring="promotionID=#local.promotion.getPromotionID()#" class="edit" type="list">            
 					  <cf_SlatwallActionCaller action="admin:promotion.detail" querystring="promotionID=#local.promotion.getPromotionID()#" class="viewDetails" type="list">
-					  <cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionID=#local.promotion.getPromotionID()#" class="delete" type="list" disabled="#local.promotion.isAssigned()#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisassigned')#" confirmrequired="true">
+					  <cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionID=#local.promotion.getPromotionID()#" class="delete" type="list" disabled="#arrayLen(local.promotion.getAppliedPromotions())#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisassigned')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>

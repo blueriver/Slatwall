@@ -53,18 +53,6 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	
-	public array function getAddressZoneOptions() {
-		if(!structKeyExists(variables, "addressZoneOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
-			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
-			smartList.addSelect(propertyIdentifier="addressZoneID", alias="value"); 
-			smartList.addOrder("addressZoneName|ASC");
-			variables.addressZoneOptions = smartList.getRecords();
-			arrayPrepend(variables.limitedAddressZoneOptins, {value="", name=rbKey('define.all')});
-		}
-		return variables.addressZoneOptions;
-	}
-	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Tax Category
