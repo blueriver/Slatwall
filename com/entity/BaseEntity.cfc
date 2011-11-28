@@ -206,7 +206,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			if(!structKeyExists(variables, cacheKey)) {
 				variables[ cacheKey ] = {};
 				
-				var propertyName = left(cacheKey, len(cacheKey)-7);
+				var propertyName = left(cacheKey, len(cacheKey)-6);
 				var values = this.invokeMethod("get#propertyName#");
 				
 				for(var i=1; i<=arrayLen(values); i++) {
