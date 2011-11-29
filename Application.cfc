@@ -153,7 +153,7 @@ component extends="org.fw1.framework" output="false" {
 		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
 			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
 			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
-			minifyMode = 'all',
+			minifyMode = 'package',
 			checkForUpdates = true
 		);
 		
@@ -267,8 +267,8 @@ component extends="org.fw1.framework" output="false" {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
 		}
 		
-		// If this is either the admin subsytem or an integration subsystem then include the admin css & js 
-		if( getSubsystem(request.context.slatAction) == "admin" || !listFind("admin,frontend", getSubsystem(request.context.slatAction))) {
+		// If the current subsystem isn't frontend, then include all of the default css & js
+		if( getSubsystem(request.context.slatAction) != "frontend") {
 			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin/");
 			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin/");
 			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
@@ -279,6 +279,10 @@ component extends="org.fw1.framework" output="false" {
 				getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_#getSection(request.context.slatAction)#/");
 				getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_#getSection(request.context.slatAction)#/");	
 			}
+		// If the current subsytem IS frontend, then only include the admin toolbar
+		} else {
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
 		}
 		
 	}
