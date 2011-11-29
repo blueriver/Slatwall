@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<table id="AddressList" class="mura-table-grid stripe">
+	<table id="AddressList" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.address.name")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.address.streetAddress")#</th>

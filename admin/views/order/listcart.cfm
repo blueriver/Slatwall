@@ -43,7 +43,7 @@ Notes:
 
 <div class="svoadmincartlist">
 	
-	<table id="CartList" class="mura-table-grid stripe">
+	<table id="CartList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.createdDateTime")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>

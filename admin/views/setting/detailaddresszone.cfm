@@ -60,7 +60,7 @@ Notes:
 		<cfif not rc.addressZone.isNew()>
 			<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
 		
-			<table id="addressZoneLocations" class="mura-table-grid stripe">
+			<table id="addressZoneLocations" class="listing-grid stripe">
 				<thead>
 					<tr>
 						<th>#$.slatwall.rbKey('entity.address.countryCode')#</th>

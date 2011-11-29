@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cfif arrayLen(rc.shippingMethods) gt 0>
-		<table id="shippingMethodList" class="mura-table-grid stripe">
+		<table id="shippingMethodList" class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
 				<th>&nbsp</th>

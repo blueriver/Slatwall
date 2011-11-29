@@ -45,7 +45,7 @@ Notes:
 	    	<cf_SlatwallActionCaller action="admin:setting.createaddresszone" type="list">
 		</ul>
 		
-		<table class="mura-table-grid stripe">
+		<table class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.slatwall.rbKey("entity.addresszone.addresszonename")#</th>
 				<th class="administration">&nbsp;</th>

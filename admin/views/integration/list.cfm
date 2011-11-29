@@ -47,7 +47,7 @@ Notes:
 		<li><a href="?slatAction=integration.list&F:shippingReadyFlag=1">Show Shipping Integrations</a></li>
 	</ul>
 	
-	<table class="mura-table-grid stripe">
+	<table class="listing-grid stripe">
 		<thead>
 			<tr>
 				<th class="varWidth">Integration Service Name</th>

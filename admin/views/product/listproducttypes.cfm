@@ -43,7 +43,7 @@ Notes:
     <cf_SlatwallActionCaller action="admin:product.createproducttype" type="list">
 </ul>
 
-<table class="mura-table-grid stripe" id="productTypes">
+<table class="listing-grid stripe" id="productTypes">
     <tr>
         <th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.producttype")#</th>
 		<th>&nbsp;</th>

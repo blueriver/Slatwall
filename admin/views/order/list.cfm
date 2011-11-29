@@ -70,7 +70,7 @@ Notes:
 		<h4>#rc.orderSmartList.getRecordsCount()# #$.slatwall.rbKey("admin.order.list.searchresultsfound")#</h4>
 	</cfif>
 	
-	<table id="OrderList" class="mura-table-grid stripe">
+	<table id="OrderList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
