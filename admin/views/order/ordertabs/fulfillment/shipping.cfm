@@ -58,10 +58,10 @@ Notes:
 					<cfif local.orderItem.hasAttributeValue() or arrayLen(local.orderItem.getSku().getOptions())>
 					  <ul class="inlineAdmin">
 			          	<li class="zoomIn">           
-							<a class="customizations viewDetails" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
+							<a class="customizations detail" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
 						</li>
 						<li class="zoomOut">           
-							<a class="customizations viewDetails" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
+							<a class="customizations detail" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
 						</li>
 			          </ul>
 					  <div class="clear" style="display:none;">

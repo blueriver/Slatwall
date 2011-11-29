@@ -65,7 +65,7 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="detail" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.editFulfillmentMethod" querystring="fulfillmentMethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#" class="edit" type="list">
 						</ul> 						
 					</td>

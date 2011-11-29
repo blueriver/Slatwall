@@ -97,10 +97,10 @@ Notes:
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
-						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+						<a class="paymentDetails detail" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
 					</li>
 					<li class="zoomOut">           
-						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+						<a class="paymentDetails detail" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
 					</li>
 		          </ul>     						
 				</td>

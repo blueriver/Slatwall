@@ -57,7 +57,7 @@ Notes:
 					<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 					<td class="administration">
 						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="viewDetails" type="list">
+						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>
@@ -85,7 +85,7 @@ Notes:
 					</cfif>
 					<td class="administration">
 						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>

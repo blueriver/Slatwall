@@ -59,7 +59,7 @@ Notes:
 				<td>#Local.accountAddress.getAddress().getPostalCode()#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:accountAddress.detail" querystring="accountAddressID=#local.accountAddress.getAccountAddressID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:accountAddress.detail" querystring="accountAddressID=#local.accountAddress.getAccountAddressID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>

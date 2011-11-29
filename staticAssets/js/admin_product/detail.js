@@ -1,6 +1,9 @@
 /**
  * 
  * @depends /admin/core.js
+ * @depends /tools/colorbox/jquery.colorbox-min.js
+ * @depends /tools/imgpreview/imgPreview-min.js
+ * 
  */
 
 $(document).ready(function() {

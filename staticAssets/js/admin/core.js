@@ -2,17 +2,17 @@
  *
  *
  *	@depends /tools/jquery/jquery-1.7.1.js
- *	@depends /tools/jquery-ui/js/jquery-ui-1.8.16.custom.min.js
+ *	@depends /tools/jquery-ui/jquery-ui-1.8.16.custom.min.js
+ *	@depends /tools/multiselect/ui.multiselect.js
  *
 */
 
 jQuery(document).ready(function(){
 	
-	//setDatePickers(".datepicker",dtLocale);
-	//setTabs(".tabs",activeTab);
-	//setAccordions(".accordion",activePanel);
 	//loadWysiwygs();
-	//jQuery('.multiselect').multiselect();
+	jQuery('.accordion').accordion();
+	jQuery('.multiselect').multiselect();
+	jQuery('.tabs').tabs();
 	jQuery('.hasDatepicker').datepicker();
 	stripe('stripe');
 	

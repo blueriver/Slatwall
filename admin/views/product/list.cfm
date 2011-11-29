@@ -88,7 +88,7 @@ Notes:
 					<cfset local.ProductID = local.Product.getProductID() />
 		          <ul class="four">
                       <cf_SlatwallActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="detail" type="list">
 					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
 					  <cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.getOrderedFlag()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
 		          </ul>     						

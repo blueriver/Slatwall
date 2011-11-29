@@ -57,7 +57,7 @@ Notes:
 					<td class="varWidth">#local.taxCategory.getTaxCategoryName()#</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="detail" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.editTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="edit" type="list">
 						</ul> 						
 					</td>

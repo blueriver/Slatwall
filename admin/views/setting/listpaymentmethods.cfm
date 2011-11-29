@@ -65,7 +65,7 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="detail" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="edit" type="list">
 						</ul> 						
 					</td>

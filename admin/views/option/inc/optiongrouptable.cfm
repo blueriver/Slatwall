@@ -66,7 +66,7 @@ Notes:
 		  <ul class="three">
 		  	  <cfif local.thisOptionGroup.getOptionsCount() gt 0><cfset local.deleteDisabled=true><cfelse><cfset local.deleteDisabled=false></cfif>
 		      <cf_SlatwallActionCaller action="admin:option.create" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
-              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="viewDetails" type="list">
+              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="detail" type="list">
 			  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
 		  </ul>		
 		
