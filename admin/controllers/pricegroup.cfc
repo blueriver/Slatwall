@@ -67,6 +67,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function edit(required struct rc) {
 		rc.productTypeTree = getProductService().getProductTypeTree();
+		rc.priceGroupRate = getPriceGroupService().getPriceGroupRate(0, true);
 		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;

@@ -43,6 +43,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="percentageOff" ormType="big_decimal";
 	property name="amountOff" ormType="big_decimal";
 	property name="amount" ormType="big_decimal";
+	property name="globalFlag" ormType="boolean" default="false";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -58,15 +59,12 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	// Related Object Properties (many-to-many)
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
-	
-	/*
-	These properties are commented out, until Brian / Greg / Sumit can talk about it (comments by greg :) )
-	
-	We might also want brand and option like in promotion reward
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID" cascade="save-update";
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
+	property name="excludedProductTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
+	property name="excludedProducts" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID" cascade="save-update";
+	property name="excludedSkus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
 	
-	*/
 	
 	public PriceGroupRate function init(){
 	   // set default collections for association management methods
@@ -100,4 +98,46 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     }
 	
     /************   END Association Management Methods   *******************/
+    
+    public string function getType(){
+    	if(!isNull(variables.percentageOff))
+    		return "percentageOff";
+    	else if(!isNull(variables.amountOff))
+    		return "amountOff";
+    	else if(!isNull(variables.amount))
+    		return "amount";
+    	else
+    		throw("getType() was called but percentageOff, amountOff and amount were all null! Thus, unable to determine type.");
+    }
+    
+    public string function getAppliesToRepresentation(){
+    	var rep = "";
+    	var products = "";
+    	var productTypes = "";
+    	var SKUs = "";
+    	
+    	if(arrayLen(getProducts()))
+    		products = "#arrayLen(getProducts())# Product" + IFF(arrayLen(getProducts()) GT 1, DE('s'));
+    	if(arrayLen(getProductTypes()))
+    		producTypes = "#arrayLen(getProductTypes())# Product Type" + IFF(arrayLen(getProductTypes()) GT 1, DE('s'));
+    	if(arrayLen(getSKUs()))
+    		SKUs = "#arrayLen(getSKUs())# SKU" + IFF(arrayLen(getSKUs()) GT 1, DE('s'));
+    	
+    	rep = ListAppend(rep, products);
+    	rep = ListAppend(rep, productTypes);
+    	rep = ListAppend(rep, SKUs);
+    	
+    	// TODO: handle proper sentence construction.
+    	return rep;
+    }
+    
+    public string function getAmountRepresentation(){
+    	if(getType() EQ "percentageOff")
+			return variables.percentageOff + "% " + rbKey('entity.priceGroupRate.priceGroupRateType.percentageOffShort');
+		if(getType() EQ "amountOff")
+			return DollarFormat(variables.amountOff) + rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
+		if(getType() EQ "amount")
+			return DollarFormat(variables.amountOff);
+    }
+    
 }

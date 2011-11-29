@@ -29,6 +29,10 @@ variables.assetDependencies["js/admin-order.detail.js"] =	[
 	"css/tools/colorbox/colorbox.css"
 	];
 
+variables.assetDependencies["js/admin-pricegroup.detail.js"] =	[
+
+	];
+
 variables.assetDependencies["js/admin-promotion.detail.js"] =	[
 	"js/tools/timepicker/jquery-ui-timepicker-addon.js",
 	"js/tools/chosen/chosen.jquery.min.js",
