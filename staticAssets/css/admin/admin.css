@@ -1,8 +1,13 @@
 /**
  * 
- * @depends /tools/jquery-ui/jquery.ui.theme.css
+ * @depends /tools/jquery-ui/jquery-ui-1.8.16.custom.css
+ * @depends /tools/colorbox/colorbox.css
+ * @depends /tools/dynatree/skin-vista/ui.dynatree.css
+ * @depends /tools/multiselect/ui.multiselect.css
+ * @depends /tools/timepicker/jquery-ui-timepicker-addon.css
  * 
  */
+
 
 * {
 	outline: 0;
@@ -42,30 +47,6 @@ div#admincontainer {
 
 .ui-widget-content a  {
 	color: #FF3A00;
-	text-decoration: none;
-}
-
-a.button, input.button, button {
-	background-color: #78A8D4;
-	vertical-align: middle;
-	/*padding: 0;*/
-	margin-left: 3px;
-	width: auto;
-	border: 0 solid #fff;
-	cursor: pointer;
-	color: #fff;
-	padding: 3px 6px;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-a.button {
-	padding: 4px 6px;
-	margin-left: 3px;
-}
-
-a.button:hover {
 	text-decoration: none;
 }
 
