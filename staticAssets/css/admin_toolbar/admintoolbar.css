@@ -191,27 +191,25 @@ div.svoadmintoolbarmenu li#mainMenu>a.logo:hover {
 div.svoadmintoolbarmenu ul.favorites li {
 	background: url(../../images/admin.toolbar.menu_libg.gif) no-repeat ;
 }
+
+
 div.svoadmintoolbarmenu li#pageTools>a.website {
-	background: url("../../images/admin.toolbar.menu.website_icon.png") no-repeat scroll 15px 7px transparent ;
-}
-div.svoadmintoolbarmenu li#navDashboard {
-	background:none ;
+	background: url(../../images/grayIcons16/email.png) no-repeat scroll 14px 6px transparent ;
 }
 div.svoadmintoolbarmenu li#navDashboard>a {
-	background: url("../../images/admin.toolbar.menu.dashboard_icon.png") no-repeat scroll 15px 7px transparent ;
+	background: url(../../images/grayIcons16/computer.png) no-repeat scroll 14px 6px transparent ;
 }
 div.svoadmintoolbarmenu li#navProducts>a {
-	background: url("../../images/admin.toolbar.menu.products_icon.png") no-repeat scroll 15px 7px transparent ;
+	background: url(../../images/grayIcons16/edit.png) no-repeat scroll 14px 6px transparent ;
 }
 div.svoadmintoolbarmenu li#navOrders>a {
-	background: url("../../images/admin.toolbar.menu.orders_icon.png") no-repeat scroll 14px 6px transparent ;
+	background: url(../../images/grayIcons16/shopping_cart.png) no-repeat scroll 14px 6px transparent ;
 }
 div.svoadmintoolbarmenu li#navAccounts>a {
-	background: url("../../images/admin.toolbar.menu.accounts_icon.png") no-repeat scroll 15px 7px transparent ;
+	background: url(../../images/grayIcons16/users.png) no-repeat scroll 14px 6px transparent ;
 }
-
 div.svoadmintoolbarmenu li#navSettings>a {
-	background: url("../../images/admin.toolbar.menu.settings_icon.png") no-repeat scroll 15px 7px transparent ;
+	background: url(../../images/grayIcons16/tools.png) no-repeat scroll 14px 6px transparent ;
 }
 
 div.svoadmintoolbarmenu li#mainMenu ul.menu {
