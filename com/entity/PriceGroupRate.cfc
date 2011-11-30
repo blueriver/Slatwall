@@ -55,7 +55,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 		
 	// Related Object Properties (many-to-one)
-	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID";
+	property name="priceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="priceGroupID" inverse="true"; 
 	
 	// Related Object Properties (many-to-many)
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
@@ -156,7 +156,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 		if(getType() EQ "amountOff")
 			return DollarFormat(variables.amountOff) & " " & rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
 		if(getType() EQ "amount")
-			return DollarFormat(variables.amountOff);
+			return DollarFormat(variables.amount);
     }
     
 }

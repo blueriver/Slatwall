@@ -52,7 +52,7 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" inverse="true" cascade="all";    
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan";    
 	
 	public PriceGroup function init(){
 	   // set default collections for association management methods

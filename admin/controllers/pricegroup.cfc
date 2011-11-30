@@ -177,10 +177,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		detail(rc);
 		
 		var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId);
-		
+
+		//priceGroupRate.removePriceGroup(rc.priceGroup);
+
 		rc.priceGroup.removePriceGroupRate(priceGroupRate);
+		priceGroupRate.removePriceGroup(rc.priceGroup);
+		
 		rc.edit = true;
-		getFW().setView("admin:pricegroups.detail");
+		getFW().setView("admin:pricegroup.detail");
 	}
 	
 	/*public void function delete(required struct rc) {
