@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="org.cfstatic.util.Base"  hint="I am an abstract representation of a single static file. I provide methods such as getting the content of the file and getting the last modified date of the file.">
+<cfcomponent output="false" extends="Slatwall.org.cfstatic.util.Base"  hint="I am an abstract representation of a single static file. I provide methods such as getting the content of the file and getting the last modified date of the file.">
 
 <!--- properties --->
 	<cfscript>
