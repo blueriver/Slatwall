@@ -37,6 +37,7 @@ Notes:
 
 */
 component extends="mxunit.framework.TestCase" {
+
 	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
 		
@@ -46,5 +47,8 @@ component extends="mxunit.framework.TestCase" {
 	public void function tearDown() {
 	}
 	
+	public void function defaultsAreCorrect() {
+		
+	}	
 }
 
