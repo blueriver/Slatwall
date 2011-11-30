@@ -45,7 +45,7 @@ Notes:
 	<form method="post">
 		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
 	</form>
-	<table class="mura-table-grid stripe">
+	<table class="listing-grid stripe">
 		<thead>
 			<tr>
 				<th class="varWidth">Name</th>
@@ -62,7 +62,7 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="detail" type="list">
 							<cf_SlatwallActionCaller action="admin:account.edit" querystring="accountID=#local.account.getAccountID()#" class="edit" type="list">
 						</ul>
 					</td>

@@ -562,9 +562,22 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getPluginConfig().getApplication().getValue('validateThis');
 	}
 	
+	// @hint Private helper function for returning the Validate This Facade Object
+	private any function getCFStatic() {
+		return getPluginConfig().getApplication().getValue('cfStatic');
+	}
+	
+	// @hint Private helper function for returning a new API key for a specific resource for this session
+	private string function getAPIKey(required string resource, required string verb) {
+		return getService("sessionService").getAPIKey(argumentcollection=arguments);
+	}
+	
 	// @hint Private helper function to return the RB Key from RB Factory in any component
-	private string function rbKey(required string key) {
-		return getRBFactory().getKeyValue(session.rb,arguments.key);
+	private string function rbKey(required string key, string local) {
+		if( !structKeyExists(arguments, "local") ) {
+			arguments.local = session.rb;
+		}
+		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 	
 	// @hint Private helper function to return a Setting

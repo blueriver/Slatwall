@@ -51,6 +51,7 @@ Notes:
 	date				|	This is still just a textbox, but it adds the jQuery date picker
 	dateTime			|	This is still just a textbox, but it adds the jQuery date & time picker
 	file				|	No value can be passed in
+	multiselect			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
 	password			|	No Value can be passed in
 	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
 	select      		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
@@ -80,17 +81,26 @@ Notes:
 		</cfcase>
 		<cfcase value="date">
 			<cfoutput>
-				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# hasDatepicker" />
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datepicker" />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="dateTime">
 			<cfoutput>
-				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# hasDatepicker" />
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# datetimepicker" />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="file">
 			<cfoutput>
 				<input type="file" name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+			</cfoutput>
+		</cfcase>
+		<cfcase value="multiselect">
+			<cfoutput>
+				<select name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" />
+					<cfloop array="#attributes.valueOptions#" index="option">
+						<option value="#option['value']#" <cfif listFind(attributes.value, option['value'])> selected="selected"</cfif>>#option['name']#</option>
+					</cfloop>
+				</select>
 			</cfoutput>
 		</cfcase>
 		<cfcase value="password">
@@ -127,7 +137,7 @@ Notes:
 		</cfcase>
 		<cfcase value="time">
 			<cfoutput>
-				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# hasDatepicker" />
+				<input type="text" name="#attributes.fieldName#" value="#attributes.value#" class="#attributes.fieldClass# timepicker" />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="wysiwyg">

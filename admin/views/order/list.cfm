@@ -70,7 +70,7 @@ Notes:
 		<h4>#rc.orderSmartList.getRecordsCount()# #$.slatwall.rbKey("admin.order.list.searchresultsfound")#</h4>
 	</cfif>
 	
-	<table id="OrderList" class="mura-table-grid stripe">
+	<table id="OrderList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
@@ -90,7 +90,7 @@ Notes:
 				<td>#DollarFormat(local.order.getTotal())#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>

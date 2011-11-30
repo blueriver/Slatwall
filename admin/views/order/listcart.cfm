@@ -43,7 +43,7 @@ Notes:
 
 <div class="svoadmincartlist">
 	
-	<table id="CartList" class="mura-table-grid stripe">
+	<table id="CartList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.createdDateTime")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
@@ -59,7 +59,7 @@ Notes:
 				<td>#DollarFormat(local.order.getTotal())#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:order.detailcart" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:order.detailcart" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>

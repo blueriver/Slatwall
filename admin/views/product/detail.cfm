@@ -39,10 +39,12 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.product" type="any" />
 
+<!---
 <cfif rc.edit>
 	<cfset getAssetWire().includeAsset("js/admin-product.edit.js") />
 	<cfset getAssetWire().includeAsset("css/admin-product.edit.css") />
 </cfif>
+--->
 
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:product.list" type="list">

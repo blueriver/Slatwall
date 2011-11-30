@@ -60,7 +60,7 @@ Notes:
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
-		<table class="mura-table-grid stripe" id="basicOrderInfo">
+		<table class="listing-grid stripe" id="basicOrderInfo">
 			<tr>
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
@@ -84,7 +84,7 @@ Notes:
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<table class="mura-table-grid stripe">
+		<table class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
 				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>
@@ -97,10 +97,10 @@ Notes:
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
-						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+						<a class="paymentDetails detail" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
 					</li>
 					<li class="zoomOut">           
-						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+						<a class="paymentDetails detail" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
 					</li>
 		          </ul>     						
 				</td>

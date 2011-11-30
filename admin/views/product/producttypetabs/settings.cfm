@@ -41,7 +41,7 @@ Notes:
 <cfset local.valueOptions = [{value="",name=rc.$.Slatwall.rbKey('setting.inherit')},{value="1",name=rc.$.Slatwall.rbKey('define.yes')},{value="0",name=rc.$.Slatwall.rbKey('define.no')}] />
 
 <cfoutput>
-	<table class="mura-table-grid stripe" id="productTypeSettings">
+	<table class="listing-grid stripe" id="productTypeSettings">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.setting.settingName')#</th>
 			<th>#rc.$.Slatwall.rbKey('entity.setting.settingValue')#</th>

@@ -40,7 +40,7 @@ Notes:
 <cfset variables.framework.applicationKey="Slatwall" />
 <cfset variables.framework.base="/Slatwall" />
 <cfset variables.framework.action="slatAction" />
-<cfset variables.framework.error="common:main.error" />
+<cfset variables.framework.error="admin:main.error" />
 <cfset variables.framework.home="admin:main.default" />
 <cfset variables.framework.defaultSection="main" />
 <cfset variables.framework.defaultItem="default" />
@@ -49,4 +49,3 @@ Notes:
 <cfset variables.framework.subsystemdelimiter=":" />
 <cfset variables.framework.generateSES = false />
 <cfset variables.framework.SESOmitIndex = true />
-<cfset variables.framework.requestContextKey = "Slatwall" />

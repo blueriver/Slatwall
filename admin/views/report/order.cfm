@@ -67,7 +67,7 @@ Notes:
 			]
 		</script>
 		<div id="container" style="height: 500px; width: 100%;"></div>
-		<table class="mura-table-grid stripe">
+		<table class="listing-grid stripe">
 			<tr>
 				<th>Day</th>
 				<th>New Carts</th>

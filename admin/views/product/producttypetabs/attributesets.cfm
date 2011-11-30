@@ -38,7 +38,7 @@ Notes:
 --->
 
 <cfoutput>
-	<table id="AttributeSets" class="mura-table-grid stripe">
+	<table id="AttributeSets" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetName')#</th>
 			<th>#rc.$.Slatwall.rbKey('entity.attributeSet.attributeSetType')#</th>

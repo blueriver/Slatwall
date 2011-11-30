@@ -42,63 +42,37 @@ Notes:
 <cfparam name="rc.message" type="string" default="" />
 <cfparam name="rc.messagetype" type="string" default="info" />
 
-<!--- Add mura specific JS variables --->
-<cfset getAssetWire().addJSVariable("htmlEditorType", application.configBean.getValue("htmlEditorType")) />
-<cfset getAssetWire().addJSVariable("context", application.configBean.getContext()) />
-<cfset getAssetWire().addJSVariable("themepath", application.settingsManager.getSite(session.siteID).getThemeAssetPath()) />
-<cfset getAssetWire().addJSVariable("rb", lcase(session.rb)) />
-<cfif isNumeric(application.configBean.getValue('sessionTimeout'))>
-	<cfset getAssetWire().addJSVariable("sessionTimeout", application.configBean.getValue('sessionTimeout') * 60) />
-<cfelse>
-	<cfset getAssetWire().addJSVariable("sessionTimeout", 180) />
-</cfif>
-<cfset getAssetWire().addJSVariable("activeTab", rc.activeTab) />
-<cfset getAssetWire().addJSVariable("activePanel", rc.activeTab) />
-<cfset getAssetWire().addJSVariable("dtExample", DateFormat(now(), "MM/DD/YYYY")) />
-<cfset getAssetWire().addJSVariable("dtCh", "/") />
-<cfset getAssetWire().addJSVariable("dtFormat", [0,1,2]) />
-<cfset getAssetWire().addJSVariable("dtLocale", "#session.dtLocale#") />
-
 <cfoutput>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
-	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
-	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
-	
+	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
+	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
+	<script type="text/javascript">
+		var dtLocale = "#session.dtLocale#";
+	</script>
 </head>
 <body>
-	#view("common:toolbar/menu")#
+	#application.pluginManager.renderAdminToolbar(jsLib="jquery", jsLibLoaded=true)#
+	#view("admin:toolbar/menu")#
 	<div id="header">
-		<h1>Mura CMS</h1>
-		<cfoutput>
-		<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.default.slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
-		<ul id="navUtility">
-		    <li id="navSiteManager">
-		    	<a href="#application.configBean.getContext()#/admin/index.cfm?fuseaction=cArch.list&siteid=#rc.$.event('siteid')#&moduleid=00000000000000000000000000000000000&topid=00000000000000000000000000000000001">#application.rbFactory.getKeyValue(session.rb,"layout.sitemanager")#</a>
-			</li>
-		    <li id="navLogout">
-		    	<a href="#application.configBean.getContext()#/admin/index.cfm?fuseaction=cLogin.logout">#application.rbFactory.getKeyValue(session.rb,"layout.logout")#</a>
-			</li>
-		</ul>
-		<p id="welcome">#application.rbFactory.getKeyValue(session.rb,"layout.welcome")#, #HTMLEditFormat("#session.mura.fname# #session.mura.lname#")#.</p>
-		</cfoutput>
+		<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.default.slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
 		<p id="currentSite"><cf_SlatwallActionCaller text="#rc.sectionTitle#" action="#request.subsystem#:#request.section#" type="link"> &rarr; #rc.itemTitle#</p>
 	</div>
 	
-	<div class="admincontainer">
+	<div id="admincontainer">
 		#view("admin:includes/message")#
 		#body#
 		<br class="clear" />
 		<br class="clear" />
 	</div>
-<div id="alertDialog" title="Alert" style="display:none">
-    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="alertDialogMessage"></span></p>
-</div>
-<script type="text/javascript" language="javascript">
-stripe('stripe');
-</script>
+	
+	<div id="alertDialog" title="Alert" style="display:none">
+	    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="alertDialogMessage"></span></p>
+	</div>
+	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 </body>
 </html>
 </cfoutput>
