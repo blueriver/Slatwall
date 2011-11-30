@@ -1,6 +1,6 @@
-<cfcomponent output="false" extends="org.cfstatic.util.Base" hint="I am a CF wrapper to the YuiCompressor jar">
+<cfcomponent output="false" extends="Slatwall.org.cfstatic.util.Base" hint="I am a CF wrapper to the YuiCompressor jar">
 
-	<cffunction name="init" access="public" returntype="org.cfstatic.util.LessCompiler" output="false" hint="Constructor, taking a javaloader instance preloaded with the path to the Less Compiler jar.">
+	<cffunction name="init" access="public" returntype="Slatwall.org.cfstatic.util.LessCompiler" output="false" hint="Constructor, taking a javaloader instance preloaded with the path to the Less Compiler jar.">
 		<cfargument name="javaloader" type="any" required="true" hint="An instance of the javaloader with class path of Less Compiler jar preloaded." />
 		<cfscript>
 			if(StructKeyExists(arguments, 'javaloader')){
@@ -30,7 +30,7 @@
 			try {
 				compiled = _getLessEngine().compile( file );				
 			} catch( any e ){
-				$throw('org.cfstatic.util.LessCompiler.badLESS', e.message, e.detail);
+				$throw('Slatwall.org.cfstatic.util.LessCompiler.badLESS', e.message, e.detail);
 			}
 
 			// cleanup and return

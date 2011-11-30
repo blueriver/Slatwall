@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="org.cfstatic.util.Base" hint="I provide an api for taking css and replacing its relative image paths with full image paths complete with cache busters based on the images last modified date">
+<cfcomponent output="false" extends="Slatwall.org.cfstatic.util.Base" hint="I provide an api for taking css and replacing its relative image paths with full image paths complete with cache busters based on the images last modified date">
 
 <!--- properties --->
 	<cfscript>

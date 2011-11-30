@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="org.cfstatic.util.Base" hint="I am an abstract representation of a collection of packages (directories). I manage dealing with the collection as one, providing methods such as getting all the content of the packages in the correct order and getting the last modified date of the entire collection.">
+<cfcomponent output="false" extends="Slatwall.org.cfstatic.util.Base" hint="I am an abstract representation of a collection of packages (directories). I manage dealing with the collection as one, providing methods such as getting all the content of the packages in the correct order and getting the last modified date of the entire collection.">
 
 <!--- properties --->
 	<cfscript>
@@ -12,7 +12,7 @@
 	</cfscript>
 
 <!--- constructor --->
-	<cffunction name="init" access="public" returntype="org.cfstatic.core.PackageCollection" output="false" hint="I am the constructor">
+	<cffunction name="init" access="public" returntype="Slatwall.org.cfstatic.core.PackageCollection" output="false" hint="I am the constructor">
 		<cfargument name="rootDirectory"	type="string" required="true" />
 		<cfargument name="rootUrl"			type="string" required="true" />
 		<cfargument name="minifiedUrl"		type="string" required="true" />
@@ -215,11 +215,11 @@
 						_addStaticFile( dependencyPath );
 					} catch(any e) {
 						// if the thrown error is one of ours, we should rethrow it (bubbling up)
-						if(e.type EQ 'org.cfstatic.missingDependency'){
+						if(e.type EQ 'Slatwall.org.cfstatic.missingDependency'){
 							$throw( argumentCollection = e );
 						}
 						// otherwise, throw our custom missing dependency error 
-						$throw(type="org.cfstatic.missingDependency", message="CFStatic Error: Could not find local dependency.", detail="The dependency, '#dependencies[i]#', could not be found or downloaded. CFStatic is expecting to find it at #dependencyPath#. The dependency is declared in '#arguments.path#'");
+						$throw(type="Slatwall.org.cfstatic.missingDependency", message="CFStatic Error: Could not find local dependency.", detail="The dependency, '#dependencies[i]#', could not be found or downloaded. CFStatic is expecting to find it at #dependencyPath#. The dependency is declared in '#arguments.path#'");
 					}
 
 					// add the static file object as a dependency to the file

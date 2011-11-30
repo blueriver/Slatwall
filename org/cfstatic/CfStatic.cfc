@@ -1,4 +1,4 @@
-<cfcomponent output="false" hint="I am the CfMinify api component. Instantiate me with configuration options and use my include(), includeData() and renderIncludes() methods to awesomely manage your static includes" extends="org.cfstatic.util.Base">
+<cfcomponent output="false" hint="I am the CfMinify api component. Instantiate me with configuration options and use my include(), includeData() and renderIncludes() methods to awesomely manage your static includes" extends="Slatwall.org.cfstatic.util.Base">
 
 <!--- private properties --->
 	<cfscript>
@@ -154,13 +154,13 @@
 		</cfscript>
 	</cffunction>
 
-	<cffunction name="_packageDirectory" access="private" returntype="org.cfstatic.core.PackageCollection" output="false" hint="I take a directory and return a processed PackageCollection object (with stored metadata about the packages and files within it)">
+	<cffunction name="_packageDirectory" access="private" returntype="Slatwall.org.cfstatic.core.PackageCollection" output="false" hint="I take a directory and return a processed PackageCollection object (with stored metadata about the packages and files within it)">
 		<cfargument name="rootDirectory"	type="string" required="true" />
 		<cfargument name="rootUrl"			type="string" required="true" />
 		<cfargument name="minifiedUrl"		type="string" required="true" />
 		<cfargument name="fileType"			type="string" required="true" />
 		
-		<cfreturn CreateObject('component', 'org.cfstatic.core.PackageCollection').init( arguments.rootDirectory, arguments.rootUrl, arguments.minifiedUrl, arguments.fileType, _getAddCacheBusters() ) />
+		<cfreturn CreateObject('component', 'Slatwall.org.cfstatic.core.PackageCollection').init( arguments.rootDirectory, arguments.rootUrl, arguments.minifiedUrl, arguments.fileType, _getAddCacheBusters() ) />
 	</cffunction>
 
 	<cffunction name="_calculateMappings" access="private" returntype="void" output="false" hint="I calculate the include mappings. The mappings are a quick referenced storage of a given 'include' string that a coder might use to include a package or file that is mapped to the resultant set of packages and files that it might need to include given its dependencies. These mappings then negate the need to calculate dependencies on every request (making cfstatic super fast).">
@@ -300,13 +300,13 @@
 				jarsForLess[1] = ExpandPath('/org/cfstatic/lib/less/lesscss-engine-1.1.4.jar');
 
 				server['_cfstaticJavaloaders'] = StructNew();
-				server['_cfstaticJavaloaders'].yui  = CreateObject('org.cfstatic.lib.javaloader.JavaLoader').init( jarsForYui  );
-				server['_cfstaticJavaloaders'].less = CreateObject('org.cfstatic.lib.javaloader.JavaLoader').init( jarsForLess );
+				server['_cfstaticJavaloaders'].yui  = CreateObject('Slatwall.org.cfstatic.lib.javaloader.JavaLoader').init( jarsForYui  );
+				server['_cfstaticJavaloaders'].less = CreateObject('Slatwall.org.cfstatic.lib.javaloader.JavaLoader').init( jarsForLess );
 			}
 			
-			_setYuiCompressor ( CreateObject('component','org.cfstatic.util.YuiCompressor' ).init( server['_cfstaticJavaloaders'].yui  ) );
-			_setLessCompiler  ( CreateObject('component','org.cfstatic.util.LessCompiler'  ).init( server['_cfstaticJavaloaders'].less ) );
-			_setCssImageParser( CreateObject('component','org.cfstatic.util.CssImageParser').init( _getCssUrl(), $listAppend(_getRootDirectory(), _getCssDirectory(), '/' ) ) );
+			_setYuiCompressor ( CreateObject('component','Slatwall.org.cfstatic.util.YuiCompressor' ).init( server['_cfstaticJavaloaders'].yui  ) );
+			_setLessCompiler  ( CreateObject('component','Slatwall.org.cfstatic.util.LessCompiler'  ).init( server['_cfstaticJavaloaders'].less ) );
+			_setCssImageParser( CreateObject('component','Slatwall.org.cfstatic.util.CssImageParser').init( _getCssUrl(), $listAppend(_getRootDirectory(), _getCssDirectory(), '/' ) ) );
 		</cfscript>
 	</cffunction>
 
@@ -517,7 +517,7 @@
 	</cffunction>
 	
 	<cffunction name="_compileJsFile" access="private" returntype="string" output="false" hint="I compile a single js file, returning the compiled string">
-		<cfargument name="file" type="org.cfstatic.core.StaticFile" required="true" hint="The staticFile object representing the javascript file to compile" />
+		<cfargument name="file" type="Slatwall.org.cfstatic.core.StaticFile" required="true" hint="The staticFile object representing the javascript file to compile" />
 
 		<cfscript>
 			// if the file is minified already, just return its content
@@ -531,7 +531,7 @@
     </cffunction>
 	
 	<cffunction name="_compileCssFile" access="private" returntype="string" output="false" hint="I compile a single css file, returning the compiled string">
-		<cfargument name="file" type="org.cfstatic.core.StaticFile" required="true" hint="The staticFile object representing the css file to compile" />
+		<cfargument name="file" type="Slatwall.org.cfstatic.core.StaticFile" required="true" hint="The staticFile object representing the css file to compile" />
 		
 		<cfscript>
 			var content = arguments.file.getContent();
@@ -735,18 +735,18 @@
     </cffunction>
     
 	<cffunction name="_setJsPackages" access="private" returntype="void" output="false">
-		<cfargument name="jsPackages" required="true" type="org.cfstatic.core.PackageCollection" />
+		<cfargument name="jsPackages" required="true" type="Slatwall.org.cfstatic.core.PackageCollection" />
 		<cfset _jsPackages = arguments.jsPackages />
 	</cffunction>
-	<cffunction name="_getJsPackages" access="private" returntype="org.cfstatic.core.PackageCollection" output="false">
+	<cffunction name="_getJsPackages" access="private" returntype="Slatwall.org.cfstatic.core.PackageCollection" output="false">
 		<cfreturn _jsPackages />
 	</cffunction>
 	
 	<cffunction name="_setCssPackages" access="private" returntype="void" output="false">
-		<cfargument name="cssPackages" required="true" type="org.cfstatic.core.PackageCollection" />
+		<cfargument name="cssPackages" required="true" type="Slatwall.org.cfstatic.core.PackageCollection" />
 		<cfset _cssPackages = arguments.cssPackages />
 	</cffunction>
-	<cffunction name="_getCssPackages" access="private" returntype="org.cfstatic.core.PackageCollection" output="false">
+	<cffunction name="_getCssPackages" access="private" returntype="Slatwall.org.cfstatic.core.PackageCollection" output="false">
 		<cfreturn _cssPackages />
 	</cffunction>
 	

@@ -1,6 +1,6 @@
-<cfcomponent output="false" extends="org.cfstatic.util.Base" hint="I am a CF wrapper to the YuiCompressor jar">
+<cfcomponent output="false" extends="Slatwall.org.cfstatic.util.Base" hint="I am a CF wrapper to the YuiCompressor jar">
 
-	<cffunction name="init" access="public" returntype="org.cfstatic.util.YuiCompressor" output="false" hint="Constructor, taking a javaloader instance preloaded with the path to the YuiCompressor jar.">
+	<cffunction name="init" access="public" returntype="Slatwall.org.cfstatic.util.YuiCompressor" output="false" hint="Constructor, taking a javaloader instance preloaded with the path to the YuiCompressor jar.">
 		<cfargument name="javaloader" type="any" required="false" hint="An instance of the javaloader with class path of Yui Compressor jar preloaded. Optional." />
 		<cfscript>
 			if(StructKeyExists(arguments, 'javaloader')){
@@ -40,7 +40,7 @@
 		<cfscript>
 			var input		= $loadJavaClass('java.io.StringReader').init(arguments.source);
 			var output		= $loadJavaClass('java.io.StringWriter').init();
-			var reporter    = $loadJavaClass('org.cfstatic.SimpleErrorReporter').init();
+			var reporter    = $loadJavaClass('Slatwall.org.cfstatic.SimpleErrorReporter').init();
 			var compressor	= "";
 			var compressed	= "";
 			
@@ -50,7 +50,7 @@
 				compressor.compress(output, javaCast('int', arguments.linebreak), javaCast('boolean', arguments.munge), javaCast('boolean',arguments.verbose), javaCast('boolean', arguments.preserveAllSemiColons), javaCast('boolean',arguments.disableOptimizations));
 			
 			} catch('org.mozilla.javascript.EvaluatorException' e){
-				$throw(type="org.cfstatic.util.YuiCompressor.badJs", message="There was an error compressing your javascript: '#e.message#'. Please see the error detail for the problematic javascript source.", detail=arguments.source);
+				$throw(type="Slatwall.org.cfstatic.util.YuiCompressor.badJs", message="There was an error compressing your javascript: '#e.message#'. Please see the error detail for the problematic javascript source.", detail=arguments.source);
 			}
 			
 			compressed = output.toString();

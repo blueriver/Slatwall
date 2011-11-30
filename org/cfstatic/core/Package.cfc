@@ -1,5 +1,5 @@
 
-<cfcomponent output="false" extends="org.cfstatic.util.Base" hint="I am an abstract representation of a single package, a directory that contains static files that can be packaged together. I provide methods such as getting all the content of the files in the correct order and getting the last modified date of the entire package.">
+<cfcomponent output="false" extends="Slatwall.org.cfstatic.util.Base" hint="I am an abstract representation of a single package, a directory that contains static files that can be packaged together. I provide methods such as getting all the content of the files in the correct order and getting the last modified date of the entire package.">
 	
 <!--- properties --->
 	<cfscript>
@@ -220,7 +220,7 @@
 				fileUrl = _getRootUrl() & ListLast(arguments.path, '/');
 			}
 			
-			return CreateObject('component', 'org.cfstatic.core.StaticFile').init( Trim(arguments.path), _getPackageName(), fileUrl, _getMinifiedUrl(), _getFileType(), _getCacheBust() );
+			return CreateObject('component', 'Slatwall.org.cfstatic.core.StaticFile').init( Trim(arguments.path), _getPackageName(), fileUrl, _getMinifiedUrl(), _getFileType(), _getCacheBust() );
 		</cfscript>
 	</cffunction>
 	
