@@ -295,9 +295,9 @@
 			
 			// put javaloader instances in server scope due to memory leak issues
 			if( not StructKeyExists(server, '_cfstaticJavaloaders') ){
-				jarsForYui[1]  = ExpandPath('/org/cfstatic/lib/yuiCompressor/yuicompressor-2.4.6.jar');
-				jarsForYui[2]  = ExpandPath('/org/cfstatic/lib/cfstatic.jar');
-				jarsForLess[1] = ExpandPath('/org/cfstatic/lib/less/lesscss-engine-1.1.4.jar');
+				jarsForYui[1]  = ExpandPath('/Slatwall/org/cfstatic/lib/yuiCompressor/yuicompressor-2.4.6.jar');
+				jarsForYui[2]  = ExpandPath('/Slatwall/org/cfstatic/lib/cfstatic.jar');
+				jarsForLess[1] = ExpandPath('/Slatwall/org/cfstatic/lib/less/lesscss-engine-1.1.4.jar');
 
 				server['_cfstaticJavaloaders'] = StructNew();
 				server['_cfstaticJavaloaders'].yui  = CreateObject('Slatwall.org.cfstatic.lib.javaloader.JavaLoader').init( jarsForYui  );
