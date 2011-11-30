@@ -68,11 +68,14 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	public PriceGroupRate function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.priceGroupRates)) {
-	   	   variables.priceGroupRates = [];
-	   }
 	   if(isNull(variables.productTypes)) {
 	   	   variables.productTypes = [];
+	   }
+	   if(isNull(variables.products)) {
+	   	   variables.products = [];
+	   }
+	   if(isNull(variables.SKUs)) {
+	   	   variables.SKUs = [];
 	   }
 	   
 	   return super.init();
@@ -106,8 +109,21 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     		return "amountOff";
     	else if(!isNull(variables.amount))
     		return "amount";
-    	else
-    		throw("getType() was called but percentageOff, amountOff and amount were all null! Thus, unable to determine type.");
+    	
+    	// Provide a default case.
+    	else    		
+    		return "percentageOff";
+    	//else
+    		//throw("getType() was called but percentageOff, amountOff and amount were all null! Thus, unable to determine type.");
+    }
+    
+     public string function getValue(){
+    	if(getType() EQ "percentageOff")
+    		return getPercentageOff();
+    	else if(getType() EQ "amountOff")
+    		return getAmountOff();
+    	else if(getType() EQ "amount")
+    		return getAmount();
     }
     
     public string function getAppliesToRepresentation(){
@@ -116,12 +132,15 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     	var productTypes = "";
     	var SKUs = "";
     	
+    	if(getGlobalFlag())
+    		return rbKey('admin.pricegroup.edit.priceGroupRateAppliesToAllProducts');
+    	
     	if(arrayLen(getProducts()))
-    		products = "#arrayLen(getProducts())# Product" + IFF(arrayLen(getProducts()) GT 1, DE('s'));
+    		products = "#arrayLen(getProducts())# Product" & IFF(arrayLen(getProducts()) GT 1, DE('s'));
     	if(arrayLen(getProductTypes()))
-    		producTypes = "#arrayLen(getProductTypes())# Product Type" + IFF(arrayLen(getProductTypes()) GT 1, DE('s'));
+    		producTypes = "#arrayLen(getProductTypes())# Product Type" & IFF(arrayLen(getProductTypes()) GT 1, DE('s'));
     	if(arrayLen(getSKUs()))
-    		SKUs = "#arrayLen(getSKUs())# SKU" + IFF(arrayLen(getSKUs()) GT 1, DE('s'));
+    		SKUs = "#arrayLen(getSKUs())# SKU" & IFF(arrayLen(getSKUs()) GT 1, DE('s'));
     	
     	rep = ListAppend(rep, products);
     	rep = ListAppend(rep, productTypes);
@@ -133,9 +152,9 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     
     public string function getAmountRepresentation(){
     	if(getType() EQ "percentageOff")
-			return variables.percentageOff + "% " + rbKey('entity.priceGroupRate.priceGroupRateType.percentageOffShort');
+			return variables.percentageOff & "% " & rbKey('entity.priceGroupRate.priceGroupRateType.percentageOffShort');
 		if(getType() EQ "amountOff")
-			return DollarFormat(variables.amountOff) + rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
+			return DollarFormat(variables.amountOff) & " " & rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
 		if(getType() EQ "amount")
 			return DollarFormat(variables.amountOff);
     }

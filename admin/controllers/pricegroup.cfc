@@ -54,10 +54,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.edit" default="false";
 		
 		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-		rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
+		//rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
 		if(!rc.priceGroup.isNew()) {
 			rc.itemTitle &= ": " & rc.priceGroup.getPriceGroupName();
 		}
+		
+		rc.newPriceGroupRate = getPriceGroupService().getPriceGroupRate(0, true);
 	}
 
 
@@ -67,7 +69,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function edit(required struct rc) {
 		rc.productTypeTree = getProductService().getProductTypeTree();
-		rc.priceGroupRate = getPriceGroupService().getPriceGroupRate(0, true);
 		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
@@ -78,6 +79,52 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
+		detail(rc);
+		
+		//Map priceGroupRateType and priceGroupRateValue to the three amount fields in the entity
+		/*if(rc.priceGroupRateType EQ "percentageOff")
+			rc.priceGroup.setPercentageOff(rc.priceGroupRateValue);
+		else if(rc.priceGroupRateType EQ "amountOff")
+			rc.priceGroup.setPercentageOff(rc.priceGroupRateValue);
+		else if(rc.priceGroupRateType EQ "amount")
+			rc.priceGroup.setPercentageOff(rc.priceGroupRateValue);
+		else
+			throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
+		*/
+		
+		//Map priceGroupRateType and priceGroupRateValue to the three amount fields in the entity (will be loaded in by populate())
+		if(rc.priceGroupRateType EQ "percentageOff")
+			rc.percentageOff = rc.priceGroupRateValue;
+		else if(rc.priceGroupRateType EQ "amountOff")
+			rc.amountOff = rc.priceGroupRateValue;
+		else if(rc.priceGroupRateType EQ "amount")
+			rc.amount = rc.priceGroupRateValue;
+		else
+			throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
+		
+		
+		
+		var wasNew = rc.PriceGroup.isNew();
+		
+		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
+		
+		if(rc.priceGroup.hasErrors() || wasNew) {
+			rc.edit = true;
+			getFW().setView("admin:priceGroup.detail");
+		} else {
+			if(structKeyExists(arguments.rc, "addPriceGroupRate") && arguments.rc.addPriceGroupRate) {
+				var newPriceGroupRate = getPriceGroupService().newPriceGroupRate();
+				newPriceGroupRate.populate(rc);
+				rc.priceGroup.addPriceGroupRate(newPriceGroupRate);
+				rc.edit = true;
+				getFW().setView("admin:priceGroup.detail");
+			} else {
+				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.saveaddresszone_success");	
+			}
+		}
+		
+		/*
+		
 	   rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
 	   rc.priceGroup = getPriceGroupService().save(rc.priceGroup,rc);
 	   if(!rc.priceGroup.hasErrors()) {
@@ -87,12 +134,56 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.itemTitle = rc.priceGroup.isNew() ? rc.$.Slatwall.rbKey("admin.priceGroup.create") : rc.$.Slatwall.rbKey("admin.priceGroup.edit") & ": #rc.priceGroup.getPriceGroupName()#";
 			rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
 			rc.productTypeTree = getProductService().getProductTypeTree();
-			rc.shippingMethods = getSettingService().listShippingMethod();
+			rc.shippingMethods = getPriceGroupService().listShippingMethod();
 	   		getFW().setView(action="admin:priceGroup.detail");
+		}
+		
+		*/
+	}
+	
+	public void function savePriceGroupRate(required struct rc) {
+		param name="rc.priceGroupId" default="";
+		param name="rc.priceGroupRateId" default="";
+		
+		// Check to see if it is already in rc because of taffy api
+		if(isNull(rc.priceGroup)) {
+			rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupId);
+		}
+		
+		if(!isNull(rc.priceGroup)) {
+			var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
+			priceGroupRate.populate(rc);
+			rc.priceGroup.addPriceGroupRate(priceGroupRate);
 		}
 	}
 	
-	public void function delete(required struct rc) {
+	public void function deletePriceGroup(required struct rc) {
+		
+		detailPriceGroup(rc);
+		
+		var deleteOK = getPriceGroupService().deletePriceGroup(rc.priceGroup);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.pricegroup.deletePriceGroup_success");
+		} else {
+			rc.message = rbKey("admin.pricegroup.deletePriceGroup_error");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:priceGroup.list", preserve="message,messagetype");
+	}
+	
+	public void function deletePriceGroupRate(required struct rc) {
+		detail(rc);
+		
+		var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId);
+		
+		rc.priceGroup.removePriceGroupRate(priceGroupRate);
+		rc.edit = true;
+		getFW().setView("admin:pricegroups.detail");
+	}
+	
+	/*public void function delete(required struct rc) {
 		var priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID);
 		var deleteResponse = getPriceGroupService().delete(priceGroup);
 		if(!deleteResponse.hasErrors()) {
@@ -119,22 +210,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
 		rc.itemTitle = rc.$.Slatwall.rbKey("admin.priceGroup.edit") & ": #rc.priceGroup.getPriceGroupName()#";
 		getFW().redirect(action="admin:priceGroup.detail",querystring="priceGroupID=#rc.priceGroupID#",preserve="message,messagetype");
-	}
+	}*/
 	
-	public void function deletePriceGroupReward(required struct rc) {
-		var priceGroupReward = getPriceGroupService().getPriceGroupReward(rc.priceGroupRewardID);
-		rc.priceGroupID = priceGroupReward.getPriceGroup().getPriceGroupID();
-		var deleteResponse = getPriceGroupService().deletePriceGroupReward(priceGroupReward);
-		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.priceGroup.deletePriceGroupReward_success");
-		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
-		}
-		rc.edit = true;
-		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-		rc.itemTitle = rc.$.Slatwall.rbKey("admin.priceGroup.edit") & ": #rc.priceGroup.getPriceGroupName()#";
-		getFW().redirect(action="admin:priceGroup.detail",querystring="priceGroupID=#rc.priceGroupID#",preserve="message,messagetype");
-	}
+	
 	
 }

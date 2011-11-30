@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.priceGroup" type="any">
-<cfparam name="rc.priceGroupRate" type="any">	<!--- This will be empty, and will be used by the "template" --->
+<cfparam name="rc.newPriceGroupRate" type="any">	<!--- This will be empty, and will be used by the "template" --->
 <cfparam name="rc.edit" type="boolean">
 
 <cfif rc.edit>
@@ -47,22 +47,23 @@ Notes:
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:priceGroup.list" type="list">
 	<cfif !rc.edit>
-	<cf_SlatwallActionCaller action="admin:priceGroup.edit" queryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" type="list">
+		<cf_SlatwallActionCaller action="admin:priceGroup.edit" queryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" type="list">
 	</cfif>
 </ul>
 
 <cfoutput>
-	<div class="svoadminpriceGroupdetail">
+	<div class="svoadminpricegroupdetail">
 		<cfif rc.edit>
-		<form name="PriceGroupEdit" action="#buildURL('admin:priceGroup.save')#" method="post">
-			<input type="hidden" name="PriceGroupID" value="#rc.PriceGroup.getPriceGroupID()#" />
+			<form name="PriceGroupEdit" action="#buildURL('admin:priceGroup.save')#" method="post">
+				<input type="hidden" name="PriceGroupID" value="#rc.PriceGroup.getPriceGroupID()#" />
 		</cfif>
-			<dl class="oneColumn">
-				<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="activeFlag" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupName" edit="#rc.edit#" first="true">
-				<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
-			</dl>
-			<cfif rc.edit>
+		
+		<dl class="twoColumn">
+			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="activeFlag" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupName" edit="#rc.edit#" first="true">
+			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
+		</dl>
+			<!---<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:priceGroup.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 				<cfif !rc.priceGroup.isNew()>
@@ -71,8 +72,53 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:priceGroup.save" type="submit" class="button">
 			</div>
 			</cfif>
+		</form>--->
+
+	
+	
+	
+	<cfif not rc.priceGroup.isNew()>
+		<strong>#$.slatwall.rbKey('admin.pricegroup.edit.priceGroupRates')#</strong>
+	
+		<table id="priceGroupRates" class="mura-table-grid stripe">
+			<thead>
+				<tr>
+					<th>#rc.$.Slatwall.rbKey("entity.priceGroupRate.priceGroupRateType")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.priceGroupRate.priceGroupRateAmount")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.priceGroupRate.priceGroupRateAppliesTo")#</th>
+					<cfif rc.edit><th class="administration">&nbsp;</th></cfif>
+				</tr>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.priceGroup.getPriceGroupRates()#" index="local.priceGroupRate" >
+					<tr>
+						<td class="varWidth">#$.Slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.' & local.priceGroupRate.getType())#</td>
+						<td>#local.priceGroupRate.getAmountRepresentation()#</td>
+						<td>#local.priceGroupRate.getAppliesToRepresentation()#</td>
+						<cfif rc.edit>
+							<td class="administration">
+								<ul class="one">
+									<cfif not local.priceGroupRate.isNew()>
+										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list">
+									</cfif>
+								</ul>
+							</td>
+						</cfif>
+					</tr>
+				</cfloop>
+			</tbody>
+		</table>
+		<cfif rc.edit>
+			<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
+			<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#entityNew('SlatwallPriceGroupRate')#" edit="true" />
+			<button type="submit" name="addPriceGroupRate" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button><br /><br />
+		</cfif>
+	</cfif>
+	<cfif rc.edit>
+		<cf_SlatwallActionCaller action="admin:pricegroup.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cf_SlatwallActionCaller action="admin:pricegroup.save" type="submit" class="button">
 		</form>
-	</div>
+	</cfif>
 	
 	
 	
@@ -81,7 +127,7 @@ Notes:
 	
 	
 	
-	
+	<!---
 	<cfif arrayLen(rc.priceGroup.getPriceGroupRates()) gt 0>
 		
 		<!--- Display the table showing any existing PriceGroupRates --->
@@ -337,7 +383,7 @@ Notes:
 		</div>
 		<!--- // Form for new reward --->
 		
-	</cfif>
+	</cfif>--->
 	
 	
 	
