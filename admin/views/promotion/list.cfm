@@ -45,7 +45,7 @@ Notes:
 
 <div class="svoadminpromotionlist">
 <cfif arrayLen(rc.promotions) gt 0>
-	<table id="Promotions" class="mura-table-grid stripe">
+	<table id="Promotions" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.promotion.promotionName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.promotion.startDateTime")#</th>
@@ -62,7 +62,7 @@ Notes:
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:promotion.edit" querystring="promotionID=#local.promotion.getPromotionID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:promotion.detail" querystring="promotionID=#local.promotion.getPromotionID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:promotion.detail" querystring="promotionID=#local.promotion.getPromotionID()#" class="detail" type="list">
 					  <cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionID=#local.promotion.getPromotionID()#" class="delete" type="list" disabled="#arrayLen(local.promotion.getAppliedPromotions())#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisassigned')#" confirmrequired="true">
 		          </ul>     						
 				</td>

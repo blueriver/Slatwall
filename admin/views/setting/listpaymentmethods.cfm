@@ -45,7 +45,7 @@ Notes:
 	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
 		</ul>
 		
-		<table id="paymentMethodList" class="mura-table-grid stripe">
+		<table id="paymentMethodList" class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listPaymentMethods_nav")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.paymentMethod.activeFlag")#</th>
@@ -65,7 +65,7 @@ Notes:
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="detail" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="edit" type="list">
 						</ul> 						
 					</td>

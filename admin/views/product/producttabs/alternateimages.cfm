@@ -39,7 +39,7 @@ Notes:
 <cfoutput>
 	<cfset local.images = rc.product.getImages() />
 	<cfif arrayLen(local.images)>
-	<table id="alternateImages" class="mura-table-grid stripe">
+	<table id="alternateImages" class="listing-grid stripe">
 		<tr>
 			<th>#$.slatwall.rbKey("admin.product.alternateImages.preview")#</th>
 			<th>#$.slatwall.rbKey("entity.image.imageType")#</th>

@@ -1,0 +1,79 @@
+/**
+ *
+ *	@depends /tools/jquery/jquery-1.7.1.js
+ *	@depends /tools/jquery-ui/jquery-ui-1.8.16.custom.min.js
+ *  @depends /tools/colorbox/jquery.colorbox.js
+ *  @depends /tools/imgpreview/imgpreview-min.js
+ *  @depends /tools/timepicker/jquery-ui-timepicker-addon.js
+ *  @depends /tools/multiselect/ui.multiselect.js
+ *
+*/
+
+
+jQuery(document).ready(function(){
+	
+	jQuery('.multiselect').multiselect();
+	jQuery('.datetimepicker').datetimepicker();
+	jQuery('.datepicker').datepicker();
+	jQuery('.accordion').accordion();
+	jQuery('.tabs').tabs();
+	
+	jQuery('.wysiwyg').ckeditor();
+	
+	stripe('stripe');
+	
+});
+
+
+function btnConfirmDialog(message,btn){
+    
+    jQuery("#alertDialogMessage").html(message);
+	
+    jQuery("#alertDialog").dialog({
+        resizable: false,
+        modal: true,
+        buttons: {
+            'YES': function() {
+                jQuery(this).dialog('close');
+                btn.form.submit();        
+                },
+            'NO': function() {
+                jQuery(this).dialog('close');
+            }
+        }
+    });
+
+    return false;   
+}
+
+
+function toggleDisplay(link, expand, close){
+	var target = jQuery(link).parent().next().children('div');
+	target.toggle();
+	if(jQuery(link).html() == '[' + expand + ']') {
+		jQuery(link).html('[' + close + ']');
+	} else {
+		jQuery(link).html('[' + expand + ']');
+	}  
+}
+
+function stripe(theclass) {
+  jQuery('table.' + theclass + ' tr').each(
+		function(index) {
+			if(index % 2){
+				jQuery(this).addClass('alt');	
+			} else {
+				jQuery(this).removeClass('alt');
+			}
+		}
+	);
+   jQuery('div.' + theclass + ' dl').each(
+		function(index) {
+			if(index % 2){
+				jQuery(this).addClass('alt');	
+			} else {
+				jQuery(this).removeClass('alt');
+			}
+		}
+	);
+}

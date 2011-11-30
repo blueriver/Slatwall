@@ -1,0 +1,349 @@
+/*
+
+    Slatwall - An e-commerce plugin for Mura CMS
+    Copyright (C) 2011 ten24, LLC
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    Linking this library statically or dynamically with other modules is
+    making a combined work based on this library.  Thus, the terms and
+    conditions of the GNU General Public License cover the whole
+    combination.
+ 
+    As a special exception, the copyright holders of this library give you
+    permission to link this library with independent modules to produce an
+    executable, regardless of the license terms of these independent
+    modules, and to copy and distribute the resulting executable under
+    terms of your choice, provided that you also meet, for each linked
+    independent module, the terms and conditions of the license of that
+    module.  An independent module is a module which is not derived from
+    or based on this library.  If you modify this library, you may extend
+    this exception to your version of the library, but you are not
+    obligated to do so.  If you do not wish to do so, delete this
+    exception statement from your version.
+
+Notes:
+
+*/
+
+div.svoadmintoolbarmenu {
+	position: fixed !important;
+	bottom:0px !important;
+	left:0px !important;
+	width:100% !important;
+	height:30px !important;
+	background: url(../../images/admin.toolbar.menu_bg.gif) repeat-x bottom left !important;
+	z-index: 499999 !important;
+	font-family: Arial, Helvetica, sans-serif !important;
+}
+
+div.svoadmintoolbarmenu a {
+	text-decoration:none;
+}
+
+div.svoadmintoolbarmenu ul.home {
+	position:relative !important;
+	height:30px ;
+	float:left ;
+}
+
+div.svoadmintoolbarmenu ul.favorites {
+	position:relative !important;
+	height:30px ;
+	float:left ;
+	background: url(../../images/admin.toolbar.menu_darkbg.gif) repeat-x bottom left ;
+}
+
+div.svoadmintoolbarmenu ul {
+	list-style:none ;
+	position:relative ;
+	margin:0px ;
+	padding:0px ;
+}
+div.svoadmintoolbarmenu ul li {
+	display:inline-block ;
+	float:left ;
+	position:relative ;
+	margin:0px ;
+	padding:0px ;
+}
+div.svoadmintoolbarmenu li a {
+	display:block ;
+	margin:0px ;
+	padding:7px 12px 0px 20px ;
+	color:#ffffff ;
+	text-indent: 14px ;
+	text-shadow: rgba(0, 0, 0, .80) 0px -1px 0px ;
+	font-size:11px ;
+}
+
+div.svoadmintoolbarmenu li:hover a {
+	color:#dedede ;
+	text-decoration:none ;	
+}
+
+div.svoadmintoolbarmenu ul.favorites li ul {
+	display:none;
+}
+
+div.svoadmintoolbarmenu ul.favorites li ul li {
+	float: left ;
+	width: 100% ; /* width needed or else Opera goes nuts */
+	padding: 0 ;
+	margin: 0 ;
+	border-bottom: 1px dotted #666 ;
+	background: none ;
+	color: #fff ;
+}
+
+div.svoadmintoolbarmenu ul.favorites li ul li a {
+	padding:0px ;
+	width: 11em ;
+	padding: 4px 0 4px 14px ;
+	text-indent: 0px ;
+	margin: 1px 0 ;
+	line-height: 1.2 ;
+	background: url(../../images/admin.toolbar.menu.arrow_dk_grey.gif) no-repeat 3px center ;
+	color: #333 ;
+	text-shadow: rgba(255,255,255,.30) 0px 1px 0px ;
+}
+
+div.svoadmintoolbarmenu ul.favorites li:hover ul {
+	display:block ;
+	bottom:20px ;
+	width: 140px ;
+	padding: 0.5em 0.5em 0 0.5em ;
+	margin: 11px 0 0 6px ;
+	list-style: none ;
+	line-height: 1 ;
+	background-image: none ;
+	position: absolute ;
+	background: #999 ;
+	height: auto ;
+	opacity: .98 ;
+	-moz-opacity: .98 ;
+	filter: alpha(opacity=98) ; /* Move to ie.css? */
+	-moz-border-radius-topleft: 5px ;
+	-webkit-border-top-left-radius: 5px ;
+	-moz-border-radius-topright: 5px ;
+	-webkit-border-top-right-radius: 5px ;
+	-webkit-box-shadow: 2px -2px 5px #666 ;
+	-moz-box-shadow: 3px -3px 5px #555 ;
+	box-shadow: 3px -3px 3px #555 ;
+	color:#fff ;
+}
+
+div.svoadmintoolbarmenu ul.favorites li li a:hover {
+	background: url(../../images/admin.toolbar.menu.arrow_grey.gif) no-repeat 3px center ;
+	color: #fff ;
+	text-shadow: rgba(0,0,0,.60) 0px -1px 0px ;
+	
+}
+
+div.svoadmintoolbarmenu ul.favorites li:hover ul a:hover, div.svoadmintoolbarmenu ul.favorites li.sfhover ul a:hover { 
+	color: #fff ;
+	text-shadow: rgba(0,0,0,.60) 0px -1px 0px ;
+	background: url(../../images/admin.toolbar.menu.arrow_grey.gif) no-repeat 3px center ;
+}
+
+div.svoadmintoolbarmenu ul.favorites li ul li.last {
+	border-bottom: none ;
+}
+
+div.svoadmintoolbarmenu ul.favorites li:hover ul, div.svoadmintoolbarmenu ul.favorites li.sfhover ul {
+	left: auto ;
+	z-index: 2 ;
+}
+
+div.svoadmintoolbarmenu ul.favorites li li:last-child {
+	border-bottom: none ;
+}
+
+div.svoadmintoolbarmenu ul li#search input {
+	width:200px ;
+	border:1px solid #efefef ;
+	height:13px ;
+	margin-top:7px ;
+}
+div.svoadmintoolbarmenu li#mainMenu>a.logo {
+	display:block ;
+	margin:0px ;
+	padding:0px ;
+	text-indent: -9999px ;
+	width:50px ;
+	height:30px ;
+	background: url(../../images/admin.toolbar.menu_logo.png) no-repeat ;
+}
+div.svoadmintoolbarmenu li#mainMenu>a.logo:hover {
+	background: url(../../images/admin.toolbar.menu_logohover.png) no-repeat ;
+}
+div.svoadmintoolbarmenu ul.favorites li {
+	background: url(../../images/admin.toolbar.menu_libg.gif) no-repeat ;
+}
+
+
+div.svoadmintoolbarmenu li#pageTools>a.website {
+	background: url(../../images/grayIcons16/email.png) no-repeat scroll 14px 6px transparent ;
+}
+div.svoadmintoolbarmenu li#navDashboard>a {
+	background: url(../../images/grayIcons16/computer.png) no-repeat scroll 14px 6px transparent ;
+}
+div.svoadmintoolbarmenu li#navProducts>a {
+	background: url(../../images/grayIcons16/edit.png) no-repeat scroll 14px 6px transparent ;
+}
+div.svoadmintoolbarmenu li#navOrders>a {
+	background: url(../../images/grayIcons16/shopping_cart.png) no-repeat scroll 14px 6px transparent ;
+}
+div.svoadmintoolbarmenu li#navAccounts>a {
+	background: url(../../images/grayIcons16/users.png) no-repeat scroll 14px 6px transparent ;
+}
+div.svoadmintoolbarmenu li#navSettings>a {
+	background: url(../../images/grayIcons16/tools.png) no-repeat scroll 14px 6px transparent ;
+}
+
+div.svoadmintoolbarmenu li#mainMenu ul.menu {
+	display: none;
+	position: absolute !important;
+	bottom:30px ;
+	height: auto ;
+	width: 260px ;
+	padding:20px 0px 80px 0px ;
+	background-color:#666666 ;
+	-moz-border-radius-topright: 15px ;
+	-webkit-border-top-right-radius: 15px ;
+	z-index: 499998 ;
+}
+
+div.svoadmintoolbarmenu li#mainMenu div.subMenuWrapper {
+	position: absolute !important;
+	display: none;
+	background-color:#111 ;
+	-moz-border-radius-topright: 15px ;
+	-webkit-border-top-right-radius: 15px ;
+	opacity: .96 ;
+	-moz-opacity: .96 ;
+	filter: alpha(opacity=96) ; /* Move to ie.css? */
+}
+
+div.svoadmintoolbarmenu li#mainMenu ul.menu li {
+	background-color:#666666 ;
+	background-image:url(../../images/admin.toolbar.menu.arrow_white.png) ;
+	background-position:240px 18px ;
+	background-repeat:no-repeat ;
+}
+
+div.svoadmintoolbarmenu li#mainMenu ul.menu li.selected {
+	background-color:#777777 ;
+}
+
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a {
+	display:block ;
+	width: 190px ;
+	padding: 15px 30px 15px 40px ;
+	font-size:14px ;
+	font-weight:bold ;
+	color:#ffffff ;
+	background-position:7px 10px ;
+	background-repeat:no-repeat ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminmain {
+	background-image:url(../../images/grayIcons32/computer.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminproduct {
+	background-image:url(../../images/grayIcons32/edit.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminorder {
+	background-image:url(../../images/grayIcons32/shopping_cart.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminaccount {
+	background-image:url(../../images/grayIcons32/users.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminsetting {
+	background-image:url(../../images/grayIcons32/tools.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminattribute {
+	background-image:url(../../images/grayIcons32/process.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminpromotion {
+	background-image:url(../../images/grayIcons32/dollar.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminreport {
+	background-image:url(../../images/grayIcons32/chart.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminhelp {
+	background-image:url(../../images/grayIcons32/help.png) ;
+}
+
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu {
+	display:none;
+	position:relative ;
+	margin-left:260px ;
+	width:260px ;
+	background: none ;
+}
+div.svoadmintoolbarmenu div.subMenuWrapper div.adminsetting,
+div.svoadmintoolbarmenu div.subMenuWrapper div.adminproduct {
+	width:400px ;
+}
+div.svoadmintoolbarmenu div.subMenuWrapper div.searchresults {
+	width:800px ;
+}
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu h3 {
+	font-size:22px ;
+	font-weight:normal ;
+	margin:25px ;
+	padding-bottom:10px ;
+	color:#fff ;
+	border-bottom:1px solid #fff ;
+}
+
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu ul {
+	margin-bottom:25px ;
+}
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu ul li {
+	display:block ;
+	float:none ;
+}
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu ul li.title {
+	display:block ;
+	font-size:14px ;
+	font-weight:bold ;
+	color:#dedede ;
+	margin-bottom:10px ;
+}
+
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu a {
+	padding:0px ;
+	margin:0px ;
+	text-indent:0px ;
+	font-size:12px ;
+	color:#999 ;
+	font-weight:normal ;
+	text-shadow:none ;
+}
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu a:hover {
+	color:#dedede ;
+}
+
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu div.oneColumn {
+	margin-left:25px ;
+	width:160px ;
+	float:left ;
+}
+
+div.svoadmintoolbarmenu div.subMenuWrapper div.subMenu div.twoColumn {
+	margin-left:25px ;
+	width:380px ;
+	float:left ;
+}

@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cfif arrayLen(rc.promotion.getPromotionRewards()) gt 0>
-	<table id="promotionRewardTable" class="mura-table-grid">
+	<table id="promotionRewardTable" class="listing-grid">
 		<thead>
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.promotionReward.rewardType")#</th>

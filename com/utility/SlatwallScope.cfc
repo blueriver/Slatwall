@@ -215,27 +215,33 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
+	// Public methods that expose some of the base objects private methods
 	public string function rbKey(required string key, string local) {
-		if(!isDefined("arguments.local")) {
-			arguments.local = session.rb;
-		}
-		return getRBFactory().getKeyValue(arguments.local, arguments.key);
+		return super.rbKey(argumentCollection=arguments);
 	}
 	
 	public string function setting(required string settingName) {
-		return Super.setting(arguments.settingName);
+		return super.setting(argumentcollection=arguments);
 	}
 	
 	public string function getAPIKey(required string resource, required string verb) {
-		return getService("sessionService").getAPIKey(argumentcollection=arguments);
+		return super.getAPIKey(argumentcollection=arguments);
 	}
 	
 	public string function getSlatwallRootPath() {
-		return super.getSlatwallRootPath();
+		return super.getSlatwallRootPath(argumentcollection=arguments);
+	}
+	
+	public string function getSlatwallRootDirectory() {
+		return super.getSlatwallRootDirectory(argumentcollection=arguments);
+	}
+	
+	public any function getCFStatic() {
+		return super.getCFStatic(argumentcollection=arguments);
 	}
 	
 	public any function getValidateThis() {
-		return super.getValidateThis();
+		return super.getValidateThis(argumentcollection=arguments);
 	}
-
+	// END: Public methods that expose some of the base objects private methods
 }

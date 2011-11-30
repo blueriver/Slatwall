@@ -70,7 +70,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().setView("admin:main.noaccess");
 		}
 		
-		if( listFind("common,frontend,admin",getFW().getSubsystem(rc.slatAction))) {
+		if( listFind("admin,frontend",getFW().getSubsystem(rc.slatAction))) {
 			// Set default section title and default item title 
 			rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#_title");
 			if(right(rc.sectionTitle, 8) == "_missing") {

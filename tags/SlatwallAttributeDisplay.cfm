@@ -66,10 +66,7 @@ Notes:
 						<textarea name="attribute.#attributes.attribute.getAttributeID()#.#attributes.attributeValueID#" id="attribute.#attributes.attribute.getAttributeID()#.#attributes.attributeValueID#">#attributes.attributeValue#</textarea>
 						<script type="text/javascript" language="Javascript">
 							var loadEditorCount = 0;
-							jQuery('##attribute\\.#attributes.attribute.getAttributeID()#\\.#attributes.attributeValueID#').ckeditor(
-								{ toolbar:'Default',
-								height:'150',
-								customConfig : 'config.js.cfm' },htmlEditorOnComplete);	 
+							 
 						</script>
 					</cfcase>
 					<cfcase value="atCheckBox">

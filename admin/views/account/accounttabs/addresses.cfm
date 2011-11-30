@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<table id="AddressList" class="mura-table-grid stripe">
+	<table id="AddressList" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.address.name")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.address.streetAddress")#</th>
@@ -59,7 +59,7 @@ Notes:
 				<td>#Local.accountAddress.getAddress().getPostalCode()#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:accountAddress.detail" querystring="accountAddressID=#local.accountAddress.getAccountAddressID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:accountAddress.detail" querystring="accountAddressID=#local.accountAddress.getAccountAddressID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>

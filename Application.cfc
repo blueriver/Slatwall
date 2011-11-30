@@ -149,16 +149,17 @@ component extends="org.fw1.framework" output="false" {
 		/******************* CFStatic Setup *************************/
 		
 		// Create The cfStatic object
-		/*
+		
 		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
-			staticDirectory = expandPath( '/plugins/Slatwall/assets' ),
-			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
+			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
+			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
+			minifyMode = 'package',
 			checkForUpdates = true
 		);
 		
 		// Place the validation facade object in the plugin config application scope
 		getPluginConfig().getApplication().setValue("cfStatic", cfStatic);
-		*/
+		
 		/******************* END: CFStatic Setup **************************/
 		
 		/******************* ValidateThis Setup *************************/
@@ -260,14 +261,43 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupView() {
+		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend,common", getSubsystem(request.context.slatAction))) {
+		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction))) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
-			getAssetWire().addViewToAssets("/Slatwall/admin/views/main/default.cfm");
 		}
+		
+		// If the current subsystem isn't frontend, then include all of the default css & js
+		if( getSubsystem(request.context.slatAction) != "frontend") {
+
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
+	
+			// If this subsystem is admin, then also include a section of assets if it applied 
+			if(getSubsystem(request.context.slatAction) == "admin") {
+				getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_#getSection(request.context.slatAction)#/");
+				getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_#getSection(request.context.slatAction)#/");
+			}
+			
+		// If the current subsytem IS frontend, then only include the admin toolbar
+		} else {
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
+		}
+		
 	}
 	
 	public void function setupResponse() {
+		// Add the CSS and JS to the header
+		if( !listFind("frontend", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
+			if(!structKeyExists(request,"layout") || request.layout) {
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );	
+			}
+		}
+		
 		endSlatwallLifecycle();
 	}
 	
@@ -337,7 +367,7 @@ component extends="org.fw1.framework" output="false" {
 		if ( subsystem eq '' ) {
 			return '';
 		}
-		if ( !listFind('admin,frontend,common', arguments.subsystem) ) {
+		if ( !listFind('admin,frontend', arguments.subsystem) ) {
 			return 'integrationServices/' & subsystem & '/';
 		}
 		return subsystem & '/';
@@ -363,38 +393,5 @@ component extends="org.fw1.framework" output="false" {
 			
 		}
 		return arguments.fullPath;
-	}
-	
-	// Start assetWire functions ==================================
-	public any function getAssetWire() {
-		if(!structKeyExists(request, "assetWire")) {
-			request.assetWire = new assets.assetWire(this); 
-		}
-		return request.assetWire;
-	}
-	
-	private void function buildViewAndLayoutQueue() {
-		super.buildViewAndLayoutQueue();
-		if(structKeyExists(request, "view")) {
-			getAssetWire().addViewToAssets(request.view);
-		}
-	}
-	
-	private string function internalLayout( string layoutPath, string body ) {
-		var rtn = super.internalLayout(argumentcollection=arguments);
-		
-		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			if( !listFind("frontend,common", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
-				getBeanFactory().getBean("utilityTagService").cfhtmlhead(getAssetWire().getAllAssets());
-			}
-		}
-		return rtn;
-	}
-		
-	public string function view( string path, struct args = { } ) {
-		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
-		return super.view(argumentcollection=arguments);
-	}
-	
-	// End assetWire functions ==================================
+	}	
 }
