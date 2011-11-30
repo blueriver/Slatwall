@@ -5,24 +5,11 @@
 
 jQuery(function() {
 
-	jQuery.datepicker.setDefaults(jQuery.datepicker.regional[dtLocale]);
-    
-	jQuery('#spdstartdatetime').datetimepicker({
-        ampm: true,
-     });
-    jQuery('#spdenddatetime').datetimepicker({
-        ampm: true,
-     });
-	 
-	jQuery('.dateTime').datetimepicker({
-        ampm: true,
-     });
-	 
-	 jQuery('.editPromotionReward').click(function(){
+	jQuery('.editPromotionReward').click(function(){
 	 	var promotionID = jQuery(this).attr("id").substr(4);
 		jQuery('tr#promotionRewardEdit' + promotionID).toggle();
 	 	return false;
-	 });
+	});
 	 
 	var promotionCodeCount = jQuery('tr[id^="PromotionCode"]').length;
     jQuery("#addPromotionCode").click(function() {

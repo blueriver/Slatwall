@@ -47,8 +47,8 @@ Notes:
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
-	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
-	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
+	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
 	<script type="text/javascript">
 		var dtLocale = "#session.dtLocale#";
 	</script>
@@ -71,7 +71,8 @@ Notes:
 	<div id="alertDialog" title="Alert" style="display:none">
 	    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="alertDialogMessage"></span></p>
 	</div>
-
+	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 </body>
 </html>
 </cfoutput>

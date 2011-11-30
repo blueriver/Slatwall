@@ -269,16 +269,18 @@ component extends="org.fw1.framework" output="false" {
 		
 		// If the current subsystem isn't frontend, then include all of the default css & js
 		if( getSubsystem(request.context.slatAction) != "frontend") {
+
 			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin/");
 			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin/");
 			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
 			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
-			
+	
 			// If this subsystem is admin, then also include a section of assets if it applied 
 			if(getSubsystem(request.context.slatAction) == "admin") {
 				getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_#getSection(request.context.slatAction)#/");
-				getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_#getSection(request.context.slatAction)#/");	
+				getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_#getSection(request.context.slatAction)#/");
 			}
+			
 		// If the current subsytem IS frontend, then only include the admin toolbar
 		} else {
 			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
@@ -290,8 +292,10 @@ component extends="org.fw1.framework" output="false" {
 	public void function setupResponse() {
 		// Add the CSS and JS to the header
 		if( !listFind("frontend", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
-			getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );
-			getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
+			if(!structKeyExists(request,"layout") || request.layout) {
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );	
+			}
 		}
 		
 		endSlatwallLifecycle();

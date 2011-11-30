@@ -1,73 +1,59 @@
 /**
  *
- *
  *	@depends /tools/jquery/jquery-1.7.1.js
  *	@depends /tools/jquery-ui/jquery-ui-1.8.16.custom.min.js
- *	@depends /tools/multiselect/ui.multiselect.js
+ *  @depends /tools/colorbox/jquery.colorbox.js
+ *  @depends /tools/imgpreview/imgpreview-min.js
+ *  @depends /tools/timepicker/jquery-ui-timepicker-addon.js
+ *  @depends /tools/multiselect/ui.multiselect.js
  *
 */
 
+
 jQuery(document).ready(function(){
 	
-	//loadWysiwygs();
-	jQuery('.accordion').accordion();
 	jQuery('.multiselect').multiselect();
+	jQuery('.datetimepicker').datetimepicker();
+	jQuery('.datepicker').datepicker();
+	jQuery('.accordion').accordion();
 	jQuery('.tabs').tabs();
-	jQuery('.hasDatepicker').datepicker();
+	
+	jQuery('.wysiwyg').ckeditor();
+	
 	stripe('stripe');
 	
-
 });
-
-function loadWysiwygs() {
-	jQuery('textarea.wysiwyg').each(function(i) {
-		setRTE(jQuery(this));
-	});
-}
-
-function setRTE(txtarea) {
-	if( txtarea.hasClass("Basic") ) {
-		var wysiwygType = "Basic";
-	} else {
-		var wysiwygType = "Default";
-	}
-	var loadEditorCount = 0;
-		txtarea.ckeditor({ 
-			toolbar:wysiwygType,
-			height:'150',
-			customConfig : 'config.js.cfm'
-		}, htmlEditorOnComplete);
-}
 
 
 function btnConfirmDialog(message,btn){
     
     jQuery("#alertDialogMessage").html(message);
+	
     jQuery("#alertDialog").dialog({
-            resizable: false,
-            modal: true,
-            buttons: {
-                'YES': function() {
-                    jQuery(this).dialog('close');
-                    btn.form.submit();        
-                    },
-                'NO': function() {
-                    jQuery(this).dialog('close');
-                }
+        resizable: false,
+        modal: true,
+        buttons: {
+            'YES': function() {
+                jQuery(this).dialog('close');
+                btn.form.submit();        
+                },
+            'NO': function() {
+                jQuery(this).dialog('close');
             }
-        });
+        }
+    });
 
     return false;   
 }
 
 
-function toggleDisplay(link,expand,close){
-	var $target = $(link).parent().next().children('div');
-	$target.toggle();
-	if($(link).html() == '[' + expand + ']') {
-		$(link).html('[' + close + ']');
+function toggleDisplay(link, expand, close){
+	var target = jQuery(link).parent().next().children('div');
+	target.toggle();
+	if(jQuery(link).html() == '[' + expand + ']') {
+		jQuery(link).html('[' + close + ']');
 	} else {
-		$(link).html('[' + expand + ']');
+		jQuery(link).html('[' + expand + ']');
 	}  
 }
 
@@ -81,7 +67,7 @@ function stripe(theclass) {
 			}
 		}
 	);
-   jQuery('div.mura-grid.' + theclass + ' dl').each(
+   jQuery('div.' + theclass + ' dl').each(
 		function(index) {
 			if(index % 2){
 				jQuery(this).addClass('alt');	
