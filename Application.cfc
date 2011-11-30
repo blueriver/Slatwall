@@ -45,6 +45,10 @@ component extends="org.fw1.framework" output="false" {
 		include "../mappings.cfm";
 	}
 	
+	if(!structKeyExists(this.mappings, "/org")) {
+		this.mappings["/org"] = mapPrefix & BaseDir & "/plugins/Slatwall/org";
+	}
+	
 	include "fw1Config.cfm";
 	variables.slatwallVfsRoot = "ram:///" & this.name;
 	this.mappings[ "/slatwallVfsRoot" ] = variables.slatwallVfsRoot;
@@ -149,8 +153,7 @@ component extends="org.fw1.framework" output="false" {
 		/******************* CFStatic Setup *************************/
 		
 		// Create The cfStatic object
-		
-		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
+		var cfStatic = createObject("component", "org.cfstatic.cfstatic").init(
 			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
 			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
 			minifyMode = 'package',
