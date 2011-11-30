@@ -43,10 +43,9 @@ component extends="org.fw1.framework" output="false" {
 		include "../../config/applicationSettings.cfm";
 		include "../../config/mappings.cfm";
 		include "../mappings.cfm";
-	}
-	
-	if(!structKeyExists(this.mappings, "/org")) {
-		this.mappings["/org"] = mapPrefix & BaseDir & "/plugins/Slatwall/org";
+		if(!structKeyExists(this.mappings, "/org")) {
+			this.mappings["/org"] = mapPrefix & BaseDir & "/plugins/Slatwall/org";
+		}
 	}
 	
 	include "fw1Config.cfm";
