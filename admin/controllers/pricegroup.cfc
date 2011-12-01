@@ -33,7 +33,7 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
+Notes: Test.
 
 */
 component extends="BaseController" persistent="false" accessors="true" output="false" {
