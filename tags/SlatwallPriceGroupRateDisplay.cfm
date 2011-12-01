@@ -46,7 +46,6 @@ Notes:
 		<div class="priceGroupRateDisplay">
 			<cfif attributes.edit>
 				<dl>
-					
 					<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
 					
 					<!--- The dynamic percentageOff,AmountOff,Amount inputs --->
@@ -58,45 +57,16 @@ Notes:
 		
 					<input type="text" id="priceGroupRateValue" name="priceGroupRateValue" value="<cfif !isNull(attributes.priceGroupRate.getValue())>#attributes.priceGroupRate.getValue()#</cfif>" />
 					
+					<div id="priceGroupRate_globalOffInputs">
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#ProductIds" property="products" edit="true"  fieldType="multiselect" value=""  />
+					</div>
 					
-					<!---	<cfif attributes.showName>
-					<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#name" property="name" edit="true" />
-					</cfif>
-					<cfif attributes.showCompany>
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#company" property="company" edit="true" />
-					</cfif>
-					<cfif attributes.priceGroupRate.getCountry().getStreetAddressShowFlag() and attributes.showStreetAddress>
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#streetAddress" property="streetAddress" edit="true" />
-					</cfif>
-					<cfif attributes.priceGroupRate.getCountry().getStreet2AddressShowFlag() and attributes.showStreet2Address>
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#street2Address" property="street2Address" edit="true" />
-					</cfif>
-					<cfif attributes.priceGroupRate.getCountry().getCityShowFlag() and attributes.showCity>
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#city" property="city" edit="true" />
-					</cfif>
-					<cfif attributes.priceGroupRate.getCountry().getStateCodeShowFlag() and attributes.showState>
-						<cfif arrayLen(attributes.priceGroupRate.getStateCodeOptions()) gt 1>
-							<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" editType="select" edit="true" />
-						<cfelse>
-							<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" editType="text" edit="true" />
-						</cfif>
-					</cfif>
-					<cfif attributes.priceGroupRate.getCountry().getPostalCodeShowFlag() and attributes.showPostalCode>
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#postalCode" property="postalCode" edit="#attributes.edit#" />
-					</cfif>--->
 					<input type="hidden" name="#attributes.fieldNamePrefix#priceGroupRateId" value="#attributes.priceGroupRate.getPriceGroupRateID()#" />
 				</dl>
 				
 				
 			<cfelse>
-				<!---<cfif len(attributes.priceGroupRate.getName())><strong>#attributes.priceGroupRate.getName()#</strong><br /></cfif>
-				<cfif len(attributes.priceGroupRate.getCompany())>#attributes.priceGroupRate.getCompany()#<br /></cfif>
-				<cfif len(attributes.priceGroupRate.getStreetAddress())>#attributes.priceGroupRate.getStreetAddress()#<br /></cfif>
-				<cfif len(attributes.priceGroupRate.getStreet2Address())>#attributes.priceGroupRate.getStreet2Address()#<br /></cfif>
-				<cfif len(attributes.priceGroupRate.getCity())>#attributes.priceGroupRate.getCity()#, </cfif>
-				<cfif len(attributes.priceGroupRate.getStateCode())>#attributes.priceGroupRate.getStateCode()# </cfif>
-				<cfif len(attributes.priceGroupRate.getPostalCode())>#attributes.priceGroupRate.getPostalCode()#</cfif><br />
-				<cfif len(attributes.priceGroupRate.getCountryCode())>#attributes.priceGroupRate.getCountryCode()#</cfif>--->
+
 			</cfif>
 		</div>
 	</cfoutput>
