@@ -166,7 +166,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
-		
 		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
 		if( left(arguments.missingMethodName, 9) == "hasUnique") {
 			

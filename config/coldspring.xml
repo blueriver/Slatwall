@@ -24,6 +24,7 @@
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
 	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
+	<bean id="priceGroupDAO" class="Slatwall.com.dao.PriceGroupDAO" />
 	<bean id="promotionDAO" class="Slatwall.com.dao.PromotionDAO" />
 	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
 		
@@ -44,6 +45,7 @@
 	<bean id="accountService" parent="parentService" class="Slatwall.com.service.AccountService">
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
+		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
 		<!-- Injected From Mua -->
 		<property name="userManager"><ref bean="userManager" /></property>
 		<property name="userUtility"><ref bean="userUtility" /></property>
@@ -106,6 +108,9 @@
 		<property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="FeedManager" /></property>
     </bean>
+	<bean id="priceGroupService" parent="parentService" class="Slatwall.com.service.priceGroupService">
+        <property name="DAO"><ref bean="PriceGroupDAO" /></property>
+	</bean>
 	<bean id="promotionService" parent="parentService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>
 	</bean>

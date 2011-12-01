@@ -105,6 +105,11 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:attribute" type="list">
 								<cf_SlatwallActionCaller action="admin:promotion" type="list">
 							</ul>
+							<ul>
+								<li class="title">Price Groups</li>
+								<cf_SlatwallActionCaller action="admin:pricegroup.create" type="list">
+								<cf_SlatwallActionCaller action="admin:pricegroup.list" type="list">
+							</ul>
 						</div>
 					</div>
 					<div class="subMenu adminaccount">

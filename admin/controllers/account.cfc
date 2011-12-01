@@ -39,6 +39,7 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
 	property name="accountService";
+	property name="priceGroupService";
 	
 	public void function before(required struct rc) {
 	}
@@ -59,12 +60,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function create(required struct rc) {
-		detail(arguments.rc);
-		getFW().setView("admin:account.detail");
-		rc.edit = true;
+		edit(rc);
 	}
 	
 	public void function edit(required struct rc) {
+		rc.priceGroups = getPriceGroupService().listPriceGroup();
 		detail(arguments.rc);
 		getFW().setView("admin:account.detail");
 		rc.edit = true;
@@ -92,6 +92,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function save(required struct rc) {
 		param name="rc.accountID" default="";
+		param name="rc.priceGroupIdsAssigned" default="";
+		
+		// Assign price groups selcted to Account
+		/*var priceGroupIdsArr = listToArray(rc.priceGroupIdsAssigned);
+		for( priceGroupId in rc.priceGroupIdsAssigned ){
+		    form[fieldName]  = qry[fieldName][1];
+		}*/
 		
 		detail(rc);
 		
