@@ -109,9 +109,14 @@ Notes:
 				</tbody>
 			</table>
 			<cfif rc.edit>
-				<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
-				<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#entityNew('SlatwallPriceGroupRate')#" edit="true" />
-				<button type="submit" name="addPriceGroupRate" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button><br /><br />
+				<div id="priceGroupRateInputs" class="ui-helper-hidden">
+					<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
+					<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#entityNew('SlatwallPriceGroupRate')#" edit="true" />
+				</div>
+				<!---<button type="submit" name="addPriceGroupRate" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button><br /><br />--->
+				<input type="hidden" name="addPriceGroupRate" id="addPriceGroupRateHidden" value=""/>
+				
+				<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button><br /><br />
 			</cfif>
 		</cfif>
 		<cfif rc.edit>

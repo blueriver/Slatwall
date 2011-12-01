@@ -81,18 +81,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function save(required struct rc) {
 		detail(rc);
 		
-		//Map priceGroupRateType and priceGroupRateValue to the three amount fields in the entity
-		/*if(rc.priceGroupRateType EQ "percentageOff")
-			rc.priceGroup.setPercentageOff(rc.priceGroupRateValue);
-		else if(rc.priceGroupRateType EQ "amountOff")
-			rc.priceGroup.setPercentageOff(rc.priceGroupRateValue);
-		else if(rc.priceGroupRateType EQ "amount")
-			rc.priceGroup.setPercentageOff(rc.priceGroupRateValue);
-		else
-			throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
-		*/
-		
-		//Map priceGroupRateType and priceGroupRateValue to the three amount fields in the entity (will be loaded in by populate())
+		// Map priceGroupRateType and priceGroupRateValue from the form to the three amount fields in the entity (will be loaded in by populate())
 		if(rc.priceGroupRateType EQ "percentageOff")
 			rc.percentageOff = rc.priceGroupRateValue;
 		else if(rc.priceGroupRateType EQ "amountOff")
@@ -102,8 +91,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		else
 			throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
 		
-		
-		
 		var wasNew = rc.PriceGroup.isNew();
 		
 		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
@@ -112,9 +99,23 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.edit = true;
 			getFW().setView("admin:priceGroup.detail");
 		} else {
-			if(structKeyExists(arguments.rc, "addPriceGroupRate") && arguments.rc.addPriceGroupRate) {
+			if(structKeyExists(arguments.rc, "addPriceGroupRate") && arguments.rc.addPriceGroupRate EQ "true") {
 				var newPriceGroupRate = getPriceGroupService().newPriceGroupRate();
 				newPriceGroupRate.populate(rc);
+				
+				// If PriceGroupRate is not "global" then populate the contents of the multiselects
+				param name="rc.globalFlag" default="0";
+				if(rc.globalFlag EQ 0){
+				
+					/*--------- TEMPORARY until Greg writes generic hander in populate() --------- */
+					param name="rc.ProductIds" default="";
+					for(var i=1; i LTE ListLen(rc.ProductIds); i++){
+						var product = getProductService().getProduct(ListGetAt(rc.ProductIds, i));
+						//newPriceGroupRate.addProduct(product);
+						newPriceGroupRate.setProducts([product]);
+					}
+				}
+				
 				rc.priceGroup.addPriceGroupRate(newPriceGroupRate);
 				rc.edit = true;
 				getFW().setView("admin:priceGroup.detail");
@@ -122,26 +123,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.saveaddresszone_success");	
 			}
 		}
-		
-		/*
-		
-	   rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-	   rc.priceGroup = getPriceGroupService().save(rc.priceGroup,rc);
-	   if(!rc.priceGroup.hasErrors()) {
-	   		getFW().redirect(action="admin:priceGroup.list",querystring="message=admin.priceGroup.save_success");
-		} else {
-			rc.edit = true;
-			rc.itemTitle = rc.priceGroup.isNew() ? rc.$.Slatwall.rbKey("admin.priceGroup.create") : rc.$.Slatwall.rbKey("admin.priceGroup.edit") & ": #rc.priceGroup.getPriceGroupName()#";
-			rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
-			rc.productTypeTree = getProductService().getProductTypeTree();
-			rc.shippingMethods = getPriceGroupService().listShippingMethod();
-	   		getFW().setView(action="admin:priceGroup.detail");
-		}
-		
-		*/
 	}
 	
-	public void function savePriceGroupRate(required struct rc) {
+	/*public void function savePriceGroupRate(required struct rc) {
 		param name="rc.priceGroupId" default="";
 		param name="rc.priceGroupRateId" default="";
 		
@@ -155,7 +139,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			priceGroupRate.populate(rc);
 			rc.priceGroup.addPriceGroupRate(priceGroupRate);
 		}
-	}
+	}*/
 	
 	public void function deletePriceGroup(required struct rc) {
 		

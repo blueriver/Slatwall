@@ -144,7 +144,7 @@ Notes:
 		<cfif attributes.fieldType eq "">
 			<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
 		</cfif>
-		<cfif listFindNoCase("checkboxgroup,radiogroup,select", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
+		<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
 			<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
 		</cfif>
 	</cfif>
