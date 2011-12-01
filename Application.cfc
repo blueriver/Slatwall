@@ -149,7 +149,7 @@ component extends="org.fw1.framework" output="false" {
 		/******************* CFStatic Setup *************************/
 		
 		// Create The cfStatic object
-		var cfStatic = createObject("component", "org.cfstatic.cfstatic").init(
+		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
 			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
 			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
 			minifyMode = 'package',
