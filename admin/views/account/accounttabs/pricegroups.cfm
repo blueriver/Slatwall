@@ -38,7 +38,7 @@ Notes:
 --->
 
 <cfoutput>
-	<table id="PriceGroupList" class="mura-table-grid stripe" style="width:50%;">
+	<table id="PriceGroupList" class="listing-grid stripe" style="width:50%;">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.name")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.enabledOnAccount")#</th>
