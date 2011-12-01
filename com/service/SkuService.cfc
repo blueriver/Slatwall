@@ -59,7 +59,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(!structIsEmpty(arguments.optionsStruct)) {
 			var options = arguments.optionsStruct;
 			var comboList = getOptionCombinations(options);
-			createSkusFromOptions(comboList,arguments.product,arguments.price,arguments.listprice,arguments.shippingWeight);
+			createSkusFromOptions(comboList,arguments.product,arguments.price);
 		} else {  // no options were selected so create a default sku
 			var thisSku = this.newSku();
 			thisSku.setProduct(arguments.product);

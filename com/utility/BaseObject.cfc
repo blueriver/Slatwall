@@ -107,8 +107,8 @@ component displayname="Base Object" accessors="true" output="false" {
 						}
 					}
 					
-				// (ONE-TO-MANY) or (MANY-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array
-				} else if ( structKeyExists(currentProperty, "fieldType") && (currentProperty.fieldType == "one-to-many" || currentProperty.fieldType == "many-to-many") && isArray( arguments.data[ currentProperty.name ] ) ) {
+				// (ONE-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array	
+				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "one-to-many" && isArray( arguments.data[ currentProperty.name ] ) ) {
 					
 					// Set the data of this One-To-Many relationship into it's own local array
 					var oneToManyArrayData = arguments.data[ currentProperty.name ];
@@ -144,6 +144,54 @@ component displayname="Base Object" accessors="true" output="false" {
 							// Add the entity to the existing objects properties
 							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
 						}
+					}
+				// (MANY-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array
+				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-many" && isStruct( arguments.data[ currentProperty.name ] ) ) {
+					
+					// Set the data of this Many-To-Many relationship into it's own local struct
+					var manyToManyStructData = arguments.data[ currentProperty.name ];
+					
+					// Find the primaryID column Name
+					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
+					
+					// If the primaryID exists then we can set the relationships
+					if(structKeyExists(manyToOneStructData, primaryIDPropertyName) && isSimpleValue(manyToOneStructData[primaryIDPropertyName])) {
+						
+						// Get all of the existing related entities
+						var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
+						
+						// Loop over the existing related entities and check if the primaryID exists in the list of data that was passed in.
+						for(var m=1; m<=arrayLen(existingRelatedEntities); m++ ) {
+							
+							var listIndex = listFind( manyToManyStructData[primaryIDPropertyName], existingRelatedEntities[m].invokeMethod("get#primaryIDPropertyName#") );
+							
+							// If the relationship already exist, then remove that id from the list
+							if(listIndex) {
+								listDeleteAt(manyToManyStructData[primaryIDPropertyName], listIndex);
+							// If the relationship no longer exists in the list, then remove the entity relationship
+							} else {
+								this.invokeMethod("remove#currentProperty.singularname#", {1=existingRelatedEntities[m]});
+							}
+						}
+						
+						// Loop over all of the primaryID's that are still in the list, and add the relationship
+						for(var n=1; n<=listLen(manyToManyStructData[primaryIDPropertyName]); n++) {
+							
+							// set the service to use to get the specific entity
+							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+								
+							// set the id of this entity into a local variable
+							var thisEntityID = listGetAt(manyToManyStructData[primaryIDPropertyName], n);
+							
+							// Load the specific entity, if one doesn't exist... this will be null
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=thisEntityID});
+							
+							// If the entity exists, then add it to the relationship
+							if(!isNull(thisEntity)) {
+								this.invokeMethod("add#currentProperty.singularname#", {1=thisEntity});
+							}
+						}
+						
 					}
 				}
 			}

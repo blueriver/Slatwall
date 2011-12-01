@@ -43,7 +43,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 		var resizedImagePath = "";
 		
 		if(!fileExists(expandPath(arguments.imagePath))) {
-			arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";
+			arguments.imagePath = "#getSlatwallRootPath()#/staticAssets/images/missingimage.jpg";
 		}
 		if(!arguments.width && !arguments.height) {
 			// if no width and height is passed in, display the original image
@@ -133,7 +133,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 					// log the error
 					getService("logService").logException(e);
 					// return the "missing image" image
-					arguments.imagePath = "#getSlatwallRootPath()#/assets/images/missingimage.jpg";
+					arguments.imagePath = "#getSlatwallRootPath()#/staticAssets/images/missingimage.jpg";
 					return getResizedImagePath(argumentCollection=arguments);
 				}
 			}
