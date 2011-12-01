@@ -194,7 +194,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				
 				variables[ cacheKey ] = smartList.getRecords();
 				
-				arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});
+				// If this is a many-to-one related property, then add a 'select' to the top of the list
+				if(getPropertyMetaData( propertyName ).fieldType == "many-to-one") {
+					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
+				}
 			}
 			
 			return variables[ cacheKey ];
