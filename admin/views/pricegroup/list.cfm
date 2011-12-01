@@ -45,7 +45,7 @@ Notes:
 
 <div class="svoadminpricegrouplist">
 <cfif arrayLen(rc.pricegroups) gt 0>
-	<table id="PriceGroups" class="mura-table-grid stripe">
+	<table id="PriceGroups" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupCode")#</th>
@@ -60,7 +60,7 @@ Notes:
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:pricegroup.edit" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:pricegroup.detail" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:pricegroup.detail" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="detail" type="list">
 					  <cf_SlatwallActionCaller action="admin:pricegroup.delete" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="delete" type="list" confirmrequired="true">
 		          </ul>     						
 				</td>
