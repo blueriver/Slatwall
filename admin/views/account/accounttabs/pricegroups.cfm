@@ -47,7 +47,13 @@ Notes:
 
 			<tr>
 				<td>#local.priceGroup.getPriceGroupName()#</td>
-				<td><input type="checkbox" name="priceGroupIdsAssigned" value="#local.priceGroup.getPriceGroupId()#" <cfif rc.Account.isPriceGroupAssigned(local.priceGroup.getPriceGroupId())>checked="checked"</cfif> /></td>
+				<td>
+					<cfif rc.edit>
+						<input type="checkbox" name="priceGroupIdsAssigned" value="#local.priceGroup.getPriceGroupId()#" <cfif rc.Account.isPriceGroupAssigned(local.priceGroup.getPriceGroupId())>checked="checked"</cfif> /></td>
+					<cfelse>
+						#rc.Account.isPriceGroupAssigned(local.priceGroup.getPriceGroupId())#
+					</cfif>
+					
 			</tr>
 
 		</cfloop>
