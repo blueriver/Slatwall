@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.priceGroup" type="any">
-<cfparam name="rc.newPriceGroupRate" type="any">	<!--- This will be empty, and will be used by the "template" --->
+<cfparam name="rc.PriceGroupRate" type="any">
 <cfparam name="rc.edit" type="boolean">
 
 <cfif rc.edit>
@@ -80,7 +80,7 @@ Notes:
 		<cfif not rc.priceGroup.isNew()>
 			<strong>#$.slatwall.rbKey('admin.pricegroup.edit.priceGroupRates')#</strong>
 		
-			<table id="priceGroupRates" class="mura-table-grid stripe">
+			<table id="priceGroupRates" class="listing-grid stripe">
 				<thead>
 					<tr>
 						<th>#rc.$.Slatwall.rbKey("entity.priceGroupRate.priceGroupRateType")#</th>
@@ -98,9 +98,10 @@ Notes:
 							<cfif rc.edit>
 								<td class="administration">
 									<ul class="one">
-										<cfif not local.priceGroupRate.isNew()>
-											<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list">
-										</cfif>
+										<!---<cfif not local.priceGroupRate.isNew()>--->
+										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
+										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list">
+										<!---</cfif>--->
 									</ul>
 								</td>
 							</cfif>

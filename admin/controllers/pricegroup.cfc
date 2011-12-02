@@ -59,7 +59,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.itemTitle &= ": " & rc.priceGroup.getPriceGroupName();
 		}
 		
-		rc.newPriceGroupRate = getPriceGroupService().getPriceGroupRate(0, true);
+		// If we are editing a PriceGroupRate (rc contain a priceGroupRateId) then pull that one specifically, otherwise, pull a brand new entity (rc does not contain priceGorupRateId)
+		param name="rc.priceGroupRateId" default="";
+		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
+
 	}
 
 
@@ -68,6 +71,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function edit(required struct rc) {
+		rc.productTypeTree = getProductService().getProductTypeTree();
+		detail(rc);
+		getFW().setView("admin:priceGroup.detail");
+		rc.edit = true;
+	}
+	
+	public void function editPriceGroupRate(required struct rc) {
 		rc.productTypeTree = getProductService().getProductTypeTree();
 		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
@@ -100,8 +110,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().setView("admin:priceGroup.detail");
 		} else {
 			if(structKeyExists(arguments.rc, "addPriceGroupRate") && arguments.rc.addPriceGroupRate EQ "true") {
-				var newPriceGroupRate = getPriceGroupService().newPriceGroupRate();
-				newPriceGroupRate.populate(rc);
+				// rc.priceGroupRate is populated by detail(). Will contain either new PriceGroupRate entity, or one from the DB if editing.
+				rc.priceGroupRate.populate(rc);	
 				
 				// If PriceGroupRate is not "global" then populate the contents of the multiselects
 				param name="rc.globalFlag" default="0";
@@ -112,11 +122,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 					for(var i=1; i LTE ListLen(rc.ProductIds); i++){
 						var product = getProductService().getProduct(ListGetAt(rc.ProductIds, i));
 						//newPriceGroupRate.addProduct(product);
-						newPriceGroupRate.setProducts([product]);
+						rc.priceGroupRate.setProducts([product]);
 					}
 				}
 				
-				rc.priceGroup.addPriceGroupRate(newPriceGroupRate);
+				rc.priceGroup.addPriceGroupRate(rc.priceGroupRate);
 				rc.edit = true;
 				getFW().setView("admin:priceGroup.detail");
 			} else {
