@@ -61,6 +61,14 @@ Notes:
 				<cfif rc.edit>
 					<th></th>
 				</cfif>
+				
+				<!--- Loop over all Price Groups and create column headers --->
+				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+					<cfset local.priceGroup = rc.skuSmartList.getPageRecords()[local.i] />
+					<th>#local.priceGroup.getPriceGroupName()#</th>
+				</cfloop>
+				
+				
 				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
@@ -121,6 +129,17 @@ Notes:
 						<a class="button uploadImage" href="/plugins/Slatwall/?slatAction=admin:product.uploadSkuImage&skuID=#local.thisSku.getSkuID()#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
 					</td>
 				</cfif>
+				
+				
+				<!--- Loop over all Price Groups and create actual values --->
+				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+					<cfset local.priceGroup = rc.skuSmartList.getPageRecords()[local.i] />
+					<td>#local.priceGroup.getPriceGroupName()#</td>
+					
+					
+				</cfloop>
+				
+				
 				<td>
 					<cfif rc.edit>
 						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />

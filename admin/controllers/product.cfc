@@ -43,6 +43,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	property name="skuService" type="Slatwall.com.service.SkuService";
 	property name="attributeService" type="Slatwall.com.service.AttributeService";
+	property name="priceGroupService" type="Slatwall.com.service.PriceGroupService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
 	property name="utilityORMService" type="Slatwall.com.service.UtilityORMService";
@@ -76,8 +77,9 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
-		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
-		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'),parentID=rc.$.slatwall.setting("product_rootProductCategory"));
+		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID(), data=rc);
+		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
+		rc.priceGroups = getPriceGroupService().getPriceGroupSmartList();
 	}
 	
 	public void function edit(required struct rc) {
