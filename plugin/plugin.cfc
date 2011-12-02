@@ -59,14 +59,14 @@ component extends="mura.plugin.plugincfc" output="false" {
 	}
 	
 	public void function toBundle(pluginConfig, bundle, siteid) {
-		var dataDAO = createObject("component", "muraWRM.plugins.slatwall.com.dao.DataDAO").init();
-		dataDAO.toBundle(argumentcollection=arguments);
+		var bundleUtility = createObject("component", "bundleUtility").init();
+		bundleUtility.toBundle(argumentcollection=arguments);
 		
 	}
 	
 	public void function fromBundle(pluginConfig, bundle, siteid, errorStruct, keyFactory) {
-		var dataDAO = createObject("component", "muraWRM.plugins.slatwall.com.dao.DataDAO").init();
-		dataDAO.fromBundle(argumentcollection=arguments);
+		var bundleUtility = createObject("component", "bundleUtility").init();
+		bundleUtility.fromBundle(argumentcollection=arguments);
 
 	}
 	
