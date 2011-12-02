@@ -64,7 +64,7 @@ Notes:
 				
 				<!--- Loop over all Price Groups and create column headers --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
-					<cfset local.priceGroup = rc.skuSmartList.getPageRecords()[local.i] />
+					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
 					<th>#local.priceGroup.getPriceGroupName()#</th>
 				</cfloop>
 				
@@ -131,10 +131,11 @@ Notes:
 				</cfif>
 				
 				
+				
 				<!--- Loop over all Price Groups and create actual values --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
-					<cfset local.priceGroup = rc.skuSmartList.getPageRecords()[local.i] />
-					<td>#local.priceGroup.getPriceGroupName()#</td>
+					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
+					<td>WIP</td>
 					
 					
 				</cfloop>

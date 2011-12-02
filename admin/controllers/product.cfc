@@ -79,7 +79,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID(), data=rc);
 		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
-		rc.priceGroups = getPriceGroupService().getPriceGroupSmartList();
+		rc.priceGroupSmartList = getPriceGroupService().getPriceGroupSmartList();
 	}
 	
 	public void function edit(required struct rc) {
