@@ -118,8 +118,6 @@ Notes:
 						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedSkuIds" property="excludedSkus" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
 						
 					</div>
-					
-					<!---<input type="hidden" name="#attributes.fieldNamePrefix#priceGroupRateId" value="#attributes.priceGroupRate.getPriceGroupRateID()#" />--->
 				</dl>
 			</cfif>
 		</div>

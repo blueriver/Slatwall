@@ -40,10 +40,6 @@ Notes:
 <cfparam name="rc.PriceGroupRate" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<cfif rc.edit>
-	<!---<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />--->
-</cfif>
-
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:priceGroup.list" type="list">
 	<cfif !rc.edit>
@@ -63,19 +59,6 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
 		</dl>
-			<!---<cfif rc.edit>
-			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:priceGroup.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.priceGroup.isNew()>
-					<cf_SlatwallActionCaller action="admin:priceGroup.delete" querystring="priceGroupid=#rc.priceGroup.getPriceGroupID()#" class="button" type="link" confirmrequired="true">
-				</cfif>
-				<cf_SlatwallActionCaller action="admin:priceGroup.save" type="submit" class="button">
-			</div>
-			</cfif>
-		</form>--->
-
-	
-	
 		
 		<cfif not rc.priceGroup.isNew()>
 			<strong>#$.slatwall.rbKey('admin.pricegroup.edit.priceGroupRates')#</strong>
@@ -98,10 +81,8 @@ Notes:
 							<cfif rc.edit>
 								<td class="administration">
 									<ul class="one">
-										<!---<cfif not local.priceGroupRate.isNew()>--->
 										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
 										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list">
-										<!---</cfif>--->
 									</ul>
 								</td>
 							</cfif>

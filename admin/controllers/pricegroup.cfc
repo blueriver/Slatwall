@@ -54,15 +54,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.edit" default="false";
 		
 		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-		//rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
-		/*if(!rc.priceGroup.isNew()) {
-			rc.itemTitle &= ": " & rc.priceGroup.getPriceGroupName();
-		}*/
 		
 		// If we are editing a PriceGroupRate (rc contain a priceGroupRateId) then pull that one specifically, otherwise, pull a brand new entity (rc does not contain priceGorupRateId)
 		param name="rc.priceGroupRateId" default="";
-		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
-		
+		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);	
 	}
 
 
@@ -71,7 +66,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function edit(required struct rc) {
-		//rc.productTypeTree = getProductService().getProductTypeTree();
 		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
@@ -114,14 +108,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 					rc.amount = rc.priceGroupRateValue;
 				else
 					throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
-				
 					
 				// rc.priceGroupRate is created by detail(). Will contain either new PriceGroupRate entity, or one from the DB if editing. populate() fills entity with values based on RC (form post).
 				rc.priceGroupRate.populate(rc);	
-				
-				
-								
-				
+
 				param name="rc.globalFlag" default="0";
 				param name="rc.productIds" default="";
 				param name="rc.productTypeIds" default="";
@@ -177,8 +167,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				if(rc.addPriceGroupRate EQ "true")
 					rc.priceGroup.addPriceGroupRate(rc.priceGroupRate);
 	
-				//rc.edit = true;
-				//getFW().setView("admin:priceGroup.detail");
 				getFW().redirect(action="admin:priceGroup.detail", querystring="message=admin.pricegroup.savepricegrouprate_success");
 			} else {
 				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.savepricegroup_success");	
@@ -215,36 +203,4 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.edit = true;
 		getFW().setView("admin:pricegroup.detail");
 	}
-	
-	/*public void function delete(required struct rc) {
-		var priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID);
-		var deleteResponse = getPriceGroupService().delete(priceGroup);
-		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.priceGroup.delete_success");
-		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype="error";
-		}	   
-		getFW().redirect(action="admin:priceGroup.list",preserve="message,messagetype");
-	}
-
-	public void function deletePriceGroupRate(required struct rc) {
-		var priceGroupCode = getPriceGroupService().getPriceGroupRate(rc.priceGroupCodeID);
-		rc.priceGroupID = priceGroupCode.getPriceGroup().getPriceGroupID();
-		var deleteResponse = getPriceGroupService().deletePriceGroupRate(priceGroupCode);
-		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.priceGroup.deletePriceGroupRate_success");
-		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
-		}
-		rc.edit = true;
-		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-		rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
-		rc.itemTitle = rc.$.Slatwall.rbKey("admin.priceGroup.edit") & ": #rc.priceGroup.getPriceGroupName()#";
-		getFW().redirect(action="admin:priceGroup.detail",querystring="priceGroupID=#rc.priceGroupID#",preserve="message,messagetype");
-	}*/
-	
-	
-	
 }
