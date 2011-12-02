@@ -314,6 +314,31 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// This will give the price based on User logged in, current term sales, volume discounts, ect.
 	public numeric function getLivePrice() {
+		var prices = [getPrice()];
+		
+		arrayAppend(prices, getBestPriceByLivePromotions());
+		arrayAppend(prices, getPriceByCurrentAccount());
+		
+		arraySort(prices, "numeric", "asc");
+		
+		return prices[1];
+	}
+	
+	public numeric function getBestPriceByLivePromotions() {
+		//return getService("promotionService").calculateBestSkuPriceBasedOnLivePromotions(sku=this);
 		return getPrice();
 	}
+	
+	public numeric function getPriceByPromotion( required any promotion) {
+		return getService("promotionService").calculateSkuPriceBasedOnPromotion(sku=this, promotion=arguments.promotion);
+	}
+	
+	public numeric function getPriceByCurrentAccount() {
+		return getService("priceGroupService").calculateSkuPriceBasedOnCurrentAccount(sku=this);
+	}
+	
+	public numeric function getPriceByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").calculateSkuPriceBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
+	}
+	
 }
