@@ -38,6 +38,8 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
+	property name="sessionService" type="any";
+	
 	public any function save(required any PriceGroup,required struct data) {
 		// populate bean from values in the data Struct
 		arguments.PriceGroup.populate(arguments.data);
@@ -82,5 +84,109 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function validatePriceGroupRate( required any priceGroupRate, string priceGroupRateList ) {
 		
 	}
+	
+	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
+		return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSessionService().getCurrent().getAccount());
+	}
+	
+	public numeric function calculateSkuPriceBasedOnAccount(required any sku, required any account) {
 		
+		// Create a new array, and add the skus price as the first entry
+		var prices = [sku.getPrice()];
+		
+		// Loop over each of the price groups of this account, and get the price based on that pricegroup
+		for(var i=1; i<=arrayLen(account.getPriceGroups()); i++) {
+			
+			// Add this price groups price to the prices array
+			arrayAppend(prices, calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=account.getPriceGroups()[i]));	
+		}
+		
+		
+		// Sort the array by lowest price
+		arraySort(prices, "numeric", "asc");
+		
+		// Return the lowest price
+		return prices[1];
+	}
+	
+	public numeric function calculateSkuPriceBasedOnPriceGroup(required any sku, required any priceGroup) {
+		
+		var prices = [sku.getPrice()];
+		
+		if(!isNull(arguments.priceGroup.getParentPriceGroup())) {
+			arrayAppend(prices, this.calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup.getParentPriceGroup()));
+		}
+		
+		// Loop over each of the rates
+		for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+			var thisPriceGroupRate = arguments.priceGroup.getPriceGroupRates()[i];
+			
+			// Setup a local sku excluded value to see if there are any excludes that make this rate not apply.
+			var skuExcluded = false;
+			var skuIncluded = false;
+			
+			if(thisPriceGroupRate.getGlobalFlag()) {
+				skuIncluded = true;
+			} else {
+				if(thisPriceGroupRate.hasExcludedSku(arguments.sku)) {
+					skuExcluded = true;
+				} else if (thisPriceGroupRate.hasExcludedProduct(arguments.sku.getProduct())) {
+					skuExcluded = true;
+				} else {
+					var currentProductType = sku.getProduct().getProductType();
+					
+					while (!isNull(currentProductType)) {
+						if(thisPriceGroupRate.hasExcludedProductType(currentProductType)) {
+							skuExcluded = true;
+							break;
+						}
+						currentProductType = currentProductType.getParentProductType();
+					}
+				}
+				
+				// As long as there were no exclusions for this sku we can check inclusions
+				if(!skuExcluded) {
+					
+					// Check skus, products & productTypes to see if this sku is included in this rate
+					if(thisPriceGroupRate.hasSku(arguments.sku)) {
+						skuIncluded = true;
+					} else if (thisPriceGroupRate.hasProduct(arguments.sku.getProduct())) {
+						skuIncluded = true;
+					} else {
+						var currentProductType = sku.getProduct().getProductType();
+						
+						while (!isNull(currentProductType)) {
+							if(thisPriceGroupRate.hasProductType(currentProductType)) {
+								skuIncluded = true;
+								break;
+							}
+							currentProductType = currentProductType.getParentProductType();
+						}
+					}
+				}
+			}
+			
+			// If the sku is supposed to have this rate applied, then calculate the rate and apply
+			if(skuIncluded) {
+				var thisNewPrice = arguments.sku.getPrice();
+				
+				if(!isNull(thisPriceGroupRate.getPercentageOff())) {
+					var thisNewPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (thisPriceGroupRate.getPercentageOff() / 100));
+				} else if (!isNull(thisPriceGroupRate.getAmountOff())) {
+					var thisNewPrice = arguments.sku.getPrice() - thisPriceGroupRate.getAmountOff();
+				} else if (!isNull(thisPriceGroupRate.getAmount())) {
+					var thisNewPrice = thisPriceGroupRate.getAmount();
+				}
+				
+				arrayAppend(prices, numberFormat(thisNewPrice, "0.00"));
+			}
+		}
+		
+		// Sort the array by lowest price
+		arraySort(prices, "numeric", "asc");
+		
+		// Return the lowest price
+		return prices[1];
+	}
+			
 }
