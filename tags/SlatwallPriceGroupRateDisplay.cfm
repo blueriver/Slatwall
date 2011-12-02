@@ -58,6 +58,9 @@ Notes:
 		
 					<input type="text" id="priceGroupRateValue" name="priceGroupRateValue" value="<cfif !isNull(attributes.priceGroupRate.getValue())>#attributes.priceGroupRate.getValue()#</cfif>" />
 					
+					<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" property="roundingRule"  edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
+					
+					
 					<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->
 					<div id="priceGroupRate_globalOffInputs" <cfif attributes.priceGroupRate.getGlobalFlag() EQ 1>class="ui-helper-hidden"</cfif> >
 						<br>
@@ -86,8 +89,8 @@ Notes:
 						<cfloop array="#attributes.priceGroupRate.getSKUs()#" index="SKU">
 							<cfset idsList = ListAppend(idsList, SKU.getSKUId())>
 						</cfloop>
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#SkuIds" property="Skus" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
-						
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#SkuIds" property="Skus" edit="true"  fieldType="multiselect" value="#idsList#"  />
+						--->
 						<br>
 						
 						<!--- ---------------- Excludes --------------- --->
@@ -115,8 +118,8 @@ Notes:
 							<cfset idsList = ListAppend(idsList, SKU.getSKUId())>
 						</cfloop>
 						
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedSkuIds" property="excludedSkus" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
-						
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedSkuIds" property="excludedSkus" edit="true"  fieldType="multiselect" value="#idsList#"  />
+						--->
 					</div>
 				</dl>
 			</cfif>

@@ -58,6 +58,9 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="activeFlag" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
+			
+			<!--- valueLink="#buildURL(action='admin:priceGroup.detail', queryString='priceGroupId=#rc.priceGroup.getParentPriceGroup().getPriceGroupId()#')#" --->
+			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="parentPriceGroup" edit="#rc.edit#" valueDefault="#rc.$.Slatwall.rbKey('admin.none')#">
 		</dl>
 		
 		<cfif not rc.priceGroup.isNew()>

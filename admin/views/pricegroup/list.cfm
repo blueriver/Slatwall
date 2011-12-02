@@ -49,13 +49,21 @@ Notes:
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupCode")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.inheritsFrom")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.activeFlag")#</th>
 			<th>&nbsp;</th>
 		</tr>
-		<cfloop array="#rc.pricegroups#" index="Local.PriceGroup">
+		<cfloop array="#rc.pricegroups#" index="local.PriceGroup">
 			<tr>
 				<td class="varWidth">#local.PriceGroup.getPriceGroupName()#</td>
 				<td>#local.PriceGroup.getPriceGroupCode()#</td>
+				<td>
+					<cfif !isNull(local.priceGroup.getParentPriceGroup())>
+						<a href="#buildURL(action='admin:pricegroup.detail', querystring='priceGroupId=#local.priceGroup.getParentPriceGroup().getPriceGroupId()#')#">#local.priceGroup.getParentPriceGroup().getPriceGroupName()#</a>
+					<cfelse>
+						#rc.$.Slatwall.rbKey("entity.pricegroup.inheritsFromNothing")#
+					</cfif>	
+				</td>
 				<td>#yesNoFormat(local.PriceGroup.getActiveFlag())#</td>
 				<td class="administration">
 		          <ul class="three">

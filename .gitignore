@@ -13,3 +13,4 @@ settings.xml/addLicense.cfm
 logs/
 assets/images/cache/
 staticAssets/min/
+staticAssets/images/cache

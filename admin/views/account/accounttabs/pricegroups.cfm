@@ -53,7 +53,7 @@ Notes:
 					<cfelse>
 						#rc.Account.isPriceGroupAssigned(local.priceGroup.getPriceGroupId())#
 					</cfif>
-					
+				</td>
 			</tr>
 
 		</cfloop>
