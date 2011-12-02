@@ -167,7 +167,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				if(rc.addPriceGroupRate EQ "true")
 					rc.priceGroup.addPriceGroupRate(rc.priceGroupRate);
 	
-				getFW().redirect(action="admin:priceGroup.detail", querystring="message=admin.pricegroup.savepricegrouprate_success");
+				getFW().redirect(action="admin:priceGroup.detail", querystring="message=admin.pricegroup.savepricegrouprate_success&priceGroupId=#rc.PriceGroup.getPriceGroupId()#");
 			} else {
 				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.savepricegroup_success");	
 			}
