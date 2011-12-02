@@ -146,4 +146,11 @@ component displayname="Data Service" extends="BaseService" {
 		return getDAO().isUniqueProperty(argumentcollection=arguments);
 	}
 	
+	public any function toBundle(required any bundle, required string tableList) {
+		getDAO().toBundle(argumentcollection=arguments);
+	}
+	
+	public any function fromBundle(required any bundle, required string tableList) {
+		getDAO().toBundle(argumentcollection=arguments);
+	}
 }

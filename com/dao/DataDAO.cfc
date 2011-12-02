@@ -240,4 +240,19 @@ Notes:
 		<cfreturn true />		
 	</cffunction>
 	
+	<cffunction name="toBundle">
+		<cfargument name="bundle" />
+		
+	</cffunction>
+	
+	<cffunction name="fromBundle">
+		<cfargument name="bundle" />
+		
+	</cffunction>
+	
+	<!---
+	bundle.setValue('queryKey', query)
+	bundle.getValue('queryKey')
+	keyFactory.get(uuid)
+	--->
 </cfcomponent>

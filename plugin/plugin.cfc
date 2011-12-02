@@ -58,5 +58,16 @@ component extends="mura.plugin.plugincfc" output="false" {
 	public void function delete() {
 	}
 	
+	public void function toBundle(pluginConfig, bundle, siteid) {
+		var dataDAO = createObject("component", "muraWRM.plugins.slatwall.com.dao.DataDAO").init();
+		dataDAO.toBundle(argumentcollection=arguments);
+		
+	}
+	
+	public void function fromBundle(pluginConfig, bundle, siteid, errorStruct, keyFactory) {
+		var dataDAO = createObject("component", "muraWRM.plugins.slatwall.com.dao.DataDAO").init();
+		dataDAO.fromBundle(argumentcollection=arguments);
+
+	}
 	
 }
