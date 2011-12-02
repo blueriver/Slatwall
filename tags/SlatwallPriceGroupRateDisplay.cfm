@@ -41,6 +41,7 @@ Notes:
 <cfparam name="attributes.fieldNamePrefix" type="string" default="" />
 
 
+
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<div class="priceGroupRateDisplay">
@@ -57,16 +58,69 @@ Notes:
 		
 					<input type="text" id="priceGroupRateValue" name="priceGroupRateValue" value="<cfif !isNull(attributes.priceGroupRate.getValue())>#attributes.priceGroupRate.getValue()#</cfif>" />
 					
-					<div id="priceGroupRate_globalOffInputs">
-						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#ProductIds" property="products" edit="true"  fieldType="multiselect" value=""  />
+					<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->
+					<div id="priceGroupRate_globalOffInputs" <cfif attributes.priceGroupRate.getGlobalFlag() EQ 1>class="ui-helper-hidden"</cfif> >
+						<br>
+						
+						<!--- ---------------- Includes --------------- --->
+						<!--- Build a list of ids for the "selected" products --->
+						<cfset idsList = "">
+						<cfloop array="#attributes.priceGroupRate.getProducts()#" index="product">
+							<cfset idsList = ListAppend(idsList, product.getProductId())>
+						</cfloop>
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#ProductIds" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
+						
+						<br>
+						
+						<!--- Build a list of ids for the "selected" product types --->
+						<cfset idsList = "">
+						<cfloop array="#attributes.priceGroupRate.getProductTypes()#" index="productType">
+							<cfset idsList = ListAppend(idsList, productType.getProductTypeId())>
+						</cfloop>
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#ProductTypeIds" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
+						
+						<br>
+						
+						<!--- Build a list of ids for the "selected" SKUs --->
+						<!---<cfset idsList = "">
+						<cfloop array="#attributes.priceGroupRate.getSKUs()#" index="SKU">
+							<cfset idsList = ListAppend(idsList, SKU.getSKUId())>
+						</cfloop>
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#SkuIds" property="Skus" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
+						
+						<br>
+						
+						<!--- ---------------- Excludes --------------- --->
+						<!--- Build a list of ids for the "selected" products --->
+						<cfset idsList = "">
+						<cfloop array="#attributes.priceGroupRate.getExcludedProducts()#" index="product">
+							<cfset idsList = ListAppend(idsList, product.getProductId())>
+						</cfloop>
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedProductIds" property="excludedProducts" edit="true"  fieldType="multiselect" value="#idsList#"  />
+						
+						<br>
+						
+						<!--- Build a list of ids for the "selected" product types --->
+						<cfset idsList = "">
+						<cfloop array="#attributes.priceGroupRate.getExcludedProductTypes()#" index="productType">
+							<cfset idsList = ListAppend(idsList, productType.getProductTypeId())>
+						</cfloop>
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedProductTypeIds" property="excludedProductTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
+						
+						<br>
+						
+						<!--- Build a list of ids for the "selected" SKUs --->
+						<!---<cfset idsList = "">
+						<cfloop array="#attributes.priceGroupRate.getExcludedSKUs()#" index="SKU">
+							<cfset idsList = ListAppend(idsList, SKU.getSKUId())>
+						</cfloop>
+						
+						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedSkuIds" property="excludedSkus" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
+						
 					</div>
 					
-					<input type="hidden" name="#attributes.fieldNamePrefix#priceGroupRateId" value="#attributes.priceGroupRate.getPriceGroupRateID()#" />
+					<!---<input type="hidden" name="#attributes.fieldNamePrefix#priceGroupRateId" value="#attributes.priceGroupRate.getPriceGroupRateID()#" />--->
 				</dl>
-				
-				
-			<cfelse>
-
 			</cfif>
 		</div>
 	</cfoutput>

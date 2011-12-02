@@ -110,14 +110,24 @@ Notes:
 				</tbody>
 			</table>
 			<cfif rc.edit>
-				<div id="priceGroupRateInputs" class="ui-helper-hidden">
+			
+				<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew()>class="ui-helper-hidden"</cfif> >
 					<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
-					<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#entityNew('SlatwallPriceGroupRate')#" edit="true" />
+					<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#rc.priceGroupRate#" edit="true" />
 				</div>
-				<!---<button type="submit" name="addPriceGroupRate" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button><br /><br />--->
+				
+				<!--- If the PriceGroupRate is new, then that means that we are just editing the PriceGroup --->
+				<cfif rc.priceGroupRate.isNew()>
+					<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button>
+				
+				<!--- Otherwise if the PriceGroupRate is not new, it means that we clicked to edit the PriceGroupRate specifically --->
+				<cfelse>
+					<input type="hidden" name="priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
+				</cfif>
+				
 				<input type="hidden" name="addPriceGroupRate" id="addPriceGroupRateHidden" value=""/>
 				
-				<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button><br /><br />
+				<br /><br />
 			</cfif>
 		</cfif>
 		<cfif rc.edit>

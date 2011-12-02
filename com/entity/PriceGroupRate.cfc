@@ -61,9 +61,9 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID" cascade="save-update";
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
-	property name="excludedProductTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
-	property name="excludedProducts" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID" cascade="save-update";
-	property name="excludedSkus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
+	property name="excludedProductTypes" singularname="excludedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProductType" fkcolumn="priceGroupRateID" inversejoincolumn="productTypeID" cascade="save-update";
+	property name="excludedProducts" singularname="excludedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedProduct" fkcolumn="priceGroupRateID" inversejoincolumn="productID" cascade="save-update";
+	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
 	
 	
 	public PriceGroupRate function init(){
@@ -74,8 +74,17 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	   if(isNull(variables.products)) {
 	   	   variables.products = [];
 	   }
-	   if(isNull(variables.SKUs)) {
-	   	   variables.SKUs = [];
+	   if(isNull(variables.Skus)) {
+	   	   variables.Skus = [];
+	   }
+	   if(isNull(variables.excludedProductTypes)) {
+	   	   variables.excludedProductTypes = [];
+	   }
+	   if(isNull(variables.excludedProducts)) {
+	   	   variables.excludedProducts = [];
+	   }
+	   if(isNull(variables.excludedSkus)) {
+	   	   variables.excludedSkus = [];
 	   }
 	   
 	   return super.init();
@@ -127,27 +136,68 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     }
     
     public string function getAppliesToRepresentation(){
-    	var rep = "";
-    	var products = "";
-    	var productTypes = "";
-    	var SKUs = "";
+    	var including = "";
+    	var excluding = "";
+    	var finalString = "";
+    	var productsList = "";
+    	var productTypesList = "";
+    	var skusList = "";
+    	var excludedProductsList = "";
+    	var excludedProductTypesList = "";
+    	var excludedSkusList = "";
     	
     	if(getGlobalFlag())
     		return rbKey('admin.pricegroup.edit.priceGroupRateAppliesToAllProducts');
     	
+    	/* --------- Including --------- */
     	if(arrayLen(getProducts()))
-    		products = "#arrayLen(getProducts())# Product" & IIF(arrayLen(getProducts()) GT 1, DE('s'), DE(''));
+    		productsList = "#arrayLen(getProducts())# Product" & IIF(arrayLen(getProducts()) GT 1, DE('s'), DE(''));
     	if(arrayLen(getProductTypes()))
-    		producTypes = "#arrayLen(getProductTypes())# Product Type" & IIF(arrayLen(getProductTypes()) GT 1, DE('s'), DE(''));
-    	if(arrayLen(getSKUs()))
-    		SKUs = "#arrayLen(getSKUs())# SKU" & IIF(arrayLen(getSKUs()) GT 1, DE('s'), DE(''));
+    		productTypesList = "#arrayLen(getProductTypes())# Product Type" & IIF(arrayLen(getProductTypes()) GT 1, DE('s'), DE(''));
+    	if(arrayLen(getSkus()))
+    		SkusList = "#arrayLen(getSkus())# SKU" & IIF(arrayLen(getSkus()) GT 1, DE('s'), DE(''));
     	
-    	rep = ListAppend(rep, products);
-    	rep = ListAppend(rep, productTypes);
-    	rep = ListAppend(rep, SKUs);
+    	if(ListLen(productsList))
+    		including = ListAppend(including, productsList);
+    	if(ListLen(productTypesList))
+    		including = ListAppend(including, productTypesList); 
+    	if(ListLen(SkusList))
+    		including = ListAppend(including, SkusList);
+    		
+    	// Replace all commas with " and ".
+    	if(listLen(including))
+    		including = Replace(including, ",", " and ");
+    		
+    	/* --------- Excluding --------- */	
+   		if(arrayLen(getExcludedProducts()))
+    		excludedProductsList = "#arrayLen(getExcludedProducts())# Product" & IIF(arrayLen(getExcludedProducts()) GT 1, DE('s'), DE(''));
+    	if(arrayLen(getExcludedProductTypes()))
+    		excludedProductTypesList = "#arrayLen(getExcludedProductTypes())# Product Type" & IIF(arrayLen(getExcludedProductTypes()) GT 1, DE('s'), DE(''));
+    	if(arrayLen(getExcludedSkus()))
+    		excludedSkusList = "#arrayLen(getExcludedSkus())# SKU" & IIF(arrayLen(getExcludedSkus()) GT 1, DE('s'), DE(''));
     	
-    	// TODO: handle proper sentence construction.
-    	return rep;
+    	if(ListLen(excludedProductsList))
+    		excluding = ListAppend(excluding, excludedProductsList);
+    	if(ListLen(excludedproductTypesList))
+    		excluding = ListAppend(excluding, excludedProductTypesList); 
+    	if(ListLen(excludedSkusList))
+    		excluding = ListAppend(excluding, excludedSkusList);
+    		
+    	// Replace all commas with " and ".
+    	if(listLen(excluding))
+    		excluding = Replace(excluding, ",", " and ");
+    		
+		// Assemble Including and Excluding strings
+    	if(len(including))
+    		finalString = "Including: " & including;
+    		
+    	if(len(excluding)){
+    		if(len(including))
+    			finalString &= ". ";
+    		finalString &= "Excluding: " & excluding;
+    	}
+    		
+    	return finalString;
     }
     
     public string function getAmountRepresentation(){

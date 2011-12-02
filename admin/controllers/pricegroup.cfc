@@ -55,14 +55,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
 		//rc.priceGroupCodeSmartList = getPriceGroupService().getPriceGroupRateSmartList(priceGroupID=rc.priceGroup.getPriceGroupID() ,data=rc);
-		if(!rc.priceGroup.isNew()) {
+		/*if(!rc.priceGroup.isNew()) {
 			rc.itemTitle &= ": " & rc.priceGroup.getPriceGroupName();
-		}
+		}*/
 		
 		// If we are editing a PriceGroupRate (rc contain a priceGroupRateId) then pull that one specifically, otherwise, pull a brand new entity (rc does not contain priceGorupRateId)
 		param name="rc.priceGroupRateId" default="";
 		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
-
+		
 	}
 
 
@@ -71,14 +71,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function edit(required struct rc) {
-		rc.productTypeTree = getProductService().getProductTypeTree();
+		//rc.productTypeTree = getProductService().getProductTypeTree();
 		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
 	}
 	
 	public void function editPriceGroupRate(required struct rc) {
-		rc.productTypeTree = getProductService().getProductTypeTree();
 		detail(rc);
 		getFW().setView("admin:priceGroup.detail");
 		rc.edit = true;
@@ -89,67 +88,103 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
+		// Populate PriceGroup and PriceGroupRate in the rc.
 		detail(rc);
-		
-		// Map priceGroupRateType and priceGroupRateValue from the form to the three amount fields in the entity (will be loaded in by populate())
-		if(rc.priceGroupRateType EQ "percentageOff")
-			rc.percentageOff = rc.priceGroupRateValue;
-		else if(rc.priceGroupRateType EQ "amountOff")
-			rc.amountOff = rc.priceGroupRateValue;
-		else if(rc.priceGroupRateType EQ "amount")
-			rc.amount = rc.priceGroupRateValue;
-		else
-			throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
 		
 		var wasNew = rc.PriceGroup.isNew();
 		
 		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
 		
+		param name="rc.addPriceGroupRate" default="false";
+		param name="rc.priceGroupRateId" default="";
+		
 		if(rc.priceGroup.hasErrors() || wasNew) {
 			rc.edit = true;
 			getFW().setView("admin:priceGroup.detail");
 		} else {
-			if(structKeyExists(arguments.rc, "addPriceGroupRate") && arguments.rc.addPriceGroupRate EQ "true") {
-				// rc.priceGroupRate is populated by detail(). Will contain either new PriceGroupRate entity, or one from the DB if editing.
+			// If adding or editing a price group
+			if(rc.addPriceGroupRate EQ "true" OR rc.priceGroupRateId NEQ "") {
+				// Since the value field posted (in RC) does not directly match the properties of the PriceGroupRate entity (percentageOff, amountOff, amount), map the posted priceGroupRateType and priceGroupRateValue from the form to the three amount fields in the entity, which will then be automatically loaded into the entity by populate().
+				rc.percentageOff = rc.amountOff = rc.amount = "";
+				if(rc.priceGroupRateType EQ "percentageOff")
+					rc.percentageOff = rc.priceGroupRateValue;
+				else if(rc.priceGroupRateType EQ "amountOff")
+					rc.amountOff = rc.priceGroupRateValue;
+				else if(rc.priceGroupRateType EQ "amount")
+					rc.amount = rc.priceGroupRateValue;
+				else
+					throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
+				
+					
+				// rc.priceGroupRate is created by detail(). Will contain either new PriceGroupRate entity, or one from the DB if editing. populate() fills entity with values based on RC (form post).
 				rc.priceGroupRate.populate(rc);	
 				
-				// If PriceGroupRate is not "global" then populate the contents of the multiselects
-				param name="rc.globalFlag" default="0";
-				if(rc.globalFlag EQ 0){
 				
-					/*--------- TEMPORARY until Greg writes generic hander in populate() --------- */
-					param name="rc.ProductIds" default="";
-					for(var i=1; i LTE ListLen(rc.ProductIds); i++){
-						var product = getProductService().getProduct(ListGetAt(rc.ProductIds, i));
-						//newPriceGroupRate.addProduct(product);
-						rc.priceGroupRate.setProducts([product]);
-					}
+								
+				
+				param name="rc.globalFlag" default="0";
+				param name="rc.productIds" default="";
+				param name="rc.productTypeIds" default="";
+				param name="rc.SKUIds" default="";
+				param name="rc.excludedProductIds" default="";
+				param name="rc.excludedProductTypeIds" default="";
+				param name="rc.excludedSKUIds" default="";
+				
+				// If PriceGroupRate is "global" then zero out the id lists. If we are editing a product that was switched from non-global to global, then the "set" methods will erase the many-to-many.  Otherwise populate the contents of the multiselects
+				if(rc.globalFlag EQ 1){
+					rc.productIds = "";
+					rc.productTypeIds = "";
+					rc.SKUIds = "";
+					rc.excludedProductIds = "";
+					rc.excludedProductTypeIds = "";
+					rc.excludedSKUIds = "";
 				}
 				
-				rc.priceGroup.addPriceGroupRate(rc.priceGroupRate);
-				rc.edit = true;
-				getFW().setView("admin:priceGroup.detail");
+				/*--------- TEMPORARY until Greg writes generic hander in populate() --------- */
+				// Included
+				var productArr = []; 
+				for(var i=1; i LTE ListLen(rc.ProductIds); i++)
+					arrayAppend(productArr, getProductService().getProduct(ListGetAt(rc.ProductIds, i)));
+				rc.PriceGroupRate.setProducts(productArr);
+				
+				var productTypeArr = []; 
+				for(var i=1; i LTE ListLen(rc.ProductTypeIds); i++)
+					arrayAppend(productTypeArr, getProductService().getProductType(ListGetAt(rc.ProductTypeIds, i)));
+				rc.PriceGroupRate.setProductTypes(productTypeArr);
+				
+				var skuArr = []; 
+				for(var i=1; i LTE ListLen(rc.SkuIds); i++)
+					arrayAppend(skuArr, getSkuService().getSku(ListGetAt(rc.SkuIds, i)));
+				rc.PriceGroupRate.setSkus(skuArr);
+				
+				// Excluded
+				var excludedProductArr = []; 
+				for(var i=1; i LTE ListLen(rc.ExcludedProductIds); i++)
+					arrayAppend(excludedProductArr, getProductService().getProduct(ListGetAt(rc.ExcludedProductIds, i)));
+				rc.PriceGroupRate.setExcludedProducts(excludedProductArr);
+				
+				var excludedProductTypeArr = []; 
+				for(var i=1; i LTE ListLen(rc.ExcludedProductTypeIds); i++)
+					arrayAppend(excludedProductTypeArr, getProductService().getProductType(ListGetAt(rc.ExcludedProductTypeIds, i)));
+				rc.PriceGroupRate.setExcludedProductTypes(excludedProductTypeArr);
+				
+				var excludedSkuArr = []; 
+				for(var i=1; i LTE ListLen(rc.ExcludedSkuIds); i++)
+					arrayAppend(excludedSkuArr, getSkuService().getSku(ListGetAt(rc.ExcludedSkuIds, i)));
+				rc.PriceGroupRate.setExcludedSkus(excludedSkuArr);
+				
+				// If we have added this PriceGroupRate, not edited, then add it to the PriceGroup
+				if(rc.addPriceGroupRate EQ "true")
+					rc.priceGroup.addPriceGroupRate(rc.priceGroupRate);
+	
+				//rc.edit = true;
+				//getFW().setView("admin:priceGroup.detail");
+				getFW().redirect(action="admin:priceGroup.detail", querystring="message=admin.pricegroup.savepricegrouprate_success");
 			} else {
-				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.saveaddresszone_success");	
+				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.savepricegroup_success");	
 			}
 		}
 	}
-	
-	/*public void function savePriceGroupRate(required struct rc) {
-		param name="rc.priceGroupId" default="";
-		param name="rc.priceGroupRateId" default="";
-		
-		// Check to see if it is already in rc because of taffy api
-		if(isNull(rc.priceGroup)) {
-			rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupId);
-		}
-		
-		if(!isNull(rc.priceGroup)) {
-			var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
-			priceGroupRate.populate(rc);
-			rc.priceGroup.addPriceGroupRate(priceGroupRate);
-		}
-	}*/
 	
 	public void function deletePriceGroup(required struct rc) {
 		
