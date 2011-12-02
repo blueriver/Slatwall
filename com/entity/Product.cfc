@@ -73,6 +73,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Related Object Properties (many-to-many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 
 	// Remote properties
 	property name="remoteID" ormtype="string";
