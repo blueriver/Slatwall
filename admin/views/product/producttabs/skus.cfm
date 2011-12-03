@@ -135,7 +135,7 @@ Notes:
 				<!--- Loop over all Price Groups and create actual values --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
-					<td>WIP</td>
+					<td>#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#</td>
 					
 					
 				</cfloop>
