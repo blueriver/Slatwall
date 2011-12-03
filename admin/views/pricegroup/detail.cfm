@@ -97,7 +97,8 @@ Notes:
 			
 				<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew()>class="ui-helper-hidden"</cfif> >
 					<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
-					<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#rc.priceGroupRate#" edit="true" />
+					
+					<cfinclude template="pricegroupratedisplay.cfm">
 				</div>
 				
 				<!--- If the PriceGroupRate is new, then that means that we are just editing the PriceGroup --->

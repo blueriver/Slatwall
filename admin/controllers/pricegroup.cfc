@@ -144,7 +144,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				
 				var skuArr = []; 
 				for(var i=1; i LTE ListLen(rc.SkuIds); i++)
-					arrayAppend(skuArr, getSkuService().getSku(ListGetAt(rc.SkuIds, i)));
+					arrayAppend(skuArr, getProductService().getSku(ListGetAt(rc.SkuIds, i)));
 				rc.PriceGroupRate.setSkus(skuArr);
 				
 				// Excluded
@@ -160,7 +160,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				
 				var excludedSkuArr = []; 
 				for(var i=1; i LTE ListLen(rc.ExcludedSkuIds); i++)
-					arrayAppend(excludedSkuArr, getSkuService().getSku(ListGetAt(rc.ExcludedSkuIds, i)));
+					arrayAppend(excludedSkuArr, getProductService().getSku(ListGetAt(rc.ExcludedSkuIds, i)));
 				rc.PriceGroupRate.setExcludedSkus(excludedSkuArr);
 				
 				// If we have added this PriceGroupRate, not edited, then add it to the PriceGroup
