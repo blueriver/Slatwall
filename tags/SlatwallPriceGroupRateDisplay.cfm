@@ -85,12 +85,12 @@ Notes:
 						<br>
 						
 						<!--- Build a list of ids for the "selected" SKUs --->
-						<!---<cfset idsList = "">
+						<cfset idsList = "">
 						<cfloop array="#attributes.priceGroupRate.getSKUs()#" index="SKU">
 							<cfset idsList = ListAppend(idsList, SKU.getSKUId())>
 						</cfloop>
 						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#SkuIds" property="Skus" edit="true"  fieldType="multiselect" value="#idsList#"  />
-						--->
+						
 						<br>
 						
 						<!--- ---------------- Excludes --------------- --->
@@ -113,13 +113,13 @@ Notes:
 						<br>
 						
 						<!--- Build a list of ids for the "selected" SKUs --->
-						<!---<cfset idsList = "">
+						<cfset idsList = "">
 						<cfloop array="#attributes.priceGroupRate.getExcludedSKUs()#" index="SKU">
 							<cfset idsList = ListAppend(idsList, SKU.getSKUId())>
 						</cfloop>
 						
 						<cf_SlatwallPropertyDisplay object="#attributes.priceGroupRate#" fieldName="#attributes.fieldNamePrefix#excludedSkuIds" property="excludedSkus" edit="true"  fieldType="multiselect" value="#idsList#"  />
-						--->
+						
 					</div>
 				</dl>
 			</cfif>
