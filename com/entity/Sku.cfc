@@ -94,6 +94,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        return super.init();
     }
     
+    public string function getSimpleRepresentationPropertyName() {
+    	return "skuCode";
+    }
+    
     public string function displayOptions(delimiter=" ") {
     	var options = getOptions(sorted=true);
     	var dspOptions = "";
