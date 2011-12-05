@@ -46,6 +46,27 @@ function btnConfirmDialog(message,btn){
     return false;   
 }
 
+/* Function used to open up a modal dialog with text/html content, where called provides a function that returns boolean, who's return value closes the dialog */
+function actionDialog(message, okHandler){
+    jQuery("#alertDialogMessage").html(message);
+	
+    jQuery("#alertDialog").dialog({
+        resizable: false,
+        modal: true,
+        buttons: {
+            'Ok': function() {
+				if(okHandler())
+	                jQuery(this).dialog('close');      
+			},
+            'Cancel': function() {
+                jQuery(this).dialog('close');
+            }
+        }
+    });
+
+    return false;   
+}
+
 
 function toggleDisplay(link, expand, close){
 	var target = jQuery(link).parent().next().children('div');
