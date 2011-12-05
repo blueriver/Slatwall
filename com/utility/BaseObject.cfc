@@ -266,22 +266,41 @@ component displayname="Base Object" accessors="true" output="false" {
 		return value;
 	}
 	
-	public any function getFormatedPropertyValue(required string propertyName, string valueDisplayFormat, any value) {
-		if(!structKeyExists(arguments, "value")) {
-			arguments.value = invokeMethod("get#arguments.propertyName#");
-		}
-		if(!structKeyExists(arguments, "valueDisplayFormat")) {
-			arguments.valueDisplayFormat = getPropertyValueDisplayFormat(arguments.propertyName);
-		}
+	public any function getFormatedValue(required string propertyName, string formatType) {
+		/*
+			Valid formatType Strings are:
+		
+			none
+			yesno
+			truefalse
+			currency
+			datetime
+			date
+			time
+			weight
+			
+		*/
+		
+		// get the value out of this object
+		var value = invokeMethod("get#arguments.propertyName#");
 		
 		// This is the null format option
 		if(isNull(arguments.value)) {
 			return "";
+		// This is not a simple value, throw an exception
+		} else if (!isSimpleValue(arguments.value)) {
+			throw("You cannont convert complex values to formatted Values");
 		}
 		
-		switch(arguments.valueDisplayFormat) {
+		// check if a formatType was passed in, if not then use the getPropertyFormatType() method to figure out what it should be by default
+		if(!structKeyExists(arguments, "formatType")) {
+			arguments.formatType = getPropertyFormatType( arguments.propertyName );
+		}
+		
+		// Do a switch on the seperate formatTypes and return a formatted value
+		switch(arguments.formatType) {
 			case "none": {
-				return arguments.value;
+				return value;
 			}
 			case "yesno": {
 				if(isBoolean(arguments.value) && arguments.value) {
@@ -298,15 +317,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				}
 			}
 			case "currency": {
-				var oldLocale = getLocale();
-				if(oldLocale != setting('currencyLocale')) {
-					setLocale(setting("advanced_currencyLocale"));
-				}
-				arguments.value = LSCurrencyFormat(arguments.value, setting("advanced_currencyType"));
-				if(oldLocale != setting('currencyLocale')) {
-					setLocale(oldLocale);
-				}
-				return arguments.value;
+				return LSCurrencyFormat(arguments.value, setting("advanced_currencyType"), setting("advanced_currencyLocal"));
 			}
 			case "datetime": {
 				return dateFormat(arguments.value, setting("advanced_dateFormat")) & " " & TimeFormat(arguments.value, setting("advanced_timeFormat"));
@@ -318,29 +329,49 @@ component displayname="Base Object" accessors="true" output="false" {
 				return timeFormat(arguments.value, setting("advanced_timeFormat"));
 			}
 			case "weight": {
-				return arguments.value & " " & setting("advanced_weightFormat");
+				return value & " " & setting("advanced_weightFormat");
 			}
 		}
-		var formatedValue = "";
 		
-		return formatedValue;
+		return value;
 	}
 	
 	// @hint public method for getting the display format for a given property, this is used a lot by the SlatwallPropertyDisplay
-	public string function getPropertyValueDisplayFormat(required string propertyName) {
-		/*
-			Valid Format Strings are:
+	public string function getPropertyFormatType(required string propertyName) {
 		
-			none
-			yesno
-			truefalse
-			currency
-			datetime
-			date
-			time
-			weight
+		var propertyMeta = getPropertyMetaData( arguments.propertyName );
+		
+		// First check to see if formatType was explicitly set for this property
+		if(structKeyExists(propertyMeta, "formatType")) {
+			return propertyMeta.formatType;
 			
-		*/
+		// If it wasn't set, but this is a simple value field then inspect the dataTypes and naming convention to try an figure it out
+		} else if( !structKeyExists(propertyMeta, "fieldType") || propertyMeta.fieldType == "column" ) {
+			
+			var dataType = "";
+			
+			// Check if there is an ormType attribute for this property to use first and asign it to the 'dataType' local var.  Otherwise check if the type attribute was set and use that.
+			if( structKeyExists(propertyMeta, "ormType") ) {
+				dataType = propertyMeta.ormType;
+			} else if ( structKeyExists(propertyMeta, "type") ) {
+				dataType = propertyMeta.type;
+			}
+			
+			// Check the dataType against different lists of types for correct formatType
+			if( listFindNoCase("boolean,yes_no,true_false", dataType) ) {
+				return "yesno";	
+			} else if ( listFindNoCase("date,timestamp", dataType) ) {
+				return "datetime";
+			} else if ( listFindNoCase("big_decimal", dataType) && right(arguments.propertyName, 6) == "weight" ) {
+				return "weight";	
+			} else if ( listFindNoCase("big_decimal", dataType) ) {
+				return "currency";
+			}
+			
+		}
+		
+		// By default just return non
+		return "none";
 	}
 	
 	// @hint public method for getting the title to be used for a property from the rbFactory, this is used a lot by the SlatwallPropertyDisplay
@@ -354,8 +385,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Get the Meta Data for the property
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
 		
-		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
-		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
+		// If this is a relational property, and the relationship is many-to-one or many-to-many, then return the propertyName and propertyName of primaryID
+		if( structKeyExists(propertyMeta, "fieldType") && (propertyMeta.fieldType == "many-to-one" || propertyMeta.fieldType == "many-to-many") ) {
 			
 			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#propertyMeta.cfc#" );
 			return "#arguments.propertyName#.#primaryIDPropertyName#";
