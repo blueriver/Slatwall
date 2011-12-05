@@ -63,7 +63,7 @@ Notes:
 				<td>
 					#rc.Order.getAccount().getFullName()#  
 					<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">
-						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.user.png" height="16" width="16" alt="" />
+						<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.user.png" height="16" width="16" alt="" />
 					</a>
 				</td>
 			</tr>
@@ -91,10 +91,10 @@ Notes:
 					<tr>
 						<td>#local.orderItem.getSku().getSkuCode()#</td>
 						<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>							
-						<td>#dollarFormat(local.orderItem.getPrice())#</td>
+						<td>#local.orderItem.getFormatedValue('price')#</td>
 						<td>#int(local.orderItem.getQuantity())#</td>
-						<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
-					</tr>				
+						<td>#local.orderItem.getFormatedValue('extendedPrice', 'currency')#</td>
+					</tr>
 				</cfloop>
 			</table>
 		</div>

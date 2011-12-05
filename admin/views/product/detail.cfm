@@ -56,6 +56,7 @@ Notes:
 <cfoutput>
 <div class="svoadminproductdetail">
 	#rc.product.getImage(width="100", height="100")#
+	
 	<cfif rc.edit>
 	<form name="ProductEdit" enctype="multipart/form-data" method="post">
 		<input type="hidden" name="slatAction" value="admin:product.save" />

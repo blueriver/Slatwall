@@ -58,9 +58,9 @@ Notes:
 					<td class="varWidth"><a href="#buildURL(action='admin:setting.detailfulfillmentmethod',querystring='fulfillmentmethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#')#">#$.Slatwall.rbKey("admin.setting.fulfillmentMethod." & local.thisFulfillmentMethod.getFulfillmentMethodID())#</a></td>
 					<td>
 						<cfif local.thisFulfillmentMethod.getActiveFlag()>
-							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
 						<cfelse>
-							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
+							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
 						</cfif>
 					</td>
 					<td class="administration">
