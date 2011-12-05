@@ -266,7 +266,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return value;
 	}
 	
-	public any function getFormatedValue(required string propertyName, string formatType) {
+	public any function getFormattedValue(required string propertyName, string formatType) {
 		/*
 			Valid formatType Strings are:
 		
