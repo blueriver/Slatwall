@@ -44,7 +44,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	property name="optionGroupCode" ormtype="string";
 	property name="optionGroupImage" ormtype="string";
 	property name="optionGroupDescription" ormtype="string" length="4000";
-	property name="imageGroupFlag" ormtype="boolean";
+	property name="imageGroupFlag" ormtype="boolean" default="0";
 	property name="sortOrder" ormtype="integer" required="true";
 	  
 	// Remote properties
