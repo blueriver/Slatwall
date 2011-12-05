@@ -131,7 +131,7 @@ Notes:
 							<cfif structKeyExists(local.property, "editType")>
 								<cfset local.propertyEditType = local.property.editType />
 							</cfif>
-							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('shipping')#" fieldName="shippingIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('shipping')#" fieldName="shippingIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" fieldType="#local.propertyEditType#">
 						</cfloop>
 					</dl>
 				</div>

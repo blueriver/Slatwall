@@ -37,7 +37,7 @@ Notes:
 
 --->
 
-<cfcomponent accessors="true" output="false" displayname="USA epay" implements="Slatwall.integrationServices.PaymentInterface" >
+<cfcomponent accessors="true" output="false" displayname="USA epay" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" >
 	
 	<cfproperty name="key" displayname="Source Key" type="string" />
 	<cfproperty name="pin" displayname="Pin Number" type="string" />
