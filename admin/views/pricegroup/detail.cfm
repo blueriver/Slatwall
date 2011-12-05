@@ -67,7 +67,7 @@ Notes:
 			<cfloop array="#local.valueOptions#" index="curOption">
 				<!--- Replace default "Select" entry with "None" --->
 				<cfif curOption["value"] EQ "">
-					<cfset curOption["name"] = #rc.$.Slatwall.rbKey('entity.pricegroup.inheritsFromNothing')#>
+					<cfset curOption["name"] = #rc.$.Slatwall.rbKey('define.none')#>
 				</cfif>
 				
 				<!--- Remove the current PriceGroup from the list --->
