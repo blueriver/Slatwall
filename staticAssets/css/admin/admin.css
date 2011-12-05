@@ -710,3 +710,48 @@ margin: .5em 0; }
 .notice a { color: #514721; }
 .success a { color: #264409; }
 
+
+a.tooltip {
+	position: relative;
+	z-index: 0;
+	text-decoration: none;
+	cursor: help;
+	padding-right: 8px;
+	background: url(../../images/admin.ui.tooltip.gif) no-repeat right top;
+	display: block;
+	line-height: 1.2;
+}
+
+dt a.tooltip, th.varWidth a.tooltip, td.varWidth a.tooltip {
+	display: inline-block;
+	color: #000;
+	padding-right: 10px;
+}
+
+a.tooltip:hover {
+	z-index: 1;
+	text-decoration: none;
+}
+
+a.tooltip span {
+	display: none;
+	font-weight: normal;
+	text-decoration:none;
+}
+
+a.tooltip:hover span {
+	display: block;
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	padding: 6px;
+	border: 1px solid #bbb;
+	background: #F7FBFE;
+	color: #000;
+	width: 250px;
+	white-space: normal;
+	text-align: left;
+	text-decoration: none;
+	line-height: 1;
+}
+

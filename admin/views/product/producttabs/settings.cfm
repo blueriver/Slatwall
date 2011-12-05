@@ -79,8 +79,8 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.trackInventoryFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.trackInventoryFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.trackInventoryFlag")#
+					<span>#rc.$.Slatwall.rbKey("setting.Product.trackInventoryFlag_hint")#</span>
 				</a>
 			</td>
 			<td>
@@ -103,8 +103,8 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.callToOrderFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.callToOrderFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.callToOrderFlag")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.callToOrderFlag_hint")#</span>
 				</a>
 			</td>
 			<td>
@@ -127,8 +127,8 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.allowShippingFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.allowShippingFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.allowShippingFlag")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.allowShippingFlag_hint")#</span>
 				</a>
 			</td>
 			<td>
@@ -151,8 +151,8 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.allowPreorderFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.allowPreorderFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.allowPreorderFlag")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.allowPreorderFlag_hint")#</span>
 				</a>
 			</td>
 			<td>
@@ -175,8 +175,8 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.allowBackorderFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.allowBackorderFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.allowBackorderFlag")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.allowBackorderFlag_hint")#</span>
 				</a>
 			</td>
 			<td>
@@ -199,8 +199,8 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("entity.product.allowDropShipFlag")#
-					<span>#rc.$.Slatwall.rbKey("entity.Product.allowDropshipFlag_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.allowDropShipFlag")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.allowDropshipFlag_hint")#</span>
 				</a>
 			</td>
 			<td>
