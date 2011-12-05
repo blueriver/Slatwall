@@ -60,7 +60,29 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
 			
 			<!--- valueLink="#buildURL(action='admin:priceGroup.detail', queryString='priceGroupId=#rc.priceGroup.getParentPriceGroup().getPriceGroupId()#')#" --->
-			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="parentPriceGroup" edit="#rc.edit#" valueDefault="#rc.$.Slatwall.rbKey('admin.none')#">
+			
+			<!--- Populate list of price groups removing the current group from the options so that a user can't select a price group to be it's own parent --->	
+			<cfset local.valueOptions = rc.priceGroup.getParentPriceGroupOptions() />
+
+			<cfloop array="#local.valueOptions#" index="curOption">
+				<!--- Replace default "Select" entry with "None" --->
+				<cfif curOption["value"] EQ "">
+					<cfset curOption["name"] = #rc.$.Slatwall.rbKey('entity.pricegroup.inheritsFromNothing')#>
+				</cfif>
+				
+				<!--- Remove the current PriceGroup from the list --->
+				<cfif curOption["value"] EQ rc.priceGroup.getPriceGroupId()>
+					<cfset ArrayDelete(local.valueOptions, curOption)>
+					<cfbreak>
+				</cfif>
+			</cfloop>		
+			
+			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="parentPriceGroup" edit="#rc.edit#" valueDefault="#rc.$.Slatwall.rbKey('admin.none')#" valueOptions="#local.valueOptions#" />
+
+			
+			
+			<!---parentPriceGroup.priceGroupID
+			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="parentPriceGroup" edit="#rc.edit#" valueDefault="#rc.$.Slatwall.rbKey('admin.none')#">--->
 		</dl>
 		
 		<cfif not rc.priceGroup.isNew()>
@@ -97,7 +119,8 @@ Notes:
 			
 				<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew()>class="ui-helper-hidden"</cfif> >
 					<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
-					<cf_SlatwallPriceGroupRateDisplay priceGroupRate="#rc.priceGroupRate#" edit="true" />
+					
+					<cfinclude template="pricegroupratedisplay.cfm">
 				</div>
 				
 				<!--- If the PriceGroupRate is new, then that means that we are just editing the PriceGroup --->

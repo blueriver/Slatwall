@@ -37,6 +37,17 @@ Notes:
 
 --->
 <cfoutput>
+	
+<!---	<script type="text/javascript">
+		jQuery(function(){
+			actionDialog("<input type='checkbox' style=''>test", function(){alert('clicked ok!'); return false;});	
+			
+		});
+		
+		
+	</script>
+	--->
+	
 <cfif rc.edit>
 <div class="buttons">
 	<cfif rc.Product.getOptionGroupCount() gt 0>
@@ -65,7 +76,7 @@ Notes:
 				<!--- Loop over all Price Groups and create column headers --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
-					<th>#local.priceGroup.getPriceGroupName()#</th>
+					<th priceGroupId="#local.priceGroup.getPriceGroupId#">#local.priceGroup.getPriceGroupName()#</th>
 				</cfloop>
 				
 				
