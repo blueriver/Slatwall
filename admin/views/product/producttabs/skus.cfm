@@ -37,6 +37,17 @@ Notes:
 
 --->
 <cfoutput>
+	
+	<script type="text/javascript">
+		jQuery(function(){
+			alertDialog("<input type='checkbox' style='height:600px;'>test");	
+			
+		});
+		
+		
+	</script>
+	
+	
 <cfif rc.edit>
 <div class="buttons">
 	<cfif rc.Product.getOptionGroupCount() gt 0>

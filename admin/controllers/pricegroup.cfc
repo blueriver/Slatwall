@@ -95,6 +95,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(rc.priceGroup.hasErrors() || wasNew) {
 			rc.edit = true;
 			getFW().setView("admin:priceGroup.detail");
+			rc.message="admin.pricegroup.savepricegroup_nowaddrates";	
 		} else {
 			// If adding or editing a price group
 			if(rc.addPriceGroupRate EQ "true" OR rc.priceGroupRateId NEQ "") {

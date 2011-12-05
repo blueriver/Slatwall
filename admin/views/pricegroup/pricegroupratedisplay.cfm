@@ -61,15 +61,6 @@ Notes:
 					<br>
 					
 					<!--- ---------------- Includes --------------- --->
-					<!--- Build a list of ids for the "selected" products --->
-					<cfset idsList = "">
-					<cfloop array="#rc.priceGroupRate.getProducts()#" index="product">
-						<cfset idsList = ListAppend(idsList, product.getProductId())>
-					</cfloop>
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="ProductIds" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
-					
-					<br>
-					
 					<!--- Build a list of ids for the "selected" product types --->
 					<cfset idsList = "">
 					<cfloop array="#rc.priceGroupRate.getProductTypes()#" index="productType">
@@ -78,6 +69,15 @@ Notes:
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="ProductTypeIds" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
 					
 					<br>
+					
+					<!--- Build a list of ids for the "selected" products --->
+					<cfset idsList = "">
+					<cfloop array="#rc.priceGroupRate.getProducts()#" index="product">
+						<cfset idsList = ListAppend(idsList, product.getProductId())>
+					</cfloop>
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="ProductIds" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
+					
+					<br>	
 					
 					<!--- Build a list of ids for the "selected" SKUs --->
 					<cfset idsList = "">
@@ -89,21 +89,21 @@ Notes:
 					<br>
 					
 					<!--- ---------------- Excludes --------------- --->
-					<!--- Build a list of ids for the "selected" products --->
-					<cfset idsList = "">
-					<cfloop array="#rc.priceGroupRate.getExcludedProducts()#" index="product">
-						<cfset idsList = ListAppend(idsList, product.getProductId())>
-					</cfloop>
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="excludedProductIds" property="excludedProducts" edit="true"  fieldType="multiselect" value="#idsList#"  />
-					
-					<br>
-					
 					<!--- Build a list of ids for the "selected" product types --->
 					<cfset idsList = "">
 					<cfloop array="#rc.priceGroupRate.getExcludedProductTypes()#" index="productType">
 						<cfset idsList = ListAppend(idsList, productType.getProductTypeId())>
 					</cfloop>
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="excludedProductTypeIds" property="excludedProductTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
+					
+					<br>
+					
+					<!--- Build a list of ids for the "selected" products --->
+					<cfset idsList = "">
+					<cfloop array="#rc.priceGroupRate.getExcludedProducts()#" index="product">
+						<cfset idsList = ListAppend(idsList, product.getProductId())>
+					</cfloop>
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="excludedProductIds" property="excludedProducts" edit="true"  fieldType="multiselect" value="#idsList#"  />	
 					
 					<br>
 					
