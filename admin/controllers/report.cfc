@@ -40,6 +40,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	property name="reportService";
 
+	public void function default(required struct rc) {
+		getFW().redirect("admin:report.order");
+	}
+
 	public void function order(required struct rc) {
 		rc.orderReport = getReportService().getOrderReport();
 	}

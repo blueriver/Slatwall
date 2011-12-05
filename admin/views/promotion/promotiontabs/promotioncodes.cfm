@@ -96,7 +96,7 @@ Notes:
 						<cfif !local.thisPromotionCode.isNew()>
 							<cfset local.disabledText = "" />
 							<ul class="one">
-								<cfset local.deleteDisabled = arrayLen(local.thisPromotionCode.orders) />
+								<cfset local.deleteDisabled = arrayLen(local.thisPromotionCode.getorders()) />
 								<cfif local.deleteDisabled>
 									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.promotionCode.delete_validateAssigned') />
 								</cfif>
