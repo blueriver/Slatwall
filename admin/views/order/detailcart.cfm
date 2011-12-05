@@ -91,9 +91,9 @@ Notes:
 					<tr>
 						<td>#local.orderItem.getSku().getSkuCode()#</td>
 						<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>							
-						<td>#local.orderItem.getFormatedValue('price')#</td>
+						<td>#local.orderItem.getFormattedValue('price')#</td>
 						<td>#int(local.orderItem.getQuantity())#</td>
-						<td>#local.orderItem.getFormatedValue('extendedPrice', 'currency')#</td>
+						<td>#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</td>
 					</tr>
 				</cfloop>
 			</table>
