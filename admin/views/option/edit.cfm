@@ -72,7 +72,7 @@ Notes:
         <cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optionname" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optioncode" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optionImage" edit="true" tooltip="true" fieldType="file">
-		<cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optionDescription" edit="true" fieldType="wysiwygbasic" toggle="show">
+		<cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optionDescription" edit="true" fieldType="wysiwyg" toggle="show">
     </dl>
 	<a class="button" href="javascript:;" onclick="jQuery('##newFrmcontainer').slideUp();jQuery('##newFrmclose').hide();jQuery('##newFrmopen').show();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
 	<cf_SlatwallActionCaller action="admin:option.save" type="submit" class="button">
@@ -125,7 +125,7 @@ Notes:
 		            <input type="checkbox" name="removeImage" value="1" id="removeOptionImage#local.i#" /> <label for="removeOptionImage#local.i#">#rc.$.Slatwall.rbKey("admin.option.removeimage")#</label>
 		        </dd>
 		        </cfif>
-				<cf_SlatwallPropertyDisplay id="optiondescription#local.i#" object="#local.thisOption#" property="optionDescription" edit="true" fieldType="wysiwygbasic" toggle="show">
+				<cf_SlatwallPropertyDisplay id="optiondescription#local.i#" object="#local.thisOption#" property="optionDescription" edit="true" fieldType="wysiwyg" toggle="show">
 		    </dl>
 			<a class="button" href="javascript:;" onclick="jQuery('##editFrm#local.i#container').slideUp();jQuery('##editFrm#local.i#open').show();jQuery('##editFrm#local.i#close').hide();return false;">#rc.$.Slatwall.rbKey('sitemanager.cancel')#</a>
 			<cf_SlatwallActionCaller action="admin:option.save" type="submit" class="button">
