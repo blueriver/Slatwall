@@ -175,16 +175,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	public void function deletePriceGroup(required struct rc) {
+	public void function delete(required struct rc) {
 		
-		detailPriceGroup(rc);
+		detail(rc);
 		
-		var deleteOK = getPriceGroupService().deletePriceGroup(rc.priceGroup);
+		var deleteOK = getPriceGroupService().delete(rc.priceGroup);
 		
 		if( deleteOK ) {
-			rc.message = rbKey("admin.pricegroup.deletePriceGroup_success");
+			rc.message = rbKey("admin.pricegroup.delete_success");
 		} else {
-			rc.message = rbKey("admin.pricegroup.deletePriceGroup_error");
+			rc.message = rbKey("admin.pricegroup.delete_error");
 			rc.messagetype="error";
 		}
 		
