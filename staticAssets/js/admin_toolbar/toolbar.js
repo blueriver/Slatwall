@@ -133,7 +133,7 @@ function runToolbarSearch(){
 	jQuery.ajax({
 		type: 'get',
 		url: '/plugins/Slatwall/api/index.cfm/display/toolbarSearchResults/',
-		data: {apiKey: slatwallToolbarSearchKey, keywords: jQuery('#SlatwallToolbarSearch').val()},
+		data: {apiKey: cfrequest['slatwallToolbarSearchKey'], keywords: jQuery('#SlatwallToolbarSearch').val()},
 		dataType: "json",
 		context: document.body,
 		success: function(r) {

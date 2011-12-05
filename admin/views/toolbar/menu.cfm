@@ -36,9 +36,9 @@
 Notes:
 
 --->
-<!---
-<cfset getAssetWire().addJSVariable("slatwallToolbarSearchKey", $.slatwall.getAPIKey(resource='DisplayToolbarSearchResults', verb='get')) />
---->
+
+<cfset $.slatwall.getCFStatic().includeData({slatwallToolbarSearchKey=$.slatwall.getAPIKey(resource='DisplayToolbarSearchResults', verb='get')}) />
+
 <cfoutput>
 	<div class="svoadmintoolbarmenu">
 		<ul class="home">
