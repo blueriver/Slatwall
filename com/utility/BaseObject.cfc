@@ -285,10 +285,10 @@ component displayname="Base Object" accessors="true" output="false" {
 		var value = invokeMethod("get#arguments.propertyName#");
 		
 		// This is the null format option
-		if(isNull(arguments.value)) {
+		if(isNull(value)) {
 			return "";
 		// This is not a simple value, throw an exception
-		} else if (!isSimpleValue(arguments.value)) {
+		} else if (!isSimpleValue(value)) {
 			throw("You cannont convert complex values to formatted Values");
 		}
 		
@@ -303,30 +303,30 @@ component displayname="Base Object" accessors="true" output="false" {
 				return value;
 			}
 			case "yesno": {
-				if(isBoolean(arguments.value) && arguments.value) {
+				if(isBoolean(value) && value) {
 					return rbKey('define.yes');
 				} else {
 					return rbKey('define.no');
 				}
 			}
 			case "truefalse": {
-				if(isBoolean(arguments.value) && arguments.value) {
+				if(isBoolean(value) && value) {
 					return rbKey('define.true');
 				} else {
 					return rbKey('define.false');
 				}
 			}
 			case "currency": {
-				return LSCurrencyFormat(arguments.value, setting("advanced_currencyType"), setting("advanced_currencyLocal"));
+				return LSCurrencyFormat(value, setting("advanced_currencyType"), setting("advanced_currencyLocal"));
 			}
 			case "datetime": {
-				return dateFormat(arguments.value, setting("advanced_dateFormat")) & " " & TimeFormat(arguments.value, setting("advanced_timeFormat"));
+				return dateFormat(value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
 			}
 			case "date": {
-				return dateFormat(arguments.value, setting("advanced_dateFormat"));
+				return dateFormat(value, setting("advanced_dateFormat"));
 			}
 			case "time": {
-				return timeFormat(arguments.value, setting("advanced_timeFormat"));
+				return timeFormat(value, setting("advanced_timeFormat"));
 			}
 			case "weight": {
 				return value & " " & setting("advanced_weightFormat");
@@ -502,7 +502,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 		
 		// If no properties could be identified as a simpleRepresentaition 
-		return "";
+		throw("There is no Simple Representation Property Name for #getClassName()#");
 	}
 	
 	// @help Public Method that allows you to get a serialized JSON struct of all the simple values in the variables scope.  This is very useful for compairing objects before and after a populate

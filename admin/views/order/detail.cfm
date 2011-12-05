@@ -74,7 +74,7 @@ Notes:
 				<td>
 					#rc.Order.getAccount().getFullName()#  
 					<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">
-						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.user.png" height="16" width="16" alt="" />
+						<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.user.png" height="16" width="16" alt="" />
 					</a>
 				</td>
 			</tr>
@@ -119,15 +119,15 @@ Notes:
 		<p><strong>#$.Slatwall.rbKey("admin.order.detail.ordertotals")#</strong></p>
 		<dl class="orderTotals">
 			<dt>#$.Slatwall.rbKey("admin.order.detail.subtotal")#</dt> 
-			<dd>#dollarFormat(rc.order.getSubtotal())#</dd>
+			<dd>#rc.order.getFormattedValue('subtotal', 'currency')#</dd>
 			<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
-			<dd>#dollarFormat(rc.order.getTaxtotal())#</dd>
+			<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
 			<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentCharge")#</dt>
-			<dd>#dollarFormat(rc.order.getFulfillmentTotal())#</dd>
+			<dd>#rc.order.getFormattedValue('fulfillmentTotal', 'currency')#</dd>
 			<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
-			<dd>#dollarFormat(rc.order.getDiscountTotal())#</dd>
+			<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>
 			<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
-			<dd><strong>#dollarFormat(rc.order.getTotal())#</strong></dd>
+			<dd><strong>#rc.order.getFormattedValue('total', 'currency')#</strong></dd>
 		</dl>
 	</div>
 	<div class="clear">

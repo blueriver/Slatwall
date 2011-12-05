@@ -52,7 +52,12 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	
-/******* Association management methods for bidirectional relationships **************/
+	// Override the base class simple Representation value
+	public string function getSimpleRepresentation() {
+		return getEmailAddress();
+	}
+	
+	/******* Association management methods for bidirectional relationships **************/
 	
 	// Account (many-to-one)
 	 

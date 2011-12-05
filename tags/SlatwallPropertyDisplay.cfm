@@ -50,7 +50,7 @@ Notes:
 <cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />		<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
 <cfparam name="attributes.valueDefault" type="string" default="" />					<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
 <cfparam name="attributes.valueLink" type="string" default="" />					<!--- hint: if specified, will wrap property value with an achor tag using the attribute as the href value --->
-<cfparam name="attributes.valueDisplayFormat" type="string" default="" />			<!--- hint: This can be used to defined the format of this property wehn it is displayed --->
+<cfparam name="attributes.valueFormatType" type="string" default="" />				<!--- hint: This can be used to defined the format of this property wehn it is displayed --->
 
 <cfparam name="attributes.fieldName" type="string" default="" />					<!--- hint: This can be used to override the default field name" --->
 <cfparam name="attributes.fieldType" type="string" default="" />					<!--- hint: When in edit mode you can override the default type of form object to use" --->
@@ -113,6 +113,15 @@ Notes:
 			<cfelse>
 				<cfset attributes.value = attributes.value.getSimpleRepresentation() />
 			</cfif>
+		<cfelse>
+			<cfif not attributes.edit>
+				<!--- Set up the value formatType --->
+				<cfif attributes.valueFormatType eq "">
+					<cfset attributes.valueFormatType = attributes.object.getPropertyFormatType( attributes.property ) />
+				</cfif>
+				
+				<cfset attributes.value = attributes.object.getFormatedValue(attributes.property, attributes.valueFormatType) />
+			</cfif>
 		</cfif>
 		
 		<!--- Final check to make sure that the value is simple --->
@@ -123,17 +132,11 @@ Notes:
 				<cfset attributes.value = "" />
 			</cfif>
 		</cfif>
-		
 	</cfif>
 	
 	<!--- Set up the property title --->
 	<cfif attributes.title eq "">
 		<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
-	</cfif>
-	
-	<!--- Set up the displayFormat --->
-	<cfif attributes.valueDisplayFormat eq "">
-		<cfset attributes.valueDisplayFormat = attributes.object.getFormatedValue( attributes.property ) />
 	</cfif>
 	
 	<!--- If this is in edit mode then get the pertinent field info --->
