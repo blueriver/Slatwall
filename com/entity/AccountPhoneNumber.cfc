@@ -52,6 +52,12 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
 	
+	
+	// Override the base class simple Representation value
+	public string function getSimpleRepresentation() {
+		return getPhoneNumber();
+	}
+	
 	public string function getPhoneType() {
 		return getAccountPhoneType().getType();
 	}
