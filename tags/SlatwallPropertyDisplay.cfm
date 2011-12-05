@@ -133,7 +133,7 @@ Notes:
 	
 	<!--- Set up the displayFormat --->
 	<cfif attributes.valueDisplayFormat eq "">
-		<cfset attributes.valueDisplayFormat = attributes.object.getPropertyValueDisplayFormat( attributes.property ) />
+		<cfset attributes.valueDisplayFormat = attributes.object.getFormatedValue( attributes.property ) />
 	</cfif>
 	
 	<!--- If this is in edit mode then get the pertinent field info --->

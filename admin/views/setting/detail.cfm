@@ -38,7 +38,11 @@ Notes:
 --->
 <cfparam name="rc.edit" type="boolean" />
 <cfparam name="rc.allSettings" type="struct" />
-<cfparam name="rc.productTemplateOptions" type="any" /> 
+<cfparam name="rc.productTemplateOptions" type="any" />
+
+<cfsilent>
+	<cfset local.yesNoValueOptions = [{name=$.slatwall.rbKey('define.yes'), value=1},{name=$.slatwall.rbKey('define.no'), value=0}] />
+</cfsilent>
 
 <cfoutput>
 	<div class="svoadminsettingdetail">
@@ -62,7 +66,7 @@ Notes:
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
 					<tr class="spdproduct_defaulttemplate">
-						<td class="property varWidth">#rc.$.Slatwall.rbKey('setting.product.defaultProductTemplate')#</td>
+						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.product.defaultProductTemplate')#</td>
 						<cfif rc.edit>
 							<td id="spdproduct_defaulttemplate" class="value">
 								<select name="product_defaulttemplate">
@@ -76,7 +80,7 @@ Notes:
 						</cfif>
 					</tr>
 					<tr class="spdproduct_rootProductCategory">
-						<td class="property varWidth">#rc.$.slatwall.rbKey('setting.product.rootProductCategory')#</td>
+						<td class="title varWidth">#rc.$.slatwall.rbKey('setting.product.rootProductCategory')#</td>
 						<cfif rc.edit>
 							<td class="value">
 								<select name="product_rootProductCategory">
@@ -90,22 +94,22 @@ Notes:
 							<td class="value">#rc.rootCategory#</td>
 						</cfif>
 					</tr>
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" property="settingValue" fieldName="product_urlKey" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" property="settingValue" fieldName="product_missingimagepath" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" property="settingValue" fieldName="product_imageextension" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imagewidthsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthsmall')#" property="settingValue" fieldName="product_imagewidthsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageheightsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightsmall')#" property="settingValue" fieldName="product_imageheightsmall" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imagewidthmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthmedium')#" property="settingValue" fieldName="product_imagewidthmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageheightmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightmedium')#" property="settingValue" fieldName="product_imageheightmedium" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imagewidthlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthlarge')#" property="settingValue" fieldName="product_imagewidthlarge" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_imageheightlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightlarge')#" property="settingValue" fieldName="product_imageheightlarge" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_titleString#" title="#rc.$.Slatwall.rbKey('setting.product.titleString')#" property="settingValue" fieldName="product_titleString" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" property="settingValue" fieldName="product_trackInventoryFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_SlatwallPropertyDisplay object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" property="settingValue" fieldName="product_callToOrderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" property="settingValue" fieldName="product_allowShippingFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-				    <cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" property="settingValue" fieldName="product_allowPreorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowBackorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorderFlag')#" property="settingValue" fieldName="product_allowBackorderFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.product_allowDropshipFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropshipFlag')#" property="settingValue" fieldName="product_allowDropshipFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_urlKey#" title="#rc.$.Slatwall.rbKey('setting.product.urlKey')#" fieldName="product_urlKey">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_missingimagepath#" title="#rc.$.Slatwall.rbKey('setting.product.missingimagepath')#" fieldName="product_missingimagepath">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageextension#" title="#rc.$.Slatwall.rbKey('setting.product.imageextension')#" fieldName="product_imageextension">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imagewidthsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthsmall')#" fieldName="product_imagewidthsmall">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageheightsmall#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightsmall')#" fieldName="product_imageheightsmall">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imagewidthmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthmedium')#" fieldName="product_imagewidthmedium">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageheightmedium#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightmedium')#" fieldName="product_imageheightmedium">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imagewidthlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthlarge')#" fieldName="product_imagewidthlarge">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageheightlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightlarge')#" fieldName="product_imageheightlarge">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_titleString#" title="#rc.$.Slatwall.rbKey('setting.product.titleString')#" fieldName="product_titleString">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" fieldName="product_trackInventoryFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" fieldName="product_callToOrderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" fieldName="product_allowShippingFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" fieldName="product_allowPreorderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowBackorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorderFlag')#" fieldName="product_allowBackorderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowDropshipFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropshipFlag')#" fieldName="product_allowDropshipFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
 				</table>
 			</div>
 			<div id="tabOrder">
@@ -114,10 +118,10 @@ Notes:
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailFrom')#" property="settingValue" fieldName="order_orderPlacedEmailFrom" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailCC')#" property="settingValue" fieldName="order_orderPlacedEmailCC" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailBCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailBCC')#" property="settingValue" fieldName="order_orderPlacedEmailBCC" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.order_orderPlacedEmailSubject#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailSubject')#" property="settingValue" fieldName="order_orderPlacedEmailSubject" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailFrom#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailFrom')#" fieldName="order_orderPlacedEmailFrom">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailCC')#" fieldName="order_orderPlacedEmailCC">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailBCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailBCC')#" fieldName="order_orderPlacedEmailBCC">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailSubject#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailSubject')#" fieldName="order_orderPlacedEmailSubject">
 				</table>
 			</div>
 			<div id="tabAdvanced">
@@ -127,7 +131,7 @@ Notes:
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
 					<tr class="spdadvanced_logmessages">
-						<td class="property varWidth">#rc.$.slatwall.rbKey('setting.advanced.logmessages')#</td>
+						<td class="title varWidth">#rc.$.slatwall.rbKey('setting.advanced.logmessages')#</td>
 						<cfif rc.edit>
 							<td class="value">
 								<select name="advanced_logmessages">
@@ -140,12 +144,26 @@ Notes:
 							<td class="value">#rc.allSettings.advanced_logMessages.getSettingValue()#</td>
 						</cfif>
 					</tr>
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logExceptionsToDatabaseFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.logExceptionsToDatabaseFlag')#" property="settingValue" fieldName="advanced_logExceptionsToDatabaseFlag" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" property="settingValue" fieldName="advanced_logDatabaseClearAfterDays" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_showRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.showRemoteIDFields')#" property="settingValue" fieldName="advanced_showRemoteIDFields" edit="#rc.edit#" dataType="boolean" editType="radiogroup" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_dateFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.dateFormat')#" property="settingValue" fieldName="advanced_dateFormat" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_timeFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.timeFormat')#" property="settingValue" fieldName="advanced_timeFormat" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
-					<cf_SlatwallPropertyDisplay object="#rc.allSettings.advanced_currencyLocale#" title="#rc.$.Slatwall.rbKey('setting.advanced.currencyLocale')#" property="settingValue" fieldName="advanced_currencyLocale" edit="#rc.edit#" dataType="text" editType="text" displaytype="table">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_logExceptionsToDatabaseFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.logExceptionsToDatabaseFlag')#" fieldName="advanced_logExceptionsToDatabaseFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_logDatabaseClearAfterDays#" title="#rc.$.Slatwall.rbKey('setting.advanced.logDatabaseClearAfterDays')#" fieldName="advanced_logDatabaseClearAfterDays">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_showRemoteIDFields#" title="#rc.$.Slatwall.rbKey('setting.advanced.showRemoteIDFields')#" fieldName="advanced_showRemoteIDFields" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_dateFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.dateFormat')#" fieldName="advanced_dateFormat">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_timeFormat#" title="#rc.$.Slatwall.rbKey('setting.advanced.timeFormat')#" fieldName="advanced_timeFormat">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_currencyLocale#" title="#rc.$.Slatwall.rbKey('setting.advanced.currencyLocale')#" fieldName="advanced_currencyLocale">
+					<tr class="spdadvanced_currencyType">
+						<td class="title varWidth">#rc.$.slatwall.rbKey('setting.advanced.currencyType')#</td>
+						<cfif rc.edit>
+							<td class="value">
+								<select name="advanced_currencyType">
+									<option value="None" <cfif rc.allSettings.advanced_currencyType.getSettingValue() eq "None">selected="selected"</cfif>>#$.slatwall.rbKey("define.none")#</option>
+									<option value="Local" <cfif rc.allSettings.advanced_currencyType.getSettingValue() eq "Local">selected="selected"</cfif>>#$.slatwall.rbKey("define.local")#</option>
+									<option value="International" <cfif rc.allSettings.advanced_currencyType.getSettingValue() eq "International">selected="selected"</cfif>>#$.slatwall.rbKey("define.international")#</option>
+								</select>
+							</td>
+						<cfelse>
+							<td class="value">#rc.allSettings.advanced_currencyType.getSettingValue()#</td>
+						</cfif>
+					</tr>
 				</table>
 			</div>
 		</div>
