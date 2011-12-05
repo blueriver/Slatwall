@@ -115,7 +115,7 @@ Notes:
 		</div>
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="defaultValue" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="requiredFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationType" propertyObject="Type" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationType" propertyObject="Type" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationRegex" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationMessage" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
@@ -230,7 +230,7 @@ Notes:
 				</div>
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="defaultValue" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="requiredFlag" edit="true">
-				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" propertyObject="Type" edit="true">
+				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="validationType" propertyObject="Type" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="validationRegex" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="validationMessage" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="activeFlag" edit="true">
