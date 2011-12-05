@@ -1,6 +1,8 @@
 /**
  * 
  * @depends /admin/core.js
+ * @depends /tools/hicharts/highstock.js
+ * @depends /tools/hicharts/highstock-exporting.js
  */
 
 jQuery(document).ready(function() {
