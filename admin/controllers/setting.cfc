@@ -182,7 +182,9 @@ component extends="BaseController" output="false" accessors="true" {
 		} else {
 			if(rc.addRate) {
 				var rate = getSettingService().newShippingRate();
+				rate.setShippingMethod(rc.shippingMethod);
 				rate = getSettingService().saveShippingRate(rate, rc);
+				
 				if(rate.hasErrors()) {
 					errorsExist = true;
 				}
