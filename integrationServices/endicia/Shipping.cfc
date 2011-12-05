@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="Endicia" implements="Slatwall.integrationServices.ShippingInterface" {
+component accessors="true" output="false" displayname="Endicia" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 	
 	// Custom Properties that need to be set by the end user
 	property name="accountID" validateRequired displayname="Endicia Account Number" type="string";
