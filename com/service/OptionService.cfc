@@ -50,8 +50,13 @@ component extends="BaseService" accessors="true" {
 		return smartList;
 	}
 	
-	public any function saveOption(required any entity, required struct data) {	
-
+	public any function saveOption(required any entity, required struct data) {
+		
+		// If this is a new option then we need to set the sort order as the next in line
+		if(isNull(arguments.entity.getSortOrder())) {
+			arguments.entity.setSortOrder( getOptionCountByOptionGroupID(arguments.data.optionGroup.optionGroupID) + 1);
+		}
+		
 		super.save(argumentcollection=arguments);
 		
 		if(!arguments.entity.hasErrors()) {
@@ -75,7 +80,12 @@ component extends="BaseService" accessors="true" {
 		return arguments.entity;
 	}
 	
-	public any function saveOptionGroup(required any entity, required struct data) {	
+	public any function saveOptionGroup(required any entity, required struct data) {
+		
+		// If this is a new option group then we need to set the sort order as the next in line
+		if(isNull(arguments.entity.getSortOrder())) {
+			arguments.entity.setSortOrder( getOptionGroupCount() + 1);
+		}
 		
 		super.save(argumentcollection=arguments);
 		
@@ -122,6 +132,10 @@ component extends="BaseService" accessors="true" {
 	
 	public numeric function getOptionGroupCount() {
 		return arrayLen(this.listOptionGroup());
+	}
+	
+	public numeric function getOptionCountByOptionGroupID( required string optionGroupID ) {
+		return arrayLen(this.listOptionGroupByOptionGroupID(arguments.optionGorupID));
 	}
 	
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {
