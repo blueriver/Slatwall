@@ -519,6 +519,36 @@ td.administration ul {
 	float: left;
 }
 
+/* @group Admin Icons */
+
+td.administration ul.one { /* 1 Icon */
+	width: 14px;
+}
+
+td.administration ul.two { /* 2 Icons */
+	width: 38px;
+}
+
+td.administration ul.three { /* 3 Icons */
+	width: 57px;
+}
+
+td.administration ul.four { /* 4 Icons */
+	width: 72px !important;
+}
+
+td.administration ul.five { /* 5 Icons */
+	width: 95px;
+}
+
+td.administration ul.six { /* 6 Icons */
+	width: 104px;
+}
+
+td.administration ul.seven { /* 7 Icons */
+	width: 133px;
+}
+
 td.administration li {
 	list-style: none; 
 	float: left !important;
@@ -754,4 +784,3 @@ a.tooltip:hover span {
 	text-decoration: none;
 	line-height: 1;
 }
-
