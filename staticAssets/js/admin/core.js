@@ -2,6 +2,7 @@
  *
  *	@depends /tools/jquery/jquery-1.7.1.js
  *	@depends /tools/jquery-ui/jquery-ui-1.8.16.custom.min.js
+ *	@depends /tools/jquery-validate/jquery.validate.min.js
  *  @depends /tools/colorbox/jquery.colorbox.js
  *  @depends /tools/imgpreview/imgpreview-min.js
  *  @depends /tools/timepicker/jquery-ui-timepicker-addon.js

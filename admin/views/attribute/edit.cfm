@@ -71,9 +71,9 @@ Notes:
     <dl class="oneColumn">
         <cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeName" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeCode" edit="true" tooltip="true" tooltipmessage="#$.slatwall.rbKey('entity.attribute.attributeCode_hint')#" />
-		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" editType="wysiwygbasic" />
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeDescription" edit="true" toggle="show" fieldType="wysiwyg" />
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeHint" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeType" propertyObject="Type" class="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="attributeType" class="attributeType" defaultValue="Text Box" allowNullOption="false" edit="true">
 		<div class="attributeOptions" style="display:none;">
 		<dt>
 			Attribute Options
@@ -115,7 +115,7 @@ Notes:
 		</div>
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="defaultValue" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="requiredFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationType" propertyObject="Type" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationType" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationRegex" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="validationMessage" edit="true">
 		<cf_SlatwallPropertyDisplay object="#rc.newAttribute#" property="activeFlag" edit="true">
@@ -165,9 +165,9 @@ Notes:
 		    <dl class="oneColumn">
 		        <cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeName" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeCode" edit="true" tooltip="true" tooltipmessage="#$.slatwall.rbKey('entity.attribute.attributeCode_hint')#" />
-				<cf_SlatwallPropertyDisplay id="attributeDescription#local.i#" object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" editType="wysiwygbasic" />
+				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeDescription" toggle="show" edit="true" fieldType="wysiwy" />
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="attributeHint" edit="true">
-				<cf_SlatwallPropertyDisplay class="attributeType" object="#local.thisAttribute#" property="attributeType" propertyObject="Type" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
+				<cf_SlatwallPropertyDisplay class="attributeType" object="#local.thisAttribute#" property="attributeType" defaultValue="#$.slatwall.rbKey('entity.attribute.attributetype.atTextBox')#" allowNullOption="false" edit="true">
 				<div class="attributeOptions" style="display:none;">
 				<dt>
 					Attribute Options
@@ -230,7 +230,7 @@ Notes:
 				</div>
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="defaultValue" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="requiredFlag" edit="true">
-				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" nullLabel="#rc.$.Slatwall.rbKey('sitemanager.content.none')#" property="validationType" propertyObject="Type" edit="true">
+				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="validationType" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="validationRegex" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="validationMessage" edit="true">
 				<cf_SlatwallPropertyDisplay object="#local.thisAttribute#" property="activeFlag" edit="true">

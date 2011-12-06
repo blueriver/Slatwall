@@ -74,9 +74,9 @@ Notes:
 					</cfif>
 					<cfif attributes.address.getCountry().getStateCodeShowFlag() and attributes.showState>
 						<cfif arrayLen(attributes.address.getStateCodeOptions()) gt 1>
-							<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" editType="select" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" fieldType="select" edit="true" />
 						<cfelse>
-							<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" editType="text" edit="true" />
+							<cf_SlatwallPropertyDisplay object="#attributes.address#" fieldName="#attributes.fieldNamePrefix#stateCode" property="stateCode" fieldType="text" edit="true" />
 						</cfif>
 					</cfif>
 					<cfif attributes.address.getCountry().getPostalCodeShowFlag() and attributes.showPostalCode>

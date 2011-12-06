@@ -68,10 +68,10 @@ Notes:
 				</td>
 			</tr>
 			<cfif !isNull(local.account.getPrimaryEmailAddress())>
-			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="false" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" edit="false" displayType="table">
 			</cfif>
 			<cfif !isNull(local.account.getPrimaryPhoneNumber())>
-			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="false" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" edit="false" displayType="table">
 			</cfif>
 		</table>
 	</div>

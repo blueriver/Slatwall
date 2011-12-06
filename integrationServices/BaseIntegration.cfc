@@ -36,7 +36,7 @@
 Notes:
 
 */
-component {
+component extends="Slatwall.com.utility.BaseObject" {
 	public any function init() {
 		return this;
 	}

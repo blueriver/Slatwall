@@ -347,15 +347,15 @@ p.messagebox {
 }
 
 p.info_message {
-	background: #D1E6EF url(../images/admin.ui.msg_redcheck.gif) no-repeat scroll .5em 50%;
+	background: #D1E6EF url(../../images/admin.ui.msg_redcheck.gif) no-repeat scroll .5em 50%;
 }
 
 p.warning_message {
-	background: #FFF2CF url(../images/admin.ui.msg_warning.gif) no-repeat scroll .5em 50%;
+	background: #FFF2CF url(../../images/admin.ui.msg_warning.gif) no-repeat scroll .5em 50%;
 }
 
 p.error_message {
-	background: #FFFFE0 url(../images/admin.ui.msg_error.gif) no-repeat scroll .5em 50%;
+	background: #FFFFE0 url(../../images/admin.ui.msg_error.gif) no-repeat scroll .5em 50%;
 }
 
 /**************************************************************/
@@ -517,6 +517,36 @@ table td.varWidth li {padding-left:10px;}
 td.administration ul {
 	margin: 0 auto;
 	float: left;
+}
+
+/* @group Admin Icons */
+
+td.administration ul.one { /* 1 Icon */
+	width: 14px;
+}
+
+td.administration ul.two { /* 2 Icons */
+	width: 38px;
+}
+
+td.administration ul.three { /* 3 Icons */
+	width: 57px;
+}
+
+td.administration ul.four { /* 4 Icons */
+	width: 72px !important;
+}
+
+td.administration ul.five { /* 5 Icons */
+	width: 95px;
+}
+
+td.administration ul.six { /* 6 Icons */
+	width: 104px;
+}
+
+td.administration ul.seven { /* 7 Icons */
+	width: 133px;
 }
 
 td.administration li {
@@ -698,15 +728,60 @@ td.administration li.historyOff {
 	background: none;
 }
 
-.error, .notice, .success { padding: .8em !important; margin-bottom: 1em !important; border: 2px solid #ddd; }
+div.error, label.error {
+	padding: .8em !important;
+	margin-bottom: 1em !important;
+	background: #FBE3E4;
+	color: #8a1f11;
+	border-color: #FBC2C4;
+}
 
-#tabBundles .error,#tabBundles .notice,#tabBundles .success { 
-margin: .5em 0; }
+div.error a { color: #8a1f11; }
 
-.error { background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
-.notice { background: #FFF6BF; color: #514721; border-color: #FFD324; }
-.success { background: #E6EFC2; color: #264409; border-color: #C6D880; }
-.error a { color: #8a1f11; }
-.notice a { color: #514721; }
-.success a { color: #264409; }
+.error {
+	border: 2px solid #FBC2C4;
+}
 
+a.tooltip {
+	position: relative;
+	z-index: 0;
+	text-decoration: none;
+	cursor: help;
+	padding-right: 8px;
+	background: url(../../images/admin.ui.tooltip.gif) no-repeat right top;
+	display: block;
+	line-height: 1.2;
+}
+
+dt a.tooltip, th.varWidth a.tooltip, td.varWidth a.tooltip {
+	display: inline-block;
+	color: #000;
+	padding-right: 10px;
+}
+
+a.tooltip:hover {
+	z-index: 1;
+	text-decoration: none;
+}
+
+a.tooltip span {
+	display: none;
+	font-weight: normal;
+	text-decoration:none;
+}
+
+a.tooltip:hover span {
+	display: block;
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	padding: 6px;
+	border: 1px solid #bbb;
+	background: #F7FBFE;
+	color: #000;
+	width: 250px;
+	white-space: normal;
+	text-align: left;
+	text-decoration: none;
+	line-height: 1;
+}

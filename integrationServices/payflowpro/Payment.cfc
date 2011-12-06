@@ -37,13 +37,13 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" {
+component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	// Custom Properties that need to be set by the end user
 	property name="vendorID" displayname="Vendor ID (Merchant ID)" type="string";
 	property name="partnerID" displayname="Partner ID (leave blank if no partner)" type="string";
 	property name="username" displayname="Username" type="string";
-	property name="password" displayname="Password" type="string" editType="password";
+	property name="password" displayname="Password" type="string" fieldType="password";
 	property name="liveModeFlag" displayname="Live Mode" type="boolean";
 	
 	//Global variables

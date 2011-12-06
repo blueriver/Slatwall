@@ -174,8 +174,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID,true);
 		
 		// upload the image and return the result struct
-		if(rc.optionGroupImageFile != "") {
-			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionGroupImageFile","","makeUnique");
+		if(rc.optionGroupImage != "") {
+			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionGroupImage","","makeUnique");
 		} 
 		
 		rc.optionGroup = getOptionService().save(rc.optionGroup,rc);

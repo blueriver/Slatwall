@@ -51,10 +51,11 @@ Notes:
 </cfif>
     <dl class="oneColumn optionDetail">
     	<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" tooltip=true />
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupCode" edit="#rc.edit#" toggle="true" />
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" />
 		<cfif rc.edit>
 		<!--- if editing, display field for image uploading --->
-		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" editType="file" tooltip=true>
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupImage" edit="#rc.edit#" fieldType="file" tooltip=true>
 		</cfif>
 		<cfif len(rc.OptionGroup.getOptionGroupImage())>
 		<!--- if editing, and optiongroup has an image, display it  --->
@@ -68,7 +69,7 @@ Notes:
 		</cfif>
 		</dd>
 		</cfif>
-		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
+		<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" fieldType="wysiwyg" />
 	</dl>
 <cfif rc.edit>
 <div id="actionButtons" class="clearfix">
