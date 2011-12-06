@@ -56,6 +56,17 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		}
 		return false;
 	}
+	
+	// @hint public method to determine if this entity can be deleted
+	public boolean function isDeletable() {
+		var results = getValidateThis.validate(theObject=this, context="delete", injectResultIntoBO="false");
+		
+		if(results.hasErrors()) {
+			return false;	
+		}
+		
+		return true;
+	}
 		
 	// @hint public method that returns the value from the primary ID of this entity
 	public string function getPrimaryIDValue() {
