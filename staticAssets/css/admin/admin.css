@@ -23,6 +23,15 @@ body,ul,ol,li,h1,h2,h3,h4,h5,h6,form,dl,dt,dd,p,div,address,blockquote,pre,field
 .clear {
 	clear: both;
 }
+h1 {
+    background: url("../../images/admin.default.mura_logo.png") no-repeat scroll 0 0 transparent;
+    color: #FEE100;
+    float: left;
+    height: 53px;
+    margin: 0 0 0 6px;
+    text-indent: -999em;
+    width: 58px;
+}
 h3 {
     color: #333333;
     font-size: 18px;
@@ -57,8 +66,8 @@ a.button, input.button, button, .ui-widget-content a.button {
     width: auto;
 	font-size: 11px;
     height: 20px;
-	font-family:MS Shell Dlg;
-	text-align:center;
+	 height: 19px;
+	font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
 }
 label {
 	font-weight:bold;
@@ -477,6 +486,11 @@ div.svoadminproductdetail img.skuImage {float:right;}
 
 table td.varWidth div {float:left; margin-right:20px;}
 table td.varWidth ul {list-style:none;}
+table td.varWidth ul.nest1on {margin-left:16px;}
+table td.varWidth ul.nest2on {margin-left:32px;}
+table td.varWidth ul.nest3on {margin-left:48px;}
+table td.varWidth ul.nest4on {margin-left:64px;}
+table td.varWidth ul.nest5on {margin-left:80px;}
 table td.varWidth li {padding-left:10px;}
 
 
