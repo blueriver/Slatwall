@@ -59,15 +59,27 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
     }
     
-    public void function editOptoinGroup(required struct rc) {
+    public void function editOptionGroup(required struct rc) {
     	detailOptionGroup(rc);
-    	setView("admin:option.detailOptionGroup");
+    	getFW().setView("admin:option.detailOptionGroup");
     	rc.edit = true;
     }
     
     public void function saveOptionGroup(required struct rc) {
-    	
-    }
+		
+		detailOptionGroup(rc);
+		
+		rc.optionGroup = getOptionService().saveOptionGroup(rc.optionGroup, rc);
+		
+		if(!rc.optionGroup.hasErrors()) {
+			rc.message="admin.option.saveoptiongroup_success";
+			getFW().redirect(action="admin:option.detailOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#&editOptoins=true",preserve="message");
+		} else {
+			rc.edit = true;
+			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
+			getFW().setView(action="admin:option.detailOptionGroup");
+		}
+	}
 /*	
 	public void function create(required struct rc) {
 		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);

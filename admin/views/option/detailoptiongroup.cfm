@@ -54,7 +54,7 @@ Notes:
 			<input type="hidden" name="slatAction" value="admin:option.saveoptiongroup" />
 			<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 	</cfif>
-		    <dl class="oneColumn optionDetail">
+		    <dl class="twoColumn">
 		    	<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupCode" edit="#rc.edit#" toggle="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="imageGroupFlag" edit="#rc.edit#" />
@@ -74,8 +74,21 @@ Notes:
 					</cfif>
 					</dd>
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="OptionGroupDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" fieldType="wysiwyg" />
 			</dl>
+			
+			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
+				<ul>
+					<li><a href="##tabOptions" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.options")#</span></a></li>	
+					<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.description")#</span></a></li>
+				</ul>
+			
+				<div id="tabOptions">
+					#view("option/optiongrouptabs/options")#
+				</div>
+				<div id="tabDescription">
+					<cf_SlatwallPropertyDisplay object="#rc.optionGroup#" property="optionGroupDescription" edit="#rc.edit#" fieldType="wysiwyg">
+				</div>
+			</div>
 			
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
