@@ -347,15 +347,15 @@ p.messagebox {
 }
 
 p.info_message {
-	background: #D1E6EF url(../images/admin.ui.msg_redcheck.gif) no-repeat scroll .5em 50%;
+	background: #D1E6EF url(../../images/admin.ui.msg_redcheck.gif) no-repeat scroll .5em 50%;
 }
 
 p.warning_message {
-	background: #FFF2CF url(../images/admin.ui.msg_warning.gif) no-repeat scroll .5em 50%;
+	background: #FFF2CF url(../../images/admin.ui.msg_warning.gif) no-repeat scroll .5em 50%;
 }
 
 p.error_message {
-	background: #FFFFE0 url(../images/admin.ui.msg_error.gif) no-repeat scroll .5em 50%;
+	background: #FFFFE0 url(../../images/admin.ui.msg_error.gif) no-repeat scroll .5em 50%;
 }
 
 /**************************************************************/
