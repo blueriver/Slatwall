@@ -105,7 +105,7 @@ Notes:
 							<td>#local.priceGroupRate.getAppliesToRepresentation()#</td>
 							<cfif rc.edit>
 								<td class="administration">
-									<ul class="one">
+									<ul class="two">
 										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
 										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list">
 									</ul>

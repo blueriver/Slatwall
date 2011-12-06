@@ -58,8 +58,21 @@ Notes:
 </div>
 </cfif>
 <!---<cfset local.skus = rc.SkuSmartList.getPageRecords() />--->
+	<style>
+		.listing-grid th.noBorderOrBackground{background: none; border: 0px;}	
+		
+	</style>
 	<table id="skuTable" class="listing-grid stripe">
 		<thead>
+		<tr>
+			<th colspan="5" class="noBorderOrBackground"></th>
+			<th colspan="10">Price Groups</th>
+			
+			<th colspan="3"  class="noBorderOrBackground"></th>
+
+		</tr>
+		
+		
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.isDefault")#</th>
@@ -76,13 +89,19 @@ Notes:
 				<!--- Loop over all Price Groups and create column headers --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
-					<th priceGroupId="#local.priceGroup.getPriceGroupId#">#local.priceGroup.getPriceGroupName()#</th>
+					<th priceGroupId="#local.priceGroup.getPriceGroupId()#">
+						#local.priceGroup.getPriceGroupName()#
+					
+						<cfif !isNull(local.priceGroup.getParentPriceGroup())>
+							(Inherited from #local.priceGroup.getParentPriceGroup().getPriceGroupName()#)
+						</cfif>
+					</th>
 				</cfloop>
 				
 				
-				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.price")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>
@@ -101,7 +120,7 @@ Notes:
 		<tbody>
 		<cfloop from="1" to="#arrayLen(rc.skuSmartList.getPageRecords())#" index="local.skuCount">
 			<cfset local.thisSku = rc.skuSmartList.getPageRecords()[local.skuCount] />
-			<tr id="Sku#local.skuCount#" class="skuRow">
+			<tr id="Sku#local.skuCount#" class="skuRow" skuid="#local.thisSku.getSkuId()#">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<td class="alignLeft">
 					<cfif rc.edit>
@@ -146,12 +165,12 @@ Notes:
 				<!--- Loop over all Price Groups and create actual values --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
-					<td>#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#</td>
-					
-					
+					<cfset priceGroupId = local.priceGroup.getPriceGroupId()>
+					<td class="priceGroupSKUColumn" pricegroupid="#priceGroupId#">
+						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
+					</td>	
 				</cfloop>
-				
-				
+
 				<td>
 					<cfif rc.edit>
 						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />
@@ -240,11 +259,11 @@ Notes:
 			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
 		</td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+	        <td></td>
+	        <td></td>
+	        <td></td>
+	        <td></td>
+	        <td></td>
         </cfif>
             <td class="administration">
             </td>
@@ -254,4 +273,6 @@ Notes:
 <cfelse>
 	<div class="clear"></div>
 </cfif>
+
+
 </cfoutput>

@@ -83,4 +83,30 @@ jQuery(document).ready(function() {
             });         
         }
     });
+	
+	/* Bind modal dialog clickable images to the price cells of the SKU tab. */
+	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>");
+	$newImage.click(function(){
+		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog").clone();
+		var clickedPriceGroupId = $(this).parent("td").attr("pricegroupid"); 
+		var clickedSkuId = $(this).parents("tr").first().attr("skuid");
+		
+		// Assign the clicked PriceGroupId and SkuId to the form so that it posts to the server
+		$("#updatePriceGroupSKUSettingsForm_priceGroupId", $dialogDiv).val(clickedPriceGroupId);
+		$("#updatePriceGroupSKUSettingsForm_skuId", $dialogDiv).val(clickedSkuId);
+
+		// Populate the Price Group title in the modal dialog.
+		$("#updatePriceGroupSKUSettings_GroupName\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
+		
+		// Populate the rate radio buttons
+		$("#updatePriceGroupSKUSettings_PriceGroupRateInputs\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
+		
+		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked.
+		actionDialog($dialogDiv, function(){
+			return false;
+			
+		});
+	});
+	
+	$(".priceGroupSKUColumn").append($newImage);
 });
