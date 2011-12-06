@@ -11,7 +11,7 @@
 			</rule>
 		</property>
 		<property name="options">
-			<rule type="collectionSize" context="delete">
+			<rule type="collectionSize" contexts="delete">
 				<param name="max" value="0" />
 			</rule>
 		</property>

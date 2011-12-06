@@ -203,7 +203,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint pubic method to validate this object
-	public any function validate( string context) {
+	public any function validate( ) {
 		
 		// Set up the validation arguments as a mirror of the arguments struct
 		var valdationArguments = arguments;

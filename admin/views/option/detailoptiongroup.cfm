@@ -48,7 +48,9 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list">
 		</cfif>
 	</ul>
-
+	<cfif rc.optionGroup.hasErrors()>
+		<cfdump var="#rc.optionGroup.getErrors()#" />
+	</cfif>
 	<cfif rc.edit>
 		<form "OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" method="post">
 			<input type="hidden" name="slatAction" value="admin:option.saveoptiongroup" />

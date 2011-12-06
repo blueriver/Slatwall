@@ -87,7 +87,7 @@
 		
 		<cfset var context = 0 />
 		<cfset var rule = 0 />
-
+		
 		<cfset structAppend(variables.instance.propertyDescs,theStruct.propertyDescs) />
 		<cfset structAppend(variables.instance.clientFieldDescs,theStruct.clientFieldDescs) />
 		<cfset structAppend(variables.instance.formContexts,theStruct.formContexts) />
