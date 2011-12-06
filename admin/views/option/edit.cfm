@@ -66,7 +66,7 @@ Notes:
 <div<cfif !local.thisOpen> style="display:none;"</cfif> id="newFrmcontainer">
 
 <form id="newOptionForm" enctype="multipart/form-data" action="#buildURL('admin:option.save')#" method="post">
-    <input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
+    <input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 	<input type="hidden" name="sortOrder" value="#arrayLen(local.options)+1#" />
     <dl class="oneColumn">
         <cf_SlatwallPropertyDisplay object="#rc.newOption#" property="optionname" edit="true">
@@ -112,7 +112,7 @@ Notes:
 		<div<cfif !local.thisOpen> style="display:none;"</cfif> id="editFrm#local.i#container">
 
 		<form name="editFrm#local.i#" enctype="multipart/form-data" action="#buildURL('admin:option.save')#" method="post">
-		    <input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
+		    <input type="hidden" name="optionGroup.optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 			<input type="hidden" name="optionID" value="#local.thisOption.getOptionID()#" />
 			<input type="hidden" name="sortOrder" value="#local.thisOption.getSortOrder()#" />
 		    <dl class="oneColumn">
