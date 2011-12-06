@@ -236,6 +236,13 @@ Notes:
 				</ul>
 				<cf_SlatwallActionCaller action="admin:account" type="link">
 			</li>
+			<li id="navMura">
+				<ul class="addMenuNav">
+					<li><a href="/admin/index.cfm?fuseaction=cArch.list&amp;siteid=default&amp;moduleid=00000000000000000000000000000000000&amp;topid=00000000000000000000000000000000001">Site Manager</a></li>
+					<li><a href="/admin/index.cfm?fuseaction=cPlugins.list&amp;siteid=default">Plugins</a></li>
+				</ul>
+				<a href="/admin/index.cfm?fuseaction=cDashboard.main&amp;siteid=default&amp;span=1">Mura Dashboard</a>
+			</li>
 		</ul>
 	</div>
 </cfoutput>
