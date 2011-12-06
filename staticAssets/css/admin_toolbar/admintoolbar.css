@@ -211,6 +211,9 @@ div.svoadmintoolbarmenu li#navAccounts>a {
 div.svoadmintoolbarmenu li#navSettings>a {
 	background: url(../../images/grayIcons16/tools.png) no-repeat scroll 14px 6px transparent ;
 }
+div.svoadmintoolbarmenu li#navMura>a {
+	background: url(../../images/grayIcons16/wired.png) no-repeat scroll 14px 6px transparent ;
+}
 
 div.svoadmintoolbarmenu li#mainMenu ul.menu {
 	display: none;
