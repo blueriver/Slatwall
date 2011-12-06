@@ -58,7 +58,7 @@ Notes:
 					<ul class="three">
 						<cf_SlatwallActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
 						<cf_SlatwallActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="detail" type="list">
-						<cf_SlatwallActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.isDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.brand.delete_validateisassigned')#" confirmrequired="true">
+						<cf_SlatwallActionCaller action="admin:brand.delete" querystring="brandID=#local.brand.getBrandID()#" class="delete" type="list" disabled="#local.brand.isNotDeletable()#" confirmrequired="true">
 					</ul>     						
 				</td>
 			</tr>

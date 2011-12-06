@@ -71,12 +71,10 @@ Notes:
 						<td>#local.thisOptionGroup.getOptionsCount()#</td>
 						<td class="administration">
 						  <ul class="three">
-						  	  <cfif local.thisOptionGroup.getOptionsCount() gt 0><cfset local.deleteDisabled=true><cfelse><cfset local.deleteDisabled=false></cfif>
-						      <cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
+						  	  <cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
 				              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="detail" type="list">
-							  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
+							  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.thisOptionGroup.isNotDeletable()#" confirmrequired="true">
 						  </ul>		
-						
 						</td>
 					</tr>
 				</cfloop>
