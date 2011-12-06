@@ -39,7 +39,7 @@ Notes:
 component accessors="true" output="false" extends="BaseObject" {
 
 	public any function init() {
-		return this;	
+		return this;
 	}
 	
 	public any function getCurrentProduct() {
@@ -213,6 +213,36 @@ component accessors="true" output="false" extends="BaseObject" {
 		} else {
 			return getService("sessionService");	
 		}
+	}
+	
+	public void function addVTScript( ) {
+		var script = getValidateThis().getValidationScript( argumentcollection = arguments );
+		
+		if(!getService("requestCacheService").keyExists("vtScripts")) {
+			getService("requestCacheService").setValue("vtScripts", []);	
+		}
+		
+		arrayAppend(getService("requestCacheService").getValue("vtScripts"), script);
+	}
+	
+	public string function renderVTScript() {
+		var scripts = [];
+		var outputScript = "";
+		
+		if(getService("requestCacheService").keyExists("vtScripts")) {
+			scripts = getService("requestCacheService").getValue("vtScripts");
+		}
+		
+		outputScript &= '<script type="text/javascript">';
+		outputScript &= 'jQuery(document).ready(function(){';
+		 
+		for(var i=1; i<=arrayLen(scripts); i++) {
+			outputScript &= replace(replace(replace(replace(scripts[i],'<script type="text/javascript">',''),'</script>',''),'/*<![CDATA[*/','','all'),'/*]]>*/','','all');
+		}
+		
+		outputScript &= '});</script>';
+		
+		return outputScript;
 	}
 	
 	// Public methods that expose some of the base objects private methods
