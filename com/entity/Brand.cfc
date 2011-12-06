@@ -58,8 +58,6 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
-	// Calculated Properties
-	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallBrand sb on sp.brandID = sb.brandID where sp.brandID=brandID";
 	
 	public Brand function init(){
 	   // set default collections for association management methods

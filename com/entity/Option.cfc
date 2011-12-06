@@ -61,9 +61,6 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
-	// Calculated Properties
-	property name="assignedFlag" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
-
 	public Option function init(){
 		// set default collections for association management methods
 		if(isNull(variables.skus)) {

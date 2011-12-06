@@ -128,10 +128,4 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	/******* End: Association management methods for bidirectional relationships **************/
 	
-	public boolean function isAssigned(){
-		var smartList = getService("ShippingService").getSmartList("OrderFulfillmentShipping");
-		smartList.addFilter("shippingMethod_shippingMethodID",this.getShippingMethodID());
-		return smartList.getRecordsCount();
-	}
-	
 }
