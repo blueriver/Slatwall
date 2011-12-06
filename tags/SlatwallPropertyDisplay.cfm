@@ -91,6 +91,8 @@ Notes:
 	plain
 --->
 
+
+
 <cfif thisTag.executionMode is "start">
 	
 	<!--- Set Up The Value --->
@@ -103,16 +105,25 @@ Notes:
 		</cfif>
 		
 		<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
-		<cfif isObject(attributes.value)>
+		<cfif isObject(attributes.value) && attributes.object.isPersistent()>
 			<cfif attributes.edit>
-				<cfif attributes.object.isPersistent()>
-					<cfset attributes.value = attributes.value.getIdentifierValue() />
-				<cfelse>
-					<cfset attributes.value = attributes.valueDefault />
-				</cfif>
+				<cfset attributes.value = attributes.value.getIdentifierValue() />
 			<cfelse>
 				<cfset attributes.value = attributes.value.getSimpleRepresentation() />
 			</cfif>
+		<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->	
+		<cfelseif isArray(attributes.value)>
+			<cfset thisValueList = "" />
+			<cfloop array="#attributes.value#" index="thisValue">
+				<cfif isObject(thisValue) && thisValue.isPersistent()>
+					<cfif attributes.edit>
+						<cfset thisValueList = listAppend(thisValueList, thisValue.getIdentifierValue()) />
+					<cfelse>
+						<cfset thisValueList = listAppend(thisValueList, " #attributes.value.getSimpleRepresentation()#") />
+					</cfif>
+				</cfif>
+			</cfloop>
+			<cfset attributes.value = trim(thisValueList) />
 		<cfelse>
 			<cfif not attributes.edit>
 				<!--- Set up the value formatType --->
