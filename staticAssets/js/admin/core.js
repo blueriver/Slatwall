@@ -100,3 +100,30 @@ function stripe(theclass) {
 		}
 	);
 }
+
+// This actually came from Mura admin.js.
+function confirmDialog(message,action){
+	confirmedAction=action;
+	
+	jQuery("#alertDialogMessage").html(message);
+	jQuery("#alertDialog").dialog({
+			resizable: false,
+			modal: true,
+			buttons: {
+				'YES': function() {
+					jQuery(this).dialog('close');
+					if(typeof(confirmedAction)=='function'){
+						confirmedAction();
+					} else {
+						location.href=confirmedAction;
+					}
+					
+					},
+				'NO': function() {
+					jQuery(this).dialog('close');
+				}
+			}
+		});
+
+	return false;	
+}
