@@ -66,15 +66,7 @@ label {
 input, select {
 	font-size:11px;
 }
-h1 {
-    background: url("../../images/admin.default.mura_logo.png") no-repeat scroll 0 0 transparent;
-    color: #FEE100;
-    float: left;
-    height: 53px;
-    margin: 0 0 0 6px;
-    text-indent: -999em;
-    width: 58px;
-}
+
 div#header {
 	background: url(../../images/admin.ui.bg_header.png) repeat-x scroll 0 0 transparent;
     color: #666666;
@@ -498,7 +490,7 @@ table td.varWidth li {padding-left:10px;}
 
 .listing-grid th, .listtable th {
 	margin: 0 !important;
-	background: #FFFEFE url(../../images/admin.default.listing-grid_th_bg.jpg) repeat-x left bottom;
+	background: #FFFEFE url(../../images/admin.ui.listing-grid_th_bg.jpg) repeat-x left bottom;
 	font-style: normal;
 	color: #000;
 	padding: 4px 5px;
@@ -676,7 +668,7 @@ td.administration li.historyOff {
 	position: relative;
 	/*border-top: 1px solid #f9f9f9;
 	border-bottom: 1px solid #f9f9f9;*/
-	background: url(../../images/admin.default.dots_bg.gif);
+	background: url(../../images/admin.ui.dots_bg.gif);
 }
 
 #navTask li {
@@ -684,7 +676,7 @@ td.administration li.historyOff {
 	display: inline;
 	margin: 0 10px 0 2px;
 	padding: 0 0 0 7px;
-	background: transparent url(../../images/admin.default.nav_arrow_orange.gif) no-repeat 0% 50%;
+	background: transparent url(../../images/admin.ui.nav_arrow_orange.gif) no-repeat 0% 50%;
 }
 
 #navTask li a {
@@ -728,7 +720,7 @@ td.administration li.historyOff {
 .oneColumn dt {
 	margin: 8px 0 4px 0;
 	padding: 8px 0 0 0;
-	background: url(../../images/admin.default.rule_dotted.gif) repeat-x left top;
+	background: url(../../images/admin.ui.rule_dotted.gif) repeat-x left top;
 }
 
 .oneColumn .first   {
@@ -740,7 +732,7 @@ td.administration li.historyOff {
 .oneColumn .firstAlt {
 	margin: 0 0 2px 0;
 	padding: 8px 0 0 0;
-	background: url(../../images/admin.default.rule_dotted.gif) repeat-x left top;
+	background: url(../../images/admin.ui.rule_dotted.gif) repeat-x left top;
 }
 
 .oneColumn dd dt {
@@ -753,14 +745,14 @@ td.administration li.historyOff {
 .oneColumnAlt {
 	margin: 0 0 0 0;
 	padding: 16px 0 0 0;
-	background: url(../../images/admin.default.rule_dotted_big.gif) repeat-x left top;
+	background: url(../../images/admin.ui.rule_dotted_big.gif) repeat-x left top;
 	border: 1px solid #fff;
 }
 
 .oneColumnAlt dt {
 	margin: 8px 0 2px 0;
 	padding: 8px 0 0 0;
-	background: url(../../images/admin.default.rule_dotted.gif) repeat-x left top;
+	background: url(../../images/admin.ui.rule_dotted.gif) repeat-x left top;
 }
 
 .oneColumnAlt .first {
