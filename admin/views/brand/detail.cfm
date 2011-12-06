@@ -40,6 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
+	#$.slatwall.getValidateThis().getValidationScript(theObject=rc.brand, formName="brandDetail")#
+	
 	<ul id="navTask">
 		<cfif not rc.edit>
 	    	<cf_SlatwallActionCaller action="admin:brand.edit" querystring="brandID=#rc.brand.getbrandID()#" type="list">
@@ -49,7 +51,7 @@ Notes:
 	
 	<div class="svoadminbranddetail">
 		<cfif rc.edit>
-			<form name="brandDetail" method="post">
+			<form name="brandDetail" id="brandDetail" method="post">
 				<input type="hidden" name="slatAction" value="admin:brand.save" />
 				<input type="hidden" name="BrandID" value="#rc.Brand.getBrandID()#" />
 		</cfif>
