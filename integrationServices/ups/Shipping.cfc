@@ -42,7 +42,7 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 	// Custom Properties that need to be set by the end user
 	property name="apiKey" validateRequired displayname="API Key" type="string";
 	property name="username" displayname="UPS Username" type="string";
-	property name="password" displayname="UPS Password" type="string" editType="password";
+	property name="password" displayname="UPS Password" type="string" fieldType="password";
 	property name="testingFlag" displayname="Testing Mode" type="boolean";
 	property name="shipperNumber" displayname="Shipper Number" type="string";
 	property name="shipFromCity" displayname="Ship From City" type="string";
