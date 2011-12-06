@@ -42,9 +42,33 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="optionService" type="any";
 
 	public void function default(required struct rc) {
-		getFW().redirect(action="option.list");
+		getFW().redirect(action="option.listoptiongroups");
 	}
-	
+
+	public void function listOptionGroups(required struct rc) {
+        param name="rc.sortOrder" default="sortOrder|ASC";
+        
+        rc.optionGroupSmartList = getOptionService().getOptionGroupSmartList(data=arguments.rc);
+        
+    }
+    
+    public void function detailOptionGroup(required struct rc) {
+    	param name="rc.optionGroupID" default="";
+    	param name="rc.edit" default="false";
+    	
+    	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+    }
+    
+    public void function editOptoinGroup(required struct rc) {
+    	detailOptionGroup(rc);
+    	setView("admin:option.detailOptionGroup");
+    	rc.edit = true;
+    }
+    
+    public void function saveOptionGroup(required struct rc) {
+    	
+    }
+/*	
 	public void function create(required struct rc) {
 		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		if(!isNull(rc.optionGroup)) {
@@ -210,5 +234,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		getFW().redirect(action="admin:option.list",preserve="message,messageType");
 	}
+*/
 	
 }

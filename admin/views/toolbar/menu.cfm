@@ -89,9 +89,9 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
 							</ul>
 							<ul>
-								<li class="title">Product Options</li>
+								<li class="title">Product Option Groups</li>
 								<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="list">
-								<cf_SlatwallActionCaller action="admin:option.list" type="list">
+								<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="list">
 							</ul>
 						</div>
 						<div class="oneColumn">

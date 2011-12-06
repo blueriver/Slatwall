@@ -41,9 +41,12 @@ Notes:
  
 <cfoutput>
 	<ul id="navTask">
-		<cfif !rc.optionGroup.isNew()><cf_SlatwallActionCaller action="admin:option.create" querystring="optiongroupid=#rc.optiongroup.getoptiongroupid()#" type="list"></cfif>
-	    <cfif !rc.edit><cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list"></cfif>
-		<cf_SlatwallActionCaller action="admin:option.list" type="list">
+		<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="list">
+		<cfif !rc.edit>
+			<cf_SlatwallActionCaller action="admin:option.editoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list">
+		<cfelse>
+			<cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list">
+		</cfif>
 	</ul>
 
 	<cfif rc.edit>
@@ -83,12 +86,6 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
 			</div>
 		</form>
-	<cfelse>
-		<h4>#rc.$.Slatwall.rbKey('entity.optiongroup.options')#</h4>
-		<ul id="optionList">
-			<cfloop array="#rc.optionGroup.getOptions()#" index="local.thisOption">
-				<li>#local.thisOption.getOptionName()#</li>
-			</cfloop>
-		</ul>
 	</cfif>
+	
 </cfoutput>

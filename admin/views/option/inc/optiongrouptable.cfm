@@ -57,22 +57,22 @@ Notes:
 	</tr>
 	</thead>
 	<tbody id="OptionGroupList">
-<cfloop array="#rc.optionGroups.getPageRecords()#" index="local.thisOptionGroup">
-	<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
-		<td class="handle" style="display:none;"><img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
-		<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
-		<td>#local.thisOptionGroup.getOptionsCount()#</td>
-		<td class="administration">
-		  <ul class="three">
-		  	  <cfif local.thisOptionGroup.getOptionsCount() gt 0><cfset local.deleteDisabled=true><cfelse><cfset local.deleteDisabled=false></cfif>
-		      <cf_SlatwallActionCaller action="admin:option.create" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
-              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="detail" type="list">
-			  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
-		  </ul>		
-		
-		</td>
-	</tr>
-</cfloop>
+		<cfloop array="#rc.optionGroups.getPageRecords()#" index="local.thisOptionGroup">
+			<tr class="OptionGroup" id="#local.thisOptionGroup.getOptionGroupID()#">
+				<td class="handle" style="display:none;"><img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#" /></td>
+				<td class="varWidth">#local.thisOptionGroup.getOptionGroupName()#</td>
+				<td>#local.thisOptionGroup.getOptionsCount()#</td>
+				<td class="administration">
+				  <ul class="three">
+				  	  <cfif local.thisOptionGroup.getOptionsCount() gt 0><cfset local.deleteDisabled=true><cfelse><cfset local.deleteDisabled=false></cfif>
+				      <cf_SlatwallActionCaller action="admin:option.create" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="edit" type="list">
+		              <cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optiongroupid=#local.thisOptionGroup.getOptionGroupID()#" class="delete" type="list" disabled="#local.deleteDisabled#" confirmrequired="true">
+				  </ul>		
+				
+				</td>
+			</tr>
+		</cfloop>
     </tbody>
 </table>
 <cf_SlatwallSmartListPager smartList="#rc.optionGroups#">
