@@ -103,10 +103,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!rc.option.hasErrors()) {
 			// go to the 'manage option group' form to add/edit more options
 			rc.message = rc.$.Slatwall.rbKey("admin.option.save_success");
-			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroupID#",preserve="message");
+			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.optionGroupID#",preserve="message");
 		} else {
 			//put optionGroup in rc for form
-			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroup.optionGroupID);
 			rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
 			if(rc.option.isNew()) {
 				rc.newOption = rc.option;

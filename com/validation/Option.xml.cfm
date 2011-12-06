@@ -10,6 +10,9 @@
 		<property name="optionName">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="optionGroup">
+			<rule type="required" contexts="*" />
+		</property>
 		<property name="skus">
 			<rule type="collectionSize" context="delete">
 				<param name="max" value="0" />
