@@ -53,9 +53,9 @@ Notes:
 		<tr>
 			<cfif rc.edit><input type="hidden" class="imageid" name="images[#local.i#].imageID" value="#local.thisImage.getImageID()#" /></cfif>
 			<td><a href="#local.thisImage.getImagePath()#" class="lightbox<cfif !rc.edit> preview</cfif>"><cfif rc.edit>#local.thisImage.getImage(height="120", width="120")#<cfelse>#$.Slatwall.rbKey("admin.product.previewalternateimage")#</cfif></a></td>
-			<td><cf_SlatwallPropertyDisplay id="imageType#local.i#" object="#local.thisImage#" property="imageType" propertyObject="Type" fieldName="images[#local.i#].imageType" displayType="plain" edit="#rc.edit#"></td>
-			<td><cf_SlatwallPropertyDisplay id="imageName#local.i#" object="#local.thisImage#" property="imageName" fieldName="images[#local.i#].imageName" displayType="plain" edit="#rc.edit#"></td>
-			<td class="varWidth"><cf_SlatwallPropertyDisplay id="imageDescription#local.i#" object="#local.thisImage#" property="imageDescription" fieldName="images[#local.i#].imageDescription" displayType="plain" fieldType="wysiwyg" edit="#rc.edit#"></td>
+			<td><cf_SlatwallPropertyDisplay object="#local.thisImage#" property="imageType" fieldName="images[#local.i#].imageType" displayType="plain" edit="#rc.edit#"></td>
+			<td><cf_SlatwallPropertyDisplay object="#local.thisImage#" property="imageName" fieldName="images[#local.i#].imageName" displayType="plain" edit="#rc.edit#"></td>
+			<td class="varWidth"><cf_SlatwallPropertyDisplay object="#local.thisImage#" property="imageDescription" fieldName="images[#local.i#].imageDescription" displayType="plain" fieldType="wysiwyg" edit="#rc.edit#"></td>
 			<td class="administration">
 				<ul class="one">
 					<cf_SlatwallActionCaller action="admin:product.deleteImage" querystring="imageID=#local.thisImage.getImageID()#&productID=#rc.product.getProductID()#" confirmRequired="true" class="delete" type="list">
@@ -78,10 +78,10 @@ Notes:
 						<input type="hidden" name="images[#local.i#].imageID" value="" />
 						<input type="file" class="imageFile" name="images[#local.i#].productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
 					</dd>
-					<cf_SlatwallPropertyDisplay object="#local.thisImage#" propertyObject="Type" fieldName="images[#local.i#].imageType" property="imageType" edit="true" allowNullOption="false">
+					<cf_SlatwallPropertyDisplay object="#local.thisImage#" fieldName="images[#local.i#].imageType" property="imageType" edit="true" allowNullOption="false">
 					<cf_SlatwallPropertyDisplay object="#local.thisImage#" property="imageName" fieldName="images[#local.i#].imageName" edit="true">
-					<cf_SlatwallPropertyDisplay id="imageDescription#local.i#" object="#local.thisImage#" property="imageDescription" fieldName="images[#local.i#].imageDescription" fieldType="wysiwyg" edit="true" toggle="hide">
-				</dl>				
+					<cf_SlatwallPropertyDisplay object="#local.thisImage#" property="imageDescription" fieldName="images[#local.i#].imageDescription" fieldType="wysiwyg" edit="true" toggle="hide">
+				</dl>
 			</cfif>
 		</cfloop>
 		<div class="buttons">
@@ -94,9 +94,9 @@ Notes:
 				<input type="hidden" name="imageID" value="" />
 				<input type="file" class="imageFile" name="productImageFile" accept="image/gif, image/jpeg, image/jpg, image/png">
 			</dd>
-			<cf_SlatwallPropertyDisplay object="#rc.image#" propertyObject="Type" fieldName="imageType" property="imageType" edit="true" allowNullOption="false">
+			<cf_SlatwallPropertyDisplay object="#rc.image#" fieldName="imageType" property="imageType" edit="true" allowNullOption="false">
 			<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageName" fieldName="imageName" edit="true">
-			<cf_SlatwallPropertyDisplay id="imageDescription" object="#rc.image#" property="imageDescription" fieldName="imageDescription" fieldType="textarea" edit="true" toggle="hide">
+			<cf_SlatwallPropertyDisplay object="#rc.image#" property="imageDescription" fieldName="imageDescription" fieldType="textarea" edit="true" toggle="hide">
 		</dl>
 	</cfif>	
 </cfoutput>

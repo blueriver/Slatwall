@@ -87,7 +87,7 @@ Notes:
 							<cfif structKeyExists(local.property, "editType")>
 								<cfset local.propertyEditType = local.property.editType />
 							</cfif>
-							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('data')#" fieldName="dataIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('data')#" fieldName="dataIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" fieldType="#local.propertyEditType#">
 						</cfloop>
 					</dl>
 				</div>
@@ -109,7 +109,7 @@ Notes:
 							<cfif structKeyExists(local.property, "editType")>
 								<cfset local.propertyEditType = local.property.editType />
 							</cfif>
-							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('payment')#" fieldName="paymentIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" editType="#local.propertyEditType#">
+							<cf_SlatwallPropertyDisplay object="#rc.integration.getIntegrationCFC('payment')#" fieldName="paymentIntegration.#local.property.name#" property="#local.property.name#" title="#local.propertyTitle#" edit="#rc.edit#" fieldType="#local.propertyEditType#">
 						</cfloop>
 					</dl>
 				</div>
