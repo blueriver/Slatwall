@@ -79,7 +79,7 @@ Notes:
 			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 				<ul>
 					<li><a href="##tabOptions" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.options")#</span></a></li>	
-					<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.description")#</span></a></li>
+					<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.optionGroup.optionGroupDescription")#</span></a></li>
 				</ul>
 			
 				<div id="tabOptions">
