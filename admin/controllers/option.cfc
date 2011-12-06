@@ -98,7 +98,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionImage","","makeUnique");
 		} 
 
-		rc.option = getOptionService().save(rc.option,rc);
+		rc.option = getOptionService().saveOption(rc.option,rc);
 		
 		if(!rc.option.hasErrors()) {
 			// go to the 'manage option group' form to add/edit more options
@@ -178,7 +178,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionGroupImage","","makeUnique");
 		} 
 		
-		rc.optionGroup = getOptionService().save(rc.optionGroup, rc);
+		rc.optionGroup = getOptionService().saveOptionGroup(rc.optionGroup, rc);
 		
 		if(!rc.optionGroup.hasErrors()) {
 			// go to the 'manage option group' form to add options

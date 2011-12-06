@@ -47,7 +47,7 @@ Notes:
 	</ul>
 
 	<cfif rc.edit>
-		<form="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" method="post">
+		<form "OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" method="post">
 			<input type="hidden" name="slatAction" value="admin:option.saveoptiongroup" />
 			<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 	</cfif>
