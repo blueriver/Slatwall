@@ -94,8 +94,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.option = getOptionService().getOption(rc.optionID,true);
 					
 		// upload the image and return the result struct
-		if(rc.optionImageFile != "") {
-			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionImageFile","","makeUnique");
+		if(rc.optionImage != "") {
+			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionImage","","makeUnique");
 		} 
 
 		rc.option = getOptionService().save(rc.option,rc);
