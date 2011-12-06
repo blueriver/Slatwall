@@ -88,6 +88,7 @@ jQuery(document).ready(function() {
 	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>");
 	$newImage.click(function(){
 		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog").clone();
+		var $form = $("#updatePriceGroupSKUSettingsForm");
 		var clickedPriceGroupId = $(this).parent("td").attr("pricegroupid"); 
 		var clickedSkuId = $(this).parents("tr").first().attr("skuid");
 		
@@ -101,8 +102,24 @@ jQuery(document).ready(function() {
 		// Populate the rate radio buttons
 		$("#updatePriceGroupSKUSettings_PriceGroupRateInputs\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
 		
+		// Bind "change" handler to the Rate select
+		$("updatePriceGroupSKUSettings_PriceGroupRateSelect\\[" + clickedPriceGroupId + "\\]").change(function(){
+			alert($(this).val());
+			if($(this).val() == "new amount")
+				$("#updatePriceGroupSKUSettings_newAmount\\[" + clickedPriceGroupId + "\\]").show();
+			else
+				$("#updatePriceGroupSKUSettings_newAmount\\[" + clickedPriceGroupId + "\\]").hide();
+			
+		});
+		
 		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked.
 		actionDialog($dialogDiv, function(){
+			// First validate the dialog
+			if(!validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, clickedPriceGroupId))
+				return false;
+			
+			// If valid, then submit the dialog's form
+			$form.submit();
 			return false;
 			
 		});
@@ -110,3 +127,27 @@ jQuery(document).ready(function() {
 	
 	$(".priceGroupSKUColumn").append($newImage);
 });
+
+function validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, priceGroupId){
+	// TODO: Write validation!!!
+	return true;
+	
+	//$divContainingRadios = $("#updatePriceGroupSKUSettings_PriceGroupRateInputs[" + priceGroupId + "]",$dialogDiv);
+	
+	// If no radio was selected
+	//if(!$(":checked", $dialogDiv).size())
+	//	alertDialog()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

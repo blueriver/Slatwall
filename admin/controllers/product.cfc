@@ -289,5 +289,20 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.skuList = getSkuService().searchSkusByProductType(term=rc.term,productTypeID=productTypeIDs);
 	}
+	
+	// Handler is called by modal dialog, to update the price group configuration on a specific SKU
+	public void function updatePriceGroupSKUSettings(required struct rc) {
+		var priceGroupRateId = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
+		var newAmount = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
+		
+		// If the user has selected the radio buton for creating a new price (not selecting an existing rate)
+		//if(priceGroupRateId EQ "new amount")
+			getPriceGroupService().updatePriceGroupSKUSettings(argumentCollection = rc);
+		//else
+			//getPriceGroupService().updatePriceGroupSKUSettings(skuID = rc.skuId, priceGroupRateId = priceGroupRateId);
+	}
 		
 }
+
+
+
