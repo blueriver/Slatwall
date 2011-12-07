@@ -554,19 +554,25 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
+	// @hint Returns the ValidateThis result object, if one hasn't been setup yet it returns a new one
+	public any function getVTResult() {
+		if(!structKeyExists(variables, "vtResult")) {
+			variables.vtResult = new ValidateThis.util.Result(); 
+		}
+		return variables.vtResult;
+	}
+	
+	// @hint Returns the errorBeant object, if one hasn't been setup yet it returns a new one
+	public any function getErrorBean() {
+		if(!structKeyExists(variables, "errorBean")) {
+			variables.errorBean = new Slatwall.com.utility.ErrorBean(); 
+		}
+		return variables.errorBean;
+	}
+	
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
-		var vtResultHasErrors = false;
-		var errorBeanHasErrors = false;
-		
-		if( !isNull(getVTResult() ) ) {
-			vtResultHasErrors = getVTResult().hasErrors();
-		}
-		if( !isNull(getErrorBean()) ) {
-			errorBeanHasErrors = getErrorBean.hasErrors();
-		}
-		
-		if(vtResultHasErrors || errorBeanHasErrors) {
+		if(getVTResult().hasErrors() || getErrorBean().hasErrors()) {
 			return true;
 		}
 		
@@ -578,23 +584,18 @@ component displayname="Base Object" accessors="true" output="false" {
 		var errorsStruct = {};
 		
 		// Check the VTResult for any errors
-		if( !isNull(getVTResult()) ) {
-			for(var key in getVTResult().getErrors()) {
-				errorsStruct[key] = getVTResult().getErrors()[key];	
-			}
+		for(var key in getVTResult().getErrors()) {
+			errorsStruct[key] = getVTResult().getErrors()[key];	
 		}
 		
-		// Check the Error bean for any errors
-		if( !isNull(getErrorBean()) ) {
-			var errorBeanErrors = getErrorBean().getErrors();
-			for(var key in getErrorBean().getErrors()) {
-				if(structKeyExists(errorsStruct, key)) {
-					for(var i=1; i<=arrayLen(getVTResult().getErrors()[key]); i++) {
-						arrayAppend(errorsStruct[key], getVTResult().getErrors()[key][i]);	
-					}
-				} else {
-					errorsStruct[key] = getVTResult().getErrors()[key];	
+		// Check the ErrorBean for any errors
+		for(var key in getErrorBean().getErrors()) {
+			if(structKeyExists(errorsStruct, key)) {
+				for(var i=1; i<=arrayLen(getErrorBean().getErrors()[key]); i++) {
+					arrayAppend(errorsStruct[key], getErrorBean().getErrors()[key][i]);	
 				}
+			} else {
+				errorsStruct[key] = getErrorBean().getErrors()[key];	
 			}
 		}
 		
@@ -619,10 +620,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		return [];
 	}
 	
+	// @hint helper method to add an error to the error bean	
 	public void function addError( required string errorName, required string errorMessage ) {
-		if(isNull(getErrorBean())) {
-			setErrorBean(new Slatwall.com.ultility.ErrorBean());
-		}
 		getErrorBean().addError(argumentCollection=arguments);
 	}
 	
