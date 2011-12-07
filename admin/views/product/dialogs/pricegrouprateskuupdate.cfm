@@ -20,7 +20,8 @@
 			<!---<cfloop array="#local.thisPriceGroup.getPriceGroupRates()#" index="local.thisPriceGroupRate">
 				<option value="#local.thisPriceGroupRate.getPriceGroupRateId()#">#local.thisPriceGroupRate.getAmountRepresentation()#</option>
 			</cfloop>--->	
-			<option value="new amount">New Amount</option>	
+			<option value="new amount">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#</option>
+			<option value="inherited">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.inherited')#</option>	
 		</select>
 				
 				

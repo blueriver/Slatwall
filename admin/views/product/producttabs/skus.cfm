@@ -179,7 +179,7 @@ Notes:
 					<cfif isNull(rate)>
 						<cfset dataPriceGroupRateId = "">
 					<cfelseif rate.getPriceGroup().getPriceGroupId() EQ local.priceGroup.getPriceGroupId()>
-						<cfset dataPriceGroupRateId = "#rate.getPriceGroupRateId#">	
+						<cfset dataPriceGroupRateId = "#rate.getPriceGroupRateId()#">	
 					<cfelse>
 						<cfset dataPriceGroupRateId = "inherited">	
 					</cfif>
