@@ -557,7 +557,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Returns the ValidateThis result object, if one hasn't been setup yet it returns a new one
 	public any function getVTResult() {
 		if(!structKeyExists(variables, "vtResult")) {
-			variables.vtResult = new ValidateThis.util.Result(); 
+			variables.vtResult = getValidateThis().newResult(); 
 		}
 		return variables.vtResult;
 	}
