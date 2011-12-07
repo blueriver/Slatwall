@@ -214,32 +214,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	}
     }
     
-    /*
-    public void function populate(required any data){
-    	// remove the ones not selected, loop in reverse to prevent shifting of array items
-    	var attributeSetAssignmentCount = arrayLen(getAttributeSetAssignments());
-    	for(var i = attributeSetAssignmentCount; i > 0; i--){
-    		var attributeSetAssignment = getAttributeSetAssignments()[i];
-    		if(structKeyExists(data,"attributeSetIDs") && listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
-    			removeAttributeSetAssignment(attributeSetAssignment);
-    		}
-    	}
-    	// Add new ones
-    	if(structKeyExists(data,"attributeSetIDs")){
-    		var attributeSetIDArray = listToArray(data.attributeSetIDs);
-    		for(var attributeSetID in attributeSetIDArray){
-    			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=getProductTypeID()};
-    			var attributeSetAssignmentArray = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
-    			if(!arrayLen(attributeSetAssignmentArray)){
-	    			var attributeSetAssignment = getService("AttributeService").newProductTypeAttributeSetAssignment();
-	    			var attributeSet = getService("AttributeService").getAttributeSet(attributeSetID);
-	    			attributeSetAssignment.setProductType(this);
-	    			attributeSetAssignment.setAttributeSet(attributeSet);
-	    			addAttributeSetAssignment(attributeSetAssignment);
-    			}
-    		}
-    	}
-    	super.populate(argumentCollection=arguments);
-    }
-    */
+    public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
+	}
+    
 }

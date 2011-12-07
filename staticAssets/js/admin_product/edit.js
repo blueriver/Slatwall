@@ -112,22 +112,27 @@ jQuery(document).ready(function() {
 		var $select = $("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv);
 		
 		// Save the two existing options, so that we have their lancuage
-		var $oldOptions = $select.children("option");
+		var $oldNewAmountOption = $select.children("option")[0];
+		var $oldNewInheritedOption = $select.children("option")[0];
+		
 		$select.empty();
 		$.each(priceGroupData[clickedPriceGroupId].PRICEGROUPRATES, function(i, curRate){
 			$select.append($("<option/>").attr("value", curRate.ID).text(curRate.NAME));
 		});
 		
 		alert($oldOptions.size());
-		alert($("[value='new amount']", $oldOptions).size());
+		alert($oldOptions.first().size());
 		
-		// If this dialog was opened by a column header, include the "new amount" option
-		if(clickedSkuId == "")
-			$select.append($("[value='new amount']", $oldOptions));
-		else{
-			// Otherwise, if we clicked on a SKU price, and we find that the specific SKU has been overwritten, include the "Inherited" option
-			$select.append($("[value='inherited']", $oldOptions));	
-		}	
+		// If this dialog was opened by a column header (no clickedSkuId), include the "new amount" option
+		if(clickedSkuId == ""){
+			$select.append($oldNewAmountOption);
+		
+			// Also, if find that this group's rate has been inherited, include the "Inherited" option.
+			if(currentPriceGroupRateValue == "inherited")
+				$select.append($oldNewInheritedOption);	
+		}
+			
+	
 		
 		// Select the value in the select box
 		/*if(clickedSkuId == "inherited")
