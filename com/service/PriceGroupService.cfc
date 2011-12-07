@@ -42,28 +42,28 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
 		
-		var priceGroupRate = super.save(argumentcollection=arguments);
+		arguments.priceGroupRate = super.save(argumentcollection=arguments);
 		
 		// As long as this price group rate didn't have errors, then we can update all of the other rates for this given price group
-		if(!priceGroupRate.hasErrors()) {
+		if(!arguments.priceGroupRate.hasErrors()) {
 			
-			var priceGroup = priceGroupRate.getPriceGroup();
+			var priceGroup = arguments.priceGroupRate.getPriceGroup();
 			var rates = priceGroup.getPriceGroupRates();
 			
 			// Loop over all of the rates that aren't this one, and make sure that they don't have any of the productTypes, products, or skus of this one
 			for(var i=1; i<=arrayLen(rates); i++) {
-				if(rates[i].getPriceGroupRateID() != priceGroupRate.getPriceGroupRate()) {
+				if(rates[i].getPriceGroupRateID() != arguments.priceGroupRate.getPriceGroupRate()) {
 					// Remove Product Types
-					for(var pt=1; pt<=arrayLen(priceGroupRate.getProductTypes()); pt++) {
-						rates[i].removeProductType(priceGroupRate.getProductTypes()[pt]);
+					for(var pt=1; pt<=arrayLen(arguments.priceGroupRate.getProductTypes()); pt++) {
+						rates[i].removeProductType(arguments.priceGroupRate.getProductTypes()[pt]);
 					}
 					// Remove Products
-					for(var p=1; p<=arrayLen(priceGroupRate.getProducts()); p++) {
-						rates[i].removeProduct(priceGroupRate.getProducts()[p]);
+					for(var p=1; p<=arrayLen(arguments.priceGroupRate.getProducts()); p++) {
+						rates[i].removeProduct(arguments.priceGroupRate.getProducts()[p]);
 					}
 					// Remove Skus
-					for(var s=1; s<=arrayLen(priceGroupRate.getSkus()); s++) {
-						rates[i].removeSku(priceGroupRate.getSkus()[s]);
+					for(var s=1; s<=arrayLen(arguments.priceGroupRate.getSkus()); s++) {
+						rates[i].removeSku(arguments.priceGroupRate.getSkus()[s]);
 					}
 				}
 			}
