@@ -203,7 +203,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint pubic method to validate this object
-	public any function validate( string context) {
+	public any function validate( ) {
 		
 		// Set up the validation arguments as a mirror of the arguments struct
 		var valdationArguments = arguments;
@@ -552,13 +552,54 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
+	
+	
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
+		var vtResultHasErrors = false;
+		var errorBeanHasErrors = false;
+		
 		if( !isNull(getVTResult() ) ) {
-			return getVTResult().hasErrors();
+			vtResultHasErrors = getVTResult().hasErrors();
+		}
+		if( !isNull(getErrorBean()) ) {
+			errorBeanHasErrors = getErrorBean.hasErrors();
+		}
+		
+		if(vtResultHasErrors || errorBeanHasErrors) {
+			return true;
 		}
 		
 		return false;
+	}
+	
+	// @hint Returns a struct of all the errors for this entity
+	public struct function getErrors() {
+		var errorsStruct = {};
+		
+		// Check the VTResult for any errors
+		if( !isNull(getVTResult()) ) {
+			for(var key in getVTResult().getErrors()) {
+				errorsStruct[key] = getVTResult().getErrors()[key];	
+			}
+		}
+		
+		// Check the Error bean for any errors
+		if( !isNull(getErrorBean()) ) {
+			var errorBeanErrors = getErrorBean().getErrors();
+			for(var key in getErrorBean().getErrors()) {
+				if(structKeyExists(errorsStruct, key)) {
+					for(var i=1; i<=arrayLen(getVTResult().getErrors()[key]); i++) {
+						arrayAppend(errorsStruct[key], getVTResult().getErrors()[key][i]);	
+					}
+				} else {
+					errorsStruct[key] = getVTResult().getErrors()[key];	
+				}
+			}
+		}
+		
+		// Default behavior if this object hasn't been validated is to return a blank struct
+		return errorsStruct;
 	}
 	
 	// @hint Returns true if a specific error key exists
@@ -566,20 +607,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		return structKeyExists(getErrors(), arguments.errorName);
 	}
 	
-	// @hint Returns a struct of all the errors for this entity
-	public struct function getErrors() {
-		
-		// Check to make sure that this object has been validated and has a VTResult
-		if( !isNull(getVTResult() ) ) {
-			return getVTResult().getErrors();
-		}
-		
-		// Default behavior if this object hasn't been validated is to return a blank struct
-		return {};
-	}
-	
 	// @hint Returns the error message of a given error name
-	public array function getErrorsByName( required string errorName ) {
+	public array function getError( required string errorName ) {
 		
 		// Check First that the error exists, and if it does return it
 		if( hasError(arguments.errorName) ) {
@@ -589,6 +618,33 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Default behavior if the error isn't found is to return an empty array
 		return [];
 	}
+	
+	public void function addError( required string errorName, required string errorMessage ) {
+		if(isNull(getErrorBean())) {
+			setErrorBean(new Slatwall.com.ultility.ErrorBean());
+		}
+		getErrorBean().addError(argumentCollection=arguments);
+	}
+	
+	public string function getAllErrorMessages() {
+		var messages = "";
+		
+		if( !isNull(getErrorBean()) ) {
+			var messages &= getErrorBean().getAllErrorMessages();
+		}
+		
+		if(!isNull(getVTResult()) && getVTResult().hasErrors()) {
+			var vtResultErrors = getVTResult().getErrors();
+			for(var key in vtResultErrors) {
+				for(var i=1; i<=arrayLen(vtResultErrors[key]); i++) {
+					var messages &= "<p>#vtResultErrors[key][i]#</p>";
+				}
+			}
+		}
+		
+		return messages;
+	} 
+	
 			
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {

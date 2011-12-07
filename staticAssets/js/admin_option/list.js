@@ -33,6 +33,8 @@ $(document).ready(function(){
 		
 		$.post(url + "?" + pars); 
 		showSort();
+		
+		stripe('.stripe');
 	});
 });
 

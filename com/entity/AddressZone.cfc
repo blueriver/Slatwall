@@ -61,12 +61,5 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 		return variables.addressZoneLocations;
 	}
 
-	public boolean function isAssigned(){
-		var isAssignedFlag = false;
-		if(arrayLen(this.getShippingMethods()) OR arrayLen(getShippingRates()) OR arrayLen(getTaxCategoryRates())){
-			isAssignedFlag = true;
-		}
-		return isAssignedFlag;
-	}
 	
 }

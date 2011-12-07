@@ -36,6 +36,7 @@
 Notes:
 
 --->
+<!---
 <cfparam name="rc.create" type="boolean" default="false" />
 <cfparam name="rc.newOption" type="any" default="" />
 <cfparam name="rc.activeOption" type="any" default="" />
@@ -141,3 +142,4 @@ Notes:
 </cfif>
 
 </cfoutput>
+--->
