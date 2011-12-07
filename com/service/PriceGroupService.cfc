@@ -40,49 +40,34 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	property name="sessionService" type="any";
 	
-	public any function save(required any PriceGroup,required struct data) {
-		// populate bean from values in the data Struct
-		arguments.PriceGroup.populate(arguments.data);
+	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
 		
-		/*if(structKeyExists(arguments.data.structuredData,"priceGroupRates")){
-			savePriceGroupRates(arguments.priceGroup,arguments.data.structuredData.priceGroupRates);
-		} */
-
+		var priceGroupRate = super.save(argumentcollection=arguments);
 		
-		arguments.PriceGroup = super.save(arguments.PriceGroup);
-		
-		return arguments.PriceGroup;
-	}
-	
-	public any function delete(required any PriceGroup){
-		return Super.delete(arguments.PriceGroup);
-	}
-	
-	public any function getPriceGroupRateSmartList(string priceGroupID, struct data={}){
-		arguments.entityName = "SlatwallPriceGroupRate";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
-		
-		if( structKeyExists(arguments,"priceGroupID") ) {
-			smartList.addFilter(propertyIdentifier="priceGroup_priceGroupID", value=arguments.priceGroupID);
+		// As long as this price group rate didn't have errors, then we can update all of the other rates for this given price group
+		if(!priceGroupRate.hasErrors()) {
+			
+			var priceGroup = priceGroupRate.getPriceGroup();
+			var rates = priceGroup.getPriceGroupRates();
+			
+			// Loop over all of the rates that aren't this one, and make sure that they don't have any of the productTypes, products, or skus of this one
+			for(var i=1; i<=arrayLen(rates); i++) {
+				if(rates[i].getPriceGroupRateID() != priceGroupRate.getPriceGroupRate()) {
+					// Remove Product Types
+					for(var pt=1; pt<=arrayLen(priceGroupRate.getProductTypes()); pt++) {
+						rates[i].removeProductType(priceGroupRate.getProductTypes()[pt]);
+					}
+					// Remove Products
+					for(var p=1; p<=arrayLen(priceGroupRate.getProducts()); p++) {
+						rates[i].removeProduct(priceGroupRate.getProducts()[p]);
+					}
+					// Remove Skus
+					for(var s=1; s<=arrayLen(priceGroupRate.getSkus()); s++) {
+						rates[i].removeSku(priceGroupRate.getSkus()[s]);
+					}
+				}
+			}
 		}
-		
-		return smartList;
-	}
-	
-	public any function deletePriceGroupRate(required any priceGroupRate) {
-		
-	}
-	
-	public void function savePriceGroupRates(required any priceGroup, required array priceGroupRates){
-		
-	}
-	
-	public any function savePriceGroupRate(required any priceGroupRate, required struct data, string priceGroupRateList){
-		
-	}
-	
-	public void function validatePriceGroupRate( required any priceGroupRate, string priceGroupRateList ) {
-		
 	}
 	
 	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
