@@ -90,7 +90,7 @@ Notes:
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
 					
 					<!--- Store the value of the priceGroupRateId as a "data" property. Check what is the active rate in this price group. If the rate returned is not actaully a rate in this price group (inherited) just use a code --->
-					<cfset rate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+					<cfset rate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
 					<cfif isNull(rate)>
 						<cfset dataPriceGroupRateId = "">
 					<cfelseif rate.getPriceGroup().getPriceGroupId() EQ local.priceGroup.getPriceGroupId()>
@@ -100,7 +100,7 @@ Notes:
 					</cfif>
 					
 					
-					<th class="priceGroupSKUColumn" data-priceGroupId="#local.priceGroup.getPriceGroupId()#">
+					<th class="priceGroupSKUColumn" data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#local.priceGroup.getPriceGroupId()#">
 						#local.priceGroup.getPriceGroupName()#
 					
 						<cfif !isNull(local.priceGroup.getParentPriceGroup())>

@@ -120,9 +120,6 @@ jQuery(document).ready(function() {
 			$select.append($("<option/>").attr("value", curRate.ID).text(curRate.NAME));
 		});
 		
-		alert($oldOptions.size());
-		alert($oldOptions.first().size());
-		
 		// If this dialog was opened by a column header (no clickedSkuId), include the "new amount" option
 		if(clickedSkuId == ""){
 			$select.append($oldNewAmountOption);
