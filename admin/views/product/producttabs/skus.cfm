@@ -127,7 +127,7 @@ Notes:
 				<td class="alignLeft">
 					<cfif rc.edit>
 						<input type="text" name="skus[#local.skuCount#].skuCode" value="#local.thisSku.getSkuCode()#" />
-						<cfif local.thisSku.hasErrors()>
+						<cfif local.thisSku.hasError("skuCode")>
 							<br><span class="formError">#local.thisSku.getErrorBean().getError("skuCode")#</span>
 						</cfif>
 					<cfelse>

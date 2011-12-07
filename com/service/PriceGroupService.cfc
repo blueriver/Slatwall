@@ -70,10 +70,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
+	// Helper method the delegates
 	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
 		return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSessionService().getCurrent().getAccount());
 	}
 	
+	// Takes the account and runs any price groups applied through the calculation for best rate.
 	public numeric function calculateSkuPriceBasedOnAccount(required any sku, required any account) {
 		
 		// Create a new array, and add the skus price as the first entry
@@ -94,6 +96,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return prices[1];
 	}
 	
+	// Simple method that gets the appopriate rate to use for this sku no matter where it comes from, and then calculates the correct value.  If no rate is found, it is just a passthough of sku.getPrice()
 	public numeric function calculateSkuPriceBasedOnPriceGroup(required any sku, required any priceGroup) {
 		
 		// Figure out the rate for this particular sku
@@ -108,9 +111,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return sku.getPrice();
 	}
 	
+	// This method will calculate the actual price of a sku based on a given price group rate
 	public numeric function calculateSkuPriceBasedOnPriceGroupRate(required any sku, required any priceGroupRate) {
+		
+		// setup the new price as the old price in the event of a passthrough
 		var newPrice = arguments.sku.getPrice();
-			
+
+		// calculate the new price bassed on whatever was set up.
 		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
 			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
 		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
@@ -119,64 +126,105 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var newPrice = arguments.priceGroupRate.getAmount();
 		}
 		
+		//return the newPrice
 		return newPrice;
+	}
+	
+	// This method will return the rate that a given productType has based on a priceGroup, also this looks up to parent productTypes as well.
+	public any function getRateForProductTypeBasedOnPriceGroup(required any productType, required any priceGroup) {
+		
+		// Setup a var'd value for returnRate but default it to null
+		var returnRate = javaCast("null","");
+		
+		// Loop over rates to see if productType applies
+		for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+			
+			// We need to look up the product type inheritence for parent product types here
+			var currentProductType = arguments.productType;
+			
+			while (!isNull(currentProductType)) {
+				// Check if this productType is applied in the rate
+				if(arguments.priceGroup.getPriceGroupRates()[i].hasProductType(currentProductType)) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+					break;
+				}
+				
+				// This sets the product type to the parent, so the while loop will run again
+				currentProductType = currentProductType.getParentProductType();
+			}
+		}
+		
+		// If the rate is still null, then check the productType against the parent priceGroup which will check product and productType (this is done with recursion)
+		if(isNull(returnRate) && !isNull(arguments.priceGroup.getParentPriceGroup())) {
+			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.productType, priceGroup=arguments.priceGroup.getParentPriceGroup());
+		}
+		
+		// As long as the returnRate is not null, then return it.
+		if(!isNull(returnRate)) {
+			return returnRate;
+		}
+	}
+	
+	// This method will return the rate that a product has for a given price group
+	public any function getRateForProductBasedOnPriceGroup(required any product, required any priceGroup) {
+		
+		// Setup a var'd value for returnRate but default it to null
+		var returnRate = javaCast("null","");
+		
+		// Loop over rates to see if product applies
+		for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+			if (arguments.priceGroup.getPriceGroupRates()[i].hasProduct(arguments.product)) {
+				returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+			}
+		}
+		
+		// If the rate is still null, then check the productType
+		if(isNull(returnRate)) {
+			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.product.getProductType(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then check the product against the parent priceGroup which will check product and productType (this is done with recursion)
+		if(isNull(returnRate) && !isNull(arguments.priceGroup.getParentPriceGroup())) {
+			returnRate = getRateForProductBasedOnPriceGroup(product=arguments.product, priceGroup=arguments.priceGroup.getParentPriceGroup());
+		}
+		
+		// As long as the returnRate is not null, then return it.
+		if(!isNull(returnRate)) {
+			return returnRate;
+		}
 	}
 	
 	public any function getRateForSkuBasedOnPriceGroup(required any sku, required any priceGroup) {
 		
+		// Setup a var'd value for returnRate but default it to null
 		var returnRate = javaCast("null","");
 		
-		// This allows for the Rate to come from a parent PriceGroup, if it isn't defined at this price group level
-		if(!isNull(arguments.priceGroup.getParentPriceGroup())) {
-			returnRate = getRateForSkuBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup.getParentPriceGroup());
-		}
-		
-		// Loop over each of the rates, and determine which one the sku applies to
+		// Loop over rates to see if sku applies
 		for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
-			
-			// Assign the priceGroup rate of the loop to a var so that it is easier to ref.
-			var thisPriceGroupRate = arguments.priceGroup.getPriceGroupRates()[i];
-			
-			// This chunk of logic just determines if the sku applies to this rate.
-			if(thisPriceGroupRate.getGlobalFlag()) {
-				// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
-				if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
-					returnRate = thisPriceGroupRate;	
-				}
-			} else {
-				
-				// Check skus, products & productTypes to see if this sku is included in this rate
-				if(thisPriceGroupRate.hasSku(arguments.sku)) {
-					// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
-					if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
-						returnRate = thisPriceGroupRate;	
-					}
-				} else if (thisPriceGroupRate.hasProduct(arguments.sku.getProduct())) {
-					// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
-					if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
-						returnRate = thisPriceGroupRate;	
-					}
-				} else {
-					var currentProductType = sku.getProduct().getProductType();
-					
-					while (!isNull(currentProductType)) {
-						if(thisPriceGroupRate.hasProductType(currentProductType)) {
-							// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
-							if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
-								returnRate = thisPriceGroupRate;
-							}
-							break;
-						}
-						currentProductType = currentProductType.getParentProductType();
-					}
-				}
-				
+			if (arguments.priceGroup.getPriceGroupRates()[i].hasSku(arguments.sku)) {
+				returnRate = arguments.priceGroup.getPriceGroupRates()[i];
 			}
 		}
 		
+		// If the rate is still null, then check the product
+		if(isNull(returnRate)) {
+			returnRate = getRateForProductBasedOnPriceGroup(product=arguments.sku.getProduct(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then check the productType
+		if(isNull(returnRate)) {
+			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.sku.getProduct().getProductType(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then check the sku against the parent priceGroup which will check product and productType (this is done with recursion)
+		if(isNull(returnRate) && !isNull(arguments.priceGroup.getParentPriceGroup())) {
+			returnRate = getRateForProductBasedOnPriceGroup(product=arguments.product, priceGroup=arguments.priceGroup.getParentPriceGroup());
+		}
+		
+		// As long as the returnRate is not null, then return it.
 		if(!isNull(returnRate)) {
-			return returnRate;	
-		} 
+			return returnRate;
+		}
 	}
 	
 	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 

@@ -554,8 +554,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
-	
-	
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
 		var vtResultHasErrors = false;
@@ -647,7 +645,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		return messages;
 	} 
 	
-			
+		
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {
 		
