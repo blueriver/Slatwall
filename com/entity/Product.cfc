@@ -699,6 +699,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
+	}
+	
 }
 
 
