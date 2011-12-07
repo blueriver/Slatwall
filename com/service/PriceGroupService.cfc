@@ -173,5 +173,55 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// Return the lowest price
 		return prices[1];
 	}
+	
+	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 
+	public void function updatePriceGroupSKUSettings(required numeric skuId, required numeric priceGroupId, any newAmount="", any priceGroupRateId=""){
+		
+		dumpScreen(arguments);
+		
+		// If a priceGroupRateId was included, then check to see if we already have a SKU override for that rate. If not, add one in
+		if(isNumeric(arguments.priceGroupRateId)){
+			
+			
+		}
+		
+		// Else, if we have been provided a new amount, then see if a rate already exists in this price group with that amount add add the SKU there. If not, add that new rate, and then add the sku. 
+		else if (isNumeric(arguments.newAmount)){
+		
+		}
+	}
+	
+	// Produces a structure which is a struct of {[priceGroupId] = {name=[pricegroupname], pricegroupRates=}}
+	public string function getPriceGroupDataJSON(){
+		var local = {};
+		var priceGroupData = {};
+		var priceGroupSmartList = getDAO().getSmartList("PriceGroup");
+	
+		
+		for(var i=1; i LTE arrayLen(priceGroupSmartList.getPageRecords()); i++){
+			var thisPriceGroup = priceGroupSmartList.getPageRecords()[local.i];
+			var priceGroupRates = [];
+
+			for(var j=1; j LTE arrayLen(thisPriceGroup.getPriceGroupRates()); j++){
+				var thisRate = thisPriceGroup.getPriceGroupRates()[j];
+				var rateStruct = {
+					id = thisRate.getPriceGroupRateId(),
+					name = thisRate.getAmountRepresentation()
+				};
+				ArrayAppend(priceGroupRates, rateStruct);
+			}
+			
+			var groupStruct = {
+				priceGroupName = thisPriceGroup.getPriceGroupName(),
+				priceGroupRates = priceGroupRates
+			};	
+			
+			priceGroupData[thisPriceGroup.getPriceGroupId()] = groupStruct;
+		}
+		
+		//dumpScreen(priceGroupData);	
+		//dumpScreen(SerializeJSON(priceGroupData));
+		return SerializeJSON(priceGroupData);
+	}
 			
 }

@@ -48,7 +48,7 @@ function btnConfirmDialog(message,btn){
 }
 
 /* Function used to open up a modal dialog with text/html content, where called provides a function that returns boolean, who's return value closes the dialog */
-function actionDialog($dialogDiv, okHandler){
+function actionDialog($dialogDiv, okHandler, cancelHandler, onClosedHandler){
     //jQuery("#alertDialogMessage").html(message);
 	
 	//$dialogDiv.attr("title", title);
@@ -57,11 +57,16 @@ function actionDialog($dialogDiv, okHandler){
         modal: true,
         buttons: {
             'Ok': function() {
-				if(okHandler())
-	                jQuery(this).dialog('close');      
+				if(okHandler == null || okHandler()){
+	                jQuery(this).dialog('close');
+					onClosedHandler();
+				}      
 			},
             'Cancel': function() {
-                jQuery(this).dialog('close');
+				if(cancelHandler == null || cancelHandler()){
+                	jQuery(this).dialog('close');
+					onClosedHandler();
+				}
             }
         }
     });
