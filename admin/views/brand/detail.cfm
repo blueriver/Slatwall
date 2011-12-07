@@ -46,9 +46,7 @@ Notes:
 	    </cfif>
 	    <cf_SlatwallActionCaller action="admin:brand.list" type="list">
 	</ul>
-	<cfif rc.brand.hasErrors()>
-		<cfdump var="#rc.brand.getErrors()#" />
-	</cfif>
+
 	<div class="svoadminbranddetail">
 		<cfif rc.edit>
 			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.brand, formName="brandDetail")#
