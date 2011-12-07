@@ -187,11 +187,7 @@ Notes:
 					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
 					<dd class="#attributes.valueClass#">
 						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-						<cfif attributes.object.hasError(attributes.property)>
-							<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
-								<label for="#attributes.fieldName#" generated="true" class="error">#error#</label>
-							</cfloop>
-						</cfif>
+						<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 					</dd>
 				</cfoutput>
 			<cfelse>
@@ -209,11 +205,7 @@ Notes:
 						<td class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></td>
 						<td class="#attributes.valueClass#">
 							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-							<cfif attributes.object.hasError(attributes.property)>
-								<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
-									<label for="#attributes.fieldName#" generated="true" class="error">#error#</label>
-								</cfloop>
-							</cfif>
+							<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 						</td>
 					</tr>
 				</cfoutput>
@@ -233,11 +225,7 @@ Notes:
 					<span class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></span>
 					<span class="#attributes.valueClass#">
 						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-						<cfif attributes.object.hasError(attributes.property)>
-							<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
-								<label for="#attributes.fieldName#" generated="true" class="error">#error#</label>
-							</cfloop>
-						</cfif>
+						<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 					</span>
 				</cfoutput>
 			<cfelse>
@@ -252,11 +240,7 @@ Notes:
 			<cfif attributes.edit>
 				<cfoutput>
 					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
-					<cfif attributes.object.hasError(attributes.property)>
-						<cfloop array="#attributes.object.getErrorsByName( attributes.property )#" index="error">
-							<label for="#attributes.fieldName#" generated="true" class="error">#error#</label>
-						</cfloop>
-					</cfif>
+					<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
