@@ -104,24 +104,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// If the sku is supposed to have this rate applied, then calculate the rate and apply
 		if(!isNull(rate)) {
-			return calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=rate);
+			return calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, priceGroupRate=rate);
 		}
 		
 		// Return the sku price if there was no rate
 		return sku.getPrice();
 	}
 	
-<<<<<<< HEAD
-	public numeric function calculateSkuPriceBasedOnPriceGroupRate(required any sku, required any rate) {
-		var newPrice = arguments.sku.getPrice();
-			
-		if(!isNull(arguments.rate.getPercentageOff())) {
-			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.rate.getPercentageOff() / 100));
-		} else if (!isNull(arguments.rate.getAmountOff())) {
-			var newPrice = arguments.sku.getPrice() - arguments.rate.getAmountOff();
-		} else if (!isNull(arguments.rate.getAmount())) {
-			var newPrice = arguments.rate.getAmount();
-=======
 	// This method will calculate the actual price of a sku based on a given price group rate
 	public numeric function calculateSkuPriceBasedOnPriceGroupRate(required any sku, required any priceGroupRate) {
 		
@@ -135,7 +124,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
 		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
 			var newPrice = arguments.priceGroupRate.getAmount();
->>>>>>> remotes/upstream(ten24-slatwall)/develop
 		}
 		
 		//return the newPrice
