@@ -96,82 +96,87 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public numeric function calculateSkuPriceBasedOnPriceGroup(required any sku, required any priceGroup) {
 		
-		var prices = [sku.getPrice()];
+		// Figure out the rate for this particular sku
+		var rate = getRateForSkuBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup);
 		
-		if(!isNull(arguments.priceGroup.getParentPriceGroup())) {
-			arrayAppend(prices, this.calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup.getParentPriceGroup()));
+		// If the sku is supposed to have this rate applied, then calculate the rate and apply
+		if(!isNull(rate)) {
+			return calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, priceGroupRate=rate);
 		}
 		
-		// Loop over each of the rates
+		// Return the sku price if there was no rate
+		return sku.getPrice();
+	}
+	
+	public numeric function calculateSkuPriceBasedOnPriceGroupRate(required any sku, required any priceGroupRate) {
+		var newPrice = arguments.sku.getPrice();
+			
+		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
+			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
+		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
+			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
+		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
+			var newPrice = arguments.priceGroupRate.getAmount();
+		}
+		
+		return newPrice;
+	}
+	
+	public any function getRateForSkuBasedOnPriceGroup(required any sku, required any priceGroup) {
+		
+		var returnRate = javaCast("null","");
+		
+		// This allows for the Rate to come from a parent PriceGroup, if it isn't defined at this price group level
+		if(!isNull(arguments.priceGroup.getParentPriceGroup())) {
+			returnRate = getRateForSkuBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup.getParentPriceGroup());
+		}
+		
+		// Loop over each of the rates, and determine which one the sku applies to
 		for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+			
+			// Assign the priceGroup rate of the loop to a var so that it is easier to ref.
 			var thisPriceGroupRate = arguments.priceGroup.getPriceGroupRates()[i];
 			
-			// Setup a local sku excluded value to see if there are any excludes that make this rate not apply.
-			var skuExcluded = false;
-			var skuIncluded = false;
-			
+			// This chunk of logic just determines if the sku applies to this rate.
 			if(thisPriceGroupRate.getGlobalFlag()) {
-				skuIncluded = true;
+				// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
+				if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
+					returnRate = thisPriceGroupRate;	
+				}
 			} else {
-				if(thisPriceGroupRate.hasExcludedSku(arguments.sku)) {
-					skuExcluded = true;
-				} else if (thisPriceGroupRate.hasExcludedProduct(arguments.sku.getProduct())) {
-					skuExcluded = true;
+				
+				// Check skus, products & productTypes to see if this sku is included in this rate
+				if(thisPriceGroupRate.hasSku(arguments.sku)) {
+					// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
+					if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
+						returnRate = thisPriceGroupRate;	
+					}
+				} else if (thisPriceGroupRate.hasProduct(arguments.sku.getProduct())) {
+					// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
+					if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
+						returnRate = thisPriceGroupRate;	
+					}
 				} else {
 					var currentProductType = sku.getProduct().getProductType();
 					
 					while (!isNull(currentProductType)) {
-						if(thisPriceGroupRate.hasExcludedProductType(currentProductType)) {
-							skuExcluded = true;
+						if(thisPriceGroupRate.hasProductType(currentProductType)) {
+							// If no returnRate has been setup yet, or this new rate is better than the existing returnRate then update the returnRate
+							if(isNull(returnRate) || calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=returnRate) > calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, rate=thisPriceGroupRate)) {
+								returnRate = thisPriceGroupRate;
+							}
 							break;
 						}
 						currentProductType = currentProductType.getParentProductType();
 					}
 				}
 				
-				// As long as there were no exclusions for this sku we can check inclusions
-				if(!skuExcluded) {
-					
-					// Check skus, products & productTypes to see if this sku is included in this rate
-					if(thisPriceGroupRate.hasSku(arguments.sku)) {
-						skuIncluded = true;
-					} else if (thisPriceGroupRate.hasProduct(arguments.sku.getProduct())) {
-						skuIncluded = true;
-					} else {
-						var currentProductType = sku.getProduct().getProductType();
-						
-						while (!isNull(currentProductType)) {
-							if(thisPriceGroupRate.hasProductType(currentProductType)) {
-								skuIncluded = true;
-								break;
-							}
-							currentProductType = currentProductType.getParentProductType();
-						}
-					}
-				}
-			}
-			
-			// If the sku is supposed to have this rate applied, then calculate the rate and apply
-			if(skuIncluded) {
-				var thisNewPrice = arguments.sku.getPrice();
-				
-				if(!isNull(thisPriceGroupRate.getPercentageOff())) {
-					var thisNewPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (thisPriceGroupRate.getPercentageOff() / 100));
-				} else if (!isNull(thisPriceGroupRate.getAmountOff())) {
-					var thisNewPrice = arguments.sku.getPrice() - thisPriceGroupRate.getAmountOff();
-				} else if (!isNull(thisPriceGroupRate.getAmount())) {
-					var thisNewPrice = thisPriceGroupRate.getAmount();
-				}
-				
-				arrayAppend(prices, numberFormat(thisNewPrice, "0.00"));
 			}
 		}
 		
-		// Sort the array by lowest price
-		arraySort(prices, "numeric", "asc");
-		
-		// Return the lowest price
-		return prices[1];
+		if(!isNull(returnRate)) {
+			return returnRate;	
+		} 
 	}
 	
 	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 
