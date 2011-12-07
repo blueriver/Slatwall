@@ -75,10 +75,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		// Populate RoundingRule and RoundingRuleRate in the rc.
 		detail(rc);
 		
-		var wasNew = rc.RoundingRule.isNew();
-		
-		rc.roundingRule = getRoundingRuleService().save(rc.roundingRule, rc);
-		//rc.roundingRule.populate(rc);	
+		rc.roundingRule = getRoundingRuleService().saveRoundingRule(rc.roundingRule, rc);
 		
 		// If the rounding rule doesn't have any errors then redirect to detail or list
 		if(!rc.roundingRule.hasErrors()) {
@@ -86,7 +83,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		
 		// This logic only runs if the entity has errors.  If it was a new entity show the create page, otherwise show the edit page
-		if( wasNew ) {
+		if( rc.roundingRule.isNew() ) {
 			create( rc );
 			getFW().setView(action="admin:roundingrule.create");
 		} else {
@@ -98,7 +95,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		detail(rc);
 		
-		var deleteOK = getRoundingRuleService().delete(rc.roundingRule);
+		var deleteOK = getRoundingRuleService().deleteRoundingRule(rc.roundingRule);
 		
 		if( deleteOK ) {
 			rc.message = rbKey("admin.roundingrule.delete_success");
