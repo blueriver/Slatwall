@@ -318,7 +318,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				}
 			}
 			case "currency": {
-				return LSCurrencyFormat(value, setting("advanced_currencyType"), setting("advanced_currencyLocal"));
+				return LSCurrencyFormat(value, setting("advanced_currencyType"), setting("advanced_currencyLocale"));
 			}
 			case "datetime": {
 				return dateFormat(value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
@@ -465,6 +465,8 @@ component displayname="Base Object" accessors="true" output="false" {
 				return properties[i];
 			}
 		}
+		// If no properties found with the name throw error 
+		throw("No property found with name #propertyName# in #getClassName()#");
 	}
 	
 	// @hint return a simple representation of this entity
