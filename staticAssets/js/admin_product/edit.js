@@ -90,7 +90,7 @@ jQuery(document).ready(function() {
 		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog");
 		var $copyOfDialogDiv = $dialogDiv.clone();
 		
-		var $form = $("#updatePriceGroupSKUSettingsForm");
+		var $form = $("form", $dialogDiv).first();
 		var clickedPriceGroupId = $(this).parent("td,th").data("pricegroupid"); 
 		var clickedSkuId = $(this).parents("tr").first().data("skuid");
 		
@@ -140,6 +140,64 @@ jQuery(document).ready(function() {
 	});
 	
 	$(".priceGroupSKUColumn").append($newImage);
+	
+	
+	/* Bind price auto-fill modal dialog clickable images to the header cell of the SKU tab. */
+	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>");
+	$newImage.click(function(){
+		var $dialogDiv = $("#updateAllSKUPricesDialog");
+		var $copyOfDialogDiv = $dialogDiv.clone();
+		
+		var $form = $("form", $dialogDiv).first();
+		
+		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
+		actionDialog($dialogDiv, function(){
+			// First validate the dialog
+			if(!validateUpdateSKUPricesDialog($dialogDiv))
+				return false;
+			
+			// If valid, then submit the dialog's form
+			$form.submit();
+			return true;	// Closes the dialog
+			
+		}, null
+		, function(){
+			// Dialog was closed. 
+			$dialogDiv.remove();
+			$("body").append($copyOfDialogDiv);
+		});
+	});
+	
+	$(".skuPriceColumn").append($newImage);
+	
+	
+	/* Bind weight auto-fill modal dialog clickable images to the header cell of the SKU tab. */
+	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>");
+	$newImage.click(function(){
+		var $dialogDiv = $("#updateAllSKUWeightsDialog");
+		var $copyOfDialogDiv = $dialogDiv.clone();
+		
+		var $form = $("form", $dialogDiv).first();
+		
+		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
+		actionDialog($dialogDiv, function(){
+			// First validate the dialog
+			if(!validateUpdateSKUWeightsDialog($dialogDiv))
+				return false;
+			
+			// If valid, then submit the dialog's form
+			$form.submit();
+			return true;	// Closes the dialog
+			
+		}, null
+		, function(){
+			// Dialog was closed. 
+			$dialogDiv.remove();
+			$("body").append($copyOfDialogDiv);
+		});
+	});
+	
+	$(".skuWeightColumn").append($newImage);
 });
 
 function validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, priceGroupId){
@@ -153,26 +211,12 @@ function validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, priceGroupId){
 	//	alertDialog()
 }
 
-/*
-function resetUpdatePriceGroupSKUSettingsForm($dialogDiv){
-	// Hide all price group titles
-	$("updatePriceGroupSKUSettings_GroupName", $dialogDiv).hide();
-	
-	// Hide all select boxes.
-	$("updatePriceGroupSKUSettings_GroupName", $dialogDiv).hide();
-	
-	// Hide all "new amount" input boxes.
-	$("updatePriceGroupSKUSettings_GroupName", $dialogDiv).hide();
+function validateUpdateSKUPricesDialog($dialogDiv){
+	// TODO: Write validation!!!
+	return true;
 }
-*/
 
-
-
-
-
-
-
-
-
-
-
+function validateUpdateSKUWeightsDialog($dialogDiv){
+	// TODO: Write validation!!!
+	return true;
+}

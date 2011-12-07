@@ -123,6 +123,7 @@ Notes:
 	
 	<cfinclude template="dialogs/pricegrouprateskuupdate.cfm">
 	<cfinclude template="dialogs/priceautofill.cfm">
+	<cfinclude template="dialogs/weightautofill.cfm">
 </cfif>
 </div>
 

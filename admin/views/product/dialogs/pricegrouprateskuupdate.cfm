@@ -1,9 +1,3 @@
-<style>
-	.dialog p, .dialog select {margin-top:5px; margin-bottom:5px;}
-	.dialog form {width:280px;}
-	
-</style>
-
 <cfoutput>
 	
 <script language="JavaScript">
@@ -11,7 +5,7 @@
 </script>
 <!--- These are DIVs used by the modal dialog for the SKUs price grid. We can't put this into skus.cfm since we need to avoid nested forms. --->
 <div id="updatePriceGroupSKUSettingsDialog" class="ui-helper-hidden dialog" title="#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.title')#">
-	<form id="updatePriceGroupSKUSettingsForm" action="#buildURL('admin:product.updatePriceGroupSKUSettings')#" method="post">
+	<form action="#buildURL('admin:product.updatePriceGroupSKUSettings')#" method="post">
 		<!---<input type="hidden" id="updatePriceGroupSKUSettingsForm_priceGroupId" name="priceGroupId">--->
 		<!---<input type="hidden" id="updatePriceGroupSKUSettingsForm_skuId" name="skuId">--->
 		

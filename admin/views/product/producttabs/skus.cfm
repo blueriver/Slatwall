@@ -82,7 +82,7 @@ Notes:
 				<cfif rc.edit>
 					<th></th>
 				</cfif>--->
-				<th>#rc.$.Slatwall.rbKey("entity.sku.price")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>
+				<th class="skuPriceColumn">#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				
 				
 				<!--- Loop over all Price Groups and create column headers --->
@@ -100,7 +100,7 @@ Notes:
 				
 				
 				<!---<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>--->
-				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>
+				<th class="skuWeightColumn">#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>

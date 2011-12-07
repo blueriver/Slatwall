@@ -311,6 +311,22 @@ component extends="BaseController" output=false accessors=true {
 		//else
 			//getPriceGroupService().updatePriceGroupSKUSettings(skuID = rc.skuId, priceGroupRateId = priceGroupRateId);
 	}
+	
+	// Handler is called by modal dialog, to update the price of all SKUs
+	public void function updateSKUPrices(required struct rc) {
+		getSKUService().updateAllSKUPricesForProduct(rc.productId, rc.price);
+		
+		rc.message = rbKey("admin.sku.updateallprices_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
+	
+	// Handler is called by modal dialog, to update the weights of all SKUs
+	public void function updateSKUWeights(required struct rc) {
+		getSKUService().updateAllSKUWeightsForProduct(rc.productId, rc.weight);
+		
+		rc.message = rbKey("admin.sku.updateallweights_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
 		
 }
 

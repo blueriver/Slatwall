@@ -954,3 +954,6 @@ dt.title, dd.value {
 div.optionsSelector ul {
 	list-style:none;
 }
+
+.dialog p, .dialog select {margin-top:5px; margin-bottom:5px;}
+.dialog form {width:280px;}
