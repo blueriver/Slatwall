@@ -88,6 +88,18 @@ Notes:
 				<!--- Loop over all Price Groups and create column headers --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
+					
+					<!--- Store the value of the priceGroupRateId as a "data" property. Check what is the active rate in this price group. If the rate returned is not actaully a rate in this price group (inherited) just use a code --->
+					<cfset rate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+					<cfif isNull(rate)>
+						<cfset dataPriceGroupRateId = "">
+					<cfelseif rate.getPriceGroup().getPriceGroupId() EQ local.priceGroup.getPriceGroupId()>
+						<cfset dataPriceGroupRateId = "#rate.getPriceGroupRateId()#">	
+					<cfelse>
+						<cfset dataPriceGroupRateId = "inherited">	
+					</cfif>
+					
+					
 					<th class="priceGroupSKUColumn" data-priceGroupId="#local.priceGroup.getPriceGroupId()#">
 						#local.priceGroup.getPriceGroupName()#
 					
@@ -127,7 +139,7 @@ Notes:
 				<td class="alignLeft">
 					<cfif rc.edit>
 						<input type="text" name="skus[#local.skuCount#].skuCode" value="#local.thisSku.getSkuCode()#" />
-						<cfif local.thisSku.hasError("skuCode")>
+						<cfif local.thisSku.hasErrors()>
 							<br><span class="formError">#local.thisSku.getErrorBean().getError("skuCode")#</span>
 						</cfif>
 					<cfelse>
@@ -173,7 +185,18 @@ Notes:
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
 					<cfset priceGroupId = local.priceGroup.getPriceGroupId()>
-					<td class="priceGroupSKUColumn" data-pricegroupid="#priceGroupId#">
+					
+					<!--- Store the value of the priceGroupRateId as a "data" property. Check what is the active rate in this price group. If the rate returned is not actaully a rate in this price group (inherited) just use a code --->
+					<cfset rate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+					<cfif isNull(rate)>
+						<cfset dataPriceGroupRateId = "">
+					<cfelseif rate.getPriceGroup().getPriceGroupId() EQ local.priceGroup.getPriceGroupId()>
+						<cfset dataPriceGroupRateId = "#rate.getPriceGroupRateId()#">	
+					<cfelse>
+						<cfset dataPriceGroupRateId = "inherited">	
+					</cfif>
+					
+					<td class="priceGroupSKUColumn" data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
 						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
 					</td>	
 				</cfloop>

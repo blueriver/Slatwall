@@ -93,7 +93,11 @@ jQuery(document).ready(function() {
 		var $form = $("form", $dialogDiv).first();
 		var clickedPriceGroupId = $(this).parent("td,th").data("pricegroupid"); 
 		var clickedSkuId = $(this).parents("tr").first().data("skuid");
+		if (clickedSkuId == undefined)
+			clickedSkuId = ""; 
+		var currentPriceGroupRateValue = $(this).parent("td,th").data("pricegrouprateid");
 		
+		//alert(currentPriceGroupRateValue);
 		//alert("clickedPriceGroupId: " + clickedPriceGroupId + " clickedSkuId: " + clickedSkuId);
 		
 		// Assign the clicked PriceGroupId and SkuId to the form so that it posts to the server
@@ -106,12 +110,36 @@ jQuery(document).ready(function() {
 		
 		// Populate the select
 		var $select = $("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv);
-		var oldContents = $select.html();
+		
+		// Save the two existing options, so that we have their lancuage
+		var $oldNewAmountOption = $select.children("option")[0];
+		var $oldNewInheritedOption = $select.children("option")[0];
+		
 		$select.empty();
 		$.each(priceGroupData[clickedPriceGroupId].PRICEGROUPRATES, function(i, curRate){
 			$select.append($("<option/>").attr("value", curRate.ID).text(curRate.NAME));
 		});
-		$select.append($(oldContents));
+		
+		alert($oldOptions.size());
+		alert($oldOptions.first().size());
+		
+		// If this dialog was opened by a column header (no clickedSkuId), include the "new amount" option
+		if(clickedSkuId == ""){
+			$select.append($oldNewAmountOption);
+		
+			// Also, if find that this group's rate has been inherited, include the "Inherited" option.
+			if(currentPriceGroupRateValue == "inherited")
+				$select.append($oldNewInheritedOption);	
+		}
+			
+	
+		
+		// Select the value in the select box
+		/*if(clickedSkuId == "inherited")
+			$select.val("inherited");
+		else if clickedSkuId != "")*/
+		$select.val(clickedSkuId);
+		
 		
 		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
 		actionDialog($dialogDiv, function(){
