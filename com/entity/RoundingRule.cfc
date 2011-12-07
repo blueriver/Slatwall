@@ -41,7 +41,7 @@ component displayname="Rounding Rule" entityname="SlatwallRoundingRule" table="S
 	// Persistent Properties
 	property name="roundingRuleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="roundingRuleName" ormtype="string";
-	property name="roundingRuleCode" ormtype="string";
+	property name="roundingRuleExpression" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

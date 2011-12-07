@@ -40,16 +40,4 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	property name="sessionService" type="any";
 	
-	public any function save(required any RoundingRule,required struct data) {
-		// populate bean from values in the data Struct
-		arguments.RoundingRule.populate(arguments.data);
-		arguments.RoundingRule = super.save(arguments.RoundingRule);
-		
-		return arguments.RoundingRule;
-	}
-	
-	public any function delete(required any RoundingRule){
-		return Super.delete(arguments.RoundingRule);
-	}
-			
 }
