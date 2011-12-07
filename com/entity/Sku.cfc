@@ -345,7 +345,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return getService("priceGroupService").calculateSkuPriceBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
 	}
 	
-	public any function getAppliedRateByPriceGroup( required any priceGroup) {
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
 		return getService("priceGroupService").getRateForSkuBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
 	}
 	
