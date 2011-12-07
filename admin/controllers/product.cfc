@@ -84,6 +84,9 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function edit(required struct rc) {
 		detail(rc);
+		
+		rc.priceGroupDataJSON = getPriceGroupService().getPriceGroupDataJSON();
+		
 		getFW().setView("admin:product.detail");
 		rc.edit = true;
 		param name="rc.Image" default="#getProductService().newImage()#";
@@ -292,8 +295,13 @@ component extends="BaseController" output=false accessors=true {
 	
 	// Handler is called by modal dialog, to update the price group configuration on a specific SKU
 	public void function updatePriceGroupSKUSettings(required struct rc) {
-		var priceGroupRateId = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
-		var newAmount = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
+		// The "rc" should contain pricegroupId and possibly skuId (If user selected the entire colunm header).
+		rc.priceGroupRateId = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
+		rc.newAmount = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
+		var priceGroupId = rc["priceGroupId"];
+		//var updatePriceGroupSKUSettings_PriceGroupRateId[#local.thisPriceGroup.getPriceGroupId()#]_PriceGroupId
+		
+		dumpScreen(rc);
 		
 		// If the user has selected the radio buton for creating a new price (not selecting an existing rate)
 		//if(priceGroupRateId EQ "new amount")

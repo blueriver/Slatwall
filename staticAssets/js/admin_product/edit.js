@@ -89,8 +89,10 @@ jQuery(document).ready(function() {
 	$newImage.click(function(){
 		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog").clone();
 		var $form = $("#updatePriceGroupSKUSettingsForm");
-		var clickedPriceGroupId = $(this).parent("td").attr("pricegroupid"); 
-		var clickedSkuId = $(this).parents("tr").first().attr("skuid");
+		var clickedPriceGroupId = $(this).parent("td,th").data("pricegroupid"); 
+		var clickedSkuId = $(this).parents("tr").first().data("skuid");
+		
+		alert("clickedPriceGroupId: " + clickedPriceGroupId + " clickedSkuId: " + clickedSkuId);
 		
 		// Assign the clicked PriceGroupId and SkuId to the form so that it posts to the server
 		$("#updatePriceGroupSKUSettingsForm_priceGroupId", $dialogDiv).val(clickedPriceGroupId);
@@ -100,17 +102,7 @@ jQuery(document).ready(function() {
 		$("#updatePriceGroupSKUSettings_GroupName\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
 		
 		// Populate the rate radio buttons
-		$("#updatePriceGroupSKUSettings_PriceGroupRateInputs\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
-		
-		// Bind "change" handler to the Rate select
-		$("updatePriceGroupSKUSettings_PriceGroupRateSelect\\[" + clickedPriceGroupId + "\\]").change(function(){
-			alert($(this).val());
-			if($(this).val() == "new amount")
-				$("#updatePriceGroupSKUSettings_newAmount\\[" + clickedPriceGroupId + "\\]").show();
-			else
-				$("#updatePriceGroupSKUSettings_newAmount\\[" + clickedPriceGroupId + "\\]").hide();
-			
-		});
+		$("#updatePriceGroupSKUSettings_PriceGroupRateInputs\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();	
 		
 		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked.
 		actionDialog($dialogDiv, function(){
@@ -121,6 +113,15 @@ jQuery(document).ready(function() {
 			// If valid, then submit the dialog's form
 			$form.submit();
 			return false;
+			
+		});
+		
+		// Bind "change" handler to the Rate select. This has to happen after we assign the div to the dialog.
+		$("#updatePriceGroupSKUSettings_PriceGroupRateSelect\\[" + clickedPriceGroupId + "\\]").bind("change", function(){
+			if($(this).val() == "new amount")
+				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).show();
+			else
+				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).hide();
 			
 		});
 	});
@@ -139,7 +140,18 @@ function validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, priceGroupId){
 	//	alertDialog()
 }
 
-
+/*
+function resetUpdatePriceGroupSKUSettingsForm($dialogDiv){
+	// Hide all price group titles
+	$("updatePriceGroupSKUSettings_GroupName", $dialogDiv).hide();
+	
+	// Hide all select boxes.
+	$("updatePriceGroupSKUSettings_GroupName", $dialogDiv).hide();
+	
+	// Hide all "new amount" input boxes.
+	$("updatePriceGroupSKUSettings_GroupName", $dialogDiv).hide();
+}
+*/
 
 
 
