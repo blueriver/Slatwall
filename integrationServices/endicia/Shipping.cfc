@@ -110,7 +110,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		if(isDefined('xmlResponse.Fault')) {
 			// If XML fault then log error message
 			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
-			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
+			ratesResponseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from Endicia into the response bean
 			
@@ -119,7 +119,7 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 					messageCode=xmlResponse.PostageRatesResponse.Status.xmltext,
 					message=xmlResponse.PostageRatesResponse.ErrorMessage.xmltext
 				);
-				ratesResponseBean.getErrorBean().addError(
+				ratesResponseBean.addError(
 					xmlResponse.PostageRatesResponse.Status.xmltext,
 					xmlResponse.PostageRatesResponse.ErrorMessage.xmltext
 				);

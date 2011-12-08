@@ -119,7 +119,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function chargeOrderPayment(required struct rc) {
 		var orderPayment = getOrderService().getOrderPayment(rc.orderPaymentID);
 		if(!isNull(orderPayment)) {
-			var chargeOK = getOrderService().chargeOrderPayment(orderPayment,rc.providerTransactionID);
+			var chargeOK = getOrderService().chargeOrderPayment(orderPayment, rc.providerTransactionID);
 			if(chargeOK) {
 				rc.message = rc.$.slatwall.rbKey("admin.order.chargeOrderPayment_success");
 				getFW().redirect(action="admin:order.detail", queryString="orderID=#orderPayment.getOrder().getOrderID()#",preserve="message");
@@ -204,7 +204,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				// getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
 			} else {
 				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
-				rc.message = orderDelivery.getErrorBean().getError("orderDeliveryItems");
+				rc.message = orderDelivery.getError("orderDeliveryItems");
 				rc.messagetype = "warning";
 				getFW().setView("admin:order.detailOrderFulfillment");
 			}

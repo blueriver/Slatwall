@@ -110,7 +110,7 @@ component extends="BaseService" accessors="true" output="false" {
 		// Check for password validation requirement
 		if ((!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) && structKeyExists(arguments.data, "password") && len(arguments.data.password) lt 3) {
 			getRequestCacheService().setValue("ormHasErrors", true);
-			arguments.account.getErrorBean().addError("password", "You must enter a valid password to create this account.");
+			arguments.account.addError("password", "You must enter a valid password to create this account.");
 		}
 		
 		// Account Email
@@ -157,7 +157,7 @@ component extends="BaseService" accessors="true" output="false" {
 				
 				if(!muraUser.getIsNew()) {
 					getRequestCacheService().setValue("ormHasErrors", true);
-					arguments.account.getErrorBean().addError("primaryEmailAddress", "This E-Mail Address is already in use with another Account.");
+					arguments.account.addError("primaryEmailAddress", "This E-Mail Address is already in use with another Account.");
 				} else {
 					// Setup a new mura user
 					muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
