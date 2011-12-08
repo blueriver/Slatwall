@@ -228,7 +228,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				
 				// If after validation that sub object has errors, add a failure to this object
 				if(subPropertyValuesArray[e].hasErrors()) {
-					getVTResult().addFailure({propertyName=getPopulatedSubProperties()[p], message="One or more items had invalid data"});
+					getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
 				}
 			}
 			
