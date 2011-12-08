@@ -201,7 +201,11 @@ Notes:
 					<td class="priceGroupSKUColumn" data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
 						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
 						
-						<cfif rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup).getPriceGroupRateId() neq local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup).getPriceGroupRateId()>Overridden</cfif>
+						<cfset productRate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+						<cfset skuRate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+						<cfif !isNull(productRate) AND !isNull(skuRate) AND productRate.getPriceGroupRateId() neq skuRate.getPriceGroupRateId()>
+							Overridden
+						</cfif>
 					</td>	
 				</cfloop>
 
