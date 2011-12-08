@@ -82,4 +82,5 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	}
 	
     /************   END Association Management Methods   *******************/
+    
 }

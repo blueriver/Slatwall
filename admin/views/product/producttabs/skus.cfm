@@ -100,7 +100,7 @@ Notes:
 					</cfif>
 					
 					
-					<th class="priceGroupSKUColumn" data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#local.priceGroup.getPriceGroupId()#">
+					<th class="priceGroupSKUColumn" data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#dataPriceGroupRateId#" <cfif !isNull(local.priceGroup.getParentPriceGroup())>data-inheritedpricegroupid="#local.priceGroup.getParentPriceGroup().getPriceGroupId()#"</cfif>>
 						#local.priceGroup.getPriceGroupName()#
 					
 						<cfif !isNull(local.priceGroup.getParentPriceGroup())>
@@ -139,9 +139,11 @@ Notes:
 				<td class="alignLeft">
 					<cfif rc.edit>
 						<input type="text" name="skus[#local.skuCount#].skuCode" value="#local.thisSku.getSkuCode()#" />
-						<cfif local.thisSku.hasErrors()>
+						<!---<cfif local.thisSku.hasErrors()>
 							<br><span class="formError">#local.thisSku.getErrorBean().getError("skuCode")#</span>
-						</cfif>
+						</cfif>--->
+						
+						<cf_SlatwallErrorDisplay object="#local.thisSku#" errorName="skuCode" />
 					<cfelse>
 						#local.thisSku.getSkuCode()#
 					</cfif>
@@ -198,6 +200,8 @@ Notes:
 					
 					<td class="priceGroupSKUColumn" data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
 						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
+						
+						<cfif rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup).getPriceGroupRateId() neq local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup).getPriceGroupRateId()>Overridden</cfif>
 					</td>	
 				</cfloop>
 
