@@ -232,7 +232,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 
 	public void function updatePriceGroupSKUSettings(data){
 		var local = {};
-		//dumpScreen(arguments);
+		//dumpScreen(arguments.data);
+		
+		// If we are not updating to a new amount then make sure to delete "amount" from RC or else it will overwrite the Rate.
+		if(arguments.data.priceGroupRateId != "new amount"){
+			StructDelete(arguments.data, "amount");
+		}
 		
 		// If no skuId exists, then the user is editing the entire group, so we need to create a "product" entry in the included list
 		if(arguments.data.skuId EQ ""){
@@ -243,7 +248,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					product is already included. If not, add it. When we call savePriceGroupRate(), it will automatically clear out the product entries from
 					the other rates for ys
 				*/
+				//dumpScreen(arguments.data);
+				
+				
+				
+				
 				var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
+				//dumpScreen(priceGroupRate);
 				priceGroupRate.addProduct(getProductService().getProduct(arguments.data.productId));
 				this.savePriceGroupRate(priceGroupRate, arguments.data);
 			}

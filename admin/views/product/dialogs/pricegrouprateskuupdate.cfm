@@ -26,7 +26,7 @@
 			<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.norates')#</p>
 		</div>		
 		<div id="updatePriceGroupSKUSettings_newAmount" class="ui-helper-hidden">
-			<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#: $<input type="text" name="newAmount"></p>
+			<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#: $<input type="text" name="amount"></p>
 		</div>
 
 	</form>
