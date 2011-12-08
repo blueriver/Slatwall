@@ -517,7 +517,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Validate the order Fulfillment
-			this.validateOrderFulfillmentShipping(arguments.orderFulfillment);
+			arguments.orderFulfillment.validate();
 			
 			if(!getRequestCacheService().getValue("ormHasErrors")){
 				getDAO().flushORMSession();
