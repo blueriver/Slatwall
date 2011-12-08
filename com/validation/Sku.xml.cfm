@@ -10,5 +10,13 @@
 				<param name="methodName" value="hasUniqueSkuCode" />
 			</rule>
 		</property>
+		<property name="options">
+			<rule type="custom" contexts="*" failureMessage="This Sku has the same options as another Sku">
+				<param name="methodName" value="hasUniqueOptions" />
+			</rule>
+			<rule type="custom" contexts="*" failureMessage="This Sku has two options from the same option group">
+				<param name="methodName" value="hasOneOptionPerOptionGroup" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
