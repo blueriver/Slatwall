@@ -61,15 +61,6 @@ Notes:
 
 	<table id="skuTable" class="listing-grid stripe">
 		<thead>
-		<!---<tr>
-			<th colspan="5" class="noBorderOrBackground"></th>
-			<th colspan="10">Price Groups</th>
-			
-			<th colspan="3"  class="noBorderOrBackground"></th>
-
-		</tr>--->
-		
-		
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.isDefault")#</th>
@@ -82,7 +73,7 @@ Notes:
 				<cfif rc.edit>
 					<th></th>
 				</cfif>--->
-				<th class="skuPriceColumn">#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
+				<th <cfif rc.edit>class="skuPriceColumn"</cfif>>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
 				
 				
 				<!--- Loop over all Price Groups and create column headers --->
@@ -100,7 +91,7 @@ Notes:
 					</cfif>
 					
 					
-					<th class="priceGroupSKUColumn" data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#dataPriceGroupRateId#" <cfif !isNull(local.priceGroup.getParentPriceGroup())>data-inheritedpricegroupid="#local.priceGroup.getParentPriceGroup().getPriceGroupId()#"</cfif>>
+					<th <cfif rc.edit>class="priceGroupSKUColumn"</cfif> data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#dataPriceGroupRateId#" <cfif !isNull(local.priceGroup.getParentPriceGroup())>data-inheritedpricegroupid="#local.priceGroup.getParentPriceGroup().getPriceGroupId()#"</cfif>>
 						#local.priceGroup.getPriceGroupName()#
 					
 						<cfif !isNull(local.priceGroup.getParentPriceGroup())>
@@ -112,7 +103,7 @@ Notes:
 				
 				
 				<!---<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>--->
-				<th class="skuWeightColumn">#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
+				<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>
@@ -198,7 +189,7 @@ Notes:
 						<cfset dataPriceGroupRateId = "inherited">	
 					</cfif>
 					
-					<td class="priceGroupSKUColumn" data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
+					<td <cfif rc.edit>class="priceGroupSKUColumn"</cfif> data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
 						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
 						
 						<cfset productRate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
