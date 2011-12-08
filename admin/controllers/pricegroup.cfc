@@ -82,11 +82,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-		// Populate PriceGroup and PriceGroupRate in the rc.
+		// Populate either a brand new PriceGroup and PriceGroupRate in the rc, or pulls them based on the provided ID. Does NOT populate based on RC.
 		detail(rc);
 		
 		var wasNew = rc.PriceGroup.isNew();
 		
+		// save() does an RC -> Entity population, and flags the entities to be saved.
 		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
 		
 		param name="rc.addPriceGroupRate" default="false";
