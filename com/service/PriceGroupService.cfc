@@ -220,7 +220,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		// If the rate is still null, then check the sku against the parent priceGroup which will check product and productType (this is done with recursion)
 		if(isNull(returnRate) && !isNull(arguments.priceGroup.getParentPriceGroup())) {
-			returnRate = getRateForProductBasedOnPriceGroup(product=arguments.product, priceGroup=arguments.priceGroup.getParentPriceGroup());
+			returnRate = getRateForProductBasedOnPriceGroup(product=arguments.sku.getProduct(), priceGroup=arguments.priceGroup.getParentPriceGroup());
 		}
 		
 		// As long as the returnRate is not null, then return it.

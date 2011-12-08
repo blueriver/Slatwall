@@ -85,7 +85,7 @@ jQuery(document).ready(function() {
     });
 	
 	/* Bind modal dialog clickable images to the price cells of the SKU tab. */
-	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>");
+	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>").addClass("clickable");
 	$newImage.click(function(){
 		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog");
 		var $copyOfDialogDiv = $dialogDiv.clone();
@@ -97,14 +97,10 @@ jQuery(document).ready(function() {
 		if (clickedSkuId == undefined)
 			clickedSkuId = ""; 
 		var currentPriceGroupRateValue = $(this).parent("td,th").data("pricegrouprateid");
-		
-		//alert(currentPriceGroupRateValue);
-		//alert("clickedPriceGroupId: " + clickedPriceGroupId + " clickedSkuId: " + clickedSkuId);
-		
+
 		// Assign the clicked PriceGroupId and SkuId to the form so that it posts to the server
 		$form.append("<input type='hidden' name='priceGroup.priceGroupId' value='" + clickedPriceGroupId + "'>");
 		$form.append("<input type='hidden' name='skuId' value='" + clickedSkuId + "'>");
-
 
 		// Populate the Price Group title in the modal dialog.
 		$("#updatePriceGroupSKUSettings_GroupName", $dialogDiv).html(priceGroupData[clickedPriceGroupId].PRICEGROUPNAME);
@@ -154,10 +150,7 @@ jQuery(document).ready(function() {
 			// Call the change handler so that if "New Amount" is selected, the input is opened.
 			$select.change();
 		}
-			
-		
-		
-		
+
 		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
 		actionDialog($dialogDiv, function(){
 			// First validate the dialog
@@ -188,7 +181,7 @@ jQuery(document).ready(function() {
 	
 	
 	/* Bind price auto-fill modal dialog clickable images to the header cell of the SKU tab. */
-	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>");
+	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>").addClass("clickable");
 	$newImage.click(function(){
 		var $dialogDiv = $("#updateAllSKUPricesDialog");
 		var $copyOfDialogDiv = $dialogDiv.clone();
