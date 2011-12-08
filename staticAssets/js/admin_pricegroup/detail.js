@@ -17,11 +17,17 @@ jQuery(function() {
 	})
 	
 	jQuery('input[name="globalFlag"]').click(function(){
-	 	if(jQuery(this).val() == '1')
+	 	if (jQuery(this).val() == '1') {
 			jQuery('#priceGroupRate_globalOffInputs').fadeOut(400);
-		else
+			jQuery("#priceGroupRate_globalWarning").fadeIn(400);
+		}
+		else {
 			jQuery('#priceGroupRate_globalOffInputs').fadeIn(400);
+			jQuery("#priceGroupRate_globalWarning").fadeOut(400);
+		}
 	});
+	
+	
 	 
 });
 	

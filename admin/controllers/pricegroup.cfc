@@ -172,6 +172,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			} else {
 				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.savepricegroup_success");	
 			}
+			
+			// Populates and validates entity
+			//getPriceGroupService().savePriceGroupRate(rc.PriceGroupRate);
 		}
 	}
 	

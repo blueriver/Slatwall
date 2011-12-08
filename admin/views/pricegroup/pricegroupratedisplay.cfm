@@ -42,7 +42,21 @@ Notes:
 	<div class="priceGroupRateDisplay">
 		<cfif rc.edit>
 			<dl>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
+				<div id="globalRateControls">
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
+				</div>
+					
+				<!--- If there is another Rate in this Group that is set to global, output this warning --->
+				<cfset globalRate = rc.priceGroup.getGlobalPriceGroupRate()>
+				<cfif !isNull(globalRate) AND globalRate.getPriceGroupRateId() NEQ rc.priceGroupRate.getPriceGroupRateId()>
+					<p id="priceGroupRate_globalWarning" class="messagebox warning_message ui-helper-hidden">
+						<!--- Do token replacement on RB string --->
+						<cfset str = rc.$.Slatwall.rbKey("admin.pricegroup.detail.globalwarning")>
+						<cfset str = ReplaceNoCase(str, "{ratevalue}", globalRate.getAmountRepresentation())>
+						#str#
+					</p><br>
+				</cfif>
+				
 				
 				<!--- The dynamic percentageOff,AmountOff,Amount inputs --->
 				<select name="priceGroupRateType" id="priceGroupRateType">
@@ -56,6 +70,7 @@ Notes:
 				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> >
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule"  edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
 				</div>
+				
 				
 				<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->
 				<div id="priceGroupRate_globalOffInputs" <cfif rc.priceGroupRate.getGlobalFlag() EQ 1>class="ui-helper-hidden"</cfif> >

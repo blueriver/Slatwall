@@ -46,14 +46,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// Populates entity based on RC contents and validates entity. 
 		arguments.priceGroupRate = super.save(entity=arguments.priceGroupRate, data=arguments.data);
 		
+		throw("Inside of savePriceGroupRate()");
 		// As long as this price group rate didn't have errors, then we can update all of the other rates for this given price group
 		if(!arguments.priceGroupRate.hasErrors()) {
-			
 			var priceGroup = arguments.priceGroupRate.getPriceGroup();
 			var rates = priceGroup.getPriceGroupRates();
 			
 			// Loop over all of the rates that aren't this one, and make sure that they don't have any of the productTypes, products, or skus of this one
 			for(var i=1; i<=arrayLen(rates); i++) {
+				// Don't check the rate in this loop interation if it had the same ID as the rate we just edited
 				if(rates[i].getPriceGroupRateID() != arguments.priceGroupRate.getPriceGroupRateID()) {
 					// Remove Product Types
 					for(var pt=1; pt<=arrayLen(arguments.priceGroupRate.getProductTypes()); pt++) {
@@ -67,8 +68,27 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					for(var s=1; s<=arrayLen(arguments.priceGroupRate.getSkus()); s++) {
 						rates[i].removeSku(arguments.priceGroupRate.getSkus()[s]);
 					}
+					
+					throw(arguments.priceGroupRate.getGlobalFlag());
+					// If the rate that was just edited was set to global, make sure that no other rates are global
+					if(arguments.priceGroupRate.getGlobalFlag() && rates[i].getGlobalFlag()){
+						rates[i].setGlobalFlag(false);	
+					}	
 				}
 			}
+			
+			// If this rate is set to global, remove all include/exclude filters
+			if(arguments.priceGroupRate.getGlobalFlag()){
+				arguments.priceGroupRate.setProducts([]);
+				arguments.priceGroupRate.setProductTypes([]);
+				arguments.priceGroupRate.setProductSKUs([]);
+				rguments.priceGroupRate.setExcludedProducts([]);
+				arguments.priceGroupRate.setExcludedProductTypes([]);
+				arguments.priceGroupRate.setExcludedProductSKUs([]);
+			}
+		}
+		else {
+			throw("Uncaught errors!");
 		}
 	}
 	
