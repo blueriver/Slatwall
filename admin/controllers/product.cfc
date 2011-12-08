@@ -295,21 +295,10 @@ component extends="BaseController" output=false accessors=true {
 	
 	// Handler is called by modal dialog, to update the price group configuration on a specific SKU
 	public void function updatePriceGroupSKUSettings(required struct rc) {
-		dumpScreen(rc);
-			
-		// The "rc" should contain pricegroupId and possibly skuId (If user selected the entire colunm header).
-		rc.priceGroupRateId = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
-		rc.newAmount = rc["updatePriceGroupSKUSettings_PriceGroupId[" & rc.priceGroupId & "]"];
-		var priceGroupId = rc["priceGroupId"];
-		//var updatePriceGroupSKUSettings_PriceGroupRateId[#local.thisPriceGroup.getPriceGroupId()#]_PriceGroupId
+		getService("PriceGroupService").updatePriceGroupSKUSettings(data = rc);
 		
-		
-		
-		// If the user has selected the radio buton for creating a new price (not selecting an existing rate)
-		//if(priceGroupRateId EQ "new amount")
-			getPriceGroupService().updatePriceGroupSKUSettings(argumentCollection = rc);
-		//else
-			//getPriceGroupService().updatePriceGroupSKUSettings(skuID = rc.skuId, priceGroupRateId = priceGroupRateId);
+		rc.message = rbKey("admin.sku.updatepricegroupsettings_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
 	}
 	
 	// Handler is called by modal dialog, to update the price of all SKUs
