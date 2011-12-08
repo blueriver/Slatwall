@@ -102,13 +102,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				// Since the value field posted (in RC) does not directly match the properties of the PriceGroupRate entity (percentageOff, amountOff, amount), map the posted priceGroupRateType and priceGroupRateValue from the form to the three amount fields in the entity, which will then be automatically loaded into the entity by populate().
 				rc.percentageOff = rc.amountOff = rc.amount = "";
 				if(rc.priceGroupRateType EQ "percentageOff")
-					rc.percentageOff = rc.priceGroupRateValue;
+					rc["PriceGroupRate.percentageOff"] = rc.priceGroupRateValue;
 				else if(rc.priceGroupRateType EQ "amountOff")
-					rc.amountOff = rc.priceGroupRateValue;
+					rc["PriceGroupRate.amounOff"] = rc.priceGroupRateValue;
 				else if(rc.priceGroupRateType EQ "amount")
-					rc.amount = rc.priceGroupRateValue;
+					rc["PriceGroupRate.amount"] = rc.priceGroupRateValue;
 				else
 					throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
+					
+					
+				// Populates and validates entity
+				getPriceGroupService().savePriceGroupRate(rc.PriceGroupRate);	
+				
+				/* Everythign bellow might need to go! */	
+					
+					
 					
 				// rc.priceGroupRate is created by detail(). Will contain either new PriceGroupRate entity, or one from the DB if editing. populate() fills entity with values based on RC (form post).
 				rc.priceGroupRate.populate(rc);	
@@ -173,8 +181,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().redirect(action="admin:priceGroup.list", querystring="message=admin.pricegroup.savepricegroup_success");	
 			}
 			
-			// Populates and validates entity
-			//getPriceGroupService().savePriceGroupRate(rc.PriceGroupRate);
+			
 		}
 	}
 	
