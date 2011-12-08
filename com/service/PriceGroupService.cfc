@@ -39,10 +39,12 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	property name="sessionService" type="any";
+	property name="skuService" type="any";
+	property name="productService" type="any";
 	
 	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
-		
-		arguments.priceGroupRate = super.save(argumentcollection=arguments);
+		// Populates entity based on RC contents and validates entity. 
+		arguments.priceGroupRate = super.save(entity=arguments.priceGroupRate, data=arguments.data);
 		
 		// As long as this price group rate didn't have errors, then we can update all of the other rates for this given price group
 		if(!arguments.priceGroupRate.hasErrors()) {
@@ -52,7 +54,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			// Loop over all of the rates that aren't this one, and make sure that they don't have any of the productTypes, products, or skus of this one
 			for(var i=1; i<=arrayLen(rates); i++) {
-				if(rates[i].getPriceGroupRateID() != arguments.priceGroupRate.getPriceGroupRate()) {
+				if(rates[i].getPriceGroupRateID() != arguments.priceGroupRate.getPriceGroupRateID()) {
 					// Remove Product Types
 					for(var pt=1; pt<=arrayLen(arguments.priceGroupRate.getProductTypes()); pt++) {
 						rates[i].removeProductType(arguments.priceGroupRate.getProductTypes()[pt]);
@@ -228,22 +230,41 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 
-	public void function updatePriceGroupSKUSettings(required numeric skuId, required numeric priceGroupId, any newAmount="", any priceGroupRateId=""){
+	public void function updatePriceGroupSKUSettings(data){
+		var local = {};
+		//dumpScreen(arguments);
 		
-		dumpScreen(arguments);
-		
-		// If a priceGroupRateId was included, then check to see if we already have a SKU override for that rate. If not, add one in
-		if(isNumeric(arguments.priceGroupRateId)){
-			
-			
+		// If no skuId exists, then the user is editing the entire group, so we need to create a "product" entry in the included list
+		if(arguments.data.skuId EQ ""){
+			// Ignore if the "rate" chosen is keyword "inherit". 
+			if(arguments.data.priceGroupRateId NEQ "inherit"){
+				/*
+					If we are assigning an entire product to a selected rate (user clicked on column header), then pull the selected rate, and see if the
+					product is already included. If not, add it. When we call savePriceGroupRate(), it will automatically clear out the product entries from
+					the other rates for ys
+				*/
+				var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
+				priceGroupRate.addProduct(getProductService().getProduct(arguments.data.productId));
+				this.savePriceGroupRate(priceGroupRate, arguments.data);
+			}
 		}
 		
-		// Else, if we have been provided a new amount, then see if a rate already exists in this price group with that amount add add the SKU there. If not, add that new rate, and then add the sku. 
-		else if (isNumeric(arguments.newAmount)){
-		
+		// Otherwise, we have a SKU, which means that we are working with a specifc SKU
+		else {	
+			/*
+				Either the priceGroupRateId value has been passed, or we have a value for newAmount. If newAmount, then create a brand new rate with a SKU
+				include, and assign to the group. If priceGroupRateId is provided, then add the SKU "include" to that Rate 
+			*/
+
+			// getPriceGroupRate() returns either the requested priceGrouRate or a new Entity. savePriceGroupRate() Populates entity from RC, and saves.
+			var sku = getSkuService().getSku(arguments.data.skuId);
+			var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
+			priceGroupRate.addSku(sku);
+			this.savePriceGroupRate(priceGroupRate, arguments.data);	
 		}
 	}
 	
+
 	// Produces a structure which is a struct of {[priceGroupId] = {name=[pricegroupname], pricegroupRates=}}
 	public string function getPriceGroupDataJSON(){
 		var local = {};

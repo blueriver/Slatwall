@@ -112,6 +112,8 @@
 	<bean id="priceGroupService" parent="parentService" class="Slatwall.com.service.priceGroupService">
         <property name="DAO"><ref bean="PriceGroupDAO" /></property>
 		<property name="sessionService"><ref bean="SessionService" /></property>
+		<property name="skuService"><ref bean="SkuService" /></property>
+		<property name="productService"><ref bean="ProductService" /></property>
 	</bean>
 	<bean id="promotionService" parent="parentService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>

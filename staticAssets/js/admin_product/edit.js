@@ -91,7 +91,8 @@ jQuery(document).ready(function() {
 		var $copyOfDialogDiv = $dialogDiv.clone();
 		
 		var $form = $("form", $dialogDiv).first();
-		var clickedPriceGroupId = $(this).parent("td,th").data("pricegroupid"); 
+		var clickedPriceGroupId = $(this).parent("td,th").data("pricegroupid");
+		var inheritedPriceGroupId = $(this).parent("td,th").data("inheritedpricegroupid"); 
 		var clickedSkuId = $(this).parents("tr").first().data("skuid");
 		if (clickedSkuId == undefined)
 			clickedSkuId = ""; 
@@ -101,7 +102,7 @@ jQuery(document).ready(function() {
 		//alert("clickedPriceGroupId: " + clickedPriceGroupId + " clickedSkuId: " + clickedSkuId);
 		
 		// Assign the clicked PriceGroupId and SkuId to the form so that it posts to the server
-		$form.append("<input type='hidden' name='priceGroupId' value='" + clickedPriceGroupId + "'>");
+		$form.append("<input type='hidden' name='priceGroup.priceGroupId' value='" + clickedPriceGroupId + "'>");
 		$form.append("<input type='hidden' name='skuId' value='" + clickedSkuId + "'>");
 
 
@@ -112,9 +113,10 @@ jQuery(document).ready(function() {
 		var $select = $("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv);
 		
 		// Save the two existing options, so that we have their lancuage
-		var $oldNewAmountOption = $select.children("option")[0];
-		var $oldNewInheritedOption = $select.children("option")[0];
+		var $oldNewAmountOption = $($select.children("option")[0]);  
+		var $oldInheritedOption = $($select.children("option")[1]);  
 		
+		// Load in the select options
 		$select.empty();
 		$.each(priceGroupData[clickedPriceGroupId].PRICEGROUPRATES, function(i, curRate){
 			$select.append($("<option/>").attr("value", curRate.ID).text(curRate.NAME));
@@ -125,17 +127,35 @@ jQuery(document).ready(function() {
 			$select.append($oldNewAmountOption);
 		
 			// Also, if find that this group's rate has been inherited, include the "Inherited" option.
-			if(currentPriceGroupRateValue == "inherited")
-				$select.append($oldNewInheritedOption);	
+			if(currentPriceGroupRateValue == "inherited"){
+				// Append the string to the end of the "Inherited From" select value so it reads: "Inherited From [Rule Name] ([rule value])
+				var newname = $oldInheritedOption.html() + " " + priceGroupData[inheritedPriceGroupId].PRICEGROUPNAME 
+				newname += ""; //(" + priceGroupData[inheritedPriceGroupId].PRICEGROUPNAME + ")";
+				
+				$oldInheritedOption.html(newname);
+				$select.prepend($oldInheritedOption);	
+			}
+		}
+		
+		// If there are no rates (including no ability to add a new or no inherited option), show message!
+		if($select.children().size() == 0){
+			$("#updatePriceGroupSKUSettings_norates").show();
+			$select.hide();
+		}
+		else{
+			// Select the value in the select box
+			/*if(clickedSkuId == "inherited")
+				$select.val("inherited");
+			else if clickedSkuId != "")*/
+			
+			// Select the currently selected option
+			$select.val(currentPriceGroupRateValue);
+			
+			// Call the change handler so that if "New Amount" is selected, the input is opened.
+			$select.change();
 		}
 			
-	
 		
-		// Select the value in the select box
-		/*if(clickedSkuId == "inherited")
-			$select.val("inherited");
-		else if clickedSkuId != "")*/
-		$select.val(clickedSkuId);
 		
 		
 		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 

@@ -100,7 +100,7 @@ Notes:
 					</cfif>
 					
 					
-					<th class="priceGroupSKUColumn" data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#dataPriceGroupRateId#">
+					<th class="priceGroupSKUColumn" data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#dataPriceGroupRateId#" <cfif !isNull(local.priceGroup.getParentPriceGroup())>data-inheritedpricegroupid="#local.priceGroup.getParentPriceGroup().getPriceGroupId()#"</cfif>>
 						#local.priceGroup.getPriceGroupName()#
 					
 						<cfif !isNull(local.priceGroup.getParentPriceGroup())>
@@ -200,6 +200,8 @@ Notes:
 					
 					<td class="priceGroupSKUColumn" data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
 						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
+						
+						
 					</td>	
 				</cfloop>
 
