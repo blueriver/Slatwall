@@ -115,6 +115,7 @@ component extends="BaseService" accessors="true" {
 			var thisOption = this.getOption(optionID);
 			thisOption.setSortOrder(i);
 		}
+		
 	}
 	
 	public void function saveOptionGroupSort(required string optionGroupIDs) {

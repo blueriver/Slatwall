@@ -47,20 +47,20 @@ Notes:
 	<div class="svoadminoptionlistoptiongroups">
 		<cfif arrayLen(rc.optionGroupSmartList.getPageRecords()) gt 1>
 			<div class="buttons">
-			<a class="button" href="##" style="display:none;" id="saveSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
-			<a class="button" href="##"  id="showSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
+				<a class="button" href="##" style="display:none;" id="saveOptionGroupSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
+				<a class="button" href="##" id="showOptionGroupSort">#rc.$.Slatwall.rbKey('admin.optionGroup.reorder')#</a>	
 			</div>
 		</cfif>
 		
 		<table class="listing-grid stripe" id="OptionGroups">
 			<thead>
-			<tr>
-				<th class="handle" style="display:none;"></th>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupname")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.optiongroup.optionGroupCode")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.optiongroup.options")#</th>
-				<th>&nbsp;</th>
-			</tr>
+				<tr>
+					<th class="handle" style="display:none;"></th>
+					<th class="varWidth">#rc.$.Slatwall.rbKey("entity.optiongroup.optiongroupname")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.optiongroup.optionGroupCode")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.optiongroup.options")#</th>
+					<th>&nbsp;</th>
+				</tr>
 			</thead>
 			<tbody id="OptionGroupList">
 				<cfloop array="#rc.optionGroupSmartList.getPageRecords()#" index="local.thisOptionGroup">

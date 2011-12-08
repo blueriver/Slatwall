@@ -46,7 +46,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function listOptionGroups(required struct rc) {
-        param name="rc.sortOrder" default="sortOrder|ASC";
+        param name="rc.orderBy" default="sortOrder|ASC";
         
         rc.optionGroupSmartList = getOptionService().getOptionGroupSmartList(data=arguments.rc);
         
@@ -57,6 +57,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	param name="rc.edit" default="false";
     	
     	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+    	
+    	if(isNull(rc.optionGroup)) {
+    		getFW().redirect(action="admin:option.listOptionGroups");
+    	}
     }
     
     public void function createOptionGroup(required struct rc) {
@@ -64,26 +68,73 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
     
     public void function editOptionGroup(required struct rc) {
-    	detailOptionGroup(rc);
-    	getFW().setView("admin:option.detailOptionGroup");
+    	param name="rc.optionGroupID" default="";
+    	param name="rc.optionID" default="";
+    	
+    	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID, true);
+    	rc.option = getOptionService().getOption(rc.optionID, true);
+    	
     	rc.edit = true;
+    	getFW().setView("admin:option.detailOptionGroup");
     }
     
     public void function saveOptionGroup(required struct rc) {
-		
-		detailOptionGroup(rc);
+		editOptionGroup(rc);
 		
 		rc.optionGroup = getOptionService().saveOptionGroup(rc.optionGroup, rc);
 		
 		if(!rc.optionGroup.hasErrors()) {
 			rc.message="admin.option.saveoptiongroup_success";
-			getFW().redirect(action="admin:option.detailOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
+			if(rc.populateSubProperties) {
+				getFW().redirect(action="admin:option.editOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:option.detailOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
+			}
 		} else {
+			// If one of the sub-options had the error, then find out which one and populate it
+			if(rc.optionGroup.hasError("options")) {
+				for(var i=1; i<=arrayLen(rc.optionGroup.getOptions()); i++) {
+					if(rc.optionGroup.getOptions()[i].hasErrors()) {
+						rc.option = rc.optionGroup.getOptions()[i];
+					}
+				}
+			}
 			rc.edit = true;
 			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
 			getFW().setView(action="admin:option.detailOptionGroup");
 		}
 	}
+	
+	public void function deleteOption(required struct rc) {
+		
+		var option = getOptionService().getOption(rc.optionid);
+		var optionGroupID = option.getOptionGroup().getOptionGroupID();
+		var deleteOK = getOptionService().deleteOption(option);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.option.delete_success");
+		} else {
+			rc.message = rbKey("admin.option.delete_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:option.editOptionGroup", querystring="optiongroupid=#optionGroupID#",preserve="message,messagetype");
+	}
+	
+	public void function saveOptionGroupSort(required struct rc) {
+		param name="rc.optionGroupIDs" default="";
+		
+		getOptionService().saveOptionGroupSort(rc.optionGroupIDs);
+		getFW().redirect("admin:option.listOptionGroups");
+	}
+	
+	public void function saveOptionSort(required struct rc) {
+		param name="rc.optionIDs" default="";
+		
+		getOptionService().saveOptionSort(rc.optionIDs);
+		getFW().redirect("admin:option.listOptionGroups");
+	}
+	
 /*	
 	public void function create(required struct rc) {
 		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
@@ -160,10 +211,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 	}
 	
-	public void function saveOptionSort(required struct rc) {
-		getOptionService().saveOptionSort(rc.optionID);
-		getFW().redirect("admin:option.list");
-	}
+	
 	
 	public void function delete(required struct rc) {
 		

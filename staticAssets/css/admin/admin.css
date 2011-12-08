@@ -52,7 +52,6 @@ a:hover {
 form {
     margin: 0 0 20px;
     padding: 0;
-    width: 920px;
 }
 a.button, input.button, button, .ui-widget-content a.button {
     background-color: #78A8D4;
