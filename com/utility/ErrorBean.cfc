@@ -74,15 +74,5 @@ component displayName="ErrorBean" persistent="false" accessors="true" hint="Bean
 		return !structIsEmpty(variables.errors) ;
 	}
 	
-	public string function getAllErrorMessages() {
-		var messages = "";
-		for(var key in variables.errors) {
-			for(var i=1; i<=arrayLen(variables.errors[key]); i++) {
-				messages &= "<p>#variables.errors[key][i]#</p>";	
-			}
-		}
-		return messages;
-	}
-	
 }
 

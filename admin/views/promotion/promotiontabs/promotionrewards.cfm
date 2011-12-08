@@ -119,11 +119,8 @@ Notes:
 					</td>
 				</cfif>
 			</tr>
-			<cfif local.thisPromotionReward.hasErrors() && local.thisPromotionReward.getErrorBean().getError("reward") NEQ "">
-				<tr>
-					<td colspan="5"><span class="formError">#rc.$.Slatwall.rbKey("admin.promotion.edit.validatePromotionReward")#</span></td>
-				</tr>
-			</cfif>
+			<cf_SlatwallErrorDisplay object="#local.thisPromotionReward#" errorName="reward" />
+			
 			<cfif rc.edit>
 			<!--- Row to edit the current reward --->
 				<tr id="promotionRewardEdit#local.thisPromotionReward.getPromotionRewardID()#" class="alt<cfif !local.thisPromotionReward.hasErrors()> hideElement</cfif>">

@@ -58,10 +58,16 @@ Notes:
 	</cfsilent>
 	<cfif arrayLen(attributes.errors)>
 		<cfswitch expression="#attributes.displaytype#">
-			<!--- Label Case --->
+			<!--- LABEL Display --->
 			<cfcase value="label">
 				<cfloop array="#attributes.errors#" index="error">
 					<cfoutput><label for="#attributes.for#" generated="true" class="error">#error#</label></cfoutput>
+				</cfloop>
+			</cfcase>
+			<!--- DIV Display --->
+			<cfcase value="div">
+				<cfloop array="#attributes.errors#" index="error">
+					<cfoutput><div class="error">#error#</div></cfoutput>
 				</cfloop>
 			</cfcase>
 			<!--- P Display --->
@@ -76,13 +82,13 @@ Notes:
 					<cfoutput>#error#<br /></cfoutput>
 				</cfloop>
 			</cfcase>
-			<!--- Span Display --->
+			<!--- SPAN Display --->
 			<cfcase value="span">
 				<cfloop array="#attributes.errors#" index="error">
 					<cfoutput><span class="error">#error#</span></cfoutput>
 				</cfloop>
 			</cfcase>
-			<!--- Span Display --->
+			<!--- LI Display --->
 			<cfcase value="li">
 				<cfloop array="#attributes.errors#" index="error">
 					<cfoutput><li class="error">#error#</li></cfoutput>

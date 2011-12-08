@@ -625,26 +625,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		getErrorBean().addError(argumentCollection=arguments);
 	}
 	
-	public string function getAllErrorMessages() {
-		var messages = "";
-		
-		if( !isNull(getErrorBean()) ) {
-			var messages &= getErrorBean().getAllErrorMessages();
-		}
-		
-		if(!isNull(getVTResult()) && getVTResult().hasErrors()) {
-			var vtResultErrors = getVTResult().getErrors();
-			for(var key in vtResultErrors) {
-				for(var i=1; i<=arrayLen(vtResultErrors[key]); i++) {
-					var messages &= "<p>#vtResultErrors[key][i]#</p>";
-				}
-			}
-		}
-		
-		return messages;
-	} 
-	
-		
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {
 		
