@@ -38,27 +38,66 @@ Notes:
 --->
 <cfoutput>
 	<cfif arrayLen(rc.optionGroup.getOptions()) GT 0>
+		<cfif arrayLen(rc.optionGroup.getOptions()) GT 1>
+			<div class="buttons">
+				<a class="button" href="##" style="display:none;" id="saveOptionSort">#rc.$.Slatwall.rbKey("admin.option.saveorder")#</a>
+				<a class="button" href="##" id="showOptionSort">#rc.$.Slatwall.rbKey('admin.option.reorder')#</a>	
+			</div>
+		</cfif>
 		<table class="listing-grid stripe" id="Options">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.option.optionname")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.option.optioncode")#</th>
-				<th>&nbsp;</th>
-			</tr>
-			<cfloop array="#rc.optionGroup.getOptions()#" index="local.thisOption">
+			<thead>
 				<tr>
-					<td class="varWidth">#local.thisOption.getOptionName()#</td>
-					<td>#local.thisOption.getOptionCode()#</td>
-					<td class="administration">
-					  <ul class="two">
-			              <cf_SlatwallActionCaller action="admin:option.edit" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">
-			              <cf_SlatwallActionCaller action="admin:option.delete" querystring="optionid=#local.thisOption.getOptionID()#" class="delete" type="list" disabled="#local.thisOption.getAssignedFlag()#" confirmrequired="true">
-					  </ul>
-					</td>
+					<th class="handle" style="display:none;"></th>
+					<th>#rc.$.Slatwall.rbKey("entity.option.optioncode")#</th>
+					<th class="varWidth">#rc.$.Slatwall.rbKey("entity.option.optionname")#</th>
+					<th>&nbsp;</th>
 				</tr>
-			</cfloop>
+			</thead>
+			<tbody id="OptionList">
+				<cfloop array="#rc.optionGroup.getOptions()#" index="local.thisOption">
+					<cfif not local.thisOption.hasErrors()>
+						<tr class="Option" id="#local.thisOption.getOptionID()#">
+							<td class="handle" style="display:none;"><img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.drag_handle.png" height="14" width="15" alt="#rc.$.Slatwall.rbKey('admin.option.reorder')#" /></td>
+							<td>#local.thisOption.getOptionCode()#</td>
+							<td class="varWidth">#local.thisOption.getOptionName()#</td>
+							<td class="administration">
+								<ul class="two">
+									<cf_SlatwallActionCaller action="admin:option.editOptionGroup" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">
+									<cf_SlatwallActionCaller action="admin:option.deleteOption" querystring="optionid=#local.thisOption.getOptionID()#" class="delete" type="list" disabled="#local.thisOption.isNotDeletable()#" confirmrequired="true">
+								</ul>
+							</td>
+						</tr>
+					</cfif>
+				</cfloop>
+			</tbody>
 		</table>
 	<cfelse>
 		<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
+		<br /><br />
+	</cfif>
+	<cfif rc.edit>
+		<!--- If the Option is new, then that means that we are just editing the PriceGroup --->
+		<cfif rc.option.isNew() && not rc.option.hasErrors()>
+			<button type="button" id="addOptionButton" value="true">#rc.$.Slatwall.rbKey("admin.option.detailOptionGroup.addOption")#</button>
+		</cfif>
+		
+		<div id="optionInputs" <cfif rc.option.isNew() && not rc.option.hasErrors()>class="ui-helper-hidden"</cfif> >
+			<strong>#rc.$.Slatwall.rbKey("admin.option.detailOptionGroup.addOption")#</strong>
+			<dl class="twoColumn">
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionName" fieldName="options[1].optionName" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionCode" fieldName="options[1].optionCode" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionImage" fieldName="options[1].optionImage" edit="true" fieldType="file" />
+			</dl>
+			<cf_SlatwallPropertyDisplay object="#rc.option#" property="optionDescription" edit="true" fieldType="wysiwyg" />
+			<input type="hidden" name="options[1].optionID" value="#rc.option.getOptionId()#"/>
+			<cfif rc.option.isNew() && not rc.option.hasErrors()>
+				<input type="hidden" name="populateSubProperties" id="addOptionHidden" value="false"/>
+			<cfelse>
+				<input type="hidden" name="populateSubProperties" id="addOptionHidden" value="true"/>
+			</cfif>
+		</div>
+		
+		<br /><br />
 	</cfif>
 </cfoutput>
 

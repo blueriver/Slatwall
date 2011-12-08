@@ -191,7 +191,7 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 			}
 			default: {
 				// Transaction did not go through
-				response.getErrorBean().addError(name=responseData.status,message=responseData.statusDetail);
+				response.addError(name=responseData.status,message=responseData.statusDetail);
 				break;
 			}
 		}

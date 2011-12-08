@@ -189,7 +189,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		// Check to see if it was successful
 		if(responseData["result"] != 0) {
 			// Transaction did not go through
-			response.getErrorBean().addError(name=responseData["result"], message=responseData["respmsg"]);
+			response.addError(name=responseData["result"], message=responseData["respmsg"]);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized(requestBean.getTransactionAmount());

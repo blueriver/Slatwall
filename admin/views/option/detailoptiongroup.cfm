@@ -48,11 +48,9 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:option.detailoptiongroup" querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#" type="list">
 		</cfif>
 	</ul>
-	<cfif rc.optionGroup.hasErrors()>
-		<cfdump var="#rc.optionGroup.getErrors()#" />
-	</cfif>
+
 	<cfif rc.edit>
-		<form "OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" method="post">
+		<form name="OptionGroupForm" id="OptionGroupForm" enctype="multipart/form-data" method="post">
 			<input type="hidden" name="slatAction" value="admin:option.saveoptiongroup" />
 			<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 	</cfif>
@@ -88,13 +86,13 @@ Notes:
 					#view("option/optiongrouptabs/options")#
 				</div>
 				<div id="tabDescription">
-					<cf_SlatwallPropertyDisplay object="#rc.optionGroup#" property="optionGroupDescription" edit="#rc.edit#" fieldType="wysiwyg">
+					<cf_SlatwallPropertyDisplay object="#rc.optionGroup#" property="optionGroupDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
 				</div>
 			</div>
 			
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:option.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 				<cfif rc.optiongroup.getOptionsCount() eq 0 and !rc.optionGroup.isNew()>
 					<cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
 				</cfif>

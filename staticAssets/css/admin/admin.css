@@ -39,6 +39,20 @@ h3 {
     margin: 0 0 0.5em;
     padding: 0;
 }
+h4 {
+    clear: both;
+    font-size: 15px;
+    font-weight: normal;
+    margin: 0 0 0.75em;
+    padding: 0;
+}
+table {
+    border: 1px solid #DBDBDB;
+    border-collapse: collapse;
+    clear: both;
+    margin: 0 0 16px;
+    width: 100%;
+}
 table td {
 	vertical-align: text-top;
 }
@@ -52,7 +66,6 @@ a:hover {
 form {
     margin: 0 0 20px;
     padding: 0;
-    width: 920px;
 }
 a.button, input.button, button, .ui-widget-content a.button {
     background-color: #78A8D4;
@@ -65,9 +78,16 @@ a.button, input.button, button, .ui-widget-content a.button {
     vertical-align: middle;
     width: auto;
 	font-size: 11px;
-    height: 20px;
-	 height: 19px;
+    height: 23px;
 	font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a.button, .ui-widget-content a.button {
+	height:17px;
+	line-height:17px;
+	display:inline-block;
+}
+input.button:hover, button:hover {
+	text-decoration:underline;
 }
 label {
 	font-weight:bold;
@@ -98,6 +118,7 @@ img.slatwallLogo {
     float: left;
     margin: 8px 0 0 5px;
 }
+ul.one {width:14px !important;}
 ul.two, ul.campaigns, ul.adZones, ul.emails, ul.users, ul.currentSites, ul.versionHistory, ul.group {
     width: 38px !important;
 }
@@ -233,12 +254,12 @@ table#alternateImages td img {
 }
 
 table td li.zoomIn {
-	background: url(../images/admin.ui.zoom_in.png) no-repeat;
+	background: url(../../images/admin.ui.zoom_in.png) no-repeat;
 	width: 16px;
 }
 
 table td li.zoomOut {
-	background: url(../images/admin.ui.zoom_out.png) no-repeat;
+	background: url(../../images/admin.ui.zoom_out.png) no-repeat;
 	width: 16px;
 	display: none;
 }
@@ -264,7 +285,7 @@ td ul.inlineAdmin li a, td.varWidth ul.inlineAdmin li a {
     width: 14px;
 }
   
-td.property, .listing-grid td.title {
+td.property, .listing-grid td.title, .listing-grid td.property {
 	text-align: left;
 	font-weight: bold;
 }
@@ -276,7 +297,7 @@ form div.required {
 	font-weight: bold;
 	color: #000000;
 	padding-right: 1em;
-	background: url("../images/admin.ui.required.gif") no-repeat scroll right center transparent;
+	background: url("../../images/admin.ui.required.gif") no-repeat scroll right center transparent;
 }
 
 
@@ -290,13 +311,13 @@ div.dashboardSection {
 div.basicOrderInfo {
 	width: 400px;
 	float: left;
-	margin: 10px;
+	margin: 0;
 }
 
 div.paymentInfo {
 	width: 700px;
 	float: left;
-	margin: 10px;
+	margin: 0 0 0 10px;
 }
 
 div.paymentDetails {
@@ -578,7 +599,7 @@ table td.varWidth li {padding-left:10px;}
 
 .listing-grid td.add a, .listing-grid a.add, .listtable td.add a, .listtable a.add {
 	display: block;
-	background: url(../images/icons/add_32.png) no-repeat center center;
+	background: url(../../images/icons/add_32.png) no-repeat center center;
 	width: 12px;
 	height: 12px;
 	padding: 0;
@@ -933,7 +954,8 @@ a.tooltip:hover span {
     display: none !important;
 }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-	font-family: MS Shell Dlg;
+	font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
+;
 }
 table.listing-grid a.button {color:#fff;}
 #actionButtons {

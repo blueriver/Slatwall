@@ -120,8 +120,8 @@ component displayname="Base Object" accessors="true" output="false" {
 					// Loop over the array of objects in the data... Then load, populate, and validate each one
 					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
 						
-						// Check to make sure that this array has the primary ID property in it, otherwise we can't do a populate
-						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName)) {
+						// Check to make sure that this array has the primary ID property in it, otherwise we can't do a populate.  Also check to make sure populateSubProperties was not set to false in the data (if not defined we asume true).
+						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName) && (!structKeyExists(arguments.data, "populateSubProperties") || arguments.data.populateSubProperties)) {
 							
 							// set the service to use to get the specific entity
 							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
@@ -129,7 +129,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
 							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
 							
-							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
+							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell.
 							if(structCount(oneToManyArrayData[a]) gt 1) {
 								
 								// Populate the entity with the data, this is recursive
@@ -228,7 +228,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				
 				// If after validation that sub object has errors, add a failure to this object
 				if(subPropertyValuesArray[e].hasErrors()) {
-					getVTResult().addFailure({propertyName=getPopulatedSubProperties()[p], message="One or more items had invalid data"});
+					getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
 				}
 			}
 			
@@ -625,26 +625,6 @@ component displayname="Base Object" accessors="true" output="false" {
 		getErrorBean().addError(argumentCollection=arguments);
 	}
 	
-	public string function getAllErrorMessages() {
-		var messages = "";
-		
-		if( !isNull(getErrorBean()) ) {
-			var messages &= getErrorBean().getAllErrorMessages();
-		}
-		
-		if(!isNull(getVTResult()) && getVTResult().hasErrors()) {
-			var vtResultErrors = getVTResult().getErrors();
-			for(var key in vtResultErrors) {
-				for(var i=1; i<=arrayLen(vtResultErrors[key]); i++) {
-					var messages &= "<p>#vtResultErrors[key][i]#</p>";
-				}
-			}
-		}
-		
-		return messages;
-	} 
-	
-		
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {
 		

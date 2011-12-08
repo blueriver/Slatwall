@@ -46,7 +46,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 
 	public void function listOptionGroups(required struct rc) {
-        param name="rc.sortOrder" default="sortOrder|ASC";
+        param name="rc.orderBy" default="sortOrder|ASC";
         
         rc.optionGroupSmartList = getOptionService().getOptionGroupSmartList(data=arguments.rc);
         
@@ -57,6 +57,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	param name="rc.edit" default="false";
     	
     	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+    	
+    	if(isNull(rc.optionGroup)) {
+    		getFW().redirect(action="admin:option.listOptionGroups");
+    	}
     }
     
     public void function createOptionGroup(required struct rc) {
@@ -64,112 +68,48 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
     
     public void function editOptionGroup(required struct rc) {
-    	detailOptionGroup(rc);
-    	getFW().setView("admin:option.detailOptionGroup");
+    	param name="rc.optionGroupID" default="";
+    	param name="rc.optionID" default="";
+    	
+    	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID, true);
+    	rc.option = getOptionService().getOption(rc.optionID, true);
+    	
     	rc.edit = true;
+    	getFW().setView("admin:option.detailOptionGroup");
     }
     
     public void function saveOptionGroup(required struct rc) {
-		
-		detailOptionGroup(rc);
+		editOptionGroup(rc);
 		
 		rc.optionGroup = getOptionService().saveOptionGroup(rc.optionGroup, rc);
 		
 		if(!rc.optionGroup.hasErrors()) {
 			rc.message="admin.option.saveoptiongroup_success";
-			getFW().redirect(action="admin:option.detailOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
+			if(rc.populateSubProperties) {
+				getFW().redirect(action="admin:option.editOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:option.detailOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
+			}
 		} else {
+			// If one of the sub-options had the error, then find out which one and populate it
+			if(rc.optionGroup.hasError("options")) {
+				for(var i=1; i<=arrayLen(rc.optionGroup.getOptions()); i++) {
+					if(rc.optionGroup.getOptions()[i].hasErrors()) {
+						rc.option = rc.optionGroup.getOptions()[i];
+					}
+				}
+			}
 			rc.edit = true;
 			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
 			getFW().setView(action="admin:option.detailOptionGroup");
 		}
 	}
-/*	
-	public void function create(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
-		if(!isNull(rc.optionGroup)) {
-			rc.newOption = getOptionService().newOption();
-			rc.create = true;
-			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
-			getFW().setView("option.edit");
-		} else {
-			getFW().redirect("option.list");
-		}
-	}
-
-	public void function edit(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
-		if(!isNull(rc.optionGroup)) {
-			rc.itemTitle &= ": " & rc.optionGroup.getOptionGroupName();
-		} else {
-			getFW().redirect("option.list");
-		}
-	}
 	
-	public void function detail(required struct rc) {
-		if(len(rc.option.getOptionName())) {
-			rc.itemTitle &= ": #rc.option.getOptionName()#";
-		} else {
-			getFW().redirect("admin:option.list");
-		}
-	}
-	
-    
-    public void function list(required struct rc) {
-        param name="rc.listby" default="optiongroups";
-        rc.orderBy="sortOrder|ASC";
-        rc.optionGroups = getOptionService().getOptionGroupSmartList(data=arguments.rc);
-        if( rc.listby  == "options" ) {
-        	// if the option group filter is blank, remove the filter
-	        if(structKeyExists(rc,"F:optiongroup_optiongroupname") && !len(rc["F:optiongroup_optiongroupname"])) {
-	        	structDelete(rc,"F:optiongroup_optiongroupname");
-	        }
-        	rc.orderby="optiongroup_optiongroupname|ASC,sortOrder|ASC";
-        	rc.options = getOptionService().getOptionSmartList(data=arguments.rc);
-        } 
-    }
-	
-	public void function save(required struct rc) {
-		param name="rc.optionID" default="";
-		rc.option = getOptionService().getOption(rc.optionID,true);
-					
-		// upload the image and return the result struct
-		if(rc.optionImage != "") {
-			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionImage","","makeUnique");
-		} 
-
-		rc.option = getOptionService().saveOption(rc.option,rc);
-		
-		if(!rc.option.hasErrors()) {
-			// go to the 'manage option group' form to add/edit more options
-			rc.message = rc.$.Slatwall.rbKey("admin.option.save_success");
-			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.optionGroupID#",preserve="message");
-		} else {
-			//put optionGroup in rc for form
-			rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroup.optionGroupID);
-			rc.itemTitle = rc.$.Slatwall.rbKey("admin.option.create") & ": #rc.optionGroup.getOptionGroupName()#";
-			if(rc.option.isNew()) {
-				rc.newOption = rc.option;
-				rc.create = true;
-				rc.newOptionFormOpen=true;
-			} else {
-				rc.activeOption = rc.option;				
-			}
-			getFW().setView("admin:option.edit");
-		}
-		
-	}
-	
-	public void function saveOptionSort(required struct rc) {
-		getOptionService().saveOptionSort(rc.optionID);
-		getFW().redirect("admin:option.list");
-	}
-	
-	public void function delete(required struct rc) {
+	public void function deleteOption(required struct rc) {
 		
 		var option = getOptionService().getOption(rc.optionid);
-		var optiongroupID = option.getOptionGroup().getOptionGroupID();
-		var deleteOK = getOptionService().delete(option);
+		var optionGroupID = option.getOptionGroup().getOptionGroupID();
+		var deleteOK = getOptionService().deleteOption(option);
 		
 		if( deleteOK ) {
 			rc.message = rbKey("admin.option.delete_success");
@@ -178,78 +118,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype="error";
 		}
 		
-		getFW().redirect(action="admin:option.edit", querystring="optiongroupid=#optiongroupid#",preserve="message,messagetype");
+		getFW().redirect(action="admin:option.editOptionGroup", querystring="optiongroupid=#optionGroupID#",preserve="message,messagetype");
 	}
 	
-	public void function createOptionGroup(required struct rc) {
-	   rc.edit=true;
-	   rc.optionGroup = getOptionService().newOptionGroup();
-	   getFW().setView("admin:option.detailoptiongroup");
-	}
-	
-	public void function detailOptionGroup(required struct rc) {
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
-		if(!isNull(rc.optionGroup) and !rc.optionGroup.isNew()) {
-			rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
-		} else {
-			getFW().redirect("admin:option.list");
-		}
-	}
-	
-	public void function editOptionGroup(required struct rc) {
-		rc.edit=true;
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
-		if(!isNull(rc.optionGroup)) {
-			if( len(rc.optionGroup.getOptionGroupName()) ) {
-				rc.itemTitle &= ": #rc.optionGroup.getOptionGroupName()#";
-			}
-			getFW().setView("admin:option.detailoptiongroup");
-		} else
-		  getFW().redirect("admin:option.list");
-	}
-
-	public void function saveOptionGroup(required struct rc) {
-		param name="rc.optionGroupID" default="";
-		
-		rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID,true);
-		
-		// upload the image and return the result struct
-		if(rc.optionGroupImage != "") {
-			rc.imageUploadResult = fileUpload(getTempDirectory(),"optionGroupImage","","makeUnique");
-		} 
-		
-		rc.optionGroup = getOptionService().saveOptionGroup(rc.optionGroup, rc);
-		
-		if(!rc.optionGroup.hasErrors()) {
-			// go to the 'manage option group' form to add options
-			rc.message="admin.option.saveoptiongroup_success";
-			getFW().redirect(action="admin:option.create",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
-		} else {
-			rc.edit = true;
-			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
-			getFW().setView(action="admin:option.detailOptionGroup");
-		}
-	}
-
 	public void function saveOptionGroupSort(required struct rc) {
-		getOptionService().saveOptionGroupSort(rc.optionGroupID);
-		getFW().redirect("admin:option.list");
+		param name="rc.optionGroupIDs" default="";
+		
+		getOptionService().saveOptionGroupSort(rc.optionGroupIDs);
+		getFW().redirect("admin:option.listOptionGroups");
 	}
 	
-	public void function deleteOptionGroup(required struct rc) {
+	public void function saveOptionSort(required struct rc) {
+		param name="rc.optionIDs" default="";
 		
-		var optionGroup = getOptionService().getOptionGroup(rc.optiongroupid);
-		var deleteOK = getOptionService().deleteOptionGroup(optionGroup);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.option.deleteOptionGroup_success");
-		} else {
-			rc.message = rbKey("admin.option.deleteOptionGroup_failure");
-			rc.messageType = "error";
-		}
-		
-		getFW().redirect(action="admin:option.list",preserve="message,messageType");
+		getOptionService().saveOptionSort(rc.optionIDs);
+		getFW().redirect("admin:option.listOptionGroups");
 	}
-*/
 	
 }

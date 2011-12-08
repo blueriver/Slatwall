@@ -44,9 +44,7 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<cfif attributes.orderFulfillmentShipping.getErrorBean().hasError('processing')>
-			<div class="error">#attributes.orderFulfillmentShipping.getErrorBean().getError('processing')#</div>
-		</cfif>
+		<cf_SlatwallErrorDisplay object="#attributes.orderFulfillmentShipping#" errorName="processing" displayType="div">
 		<cfif attributes.edit>
 			<cfif arrayLen(local.methodOptions)>
 				<cfset local.noneSelected = false />

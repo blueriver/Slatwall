@@ -55,7 +55,7 @@ Notes:
 		
 		<dl class="twoColumn">
 			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleCode" edit="#rc.edit#" >
+			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleExpression" edit="#rc.edit#" >
 		</dl>
 		
 		<cfif rc.edit>

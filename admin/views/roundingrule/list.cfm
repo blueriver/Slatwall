@@ -48,18 +48,18 @@ Notes:
 	<table id="RoundingRules" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleCode")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleExpression")#</th>
 			<th>&nbsp;</th>
 		</tr>
 		<cfloop array="#rc.roundingrules#" index="local.RoundingRule">
 			<tr>
 				<td class="varWidth">#local.RoundingRule.getRoundingRuleName()#</td>
-				<td>#local.RoundingRule.getRoundingRuleCode()#</td>
+				<td>#local.RoundingRule.getRoundingRuleExpression()#</td>
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:roundingrule.edit" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="edit" type="list">            
 					  <cf_SlatwallActionCaller action="admin:roundingrule.detail" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:roundingrule.delete" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="delete" type="list" disabled="" confirmrequired="true">
+					  <cf_SlatwallActionCaller action="admin:roundingrule.delete" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="delete" type="list" disabled="true" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
