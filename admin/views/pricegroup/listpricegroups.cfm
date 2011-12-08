@@ -59,7 +59,7 @@ Notes:
 				<td>#local.PriceGroup.getPriceGroupCode()#</td>
 				<td>
 					<cfif !isNull(local.priceGroup.getParentPriceGroup())>
-						<a href="#buildURL(action='admin:pricegroup.detail', querystring='priceGroupId=#local.priceGroup.getParentPriceGroup().getPriceGroupId()#')#">#local.priceGroup.getParentPriceGroup().getPriceGroupName()#</a>
+						<a href="#buildURL(action='admin:pricegroup.detailpricegroup', querystring='priceGroupId=#local.priceGroup.getParentPriceGroup().getPriceGroupId()#')#">#local.priceGroup.getParentPriceGroup().getPriceGroupName()#</a>
 					<cfelse>
 						#rc.$.Slatwall.rbKey("entity.pricegroup.inheritsFromNothing")#
 					</cfif>	
@@ -67,9 +67,9 @@ Notes:
 				<td>#yesNoFormat(local.PriceGroup.getActiveFlag())#</td>
 				<td class="administration">
 		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:pricegroup.edit" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:pricegroup.detail" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:pricegroup.delete" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="delete" type="list" confirmrequired="true">
+                      <cf_SlatwallActionCaller action="admin:pricegroup.editpricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="edit" type="list">            
+					  <cf_SlatwallActionCaller action="admin:pricegroup.detailpricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:pricegroup.deletepricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="delete" type="list" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>

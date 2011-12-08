@@ -8,15 +8,16 @@ jQuery(function() {
 	
 	// If Price Group Rate type is percentageOff, then enable the rounding rule
 	jQuery("#priceGroupRateType").change(function(){
-		if($(this).val() == "percentageOff")
-			$("#roundingRuleDiv").fadeIn(400);
+		if(jQuery(this).val() == "percentageOff")
+			jQuery("#roundingRuleDiv").fadeIn(400);
 		else{
-			$("#roundingRuleDiv").fadeOut(400);
-			$("#roundingRuleDiv select").val("");
+			jQuery("#roundingRuleDiv").fadeOut(400);
+			jQuery("#roundingRuleDiv select").val("");
 		}
 	})
 	
-	jQuery('input[name="globalFlag"]').click(function(){
+	// Set up the warning message when GlobalFlag is turned on. name~="globalFlag" is a "contains"-version of the attribute selector. This prevents us from having to write name="PriceGroupRates[0].globalFlag" and escaping it.
+	jQuery('input[name~="globalFlag"]').click(function(){
 	 	if (jQuery(this).val() == '1') {
 			jQuery('#priceGroupRate_globalOffInputs').fadeOut(400);
 			jQuery("#priceGroupRate_globalWarning").fadeIn(400);

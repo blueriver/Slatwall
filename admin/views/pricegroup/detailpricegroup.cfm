@@ -105,7 +105,7 @@ Notes:
 							<cfif rc.edit>
 								<td class="administration">
 									<ul class="two">
-										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
+										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroup" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
 										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list" confirmrequired="true">
 									</ul>
 								</td>
@@ -125,20 +125,23 @@ Notes:
 				<!--- If the PriceGroupRate is new, then that means that we are just editing the PriceGroup --->
 				<cfif rc.priceGroupRate.isNew()>
 					<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button>
-				
 				<!--- Otherwise if the PriceGroupRate is not new, it means that we clicked to edit the PriceGroupRate specifically --->
 				<cfelse>
-					<input type="hidden" name="priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
+					<input type="hidden" name="priceGroupRates[1].priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
 				</cfif>
 				
-				<input type="hidden" name="addPriceGroupRate" id="addPriceGroupRateHidden" value=""/>
+				<cfif rc.priceGroupRate.isNew() && not rc.priceGroupRate.hasErrors()>
+					<input type="hidden" name="populateSubProperties" value="false"/>
+				<cfelse>
+					<input type="hidden" name="populateSubProperties" value="true"/>
+				</cfif>
 				
 				<br /><br />
 			</cfif>
 		</cfif>
 		<cfif rc.edit>
-			<cf_SlatwallActionCaller action="admin:pricegroup.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:pricegroup.save" type="submit" class="button">
+			<cf_SlatwallActionCaller action="admin:pricegroup.listpricegroups" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:pricegroup.savepricegroup" type="submit" class="button">
 			</form>
 		</cfif>
 		

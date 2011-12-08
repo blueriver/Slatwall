@@ -47,9 +47,43 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function default(required struct rc) {
 		getFW().redirect("admin:pricegroup.list");
 	}
+	
+	public void function listPriceGroups(required struct rc) {
+        param name="rc.orderBy" default="sortOrder|ASC";
+        
+        rc.priceGroupSmartList = getPriceGroup().getPriceGroupSmartList(data=arguments.rc);  
+    }
+    
+    public void function detailPriceGroup(required struct rc) {
+    	param name="rc.priceGroupID" default="";
+    	param name="rc.edit" default="false";
+    	
+    	rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID);
+    	
+    	if(isNull(rc.priceGroup)) {
+    		getFW().redirect(action="admin:pricegroup.listPriceGroups");
+    	}
+    }
+    
+    public void function createPriceGroup(required struct rc) {
+    	editPriceGroup(rc);
+	}
+    
+    public void function editPriceGroup(required struct rc) {
+    	param name="rc.priceGroupID" default="";
+    	param name="rc.priceGroupRateID" default="";
+    	
+    	rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID, true);
+    	rc.priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
+    	
+    	rc.edit = true;
+    	getFW().setView("admin:pricegroup.detailPriceGroup");
+    }
+	
 
+	
 	// Common functionalty of Add/Edit/View
-	public void function detail(required struct rc) {
+	/*public void function detail(required struct rc) {
 		param name="rc.priceGroupID" default="";
 		param name="rc.edit" default="false";
 		
@@ -80,7 +114,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     public void function list(required struct rc) {	
 		rc.priceGroups = getPriceGroupService().listPriceGroup();
     }
-
+*/
 	public void function save(required struct rc) {
 		// Populate either a brand new PriceGroup and PriceGroupRate in the rc, or pulls them based on the provided ID. Does NOT populate based on RC.
 		detail(rc);
@@ -126,9 +160,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.edit = true;
 			rc.itemTitle = rc.PriceGroup.isNew() ? rc.$.Slatwall.rbKey("admin.pricegroup.createPriceGroup") : rc.$.Slatwall.rbKey("admin.pricegroup.editPriceGroup") & ": #rc.pricegroup.getPriceGroupName()#";
 			getFW().setView(action="admin:option.detailPriceGroup");
-		}
-		
-			
+		}	
 	}
 	
 	public void function delete(required struct rc) {
@@ -151,13 +183,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		detail(rc);
 		
 		var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId);
-
-		//priceGroupRate.removePriceGroup(rc.priceGroup);
-
 		rc.priceGroup.removePriceGroupRate(priceGroupRate);
 		priceGroupRate.removePriceGroup(rc.priceGroup);
-		
 		rc.edit = true;
-		getFW().setView("admin:pricegroup.detail");
+		getFW().setView("admin:pricegroup.detailPriceGroup");
 	}
 }
