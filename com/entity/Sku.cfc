@@ -45,7 +45,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="price" ormtype="big_decimal" default="0";
 	property name="shippingWeight" ormtype="big_decimal" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
-	 
+
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
