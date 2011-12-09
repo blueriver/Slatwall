@@ -147,7 +147,7 @@ Notes:
 		</cfcase>
 		<cfcase value="yesno">
 			<cfoutput>
-				<input type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="1" <cfif attributes.value>checked="checked"</cfif> /><span class="#attributes.fieldClass# yes">#yesNoFormat(1)#</span><input type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="0" <cfif not attributes.value>checked="checked"</cfif> /><span class="#attributes.fieldClass# no">#yesNoFormat(0)#</span>
+				<input type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="1" <cfif isBoolean(attributes.value) && attributes.value>checked="checked"</cfif> /><span class="#attributes.fieldClass# yes">#yesNoFormat(1)#</span><input type="radio" name="#attributes.fieldName#" class="#attributes.fieldClass# yes" value="0" <cfif (isboolean(attributes.value) && not attributes.value) || not isBoolean(attributes.value)>checked="checked"</cfif> /><span class="#attributes.fieldClass# no">#yesNoFormat(0)#</span>
 			</cfoutput>
 		</cfcase>
 	</cfswitch>

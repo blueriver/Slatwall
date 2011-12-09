@@ -77,15 +77,12 @@ component extends="BaseService" accessors="true" {
 	
 	public any function saveOptionGroup(required any entity, required struct data) {
 		
+		// This also saves options that were passed in the correct format by using base object populate that will automatically call saveOption() in this service
+		super.save(argumentcollection=arguments);
+		
 		// If this is a new option group then we need to set the sort order as the next in line
 		if(isNull(arguments.entity.getSortOrder())) {
 			arguments.entity.setSortOrder( getOptionGroupCount() + 1);
-		}
-		
-		super.save(argumentcollection=arguments);
-		
-		if(arguments.entity.isNew()) {
-			arguments.entity.setSortOrder(getOptionGroupCount()+1);	
 		}
 		
 		if(!arguments.entity.hasErrors()) {
