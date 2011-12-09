@@ -46,7 +46,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// Populates entity based on RC contents and validates entity. 
 		arguments.priceGroupRate = super.save(entity=arguments.priceGroupRate, data=arguments.data);
 		
-		throw("Inside of savePriceGroupRate()");
+		dumpScreen("Inside of savePriceGroupRate()");
 		// As long as this price group rate didn't have errors, then we can update all of the other rates for this given price group
 		if(!arguments.priceGroupRate.hasErrors()) {
 			var priceGroup = arguments.priceGroupRate.getPriceGroup();
@@ -272,13 +272,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					product is already included. If not, add it. When we call savePriceGroupRate(), it will automatically clear out the product entries from
 					the other rates for ys
 				*/
-				//dumpScreen(arguments.data);
-				
-				
-				
 				
 				var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
-				//dumpScreen(priceGroupRate);
 				priceGroupRate.addProduct(getProductService().getProduct(arguments.data.productId));
 				this.savePriceGroupRate(priceGroupRate, arguments.data);
 			}
