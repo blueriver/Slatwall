@@ -135,7 +135,7 @@ Notes:
 				<input type="hidden" name="priceGroupRates[1].priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
 				
 				<cfif rc.priceGroupRate.isNew() && not rc.priceGroupRate.hasErrors()>
-					<input type="hidden" name="populateSubProperties"id="populateSubProperties" value="false"/>
+					<input type="hidden" name="populateSubProperties" id="addPriceGroupRateHidden" value="false"/>
 				<cfelse>
 					<input type="hidden" name="populateSubProperties" value="true"/>
 				</cfif>
