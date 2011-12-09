@@ -84,6 +84,9 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function edit(required struct rc) {
 		detail(rc);
+		
+		rc.priceGroupDataJSON = getPriceGroupService().getPriceGroupDataJSON();
+		
 		getFW().setView("admin:product.detail");
 		rc.edit = true;
 		param name="rc.Image" default="#getProductService().newImage()#";
@@ -289,5 +292,32 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.skuList = getSkuService().searchSkusByProductType(term=rc.term,productTypeID=productTypeIDs);
 	}
+	
+	// Handler is called by modal dialog, to update the price group configuration on a specific SKU
+	public void function updatePriceGroupSKUSettings(required struct rc) {
+		getService("PriceGroupService").updatePriceGroupSKUSettings(data = rc);
+		
+		rc.message = rbKey("admin.sku.updatepricegroupsettings_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
+	
+	// Handler is called by modal dialog, to update the price of all SKUs
+	public void function updateSKUPrices(required struct rc) {
+		getSKUService().updateAllSKUPricesForProduct(rc.productId, rc.price);
+		
+		rc.message = rbKey("admin.sku.updateallprices_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
+	
+	// Handler is called by modal dialog, to update the weights of all SKUs
+	public void function updateSKUWeights(required struct rc) {
+		getSKUService().updateAllSKUWeightsForProduct(rc.productId, rc.weight);
+		
+		rc.message = rbKey("admin.sku.updateallweights_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
 		
 }
+
+
+

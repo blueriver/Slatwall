@@ -39,6 +39,7 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="optionService" type="any";
+	property name="productService" type="any";
 
 	public any function getSkuSmartList(string productID, struct data={}){
 		arguments.entityName = "SlatwallSku";
@@ -234,5 +235,23 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public any function searchSkusByProductType(string term,string productTypeID) {
 		return getDAO().searchSkusByProductType(argumentCollection=arguments);
 	}	
+	
+	/**
+	/* @hint Updates the prices of all of the SKUs in a product 
+	**/
+	public void function updateAllSKUPricesForProduct(productId, price){
+		var skus = getProductService().getProduct(arguments.productId).getSKUs();
+		for(var i=1; i LTE ArrayLen(skus); i++)
+			skus[i].setPrice(price);
+	}
+
+	/**
+	/* @hint Updates the wight of all of the SKUs in a product 
+	**/
+	public void function updateAllSKUWeightsForProduct(productId, weight){
+		var skus = getProductService().getProduct(arguments.productId).getSKUs();
+		for(var i=1; i LTE ArrayLen(skus); i++)
+			skus[i].setShippingWeight(weight);
+	}
 
 }

@@ -66,6 +66,17 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID" cascade="save-update";
 	
+	// Non persistent properties
+	property name="total" persistent="false" formatType="currency" ; 
+	property name="orderTotal" persistent="false" formatType="currency" ; 
+	property name="subTotal" persistent="false" formatType="currency" ; 
+	property name="taxTotal" persistent="false" formatType="currency" ; 
+	property name="itemDiscountAmountTotal" persistent="false" formatType="currency" ; 
+	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency" ; 
+	property name="orderDiscountAmountTotal" persistent="false" formatType="currency" ; 
+	property name="discountTotal" persistent="false" formatType="currency" ; 
+	property name="fulfillmentTotal" persistent="false" formatType="currency" ; 
+	
 	public any function init() {
 		if(isNull(variables.orderFulfillments)) {
 			variables.orderFulfillments = [];

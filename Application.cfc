@@ -152,7 +152,7 @@ component extends="org.fw1.framework" output="false" {
 		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
 			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
 			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
-			minifyMode = 'package',
+			minifyMode = 'none',
 			checkForUpdates = true
 		);
 		
@@ -293,7 +293,7 @@ component extends="org.fw1.framework" output="false" {
 		if( !listFind("frontend", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
 			if(!structKeyExists(request,"layout") || request.layout) {
 				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
-				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );	
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );
 			}
 		}
 		

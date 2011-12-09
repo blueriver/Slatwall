@@ -49,7 +49,7 @@ Notes:
 		</tr>
 	<cfloop from="1" to="#arrayLen(local.images)#" index="local.i" >
 		<cfset local.thisImage = local.images[local.i] />
-		<cfif len(local.thisImage.getImageID()) && !len(local.thisImage.getErrorBean().getError("AlternateImage"))>
+		<cfif len(local.thisImage.getImageID()) && !arrayLen(local.thisImage.getError("AlternateImage"))>
 		<tr>
 			<cfif rc.edit><input type="hidden" class="imageid" name="images[#local.i#].imageID" value="#local.thisImage.getImageID()#" /></cfif>
 			<td><a href="#local.thisImage.getImagePath()#" class="lightbox<cfif !rc.edit> preview</cfif>"><cfif rc.edit>#local.thisImage.getImage(height="120", width="120")#<cfelse>#$.Slatwall.rbKey("admin.product.previewalternateimage")#</cfif></a></td>
@@ -71,7 +71,7 @@ Notes:
 	<cfif rc.edit>
 		<cfloop from="1" to="#arrayLen(local.images)#" index="local.i">
 			<cfset local.thisImage = local.images[local.i] />
-			<cfif local.thisImage.isNew() || len(local.thisImage.getErrorBean().getError("AlternateImage"))>
+			<cfif local.thisImage.isNew() || arrayLen(local.thisImage.getError("AlternateImage"))>
 				<dl class="alternateImageUpload">
 					<dt class="spdimagefile"> Upload Image </dt>
 					<dd class="spdimagefile">

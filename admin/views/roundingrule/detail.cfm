@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,41 +36,34 @@
 Notes:
 
 --->
+<cfparam name="rc.roundingRule" type="any">
+<cfparam name="rc.edit" type="boolean">
 
-<cfparam name="rc.options" type="any" default="#arrayNew(1)#" />
-<cfparam name="rc.optionGroups" type="any"  />
-
-<cfoutput>
 <ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="list">
-	<cfif rc.listby EQ "optiongroups">
-		<cf_SlatwallActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptions')#" querystring="listby=options" type="list">
-	<cfelseif rc.listby EQ "options">
-		<cf_SlatwallActionCaller action="admin:option.list" text="#rc.$.Slatwall.rbKey('admin.option.listbyoptiongroups')#" querystring="listby=optiongroups" type="list">
+	<cf_SlatwallActionCaller action="admin:roundingrule.list" type="list">
+	<cfif !rc.edit>
+		<cf_SlatwallActionCaller action="admin:roundingrule.edit" queryString="roundingRuleID=#rc.roundingRule.getRoundingRuleID()#" type="list">
 	</cfif>
 </ul>
 
-<cfif arrayLen(rc.optionGroups.getRecords()) GT 0>
-	<cfif rc.listby eq "options">
-		<form name="filterOptions" method="get">
-			 #rc.$.Slatwall.rbKey("admin.option.optiongroupfilter")#:
-			<input type="hidden" name="slatAction" value="admin:option.list" />
-			<input type="hidden" name="listby" value="options" />
-			<select name="F:optiongroup_optiongroupname">
-				<option value="">#rc.$.Slatwall.rbKey('admin.option.showall')#</option>
-			<cfloop array="#rc.optionGroups.getRecords()#" index="local.thisOptionGroup">
-				<option value="#local.thisOptionGroup.getOptionGroupName()#"<cfif structKeyExists(rc,"F:optiongroup_optiongroupname") and rc["F:optiongroup_optiongroupname"] eq local.thisOptionGroup.getOptionGroupName()> selected="selected"</cfif>>#local.thisOptionGroup.getOptionGroupName()#</option>
-			</cfloop>
-			</select>
-			<cf_SlatwallActionCaller action="admin:option.list" type="submit" text="#rc.$.Slatwall.rbKey('admin.option.show')#" class="button">
-		</form>
-		#view("option/inc/optiontable")#
-	<cfelse>
-		#view("option/inc/optiongrouptable")#
-	</cfif>
-<cfelse>
-	<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptiongroupsdefined")#</em></p>
-</cfif>
-
+<cfoutput>
+	<div class="svoadminroundingruledetail">
+		<cfif rc.edit>
+			<form name="RoundingRuleEdit" action="#buildURL('admin:roundingrule.save')#" method="post">
+				<input type="hidden" name="RoundingRuleID" value="#rc.RoundingRule.getRoundingRuleID()#" />
+		</cfif>
+		
+		<dl class="twoColumn">
+			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleName" edit="#rc.edit#" first="true">
+			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleExpression" edit="#rc.edit#" >
+		</dl>
+		
+		<cfif rc.edit>
+			<cf_SlatwallActionCaller action="admin:roundingrule.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:roundingrule.save" type="submit" class="button">
+			</form>
+		</cfif>
+		
+	</div>	
+		
 </cfoutput>
-

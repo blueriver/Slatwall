@@ -345,4 +345,39 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return getService("priceGroupService").calculateSkuPriceBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
 	}
 	
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForSkuBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
+	}
+	
+	// @hint this method validates that this skus has a unique option combination that no other sku has
+	public any function hasUniqueOptions() {
+		var optionsList = "";
+		
+		for(var i=1; i<=arrayLen(getOptions()); i++){
+			optionsList = listAppend(optionsList, getOptions()[i].getOptionID());
+		}
+		
+		var skus = getProduct().getSkusBySelectedOptions(selectedOptions=optionsList);
+		if(!arrayLen(skus) || (arrayLen(skus) == 1 && skus[1].getSkuID() == getSkuID() )) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// @hint this method validates that this skus has a unique option combination that no other sku has
+	public any function hasOneOptionPerOptionGroup() {
+		var optionGroupList = "";
+		
+		for(var i=1; i<=arrayLen(getOptions()); i++){
+			if(listFind(optionGroupList, getOptions()[i].getOptionGroup().getOptionGroupID())) {
+				return false;
+			} else {
+				optionGroupList = listAppend(optionGroupList, getOptions()[i].getOptionGroup().getOptionGroupID());	
+			}
+		}
+		
+		return true;
+	}
+	
 }

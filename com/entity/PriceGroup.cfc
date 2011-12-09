@@ -82,4 +82,15 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	}
 	
     /************   END Association Management Methods   *******************/
+    
+    
+    // Loop over all Price Group Rates and pull the one that is global
+    public any function getGlobalPriceGroupRate(){
+    	var rates = getPriceGroupRates();
+    	for(var i=1; i <= ArrayLen(rates); i++){
+    		if(rates[i].getGlobalFlag())
+    			return rates[i];
+    	}	
+    }
+    
 }

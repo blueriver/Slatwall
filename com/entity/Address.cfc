@@ -76,22 +76,22 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		
 		// Check each of the contries required fields
 		if ( country.getStreetAddressRequiredFlag() ) {
-			getValidateThis().addRule(propertyName="streetAddress", valType="required", contexts="full");
+			getValidateThis().addRule(objectType="Address",propertyName="streetAddress", valType="required", contexts="full");
 		}
 		if ( country.getStreet2AddressRequiredFlag() ) {
-			getValidateThis().addRule(propertyName="street2Address", valType="required", contexts="full");
+			getValidateThis().addRule(objectType="Address",propertyName="street2Address", valType="required", contexts="full");
 		}
 		if ( country.getLocalityRequiredFlag() ) {
-			getValidateThis().addRule(propertyName="locality", valType="required", contexts="full");
+			getValidateThis().addRule(objectType="Address",propertyName="locality", valType="required", contexts="full");
 		}
 		if ( country.getCityRequiredFlag() ) {
-			getValidateThis().addRule(propertyName="city", valType="required", contexts="full");
+			getValidateThis().addRule(objectType="Address",propertyName="city", valType="required", contexts="full");
 		}
 		if ( country.getStateCodeRequiredFlag() ) {
-			getValidateThis().addRule(propertyName="stateCode", valType="required", contexts="full");
+			getValidateThis().addRule(objectType="Address",propertyName="stateCode", valType="required", contexts="full");
 		}
 		if ( country.getPostalCodeRequiredFlag() ) {
-			getValidateThis().addRule(propertyName="postalCode", valType="required", contexts="full");
+			getValidateThis().addRule(objectType="Address",propertyName="postalCode", valType="required", contexts="full");
 		}
 		
 		// Call the base method validate with any additional arguments passed in

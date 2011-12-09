@@ -57,13 +57,10 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Related Object Properties
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true" lazy="extra" cascade="save-update"; 
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true" cascade="save-update"; 
 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
-	// Calculated Properties
-	property name="assignedFlag" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
-
 	public Option function init(){
 		// set default collections for association management methods
 		if(isNull(variables.skus)) {
@@ -154,4 +151,12 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     public string function getImagePath() {
         return getImageDirectory() & getOptionImage();
     }
+    
+    // Override the preInsert method to set a default sortOrder
+    public void function preInsert() {
+    	if(isNull(getSortOrder())) {
+    		setSortOrder(arrayLen(getOptionGroup().getOptions()));
+    	}
+    }
+    
 }

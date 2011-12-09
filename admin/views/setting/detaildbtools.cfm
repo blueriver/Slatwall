@@ -67,6 +67,16 @@ Notes:
 			Confirm Delete: <input type="checkbox" name="confirmDelete" value="1" />
 			<cf_SlatwallActionCaller action="admin:setting.deleteallproducts" type="submit" class="button" confirmRequired="true">
 		</form>
-		<hr /><applet></applet>
+		<hr />
+		<h2>Import Data From Bundle</h2>
+		<form method="post">
+			<input type="hidden" name="slatAction" value="admin:setting.importbundledata" />
+			<p>Clicking this option will delete all Slatwall Data, and re-import it from a bundle.</p>
+			<br />
+			<input type="hidden" name="confirmImport" value="" />
+			Confirm Import: <input type="checkbox" name="confirmImport" value="1" />
+			<cf_SlatwallActionCaller action="admin:setting.importbundledata" type="submit" class="button" confirmRequired="true">
+		</form>
+		<hr />
 	</div>
 </cfoutput>

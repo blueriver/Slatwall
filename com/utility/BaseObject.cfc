@@ -120,8 +120,8 @@ component displayname="Base Object" accessors="true" output="false" {
 					// Loop over the array of objects in the data... Then load, populate, and validate each one
 					for(var a=1; a<=arrayLen(oneToManyArrayData); a++) {
 						
-						// Check to make sure that this array has the primary ID property in it, otherwise we can't do a populate
-						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName)) {
+						// Check to make sure that this array has the primary ID property in it, otherwise we can't do a populate.  Also check to make sure populateSubProperties was not set to false in the data (if not defined we asume true).
+						if(structKeyExists(oneToManyArrayData[a], primaryIDPropertyName) && (!structKeyExists(arguments.data, "populateSubProperties") || arguments.data.populateSubProperties)) {
 							
 							// set the service to use to get the specific entity
 							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
@@ -129,7 +129,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
 							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
 							
-							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell
+							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell.
 							if(structCount(oneToManyArrayData[a]) gt 1) {
 								
 								// Populate the entity with the data, this is recursive
@@ -203,7 +203,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint pubic method to validate this object
-	public any function validate( string context) {
+	public any function validate( ) {
 		
 		// Set up the validation arguments as a mirror of the arguments struct
 		var valdationArguments = arguments;
@@ -228,7 +228,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				
 				// If after validation that sub object has errors, add a failure to this object
 				if(subPropertyValuesArray[e].hasErrors()) {
-					getVTResult().addFailure({propertyName=getPopulatedSubProperties()[p], message="One or more items had invalid data"});
+					getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
 				}
 			}
 			
@@ -266,8 +266,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 		return value;
 	}
-	
-	public any function getFormattedValue(required string propertyName, string formatType) {
+
+	public any function getFormattedValue(required string propertyName, string formatType, any valueArg) {
 		/*
 			Valid formatType Strings are:
 		
@@ -283,7 +283,12 @@ component displayname="Base Object" accessors="true" output="false" {
 		*/
 		
 		// get the value out of this object
-		var value = invokeMethod("get#arguments.propertyName#");
+		if(StructKeyExists(arguments, "valueArg")){
+			var value = arguments.valueArg;
+		}
+		else{
+			var value = invokeMethod("get#arguments.propertyName#");
+		}
 		
 		// This is the null format option
 		if(isNull(value)) {
@@ -318,7 +323,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				}
 			}
 			case "currency": {
-				return LSCurrencyFormat(value, setting("advanced_currencyType"), setting("advanced_currencyLocal"));
+				return LSCurrencyFormat(value, setting("advanced_currencyType"), setting("advanced_currencyLocale"));
 			}
 			case "datetime": {
 				return dateFormat(value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
@@ -465,6 +470,8 @@ component displayname="Base Object" accessors="true" output="false" {
 				return properties[i];
 			}
 		}
+		// If no properties found with the name throw error 
+		throw("No property found with name #propertyName# in #getClassName()#");
 	}
 	
 	// @hint return a simple representation of this entity
@@ -552,13 +559,53 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
+	// @hint Returns the ValidateThis result object, if one hasn't been setup yet it returns a new one
+	public any function getVTResult() {
+		if(!structKeyExists(variables, "vtResult")) {
+			variables.vtResult = getValidateThis().newResult(); 
+		}
+		return variables.vtResult;
+	}
+	
+	// @hint Returns the errorBeant object, if one hasn't been setup yet it returns a new one
+	public any function getErrorBean() {
+		if(!structKeyExists(variables, "errorBean")) {
+			variables.errorBean = new Slatwall.com.utility.ErrorBean(); 
+		}
+		return variables.errorBean;
+	}
+	
 	// @hint Returns true if this object has any errors.
 	public boolean function hasErrors() {
-		if( !isNull(getVTResult() ) ) {
-			return getVTResult().hasErrors();
+		if(getVTResult().hasErrors() || getErrorBean().hasErrors()) {
+			return true;
 		}
 		
 		return false;
+	}
+	
+	// @hint Returns a struct of all the errors for this entity
+	public struct function getErrors() {
+		var errorsStruct = {};
+		
+		// Check the VTResult for any errors
+		for(var key in getVTResult().getErrors()) {
+			errorsStruct[key] = getVTResult().getErrors()[key];	
+		}
+		
+		// Check the ErrorBean for any errors
+		for(var key in getErrorBean().getErrors()) {
+			if(structKeyExists(errorsStruct, key)) {
+				for(var i=1; i<=arrayLen(getErrorBean().getErrors()[key]); i++) {
+					arrayAppend(errorsStruct[key], getErrorBean().getErrors()[key][i]);	
+				}
+			} else {
+				errorsStruct[key] = getErrorBean().getErrors()[key];	
+			}
+		}
+		
+		// Default behavior if this object hasn't been validated is to return a blank struct
+		return errorsStruct;
 	}
 	
 	// @hint Returns true if a specific error key exists
@@ -566,20 +613,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		return structKeyExists(getErrors(), arguments.errorName);
 	}
 	
-	// @hint Returns a struct of all the errors for this entity
-	public struct function getErrors() {
-		
-		// Check to make sure that this object has been validated and has a VTResult
-		if( !isNull(getVTResult() ) ) {
-			return getVTResult().getErrors();
-		}
-		
-		// Default behavior if this object hasn't been validated is to return a blank struct
-		return {};
-	}
-	
 	// @hint Returns the error message of a given error name
-	public array function getErrorsByName( required string errorName ) {
+	public array function getError( required string errorName ) {
 		
 		// Check First that the error exists, and if it does return it
 		if( hasError(arguments.errorName) ) {
@@ -589,7 +624,12 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Default behavior if the error isn't found is to return an empty array
 		return [];
 	}
-			
+	
+	// @hint helper method to add an error to the error bean	
+	public void function addError( required string errorName, required string errorMessage ) {
+		getErrorBean().addError(argumentCollection=arguments);
+	}
+	
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {
 		

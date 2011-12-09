@@ -42,7 +42,21 @@ Notes:
 	<div class="priceGroupRateDisplay">
 		<cfif rc.edit>
 			<dl>
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
+				<div id="globalRateControls">
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
+				</div>
+					
+				<!--- If there is another Rate in this Group that is set to global, output this warning --->
+				<cfset globalRate = rc.priceGroup.getGlobalPriceGroupRate()>
+				<cfif !isNull(globalRate) AND globalRate.getPriceGroupRateId() NEQ rc.priceGroupRate.getPriceGroupRateId()>
+					<p id="priceGroupRate_globalWarning" class="messagebox warning_message ui-helper-hidden">
+						<!--- Do token replacement on RB string --->
+						<cfset str = rc.$.Slatwall.rbKey("admin.pricegroup.detail.globalwarning")>
+						<cfset str = ReplaceNoCase(str, "{ratevalue}", globalRate.getAmountRepresentation())>
+						#str#
+					</p><br>
+				</cfif>
+				
 				
 				<!--- The dynamic percentageOff,AmountOff,Amount inputs --->
 				<select name="priceGroupRateType" id="priceGroupRateType">
@@ -53,9 +67,10 @@ Notes:
 	
 				<input type="text" id="priceGroupRateValue" name="priceGroupRateValue" value="<cfif !isNull(rc.priceGroupRate.getValue())>#rc.priceGroupRate.getValue()#</cfif>" />
 				
-				<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule"  edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
-				
-				
+				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> >
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[1].RoundingRule" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
+				</div>
+	
 				<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->
 				<div id="priceGroupRate_globalOffInputs" <cfif rc.priceGroupRate.getGlobalFlag() EQ 1>class="ui-helper-hidden"</cfif> >
 					<br>
@@ -66,7 +81,7 @@ Notes:
 					<cfloop array="#rc.priceGroupRate.getProductTypes()#" index="productType">
 						<cfset idsList = ListAppend(idsList, productType.getProductTypeId())>
 					</cfloop>
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="ProductTypeIds" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].ProductTypes" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
 					
 					<br>
 					
@@ -75,7 +90,7 @@ Notes:
 					<cfloop array="#rc.priceGroupRate.getProducts()#" index="product">
 						<cfset idsList = ListAppend(idsList, product.getProductId())>
 					</cfloop>
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="ProductIds" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].Products" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
 					
 					<br>	
 					
@@ -90,7 +105,7 @@ Notes:
 					
 					<!--- ---------------- Excludes --------------- --->
 					<!--- Build a list of ids for the "selected" product types --->
-					<cfset idsList = "">
+					<!---<cfset idsList = "">
 					<cfloop array="#rc.priceGroupRate.getExcludedProductTypes()#" index="productType">
 						<cfset idsList = ListAppend(idsList, productType.getProductTypeId())>
 					</cfloop>
@@ -105,7 +120,7 @@ Notes:
 					</cfloop>
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="excludedProductIds" property="excludedProducts" edit="true"  fieldType="multiselect" value="#idsList#"  />	
 					
-					<br>
+					<br>--->
 					
 					<!--- Build a list of ids for the "selected" SKUs --->
 					<!---<cfset idsList = "">

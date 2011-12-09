@@ -89,9 +89,9 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
 							</ul>
 							<ul>
-								<li class="title">Product Options</li>
+								<li class="title">Product Option Groups</li>
 								<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="list">
-								<cf_SlatwallActionCaller action="admin:option.list" type="list">
+								<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="list">
 							</ul>
 						</div>
 						<div class="oneColumn">
@@ -107,8 +107,8 @@ Notes:
 							</ul>
 							<ul>
 								<li class="title">Price Groups</li>
-								<cf_SlatwallActionCaller action="admin:pricegroup.create" type="list">
-								<cf_SlatwallActionCaller action="admin:pricegroup.list" type="list">
+								<cf_SlatwallActionCaller action="admin:pricegroup.createPriceGroup" type="list">
+								<cf_SlatwallActionCaller action="admin:pricegroup.listPriceGroups" type="list">
 							</ul>
 						</div>
 					</div>
@@ -186,6 +186,11 @@ Notes:
 									<a href="#buildURL(action='#local.intsys.subsystem#:main.default')#">#local.intsys.name#</a>
 								</cfloop>
 							</ul>
+							<ul>
+								<li class="title">Rounding Rules</li>
+								<cf_SlatwallActionCaller action="admin:roundingrule.create" type="list">
+								<cf_SlatwallActionCaller action="admin:roundingrule.list" type="list">
+							</ul>
 						</div>
 					</div>
 					<div class="subMenu adminhelp">
@@ -235,6 +240,13 @@ Notes:
 					<cf_SlatwallActionCaller action="admin:account.list" type="list" class="last">
 				</ul>
 				<cf_SlatwallActionCaller action="admin:account" type="link">
+			</li>
+			<li id="navMura">
+				<ul class="addMenuNav">
+					<li><a href="/admin/index.cfm?fuseaction=cArch.list&amp;siteid=default&amp;moduleid=00000000000000000000000000000000000&amp;topid=00000000000000000000000000000000001">Site Manager</a></li>
+					<li><a href="/admin/index.cfm?fuseaction=cPlugins.list&amp;siteid=default">Plugins</a></li>
+				</ul>
+				<a href="/admin/index.cfm?fuseaction=cDashboard.main&amp;siteid=default&amp;span=1">Mura Dashboard</a>
 			</li>
 		</ul>
 	</div>

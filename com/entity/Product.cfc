@@ -629,10 +629,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 
 	public any function getSkuBySelectedOptions(string selectedOptions="") {
 		if(len(arguments.selectedOptions) > 0) {
-			return getService("productService").getProductSkuBySelectedOptions(arguments.selectedOptions,this.getProductID());
+			var skus = getSkusBySelectedOptions(selectedOptions=arguments.selectedOptions);
+			if(arrayLen(skus) == 1) {
+				return skus[1];
+			} else if (arrayLen(skus) > 1) {
+				throw("More than one sku is returned when the selected options are: #arguments.selectedOptions#");
+			} else if (arrayLen(skus) < 1) {
+				throw("No Skus are found for these selected options: #arguments.selectedOptions#");
+			}
+		} else if (arrayLen(getSkus()) == 1) {
+			return getSkus()[1];
 		} else {
-			return getDefaultSku();
+			throw("You must submit a comma seperated list of selectOptions to find an indvidual sku in this product");
 		}
+	}
+	
+	public any function getSkusBySelectedOptions(string selectedOptions="") {
+		return getService("productService").getProductSkusBySelectedOptions(arguments.selectedOptions,this.getProductID());
 	}
 	
 	// get all the assigned attribute sets
@@ -697,6 +710,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		};
 		
 		return productCrumbData;
+	}
+	
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
 	
 }

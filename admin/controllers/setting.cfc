@@ -421,7 +421,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.edit" default="false";
 		
 		rc.taxCategory = getTaxService().getTaxCategory(rc.taxCategoryID);
-		rc.blankTaxCategoryRate = getTaxService().newTaxCategoryRate();
+		rc.newTaxCategoryRate = getTaxService().newTaxCategoryRate();
 	}
 	
 	public void function editTaxCategory(required struct rc) {
@@ -439,22 +439,21 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	public void function saveTaxCategory(required struct rc) {
 		detailTaxCategory(rc);
+		
 		rc.edit = true;
+		
 		getFW().setView("admin:setting.detailtaxcategory");
 		
 		rc.taxCategory = getTaxService().saveTaxCategory(rc.taxCategory, rc);
 		
-		if(structKeyExists(rc, "addRate") && rc.addRate) {
-			var rate = getTaxService().newTaxCategoryRate();
-			rate.setAddressZone(getAddressService().getAddressZone(rc.addressZoneID));
-			rate.setTaxRate(rc.taxRate);
-			rate = getTaxService().saveTaxCategoryRate(rate);
-			if(!rate.hasErrors()) {
-				rate.setTaxCategory(rc.taxCategory);
-			}
-		} else {
+		if(rc.taxCategory.hasErrors() && structKeyExists(rc, "addRate") && rc.addRate) {
+			rc.newTaxCategoryRate = rc.taxCategory.getTaxCategoryRates()[arrayLen(rc.taxCategory.getTaxCategoryRates())];
+		}
+		
+		if(!structKeyExists(rc, "addRate") || !rc.addRate) {
 			getFW().redirect(action="admin:setting.listtaxcategories", preserve="message");	
 		}
+		
 	}
 	
 	public void function deleteTaxCategoryRate(required struct rc) {
@@ -494,6 +493,17 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		if(isBoolean(rc.confirmDelete) && rc.confirmDelete) {
 			getDataService().deleteAllProducts(data=rc);
+		}
+		
+		getFW().redirect(action='admin:main.default');
+	}
+	
+	public void function importBundleData(required struct rc) {
+		param name="rc.confirmImport" default="0";
+		
+		if(isBoolean(rc.confirmImport) && rc.confirmImport) {
+			var bundleUtility = createObject("component", "Slatwall.plugin.bundleUtility");
+			bundleUtility.fromBundle(pluginConfig = getPluginConfig());
 		}
 		
 		getFW().redirect(action='admin:main.default');

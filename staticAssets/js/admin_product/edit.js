@@ -85,28 +85,176 @@ jQuery(document).ready(function() {
     });
 	
 	/* Bind modal dialog clickable images to the price cells of the SKU tab. */
-	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>");
+	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>").addClass("clickable");
 	$newImage.click(function(){
-		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog").clone();
-		var clickedPriceGroupId = $(this).parent("td").attr("pricegroupid"); 
-		var clickedSkuId = $(this).parents("tr").first().attr("skuid");
+		var $dialogDiv = $("#updatePriceGroupSKUSettingsDialog");
+		var $copyOfDialogDiv = $dialogDiv.clone();
 		
+		var $form = $("form", $dialogDiv).first();
+		var clickedPriceGroupId = $(this).parent("td,th").data("pricegroupid");
+		var inheritedPriceGroupId = $(this).parent("td,th").data("inheritedpricegroupid"); 
+		var clickedSkuId = $(this).parents("tr").first().data("skuid");
+		if (clickedSkuId == undefined)
+			clickedSkuId = ""; 
+		var currentPriceGroupRateValue = $(this).parent("td,th").data("pricegrouprateid");
+
 		// Assign the clicked PriceGroupId and SkuId to the form so that it posts to the server
-		$("#updatePriceGroupSKUSettingsForm_priceGroupId", $dialogDiv).val(clickedPriceGroupId);
-		$("#updatePriceGroupSKUSettingsForm_skuId", $dialogDiv).val(clickedSkuId);
+		$form.append("<input type='hidden' name='priceGroup.priceGroupId' value='" + clickedPriceGroupId + "'>");
+		$form.append("<input type='hidden' name='skuId' value='" + clickedSkuId + "'>");
 
 		// Populate the Price Group title in the modal dialog.
-		$("#updatePriceGroupSKUSettings_GroupName\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
+		$("#updatePriceGroupSKUSettings_GroupName", $dialogDiv).html(priceGroupData[clickedPriceGroupId].PRICEGROUPNAME);
 		
-		// Populate the rate radio buttons
-		$("#updatePriceGroupSKUSettings_PriceGroupRateInputs\\[" + clickedPriceGroupId + "\\]", $dialogDiv).show();
+		// Populate the select
+		var $select = $("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv);
 		
-		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked.
-		actionDialog($dialogDiv, function(){
-			return false;
+		// Save the two existing options, so that we have their lancuage
+		var $oldNewAmountOption = $($select.children("option")[0]);  
+		var $oldInheritedOption = $($select.children("option")[1]);  
+		
+		// Load in the select options
+		$select.empty();
+		$.each(priceGroupData[clickedPriceGroupId].PRICEGROUPRATES, function(i, curRate){
+			$select.append($("<option/>").attr("value", curRate.ID).text(curRate.NAME));
+		});
+		
+		// If this dialog was opened by a column header (no clickedSkuId), include the "new amount" option
+		if(clickedSkuId == ""){
+			$select.append($oldNewAmountOption);
+		
+			// Also, if find that this group's rate has been inherited, include the "Inherited" option.
+			if(currentPriceGroupRateValue == "inherited"){
+				// Append the string to the end of the "Inherited From" select value so it reads: "Inherited From [Rule Name] ([rule value])
+				var newname = $oldInheritedOption.html() + " " + priceGroupData[inheritedPriceGroupId].PRICEGROUPNAME 
+				newname += ""; //(" + priceGroupData[inheritedPriceGroupId].PRICEGROUPNAME + ")";
+				
+				$oldInheritedOption.html(newname);
+				$select.prepend($oldInheritedOption);	
+			}
+		}
+		
+		// If there are no rates (including no ability to add a new or no inherited option), show message!
+		if($select.children().size() == 0){
+			$("#updatePriceGroupSKUSettings_norates").show();
+			$select.hide();
+		}
+		else{
+			// Select the value in the select box
+			/*if(clickedSkuId == "inherited")
+				$select.val("inherited");
+			else if clickedSkuId != "")*/
 			
+			// Select the currently selected option
+			$select.val(currentPriceGroupRateValue);
+			
+			// Call the change handler so that if "New Amount" is selected, the input is opened.
+			$select.change();
+		}
+
+		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
+		actionDialog($dialogDiv, function(){
+			// First validate the dialog
+			if(!validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, clickedPriceGroupId))
+				return false;
+			
+			// If valid, then submit the dialog's form
+			$form.submit();
+			return true;	// Closes the dialog
+			
+		}, null
+		, function(){
+			// Dialog was closed. 
+			$dialogDiv.remove();
+			$("body").append($copyOfDialogDiv);
+		});
+		
+		// Bind "change" handler to the Rate select. This has to happen after we assign the div to the dialog.
+		$("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv).bind("change", function(){
+			if($(this).val() == "new amount")
+				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).show();
+			else
+				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).hide();
 		});
 	});
 	
 	$(".priceGroupSKUColumn").append($newImage);
+	
+	
+	/* Bind price auto-fill modal dialog clickable images to the header cell of the SKU tab. */
+	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>").addClass("clickable");
+	$newImage.click(function(){
+		var $dialogDiv = $("#updateAllSKUPricesDialog");
+		var $copyOfDialogDiv = $dialogDiv.clone();
+		
+		var $form = $("form", $dialogDiv).first();
+		
+		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
+		actionDialog($dialogDiv, function(){
+			// First validate the dialog
+			if(!validateUpdateSKUPricesDialog($dialogDiv))
+				return false;
+			
+			// If valid, then submit the dialog's form
+			$form.submit();
+			return true;	// Closes the dialog
+			
+		}, null
+		, function(){
+			// Dialog was closed. 
+			$dialogDiv.remove();
+			$("body").append($copyOfDialogDiv);
+		});
+	});
+	
+	$(".skuPriceColumn").append($newImage);
+	
+	
+	/* Bind weight auto-fill modal dialog clickable images to the header cell of the SKU tab. */
+	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>");
+	$newImage.click(function(){
+		var $dialogDiv = $("#updateAllSKUWeightsDialog");
+		var $copyOfDialogDiv = $dialogDiv.clone();
+		
+		var $form = $("form", $dialogDiv).first();
+		
+		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
+		actionDialog($dialogDiv, function(){
+			// First validate the dialog
+			if(!validateUpdateSKUWeightsDialog($dialogDiv))
+				return false;
+			
+			// If valid, then submit the dialog's form
+			$form.submit();
+			return true;	// Closes the dialog
+			
+		}, null
+		, function(){
+			// Dialog was closed. 
+			$dialogDiv.remove();
+			$("body").append($copyOfDialogDiv);
+		});
+	});
+	
+	$(".skuWeightColumn").append($newImage);
 });
+
+function validateUpdatePriceGroupSKUSettingsDialog($dialogDiv, priceGroupId){
+	// TODO: Write validation!!!
+	return true;
+	
+	//$divContainingRadios = $("#updatePriceGroupSKUSettings_PriceGroupRateInputs[" + priceGroupId + "]",$dialogDiv);
+	
+	// If no radio was selected
+	//if(!$(":checked", $dialogDiv).size())
+	//	alertDialog()
+}
+
+function validateUpdateSKUPricesDialog($dialogDiv){
+	// TODO: Write validation!!!
+	return true;
+}
+
+function validateUpdateSKUWeightsDialog($dialogDiv){
+	// TODO: Write validation!!!
+	return true;
+}

@@ -82,11 +82,8 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 		requestData["cardNumber"]=arguments.requestBean.getCreditCardNumber();
 		requestData["expiryDate"]=arguments.requestBean.getExpirationMonth() & arguments.requestBean.getExpirationYear();
 		requestData["CV2"]=arguments.requestBean.getSecurityCode();
-		requestData["cardType"]=arguments.requestBean.getCreditCardType();
+		requestData["cardType"]=UCase(arguments.requestBean.getCreditCardType());
 		requestData["customerName"]=arguments.requestBean.getAccountFirstName();
-		if(arguments.requestBean.getAccountPrimaryPhoneNumber() eq "") {
-			requestData["contactNumber"]=arguments.requestBean.getAccountPrimaryPhoneNumber();
-		}
 		requestData["customerEmail"]=arguments.requestBean.getAccountPrimaryEmailAddress();
 		requestData["clientIPAddress"]=CGI.REMOTE_ADDR;
 	
@@ -191,7 +188,7 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 			}
 			default: {
 				// Transaction did not go through
-				response.getErrorBean().addError(name=responseData.status,message=responseData.statusDetail);
+				response.addError(name=responseData.status,message=responseData.statusDetail);
 				break;
 			}
 		}
