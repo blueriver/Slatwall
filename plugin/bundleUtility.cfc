@@ -43,7 +43,7 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="toBundle">
-		<cfargument name="bundle" />
+		<cfargument name="pluginConfig" />
 		
 		<cfset var rs = "" />
 		<cfset var tableList = getTableList() />
@@ -58,7 +58,7 @@ Notes:
 						#tableName#
 				</cfquery>
 				
-				<cfset arguments.bundle.setValue('#tableName#', rs) />
+				<cfset arguments.pluginConfig.setCustomSetting('#tableName#', rs) />
 				<cflog text="The Table: #tableName# - was exported to a mura bundle" file="Slatwall" />
 			</cfif>
 			
@@ -67,7 +67,7 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="fromBundle">
-		<cfargument name="bundle" />
+		<cfargument name="pluginConfig" />
 		
 		<cfset var rs = "" />
 		<cfset var columnName = "" />
@@ -75,40 +75,41 @@ Notes:
 		
 		<cfloop list="#tableList#" index="tableName">
 			
-			<cfset var importQuery = arguments.bundle.getValue('#tableName#') />
-
-			<cfif not listFind("SlatwallLog,SlatwallSession", tableName)>
-				
-				<cfif application.configBean.getDBType() eq "mssql">
-					<cfquery name="rs">
-						ALTER TABLE '#tableName#'NOCHECK CONSTRAINT ALL
-					</cfquery>
-				<cfelseif application.configBean.getDBType() eq "mssql">
-					<cfquery name="rs">
-						ALTER TABLE '#tableName#' DISABLE KEYS
-					</cfquery>
-				</cfif>
-				
-				<cfquery name="rs" >
-					TRUNCATE TABLE #tableName#
-				</cfquery>
-				
-				<cfquery name="rs" >
-					INSERT INTO #tableName# 
-						(
-							#importQuery.columnList#
-						)
-					VALUES
-						(
-							<cfloop list="#importQuery.columnList#" index="columnName">
-								'#importQuery[ columnName ]#'
-							</cfloop>
-						)
-				</cfquery>
-				
-				<cflog text="The Table: #tableName# - was updated from a mura bundle" file="Slatwall" />
-			</cfif>
+			<cfset var importQuery = arguments.pluginConfig.getCustomSetting('#tableName#') />
 			
+			<cfif isQuery(importQuery)>
+				<cfif not listFind("SlatwallLog,SlatwallSession", tableName)>
+					
+					<cfif application.configBean.getDBType() eq "mssql">
+						<cfquery name="rs">
+							ALTER TABLE '#tableName#'NOCHECK CONSTRAINT ALL
+						</cfquery>
+					<cfelseif application.configBean.getDBType() eq "mssql">
+						<cfquery name="rs">
+							ALTER TABLE '#tableName#' DISABLE KEYS
+						</cfquery>
+					</cfif>
+					
+					<cfquery name="rs" >
+						TRUNCATE TABLE #tableName#
+					</cfquery>
+					
+					<cfquery name="rs" >
+						INSERT INTO #tableName# 
+							(
+								#importQuery.columnList#
+							)
+						VALUES
+							(
+								<cfloop list="#importQuery.columnList#" index="columnName">
+									'#importQuery[ columnName ]#'
+								</cfloop>
+							)
+					</cfquery>
+					
+					<cflog text="The Table: #tableName# - was updated from a mura bundle" file="Slatwall" />
+				</cfif>
+			</cfif>
 		</cfloop>
 		
 	</cffunction>
