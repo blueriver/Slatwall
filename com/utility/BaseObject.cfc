@@ -266,8 +266,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		}
 		return value;
 	}
-	
-	public any function getFormattedValue(required string propertyName, string formatType) {
+
+	public any function getFormattedValue(required string propertyName, string formatType, any valueArg) {
 		/*
 			Valid formatType Strings are:
 		
@@ -283,7 +283,12 @@ component displayname="Base Object" accessors="true" output="false" {
 		*/
 		
 		// get the value out of this object
-		var value = invokeMethod("get#arguments.propertyName#");
+		if(StructKeyExists(arguments, "valueArg")){
+			var value = arguments.valueArg;
+		}
+		else{
+			var value = invokeMethod("get#arguments.propertyName#");
+		}
 		
 		// This is the null format option
 		if(isNull(value)) {

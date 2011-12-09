@@ -90,7 +90,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var wasNew = rc.PriceGroup.isNew();
 		
 		// In order for the automated population / save logic to work, map certain fields in the RC to their matching entity fields
-		if(rc.populateSubProperties){
+		if(StructKeyExists(rc, "priceGroupRateType") && rc.priceGroupRateType != ""){
+			
 			//rc["PriceGroupRates[1].percentageOff"] = rc["PriceGroupRates[1].amounOff"] = rc["PriceGroupRates[1].amount"] = "";
 			if(rc.priceGroupRateType EQ "percentageOff")
 				rc["PriceGroupRates[1].percentageOff"] = rc.priceGroupRateValue;
@@ -104,14 +105,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		// save() does an RC -> Entity population, and flags the entities to be saved.
 		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
-		
+
 		if(!rc.priceGroup.hasErrors()) {
 			// If added or edited a Price Group Rate
 			if(rc.populateSubProperties) {
-				rc.message="admin.pricegroup.savepricegroup_nowaddrates";	
+				rc.message=rbKey("admin.pricegroup.savepricegroup_nowaddrates");;	
 				getFW().redirect(action="admin:priceGroup.editPriceGroup",querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#",preserve="message");	
 			} else {
-				rc.message="admin.option.savepricegroup_success";
+				rc.message=rc.message=rbKey("admin.option.savepricegroup_success");
 				getFW().redirect(action="admin:priceGroup.detailPriceGroup",querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#",preserve="message");
 			}
 			
