@@ -104,6 +104,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().setView(action="admin:option.detailOptionGroup");
 		}
 	}
+	public void function deleteOptionGroup(required struct rc) {
+		param name="rc.optionGroupID" default="";
+		
+		var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+		
+		var deleteOK = getOptionService().deleteOptionGroup(optionGroup);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.optionGroup.delete_success");
+		} else {
+			rc.message = rbKey("admin.optionGroup.delete_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:option.listOptionGroups", preserve="message,messagetype");
+	}
 	
 	public void function deleteOption(required struct rc) {
 		

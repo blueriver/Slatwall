@@ -151,4 +151,12 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     public string function getImagePath() {
         return getImageDirectory() & getOptionImage();
     }
+    
+    // Override the preInsert method to set a default sortOrder
+    public void function preInsert() {
+    	if(isNull(getSortOrder())) {
+    		setSortOrder(arrayLen(getOptionGroup().getOptions()));
+    	}
+    }
+    
 }

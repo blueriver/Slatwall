@@ -498,5 +498,16 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action='admin:main.default');
 	}
 	
+	public void function importBundleData(required struct rc) {
+		param name="rc.confirmImport" default="0";
+		
+		if(isBoolean(rc.confirmImport) && rc.confirmImport) {
+			var bundleUtility = createObject("component", "Slatwall.plugin.bundleUtility");
+			bundleUtility.fromBundle(pluginConfig = getPluginConfig());
+		}
+		
+		getFW().redirect(action='admin:main.default');
+	}
+	
 	
 }

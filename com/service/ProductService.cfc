@@ -136,8 +136,8 @@ component extends="BaseService" accessors="true" {
 		return smartList;	
 	}
 	
-	public any function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
-		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
+	public any function getProductSkusBySelectedOptions(required string selectedOptions, required string productID){
+		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
 	}
 	
 	public any function getMuraCategories(required string siteID, string parentID=0) {
