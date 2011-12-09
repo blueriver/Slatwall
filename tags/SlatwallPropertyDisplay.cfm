@@ -100,7 +100,7 @@ Notes:
 	<cfsilent>
 		<!--- Set Up The Value --->
 		<cfif attributes.value eq "">
-			
+
 			<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
 			
 			<cfif isNull(attributes.value) || (isSimpleValue(attributes.value) && attributes.value eq "")>
@@ -114,6 +114,7 @@ Notes:
 				<cfelse>
 					<cfset attributes.value = attributes.value.getSimpleRepresentation() />
 				</cfif>
+
 			<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->	
 			<cfelseif isArray(attributes.value)>
 				<cfset thisValueList = "" />

@@ -43,7 +43,7 @@ Notes:
 		<cfif rc.edit>
 			<dl>
 				<div id="globalRateControls">
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[0].globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
 				</div>
 					
 				<!--- If there is another Rate in this Group that is set to global, output this warning --->
@@ -68,7 +68,7 @@ Notes:
 				<input type="text" id="priceGroupRateValue" name="priceGroupRateValue" value="<cfif !isNull(rc.priceGroupRate.getValue())>#rc.priceGroupRate.getValue()#</cfif>" />
 				
 				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> >
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[0].RoundingRule" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[1].RoundingRule" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
 				</div>
 	
 				<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->
@@ -81,7 +81,7 @@ Notes:
 					<cfloop array="#rc.priceGroupRate.getProductTypes()#" index="productType">
 						<cfset idsList = ListAppend(idsList, productType.getProductTypeId())>
 					</cfloop>
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[0].ProductTypes" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].ProductTypes" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
 					
 					<br>
 					
@@ -90,7 +90,7 @@ Notes:
 					<cfloop array="#rc.priceGroupRate.getProducts()#" index="product">
 						<cfset idsList = ListAppend(idsList, product.getProductId())>
 					</cfloop>
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[0].Products" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].Products" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
 					
 					<br>	
 					

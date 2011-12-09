@@ -36,15 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.pricegroups" type="any" />
+<cfparam name="rc.priceGroupSmartList" type="any" />
 
 <cfoutput>
 <ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:pricegroup.create" type="list">
+    <cf_SlatwallActionCaller action="admin:pricegroup.createpricegroup" type="list">
 </ul>
 
 <div class="svoadminpricegrouplist">
-<cfif arrayLen(rc.pricegroups) gt 0>
+<cfif arrayLen(rc.priceGroupSmartList.getPageRecords()) gt 0>
 	<table id="PriceGroups" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.pricegroup.priceGroupName")#</th>
@@ -53,7 +53,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.activeFlag")#</th>
 			<th>&nbsp;</th>
 		</tr>
-		<cfloop array="#rc.pricegroups#" index="local.PriceGroup">
+		<cfloop array="#rc.priceGroupSmartList.getPageRecords()#" index="local.PriceGroup">
 			<tr>
 				<td class="varWidth">#local.PriceGroup.getPriceGroupName()#</td>
 				<td>#local.PriceGroup.getPriceGroupCode()#</td>

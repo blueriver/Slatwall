@@ -49,9 +49,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function listPriceGroups(required struct rc) {
-        param name="rc.orderBy" default="sortOrder|ASC";
+        param name="rc.orderBy" default="priceGroupId|ASC";
         
-        rc.priceGroupSmartList = getPriceGroup().getPriceGroupSmartList(data=arguments.rc);  
+        rc.priceGroupSmartList = getPriceGroupService().getPriceGroupSmartList(data=arguments.rc);  
     }
     
     public void function detailPriceGroup(required struct rc) {
@@ -76,54 +76,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID, true);
     	rc.priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
     	
-    	rc.edit = true;
-    	getFW().setView("admin:pricegroup.detailPriceGroup");
+    	rc.edit = true; 
+    	getFW().setView("admin:pricegroup.detailPriceGroup"); 
     }
 	
 
 	
-	// Common functionalty of Add/Edit/View
-	/*public void function detail(required struct rc) {
-		param name="rc.priceGroupID" default="";
-		param name="rc.edit" default="false";
-		
-		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-		
-		// If we are editing a PriceGroupRate (rc contain a priceGroupRateId) then pull that one specifically, otherwise, pull a brand new entity (rc does not contain priceGorupRateId)
-		param name="rc.priceGroupRateId" default="";
-		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);	
-	}
 
-
-    public void function create(required struct rc) {
-		edit(rc);
-    }
-
-	public void function edit(required struct rc) {
-		detail(rc);
-		getFW().setView("admin:priceGroup.detail");
-		rc.edit = true;
-	}
-	
-	public void function editPriceGroupRate(required struct rc) {
-		detail(rc);
-		getFW().setView("admin:priceGroup.detail");
-		rc.edit = true;
-	}
-	 
-    public void function list(required struct rc) {	
-		rc.priceGroups = getPriceGroupService().listPriceGroup();
-    }
-*/
-	public void function save(required struct rc) {
+	public void function savePriceGroup(required struct rc) {
 		// Populate either a brand new PriceGroup and PriceGroupRate in the rc, or pulls them based on the provided ID. Does NOT populate based on RC.
-		detail(rc);
-		
+		editPriceGroup(rc);
+
 		var wasNew = rc.PriceGroup.isNew();
 		
 		// In order for the automated population / save logic to work, map certain fields in the RC to their matching entity fields
 		if(rc.populateSubProperties){
-			rc["PriceGroupRates[1].percentageOff"] = rc["PriceGroupRates[1].amounOff"] = rc["PriceGroupRates[1].amount"] = "";
+			//rc["PriceGroupRates[1].percentageOff"] = rc["PriceGroupRates[1].amounOff"] = rc["PriceGroupRates[1].amount"] = "";
 			if(rc.priceGroupRateType EQ "percentageOff")
 				rc["PriceGroupRates[1].percentageOff"] = rc.priceGroupRateValue;
 			else if(rc.priceGroupRateType EQ "amountOff")
@@ -131,10 +99,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			else if(rc.priceGroupRateType EQ "amount")
 				rc["PriceGroupRates[1].amount"] = rc.priceGroupRateValue;
 			else
-				throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
-			
+				dumpScreen("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
 		}
-		
+
 		// save() does an RC -> Entity population, and flags the entities to be saved.
 		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
 		
@@ -148,7 +115,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().redirect(action="admin:priceGroup.detailPriceGroup",querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#",preserve="message");
 			}
 			
-		} else {
+		} else {				
 			// If one of the rates had the error, then find out which one and populate it
 			if(rc.pricegroup.hasError("priceGroupRates")) {
 				for(var i=1; i<=arrayLen(rc.pricegroup.getPriceGroupRates()); i++) {
@@ -188,4 +155,38 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.edit = true;
 		getFW().setView("admin:pricegroup.detailPriceGroup");
 	}
+	
+		// Common functionalty of Add/Edit/View
+	/*public void function detail(required struct rc) {
+		param name="rc.priceGroupID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
+		
+		// If we are editing a PriceGroupRate (rc contain a priceGroupRateId) then pull that one specifically, otherwise, pull a brand new entity (rc does not contain priceGorupRateId)
+		param name="rc.priceGroupRateId" default="";
+		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);	
+	}
+
+
+    public void function create(required struct rc) {
+		edit(rc);
+    }
+
+	public void function edit(required struct rc) {
+		detail(rc);
+		getFW().setView("admin:priceGroup.detail");
+		rc.edit = true;
+	}
+	
+	public void function editPriceGroupRate(required struct rc) {
+		detail(rc);
+		getFW().setView("admin:priceGroup.detail");
+		rc.edit = true;
+	}
+	 
+    public void function list(required struct rc) {	
+		rc.priceGroups = getPriceGroupService().listPriceGroup();
+    }
+*/
 }
