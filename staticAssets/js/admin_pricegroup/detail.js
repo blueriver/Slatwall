@@ -6,11 +6,19 @@ jQuery(function() {
 		jQuery(this).remove();
 	});
 	
-	// If Price Group Rate type is percentageOff, then enable the rounding rule
+	// If Price Group Rate type is percentageOff, then enable the rounding rule. Also, change the name of the "value" input to map property to the entity's properties.
 	jQuery("#priceGroupRateType").change(function(){
-		if(jQuery(this).val() == "percentageOff")
-			jQuery("#roundingRuleDiv").fadeIn(400);
-		else{
+		if (jQuery(this).val() == "percentageOff") {
+			jQuery("#priceGroupRateValue").attr("name", "priceGroupRates[1].percentageOff");
+			jQuery("#roundingRuleDiv").fadeIn(400);		
+		}
+		else if (jQuery(this).val() == "amountOff") {
+			jQuery("#priceGroupRateValue").attr("name", "priceGroupRates[1].amountOff");
+			jQuery("#roundingRuleDiv").fadeOut(400);
+			jQuery("#roundingRuleDiv select").val("");
+		}
+		else if (jQuery(this).val() == "amount") {
+			jQuery("#priceGroupRateValue").attr("name", "priceGroupRates[1].amount");
 			jQuery("#roundingRuleDiv").fadeOut(400);
 			jQuery("#roundingRuleDiv select").val("");
 		}

@@ -193,7 +193,7 @@ component displayname="Base Object" accessors="true" output="false" {
 						}
 						
 					}
-				}
+				}	
 			}
 		}
 		

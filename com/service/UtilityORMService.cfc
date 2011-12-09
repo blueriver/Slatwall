@@ -74,6 +74,9 @@ component extends="BaseService" accessors="true" {
 		} else if ( left(arguments.entityName, 15) == "SlatwallPayment" || listFindNoCase("SlatwallCreditCardTransaction", arguments.entityName)  )  {
 			serviceName = "paymentService";
 			
+		} else if ( left(arguments.entityName, 22) == "SlatwallPriceGroupRate")  {
+			serviceName = "priceGroupService";
+			
 		} else if ( left(arguments.entityName, 15) == "SlatwallProduct" ) {
 			serviceName = "productService";
 			
