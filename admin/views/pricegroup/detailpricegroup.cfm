@@ -36,21 +36,20 @@
 Notes:
 
 --->
-<cfparam name="rc.priceGroup" type="any">
-<cfparam name="rc.PriceGroupRate" type="any">
 <cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.priceGroup" type="any">
 
 <ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:priceGroup.list" type="list">
+	<cf_SlatwallActionCaller action="admin:priceGroup.listPriceGroups" type="list">
 	<cfif !rc.edit>
-		<cf_SlatwallActionCaller action="admin:priceGroup.edit" queryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" type="list">
+		<cf_SlatwallActionCaller action="admin:priceGroup.editPriceGroup" queryString="priceGroupID=#rc.priceGroup.getPriceGroupID()#" type="list">
 	</cfif>
 </ul>
 
 <cfoutput>
 	<div class="svoadminpricegroupdetail">
 		<cfif rc.edit>
-			<form name="PriceGroupEdit" action="#buildURL('admin:priceGroup.save')#" method="post">
+			<form name="PriceGroupEdit" action="#buildURL('admin:priceGroup.savePriceGroup')#" method="post">
 				<input type="hidden" name="PriceGroupID" value="#rc.PriceGroup.getPriceGroupID()#" />
 		</cfif>
 		
@@ -77,14 +76,11 @@ Notes:
 			</cfloop>		
 			
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="parentPriceGroup" edit="#rc.edit#" valueDefault="#rc.$.Slatwall.rbKey('admin.none')#" valueOptions="#local.valueOptions#" />
-
-			
-			
-			<!---parentPriceGroup.priceGroupID
-			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="parentPriceGroup" edit="#rc.edit#" valueDefault="#rc.$.Slatwall.rbKey('admin.none')#">--->
 		</dl>
 		
-		<cfif not rc.priceGroup.isNew()>
+	
+		<!--- If there are Price Group Rates, then output the table. --->
+		<cfif arrayLen(rc.priceGroup.getPriceGroupRates()) GT 0>
 			<strong>#$.slatwall.rbKey('admin.pricegroup.edit.priceGroupRates')#</strong>
 		
 			<table id="priceGroupRates" class="listing-grid stripe">
@@ -105,7 +101,7 @@ Notes:
 							<cfif rc.edit>
 								<td class="administration">
 									<ul class="two">
-										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
+										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroup" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
 										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list" confirmrequired="true">
 									</ul>
 								</td>
@@ -114,34 +110,45 @@ Notes:
 					</cfloop>
 				</tbody>
 			</table>
-			<cfif rc.edit>
 			
-				<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew()>class="ui-helper-hidden"</cfif> >
-					<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
-					
-					<cfinclude template="pricegroupratedisplay.cfm">
-				</div>
-				
-				<!--- If the PriceGroupRate is new, then that means that we are just editing the PriceGroup --->
-				<cfif rc.priceGroupRate.isNew()>
-					<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button>
-				
-				<!--- Otherwise if the PriceGroupRate is not new, it means that we clicked to edit the PriceGroupRate specifically --->
-				<cfelse>
-					<input type="hidden" name="priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
-				</cfif>
-				
-				<input type="hidden" name="addPriceGroupRate" id="addPriceGroupRateHidden" value=""/>
-				
-				<br /><br />
-			</cfif>
+			
+			
+		<!--- No Price Group Rates defined --->	
+		<cfelse>
+			
+			#rc.$.Slatwall.rbKey("admin.pricegroups.nopricegroupratesdefined")#
+			
+			<br /><br />	
 		</cfif>
+		
+		
+		<!--- We are in Add or Edit mode (not view) --->
 		<cfif rc.edit>
-			<cf_SlatwallActionCaller action="admin:pricegroup.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:pricegroup.save" type="submit" class="button">
+			<!--- If the PriceGroupRate is new, then that means that we are just editing the PriceGroup --->
+			<cfif rc.priceGroupRate.isNew()>
+				<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button>
+			</cfif>
+			
+			<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew()>class="ui-helper-hidden"</cfif> >
+				<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
+				<cfinclude template="pricegroupratedisplay.cfm">
+				<input type="hidden" name="priceGroupRates[1].priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
+				
+				<cfif rc.priceGroupRate.isNew() && not rc.priceGroupRate.hasErrors()>
+					<input type="hidden" name="populateSubProperties"id="populateSubProperties" value="false"/>
+				<cfelse>
+					<input type="hidden" name="populateSubProperties" value="true"/>
+				</cfif>
+			</div>
+
+			<br /><br />
+		</cfif>
+
+		<cfif rc.edit>
+			<cf_SlatwallActionCaller action="admin:pricegroup.listpricegroups" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:pricegroup.savepricegroup" type="submit" class="button">
 			</form>
 		</cfif>
 		
-	</div>	
-		
+	</div>		
 </cfoutput>

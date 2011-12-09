@@ -76,7 +76,7 @@ Notes:
 		<br /><br />
 	</cfif>
 	<cfif rc.edit>
-		<!--- If the Option is new, then that means that we are just editing the PriceGroup --->
+		<!--- If the Option is new, then that means that we are just editing the Option --->
 		<cfif rc.option.isNew() && not rc.option.hasErrors()>
 			<button type="button" id="addOptionButton" value="true">#rc.$.Slatwall.rbKey("admin.option.detailOptionGroup.addOption")#</button>
 		</cfif>

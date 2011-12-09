@@ -107,8 +107,8 @@ Notes:
 							</ul>
 							<ul>
 								<li class="title">Price Groups</li>
-								<cf_SlatwallActionCaller action="admin:pricegroup.create" type="list">
-								<cf_SlatwallActionCaller action="admin:pricegroup.list" type="list">
+								<cf_SlatwallActionCaller action="admin:pricegroup.createPriceGroup" type="list">
+								<cf_SlatwallActionCaller action="admin:pricegroup.listPriceGroups" type="list">
 							</ul>
 						</div>
 					</div>
