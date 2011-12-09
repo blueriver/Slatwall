@@ -49,7 +49,10 @@ Notes:
 <cfoutput>
 	<div class="svoadminpricegroupdetail">
 		<cfif rc.edit>
-			<form name="PriceGroupEdit" action="#buildURL('admin:priceGroup.savePriceGroup')#" method="post">
+			
+			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.PriceGroup, formName="PriceGroupEdit")#
+			
+			<form name="PriceGroupEdit" id="PriceGroupEdit" action="#buildURL('admin:priceGroup.savePriceGroup')#" method="post">
 				<input type="hidden" name="PriceGroupID" value="#rc.PriceGroup.getPriceGroupID()#" />
 		</cfif>
 		
