@@ -84,9 +84,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 
 	public void function savePriceGroup(required struct rc) {
-		
+		editPriceGroup(rc);
 
-		
+		var wasNew = rc.PriceGroup.isNew();
+
+		dumpScreen("inside saveProductGroup");
 		
 		// In order for the automated population / save logic to work, map certain fields in the RC to their matching entity fields
 		if(StructKeyExists(rc, "priceGroupRateType") && rc.priceGroupRateType != ""){
@@ -101,9 +103,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			else
 				dumpScreen("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
 		}
-		
-		editPriceGroup(rc);
-		var wasNew = rc.PriceGroup.isNew();
 		
 		//dumpScreen(rc);
 
