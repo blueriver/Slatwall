@@ -129,21 +129,20 @@ component displayname="Base Object" accessors="true" output="false" {
 							// Load the specific entity, and if one doesn't exist yet then return a new entity
 							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=oneToManyArrayData[a][primaryIDPropertyName],2=true});
 							
-							// If there were additional values in the data array, then we use those values to populate the entity, later validating it aswell.
+							// Add the entity to the existing objects properties
+							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
+							
+							// If there were additional values in the data array, then we use those values to populate the entity, and validating it aswell.
 							if(structCount(oneToManyArrayData[a]) gt 1) {
 								
 								// Call the save method for this sub property entity and pass in the data
-								thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=oneToManyArrayData[a]});
+								thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=oneToManyArrayData[a]});
 								
 								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
 								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
 									arrayAppend(getPopulatedSubProperties(), currentProperty.name);
 								}
-
 							}
-							
-							// Add the entity to the existing objects properties
-							this.invokeMethod("add#currentProperty.singularName#", {1=thisEntity});
 						}
 					}
 				// (MANY-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array
