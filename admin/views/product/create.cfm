@@ -51,13 +51,15 @@ Notes:
 			<!--- Add Client Side Validation for the form --->
 			<!---<cfset $.slatwall.addVTScript(theObject=rc.product, formName="createProductForm") />--->
 			
+			<!---#$.slatwall.getValidateThis().getValidationScript(theObject=rc.product, formName="createProductForm")#--->
+			
 			<form id="createProductForm" name="createProduct" method="post">
 				<input type="hidden" name="slatAction" value="admin:product.save" />
 				<dl class="oneColumn">
 				    <cf_SlatwallPropertyDisplay object="#rc.product#" first="true" property="productName" edit="true">
 				    <cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true" toggle="true">
 					<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true" tooltip="true">
-				    <cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true">
+					<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true">
 					<cf_SlatwallActionCaller action="admin:brand.create" type="link">
 					<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true">
 					<cf_SlatwallActionCaller action="admin:product.createproducttype" type="link">
