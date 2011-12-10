@@ -63,7 +63,8 @@ component {
 	 *	buildURL() should be used from views to construct urls when using subsystems or
 	 *	in order to provide a simpler transition to using subsystems in the future
 	 */
-	public string function buildURL( string action, string path = variables.magicBaseURL, string queryString = '' ) {
+	public string function buildURL( string action = '', string path = variables.magicBaseURL, any queryString = '' ) {
+		if ( action == '' ) action = getFullyQualifiedAction();
 		if ( path == variables.magicBaseURL ) path = getBaseURL();
 		var omitIndex = false;
 		if ( path == 'useSubsystemConfig' ) {
@@ -87,10 +88,36 @@ component {
 				omitIndex = true;
 			}
 		}
-		var n = find( '?', action );
-		if ( n && queryString == '' ) {
-			queryString = right( action, len( action ) - n + 1 );
-			action = listFirst( action, '?##' );
+		// if queryString is a struct, massage it into a string
+		if ( isStruct( queryString ) && structCount( queryString ) ) {
+			var q = '';
+			for( var key in queryString ) {
+				q &= '#urlEncodedFormat( key )#=#urlEncodedFormat( queryString[ key ] )#&';
+			}
+			queryString = q;
+		}
+		else if ( !isSimpleValue( queryString ) ) {
+			queryString = '';
+		}
+		if ( queryString == '' ) {
+			// extract query string from action section:
+			var q = find( '?', action );
+			var a = find( '##', action );
+			if ( q > 0 ) {
+				queryString = right( action, len( action ) - q );
+				if ( q == 1 ) {
+					action = '';
+				} else {
+					action = left( action, q - 1 );
+				}
+			} else if ( a > 0 ) {
+				queryString = right( action, len( action ) - a + 1 );
+				if ( a == 1 ) {
+					action = '';
+				} else {
+					action = left( action, a - 1 );
+				}
+			}
 		}
 		var cosmeticAction = getFullyQualifiedAction( action );
 		var isHomeAction = cosmeticAction == getFullyQualifiedAction( variables.framework.home );
@@ -127,14 +154,33 @@ component {
 		}
 		
 		if ( len( queryString ) ) {
-			extraArgs = listFirst( queryString, '?##' );
-			n = find( '?', queryString );
-			if ( n ) {
-				queryPart = right( queryString, len( queryString ) - n + 1 );
-			}
-			n = find( '##', queryString );
-			if ( n ) {
-				anchor = right( queryString, len( queryString ) - n + 1 );
+			// extract query part and anchor from query string:
+			q = find( '?', queryString );
+			if ( q > 0 ) {
+				queryPart = right( queryString, len( queryString ) - q );
+				if ( q > 1 ) {
+					extraArgs = left( queryString, q - 1 );
+				}
+				a = find( '##', queryPart );
+				if ( a > 0 ) {
+					anchor = right( queryPart, len( queryPart ) - a );
+					if ( a == 1 ) {
+						queryPart = '';
+					} else {
+						queryPart = left( queryPart, a - 1 );
+					}
+				}
+			} else {
+				extraArgs = queryString;
+				a = find( '##', extraArgs );
+				if ( a > 0 ) {
+					anchor = right( extraArgs, len( extraArgs ) - a );
+					if ( a == 1 ) {
+						extraArgs = '';
+					} else {
+						extraArgs = left( extraArgs, a - 1 );
+					}
+				}
 			}
 			if ( ses ) {
 				extraArgs = listChangeDelims( extraArgs, '/', '&=' );
@@ -502,7 +548,20 @@ component {
 			structDelete( request, 'serviceExecutionComplete' );
 			// setup the new controller action, based on the error action:
 			structDelete( request, 'controllers' );
-			request.action = variables.framework.error;
+			
+			if ( structKeyExists( variables, 'framework' ) && structKeyExists( variables.framework, 'error' ) ) {
+				request.action = variables.framework.error;
+			} else {
+				// this is an edge case so we don't bother with subsystems etc
+				// (because if part of the framework defaults are not present,
+				// we'd have to do a lot of conditional logic here!)
+				request.action = 'main.error';
+			}
+			// ensure request.context is available
+			if ( !structKeyExists( request, 'context' ) ) {
+			    request.context = { };
+			}
+			
 			setupRequestWrapper( false );
 			onRequest( '' );
 		} catch ( any e ) {
@@ -809,9 +868,8 @@ component {
 			} else {
 				preserveKey = '?#variables.framework.preserveKeyURLKey#=#preserveKey#';
 			}
-			var n = find( '##', targetURL );
-			if ( n ) {
-				targetURL = listFirst( targetURL, '##' ) & preserveKey & '##' & right( targetURL, len( targetURL ) - n + 1 );
+			if ( find( '##', targetURL ) ) {
+				targetURL = listFirst( targetURL, '##' ) & preserveKey & '##' & listRest( targetURL, '##' );
 			} else {
 				targetURL = targetURL & preserveKey;
 			}
@@ -1644,7 +1702,7 @@ component {
 		if ( !structKeyExists( variables.framework, 'subsystems' ) ) {
 			variables.framework.subsystems = { };
 		}
-		variables.framework.version = '2.0_RC';
+		variables.framework.version = '2.0_RC2';
 	}
 
 	private void function setupRequestDefaults() {
