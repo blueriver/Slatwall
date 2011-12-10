@@ -94,12 +94,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.accountID" default="";
 		param name="rc.priceGroupIdsAssigned" default="";
 		
-		// Assign price groups selcted to Account
-		/*var priceGroupIdsArr = listToArray(rc.priceGroupIdsAssigned);
-		for( priceGroupId in rc.priceGroupIdsAssigned ){
-		    form[fieldName]  = qry[fieldName][1];
-		}*/
-		
 		detail(rc);
 		
 		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteid'));
