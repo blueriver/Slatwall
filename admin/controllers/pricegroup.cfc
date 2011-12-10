@@ -108,9 +108,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		//dumpScreen(rc);
 
-		// save() does an RC -> Entity population, and flags the entities to be saved.
-		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
-		
+		// this does an RC -> Entity population, and flags the entities to be saved.
+		rc.priceGroup = getPriceGroupService().savePriceGroup(rc.priceGroup, rc);
+
 		if(!rc.priceGroup.hasErrors()) {
 			// If added or edited a Price Group Rate
 			if(rc.populateSubProperties) {
@@ -132,7 +132,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			rc.edit = true;
 			rc.itemTitle = rc.PriceGroup.isNew() ? rc.$.Slatwall.rbKey("admin.pricegroup.createPriceGroup") : rc.$.Slatwall.rbKey("admin.pricegroup.editPriceGroup") & ": #rc.pricegroup.getPriceGroupName()#";
-			getFW().setView(action="admin:option.detailPriceGroup");
+			getFW().setView(action="admin:priceGroup.detailPriceGroup");
 		}	
 	}
 	
