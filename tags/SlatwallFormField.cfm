@@ -47,14 +47,14 @@ Notes:
 	attributes.fieldType have the following options:
 	
 	checkbox			|	As a single checkbox this doesn't require any options, but it will create a hidden field for you so that the key gets submitted even when not checked.  The value of the checkbox will be 1
-	checkboxgroup		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	checkboxgroup		|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
 	date				|	This is still just a textbox, but it adds the jQuery date picker
 	dateTime			|	This is still just a textbox, but it adds the jQuery date & time picker
 	file				|	No value can be passed in
-	multiselect			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	multiselect			|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
 	password			|	No Value can be passed in
-	radiogroup			|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
-	select      		|	Requires the valueOptions to be an array of structs with the format of {value="", name=""}
+	radiogroup			|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
+	select      		|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
 	text				|	Simple Text Field
 	textarea			|	Simple Textarea
 	time				|	This is still just a textbox, but it adds the jQuery time picker
@@ -75,7 +75,9 @@ Notes:
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
 				<cfloop array="#attributes.valueOptions#" index="option">
-					<input type="checkbox" name="#attributes.fieldName#" value="#structFind(option, 'value')#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, structFind(option, 'value'))> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#structFind(option, 'value')#</span>	
+					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
+					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+					<input type="checkbox" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif listFindNoCase(attributes.value, thisOptionValue)> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#thisOptionName#</span>	
 				</cfloop>
 			</cfoutput>
 		</cfcase>
@@ -98,7 +100,9 @@ Notes:
 			<cfoutput>
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" />
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<option value="#option['value']#" <cfif listFind(attributes.value, option['value'])> selected="selected"</cfif>>#option['name']#</option>
+						<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
+						<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+						<option value="#thisOptionValue#" <cfif listFindNoCase(attributes.value, thisOptionValue)> selected="selected"</cfif>>#thisOptionName#</option>
 					</cfloop>
 				</select>
 			</cfoutput>
@@ -112,7 +116,9 @@ Notes:
 			<cfoutput>
 				<input type="hidden" name="#attributes.fieldName#" value="" />
 				<cfloop array="#attributes.valueOptions#" index="option">
-					<input type="radio" name="#attributes.fieldName#" value="#structFind(option, 'value')#" class="#attributes.fieldClass#" <cfif attributes.value eq structFind(option, 'value')> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#structFind(option, 'name')#</span>
+					<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
+					<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+					<input type="radio" name="#attributes.fieldName#" value="#thisOptionValue#" class="#attributes.fieldClass#" <cfif attributes.value EQ thisOptionValue> checked="checked"</cfif> /><span class="#attributes.fieldClass#">#thisOptionName#</span>
 				</cfloop>
 			</cfoutput>
 		</cfcase>
@@ -120,7 +126,9 @@ Notes:
 			<cfoutput>
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<option value="#option['value']#" <cfif attributes.value eq option['value']> selected="selected"</cfif>>#option['name']#</option>
+						<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
+						<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+						<option value="#thisOptionValue#" <cfif attributes.value EQ thisOptionValue> selected="selected"</cfif>>#thisOptionName#</option>
 					</cfloop>
 				</select>
 			</cfoutput>

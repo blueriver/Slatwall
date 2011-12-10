@@ -438,7 +438,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "one-to-many" ) {
 			throw("There is now property field type for one-to-many relationship properties");
 		} else if ( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-many" ) {
-			return "checkbox";
+			return "multiselect";
 		}
 		
 		// Default case if no matches were found is a text field
