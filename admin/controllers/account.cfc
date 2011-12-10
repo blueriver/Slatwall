@@ -57,7 +57,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.account = getAccountService().getAccount(rc.accountID, true);
 		rc.attributeSets = rc.account.getAttributeSets(["astAccount"]);
 		rc.orderSmartList = getAccountService().getOrderSmartList(data=orderParams);
-		rc.priceGroups = getPriceGroupService().listPriceGroup();
 	}
 	
 	public void function create(required struct rc) {
@@ -92,7 +91,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function save(required struct rc) {
 		param name="rc.accountID" default="";
-		param name="rc.priceGroupIdsAssigned" default="";
 		
 		detail(rc);
 		

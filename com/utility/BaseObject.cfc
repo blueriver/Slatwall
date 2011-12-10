@@ -158,7 +158,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
 					
 					// Loop over the existing related entities and check if the primaryID exists in the list of data that was passed in.
-					for(var m=1; m<=arrayLen(existingRelatedEntities); m++ ) {
+					for(var m=arrayLen(existingRelatedEntities); m>=1; m-- ) {
 						
 						// Get the primary ID of this existing relationship
 						var thisPrimrayID = existingRelatedEntities[m].invokeMethod("get#primaryIDPropertyName#");
@@ -183,7 +183,7 @@ component displayname="Base Object" accessors="true" output="false" {
 							
 						// set the id of this entity into a local variable
 						var thisEntityID = listGetAt(manyToManyIDList, n);
-							
+						
 						// Load the specific entity, if one doesn't exist... this will be null
 						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=thisEntityID});
 						
@@ -192,7 +192,6 @@ component displayname="Base Object" accessors="true" output="false" {
 							this.invokeMethod("add#currentProperty.singularname#", {1=thisEntity});
 						}
 					}
-					
 				}	
 			}
 		}
@@ -387,8 +386,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Get the Meta Data for the property
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
 		
-		// If this is a relational property, and the relationship is many-to-one or many-to-many, then return the propertyName and propertyName of primaryID
-		if( structKeyExists(propertyMeta, "fieldType") && (propertyMeta.fieldType == "many-to-one" || propertyMeta.fieldType == "many-to-many") ) {
+		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
+		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
 			
 			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#propertyMeta.cfc#" );
 			return "#arguments.propertyName#.#primaryIDPropertyName#";
