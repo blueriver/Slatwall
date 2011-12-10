@@ -42,20 +42,17 @@ Notes:
 	<div class="svoadminaccountdetaillogin">
 		<dl class="twoColumn">
 			<dt>
-				<label for="primaryemail">#rc.$.Slatwall.rbKey("entity.accountEmailAddress.emailAddress")#</label>
+				<label for="primaryemail">#rc.$.Slatwall.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#</label>
 			</dt>
 			<dd>
 				<input type="text" id="emailAddress" name="emailAddress" value="#rc.account.getEmailAddress()#" />
 			</dd>
-			<!--- Commenting Out Because this causes validation error if not filled out --->
-			<!---
 			<dt>
 				<label for="password">#rc.$.Slatwall.rbKey("admin.account.detail.tab.login.password")#</label>
 			</dt>
 			<dd>
-				<input type="text" id="password" name="password" value="" />
+				<input type="password" autocomplete="off" id="password" name="password" value="" />
 			</dd>
-			--->
 		</dl>
 	</div>
 </cfoutput>

@@ -130,8 +130,14 @@ component extends="BaseService" accessors="true" output="false" {
 			if(!muraUser.getIsNew()) {
 				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
 				
-				// Set the password to blank so that Mura doesn't try to save it (this is just how mura does things yo!)
-				muraUser.setPassword("");
+				// If a pasword was passed in, then update the mura accout with the new password
+				if(structKeyExists(arguments.data, "password")) {
+					muraUser.setPassword(arguments.data.password);
+				// If a password wasn't submitted then just set the value to blank so that mura doesn't re-hash the password	
+				} else {
+					muraUser.setPassword("");	
+				}
+				
 				
 				muraUser.save();
 			}
