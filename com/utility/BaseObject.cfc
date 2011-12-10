@@ -205,7 +205,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	public any function validate( ) {
 		
 		// Set up the validation arguments as a mirror of the arguments struct
-		var valdationArguments = arguments;
+		var validationArguments = arguments;
 		
 		// Add this as "theObject" to the validation arguments
 		validationArguments.theObject = this;
