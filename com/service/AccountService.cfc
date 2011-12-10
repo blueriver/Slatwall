@@ -131,7 +131,7 @@ component extends="BaseService" accessors="true" output="false" {
 				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
 				
 				// Set the password to blank so that Mura doesn't try to save it (this is just how mura does things yo!)
-				arguments.muraUser.setPassword("");
+				muraUser.setPassword("");
 				
 				muraUser.save();
 			}
