@@ -110,7 +110,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		// save() does an RC -> Entity population, and flags the entities to be saved.
 		rc.priceGroup = getPriceGroupService().save(rc.priceGroup, rc);
-		
+
 		if(!rc.priceGroup.hasErrors()) {
 			// If added or edited a Price Group Rate
 			if(rc.populateSubProperties) {

@@ -160,11 +160,15 @@ component displayname="Base Object" accessors="true" output="false" {
 					// Loop over the existing related entities and check if the primaryID exists in the list of data that was passed in.
 					for(var m=1; m<=arrayLen(existingRelatedEntities); m++ ) {
 						
-						var listIndex = listFind( manyToManyIDList, existingRelatedEntities[m].invokeMethod("get#primaryIDPropertyName#") );
+						// Get the primary ID of this existing relationship
+						var thisPrimrayID = existingRelatedEntities[m].invokeMethod("get#primaryIDPropertyName#");
+						
+						// Find out if hat ID is in the list
+						var listIndex = listFind( manyToManyIDList, thisPrimrayID );
 						
 						// If the relationship already exist, then remove that id from the list
 						if(listIndex) {
-							listDeleteAt(manyToManyIDList, listIndex);
+							manyToManyIDList = listDeleteAt(manyToManyIDList, listIndex);
 						// If the relationship no longer exists in the list, then remove the entity relationship
 						} else {
 							this.invokeMethod("remove#currentProperty.singularname#", {1=existingRelatedEntities[m]});
@@ -179,12 +183,12 @@ component displayname="Base Object" accessors="true" output="false" {
 							
 						// set the id of this entity into a local variable
 						var thisEntityID = listGetAt(manyToManyIDList, n);
-						
+							
 						// Load the specific entity, if one doesn't exist... this will be null
 						var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=thisEntityID});
 						
 						// If the entity exists, then add it to the relationship
-						if(!isNull(thisEntity) && !this.invokeMethod( "has#currentProperty.singularname#", {1=thisEntity} ) ) {
+						if(!isNull(thisEntity)) {
 							this.invokeMethod("add#currentProperty.singularname#", {1=thisEntity});
 						}
 					}
