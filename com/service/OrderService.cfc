@@ -645,7 +645,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		arguments.orderPayment.setCreditCardNumber(arguments.data.creditCardNumber);
 		
 		// Validate the order Payment
-		arguments.orderPayment = this.validateOrderPaymentCreditCard(arguments.orderPayment);
+		arguments.orderPayment.validate();
+		
 		if(arguments.orderPayment.getCreditCardType() == "Invalid") {
 			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
 		}
