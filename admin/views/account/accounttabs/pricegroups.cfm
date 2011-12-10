@@ -39,7 +39,7 @@ Notes:
 
 <cfoutput>
 	
-	<cf_SlatwallPropertyDisplay object="#rc.account#" property="priceGroups" edit="#rc.edit#" />
+	<cf_SlatwallPropertyDisplay object="#rc.account#" property="priceGroups" edit="#rc.edit#" displayType="plain" />
 	<!---
 	<table id="PriceGroupList" class="listing-grid stripe" style="width:50%;">
 		<tr>
