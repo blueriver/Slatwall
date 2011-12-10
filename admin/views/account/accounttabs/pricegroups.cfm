@@ -38,6 +38,9 @@ Notes:
 --->
 
 <cfoutput>
+	
+	<cf_SlatwallPropertyDisplay object="#rc.account#" property="priceGroups" edit="#rc.edit#" />
+	<!---
 	<table id="PriceGroupList" class="listing-grid stripe" style="width:50%;">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.name")#</th>
@@ -58,4 +61,5 @@ Notes:
 
 		</cfloop>
 	</table>
+	--->
 </cfoutput>
