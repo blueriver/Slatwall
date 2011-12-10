@@ -123,13 +123,21 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	   }
 	}
 	
-	public void function removePriceGroup(required any priceGroup) {
+	public void function removePriceGroup() {
+       var index = arrayFind(variables.priceGroup.getPriceGroupRates(),this);
+       if(index > 0) {
+           arrayDeleteAt(variables.priceGroup.getPriceGroupRates(),index);
+       }
+       structDelete(variables,"priceGroup");
+    }
+	
+	/*public void function removePriceGroup(required any priceGroup) {
        var index = arrayFind(arguments.priceGroup.getPriceGroupRates(),this);
        if(index > 0) {
            arrayDeleteAt(arguments.priceGroup.getPriceGroupRates(),index);
        }
        structDelete(variables,"priceGroup");
-    }
+    }*/
 	
     /************   END Association Management Methods   *******************/
     
