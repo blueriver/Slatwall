@@ -77,10 +77,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
     	
     	rc.edit = true; 
-    	getFW().setView("admin:pricegroup.detailPriceGroup"); 
-    }
+    	getFW().setView("admin:pricegroup.detailPriceGroup");  
 	
-
+	}
 	
 
 	public void function savePriceGroup(required struct rc) {
@@ -113,15 +112,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		if(!rc.priceGroup.hasErrors()) {
 			// If added or edited a Price Group Rate
-			if(rc.populateSubProperties) {
-				rc.message=rbKey("admin.pricegroup.savepricegroup_nowaddrates");;	
-				getFW().redirect(action="admin:priceGroup.editPriceGroup",querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#",preserve="message");	
+			if(wasNew) {
+				rc.message=rbKey("admin.pricegroup.savepricegroup_nowaddrates");
+				getFW().redirect(action="admin:priceGroup.editPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");	
 			} else {
-				rc.message=rc.message=rbKey("admin.option.savepricegroup_success");
-				getFW().redirect(action="admin:priceGroup.detailPriceGroup",querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#",preserve="message");
+				rc.message=rc.message=rbKey("admin.priceGroup.savepricegroup_success");
+				getFW().redirect(action="admin:priceGroup.detailPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");
 			}
 			
-		} else {				
+		} 
+		else { 			
 			// If one of the rates had the error, then find out which one and populate it
 			if(rc.pricegroup.hasError("priceGroupRates")) {
 				for(var i=1; i<=arrayLen(rc.pricegroup.getPriceGroupRates()); i++) {

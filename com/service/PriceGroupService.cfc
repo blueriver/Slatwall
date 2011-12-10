@@ -45,6 +45,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
 		// Before we allow the automated entity population to work, clear out the percentageOff, amountOff and amount fields from the rate so that they null out in the DB.
 		arguments.priceGroupRate.clearAmounts();
+		
 			
 		// Populates entity based on RC contents and validates entity. 
 		arguments.priceGroupRate = super.save(entity=arguments.priceGroupRate, data=arguments.data);
@@ -93,12 +94,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	public void function deletePriceGroup(required any priceGroup){
+	public boolean function deletePriceGroup(required any priceGroup){
 		// Any price groups that are inhering from this price group should have that inheritence disabled.
-		var priceGroups = getPriceGroupByParentPriceGroup(priceGroup.getPriceGroupId());
-		dumpScreen(priceGroups);
-		
-		super.deletePRiceGroup(priceGroup);
+		var inheritingPriceGroups = arguments.priceGroup.getChildPriceGroups();
+		for(var i=1; i<=arrayLen(inheritingPriceGroups); i++) {
+			priceGroup.removeChildPriceGroup(inheritingPriceGroups[i]);
+		}
+
+		return super.delete(priceGroup);
 	}
 	
 	// Helper method the delegates

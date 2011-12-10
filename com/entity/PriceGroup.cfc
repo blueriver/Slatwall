@@ -53,14 +53,22 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	// Related Object Properties (Many-To-One)
 	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID";
 	
+	// Track which PriceGroups are inheriting from THIS price group. Should be maintaining this property through parentPriceGroup
+	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" inverse="true" fkcolumn="priceGroupID" lazy="extra" cascade="all";
+	
+	
 	// Related Object Properties (One-To-Many)
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
 	
 	public PriceGroup function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.pricingGroupRates)) {
-	   	   variables.priceGroupRates = [];
-	   }
+		// set default collections for association management methods
+		if(isNull(variables.pricingGroupRates)) {
+			variables.priceGroupRates = [];
+		}
+		
+		if(isNull(variables.Products)){
+		   variables.Products = [];
+		}
 	   
 		if(isNull(variables.activeFlag)) {
 			variables.activeFlag = true;
@@ -81,7 +89,41 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	   arguments.priceGroupRate.removePriceGroup(this);
 	}
 	
+	
+	
+	// Parent Pricing Group (many-to-one)
+	public void function addChildPriceGroup(required any priceGroup) {
+	   arguments.priceGroup.setParentPriceGroup(this);
+	}
+	
+	public void function removeChildPriceGroup(required any priceGroup) {
+		// removeParentPriceGroup is defined...?
+		arguments.priceGroup.removeParentPriceGroup();
+	}
+	
+	// Override the default setParentPriceGroup method to wire up childParentGroups
+    public void function setParentPriceGroup(required any priceGroup){
+    	variables.parentPriceGroup = arguments.priceGroup;
+    	
+		// Populate the ChildPriceGroups in the other Price Group. We need to manually manipulate the array because the addChildPriceGroup() has been overwridden
+		if(isNew() or !arguments.priceGroup.hasChildPriceGroup(this)) {
+	       arrayAppend(arguments.priceGroup.getChildPriceGroups(), this);
+	   }
+    	
+    }
+    
+    // Removes the parent (inherited) price group from this price group (nulls out the property) and also removes the references to this price group from the price group that we were inheriting from.
+    public void function removeParentPriceGroup() {
+       var index = arrayFind(variables.parentPriceGroup.getChildPriceGroups(), this);
+       if(index > 0) {
+           arrayDeleteAt(variables.parentPriceGroup.getChildPriceGroups(), index);
+       }
+       structDelete(variables, "parentPriceGroup");
+    }
+	
+	
     /************   END Association Management Methods   *******************/
+    
     
     
     // Loop over all Price Group Rates and pull the one that is global
