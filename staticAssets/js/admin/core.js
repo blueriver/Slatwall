@@ -132,3 +132,18 @@ function confirmDialog(message,action){
 
 	return false;	
 }
+
+function alertDialog(message) {
+	jQuery("#alertDialogMessage").html(message);
+	jQuery("#alertDialog").dialog({
+		resizable: false,
+		modal: true,
+		buttons: {
+			'Ok': function() {
+				jQuery(this).dialog('close');
+			}
+		}
+	});
+
+return false;
+}

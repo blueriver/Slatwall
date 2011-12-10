@@ -4,5 +4,25 @@
 		<property name="addressZoneName">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="addressZoneLocations">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="shippingMethods">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="shippingRates">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="taxCategoryRates">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>

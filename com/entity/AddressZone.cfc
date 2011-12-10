@@ -49,10 +49,10 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
 	
 	// Related Object Properties
-	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all-delete-orphan" ;
-	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all-delete-orphan" ;
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" cascade="all-delete-orphan" ;
+	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID";
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" ;
+	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" ;
+	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" ;
 	
 	public array function getAddressZoneLocations() {
 		if(isNull(variables.addressZoneLocations)) {
