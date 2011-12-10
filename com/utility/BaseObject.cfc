@@ -387,8 +387,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		// Get the Meta Data for the property
 		var propertyMeta = getPropertyMetaData( arguments.propertyName );
 		
-		// If this is a relational property, and the relationship is many-to-one or many-to-many, then return the propertyName and propertyName of primaryID
-		if( structKeyExists(propertyMeta, "fieldType") && (propertyMeta.fieldType == "many-to-one" || propertyMeta.fieldType == "many-to-many") ) {
+		// If this is a relational property, and the relationship is many-to-one, then return the propertyName and propertyName of primaryID
+		if( structKeyExists(propertyMeta, "fieldType") && propertyMeta.fieldType == "many-to-one" ) {
 			
 			var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#propertyMeta.cfc#" );
 			return "#arguments.propertyName#.#primaryIDPropertyName#";
