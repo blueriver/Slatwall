@@ -93,6 +93,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
+	public void function deletePriceGroup(required any priceGroup){
+		// Any price groups that are inhering from this price group should have that inheritence disabled.
+		var priceGroups = getPriceGroupByParentPriceGroup(priceGroup.getPriceGroupId());
+		dumpScreen(priceGroups);
+		
+		super.deletePRiceGroup(priceGroup);
+	}
+	
 	// Helper method the delegates
 	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
 		if(!isNull(getSessionService().getCurrent().getAccount())) {

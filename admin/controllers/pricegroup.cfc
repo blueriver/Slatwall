@@ -136,30 +136,53 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}	
 	}
 	
-	public void function delete(required struct rc) {
-		
-		detail(rc);
-		
-		var deleteOK = getPriceGroupService().delete(rc.priceGroup);
+	public void function deletePriceGroup(required struct rc) {
+		var priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupId);
+		var deleteOK = getPriceGroupService().deletePriceGroup(priceGroup);
 		
 		if( deleteOK ) {
-			rc.message = rbKey("admin.pricegroup.delete_success");
+			rc.message = rbKey("admin.pricegroup.deletePriceGroup_success");
 		} else {
-			rc.message = rbKey("admin.pricegroup.delete_error");
+			rc.message = rbKey("admin.pricegroup.deletePriceGroup_failure");
 			rc.messagetype="error";
 		}
 		
-		getFW().redirect(action="admin:priceGroup.list", preserve="message,messagetype");
+		getFW().redirect(action="admin:priceGroup.listPriceGroups", preserve="message,messagetype");
 	}
 	
-	public void function deletePriceGroupRate(required struct rc) {
-		detail(rc);
+	/*
+	
+	var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
 		
+		var deleteOK = getOptionService().deleteOptionGroup(optionGroup);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.optionGroup.delete_success");
+		} else {
+			rc.message = rbKey("admin.optionGroup.delete_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:option.listOptionGroups", preserve="message,messagetype");
+	
+	*/
+	
+	
+	
+	public void function deletePriceGroupRate(required struct rc) {
 		var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId);
-		rc.priceGroup.removePriceGroupRate(priceGroupRate);
-		priceGroupRate.removePriceGroup(rc.priceGroup);
-		rc.edit = true;
-		getFW().setView("admin:pricegroup.detailPriceGroup");
+		var priceGroupId = priceGroupRate.getPriceGroup().getPriceGroupId();
+		var deleteOK = getPriceGroupService().deletePriceGroupRate(priceGroupRate);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.pricegroup.deletePriceGroupRate_success");
+		} else {
+			rc.message = rbKey("admin.pricegroup.deletePriceGroupRate_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:pricegroup.editPriceGroup", querystring="priceGroupid=#priceGroupId#",preserve="message,messagetype");
+		
 	}
 	
 		// Common functionalty of Add/Edit/View
