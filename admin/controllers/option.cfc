@@ -75,7 +75,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.option = getOptionService().getOption(rc.optionID, true);
     	
     	rc.edit = true;
-    	getFW().setView("admin:option.detailOptionGroup");
+    	getFW().setView("admin:option.detailOptionGroup"); 
     }
     
     public void function saveOptionGroup(required struct rc) {
