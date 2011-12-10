@@ -94,6 +94,27 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	/******* Association management methods for bidirectional relationships **************/
 	
 	
+	// Enforce that this entity can only have one of either percentageOff, amountOff or amount at any given time.
+	public void function clearAmounts(){
+		StructDelete(variables, "percentageOff");
+		StructDelete(variables, "amountOff");
+		StructDelete(variables, "amount");
+	}
+	/*public void function setPercentageOff(required numeric value){
+		clearAmounts();
+		variables.percentageOff = arguments.value;
+	}
+	
+	public void function setAmountOff(required numeric value){
+		clearAmounts();
+		variables.amountOff = arguments.value;
+	}
+	
+	public void function setAmount(required numeric value){
+		clearAmounts();
+		variables.amount = arguments.value;
+	}*/
+	
 	// Price Group (many-to-one)
 	public void function setPriceGroup(required any priceGroup) {
 	   variables.priceGroup = arguments.priceGroup;

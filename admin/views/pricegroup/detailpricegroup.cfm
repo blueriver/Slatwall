@@ -137,6 +137,7 @@ Notes:
 				<cfinclude template="pricegroupratedisplay.cfm">
 				<input type="hidden" name="priceGroupRates[1].priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>
 				
+				<!--- The populateSubProperties is read by the implicit save() handler to determine if it should process the savePriceGroupRate() method. --->
 				<cfif rc.priceGroupRate.isNew() && not rc.priceGroupRate.hasErrors()>
 					<input type="hidden" name="populateSubProperties" id="addPriceGroupRateHidden" value="false"/>
 				<cfelse>

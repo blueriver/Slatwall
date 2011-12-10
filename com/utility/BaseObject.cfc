@@ -146,16 +146,16 @@ component displayname="Base Object" accessors="true" output="false" {
 						}
 					}
 				// (MANY-TO-MANY) Do this logic if this property is a one-to-many or many-to-many relationship, and the data passed in is of type array
-				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-many" && isStruct( arguments.data[ currentProperty.name ] ) ) {
+				} else if ( structKeyExists(currentProperty, "fieldType") && currentProperty.fieldType == "many-to-many" && isSimpleValue( arguments.data[ currentProperty.name ] ) ) {
 					
 					// Set the data of this Many-To-Many relationship into it's own local struct
-					var manyToManyStructData = arguments.data[ currentProperty.name ];
+					var manyToManyListData = arguments.data[ currentProperty.name ];
 					
 					// Find the primaryID column Name
 					var primaryIDPropertyName = getService( "utilityORMService" ).getPrimaryIDPropertyNameByEntityName( "Slatwall#currentProperty.cfc#" );
 					
 					// If the primaryID exists then we can set the relationships
-					if(structKeyExists(manyToOneStructData, primaryIDPropertyName) && isSimpleValue(manyToOneStructData[primaryIDPropertyName])) {
+					if(structKeyExists(manyToManyStructData, primaryIDPropertyName) && isSimpleValue(manyToManyStructData[primaryIDPropertyName])) {
 						
 						// Get all of the existing related entities
 						var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
@@ -193,7 +193,7 @@ component displayname="Base Object" accessors="true" output="false" {
 						}
 						
 					}
-				}
+				}	
 			}
 		}
 		

@@ -65,7 +65,16 @@ Notes:
 					<option value="amount" <cfif rc.priceGroupRate.getType() EQ "amount"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.amount')#</option>
 				</select>
 	
-				<input type="text" id="priceGroupRateValue" name="priceGroupRateValue" value="<cfif !isNull(rc.priceGroupRate.getValue())>#rc.priceGroupRate.getValue()#</cfif>" />
+				<!--- The name of this hidden input is changed dynamically based on the value of priceGroupRateType --->
+				<input type="text" id="priceGroupRateValue" 
+				<cfif rc.priceGroupRate.isNew() OR rc.priceGroupRate.getType() EQ "percentageOff">
+					name="priceGroupRates[1].percentageOff" 
+				<cfelseif rc.priceGroupRate.getType() EQ "amountOff">	
+					name="priceGroupRates[1].amountOff" 
+				<cfelseif rc.priceGroupRate.getType() EQ "amount">
+					name="priceGroupRates[1].amount" 
+				</cfif>	
+					value="<cfif !isNull(rc.priceGroupRate.getValue())>#rc.priceGroupRate.getValue()#</cfif>" />
 				
 				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> >
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[1].RoundingRule" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">

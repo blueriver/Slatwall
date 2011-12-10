@@ -43,10 +43,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="productService" type="any";
 	
 	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
+		// Before we allow the automated entity population to work, clear out the percentageOff, amountOff and amount fields from the rate so that they null out in the DB.
+		arguments.priceGroupRate.clearAmounts();
+			
 		// Populates entity based on RC contents and validates entity. 
 		arguments.priceGroupRate = super.save(entity=arguments.priceGroupRate, data=arguments.data);
 		
-		dumpScreen("Inside of savePriceGroupRate()");
 		// As long as this price group rate didn't have errors, then we can update all of the other rates for this given price group
 		if(!arguments.priceGroupRate.hasErrors()) {
 			var priceGroup = arguments.priceGroupRate.getPriceGroup();
@@ -69,7 +71,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						rates[i].removeSku(arguments.priceGroupRate.getSkus()[s]);
 					}
 					
-					throw(arguments.priceGroupRate.getGlobalFlag());
 					// If the rate that was just edited was set to global, make sure that no other rates are global
 					if(arguments.priceGroupRate.getGlobalFlag() && rates[i].getGlobalFlag()){
 						rates[i].setGlobalFlag(false);	
@@ -81,14 +82,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			if(arguments.priceGroupRate.getGlobalFlag()){
 				arguments.priceGroupRate.setProducts([]);
 				arguments.priceGroupRate.setProductTypes([]);
-				arguments.priceGroupRate.setProductSKUs([]);
-				rguments.priceGroupRate.setExcludedProducts([]);
+				arguments.priceGroupRate.setSKUs([]);
+				arguments.priceGroupRate.setExcludedProducts([]);
 				arguments.priceGroupRate.setExcludedProductTypes([]);
-				arguments.priceGroupRate.setExcludedProductSKUs([]);
+				arguments.priceGroupRate.setExcludedSKUs([]);
 			}
 		}
 		else {
-			throw("Uncaught errors!");
+			
 		}
 	}
 	

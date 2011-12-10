@@ -134,7 +134,7 @@
     </bean>
     <bean id="settingService" parent="parentService" class="Slatwall.com.service.SettingService">
         <property name="DAO"><ref bean="settingDAO" /></property>
-		<!-- Injected From Mua -->
+		<!-- Injected From Mura -->
 		<property name="configBean"><ref bean="ConfigBean" /></property>
 		<property name="contentManager"><ref bean="ContentManager" /></property>
     </bean>
