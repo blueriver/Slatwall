@@ -721,5 +721,10 @@ component displayname="Base Object" accessors="true" output="false" {
     	GetPageContext().getResponse().getWriter().write(theContent);
     	abort;
 	}
+	
+	// This can be expanded, but kept it simple for now.
+	public void function logSlatwall(required string message){
+		getService("logService").logMessage(message=arguments.message, generalLog=false);		
+	}
 		
 }

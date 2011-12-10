@@ -97,10 +97,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public boolean function deletePriceGroup(required any priceGroup){
 		// Any price groups that are inhering from this price group should have that inheritence disabled.
 		var inheritingPriceGroups = arguments.priceGroup.getChildPriceGroups();
-		for(var i=1; i<=arrayLen(inheritingPriceGroups); i++) {
-			priceGroup.removeChildPriceGroup(inheritingPriceGroups[i]);
-		}
 
+		//logSlatwall("deletePriceGroup: Found #ArrayLen(inheritingPriceGroups)# inheritingPriceGroups.");
+
+		while(arrayLen(inheritingPriceGroups) != 0) {
+			//logSlatwall("Calling removeChildPriceGroup(#inheritingPriceGroups[1].getPriceGroupName()#) on #priceGroup.getPriceGroupName()#. The arrayLen is #arrayLen(inheritingPriceGroups)#");
+			priceGroup.removeChildPriceGroup(inheritingPriceGroups[1]);
+		}
+	
+		//logSlatwall("deletePriceGroup: Calling super.delete(#priceGroup.getPriceGroupName()#)");
 		return super.delete(priceGroup);
 	}
 	

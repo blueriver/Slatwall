@@ -117,7 +117,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().redirect(action="admin:priceGroup.editPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");	
 			} else {
 				rc.message=rc.message=rbKey("admin.priceGroup.savepricegroup_success");
-				getFW().redirect(action="admin:priceGroup.detailPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");
+				
+				// If the price group rate has changed during this edit, then stay on the details page, otherwise, list.
+				if(rc.populateSubProperties)
+					getFW().redirect(action="admin:priceGroup.detailPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");
+				else
+					getFW().redirect(action="admin:priceGroup.listPriceGroups", querystring="", preserve="message");
 			}
 			
 		} 

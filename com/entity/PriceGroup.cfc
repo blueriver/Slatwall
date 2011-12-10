@@ -54,7 +54,7 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID";
 	
 	// Track which PriceGroups are inheriting from THIS price group. Should be maintaining this property through parentPriceGroup
-	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" inverse="true" fkcolumn="priceGroupID" lazy="extra" cascade="all";
+	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" inverse="true" fkcolumn="parentPriceGroupID" lazy="extra" cascade="all";
 	
 	
 	// Related Object Properties (One-To-Many)
@@ -98,6 +98,8 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	
 	public void function removeChildPriceGroup(required any priceGroup) {
 		// removeParentPriceGroup is defined...?
+		
+		//logSlatwall("removeChildPriceGroup: Calling removeParentPriceGroup() on #arguments.priceGroup.getPriceGroupName()#");
 		arguments.priceGroup.removeParentPriceGroup();
 	}
 	
@@ -113,12 +115,21 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
     }
     
     // Removes the parent (inherited) price group from this price group (nulls out the property) and also removes the references to this price group from the price group that we were inheriting from.
+    // If PriceGroupB inherits from PriceGroupA, then this method is going to be called on PriceGroupB. 
     public void function removeParentPriceGroup() {
-       var index = arrayFind(variables.parentPriceGroup.getChildPriceGroups(), this);
-       if(index > 0) {
-           arrayDeleteAt(variables.parentPriceGroup.getChildPriceGroups(), index);
-       }
-       structDelete(variables, "parentPriceGroup");
+    	//logSlatwall("removeParentPriceGroup(): was called for #this.getPriceGroupName()#");
+    	
+		if(StructKeyExists(variables, "parentPriceGroup")){
+			// Loop in the parent price group's (priceGroupA) children (inheriting Price Groups), and find this price group (PriceGroupB), and remove it from PriceGroupA's array.
+			var index = arrayFind(variables.parentPriceGroup.getChildPriceGroups(), this);
+			if(index > 0) {
+				//logSlatwall("removeParentPriceGroup(): Removing #this.getPriceGroupName()# from #variables.parentPriceGroup.getPriceGroupName()#");
+				arrayDeleteAt(variables.parentPriceGroup.getChildPriceGroups(), index);
+			}
+			
+			//logSlatwall("removeParentPriceGroup(): Clearing the parentPriceGroup attribute for #this.getPriceGroupName()#");
+			structDelete(variables, "parentPriceGroup");
+		}
     }
 	
 	
