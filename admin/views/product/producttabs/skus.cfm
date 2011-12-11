@@ -58,7 +58,7 @@ Notes:
 </div>
 </cfif>
 <!---<cfset local.skus = rc.SkuSmartList.getPageRecords() />--->
-
+	<cf_SlatwallErrorDisplay object="#rc.product#" errorName="skus" displaytype="div" />
 	<table id="skuTable" class="listing-grid stripe">
 		<thead>
 			<tr>

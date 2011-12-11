@@ -380,4 +380,36 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return true;
 	}
 	
+	//@hint Generates the image path based upon product code, and image options for this sku
+	public string function generateImageFileName() {
+		var optionString = "";
+		for(var option in getOptions()){
+			if(option.getOptionGroup().getImageGroupFlag()){
+				optionString &= "-#option.getOptionCode()#";
+			}
+		}
+		return "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
+	}
+	
+	//@hint this method generated sku code based on assigned options
+	public any function generateSkuCode () {
+		var newSkuCode = getProduct().getProductCode();
+		for(var option in getOptions() ) {
+			newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
+		}
+		return newSkuCode;
+	}
+
+    // Override the preInsert method to set a default sortOrder
+    public void function preInsert() {
+    	if(isNull(getSkuCode()) || getSkuCode() == "") {
+    		setSkuCode(generateSkuCode());
+    	}
+    	if(isNull(getImageFile()) || getImageFile() == "") {
+    		setImageFile(generateImageFileName());
+    	}
+		super.preInsert();
+    }
+    
+	
 }

@@ -97,7 +97,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisOptionID = listGetAt(arguments.data.options,j);
 			var thisOption = this.getOption(thisOptionID);
 			thisSku.addOption(thisOption);
-			thisSku.setImageFile(generateImageFileName(thisSku));
+			thisSku.setImageFile(thisSku.generateImageFileName());
 			// generate code from options to be used in Sku Code
 			comboCode = listAppend(comboCode,thisOption.getOptionCode(),"-");
 		}
@@ -109,46 +109,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return thisSku;
 	}
 
-    /**
-    /* @hint bulk update of skus from product edit page
-    */	
-	public any function updateSkus(required any product,required array skus) {
-		// keep track of sku codes so that we can flag any duplicates
-		var skuCodeList = "";
-		for(var i=1;i<=arrayLen(arguments.skus);i++) {
-			local.skuStruct = arguments.skus[i];
-			if( len(local.skuStruct.skuID) > 0 ) {
-				local.thisSku = this.getSku(local.skuStruct.skuID);
-				// set the new sku Code if one was entered
-				if(len(trim(local.skuStruct.skuCode)) > 0) {
-					local.thisSku.setSkuCode(local.skuStruct.skuCode);
-				}
-				// set new sku prices if they were numeric
-				if(isNumeric(local.skuStruct.price)) {
-					local.thisSku.setPrice(local.skuStruct.price);
-				}
-	            if(isNumeric(local.skuStruct.listPrice)) {
-	                local.thisSku.setListPrice(local.skuStruct.listPrice);
-	            }
-	          	if(isNumeric(local.skuStruct.shippingWeight)) {
-	                local.thisSku.setShippingWeight(local.skuStruct.shippingWeight);
-	            }
-	            // set the remoteID if it was passed in
-	            if(structKeyExists(local.skuStruct,"remoteID") && len(trim(local.skuStruct.remoteID))) {
-	            	local.thisSku.setRemoteID(local.skuStruct.remoteID);
-	            }
-	            local.thisSku.setImageFile(generateImageFileName(local.thisSku));
-	         } else {
-	         	// this is a new sku added from product.edit form (no skuID yet)
-	         	local.thisSku = createSkuFromStruct( local.skuStruct, arguments.product );
-	         	validateDuplicate(local.thisSku);
-	         }
-	         validateSkuCode( local.thisSku, skuCodeList );
-	         skuCodeList = listAppend(skuCodeList, local.thisSku.getSkuCode());
-		}
-		return true;
-	}
-	
 	
 	/**
 	/* @hint takes a struct of optionGroup (keys are option group sort orders) and lists of optionID's (values) and returns a list of all possible optionID combinations 
@@ -193,18 +153,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		} else {
 			return false;
 		}	
-	}
-	
-	public string function generateImageFileName( required any sku ) {
-		// Generates the image path based upon product code, and image options for this sku
-		var options = arguments.sku.getOptions();
-		var optionString = "";
-		for(var i=1; i<=arrayLen(options); i++){
-			if(options[i].getOptionGroup().getImageGroupFlag()){
-				optionString &= "-#options[i].getOptionCode()#";
-			}
-		}
-		return "#arguments.Sku.getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
 	}
 	
 	public array function getSortedProductSkus(required any product) {
