@@ -44,9 +44,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
 		// Before we allow the automated entity population to work, clear out the percentageOff, amountOff and amount fields from the rate so that they null out in the DB.
-		arguments.priceGroupRate.clearAmounts();
-		
-			
+		if(arguments.data.priceGroupRateId == "new amount"){
+			arguments.priceGroupRate.clearAmounts();
+		}
+
 		// Populates entity based on RC contents and validates entity. 
 		arguments.priceGroupRate = super.save(entity=arguments.priceGroupRate, data=arguments.data);
 		
@@ -273,12 +274,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 
 	public void function updatePriceGroupSKUSettings(data){
 		var local = {};
-		//dumpScreen(arguments.data);
+		
 		
 		// If we are not updating to a new amount then make sure to delete "amount" from RC or else it will overwrite the Rate.
 		if(arguments.data.priceGroupRateId != "new amount"){
 			StructDelete(arguments.data, "amount");
 		}
+		
+
 		
 		// If no skuId exists, then the user is editing the entire group, so we need to create a "product" entry in the included list
 		if(arguments.data.skuId EQ ""){
@@ -307,6 +310,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var sku = getSkuService().getSku(arguments.data.skuId);
 			var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
 			priceGroupRate.addSku(sku);
+
+			// This will actually populate the price group rate based on the RC.
 			this.savePriceGroupRate(priceGroupRate, arguments.data);	
 		}
 	}

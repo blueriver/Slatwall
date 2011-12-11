@@ -294,7 +294,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	// Handler is called by modal dialog, to update the price group configuration on a specific SKU
-	public void function updatePriceGroupSKUSettings(required struct rc) {
+	public void function updatePriceGroupSKUSettings(required struct rc) { 
 		getService("PriceGroupService").updatePriceGroupSKUSettings(data = rc);
 		
 		rc.message = rbKey("admin.sku.updatepricegroupsettings_success");
