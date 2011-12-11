@@ -51,7 +51,7 @@ Notes:
 							<ul class="three">
 								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="detail" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="edit" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="delete" type="list" disabled="#local.shippingMethod.isAssigned()#" disabledText="#rc.$.Slatwall.rbKey('entity.shippingMethod.delete_validateIsAssigned')#" confirmRequired="true">
+								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="delete" type="list" disabled="#local.shippingMethod.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.shippingMethod.delete_validateIsDeletable')#" confirmRequired="true">
 							</ul>
 						<cfelse>
 							<ul class="one">

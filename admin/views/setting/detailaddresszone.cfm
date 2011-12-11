@@ -81,7 +81,7 @@ Notes:
 							<td class="administration">
 								<ul class="one">
 									<cfif not local.address.isNew()>
-										<cf_SlatwallActionCaller action="admin:setting.deleteaddresszonelocation" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#&addressID=#local.address.getAddressID()#" disabled="#rc.addressZone.isNotDeletable()#" class="delete" type="list">
+										<cf_SlatwallActionCaller action="admin:setting.deleteaddresszonelocation" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#&addressID=#local.address.getAddressID()#" class="delete" type="list">
 									</cfif>
 								</ul>
 							</td>
@@ -98,6 +98,9 @@ Notes:
 		</cfif>
 		<cfif rc.edit>
 			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cfif Not rc.addressZone.isNew()>
+				<cf_SlatwallActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#" class="button" type="link" disabled="#rc.addressZone.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.addressZone.delete_validateIsDeletable')#" confirmRequired="true">
+			</cfif>
 			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
 			</form>
 		</cfif>

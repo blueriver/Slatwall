@@ -4,5 +4,10 @@
 		<property name="shippingMethodName">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="orderFulfillments">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>

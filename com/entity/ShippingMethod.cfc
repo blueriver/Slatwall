@@ -59,6 +59,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	// Related Object Properties (One-to-Many)
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillmentShipping" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true";
 	
 	// Related Object Properties (Many-to-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
