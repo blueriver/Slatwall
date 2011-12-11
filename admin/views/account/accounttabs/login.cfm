@@ -41,18 +41,8 @@ Notes:
 <cfoutput>
 	<div class="svoadminaccountdetaillogin">
 		<dl class="twoColumn">
-			<dt>
-				<label for="primaryemail">#rc.$.Slatwall.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#</label>
-			</dt>
-			<dd>
-				<input type="text" id="emailAddress" name="emailAddress" value="#rc.account.getEmailAddress()#" />
-			</dd>
-			<dt>
-				<label for="password">#rc.$.Slatwall.rbKey("admin.account.detail.tab.login.password")#</label>
-			</dt>
-			<dd>
-				<input type="password" autocomplete="off" id="password" name="password" value="" />
-			</dd>
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="#rc.edit#" title="#rc.$.Slatwall.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#" />
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#" />
 		</dl>
 	</div>
 </cfoutput>

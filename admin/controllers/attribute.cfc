@@ -54,15 +54,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().setView("admin:attribute.detailAttributeSet");
 		
 		rc.attributeSet = getAttributeService().newAttributeSet();
+		rc.attribute = getAttributeService().newAttribute();
 	}
 	
 	public void function editAttributeSet(required struct rc) {
 		param name="rc.attributeSetID" default="";
+		param name="rc.attributeID" default="";
 		
 		rc.edit = true;
 		getFW().setView("admin:attribute.detailAttributeSet");
 		
 		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
+		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
 		
 		if(isNull(rc.attributeSet)) {
 			getFW().redirect(action="admin:attribute.listAttributeSets");
@@ -89,6 +92,23 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.itemTitle = rc.AttributeSet.isNew() ? rc.$.Slatwall.rbKey("admin.attribute.createAttributeSet") : rc.$.Slatwall.rbKey("admin.attribute.editAttributeSet") & ": #rc.attributeSet.getAttributeSetName()#";
 			getFW().setView(action="admin:attribute.detailAttributeSet");
 		}
+	}
+	
+	public void function deleteAttributeSet(required struct rc) {
+		param name="rc.attributeSetID" default="";
+		
+		var attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
+		
+		var deleteOK = getAttributeService().deleteAttributeSet(attributeSet);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.optionGroup.delete_success");
+		} else {
+			rc.message = rbKey("admin.optionGroup.delete_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:attribute.listAttributeSets", preserve="message,messagetype");
 	}
 	
 	/*
