@@ -12,7 +12,7 @@
 			<rule type="required" contexts="*" />
 			<rule type="date" contexts="*" />
 		</property>
-		<property name="products">
+		<property name="appliedPromotions">
 			<rule type="collectionSize" contexts="delete">
 				<param name="max" value="0" />
 			</rule>
