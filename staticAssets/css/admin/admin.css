@@ -89,6 +89,34 @@ a.button, .ui-widget-content a.button {
 input.button:hover, button:hover {
 	text-decoration:underline;
 }
+a.buttonOff {
+	background-color: #cccccc;
+    border: none;
+	border-radius: 3px;
+	color: #FFFFFF;
+	cursor: pointer;
+    margin:0 0 0 3px;
+    padding: 3px 6px;
+	vertical-align: middle;
+	width: auto;
+	font-size: 11px;
+    height: 23px;
+	font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a.buttonOff, .ui-widget-content a.buttonOff {
+	height:17px;
+	line-height:17px;
+	display:inline-block;
+}
+
+a.buttonOff:hover {
+	text-decoration: none;
+}
+
+.buttons a.adminorderdetailorderfulfillment {
+	float:right;
+}
+
 label {
 	font-weight:bold;
 }
@@ -181,29 +209,6 @@ div#advancedSearchOptions {
 
 div#statusSelections {
 	margin: 5px 0;
-}
-
-a.buttonOff {
-	background-color: #cccccc;
-	vertical-align: middle;
-	/*padding: 0;*/
-	width: auto;
-	border: 0 solid #fff;
-	cursor: pointer;
-	color: #fff;
-	padding: 4px 6px 3px;
-	margin-right: 10px;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-a.buttonOff:hover {
-	text-decoration: none;
-}
-
-.buttons a.adminorderdetailorderfulfillment {
-	float:right;
 }
 
 .admincontainer fieldset {
