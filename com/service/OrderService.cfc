@@ -501,6 +501,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Validate & Save Address
+			address.validate(context="full");
 			address = getAddressService().saveAddress(address);
 			
 			// Check for a shipping method option selected
@@ -648,7 +649,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		arguments.orderPayment.validate();
 		
 		if(arguments.orderPayment.getCreditCardType() == "Invalid") {
-			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
+			arguments.orderPayment.addError(errorName="creditCardNumber", errorMessage="Invalid credit card number.");
 		}
 		
 		var address = arguments.orderPayment.getBillingAddress();
