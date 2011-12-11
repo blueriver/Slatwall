@@ -110,7 +110,7 @@ Notes:
 		</cfcase>
 		<cfcase value="password">
 			<cfoutput>
-				<input type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="false" />
+				<input type="password" name="#attributes.fieldName#" class="#attributes.fieldClass#" autocomplete="off" />
 			</cfoutput>
 		</cfcase>
 		<cfcase value="radiogroup">

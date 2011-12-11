@@ -69,12 +69,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
 	property name="fullName" persistent="false";
+	property name="emailAddress" persistent="false";
+	property name="phoneNumber" persistent="false";
+	property name="password" persistent="false";
 	
 	public any function init() {
 		if(isNull(variables.accountEmailAddresses)) {

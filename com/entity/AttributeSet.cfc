@@ -48,9 +48,9 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
 	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
@@ -60,15 +60,17 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	
 	public AttributeSet function init(){
        // set default collections for association management methods
-       if(isNull(variables.Attributes))
-           variables.Attributes = [];
-       if(isNull(variables.attributeSetAssignments))
-           variables.attributeSetAssignments = [];
-       return Super.init();
+       if(isNull(variables.attributes)) {
+       	   variables.attributes = [];
+       }
+       if(isNull(variables.attributeSetAssignments)) {
+       	   variables.attributeSetAssignments = [];
+       }
+       return super.init();
     }
 	
 	public array function getAttributes(orderby, sortType="text", direction="asc") {
-		if(!structKeyExists(arguments,"orderby")) {
+		if(!structKeyExists(arguments, "orderby")) {
 			return variables.Attributes;
 		} else {
 			return getService("utilityService").sortObjectArray(variables.Attributes,arguments.orderby,arguments.sortType,arguments.direction);
