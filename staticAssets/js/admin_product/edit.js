@@ -147,8 +147,10 @@ jQuery(document).ready(function() {
 			// Select the currently selected option
 			$select.val(currentPriceGroupRateValue);
 			
-			// Call the change handler so that if "New Amount" is selected, the input is opened.
-			$select.change();
+			if($select.val() == "new amount"){
+				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).show();
+			}
+			
 		}
 
 		// Open the dialog itself, and pass in the method that will be called when the OK button is clicked. Once the dialog is closed, replace the form with a copy so that it resets. 
