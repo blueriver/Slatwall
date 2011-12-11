@@ -42,43 +42,56 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="attributeService" type="any";
 
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:attribute.list");
+		getFW().redirect(action="admin:attribute.listAttributeSets");
 	}
 	
-	public void function create(required struct rc) {
-		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		if(!isNull(rc.attributeSet)) {
-			rc.newAttribute = getAttributeService().newAttribute();
-			rc.create = true;
-			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
-			getFW().setView("attribute.edit");
-		} else {
-			getFW().redirect("attribute.list");
-		}
-	}
-
-	public void function edit(required struct rc) {
-		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		if(!isNull(rc.attributeSet)) {
-			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
-		} else {
-			getFW().redirect("attribute.list");
-		}
-	}
-	
-	public void function detail(required struct rc) {
-		if(len(rc.attribute.getAttributeName())) {
-			rc.itemTitle &= ": #rc.attribute.getAttributeName()#";
-		} else {
-			getFW().redirect("admin:attribute.list");
-		}
-	}
-	
-    
-    public void function list(required struct rc) {
-        rc.attributeSets = getAttributeService().listAttributeSetOrderByAttributeSetName();
+	public void function listAttributeSets(required struct rc) {
+        rc.attributeSetSmartList = getAttributeService().getAttributeSetSmartList();
     }
     
+	public void function createAttributeSet(required struct rc) {
+		rc.edit = true;
+		getFW().setView("admin:attribute.detailAttributeSet");
+		
+		rc.attributeSet = getAttributeService().newAttributeSet();
+	}
+	
+	public void function editAttributeSet(required struct rc) {
+		param name="rc.attributeSetID" default="";
+		
+		rc.edit = true;
+		getFW().setView("admin:attribute.detailAttributeSet");
+		
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
+		
+		if(isNull(rc.attributeSet)) {
+			getFW().redirect(action="admin:attribute.listAttributeSets");
+		}
+	}
+	
+	public void function saveAttributeSet(required struct rc) {
+		param name="rc.attributeSetID" default="";
+		param name="rc.populateSubProperties" default="false";
+		
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID, true);
+		
+		rc.attributeSet = getAttributeService().saveAttributeSet(rc.attributeSet, rc);
+		
+		if(!rc.attributeSet.hasErrors()) {
+			rc.message=rc.$.Slatwall.rbKey("admin.attribute.saveAttributeSet_success");
+			if(rc.populateSubProperties) {
+				getFW().redirect(action="admin:attribute.editAttributeSet",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:attribute.listAttributeSets",preserve="message");
+			}
+		} else {
+			rc.edit = true;
+			rc.itemTitle = rc.AttributeSet.isNew() ? rc.$.Slatwall.rbKey("admin.attribute.createAttributeSet") : rc.$.Slatwall.rbKey("admin.attribute.editAttributeSet") & ": #rc.attributeSet.getAttributeSetName()#";
+			getFW().setView(action="admin:attribute.detailAttributeSet");
+		}
+	}
+	
+	/*
 	public void function save(required struct rc) {
 		param name="rc.attributeID" default="";
 		
@@ -211,5 +224,37 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 		}
 	}
+	
+	
+	public void function create(required struct rc) {
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
+		if(!isNull(rc.attributeSet)) {
+			rc.newAttribute = getAttributeService().newAttribute();
+			rc.create = true;
+			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
+			getFW().setView("attribute.edit");
+		} else {
+			getFW().redirect("attribute.list");
+		}
+	}
+
+	public void function edit(required struct rc) {
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
+		if(!isNull(rc.attributeSet)) {
+			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
+		} else {
+			getFW().redirect("attribute.list");
+		}
+	}
+	
+	public void function detail(required struct rc) {
+		if(len(rc.attribute.getAttributeName())) {
+			rc.itemTitle &= ": #rc.attribute.getAttributeName()#";
+		} else {
+			getFW().redirect("admin:attribute.list");
+		}
+	}
+	*/
+	
 	
 }
