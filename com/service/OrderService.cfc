@@ -663,7 +663,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		address.populate(arguments.data.billingAddress);
 		
 		// Validate Address
-		address = getAddressService().validateAddress(address);
+		address.validate();
 		
 		arguments.orderPayment.setBillingAddress(address);
 		
