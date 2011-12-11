@@ -139,11 +139,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public void function setProducts(required array Products) {
 		// first, clear existing collection
 		variables.Products = [];
-		for( var i=1; i<= arraylen(arguments.Products); i++ ) {
-			var thisProduct = arguments.Products[i];
-			if(isObject(thisProduct) && thisProduct.getClassName() == "SlatwallProduct") {
-				addProduct(thisProduct);
-			}
+		for( var product in arguments.Products ) {
+			addProduct(product);
 		}
 	}
 	
