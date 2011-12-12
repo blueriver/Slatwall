@@ -85,29 +85,32 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	
 	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
     public any function save(required any entity, struct data) {
-    	
-    	// If data was passed in to this method then populate it with the new data
-        if(structKeyExists(arguments,"data")){
-        	
-        	// Populate this object
-			arguments.entity.populate(argumentCollection=arguments);
-		
-		    // Validate this object now that it has been populated
-        	arguments.entity.validate(entity=arguments.entity);
-        	
-        }
-        
-        // If the object passed validation then call save in the DAO, otherwise set the errors flag
-        if(!arguments.entity.hasErrors()) {
-            arguments.entity = getDAO().save(target=arguments.entity);
-        } else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
-        }
-        
-        // Return the entity
-        return arguments.entity;
+    	// Run the save in a Try/Catch block to handle issues with incorrect objects being passed in
+    	try {
+    		// If data was passed in to this method then populate it with the new data
+	        if(structKeyExists(arguments,"data")){
+	        	
+	        	// Populate this object
+				arguments.entity.populate(argumentCollection=arguments);
+			
+			    // Validate this object now that it has been populated
+	        	arguments.entity.validate(entity=arguments.entity);
+	        	
+	        }
+	        
+	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
+	        if(!arguments.entity.hasErrors()) {
+	            arguments.entity = getDAO().save(target=arguments.entity);
+	        } else {
+	            getService("requestCacheService").setValue("ormHasErrors", true);
+	        }
+	        
+	        // Return the entity
+	        return arguments.entity;
+    	} catch (any e) {
+    		throw("The entity being passed to this service is not a persistent entity.  Make sure that you aren't calling the oMM method with named arguments.");
+    	}
     }
-    
     
     
  	/**
