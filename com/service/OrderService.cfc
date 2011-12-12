@@ -87,6 +87,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartlist.getRecords();
 	}
 	
+	public any function saveOrder(required any order, struct data={}) {
+		
+		// Call the super.save() method to do the base populate & validate logic
+		arguments.order = super.save(entity=arguments.order, data=arguments.data);
+		
+		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
+		if(arguments.order.getStatusCode() == "ostNotPlaced") {
+			for(var i=arrayLen(arguments.order.getOrderItems()); i>=1; i--) {
+				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
+					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
+				}
+			}	
+		}
+		
+		return arguments.order;
+	}
+	
 	public any function searchOrders(struct data={}) {
 		//set keyword and orderby
 		var params = {

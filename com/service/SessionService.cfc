@@ -101,7 +101,7 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// Save the session
-		save(currentSession);
+		this.saveSession(entity=currentSession);
 		
 		// Save session ID in the session Scope & cookie scope for next request
 		session.slatwall.sessionID = currentSession.getSessionID();

@@ -85,13 +85,13 @@ Notes:
 				<cfset taxTotal += rc.orderReport.orderClosedTaxAfterDiscount />
 				
 				<tr>
-					<td>#DateFormat("#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#", $.slatwall.setting('advanced_dateFormat'))#</td>
+					<td>#$.slatwall.formatValue("#rc.orderReport.Year#-#rc.orderReport.Month#-#rc.orderReport.Day#", "date")#</td>
 					<td>#rc.orderReport.cartCreatedOrderCount#</td>
-					<td>#dollarFormat(rc.orderReport.cartCreatedSubtotalAfterDiscount)#</td>
+					<td>#$.slatwall.formatValue(rc.orderReport.cartCreatedSubtotalAfterDiscount, "currency")#</td>
 					<td>#rc.orderReport.orderPlacedOrderCount#</td>
-					<td>#dollarFormat(rc.orderReport.orderPlacedSubtotalAfterDiscount)#</td>
+					<td>#$.slatwall.formatValue(rc.orderReport.orderPlacedSubtotalAfterDiscount, "currency")#</td>
 					<td>#rc.orderReport.orderClosedOrderCount#</td>
-					<td>#dollarFormat(rc.orderReport.orderClosedSubtotalAfterDiscount)#</td>
+					<td>#$.slatwall.formatValue(rc.orderReport.orderClosedSubtotalAfterDiscount, "currency")#</td>
 				</tr>
 			</cfloop>
 			

@@ -262,34 +262,14 @@ component displayname="Base Object" accessors="true" output="false" {
 		return value;
 	}
 
-	public any function getFormattedValue(required string propertyName, string formatType, any valueArg) {
-		/*
-			Valid formatType Strings are:
-		
-			none
-			yesno
-			truefalse
-			currency
-			datetime
-			date
-			time
-			weight
-			
-		*/
-		
-		// get the value out of this object
-		if(StructKeyExists(arguments, "valueArg")){
-			var value = arguments.valueArg;
-		}
-		else{
-			var value = invokeMethod("get#arguments.propertyName#");
-		}
+	public any function getFormattedValue(required string propertyName, string formatType ) {
+		arguments.value = invokeMethod("get#arguments.propertyName#");
 		
 		// This is the null format option
-		if(isNull(value)) {
+		if(isNull(arguments.value)) {
 			return "";
 		// This is not a simple value, throw an exception
-		} else if (!isSimpleValue(value)) {
+		} else if (!isSimpleValue(arguments.value)) {
 			throw("You cannont convert complex values to formatted Values");
 		}
 		
@@ -298,43 +278,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			arguments.formatType = getPropertyFormatType( arguments.propertyName );
 		}
 		
-		// Do a switch on the seperate formatTypes and return a formatted value
-		switch(arguments.formatType) {
-			case "none": {
-				return value;
-			}
-			case "yesno": {
-				if(isBoolean(value) && value) {
-					return rbKey('define.yes');
-				} else {
-					return rbKey('define.no');
-				}
-			}
-			case "truefalse": {
-				if(isBoolean(value) && value) {
-					return rbKey('define.true');
-				} else {
-					return rbKey('define.false');
-				}
-			}
-			case "currency": {
-				return LSCurrencyFormat(value, setting("advanced_currencyType"), setting("advanced_currencyLocale"));
-			}
-			case "datetime": {
-				return dateFormat(value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
-			}
-			case "date": {
-				return dateFormat(value, setting("advanced_dateFormat"));
-			}
-			case "time": {
-				return timeFormat(value, setting("advanced_timeFormat"));
-			}
-			case "weight": {
-				return value & " " & setting("advanced_weightFormat");
-			}
-		}
-		
-		return value;
+		return formatValue(value=arguments.value, formatType=arguments.formatType);
 	}
 	
 	// @hint public method for getting the display format for a given property, this is used a lot by the SlatwallPropertyDisplay
@@ -623,6 +567,60 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint helper method to add an error to the error bean	
 	public void function addError( required string errorName, required string errorMessage ) {
 		getErrorBean().addError(argumentCollection=arguments);
+	}
+	
+	public any function formatValue( required string value, required string formatType ) {
+		/*
+			Valid formatType Strings are:
+		
+			none
+			yesno
+			truefalse
+			currency
+			datetime
+			date
+			time
+			weight
+			
+		*/
+		
+		// Do a switch on the seperate formatTypes and return a formatted value
+		switch(arguments.formatType) {
+			case "none": {
+				return arguments.value;
+			}
+			case "yesno": {
+				if(isBoolean(arguments.value) && arguments.value) {
+					return rbKey('define.yes');
+				} else {
+					return rbKey('define.no');
+				}
+			}
+			case "truefalse": {
+				if(isBoolean(arguments.value) && arguments.value) {
+					return rbKey('define.true');
+				} else {
+				return rbKey('define.false');
+				}
+			}
+			case "currency": {
+				return LSCurrencyFormat(arguments.value, setting("advanced_currencyType"), setting("advanced_currencyLocale"));
+			}
+			case "datetime": {
+				return dateFormat(arguments.value, setting("advanced_dateFormat")) & " " & TimeFormat(value, setting("advanced_timeFormat"));
+			}
+			case "date": {
+				return dateFormat(arguments.value, setting("advanced_dateFormat"));
+			}
+			case "time": {
+				return timeFormat(arguments.value, setting("advanced_timeFormat"));
+			}
+			case "weight": {
+				return arguments.value & " " & setting("advanced_weightFormat");
+			}
+		}
+		
+		return arguments.value;
 	}
 	
 	// @help private method only used by populate

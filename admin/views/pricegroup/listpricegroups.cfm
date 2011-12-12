@@ -69,7 +69,7 @@ Notes:
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:pricegroup.editpricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="edit" type="list">            
 					  <cf_SlatwallActionCaller action="admin:pricegroup.detailpricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:pricegroup.deletepricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="delete" type="list" confirmrequired="true">
+					  <cf_SlatwallActionCaller action="admin:pricegroup.deletepricegroup" querystring="pricegroupID=#local.pricegroup.getPriceGroupID()#" class="delete" type="list" disabled="#local.pricegroup.isNotDeletable()#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>

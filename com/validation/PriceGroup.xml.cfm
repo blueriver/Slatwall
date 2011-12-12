@@ -7,5 +7,10 @@
 		<property name="priceGroupCode">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="childPriceGroups">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
