@@ -195,7 +195,7 @@ Notes:
 						<cfset productRate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
 						<cfset skuRate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
 						<cfif !isNull(productRate) AND !isNull(skuRate) AND productRate.getPriceGroupRateId() neq skuRate.getPriceGroupRateId()>
-							Overridden
+							Overridden (#skuRate.getAmountRepresentation()#)
 						</cfif>
 					</td>	
 				</cfloop>

@@ -9,25 +9,52 @@
 	<form action="#buildURL('admin:product.updatePriceGroupSKUSettings')#" method="post">
 		<input type="hidden" name="productId" value="#rc.product.getProductId()#">
 		
-		<strong>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.groupname')#: </strong> 
+		<dl class="twoColumn">
+			<dt class="title">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.groupname')#: </dt>
+			<dd class="value"><span id="updatePriceGroupSKUSettings_GroupName"></span></dd>
+			
+			<dt class="title">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.currentrate')#: </dt>
+			<dd class="value"><span id="updatePriceGroupSKUSettings_CurrentRate"></span></dd>
+			
+			<dt class="title">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.selectrate')#: </dt>
+			<dd class="value">
+				<p class="ui-helper-hidden">No rates were defined for this price group.</p>
+					
+				<select name="priceGroupRateId" id="updatePriceGroupSKUSettings_PriceGroupRateId">
+					<option value="new amount">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#</option>
+					<option value="inherited">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.inherited')#</option>
+					<option value="">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.selectarate')#</option>	
+				</select>
+				
+				<div id="updatePriceGroupSKUSettings_norates" class="ui-helper-hidden">
+					<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.norates')#</p>
+				</div>		
+			</dd>
+			<dt class="title ui-helper-hidden" id="updatePriceGroupSKUSettings_newAmountTitle">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#: </dt>
+			<dd class="value ui-helper-hidden" id="updatePriceGroupSKUSettings_newAmountValue">$<input type="text" name="amount"></dd>
+		</dl>
+		
+		
+		
+		
+		<!---<strong>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.groupname')#: </strong> 
 		<span id="updatePriceGroupSKUSettings_GroupName"></span>
 	
 		<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.selectrate')#:</p>
-		
-		<p class="ui-helper-hidden">No rates were defined for this price group.</p>
 					
 		<select name="priceGroupRateId" id="updatePriceGroupSKUSettings_PriceGroupRateId">
 			<option value="new amount">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#</option>
-			<option value="inherited">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.inherited')#</option>	
+			<option value="inherited">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.inherited')#</option>
+			<option value="">#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.selectarate')#</option>	
 		</select>
 				
 				
 		<div id="updatePriceGroupSKUSettings_norates" class="ui-helper-hidden">
 			<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.norates')#</p>
-		</div>		
+		</div>	
 		<div id="updatePriceGroupSKUSettings_newAmount" class="ui-helper-hidden">
 			<p>#rc.$.Slatwall.rbKey('admin.product.pricegroupskuupdatedialog.newamount')#: $<input type="text" name="amount"></p>
-		</div>
+		</div>--->
 
 	</form>
 </div>
