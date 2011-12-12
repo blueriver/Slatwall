@@ -979,4 +979,5 @@ div.optionsSelector ul {
 
 .dialog p, .dialog select {margin-top:5px; margin-bottom:5px;}
 .dialog form {width:280px;}
+.dialog dl dt{width:100px; font-weight:bold;}
 .clickable:hover{cursor:pointer;}

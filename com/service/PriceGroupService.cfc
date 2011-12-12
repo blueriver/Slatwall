@@ -281,38 +281,40 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			StructDelete(arguments.data, "amount");
 		}
 		
-
-		
-		// If no skuId exists, then the user is editing the entire group, so we need to create a "product" entry in the included list
-		if(arguments.data.skuId EQ ""){
-			// Ignore if the "rate" chosen is keyword "inherit". 
-			if(arguments.data.priceGroupRateId NEQ "inherit"){
-				/*
-					If we are assigning an entire product to a selected rate (user clicked on column header), then pull the selected rate, and see if the
-					product is already included. If not, add it. When we call savePriceGroupRate(), it will automatically clear out the product entries from
-					the other rates for ys
-				*/
-				
-				var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
-				priceGroupRate.addProduct(getProductService().getProduct(arguments.data.productId));
-				this.savePriceGroupRate(priceGroupRate, arguments.data);
+		// If the user has selected the "Select a Rate" rate, ignore all of this logic. This should not have been allowed to happen.
+		if(arguments.data.priceGroupRateId NEQ "")
+		{
+			// If no skuId exists, then the user is editing the entire group, so we need to create a "product" entry in the included list
+			if(arguments.data.skuId EQ ""){
+				// Ignore if the "rate" chosen is keyword "inherit". 
+				if(arguments.data.priceGroupRateId NEQ "inherit"){
+					/*
+						If we are assigning an entire product to a selected rate (user clicked on column header), then pull the selected rate, and see if the
+						product is already included. If not, add it. When we call savePriceGroupRate(), it will automatically clear out the product entries from
+						the other rates for ys
+					*/
+					
+					var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
+					priceGroupRate.addProduct(getProductService().getProduct(arguments.data.productId));
+					this.savePriceGroupRate(priceGroupRate, arguments.data);
+				}
 			}
-		}
-		
-		// Otherwise, we have a SKU, which means that we are working with a specifc SKU
-		else {	
-			/*
-				Either the priceGroupRateId value has been passed, or we have a value for newAmount. If newAmount, then create a brand new rate with a SKU
-				include, and assign to the group. If priceGroupRateId is provided, then add the SKU "include" to that Rate 
-			*/
-
-			// getPriceGroupRate() returns either the requested priceGrouRate or a new Entity. savePriceGroupRate() Populates entity from RC, and saves.
-			var sku = getSkuService().getSku(arguments.data.skuId);
-			var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
-			priceGroupRate.addSku(sku);
-
-			// This will actually populate the price group rate based on the RC.
-			this.savePriceGroupRate(priceGroupRate, arguments.data);	
+			
+			// Otherwise, we have a SKU, which means that we are working with a specifc SKU
+			else {	
+				/*
+					Either the priceGroupRateId value has been passed, or we have a value for newAmount. If newAmount, then create a brand new rate with a SKU
+					include, and assign to the group. If priceGroupRateId is provided, then add the SKU "include" to that Rate 
+				*/
+	
+				// getPriceGroupRate() returns either the requested priceGrouRate or a new Entity. savePriceGroupRate() Populates entity from RC, and saves.
+				var sku = getSkuService().getSku(arguments.data.skuId);
+				var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
+				priceGroupRate.addSku(sku);
+	
+				// This will actually populate the price group rate based on the RC.
+				this.savePriceGroupRate(priceGroupRate, arguments.data);	
+			}
 		}
 	}
 	
