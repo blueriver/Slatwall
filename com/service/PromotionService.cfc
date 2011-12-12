@@ -38,7 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-
+	/*
 	public void function savePromotionCodes(required any promotion, required array promotionCodes){
 		// keep track of promotion code list to validate that there are no duplicates
 		var promotionCodeList = "";
@@ -66,7 +66,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			arguments.promotionCode = super.save(arguments.promotionCode);
 		}
 		return arguments.promotionCode;
-	}
+	}*/
 	
 	public void function savePromotionRewards(required any promotion, required array promotionRewards){
 		for(var promotionRewardData in arguments.promotionRewards){
@@ -115,19 +115,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		arguments.promotionReward.populate(arguments.data);
 		
 		if(arguments.promotionReward.getRewardType() == "product"){
-			
+			arguments.promotionReward = this.getPromotionRewardProduct(arguments.promotionReward.getPromotionRewardID(),true);
 			// Clear any skus from promotion reward
-			for( var s=1; s<=arrayLen(arguments.promotionReward.getSkus()); s++ ) {
+			for( var s=arrayLen(arguments.promotionReward.getSkus()); s>=1; s-- ) {
 				arguments.promotionReward.removeSku(arguments.promotionReward.getSkus()[s]);
 			}
 			
 			// Clear any products from promotion reward
-			for( var p=1; p<=arrayLen(arguments.promotionReward.getProducts()); p++ ) {
+			for( var p=arrayLen(arguments.promotionReward.getProducts()); p>=1; p-- ) {
 				arguments.promotionReward.removeProduct(arguments.promotionReward.getProducts()[p]);
 			}
 			
 			// Clear any product types from promotion reward
-			for( var pt=1; pt<=arrayLen(arguments.promotionReward.getProductTypes()); pt++ ) {
+			for( var pt=arrayLen(arguments.promotionReward.getProductTypes()); pt>=1; pt-- ) {
 				arguments.promotionReward.removeProductType(arguments.promotionReward.getProductTypes()[p]);
 			}
 			
@@ -164,8 +164,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		else if(arguments.promotionReward.getRewardType() == "shipping"){
 
+			arguments.promotionReward = this.getPromotionRewardShipping(arguments.promotionReward.getPromotionRewardID(),true);
 			// Clear any shipping methods from promotion reward
-			for( var sm=1; sm<=arrayLen(arguments.promotionReward.getShippingMethods()); sm++ ) {
+			for( var sm=arrayLen(arguments.promotionReward.getShippingMethods()); sm>=1; sm-- ) {
 				arguments.promotionReward.removeShippingMethod(arguments.promotionReward.getShippingMethods()[sm]);
 			}			
 
@@ -179,7 +180,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 		}
-		validatePromotionReward(arguments.promotionReward);
 		arguments.promotionReward = super.save(arguments.promotionReward);
 		return arguments.promotionReward;
 	}

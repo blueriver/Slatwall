@@ -80,5 +80,13 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
     }
 	
     /************   END Association Management Methods   *******************/
-
+    
+    // Override the preInsert method to set a promotion code
+    public void function preInsert() {
+		if(isNull(getPromotionCode()) || getPromotionCode() == ""){
+			setPromotionCode(createUUID());
+		}
+		super.preInsert();
+    }
+    
 }

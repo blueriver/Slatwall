@@ -81,7 +81,6 @@ Notes:
 					<cfif rc.edit>
 						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="dateTime" />
 						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="endDateTime" for="promotionCodes[#local.promotionCodeCount#].endDateTime" />         
-						
 					<cfelse>
 						#local.endDateTime#
 					</cfif>
@@ -110,23 +109,17 @@ Notes:
 						<input type="hidden" name="promotionCodes[#local.promotionCodeCount#].promotionCodeID" value="" />
 						<td class="alignLeft">
 							<input type="text" size="40" name="promotionCodes[#local.promotionCodeCount#].promotionCode" value="#local.thisPromotionCode.getPromotionCode()#" />
-							<cfif local.thisPromotionCode.hasErrors()>
-								<br><span class="formError">#local.thisPromotionCode.getErrorBean().getError("promotionCode")#</span>
-							</cfif>
+							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="promotionCode" for="promotionCodes[#local.promotionCodeCount#].promotionCode" />
 						</td>
 						<td>
 							<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 							<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="dateTime" />
-							<cfif local.thisPromotionCode.hasErrors()>
-								<br><span class="formError">#local.thisPromotionCode.getErrorBean().getError("startDateTime")#</span>
-							</cfif>
+							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="startDateTime" for="promotionCodes[#local.promotionCodeCount#].startDateTime" />
 						</td>
 						<td>
 							<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
-							 <input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="dateTime" />         
-							<cfif local.thisPromotionCode.hasErrors()>
-								<br><span class="formError">#local.thisPromotionCode.getErrorBean().getError("endDateTime")#</span>
-							</cfif>
+							<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="dateTime" />         
+							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="endDateTime" for="promotionCodes[#local.promotionCodeCount#].endDateTime" />
 						</td>
 						<td class="administration">
 						</td>

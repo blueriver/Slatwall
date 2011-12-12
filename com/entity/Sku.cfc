@@ -400,7 +400,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return newSkuCode;
 	}
 
-    // Override the preInsert method to set a default sortOrder
+    // Override the preInsert method to set sku code and Image name
     public void function preInsert() {
     	if(isNull(getSkuCode()) || getSkuCode() == "") {
     		setSkuCode(generateSkuCode());

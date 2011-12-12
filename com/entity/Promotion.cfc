@@ -111,4 +111,18 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
     /************   END Association Management Methods   *******************/
 
+	// @hint this method validates that promotion codes are unique
+	public any function hasUniquePromotionCodes() {
+		var promotionCodeList = "";
+		
+		for(var promotionCode in getPromotionCodes()){
+			if(listFindNoCase(promotionCodeList, promotionCode.getPromotionCode())) {
+				return false;
+			} else {
+				promotionCodeList = listAppend(promotionCodeList, promotionCode.getPromotionCode());
+			}
+		}
+		return true;
+	}
+
 }
