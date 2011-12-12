@@ -130,7 +130,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Check to see if the order has already been closed or canceled
 		if (arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
-			throw("You cannot add an item to an order that has been closed or canceld");
+			throw("You cannot add an item to an order that has been closed or canceled");
 		}
 		
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
