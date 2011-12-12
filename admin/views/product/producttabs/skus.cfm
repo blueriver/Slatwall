@@ -167,9 +167,9 @@ Notes:
 	
 				<td>
 					<cfif rc.edit>
-						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />
+						<input type="text" size="6" name="skus[#local.skuCount#].price" value="#local.thisSku.getPrice()#" />
 					<cfelse>
-						#DollarFormat(local.thisSku.getPrice())#
+						#local.thisSku.getFormattedValue('price')#
 					</cfif>
 				</td>
 				
@@ -190,7 +190,7 @@ Notes:
 					</cfif>
 					
 					<td <cfif rc.edit>class="priceGroupSKUColumn"</cfif> data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
-						#DollarFormat(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup))#
+						#$.Slatwall.formatValue(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup), "currency")#
 						
 						<cfset productRate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
 						<cfset skuRate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
