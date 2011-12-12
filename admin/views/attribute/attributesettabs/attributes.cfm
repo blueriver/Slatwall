@@ -76,7 +76,7 @@ Notes:
 		</cfif>
 		
 		<div id="attributeInputs" <cfif rc.attribute.isNew() && not rc.attribute.hasErrors()>class="ui-helper-hidden"</cfif> >
-			<strong>#rc.$.Slatwall.rbKey("admin.attribute.detailAttributeGroup.addAttribute")#</strong>
+			<strong>#rc.$.Slatwall.rbKey("admin.attribute.detailAttributeSet.addAttribute")#</strong>
 			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="activeFlag" fieldName="attributes[1].activeFlag" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeName" fieldName="attributes[1].attributeName" edit="true" />
@@ -91,9 +91,9 @@ Notes:
 			
 			<input type="hidden" name="attributes[1].attributeID" value="#rc.attribute.getAttributeID()#"/>
 			<cfif rc.attribute.isNew() && not rc.attribute.hasErrors()>
-				<input type="hidden" name="populateSubProperties" id="addOptionHidden" value="false"/>
+				<input type="hidden" name="populateSubProperties" id="populateSubPropertiesHidden" value="false"/>
 			<cfelse>
-				<input type="hidden" name="populateSubProperties" id="addOptionHidden" value="true"/>
+				<input type="hidden" name="populateSubProperties" id="populateSubPropertiesHidden" value="true"/>
 			</cfif>
 		</div>
 		
