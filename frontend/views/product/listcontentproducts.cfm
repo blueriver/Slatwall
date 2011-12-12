@@ -46,7 +46,7 @@ Notes:
 					<dl>
 						<dt class="image">#local.product.getImage("s")#</dt>
 						<dt class="title">#local.product.getTitle()#</dt>
-						<dd class="price">#DollarFormat(local.product.getLivePrice())#</dd>
+						<dd class="price">#local.product.getFormattedValue('livePrice')#</dd>
 					</dl>
 				</a>
 			</cfloop>
