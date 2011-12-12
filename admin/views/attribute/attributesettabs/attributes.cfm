@@ -83,13 +83,13 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeName" fieldName="attributes[1].attributeName" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeCode" fieldName="attributes[1].attributeCode" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeHint" fieldName="attributes[1].attributeHint" edit="true" />
-				<!---<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeDescription" fieldName="attributes[1].attributeDescription" edit="true" fieldType="wysiwyg" />--->
+				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeDescription" fieldName="attributes[1].attributeDescription" edit="true" fieldType="wysiwyg" />
+				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="defaultValue" fieldName="attributes[1].defaultValue" edit="true" />
 				<cfif isNull(rc.attribute.getAttributeType())>
 					<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeType" fieldName="attributes[1].attributeType.typeID" edit="true" value="444df2a5a9088e72342c0b5eaf731c64" />	
 				<cfelse>
 					<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeType" fieldName="attributes[1].attributeType.typeID" edit="true" />
 				</cfif>
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="defaultValue" fieldName="attributes[1].defaultValue" edit="true" />
 			</dl>
 			
 			
@@ -131,10 +131,7 @@ Notes:
 						<button type="button" id="removeAttributeOptionButton" value="true" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.detailAttributeSet.removeAttributeOption")#</button>
 					</dd>
 				</dl>
-				
-				
 			</div>
-			
 			
 			<input type="hidden" name="attributes[1].attributeID" value="#rc.attribute.getAttributeID()#"/>
 			<cfif rc.attribute.isNew() && not rc.attribute.hasErrors()>

@@ -751,6 +751,10 @@ td.administration li.historyOff {
 	padding: 2px;
 	line-height: 22px;
 }
+.twoColumn dd .cke_skin_kama {
+	margin-left: 200px;
+}
+
 .tabs .oneColumn {
 	background: none;
 	padding-bottom: 0;
