@@ -83,27 +83,20 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return false;
 	}
 	
-	// @hint this default populate method just delegates to the entity
-	public any function populate(required any entity, required struct data, boolean cleanseInput=false) {
-		return arguments.entity.populate(data=arguments.data, cleanseInput=arguments.cleanseInput);
-	}
-	
-	// @hint this default validate method just delegates to the entity
-	public any function validate(required any entity) {
-    	return arguments.entity.validate();
-    }
-	
 	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
     public any function save(required any entity, struct data) {
     	
     	// If data was passed in to this method then populate it with the new data
         if(structKeyExists(arguments,"data")){
-            populate(argumentCollection=arguments);
-            
-            // Validate this object now that it has been populated
-        	validate(entity=arguments.entity);
+        	
+        	// Populate this object
+			arguments.entity.populate(argumentCollection=arguments);
+		
+		    // Validate this object now that it has been populated
+        	arguments.entity.validate(entity=arguments.entity);
+        	
         }
-         
+        
         // If the object passed validation then call save in the DAO, otherwise set the errors flag
         if(!arguments.entity.hasErrors()) {
             arguments.entity = getDAO().save(target=arguments.entity);
