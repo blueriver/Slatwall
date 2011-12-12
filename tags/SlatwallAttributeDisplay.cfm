@@ -38,7 +38,8 @@ Notes:
 --->
 <!--- hint: This is a required attribute that defines the object that contains the property to display --->
 <cfparam name="attributes.attribute" type="any" />
-<cfparam name="attributes.attributeValue" type="string" default="" />
+<cfparam name="attributes.attributeValue" type="any" />
+<cfparam name="attributes.edit" type="boolean" default="false" />
 
 <cfset local = structNew() />
 

@@ -79,15 +79,62 @@ Notes:
 			<strong>#rc.$.Slatwall.rbKey("admin.attribute.detailAttributeSet.addAttribute")#</strong>
 			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="activeFlag" fieldName="attributes[1].activeFlag" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="requiredFlag" fieldName="attributes[1].requiredFlag" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeName" fieldName="attributes[1].attributeName" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeCode" fieldName="attributes[1].attributeCode" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeHint" fieldName="attributes[1].attributeHint" edit="true" />
+				<!---<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeDescription" fieldName="attributes[1].attributeDescription" edit="true" fieldType="wysiwyg" />--->
+				<cfif isNull(rc.attribute.getAttributeType())>
+					<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeType" fieldName="attributes[1].attributeType.typeID" edit="true" value="444df2a5a9088e72342c0b5eaf731c64" />	
+				<cfelse>
+					<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeType" fieldName="attributes[1].attributeType.typeID" edit="true" />
+				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="defaultValue" fieldName="attributes[1].defaultValue" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="requiredFlag" fieldName="attributes[1].requiredFlag" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationMessage" fieldName="attributes[1].validationMessage" edit="true"/>
-				<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationRegex" fieldName="attributes[1].validationRegex" edit="true"/>
 			</dl>
-			<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="attributeDescription" fieldName="attributes[1].attributeDescription" edit="true" fieldType="wysiwyg" />
+			
+			
+			<div id="attributeValidationInputs">
+				<dl class="twoColumn">
+					<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationMessage" fieldName="attributes[1].validationMessage" edit="true"/>
+					<cf_SlatwallPropertyDisplay object="#rc.attribute#" property="validationRegex" fieldName="attributes[1].validationRegex" edit="true"/>
+				</dl>
+			</div>
+			<div id="attributeOptionInputs">
+				<dl class="twoColumn">
+					<dt><label>#rc.$.Slatwall.rbKey("entity.Attribute.AttributeOptions")#</label></dt>
+					<dd>
+						<table id="attributeOptionsTable" class="listing-grid stripe" style="width:200px;">
+							<tr>
+								<th>#rc.$.Slatwall.rbKey("entity.AttributeOption.attributeOptionValue")#</th>
+								<th>#rc.$.Slatwall.rbKey("entity.AttributeOption.attributeOptionLabel")#</th>
+								<th></th>
+							</tr>
+							
+							<cfloop from="1" to="#arrayLen(rc.attribute.getAttributeOptions())#" index="local.optionCount">
+								<tr>
+									<td>
+										<input type="hidden" name="attributes[1].attributeOptions[#local.optionCount#].attributeOptionID" value="#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionID()#">
+										<input name="attributes[1].attributeOptions[#local.optionCount#].attributeOptionValue" value="#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionValue()#">
+									</td>
+									<td>
+										<input name="attributes[1].attributeOptions[#local.optionCount#].attributeOptionLabel" value="#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionLabel()#">
+									</td>
+									<td class="administration">
+										<ul class="one">
+											<cf_SlatwallActionCaller action="admin:attribute.deleteAttributeOption" querystring="attributeOptionID=#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionID()#" class="delete" type="list">
+										</ul>
+									</td>
+								</tr>
+							</cfloop>
+						</table>
+						<button type="button" id="addAttributeOptionButton" value="true">#rc.$.Slatwall.rbKey("admin.attribute.detailAttributeSet.addAttributeOption")#</button>
+						<button type="button" id="removeAttributeOptionButton" value="true" style="display:none;">#rc.$.Slatwall.rbKey("admin.attribute.detailAttributeSet.removeAttributeOption")#</button>
+					</dd>
+				</dl>
+				
+				
+			</div>
+			
 			
 			<input type="hidden" name="attributes[1].attributeID" value="#rc.attribute.getAttributeID()#"/>
 			<cfif rc.attribute.isNew() && not rc.attribute.hasErrors()>
