@@ -135,8 +135,6 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	
     /************   END Association Management Methods   *******************/
     
-    
-    
     // Loop over all Price Group Rates and pull the one that is global
     public any function getGlobalPriceGroupRate(){
     	var rates = getPriceGroupRates();
@@ -144,6 +142,11 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
     		if(rates[i].getGlobalFlag())
     			return rates[i];
     	}	
+    }
+    
+    // Check if this PriceGroup can be deleted. Right now, only check if it has inheriting price groups
+    public boolean function isNotDeletable(){
+    	return ArrayLen(getChildPriceGroups()) NEQ 0;
     }
     
 }
