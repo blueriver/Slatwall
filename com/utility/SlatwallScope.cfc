@@ -154,10 +154,10 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function cart(string property, string value) {
-		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getCurrentCart().set#arguments.property#(#arguments.value#)");
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return getCurrentCart().invokeMethod("set#arguments.property#", {1=arguments.value});
 		} else if (isDefined("arguments.property")) {
-			return evaluate("getCurrentCart().get#arguments.property#()");
+			return getCurrentCart().invokeMethod("get#arguments.property#", {});
 		} else {
 			return getCurrentCart();	
 		}
