@@ -868,7 +868,7 @@ a.tooltip:hover span {
 }
 
 .ui-widget-content {
-    background: url("images/ui-bg_flat_75_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF;
+    background: url("images/admin.ui.bg_flat_ffffff.png") repeat-x scroll 50% 50% #FFFFFF;
     border: 0 solid #DBDBDB;
     color: #000000;
 }
@@ -894,12 +894,12 @@ a.tooltip:hover span {
     position: relative;
     top: 1px;
     white-space: nowrap;
-	background: url(../../images/admin.ui-bg_highlight-hard_90_f5f5f5_1x100.png) repeat-x scroll 50% 50% #F5F5F5;
+	background: url(../../images/admin.ui.bg_highlight_f5f5f5.png) repeat-x scroll 50% 50% #F5F5F5;
 	color: #636261;
 	border-color:#dbdbdb;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-hover {
-	background: url(../../images/admin.ui-bg_highlight-hard_90_dadada_1x100.png) repeat-x scroll 50% 50% #DADADA;
+	background: url(../../images/admin.ui.bg_highlight_dadada.png) repeat-x scroll 50% 50% #DADADA;
 	border-color:#dbdbdb;
 }
 .ui-tabs .ui-tabs-nav li a {
@@ -998,6 +998,7 @@ div.optionsSelector ul {
 
 .dialog p, .dialog select {margin-top:5px; margin-bottom:5px;}
 .dialog form {width:280px;}
+.dialog dl dt{width:100px; font-weight:bold;}
 .clickable:hover{cursor:pointer;}
 
 .ui-dialog {
@@ -1038,14 +1039,14 @@ div.optionsSelector ul {
     overflow: visible;
     padding: 0.2em 0.6em 0.3em;
     width: auto;
-	background: url("../../images/admin.ui-bg_highlight-hard_90_f5f5f5_1x100.png") repeat-x scroll 50% 50% #F5F5F5;
+	background: url("../../images/admin.ui.bg_highlight_f5f5f5.png") repeat-x scroll 50% 50% #F5F5F5;
     border: 1px solid #DBDBDB;
     color: #636261;
 	height:auto;
     font-weight: normal;
 }
 .ui-dialog .ui-dialog-buttonpane button:hover {
-	background: url("../../images/admin.ui-bg_highlight-hard_90_dadada_1x100.png") repeat-x scroll 50% 50% #F5F5F5;
+	background: url("../../images/admin.ui.bg_highlight_dadada.png") repeat-x scroll 50% 50% #F5F5F5;
 }
 .ui-dialog-content p {
     color: #666666;

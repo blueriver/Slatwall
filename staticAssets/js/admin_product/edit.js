@@ -105,23 +105,36 @@ jQuery(document).ready(function() {
 		// Populate the Price Group title in the modal dialog.
 		$("#updatePriceGroupSKUSettings_GroupName", $dialogDiv).html(priceGroupData[clickedPriceGroupId].PRICEGROUPNAME);
 		
-		// Populate the select
+		// Populate the current rate. We need to search through the price group rates array to find the one with the right id
+		var priceGroupRates = priceGroupData[clickedPriceGroupId].PRICEGROUPRATES;
+		jQuery.each(priceGroupRates, function(index, value){
+			if(value.ID == currentPriceGroupRateValue){
+				$("#updatePriceGroupSKUSettings_CurrentRate", $dialogDiv).html(value.NAME)
+				return false;	// Stop loop iteration
+			}
+			
+		});
+		
 		var $select = $("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv);
 		
 		// Save the two existing options, so that we have their lancuage
 		var $oldNewAmountOption = $($select.children("option")[0]);  
 		var $oldInheritedOption = $($select.children("option")[1]);  
+		var $oldSelectRateOption = $($select.children("option")[2]);  
 		
 		// Load in the select options
 		$select.empty();
 		$.each(priceGroupData[clickedPriceGroupId].PRICEGROUPRATES, function(i, curRate){
+			//alert("loading the select with " + curRate.NAME)
 			$select.append($("<option/>").attr("value", curRate.ID).text(curRate.NAME));
 		});
 		
-		// If this dialog was opened by a column header (no clickedSkuId), include the "new amount" option
-		if(clickedSkuId == ""){
-			$select.append($oldNewAmountOption);
+		// Add the "New Amount" in both the column header and individual SKU.
+		$select.append($oldNewAmountOption);
 		
+		// If this dialog was opened by a column header (no clickedSkuId)...
+		if(clickedSkuId == ""){
+
 			// Also, if find that this group's rate has been inherited, include the "Inherited" option.
 			if(currentPriceGroupRateValue == "inherited"){
 				// Append the string to the end of the "Inherited From" select value so it reads: "Inherited From [Rule Name] ([rule value])
@@ -138,17 +151,24 @@ jQuery(document).ready(function() {
 			$("#updatePriceGroupSKUSettings_norates").show();
 			$select.hide();
 		}
+		// Else there ARE children (possibly only "Inherited From") in the select.
 		else{
 			// Select the value in the select box
 			/*if(clickedSkuId == "inherited")
 				$select.val("inherited");
 			else if clickedSkuId != "")*/
 			
+			// If there is no value to select (but there ARE rates), then add the "Select a Rate" option
+			if(currentPriceGroupRateValue == ""){
+				$select.prepend($oldSelectRateOption);
+			}
+			
 			// Select the currently selected option
 			$select.val(currentPriceGroupRateValue);
 			
 			if($select.val() == "new amount"){
-				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).show();
+				$("#updatePriceGroupSKUSettings_newAmountTitle", $dialogDiv).show();
+				$("#updatePriceGroupSKUSettings_newAmountValue", $dialogDiv).show();
 			}
 			
 		}
@@ -172,10 +192,14 @@ jQuery(document).ready(function() {
 		
 		// Bind "change" handler to the Rate select. This has to happen after we assign the div to the dialog.
 		$("#updatePriceGroupSKUSettings_PriceGroupRateId", $dialogDiv).bind("change", function(){
-			if($(this).val() == "new amount")
-				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).show();
-			else
-				$("#updatePriceGroupSKUSettings_newAmount", $dialogDiv).hide();
+			if ($(this).val() == "new amount") {
+				$("#updatePriceGroupSKUSettings_newAmountTitle", $dialogDiv).show();
+				$("#updatePriceGroupSKUSettings_newAmountValue", $dialogDiv).show();
+			}
+			else {
+				$("#updatePriceGroupSKUSettings_newAmountTitle", $dialogDiv).hide();
+				$("#updatePriceGroupSKUSettings_newAmountValue", $dialogDiv).hide();
+			}
 		});
 	});
 	
