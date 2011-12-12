@@ -38,6 +38,9 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	property name="sessionService" type="any";
+	public numeric function roundValue(required any value, required any roundingRuleExpression) {
+		// TODO: actually do the rounding rule calculation here.
+		return arguments.value;
+	}
 	
 }

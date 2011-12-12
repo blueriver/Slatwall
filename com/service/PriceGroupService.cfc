@@ -164,14 +164,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// calculate the new price bassed on whatever was set up.
 		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
 			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
+			
+			// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
+			if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
+				newPrice = arguments.priceGroupRate.getRoundingRule().roundValue(newPrice);
+			}
 		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
 			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
 		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
 			var newPrice = arguments.priceGroupRate.getAmount();
 		}
 		
-		//return the newPrice
-		return newPrice;
+		//return the newPrice and make sure that it is just a two decimal number
+		return numberFormat(newPrice, "0.00");
 	}
 	
 	// This method will return the rate that a given productType has based on a priceGroup, also this looks up to parent productTypes as well.

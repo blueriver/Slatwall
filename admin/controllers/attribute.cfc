@@ -77,17 +77,26 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.populateSubProperties" default="false";
 		
 		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID, true);
+		rc.attribute = getAttributeService().newAttribute();
 		
 		rc.attributeSet = getAttributeService().saveAttributeSet(rc.attributeSet, rc);
 		
 		if(!rc.attributeSet.hasErrors()) {
 			rc.message=rc.$.Slatwall.rbKey("admin.attribute.saveAttributeSet_success");
 			if(rc.populateSubProperties) {
-				getFW().redirect(action="admin:attribute.editAttributeSet",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
+				getFW().redirect(action="admin:attribute.editAttributeSet",querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#",preserve="message");	
 			} else {
 				getFW().redirect(action="admin:attribute.listAttributeSets",preserve="message");
 			}
 		} else {
+			// If one of the attributes had the error, then find out which one and populate it
+			if(rc.attributeSet.hasError("attributes")) {
+				for(var i=1; i<=arrayLen(rc.attributeSet.getAttributes()); i++) {
+					if(rc.attributeSet.getAttributes()[i].hasErrors()) {
+						rc.attribute = rc.attributeSet.getAttributes()[i];
+					}
+				}
+			}
 			rc.edit = true;
 			rc.itemTitle = rc.AttributeSet.isNew() ? rc.$.Slatwall.rbKey("admin.attribute.createAttributeSet") : rc.$.Slatwall.rbKey("admin.attribute.editAttributeSet") & ": #rc.attributeSet.getAttributeSetName()#";
 			getFW().setView(action="admin:attribute.detailAttributeSet");

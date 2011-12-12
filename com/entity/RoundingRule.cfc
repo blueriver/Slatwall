@@ -49,4 +49,7 @@ component displayname="Rounding Rule" entityname="SlatwallRoundingRule" table="S
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	public numeric function roundValue(required any value) {
+		return getService("roundingRuleService").roundValue(value=arguments.value, roundingRuleExpression=getRoundingRuleExpression());
+	}	
 }

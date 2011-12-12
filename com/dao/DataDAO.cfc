@@ -185,11 +185,7 @@ Notes:
 				#arguments.tableName#
 			SET
 				<cfloop from="1" to="#arrayLen(updateColumns)#" index="i">
-					<cfif isNumeric(updateValues[i])>
-						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_numeric" value="#updateValues[i]#">
-					<cfelse>
-						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#updateValues[i]#">
-					</cfif>
+					#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#updateValues[i]#">
 					<cfif arrayLen(updateColumns) gt i>,</cfif> 
 				</cfloop>
 			WHERE
@@ -209,11 +205,7 @@ Notes:
 				#arrayToList(insertColumns, ",")#
 			) VALUES (
 				<cfloop from="1" to="#arrayLen(insertValues)#" index="i">
-					<cfif isNumeric(insertValues[i])>
-						<cfqueryparam cfsqltype="cf_sql_numeric" value="#insertValues[i]#">
-					<cfelse>
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#insertValues[i]#">
-					</cfif>
+					<cfqueryparam cfsqltype="cf_sql_varchar" value="#insertValues[i]#">
 					<cfif arrayLen(insertValues) gt i>,</cfif>
 				</cfloop>
 			)

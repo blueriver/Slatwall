@@ -39,6 +39,7 @@ Notes:
 
 component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
+	/*
 	public void function saveAttributeSort(required string attributeIDs) {
 		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
 			var attributeID = listGetAt(arguments.attributeIDs,i);
@@ -108,5 +109,7 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		smartList.addOrder("sortOrder|ASC");
 		return smartList.getRecords();
 	}
+	
+	*/
 	
 }
