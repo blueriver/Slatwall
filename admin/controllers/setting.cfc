@@ -187,6 +187,8 @@ component extends="BaseController" output="false" accessors="true" {
 				
 				if(rate.hasErrors()) {
 					errorsExist = true;
+					rate.removeShippingMethod(rc.shippingMethod);
+					rc.blankShippingRate = rate;
 				}
 			}
 		}
