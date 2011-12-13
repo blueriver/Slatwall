@@ -1,7 +1,7 @@
 <Table tableName="SlatwallFulfillmentMethod">
 	<Columns>
 		<column name="fulfillmentMethodID" fieldtype="id" />
-		<column name="activeFlag" update="false" />
+		<column name="activeFlag" update="false" datatype="bit" />
 	</Columns>
 	<Records>
 		<Record fulfillmentMethodID="shipping" activeFlag="0" />
