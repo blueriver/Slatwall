@@ -55,12 +55,13 @@ Notes:
 		
 		<dl class="twoColumn">
 			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleExpression" edit="#rc.edit#" >
+			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
 		</dl>
 		
 		<cfif rc.edit>
-			<cf_SlatwallActionCaller action="admin:roundingrule.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:roundingrule.save" type="submit" class="button">
+				<cf_SlatwallActionCaller action="admin:roundingrule.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:roundingrule.save" type="submit" class="button">
 			</form>
 		</cfif>
 		

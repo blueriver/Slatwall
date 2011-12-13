@@ -135,7 +135,7 @@ Notes:
 						<cfset attributes.valueFormatType = attributes.object.getPropertyFormatType( attributes.property ) />
 					</cfif>
 					
-					<cfset attributes.value = attributes.object.getFormattedValue(attributes.property, attributes.valueFormatType, attributes.value) />
+					<cfset attributes.value = attributes.object.formatValue(attributes.value, attributes.valueFormatType) />
 				</cfif>
 			</cfif>
 			

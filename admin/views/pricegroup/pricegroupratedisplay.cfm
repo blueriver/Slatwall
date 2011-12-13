@@ -77,7 +77,7 @@ Notes:
 					value="<cfif !isNull(rc.priceGroupRate.getValue())>#rc.priceGroupRate.getValue()#</cfif>" />
 				
 				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff" AND rc.priceGroupRate.getType() NEQ "">class="ui-helper-hidden"</cfif> >
-					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[1].RoundingRule" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
+					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[1].roundingRule.roundingRuleID" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
 				</div>
 	
 				<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->

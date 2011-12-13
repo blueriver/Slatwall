@@ -58,7 +58,7 @@ Notes:
 		<form name="PromotionEdit" action="#buildURL('admin:promotion.save')#" method="post">
 			<input type="hidden" name="PromotionID" value="#rc.Promotion.getPromotionID()#" />
 		</cfif>
-			<dl class="oneColumn">
+			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
@@ -71,8 +71,8 @@ Notes:
 						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
 					</ul>
 					<div id="tabDescription">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
 						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
+						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
 					</div>
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
@@ -85,8 +85,8 @@ Notes:
 			<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:promotion.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.promotion.isNew() and !arrayLen(rc.promotion.getAppliedPromotions())>
-				<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" confirmrequired="true">
+				<cfif Not rc.promotion.isNew()>
+					<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" disabled="#rc.promotion.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisDeletable')#" confirmrequired="true">
 				</cfif>
 				<cf_SlatwallActionCaller action="admin:promotion.save" type="submit" class="button">
 			</div>

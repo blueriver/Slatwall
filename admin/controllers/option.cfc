@@ -88,7 +88,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			if(rc.populateSubProperties) {
 				getFW().redirect(action="admin:option.editOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
 			} else {
-				getFW().redirect(action="admin:option.detailOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");
+				getFW().redirect(action="admin:option.listOptionGroups",preserve="message");
 			}
 		} else {
 			// If one of the sub-options had the error, then find out which one and populate it

@@ -42,11 +42,36 @@ component displayname="Rounding Rule" entityname="SlatwallRoundingRule" table="S
 	property name="roundingRuleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="roundingRuleName" ormtype="string";
 	property name="roundingRuleExpression" ormtype="string";
+	property name="roundingRuleDirection" ormtype="string"; 
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Related Object Properties
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="roundingRuleID" inverse="true";    
+
+	public numeric function roundValue(required any value) {
+		return getService("roundingRuleService").roundValueByRoundingRule(value=arguments.value, roundingRule=this);
+	}
+	
+	public array function getRoundingRuleDirectionOptions() {
+		return [
+			{value="Closest", name="Round to Closest"},
+			{value="Up", name="Only Round Up"},
+			{value="Down", name="Only Round Down"}
+		];
+	}
+	
+	public boolean function hasExpressionWithListOfNumericValuesOnly() {
+		for(var i=1; i<=listLen(getRoundingRuleExpression()); i++) {
+			var thisValue = listGetAt(getRoundingRuleExpression(), i);
+			if((len(thisValue) - find(".", thisValue)) != 2 || !isNumeric(thisValue)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

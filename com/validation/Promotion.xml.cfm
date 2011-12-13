@@ -12,9 +12,14 @@
 			<rule type="required" contexts="*" />
 			<rule type="date" contexts="*" />
 		</property>
-		<property name="products">
+		<property name="appliedPromotions">
 			<rule type="collectionSize" contexts="delete">
 				<param name="max" value="0" />
+			</rule>
+		</property>
+		<property name="promotionCodes">
+			<rule type="custom" contexts="*" failureMessage="This Promotion has promotion codes that are not unique">
+				<param name="methodName" value="hasUniquePromotionCodes" />
 			</rule>
 		</property>
 	</objectProperties>

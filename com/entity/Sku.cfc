@@ -41,9 +41,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Persistent Properties
 	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="skuCode" ormtype="string" unique="true" length="50";
-	property name="listPrice" ormtype="big_decimal" default="0";
-	property name="price" ormtype="big_decimal" default="0";
-	property name="shippingWeight" ormtype="big_decimal" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
+	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
+	property name="price" ormtype="big_decimal" formatType="currency" default="0";
+	property name="shippingWeight" ormtype="big_decimal" formatType="weight" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
 
 	// Remote properties
@@ -51,9 +51,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (Many-to-One)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
@@ -68,7 +68,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 	
 	// Non-Persistent Properties
-	property name="livePrice" persistent="false" hint="this property should calculate after term sale";
+	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
 	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
 	property name="qc" persistent="false" type="numeric" hint="quantity committed";
 	property name="qexp" persistent="false" type="numeric" hint="quantity exptected";
@@ -379,5 +379,37 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		
 		return true;
 	}
+	
+	//@hint Generates the image path based upon product code, and image options for this sku
+	public string function generateImageFileName() {
+		var optionString = "";
+		for(var option in getOptions()){
+			if(option.getOptionGroup().getImageGroupFlag()){
+				optionString &= "-#option.getOptionCode()#";
+			}
+		}
+		return "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
+	}
+	
+	//@hint this method generated sku code based on assigned options
+	public any function generateSkuCode () {
+		var newSkuCode = getProduct().getProductCode();
+		for(var option in getOptions() ) {
+			newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
+		}
+		return newSkuCode;
+	}
+
+    // Override the preInsert method to set sku code and Image name
+    public void function preInsert() {
+    	if(isNull(getSkuCode()) || getSkuCode() == "") {
+    		setSkuCode(generateSkuCode());
+    	}
+    	if(isNull(getImageFile()) || getImageFile() == "") {
+    		setImageFile(generateImageFileName());
+    	}
+		super.preInsert();
+    }
+    
 	
 }

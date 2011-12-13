@@ -38,6 +38,88 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	property name="sessionService" type="any";
+	public numeric function roundValueByRoundingRule(required any value, required any roundingRule) {
+		
+		var inputValue = numberFormat(arguments.value, "0.00");
+		
+		var returnValue = javaCast("null", "");
+		var returnDelta = javaCast("null", "");
+		
+		for(var i=1; i<=listLen(arguments.roundingRule.getRoundingRuleExpression()); i++) {
+			var rr = listGetAt(arguments.roundingRule.getRoundingRuleExpression(), i);
+			var rrPower = 1 * (10 ^ (len(rr)-3));
+			
+			
+			if(len(inputValue) > len(rr)) {
+				var valueOptionOne = left(inputValue,len(inputValue)-len(rr)) & rr;
+				
+				if(valueOptionOne > inputValue) {
+					var lowerValue = inputValue - rrPower;
+					var valueOptionTwo = left(lowerValue,len(inputValue)-len(rr)) & rr;
+				} else {
+					var higherValue = inputValue + rrPower;
+					var valueOptionTwo = left(higherValue,len(inputValue)-len(rr)) & rr;
+				}
+			} else {
+				var valueOptionOne = rr;
+				var valueOptionTwo = rr;
+			}
+			
+			if(valueOptionOne == inputValue || valueOptionTwo == inputValue) {
+				return inputValue;
+			} else {
+				var valueOptionOneDelta = inputValue - valueOptionOne;
+				if(valueOptionOneDelta < 0) {
+					valueOptionOneDelta = valueOptionOneDelta*-1;
+				}
+				var valueOptionTwoDelta = inputValue - valueOptionTwo;
+				if(valueOptionTwoDelta < 0) {
+					valueOptionTwoDelta = valueOptionTwoDelta*-1;
+				}
+				
+				switch(arguments.roundingRule.getRoundingRuleDirection()) {
+					case "Closest": {
+						if(isNull(returnDelta) || valueOptionOneDelta < returnDelta ) {
+							returnValue = valueOptionOne;
+							returnDelta = valueOptionOneDelta;
+						}
+						if (isNull(returnDelta) || valueOptionTwoDelta < returnDelta ) {
+							returnValue = valueOptionTwo;
+							returnDelta = valueOptionTwoDelta;
+						}
+						break;
+					}
+					case "Up": {
+						if( valueOptionOne > inputValue && (isNull(returnDelta) || valueOptionOneDelta < returnDelta) )  {
+							returnValue = valueOptionOne;
+							returnDelta = valueOptionOneDelta;
+						}
+						if ( valueOptionTwo > inputValue && (isNull(returnDelta) || valueOptionTwoDelta < returnDelta) ) {
+							returnValue = valueOptionTwo;
+							returnDelta = valueOptionTwoDelta;
+						}
+						break;
+					}
+					case "Down": {
+						if( valueOptionOne < inputValue && (isNull(returnDelta) || valueOptionOneDelta < returnDelta) ) {
+							returnValue = valueOptionOne;
+							returnDelta = valueOptionOneDelta;
+						}
+						if ( valueOptionTwo < inputValue && (isNull(returnDelta) || valueOptionTwoDelta < returnDelta) ) {
+							returnValue = valueOptionTwo;
+							returnDelta = valueOptionTwoDelta;
+						}
+						break;
+					}
+				}
+			}
+		}
+		
+		if(!isNull(returnValue)) {
+			return returnValue;
+		} else {
+			return inputValue;	
+		}
+	}
 	
 }

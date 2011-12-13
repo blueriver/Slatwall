@@ -49,9 +49,9 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (Many-To-Many)
 	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" cascade="save-update";
@@ -80,5 +80,13 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
     }
 	
     /************   END Association Management Methods   *******************/
-
+    
+    // Override the preInsert method to set a promotion code
+    public void function preInsert() {
+		if(isNull(getPromotionCode()) || getPromotionCode() == ""){
+			setPromotionCode(createUUID());
+		}
+		super.preInsert();
+    }
+    
 }

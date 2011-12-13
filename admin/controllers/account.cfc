@@ -97,6 +97,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteid'));
 		
 		if(rc.account.hasErrors()) {
+			rc.edit = true;
 			getFW().setView("admin:account.detail");
 		} else {
 			rc.message = "admin.account.save_success";

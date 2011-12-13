@@ -38,6 +38,9 @@ Notes:
 --->
 <cfparam name="rc.allSettings" type="struct" />
 
+<cfsilent>
+	<cfset local.yesNoValueOptions = [{name=$.slatwall.rbKey('define.yes'), value=1},{name=$.slatwall.rbKey('define.no'), value=0}] />
+</cfsilent>
 <cfoutput>
 <dl>
 	<dt class="spdcreditcardactiononcheckout">
@@ -52,8 +55,8 @@ Notes:
 			#$.slatwall.rbKey("admin.setting.paymentMethod.creditCard.checkoutTransactionType." & $.Slatwall.setting("paymentMethod_creditCard_checkoutTransactionType"))#
 		</cfif>
 	</dd>
-	<cf_SlatwallPropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithOrderPayment#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithOrderPayment')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithOrderPayment" edit="#rc.edit#" dataType="boolean" fieldType="radiogroup">
-	<cf_SlatwallPropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithAccount#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithAccount')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithAccount" edit="#rc.edit#" dataType="boolean" fieldType="radiogroup">
+	<cf_SlatwallPropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithOrderPayment#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithOrderPayment')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithOrderPayment" edit="#rc.edit#" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
+	<cf_SlatwallPropertyDisplay object="#rc.allSettings.paymentMethod_creditCard_storeCreditCardWithAccount#" title="#rc.$.Slatwall.rbKey('setting.paymentMethod.creditCard.storeCreditCardWithAccount')#" property="settingValue" fieldName="paymentMethod_creditCard_storeCreditCardWithAccount" edit="#rc.edit#" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 	<dt class="spdcreditcardtypes">#$.Slatwall.rbKey("admin.setting.paymentMethod.creditCardsAccepted")#</dt>
 	<dd id="spdcreditcardsaccepted">
 	<cfif rc.edit>

@@ -57,7 +57,7 @@ Notes:
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
 				<li><a href="##tabFulfillmentMethodBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
-				<li><a href="##tabFulfillmentMethodWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
+				<!---<li><a href="##tabFulfillmentMethodWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>--->
 			</ul>
 			<div id="tabFulfillmentMethodBasicSettings">
 				<!--- include any fulfillment method-specific settings ---> 
@@ -68,9 +68,9 @@ Notes:
 				</cfif>
 			</div>
 			
-			<div id="tabFulfillmentMethodWorkflowSettings">
+			<!---<div id="tabFulfillmentMethodWorkflowSettings">
 				
-			</div>
+			</div>--->
 		</div>
 		<cfif rc.edit>
 				<div id="actionButtons" class="clearfix">

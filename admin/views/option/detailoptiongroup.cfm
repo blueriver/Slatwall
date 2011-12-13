@@ -54,6 +54,7 @@ Notes:
 			<input type="hidden" name="slatAction" value="admin:option.saveoptiongroup" />
 			<input type="hidden" name="optionGroupID" value="#rc.optionGroup.getOptionGroupID()#" />
 	</cfif>
+	
 		    <dl class="twoColumn">
 		    	<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupName" edit="#rc.edit#" />
 				<cf_SlatwallPropertyDisplay object="#rc.OptionGroup#" property="optionGroupCode" edit="#rc.edit#" toggle="true" />
@@ -93,9 +94,6 @@ Notes:
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif rc.optiongroup.getOptionsCount() eq 0 and !rc.optionGroup.isNew()>
-					<cf_SlatwallActionCaller action="admin:option.deleteoptiongroup" querystring="optionGroupID=#rc.optionGroup.getOptionGroupID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
-				</cfif>
 				<cf_SlatwallActionCaller action="admin:option.saveoptiongroup" type="submit" class="button">
 			</div>
 		</form>

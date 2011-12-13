@@ -22,12 +22,19 @@
 		<Record typeID="444df2a3ebb07d6280c339a09c0d90d3" parentTypeID="444df2919d15d8ef5c9bc67857f19228" type="Account" systemCode="astAccount" />
 		
 		<Record typeID="444df2a4e7c799436c29759e09b6e2c5" type="Attribute Types" systemCode="attributeType" />
-		<Record typeID="444df2a5a9088e72342c0b5eaf731c64" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Text Box" systemCode="atTextBox" />
-		<Record typeID="444df2a60dbf45cfad1b1b96baa44c47" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="TextArea" systemCode="atTextArea" />
-		<Record typeID="444df2a7a2c39796d2b15516840344ea" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Rich Text Editor" systemCode="atRichTextEditor" />
-		<Record typeID="444df2a8bfb73ecb3a777c8599950d5f" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Select Box" systemCode="atSelectBox" />
-		<Record typeID="444df2aaed92cb33d16a83d2bde93e72" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box" systemCode="atCheckBox" />
+		<Record typeID="444df2aaed92cb33d16a83d2bde93e72" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box" systemCode="atCheckbox" />
+		<Record typeID="444df2d2bd86e1f290c2cce99d5ca2d8" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Check Box Group" systemCode="atCheckBoxGroup" />
+		<Record typeID="444df2d3c0420d6b13d2baf2a0c7e1f2" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Date" systemCode="atDate" />
+		<Record typeID="444df2d4cad3af5f4465a21f7d1b5f6c" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Date Time" systemCode="atDateTime" />
+		<Record typeID="444df2d5973447a85033d6c6735e002a" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Multiselect" systemCode="atMultiselect" />
+		<Record typeID="444df2d6ff67aedc177f35d1e672dd82" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Password" systemCode="atPassword" />
 		<Record typeID="444df2a9fe732d3ec9d8b495ab1dddf7" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Radio Group" systemCode="atRadioGroup" />
+		<Record typeID="444df2a8bfb73ecb3a777c8599950d5f" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Select Box" systemCode="atSelect" />
+		<Record typeID="444df2a5a9088e72342c0b5eaf731c64" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Text" systemCode="atText" />
+		<Record typeID="444df2a60dbf45cfad1b1b96baa44c47" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Text Area" systemCode="atTextArea" />
+		<Record typeID="444df2d7dddd6c7549632a58d2887bd0" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Time" systemCode="atTime" />
+		<Record typeID="444df2a7a2c39796d2b15516840344ea" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Rich Text Editor" systemCode="atWysiwyg" />
+		<Record typeID="444df2d8eb236c42dbbef7ea66200f1b" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Yes / No" systemCode="atYesNo" />
 		
 		<Record typeID="444df2b3df09f67ddcb27918f02c2d83" type="Order Status Types" systemCode="orderStatusType" />
 		<Record typeID="444df2b498de93b4b33001593e96f4be" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Not Placed" systemCode="ostNotPlaced" />
@@ -87,14 +94,7 @@
 <!--
 Below Are UUID's to use... delete after using
 
-444df2d2bd86e1f290c2cce99d5ca2d8
-444df2d3c0420d6b13d2baf2a0c7e1f2
-444df2d4cad3af5f4465a21f7d1b5f6c
-444df2d5973447a85033d6c6735e002a
-444df2d6ff67aedc177f35d1e672dd82
-444df2d7dddd6c7549632a58d2887bd0
-444df2d8eb236c42dbbef7ea66200f1b
-444df2d90494719fc235d4b4ac6676de
+
 444df2dafc8a46af86aedf6aa15bb35a
 444df2dbfde8c38ab64bb21c724d46e0
 444df2dc91afb63f25074c7d9512248b

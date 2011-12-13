@@ -80,9 +80,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
@@ -90,9 +90,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="onClearanceSaleFlag" type="boolean" persistent="false";
 	property name="dateFirstReceived" type="date" persistent="false";
 	property name="dateLastReceived" type="date" persistent="false";
-	property name="livePrice" type="numeric" persistent="false";
-	property name="price" type="numeric" persistent="false";
-	property name="listPrice" type="numeric" persistent="false";
+	property name="price" type="numeric" formatType="currency" persistent="false";
+	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="shippingWeight" type="numeric" persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;

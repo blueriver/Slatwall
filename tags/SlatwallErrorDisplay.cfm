@@ -47,7 +47,11 @@ Notes:
 		
 		<cfif not arrayLen(attributes.errors)>
 			<cfif attributes.errorName eq "">
-				<cfset attributes.errors = attributes.object.getErrors() />
+				<cfloop collection="#attributes.object.getErrors()#" item="errorName">
+					<cfloop array="#attributes.object.getErrors()[errorName]#" index="thisError">
+						<cfset arrayAppend(attributes.errors, thisError) />
+					</cfloop>
+				</cfloop>
 			<cfelse>
 				<cfif attributes.object.hasError( attributes.errorName )>
 					<cfset attributes.errors = attributes.object.getError( attributes.errorName ) />

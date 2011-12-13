@@ -113,7 +113,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 		variables.creditCardNumber = arguments.creditCardNumber;
 		setCreditCardLastFour(Right(arguments.creditCardNumber, 4));
 		setCreditCardType(getService("paymentService").getCreditCardTypeFromNumber(arguments.creditCardNumber));
-		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment")) {
+		if(getCreditCardType() != "Invalid" && setting("paymentMethod_creditCard_storeCreditCardWithOrderPayment") == 1) {
 			setCreditCardNumberEncrypted(encryptCreditCardNumber(arguments.creditCardNumber));
 		}
 	}

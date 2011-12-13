@@ -54,9 +54,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (Many-To-One)
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
@@ -139,11 +139,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public void function setProducts(required array Products) {
 		// first, clear existing collection
 		variables.Products = [];
-		for( var i=1; i<= arraylen(arguments.Products); i++ ) {
-			var thisProduct = arguments.Products[i];
-			if(isObject(thisProduct) && thisProduct.getClassName() == "SlatwallProduct") {
-				addProduct(thisProduct);
-			}
+		for( var product in arguments.Products ) {
+			addProduct(product);
 		}
 	}
 	

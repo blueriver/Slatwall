@@ -89,6 +89,34 @@ a.button, .ui-widget-content a.button {
 input.button:hover, button:hover {
 	text-decoration:underline;
 }
+a.buttonOff {
+	background-color: #cccccc;
+    border: none;
+	border-radius: 3px;
+	color: #FFFFFF;
+	cursor: pointer;
+    margin:0 0 0 3px;
+    padding: 3px 6px;
+	vertical-align: middle;
+	width: auto;
+	font-size: 11px;
+    height: 23px;
+	font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a.buttonOff, .ui-widget-content a.buttonOff {
+	height:17px;
+	line-height:17px;
+	display:inline-block;
+}
+
+a.buttonOff:hover {
+	text-decoration: none;
+}
+
+.buttons a.adminorderdetailorderfulfillment {
+	float:right;
+}
+
 label {
 	font-weight:bold;
 }
@@ -181,29 +209,6 @@ div#advancedSearchOptions {
 
 div#statusSelections {
 	margin: 5px 0;
-}
-
-a.buttonOff {
-	background-color: #cccccc;
-	vertical-align: middle;
-	/*padding: 0;*/
-	width: auto;
-	border: 0 solid #fff;
-	cursor: pointer;
-	color: #fff;
-	padding: 4px 6px 3px;
-	margin-right: 10px;
-	border-radius: 3px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-}
-
-a.buttonOff:hover {
-	text-decoration: none;
-}
-
-.buttons a.adminorderdetailorderfulfillment {
-	float:right;
 }
 
 .admincontainer fieldset {
@@ -746,6 +751,10 @@ td.administration li.historyOff {
 	padding: 2px;
 	line-height: 22px;
 }
+.twoColumn dd .cke_skin_kama {
+	margin-left: 200px;
+}
+
 .tabs .oneColumn {
 	background: none;
 	padding-bottom: 0;
@@ -859,7 +868,7 @@ a.tooltip:hover span {
 }
 
 .ui-widget-content {
-    background: url("images/ui-bg_flat_75_ffffff_40x100.png") repeat-x scroll 50% 50% #FFFFFF;
+    background: url("images/admin.ui.bg_flat_ffffff.png") repeat-x scroll 50% 50% #FFFFFF;
     border: 0 solid #DBDBDB;
     color: #000000;
 }
@@ -885,12 +894,12 @@ a.tooltip:hover span {
     position: relative;
     top: 1px;
     white-space: nowrap;
-	background: url(../../images/admin.ui-bg_highlight-hard_90_f5f5f5_1x100.png) repeat-x scroll 50% 50% #F5F5F5;
+	background: url(../../images/admin.ui.bg_highlight_f5f5f5.png) repeat-x scroll 50% 50% #F5F5F5;
 	color: #636261;
 	border-color:#dbdbdb;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-hover {
-	background: url(../../images/admin.ui-bg_highlight-hard_90_dadada_1x100.png) repeat-x scroll 50% 50% #DADADA;
+	background: url(../../images/admin.ui.bg_highlight_dadada.png) repeat-x scroll 50% 50% #DADADA;
 	border-color:#dbdbdb;
 }
 .ui-tabs .ui-tabs-nav li a {
@@ -957,6 +966,16 @@ a.tooltip:hover span {
 	font-family:"Lucida Grande", Helvetica, Arial, sans-serif;
 ;
 }
+.ui-button {
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 0.1em;
+    overflow: visible;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none !important;
+}
 table.listing-grid a.button {color:#fff;}
 #actionButtons {
     background: url(../../images/admin.ui.rule_dotted_big.gif) repeat-x scroll 0 0 transparent;
@@ -981,3 +1000,58 @@ div.optionsSelector ul {
 .dialog form {width:280px;}
 .dialog dl dt{width:100px; font-weight:bold;}
 .clickable:hover{cursor:pointer;}
+
+.ui-dialog {
+    border: 6px solid #666666;
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 0.2em;
+    position: absolute;
+}
+.ui-dialog .ui-dialog-titlebar {
+	background:none;
+	border:none;
+}
+.ui-dialog .ui-dialog-title {
+    float: left;
+    font-size: 20px;
+    margin: 0.1em 16px 0.1em 0;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+    height: 18px;
+    margin: -10px 0 0;
+    padding: 1px;
+    position: absolute;
+    right: 0.3em;
+    top: 50%;
+    width: 19px;
+}
+.ui-dialog .ui-dialog-titlebar-close span {
+    background: url("../../images/admin.ui.remov_16.png") no-repeat scroll 50% 50% transparent;
+    height: 16px;
+    width: 16px;
+}
+.ui-dialog .ui-dialog-buttonpane button {
+    cursor: pointer;
+    float: right;
+    line-height: 1.4em;
+    margin: 0.5em 0.4em 0.5em 0;
+    overflow: visible;
+    padding: 0.2em 0.6em 0.3em;
+    width: auto;
+	background: url("../../images/admin.ui.bg_highlight_f5f5f5.png") repeat-x scroll 50% 50% #F5F5F5;
+    border: 1px solid #DBDBDB;
+    color: #636261;
+	height:auto;
+    font-weight: normal;
+}
+.ui-dialog .ui-dialog-buttonpane button:hover {
+	background: url("../../images/admin.ui.bg_highlight_dadada.png") repeat-x scroll 50% 50% #F5F5F5;
+}
+.ui-dialog-content p {
+    color: #666666;
+    font-size: 13px;
+}
+.ui-dialog .ui-icon-alert {
+    display: none;
+}

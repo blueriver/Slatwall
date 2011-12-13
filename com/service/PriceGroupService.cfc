@@ -164,14 +164,19 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// calculate the new price bassed on whatever was set up.
 		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
 			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
+			
+			// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
+			if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
+				newPrice = arguments.priceGroupRate.getRoundingRule().roundValue(newPrice);
+			}
 		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
 			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
 		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
 			var newPrice = arguments.priceGroupRate.getAmount();
 		}
 		
-		//return the newPrice
-		return newPrice;
+		//return the newPrice and make sure that it is just a two decimal number
+		return numberFormat(newPrice, "0.00");
 	}
 	
 	// This method will return the rate that a given productType has based on a priceGroup, also this looks up to parent productTypes as well.
@@ -195,6 +200,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				// This sets the product type to the parent, so the while loop will run again
 				currentProductType = currentProductType.getParentProductType();
+			}
+		}
+		
+		// If the rate is still null, then loop through the rates looking for a global rate
+		if(isNull(returnRate)) {
+			// Loop over rates looking for a global one
+			for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+				if (arguments.priceGroup.getPriceGroupRates()[i].getGlobalFlag()) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+				}
 			}
 		}
 		
@@ -225,6 +240,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// If the rate is still null, then check the productType
 		if(isNull(returnRate)) {
 			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.product.getProductType(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then loop through the rates looking for a global rate
+		if(isNull(returnRate)) {
+			// Loop over rates looking for a global one
+			for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+				if (arguments.priceGroup.getPriceGroupRates()[i].getGlobalFlag()) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+				}
+			}
 		}
 		
 		// If the rate is still null, then check the product against the parent priceGroup which will check product and productType (this is done with recursion)
@@ -258,6 +283,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// If the rate is still null, then check the productType
 		if(isNull(returnRate)) {
 			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.sku.getProduct().getProductType(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then loop through the rates looking for a global rate
+		if(isNull(returnRate)) {
+			// Loop over rates looking for a global one
+			for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+				if (arguments.priceGroup.getPriceGroupRates()[i].getGlobalFlag()) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+				}
+			}
 		}
 		
 		// If the rate is still null, then check the sku against the parent priceGroup which will check product and productType (this is done with recursion)

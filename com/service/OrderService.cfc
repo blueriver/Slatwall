@@ -87,6 +87,23 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartlist.getRecords();
 	}
 	
+	public any function saveOrder(required any order, struct data={}) {
+		
+		// Call the super.save() method to do the base populate & validate logic
+		arguments.order = super.save(entity=arguments.order, data=arguments.data);
+		
+		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
+		if(arguments.order.getStatusCode() == "ostNotPlaced") {
+			for(var i=arrayLen(arguments.order.getOrderItems()); i>=1; i--) {
+				if(arguments.order.getOrderItems()[i].getQuantity() < 1) {
+					arguments.order.removeOrderItem(arguments.order.getOrderItems()[i]);
+				}
+			}	
+		}
+		
+		return arguments.order;
+	}
+	
 	public any function searchOrders(struct data={}) {
 		//set keyword and orderby
 		var params = {
@@ -130,7 +147,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Check to see if the order has already been closed or canceled
 		if (arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
-			throw("You cannot add an item to an order that has been closed or canceld");
+			throw("You cannot add an item to an order that has been closed or canceled");
 		}
 		
 		// Check for an orderFulfillment in the arguments.  If none, use the orders first.  If none has been setup create a new one
@@ -501,6 +518,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 			
 			// Validate & Save Address
+			address.validate(context="full");
 			address = getAddressService().saveAddress(address);
 			
 			// Check for a shipping method option selected
@@ -648,7 +666,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		arguments.orderPayment.validate();
 		
 		if(arguments.orderPayment.getCreditCardType() == "Invalid") {
-			arguments.orderPayment.addError(name="creditCardNumber", message="Invalid credit card number.");
+			arguments.orderPayment.addError(errorName="creditCardNumber", errorMessage="Invalid credit card number.");
 		}
 		
 		var address = arguments.orderPayment.getBillingAddress();
@@ -663,7 +681,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		address.populate(arguments.data.billingAddress);
 		
 		// Validate Address
-		address = getAddressService().validateAddress(address);
+		address.validate();
 		
 		arguments.orderPayment.setBillingAddress(address);
 		

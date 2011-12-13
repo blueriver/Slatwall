@@ -46,7 +46,6 @@ Notes:
 	    </cfif>
 	    <cf_SlatwallActionCaller action="admin:brand.list" type="list">
 	</ul>
-
 	<div class="svoadminbranddetail">
 		<cfif rc.edit>
 			
