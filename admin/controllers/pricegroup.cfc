@@ -132,6 +132,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				for(var i=1; i<=arrayLen(rc.pricegroup.getPriceGroupRates()); i++) {
 					if(rc.pricegroup.getPriceGroupRates()[i].hasErrors()) {
 						rc.priceGroupRate = rc.pricegroup.getPriceGroupRates()[i];
+						break;
 					}
 				}
 			}

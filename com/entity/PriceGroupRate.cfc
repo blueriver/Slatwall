@@ -142,11 +142,11 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     /************   END Association Management Methods   *******************/
     
     public string function getType(){
-    	if(!isNull(variables.percentageOff))
+    	if(StructKeyExists(variables, "percentageOff") AND isNumeric(variables.percentageOff))
     		return "percentageOff";
-    	else if(!isNull(variables.amountOff))
+    	else if(StructKeyExists(variables, "amountOff") AND isNumeric(variables.amountOff))
     		return "amountOff";
-    	else if(!isNull(variables.amount))
+    	else if(StructKeyExists(variables, "amount") AND isNumeric(variables.amount))
     		return "amount";
     	
     	// Provide a default case.
@@ -237,6 +237,8 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 			return DollarFormat(variables.amountOff) & " " & rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
 		if(getType() EQ "amount")
 			return DollarFormat(variables.amount);
+		else
+			return "";
     }
     
 }

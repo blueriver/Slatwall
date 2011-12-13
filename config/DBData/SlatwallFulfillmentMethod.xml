@@ -4,6 +4,6 @@
 		<column name="activeFlag" update="false" datatype="bit" />
 	</Columns>
 	<Records>
-		<Record fulfillmentMethodID="shipping" activeFlag="0" />
+		<Record fulfillmentMethodID="shipping" activeFlag="1" />
 	</Records>
 </Table>
