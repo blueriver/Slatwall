@@ -6,6 +6,12 @@
 		</property>
 		<property name="roundingRuleExpression">
 			<rule type="required" contexts="*" />
+			<rule type="custom" contexts="*" failureMessage="The Rounding Rule Expression needs to be a comma seperated list of numeric values that have two decimal proints for each value.">
+				<param name="methodName" value="hasExpressionWithListOfNumericValuesOnly" />
+			</rule>
+		</property>
+		<property name="roundingRuleDirection">
+			<rule type="required" contexts="*" />
 		</property>
 	</objectProperties>
 </validateThis>

@@ -62,4 +62,13 @@ component displayname="Rounding Rule" entityname="SlatwallRoundingRule" table="S
 		];
 	}
 	
+	public boolean function hasExpressionWithListOfNumericValuesOnly() {
+		for(var i=1; i<=listLen(getRoundingRuleExpression()); i++) {
+			var thisValue = listGetAt(getRoundingRuleExpression(), i);
+			if((len(thisValue) - find(".", thisValue)) != 2 || !isNumeric(thisValue)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
