@@ -1,7 +1,7 @@
 <Table tableName="SlatwallPaymentMethod">
 	<Columns>
 		<column name="paymentMethodID" fieldtype="id" />
-		<column name="activeFlag" update="false" />
+		<column name="activeFlag" update="false" datatype="bit" />
 	</Columns>
 	<Records>
 		<Record paymentMethodID="creditCard" activeFlag="0" />
