@@ -49,12 +49,14 @@ Notes:
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleExpression")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleDirection")#</th>
 			<th>&nbsp;</th>
 		</tr>
 		<cfloop array="#rc.roundingrules#" index="local.RoundingRule">
 			<tr>
 				<td class="varWidth">#local.RoundingRule.getRoundingRuleName()#</td>
 				<td>#local.RoundingRule.getRoundingRuleExpression()#</td>
+				<td>#local.RoundingRule.getRoundingRuleDirection()#</td>
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:roundingrule.edit" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="edit" type="list">            
