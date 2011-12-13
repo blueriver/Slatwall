@@ -73,8 +73,8 @@ Notes:
 				<!---<cf_SlatwallErrorDisplay object="#rc.priceGroupRate#" errorName="percentageOff" displayType="label" for="priceGroupRates[1].percentageOff" />--->
 
 				<div id="percentageOffDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="percentageOff" edit="#rc.edit#" fieldName="priceGroupRates[1].percentageOff"></div>
-				<div id="amountOffDiv" <cfif rc.priceGroupRate.getType() NEQ "amountOff">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amountOff" edit="#rc.edit#" fieldName="priceGroupRates[1].amountOff">
-				<div id="amountDiv" <cfif rc.priceGroupRate.getType() NEQ "amount">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amount" edit="#rc.edit#" fieldName="priceGroupRates[1].amount">
+				<div id="amountOffDiv" <cfif rc.priceGroupRate.getType() NEQ "amountOff">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amountOff" edit="#rc.edit#" fieldName="priceGroupRates[1].amountOff"></div>
+				<div id="amountDiv" <cfif rc.priceGroupRate.getType() NEQ "amount">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amount" edit="#rc.edit#" fieldName="priceGroupRates[1].amount"></div>
 					
 				
 				<!---<input type="text" id="priceGroupRateValue" 

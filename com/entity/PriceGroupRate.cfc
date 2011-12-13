@@ -151,7 +151,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     	
     	// Provide a default case.
     	else    		
-    		return "";
+    		return "percentageOff";
     	//else
     		//throw("getType() was called but percentageOff, amountOff and amount were all null! Thus, unable to determine type.");
     }

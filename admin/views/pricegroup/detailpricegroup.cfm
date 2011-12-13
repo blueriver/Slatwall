@@ -96,20 +96,22 @@ Notes:
 					</tr>
 				</thead>
 				<tbody>
-					<cfloop array="#rc.priceGroup.getPriceGroupRates()#" index="local.priceGroupRate" >
-						<tr>
-							<td class="varWidth">#$.Slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.' & local.priceGroupRate.getType())#</td>
-							<td>#local.priceGroupRate.getAmountRepresentation()#</td>
-							<td>#local.priceGroupRate.getAppliesToRepresentation()#</td>
-							<cfif rc.edit>
-								<td class="administration">
-									<ul class="two">
-										<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroup" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
-										<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list" confirmrequired="true">
-									</ul>
-								</td>
-							</cfif>
-						</tr>
+					<cfloop array="#rc.priceGroup.getPriceGroupRates()#" index="local.priceGroupRate">
+						<cfif not local.priceGroupRate.hasErrors()>
+							<tr>
+								<td class="varWidth">#$.Slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.' & local.priceGroupRate.getType())#</td>
+								<td>#local.priceGroupRate.getAmountRepresentation()#</td>
+								<td>#local.priceGroupRate.getAppliesToRepresentation()#</td>
+								<cfif rc.edit>
+									<td class="administration">
+										<ul class="two">
+											<cf_SlatwallActionCaller action="admin:pricegroup.editPriceGroup" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="edit" type="list">
+											<cf_SlatwallActionCaller action="admin:pricegroup.deletePriceGroupRate" querystring="priceGroupID=#rc.priceGroup.getPriceGroupID()#&priceGroupRateId=#local.priceGroupRate.getPriceGroupRateId()#" class="delete" type="list" confirmrequired="true">
+										</ul>
+									</td>
+								</cfif>
+							</tr>
+						</cfif>
 					</cfloop>
 				</tbody>
 			</table>
