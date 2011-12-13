@@ -194,7 +194,11 @@ Notes:
 			<cfelse>
 				<cfoutput>
 					<dt class="#attributes.titleClass#">#attributes.title#</dt>
-					<dd class="#attributes.valueClass#">#attributes.value#</dd>
+					<cfif attributes.valueLink neq "">
+						<dd class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
+					<cfelse>
+						<dd class="#attributes.valueClass#">#attributes.value#</dd>
+					</cfif>
 				</cfoutput>
 			</cfif>
 		</cfcase>
@@ -214,7 +218,11 @@ Notes:
 				<cfoutput>
 					<tr>
 						<td class="#attributes.titleClass#">#attributes.title#</td>
-						<td class="#attributes.valueClass#">#attributes.value#</td>
+						<cfif attributes.valueLink neq "">
+							<td class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
+						<cfelse>
+							<td class="#attributes.valueClass#">#attributes.value#</td>
+						</cfif>
 					</tr>
 				</cfoutput>
 			</cfif>
@@ -232,7 +240,11 @@ Notes:
 			<cfelse>
 				<cfoutput>
 					<span class="#attributes.titleClass#">#attributes.title#: </span>
-					<span class="#attributes.valueClass#">#attributes.value#</span>
+					<cfif attributes.valueLink neq "">
+						<span class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
+					<cfelse>
+						<span class="#attributes.valueClass#">#attributes.value#</span>
+					</cfif>
 				</cfoutput>
 			</cfif>
 		</cfcase>
@@ -245,7 +257,11 @@ Notes:
 				</cfoutput>
 			<cfelse>
 				<cfoutput>
-					#attributes.value#	
+					<cfif attributes.valueLink neq "">
+						<a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a>
+					<cfelse>
+						#attributes.value#	
+					</cfif>
 				</cfoutput>
 			</cfif>
 		</cfcase>
