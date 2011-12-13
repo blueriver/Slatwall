@@ -90,6 +90,7 @@ component displayname="Data Service" extends="BaseService" {
 		for(var r=1; r <= arrayLen(xmlData.Table.Records.xmlChildren); r++) {
 			
 			var idColumnValue = "";
+			var columnDataTypes = [];
 			
 			var updateColumns = [];
 			var updateValues = [];
@@ -114,12 +115,17 @@ component displayname="Data Service" extends="BaseService" {
 					arrayAppend(updateColumns, thisColumn);
 					arrayAppend(updateValues, value);
 				}
+				if(isDefined("columnAttributes.dataType")) {
+					arrayAppend(columnDataTypes, columnAttributes.dataType);
+				} else {
+					arrayAppend(columnDataTypes, "varchar");
+				}
 			}
 			
 			if( getDAO().recordExists(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue) ) {
-				getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues);
+				getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues, columnDataTypes);
 			} else {
-				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues);
+				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues, columnDataTypes);
 			}
 		}
 	}
