@@ -36,6 +36,25 @@ jQuery(function() {
 		}
 	});
 	
+	jQuery("#priceGroupRateType").change(function(){
+		if (jQuery(this).val() == "percentageOff") {
+			jQuery("#percentageOffDiv").css("display", "inline");
+			jQuery("#amountOffDiv").hide().val();
+			jQuery("#amountDiv").hide().val();
+		}
+		else if (jQuery(this).val() == "amountOff") {
+			jQuery("#percentageOffDiv").hide().val();
+			jQuery("#amountOffDiv").css("display", "inline");
+			jQuery("#amountDiv").hide().val();
+		}
+		else if (jQuery(this).val() == "amount") {
+			jQuery("#percentageOffDiv").hide().val();
+			jQuery("#amountOffDiv").hide().val();
+			jQuery("#amountDiv").css("display", "inline");
+		}
+	});
+	
+	jQuery("#priceGroupRateType").change(); // ab
 	
 	 
 });

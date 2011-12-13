@@ -53,17 +53,13 @@ component displayname="Data Service" extends="BaseService" {
 			for(var i=1; i<= arrayLen(dirList); i++) {
 				if(listLast(dirList[i],".") == "xml"){
 					var xmlRaw = FileRead(dirList[i]);
-					try{
-						loadDataFromXMLRaw(xmlRaw);	
-					} catch (any e) {
-						// If we haven't retried 3 times, then incriment the retry counter and re-run the population
-						if(retryCount <= 3) {
-							retryCount += 1;
-							runPopulation = true;
-						} else {
-							throw(e);
-						}
-					}
+					//try{
+						loadDataFromXMLRaw(xmlRaw);
+						//}
+						//catch(any e){
+						//	dumpScreen(dirList[i]);
+						//}	
+					
 				}
 			}	
 		} while (runPopulation);
@@ -114,16 +110,18 @@ component displayname="Data Service" extends="BaseService" {
 				if(!isDefined("columnAttributes.update") || columnAttributes.update == true) {
 					arrayAppend(updateColumns, thisColumn);
 					arrayAppend(updateValues, value);
+					
+					if(isDefined("columnAttributes.dataType")) {
+						arrayAppend(columnDataTypes, columnAttributes.dataType);
+					} else {
+						arrayAppend(columnDataTypes, "varchar");
+					}
 				}
-				if(isDefined("columnAttributes.dataType")) {
-					arrayAppend(columnDataTypes, columnAttributes.dataType);
-				} else {
-					arrayAppend(columnDataTypes, "varchar");
-				}
+				
 			}
 			
 			if( getDAO().recordExists(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue) ) {
-				getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues, columnDataTypes);
+					getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues, columnDataTypes);
 			} else {
 				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues, columnDataTypes);
 			}
