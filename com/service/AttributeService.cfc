@@ -97,6 +97,7 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 			}
 		}		
 	}
+	*/
 		
 	public any function getAttributeSets(array systemCode) {
 		var smartList = this.getAttributeSetSmartList();
@@ -110,6 +111,5 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		return smartList.getRecords();
 	}
 	
-	*/
 	
 }
