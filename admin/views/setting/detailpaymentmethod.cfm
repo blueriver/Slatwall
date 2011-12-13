@@ -58,7 +58,7 @@ Notes:
 			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 				<ul>
 					<li><a href="##tabBasicSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.basicsettings")#</span></a></li>	
-					<li><a href="##tabWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>
+					<!---<li><a href="##tabWorkflowSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.setting.tab.workflowsettings")#</span></a></li>--->
 				</ul>
 	
 				<div id="tabBasicSettings">
@@ -86,7 +86,7 @@ Notes:
 					</dl>	
 				</div>
 				
-				<div id="tabWorkflowSettings">Under Construction.</div>
+				<!---<div id="tabWorkflowSettings">Under Construction.</div>--->
 			</div>	
 		</cfif>
 		<cfif rc.edit>
