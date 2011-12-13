@@ -42,8 +42,7 @@ component displayname="Rounding Rule" entityname="SlatwallRoundingRule" table="S
 	property name="roundingRuleID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="roundingRuleName" ormtype="string";
 	property name="roundingRuleExpression" ormtype="string";
-	
-	//property name="roundingRuleDirection" ormtype="string";  Going to add this later.
+	property name="roundingRuleDirection" ormtype="string"; 
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -53,5 +52,14 @@ component displayname="Rounding Rule" entityname="SlatwallRoundingRule" table="S
 	
 	public numeric function roundValue(required any value) {
 		return getService("roundingRuleService").roundValueByRoundingRule(value=arguments.value, roundingRule=this);
-	}	
+	}
+	
+	public array function getRoundingRuleDirectionOptions() {
+		return [
+			{value="Closest", name="Round to Closest"},
+			{value="Up", name="Only Round Up"},
+			{value="Down", name="Only Round Down"}
+		];
+	}
+	
 }

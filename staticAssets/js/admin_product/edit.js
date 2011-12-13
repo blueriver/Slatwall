@@ -207,7 +207,7 @@ jQuery(document).ready(function() {
 	
 	
 	/* Bind price auto-fill modal dialog clickable images to the header cell of the SKU tab. */
-	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>").addClass("clickable");
+	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>").addClass("clickable");
 	$newImage.click(function(){
 		var $dialogDiv = $("#updateAllSKUPricesDialog");
 		var $copyOfDialogDiv = $dialogDiv.clone();
@@ -236,7 +236,7 @@ jQuery(document).ready(function() {
 	
 	
 	/* Bind weight auto-fill modal dialog clickable images to the header cell of the SKU tab. */
-	$newImage = $("<img src='staticAssets/images/grayIcons16/arrow_down.png'>");
+	$newImage = $("<img src='staticAssets/images/actionIcons14/edit.png'>");
 	$newImage.click(function(){
 		var $dialogDiv = $("#updateAllSKUWeightsDialog");
 		var $copyOfDialogDiv = $dialogDiv.clone();

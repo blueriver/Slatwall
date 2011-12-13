@@ -76,12 +76,41 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				if(valueOptionTwoDelta < 0) {
 					valueOptionTwoDelta = valueOptionTwoDelta*-1;
 				}
-				if(valueOptionOneDelta <= valueOptionTwoDelta && (isNull(returnDelta) || valueOptionOneDelta < returnDelta) ) {
-					returnValue = valueOptionOne;
-					returnDelta = valueOptionOneDelta;
-				} else if (valueOptionTwoDelta <= valueOptionOneDelta && (isNull(returnDelta) || valueOptionTwoDelta < returnDelta) ) {
-					returnValue = valueOptionTwo;
-					returnDelta = valueOptionTwoDelta;
+				
+				switch(arguments.roundingRule.getRoundingRuleDirection()) {
+					case "Closest": {
+						if(isNull(returnDelta) || valueOptionOneDelta < returnDelta ) {
+							returnValue = valueOptionOne;
+							returnDelta = valueOptionOneDelta;
+						}
+						if (isNull(returnDelta) || valueOptionTwoDelta < returnDelta ) {
+							returnValue = valueOptionTwo;
+							returnDelta = valueOptionTwoDelta;
+						}
+						break;
+					}
+					case "Up": {
+						if( valueOptionOne > inputValue && (isNull(returnDelta) || valueOptionOneDelta < returnDelta) )  {
+							returnValue = valueOptionOne;
+							returnDelta = valueOptionOneDelta;
+						}
+						if ( valueOptionTwo > inputValue && (isNull(returnDelta) || valueOptionTwoDelta < returnDelta) ) {
+							returnValue = valueOptionTwo;
+							returnDelta = valueOptionTwoDelta;
+						}
+						break;
+					}
+					case "Down": {
+						if( valueOptionOne < inputValue && (isNull(returnDelta) || valueOptionOneDelta < returnDelta) ) {
+							returnValue = valueOptionOne;
+							returnDelta = valueOptionOneDelta;
+						}
+						if ( valueOptionTwo < inputValue && (isNull(returnDelta) || valueOptionTwoDelta < returnDelta) ) {
+							returnValue = valueOptionTwo;
+							returnDelta = valueOptionTwoDelta;
+						}
+						break;
+					}
 				}
 			}
 		}
