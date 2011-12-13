@@ -61,7 +61,7 @@ Notes:
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:roundingrule.edit" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="edit" type="list">            
 					  <cf_SlatwallActionCaller action="admin:roundingrule.detail" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:roundingrule.delete" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="delete" type="list" disabled="true" confirmrequired="true">
+					  <cf_SlatwallActionCaller action="admin:roundingrule.delete" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="delete" type="list" disabled="#local.roundingrule.isNotDeletable()#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>

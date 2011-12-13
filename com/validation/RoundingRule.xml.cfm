@@ -13,5 +13,10 @@
 		<property name="roundingRuleDirection">
 			<rule type="required" contexts="*" />
 		</property>
+		<property name="priceGroupRates">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 	</objectProperties>
 </validateThis>
