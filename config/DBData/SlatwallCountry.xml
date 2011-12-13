@@ -3,7 +3,7 @@
 	<Columns>
 		<column name="countryCode" fieldtype="id" />
 		<column name="countryName" />
-		<column name="activeFlag" />
+		<column name="activeFlag" datatype="bit" />
 		<column name="streetAddressLabel" />
 		<column name="streetAddressShowFlag" />
 		<column name="streetAddressRequiredFlag" />
