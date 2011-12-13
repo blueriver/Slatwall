@@ -105,6 +105,7 @@ Notes:
 					<dd>
 						<table id="attributeOptionsTable" class="listing-grid stripe" style="width:200px;">
 							<tr>
+								<th>#rc.$.Slatwall.rbKey("entity.AttributeOption.sortOrder")#</th>
 								<th>#rc.$.Slatwall.rbKey("entity.AttributeOption.attributeOptionValue")#</th>
 								<th>#rc.$.Slatwall.rbKey("entity.AttributeOption.attributeOptionLabel")#</th>
 								<th></th>
@@ -114,6 +115,9 @@ Notes:
 								<tr>
 									<td>
 										<input type="hidden" name="attributes[1].attributeOptions[#local.optionCount#].attributeOptionID" value="#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionID()#">
+										<input name="attributes[1].attributeOptions[#local.optionCount#].sortOrder" value="#rc.attribute.getAttributeOptions()[local.optionCount].getSortOrder()#">
+									</td>
+									<td>
 										<input name="attributes[1].attributeOptions[#local.optionCount#].attributeOptionValue" value="#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionValue()#">
 									</td>
 									<td>
