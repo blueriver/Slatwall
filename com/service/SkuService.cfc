@@ -66,7 +66,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			thisSku.setProduct(arguments.product);
 			thisSku.setPrice(arguments.price);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
-			thisSku.setImageFile(generateImageFileName(thisSku));
 			arguments.product.setDefaultSku(thisSku);
 		}
 		return true;
