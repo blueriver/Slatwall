@@ -203,6 +203,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		
+		// If the rate is still null, then loop through the rates looking for a global rate
+		if(isNull(returnRate)) {
+			// Loop over rates looking for a global one
+			for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+				if (arguments.priceGroup.getPriceGroupRates()[i].getGlobalFlag()) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+				}
+			}
+		}
+		
 		// If the rate is still null, then check the productType against the parent priceGroup which will check product and productType (this is done with recursion)
 		if(isNull(returnRate) && !isNull(arguments.priceGroup.getParentPriceGroup())) {
 			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.productType, priceGroup=arguments.priceGroup.getParentPriceGroup());
@@ -230,6 +240,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// If the rate is still null, then check the productType
 		if(isNull(returnRate)) {
 			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.product.getProductType(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then loop through the rates looking for a global rate
+		if(isNull(returnRate)) {
+			// Loop over rates looking for a global one
+			for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+				if (arguments.priceGroup.getPriceGroupRates()[i].getGlobalFlag()) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+				}
+			}
 		}
 		
 		// If the rate is still null, then check the product against the parent priceGroup which will check product and productType (this is done with recursion)
@@ -263,6 +283,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// If the rate is still null, then check the productType
 		if(isNull(returnRate)) {
 			returnRate = getRateForProductTypeBasedOnPriceGroup(productType=arguments.sku.getProduct().getProductType(), priceGroup=arguments.priceGroup);
+		}
+		
+		// If the rate is still null, then loop through the rates looking for a global rate
+		if(isNull(returnRate)) {
+			// Loop over rates looking for a global one
+			for(var i=1; i<=arrayLen(arguments.priceGroup.getPriceGroupRates()); i++) {
+				if (arguments.priceGroup.getPriceGroupRates()[i].getGlobalFlag()) {
+					returnRate = arguments.priceGroup.getPriceGroupRates()[i];
+				}
+			}
 		}
 		
 		// If the rate is still null, then check the sku against the parent priceGroup which will check product and productType (this is done with recursion)
