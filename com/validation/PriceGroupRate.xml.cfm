@@ -12,9 +12,13 @@
 		</property>
 		<property name="percentageOff">
 			<rule type="numeric" />
-			<rule type="required" condition="MustHavePercentageOff"
+			<rule type="required"
 				failureMessage="You must define a numeric value for percentage off.">
 			</rule>
+		</property>
+		
+		<property name="roundingRule">
+			<rule type="required" contexts="*" />
 		</property>
 	</objectProperties>
 </validateThis>

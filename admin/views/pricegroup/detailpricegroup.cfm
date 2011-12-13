@@ -132,7 +132,7 @@ Notes:
 				<button type="button" id="addPriceGroupRateButton" value="true">#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</button>
 			</cfif>
 			
-			<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew()>class="ui-helper-hidden"</cfif> >
+			<div id="priceGroupRateInputs" <cfif rc.priceGroupRate.isNew() AND !rc.priceGroupRate.hasErrors()>class="ui-helper-hidden"</cfif> >
 				<strong>#rc.$.Slatwall.rbKey("admin.pricegroup.edit.addPriceGroupRate")#</strong>
 				<cfinclude template="pricegroupratedisplay.cfm">
 				<input type="hidden" name="priceGroupRates[1].priceGroupRateId" value="#rc.priceGroupRate.getPriceGroupRateId()#"/>

@@ -76,7 +76,7 @@ Notes:
 				</cfif>	
 					value="<cfif !isNull(rc.priceGroupRate.getValue())>#rc.priceGroupRate.getValue()#</cfif>" />
 				
-				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> >
+				<div id="roundingRuleDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff" AND rc.priceGroupRate.getType() NEQ "">class="ui-helper-hidden"</cfif> >
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" property="roundingRule" fieldName="priceGroupRates[1].RoundingRule" edit="#true#" valueDefault="#request.context.$.Slatwall.rbKey('admin.none')#">
 				</div>
 	
