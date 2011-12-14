@@ -280,7 +280,7 @@ component extends="BaseService" accessors="true" {
 		arguments.product.populate(arguments.data);
 		
 		// populate custom attributes
-		if(structKeyExists(arguments.data,"attributes")){
+		if(structKeyExists(arguments.data,"attribute")){
 			for(var attributeID in arguments.data.attribute){
 				for(var attributeValueID in arguments.data.attribute[attributeID]){
 					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
@@ -451,6 +451,31 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.productType.populate(data=arguments.data);
 
+		// set attributeSetAssignemnts
+		// remove the ones not selected, loop in reverse to prevent shifting of array items
+    	var attributeSetAssignmentCount = arrayLen(arguments.productType.getAttributeSetAssignments());
+    	for(var i = attributeSetAssignmentCount; i > 0; i--){
+    		var attributeSetAssignment = arguments.productType.getAttributeSetAssignments()[i];
+    		if(structKeyExists(data,"attributeSetIDs") && listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
+    			arguments.productType.removeAttributeSetAssignment(attributeSetAssignment);
+    		}
+    	}
+    	// Add new ones
+    	if(structKeyExists(data,"attributeSetIDs")){
+    		var attributeSetIDArray = listToArray(data.attributeSetIDs);
+    		for(var attributeSetID in attributeSetIDArray){
+    			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=arguments.productType.getProductTypeID()};
+    			var attributeSetAssignmentArray = getDAO().getSmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
+    			if(!arrayLen(attributeSetAssignmentArray)){
+	    			var attributeSetAssignment = getService("AttributeService").newProductTypeAttributeSetAssignment();
+	    			var attributeSet = getService("AttributeService").getAttributeSet(attributeSetID);
+	    			attributeSetAssignment.setProductType(arguments.productType);
+	    			attributeSetAssignment.setAttributeSet(attributeSet);
+	    			arguments.productType.addAttributeSetAssignment(attributeSetAssignment);
+    			}
+    		}
+    	}
+    	
 		arguments.productType.validate();
 
 		// if this type has a parent, inherit all products that were assigned to that parent

@@ -54,7 +54,7 @@ it is set to 0
 				<dd>
 					<cfif rc.edit>
 						<cfswitch expression="#local.attribute.getAttributeType().getSystemCode()#">
-							<cfcase value="atSelectBox">
+							<cfcase value="atSelect">
 								<select name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#">
 									<option value="#local.attribute.getDefaultValue()#" <cfif local.attributeValue.getAttributeValue() EQ local.attribute.getDefaultValue()> Selected</cfif>>Select an option</option>
 									<cfloop array="#local.attribute.getAttributeOptions()#" index="local.option" >
@@ -62,7 +62,7 @@ it is set to 0
 									</cfloop>
 								</select>
 							</cfcase>
-							<cfcase value="atTextBox">
+							<cfcase value="atText">
 								<input type="text" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.attributeValue.getAttributeValue()#" />
 							</cfcase>
 							<cfcase value="atTextArea">
@@ -71,14 +71,13 @@ it is set to 0
 							<cfcase value="atRichTextEditor">
 								<textarea name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" class="wysiwyg" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#">#local.attributeValue.getAttributeValue()#</textarea>
 							</cfcase>
-							<cfcase value="atCheckBox">
-								<input type="hidden" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="" />
+							<cfcase value="atCheckBox,atCheckBoxGroup">
+								<input type="hidden" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="" />
 								<cfloop array="#local.attribute.getAttributeOptions()#" index="local.option" >
-									<input type="checkbox" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.option.getAttributeOptionValue()#" <cfif local.attributeValue.getAttributeValue() EQ local.option.getAttributeOptionValue()> checked</cfif>>#local.option.getAttributeOptionLabel()#</option>
+									<input type="checkbox" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.option.getAttributeOptionValue()#" <cfif listFindNoCase(local.attributeValue.getAttributeValue(),local.option.getAttributeOptionValue())> checked</cfif>>#local.option.getAttributeOptionLabel()#</option>
 								</cfloop>					
 							</cfcase>
 							<cfcase value="atRadioGroup">
-								<input type="hidden" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="" />
 								<cfloop array="#local.attribute.getAttributeOptions()#" index="local.option" >
 									<input type="radio" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.option.getAttributeOptionValue()#" <cfif local.attributeValue.getAttributeValue() EQ local.option.getAttributeOptionValue()> checked</cfif>>#local.option.getAttributeOptionLabel()#</option>
 								</cfloop>					

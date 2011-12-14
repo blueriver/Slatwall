@@ -57,7 +57,7 @@ Notes:
 							<td class="administration">
 								<ul class="two">
 									<cf_SlatwallActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetID=#local.thisAttribute.getAttributeSet().getAttributeSetID()#&attributeID=#local.thisAttribute.getAttributeID()#" class="edit" type="list">
-									<cf_SlatwallActionCaller action="admin:attribute.deleteAttribute" querystring="attributeID=#local.thisAttribute.getAttributeID()#" class="delete" type="list" disabled="#local.thisAttribute.isNotDeletable()#" confirmrequired="true">
+									<cf_SlatwallActionCaller action="admin:attribute.deleteAttribute" querystring="attributeID=#local.thisAttribute.getAttributeID()#&attributeSetID=#rc.attributeSet.getAttributeSetID()#" class="delete" type="list" disabled="#local.thisAttribute.isNotDeletable()#" confirmrequired="true">
 								</ul>
 							</td>
 						</tr>
@@ -125,7 +125,7 @@ Notes:
 									</td>
 									<td class="administration">
 										<ul class="one">
-											<cf_SlatwallActionCaller action="admin:attribute.deleteAttributeOption" querystring="attributeOptionID=#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionID()#" class="delete" type="list">
+											<cf_SlatwallActionCaller action="admin:attribute.deleteAttributeOption" querystring="attributeOptionID=#rc.attribute.getAttributeOptions()[local.optionCount].getAttributeOptionID()#&attributeID=#rc.attribute.getAttributeID()#&attributeSetID=#rc.attributeSet.getAttributeSetID()#" class="delete" type="list">
 										</ul>
 									</td>
 								</tr>

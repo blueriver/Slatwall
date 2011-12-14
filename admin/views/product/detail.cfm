@@ -66,8 +66,16 @@ Notes:
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="publishedFlag" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" valueLink="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" valueLink="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
+		<cfif rc.edit>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
+		<cfelse>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="false" valueLink="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#">
+		</cfif>
+		<cfif rc.edit>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
+		<cfelse>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="false" valueLink="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#">
+		</cfif>
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
 			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
