@@ -259,7 +259,7 @@ Notes:
         </cfloop>
         <td class="varWidth"><!--image path --></td>
         <td>
-            $<input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
+            <input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
         </td>
         
 		<!--- Loop though price groups --->
