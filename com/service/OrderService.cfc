@@ -519,6 +519,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Validate & Save Address
 			address.validate(context="full");
+			
 			address = getAddressService().saveAddress(address);
 			
 			// Check for a shipping method option selected
@@ -536,7 +537,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Validate the order Fulfillment
 			arguments.orderFulfillment.validate();
-			
 			if(!getRequestCacheService().getValue("ormHasErrors")){
 				getDAO().flushORMSession();
 			}
