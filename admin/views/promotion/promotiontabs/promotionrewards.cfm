@@ -36,6 +36,129 @@
 Notes:
 
 --->
+
+<cfoutput>
+	<cfif arrayLen(rc.promotion.getPromotionRewards()) GT 0>
+		<table class="listing-grid stripe">
+			<thead>
+				<tr>
+					<th>#rc.$.Slatwall.rbKey("entity.promotionReward.rewardType")#</th>
+					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.promotion.promotionReward.item")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.promotionRewardProduct.itemRewardQuantity")#</th>
+					<th>#rc.$.Slatwall.rbKey("admin.promotion.edit.discount")#</th>
+					<th class="administration">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.promotion.getPromotionRewards()#" index="local.thisPromotionReward">
+					<cfif not local.thisPromotionReward.hasErrors()>
+						<tr>
+							<td>#$.Slatwall.rbKey('entity.promotionReward.promotionRewardType.' & local.thisPromotionReward.getRewardType())#</td>
+							<td class="varWidth">
+								<cfset local.itemName = "" />
+								<cfif local.thisPromotionReward.getRewardType() eq "product">
+									<cfif arrayLen(local.thisPromotionReward.getSkus())>
+										<cfset local.itemName = arrayLen(local.thisPromotionReward.getSkus()) gt 1 ? "Skus: " : "Sku: " />
+										<cfset local.itemName &= local.thisPromotionReward.displaySkuCodes() />		
+									<cfelseif arrayLen(local.thisPromotionReward.getProducts())>
+										<cfset local.itemName = local.thisPromotionReward.displayProductNames() />
+									<cfelseif arrayLen(local.thisPromotionReward.getProductTypes())>
+										<cfset local.itemName = arrayLen(local.thisPromotionReward.getProductTypes()) gt 1 ? "#$.Slatwall.rbKey('admin.product.product.productTypes')#: " : "#$.Slatwall.rbKey('entity.product.productType')#: " />
+										<cfset local.itemName &= local.thisPromotionReward.displayProductTypeNames() />
+									<cfelse>
+										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
+									</cfif>
+								<cfelseif local.thisPromotionReward.getRewardType() eq "shipping">
+									<cfif arrayLen(thisPromotionReward.getShippingMethods())>
+										<cfset local.itemName = thisPromotionReward.displayShippingMethodNames() />
+									<cfelse>
+										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
+									</cfif>
+								</cfif>
+								#local.itemName#
+							</td>
+							<td>
+								<cfif local.thisPromotionReward.getRewardType() eq "product">
+									#local.thisPromotionReward.getItemRewardQuantity()#
+								</cfif>
+							</td>
+							<td>
+								<cfif local.thisPromotionReward.getRewardType() eq "product">
+									<cfif !isNull(local.thisPromotionReward.getItemPercentageOff()) && isNumeric(local.thisPromotionReward.getItemPercentageOff())>
+										#local.thisPromotionReward.getItemPercentageOff()#&##37; #$.Slatwall.rbKey("admin.promotion.discount.off")#
+									<cfelseif !isNull(local.thisPromotionReward.getItemAmountOff()) && isNumeric(local.thisPromotionReward.getItemAmountOff())>
+										#local.thisPromotionReward.getFormattedValue('itemAmountOff', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.off")#
+									<cfelseif !isNull(local.thisPromotionReward.getItemAmount()) && isNumeric(local.thisPromotionReward.getItemAmount())>
+										#local.thisPromotionReward.getFormattedValue('itemAmount', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.price")#
+									</cfif>
+								<cfelseif local.thisPromotionReward.getRewardType() eq "shipping">
+									<cfif !isNull(local.thisPromotionReward.getShippingPercentageOff()) && isNumeric(local.thisPromotionReward.getShippingPercentageOff())>
+										#local.thisPromotionReward.getShippingPercentageOff()#&##37; #$.Slatwall.rbKey("admin.promotion.discount.off")#
+									<cfelseif !isNull(local.thisPromotionReward.getShippingAmountOff()) && isNumeric(local.thisPromotionReward.getShippingAmountOff())>
+										#local.thisPromotionReward.getFormattedValue('shippingAmountOff', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.off")#
+									<cfelseif !isNull(local.thisPromotionReward.getShippingAmount()) && isNumeric(local.thisPromotionReward.getShippingAmount())>
+										#local.thisPromotionReward.getFormattedValue('shippingAmount', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.price")#
+									</cfif>
+								</cfif>	
+							</td>
+							<td class="administration">
+								<ul class="two">
+									<cf_SlatwallActionCaller action="admin:option.editOptionGroup" querystring="optiongroupid=#local.thisOption.getOptionGroup().getOptionGroupID()#&optionID=#local.thisOption.getOptionID()#" class="edit" type="list">
+									<cf_SlatwallActionCaller action="admin:option.deleteOption" querystring="optionid=#local.thisOption.getOptionID()#" class="delete" type="list" disabled="#local.thisOption.isNotDeletable()#" confirmrequired="true">
+								</ul>
+							</td>
+						</tr>
+					</cfif>
+				</cfloop>
+			</tbody>
+		</table>
+	<cfelse>
+		<p><em>#rc.$.Slatwall.rbKey("admin.promotion.nopromotionrewardsdefined")#</em></p>
+		<br /><br />
+	</cfif>
+	<cfif rc.edit>
+		<!--- If the Option is new, then that means that we are just editing the Option --->
+		<cfif rc.promotionRewardShipping.isNew() && not rc.promotionRewardShipping.hasErrors() && rc.promotionRewardProduct.isNew() && not rc.promotionRewardProduct.hasErrors()>
+			<button type="button" id="addPromotionRewardProductButton" value="true">#rc.$.Slatwall.rbKey("admin.promotion.detail.addPromotionRewardProduct")#</button>
+			<button type="button" id="addPromotionRewardShippingButton" value="true">#rc.$.Slatwall.rbKey("admin.promotion.detail.addPromotionRewardShipping")#</button>
+			<input type="hidden" name="populateSubProperties" id="addPromotionRewardHidden" value="false"/>
+		<cfelse>
+			<input type="hidden" name="populateSubProperties" id="addPromotionRewardHidden" value="true"/>
+		</cfif>
+		
+		<div id="promotionRewardProductInputs" <cfif rc.promotionRewardProduct.isNew() and not rc.promotionRewardProduct.hasErrors()>class="ui-helper-hidden"</cfif> >
+			<dl class="oneColumn">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="brands" fieldName="promotionRewards[1].brands" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="options" fieldName="promotionRewards[1].options" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productTypes" fieldName="promotionRewards[1].productTypes" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="products" fieldName="promotionRewards[1].products" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="skus" fieldName="promotionRewards[1].skus" edit="true" />
+			</dl>
+			<input type="hidden" name="promotionRewards[1].promotionRewardID" value="#rc.promotionRewardProduct.getPromotionRewardID()#"/>
+		</div>
+		
+		<div id="promotionRewardShippingInputs" <cfif rc.promotionRewardShipping.isNew() and not rc.promotionRewardShipping.hasErrors()>class="ui-helper-hidden"</cfif> >
+			<dl class="oneColumn">
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="shippingMethods" fieldName="promotionRewards[1].shippingMethods" edit="true" />
+			</dl>
+			<input type="hidden" name="promotionRewards[1].promotionRewardID" value="#rc.promotionRewardShipping.getPromotionRewardID()#"/>
+		</div>
+		
+		<br /><br />
+	</cfif>
+</cfoutput>
+
+
+
+
+
+
+
+
+
+
+
+<!---
 <cfoutput>
 	<cfif arrayLen(rc.promotion.getPromotionRewards()) gt 0>
 	<table id="promotionRewardTable" class="listing-grid">
@@ -119,6 +242,7 @@ Notes:
 					</td>
 				</cfif>
 			</tr>
+			
 			<cf_SlatwallErrorDisplay object="#local.thisPromotionReward#" errorName="reward" />
 			
 			<cfif rc.edit>
@@ -329,3 +453,4 @@ Notes:
 
 </cfif>
 </cfoutput>
+--->

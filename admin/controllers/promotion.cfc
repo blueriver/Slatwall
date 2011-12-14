@@ -71,16 +71,27 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function edit(required struct rc) {
+		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
 		
-		detail(arguments.rc);
-		getFW().setView("admin:promotion.detail");
+		// Get the promotion
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
+		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
+		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
+		
+		// Get a smart list of Promotion Codes for the view
+		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
+		
 		rc.edit = true;
+		getFW().setView("admin:promotion.detail");
 		
+		/*
 		// Set up additional values that the view needs when in edit mode
 		rc.productTypeTree = getService("ProductService").getProductTypeTree();
 		rc.brands = getService("BrandService").listBrandorderByBrandName();
 		rc.optionGroups = getService("optionService").listOptionGroup();
 		rc.shippingMethods = getSettingService().listShippingMethod();
+		*/
 		
 	}
 	 
