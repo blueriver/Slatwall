@@ -93,7 +93,7 @@ Notes:
 					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey( "entity.setting.global" )#</a>
 				<cfelseif local.settingSource.type eq "Product Type">
 					<a href="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#local.settingSource.id#')#">#local.settingSource.name#</a>
-				<cfelse>
+				<cfelseif local.settingSource.type eq "Product">
 					#rc.$.Slatwall.rbKey( "entity.product" )#
 				</cfif>
 			</td>	

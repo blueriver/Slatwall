@@ -345,13 +345,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// Get source of setting
-    public any function getWhereSettingDefined( required string settingName ) {
-    	if(structKeyExists(variables,arguments.settingName)) {
-    		return {type="Product"};
-    	} else {
-    		return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
-    	}
-    }
+	public any function getWhereSettingDefined( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return {type="Product"};
+		} else if(isNull(getProductType())) {
+			return {type=""};
+		} else {
+			return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
+		}
+	}
 	
 	
 	/***************************************************/
@@ -652,9 +654,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public array function getAttributeSets(array attributeSetTypeCode){
 		var attributeSets = [];
 		// get all the parent product types
-		var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
+		if(!isNull(getProductType())){
+			var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
+			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
+		} else {
+			return attributeSets;
+		}
 		
-		return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
 	}
 	
 	//get attribute value
