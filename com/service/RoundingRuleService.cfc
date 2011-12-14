@@ -41,14 +41,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public numeric function roundValueByRoundingRule(required any value, required any roundingRule) {
 		
 		var inputValue = numberFormat(arguments.value, "0.00");
-		
 		var returnValue = javaCast("null", "");
 		var returnDelta = javaCast("null", "");
 		
 		for(var i=1; i<=listLen(arguments.roundingRule.getRoundingRuleExpression()); i++) {
 			var rr = listGetAt(arguments.roundingRule.getRoundingRuleExpression(), i);
 			var rrPower = 1 * (10 ^ (len(rr)-3));
-			
 			
 			if(len(inputValue) > len(rr)) {
 				var valueOptionOne = left(inputValue,len(inputValue)-len(rr)) & rr;
