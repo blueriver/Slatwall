@@ -87,6 +87,40 @@ component extends="BaseService" accessors="true" output="false" {
 		// Call the super.save() to do population and validation
 		arguments.account = super.save(entity=arguments.account, data=arguments.data);
 		
+		// Account Email
+		if( structKeyExists(arguments.data, "emailAddress") && isNull(arguments.account.getPrimaryEmailAddress()) ) {
+			
+			// Setup Email Address
+			var accountEmailAddress = this.newAccountEmailAddress();
+			accountEmailAddress.populate(arguments.data);
+			accountEmailAddress.setAccount(arguments.account);
+			arguments.account.setPrimaryEmailAddress(accountEmailAddress);
+			
+			// Validate This Object
+			accountEmailAddress.validate();
+			if(accountEmailAddress.hasErrors()) {
+				arguments.account.addError("emailAddress", "The Email address has errors");
+			}
+
+		}
+
+		// Account Phone Number
+		if( structKeyExists(arguments.data, "phoneNumber") && isNull(arguments.account.getPrimaryPhoneNumber())) {
+			
+			// Setup Phone Number
+			var accountPhoneNumber = this.newAccountPhoneNumber();
+			accountPhoneNumber.populate(arguments.data);
+			accountPhoneNumber.setAccount(arguments.account);
+			arguments.account.setPrimaryPhoneNumber(accountPhoneNumber);
+			
+			// Validate This Object
+			accountPhoneNumber.validate();
+			if(accountPhoneNumber.hasErrors()) {
+				arguments.account.addError("phoneNumber", "The Phone Number has errors");
+			}
+		}
+		
+		
 		// If the account doesn't have errors, is new, has and email address and password, has a password passed in, and not supposed to be a guest account. then attempt to setup the username and password in Mura
 		if( !arguments.account.hasErrors() && arguments.account.isNew() && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
 			
