@@ -60,9 +60,7 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="activeFlag" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.PriceGroup#" property="priceGroupCode" edit="#rc.edit#" >
-			
-			<!--- valueLink="#buildURL(action='admin:priceGroup.detail', queryString='priceGroupId=#rc.priceGroup.getParentPriceGroup().getPriceGroupId()#')#" --->
-			
+
 			<!--- Populate list of price groups removing the current group from the options so that a user can't select a price group to be it's own parent --->	
 			<cfset local.valueOptions = rc.priceGroup.getParentPriceGroupOptions() />
 

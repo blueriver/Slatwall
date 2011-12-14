@@ -66,7 +66,7 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 			variables.priceGroupRates = [];
 		}
 		
-		if(isNull(variables.Products)){
+		if(isNull(variables.Products)) {
 		   variables.Products = [];
 		}
 	   
@@ -93,41 +93,34 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	
 	// Parent Pricing Group (many-to-one)
 	public void function addChildPriceGroup(required any priceGroup) {
-	   arguments.priceGroup.setParentPriceGroup(this);
+		arguments.priceGroup.setParentPriceGroup(this);
 	}
 	
 	public void function removeChildPriceGroup(required any priceGroup) {
-		// removeParentPriceGroup is defined...?
-		
-		//logSlatwall("removeChildPriceGroup: Calling removeParentPriceGroup() on #arguments.priceGroup.getPriceGroupName()#");
 		arguments.priceGroup.removeParentPriceGroup();
 	}
 	
 	// Override the default setParentPriceGroup method to wire up childParentGroups
-    public void function setParentPriceGroup(required any priceGroup){
+    public void function setParentPriceGroup(required any priceGroup) {
     	variables.parentPriceGroup = arguments.priceGroup;
     	
 		// Populate the ChildPriceGroups in the other Price Group. We need to manually manipulate the array because the addChildPriceGroup() has been overwridden
 		if(isNew() or !arguments.priceGroup.hasChildPriceGroup(this)) {
-	       arrayAppend(arguments.priceGroup.getChildPriceGroups(), this);
-	   }
+			arrayAppend(arguments.priceGroup.getChildPriceGroups(), this);
+		}
     	
     }
     
     // Removes the parent (inherited) price group from this price group (nulls out the property) and also removes the references to this price group from the price group that we were inheriting from.
     // If PriceGroupB inherits from PriceGroupA, then this method is going to be called on PriceGroupB. 
     public void function removeParentPriceGroup() {
-    	//logSlatwall("removeParentPriceGroup(): was called for #this.getPriceGroupName()#");
-    	
-		if(StructKeyExists(variables, "parentPriceGroup")){
+		if(StructKeyExists(variables, "parentPriceGroup")) {
 			// Loop in the parent price group's (priceGroupA) children (inheriting Price Groups), and find this price group (PriceGroupB), and remove it from PriceGroupA's array.
 			var index = arrayFind(variables.parentPriceGroup.getChildPriceGroups(), this);
 			if(index > 0) {
-				//logSlatwall("removeParentPriceGroup(): Removing #this.getPriceGroupName()# from #variables.parentPriceGroup.getPriceGroupName()#");
 				arrayDeleteAt(variables.parentPriceGroup.getChildPriceGroups(), index);
 			}
 			
-			//logSlatwall("removeParentPriceGroup(): Clearing the parentPriceGroup attribute for #this.getPriceGroupName()#");
 			structDelete(variables, "parentPriceGroup");
 		}
     }
@@ -136,16 +129,17 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
     /************   END Association Management Methods   *******************/
     
     // Loop over all Price Group Rates and pull the one that is global
-    public any function getGlobalPriceGroupRate(){
+    public any function getGlobalPriceGroupRate() {
     	var rates = getPriceGroupRates();
-    	for(var i=1; i <= ArrayLen(rates); i++){
-    		if(rates[i].getGlobalFlag())
+    	for(var i=1; i <= ArrayLen(rates); i++) {
+    		if(rates[i].getGlobalFlag()) {
     			return rates[i];
+    		}
     	}	
     }
     
     // Check if this PriceGroup can be deleted. Right now, only check if it has inheriting price groups
-    public boolean function isNotDeletable(){
+    public boolean function isNotDeletable() {
     	return ArrayLen(getChildPriceGroups()) NEQ 0;
     }
     

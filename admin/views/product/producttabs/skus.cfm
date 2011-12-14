@@ -100,9 +100,6 @@ Notes:
 					</th>
 				</cfloop>
 				
-				
-				
-				<!---<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")# <img src="staticAssets/images/grayIcons16/arrow_down.png"></th>--->
 				<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
@@ -173,7 +170,6 @@ Notes:
 					</cfif>
 				</td>
 				
-				
 				<!--- Loop over all Price Groups and create actual values --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
@@ -200,14 +196,6 @@ Notes:
 					</td>	
 				</cfloop>
 
-				
-				<!---<td>
-					<cfif rc.edit>
-						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#decimalFormat(local.thisSku.getListPrice())#" />         
-					<cfelse>
-						#DollarFormat(local.thisSku.getListPrice())#
-					</cfif>
-				</td>--->
 				<td>
 					<cfif rc.edit>
 						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
@@ -270,14 +258,15 @@ Notes:
 			</td>
         </cfloop>
         <td class="varWidth"><!--image path --></td>
-		<td><!--image exists --></td>
-		<td><!--upload image field --></td>
         <td>
             $<input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
         </td>
-        <td>
-            $<input type="text" size="6" name="listPrice" value="#rc.product.getDefaultSku().getListPrice()#" />         
-        </td>
+        
+		<!--- Loop though price groups --->
+		<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+			<td></td>
+		</cfloop>
+		
 		<td>
 			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
 		</td>

@@ -57,10 +57,6 @@ Notes:
 					</p><br>
 				</cfif>
 				
-				<style>
-					.inline{display:inline;}
-					
-				</style>
 				<!--- The dynamic percentageOff,AmountOff,Amount inputs --->
 				<select name="priceGroupRateType" id="priceGroupRateType">
 					<option value="percentageOff" <cfif rc.priceGroupRate.getType() EQ "percentageOff"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.percentageOff')#</option>

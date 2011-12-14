@@ -29,7 +29,7 @@
 		</property>
 		
 		<property name="percentageOff">
-			<rule type="numeric" condition="HasPercentageOff,isNotGlobal" />
+			<rule type="numeric" condition="HasPercentageOff" />
 			<rule type="required" condition="HasPercentageOff" failureMessage="You must define a numeric value for percentage off (between 0 and 100)." />
 			<rule type="rangelength" condition="HasPercentageOff">
 				<param name="minlength" value="0" />
