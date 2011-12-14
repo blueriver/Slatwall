@@ -47,10 +47,6 @@
 			<rule type="required" condition="HasAmount" failureMessage="You must define a numeric value for amount."/>
 		</property>
 		
-		<property name="roundingRule">
-			<rule type="required" contexts="*" condition="HasPercentageOff" />
-		</property>
-		
 		<!--<property name="productTypes">
 			<rule type="required" condition="HasNoIncludesButIsNotGlobal" failureMessage="You require at least one product or product type in this non-global rate."/>
 			<rule type="collectionSize" contexts="*" condition="HasNoIncludesButIsNotGlobal" failureMessage="You require at least one product or product type in this non-global rate.">
