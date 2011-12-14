@@ -162,7 +162,7 @@ div#admincontainer {
 
 .multiselect {
 	width: 600px;
-	height: 300px;
+	height: 200px;
 }
 
 .ui-widget-content a  {
@@ -747,12 +747,20 @@ td.administration li.historyOff {
 	margin:0 10px 0 5px;
 }
 .twoColumn dd {
-	margin: 0 0 0 210px;
+	margin: 0 0 0 200px;
 	padding: 2px;
 	line-height: 22px;
 }
 .twoColumn dd .cke_skin_kama {
-	margin-left: 200px;
+	margin-left: 204px;
+}
+.twoColumn dd .ui-multiselect {
+	margin-left: 204px;
+}
+
+.twoColumn dd div {
+	padding:0px;
+	margin:0px;
 }
 
 .tabs .oneColumn {

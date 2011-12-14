@@ -120,7 +120,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				
 				// If the price group rate has changed during this edit, then stay on the details page, otherwise, list.
 				if(rc.populateSubProperties)
-					getFW().redirect(action="admin:priceGroup.detailPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");
+					getFW().redirect(action="admin:priceGroup.editPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");
 				else
 					getFW().redirect(action="admin:priceGroup.listPriceGroups", querystring="", preserve="message");
 			}
@@ -156,25 +156,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:priceGroup.listPriceGroups", preserve="message,messagetype");
 	}
 	
-	/*
-	
-	var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
-		
-		var deleteOK = getOptionService().deleteOptionGroup(optionGroup);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.optionGroup.delete_success");
-		} else {
-			rc.message = rbKey("admin.optionGroup.delete_failure");
-			rc.messagetype="error";
-		}
-		
-		getFW().redirect(action="admin:option.listOptionGroups", preserve="message,messagetype");
-	
-	*/
-	
-	
-	
 	public void function deletePriceGroupRate(required struct rc) {
 		var priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId);
 		var priceGroupId = priceGroupRate.getPriceGroup().getPriceGroupId();
@@ -190,38 +171,5 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirect(action="admin:pricegroup.editPriceGroup", querystring="priceGroupid=#priceGroupId#",preserve="message,messagetype");
 		
 	}
-	
-		// Common functionalty of Add/Edit/View
-	/*public void function detail(required struct rc) {
-		param name="rc.priceGroupID" default="";
-		param name="rc.edit" default="false";
-		
-		rc.priceGroup = getPriceGroupService().getPriceGroup(rc.priceGroupID,true);
-		
-		// If we are editing a PriceGroupRate (rc contain a priceGroupRateId) then pull that one specifically, otherwise, pull a brand new entity (rc does not contain priceGorupRateId)
-		param name="rc.priceGroupRateId" default="";
-		rc.PriceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);	
-	}
 
-
-    public void function create(required struct rc) {
-		edit(rc);
-    }
-
-	public void function edit(required struct rc) {
-		detail(rc);
-		getFW().setView("admin:priceGroup.detail");
-		rc.edit = true;
-	}
-	
-	public void function editPriceGroupRate(required struct rc) {
-		detail(rc);
-		getFW().setView("admin:priceGroup.detail");
-		rc.edit = true;
-	}
-	 
-    public void function list(required struct rc) {	
-		rc.priceGroups = getPriceGroupService().listPriceGroup();
-    }
-*/
 }

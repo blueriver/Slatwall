@@ -38,156 +38,75 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
-	/*
-	public void function savePromotionCodes(required any promotion, required array promotionCodes){
-		// keep track of promotion code list to validate that there are no duplicates
-		var promotionCodeList = "";
-		for(var promotionCodeData in arguments.promotionCodes){
-			var promotionCode = this.getPromotionCode(promotionCodeData.promotionCodeID,true);
-			if(promotionCode.isNew()){
-				promotionCode.setPromotion(arguments.promotion);
-			}
-			promotionCode = savePromotionCode(promotionCode,promotionCodeData,promotionCodeList);
-			promotionCodeList = listAppend(promotionCodeList,promotionCode.getPromotionCode());
-		}
-	}
-	
-	public any function savePromotionCode(required any promotionCode, required struct data, string promotionCodeList){
-		arguments.promotionCode.populate(arguments.data);
-		if(isNull(arguments.promotionCode.getPromotionCode()) || arguments.promotionCode.getPromotionCode() == ""){
-			arguments.promotionCode.setPromotionCode(createUUID());
-		}
-		if(structKeyExists(arguments,"promotionCodeList")) {
-			validatePromotionCode(arguments.promotionCode,arguments.promotionCodeList);
-		} else {
-			validatePromotionCode(arguments.promotionCode);
-		}
-		if(!getService("requestCacheService").getValue("ormHasErrors")){
-			arguments.promotionCode = super.save(arguments.promotionCode);
-		}
-		return arguments.promotionCode;
-	}*/
-	
-	public void function savePromotionRewards(required any promotion, required array promotionRewards){
-		for(var promotionRewardData in arguments.promotionRewards){
-			if(isNumeric(promotionRewardData.discountValue)) {
-				if(promotionRewardData.rewardType == "product") {
-					// reset all discount values first
-					promotionRewardData["itemPercentageOff"] = "";
-					promotionRewardData["itemAmountOff"] = "";
-					promotionRewardData["itemAmount"] = "";
-					var promotionReward = this.getPromotionRewardProduct(promotionRewardData.promotionRewardID,true);
-					// set discount
-					promotionRewardData[promotionRewardData.productDiscountType] = promotionRewardData.discountValue;
-					if(trim(promotionRewardData.productName) == ""){
-						promotionRewardData.product = "0";
-					}
-					if(trim(promotionRewardData.skuCode) == ""){
-						promotionRewardData.sku = "0";
-					}
-					//writeDump(var=promotionRewardData,abort=true);
-				} else if(promotionRewardData.rewardType == "shipping") {
-					// reset all discount values first
-					promotionRewardData["shippingPercentageOff"] = "";
-					promotionRewardData["shippingAmountOff"] = "";
-					promotionRewardData["shippingAmount"] = "";
-					var promotionReward = this.getPromotionRewardShipping(promotionRewardData.promotionRewardID,true);
-					// reset all discount values first
-					promotionRewardData[promotionRewardData.shippingDiscountType] = promotionRewardData.discountValue;
-					if(trim(promotionRewardData.shippingMethod) == ""){
-						promotionRewardData.shippingMethod = "0";
-					}
-				}
-	/*			else if(promotionRewardData.rewardType == "order") {
-					var promotionReward = this.getPromotionRewardOrder(promotionRewardData.promotionRewardID,true);
-					promotionRewardData[promotionRewardData.orderDiscountType] = promotionRewardData.discountValue;
-				}*/
-				
-				if(promotionReward.isNew()){
-					promotionReward.setPromotion(arguments.promotion);
-				}
-				promotionReward = savePromotionReward(promotionReward,promotionRewardData);			
-			}
-		}
-	}
-	
-	public any function savePromotionReward(required any promotionReward, required struct data){
-		arguments.promotionReward.populate(arguments.data);
+	public any function savePromotion(required any promotion, struct data={}) {
 		
-		if(arguments.promotionReward.getRewardType() == "product"){
-			arguments.promotionReward = this.getPromotionRewardProduct(arguments.promotionReward.getPromotionRewardID(),true);
-			// Clear any skus from promotion reward
-			for( var s=arrayLen(arguments.promotionReward.getSkus()); s>=1; s-- ) {
-				arguments.promotionReward.removeSku(arguments.promotionReward.getSkus()[s]);
-			}
-			
-			// Clear any products from promotion reward
-			for( var p=arrayLen(arguments.promotionReward.getProducts()); p>=1; p-- ) {
-				arguments.promotionReward.removeProduct(arguments.promotionReward.getProducts()[p]);
-			}
-			
-			// Clear any product types from promotion reward
-			for( var pt=arrayLen(arguments.promotionReward.getProductTypes()); pt>=1; pt-- ) {
-				arguments.promotionReward.removeProductType(arguments.promotionReward.getProductTypes()[p]);
-			}
-			
-			if(len(arguments.data.sku) && arguments.data.sku != 0){
-				// loop over sku IDs and set skus into the promotion reward
-				for(var i=1; i<=listLen(arguments.data.sku); i++) {
-					local.thisSku = this.getSku( listGetAt(arguments.data.sku,i) );
-					if( !isNull(local.thisSku) ) {						
-						arguments.promotionReward.addSku(local.thisSku);
-					}
-				}
-				// remove any products or productTypes from the reward
-			}
-			// no sku ids are specified, so check for product ids
-			else if(len(arguments.data.product) && arguments.data.product != 0) {
-				// loop over product IDs and set products into the promotion reward
-				for(var i=1; i<=listLen(arguments.data.product); i++) {
-					local.thisProduct = this.getProduct( listGetAt(arguments.data.product,i) );
-					if( !isNull(local.thisProduct) ) {						
-						arguments.promotionReward.addProduct(local.thisProduct);
-					}
-				}
-			}
-			// no skus or products specified, so check for product type ids
-			else if(len(arguments.data.productType) && arguments.data.productType != 0) {
-				// loop over productType IDs and set product types into the promotion reward
-				for(var i=1; i<=listLen(arguments.data.productType); i++) {
-					local.thisProductType = this.getProductType( listGetAt(arguments.data.productType,i) );
-					if( !isNull(local.thisProductType) ) {						
-						arguments.promotionReward.addProductType(local.thisProductType);
-					}
-				}				
-			}
-		}
-		else if(arguments.promotionReward.getRewardType() == "shipping"){
-
-			arguments.promotionReward = this.getPromotionRewardShipping(arguments.promotionReward.getPromotionRewardID(),true);
-			// Clear any shipping methods from promotion reward
-			for( var sm=arrayLen(arguments.promotionReward.getShippingMethods()); sm>=1; sm-- ) {
-				arguments.promotionReward.removeShippingMethod(arguments.promotionReward.getShippingMethods()[sm]);
-			}			
-
-			if(len(arguments.data.shippingMethod) && arguments.data.shippingMethod != 0) {
-				// loop over shippingMethod IDs and set them into the promotion reward
-				for(var i=1; i<=listLen(arguments.data.shippingMethod); i++) {
-					local.thisShippingMethod = this.getShippingMethod( listGetAt(arguments.data.shippingMethod,i) );
-					if( !isNull(local.thisShippingMethod) ) {						
-						arguments.promotionReward.addShippingMethod(local.thisShippingMethod);
-					}
+		// Turn off sub-property populating because it will be managed manually in this method.
+		arguments.data.populateSubProperties = false;
+		
+		// Populate the promotion
+		arguments.promotion.populate(arguments.data);
+		
+		// Populate the promotion codes
+		if(structKeyExists(arguments.data, "promotionCodes") && isArray(arguments.data.promotionCodes)) {
+			for(var i=1; i<=arrayLen(arguments.data.promotionCodes); i++) {
+				// Get the promotion code
+				var promotionCode = this.getPromotionCode(arguments.data.promotionCodes[i].promotionCodeID, true);
+				
+				// Populate it with the new data
+				promotionCode.populate(arguments.data.promotionCodes[i]);
+				
+				// Set it in promotion
+				arguments.promotion.addPromotionCode(promotionCode);
+				
+				// Add to the populated sub properties
+				if(!arrayFind(arguments.promotion.getPopulatedSubProperties(), "promotionCodes")) {
+					arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionCodes");
 				}
 			}
 		}
-		arguments.promotionReward = super.save(arguments.promotionReward);
-		return arguments.promotionReward;
+		
+		// Check to see if we are going to update or editing any rewards (TPC) 
+		if(structKeyExists(arguments.data, "savePromotionRewardProduct") && arguments.data.savePromotionRewardProduct) {
+			// Get product reward, and return a new one if not found
+			var prProduct = this.getPromotionRewardProduct(arguments.data.promotionRewards[1].promotionRewardID, true);
+			
+			// Populate that product reward
+			prProduct.populate(arguments.data.promotionRewards[1]);
+			
+			// Add the promotion reward to the promotion
+			arguments.promotion.addPromotionReward(prProduct);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
+			
+		} else if (structKeyExists(arguments.data, "savePromotionRewardShipping") && arguments.data.savePromotionRewardShipping) {
+			// Get shipping reward, and return a new one if not found
+			var prShipping = this.getPromotionRewardShipping(arguments.data.promotionRewards[1].promotionRewardID, true);
+			
+			// Get shipping reward, and return a new one if not found
+			prShipping.populate(arguments.data.promotionRewards[1]);
+			
+			// Add the promotion reward to the promotion
+			arguments.promotion.addPromotionReward(prShipping);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
+		}
+		
+		// Validate the promotion, this will also check any sub-entities that got populated 
+		arguments.promotion.validate();
+		
+		// If the object passed validation then call save in the DAO, otherwise set the errors flag
+		if(!arguments.promotion.hasErrors()) {
+			arguments.promotion = getDAO().save(target=arguments.promotion);
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
+        }
+		
+		return arguments.promotion;
 	}
-	
-
-	
+		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
-	
 	public void function updateOrderAmountsWithPromotions(required any order) {
 		// Get All of the active current promotions
 		var promotions = getDAO().getAllActivePromotions();

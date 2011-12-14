@@ -71,16 +71,20 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function edit(required struct rc) {
+		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
 		
-		detail(arguments.rc);
-		getFW().setView("admin:promotion.detail");
+		// Get the promotion
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
+		
+		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
+		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
+		
+		// Get a smart list of Promotion Codes for the view
+		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
+		
 		rc.edit = true;
-		
-		// Set up additional values that the view needs when in edit mode
-		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		rc.brands = getService("BrandService").listBrandorderByBrandName();
-		rc.optionGroups = getService("optionService").listOptionGroup();
-		rc.shippingMethods = getSettingService().listShippingMethod();
+		getFW().setView("admin:promotion.detail");
 		
 	}
 	 
@@ -89,18 +93,42 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
+		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
+		param name="rc.savePromotionRewardProduct" default="false";
+		param name="rc.savePromotionRewardShipping" default="false";
 		
 		// Get the promotion from the DB, and return a new promotion if necessary
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
+		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
+		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
 		
 		// Call the promotion service save method (this is standard)
-		rc.promotion = getPromotionService().savePromotion(rc.promotion,rc);
+		rc.promotion = getPromotionService().savePromotion(rc.promotion, rc);
 		
 		// If no errors, then redirect to the list page, otherwise go back to edit
 		if(!rc.promotion.hasErrors()) {
-			getFW().redirect(action="admin:promotion.list",querystring="message=admin.promotion.save_success");
+			rc.message="admin.promotion.save_success";
+			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping) {
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:promotion.list",preserve="message");
+			}
 		} else {
-			edit( rc );
+			// If one of the sub-options had the error, then find out which one and populate it
+			if(rc.promotion.hasError("promotionRewards")) {
+				for(var i=1; i<=arrayLen(rc.promotion.getPromotionRewards()); i++) {
+					var thisReward = rc.promotion.getPromotionRewards()[i];
+					if(thisReward.hasErrors() && thisReward.getRewardType() == "product") {
+						rc.promotionRewardProduct = thisReward;
+					} else if(thisReward.hasErrors() && thisReward.getRewardType() == "shipping") {
+						rc.promotionRewardShipping = thisReward;
+					}
+				}
+			}
+			rc.edit = true;
+			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.createPromotion") : rc.$.Slatwall.rbKey("admin.promotion.editPromotion") & ": #rc.promotion.getPromotionName()#";
+			getFW().setView(action="admin:option.detailOptionGroup");
 		}
 	}
 	
@@ -134,7 +162,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.detail",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionReward(required struct rc) {
@@ -151,7 +179,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messagetype = "error";
 		}
 		
-		getFW().redirect(action="admin:promotion.detail",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 }

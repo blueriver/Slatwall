@@ -66,19 +66,22 @@ Notes:
 				
 				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<ul>
-						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
-						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>	
 						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
+						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>
+						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
+						<li><a href="##tabSummary" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabSummary')#</span></a></li>
 					</ul>
-					<div id="tabDescription">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg">
+					<div id="tabPromotionRewards">
+						#view("promotion/promotiontabs/promotionrewards")#
 					</div>
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
 					</div>
-					<div id="tabPromotionRewards">
-						#view("promotion/promotiontabs/promotionrewards")#
+					<div id="tabDescription">
+						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+					</div>
+					<div id="tabSummary">
+						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
 					</div>
 				</div>
 			</dl>

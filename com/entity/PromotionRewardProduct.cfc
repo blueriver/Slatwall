@@ -218,10 +218,26 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		return variables.brandOptions;
 	}
 	
+	public string function displayBrandNames() {
+		var brandNames = "";
+		for( var i=1; i<=arrayLen(this.getBrands());i++ ) {
+			brandNames = listAppend(brandNames, " " & this.getBrands()[i].getBrandName());
+		}
+		return brandNames;
+	}
+	
+	public string function displayOptionNames() {
+		var optionNames = "";
+		for( var i=1; i<=arrayLen(this.getOptions());i++ ) {
+			optionNames = listAppend(optionNames, " " & this.getOptions()[i].getOptionName());
+		}
+		return optionNames;
+	}
+	
 	public string function displayProductTypeNames() {
 		var productTypeNames = "";
 		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
-			productTypeNames = listAppend(productTypeNames,this.getProductTypes()[i].getProductTypeName());
+			productTypeNames = listAppend(productTypeNames, " " & this.getProductTypes()[i].getProductTypeName());
 		}
 		return productTypeNames;
 	}
@@ -229,7 +245,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	public string function displayProductNames() {
 		var productNames = "";
 		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
-			productNames = listAppend(productNames,this.getProducts()[i].getProductName());
+			productNames = listAppend(productNames, " " & this.getProducts()[i].getProductName());
 		}
 		return productNames;
 	}
@@ -237,7 +253,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	public string function displaySkuCodes() {
 		var skuCodes = "";
 		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
-			skuCodes = listAppend(skuCodes,this.getSkus()[i].getSkuCode());
+			skuCodes = listAppend(skuCodes, " " & this.getSkus()[i].getSkuCode());
 		}
 		return skuCodes;
 	}
