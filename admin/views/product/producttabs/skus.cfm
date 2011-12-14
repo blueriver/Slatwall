@@ -258,14 +258,15 @@ Notes:
 			</td>
         </cfloop>
         <td class="varWidth"><!--image path --></td>
-		<td><!--image exists --></td>
-		<td><!--upload image field --></td>
         <td>
             $<input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
         </td>
-        <td>
-            $<input type="text" size="6" name="listPrice" value="#rc.product.getDefaultSku().getListPrice()#" />         
-        </td>
+        
+		<!--- Loop though price groups --->
+		<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+			<td></td>
+		</cfloop>
+		
 		<td>
 			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
 		</td>
