@@ -188,7 +188,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newItem.setQuantity(arguments.quantity);
 			newItem.setOrder(arguments.order);
 			newItem.setOrderFulfillment(arguments.orderFulfillment);
-			newItem.setPrice(arguments.sku.getPrice());
+			newItem.setPrice(arguments.sku.getLivePrice());
 			
 			// Check for product customization
 			if(structKeyExists(arguments, "customizatonData") && structKeyExists(arguments.customizatonData, "attribute")) {
