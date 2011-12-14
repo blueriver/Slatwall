@@ -16,7 +16,7 @@ jQuery(function() {
 	jQuery('#addAttributeOptionButton').click(function(){
 		jQuery('#removeAttributeOptionButton').show();
 	 	var inputNum = jQuery('#attributeOptionsTable tr').length;
-		jQuery('#attributeOptionsTable tr:last').after('<tr><td><input type="hidden" name="attributes[1].attributeOptions[' + inputNum + '].attributeOptionID" value="" /><input name="attributes[1].attributeOptions[' + inputNum + '].attributeOptionValue" /></td><td><input name="attributes[1].attributeOptions[' + inputNum + '].attributeOptionLabel" /></td><td></td></tr>');
+		jQuery('#attributeOptionsTable tr:last').after('<tr><td><input type="hidden" name="attributes[1].attributeOptions[' + inputNum + '].attributeOptionID" value="" /><input name="attributes[1].attributeOptions[' + inputNum + '].sortorder" /></td><td><input name="attributes[1].attributeOptions[' + inputNum + '].attributeOptionValue" /></td><td><input name="attributes[1].attributeOptions[' + inputNum + '].attributeOptionLabel" /></td><td></td></tr>');
 		stripe('.stripe');
 		addClicks = addClicks + 1;
 	});
