@@ -38,22 +38,6 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	
-	public any function saveAddress(required any address, struct data) {
-		if(structKeyExists(arguments,"data")){
-			arguments.address.populate(arguments.data);
-        }
-        
-        arguments.address.validate();
-                
-        if(!arguments.address.hasErrors()) {
-            arguments.address = getDAO().save(target=arguments.address);
-        } else {
-            getRequestCacheService().setValue("ormHasErrors", true);
-        }
-        
-        return arguments.address;
-	}
-	
 	public boolean function isAddressInZone(required any address, required any addressZone) {
 		var addressInZone = false;
 		

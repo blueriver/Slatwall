@@ -114,7 +114,7 @@ Notes:
 				<div class="accountDetails">
 					<dl class="accountInfo">
 						<dt class="fullName">#rc.account.getFullName()#</dt>
-						<dd class="primaryEmail">#rc.account.getPrimaryEmailAddress().getEmailAddress()#</dd>
+						<dd class="primaryEmail">#rc.account.getEmailAddress()#</dd>
 					</dl>
 				</div>
 			</cfif>
