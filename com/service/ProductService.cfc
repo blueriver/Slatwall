@@ -280,7 +280,7 @@ component extends="BaseService" accessors="true" {
 		arguments.product.populate(arguments.data);
 		
 		// populate custom attributes
-		if(structKeyExists(arguments.data,"attributes")){
+		if(structKeyExists(arguments.data,"attribute")){
 			for(var attributeID in arguments.data.attribute){
 				for(var attributeValueID in arguments.data.attribute[attributeID]){
 					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
