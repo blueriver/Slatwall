@@ -41,7 +41,7 @@ Notes:
 <cfoutput>
 	<div class="priceGroupRateDisplay">
 		<cfif rc.edit>
-			<dl>
+			<dl class="twoColumn">
 				<div id="globalRateControls">
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].globalFlag" property="globalFlag" edit="true"  fieldType="yesno" />
 				</div>
@@ -94,7 +94,6 @@ Notes:
 	
 				<!--- If PriceGroupRate.getGlobalFlag() is 1, then we must be in edit mode, and the Rate being populated was set to global. Hide the inputs  --->
 				<div id="priceGroupRate_globalOffInputs" <cfif rc.priceGroupRate.getGlobalFlag() EQ 1>class="ui-helper-hidden"</cfif> >
-					<br>
 					
 					<!--- ---------------- Includes --------------- --->
 					<!--- Build a list of ids for the "selected" product types --->
@@ -104,16 +103,12 @@ Notes:
 					</cfloop>
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].ProductTypes" property="productTypes" edit="true"  fieldType="multiselect" value="#idsList#"  />
 					
-					<br>
-					
 					<!--- Build a list of ids for the "selected" products --->
 					<cfset idsList = "">
 					<cfloop array="#rc.priceGroupRate.getProducts()#" index="product">
 						<cfset idsList = ListAppend(idsList, product.getProductId())>
 					</cfloop>
 					<cf_SlatwallPropertyDisplay object="#rc.priceGroupRate#" fieldName="priceGroupRates[1].Products" property="products" edit="true"  fieldType="multiselect" value="#idsList#"  />
-					
-					<br>	
 					
 					<!--- Build a list of ids for the "selected" SKUs --->
 					<!---<cfset idsList = "">
