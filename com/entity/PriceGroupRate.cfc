@@ -67,7 +67,7 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	property name="excludedSkus" singularname="excludedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateExcludedSku" fkcolumn="priceGroupRateID" inversejoincolumn="skuID" cascade="save-update";
 	
 	
-	public PriceGroupRate function init(){
+	public PriceGroupRate function init() {
 	   // set default collections for association management methods
 	   if(isNull(variables.productTypes)) {
 	   	   variables.productTypes = [];
@@ -95,25 +95,11 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
 	
 	
 	// Enforce that this entity can only have one of either percentageOff, amountOff or amount at any given time.
-	public void function clearAmounts(){
+	public void function clearAmounts() {
 		StructDelete(variables, "percentageOff");
 		StructDelete(variables, "amountOff");
 		StructDelete(variables, "amount");
 	}
-	/*public void function setPercentageOff(required numeric value){
-		clearAmounts();
-		variables.percentageOff = arguments.value;
-	}
-	
-	public void function setAmountOff(required numeric value){
-		clearAmounts();
-		variables.amountOff = arguments.value;
-	}
-	
-	public void function setAmount(required numeric value){
-		clearAmounts();
-		variables.amount = arguments.value;
-	}*/
 	
 	// Price Group (many-to-one)
 	public void function setPriceGroup(required any priceGroup) {
@@ -131,38 +117,30 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
        structDelete(variables,"priceGroup");
     }
 	
-	/*public void function removePriceGroup(required any priceGroup) {
-       var index = arrayFind(arguments.priceGroup.getPriceGroupRates(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.priceGroup.getPriceGroupRates(),index);
-       }
-       structDelete(variables,"priceGroup");
-    }*/
-	
     /************   END Association Management Methods   *******************/
     
     public string function getType(){
-    	if(StructKeyExists(variables, "percentageOff") AND isNumeric(variables.percentageOff))
+    	if(StructKeyExists(variables, "percentageOff") AND isNumeric(variables.percentageOff)) {
     		return "percentageOff";
-    	else if(StructKeyExists(variables, "amountOff") AND isNumeric(variables.amountOff))
+    	} else if(StructKeyExists(variables, "amountOff") AND isNumeric(variables.amountOff)) {
     		return "amountOff";
-    	else if(StructKeyExists(variables, "amount") AND isNumeric(variables.amount))
+    	} else if(StructKeyExists(variables, "amount") AND isNumeric(variables.amount)) {
     		return "amount";
-    	
+    	}
     	// Provide a default case.
-    	else    		
+    	else {   		
     		return "percentageOff";
-    	//else
-    		//throw("getType() was called but percentageOff, amountOff and amount were all null! Thus, unable to determine type.");
+    	}
     }
     
      public string function getValue(){
-    	if(getType() EQ "percentageOff")
+    	if(getType() EQ "percentageOff") {
     		return getPercentageOff();
-    	else if(getType() EQ "amountOff")
+    	} else if(getType() EQ "amountOff") {
     		return getAmountOff();
-    	else if(getType() EQ "amount")
+    	} else if(getType() EQ "amount"){
     		return getAmount();
+    	}
     }
     
     public string function getAppliesToRepresentation(){
@@ -176,69 +154,89 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
     	var excludedProductTypesList = "";
     	var excludedSkusList = "";
     	
-    	if(getGlobalFlag())
+    	if(getGlobalFlag()) {
     		return rbKey('admin.pricegroup.edit.priceGroupRateAppliesToAllProducts');
+    	}
     	
     	/* --------- Including --------- */
-    	if(arrayLen(getProducts()))
+    	if(arrayLen(getProducts())) {
     		productsList = "#arrayLen(getProducts())# Product" & IIF(arrayLen(getProducts()) GT 1, DE('s'), DE(''));
-    	if(arrayLen(getProductTypes()))
+    	}
+    	if(arrayLen(getProductTypes())) {
     		productTypesList = "#arrayLen(getProductTypes())# Product Type" & IIF(arrayLen(getProductTypes()) GT 1, DE('s'), DE(''));
-    	if(arrayLen(getSkus()))
+    	}
+    	if(arrayLen(getSkus())) {
     		SkusList = "#arrayLen(getSkus())# SKU" & IIF(arrayLen(getSkus()) GT 1, DE('s'), DE(''));
-    	
-    	if(ListLen(productsList))
+    	}
+    	if(ListLen(productsList)) {
     		including = ListAppend(including, productsList);
-    	if(ListLen(productTypesList))
-    		including = ListAppend(including, productTypesList); 
-    	if(ListLen(SkusList))
+    	}
+    	if(ListLen(productTypesList)) {
+    		including = ListAppend(including, productTypesList);
+    	} 
+    	if(ListLen(SkusList)) {
     		including = ListAppend(including, SkusList);
+    	}
     		
     	// Replace all commas with " and ".
-    	if(listLen(including))
+    	if(listLen(including)) {
     		including = Replace(including, ",", " and ");
+    	}
     		
     	/* --------- Excluding --------- */	
-   		if(arrayLen(getExcludedProducts()))
+   		if(arrayLen(getExcludedProducts())) {
     		excludedProductsList = "#arrayLen(getExcludedProducts())# Product" & IIF(arrayLen(getExcludedProducts()) GT 1, DE('s'), DE(''));
-    	if(arrayLen(getExcludedProductTypes()))
+    	}
+    	if(arrayLen(getExcludedProductTypes())) {
     		excludedProductTypesList = "#arrayLen(getExcludedProductTypes())# Product Type" & IIF(arrayLen(getExcludedProductTypes()) GT 1, DE('s'), DE(''));
-    	if(arrayLen(getExcludedSkus()))
+    	}
+    	if(arrayLen(getExcludedSkus())) {
     		excludedSkusList = "#arrayLen(getExcludedSkus())# SKU" & IIF(arrayLen(getExcludedSkus()) GT 1, DE('s'), DE(''));
+    	}
     	
-    	if(ListLen(excludedProductsList))
+    	if(ListLen(excludedProductsList)) { 
     		excluding = ListAppend(excluding, excludedProductsList);
-    	if(ListLen(excludedproductTypesList))
-    		excluding = ListAppend(excluding, excludedProductTypesList); 
-    	if(ListLen(excludedSkusList))
+    	}
+    	if(ListLen(excludedproductTypesList)) {
+    		excluding = ListAppend(excluding, excludedProductTypesList);
+    	} 
+    	if(ListLen(excludedSkusList)) {
     		excluding = ListAppend(excluding, excludedSkusList);
+    	}
     		
     	// Replace all commas with " and ".
-    	if(listLen(excluding))
+    	if(listLen(excluding)) {
     		excluding = Replace(excluding, ",", " and ");
+    	}
     		
 		// Assemble Including and Excluding strings
-    	if(len(including))
+    	if(len(including)) {
     		finalString = "Including: " & including;
+    	}
     		
-    	if(len(excluding)){
-    		if(len(including))
+    	if(len(excluding)) {
+    		if(len(including)) {
     			finalString &= ". ";
+    		}
     		finalString &= "Excluding: " & excluding;
     	}
     		
     	return finalString;
     }
     
-    public string function getAmountRepresentation(){
-    	if(getType() EQ "percentageOff")
+    public string function getAmountRepresentation() {
+    	if(getType() EQ "percentageOff") {
 			return variables.percentageOff & "% " & rbKey('entity.priceGroupRate.priceGroupRateType.percentageOffShort');
-		if(getType() EQ "amountOff")
+		}
+		if(getType() EQ "amountOff") {
 			return DollarFormat(variables.amountOff) & " " & rbKey('entity.priceGroupRate.priceGroupRateType.amountOffShort');
-		if(getType() EQ "amount")
+		}
+		if(getType() EQ "amount") {
 			return DollarFormat(variables.amount);
-		else
+		}
+		else {
 			return "";
+		}
     }
     
 }

@@ -44,7 +44,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public any function savePriceGroupRate(required any priceGroupRate, struct data) {
 		// Before we allow the automated entity population to work, clear out the percentageOff, amountOff and amount fields from the rate so that they null out in the DB.
-		if(arguments.data.priceGroupRateId == "new amount"){
+		if(arguments.data.priceGroupRateId == "new amount") {
 			arguments.priceGroupRate.clearAmounts();
 		}
 
@@ -74,14 +74,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					}
 					
 					// If the rate that was just edited was set to global, make sure that no other rates are global
-					if(arguments.priceGroupRate.getGlobalFlag() && rates[i].getGlobalFlag()){
+					if(arguments.priceGroupRate.getGlobalFlag() && rates[i].getGlobalFlag()) {
 						rates[i].setGlobalFlag(false);	
 					}	
 				}
 			}
 			
 			// If this rate is set to global, remove all include/exclude filters
-			if(arguments.priceGroupRate.getGlobalFlag()){
+			if(arguments.priceGroupRate.getGlobalFlag()) {
 				arguments.priceGroupRate.setProducts([]);
 				arguments.priceGroupRate.setProductTypes([]);
 				arguments.priceGroupRate.setSKUs([]);
@@ -89,24 +89,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				arguments.priceGroupRate.setExcludedProductTypes([]);
 				arguments.priceGroupRate.setExcludedSKUs([]);
 			}
-		}
-		else {
-			
-		}
+		} 
 	}
 	
 	public boolean function deletePriceGroup(required any priceGroup){
 		// Any price groups that are inhering from this price group should have that inheritence disabled.
 		var inheritingPriceGroups = arguments.priceGroup.getChildPriceGroups();
 
-		//logSlatwall("deletePriceGroup: Found #ArrayLen(inheritingPriceGroups)# inheritingPriceGroups.");
-
 		while(arrayLen(inheritingPriceGroups) != 0) {
-			//logSlatwall("Calling removeChildPriceGroup(#inheritingPriceGroups[1].getPriceGroupName()#) on #priceGroup.getPriceGroupName()#. The arrayLen is #arrayLen(inheritingPriceGroups)#");
 			priceGroup.removeChildPriceGroup(inheritingPriceGroups[1]);
 		}
 	
-		//logSlatwall("deletePriceGroup: Calling super.delete(#priceGroup.getPriceGroupName()#)");
 		return super.delete(priceGroup);
 	}
 	
@@ -131,7 +124,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Add this price groups price to the prices array
 			arrayAppend(prices, calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=account.getPriceGroups()[i]));	
 		}
-		
 		
 		// Sort the array by lowest price
 		arraySort(prices, "numeric", "asc");
@@ -307,12 +299,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	// This function has two optional arguments, newAmount and priceGroupRateId. Calling this function either other of these mutually exclusively determines the function's logic 
-	public void function updatePriceGroupSKUSettings(data){
+	public void function updatePriceGroupSKUSettings(data) {
 		var local = {};
 		
 		
 		// If we are not updating to a new amount then make sure to delete "amount" from RC or else it will overwrite the Rate.
-		if(arguments.data.priceGroupRateId != "new amount"){
+		if(arguments.data.priceGroupRateId != "new amount") {
 			StructDelete(arguments.data, "amount");
 		}
 		
@@ -322,13 +314,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// If no skuId exists, then the user is editing the entire group, so we need to create a "product" entry in the included list
 			if(arguments.data.skuId EQ ""){
 				// Ignore if the "rate" chosen is keyword "inherit". 
-				if(arguments.data.priceGroupRateId NEQ "inherit"){
+				if(arguments.data.priceGroupRateId NEQ "inherit") {
 					/*
 						If we are assigning an entire product to a selected rate (user clicked on column header), then pull the selected rate, and see if the
 						product is already included. If not, add it. When we call savePriceGroupRate(), it will automatically clear out the product entries from
 						the other rates for ys
 					*/
-					
 					var priceGroupRate = this.getPriceGroupRate(arguments.data.priceGroupRateId, true);
 					priceGroupRate.addProduct(getProductService().getProduct(arguments.data.productId));
 					this.savePriceGroupRate(priceGroupRate, arguments.data);
@@ -353,19 +344,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-
 	// Produces a structure which is a struct of {[priceGroupId] = {name=[pricegroupname], pricegroupRates=}}
 	public string function getPriceGroupDataJSON(){
 		var local = {};
 		var priceGroupData = {};
 		var priceGroupSmartList = getDAO().getSmartList("PriceGroup");
 	
-		
-		for(var i=1; i LTE arrayLen(priceGroupSmartList.getPageRecords()); i++){
+		for(var i=1; i LTE arrayLen(priceGroupSmartList.getPageRecords()); i++) {
 			var thisPriceGroup = priceGroupSmartList.getPageRecords()[local.i];
 			var priceGroupRates = [];
 
-			for(var j=1; j LTE arrayLen(thisPriceGroup.getPriceGroupRates()); j++){
+			for(var j=1; j LTE arrayLen(thisPriceGroup.getPriceGroupRates()); j++) {
 				var thisRate = thisPriceGroup.getPriceGroupRates()[j];
 				var rateStruct = {
 					id = thisRate.getPriceGroupRateId(),
@@ -381,9 +370,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			priceGroupData[thisPriceGroup.getPriceGroupId()] = groupStruct;
 		}
-		
-		//dumpScreen(priceGroupData);	
-		//dumpScreen(SerializeJSON(priceGroupData));
+
 		return SerializeJSON(priceGroupData);
 	}
 			

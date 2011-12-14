@@ -101,10 +101,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function save(required struct rc) {
 		param name="rc.productID" default="";
-		
-		
-		
-		
+
 		// We are going to be flushing ORM, so we need to check if the product was new before that flush
 		var productWasNew = true;
 		
@@ -116,10 +113,8 @@ component extends="BaseController" output=false accessors=true {
 			productWasNew = false;
 		}
 		
-		
 		// Attempt to Save Product
 		rc.product = getProductService().saveProduct( rc.product, rc );
-		
 		
 		// If the product doesn't have any errors then redirect to detail or list
 		if(!rc.product.hasErrors()) {
@@ -172,9 +167,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	// SKU actions
-	
 	public void function deleteSku(required struct rc) {
-		
 		var sku = getSkuService().getSku(rc.skuID);
 		var productID = sku.getProduct().getProductID();
 		
@@ -266,7 +259,6 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function deleteProductType(required struct rc) {
-		
 		var productType = getProductService().getProductType(rc.productTypeID);
 		var deleteOK = getProductService().deleteProductType(productType);
 		

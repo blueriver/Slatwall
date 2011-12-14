@@ -45,24 +45,6 @@ jQuery(function() {
 		}
 	});
 	
-	/*jQuery("#priceGroupRateType").change(function(){
-		if (jQuery(this).val() == "percentageOff") {
-			jQuery("#percentageOffDiv").css("display", "inline");
-			jQuery("#amountOffDiv").hide();
-			jQuery("#amountDiv").hide();
-		}
-		else if (jQuery(this).val() == "amountOff") {
-			jQuery("#percentageOffDiv").hide();
-			jQuery("#amountOffDiv").css("display", "inline");
-			jQuery("#amountDiv").hide();
-		}
-		else if (jQuery(this).val() == "amount") {
-			jQuery("#percentageOffDiv").hide();
-			jQuery("#amountOffDiv").hide();
-			jQuery("#amountDiv").css("display", "inline");
-		}
-	});*/
-	
 	jQuery("#priceGroupRateType").change();
 	
 	 
