@@ -79,9 +79,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="webWholesaleQC" persistent="false" type="numeric";
 	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	
-	// Calculated Properties
-	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID=skuID";
-
 	public Sku function init() {
        // set default collections for association management methods
        if(isNull(variables.Options)) {

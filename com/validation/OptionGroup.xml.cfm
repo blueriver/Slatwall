@@ -2,11 +2,11 @@
 <validateThis xsi:noNamespaceSchemaLocation="validateThis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<objectProperties>
 		<property name="optionGroupName">
-			<rule type="required" contexts="*" />
+			<rule type="required" contexts="save" />
 		</property>
 		<property name="optionGroupCode">
-			<rule type="required" contexts="*" />
-			<rule type="custom" contexts="*" failureMessage="Option Group Code is Not Unique">
+			<rule type="required" contexts="save" />
+			<rule type="custom" contexts="save" failureMessage="Option Group Code is Not Unique">
 				<param name="methodName" value="hasUniqueOptionGroupCode" />
 			</rule>
 		</property>

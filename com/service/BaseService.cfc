@@ -94,7 +94,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 				arguments.entity.populate(argumentCollection=arguments);
 			
 			    // Validate this object now that it has been populated
-	        	arguments.entity.validate(entity=arguments.entity);
+			    arguments.entity.validate(context="save");
 	        	
 	        }
 	        

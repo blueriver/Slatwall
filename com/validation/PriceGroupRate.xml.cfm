@@ -25,26 +25,26 @@
 	
 	<objectProperties>
 		<property name="priceGroup">
-			<rule type="required" contexts="*" />
+			<rule type="required" contexts="save" />
 		</property>
 		
 		<property name="percentageOff">
-			<rule type="numeric" condition="HasPercentageOff" />
-			<rule type="required" condition="HasPercentageOff" failureMessage="You must define a numeric value for percentage off (between 0 and 100)." />
-			<rule type="rangelength" condition="HasPercentageOff">
+			<rule type="numeric" contexts="save" condition="HasPercentageOff" />
+			<rule type="required" contexts="save" condition="HasPercentageOff" failureMessage="You must define a numeric value for percentage off (between 0 and 100)." />
+			<rule type="rangelength" contexts="save" condition="HasPercentageOff">
 				<param name="minlength" value="0" />
 				<param name="maxlength" value="100" />
 			</rule>
 		</property>
 		
 		<property name="amountOff">
-			<rule type="numeric" condition="HasAmountOff" />
-			<rule type="required" condition="HasAmountOff" failureMessage="You must define a numeric value for amount off."/>
+			<rule type="numeric" contexts="save" condition="HasAmountOff" />
+			<rule type="required" contexts="save" condition="HasAmountOff" failureMessage="You must define a numeric value for amount off."/>
 		</property>
 		
 		<property name="amount">
-			<rule type="numeric" condition="HasAmount" />
-			<rule type="required" condition="HasAmount" failureMessage="You must define a numeric value for amount."/>
+			<rule type="numeric" contexts="save" condition="HasAmount" />
+			<rule type="required" contexts="save" condition="HasAmount" failureMessage="You must define a numeric value for amount."/>
 		</property>
 		
 		<!--<property name="productTypes">

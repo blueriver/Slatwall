@@ -97,6 +97,7 @@ component extends="BaseService" accessors="true" {
 		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
 		smartList.joinRelatedProperty("SlatwallProduct","productType");
+		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
 		
 		return smartList;
 	}

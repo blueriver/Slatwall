@@ -548,13 +548,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public numeric function getRecordsCount() {
-		if(!structKeyExists(variables,"records")) {
-			var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
-			var recordCount = ormExecuteQuery(HQL, getHQLParams(), false, {ignoreCase="true"});
-			return recordCount[1];
-		} else {
-			return arrayLen(getRecords());	
+		if(!structKeyExists(variables, "recordsCount")) {
+			if(!structKeyExists(variables,"records")) {
+				var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
+				var recordCount = ormExecuteQuery(HQL, getHQLParams(), false, {ignoreCase="true"});
+				variables.recordsCount = recordCount[1];
+			} else {
+				variables.recordsCount = arrayLen(getRecords());	
+			}
 		}
+		return variables.recordsCount;
 	}
 	
 	public numeric function getPageRecordsStart() {

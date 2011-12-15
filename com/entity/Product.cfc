@@ -100,9 +100,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
 	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
 	
-	// Calculated Properties
-	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
-	
 	public Product function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.activeFlag)) {
