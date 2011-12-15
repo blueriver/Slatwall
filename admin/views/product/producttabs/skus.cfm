@@ -216,17 +216,8 @@ Notes:
 				<cfif rc.edit>
 					<td class="administration">
 						<cfif !local.thisSku.isNew()>
-							<cfset local.disabledText = "" />
 							<ul class="one">
-								<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID() or local.thisSku.getOrderedFlag() />
-								<cfif local.deleteDisabled and arrayLen(rc.product.getSkus()) eq 1>
-									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku') />
-								<cfelseif local.deleteDisabled and rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()>
-									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateIsDefault') />
-								<cfelseif local.deleteDisabled and local.thisSku.getOrderedFlag()>
-									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOrdered') />
-								</cfif>
-								<cf_SlatwallActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
+								<cf_SlatwallActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.thisSku.isNotDeletable()#" confirmrequired="true">
 							</ul>
 						</cfif>
 					</td>

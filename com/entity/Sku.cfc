@@ -91,6 +91,13 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
        return super.init();
     }
     
+    public boolean function isNotDefaultSku() {
+    	if(getProduct().getDefaultSku().getSkuID() != getSkuID()) {
+    		return true;
+    	}
+    	return false;
+    }
+    
     public string function getSimpleRepresentationPropertyName() {
     	return "skuCode";
     }
