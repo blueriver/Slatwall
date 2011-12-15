@@ -50,9 +50,11 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (one-to-many)
 	property name="phoneNumbers" singularname="phoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	property name="emailAddresses" singularname="emailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
-	property name="brands" singularname="brand" type="array" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	
+	// Related Object Properties (many-to-many)
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";
 	
 }
