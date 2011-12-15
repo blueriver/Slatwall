@@ -68,7 +68,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency" ; 
-	property name="orderTotal" persistent="false" formatType="currency" ; 
 	property name="subTotal" persistent="false" formatType="currency" ; 
 	property name="taxTotal" persistent="false" formatType="currency" ; 
 	property name="itemDiscountAmountTotal" persistent="false" formatType="currency" ; 
