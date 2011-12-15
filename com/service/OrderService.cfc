@@ -409,16 +409,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 
 	function sendOrderConfirmationEmail (required any order) {
+		
 		var emailBody = "";
+		
+		var $ = request.context.$;
+		var local = {};
+		var order = arguments.order;
+		
+		savecontent variable="emailBody" {
+			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
+		}
+		
 		var messageParams = {
 			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getEmailAddress()#>',
 			from = setting('order_orderPlacedEmailFrom'),
 			subject = getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)
 		};
-	
-		savecontent variable="emailBody" {
-			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
-		}
 		
 		if(len(trim(setting('order_orderPlacedEmailCC')))) {
 			messageParams['cc'] = setting('order_orderPlacedEmailCC');
@@ -426,6 +432,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(len(trim(setting('order_orderPlacedEmailBCC')))) {
 			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
 		}
+		
 		messageParams['body'] = emailBody;
 		
 		getUtilityTagService().cfmail(argumentCollection=messageParams);
