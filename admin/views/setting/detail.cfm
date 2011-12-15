@@ -48,13 +48,19 @@ Notes:
 
 <cfoutput>
 	<div class="svoadminsettingdetail">
-		<cfif rc.edit eq false>
-	        <ul id="navTask">
-	            <cf_SlatwallActionCaller action="admin:setting.edit" type="list">
-	        </ul>
-		<cfelse>
+		
+		<ul id="navTask">
+			<cfif rc.edit>
+				<cf_SlatwallActionCaller action="admin:setting.detail" type="list" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cfelse>
+				<cf_SlatwallActionCaller action="admin:setting.edit" type="list">
+			</cfif>
+        </ul>
+		
+		<cfif rc.edit>
 			<form action="#buildURL(action='admin:setting.save')#" method="post">
 		</cfif>
+		
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
 				<li><a href="##tabProduct" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.product')#</span></a></li>	

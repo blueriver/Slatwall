@@ -212,7 +212,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		// Check to see if it was successful
 		if(responseData.responseCode != 1) {
 			// Transaction did not go through
-			response.addError(name=responseData.responseReasonCode, message=responseData.responseReasonText);
+			response.addError(responseData.responseReasonCode, responseData.responseReasonText);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized( responseData.amount );
