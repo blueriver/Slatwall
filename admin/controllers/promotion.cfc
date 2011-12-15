@@ -51,11 +51,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionID" default="";
 		param name="rc.edit" default="false";
 		
-		// Get the promotion
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		
-		// Put the promotion ID in the data so that the SmartList works
-		rc["F:promotion.promotionID"] = rc.promotion.getPromotionID();
+		// Get the promotion from the DB, and return a new promotion if necessary
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
+		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
+		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
 		
 		// Get a smart list of Promotion Codes for the view
 		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
@@ -74,15 +73,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
 		
-		// Get the promotion
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
-		
-		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
-		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
-		
-		// Get a smart list of Promotion Codes for the view
-		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
-		
+		detail(rc);
 		rc.edit = true;
 		getFW().setView("admin:promotion.detail");
 		
@@ -98,11 +89,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.savePromotionRewardProduct" default="false";
 		param name="rc.savePromotionRewardShipping" default="false";
 		
-		// Get the promotion from the DB, and return a new promotion if necessary
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
-		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
-		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
-		
+		detail(rc);
 		// Call the promotion service save method (this is standard)
 		rc.promotion = getPromotionService().savePromotion(rc.promotion, rc);
 		
@@ -110,7 +97,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(!rc.promotion.hasErrors()) {
 			rc.message="admin.promotion.save_success";
 			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping) {
-				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message");	
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()#",preserve="message");	
 			} else {
 				getFW().redirect(action="admin:promotion.list",preserve="message");
 			}
@@ -128,7 +115,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			rc.edit = true;
 			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.createPromotion") : rc.$.Slatwall.rbKey("admin.promotion.editPromotion") & ": #rc.promotion.getPromotionName()#";
-			getFW().setView(action="admin:option.detailOptionGroup");
+			getFW().setView(action="admin:promotion.detail");
 		}
 	}
 	
