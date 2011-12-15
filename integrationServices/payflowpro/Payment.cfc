@@ -181,7 +181,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		response.setData(data);
 		
 		// Add message for what happened
-		response.addMessage(messageCode=responseData["result"], message=responseData["respmsg"]);
+		response.addMessage(responseData["result"], responseData["respmsg"]);
 		
 		// Set the status Code
 		response.setStatusCode(responseData["result"]);
@@ -189,7 +189,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		// Check to see if it was successful
 		if(responseData["result"] != 0) {
 			// Transaction did not go through
-			response.addError(name=responseData["result"], message=responseData["respmsg"]);
+			response.addError(responseData["result"], responseData["respmsg"]);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized(requestBean.getTransactionAmount());

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <validateThis xsi:noNamespaceSchemaLocation="validateThis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<objectProperties>
+		<property name="skuID">
+			<rule type="custom" contexts="delete" failureMessage="You cannot delete this sku because it is the default sku">
+				<param name="methodName" value="isNotDefaultSku" />
+			</rule>
+		</property>
 		<property name="price">
 			<rule type="required" contexts="save" />
+			<rule type="numeric" contexts="save" />
 		</property>
 		<property name="skuCode">
 			<rule type="custom" contexts="save" failureMessage="Sku Code is Not Unique">

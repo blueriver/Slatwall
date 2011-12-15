@@ -125,8 +125,8 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 				);
 			} else {
 				ratesResponseBean.addMessage(
-					messageCode="0",
-					message="Successful"
+					"0",
+					"Successful"
 				);
 			}
 			

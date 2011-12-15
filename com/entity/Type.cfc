@@ -61,4 +61,8 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 		return variables.type;
 	}
 	
+	public string function getSimpleRepresentationPropertyName() {
+    	return "type";
+    }
+	
 }
