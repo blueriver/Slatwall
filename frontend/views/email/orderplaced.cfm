@@ -147,8 +147,8 @@ Notes:
 						</tr>
 						<cfif order.getDiscountTotal()>
 						<tr>
-							<td style="border: 1px solid ##d8d8d8;"><strong>Discounts</strong></td>
-							<td style="border: 1px solid ##d8d8d8; color:##cc0000;">-#DollarFormat(order.getDiscountTotal())#</td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><strong>Discounts</strong></td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px; color:##cc0000;">-#DollarFormat(order.getDiscountTotal())#</td>
 						</tr>
 						</cfif>
 						<tr>

@@ -46,9 +46,10 @@ Notes:
 			<p class="success">Your order has been placed!</p>
 			<dl>
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="OrderNumber">
-				<cf_SlatwallPropertyDisplay object="#rc.order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderTotal">
+				<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="fullName">
+				<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="emailAddress">
+				<cf_SlatwallPropertyDisplay object="#rc.order.getAccount()#" property="phoneNumber">
 			</dl>
 			<table>
 				<tr>
@@ -70,6 +71,15 @@ Notes:
 					</tr>
 				</cfloop>
 			</table>
+			<dl>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="taxtotal">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="fulfillmentTotal">
+				<cfif rc.order.getDiscountTotal() > 0> 
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="discountTotal">
+				</cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
+			</dl>
 		</cfif>
 	</div>
 </cfoutput>
