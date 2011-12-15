@@ -47,6 +47,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityFormService";
 	property name="utilityTagService";
 	property name="utilityService";
+	property name="utilityEmailService";
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
@@ -395,7 +396,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							getService("logService").logMessage(message="New Order Processed - Order Number: #order.getOrderNumber()# - Order ID: #order.getOrderID()#", generalLog=true);
 							
 							// Send out the e-mail
-							sendOrderConfirmationEmail(order);
+							getUtilityEmailService().sendOrderConfirmationEmail(order=order);
 							
 							processOK = true;
 						}
@@ -408,35 +409,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return processOK;
 	}
 
-	function sendOrderConfirmationEmail (required any order) {
-		
-		var $ = request.context.$;
-		var local = {};
-		
-		var emailBody = "";
-		savecontent variable="emailBody" {
-			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
-		}
-		
-		var messageParams = {
-			to = '"#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()#" <#arguments.order.getAccount().getEmailAddress()#>',
-			from = setting('order_orderPlacedEmailFrom'),
-			subject = getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)
-		};
-		
-		if(len(trim(setting('order_orderPlacedEmailCC')))) {
-			messageParams['cc'] = setting('order_orderPlacedEmailCC');
-		}
-		if(len(trim(setting('order_orderPlacedEmailBCC')))) {
-			messageParams['bcc'] = setting('order_orderPlacedEmailBCC');
-		}
-		
-		messageParams['body'] = emailBody;
-		
-		getUtilityTagService().cfmail(argumentCollection=messageParams);
-		
-	}
-	
 	public any function getOrderRequirementsList(required any order) {
 		var orderRequirementsList = "";
 		

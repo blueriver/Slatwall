@@ -204,7 +204,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				// getFW().redirect(action="admin:order.listorderfulfillments", preserve="message");
 			} else {
 				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
-				rc.message = orderDelivery.getError("orderDeliveryItems");
+				rc.message = orderDelivery.getError("orderDeliveryItems")[1];
 				rc.messagetype = "warning";
 				getFW().setView("admin:order.detailOrderFulfillment");
 			}

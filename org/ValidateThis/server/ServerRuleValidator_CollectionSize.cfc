@@ -65,7 +65,7 @@
 		<cfset var valid = true/>
 		<cfset var args = [arguments.validation.getPropertyDesc()] />
 		<cfset var msgKey = "" />
-
+		
 		<cfif not shouldTest(arguments.validation)><cfreturn/></cfif>
 		
 		<cfscript>

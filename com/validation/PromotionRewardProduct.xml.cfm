@@ -6,12 +6,21 @@
 		</property>
 		<property name="itemPercentageOff">
 			<rule type="numeric" contexts="save" />
+			<rule type="custom" contexts="save" failureMessage="You must enter a vaild value for percentage off.">
+				<param name="methodName" value="hasValidPercentageOffValue" />
+			</rule>
 		</property>
 		<property name="itemAmountOff">
 			<rule type="numeric" contexts="save" />
+			<rule type="custom" contexts="save" failureMessage="You must enter a vaild value for amount off.">
+				<param name="methodName" value="hasValidAmountOffValue" />
+			</rule>
 		</property>
 		<property name="itemAmount">
 			<rule type="numeric" contexts="save" />
+			<rule type="custom" contexts="save" failureMessage="You must enter a vaild value for amount.">
+				<param name="methodName" value="hasValidAmountValue" />
+			</rule>
 		</property>
 	</objectProperties>
 </validateThis>
