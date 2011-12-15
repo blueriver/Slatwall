@@ -410,12 +410,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 	function sendOrderConfirmationEmail (required any order) {
 		
-		var emailBody = "";
-		
 		var $ = request.context.$;
 		var local = {};
-		var order = arguments.order;
 		
+		var emailBody = "";
 		savecontent variable="emailBody" {
 			include "#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm";
 		}
