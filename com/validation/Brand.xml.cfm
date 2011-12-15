@@ -2,10 +2,10 @@
 <validateThis xsi:noNamespaceSchemaLocation="validateThis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<objectProperties>
 		<property name="brandName">
-			<rule type="required" contexts="*" />
+			<rule type="required" contexts="save" />
 		</property>
 		<property name="brandWebsite">
-			<rule type="url" contexts="*" />
+			<rule type="url" contexts="save" />
 		</property>
 		<property name="products">
 			<rule type="collectionSize" contexts="delete">

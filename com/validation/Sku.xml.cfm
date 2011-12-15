@@ -2,18 +2,18 @@
 <validateThis xsi:noNamespaceSchemaLocation="validateThis.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<objectProperties>
 		<property name="price">
-			<rule type="required" contexts="*" />
+			<rule type="required" contexts="save" />
 		</property>
 		<property name="skuCode">
-			<rule type="custom" contexts="*" failureMessage="Sku Code is Not Unique">
+			<rule type="custom" contexts="save" failureMessage="Sku Code is Not Unique">
 				<param name="methodName" value="hasUniqueSkuCode" />
 			</rule>
 		</property>
 		<property name="options">
-			<rule type="custom" contexts="*" failureMessage="This Sku has the same options as another Sku">
+			<rule type="custom" contexts="save" failureMessage="This Sku has the same options as another Sku">
 				<param name="methodName" value="hasUniqueOptions" />
 			</rule>
-			<rule type="custom" contexts="*" failureMessage="This Sku has two options from the same option group">
+			<rule type="custom" contexts="save" failureMessage="This Sku has two options from the same option group">
 				<param name="methodName" value="hasOneOptionPerOptionGroup" />
 			</rule>
 		</property>
