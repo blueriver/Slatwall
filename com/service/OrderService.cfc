@@ -504,7 +504,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var methodOption = this.getOrderShippingMethodOption(arguments.data.orderShippingMethodOptionID);
 				
 				// Verify that the method option is one for this fulfillment
-				if(arguments.orderFulfillment.hasOrderShippingMethodOption(methodOption)) {
+				if(!isNull(methodOption) && arguments.orderFulfillment.hasOrderShippingMethodOption(methodOption)) {
 					// Update the orderFulfillment to have this option selected
 					arguments.orderFulfillment.setShippingMethod(methodOption.getShippingMethod());
 					arguments.orderFulfillment.setFulfillmentCharge(methodOption.getTotalCharge());
