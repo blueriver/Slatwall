@@ -92,7 +92,7 @@
 	<cffunction name="propertyHasValue" returntype="boolean" access="public" output="false" hint="I determine whether the property that the validation references has a value.">
 		<cfargument name="propertyName" type="any" required="false" default="#getPropertyName()#" />
 		 <cfset var theVal = getObjectValue(arguments.propertyName) />
-		<cfreturn (isSimpleValue(theVal) and len(theVal) gt 0) or isStruct(theVal) or isArray(theVal)/>
+		<cfreturn (isSimpleValue(theVal) and len(theVal) gt 0) or (isStruct(theVal) and structCount(theVal) gt 0) or (isArray(theVal) and arrayLen(theVal) gt 0)/>
 	</cffunction>
 
 	<cffunction name="propertyExists" returntype="boolean" access="public" output="false" hint="I report whether a property exists in the object being validated.">
