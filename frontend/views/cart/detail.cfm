@@ -58,9 +58,9 @@ Notes:
 							<input name="orderItems[#formIndex#].quantity" value="#NumberFormat(local.orderItem.getQuantity(),"0")#" size="3" />
 							<a href="?slatAction=frontend:cart.removeItem&orderItemID=#local.orderItem.getOrderItemID()#">Remove</a>
 						</dd>
-						<cfif local.orderItem.getDiscountAmount()>
-							<dd class="extended">#local.orderItem.getFormattedValue('price', 'extendedPrice')#</dd>
-							<dd class="discount">- #local.orderItem.getFormattedValue('discountAmount', 'extendedPrice')#</dd>
+						<cfif local.orderItem.getDiscountAmount() GT 0>
+							<dd class="extended">#local.orderItem.getFormattedValue('price', 'currency')#</dd>
+							<dd class="discount">- #local.orderItem.getFormattedValue('discountAmount', 'currency')#</dd>
 							<dd class="extendedAfterDiscount">#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</dd>
 						<cfelse>
 							<dd class="extendedAfterDiscount">#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</dd>
