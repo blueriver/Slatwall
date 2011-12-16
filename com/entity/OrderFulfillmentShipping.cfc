@@ -80,9 +80,9 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		if(isNull(getAddress())) {
 			return false;
 		} else {
-			getAddress().validate();
+			getAddress().validate(context="full");
 			if(getAddress().hasErrors()) {
-				return false;	
+				return false;
 			}
 		}
 		
