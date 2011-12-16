@@ -59,6 +59,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedTaxes" singularname="appliedTax" cfc="OrderItemAppliedTax" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 
+	// Non persistent properties
+	property name="extendedPrice" persistent="false" formatType="currency" ; 
+	property name="extendedPriceAfterDiscount" persistent="false" formatType="currency" ; 
+	property name="taxAmount" persistent="false" formatType="currency" ; 
+	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ; 
+
+
 	public any function init() {
 		
 		// set status to new by default
