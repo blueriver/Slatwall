@@ -67,7 +67,11 @@ Notes:
 						<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 						<td>#int(local.orderItem.getQuantity())#</td>
 						<td>#local.orderItem.getQuantityDelivered()#</td>
-						<td>#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</td>
+						<cfif orderItem.getDiscountAmount() GT 0>
+							<td><span style="text-decoration:line-through; color:##cc0000;">#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</span><br />#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
+						<cfelse>
+							<td>#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
+						</cfif>
 					</tr>
 				</cfloop>
 			</table>
