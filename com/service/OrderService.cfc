@@ -102,6 +102,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}	
 		}
 		
+		// Recalculate the order amounts for tax and promotions
+		recalculateOrderAmounts(arguments.order);
+		
 		return arguments.order;
 	}
 	

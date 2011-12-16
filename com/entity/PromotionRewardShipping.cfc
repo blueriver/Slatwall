@@ -57,6 +57,10 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 		return super.init();
 	}
 	
+	public string function getRewardType() {
+		return "shipping";
+	}
+	
 	/*-----  Relationship Management Methods for bidirectional relationships -----*/
 	
 	// shippingMethod (many-to-many)
@@ -102,6 +106,50 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 			shippingMethodIDs = listAppend(shippingMethodIDs,this.getShippingMethods()[i].getShippingMethodID());
 		}
 		return shippingMethodIDs;
+	}
+	
+	public array function getShippingDiscountTypeOptions() {
+		return [
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
+		];
+	}
+	
+	public string function getShippingDiscountType() {
+		if(isNull(variables.shippingDiscountType)) {
+			if(!isNull(getShippingPercentageOff()) && isNull(getShippingAmountOff()) && isNull(getShippingAmount())) {
+				variables.shippingDiscountType = "percentageOff";
+			} else if (!isNull(getShippingAmountOff()) && isNull(getShippingPercentageOff()) && isNull(getShippingAmount())) {
+				variables.shippingDiscountType = "amountOff";
+			} else if (!isNull(getShippingAmount()) && isNull(getShippingPercentageOff()) && isNull( getShippingAmountOff())) {
+				variables.shippingDiscountType = "amount";
+			} else {
+				variables.shippingDiscountType = "percentageOff";
+			}
+		}
+		return variables.shippingDiscountType;
+	}
+	
+	public boolean function hasValidShippingPercentageOffValue() {
+		if(getShippingDiscountType() == "percentageOff" && (isNull(getShippingPercentageOff()) || !isNumeric(getShippingPercentageOff()) || getShippingPercentageOff() > 100 || getShippingPercentageOff() < 0) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidShippingAmountOffValue() {
+		if(getShippingDiscountType() == "amountOff" && ( isNull(getShippingAmountOff()) || !isNumeric(getShippingAmountOff()) ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidShippingAmountValue() {
+		if(getShippingDiscountType() == "amount" && ( isNull(getShippingAmount()) || !isNumeric(getShippingAmount()) ) ) {
+			return false;
+		}
+		return true;
 	}
 	
 }

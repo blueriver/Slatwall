@@ -162,6 +162,7 @@ Notes:
 		
 		<div id="promotionRewardProductInputs" <cfif rc.promotionRewardProduct.isNew() and not rc.promotionRewardProduct.hasErrors()>class="ui-helper-hidden"</cfif> >
 			<dl class="twoColumn">
+				<!---
 				<dt><label for="itemDiscountType">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardProduct.discountType")#</label></dt>
 				<dd>
 					<select name="itemDiscountType" id="productDiscountType">
@@ -170,6 +171,8 @@ Notes:
 						<option value="amount">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardProduct.discountType.amount")#</option>
 					</select>
 				</dd>
+				--->
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemDiscountType" fieldName="promotionRewards[1].itemDiscountType" edit="true" fieldType="select" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemPercentageOff" fieldName="promotionRewards[1].itemPercentageOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemAmountOff" fieldName="promotionRewards[1].itemAmountOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemAmount" fieldName="promotionRewards[1].itemAmount" edit="true" />
@@ -184,6 +187,7 @@ Notes:
 		
 		<div id="promotionRewardShippingInputs" <cfif rc.promotionRewardShipping.isNew() and not rc.promotionRewardShipping.hasErrors()>class="ui-helper-hidden"</cfif> >
 			<dl class="twoColumn">
+				<!---
 				<dt><label for="shippingDiscountType">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardShipping.discountType")#</label></dt>
 				<dd>
 					<select name="shippingDiscountType" id="shippingDiscountType">
@@ -192,6 +196,8 @@ Notes:
 						<option value="amount">#rc.$.Slatwall.rbKey("admin.promotion.promotionRewardShipping.discountType.amount")#</option>
 					</select>
 				</dd>
+				--->
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="shippingDiscountType" fieldName="promotionRewards[1].shippingDiscountType" edit="true" fieldType="select" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="shippingPercentageOff" fieldName="promotionRewards[1].shippingPercentageOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="shippingAmountOff" fieldName="promotionRewards[1].shippingAmountOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardShipping#" property="shippingAmount" fieldName="promotionRewards[1].shippingAmount" edit="true" />
