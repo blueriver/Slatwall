@@ -51,7 +51,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID" cascade="save-update";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID" cascade="save-update";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID" cascade="save-update";
-		
+	
+	// Non-persistent entities
+	property name="itemDiscountType" persistent="false";
+	
 	public any function init() {
 
 		if(isNull(variables.brands)) {
@@ -71,6 +74,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		}
 
 		return super.init();
+	}
+	
+	public string function getRewardType() {
+		return "product";
 	}
 		
 	/******* Association management methods for bidirectional relationships **************/
@@ -280,6 +287,50 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
 		}
 		return skuIDs;
+	}
+	
+	public array function getItemDiscountTypeOptions() {
+		return [
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
+		];
+	}
+	
+	public string function getItemDiscountType() {
+		if(isNull(variables.itemDiscountType)) {
+			if(!isNull(getItemPercentageOff()) && isNull(getItemAmountOff()) && isNull(getItemAmount())) {
+				variables.itemDiscountType = "percentageOff";
+			} else if (!isNull(getItemAmountOff()) && isNull(getItemPercentageOff()) && isNull(getItemAmount())) {
+				variables.itemDiscountType = "amountOff";
+			} else if (!isNull(getItemAmount()) && isNull(getItemPercentageOff()) && isNull( getItemAmountOff())) {
+				variables.itemDiscountType = "amount";
+			} else {
+				variables.itemDiscountType = "percentageOff";
+			}
+		}
+		return variables.itemDiscountType;
+	}
+	
+	public boolean function hasValidItemPercentageOffValue() {
+		if(getItemDiscountType() == "percentageOff" && ( isNull(getItemPercentageOff()) || !isNumeric(getItemPercentageOff()) || getItemPercentageOff() > 100 || getItemPercentageOff() < 0 ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidItemAmountOffValue() {
+		if(getItemDiscountType() == "amountOff" && ( isNull(getItemAmountOff()) || !isNumeric(getItemAmountOff()) ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidItemAmountValue() {
+		if(getItemDiscountType() == "amount" && ( isNull(getItemAmount()) || !isNumeric(getItemAmount()) ) ) {
+			return false;
+		}
+		return true;
 	}
 	
 }

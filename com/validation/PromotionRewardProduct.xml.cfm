@@ -7,19 +7,19 @@
 		<property name="itemPercentageOff">
 			<rule type="numeric" contexts="save" />
 			<rule type="custom" contexts="save" failureMessage="You must enter a vaild value for percentage off.">
-				<param name="methodName" value="hasValidPercentageOffValue" />
+				<param name="methodName" value="hasValidItemPercentageOffValue" />
 			</rule>
 		</property>
 		<property name="itemAmountOff">
 			<rule type="numeric" contexts="save" />
 			<rule type="custom" contexts="save" failureMessage="You must enter a vaild value for amount off.">
-				<param name="methodName" value="hasValidAmountOffValue" />
+				<param name="methodName" value="hasValidItemAmountOffValue" />
 			</rule>
 		</property>
 		<property name="itemAmount">
 			<rule type="numeric" contexts="save" />
 			<rule type="custom" contexts="save" failureMessage="You must enter a vaild value for amount.">
-				<param name="methodName" value="hasValidAmountValue" />
+				<param name="methodName" value="hasValidItemAmountValue" />
 			</rule>
 		</property>
 	</objectProperties>

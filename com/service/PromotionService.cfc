@@ -73,6 +73,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Populate that product reward
 			prProduct.populate(arguments.data.promotionRewards[1]);
 			
+			// Validate the product reward
+			prProduct.validate();
+			
 			// Add the promotion reward to the promotion
 			arguments.promotion.addPromotionReward(prProduct);
 			
@@ -86,13 +89,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Get shipping reward, and return a new one if not found
 			prShipping.populate(arguments.data.promotionRewards[1]);
 			
+			// Validate the shipping reward
+			prShipping.validate();
+			
 			// Add the promotion reward to the promotion
 			arguments.promotion.addPromotionReward(prShipping);
 			
-			// add to the sub items populated so that we can validate on parent
+			// add to the sub items populated so that the parent validate method checks for errors in the children
 			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
 		}
-		
+
 		// Validate the promotion, this will also check any sub-entities that got populated 
 		arguments.promotion.validate();
 		
