@@ -115,8 +115,6 @@ Notes:
 								addressData["stateCode"] = jQuery('input[name="#attributes.fieldNamePrefix#stateCode"]').val();
 							}
 							
-							console.log(addressData);
-							
 							jQuery.ajax({
 								type: 'get',
 								url: '/plugins/Slatwall/api/index.cfm/display/addressDisplay/',

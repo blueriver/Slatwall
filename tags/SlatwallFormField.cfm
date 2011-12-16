@@ -99,7 +99,7 @@ Notes:
 		<cfcase value="multiselect">
 			<cfoutput>
 				<input name="#attributes.fieldName#" type="hidden" value="" />
-				<select name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple" />
+				<select name="#attributes.fieldName#" class="#attributes.fieldClass# multiselect" multiple="multiple">
 					<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
 						<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
@@ -125,7 +125,7 @@ Notes:
 		</cfcase>
 		<cfcase value="select">
 			<cfoutput>
-				<select name="#attributes.fieldName#" class="#attributes.fieldClass#" />
+				<select name="#attributes.fieldName#" class="#attributes.fieldClass#">
 					<cfloop array="#attributes.valueOptions#" index="option">
 						<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
 						<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />

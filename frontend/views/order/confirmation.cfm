@@ -64,10 +64,14 @@ Notes:
 					<tr>
 						<td>#local.orderItem.getSku().getSkuCode()#</td>
 						<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>
-						<td>#dollarFormat(local.orderItem.getPrice())#</td>
+						<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 						<td>#int(local.orderItem.getQuantity())#</td>
 						<td>#local.orderItem.getQuantityDelivered()#</td>
-						<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
+						<cfif orderItem.getDiscountAmount() GT 0>
+							<td><span style="text-decoration:line-through; color:##cc0000;">#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</span><br />#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
+						<cfelse>
+							<td>#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
+						</cfif>
 					</tr>
 				</cfloop>
 			</table>
@@ -75,8 +79,8 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="taxtotal">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="fulfillmentTotal">
-				<cfif rc.order.getDiscountTotal() > 0> 
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="discountTotal">
+				<cfif rc.order.getDiscountTotal() GT 0> 
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="discountTotal">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
 			</dl>

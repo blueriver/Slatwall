@@ -48,13 +48,16 @@ Items:
 <cfloop array="#order.getOrderItems()#" index="orderItem">
 #orderItem.getSku().getProduct().getTitle()#
 <cfif len(orderItem.getSku().displayOptions())>#orderItem.getSku().displayOptions()#</cfif>
-#DollarFormat(orderItem.getPrice())# | #NumberFormat(orderItem.getQuantity())# | #DollarFormat(orderItem.getExtendedPrice())# 
+#orderItem.getFormattedValue('price', 'currency')# | #NumberFormat(orderItem.getQuantity())# | #orderItem.getFormattedValue('extendedPrice', 'currency')# 
 ---------------------------------------------------------------------------
 </cfloop>
 
 ===========================================================================
-Subtotal: #DollarFormat(order.getSubtotal())#
-Delivery Charges: #DollarFormat(order.getFulfillmentTotal())#
-Tax: #DollarFormat(order.getTaxTotal())#
-Total: #DollarFormat(order.getTotal())#
+Subtotal: #order.getFormattedValue('Subtotal', 'currency')#
+<cfif order.getDiscountTotal() GT 0> 
+	Discount: #order.getFormattedValue('discountTotal', 'currency')#
+</cfif>
+Delivery Charges: #order.getFormattedValue('fulfillmentTotal', 'currency')#
+Tax: #order.getFormattedValue('taxTotal', 'currency')#
+Total: #order.getFormattedValue('total', 'currency')#
 </cfoutput>
