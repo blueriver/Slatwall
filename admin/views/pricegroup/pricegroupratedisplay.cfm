@@ -57,22 +57,28 @@ Notes:
 					</p><br>
 				</cfif>
 				
-				<!--- The dynamic percentageOff,AmountOff,Amount inputs --->
-				<select name="priceGroupRateType" id="priceGroupRateType">
-					<option value="percentageOff" <cfif rc.priceGroupRate.getType() EQ "percentageOff"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.percentageOff')#</option>
-					<option value="amountOff" <cfif rc.priceGroupRate.getType() EQ "amountOff"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.amountOff')#</option>						
-					<option value="amount" <cfif rc.priceGroupRate.getType() EQ "amount"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.amount')#</option>
-				</select>
+				<div>
+					<dt class="title">
+						<label for="priceGroupRateType">#rc.$.Slatwall.rbKey("admin.pricegroup.detail.ratetype")#</label>
+					</dt>
+					<dd class="value">
+						<!--- The dynamic percentageOff,AmountOff,Amount inputs --->
+						<select name="priceGroupRateType" id="priceGroupRateType">
+							<option value="percentageOff" <cfif rc.priceGroupRate.getType() EQ "percentageOff"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.percentageOff')#</option>
+							<option value="amountOff" <cfif rc.priceGroupRate.getType() EQ "amountOff"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.amountOff')#</option>						
+							<option value="amount" <cfif rc.priceGroupRate.getType() EQ "amount"> selected="selected" </cfif>>#request.context.$.slatwall.rbKey('entity.priceGroupRate.priceGroupRateType.amount')#</option>
+						</select>
 	
-				<!--- The name of this hidden input is changed dynamically based on the value of priceGroupRateType --->
-				
-				<!---<cf_SlatwallErrorDisplay object="#rc.priceGroupRate#" errorName="percentageOff" displayType="label" for="priceGroupRates[1].percentageOff" />--->
-
-				<div id="percentageOffDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="percentageOff" edit="#rc.edit#" fieldName="priceGroupRates[1].percentageOff"></div>
-				<div id="amountOffDiv" <cfif rc.priceGroupRate.getType() NEQ "amountOff">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amountOff" edit="#rc.edit#" fieldName="priceGroupRates[1].amountOff"></div>
-				<div id="amountDiv" <cfif rc.priceGroupRate.getType() NEQ "amount">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amount" edit="#rc.edit#" fieldName="priceGroupRates[1].amount"></div>
+						<!--- The name of this hidden input is changed dynamically based on the value of priceGroupRateType --->
+						
+						<!---<cf_SlatwallErrorDisplay object="#rc.priceGroupRate#" errorName="percentageOff" displayType="label" for="priceGroupRates[1].percentageOff" />--->
+		
+						<div id="percentageOffDiv" <cfif rc.priceGroupRate.getType() NEQ "percentageOff">class="ui-helper-hidden"</cfif> ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="percentageOff" edit="#rc.edit#" fieldName="priceGroupRates[1].percentageOff"></div>
+						<div id="amountOffDiv" <cfif rc.priceGroupRate.getType() NEQ "amountOff">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amountOff" edit="#rc.edit#" fieldName="priceGroupRates[1].amountOff"></div>
+						<div id="amountDiv" <cfif rc.priceGroupRate.getType() NEQ "amount">class="ui-helper-hidden"</cfif>  ><cf_SlatwallPropertyDisplay displayType="plain" title="" object="#rc.PriceGroupRate#" property="amount" edit="#rc.edit#" fieldName="priceGroupRates[1].amount"></div>
+					</dd>
+				</div>
 					
-				
 				<!---<input type="text" id="priceGroupRateValue" 
 				<cfif rc.priceGroupRate.isNew() OR rc.priceGroupRate.getType() EQ "percentageOff">
 					name="priceGroupRates[1].percentageOff" class=""
