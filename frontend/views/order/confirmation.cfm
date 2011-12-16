@@ -75,8 +75,8 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="subtotal">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="taxtotal">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="fulfillmentTotal">
-				<cfif rc.order.getDiscountTotal() > 0> 
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="discountTotal">
+				<cfif rc.order.getDiscountTotal() GT 0> 
+					<cf_SlatwallPropertyDisplay object="#rc.order#" property="discountTotal">
 				</cfif>
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
 			</dl>
