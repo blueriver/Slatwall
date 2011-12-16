@@ -39,7 +39,6 @@ Notes:
 component displayname="Base Service" persistent="false" accessors="true" output="false" extends="Slatwall.com.utility.BaseObject" hint="This is a base service that all services will extend" {
 
 	property name="DAO" type="any";
-	property name="validationService" type="any";
 	property name="requestCacheService" type="any";
 	
 	public any function init() {
@@ -62,47 +61,57 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().getSmartList(argumentcollection=arguments);
 	}
 	
-	public any function delete(required any entity){
-		var response = new Slatwall.com.utility.ResponseBean();
-		var entityName = replaceNoCase(arguments.entity.getClassName(),"Slatwall","","one");
+	public boolean function delete(required any entity){
+		
+		// Validate that this entity can be deleted
+		arguments.entity.validate(context="delete");
+		
+		// If the entity Passes validation
 		if(!arguments.entity.hasErrors()) {
+			
+			// Call delete in the DAO
 			getDAO().delete(target=arguments.entity);
-			response.addMessage(messageCode="01", message=rbKey("entity.#entityName#.delete_success"));
-		} else {
-			// set entity into the response
-			response.setData(arguments.entity);
-			// set errors in the response error bean (from the entity error bean)
-			response.getErrorBean().setErrors(arguments.entity.getErrorBean().getErrors());
-			getService("requestCacheService").setValue("ormHasErrors", true);
+			
+			// Return that the delete was sucessful
+			return true;
+			
 		}
-		return response;
+			
+		// Setup ormHasErrors because it didn't pass validation
+		getService("requestCacheService").setValue("ormHasErrors", true);
+
+		return false;
 	}
 	
-	public any function populate(required any entity, required struct data, boolean cleanseInput=false) {
-		return arguments.entity.populate(data=arguments.data, cleanseInput=arguments.cleanseInput);
-	}
-
-    public any function save(required any entity, struct data, boolean cleanseInput=false) {
-        if(structKeyExists(arguments,"data")){
-            populate(argumentCollection=arguments);
-        }
-        validate(entity=arguments.entity);
-        
-        if(!arguments.entity.hasErrors()) {
-            arguments.entity = getDAO().save(target=arguments.entity);
-        } else {
-            getService("requestCacheService").setValue("ormHasErrors", true);
-        }
-        return arguments.entity;
+	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
+    public any function save(required any entity, struct data) {
+    	// Run the save in a Try/Catch block to handle issues with incorrect objects being passed in
+    	try {
+    		// If data was passed in to this method then populate it with the new data
+	        if(structKeyExists(arguments,"data")){
+	        	
+	        	// Populate this object
+				arguments.entity.populate(argumentCollection=arguments);
+			
+			    // Validate this object now that it has been populated
+			    arguments.entity.validate(context="save");
+	        	
+	        }
+	        
+	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
+	        if(!arguments.entity.hasErrors()) {
+	            arguments.entity = getDAO().save(target=arguments.entity);
+	        } else {
+	            getService("requestCacheService").setValue("ormHasErrors", true);
+	        }
+	        
+	        // Return the entity
+	        return arguments.entity;
+    	} catch (any e) {
+    		throw("The entity being passed to this service is not a persistent entity.  Make sure that you aren't calling the oMM method with named arguments.");
+    	}
     }
     
-    public any function validate(required any entity) {
-    	return getValidationService().validateObject(entity=arguments.entity);
-    }
-    
-    public void function reloadEntity(required any entity) {
-    	getDAO().reloadEntity(entity=arguments.entity);
-    }
     
  	/**
 	 * Generic ORM CRUD methods and dynamic methods by convention via onMissingMethod.
@@ -154,8 +163,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			return onMissingSaveMethod( missingMethodName, missingMethodArguments );
 		} else if ( lCaseMissingMethodName.startsWith( 'delete' ) )	{
 			return onMissingDeleteMethod( missingMethodName, missingMethodArguments );
-		} else if ( lCaseMissingMethodName.startsWith( 'validate' ) )	{
-			return onMissingValidateMethod( missingMethodName, missingMethodArguments );
 		}
 
 		throw( 'No matching method for #missingMethodName#().' );
@@ -164,10 +171,6 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 
 
 	/********** PRIVATE ************************************************************/
-	private function onMissingValidateMethod( required string missingMethodName, required struct missingMethodArguments ) {
-		return validate( missingMethodArguments[ 1 ] );
-	}
-
 	private function onMissingDeleteMethod( required string missingMethodName, required struct missingMethodArguments ) {
 		return delete( missingMethodArguments[ 1 ] );
 	}

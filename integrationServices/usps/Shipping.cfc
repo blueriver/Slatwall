@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.ShippingInterface" {
+component accessors="true" output="false" displayname="USPS" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 
 	// Custom Properties that need to be set by the end user
 	property name="userID" validateRequired="true" displayname="USPS Web Tools UserID" type="string";
@@ -138,7 +138,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		if(isDefined('xmlResponse.Fault')) {
 			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
-			ratesResponseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
+			ratesResponseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			if(structKeyExists(xmlResponse.RateV4Response.Package, "Error")) {
 				ratesResponseBean.addMessage(
@@ -146,7 +146,7 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 					messageType=xmlResponse.RateV4Response.Package.Error.Source.xmlText,
 					message=xmlResponse.RateV4Response.Package.Error.Description.xmlText
 				);
-				ratesResponseBean.getErrorBean().addError(xmlResponse.RateV4Response.Package.Error.HelpContext.xmlText, xmlResponse.RateV4Response.Package.Error.Description.xmlText);
+				ratesResponseBean.addError(xmlResponse.RateV4Response.Package.Error.HelpContext.xmlText, xmlResponse.RateV4Response.Package.Error.Description.xmlText);
 			}
 			
 			if(!ratesResponseBean.hasErrors()) {

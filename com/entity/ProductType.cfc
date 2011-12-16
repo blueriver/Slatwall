@@ -40,7 +40,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			
 	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="productTypeName" ormtype="string" validateRequired="true";
+	property name="productTypeName" ormtype="string";
     property name="productTypeDescription" ormtype="string" length="2000";
     property name="trackInventoryFlag" ormtype="boolean";
     property name="callToOrderFlag" ormtype="boolean";
@@ -54,19 +54,21 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (Many-To-One)
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
+	
+	// Related Object Properties (Many-To-One)
 	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
 	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all" ;
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
-	// Calculated Properties
-	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallProductType spt on sp.productTypeID = spt.productTypeID where sp.productTypeID=productTypeID";
+	// Related Object Properties (Many-To-Many)
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 	
 	public ProductType function init(){
 	   // set default collections for association management methods
@@ -86,19 +88,33 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public any function getProductTypeTree() {
 		return getService("ProductService").getProductTypeTree();
 	}
-
 	
-    // @hint use this to implement get{setting}Options() calls for PropertyDisplay tags for settings
-	public function onMissingMethod(missingMethodName, missingMethodArguments) {
-		// first look to see if the method name follows the get{SettingName}Options naming convention and that {setting} is a valid property
-		if( left(arguments.missingMethodName,3) == "get" 
-		    && right(arguments.missingMethodName,7) == "options"
-		    && listFindNoCase( getPropertyList(),mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10) ) ) {
-		    	var settingName = mid(arguments.missingMethodName,4,len(arguments.missingMethodName)-10);
-		    	return getSettingOptions(settingName);
-		    }
+	public any function getParentProductTypeOptions() {
+		if(!structKeyExists(variables, "parentProductTypeOptions")) {
+			variables.parentProductTypeOptions=[];
+			
+			// Add a null value to the options for none.
+			arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
+			
+			// Get product type tree query
+			var ptt = getProductTypeTree();
+			
+			// Loop over all records in product type tree
+			for(var i=1; i<=ptt.recordCount; i++) {
+				
+				// This logic makes it so that it can't be child of itself or any of its children
+				if(!listFindNoCase(ptt.idpath[i], this.getProductTypeID())) {
+					var option = {};
+					option.value = ptt.productTypeID[i];
+					option.name = replace(ptt.productTypeNamePath[i], ",", "&nbsp;&raquo;&nbsp;", "all");
+					arrayAppend(variables.parentProductTypeOptions, option);
+				}
+			}
+		}
+		
+		return variables.parentProductTypeOptions;
 	}
-	
+
 	private array function getSettingOptions(required string settingName) {
 		var settingOptions = [
 		  {id="1", name=rbKey("sitemanager.yes")},
@@ -123,11 +139,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	public void function setProducts(required array Products) {
 		// first, clear existing collection
 		variables.Products = [];
-		for( var i=1; i<= arraylen(arguments.Products); i++ ) {
-			var thisProduct = arguments.Products[i];
-			if(isObject(thisProduct) && thisProduct.getClassName() == "SlatwallProduct") {
-				addProduct(thisProduct);
-			}
+		for( var product in arguments.Products ) {
+			addProduct(product);
 		}
 	}
 	
@@ -198,30 +211,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     	}
     }
     
-    public void function populate(required any data){
-    	// remove the ones not selected, loop in reverse to prevent shifting of array items
-    	var attributeSetAssignmentCount = arrayLen(getAttributeSetAssignments());
-    	for(var i = attributeSetAssignmentCount; i > 0; i--){
-    		var attributeSetAssignment = getAttributeSetAssignments()[i];
-    		if(structKeyExists(data,"attributeSetIDs") && listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
-    			removeAttributeSetAssignment(attributeSetAssignment);
-    		}
-    	}
-    	// Add new ones
-    	if(structKeyExists(data,"attributeSetIDs")){
-    		var attributeSetIDArray = listToArray(data.attributeSetIDs);
-    		for(var attributeSetID in attributeSetIDArray){
-    			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=getProductTypeID()};
-    			var attributeSetAssignmentArray = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
-    			if(!arrayLen(attributeSetAssignmentArray)){
-	    			var attributeSetAssignment = getService("AttributeService").newProductTypeAttributeSetAssignment();
-	    			var attributeSet = getService("AttributeService").getAttributeSet(attributeSetID);
-	    			attributeSetAssignment.setProductType(this);
-	    			attributeSetAssignment.setAttributeSet(attributeSet);
-	    			addAttributeSetAssignment(attributeSetAssignment);
-    			}
-    		}
-    	}
-    	super.populate(argumentCollection=arguments);
-    }
+    public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
+	}
+    
 }

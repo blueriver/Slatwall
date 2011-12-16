@@ -45,7 +45,7 @@ Notes:
 	    	<cf_SlatwallActionCaller action="admin:setting.listPaymentMethods" type="list">
 		</ul>
 		
-		<table id="paymentMethodList" class="mura-table-grid stripe">
+		<table id="paymentMethodList" class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("admin.setting.listPaymentMethods_nav")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.paymentMethod.activeFlag")#</th>
@@ -58,14 +58,14 @@ Notes:
 					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodID())#</td>
 					<td>
 						<cfif local.thisPaymentMethod.getActiveFlag()>
-							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
 						<cfelse>
-							<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
+							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
 						</cfif>
 					</td>
 					<td class="administration">
 						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="viewDetails" type="list">
+							<cf_SlatwallActionCaller action="admin:setting.detailPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="detail" type="list">
 							<cf_SlatwallActionCaller action="admin:setting.editPaymentMethod" querystring="paymentMethodID=#local.thisPaymentMethod.getPaymentMethodID()#" class="edit" type="list">
 						</ul> 						
 					</td>

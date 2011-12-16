@@ -39,10 +39,12 @@ Notes:
 <cfparam name="rc.edit" default="false" />
 <cfparam name="rc.product" type="any" />
 
+<!---
 <cfif rc.edit>
 	<cfset getAssetWire().includeAsset("js/admin-product.edit.js") />
 	<cfset getAssetWire().includeAsset("css/admin-product.edit.css") />
 </cfif>
+--->
 
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:product.list" type="list">
@@ -54,16 +56,26 @@ Notes:
 <cfoutput>
 <div class="svoadminproductdetail">
 	#rc.product.getImage(width="100", height="100")#
+	
 	<cfif rc.edit>
-	<form name="ProductEdit" enctype="multipart/form-data" action="#buildURL(action='admin:product.save')#" method="post">
+	<form name="ProductEdit" enctype="multipart/form-data" method="post">
+		<input type="hidden" name="slatAction" value="admin:product.save" />
 		<input type="hidden" name="ProductID" value="#rc.Product.getProductID()#" />
 	</cfif>
 	<dl class="twoColumn">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="publishedFlag" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productName" edit="#rc.edit#">
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="#rc.edit#">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" link="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#" edit="#rc.edit#" nullLabel="#rc.$.Slatwall.rbKey('admin.none')#">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" link="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#" edit="#rc.edit#">
+		<cfif rc.edit>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
+		<cfelse>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="false" valueLink="#buildURL(action='admin:brand.detail', queryString='brandID=#rc.product.getBrand().getBrandID()#')#">
+		</cfif>
+		<cfif rc.edit>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
+		<cfelse>
+			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="false" valueLink="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#">
+		</cfif>
 		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="filename" edit="#rc.edit#">
 		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
 			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
@@ -87,9 +99,8 @@ Notes:
 	<div id="tabSkus">
 		#view("product/producttabs/skus")#
 	</div>
-	
 	<div id="tabDescription">
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="ProductDescription" edit="#rc.edit#" editType="wysiwyg">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productDescription" edit="#rc.edit#" fieldType="wysiwyg">
 	</div>
 	<div id="tabProductSettings">
 		#view("product/producttabs/settings")#
@@ -109,14 +120,18 @@ Notes:
 	#view("product/producttabs/customattributes")#
 </div>
 <cfif rc.edit>
-<div id="actionButtons" class="clearfix">
-	<cf_SlatwallActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-	<cfif !rc.product.getOrderedFlag()>
-	<cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
-	</cfif>
-	<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button">
-</div>
-</form>
+	<div id="actionButtons" class="clearfix">
+		<cf_SlatwallActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cfif rc.product.isDeletable()>
+			<cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
+		</cfif>
+		<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button">
+	</div>
+	</form>
+	
+	<cfinclude template="dialogs/pricegrouprateskuupdate.cfm">
+	<cfinclude template="dialogs/priceautofill.cfm">
+	<cfinclude template="dialogs/weightautofill.cfm">
 </cfif>
 </div>
 

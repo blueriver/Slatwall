@@ -41,21 +41,8 @@ Notes:
 <cfoutput>
 	<div class="svoadminaccountdetaillogin">
 		<dl class="twoColumn">
-			<dt>
-				<label for="primaryemail">#rc.$.Slatwall.rbKey("entity.accountEmailAddress.emailAddress")#</label>
-			</dt>
-			<dd>
-				<input type="text" id="emailAddress" name="emailAddress" value="#rc.account.getEmailAddress()#" />
-			</dd>
-			<!--- Commenting Out Because this causes validation error if not filled out --->
-			<!---
-			<dt>
-				<label for="password">#rc.$.Slatwall.rbKey("admin.account.detail.tab.login.password")#</label>
-			</dt>
-			<dd>
-				<input type="text" id="password" name="password" value="" />
-			</dd>
-			--->
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="emailAddress" edit="false" title="#rc.$.Slatwall.rbKey("define.email")# / #rc.$.Slatwall.rbKey("define.username")#" />
+			<cf_SlatwallPropertyDisplay object="#rc.account#" property="password" edit="#rc.edit#" />
 		</dl>
 	</div>
 </cfoutput>

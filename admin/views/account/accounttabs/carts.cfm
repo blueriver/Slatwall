@@ -39,7 +39,7 @@ Notes:
 <cfparam name="rc.account" type="any" />
 
 <cfoutput>
-	<table id="CartList" class="mura-table-grid stripe">
+	<table id="CartList" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.order.createdDateTime")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
@@ -53,10 +53,10 @@ Notes:
 				<td class="varWidth">
 					#Local.Order.getAccount().getFullName()# <cfif local.order.getAccount().isGuestAccount()>(#$.slatwall.rbKey('admin.order.account.isguestaccount')#)</cfif>
 				</td>
-				<td>#DollarFormat(local.order.getTotal())#</td>
+				<td>#local.order.getFormattedValue('total', 'currency')#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:order.detailcart" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+					  <cf_SlatwallActionCaller action="admin:order.detailcart" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>

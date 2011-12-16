@@ -65,10 +65,10 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	 
 	public any function getAccountAddressOptions() {
 		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAddress");
-		smartList.addSelect(propertyIdentifier="name", alias="name");
-		smartList.addSelect(propertyIdentifier="accountAddressID", alias="id"); 
+		smartList.addSelect(propertyIdentifier="accountAddressName", alias="name");
+		smartList.addSelect(propertyIdentifier="accountAddressID", alias="value"); 
 		smartList.addFilter(propertyIdentifier="account_accountID",value=this.getOrder().getAccount().getAccountID(),fetch="false");
-		smartList.addOrder("name|ASC");
+		smartList.addOrder("accountAddressName|ASC");
 		return smartList.getRecords();
 	}
 	
@@ -79,8 +79,11 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		
 		if(isNull(getAddress())) {
 			return false;
-		} else if(getService("addressService").validateAddress(getAddress()).getErrorBean().hasErrors()) {
-			return false;
+		} else {
+			getAddress().validate(context="full");
+			if(getAddress().hasErrors()) {
+				return false;
+			}
 		}
 		
 		if(isNull(getShippingMethod())) {
@@ -108,11 +111,11 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	}
 	
     // Order Shipping Method Options (one-to-many)
-    public void function addOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    public void function addOrderShippingMethodOption(required any orderShippingMethodOption) {
     	arguments.orderShippingMethodOption.addOrderShipping(this);
     }
     
-    public void function removeOrderShippingMethodOption(required OrderShippingMethodOption orderShippingMethodOption) {
+    public void function removeOrderShippingMethodOption(required any orderShippingMethodOption) {
     	arguments.orderShippingMethodOption.removeOrderShipping(this);
     }
 

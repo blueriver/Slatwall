@@ -37,13 +37,13 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" {
+component accessors="true" output="false" displayname="PayFlowPro" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	// Custom Properties that need to be set by the end user
 	property name="vendorID" displayname="Vendor ID (Merchant ID)" type="string";
 	property name="partnerID" displayname="Partner ID (leave blank if no partner)" type="string";
 	property name="username" displayname="Username" type="string";
-	property name="password" displayname="Password" type="string" editType="password";
+	property name="password" displayname="Password" type="string" fieldType="password";
 	property name="liveModeFlag" displayname="Live Mode" type="boolean";
 	
 	//Global variables
@@ -181,7 +181,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		response.setData(data);
 		
 		// Add message for what happened
-		response.addMessage(messageCode=responseData["result"], message=responseData["respmsg"]);
+		response.addMessage(responseData["result"], responseData["respmsg"]);
 		
 		// Set the status Code
 		response.setStatusCode(responseData["result"]);
@@ -189,7 +189,7 @@ component accessors="true" output="false" displayname="PayFlowPro" implements="S
 		// Check to see if it was successful
 		if(responseData["result"] != 0) {
 			// Transaction did not go through
-			response.getErrorBean().addError(name=responseData["result"], message=responseData["respmsg"]);
+			response.addError(responseData["result"], responseData["respmsg"]);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized(requestBean.getTransactionAmount());

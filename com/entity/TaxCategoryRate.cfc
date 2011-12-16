@@ -40,29 +40,18 @@ component displayname="Tax Category Rate" entityname="SlatwallTaxCategoryRate" t
 	
 	// Persistent Properties
 	property name="taxCategoryRateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxRate" ormtype="big_decimal" validateRequired="true" validateNumeric="true";
+	property name="taxRate" ormtype="big_decimal";
 	
 	// Related Object Properties
-	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID" validateRequired="true";
+	property name="addressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="addressZoneID";
 	property name="taxCategory" cfc="TaxCategory" fieldtype="many-to-one" fkcolumn="taxCategoryID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	
-	public array function getAddressZoneOptions() {
-		if(!structKeyExists(variables, "addressZoneOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
-			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
-			smartList.addSelect(propertyIdentifier="addressZoneID", alias="id"); 
-			smartList.addOrder("addressZoneName|ASC");
-			variables.addressZoneOptions = smartList.getRecords();
-		}
-		return variables.addressZoneOptions;
-	}
 	
 	/******* Association management methods for bidirectional relationships **************/
 	

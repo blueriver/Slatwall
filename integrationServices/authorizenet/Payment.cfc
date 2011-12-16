@@ -37,7 +37,7 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.integrationServices.PaymentInterface" {
+component accessors="true" output="false" displayname="Authorize.net" implements="Slatwall.integrationServices.PaymentInterface" extends="Slatwall.integrationServices.BasePayment" {
 	
 	// Custom Properties that need to be set by the end user
 	property name="loginID" displayname="Login ID" type="string";
@@ -212,7 +212,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		// Check to see if it was successful
 		if(responseData.responseCode != 1) {
 			// Transaction did not go through
-			response.getErrorBean().addError(name=responseData.responseReasonCode, message=responseData.responseReasonText);
+			response.addError(responseData.responseReasonCode, responseData.responseReasonText);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized( responseData.amount );

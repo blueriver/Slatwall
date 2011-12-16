@@ -48,14 +48,14 @@ component displayname="Order Shipping Method Option" entityname="SlatwallOrderSh
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Order Shipping (many-to-one)
-	public void function setOrderFulfillmentShipping(required OrderFulfillmentShipping orderFulfillmentShipping) {
+	public void function setOrderFulfillmentShipping(required any orderFulfillmentShipping) {
 		variables.orderFulfillmentShipping = arguments.orderFulfillmentShipping;
 		if(isNew() || !arguments.orderFulfillmentShipping.hasOrderShippingMethodOption(this)) {
 			arrayAppend(arguments.orderFulfillmentShipping.getOrderShippingMethodOptions(),this);
 		}
 	}
 	
-	public void function removeOrderFulfillmentShipping(OrderFulfillmentShipping orderFulfillmentShipping) {
+	public void function removeOrderFulfillmentShipping(any orderFulfillmentShipping) {
 	   if(!structKeyExists(arguments,"orderFulfillmentShipping")) {
 	   		arguments.orderFulfillmentShipping = variables.orderFulfillmentShipping;
 	   }

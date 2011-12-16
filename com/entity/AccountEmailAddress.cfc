@@ -40,19 +40,24 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	
 	// Persistent Properties
 	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="emailAddress" validateRequired="true" validateEmail="true" ormtype="string" inverse="true";
+	property name="emailAddress" ormtype="string" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	
-/******* Association management methods for bidirectional relationships **************/
+	// Override the base class simple Representation value
+	public string function getSimpleRepresentation() {
+		return getEmailAddress();
+	}
+	
+	/******* Association management methods for bidirectional relationships **************/
 	
 	// Account (many-to-one)
 	 

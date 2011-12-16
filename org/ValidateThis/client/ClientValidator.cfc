@@ -18,19 +18,25 @@
 	<cffunction name="init" access="Public" returntype="any" output="false" hint="I build a new ClientValidator">
 		<cfargument name="childObjectFactory" type="any" required="true" />
 		<cfargument name="translator" type="any" required="true" />
+		<cfargument name="messageHelper" type="any" required="true" />
 		<cfargument name="fileSystem" type="any" required="true" />
 		<cfargument name="transientFactory" type="any" required="true" />
 		<cfargument name="JSRoot" type="string" required="true" />
 		<cfargument name="extraClientScriptWriterComponentPaths" type="string" required="true" />
 		<cfargument name="defaultFailureMessagePrefix" type="string" required="true" />
+		<cfargument name="vtFolder" type="string" required="true" />
+		<cfargument name="defaultLocale" type="string" required="true" />
 
 		<cfset variables.childObjectFactory = arguments.childObjectFactory />
 		<cfset variables.translator = arguments.translator />
+		<cfset variables.messageHelper = arguments.messageHelper />
 		<cfset variables.fileSystem = arguments.fileSystem />
 		<cfset variables.transientFactory = arguments.TransientFactory />
 		<cfset variables.JSRoot = arguments.JSRoot />
 		<cfset variables.extraClientScriptWriterComponentPaths = arguments.extraClientScriptWriterComponentPaths />
 		<cfset variables.defaultFailureMessagePrefix = arguments.defaultFailureMessagePrefix />
+		<cfset variables.vtFolder = arguments.vtFolder />
+		<cfset variables.defaultLocale = arguments.defaultLocale />
 
 		<cfset setScriptWriters() />
 		<cfreturn this />
@@ -40,21 +46,30 @@
 		<cfargument name="Validations" type="any" required="true" />
 		<cfargument name="formName" type="any" required="true" />
 		<cfargument name="JSLib" type="any" required="true" />
-		<cfargument name="locale" type="Any" required="no" default="" />
+		<cfargument name="locale" type="Any" required="no" default="#variables.defaultLocale#" />
 		<cfargument name="theObject" type="Any" required="no" default="" />
 
 		<cfset var validation = "" />
 		<cfset var theScript = "" />
 		<cfset var theScriptWriter = variables.ScriptWriters[arguments.JSLib] />
 		<cfset var theVal = variables.TransientFactory.newValidation(theObject=theObject) />
+		<cfset var safeFormName = reReplace(arguments.formName,"[\W]","","all") />
+		<!--- I hold the fieldnames that have been rendered to improve JS performance --->
+		<cfset var fields = StructNew() />
 		
 		<cfsetting enableCFoutputOnly = "true">
 		
 		<cfif IsArray(arguments.Validations) and ArrayLen(arguments.Validations)>
 			<cfsavecontent variable="theScript">
 				<cfoutput>#Trim(theScriptWriter.generateScriptHeader(arguments.formName))#</cfoutput>
+				<cfoutput>var fm={};</cfoutput>
 				<cfloop Array="#arguments.Validations#" index="validation">
 					<cfset theVal.load(validation) />
+					<cfif !StructKeyExists( fields, validation.clientfieldname )>
+						<!--- create js reference --->
+						<cfoutput>#Trim(theScriptWriter.generateJSFieldRefence(validation.clientfieldname,arguments.formName))#</cfoutput>
+						<cfset fm[validation.clientfieldname]="">
+					</cfif>
 					<cfoutput>#Trim(theScriptWriter.generateValidationScript(theVal,arguments.formName,arguments.locale))#</cfoutput>
 				</cfloop>
 				<cfoutput>#Trim(theScriptWriter.generateScriptFooter())#</cfoutput>
@@ -70,7 +85,7 @@
 		<cfargument name="Validations" type="any" required="true" />
 		<cfargument name="formName" type="any" required="true" />
 		<cfargument name="JSLib" type="any" required="true" />
-		<cfargument name="locale" type="Any" required="no" default="" />
+		<cfargument name="locale" type="Any" required="no" default="#variables.defaultLocale#" />
 		<cfargument name="theObject" type="Any" required="no" default="" />
 		
 		<cfset var validation = "" />
@@ -92,7 +107,7 @@
 		<cfif IsArray(arguments.Validations) and ArrayLen(arguments.Validations)>
 			<cfloop Array="#arguments.Validations#" index="validation">
 				<cfset theVal.load(validation) />
-				<cfset theJSON = listAppend(theJSON,Trim(theScriptWriter.generateValidationJSON(theVal,arguments.formName,arguments.locale)))/>
+				<cfset theJSON = listAppend(theJSON,Trim(theScriptWriter.generateValidationJSON(theVal,arguments.locale,arguments.formName)))/>
 			</cfloop>
 			
 			<!--- Wrap validation json as array  --->
@@ -139,7 +154,7 @@
 		<cfargument name="scriptType" type="any" required="true" hint="Current valid values are JSInclude, Locale and VTSetup." />
 		<cfargument name="JSLib" type="any" required="true" />
 		<cfargument name="formName" type="any" required="false" default="" />
-		<cfargument name="locale" type="Any" required="no" default="" />
+		<cfargument name="locale" type="Any" required="no" default="#variables.defaultLocale#" />
 
 		<cfset var theScript = "" />
 		<cfinvoke component="#variables.ScriptWriters[arguments.JSLib]#" method="generate#arguments.scriptType#Script" locale="#arguments.locale#" formName="#arguments.formName#" returnvariable="theScript" />
@@ -153,12 +168,14 @@
 
 	<cffunction name="setScriptWriters" returntype="void" access="private" output="false" hint="I create script writer objects from a list of component paths">
 		
-		<cfset var initArgs = {childObjectFactory=variables.childObjectFactory,translator=variables.translator,JSRoot=variables.JSRoot,extraClientScriptWriterComponentPaths=variables.extraClientScriptWriterComponentPaths,defaultFailureMessagePrefix=variables.defaultFailureMessagePrefix} />
-		<cfset var swDirs = variables.fileSystem.listDirs(GetDirectoryFromPath(getCurrentTemplatePath())) />
+		<cfset var initArgs = {childObjectFactory=variables.childObjectFactory,translator=variables.translator,messageHelper=variables.messageHelper,JSRoot=variables.JSRoot,extraClientScriptWriterComponentPaths=variables.extraClientScriptWriterComponentPaths,defaultFailureMessagePrefix=variables.defaultFailureMessagePrefix,vtFolder=variables.vtFolder} />
+		<cfset var thisFolder = getDirectoryFromPath(getCurrentTemplatePath()) />
+		<cfset var swDirs = variables.fileSystem.listDirs(thisFolder) />
 		<cfset var swDir = 0 />
 		<cfset var swPaths = "" />
+				
 		<cfloop list="#swDirs#" index="swDir">
-			<cfset swPaths = listAppend(swPaths,"ValidateThis.client." & swDir) />
+			<cfset swPaths = listAppend(swPaths, variables.vtFolder & ".client." & swDir) />
 		</cfloop>
 		<cfset variables.ScriptWriters = variables.childObjectFactory.loadChildObjects(swPaths & "," & variables.extraClientScriptWriterComponentPaths,"ClientScriptWriter_",structNew(),initArgs) />
 

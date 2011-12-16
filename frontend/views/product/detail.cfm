@@ -41,7 +41,11 @@ Notes:
 		<div class="image">
 			<a href="#$.slatwall.Product().getImagePath()#" target="_blank">#$.slatwall.Product().getImage(size="m")#</a>
 		</div>
-		<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productCode">
+		<dl>
+			<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productCode">
+			<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="livePrice">
+			<cf_SlatwallPropertyDisplay object="#$.slatwall.Product()#" property="productDescription">
+		</dl>
 		<div class="description">#$.slatwall.Product().getProductDescription()#</div>
 		<form action="?nocache=1" method="post">
 			<input type="hidden" name="productID" value="#$.slatwall.Product().getProductID()#" />

@@ -41,20 +41,20 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	// Persistent Properties
 	property name="productReviewID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean";
-	property name="reviewerName" validateRequired="true" ormtype="string";
-	property name="review" validateRequired="true" ormtype="string" length="4000" hint="HTML Formated review of the Product";
+	property name="reviewerName" ormtype="string";
+	property name="review" ormtype="string" length="4000" hint="HTML Formated review of the Product";
 	property name="reviewTitle" ormtype="string";
 	property name="rating" ormtpe="int";
 
 	// Related Object Properties (many-to-one)
-	property name="product" validateRequired="true" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public any function init() {
 		setActiveFlag(0);

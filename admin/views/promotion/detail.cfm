@@ -38,9 +38,12 @@ Notes:
 --->
 <cfparam name="rc.promotion" type="any">
 <cfparam name="rc.edit" type="boolean">
+
+<!---
 <cfif rc.edit>
 	<cfset getAssetWire().addJSVariable("getProductTypeTreeAPIKey", $.slatwall.getAPIKey('productservice/getproductyypetree','post')) />
 </cfif>
+--->
 
 <ul id="navTask">
 	<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
@@ -55,7 +58,7 @@ Notes:
 		<form name="PromotionEdit" action="#buildURL('admin:promotion.save')#" method="post">
 			<input type="hidden" name="PromotionID" value="#rc.Promotion.getPromotionID()#" />
 		</cfif>
-			<dl class="oneColumn">
+			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="activeFlag" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
@@ -63,27 +66,30 @@ Notes:
 				
 				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<ul>
-						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
-						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>	
 						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
+						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>
+						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
+						<li><a href="##tabSummary" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabSummary')#</span></a></li>
 					</ul>
-					<div id="tabDescription">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" editType="wysiwygbasic">
-						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" editType="wysiwyg">
+					<div id="tabPromotionRewards">
+						#view("promotion/promotiontabs/promotionrewards")#
 					</div>
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
 					</div>
-					<div id="tabPromotionRewards">
-						#view("promotion/promotiontabs/promotionrewards")#
+					<div id="tabDescription">
+						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+					</div>
+					<div id="tabSummary">
+						<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="PromotionSummary" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
 					</div>
 				</div>
 			</dl>
 			<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:promotion.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.promotion.isNew() and !rc.promotion.isAssigned()>
-				<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" confirmrequired="true">
+				<cfif Not rc.promotion.isNew()>
+					<cf_SlatwallActionCaller action="admin:promotion.delete" querystring="promotionid=#rc.promotion.getPromotionID()#" class="button" type="link" disabled="#rc.promotion.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.promotion.delete_validateisDeletable')#" confirmrequired="true">
 				</cfif>
 				<cf_SlatwallActionCaller action="admin:promotion.save" type="submit" class="button">
 			</div>

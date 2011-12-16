@@ -42,7 +42,7 @@ Notes:
 		<input type="hidden" name="categoryID" value="" />
 		<input type="hidden" name="featuredCategories" value="" />
 		<cfif rc.categories.recordCount gt 0>
-			<table id="productCategories" class="mura-table-grid stripe">
+			<table id="productCategories" class="listing-grid stripe">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
@@ -70,7 +70,7 @@ Notes:
 		</cfif>
 	<cfelse>
 		<cfif arrayLen(rc.product.getProductCategories())>
-			<table id="ProductCategories" class="mura-table-grid stripe">
+			<table id="ProductCategories" class="listing-grid stripe">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productCategories.categoryPath")#</th>
@@ -83,7 +83,7 @@ Notes:
 							<td>#listChangeDelims(rc.categories.namePath," &raquo; ")#</td>
 							<td>
 								<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)>
-									<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+									<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
 								</cfif>
 							</td>
 						</tr>

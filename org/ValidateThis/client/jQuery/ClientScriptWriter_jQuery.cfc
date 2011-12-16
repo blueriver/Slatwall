@@ -15,18 +15,32 @@
 --->
 <cfcomponent output="false" name="ClientScriptWriter_jQuery" extends="ValidateThis.client.AbstractClientScriptWriter" hint="I am responsible for generating jQuery Javascript statements to implement validations.">
 
+		
+	<cffunction name="generateJSFieldRefence" returntype="any" access="public" output="false" hint="I generate the jQuery selector that references the field name.">
+		<cfargument name="fieldname" type="any" required="yes" hint="The field name." />
+		<cfargument name="formName" type="Any" required="yes" hint="The form name." />
+		
+		<cfset var theScript = "" />
+		<cfset var safeFormName = getSafeFormName(arguments.formName) />
+		
+		<cfsavecontent variable="theScript"><cfoutput>fm['#arguments.fieldname#'] = $(":input[name='#arguments.fieldname#']",$form_#safeFormName#);</cfoutput></cfsavecontent>
+		<cfreturn theScript>
+
+	</cffunction>
+	
 	<cffunction name="generateJSIncludeScript" returntype="any" access="public" output="false" hint="I generate the JS to load the required JS libraries.">
 
 		<cfset var theScript = "" />
-		<cfset var JSRoot = variables.JSRoot />
 
 		<cfsavecontent variable="theScript">
 			<cfoutput>
-				<script src="http://ajax.microsoft.com/ajax/jquery/jquery-1.5.min.js" type="text/javascript"></script>
-				<script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/jquery.validate.min.js" type="text/javascript"></script>
-				<!---<script src="http://ajax.microsoft.com/ajax/jquery.validate/1.7/additional-methods.js" type="text/javascript"></script>--->
+				<script src="//ajax.microsoft.com/ajax/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
+				<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" type="text/javascript"></script>
+				<!---<script src="ajax.aspnetcdn.com/ajax/jquery.validate/1.9/additional-methods.min.js" type="text/javascript"></script>--->
 				<script type="text/javascript">
+				/*<![CDATA[*/
 				<cfinclude template="JS/jquery.field.min.js">
+				/*]]>*/
 				</script>
 			</cfoutput>
 		</cfsavecontent>
@@ -38,13 +52,14 @@
 		<cfargument name="locale" type="Any" required="no" default="" />
 
 		<cfset var theScript = "" />
-		<cfset var JSRoot = variables.JSRoot />
 
 		<cfsavecontent variable="theScript">
 			<cfoutput>
 				<cfif Len(arguments.locale) and ListFirst(arguments.locale,"_") NEQ "en">
 					<script type="text/javascript">
+					/*<![CDATA[*/
 					<cfinclude template="JS/localization/messages_#ListFirst(arguments.locale,'_')#.js">
+					/*]]>*/
 					</script>
 				</cfif>
 			</cfoutput>
@@ -59,16 +74,17 @@
 		<cfset var theScript = "" />
 		<cfset var scripters = this.getRuleScripters()/>
 
-		<cfsavecontent variable="theScript">
-		<cfoutput>
-		<script type="text/javascript">
-			jQuery(document).ready(function() {
+		<cfsavecontent variable="theScript"><cfoutput><script type="text/javascript">
+		/*<![CDATA[*/
+		jQuery(function($){
 			<cfloop collection="#scripters#" item="scripter">
 				<cfif structKeyExists(scripters[scripter],"generateInitScript")>
-					#scripters[scripter].generateInitScript(arguments.locale)#
+					<!--- strip out JS comments and whitespace --->
+					#ReReplace( ReReplace( scripters[scripter].generateInitScript(), "//[^\n\r]{1,}", "", "all" ), "[\n\r\t]", "", "all" )#
 				</cfif>
 			</cfloop>
-			});
+		});
+		/*]]>*/
 		</script>
 		</cfoutput>
 		</cfsavecontent>
@@ -79,7 +95,7 @@
 	<cffunction name="generateValidationScript" returntype="any" access="public" output="false" hint="I generate the JS script required to implement a validation.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation struct that describes the validation." />
 		<cfargument name="formName" type="Any" required="yes" />
-		<cfargument name="locale" type="Any" required="no" default="" />
+		<cfargument name="locale" type="Any" required="yes" />
 
 		<cfset var theScript = "" />
 		<cfset var valType = arguments.validation.getValType() />
@@ -88,7 +104,7 @@
 		<cfif (NOT (StructCount(arguments.validation.getCondition()) GT 0 OR
 			StructKeyExists(arguments.validation.getParameters(),"DependentPropertyName")) OR valType EQ "required")
 			AND StructKeyExists(variables.RuleScripters,valType)>
-			<cfset theScript = variables.RuleScripters[valType].generateValidationScript(arguments.validation,arguments.formName,arguments.locale) />
+			<cfset theScript = variables.RuleScripters[valType].generateValidationScript(arguments.validation,arguments.locale,arguments.formName) />
 		</cfif>
 		
 		<cfreturn theScript />
@@ -97,14 +113,14 @@
 	
 	<cffunction name="generateValidationJSON" returntype="any" access="public" output="false" hint="I generate the JSON rule required to implement a validation.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation struct that describes the validation." />
+		<cfargument name="locale" type="Any" required="yes" />
 		<cfargument name="formName" type="Any" required="yes" />
-		<cfargument name="locale" type="Any" required="no" default="" />
 		<cfset var theValidation = {} />
 		<cfset var theJSON = "" />
 		<cfset var valType = arguments.validation.getValType() />
 
 		<cfif StructKeyExists(variables.RuleScripters,valType)>
-			<cfset theJSON = variables.RuleScripters[valType].generateValidationJSON(arguments.validation,arguments.formName,arguments.locale) />
+			<cfset theJSON = variables.RuleScripters[valType].generateValidationJSON(arguments.validation,arguments.locale,arguments.formName) />
 		</cfif>
 		
 		<cfreturn theJSON />
@@ -134,9 +150,8 @@
 		<cfset var safeFormName = getSafeFormName(arguments.formName) />
 		<cfsavecontent variable="theScript">
 			<cfoutput>
-				<script type="text/javascript">jQuery(document).ready(function() {
-					$form_#safeFormName# = jQuery("###arguments.formName#");
-					$form_#safeFormName#.validate({ignore:'.ignore'});
+				<script type="text/javascript">
+				/*<![CDATA[*/jQuery(function($){var $form_#safeFormName# = $("###arguments.formName#");$form_#safeFormName#.validate({ignore:'.ignore'});
 			</cfoutput>
 		</cfsavecontent>
 		<cfreturn theScript />
@@ -145,10 +160,7 @@
 	<cffunction name="generateScriptFooter" returntype="any" access="public" output="false" hint="I generate the JS script required at the top of the script block.">
 		<cfset var theScript = "" />
 		<cfsavecontent variable="theScript">
-			<cfoutput>
-					
-				});</script>
-			</cfoutput>
+			<cfoutput>});/*]]>*/</script></cfoutput>
 		</cfsavecontent>
 		<cfreturn theScript />
 	</cffunction>

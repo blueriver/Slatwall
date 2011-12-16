@@ -51,7 +51,7 @@ Notes:
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
-		<table class="mura-table-grid stripe" id="basicOrderInfo">
+		<table class="listing-grid stripe" id="basicOrderInfo">
 			<tr>
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detailcart.basiccaartinfo")#</th>
 			</tr>
@@ -63,15 +63,15 @@ Notes:
 				<td>
 					#rc.Order.getAccount().getFullName()#  
 					<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">
-						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.user.png" height="16" width="16" alt="" />
+						<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.user.png" height="16" width="16" alt="" />
 					</a>
 				</td>
 			</tr>
 			<cfif !isNull(local.account.getPrimaryEmailAddress())>
-			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="false" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" edit="false" displayType="table">
 			</cfif>
 			<cfif !isNull(local.account.getPrimaryPhoneNumber())>
-			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="false" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" edit="false" displayType="table">
 			</cfif>
 		</table>
 	</div>
@@ -79,7 +79,7 @@ Notes:
 	<div class="clear">
 	<cfif arrayLen(rc.order.getOrderItems()) gt 0>
 		<div id="cartItems">
-			<table class="mura-table-grid stripe">
+			<table class="listing-grid stripe">
 				<tr>
 					<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 					<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
@@ -91,10 +91,10 @@ Notes:
 					<tr>
 						<td>#local.orderItem.getSku().getSkuCode()#</td>
 						<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>							
-						<td>#dollarFormat(local.orderItem.getPrice())#</td>
+						<td>#local.orderItem.getFormattedValue('price')#</td>
 						<td>#int(local.orderItem.getQuantity())#</td>
-						<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
-					</tr>				
+						<td>#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</td>
+					</tr>
 				</cfloop>
 			</table>
 		</div>

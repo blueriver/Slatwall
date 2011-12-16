@@ -77,9 +77,9 @@ Notes:
 				<cfif not rc.shippingMethod.isNew()>
 					<cfif arrayLen(rc.shippingMethod.getEligibleAddressZoneOptions())>
 					<cfif isNull(rc.shippingMethod.getEligibleAddressZone())>
-						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" nullLabel="#$.slatwall.rbKey('define.all')#">
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#">
 					<cfelse>
-						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" nullLabel="#$.slatwall.rbKey('define.all')#" value="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneID()#" displayValue="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneName()#">
+						<cf_SlatwallPropertyDisplay object="#rc.shippingMethod#" property="eligibleAddressZone" edit="#rc.edit#" value="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneID()#" displayValue="#rc.shippingMethod.getEligibleAddressZone().getAddressZoneName()#">
 					</cfif>
 					</cfif>
 					
@@ -114,7 +114,7 @@ Notes:
 				<div class="rateTable<cfif not rc.shippingMethod.getUseRateTableFlag()> hideElement</cfif>">
 					<strong>Rate Table</strong>
 					<cfset local.shippingRates = rc.shippingMethod.getShippingRates() />
-					<table id="shippingRateTable" class="mura-table-grid stripe">
+					<table id="shippingRateTable" class="listing-grid stripe">
 						<thead>
 							<tr>
 								<th class="varWidth">#rc.$.slatwall.rbKey('entity.shippingrate.addressZone')#</th>
@@ -165,8 +165,8 @@ Notes:
 	<cfif rc.edit>
 			<div id="actionButtons" class="clearfix">
 				<cf_SlatwallActionCaller action="admin:setting.detailfulfillmentmethod" querystring="fulfillmentmethodID=shipping" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cfif !rc.shippingMethod.isNew() AND !rc.shippingMethod.isAssigned()>
-					<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" class="button" type="link" confirmRequired="true">
+				<cfif Not rc.shippingMethod.isNew()>
+					<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#rc.shippingMethod.getShippingMethodID()#" disabled="#rc.shippingMethod.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.shippingMethod.delete_validateIsDeletable')#" class="button" type="link" confirmRequired="true">
 				</cfif>
 				<cf_SlatwallActionCaller action="admin:setting.saveshippingmethod" type="submit" class="button">
 			</div>

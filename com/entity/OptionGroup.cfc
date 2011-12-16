@@ -40,11 +40,11 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 
 	// Persistent Properties
 	property name="optionGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="optionGroupName" ormtype="string";
 	property name="optionGroupCode" ormtype="string";
-	property name="optionGroupName" ormtype="string" validateRequired="true";
 	property name="optionGroupImage" ormtype="string";
 	property name="optionGroupDescription" ormtype="string" length="4000";
-	property name="imageGroupFlag" ormtype="boolean";
+	property name="imageGroupFlag" ormtype="boolean" default="0";
 	property name="sortOrder" ormtype="integer" required="true";
 	  
 	// Remote properties
@@ -52,9 +52,9 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
 	property name="options" singularname="option" cfc="Option" fieldtype="one-to-many" fkcolumn="optionGroupID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder";
@@ -76,7 +76,7 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.Options;
 		} else {
-			return sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
+			return getService("utilityService").sortObjectArray(variables.Options,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
     
@@ -98,7 +98,6 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	public numeric function getOptionsCount() {
 		return arrayLen(this.getOptions());
 	}
-	
 	
 	// Image Management methods
 	public string function getImage(numeric width=0, numeric height=0, string alt="", string class="") {
@@ -135,5 +134,5 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
     public string function getImagePath() {
         return getImageDirectory() & getOptionGroupImage();
-    }  
+    } 
 }

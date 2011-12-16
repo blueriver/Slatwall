@@ -40,8 +40,8 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Persistent Properties
 	property name="optionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="optionCode" validateRequired="true" ormtype="string";
-	property name="optionName" validateRequired="true" ormtype="string";
+	property name="optionCode" ormtype="string";
+	property name="optionName" ormtype="string";
 	property name="optionImage" ormtype="string";
 	property name="optionDescription" ormtype="string" length="4000";
 	property name="sortOrder" ormtype="integer";
@@ -51,19 +51,16 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
 	property name="optionGroup" cfc="OptionGroup" fieldtype="many-to-one" fkcolumn="optionGroupID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true" lazy="extra" cascade="save-update"; 
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="optionID" inversejoincolumn="skuID" inverse="true" cascade="save-update"; 
 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
-	// Calculated Properties
-	property name="assignedFlag" type="boolean" formula="SELECT count(*) from SlatwallSkuOption so WHERE so.OptionID=optionID";
-
 	public Option function init(){
 		// set default collections for association management methods
 		if(isNull(variables.skus)) {
@@ -77,14 +74,6 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/meta/";
     }
     
-    public boolean function hasSkus() {
-    	if(arrayLen(getSkus()) gt 0) {
-    		return true;
-    	} else {
-    		return false;
-    	}
-    }
-
     /******* Association management methods for bidirectional relationships **************/
     
     // OptionGroup (many-to-one)
@@ -162,4 +151,12 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
     public string function getImagePath() {
         return getImageDirectory() & getOptionImage();
     }
+    
+    // Override the preInsert method to set a default sortOrder
+    public void function preInsert() {
+    	if(isNull(getSortOrder())) {
+    		setSortOrder(arrayLen(getOptionGroup().getOptions()));
+    	}
+    }
+    
 }

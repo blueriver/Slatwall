@@ -40,32 +40,32 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// Persistent Properties
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="brandName" ormtype="string" validateRequired="true" persistent="true" hint="This is the common name that the brand goes by.";
-	property name="brandWebsite" ormtype="string" validateURL="true" persistent="true" hint="This is the Website of the brand";
+	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
+	property name="brandWebsite" ormtype="string" hint="This is the Website of the brand";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
-	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";    
+	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";    
 	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
 	
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	
-	// Calculated Properties
-	property name="assignedFlag" type="boolean" formula="SELECT count(sp.productID) from SlatwallProduct sp INNER JOIN SlatwallBrand sb on sp.brandID = sb.brandID where sp.brandID=brandID";
 	
 	public Brand function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.Products))
-	       variables.Products = [];
-	   return Super.init();
+	   if(isNull(variables.Products)) {
+	   	   variables.Products = [];
+	   }
+	   
+	   return super.init();
 	}
  
  /******* Association management methods for bidirectional relationships **************/

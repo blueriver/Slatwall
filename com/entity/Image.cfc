@@ -45,16 +45,16 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 	property name="imageExtension" ormtype="string";
 	
 	// Related entity properties
-	property name="imageType" cfc="Type" validateRequired="true" fieldtype="many-to-one" fkcolumn="imageTypeID";
+	property name="imageType" cfc="Type" fieldtype="many-to-one" fkcolumn="imageTypeID";
 	
 	// Special helper property
 	property name="directory" insert="false" update="false";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public string function getImagePath() {
 		return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/#getDirectory()#/#getImageID()#.#getImageExtension()#";	
@@ -97,7 +97,7 @@ component displayname="Image" entityname="SlatwallImage" table="SlatwallImage" p
 		if(!structKeyExists(variables, "imageTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
-			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="itProduct");
 			smartList.addOrder("type|ASC");
 			

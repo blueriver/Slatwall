@@ -49,18 +49,32 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
+	
+	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	
+	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID" cascade="save-update";
+	
+	// Non persistent properties
+	property name="total" persistent="false" formatType="currency" ; 
+	property name="subTotal" persistent="false" formatType="currency" ; 
+	property name="taxTotal" persistent="false" formatType="currency" ; 
+	property name="itemDiscountAmountTotal" persistent="false" formatType="currency" ; 
+	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency" ; 
+	property name="orderDiscountAmountTotal" persistent="false" formatType="currency" ; 
+	property name="discountTotal" persistent="false" formatType="currency" ; 
+	property name="fulfillmentTotal" persistent="false" formatType="currency" ; 
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillments)) {
@@ -305,7 +319,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		//smartList.joinRelatedProperty("SlatwallOrderStatusAction", "orderStatusType", "inner", false);
 		smartList.addFilter("orderStatusType_typeID", getOrderStatusType().getTypeID());
 		//smartList.addSelect(propertyIdentifier="orderActionType_type", alias="name");
-		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="id");
+		//smartList.addSelect(propertyIdentifier="orderActionType_typeID", alias="value");
 		//return smartList.getHQL();
 		return smartList.getRecords(); 
 	}

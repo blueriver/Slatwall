@@ -44,9 +44,7 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<cfif attributes.orderFulfillmentShipping.getErrorBean().hasError('processing')>
-			<div class="error">#attributes.orderFulfillmentShipping.getErrorBean().getError('processing')#</div>
-		</cfif>
+		<cf_SlatwallErrorDisplay object="#attributes.orderFulfillmentShipping#" errorName="processing" displayType="div">
 		<cfif attributes.edit>
 			<cfif arrayLen(local.methodOptions)>
 				<cfset local.noneSelected = false />
@@ -63,7 +61,7 @@ Notes:
 					</cfif>
 					<dl>
 						<dt><input type="radio" name="orderFulfillments[#attributes.orderFulfillmentIndex#].orderShippingMethodOptionID" value="#option.getOrderShippingMethodOptionID()#" <cfif local.optionSelected>checked="checked"</cfif>>#option.getShippingMethod().getShippingMethodName()#</dt>
-						<dd>#DollarFormat(option.getTotalCharge())#</dd>
+						<dd>#option.getFormattedValue('totalCharge', 'currency')#</dd>
 					</dl>
 				</cfloop>
 			<cfelse>
@@ -72,7 +70,7 @@ Notes:
 		<cfelse>
 			<cfif not isNull(attributes.orderFulfillmentShipping.getShippingMethod())>
 				<dl>
-					<dt>#DollarFormat(attributes.orderFulfillmentShipping.getFulfillmentCharge())#</dt>
+					<dt>#attributes.orderFulfillmentShipping.getFormattedValue('fulfillmentCharge', 'currency')# </dt>
 					<dd>#attributes.orderFulfillmentShipping.getShippingMethod().getShippingMethodName()#</dd>
 				</dl>
 			</cfif>

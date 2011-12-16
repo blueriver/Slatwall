@@ -49,12 +49,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.brandID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.brand = getBrandService().getBrand(rc.brandID,true);
+		rc.brand = getBrandService().getBrand(rc.brandID, true);
 		if(!rc.brand.isNew()) {
 			rc.itemTitle &= ": " & rc.brand.getBrandName();
 		}
 	}
-
 
     public void function create(required struct rc) {
 		detail(arguments.rc);
@@ -73,25 +72,32 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-	   rc.brand = getBrandService().getBrand(rc.brandID,true);
-	   rc.brand = getBrandService().save(rc.brand,rc);
+	   detail(arguments.rc);
+	   
+	   rc.brand = getBrandService().saveBrand(rc.brand, rc);
+	   
 	   if(!rc.brand.hasErrors()) {
 	   		getFW().redirect(action="admin:brand.list",querystring="message=admin.brand.save_success");
 		} else {
 			rc.itemTitle = rc.brand.isNew() ? rc.$.Slatwall.rbKey("admin.brand.create") : rc.$.Slatwall.rbKey("admin.brand.edit") & ": #rc.brand.getBrandName()#";
-	   		getFW().setView(action="admin:brand.edit");
+	   		getFW().setView(action="admin:brand.detail");
+	   		rc.edit = true;
 		}
 	}
 	
 	public void function delete(required struct rc) {
+		
 		var brand = getBrandService().getBrand(rc.brandID);
-		var deleteResponse = getBrandService().delete(brand);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getBrandService().deleteBrand(brand);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.brand.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.brand.delete_failure");
 			rc.messagetype="error";
-		}	   
+		}
+		
 		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
 	}
 }

@@ -40,23 +40,24 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	// Persistent Properties
 	property name="promotionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="promotionName" validateRequired="true" ormtype="string";
+	property name="promotionName" ormtype="string";
 	property name="promotionSummary" ormtype="string" length="1000";
 	property name="promotionDescription" ormtype="string" length="4000";
-	property name="startDateTime" validateRequired="true" validateDate="true" ormtype="timestamp";
-	property name="endDateTime" validateRequired="true" validateDate="true" ormtype="timestamp";
-	property name="activeFlag" validateRequired="true" ormtype="boolean";
+	property name="startDateTime" ormtype="timestamp";
+	property name="endDateTime" ormtype="timestamp";
+	property name="activeFlag" ormtype="boolean";
 	
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
-	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" inverse="true" cascade="all";    
+	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public Promotion function init(){
 		// set default collections for association management methods
@@ -72,42 +73,56 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		if(isNull(variables.endDateTime)) {
 			variables.endDateTime = now();
 		}
-		return Super.init();
+		if(isNull(variables.activeFlag)) {
+			variables.activeFlag = 1;
+		}
+		return super.init();
 	}
  
 
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// promotionCodes (one-to-many)
-	
-	public void function addPromotionCode(required PromotionCode PromotionCode) {
-	   arguments.PromotionCode.setPromotion(this);
+	public void function addPromotionCode(required any promotionCode) {
+		arguments.promotionCode.setPromotion(this);
 	}
 	
-	public void function removePromotionCode(required PromotionCode PromotionCode) {
-	   arguments.PromotionCode.removePromotion(this);
+	public void function removePromotionCode(required any promotionCode) {
+	   arguments.promotionCode.removePromotion(this);
 	}
 
-	// PromotionRewards (one-to-many)
-	
-	public void function addPromotionReward(required PromotionReward promotionReward) {
+	// promotionRewards (one-to-many)
+	public void function addPromotionReward(required any promotionReward) {
 	   arguments.promotionReward.setPromotion(this);
 	}
 	
-	public void function removePromotionReward(required PromotionReward promotionReward) {
-	   arguments.promotionReward.removePromotion(this);
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removePromotion(this);
+	}
+	
+	// appliedPromotions (one-to-many)
+	public void function addAppliedPromotion(required any promotionApplied) {
+	   arguments.promotionApplied.setPromotion(this);
+	}
+	
+	public void function removeAppliedPromotion(required any promotionApplied) {
+		arguments.promotionApplied.removePromotion(this);
 	}
 	
     /************   END Association Management Methods   *******************/
 
-	public boolean function isAssigned() {
-		// check on PromotionApplied
-		var params = {promotionID = getPromotionID()};
-		var promotionApplied = ormExecuteQuery("From SlatwallPromotionApplied spa where promotion.promotionID =:promotionID",params);
-		if(arrayLen(promotionApplied)) {
-			return true;
-		} else {
-			return false;
+	// @hint this method validates that promotion codes are unique
+	public any function hasUniquePromotionCodes() {
+		var promotionCodeList = "";
+		
+		for(var promotionCode in getPromotionCodes()){
+			if(listFindNoCase(promotionCodeList, promotionCode.getPromotionCode())) {
+				return false;
+			} else {
+				promotionCodeList = listAppend(promotionCodeList, promotionCode.getPromotionCode());
+			}
 		}
+		return true;
 	}
+
 }

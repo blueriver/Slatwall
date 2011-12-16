@@ -39,74 +39,73 @@ Notes:
 <cfparam name="rc.product" type="any" />
 <cfparam name="rc.optionGroups" type="any" />
 
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:product.list" type="list">
-</ul>
-
 <cfoutput>
+		
+	<ul id="navTask">
+		<cf_SlatwallActionCaller action="admin:product.list" type="list">
+	</ul>
 	
-<cfif arrayLen(rc.product.getBrandOptions()) gt 0 and arrayLen(rc.product.getProductTypeOptions()) gt 0>
-<div id="createProductForm">
-	<form name="CreateProduct" action="#buildURL(action='admin:product.save')#" method="post">
-		<dl class="oneColumn">
-		    <cf_SlatwallPropertyDisplay object="#rc.Product#" first="true" property="productName" edit="true">
-		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="productCode" edit="true">
-		    <cf_SlatwallPropertyDisplay object="#rc.Product#" property="brand" edit="true">
-			     <cf_SlatwallActionCaller action="admin:brand.create" type="link">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="true">
-		      <cf_SlatwallActionCaller action="admin:product.createproducttype" type="link">
-		</dl>
-		<br />
-		<dl class="twoColumn productPrice">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="price" edit="true" tooltip="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="listPrice" edit="true" tooltip="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="shippingWeight" edit="true" tooltip="true">
-		</dl>
-		<br />
-		<br />
-	    <h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
-			<cfif arrayLen(rc.optionGroups) gt 0>
-				<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
-				<cfset local.options = local.thisOptionGroup.getOptions() />
-				<p><a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideDown();">#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</a></p>
-				<div class="optionsSelector" id="selectOptions#local.thisOptionGroup.getOptionGroupID()#" style="display:none;">
-					<a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideUp();">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
-				<cfif arrayLen(local.options)>
-					<cfset local.optionIndex = 1 />	
-					<ul>
-					<cfloop array="#local.options#" index="local.thisOption">
-						<li><input type="checkbox" name="options.#local.thisOptionGroup.getSortOrder()#" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
-		            <cfset local.optionIndex++ />
+	<div class="svoadminproductdetail">
+		<cfif arrayLen(rc.product.getBrandOptions()) gt 0 and arrayLen(rc.product.getProductTypeOptions()) gt 0>
+			
+			<!--- Add Client Side Validation for the form --->
+			<!---<cfset $.slatwall.addVTScript(theObject=rc.product, formName="createProductForm") />--->
+			
+			<!---#$.slatwall.getValidateThis().getValidationScript(theObject=rc.product, formName="createProductForm")#--->
+			
+			<form id="createProductForm" name="createProduct" method="post">
+				<input type="hidden" name="slatAction" value="admin:product.save" />
+				<dl class="oneColumn">
+				    <cf_SlatwallPropertyDisplay object="#rc.product#" first="true" property="productName" edit="true">
+				    <cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true" toggle="true">
+					<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true" tooltip="true">
+					<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true">
+					<cf_SlatwallActionCaller action="admin:brand.create" type="link">
+					<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true">
+					<cf_SlatwallActionCaller action="admin:product.createproducttype" type="link">
+				</dl>
+				<br />
+				<br />
+			    <h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
+				<cfif arrayLen(rc.optionGroups) gt 0>
+					<cfloop array="#rc.optionGroups#" index="local.thisOptionGroup">
+					<cfset local.options = local.thisOptionGroup.getOptions() />
+					<p><a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideDown();">#rc.$.Slatwall.rbKey("entity.option.optionGroup")#: #local.thisOptionGroup.getOptionGroupName()#</a></p>
+					<div class="optionsSelector" id="selectOptions#local.thisOptionGroup.getOptionGroupID()#" style="display:none;">
+						<a href="javascript:;" onclick="jQuery('##selectOptions#local.thisOptionGroup.getOptionGroupID()#').slideUp();">[#rc.$.Slatwall.rbKey("sitemanager.content.fields.close")#]</a>
+					<cfif arrayLen(local.options)>
+						<cfset local.optionIndex = 1 />	
+						<ul>
+						<cfloop array="#local.options#" index="local.thisOption">
+							<li><input type="checkbox" name="options.#local.thisOptionGroup.getSortOrder()#" id="option#local.thisOption.getOptionID()#" value="#local.thisOption.getOptionID()#" /> <label for="option#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</label></li>
+			            <cfset local.optionIndex++ />
+						</cfloop>
+						</ul>
+					<cfelse>
+						<!--- no options in this optiongroup defined --->
+						<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsingroup")#</em></p>
+						<cf_SlatwallActionCaller action="admin:option.create" queryString="optionGroupID=#local.thisOptionGroup.getOptionGroupID()#">
+					</cfif>
+					</div>
 					</cfloop>
-					</ul>
+					<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="link">
 				<cfelse>
-					<!--- no options in this optiongroup defined --->
-					<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsingroup")#</em></p>
-					<cf_SlatwallActionCaller action="admin:option.create" queryString="optionGroupID=#local.thisOptionGroup.getOptionGroupID()#">
+					 <!--- no options defined --->
+					<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
 				</cfif>
+				<div id="actionButtons" class="clearfix">
+					<cf_SlatwallActionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+					<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
 				</div>
-				</cfloop>
-				<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="link">
-			<cfelse>
-				 <!--- no options defined --->
-				<p><em>#rc.$.Slatwall.rbKey("admin.option.nooptionsdefined")#</em></p>
+			</form>
+		<cfelse>
+			<p><em>#rc.$.Slatwall.rbKey("admin.product.create.disabled")#</em></p>
+			<cfif arrayLen(rc.product.getBrandOptions()) eq 0>
+				<p><cf_SlatwallActionCaller action="admin:brand.create" type="link"></p>
 			</cfif>
-		<div id="actionButtons" class="clearfix">
-			<cf_SlatwallActionCaller action="admin:product.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
-		</div>
-	</form>
-</div>
-<cfelse>
-	<p><em>#rc.$.Slatwall.rbKey("admin.product.create.disabled")#</em></p>
-	<cfif arrayLen(rc.product.getBrandOptions()) eq 0>
-		<p><cf_SlatwallActionCaller action="admin:brand.create" type="link"></p>
-	</cfif>
-	<cfif arrayLen(rc.product.getProductTypeOptions()) eq 0>
-		<p><cf_SlatwallActionCaller action="admin:product.createProductType" type="link"></p>
-	</cfif>
-</cfif>
-
+			<cfif arrayLen(rc.product.getProductTypeOptions()) eq 0>
+				<p><cf_SlatwallActionCaller action="admin:product.createProductType" type="link"></p>
+			</cfif>
+		</cfif>
+	</div>
 </cfoutput>
-
-

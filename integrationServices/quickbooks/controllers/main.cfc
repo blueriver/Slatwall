@@ -17,10 +17,12 @@
 	<cffunction name="productImport" returntype="void">
 		<cfargument name="rc" type="struct" />
 		
+		<!--- Set the request timeout to 5 min --->
+		<cfsetting requesttimeout="300" >
+		
 		<cfset var newFilename = createUUID() & ".txt" />
 		<cfset var importDirectory = expandPath(rc.$.siteConfig('assetPath')) & '/assets/file/slatwall/productImport/' />
-		
-		
+				
 		<cfif not directoryExists(importDirectory)>
 			<cfset directoryCreate(importDirectory) />
 		</cfif>
@@ -74,11 +76,11 @@
 					<cfset product.setBrand(brand) />
 					
 					<cfset product.setFilename( getUtilityFileService().filterFileName(product.getProductName()) ) />
-					<cfset var duplicate = getDataService().isDuplicateProperty("filename", product) />
+					<cfset var unique = getDataService().isUniqueProperty("filename", product) />
 					<cfset var fileAddon = 1 />
-					<cfloop condition="duplicate eq true">
+					<cfloop condition="unique eq false">
 						<cfset product.setFilename( getUtilityFileService().filterFileName(product.getProductName()) & fileAddon ) />
-						<cfset var duplicate = getDataService().isDuplicateProperty("filename", product) />
+						<cfset var unique = getDataService().isUniqueProperty("filename", product) />
 						<cfset fileAddon++ />
 					</cfloop>
 				</cfif>

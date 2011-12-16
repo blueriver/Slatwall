@@ -43,7 +43,7 @@ Notes:
 <div class="svoadminmaindefault">
 	<div class="products dashboardSection">
 		<h3>Recently Updated Products</h3>
-		<table id="orderList" class="mura-table-grid stripe">
+		<table id="orderList" class="listing-grid stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
@@ -57,7 +57,7 @@ Notes:
 					<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 					<td class="administration">
 						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="viewDetails" type="list">
+						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>
@@ -67,7 +67,7 @@ Notes:
 	</div>
 	<div class="orders dashboardSection">
 		<h3>New Orders</h3>
-		<table id="orderList" class="mura-table-grid stripe">
+		<table id="orderList" class="listing-grid stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
@@ -85,7 +85,7 @@ Notes:
 					</cfif>
 					<td class="administration">
 						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="viewDetails" type="list">
+						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>

@@ -60,7 +60,7 @@ Notes:
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
-		<table class="mura-table-grid stripe" id="basicOrderInfo">
+		<table class="listing-grid stripe" id="basicOrderInfo">
 			<tr>
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
@@ -74,17 +74,16 @@ Notes:
 				<td>
 					#rc.Order.getAccount().getFullName()#  
 					<a href="#buildURL(action='admin:account.detail',queryString='accountID=#local.account.getAccountID()#')#">
-						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.user.png" height="16" width="16" alt="" />
+						<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.user.png" height="16" width="16" alt="" />
 					</a>
 				</td>
 			</tr>
-			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" propertyObject="emailAddress" edit="#rc.edit#" displayType="table">
-			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" propertyObject="phoneNumber" edit="#rc.edit#" displayType="table">
-	 		<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderTotal" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryEmailAddress" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#local.account#" property="primaryPhoneNumber" edit="#rc.edit#" displayType="table">
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<table class="mura-table-grid stripe">
+		<table class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
 				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>
@@ -93,14 +92,14 @@ Notes:
 			<cfloop array="#local.payments#" index="local.thisPayment">
 			<tr>
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#dollarFormat(local.thisPayment.getAmount())#</td>
+				<td>#local.thisPayment.getFormattedValue('amount', 'currency')#</td>
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
-						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+						<a class="paymentDetails detail" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
 					</li>
 					<li class="zoomOut">           
-						<a class="paymentDetails viewDetails" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
+						<a class="paymentDetails detail" id="show_#local.thisPayment.getOrderPaymentID()#" title="Payment Detail" href="##">#$.slatwall.rbKey("admin.order.detail.paymentDetails")#</a>
 					</li>
 		          </ul>     						
 				</td>
@@ -119,15 +118,15 @@ Notes:
 		<p><strong>#$.Slatwall.rbKey("admin.order.detail.ordertotals")#</strong></p>
 		<dl class="orderTotals">
 			<dt>#$.Slatwall.rbKey("admin.order.detail.subtotal")#</dt> 
-			<dd>#dollarFormat(rc.order.getSubtotal())#</dd>
+			<dd>#rc.order.getFormattedValue('subtotal', 'currency')#</dd>
 			<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
-			<dd>#dollarFormat(rc.order.getTaxtotal())#</dd>
+			<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
 			<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentCharge")#</dt>
-			<dd>#dollarFormat(rc.order.getFulfillmentTotal())#</dd>
+			<dd>#rc.order.getFormattedValue('fulfillmentTotal', 'currency')#</dd>
 			<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
-			<dd>#dollarFormat(rc.order.getDiscountTotal())#</dd>
+			<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>
 			<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
-			<dd><strong>#dollarFormat(rc.order.getTotal())#</strong></dd>
+			<dd><strong>#rc.order.getFormattedValue('total', 'currency')#</strong></dd>
 		</dl>
 	</div>
 	<div class="clear">

@@ -51,8 +51,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionID" default="";
 		param name="rc.edit" default="false";
 		
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
+		// Get the promotion from the DB, and return a new promotion if necessary
+		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
+		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
+		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
+		
+		// Get a smart list of Promotion Codes for the view
+		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
+		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
 		}
@@ -60,23 +66,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 
     public void function create(required struct rc) {
-		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		rc.brands = getService("BrandService").listBrandorderByBrandName();
-		rc.optionGroups = getService("optionService").listOptionGroup();
-		rc.shippingMethods = getSettingService().listShippingMethod();
-		detail(arguments.rc);
-		getFW().setView("admin:promotion.detail");
-		rc.edit = true;
+    	edit( rc );
     }
 
 	public void function edit(required struct rc) {
-		rc.productTypeTree = getService("ProductService").getProductTypeTree();
-		rc.brands = getService("BrandService").listBrandorderByBrandName();
-		rc.optionGroups = getService("optionService").listOptionGroup();
-		rc.shippingMethods = getSettingService().listShippingMethod();
-		detail(arguments.rc);
-		getFW().setView("admin:promotion.detail");
+		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
+		
+		detail(rc);
 		rc.edit = true;
+		getFW().setView("admin:promotion.detail");
+		
 	}
 	 
     public void function list(required struct rc) {
@@ -84,63 +84,89 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }
 
 	public void function save(required struct rc) {
-	   rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-	   rc.promotion = getPromotionService().save(rc.promotion,rc);
-	   if(!getRequestCacheService().getValue("ormHasErrors")) {
-	   		getFW().redirect(action="admin:promotion.list",querystring="message=admin.promotion.save_success");
+		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
+		param name="rc.savePromotionRewardProduct" default="false";
+		param name="rc.savePromotionRewardShipping" default="false";
+		
+		detail(rc);
+		// Call the promotion service save method (this is standard)
+		rc.promotion = getPromotionService().savePromotion(rc.promotion, rc);
+		
+		// If no errors, then redirect to the list page, otherwise go back to edit
+		if(!rc.promotion.hasErrors()) {
+			rc.message="admin.promotion.save_success";
+			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping) {
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:promotion.list",preserve="message");
+			}
 		} else {
+			// If one of the sub-options had the error, then find out which one and populate it
+			if(rc.promotion.hasError("promotionRewards")) {
+				for(var i=1; i<=arrayLen(rc.promotion.getPromotionRewards()); i++) {
+					var thisReward = rc.promotion.getPromotionRewards()[i];
+					if(thisReward.hasErrors() && thisReward.getRewardType() == "product") {
+						rc.promotionRewardProduct = thisReward;
+					} else if(thisReward.hasErrors() && thisReward.getRewardType() == "shipping") {
+						rc.promotionRewardShipping = thisReward;
+					}
+				}
+			}
 			rc.edit = true;
-			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.create") : rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
-			rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
-			rc.productTypeTree = getService("ProductService").getProductTypeTree();
-			rc.shippingMethods = getSettingService().listShippingMethod();
-	   		getFW().setView(action="admin:promotion.detail");
+			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.createPromotion") : rc.$.Slatwall.rbKey("admin.promotion.editPromotion") & ": #rc.promotion.getPromotionName()#";
+			getFW().setView(action="admin:promotion.detail");
 		}
 	}
 	
 	public void function delete(required struct rc) {
+		
 		var promotion = getPromotionService().getPromotion(rc.promotionID);
-		var deleteResponse = getPromotionService().delete(promotion);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getPromotionService().deletePromotion(promotion);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.promotion.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.promotion.delete_error");
 			rc.messagetype="error";
-		}	   
+		}
+			   
 		getFW().redirect(action="admin:promotion.list",preserve="message,messagetype");
 	}
 
 	public void function deletePromotionCode(required struct rc) {
+		
 		var promotionCode = getPromotionService().getPromotionCode(rc.promotionCodeID);
 		rc.promotionID = promotionCode.getPromotion().getPromotionID();
-		var deleteResponse = getPromotionService().deletePromotionCode(promotionCode);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getPromotionService().deletePromotionCode(promotionCode);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.promotion.deletePromotionCode_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.promotion.deletePromotionCode_error");
 			rc.messagetype = "error";
 		}
-		rc.edit = true;
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(promotionID=rc.promotion.getPromotionID() ,data=rc);
-		rc.itemTitle = rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
-		getFW().redirect(action="admin:promotion.detail",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 	public void function deletePromotionReward(required struct rc) {
+		
 		var promotionReward = getPromotionService().getPromotionReward(rc.promotionRewardID);
 		rc.promotionID = promotionReward.getPromotion().getPromotionID();
-		var deleteResponse = getPromotionService().deletePromotionReward(promotionReward);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getPromotionService().deletePromotionReward(promotionReward);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.promotion.deletePromotionReward_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
+			rc.message = rbKey("admin.promotion.deletePromotionReward_error");
 			rc.messagetype = "error";
 		}
-		rc.edit = true;
-		rc.promotion = getPromotionService().getPromotion(rc.promotionID,true);
-		rc.itemTitle = rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
-		getFW().redirect(action="admin:promotion.detail",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
 	}
 	
 }

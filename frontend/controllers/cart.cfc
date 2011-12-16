@@ -56,8 +56,15 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function update(required struct rc) {
-		getOrderService().updateOrderItems(order=rc.$.slatwall.cart(), data=rc);
 		
+		// Conditional logic to see if we should use the deprecated method
+		if(isArray(rc.orderItems)) {
+			getOrderService().saveOrder(rc.$.slatwall.cart(), rc);
+		} else if (isStruct(rc.orderItems)) {
+			// This is the deprecated method
+			getOrderService().updateOrderItems(order=rc.$.slatwall.cart(), data=rc);	
+		}
+				
 		getFW().setView("frontend:cart.detail");
 	}
 	
@@ -90,6 +97,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			// Add to the cart() order the new sku with quantity and shipping id
 			getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);
 		}
+		
+		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
+	}
+	
+	public void function removeItem(required struct rc) {
+		param name="rc.orderItemID" default="";
+		
+		getOrderService().removeOrderItem(order=rc.$.slatwall.cart(), orderItemID=rc.orderItemID);
 		
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);
 	}

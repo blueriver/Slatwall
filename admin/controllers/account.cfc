@@ -39,6 +39,7 @@ Notes:
 component extends="BaseController" persistent="false" accessors="true" output="false" {
 	
 	property name="accountService";
+	property name="priceGroupService";
 	
 	public void function before(required struct rc) {
 	}
@@ -59,9 +60,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function create(required struct rc) {
-		detail(arguments.rc);
-		getFW().setView("admin:account.detail");
-		rc.edit = true;
+		edit(rc);
 	}
 	
 	public void function edit(required struct rc) {
@@ -72,14 +71,16 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function delete(required struct rc) {
 		var account = getAccountService().getAccount(rc.accountID);
-		var deleteResponse = getAccountService().delete(account);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getAccountService().deleteAccount(account);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.account.delete_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype="error";
+			rc.message = rbKey("admin.account.delete_error");
+			rc.messageType="error";
 		}
-		getFW().redirect(action="admin:account.list",preserve="message");
+		
+		getFW().redirect(action="admin:account.list",preserve="message,messageType");
 	}
 
 	public void function list(required struct rc) {
@@ -96,6 +97,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.account = getAccountService().saveAccount(account=rc.account, data=rc, siteID=rc.$.event('siteid'));
 		
 		if(rc.account.hasErrors()) {
+			rc.edit = true;
 			getFW().setView("admin:account.detail");
 		} else {
 			rc.message = "admin.account.save_success";

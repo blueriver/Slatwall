@@ -45,9 +45,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
@@ -58,6 +58,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedTaxes" singularname="appliedTax" cfc="OrderItemAppliedTax" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+
+	// Non persistent properties
+	property name="extendedPrice" persistent="false" formatType="currency" ; 
+	property name="extendedPriceAfterDiscount" persistent="false" formatType="currency" ; 
+	property name="taxAmount" persistent="false" formatType="currency" ; 
+	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ; 
+
 
 	public any function init() {
 		

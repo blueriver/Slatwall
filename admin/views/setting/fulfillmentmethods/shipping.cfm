@@ -38,7 +38,7 @@ Notes:
 --->
 <cfoutput>
 	<cfif arrayLen(rc.shippingMethods) gt 0>
-		<table id="shippingMethodList" class="mura-table-grid stripe">
+		<table id="shippingMethodList" class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.shippingmethod.shippingmethodname")#</th>
 				<th>&nbsp</th>
@@ -49,13 +49,13 @@ Notes:
 					<td class="administration">
 						<cfif rc.edit>
 							<ul class="three">
-								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="viewDetails" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="detail" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.editshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="edit" type="list">
-								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="delete" type="list" disabled="#local.shippingMethod.isAssigned()#" disabledText="#rc.$.Slatwall.rbKey('entity.shippingMethod.delete_validateIsAssigned')#" confirmRequired="true">
+								<cf_SlatwallActionCaller action="admin:setting.deleteshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="delete" type="list" disabled="#local.shippingMethod.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.shippingMethod.delete_validateIsDeletable')#" confirmRequired="true">
 							</ul>
 						<cfelse>
 							<ul class="one">
-								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="viewDetails" type="list">
+								<cf_SlatwallActionCaller action="admin:setting.detailshippingmethod" querystring="shippingMethodID=#local.shippingMethod.getShippingMethodID()#" class="detail" type="list">
 							</ul>
 						</cfif>						
 					</td>

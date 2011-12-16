@@ -98,6 +98,8 @@ component extends="org.fw1.framework" output="false" {
 		// Make's sure that our entities get updated
 		ormReload();
 		
+		/********************* Coldspring Setup *************************/
+		
 		// Get Coldspring Config
 		var serviceFactory = "";
 		var integrationService = "";
@@ -123,6 +125,8 @@ component extends="org.fw1.framework" output="false" {
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
 		
+		/******************* END: Coldsping Setup **************************/		
+		
 		// Build RB Factory
 		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
 		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
@@ -139,9 +143,45 @@ component extends="org.fw1.framework" output="false" {
 		// Set the first request to True so that it runs
 		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
 		
-		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
-		
+		// Set the frameworks baseURL to be used by the buildURL() method
 		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
+		
+		/******************* CFStatic Setup *************************/
+		
+		// Create The cfStatic object (Can set to minifyMode = 'none' or 'package' to control minification).
+		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
+			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
+			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
+			minifyMode = 'none',
+			checkForUpdates = true
+		);
+		
+		// Place the validation facade object in the plugin config application scope
+		getPluginConfig().getApplication().setValue("cfStatic", cfStatic);
+		
+		/******************* END: CFStatic Setup **************************/
+		
+		/******************* ValidateThis Setup *************************/
+		
+		// Setup the ValidateThis Framework
+		
+		var validateThisConfig = {
+			definitionPath = "/Slatwall/com/validation/",
+			injectResultIntoBO = true,
+			defaultFailureMessagePrefix = ""
+		};
+		
+		// Create The 
+		var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
+		
+		// Place the validation facade object in the plugin config application scope
+		getPluginConfig().getApplication().setValue("validateThis", vtFacade);
+		
+		/******************* END: ValidateThis Setup **************************/
+		
+		
+		// Log that the application is finished setting up
+		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
 	}
 	
 	public void function setupRequest() {
@@ -206,7 +246,10 @@ component extends="org.fw1.framework" output="false" {
 		getBeanFactory().getBean("SessionService").confirmSession();
 		
 		// Setup structured Data
-		request.context.structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
+		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
+		if(structCount(structuredData)) {
+			structAppend(request.context, structuredData);	
+		}
 		
 		// Run subsytem specific logic.
 		if(isAdminRequest()) {
@@ -217,24 +260,69 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupView() {
+		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend,common", getSubsystem(request.context.slatAction))) {
+		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction))) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
-			getAssetWire().addViewToAssets("/Slatwall/admin/views/main/default.cfm");
 		}
+		
+		// If the current subsystem isn't frontend, then include all of the default css & js
+		if( getSubsystem(request.context.slatAction) != "frontend") {
+
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
+	
+			// If this subsystem is admin, then also include a section of assets if it applied 
+			if(getSubsystem(request.context.slatAction) == "admin") {
+				getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_#getSection(request.context.slatAction)#/");
+				getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_#getSection(request.context.slatAction)#/");
+			}
+			
+		// If the current subsytem IS frontend, then only include the admin toolbar
+		} else {
+			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
+			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
+		}
+		
+	}
+	
+	public void function setupResponse() {
+		// Add the CSS and JS to the header
+		if( !listFind("frontend", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
+			if(!structKeyExists(request,"layout") || request.layout) {
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );
+			}
+		}
+		
+		endSlatwallLifecycle();
 	}
 	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.
 
-	// Helper Functions
+	// This handels all of the ORM persistece.
+	public void function endSlatwallLifecycle() {
+		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
+			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
+			ormClearSession();
+			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
+		} else {
+			ormFlush();
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
+		}
+		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
+	}
+
+	/********************** APPLICATION HELPER FUNCTIONS ***************************/
+	
+	// Checks if the request is an admin request or not
 	public boolean function isAdminRequest() {
 		return not structKeyExists(request,"servletEvent");
 	}
 	
-	public string function getExternalSiteLink(required String Address) {
-		return buildURL(action='external.site', queryString='es=#arguments.Address#');
-	}
-	
+	// Uses the current mura user to check security against a given action
 	public boolean function secureDisplay(required string action) {
 		var hasAccess = false;
 		var permissionName = UCASE("PERMISSION_#getSubsystem(arguments.action)#_#getSection(arguments.action)#_#getItem(arguments.action)#");
@@ -264,8 +352,8 @@ component extends="org.fw1.framework" output="false" {
 		return hasAccess;
 	}
 	
+	// Sets default mura session variables when needed
 	private void function setupMuraSessionRequirements() {
-		// Set default mura session variables when needed
 		param name="session.rb" default="en";
 		param name="session.locale" default="en";
 		param name="session.dtLocale" default="en-US";
@@ -273,28 +361,15 @@ component extends="org.fw1.framework" output="false" {
 		param name="session.dashboardSpan" default="30";
 	}
 	
-	
-	// Override onRequest function to add some custom logic to the end of the request
+	// Allows for integration services to have a seperate directory structure
 	public any function getSubsystemDirPrefix( string subsystem ) {
 		if ( subsystem eq '' ) {
 			return '';
 		}
-		if ( !listFind('admin,frontend,common', arguments.subsystem) ) {
+		if ( !listFind('admin,frontend', arguments.subsystem) ) {
 			return 'integrationServices/' & subsystem & '/';
 		}
 		return subsystem & '/';
-	}
-	
-	// Override onRequest function to add some custom logic to the end of the request
-	public any function onRequest() {
-		super.onRequest(argumentCollection=arguments);
-		endSlatwallLifecycle();
-	}
-	
-	// Override redirect function to flush the ORM when needed
-	public void function redirect() {
-		endSlatwallLifecycle();
-		super.redirect(argumentCollection=arguments);
 	}
 	
 	// Additional redirect function to redirect to an exact URL and flush the ORM Session when needed
@@ -303,20 +378,7 @@ component extends="org.fw1.framework" output="false" {
 		location(arguments.location, arguments.addToken);
 	}
 	
-	// This handels all of the ORM persistece.
-	public void function endSlatwallLifecycle() {
-		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
-			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
-			ormClearSession();
-			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
-		} else {
-			ormFlush();
-			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
-		}
-		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
-	}
-	
-	// This is used to setup the frontend path to pull from the siteid directory
+	// This is used to setup the frontend path to pull from the siteid directory or the theme directory if the file exists
 	public string function customizeViewOrLayoutPath( struct pathInfo, string type, string fullPath ) {
 		if(arguments.pathInfo.subsystem == "frontend" && arguments.type == "view") {
 			var themeView = replace(arguments.fullPath, "/Slatwall/frontend/views/", "#request.context.$.siteConfig('themeAssetPath')#/display_objects/custom/slatwall/");
@@ -330,38 +392,5 @@ component extends="org.fw1.framework" output="false" {
 			
 		}
 		return arguments.fullPath;
-	}
-	
-	// Start assetWire functions ==================================
-	public any function getAssetWire() {
-		if(!structKeyExists(request, "assetWire")) {
-			request.assetWire = new assets.assetWire(this); 
-		}
-		return request.assetWire;
-	}
-	
-	private void function buildViewAndLayoutQueue() {
-		super.buildViewAndLayoutQueue();
-		if(structKeyExists(request, "view")) {
-			getAssetWire().addViewToAssets(request.view);
-		}
-	}
-	
-	private string function internalLayout( string layoutPath, string body ) {
-		var rtn = super.internalLayout(argumentcollection=arguments);
-		
-		if(arguments.layoutPath == request.layouts[arrayLen(request.layouts)]) {
-			if( !listFind("frontend,common", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
-				getBeanFactory().getBean("utilityTagService").cfhtmlhead(getAssetWire().getAllAssets());
-			}
-		}
-		return rtn;
-	}
-		
-	public string function view( string path, struct args = { } ) {
-		getAssetWire().addViewToAssets(trim(parseViewOrLayoutPath( path, "view" )));
-		return super.view(argumentcollection=arguments);
-	}
-	
-	// End assetWire functions ==================================
+	}	
 }

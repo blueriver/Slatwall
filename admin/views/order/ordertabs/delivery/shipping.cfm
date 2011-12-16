@@ -54,7 +54,7 @@ Notes:
 		</div>
 		<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryOpenDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryOpenDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryOpenDateTime())#</p>
 		<p>#$.slatwall.rbKey("entity.orderDelivery.deliveryCloseDateTime")#: #LSDateFormat(local.orderDelivery.getDeliveryCloseDateTime())#, #LSTimeFormat(local.orderDelivery.getDeliveryCloseDateTime())#</p>
-		<table class="mura-table-grid stripe">
+		<table class="listing-grid stripe">
 			<tr>
 				<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 				<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
@@ -67,9 +67,9 @@ Notes:
 				<tr>
 					<td>#local.thisOrderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
 					<td class="varWidth">#local.thisOrderDeliveryItem.getOrderItem().getSku().getProduct().getBrand().getBrandName()# #local.thisOrderDeliveryItem.getOrderItem().getSku().getProduct().getProductName()#</td>				
-					<td>#dollarFormat(local.thisOrderDeliveryItem.getOrderItem().getPrice())#</td>
+					<td>#local.thisOrderDeliveryItem.getOrderItem().getFormattedValue('price', 'currency')#</td>
 					<td>#local.thisOrderDeliveryItem.getQuantityDelivered()#</td>
-					<td>#dollarFormat(local.thisOrderDeliveryItem.getOrderItem().getExtendedPrice())#</td>
+					<td>#local.thisOrderDeliveryItem.getOrderItem().getFormattedValue('extendedPrice', 'currency')#</td>
 				</tr>
 			</cfloop>
 		</table>

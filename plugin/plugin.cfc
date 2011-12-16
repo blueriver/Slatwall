@@ -56,7 +56,15 @@ component extends="mura.plugin.plugincfc" output="false" {
 	
 	// On delete
 	public void function delete() {
+		
 	}
 	
-	
+	// Bundled up here, later we unbundle from from utilities
+	public void function toBundle(pluginConfig, bundle, siteid) {
+		
+		// Add DB Data to the /plugin/customSettings folder
+		var bundleUtility = createObject("component", "bundleUtility").init();
+		bundleUtility.toBundle(argumentcollection=arguments);
+	}
+		
 }

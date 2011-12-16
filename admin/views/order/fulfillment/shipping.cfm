@@ -54,7 +54,7 @@ Notes:
 	</div>
 	#$.slatwall.rbKey("entity.order.orderNumber")#: #local.orderFulfillment.getOrder().getOrderNumber()#<br>
 	#$.slatwall.rbKey("entity.order.orderOpenDateTime")#: #DateFormat(local.orderFulfillment.getOrder().getOrderOpenDateTime(), "medium")#
-	<table class="mura-table-grid stripe">
+	<table class="listing-grid stripe">
 		<tr>
 			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
 			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
@@ -72,10 +72,10 @@ Notes:
 				<td>#local.orderItem.getSku().getSkuCode()#</td>
 				<td class="varWidth">#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</td>			
 				<td>#local.orderItem.getOrderItemStatusType().getType()#</td>
-				<td>#dollarFormat(local.orderItem.getPrice())#</td>
+				<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
 				<td>#local.orderItem.getQuantityDelivered()#</td>
-				<td>#dollarFormat(local.orderItem.getExtendedPrice())#</td>
+				<td>#local.orderItem.getFormattedValue('price', 'extendedPrice')#</td>
 				<td>
 				<cfif local.orderItem.getQuantityUndelivered() gt 0>
 					<div>
@@ -103,25 +103,26 @@ Notes:
 				#$.slatwall.rbKey("entity.orderFulfillment.subtotal")#:
 			</dt>
 			<dd>
-				#dollarFormat( local.orderFulfillment.getSubTotal() )#
+				
+				#local.orderFulfillment.getFormattedValue('subTotal', 'currency')#
 			</dd>
 			<dt>
 				#$.slatwall.rbKey("entity.orderFulfillment.shippingCharge")#:
 			</dt>
 			<dd>
-				#dollarFormat( local.orderFulfillment.getShippingCharge() )#
+				#local.orderFulfillment.getFormattedValue('shippingCharge', 'currency')#
 			</dd>
 			<dt>
 				#$.slatwall.rbKey("entity.orderFulfillment.tax")#:
 			</dt>
 			<dd>
-				#dollarFormat( local.orderFulfillment.getTax() )#
+				#local.orderFulfillment.getFormattedValue('tax', 'currency')#
 			</dd>
 			<dt>
 				#$.slatwall.rbKey("entity.orderFulfillment.total")#:
 			</dt>
 			<dd>
-				#dollarFormat( local.orderFulfillment.getTotalCharge() )#
+				#local.orderFulfillment.getFormattedValue('totalCharge', 'currency')#
 			</dd>
 		</dl>
 	</div>

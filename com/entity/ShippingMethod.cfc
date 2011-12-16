@@ -40,7 +40,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	// Persistent Properties
 	property name="shippingMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingMethodName" validateRequired="true" ormtype="string";
+	property name="shippingMethodName" ormtype="string";
 	property name="shippingProvider" ormtype="string";
 	property name="shippingProviderMethod" ormtype="string";
 	property name="shippingRateIncreasePercentage" ormtype="big_decimal";
@@ -50,13 +50,18 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (Many-to-One)
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
+	
+	// Related Object Properties (One-to-Many)
 	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true" cascade="all-delete-orphan";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillmentShipping" fieldtype="one-to-many" fkcolumn="shippingMethodID" inverse="true";
+	
+	// Related Object Properties (Many-to-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
 
 	public any function init() {
@@ -77,9 +82,10 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		if(!structKeyExists(variables, "limitedAddressZoneOptins")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAddressZone");
 			smartList.addSelect(propertyIdentifier="addressZoneName", alias="name");
-			smartList.addSelect(propertyIdentifier="addressZoneID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="addressZoneID", alias="value"); 
 			smartList.addOrder("addressZoneName|ASC");
 			variables.limitedAddressZoneOptins = smartList.getRecords();
+			arrayPrepend(variables.limitedAddressZoneOptins, {value="", name=rbKey('define.all')});
 		}
 		return variables.limitedAddressZoneOptins;
 	}
@@ -122,11 +128,5 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	}
 	
 	/******* End: Association management methods for bidirectional relationships **************/
-	
-	public boolean function isAssigned(){
-		var smartList = getService("ShippingService").getSmartList("OrderFulfillmentShipping");
-		smartList.addFilter("shippingMethod_shippingMethodID",this.getShippingMethodID());
-		return smartList.getRecordsCount();
-	}
 	
 }

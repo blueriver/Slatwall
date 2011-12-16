@@ -43,8 +43,10 @@ component extends="BaseController" output=false accessors=true {
 	property name="brandService" type="Slatwall.com.service.BrandService";
 	property name="skuService" type="Slatwall.com.service.SkuService";
 	property name="attributeService" type="Slatwall.com.service.AttributeService";
+	property name="priceGroupService" type="Slatwall.com.service.PriceGroupService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
+	property name="utilityORMService" type="Slatwall.com.service.UtilityORMService";
 	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -75,12 +77,16 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
-		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID() ,data=rc);
-		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'),parentID=rc.$.slatwall.setting("product_rootProductCategory"));
+		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID(), data=rc);
+		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
+		rc.priceGroupSmartList = getPriceGroupService().getPriceGroupSmartList();
 	}
 	
 	public void function edit(required struct rc) {
 		detail(rc);
+		
+		rc.priceGroupDataJSON = getPriceGroupService().getPriceGroupDataJSON();
+		
 		getFW().setView("admin:product.detail");
 		rc.edit = true;
 		param name="rc.Image" default="#getProductService().newImage()#";
@@ -95,66 +101,36 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function save(required struct rc) {
 		param name="rc.productID" default="";
-		var isNew = 0;
-		// initialize options struct
-		rc.optionsStruct = {};
+
+		// We are going to be flushing ORM, so we need to check if the product was new before that flush
+		var productWasNew = true;
 		
+		// Load the product
 		rc.product = getProductService().getProduct(rc.productID, true);
 		
-		if(rc.product.isNew()) {
-			isNew = 1;
+		// Set the wasNewProduct as fall if the product is not new
+		if( !rc.product.isNew() ) {
+			productWasNew = false;
 		}
 		
-		if(isNew) {
-			// set up options struct for generating skus if this is a new product
-			if(structKeyExists(rc.structuredData,"options")) {
-				rc.optionsStruct = rc.structuredData.options;
-			}
-		} else {
-			// set up form collections to handle any skus/alternate images that were edited and/or added
-			rc.skuArray = rc.structuredData.skus;
-			if(structKeyExists(rc.structuredData,"images")) {
-				rc.imagesArray = rc.structuredData.images;
-			}
-			if(structKeyExists(rc.structuredData,"attribute")){
-				rc.attributes = rc.structuredData.attribute;
-			} else {
-				rc.attributes = {};
-			}
-		}
-
 		// Attempt to Save Product
-		rc.product = getProductService().saveProduct( rc.product,rc );
+		rc.product = getProductService().saveProduct( rc.product, rc );
 		
-		// Redirect & Error Handle
-		if(!getRequestCacheService().getValue("ormHasErrors")) {
-			// add product details if this is a new product
-			if(isNew) {
-			     getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
-            } else {
-            	// set a message if there was a file error in an image upload
-            	if(getRequestCacheService().keyExists("uploadFileError") && getRequestCacheService().getValue("uploadFileError") == true ) {
-            		rc.message = rc.$.Slatwall.rbKey("admin.product.uploadAlternateImage_fileError");
-            		rc.messageType = "error";
-            		getFW().redirect(action="admin:product.edit", queryString="productID=#rc.product.getProductID()#", preserve="message,messageType");
-            	} else {
-            		rc.message = rc.$.Slatwall.rbKey("admin.product.save_success");
-            		getFW().redirect(action="admin:product.list",preserve="message");
-            	}   	
-            }
-		} else {
-			rc.message = rc.$.Slatwall.rbKey("admin.product.save_error");
-			rc.messageType = "error";
-			if(isNew) {
-				rc.optionGroups = getProductService().listOptionGroupOrderByOptionGroupName();
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.create");
-				getFW().setView(action="admin:product.create");
+		// If the product doesn't have any errors then redirect to detail or list
+		if(!rc.product.hasErrors()) {
+			if( productWasNew ) {
+				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
 			} else {
-				edit(rc);
-				param name="rc.Image" default="#getProductService().newImage()#";
-				rc.itemTitle = rc.$.Slatwall.rbKey("admin.product.edit") & ": #rc.product.getProductName()#";
-				getFW().setView(action="admin:product.detail");
+				getFW().redirect(action="admin:product.list");
 			}
+		}
+		
+		// This logic only runs if the product has errors.  If it was a new product show the create page, otherwise show the edit page
+		if( productWasNew ) {
+			create( rc );
+			getFW().setView(action="admin:product.create");
+		} else {
+			edit( rc );
 		}
 	}
 	
@@ -177,29 +153,34 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function delete(required struct rc) {
 		var product = getProductService().getProduct(rc.productID);
-		var deleteResponse = getProductService().delete(product);
-		if(deleteResponse.hasErrors()) {
+		
+		var deleteOK = getProductService().deleteProduct(product);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.product.delete_success");
 		} else {
-			rc.message=deleteResponse.getErrorBean().getError("delete");
+			rc.message = rbKey("admin.product.delete_error");
 			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:product.list",preserve="message");
+		
+		getFW().redirect(action="admin:product.list",preserve="message,messageType");
 	}
 	
 	// SKU actions
-	
 	public void function deleteSku(required struct rc) {
 		var sku = getSkuService().getSku(rc.skuID);
 		var productID = sku.getProduct().getProductID();
-		var deleteResponse = getSkuService().delete(sku);
-		if(!deleteResponse.hasErrors()) {
+		
+		var deleteOK = getSkuService().deleteSku( sku );
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.product.deleteSku_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
+			rc.message = rbKey("admin.product.deleteSku_error");
+			rc.messageType = "error";
 		}
-		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:product.edit",querystring="productID=#productID#",preserve="message,messageType");
 	}
 	
 	public void function uploadSkuImage(required struct rc) {
@@ -279,14 +260,16 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function deleteProductType(required struct rc) {
 		var productType = getProductService().getProductType(rc.productTypeID);
-		var deleteResponse = getProductService().deleteProductType(productType);
-		if(!deleteResponse.hasErrors()) {
+		var deleteOK = getProductService().deleteProductType(productType);
+		
+		if( deleteOK ) {
 			rc.message = rbKey("admin.product.deleteProductType_success");
 		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype="error";
+			rc.message = rbKey("admin.product.deleteProductType_error");
+			rc.messageType="error";
 		}
-		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messageType");
 	}
 
 	public void function searchProductsByType(required struct rc) {
@@ -301,5 +284,32 @@ component extends="BaseController" output=false accessors=true {
 		}
 		rc.skuList = getSkuService().searchSkusByProductType(term=rc.term,productTypeID=productTypeIDs);
 	}
+	
+	// Handler is called by modal dialog, to update the price group configuration on a specific SKU
+	public void function updatePriceGroupSKUSettings(required struct rc) { 
+		getService("PriceGroupService").updatePriceGroupSKUSettings(data = rc);
+		
+		rc.message = rbKey("admin.sku.updatepricegroupsettings_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
+	
+	// Handler is called by modal dialog, to update the price of all SKUs
+	public void function updateSKUPrices(required struct rc) {
+		getSKUService().updateAllSKUPricesForProduct(rc.productId, rc.price);
+		
+		rc.message = rbKey("admin.sku.updateallprices_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
+	
+	// Handler is called by modal dialog, to update the weights of all SKUs
+	public void function updateSKUWeights(required struct rc) {
+		getSKUService().updateAllSKUWeightsForProduct(rc.productId, rc.weight);
+		
+		rc.message = rbKey("admin.sku.updateallweights_success");
+		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
+	}
 		
 }
+
+
+

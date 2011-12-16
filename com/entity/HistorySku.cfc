@@ -45,7 +45,7 @@ component displayname="History Sku" entityname="SlatwallHistorySku" table="Slatw
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";

@@ -41,6 +41,8 @@
 		<Record settingID="dbb327ada425f5cd38dfecb702a7e24e" settingName="advanced_showRemoteIDFields" settingValue="0" />
 		<Record settingID="dbb327abbbe32d31cc7c2b8e1e4c0c4c" settingName="advanced_dateFormat" settingValue="mmm dd, yyyy" />
 		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="advanced_timeFormat" settingValue="hh:mm tt" />
+		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="advanced_currencyLocale" settingValue="US" />
+		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="advanced_currencyType" settingValue="Local" />
 		
 	</Records>
 </Table>
@@ -48,9 +50,6 @@
 Below Are UUID's to use... delete after using
 
 	
-	
-	dbb327af9751c77495e36657075299c3
-	dbb327b0b5496521002aa35ab68ab120
 	dbb327b10d50e926dfe4052ecb129cdc
 	dbb327b20825c08e8d4b95afe6e1aec7
 	dbb327b390ff6ebeae773bf7a5cad615

@@ -61,22 +61,14 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		return this;
 	} 
 	
-	public boolean function hasErrors() {
-		return getErrorBean().hasErrors();
-	}
-	
 	public void function addMessage() {
 		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
 		getService("logService").logMessage(argumentcollection=arguments);
 	}
 	
-	public void function addError(required string name, required string message) {
+	public void function addError( required string errorName, required string errorMessage ) {
 		getErrorBean().addError(argumentcollection=arguments);
-		getService("logService").logMessage(messageCode=arguments.name, message=arguments.message, messageType="Response Error");
-	}
-	
-	public string function getError(required string name) {
-		return getErrorBean().getError(arguments.name);
+		getService("logService").logMessage(messageCode=arguments.errorName, message=arguments.errorMessage, messageType="Response Error");
 	}
 	
 	public string function getMessageString() {
@@ -90,6 +82,18 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		}
 		
 		return messageString;
+	}
+	
+	public string function getAllErrorMessages() {
+		var returnString = "";
+		
+		for(var errorName in getErrors()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				returnString &= "<p>" & getErrors()[errorName][i] & "</p>";
+			}
+		}
+		
+		return returnString;
 	}
 	
 } 

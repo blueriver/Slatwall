@@ -19,25 +19,14 @@
 		<cfargument name="defaultMessage" type="string" required="false" default="The value entered must be a boolean">
 		<cfset var theCondition="function(value,element,options) { return true; }"/>
 		<!--- JAVASCRIPT VALIDATION METHOD --->
-		<cfsavecontent variable="theCondition">function(value, element, options) {
-			if ( value==null ) 
-				{
-					return false
-				}
-			else 
-			{
-				var tocheck = value.toString().toLowerCase();
-				var pattern = /^((-){0,1}[0-9]{1,}(\.([0-9]{1,})){0,1}|(true)|(false)|(yes)|(no))$/;
-				return tocheck.match( pattern ) == null ? false : true;
-			}
+		<cfsavecontent variable="theCondition">
+		function(v,e,o){
+			if(v===''){return true;}
+			var re = /^((-){0,1}[0-9]{1,}(\.([0-9]{1,})){0,1}|true|false|yes|no)$/i;
+			return re.test(v);
 		}</cfsavecontent>
 		
 		<cfreturn generateAddMethod(theCondition,arguments.defaultMessage)/>
-	</cffunction>
-
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-		<cfreturn createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# must be a valid boolean value.") />
 	</cffunction>
 
 </cfcomponent>

@@ -98,12 +98,14 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 		}
 	}
 	
-	
 	public void function reloadEntity(required any entity) {
     	entityReload(arguments.entity);
     }
+    
+    public void function flushORMSession() {
+    	ormFlush();
+    }
 	
-
 	public any function getSmartList(required string entityName, struct data={}){
 		// Adds the Slatwall Prefix to the entityName when needed.
 		if(left(arguments.entityName,8) != "Slatwall") {
@@ -114,14 +116,5 @@ component output="false" accessors="true" extends="Slatwall.com.utility.BaseObje
 	
 		return smartList;
 	}
-	
-	// @hint checks whether another entity has the same value for the given property
-	public boolean function isDuplicateProperty( required string propertyName, required any entity ) {
-		var entityName = arguments.entity.getClassName();
-		var idValue = evaluate("arguments.entity.get#replaceNoCase(entityName,'Slatwall','','one')#ID()");
-		var propertyValue = evaluate("arguments.entity.get#arguments.propertyName#()");
-		return arrayLen(ormExecuteQuery("from #entityName# e where e.#arguments.propertyName# = :propValue and e.id != :entityID", {propValue=propertyValue, entityID=idValue}));
-	}
-	
 	
 }

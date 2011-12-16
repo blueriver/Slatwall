@@ -38,14 +38,6 @@ Notes:
 */
 component accessors="true" extends="BaseDAO" {
 
-	public any function clearProductContent(required any product) {
-		ORMExecuteQuery("Delete from SlatwallProductContent WHERE productID = '#arguments.product.getProductID()#'");
-	}
-	
-	public any function clearProductCategories(required any product) {
-		ORMExecuteQuery("Delete from SlatwallProductCategory WHERE productID = '#arguments.product.getProductID()#'");
-	}
-	
 	public array function getAttributeSets(required array attributeSetTypeCode,required array productTypeIDs){
 		var hql = " FROM SlatwallAttributeSet sas
 					WHERE (exists(FROM sas.attributes sa WHERE sa.activeFlag = 1)
@@ -58,12 +50,21 @@ component accessors="true" extends="BaseDAO" {
 		}			 
 		hql &= " ORDER BY sas.attributeSetType.systemCode ASC, sas.sortOrder ASC";
 		
-		// TODO: This method of writing out the params is used because as of Railo 3.3 it doesn't like just passing in a CF struct.
+		// TODO: Remove this conditional when railo and ACF match how they handle arrays for 'IN' clause
 		if(arrayLen(arguments.productTypeIDs)){
-			return ormExecuteQuery(hql, {productTypeIDs=arrayToList(arguments.productTypeIDs), attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
+			if(structKeyExists(server, "railo")) {
+				var returnQuery = ormExecuteQuery(hql, {productTypeIDs=arrayToList(arguments.productTypeIDs), attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});	
+			} else {
+				var returnQuery = ormExecuteQuery(hql, {productTypeIDs=arguments.productTypeIDs, attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
+			}
 		} else {
-			return ormExecuteQuery(hql, {attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
+			if(structKeyExists(server, "railo")) {
+				var returnQuery = ormExecuteQuery(hql, {attributeSetTypeCode=arrayToList(arguments.attributeSetTypeCode)});
+			} else {
+				var returnQuery = ormExecuteQuery(hql, {attributeSetTypeCode=arguments.attributeSetTypeCode});		
+			}
 		}
+		return returnQuery;
 	}
 	
 	public void function loadDataFromFile(required string fileURL, string textQualifier = ""){

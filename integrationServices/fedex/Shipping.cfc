@@ -37,11 +37,11 @@ Notes:
 
 */
 
-component accessors="true" output="false" displayname="FedEx" implements="Slatwall.integrationServices.ShippingInterface" {
+component accessors="true" output="false" displayname="FedEx" implements="Slatwall.integrationServices.ShippingInterface" extends="Slatwall.integrationServices.BaseShipping" {
 
 	// Custom Properties that need to be set by the end user
 	property name="accountNo" validateRequired displayname="FedEx Account Number" type="string";
-	property name="password" displayname="FedEx Password" type="string" editType="password";
+	property name="password" displayname="FedEx Password" type="string" fieldType="password";
 	property name="transactionKey" displayname="FedEx Transaction Key" type="string";
 	property name="meterNo" displayname="FedEx Meter Number" type="string";
 	property name="testingFlag" displayname="Testing Mode" type="boolean" default="false";
@@ -121,7 +121,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		if(isDefined('xmlResponse.Fault')) {
 			responseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
-			responseBean.getErrorBean().addError("unknown", "An unexpected communication error occured, please notify system administrator.");
+			responseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from FedEx into the response bean
 			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
@@ -131,7 +131,7 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
 				);
 				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {
-					responseBean.getErrorBean().addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
+					responseBean.addError(xmlResponse.RateReply.Notifications[i].Code.xmltext, xmlResponse.RateReply.Notifications[i].Message.xmltext);
 				}
 			}
 			

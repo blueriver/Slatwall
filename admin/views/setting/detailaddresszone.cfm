@@ -60,7 +60,7 @@ Notes:
 		<cfif not rc.addressZone.isNew()>
 			<strong>#$.slatwall.rbKey('entity.addresszone.addresszonelocations')#</strong>
 		
-			<table id="addressZoneLocations" class="mura-table-grid stripe">
+			<table id="addressZoneLocations" class="listing-grid stripe">
 				<thead>
 					<tr>
 						<th>#$.slatwall.rbKey('entity.address.countryCode')#</th>
@@ -80,7 +80,7 @@ Notes:
 							<cfif rc.edit>
 							<td class="administration">
 								<ul class="one">
-									<cfif not local.address.isNew() AND !rc.addressZone.isAssigned()>
+									<cfif not local.address.isNew()>
 										<cf_SlatwallActionCaller action="admin:setting.deleteaddresszonelocation" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#&addressID=#local.address.getAddressID()#" class="delete" type="list">
 									</cfif>
 								</ul>
@@ -98,6 +98,9 @@ Notes:
 		</cfif>
 		<cfif rc.edit>
 			<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cfif Not rc.addressZone.isNew()>
+				<cf_SlatwallActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#rc.addressZone.getAddressZoneID()#" class="button" type="link" disabled="#rc.addressZone.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.addressZone.delete_validateIsDeletable')#" confirmRequired="true">
+			</cfif>
 			<cf_SlatwallActionCaller action="admin:setting.saveaddresszone" type="submit" class="button">
 			</form>
 		</cfif>

@@ -40,7 +40,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	
 	// Persistent Properties
 	property name="attributeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeName" ormtype="string" validateRequired="true";
+	property name="attributeName" ormtype="string";
 	property name="attributeCode" ormtype="string";
 	property name="attributeDescription" ormtype="string" length="4000" ;
 	property name="attributeHint" ormtype="string";
@@ -53,12 +53,12 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
-	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" validateRequired="true" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
+	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
 	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder" ;
 	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
@@ -82,7 +82,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.AttributeOptions;
 		} else {
-			return sortObjectArray(variables.AttributeOptions,arguments.orderby,arguments.sortType,arguments.direction);
+			return getService("utilityService").sortObjectArray(variables.AttributeOptions,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
 	
@@ -121,7 +121,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		if(!structKeyExists(variables, "attributeTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
-			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="attributeType"); 
 			smartList.addOrder("type|ASC");
 			variables.attributeTypeOptions = smartList.getRecords();
@@ -133,9 +133,10 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		if(!structKeyExists(variables, "validationTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
-			smartList.addSelect(propertyIdentifier="typeID", alias="id");
+			smartList.addSelect(propertyIdentifier="typeID", alias="value");
 			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="validationType"); 
 			variables.validationTypeOptions = smartList.getRecords();
+			arrayPrepend(variables.validationTypeOptions, {value="", name=rbKey('define.none')});
 		}
 		return variables.validationTypeOptions;
     }

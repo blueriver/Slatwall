@@ -42,165 +42,119 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="attributeService" type="any";
 
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:attribute.list");
+		getFW().redirect(action="admin:attribute.listAttributeSets");
 	}
 	
-	public void function create(required struct rc) {
-		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		if(!isNull(rc.attributeSet)) {
-			rc.newAttribute = getAttributeService().newAttribute();
-			rc.create = true;
-			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
-			getFW().setView("attribute.edit");
-		} else {
-			getFW().redirect("attribute.list");
-		}
-	}
-
-	public void function edit(required struct rc) {
-		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		if(!isNull(rc.attributeSet)) {
-			rc.itemTitle &= ": " & rc.attributeSet.getAttributeSetName();
-		} else {
-			getFW().redirect("attribute.list");
-		}
-	}
-	
-	public void function detail(required struct rc) {
-		if(len(rc.attribute.getAttributeName())) {
-			rc.itemTitle &= ": #rc.attribute.getAttributeName()#";
-		} else {
-			getFW().redirect("admin:attribute.list");
-		}
-	}
-	
-    
-    public void function list(required struct rc) {
-        rc.attributeSets = getAttributeService().listAttributeSetOrderByAttributeSetName();
+	public void function listAttributeSets(required struct rc) {
+        rc.attributeSetSmartList = getAttributeService().getAttributeSetSmartList();
     }
     
-	public void function save(required struct rc) {
-		param name="rc.attributeID" default="";
-		
-		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
-		
-		rc.optionsArray = rc.structuredData.options;			
-		rc.attribute = getAttributeService().saveAttribute(rc.attribute,rc);
-		
-		if(!rc.attribute.hasErrors()) {
-			// go to the 'manage attribute set' form to add/edit more attributes
-			rc.message=rc.$.Slatwall.rbKey("admin.attribute.save_success");
-			getFW().redirect(action="admin:attribute.create",querystring="attributeSetID=#rc.attributeSetID#",preserve="message");
-		} else {
-			//put attributeSet in rc for form
-			rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-			rc.itemTitle = rc.$.Slatwall.rbKey("admin.attribute.create") & ": #rc.attributeSet.getAttributeSetName()#";
-			if(rc.attribute.isNew()) {
-				rc.newAttribute = rc.attribute;
-				rc.create = true;
-				rc.newAttributeFormOpen=true;
-			} else {
-				rc.activeAttribute = rc.attribute;
-			}
-			getFW().setView("admin:attribute.edit");	
-		}
-	}
-	
-	public void function saveAttributeSort(required struct rc) {
-		getAttributeService().saveAttributeSort(rc.attributeID);
-		getFW().redirect("admin:attribute.list");
-	}
-	
-	public void function delete(required struct rc) {
-		var attribute = getAttributeService().getAttribute(rc.attributeID);
-		var attributeSetID = attribute.getAttributeSet().getAttributeSetID();
-		var deleteResponse = getAttributeService().delete(attribute);
-		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.attribute.delete_success");
-		} else {
-			rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype="error";
-		}
-		getFW().redirect(action="admin:attribute.edit", querystring="attributeSetID=#attributeSetID#",preserve="message,messagetype");
-	}
-	
 	public void function createAttributeSet(required struct rc) {
-	   rc.edit=true;
-	   rc.attributeSet = getAttributeService().newAttributeSet();
-	   getFW().setView("admin:attribute.detailAttributeSet");
-	}
-	
-	public void function detailAttributeSet(required struct rc) {
-		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		if(!isNull(rc.attributeSet) and !rc.attributeSet.isNew()) {
-			rc.itemTitle &= ": #rc.attributeSet.getAttributeSetName()#";
-		} else {
-			getFW().redirect("admin:attribute.list");
-		}
+		rc.edit = true;
+		getFW().setView("admin:attribute.detailAttributeSet");
+		
+		rc.attributeSet = getAttributeService().newAttributeSet();
+		rc.attribute = getAttributeService().newAttribute();
 	}
 	
 	public void function editAttributeSet(required struct rc) {
-		rc.edit=true;
-		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		if(!isNull(rc.attributeSet)) {
-			if( len(rc.attributeSet.getAttributeSetName()) ) {
-				rc.itemTitle &= ": #rc.attributeSet.getAttributeSetName()#";
-			}
-			getFW().setView("admin:attribute.detailAttributeSet");
-		} else
-		  getFW().redirect("admin:attribute.list");
-	}
-
-	public void function saveAttributeSet(required struct rc) {
-		if(len(trim(rc.attributeSetID))) {
-			rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		} else {
-			rc.attributeSet = getAttributeService().newAttributeSet();
-		}
+		param name="rc.attributeSetID" default="";
+		param name="rc.attributeID" default="";
 		
-		rc.attributeSet = getAttributeService().save(rc.attributeSet,rc);
+		rc.edit = true;
+		getFW().setView("admin:attribute.detailAttributeSet");
+		
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
+		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
+		
+		if(isNull(rc.attributeSet)) {
+			getFW().redirect(action="admin:attribute.listAttributeSets");
+		}
+	}
+	
+	public void function saveAttributeSet(required struct rc) {
+		param name="rc.attributeSetID" default="";
+		param name="rc.populateSubProperties" default="false";
+		
+		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID, true);
+		rc.attribute = getAttributeService().newAttribute();
+		
+		rc.attributeSet = getAttributeService().saveAttributeSet(rc.attributeSet, rc);
 		
 		if(!rc.attributeSet.hasErrors()) {
-			// go to the 'manage attribute set' form to add attributes
 			rc.message=rc.$.Slatwall.rbKey("admin.attribute.saveAttributeSet_success");
-			getFW().redirect(action="admin:attribute.create",querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#",preserve="message");
+			if(rc.populateSubProperties) {
+				getFW().redirect(action="admin:attribute.editAttributeSet",querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:attribute.listAttributeSets",preserve="message");
+			}
 		} else {
+			// If one of the attributes had the error, then find out which one and populate it
+			if(rc.attributeSet.hasError("attributes")) {
+				for(var i=1; i<=arrayLen(rc.attributeSet.getAttributes()); i++) {
+					if(rc.attributeSet.getAttributes()[i].hasErrors()) {
+						rc.attribute = rc.attributeSet.getAttributes()[i];
+					}
+				}
+			}
 			rc.edit = true;
 			rc.itemTitle = rc.AttributeSet.isNew() ? rc.$.Slatwall.rbKey("admin.attribute.createAttributeSet") : rc.$.Slatwall.rbKey("admin.attribute.editAttributeSet") & ": #rc.attributeSet.getAttributeSetName()#";
 			getFW().setView(action="admin:attribute.detailAttributeSet");
 		}
 	}
-
-	public void function saveAttributeSetSort(required struct rc) {
-		getAttributeService().saveAttributeSetSort(rc.attributeSetID);
-		getFW().redirect("admin:attribute.list");
-	}
 	
 	public void function deleteAttributeSet(required struct rc) {
+		param name="rc.attributeSetID" default="";
+		
 		var attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
-		var deleteResponse = getAttributeService().deleteAttributeSet(attributeSet);
-		if(!deleteResponse.hasErrors()) {
-			rc.message = rbKey("admin.attribute.deleteAttributeSet_success");
+		
+		var deleteOK = getAttributeService().deleteAttributeSet(attributeSet);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.attributeSet.deleteAttributeSet_success");
 		} else {
-			rc.message = deleteResponse.getData().getErrorBean().getError("delete");
-			rc.messagetype = "error";
+			rc.message = rbKey("admin.attributeSet.deleteAttributeSet_failure");
+			rc.messagetype="error";
 		}
-		getFW().redirect(action="admin:attribute.list",preserve="message,messagetype");
+		
+		getFW().redirect(action="admin:attribute.listAttributeSets", preserve="message,messagetype");
+	}
+	
+	public void function deleteAttribute(required struct rc) {
+		param name="rc.attributeID" default="";
+		param name="rc.attributeSetID" default="";
+		
+		var attribute = getAttributeService().getAttribute(rc.attributeID);
+		
+		var deleteOK = getAttributeService().deleteAttribute(attribute);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.attribute.deleteAttribute_success");
+		} else {
+			rc.message = rbKey("admin.attribute.deleteAttribute_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:attribute.editAttributeSet", queryString="attributeSetID=#rc.attributeSetID#", preserve="message,messagetype");
 	}
 	
 	public void function deleteAttributeOption(required struct rc) {
-		param name="rc.asynch" default="false";
+		param name="rc.attributeOptionID" default="";
+		param name="rc.attributeSetID" default="";
+		param name="rc.attributeID" default="";
+		
 		var attributeOption = getAttributeService().getAttributeOption(rc.attributeOptionID);
-		if(!isNull(attributeOption)) {
-			var deleteResponse = getAttributeService().delete(attributeOption);
-			if( !deleteResponse.hasErrors() ) {
-				rc.success=1;
-				rc.message = rbKey("admin.attribute.deleteAttributeOption_success");
-			} else {
-				rc.success=0;
-				rc.message=deleteResponse.getData().getErrorBean().getError("delete");
-			}
+		
+		var deleteOK = getAttributeService().deleteAttributeOption(attributeOption);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.attribute.deleteAttributeOption_success");
+		} else {
+			rc.message = rbKey("admin.attribute.deleteAttributeOption_failure");
+			rc.messagetype="error";
 		}
+		
+		getFW().redirect(action="admin:attribute.editAttributeSet", queryString="attributeSetID=#rc.attributeSetID#&attributeID=#rc.attributeID#", preserve="message,messagetype");
 	}
 	
 }

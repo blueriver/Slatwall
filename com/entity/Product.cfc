@@ -41,10 +41,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Persistent Properties
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
-	property name="filename" ormtype="string" validateRequired="true" unique="true" hint="This is the name that is used in the URL string";
+	property name="filename" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
 	property name="template" ormtype="string" hint="This is the Template to use for product display";
-	property name="productName" ormtype="string" notNull="true" validateRequired="true" hint="Primary Notation for the Product to be Called By";
-	property name="productCode" ormtype="string" unique="true" validateRequired="true" hint="Product Code, Typically used for Manufacturer Coded";
+	property name="productName" ormtype="string" notNull="true" hint="Primary Notation for the Product to be Called By";
+	property name="productCode" ormtype="string" unique="true" hint="Product Code, Typically used for Manufacturer Coded";
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
@@ -57,13 +57,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="sortOrder" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
-	property name="brand" validateRequired="true" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
-	property name="productType" validateRequired="true" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
 	
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan";
+	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
@@ -73,15 +73,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Related Object Properties (many-to-many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
@@ -89,18 +90,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="onClearanceSaleFlag" type="boolean" persistent="false";
 	property name="dateFirstReceived" type="date" persistent="false";
 	property name="dateLastReceived" type="date" persistent="false";
-	property name="livePrice" type="numeric" persistent="false";
-	property name="price" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
-	property name="listPrice" type="numeric" validateRequired="true" validateNumeric="true" persistent="false";
-	property name="shippingWeight" validateRequired="true" type="numeric" validateNumeric="true" persistent="false";
+	property name="price" type="numeric" formatType="currency" persistent="false";
+	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="listPrice" type="numeric" formatType="currency" persistent="false";
+	property name="shippingWeight" type="numeric" persistent="false";
 	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
 	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
 	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
 	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
 	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
-	
-	// Calculated Properties
-	property name="orderedFlag" type="boolean" formula="SELECT count(soi.skuID) from SlatwallOrderItem soi where soi.skuID in (SELECT ss.skuID from SlatwallSku ss INNER JOIN SlatwallProduct sp on ss.productID = sp.productID where ss.productID=productID)";
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -149,9 +147,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
+			arrayPrepend(variables.brandOptions, {value="", name=rbKey('define.select')});
 		}
 		return variables.brandOptions;
 	}
@@ -160,13 +159,16 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			var productTypeTree = getProductTypeTree();
 			var productTypeOptions = [];
+			
 			for(var i=1; i <= productTypeTree.recordCount; i++) {
 				// only get the leaf nodes of the tree (those with no children)
 				if( productTypeTree.childCount[i] == 0 ) {
-					arrayAppend(productTypeOptions, {id=productTypeTree.productTypeID[i], name=productTypeTree.productTypeName[i], label=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")});
+					arrayAppend(productTypeOptions, {value=productTypeTree.productTypeID[i], name=listChangeDelims(productTypeTree.productTypeNamePath[i], " &raquo; ")});
 				}
 			}
+			
 			variables.productTypeOptions = productTypeOptions;
+			arrayPrepend(variables.productTypeOptions, {value="", name=rbKey('define.select')});
 		}
 		return variables.productTypeOptions;
 	}
@@ -174,8 +176,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     public any function getProductTypeTree() {
         return getService("ProductService").getProductTypeTree();
     }
-    	
-	
+    
     public array function getSkus(boolean sorted=false) {
         if(!sorted) {
         	return variables.skus;
@@ -198,7 +199,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getTemplateOptions() {
 		if(!isDefined("variables.templateOptions")){
-			variables.templateOptions = getService(service="ProductService").getProductTemplates();
+			variables.templateOptions = getService("ProductService").getProductTemplates();
 		}
 		return variables.templateOptions;
 	}
@@ -341,13 +342,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// Get source of setting
-    public any function getWhereSettingDefined( required string settingName ) {
-    	if(structKeyExists(variables,arguments.settingName)) {
-    		return {type="Product"};
-    	} else {
-    		return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
-    	}
-    }
+	public any function getWhereSettingDefined( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return {type="Product"};
+		} else if(isNull(getProductType())) {
+			return {type=""};
+		} else {
+			return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
+		}
+	}
 	
 	
 	/***************************************************/
@@ -433,23 +436,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Skus (one-to-many)
 	
-	public void function setSkus(required array Skus) {
+	public void function setSkus(required array skus) {
 		// first, clear existing collection
-		variables.Skus = [];
+		variables.skus = [];
 		for( var i=1; i<= arraylen(arguments.Skus); i++ ) {
-			var thisSku = arguments.Skus[i];
+			var thisSku = arguments.skus[i];
 			if(isObject(thisSku) && thisSku.getClassName() == "SlatwallSku") {
 				addSku(thisSku);
 			}
 		}
 	}
 	
-	public void function addSku(required any Sku) {
-	   arguments.Sku.setProduct(this);
+	public void function addSku(required any sku) {
+	   arguments.sku.setProduct(this);
 	}
 	
-	public void function removeSku(required any Sku) {
-	   arguments.Sku.removeProduct(this);
+	public void function removeSku(required any sku) {
+	   arguments.sku.removeProduct(this);
 	}
 	
 	// attributeValues (one-to-many)
@@ -625,19 +628,36 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 
 	public any function getSkuBySelectedOptions(string selectedOptions="") {
 		if(len(arguments.selectedOptions) > 0) {
-			return getService("productService").getProductSkuBySelectedOptions(arguments.selectedOptions,this.getProductID());
+			var skus = getSkusBySelectedOptions(selectedOptions=arguments.selectedOptions);
+			if(arrayLen(skus) == 1) {
+				return skus[1];
+			} else if (arrayLen(skus) > 1) {
+				throw("More than one sku is returned when the selected options are: #arguments.selectedOptions#");
+			} else if (arrayLen(skus) < 1) {
+				throw("No Skus are found for these selected options: #arguments.selectedOptions#");
+			}
+		} else if (arrayLen(getSkus()) == 1) {
+			return getSkus()[1];
 		} else {
-			return getDefaultSku();
+			throw("You must submit a comma seperated list of selectOptions to find an indvidual sku in this product");
 		}
+	}
+	
+	public any function getSkusBySelectedOptions(string selectedOptions="") {
+		return getService("productService").getProductSkusBySelectedOptions(arguments.selectedOptions,this.getProductID());
 	}
 	
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array attributeSetTypeCode){
 		var attributeSets = [];
 		// get all the parent product types
-		var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
+		if(!isNull(getProductType())){
+			var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
+			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
+		} else {
+			return attributeSets;
+		}
 		
-		return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
 	}
 	
 	//get attribute value
@@ -693,6 +713,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		};
 		
 		return productCrumbData;
+	}
+	
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
 	
 }

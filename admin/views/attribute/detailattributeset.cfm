@@ -41,40 +41,42 @@ Notes:
  
 <cfoutput>
 	<ul id="navTask">
-		<cfif !rc.attributeSet.isNew()><cf_SlatwallActionCaller action="admin:attribute.create" querystring="attributeSetId=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
-	    <cfif !rc.edit><cf_SlatwallActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetid=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
-		<cf_SlatwallActionCaller action="admin:attribute.list" type="list">
+		<cf_SlatwallActionCaller action="admin:attribute.listAttributeSets" type="list">
+		<cfif !rc.edit><cf_SlatwallActionCaller action="admin:attribute.editAttributeSet" querystring="attributeSetid=#rc.attributeSet.getAttributeSetID()#" type="list"></cfif>
 	</ul>
-	<cfset local.attributeSetTypeSelected = "" />
-	<cfif !isNull(rc.attributeSet.getAttributeSetType())>
-		<cfset local.attributeSetTypeSelected = rc.attributeSet.getAttributeSetType().getType() />
-	</cfif>
+	
 	<cfif rc.edit>
-		<form name="attributeSetForm" id="attributeSetForm" enctype="multipart/form-data" action="#buildURL(action='admin:attribute.saveAttributeSet')#" method="post">
-		<input type="hidden" id="attributeSetID" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
+		<form name="attributeSetForm" id="attributeSetForm" enctype="multipart/form-data" method="post">
+			<input type="hidden" name="slatAction" value="admin:attribute.saveAttributeSet" />
+			<input type="hidden" id="attributeSetID" name="attributeSetID" value="#rc.attributeSet.getAttributeSetID()#" />
 	</cfif>
-	<dl class="oneColumn attributeDetail">
-		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#" tooltip=true />
-		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" value="#local.attributeSetTypeSelected#" edit="#rc.edit#" />
-		<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" toggle="show" toggletext="#rc.$.Slatwall.rbKey('sitemanager.content.fields.expand')#,#rc.$.Slatwall.rbKey('sitemanager.content.fields.close')#" editType="wysiwyg" />
-	</dl>
+	
+			<dl class="twoColumn attributeDetail">
+				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetName" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetCode" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="globalFlag" edit="#rc.edit#" />
+				<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetType" edit="#rc.edit#" />
+			</dl>
+	
+			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
+				<ul>
+					<li><a href="##tabAttributes" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.attributeSet.attributes")#</span></a></li>	
+					<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey("entity.attributeSet.attributeSetDescription")#</span></a></li>
+				</ul>
+			
+				<div id="tabAttributes">
+					#view("attribute/attributesettabs/attributes")#
+				</div>
+				<div id="tabDescription">
+					<cf_SlatwallPropertyDisplay object="#rc.attributeSet#" property="attributeSetDescription" edit="#rc.edit#" fieldType="wysiwyg" displayType="plain">
+				</div>
+			</div>
+	
 	<cfif rc.edit>
 		<div id="actionButtons" class="clearfix">
-			<cf_SlatwallActionCaller action="admin:attribute.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cfif not rc.attributeSet.hasAttribute() and !rc.attributeSet.isNew()>
-				<cf_SlatwallActionCaller action="admin:attribute.deleteAttributeSet" querystring="attributeSetID=#rc.attributeSet.getAttributeSetID()#" type="link" class="button" confirmrequired="true" text="#rc.$.Slatwall.rbKey('sitemanager.delete')#">
-			</cfif>
+			<cf_SlatwallActionCaller action="admin:attribute.listAttributeSets" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 			<cf_SlatwallActionCaller action="admin:attribute.saveAttributeSet" type="submit"  class="button">
 		</div>
 		</form>
-	<cfelse>
-		<h4>#rc.$.Slatwall.rbKey('entity.attributeSet.attributes')#</h4>
-		<ul id="attributeList">
-		<cfloop array="#rc.attributeSet.getAttributes()#" index="local.thisAttribute">
-			<li>#local.thisAttribute.getAttributeName()#</li>
-		</cfloop>
-		</ul>
 	</cfif>
 </cfoutput>

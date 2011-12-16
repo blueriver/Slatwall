@@ -50,22 +50,9 @@ component extends="BaseService" accessors="true" {
 		return smartList;
 	}
 	
-	public any function save(required any entity, required struct data) {	
-		arguments.entity.populate(arguments.data);
-		if( arguments.entity.getClassName() == "SlatwallOptionGroup" ) {
-			arguments.entity.setSortOrder(getOptionGroupCount()+1);
-		}
+	public any function saveOption(required any entity, required struct data) {
 		
-		// if this is an option, make sure the option code is unique
-		if( arguments.entity.getClassName() =="SlatwallOption" ) {
-			var checkOptionCode = getDAO().isDuplicateOptionCode(arguments.entity);
-			var optionCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkOptionCode,objectName="optionCode",message=rbKey("entity.option.optionCode_validateUnique"));
-			if( !structIsEmpty(optionCodeError) ) {
-				arguments.entity.addError(argumentCollection=optionCodeError);
-			}
-		}
-		
-		arguments.entity = super.save(arguments.entity);
+		super.save(argumentcollection=arguments);
 		
 		if(!arguments.entity.hasErrors()) {
 			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
@@ -84,35 +71,38 @@ component extends="BaseService" accessors="true" {
 				fileDelete(uploadPath);
 			} 
 		}
+		
 		return arguments.entity;
 	}
 	
-	public any function delete(required any option) {
-		if(arguments.option.hasSkus()) {
-			getValidationService().setError(entity=arguments.option,errorName="delete",rule="hasSkus");
-		} else {
-			removeImage(arguments.option);
+	public any function saveOptionGroup(required any entity, required struct data) {
+		
+		// This also saves options that were passed in the correct format by using base object populate that will automatically call saveOption() in this service
+		super.save(argumentcollection=arguments);
+		
+		// If this is a new option group then we need to set the sort order as the next in line
+		if(isNull(arguments.entity.getSortOrder())) {
+			arguments.entity.setSortOrder( getOptionGroupCount() + 1);
 		}
-		return Super.delete(arguments.option);
-	}
-	
-	public any function deleteOptionGroup(required any optionGroup) {
-		if(arguments.optionGroup.hasOption()) {
-			getValidationService().setError(entity=arguments.optionGroup,errorName="delete",rule="hasOptions");
-		} else {
-			removeImage(arguments.optionGroup);
-		}
-		return Super.delete(arguments.optionGroup);
-	}
-	
-	public any function removeImage(required any entity) {
-		if(arguments.entity.hasImage() && getService("utilityFileService").removeImage(arguments.entity.getImagePath())) {
-			if(arguments.entity.getClassName() == "SlatwallOption") {
-				arguments.entity.setOptionImage(javacast('NULL', ''));
-			} else if(arguments.entity.getClassName() == "SlatwallOptionGroup") {
-				arguments.entity.setOptionGroupImage(javacast('NULL', ''));
+		
+		if(!arguments.entity.hasErrors()) {
+			// remove image if option is checked (unless a new image is set, in which case the old image is removed by processUpload
+			if(structKeyExists(arguments.data,"removeImage") and arguments.entity.hasImage() and !structKeyExists(arguments.data,"imageUploadResult")) {
+				removeImage(arguments.entity);
 			}
+			// process image if one was uploaded
+			if(structKeyExists(arguments.data,"imageUploadResult")) {
+				processImageUpload(arguments.entity,arguments.data.imageUploadResult);
+			} 
+		} else {
+			// delete image if one was uploaded
+			if(structKeyExists(arguments.data,"imageUploadResult")) {
+				var result = arguments.data.imageUploadResult;
+				var uploadPath = result.serverDirectory & "/" & result.serverFile;
+				fileDelete(uploadPath);
+			} 
 		}
+		
 		return arguments.entity;
 	}
 	
@@ -122,6 +112,7 @@ component extends="BaseService" accessors="true" {
 			var thisOption = this.getOption(optionID);
 			thisOption.setSortOrder(i);
 		}
+		
 	}
 	
 	public void function saveOptionGroupSort(required string optionGroupIDs) {
@@ -135,8 +126,9 @@ component extends="BaseService" accessors="true" {
 	public numeric function getOptionGroupCount() {
 		return arrayLen(this.listOptionGroup());
 	}
-	
+		
 	private void function processImageUpload(required any entity, required struct imageUploadResult) {
+		
 		var imageName = createUUID() & "." & arguments.imageUploadResult.serverFileExt;
 		var filePath = arguments.entity.getImageDirectory() & imageName;
 		var imageSaved = getService("utilityFileService").saveImage(uploadResult=arguments.imageUploadResult,filePath=filePath);
@@ -150,11 +142,7 @@ component extends="BaseService" accessors="true" {
 			} else if(arguments.entity.getClassName() == "SlatwallOptionGroup") {
 				arguments.entity.setOptionGroupImage(imageName);
 			}
-		} else {
-			// set error in the option group object
-			var errorName = arguments.entity.getClassName() == "SlatwallOption" ? "optionImage" : "optionGroupImage";
-			getValidationService().setError(entity=arguments.entity,errorName=errorName,rule="imageFile");
-		}	
+		}
 	}
 	
 	public array function getMaximumOptionSortOrders() {

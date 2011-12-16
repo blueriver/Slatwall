@@ -39,6 +39,7 @@ Notes:
 
 component  extends="Slatwall.com.service.BaseService" accessors="true" {
 	
+	/*
 	public void function saveAttributeSort(required string attributeIDs) {
 		for(var i=1; i<=listlen(arguments.attributeIDs);i++) {
 			var attributeID = listGetAt(arguments.attributeIDs,i);
@@ -54,12 +55,6 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		}
 		arguments.attribute = Super.save(arguments.attribute,arguments.data);
 		
-		// make sure that the attributeCode doesn't already exist
-		var checkAttributeCode = getDAO().isDuplicateProperty("attributeCode", arguments.attribute);
-		var attributeCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkAttributeCode,objectName="attributeCode",message=replace(rbKey("entity.attribute.attributeCode_validateUnique"),"{attributeCode}",arguments.data.attributeCode));
-		if( !structIsEmpty(attributeCodeError) ) {
-			arguments.attribute.addError(argumentCollection=attributeCodeError);
-		}
 		// save attribute options if the saved entity was the correct type and there were no errors
 		var optionsAttributeTypeList = "atSelectBox,atCheckBox,atRadioGroup";
 		if( listFind(optionsAttributeTypeList,arguments.attribute.getAttributeType().getSystemCode()) 
@@ -102,6 +97,7 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 			}
 		}		
 	}
+	*/
 		
 	public any function getAttributeSets(array systemCode) {
 		var smartList = this.getAttributeSetSmartList();
@@ -115,8 +111,5 @@ component  extends="Slatwall.com.service.BaseService" accessors="true" {
 		return smartList.getRecords();
 	}
 	
-	public any function deleteAttributeSet( required any attributeSet ) {
-		//TODO: delete validation
-		return super.delete(attributeSet);
-	}
+	
 }

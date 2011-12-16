@@ -36,379 +36,234 @@
 Notes:
 
 --->
-<!--- hint: This is a required attribute that defines the object that contains the property to display --->
-<cfparam name="attributes.object" type="any" />
 
-<!--- hint: This is a required attribute as the property that you want to display" --->
-<cfparam name="attributes.property" type="string" />
+<!--- These are required Attributes --->
+<cfparam name="attributes.object" type="any" />										<!--- hint: This is a required attribute that defines the object that contains the property to display --->
+<cfparam name="attributes.property" type="string" /> 								<!--- hint: This is a required attribute as the property that you want to display" --->
 
-<!--- hint: This is used in case a sub object property has a different name than the property --->
-<cfparam name="attributes.propertyObject" type="string" default="" />
+<!--- These are optional Attributes --->
+<cfparam name="attributes.edit" type="boolean" default="false" />					<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
 
-<!--- hint: text that is displayed when the property value is null --->
-<cfparam name="attributes.nullLabel" type="string" default="" />
+<cfparam name="attributes.title" type="string" default="" />						<!--- hint: This can be used to override the displayName of a property" --->
 
-<!--- hint: This can be used to override the displayName of a property" --->
-<cfparam name="attributes.title" default="" />
+<cfparam name="attributes.value" type="string" default="" />						<!--- hint: This can be used to override the value of a property --->
+<cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />		<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
+<cfparam name="attributes.valueDefault" type="string" default="" />					<!--- hint: This can be used to set a default value for the property IF it hasn't been defined  NOTE: right now this only works for select boxes--->
+<cfparam name="attributes.valueLink" type="string" default="" />					<!--- hint: if specified, will wrap property value with an achor tag using the attribute as the href value --->
+<cfparam name="attributes.valueFormatType" type="string" default="" />				<!--- hint: This can be used to defined the format of this property wehn it is displayed --->
 
-<!--- hint: This can be used to override the value of a property --->
-<cfparam name="attributes.value" default="" />
+<cfparam name="attributes.fieldName" type="string" default="" />					<!--- hint: This can be used to override the default field name" --->
+<cfparam name="attributes.fieldType" type="string" default="" />					<!--- hint: When in edit mode you can override the default type of form object to use" --->
 
-<cfparam name="attributes.noValue" type="boolean" default="false" />
+<cfparam name="attributes.titleClass" default="" />									<!--- hint: Adds class to whatever markup wraps the title element --->
+<cfparam name="attributes.valueClass" default="" />									<!--- hint: Adds class to whatever markup wraps the value element --->
+<cfparam name="attributes.fieldClass" default="" />									<!--- hint: Adds class to the actual field element --->
+<cfparam name="attributes.valueLinkClass" default="" />								<!--- hint: Adds class to whatever markup wraps the value link element --->
 
-<!--- hint: This can be used to override the display value of a property --->
-<cfparam name="attributes.displayValue" default="" />
-
-<!--- hint: This can be used to set a default value for the property IF it hasn't been defined --->
-<!--- NOTE: right now this only works for select boxes --->
-<cfparam name="attributes.defaultValue" default="" />
-
-<!--- hint: This can be used to override the default field name" --->
-<cfparam name="attributes.fieldName" default="" />
-
-<!--- hint: This can be used to override the default data type" --->
-<cfparam name="attributes.dataType" default="" />
-
-<!--- hint: When in edit mode this will create a Form Field, otherwise it will just display the value" --->
-<cfparam name="attributes.edit" default=false type="boolean" />
-
-<!--- hint: When in edit mode you can override the default type of form object to use" --->
-<cfparam name="attributes.editType" default="" type="string"  />
-
-<!--- hint: This should be an array of structs that contain two paramaters: ID & Name" --->
-<cfparam name="attributes.editOptions" default="#arrayNew(1)#" type="array" />
-
-<!--- hint: whether to allow null (empty string) option in select box control --->
-<cfparam name="attributes.allowNullOption" default="true" type="boolean" />
-
-<!--- hint: This attribute indicates that the property will have a tooltip mouseover message --->
-<cfparam name="attributes.tooltip" default="false" type="boolean" />
-
-<!--- hint: This attribute contains the content of a mouseover tooltip message to override the value in the rB (entity.entityname.propertyname_hint) --->
-<cfparam name="attributes.tooltipmessage" default="" type="string" />
-
-<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
-<cfparam name="attributes.toggle" default="no" type="string" />
-
-<!--- hint: This attribute is the text of the link used for toggling. Two comma delimited words defaulting to "Show,Hide" --->
-<cfparam name="attributes.toggletext" default="Show,Hide" />
-
-<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
-<cfparam name="attributes.displaytype" default="dl" />
-
-<!--- Add Custom class --->
-<cfparam name="attributes.class" default="" />
-
-<!--- if specified, will wrap property value with an achor tag using the attribute as the href value --->
-<cfparam name="attributes.link" default="" />
-
-<!--- class for styling link, if specified --->
-<cfparam name="attributes.linkClass" default="" />
-
-<!--- id for styling link, if specified --->
-<cfparam name="attributes.linkID" default="" />
-
-<!--- overwrite the generated id for the property element (dd or td) --->
-<cfparam name="attributes.id" default="" />
-
-<!--- if this is a dl displaytype this attribute can be used to designate if this is the first property to be displayed for proper <dt> styling --->
-<cfparam name="attributes.first" default="false" />
+<cfparam name="attributes.toggle" type="string" default="no" />						<!--- hint: This attribute indicates whether the field can be toggled to show/hide the value. Possible values are "no" (no toggling), "Show" (shows field by default but can be toggled), or "Hide" (hide field by default but can be toggled) --->
+<cfparam name="attributes.displayType" default="dl" />								<!--- hint: This attribute is used to specify if the information comes back as a definition list (dl) item or table row (table) or with no formatting or label (plain) --->
 
 <!---
-	attributes.editType have the following options:
-	text
-	textarea
-	checkbox
-	select
-	radiogroup
-	wysiwyg
-	file
-	password
+	attributes.fieldType have the following options:
+	
+	checkbox			|	As a single checkbox this doesn't require any options, but it will create a hidden field for you so that the key gets submitted even when not checked.  The value of the checkbox will be 1
+	checkboxgroup		|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
+	date				|	This is still just a textbox, but it adds the jQuery date picker
+	dateTime			|	This is still just a textbox, but it adds the jQuery date & time picker
+	file				|	No value can be passed in
+	multiselect			|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
+	password			|	No Value can be passed in
+	radiogroup			|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
+	select      		|	Requires the valueOptions to be an array of simple value if name and value is same or array of structs with the format of {value="", name=""}
+	text				|	Simple Text Field
+	textarea			|	Simple Textarea
+	time				|	This is still just a textbox, but it adds the jQuery time picker
+	wysiwyg				|	Value needs to be a string
+	yesno				|	This is used by booleans and flags to create a radio group of Yes and No
+	
 --->
 
 <!---
-	attributes.displaytype have the following options:
+	attributes.displayType have the following options:
 	dl
 	table
+	span
 	plain
 --->
 
-<cfif thisTag.executionMode is "start">
 
+
+<cfif thisTag.executionMode is "start">
+	
 	<cfset local = structNew() />
-	<cfset local.metadata = getMetadata(attributes.object) />
-	<cfset local.propertyMetadata = structNew() />
 	
-	<!--- If this object has a getProperties() method (defined in the base entity class to also get inherited properties) use that to get the property array --->
-	<cfif structKeyExists(attributes.object,"getProperties")>
-		<cfset local.properties = attributes.object.getProperties() />
-	<cfelse>
-		<cfset local.properties = local.metadata.properties />
-	</cfif>
-	
-	<!--- Loop over properties in object and find metadata for this property --->
-	<cfloop array="#local.properties#" index="i">
-		<cfif UCASE(i.name) eq UCASE(attributes.property)>
-			<cfset local.propertyMetadata = i />
-			<cfbreak />
-		</cfif>
-	</cfloop>
-	
-	<cfif structCount(local.propertyMetadata)>
-		
-		<!--- If the title attribute was not set, then set it as the the value in the resource bundle ---> 
-		<cfif attributes.title eq "">
-			<!--- remove "Slatwall" prefix from entityname --->
-			<cfset local.entityName = replaceNocase(attributes.object.getClassName(),"Slatwall","","one") />
-			<cfset attributes.title = request.customMuraScopeKeys.slatwall.rbKey("entity." & local.entityName & "." & attributes.property) />
-			<cfif right(attributes.title, 8) eq "_missing" >
-				<cfset attributes.title = local.propertyMetadata.name />
-			</cfif>
-		</cfif>
-		
-		<!--- Try to determine the datatype of the property, if not passed in --->
-		<cfif attributes.dataType eq "">
-			<cfif (structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean") or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
-				<cfset attributes.dataType = "boolean" />
-			<cfelse>
-				<cfset attributes.dataType = "string" />
-			</cfif>
-		</cfif>
-		
-		<!--- If the value attribute was not set, then try to determine the value from the object, and if that isn't set, then use the objects default. --->
-		<cfif attributes.value eq "" and not attributes.noValue>
-			<cfset attributes.value = evaluate('attributes.object.get#Local.PropertyMetadata.Name#()') />
-	
-			<cfif structKeyExists(attributes,"value")>
-				<cfif isObject(attributes.value)>
-					<cfset local.subEntityMetadata = getMetadata(attributes.value) />
-					<cfset attributes.value = "">
-					<cfloop array="#local.subEntityMetadata.properties#" index="i">
-						<cfif i.name EQ attributes.property & 'ID' 
-							  or i.name EQ attributes.propertyObject & 'ID'
-							  or i.name EQ attributes.property
-							  or i.name EQ attributes.propertyObject>
-							<cfset attributes.value = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
-						<cfelseif i.name EQ attributes.property & 'Name' 
-							  or i.name EQ attributes.propertyObject & 'Name'
-							  or i.name EQ attributes.property
-							  or i.name EQ attributes.propertyObject> 
-							<cfset attributes.displayValue = evaluate("attributes.object.get#Local.PropertyMetadata.Name#().get#i.name#()") />
-						</cfif>
-					</cfloop>
-				<cfelseif attributes.value eq "" and structKeyExists(local.propertyMetadata, "default")>
-					<cfset attributes.value = local.propertyMetadata.default />
-				<cfelseif (attributes.value eq "" and not structKeyExists(local.propertyMetadata,"default")) or isNull(attributes.value)>
-					<cfset attributes.value = "" />
-				</cfif>
-			<cfelseif isNull(attributes.value) and len(attributes.nullLabel)>
-				<cfset attributes.value = attributes.nullLabel />
-			<cfelseif isNull(attributes.value) and !len(attributes.nullLabel) and attributes.dataType eq "boolean">
-				<cfset attributes.value = 0 />
-			<cfelse>
-			     <cfset attributes.value = "" />
-			</cfif>
-		</cfif>
-		
-		<cfif attributes.displayValue eq "">
-			<cfset attributes.displayValue = attributes.value />
-		</cfif>
-		
-		<cfif attributes.fieldName eq "">
-			<cfset attributes.fieldName = local.propertyMetadata.name />
-		</cfif>
-		
-		<cfif trim(attributes.id) eq "">
-			<!--- make id from fieldname (fieldname may have dot or array notation so we'll just take the last part) --->
-		  <cfset attributes.id = "spd" & listLast(LCASE(attributes.fieldName),".]") />
-		</cfif>
-		
-		
-		<!--- If in edit mode, and that editType attribute is not set then figure out what to use --->
-		<cfif attributes.edit>
-			<cfif attributes.editType eq "">
-				<!--- Check to see if this is a many-to-one type property.  Otherwise check the propertyMetadata.type for the most suitible form type, if nothing is set then use the default of text --->
-				<cfif structKeyExists(local.propertyMetadata, "fieldtype") and local.propertyMetadata.fieldtype eq "many-to-one">
-					<cfset attributes.editType = "select" />
-				<cfelseif (structKeyExists(local.propertyMetadata, "type") and (local.propertyMetadata.type eq "string" or local.propertyMetadata.type eq "numeric")) or (structKeyExists(local.propertyMetadata, "ormtype") and (local.propertyMetadata.ormtype eq "string" or local.propertyMetadata.ormtype eq "float" or local.propertyMetadata.ormtype eq "integer" or local.propertyMetadata.ormtype eq "int"))>
-					<cfset attributes.editType = "text" />
-				<cfelseif structKeyExists(local.propertyMetadata, "type") and local.propertyMetadata.type eq "boolean" or (structKeyExists(local.propertyMetadata, "ormtype") and local.propertyMetadata.ormtype eq "boolean")>
-					<cfset attributes.editType = "radiogroup" />
-				<cfelse>
-					<cfset attributes.editType = "text" />
-				</cfif>
-			</cfif>
-		</cfif>
-		
-		<cfif attributes.editType eq "select">
-		
-			<!--- Use the "getPropertyOptions" function to populate the attributes.editOptions if none are set --->
-			<cfif arrayLen(attributes.editOptions) eq 0>
-				<cftry>
-					<cfset attributes.editOptions = evaluate("attributes.object.get#local.propertyMetadata.name#Options()") />
-					<cfcatch>
-						<cfset attributes.editOptions = arrayNew(1) />
-					</cfcatch>
-				</cftry>
+	<cfsilent>
+		<!--- Set Up The Value --->
+		<cfif attributes.value eq "">
+
+			<cfset attributes.value = attributes.object.getValueByPropertyIdentifier( attributes.property ) />
+			
+			<cfif isNull(attributes.value) || (isSimpleValue(attributes.value) && attributes.value eq "")>
+				<cfset attributes.value = attributes.valueDefault />
 			</cfif>
 			
-			<!--- If none are still set, then change the editType to none, otherwise verify that there is an ID & Name for each option 
-			<cfif arrayLen(attributes.editOptions) eq 0>
-				<cfset attributes.editType = "none" />
-			<cfelse>
-				<cfloop array="#attributes.editOptions#" index="i">
-					<cfif not isDefined("i.id") or not isDefined("i.name")>
-						<cfset attributes.editType = "none" />
-						<cfbreak />
+			<!--- If the value was an object, typically a MANY-TO-ONE, then we get either the identifierValue or for display a simpleRepresentation --->
+			<cfif isObject(attributes.value) && attributes.object.isPersistent()>
+				<cfif attributes.edit>
+					<cfset attributes.value = attributes.value.getIdentifierValue() />
+				<cfelse>
+					<cfset attributes.value = attributes.value.getSimpleRepresentation() />
+				</cfif>
+
+			<!--- If the value was an array, typically a MANY-TO-MANY, then we loop over the array and create either a list of simpleRepresetnation or a list of identifier values --->	
+			<cfelseif isArray(attributes.value)>
+				<cfset thisValueList = "" />
+				<cfloop array="#attributes.value#" index="thisValue">
+					<cfif isObject(thisValue) && thisValue.isPersistent()>
+						<cfif attributes.edit>
+							<cfset thisValueList = listAppend(thisValueList, thisValue.getIdentifierValue()) />
+						<cfelse>
+							<cfset thisValueList = listAppend(thisValueList, " #attributes.value.getSimpleRepresentation()#") />
+						</cfif>
 					</cfif>
 				</cfloop>
-			</cfif>--->
+				<cfset attributes.value = trim(thisValueList) />
+			<cfelse>
+				<cfif not attributes.edit>
+					<!--- Set up the value formatType --->
+					<cfif attributes.valueFormatType eq "">
+						<cfset attributes.valueFormatType = attributes.object.getPropertyFormatType( attributes.property ) />
+					</cfif>
+					
+					<cfset attributes.value = attributes.object.formatValue(attributes.value, attributes.valueFormatType) />
+				</cfif>
+			</cfif>
+			
+			<!--- Final check to make sure that the value is simple --->
+			<cfif not isSimpleValue(attributes.value)>
+				<cfif isSimpleValue(attributes.valueDefault)>
+					<cfset attributes.value = attributes.valueDefault />
+				<cfelse>
+					<cfset attributes.value = "" />
+				</cfif>
+			</cfif>
 		</cfif>
 		
-		<cfoutput>
-			<cfif attributes.displaytype eq "dl">
-				<dt class="spd#LCASE(attributes.property)#<cfif len(trim(attributes.class))> #attributes.class#</cfif><cfif attributes.first> first</cfif>">
-			<cfelseif attributes.displaytype eq "table">
-				<tr class="spd#LCASE(attributes.property)#<cfif len(trim(attributes.class))> #attributes.class#</cfif>">
-				<td class="property">
+		<!--- Set up the property title --->
+		<cfif attributes.title eq "">
+			<cfset attributes.title = attributes.object.getPropertyTitle( attributes.property ) />
+		</cfif>
+		
+		<!--- If this is in edit mode then get the pertinent field info --->
+		<cfif attributes.edit>
+			<cfif attributes.fieldName eq "">
+				<cfset attributes.fieldName = attributes.object.getPropertyFieldName( attributes.property ) />
 			</cfif>
-	        
-	        <cfif attributes.displaytype neq "plain">
-	        	<cfif attributes.tooltip>
-	                <a href="##" class="tooltip">
-	            </cfif> 			
-	 			<!--- If in edit mode, then wrap title in a label tag except if it's a radiogroup, in which case the radio buttons are labeled --->
-	 			<cfif attributes.edit and attributes.editType NEQ "radiogroup" and attributes.editType NEQ "file">
-					<label for="#attributes.id#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
-						#attributes.title#
-					</label>
-	 			<cfelseif attributes.edit and attributes.editType EQ "file">
-					<label for="#attributes.id#File"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
-						#attributes.title#
-					</label>
-				<cfelseif attributes.edit and attributes.editType EQ "radiogroup">
-					<div class="#attributes.fieldName#"<cfif structKeyExists(local.propertyMetadata, "validateRequired")> class="required"</cfif>>
-						#attributes.title#
-					</div>
-				<cfelse>
-					#attributes.title#
-				</cfif>
-	            <cfif attributes.tooltip>
-					<cfif len(trim(attributes.tooltipmessage))>
-	                	<span>#attributes.tooltipmessage#</span></a>
-					<cfelse>
-						<span>#request.customMuraScopeKeys.slatwall.rbKey("entity.#local.entityName#.#attributes.property#_hint")#</span></a>
-					</cfif>
-	            </cfif>
-	            <cfif listFindNoCase("show,hide",attributes.toggle)>
-	                <cfif attributes.toggle EQ "show"><cfset local.initText=2 /><cfelse><cfset local.initText=1 /></cfif>
-	                <a  href="##" class="toggleLink" onclick="javascript: toggleDisplay(this,'#listFirst(attributes.toggletext)#','#listGetAt(attributes.toggletext,2)#');return false">[#listGetAt(attributes.toggletext,local.initText)#]</a>
-	            </cfif>	
+			<cfif attributes.fieldType eq "">
+				<cfset attributes.fieldType = attributes.object.getPropertyFieldType( attributes.property ) />
+			</cfif>
+			<cfif listFindNoCase("checkboxgroup,radiogroup,select,multiselect", attributes.fieldType) and not arrayLen(attributes.valueOptions)>
+				<cfset attributes.valueOptions = attributes.object.invokeMethod( "get#attributes.property#Options" ) />
+			</cfif>
+		</cfif>
+		
+		<!--- Set up all of the classes --->
+		<cfset attributes.titleClass = trim("title #lcase(attributes.property)#title #attributes.titleClass#") />
+		<cfset attributes.valueClass = trim("value #lcase(attributes.property)#value #attributes.valueClass#") />
+		<cfset attributes.valueLinkClass = trim("valuelink #lcase(attributes.property)#valuelink #attributes.valueLinkClass#") />
+		<cfset attributes.fieldClass = trim("field #lcase(attributes.property)#field #attributes.fieldClass#") />
+		
+		
+		<!--- Add the error class to the form field if it didn't pass validation --->
+		<cfif attributes.object.hasError(attributes.property)>
+			<cfset attributes.fieldClass = attributes.fieldClass & " error" />
+		</cfif>
+	</cfsilent>
 	
-				<cfif attributes.displaytype eq "dl">
-					</dt>
-				<cfelseif attributes.displaytype eq "table">
-					</td>
-				</cfif>
-			</cfif> <!--- end cfif block for displayType neq "plain" (display label) --->
-			
-			<cfif attributes.displayType eq "dl">
-				<dd class="spd#LCASE(attributes.property)#">
-			<cfelseif attributes.displayType eq "table">
-				<td class="value">
-			</cfif>
-				<cfif listFindNoCase("show,hide",attributes.toggle)>
-					<div style="display:#attributes.toggle eq 'hide' ? 'none':'inherit'#">
-				</cfif>
-				<!--- If in edit mode, then generate necessary form field --->
-				<cfif attributes.edit eq true and attributes.editType neq "none">
-					<cfif attributes.editType eq "text" or attributes.editType eq "password">
-						<input type="#attributes.editType#" name="#attributes.fieldName#" id="#attributes.id#" value="#attributes.value#" />
-					<cfelseif attributes.editType eq "textarea">
-						<textarea name="#attributes.fieldName#" id="#attributes.id#">#attributes.Value#</textarea>
-					<cfelseif attributes.editType eq "checkbox">
-						<input type="hidden" name="#attributes.fieldName#" id="#attributes.id#" value="" />
-						<input type="checkbox" name="#attributes.fieldName#" id="#attributes.id#" value="1" <cfif attributes.value eq true>checked="checked"</cfif> />
-					<cfelseif attributes.editType eq "select">
-						<cfif arrayLen(attributes.editOptions) gt 0>
-						<select name="#attributes.fieldName#" <cfif len(attributes.class)> class="#attributes.class#"</cfif>>
-							<cfif attributes.allowNullOption>
-								<option value="">#attributes.nullLabel eq "" ? request.customMuraScopeKeys.slatwall.rbKey('admin.selectBox.select') : attributes.nullLabel#</option>
-							</cfif>
-                            <cfset attributes.displayValue = (len(attributes.defaultValue) gt 0 AND attributes.displayValue eq "") ? attributes.defaultValue : attributes.displayValue />
- 							<cfloop array="#attributes.editOptions#" index="i">
-								<!--- if there is a key named "label" use that as the displayed label for the option, if not, default to the "name" key value --->
-								<cfset label = structKeyExists(i,"label") ? i['label'] : i['name'] />
-								<option value="#i['id']#" <cfif attributes.value eq i['id'] or attributes.displayValue eq label>selected="selected"</cfif>>#label#</option>	
-							</cfloop>
-						</select>
-<!---						<cfelse>
-							<input type="hidden" name="#attributes.fieldName#_#attributes.fieldName#ID" value="" />
-							<p><em>#request.customMuraScopeKeys.slatwall.rbKey("admin.#attributes.fieldName#.no#attributes.fieldName#sdefined")#</em></p>--->
-						</cfif>
-					<cfelseif attributes.editType eq "radiogroup">
-						<ul class="radiogroup">
-						<cfif attributes.dataType eq "boolean">
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.id#yes" value="1"<cfif attributes.value> checked</cfif>> <label for="#attributes.id#yes">#request.customMuraScopeKeys.slatwall.rbKey("user.yes")#</label></li>
-							<li><input type="radio" name="#attributes.fieldName#" id="#attributes.id#no" value="0"<cfif not attributes.value> checked</cfif>> <label for="#attributes.id#no">#request.customMuraScopeKeys.slatwall.rbKey("user.no")#</label></li>	
-						<cfelse>
-							<input type="hidden" name="#attributes.fieldName#" value="" />
-							<cfloop array="#attributes.editOptions#" index="i">
-								<cfset label = structKeyExists(i,"label") ? i.label : i.name />
-								<li><input type="radio" name="#attributes.fieldName#" id="#i.id#" value="#i.id#"<cfif attributes.value eq i.name> checked="true"</cfif>><label for="#i.id#">#label#</label></li>
-							</cfloop>
-						</cfif>
-						</ul>
-					<cfelseif left(attributes.editType,7) eq "wysiwyg">
-						<!--- see if this is a default or basic wysiwig --->
-						<cfif right(attributes.editType,5) eq "basic">
-							<cfset local.wysiwygType = "Basic">
-						<cfelse>
-							<cfset local.wysiwygType = "Default">
-						</cfif>
-						<textarea id="#attributes.id#txt" class="wysiwyg #local.wysiwygType#" name="#attributes.fieldName#">#attributes.Value#</textarea>
-					<cfelseif attributes.editType eq "file">
-					<!--- ouptut a file upload field --->
-						<input type="file" name="#attributes.fieldName#File" class="file">
-					</cfif>
-				<cfelseif attributes.edit eq true and attributes.editType eq "none">
-					<!-- A Default Edit Type Could not be created -->
-				<cfelse>
-					<cfif attributes.dataType eq "boolean" and attributes.value eq true>
-						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.yes") />
-					<cfelseif attributes.dataType eq "boolean" and attributes.value eq false>
-						<cfset propertyValue = request.customMuraScopeKeys.slatwall.rbKey("sitemanager.no") />
+	<cfswitch expression="#attributes.displaytype#">
+		<!--- DL Case --->
+		<cfcase value="dl">
+			<cfif attributes.edit>
+				<cfoutput>
+					<dt class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></dt>
+					<dd class="#attributes.valueClass#">
+						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+					</dd>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<dt class="#attributes.titleClass#">#attributes.title#</dt>
+					<cfif attributes.valueLink neq "">
+						<dd class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></dd>
 					<cfelse>
-						<cfset propertyValue = attributes.displayValue />
+						<dd class="#attributes.valueClass#">#attributes.value#</dd>
 					</cfif>
-					<cfif len(attributes.link) gt 0>
-						<a href="#attributes.link#"<cfif len(attributes.linkClass) gt 0> class="#attributes.linkClass#"</cfif><cfif len(attributes.linkID) gt 0> id="#attributes.linkID#"</cfif>>#propertyValue#</a>
+				</cfoutput>
+			</cfif>
+		</cfcase>
+		<!--- TABLE Display --->
+		<cfcase value="table">
+			<cfif attributes.edit>
+				<cfoutput>
+					<tr>
+						<td class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></td>
+						<td class="#attributes.valueClass#">
+							<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+							<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+						</td>
+					</tr>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<tr>
+						<td class="#attributes.titleClass#">#attributes.title#</td>
+						<cfif attributes.valueLink neq "">
+							<td class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></td>
+						<cfelse>
+							<td class="#attributes.valueClass#">#attributes.value#</td>
+						</cfif>
+					</tr>
+				</cfoutput>
+			</cfif>
+		</cfcase>
+		<!--- INLINE Display --->
+		<cfcase value="span">
+			<cfif attributes.edit>
+				<cfoutput>
+					<span class="#attributes.titleClass#"><label for="#attributes.fieldName#">#attributes.title#</label></span>
+					<span class="#attributes.valueClass#">
+						<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+						<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+					</span>
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<span class="#attributes.titleClass#">#attributes.title#: </span>
+					<cfif attributes.valueLink neq "">
+						<span class="#attributes.valueClass#"><a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a></span>
 					<cfelse>
-						#propertyValue#
+						<span class="#attributes.valueClass#">#attributes.value#</span>
 					</cfif>
-				</cfif>
-			<!--- If the object has an error Bean, check for errors on this property --->
-			<cftry>
-				<cfif Len(attributes.object.getErrorBean().getError(attributes.fieldName))>
-					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
-				<cfelseif len(attributes.object.getErrorBean().getError(attributes.property))>
-					<span class="formError">#attributes.Object.getErrorBean().getError(local.propertyMetaData.name)#</span>
-				</cfif>
-				<cfcatch><!-- Object Contains No Error Bean --></cfcatch>
-			</cftry>
-			<cfif listFindNoCase("show,hide",attributes.toggle)>
-				</div>
+				</cfoutput>
 			</cfif>
-			<cfif attributes.displaytype eq "dl">
-				</dd>
-			<cfelseif attributes.displaytype eq "table">
-				</td>
-				</tr>
+		</cfcase>
+		<!--- Plain Display (value only) --->
+		<cfcase value="plain">
+			<cfif attributes.edit>
+				<cfoutput>
+					<cf_SlatwallFormField fieldType="#attributes.fieldType#" fieldName="#attributes.fieldName#" fieldClass="#attributes.fieldClass#" value="#attributes.value#" valueOptions="#attributes.valueOptions#" />
+					<cf_SlatwallErrorDisplay object="#attributes.object#" errorName="#attributes.property#" displayType="label" for="#attributes.fieldName#" />
+				</cfoutput>
+			<cfelse>
+				<cfoutput>
+					<cfif attributes.valueLink neq "">
+						<a href="#attributes.valueLink#" class="#attributes.valueLinkClass#">#attributes.value#</a>
+					<cfelse>
+						#attributes.value#	
+					</cfif>
+				</cfoutput>
 			</cfif>
-	 	</cfoutput>
-	<cfelse>
-		<cfoutput>
-			<!-- The Property #attributes.property# Does not exist in object -->
-		</cfoutput> 	
- 	</cfif>
+		</cfcase>
+	</cfswitch>	
 </cfif>

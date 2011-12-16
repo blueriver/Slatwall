@@ -39,7 +39,7 @@ Notes:
 component accessors="true" output="false" extends="BaseObject" {
 
 	public any function init() {
-		return this;	
+		return this;
 	}
 	
 	public any function getCurrentProduct() {
@@ -154,10 +154,10 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function cart(string property, string value) {
-		if(isDefined("arguments.property") && isDefined("arguments.value")) {
-			return evaluate("getCurrentCart().set#arguments.property#(#arguments.value#)");
+		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
+			return getCurrentCart().invokeMethod("set#arguments.property#", {1=arguments.value});
 		} else if (isDefined("arguments.property")) {
-			return evaluate("getCurrentCart().get#arguments.property#()");
+			return getCurrentCart().invokeMethod("get#arguments.property#", {});
 		} else {
 			return getCurrentCart();	
 		}
@@ -215,19 +215,63 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
-	public string function rbKey(required string key, string local) {
-		if(!isDefined("arguments.local")) {
-			arguments.local = session.rb;
+	public void function addVTScript( ) {
+		var script = getValidateThis().getValidationScript( argumentcollection = arguments );
+		
+		if(!getService("requestCacheService").keyExists("vtScripts")) {
+			getService("requestCacheService").setValue("vtScripts", []);	
 		}
-		return getRBFactory().getKeyValue(arguments.local, arguments.key);
+		
+		arrayAppend(getService("requestCacheService").getValue("vtScripts"), script);
+	}
+	
+	public string function renderVTScript() {
+		var scripts = [];
+		var outputScript = "";
+		
+		if(getService("requestCacheService").keyExists("vtScripts")) {
+			scripts = getService("requestCacheService").getValue("vtScripts");
+		}
+		
+		outputScript &= '<script type="text/javascript">';
+		outputScript &= 'jQuery(document).ready(function(){';
+		 
+		for(var i=1; i<=arrayLen(scripts); i++) {
+			outputScript &= replace(replace(replace(replace(scripts[i],'<script type="text/javascript">',''),'</script>',''),'/*<![CDATA[*/','','all'),'/*]]>*/','','all');
+		}
+		
+		outputScript &= '});</script>';
+		
+		return outputScript;
+	}
+	
+	// Public methods that expose some of the base objects private methods
+	public string function rbKey(required string key, string local) {
+		return super.rbKey(argumentCollection=arguments);
 	}
 	
 	public string function setting(required string settingName) {
-		return Super.setting(arguments.settingName);
+		return super.setting(argumentcollection=arguments);
 	}
 	
 	public string function getAPIKey(required string resource, required string verb) {
-		return getService("sessionService").getAPIKey(argumentcollection=arguments);
+		return super.getAPIKey(argumentcollection=arguments);
 	}
-
+	
+	public string function getSlatwallRootPath() {
+		return super.getSlatwallRootPath(argumentcollection=arguments);
+	}
+	
+	public string function getSlatwallRootDirectory() {
+		return super.getSlatwallRootDirectory(argumentcollection=arguments);
+	}
+	
+	public any function getCFStatic() {
+		return super.getCFStatic(argumentcollection=arguments);
+	}
+	
+	public any function getValidateThis() {
+		return super.getValidateThis(argumentcollection=arguments);
+	}
+	// END: Public methods that expose some of the base objects private methods
 }

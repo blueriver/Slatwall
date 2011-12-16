@@ -38,7 +38,7 @@ Notes:
 --->
 
 <cfoutput>
-	<table id="productCategories" class="mura-table-grid stripe">
+	<table id="productCategories" class="listing-grid stripe">
 		<tr>
 			<th>#rc.$.Slatwall.rbKey("entity.productReview.createdDateTime")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.productReview.review")#</th>

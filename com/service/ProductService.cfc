@@ -41,7 +41,8 @@ component extends="BaseService" accessors="true" {
 	// Slatwall Service Injection
 	property name="skuDAO" type="any";
 	property name="productTypeDAO" type="any";
-	property name="skuService" type="any";  
+	property name="skuService" type="any";
+	property name="dataService" type="any";  
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
 	
@@ -96,6 +97,7 @@ component extends="BaseService" accessors="true" {
 		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
 		smartList.joinRelatedProperty("SlatwallProduct","productType");
+		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
 		
 		return smartList;
 	}
@@ -135,8 +137,8 @@ component extends="BaseService" accessors="true" {
 		return smartList;	
 	}
 	
-	public any function getProductSkuBySelectedOptions(required string selectedOptions,required string productID){
-		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments)[1];
+	public any function getProductSkusBySelectedOptions(required string selectedOptions, required string productID){
+		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
 	}
 	
 	public any function getMuraCategories(required string siteID, string parentID=0) {
@@ -151,20 +153,6 @@ component extends="BaseService" accessors="true" {
     	return categoryTree;
 	}
 
-	/**
-	/* @hint associates this product with Mura content objects
-	*/
-	public void function assignProductContent(required any product,required string contentID) {
-		var productContentArray = [];
-		getDAO().clearProductContent(arguments.product);
-		for(var i=1;i<=listLen(arguments.contentID);i++) {
-			local.thisContentID = listGetAt(arguments.contentID,i);
-			local.thisProductContent = entityNew("SlatwallProductContent",{contentID=listLast(local.thisContentID," "),contentPath=listChangeDelims(local.thisContentID,","," ")});
-			arrayAppend(productContentArray,local.thisProductContent);
-		}
-		arguments.product.setProductContent(productContentArray);
-	}
-	
 	public void function updateProductContentPaths(required string contentID, required string siteID) {
 		var pcArray = getDAO().list(entityName="SlatwallProductContent");
 		for( var i=1; i<=arrayLen(pcArray); i++) {
@@ -191,14 +179,13 @@ component extends="BaseService" accessors="true" {
 	/* @hint associates this product with Mura categories
 	*/
 	public void function assignProductCategories(required any product,required string categoryID,string featuredCategories) {
-		getDAO().clearProductCategories(arguments.product);
 		for(var i=1;i<=listLen(arguments.categoryID);i++) {
 			local.isFeatured = false;
 			local.thisCategoryID = listGetAt(arguments.categoryID,i);
 			if(listFindNoCase(arguments.featuredCategories,listLast(local.thisCategoryID," "))) {
 				local.isFeatured = true;
 			}
-			local.thisProductCategory = entityNew("SlatwallProductCategory",{categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
+			local.thisProductCategory = this.newSlatwallProductCategory({categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
 			arguments.product.addProductCategory(local.thisProductCategory);
 		}
 	}
@@ -288,16 +275,17 @@ component extends="BaseService" accessors="true" {
 		return getService("utilityFileService").removeImage(arguments.image.getImagePath());
 	}
 	
-	public any function saveProduct(required any Product,required struct data) {
+	public any function saveProduct(required any product, required struct data) {
+		
 		// populate bean from values in the data Struct
-		arguments.Product.populate(arguments.data);
+		arguments.product.populate(arguments.data);
 		
 		// populate custom attributes
-		if(structKeyExists(arguments.data,"attributes")){
-			for(var attributeID in arguments.data.attributes){
-				for(var attributeValueID in arguments.data.attributes[attributeID]){
+		if(structKeyExists(arguments.data,"attribute")){
+			for(var attributeID in arguments.data.attribute){
+				for(var attributeValueID in arguments.data.attribute[attributeID]){
 					var attributeValue = getService("AttributeService").getProductAttributeValue(attributeValueID, true);
-					attributeValue.setAttributeValue(arguments.data.attributes[attributeID][attributeValueID]);
+					attributeValue.setAttributeValue(arguments.data.attribute[attributeID][attributeValueID]);
 					if(attributeValue.isNew()){
 						var attribute = getService("AttributeService").getAttribute(attributeID);
 						attributeValue.setAttribute(attribute);
@@ -311,37 +299,47 @@ component extends="BaseService" accessors="true" {
 		if(!isNumeric(arguments.data.price) || len(trim(arguments.data.price)) == 0) {
 			arguments.data.price = 0;
 		}
-		if(!isNumeric(arguments.data.listPrice) || len(trim(arguments.data.listPrice)) == 0) {
-			arguments.data.listPrice = 0;
-		}
-		if(!isNumeric(arguments.data.shippingWeight) || len(trim(arguments.data.shippingWeight)) == 0) {
-			arguments.data.shippingWeight = 0;
-		}
-		
+				
 		// set up sku(s) if this is a new product
-		if(arguments.Product.isNew()) {
-			getSkuService().createSkus(arguments.Product,arguments.data.optionsStruct,arguments.data.price,arguments.data.listPrice,arguments.data.shippingWeight);
-		} else {
-			getSkuService().updateSkus(arguments.Product,arguments.data.skuArray);
-			// set up associations between product and content
-			assignProductContent(arguments.Product,arguments.data.contentID);		
-			// set up associations between product and mura categories
+		if(arguments.product.isNew()) {
+
+			var optionsStruct = {};
+			if(structKeyExists(arguments.data, "options")) {
+				optionsStruct = arguments.data.options;
+			}
+			
+			getSkuService().createSkus(arguments.Product,optionsStruct,arguments.data.price);
+		}
+		
+		// set up associations between product and content
+		if(structKeyExists(arguments.data, "productContentIDPaths")) {
+			
+			// Remove Existing product Content
+			for(var i=arrayLen(arguments.product.getProductContent()); i >= 1; i--) {
+				arguments.product.getProductContent()[i].removeProduct();
+			}
+			
+			// Assign all new product Content
+			for(var i=1; i<=listLen(arguments.data.productContentIDPaths); i++) {
+				var thisPath = listGetAt(arguments.data.productContentIDPaths, i);
+				var thisProductContent = this.newProductContent();
+				thisProductContent.setProduct(arguments.product);
+				thisProductContent.setContentID(listLast(thisPath, " "));
+				thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
+			}
+		}
+		
+		// set up associations between product and mura categories
+		/*		
+		if(structKeyExists(arguments.data, "categoryID")) {
 			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
-			// check for images to upload
-			if(structKeyExists(arguments.data,"imagesArray")) {
-				saveAlternateImages(arguments.Product,arguments.data.imagesArray);
-			}
 		}
+		*/
 		
-		// make sure that the product code doesn't already exist
-		if( len(data.productCode) ) {
-			var checkProductCode = getDAO().isDuplicateProperty("productCode", arguments.product);
-			var productCodeError = getValidationService().validateValue(rule="assertFalse",objectValue=checkProductCode,objectName="productCode",message=rbKey("entity.product.productCode_validateUnique"));
-			if( !structIsEmpty(productCodeError) ) {
-				arguments.product.addError(argumentCollection=productCodeError);
-			}
+		// check for images to upload
+		if(structKeyExists(arguments.data,"images")) {
+			saveAlternateImages(arguments.Product,arguments.data.images);
 		}
-		
 		
 		// if filename wasn't set in bean, default it to the product's name.
 		if(arguments.Product.getFileName() == "") {
@@ -350,37 +348,60 @@ component extends="BaseService" accessors="true" {
 		
 		// make sure that the filename (product URL title) doesn't already exist, if it does then just rename with a number until it doesn't
 		var lastAppended = 1;
-		var needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
-		while(needsFilename) {
+		var uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
+		while(!uniqueFilename) {
 			arguments.Product.setFileName(arguments.Product.getFileName() & lastAppended);	
-			needsFilename = getDAO().isDuplicateProperty("filename", arguments.product);
+			uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
 			lastAppended += 1;
 		}
+				
+		// validate the product
+		arguments.product.validate();
 		
-		arguments.Product = super.save(arguments.Product);
-		
-		if( !arguments.Product.hasErrors() ) {
-			// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-		}
-		
-		return arguments.Product;
+		// If the product passed validation then call save in the DAO, otherwise set the errors flag
+        if(!arguments.product.hasErrors()) {
+        	clearProductTypeTree();
+            arguments.product = getDAO().save(target=arguments.product);
+        } else {
+            getService("requestCacheService").setValue("ormHasErrors", true);
+        }
+        
+        // Return the product
+		return arguments.product;
 	}
 	
-	public any function delete( required any product ) {
-		// make sure this product isn't in the order history
-		if( arguments.product.getOrderedFlag() ) {
-			getValidationService().setError(entity=arguments.product,errorName="delete",rule="Ordered");
-		}
-		// Removed default sku
+	public boolean function deleteProduct( required any product ) {
+		
+		// Set the default sku temporarily in this local so we can reset if delete fails
+		var defaultSku = arguments.product.getDefaultSku();
+		
+		// Remove the default sku so that we can delete this entity
 		arguments.product.setDefaultSku(javaCast("null",""));
 		
-		var deleteResponse = super.delete( arguments.product );
-		if( !deleteResponse.hasErrors() ) {
-			// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
+		// Use the base delete method to check validation
+		var deleteOK = super.delete( arguments.product );
+		
+		// If the delete failed, then we just reset the default sku into the product and return false
+		if( !deleteOK ) {
+			arguments.product.setDefaultSku(defaultSku);
+			
+			return false;
 		}
-		return deleteResponse;
+		
+		return true;
+	}
+	
+	public boolean function deleteProductType(required any productType) {
+		
+		// Use the base delete method to check validation
+		var deleteOK = super.delete(arguments.productType);
+		
+		if( deleteOK ) {
+	   		// clear cached product type tree so that it's refreshed on the next request
+	   		clearProductTypeTree();
+	   	}
+		
+		return deleteOK;
 	}
 
 	//   Product Type Methods
@@ -431,33 +452,49 @@ component extends="BaseService" accessors="true" {
 		
 		arguments.productType.populate(data=arguments.data);
 
-		if(arguments.data.parentProductType == "") {
-			arguments.productType.removeParentProductType();
-		}
-		
+		// set attributeSetAssignemnts
+		// remove the ones not selected, loop in reverse to prevent shifting of array items
+    	var attributeSetAssignmentCount = arrayLen(arguments.productType.getAttributeSetAssignments());
+    	for(var i = attributeSetAssignmentCount; i > 0; i--){
+    		var attributeSetAssignment = arguments.productType.getAttributeSetAssignments()[i];
+    		if(structKeyExists(data,"attributeSetIDs") && listFindNoCase(data.attributeSetIDs,attributeSetAssignment.getAttributeSet().getAttributeSetID()) == 0){
+    			arguments.productType.removeAttributeSetAssignment(attributeSetAssignment);
+    		}
+    	}
+    	// Add new ones
+    	if(structKeyExists(data,"attributeSetIDs")){
+    		var attributeSetIDArray = listToArray(data.attributeSetIDs);
+    		for(var attributeSetID in attributeSetIDArray){
+    			var dataStruct = {"F:attributeSet_attributeSetID"=attributeSetID,"F:productType_productTypeID"=arguments.productType.getProductTypeID()};
+    			var attributeSetAssignmentArray = getDAO().getSmartList(entityName="SlatwallProductTypeAttributeSetAssignment",data=dataStruct).getRecords();
+    			if(!arrayLen(attributeSetAssignmentArray)){
+	    			var attributeSetAssignment = getService("AttributeService").newProductTypeAttributeSetAssignment();
+	    			var attributeSet = getService("AttributeService").getAttributeSet(attributeSetID);
+	    			attributeSetAssignment.setProductType(arguments.productType);
+	    			attributeSetAssignment.setAttributeSet(attributeSet);
+	    			arguments.productType.addAttributeSetAssignment(attributeSetAssignment);
+    			}
+    		}
+    	}
+    	
+		arguments.productType.validate();
+
 		// if this type has a parent, inherit all products that were assigned to that parent
 		if(!isNull(arguments.productType.getParentProductType()) and arrayLen(arguments.productType.getParentProductType().getProducts())) {
 			arguments.productType.setProducts(arguments.productType.getParentProductType().getProducts());
 		}
-	   var entity = super.save(arguments.productType);
-	   if( !entity.hasErrors() ) {
-	   		// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-	   }
-	   return entity;
+		
+		if( !arguments.productType.hasErrors() ) {
+			// clear cached product type tree so that it's refreshed on the next request
+			clearProductTypeTree();
+			
+			// Call entitySave on the productType 
+			getDAO().save(target=arguments.productType);
+		}
+		
+		return arguments.productType;
 	}
 	
-	public any function deleteProductType(required any productType) {
-		if( arguments.productType.hasProduct() || arguments.productType.hasSubProductType() ) {
-			getValidationService().setError(entity=arguments.productType,errorName="delete",rule="isAssigned");
-		}
-		if( !arguments.productType.hasErrors() ) {
-	   		// clear cached product type tree so that it's refreshed on the next request
-	   		clearProductTypeTree();
-	   }
-		var deleted = Super.delete(arguments.productType);
-		return deleted;
-	}
 	
 	/**
 	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set

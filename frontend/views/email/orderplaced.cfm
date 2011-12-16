@@ -36,6 +36,8 @@
 Notes:
 
 --->
+<cfparam name="$" type="any" />
+<cfparam name="local" type="struct" />
 <cfparam name="order" type="any" />
 
 <cfoutput>
@@ -95,14 +97,14 @@ Notes:
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderItem.getSku().getSkuCode()#</td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderItem.getSku().getProduct().getTitle()#</td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><cfif len(orderItem.getSku().displayOptions())>#orderItem.getSku().displayOptions()#</cfif></td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#DollarFormat(orderItem.getPrice())# </td> 
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderItem.getFormattedValue('price', 'currency')# </td> 
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#NumberFormat(orderItem.getQuantity())# </td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">
-									<cfif orderItem.getDiscountAmount()>
-										<span style="text-decoration:line-through; color:##cc0000;">#DollarFormat(orderItem.getExtendedPrice())#</span><br />
-										#DollarFormat(orderItem.getExtendedPriceAfterDiscount())#
+									<cfif orderItem.getDiscountAmount() GT 0>
+										<span style="text-decoration:line-through; color:##cc0000;">#orderItem.getFormattedValue('extendedPrice', 'currency')#</span><br />
+										#orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#
 									<cfelse>
-										#DollarFormat(orderItem.getExtendedPriceAfterDiscount())#
+										#orderItem.getFormattedValue('extendedPrice', 'currency')#
 									</cfif>
 								</td>
 							</tr>
@@ -135,25 +137,25 @@ Notes:
 						<tbody>
 							<tr>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><strong>Subtotal</strong></td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#DollarFormat(order.getSubtotal())#</td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#order.getFormattedValue('subtotal', 'currency')#</td>
 							</tr>
 							<tr>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><strong>Delivery Charges</strong></td>
-							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#DollarFormat(order.getFulfillmentTotal())#</td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#order.getFormattedValue('fulfillmentTotal', 'currency')#</td>
 						</tr>
 						<tr>
 							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><strong>Tax</strong></td>
-							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#DollarFormat(order.getTaxTotal())#</td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#order.getFormattedValue('taxTotal', 'currency')#</td>
 						</tr>
 						<cfif order.getDiscountTotal()>
 						<tr>
-							<td style="border: 1px solid ##d8d8d8;"><strong>Discounts</strong></td>
-							<td style="border: 1px solid ##d8d8d8; color:##cc0000;">-#DollarFormat(order.getDiscountTotal())#</td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><strong>Discounts</strong></td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px; color:##cc0000;">-#order.getFormattedValue('discountTotal', 'currency')#</td>
 						</tr>
 						</cfif>
 						<tr>
 							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><strong>Total</strong></td>
-							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#DollarFormat(order.getTotal())#</td>
+							<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#order.getFormattedValue('total', 'currency')#</td>
 						</tr>
 					</tbody>
 				</table>
@@ -162,24 +164,24 @@ Notes:
 			<br style="clear:both;" />
 			
 			<cfif arrayLen(order.getOrderPayments())>
-			<div id="orderPayments" style="margin-top: 15px; float: left; clear: both; width: 600px;">
-				<table id="payment" style="border-spacing: 0px; border-collapse: collapse; border: 1px solid ##d8d8d8; text-align: left; font-size: 12px; width:600px;">
-					<thead>
-						<tr>
-							<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Payment Method</th>
-							<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Payment Amount</th>
-						</tr>
-					</thead>
-					<tbody>
-						<cfloop array="#order.getOrderPayments()#" index="orderPayment">
+				<div id="orderPayments" style="margin-top: 15px; float: left; clear: both; width: 600px;">
+					<table id="payment" style="border-spacing: 0px; border-collapse: collapse; border: 1px solid ##d8d8d8; text-align: left; font-size: 12px; width:600px;">
+						<thead>
 							<tr>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#application.slatwall.pluginConfig.getApplication().getValue("rbFactory").getKeyValue(session.rb,"admin.setting.paymentMethod.#orderPayment.getPaymentMethod().getPaymentMethodID()#")#</td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px; width:100px;">#DollarFormat(orderPayment.getAmount())#</td>
+								<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Payment Method</th>
+								<th style="background: ##f9f9f9; border: 1px solid ##d8d8d8; padding: 0px 5px;">Payment Amount</th>
 							</tr>
-						</cfloop>
-					</tbody>
-				</table>
-			</div>
+						</thead>
+						<tbody>
+							<cfloop array="#order.getOrderPayments()#" index="orderPayment">
+								<tr>
+									<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#application.slatwall.pluginConfig.getApplication().getValue("rbFactory").getKeyValue(session.rb,"admin.setting.paymentMethod.#orderPayment.getPaymentMethodID()#")#</td>
+									<td style="border: 1px solid ##d8d8d8; padding:0px 5px; width:100px;">#orderPayment.getFormattedValue('amount', 'currency')#</td>
+								</tr>
+							</cfloop>
+						</tbody>
+					</table>
+				</div>
 			</cfif>
 		</div>
 	</body>

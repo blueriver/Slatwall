@@ -40,15 +40,15 @@ component displayname="Tax Category" entityname="SlatwallTaxCategory" table="Sla
 	
 	// Persistent Properties
 	property name="taxCategoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="taxCategoryName" ormtype="string" validateRequired="true";
+	property name="taxCategoryName" ormtype="string";
 	
 	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" inverse="true" cascade="all-delete-orphan";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public any function init() {
 		if(isNull(getTaxCategoryRates())) {

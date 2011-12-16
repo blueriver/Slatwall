@@ -45,7 +45,7 @@ component displayname="History Product" entityname="SlatwallHistoryProduct" tabl
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Related Object Properties
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";

@@ -40,8 +40,8 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Persistent Properties
 	property name="accountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="firstName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
-	property name="lastName" validateRequired="true" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="firstName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
+	property name="lastName" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="company" ormtype="string" hint="This Value is only Set if a MuraID does not exist";
 	property name="muraUserID" ormtype="string";
 	
@@ -58,6 +58,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	
+	// Related Object Properties (many-to-many)
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID" cascade="save-update";
+		
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -66,12 +69,15 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non Persistent
 	property name="fullName" persistent="false";
+	property name="emailAddress" persistent="false";
+	property name="phoneNumber" persistent="false";
+	property name="password" persistent="false";
 	
 	public any function init() {
 		if(isNull(variables.accountEmailAddresses)) {
@@ -91,6 +97,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 		if(isNull(variables.attributeSetAssignments)) {
 			variables.attributeSetAssignments = [];
+		}
+		if(isNull(variables.priceGroups)) {
+			variables.priceGroups = [];
 		}
 		return super.init();
 	}
@@ -210,5 +219,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	/************   END Association Management Methods   *******************/
+	
+	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
+		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
+	}
 	
 }

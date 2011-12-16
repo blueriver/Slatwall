@@ -21,29 +21,28 @@ Example Usage:
 		<cfset var theCondition="function(value,element,options) { return true; }"/>
 		<!--- JAVASCRIPT VALIDATION METHOD --->
 		<cfsavecontent variable="theCondition">
-		function(value,element,options){
+		function(v,e,o){
 			var minMatches = 1;
 			var complexity = 0;
-			if(!value.length) return true;
-			if (options["minMatches"]){ minMatches = options["minMatches"]; }
-			for (var key in options) {
-				if(key.match("^[pattern]") && value.match(options[key]) ){
-					complexity++;
-				};
-				if(complexity == minMatches) {return true;}
+			if(!v.length){
+				return true;
 			}
-			if(complexity << minMatches){
-				return false;
-			};
+			if(o.minMatches){
+				minMatches = o.minMatches;
+			}
+			var re = /^pattern_/i;
+			for(var key in o){
+				if(re.test(key)&&v.match(o[key])){
+					complexity++;
+					if(complexity===minMatches){
+						return true;
+					}
+				}
+			}
+			return complexity>=minMatches;
 		}
-		</cfsavecontent>
-			
+		</cfsavecontent>			
 		<cfreturn generateAddMethod(theCondition,arguments.defaultMessage,arguments.locale)/>
 	</cffunction>
 	
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-		<cfreturn "Did not match the patterns for #lCase(variables.defaultFailureMessagePrefix)##validation.getPropertyDesc()#." />
-	</cffunction>
-
 </cfcomponent>

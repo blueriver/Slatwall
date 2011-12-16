@@ -21,19 +21,21 @@
 		<cfset var theCondition="function(value,element,options) { return true; }"/>
 
 		<!--- JAVASCRIPT VALIDATION METHOD --->
-		<cfsavecontent variable="theCondition">function(value,element,options) {
-			var theDelim = (options.delim) ? options.delim : ",";
-			var theList = options.list.split(theDelim);
-			var isValid = true;
-			$(theList).each(function(){
-				if (value.toLowerCase() == this.toLowerCase()){
-					isValid = false;
+		<cfsavecontent variable="theCondition">
+		function(v,e,o){
+			var delim = o.delim ? o.delim : ",";
+			var lst = o.list.split(delim);
+			var ok = true;
+			$.each(lst, function(i,el){
+				if (v.toLowerCase()===el.toLowerCase()){
+					ok=false;
+					return false;
 				}
 			});
-			return isValid;
+			return ok;
 		}</cfsavecontent>
-			
-		 <cfreturn generateAddMethod(theCondition,arguments.defaultMessage)/>
+		
+		<cfreturn generateAddMethod(theCondition,arguments.defaultMessage)/>
 	</cffunction>
 
 	<cffunction name="getParameterDef" returntype="any" access="public" output="false" hint="I override the parameter def because the VT param names do not match those expected by the jQuery plugin.">
@@ -49,13 +51,15 @@
 		<cfreturn serializeJSON(options) />
 	</cffunction>
 
-	<cffunction name="getDefaultFailureMessage" returntype="any" access="private" output="false">
-		<cfargument name="validation" type="any"/>
-		<cfset var failureMessage = createDefaultFailureMessage("#arguments.validation.getPropertyDesc()# was found in list:") />
-		<cfif arguments.validation.hasParameter("list")>
-			<cfset failureMessage = failureMessage & " (#arguments.validation.getParameterValue('list')#)." />
+	<cffunction name="getFailureArgs" returntype="array" access="private" output="false" hint="I provide arguments needed to generate the failure message.">
+		<cfargument name="parameters" type="any" required="yes" hint="The parameters stored in the validation object." />
+
+		<cfset var args = [""] />
+		<cfif structKeyExists(arguments.parameters,"list")>
+			<cfset args = [arguments.parameters.list] />
 		</cfif>
-		<cfreturn failureMessage />
+		<cfreturn args />
+		
 	</cffunction>
 
 </cfcomponent>

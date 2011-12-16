@@ -40,17 +40,23 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	
 	// Persistent Properties
 	property name="accountPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="phoneNumber" validateRequired="true" type="string";
+	property name="phoneNumber" type="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
+	
+	
+	// Override the base class simple Representation value
+	public string function getSimpleRepresentation() {
+		return getPhoneNumber();
+	}
 	
 	public string function getPhoneType() {
 		return getAccountPhoneType().getType();

@@ -40,7 +40,7 @@ component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewa
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="orderPercentageOff" ormType="big_decimal" validateNumeric="true";
-	property name="orderAmountOff" ormType="big_decimal" validateNumeric="true";
+	property name="orderPercentageOff" ormType="big_decimal";
+	property name="orderAmountOff" ormType="big_decimal";
 	
 }

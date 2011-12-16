@@ -410,7 +410,7 @@ Notes:
 		for(var i=1; i<=arrayLen(templateKeys); i++) {
 			var replaceDetails = {};
 			replaceDetails.key = templateKeys[i];
-			replaceDetails.value = arguments.object.getPropertyValueByIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""));
+			replaceDetails.value = arguments.object.getValueByPropertyIdentifier(replace(replace(templateKeys[i], "${", ""),"}",""));
 			arrayAppend(replacementArray, replaceDetails);
 		}
 		
@@ -419,6 +419,56 @@ Notes:
 		}
 		
 		return returnString;
+	}
+	
+	public array function arrayConcat(required array a1, required array a2) {
+		
+	/**
+		* Concatenates two arrays.
+		*
+		* @param a1      The first array.
+		* @param a2      The second array.
+		* @return Returns an array.
+		* @author Craig Fisher (craig@altainetractive.com)
+		* @version 1, September 13, 2001
+		* Modified by Tony Garcia 18Oct09 to deal with metadata arrays, which don't act like normal arrays
+		*/
+			var newArr = [];
+		    var i=1;
+		    if ((!isArray(a1)) || (!isArray(a2))) {
+		        writeoutput("Error in <Code>ArrayConcat()</code>! Correct usage: ArrayConcat(<I>Array1</I>, <I>Array2</I>) -- Concatenates Array2 to the end of Array1");
+		        return arrayNew(1);
+		    }
+		    /*we have to copy the array elements to a new array because the properties array in ColdFusion 
+		      is a "read only" array (see http://www.bennadel.com/blog/760-Converting-A-Java-Array-To-A-ColdFusion-Array.htm)*/
+		    for (i=1;i <= ArrayLen(a1);i++) {
+		        newArr[i] = a1[i];
+		    }
+		    for (i=1;i <= ArrayLen(a2);i++) {
+		        newArr[arrayLen(a1)+i] = a2[i];
+		    }
+		    return newArr;
+	}
+	
+	// @hint utility function to sort array of ojbects can be used to override getCollection() method to add sorting. 
+	// From Aaron Greenlee http://cookbooks.adobe.com/post_How_to_sort_an_array_of_objects_or_entities_with_C-17958.html
+	public array function sortObjectArray(required array objects, required string orderby, string sorttype="text", string direction = "asc") {
+		var property = arguments.orderby;
+		var sortedStruct = {};
+		var sortedArray = [];
+        for (var i=1; i <= arrayLen(arguments.objects); i++) {
+                // Each key in the struct is in the format of
+                // {VALUE}.{RAND NUMBER} This is important otherwise any objects
+                // with the same value would be lost.
+                var rn = randRange(1,100);
+                var sortedStruct[ evaluate("arguments.objects[i].get#property#() & '.' & rn") ] = objects[i];
+		}
+		var keyArray = structKeyArray(sortedStruct);
+		arraySort(keyArray,arguments.sorttype,arguments.direction);
+		for(var i=1; i<=arrayLen(keyArray);i++) {
+			arrayAppend(sortedArray, sortedStruct[keyArray[i]]);
+		}
+		return sortedArray;
 	}
 	
 	</cfscript>

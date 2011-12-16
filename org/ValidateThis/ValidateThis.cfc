@@ -18,6 +18,7 @@
 	<cffunction name="init" returnType="any" access="public" output="false" hint="I build a new ValidateThis">
 		<cfargument name="ValidateThisConfig" type="any" required="false" default="#StructNew()#" />
 
+		<cfset var defaultLocaleMap = {en_US='/ValidateThis/locales/en_US.properties'} />
 		<cfset variables.ValidateThisConfig = arguments.ValidateThisConfig />
 		<!--- Set default values for keys in ValidateThisConfig --->
 		<cfparam name="variables.ValidateThisConfig.TranslatorPath" default="ValidateThis.core.BaseTranslator" />
@@ -28,8 +29,8 @@
 		<cfparam name="variables.ValidateThisConfig.JSRoot" default="js/" />
 		<cfparam name="variables.ValidateThisConfig.defaultFormName" default="frmMain" />
 		<cfparam name="variables.ValidateThisConfig.definitionPath" default="/model/" />
-		<cfparam name="variables.ValidateThisConfig.localeMap" default="#StructNew()#" />
-		<cfparam name="variables.ValidateThisConfig.defaultLocale" default="" />
+		<cfparam name="variables.ValidateThisConfig.localeMap" default="#defaultLocaleMap#" />
+		<cfparam name="variables.ValidateThisConfig.defaultLocale" default="en_US" />
 		<cfparam name="variables.ValidateThisConfig.abstractGetterMethod" default="getValue" />
 		<cfparam name="variables.ValidateThisConfig.ExtraRuleValidatorComponentPaths" default="" />
 		<cfparam name="variables.ValidateThisConfig.ExtraClientScriptWriterComponentPaths" default="" />
@@ -42,6 +43,7 @@
 		<cfparam name="variables.ValidateThisConfig.extraAnnotationTypeReaderComponentPaths" default="" />
 		<cfparam name="variables.ValidateThisConfig.debuggingMode" default="none" /><!--- possible values: none|info|strict --->
 		<cfparam name="variables.ValidateThisConfig.ajaxProxyURL" default="" /><!--- possible values: any web webservice path that exposes the VT api --->
+		<cfparam name="variables.ValidateThisConfig.vtFolder" default="#getVTFolder()#" />
 		
 		<cfset variables.ValidationFactory = CreateObject("component","core.ValidationFactory").init(variables.ValidateThisConfig) />
 		<cfset variables.CommonScriptGenerator = getBean("CommonScriptGenerator") />
@@ -66,6 +68,13 @@
 		
 	</cffunction>
 	
+	<cffunction name="getVTFolder" access="public" output="false" returntype="any" hint="returns the name of the folder in which VT is installed">
+
+		<cfset var thisFolder = getDirectoryFromPath(getCurrentTemplatePath()) />
+		<cfreturn listLast(thisFolder,"/\") />
+
+	</cffunction>
+	
 	<cffunction name="createWrapper" access="public" output="false" returntype="any">
 		<cfargument name="theObject" type="any" required="true"/>
 		<cfreturn variables.ValidationFactory.createWrapper(arguments.theObject)/>
@@ -78,12 +87,14 @@
 		<cfargument name="Result" type="any" required="false" default="" />
 		<cfargument name="objectList" type="array" required="false" default="#arrayNew(1)#" />
 		<cfargument name="debuggingMode" type="string" required="false" default="#variables.ValidateThisConfig.debuggingMode#" />
+		<cfargument name="ignoreMissingProperties" type="boolean" required="false" default="false" />
+		<cfargument name="locale" type="string" required="false" default="#variables.ValidateThisConfig.defaultLocale#" />
 
 		<cfset var BOValidator = getValidator(argumentCollection=arguments) />
 		
 		<cfset arguments.theObject = createWrapper(arguments.theObject)/>
 
-		<cfset arguments.Result = BOValidator.validate(arguments.theObject,arguments.Context,arguments.Result,arguments.objectList,arguments.debuggingMode) />
+		<cfset arguments.Result = BOValidator.validate(arguments.theObject,arguments.Context,arguments.Result,arguments.objectList,arguments.debuggingMode,arguments.ignoreMissingProperties,arguments.locale) />
 		
 		<cfreturn arguments.Result />
 

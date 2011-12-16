@@ -69,9 +69,7 @@ Notes:
 			<h4>Credit Card Details</h4>
 			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].paymentMethodID" value="creditCard" />
 			<input type="hidden" name="orderPayments[#params.orderPaymentIndex#].orderPaymentID" value="#params.orderPayment.getOrderPaymentID()#" />
-			<cfif params.orderPayment.getErrorBean().hasError('processing')>
-				<div class="error">#params.orderPayment.getErrorBean().getError('processing')#</div>
-			</cfif> 
+			<cf_SlatwallErrorDisplay object="#params.orderPayment#" errorName="processing" displayType="div" />
 			<dl>
 				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].nameOnCreditCard" property="nameOnCreditCard" edit="#params.edit#" /> 
 				<cf_SlatwallPropertyDisplay object="#params.orderPayment#" fieldName="orderPayments[#params.orderPaymentIndex#].creditCardNumber" property="creditCardNumber" noValue="true" edit="#params.edit#" />

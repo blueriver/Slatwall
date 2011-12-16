@@ -53,9 +53,9 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID" constrained="false";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID" constrained="false";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent cached properties
 	property name="country" persistent="false";
@@ -66,6 +66,36 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		}
 		
 		return super.init();
+	}
+	
+	// This overrides the base validation method to dynamically add rules based on country specific requirements
+	public any function validate() {
+		
+		// Get the country of this address
+		var country = getCountry();
+		
+		// Check each of the contries required fields
+		if ( country.getStreetAddressRequiredFlag() ) {
+			getValidateThis().addRule(objectType="Address",propertyName="streetAddress", valType="required", contexts="full");
+		}
+		if ( country.getStreet2AddressRequiredFlag() ) {
+			getValidateThis().addRule(objectType="Address",propertyName="street2Address", valType="required", contexts="full");
+		}
+		if ( country.getLocalityRequiredFlag() ) {
+			getValidateThis().addRule(objectType="Address",propertyName="locality", valType="required", contexts="full");
+		}
+		if ( country.getCityRequiredFlag() ) {
+			getValidateThis().addRule(objectType="Address",propertyName="city", valType="required", contexts="full");
+		}
+		if ( country.getStateCodeRequiredFlag() ) {
+			getValidateThis().addRule(objectType="Address",propertyName="stateCode", valType="required", contexts="full");
+		}
+		if ( country.getPostalCodeRequiredFlag() ) {
+			getValidateThis().addRule(objectType="Address",propertyName="postalCode", valType="required", contexts="full");
+		}
+		
+		// Call the base method validate with any additional arguments passed in
+		super.validate(argumentCollection=arguments);
 	}
 	
 	public string function getFullAddress(string delimiter = ", ") {
@@ -86,7 +116,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		if(!structKeyExists(variables, "countryCodeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCountry");
 			smartList.addSelect(propertyIdentifier="countryName", alias="name");
-			smartList.addSelect(propertyIdentifier="countryCode", alias="id");
+			smartList.addSelect(propertyIdentifier="countryCode", alias="value");
 			smartList.addOrder("countryName|ASC");
 			variables.countryCodeOptions = smartList.getRecords();
 		}
@@ -97,10 +127,11 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		if(!structKeyExists(variables, "stateCodeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallState");
 			smartList.addSelect(propertyIdentifier="stateName", alias="name");
-			smartList.addSelect(propertyIdentifier="stateCode", alias="id");
+			smartList.addSelect(propertyIdentifier="stateCode", alias="value");
 			smartList.addFilter("countryCode", getCountryCode()); 
 			smartList.addOrder("stateName|ASC");
 			variables.stateCodeOptions = smartList.getRecords();
+			arrayPrepend(variables.stateCodeOptions, {value="", name=rbKey('define.select')});
 		}
 		return variables.stateCodeOptions;
 	}

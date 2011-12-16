@@ -3,25 +3,25 @@
 	<Columns>
 		<column name="countryCode" fieldtype="id" />
 		<column name="countryName" />
-		<column name="activeFlag" />
+		<column name="activeFlag" datatype="bit" />
 		<column name="streetAddressLabel" />
-		<column name="streetAddressShowFlag" />
-		<column name="streetAddressRequiredFlag" />
+		<column name="streetAddressShowFlag" datatype="bit" />
+		<column name="streetAddressRequiredFlag" datatype="bit" />
 		<column name="street2AddressLabel" />
-		<column name="street2AddressShowFlag" />
-		<column name="street2AddressRequiredFlag" />
+		<column name="street2AddressShowFlag" datatype="bit" />
+		<column name="street2AddressRequiredFlag" datatype="bit" />
 		<column name="localityLabel" />
-		<column name="localityShowFlag" />
-		<column name="localityRequiredFlag" />
+		<column name="localityShowFlag" datatype="bit" />
+		<column name="localityRequiredFlag" datatype="bit" />
 		<column name="cityLabel" />
-		<column name="cityShowFlag" />
-		<column name="cityRequiredFlag" />
+		<column name="cityShowFlag" datatype="bit" />
+		<column name="cityRequiredFlag" datatype="bit" />
 		<column name="stateCodeLabel" />
-		<column name="stateCodeShowFlag" />
-		<column name="stateCodeRequiredFlag" />
+		<column name="stateCodeShowFlag" datatype="bit" />
+		<column name="stateCodeRequiredFlag" datatype="bit" />
 		<column name="postalCodeLabel" />
-		<column name="postalCodeShowFlag" />
-		<column name="postalCodeRequiredFlag" />
+		<column name="postalCodeShowFlag" datatype="bit" />
+		<column name="postalCodeRequiredFlag" datatype="bit" />
 	</Columns>
 	<Records>
 		<Record countryCode="AD" countryName="Andorra" activeFlag="1" streetAddressLabel="Street Address" streetAddressShowFlag="1" streetAddressRequiredFlag="1" street2AddressLabel="Street Address 2" street2AddressShowFlag="1" street2AddressRequiredFlag="0" localityLabel="Locality" localityShowFlag="0" localityRequiredFlag="0" cityLabel="City" cityShowFlag="1" cityRequiredFlag="1" stateCodeLabel="State" stateCodeShowFlag="1" stateCodeRequiredFlag="0" postalCodeLabel="Postal Code" postalCodeShowFlag="1" postalCodeRequiredFlag="1" />

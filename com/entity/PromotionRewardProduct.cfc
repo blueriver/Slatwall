@@ -40,10 +40,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="itemRewardQuantity" ormType="integer" validateNumeric="true";
-	property name="itemPercentageOff" ormType="big_decimal" validateNumeric="true";
-	property name="itemAmountOff" ormType="big_decimal" validateNumeric="true";
-	property name="itemAmount" ormType="big_decimal" validateNumeric="true";
+	property name="itemRewardQuantity" ormType="integer";
+	property name="itemPercentageOff" ormType="big_decimal";
+	property name="itemAmountOff" ormType="big_decimal";
+	property name="itemAmount" ormType="big_decimal";
 	
 	// Related Entities
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID" cascade="save-update";
@@ -51,7 +51,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID" cascade="save-update";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID" cascade="save-update";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID" cascade="save-update";
-		
+	
+	// Non-persistent entities
+	property name="itemDiscountType" persistent="false";
+	
 	public any function init() {
 
 		if(isNull(variables.brands)) {
@@ -71,6 +74,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		}
 
 		return super.init();
+	}
+	
+	public string function getRewardType() {
+		return "product";
 	}
 		
 	/******* Association management methods for bidirectional relationships **************/
@@ -211,17 +218,33 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		if(!structKeyExists(variables, "brandOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
 			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="id"); 
+			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
 			smartList.addOrder("brandName|ASC");
 			variables.brandOptions = smartList.getRecords();
 		}
 		return variables.brandOptions;
 	}
 	
+	public string function displayBrandNames() {
+		var brandNames = "";
+		for( var i=1; i<=arrayLen(this.getBrands());i++ ) {
+			brandNames = listAppend(brandNames, " " & this.getBrands()[i].getBrandName());
+		}
+		return brandNames;
+	}
+	
+	public string function displayOptionNames() {
+		var optionNames = "";
+		for( var i=1; i<=arrayLen(this.getOptions());i++ ) {
+			optionNames = listAppend(optionNames, " " & this.getOptions()[i].getOptionName());
+		}
+		return optionNames;
+	}
+	
 	public string function displayProductTypeNames() {
 		var productTypeNames = "";
 		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
-			productTypeNames = listAppend(productTypeNames,this.getProductTypes()[i].getProductTypeName());
+			productTypeNames = listAppend(productTypeNames, " " & this.getProductTypes()[i].getProductTypeName());
 		}
 		return productTypeNames;
 	}
@@ -229,7 +252,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	public string function displayProductNames() {
 		var productNames = "";
 		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
-			productNames = listAppend(productNames,this.getProducts()[i].getProductName());
+			productNames = listAppend(productNames, " " & this.getProducts()[i].getProductName());
 		}
 		return productNames;
 	}
@@ -237,7 +260,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	public string function displaySkuCodes() {
 		var skuCodes = "";
 		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
-			skuCodes = listAppend(skuCodes,this.getSkus()[i].getSkuCode());
+			skuCodes = listAppend(skuCodes, " " & this.getSkus()[i].getSkuCode());
 		}
 		return skuCodes;
 	}
@@ -264,6 +287,50 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
 		}
 		return skuIDs;
+	}
+	
+	public array function getItemDiscountTypeOptions() {
+		return [
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
+		];
+	}
+	
+	public string function getItemDiscountType() {
+		if(isNull(variables.itemDiscountType)) {
+			if(!isNull(getItemPercentageOff()) && isNull(getItemAmountOff()) && isNull(getItemAmount())) {
+				variables.itemDiscountType = "percentageOff";
+			} else if (!isNull(getItemAmountOff()) && isNull(getItemPercentageOff()) && isNull(getItemAmount())) {
+				variables.itemDiscountType = "amountOff";
+			} else if (!isNull(getItemAmount()) && isNull(getItemPercentageOff()) && isNull( getItemAmountOff())) {
+				variables.itemDiscountType = "amount";
+			} else {
+				variables.itemDiscountType = "percentageOff";
+			}
+		}
+		return variables.itemDiscountType;
+	}
+	
+	public boolean function hasValidItemPercentageOffValue() {
+		if(getItemDiscountType() == "percentageOff" && ( isNull(getItemPercentageOff()) || !isNumeric(getItemPercentageOff()) || getItemPercentageOff() > 100 || getItemPercentageOff() < 0 ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidItemAmountOffValue() {
+		if(getItemDiscountType() == "amountOff" && ( isNull(getItemAmountOff()) || !isNumeric(getItemAmountOff()) ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidItemAmountValue() {
+		if(getItemDiscountType() == "amount" && ( isNull(getItemAmount()) || !isNumeric(getItemAmount()) ) ) {
+			return false;
+		}
+		return true;
 	}
 	
 }

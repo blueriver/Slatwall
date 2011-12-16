@@ -54,7 +54,7 @@ component displayname="Data Service" extends="BaseService" {
 				if(listLast(dirList[i],".") == "xml"){
 					var xmlRaw = FileRead(dirList[i]);
 					try{
-						loadDataFromXMLRaw(xmlRaw);	
+						loadDataFromXMLRaw(xmlRaw);
 					} catch (any e) {
 						// If we haven't retried 3 times, then incriment the retry counter and re-run the population
 						if(retryCount <= 3) {
@@ -64,6 +64,7 @@ component displayname="Data Service" extends="BaseService" {
 							throw(e);
 						}
 					}
+					
 				}
 			}	
 		} while (runPopulation);
@@ -90,12 +91,14 @@ component displayname="Data Service" extends="BaseService" {
 		for(var r=1; r <= arrayLen(xmlData.Table.Records.xmlChildren); r++) {
 			
 			var idColumnValue = "";
-			
+
 			var updateColumns = [];
 			var updateValues = [];
+			var updateColumnDataTypes = [];
 			
 			var insertColumns = [];
 			var insertValues = [];
+			var insertColumnDataTypes = [];
 			
 			for(var rp = 1; rp <= listLen(structKeyList(xmlData.Table.Records.xmlChildren[r].xmlAttributes)); rp ++) {
 				
@@ -109,17 +112,30 @@ component displayname="Data Service" extends="BaseService" {
 				
 				arrayAppend(insertColumns, thisColumn);
 				arrayAppend(insertValues, value);
+				
+				if(isDefined("columnAttributes.dataType")) {
+					arrayAppend(insertColumnDataTypes, columnAttributes.dataType);
+				} else {
+					arrayAppend(insertColumnDataTypes, "varchar");
+				}
 					
 				if(!isDefined("columnAttributes.update") || columnAttributes.update == true) {
 					arrayAppend(updateColumns, thisColumn);
 					arrayAppend(updateValues, value);
+					
+					if(isDefined("columnAttributes.dataType")) {
+						arrayAppend(updateColumnDataTypes, columnAttributes.dataType);
+					} else {
+						arrayAppend(updateColumnDataTypes, "varchar");
+					}
 				}
+				
 			}
 			
 			if( getDAO().recordExists(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue) ) {
-				getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues);
+					getDAO().recordUpdate(xmlData.table.xmlAttributes.tableName, idColumn, idColumnValue, updateColumns, updateValues, updateColumnDataTypes);
 			} else {
-				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues);
+				getDAO().recordInsert(xmlData.table.xmlAttributes.tableName, insertColumns, insertValues, insertColumnDataTypes);
 			}
 		}
 	}
@@ -142,8 +158,15 @@ component displayname="Data Service" extends="BaseService" {
 		}
 	}
 	
-	public boolean function isDuplicateProperty( required string propertyName, required any entity ) {
-		return getDAO().isDuplicateProperty(argumentcollection=arguments);
+	public boolean function isUniqueProperty( required string propertyName, required any entity ) {
+		return getDAO().isUniqueProperty(argumentcollection=arguments);
 	}
 	
+	public any function toBundle(required any bundle, required string tableList) {
+		getDAO().toBundle(argumentcollection=arguments);
+	}
+	
+	public any function fromBundle(required any bundle, required string tableList) {
+		getDAO().toBundle(argumentcollection=arguments);
+	}
 }

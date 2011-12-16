@@ -37,6 +37,17 @@ Notes:
 
 --->
 <cfoutput>
+	
+<!---	<script type="text/javascript">
+		jQuery(function(){
+			actionDialog("<input type='checkbox' style=''>test", function(){alert('clicked ok!'); return false;});	
+			
+		});
+		
+		
+	</script>
+	--->
+	
 <cfif rc.edit>
 <div class="buttons">
 	<cfif rc.Product.getOptionGroupCount() gt 0>
@@ -47,7 +58,8 @@ Notes:
 </div>
 </cfif>
 <!---<cfset local.skus = rc.SkuSmartList.getPageRecords() />--->
-	<table id="skuTable" class="mura-table-grid stripe">
+	<cf_SlatwallErrorDisplay object="#rc.product#" errorName="skus" displaytype="div" />
+	<table id="skuTable" class="listing-grid stripe">
 		<thead>
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
@@ -57,13 +69,38 @@ Notes:
 					<th>#local.thisOptionGroup.getOptionGroupName()#</th>
 				</cfloop>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imageFile")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
+				<!---<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
 				<cfif rc.edit>
 					<th></th>
-				</cfif>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.listPrice")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
+				</cfif>--->
+				<th <cfif rc.edit>class="skuPriceColumn"</cfif>>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
+				
+				
+				<!--- Loop over all Price Groups and create column headers --->
+				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
+					
+					<!--- Store the value of the priceGroupRateId as a "data" property. Check what is the active rate in this price group. If the rate returned is not actaully a rate in this price group (inherited) just use a code --->
+					<cfset rate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+					<cfif isNull(rate)>
+						<cfset dataPriceGroupRateId = "">
+					<cfelseif rate.getPriceGroup().getPriceGroupId() EQ local.priceGroup.getPriceGroupId()>
+						<cfset dataPriceGroupRateId = "#rate.getPriceGroupRateId()#">	
+					<cfelse>
+						<cfset dataPriceGroupRateId = "inherited">	
+					</cfif>
+					
+					
+					<th <cfif rc.edit>class="priceGroupSKUColumn"</cfif> data-pricegroupid="#local.priceGroup.getPriceGroupId()#" data-pricegrouprateid="#dataPriceGroupRateId#" <cfif !isNull(local.priceGroup.getParentPriceGroup())>data-inheritedpricegroupid="#local.priceGroup.getParentPriceGroup().getPriceGroupId()#"</cfif>>
+						#local.priceGroup.getPriceGroupName()#
+					
+						<cfif !isNull(local.priceGroup.getParentPriceGroup())>
+							(Inherited from #local.priceGroup.getParentPriceGroup().getPriceGroupName()#)
+						</cfif>
+					</th>
+				</cfloop>
+				
+				<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>
@@ -79,25 +116,30 @@ Notes:
 				</cfif>
 			</tr>
 		</thead>
+		
+		
+		
 		<tbody>
 		<cfloop from="1" to="#arrayLen(rc.skuSmartList.getPageRecords())#" index="local.skuCount">
 			<cfset local.thisSku = rc.skuSmartList.getPageRecords()[local.skuCount] />
-			<tr id="Sku#local.skuCount#" class="skuRow">
+			<tr id="Sku#local.skuCount#" class="skuRow" data-skuid="#local.thisSku.getSkuId()#">
 				<input type="hidden" name="skus[#local.skuCount#].skuID" value="#local.thisSku.getSkuID()#" />
 				<td class="alignLeft">
 					<cfif rc.edit>
 						<input type="text" name="skus[#local.skuCount#].skuCode" value="#local.thisSku.getSkuCode()#" />
-						<cfif local.thisSku.hasErrors()>
+						<!---<cfif local.thisSku.hasErrors()>
 							<br><span class="formError">#local.thisSku.getErrorBean().getError("skuCode")#</span>
-						</cfif>
+						</cfif>--->
+						
+						<cf_SlatwallErrorDisplay object="#local.thisSku#" errorName="skuCode" />
 					<cfelse>
 						#local.thisSku.getSkuCode()#
 					</cfif>
 				</td>
 				<cfif rc.edit>
-					<td><input type="radio" name="defaultSku" value="#local.thisSku.getSkuID()#"<cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()> checked="checked"</cfif> /></td>
+					<td><input type="radio" name="defaultSku.skuID" value="#local.thisSku.getSkuID()#"<cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()> checked="checked"</cfif> /></td>
 				<cfelse>
-					<td><cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
+					<td><cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()><img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
 				</cfif>
 				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
 					<td>#local.thisSku.getOptionByOptionGroupID(local.thisOptionGroup.getOptionGroupID()).getOptionName()#</td>
@@ -107,34 +149,53 @@ Notes:
 						<a href="#local.thisSku.getImagePath()#" class="lightbox preview">#local.thisSku.getImageFile()#</a>
 					<cfelse>
 						#local.thisSku.getImageFile()#
-					</cfif>		
-				</td>
-				<td>
+					</cfif>	
+					
 					<cfif local.thisSku.imageExists()>
-						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
+						<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />
 					<cfelse>
-						<img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
-					</cfif>
-				</td>
-				<cfif rc.edit>
-					<td>
+						<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.cross_red.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.no')#" title="#rc.$.Slatwall.rbkey('sitemanager.no')#" />
+					</cfif>	
+					
+					<cfif rc.edit>
 						<a class="button uploadImage" href="/plugins/Slatwall/?slatAction=admin:product.uploadSkuImage&skuID=#local.thisSku.getSkuID()#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
-					</td>
-				</cfif>
-				<td>
-					<cfif rc.edit>
-						$<input type="text" size="6" name="skus[#local.skuCount#].price" value="#decimalFormat(local.thisSku.getPrice())#" />
-					<cfelse>
-						#DollarFormat(local.thisSku.getPrice())#
 					</cfif>
 				</td>
+	
 				<td>
 					<cfif rc.edit>
-						 $<input type="text" size="6" name="skus[#local.skuCount#].listPrice" value="#decimalFormat(local.thisSku.getListPrice())#" />         
+						<input type="text" size="6" name="skus[#local.skuCount#].price" value="#local.thisSku.getPrice()#" />
 					<cfelse>
-						#DollarFormat(local.thisSku.getListPrice())#
+						#local.thisSku.getFormattedValue('price')#
 					</cfif>
 				</td>
+				
+				<!--- Loop over all Price Groups and create actual values --->
+				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+					<cfset local.priceGroup = rc.priceGroupSmartList.getPageRecords()[local.i] />
+					<cfset priceGroupId = local.priceGroup.getPriceGroupId()>
+					
+					<!--- Store the value of the priceGroupRateId as a "data" property. Check what is the active rate in this price group. If the rate returned is not actaully a rate in this price group (inherited) just use a code --->
+					<cfset rate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+					<cfif isNull(rate)>
+						<cfset dataPriceGroupRateId = "">
+					<cfelseif rate.getPriceGroup().getPriceGroupId() EQ local.priceGroup.getPriceGroupId()>
+						<cfset dataPriceGroupRateId = "#rate.getPriceGroupRateId()#">	
+					<cfelse>
+						<cfset dataPriceGroupRateId = "inherited">	
+					</cfif>
+					
+					<td <cfif rc.edit>class="priceGroupSKUColumn"</cfif> data-pricegroupid="#priceGroupId#" data-pricegrouprateid="#dataPriceGroupRateId#">
+						#$.Slatwall.formatValue(local.thisSku.getPriceByPriceGroup(priceGroup=local.priceGroup), "currency")#
+						
+						<cfset productRate = rc.product.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+						<cfset skuRate = local.thisSku.getAppliedPriceGroupRateByPriceGroup(local.priceGroup)>
+						<cfif !isNull(productRate) AND !isNull(skuRate) AND productRate.getPriceGroupRateId() neq skuRate.getPriceGroupRateId()>
+							Overridden (#skuRate.getAmountRepresentation()#)
+						</cfif>
+					</td>	
+				</cfloop>
+
 				<td>
 					<cfif rc.edit>
 						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
@@ -155,17 +216,8 @@ Notes:
 				<cfif rc.edit>
 					<td class="administration">
 						<cfif !local.thisSku.isNew()>
-							<cfset local.disabledText = "" />
 							<ul class="one">
-								<cfset local.deleteDisabled = arrayLen(rc.product.getSkus()) eq 1 or rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID() or local.thisSku.getOrderedFlag() />
-								<cfif local.deleteDisabled and arrayLen(rc.product.getSkus()) eq 1>
-									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOneSku') />
-								<cfelseif local.deleteDisabled and rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()>
-									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateIsDefault') />
-								<cfelseif local.deleteDisabled and local.thisSku.getOrderedFlag()>
-									<cfset local.disabledText = rc.$.Slatwall.rbKey('entity.sku.delete_validateOrdered') />
-								</cfif>
-								<cf_SlatwallActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.deleteDisabled#" disabledText="#local.disabledText#" confirmrequired="true">
+								<cf_SlatwallActionCaller action="admin:product.deleteSku" querystring="skuID=#local.thisSku.getSkuID()#" class="delete" type="list" disabled="#local.thisSku.isNotDeletable()#" confirmrequired="true">
 							</ul>
 						</cfif>
 					</td>
@@ -197,23 +249,24 @@ Notes:
 			</td>
         </cfloop>
         <td class="varWidth"><!--image path --></td>
-		<td><!--image exists --></td>
-		<td><!--upload image field --></td>
         <td>
-            $<input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
+            <input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
         </td>
-        <td>
-            $<input type="text" size="6" name="listPrice" value="#rc.product.getDefaultSku().getListPrice()#" />         
-        </td>
+        
+		<!--- Loop though price groups --->
+		<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
+			<td></td>
+		</cfloop>
+		
 		<td>
 			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
 		</td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+	        <td></td>
+	        <td></td>
+	        <td></td>
+	        <td></td>
+	        <td></td>
         </cfif>
             <td class="administration">
             </td>
@@ -223,4 +276,6 @@ Notes:
 <cfelse>
 	<div class="clear"></div>
 </cfif>
+
+
 </cfoutput>

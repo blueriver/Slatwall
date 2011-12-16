@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.taxCategory" type="any" />
-<cfparam name="rc.blankTaxCategoryRate" type="any" />
+<cfparam name="rc.newTaxCategoryRate" type="any" />
 <cfparam name="rc.edit" type="boolean" /> 
 
 <cfoutput>
@@ -51,41 +51,47 @@ Notes:
 		
 		<cfif rc.edit>
 			<form name="taxCategory" action="#buildURL(action='admin:setting.savetaxcategory')#" method="post">
-			<input type="hidden" name="taxCategoryID" value="#rc.taxCategory.getTaxCategoryID()#" />
+				<input type="hidden" name="taxCategoryID" value="#rc.taxCategory.getTaxCategoryID()#" />
 		</cfif>
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
-		</dl>
-		
-		<table class="mura-table-grid stripe">
-			<tr>
-				<th class="varWidth">Address Zone</th>
-				<th>Rate</th>
-				<th class="administration">&nbsp;</th>
-			</tr>
-			<cfloop array="#rc.taxCategory.getTaxCategoryRates()#" index="local.tcr">
-				<tr>
-					<td class="varWidth">#local.tcr.getAddressZone().getAddressZoneName()#</td>
-					<td>#local.tcr.getTaxRate()#</td>
-					<td class="administration">
-						<ul class="one">
-							<cf_SlatwallActionCaller action="admin:setting.deletetaxcategoryrate" querystring="taxcategoryrateid=#local.tcr.getTaxCategoryRateID()#" class="delete" type="list">
-						</ul>
-					</td>
-				</tr>
-			</cfloop>
-		</table>
+				<dl class="twoColumn">
+					<cf_SlatwallPropertyDisplay object="#rc.taxCategory#" property="taxCategoryName" edit="#rc.edit#" first="true">
+				</dl>
+				
+				<table class="listing-grid stripe">
+					<tr>
+						<th class="varWidth">Address Zone</th>
+						<th>Rate</th>
+						<th class="administration">&nbsp;</th>
+					</tr>
+					<cfloop array="#rc.taxCategory.getTaxCategoryRates()#" index="local.tcr">
+						<cfif not local.tcr.hasErrors()>
+						<tr>
+							<td class="varWidth"><cfif not isNull(local.tcr.getAddressZone())>#local.tcr.getAddressZone().getAddressZoneName()#<cfelse>#$.slatwall.rbKey('define.all')#</cfif></td>
+							<td>#local.tcr.getTaxRate()#</td>
+							<td class="administration">
+								<ul class="one">
+									<cfif not local.tcr.isNew()><cf_SlatwallActionCaller action="admin:setting.deletetaxcategoryrate" querystring="taxcategoryrateid=#local.tcr.getTaxCategoryRateID()#" class="delete" type="list"></cfif>
+								</ul>
+							</td>
+						</tr>
+						</cfif>
+					</cfloop>
+				</table>
 		
 		<cfif rc.edit>
-			<hr />
-			<strong>Add Rate</strong>
-			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="addressZone" fieldName="addressZoneID" edit="#rc.edit#" first="true">	
-			<cf_SlatwallPropertyDisplay object="#rc.blankTaxCategoryRate#" property="taxRate" edit="#rc.edit#" first="true">
-			<button type="submit" name="addRate" value="true">Add Rate</button>
-			<br /><br />	
-			<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:setting.savetaxcategory" type="submit" class="button">
+				<hr />
+				<strong>Add Rate</strong>
+				<cfset valueOptions = rc.newTaxCategoryRate.getAddressZoneOptions() />
+				<cfset valueOptions[1].name = $.slatwall.rbKey('define.all') />
+				
+				<cf_SlatwallPropertyDisplay object="#rc.newTaxCategoryRate#" property="addressZone" fieldName="taxCategoryRates[1].addressZone.addressZoneID" edit="true">	
+				<cf_SlatwallPropertyDisplay object="#rc.newTaxCategoryRate#" property="taxRate" fieldName="taxCategoryRates[1].taxRate" edit="true">
+				<input type="hidden" name="taxCategoryRates[1].taxCategoryRateID" value="" />
+				<button type="submit" name="addRate" value="true">Add Rate</button>
+				<br /><br />
+				<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+				<cf_SlatwallActionCaller action="admin:setting.savetaxcategory" type="submit" class="button">
 			</form>
 		</cfif>
 		

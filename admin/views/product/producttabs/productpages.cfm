@@ -39,9 +39,9 @@ Notes:
 
 <cfoutput>
 	<cfif rc.edit>
-		<input type="hidden" name="contentID" value="" />
+		<input type="hidden" name="productContentIDPaths" value="" />
 		<cfif rc.productPages.recordCount() gt 0>
-			<table id="productPages" class="mura-table-grid stripe">
+			<table id="productPages" class="listing-grid stripe">
 				<tr>
 					<th></th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
@@ -50,7 +50,7 @@ Notes:
 					<cfset local.thisProductPage = rc.productPages.next() />
 					<tr>
 						<td>
-							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="contentID" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
+							<input type="checkbox"<cfif local.thisProductPage.getValue("excludeFromAssignment")> disabled="true"</cfif> id="#local.thisProductPage.getContentID()#" name="productContentIDPaths" value="#listChangeDelims(local.thisProductPage.getPath(),' ')#"<cfif listFind(rc.product.getContentIDs(),local.thisProductPage.getContentID())> checked="checked"</cfif> /> 
 						</td>
 						<cfset local.thisNest = local.thisProductPage.getTreeDepth() eq 0 ? "neston" : "nest" & local.thisProductPage.getTreeDepth() & "on" />
 						<td class="varWidth">
@@ -66,7 +66,7 @@ Notes:
 		</cfif>
 	<cfelse>
 		<cfif arrayLen(rc.product.getProductContent())>
-			<table id="ProductPages" class="mura-table-grid stripe">
+			<table id="ProductPages" class="listing-grid stripe">
 				<tr>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.product.productPages.pageTitle")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.product.productPages.pagePath")#</th>

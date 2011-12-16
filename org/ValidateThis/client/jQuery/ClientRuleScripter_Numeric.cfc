@@ -18,8 +18,16 @@
 	<cffunction name="getRuleDef" returntype="any" access="private" output="false" hint="I return just the rule definition which is required for the generateAddRule method.">
 		<cfargument name="validation" type="any" required="yes" hint="The validation struct that describes the validation." />
 
-		<cfreturn '"number": "true"' />
+		<cfreturn '"number":"true"' />
 		
+	</cffunction>
+
+	<cffunction name="getMessageDef" returntype="string" access="public" output="false" hint="I generate the JS script required to display the appropriate failure message.">
+		<cfargument name="message" type="string" default="#getGeneratedFailureMessage()#"/>
+		<cfargument name="valType" type="string" default="#getValType()#"/>
+		<cfargument name="locale" type="string" default=""/>
+		
+		<cfreturn super.getMessageDef(arguments.message,"number",arguments.locale) />
 	</cffunction>
 
 </cfcomponent>
