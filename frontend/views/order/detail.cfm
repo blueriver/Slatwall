@@ -36,6 +36,8 @@
 Notes:
 
 --->
+
+
 <cfparam name="rc.order" type="any" />
 <cfparam name="rc.orderID" type="string" />
 <cfparam name="rc.orderNumber" type="string" />
@@ -64,7 +66,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="OrderNumber">
 				<cf_SlatwallPropertyDisplay object="#rc.order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type">
 				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderOpenDateTime">
-				<cf_SlatwallPropertyDisplay object="#rc.order#" property="orderTotal">
+				<cf_SlatwallPropertyDisplay object="#rc.order#" property="total">
 			</dl>
 			<table>
 				<tr>
