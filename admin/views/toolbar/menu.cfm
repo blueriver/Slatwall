@@ -49,6 +49,7 @@ Notes:
 					<cf_SlatwallActionCaller action="admin:product" type="list">
 					<cf_SlatwallActionCaller action="admin:order" type="list">
 					<cf_SlatwallActionCaller action="admin:account" type="list">
+					<cf_SlatwallActionCaller action="admin:vendor" type="list">
 					<cf_SlatwallActionCaller action="admin:promotion" type="list">
 					<cf_SlatwallActionCaller action="admin:report" type="list">
 					<cf_SlatwallActionCaller action="admin:setting" type="list">
@@ -64,6 +65,7 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
 								<cf_SlatwallActionCaller action="admin:brand.list" type="list">
 								<cf_SlatwallActionCaller action="admin:account.list" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.list" type="list">
 								<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
 							</ul>
@@ -119,6 +121,16 @@ Notes:
 								<li class="title">Accounts</li>
 								<cf_SlatwallActionCaller action="admin:account.create" type="list">
 								<cf_SlatwallActionCaller action="admin:account.list" type="list">
+							</ul>
+						</div>
+					</div>
+					<div class="subMenu adminvendor">
+						<h3>#$.slatwall.rbkey('admin.vendor')#</h3>
+						<div class="oneColumn">
+							<ul>
+								<li class="title">Vendors</li>
+								<cf_SlatwallActionCaller action="admin:vendor.create" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.list" type="list">
 							</ul>
 						</div>
 					</div>
