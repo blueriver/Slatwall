@@ -53,4 +53,8 @@ component displayname="Vendor Order" entityname="SlatwallVendorOrder" table="Sla
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all";
 	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
 	
+	
+	public numeric function getTotal() {
+		return 999;
+	}
 }

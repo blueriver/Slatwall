@@ -64,12 +64,13 @@ Notes:
 				<li><a href="##tabVendorOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendororders")#</span></a></li>
 			</ul>
 
-			<div id="tabVendorOrders">
-				#view("admin:vendor/vendortabs/vendororders")#
-			</div>
 			<div id="tabVendorAddresses">
 				#view("admin:vendor/vendortabs/vendoraddresses")#
 			</div>
+			<div id="tabVendorOrders">
+				#view("admin:vendor/vendortabs/vendororders")#
+			</div>
+			
 		</div>
 		
 		<cfif rc.edit>

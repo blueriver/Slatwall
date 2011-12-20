@@ -77,7 +77,7 @@ Notes:
 		<div id="vendorAddressInputs" <cfif rc.vendorAddress.isNew() AND !rc.vendorAddress.hasErrors()>class="ui-helper-hidden"</cfif> >
 			<strong>#rc.$.Slatwall.rbKey("admin.vendoraddress.edit.addVendorAddress")#</strong>
 			<cfinclude template="vendoraddressdisplay.cfm">
-			<input type="hidden" name="vendorAddresss[1].vendorAddressId" value="#rc.vendorAddress.getVendorAddressId()#"/>
+			<input type="hidden" name="vendorAddresses[1].vendorAddressId" value="#rc.vendorAddress.getVendorAddressId()#"/>
 			
 			<!--- The populateSubProperties is read by the implicit save() handler to determine if it should process the saveVendorAddress() method. --->
 			<cfif rc.vendorAddress.isNew() && not rc.vendorAddress.hasErrors()>

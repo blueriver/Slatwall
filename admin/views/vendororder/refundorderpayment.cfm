@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -37,26 +37,18 @@ Notes:
 
 --->
 
+<cfparam name="rc.orderpayment" type="any" />
+<cfparam name="rc.orderpaymentID" type="string" /> 
+
 <cfoutput>
-	<div class="vendorAddressDisplay">
-		<dl class="twoColumn">
-			
-			<!---
-			property name="addressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="name" ormtype="string";
-	property name="company" ormtype="string";
-	property name="phone" ormtype="string";
-	property name="streetAddress" ormtype="string";
-	property name="street2Address" ormtype="string";
-	property name="locality" ormtype="string";
-	property name="city" ormtype="string";
-	property name="stateCode" ormtype="string";
-	property name="postalCode" ormtype="string";
-	property name="countryCode" ormtype="string"
-			--->
-			
-			<cf_SlatwallPropertyDisplay object="#rc.vendorAddress.getAddress()#" property="streetAddress" fieldName="vendorAddresses[1].addresses[1].streetAddress" edit="#rc.edit#" />
-			<!--- More to come! --->
-		</dl>
-	</div>
+	<form class="modal" method="post" action="#buildURL('admin:order.processOrderPaymentRefund')#">
+		<input type="hidden" name="orderPaymentID" value="#rc.orderPaymentID#" />
+		<input type="hidden" name="providerTransactionID" value="#rc.providerTransactionID#" />
+		<p>#rc.$.Slatwall.rbKey("admin.order.enterPaymentRefundAmount")#: #rc.orderpayment.getFormattedValue('amountCharged', 'currency')#</p>
+		$ <input class="refundAmount" type="text" name="refundAmount" value="0" size="10" />
+		<br><br>
+		<div id="actionButtons" class="clearfix">
+			<cf_SlatwallActionCaller action="admin:order.processOrderPaymentRefund" class="button" type="submit" />
+		</div>
+	</form>
 </cfoutput>

@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,27 +36,13 @@
 Notes:
 
 --->
+<cfparam name="rc.orderFulfillment" type="any" />
 
+<cfset local.method = rc.orderfulfillment.getFulfillmentMethodID() />
+
+<cfset local.params.orderFulfillment = rc.orderFulfillment />
+<div class="svoadminorderfulfillmentdetail">
 <cfoutput>
-	<div class="vendorAddressDisplay">
-		<dl class="twoColumn">
-			
-			<!---
-			property name="addressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="name" ormtype="string";
-	property name="company" ormtype="string";
-	property name="phone" ormtype="string";
-	property name="streetAddress" ormtype="string";
-	property name="street2Address" ormtype="string";
-	property name="locality" ormtype="string";
-	property name="city" ormtype="string";
-	property name="stateCode" ormtype="string";
-	property name="postalCode" ormtype="string";
-	property name="countryCode" ormtype="string"
-			--->
-			
-			<cf_SlatwallPropertyDisplay object="#rc.vendorAddress.getAddress()#" property="streetAddress" fieldName="vendorAddresses[1].addresses[1].streetAddress" edit="#rc.edit#" />
-			<!--- More to come! --->
-		</dl>
-	</div>
+	#view("order/fulfillment/#local.method#",local.params)#
 </cfoutput>
+</div>

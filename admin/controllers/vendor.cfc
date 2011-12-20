@@ -119,6 +119,46 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function saveVendor(required struct rc) {
 		param name="rc.vendorID" default="";
 		
+		editVendor(rc);
+
+		var wasNew = rc.Vendor.isNew();
+
+		// this does an RC -> Entity population, and flags the entities to be saved.
+		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
+
+		if(!rc.Vendor.hasErrors()) {
+			// If added or edited a Price Group Rate
+			if(wasNew) {
+				rc.message=rbKey("admin.vendor.saveVendor_success");
+				//getFW().redirect(action="admin:vendor.editVendor", querystring="Vendorid=#rc.Vendor.getVendorID()#", preserve="message");
+				getFW().redirect(action="admin:vendor.listvendors", preserve="message");	
+			} else {
+				rc.message=rc.message=rbKey("admin.vendor.saveVendor_success");
+				
+				// If any of the sub properties (such as address or email) has changed during this edit, then stay on the details page, otherwise, list.
+				if(rc.populateSubProperties)
+					getFW().redirect(action="admin:vendor.editVendor", querystring="vendorID=#rc.Vendor.getVendorID()#", preserve="message");
+				else
+					getFW().redirect(action="admin:vendor.listVendors", preserve="message");
+			}	
+		} 
+		else { 			
+			// If one of the sub properties had the error, then find out which one and populate it
+			if(rc.Vendor.hasError("VendorAddress")) {
+				for(var i=1; i<=arrayLen(rc.Vendor.getVendorAddresses()); i++) {
+					if(rc.Vendor.getVendorAddresses()[i].getAddress().hasErrors()) {
+						rc.VendorAddress = rc.Vendor.getVendorAddresses()[i];
+						break;
+					}
+				}
+			}
+			rc.edit = true;
+			//rc.itemTitle = rc.Vendor.isNew() ? rc.$.Slatwall.rbKey("admin.Vendor.createVendor") : rc.$.Slatwall.rbKey("admin.Vendor.editVendor") & ": #rc.Vendor.getVendorName()#";
+			getFW().setView(action="admin:vendor.detailVendor");
+		}	
+		
+		
+		/*
 		detailVendor(rc);
 		
 		rc.vendor = getVendorService().saveVendor(vendor=rc.vendor, data=rc);
@@ -130,5 +170,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.message = "admin.vendor.save_success";
         	getFW().redirect(action="admin:vendor.listvendor",preserve="message");	
 		}
+		*/
 	}
 }
