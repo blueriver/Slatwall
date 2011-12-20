@@ -43,10 +43,15 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 		
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorAddressType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorAddressTypeID";
+	//property name="vendorAddressType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorAddressTypeID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	
-	public string function getAddressType() {
+	/*public string function getAddressType() {
 		return getVendorAddressType().getType();
+	}*/
+	
+	// Function which verifies that the vendor address can be deleted. Right now it does nothing.
+	public boolean function isDeletable() {
+		return true;
 	}
 }

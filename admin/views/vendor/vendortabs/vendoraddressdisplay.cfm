@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,28 @@
 
 Notes:
 
-*/
-component displayname="Vendor Order" entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="vendorOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="vendorOrderNumber" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all";
-	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
-	
-}
+--->
+
+<cfoutput>
+	<div class="vendorAddressDisplay">
+		<dl class="twoColumn">
+			
+			<!---
+			property name="addressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="name" ormtype="string";
+	property name="company" ormtype="string";
+	property name="phone" ormtype="string";
+	property name="streetAddress" ormtype="string";
+	property name="street2Address" ormtype="string";
+	property name="locality" ormtype="string";
+	property name="city" ormtype="string";
+	property name="stateCode" ormtype="string";
+	property name="postalCode" ormtype="string";
+	property name="countryCode" ormtype="string"
+			--->
+			
+			<cf_SlatwallPropertyDisplay object="#rc.vendorAddress.getAddress()#" fieldName="vendorAddress[1].address.streetAddress" property="streetAddress" edit="#rc.edit#" />
+			<!--- More to come! --->
+		</dl>
+	</div>
+</cfoutput>

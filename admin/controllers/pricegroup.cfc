@@ -78,7 +78,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	rc.edit = true; 
     	getFW().setView("admin:pricegroup.detailPriceGroup");  
-	
 	}
 	
 

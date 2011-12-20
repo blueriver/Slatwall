@@ -65,7 +65,7 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
 								<cf_SlatwallActionCaller action="admin:brand.list" type="list">
 								<cf_SlatwallActionCaller action="admin:account.list" type="list">
-								<cf_SlatwallActionCaller action="admin:vendor.list" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.listvendor" type="list">
 								<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
 							</ul>
@@ -129,8 +129,13 @@ Notes:
 						<div class="oneColumn">
 							<ul>
 								<li class="title">Vendors</li>
-								<cf_SlatwallActionCaller action="admin:vendor.create" type="list">
-								<cf_SlatwallActionCaller action="admin:vendor.list" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.createvendor" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.listvendors" type="list">
+							</ul>
+							<ul>
+								<li class="title">Vendor Orders</li>
+								<cf_SlatwallActionCaller action="admin:vendororder.createvendororder" type="list">
+								<cf_SlatwallActionCaller action="admin:vendororder.listvendororders" type="list">
 							</ul>
 						</div>
 					</div>

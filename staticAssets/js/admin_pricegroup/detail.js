@@ -1,7 +1,7 @@
 jQuery(function() {
 
 	jQuery('#addPriceGroupRateButton').click(function(){
-	 	jQuery('#addPriceGroupRateHidden').val('true');
+	 	jQuery('#populateSubProperties').val('true');
 		jQuery('#priceGroupRateInputs').fadeIn(400);
 		jQuery(this).remove();
 	});

@@ -51,10 +51,34 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (one-to-many)
-	property name="phoneNumbers" singularname="phoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	property name="vendorOrders" singularname="vendorOrder" type="array" cfc="VendorOrder" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	property name="vendorAddresses" singularname="vendorAddress" type="array" cfc="VendorAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	//property name="phoneNumbers" singularname="phoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	property name="emailAddresses" singularname="emailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";
+	/*property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";*/
+	
+	public Vendor function init(){
+		// set default collections for association management methods
+		if(isNull(variables.vendorAddresses)) {
+			variables.vendorAddresses = [];
+		}
+		
+		if(isNull(variables.vendorOrders)) {
+		   variables.vendorOrders = [];
+		}
+	   
+		if(isNull(variables.emailAddresses)) {
+			variables.emailAddresses = [];
+		}
+
+		return super.init();
+	}
+	
+	// Function which verifies that the vendor can be deleted.
+	public boolean function isDeletable() {
+		return ArrayLen(getVendorOrders()) == 0;
+	}
 	
 }

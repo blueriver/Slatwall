@@ -36,15 +36,69 @@
 Notes:
 
 */
-component extends="BaseService" {
+component extends="BaseService" accessors="true" output="false" {
+	
+	property name="vendorOrderService" type="any";
 
-	public any function getVendorSmartList(struct data={}){
-		arguments.entityName = "SlatwallVendor";
-		var smartList = getDAO().getSmartList(argumentCollection=arguments);
 	
-		smartList.addKeywordColumn(propertyIdentifier="vendorName", weight=1);
 	
-		return smartList;
+	public any function saveVendor(required any vendor, required struct data) {
+		
+		// Call the super.save() to do population and validation
+		arguments.vendor = super.save(entity=arguments.vendor, data=arguments.data);
+		
+		// Vendor Email
+		if( structKeyExists(arguments.data, "emailAddress") && isNull(arguments.vendor.getPrimaryEmailAddress()) ) {
+			
+			// Setup Email Address
+			var vendorEmailAddress = this.newVendorEmailAddress();
+			vendorEmailAddress.populate(arguments.data);
+			vendorEmailAddress.setVendor(arguments.vendor);
+			arguments.vendor.setPrimaryEmailAddress(vendorEmailAddress);
+			
+			// Validate This Object
+			vendorEmailAddress.validate();
+			if(vendorEmailAddress.hasErrors()) {
+				arguments.vendor.addError("emailAddress", "The Email address has errors");
+			}
+
+		}
+
+		// Vendor Phone Number
+		if( structKeyExists(arguments.data, "phoneNumber") && isNull(arguments.vendor.getPrimaryPhoneNumber())) {
+			
+			// Setup Phone Number
+			var vendorPhoneNumber = this.newVendorPhoneNumber();
+			vendorPhoneNumber.populate(arguments.data);
+			vendorPhoneNumber.setVendor(arguments.vendor);
+			arguments.vendor.setPrimaryPhoneNumber(vendorPhoneNumber);
+			
+			// Validate This Object
+			vendorPhoneNumber.validate();
+			if(vendorPhoneNumber.hasErrors()) {
+				arguments.vendor.addError("phoneNumber", "The Phone Number has errors");
+			}
+		}
+		
+		return arguments.vendor;
 	}
 	
+
+	/*public any function getVendorSmartList(struct data={}) {
+		arguments.entityName = "SlatwallVendor";
+		
+		// Set the defaul showing to 25
+		if(!structKeyExists(arguments.data, "P:Show")) {
+			arguments.data["P:Show"] = 25;
+		}
+		
+		var smartList = getDAO().getSmartList(argumentCollection=arguments);
+		
+		smartList.addKeywordProperty(propertyIdentifier="firstName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="lastName", weight=3);
+		smartList.addKeywordProperty(propertyIdentifier="company", weight=1);
+
+		
+		return smartList;
+	}*/
 }

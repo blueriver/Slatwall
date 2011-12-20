@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,30 @@
 
 Notes:
 
-*/
-component displayname="Vendor Order" entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="vendorOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="vendorOrderNumber" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all";
-	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
-	
-}
+--->
+<cfparam name="rc.vendor" type="any" />
+
+<cfoutput>
+	<table id="VendorOrderList" class="listing-grid stripe">
+		<tr>
+			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderType")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
+			<th>&nbsp</th>
+		</tr>
+		<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
+			<tr>
+				<td>#Local.VendorOrder.getVendorOrderNumber()#</td>
+				<td>#DateFormat(Local.VendorOrder.getVendorOrderCreatedDateTime(), "medium")#</td>
+				<td>#Local.VendorOrder.getVendorOrderType().getType()#</td>
+				<td>#local.VendorOrder.getFormattedValue('total', 'currency')#</td>
+				<td class="administration">
+					<ul class="one">
+					  <cf_SlatwallActionCaller action="admin:vendorOrder.detail" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
+					</ul>     						
+				</td>
+			</tr>
+		</cfloop>
+	</table>
+</cfoutput>

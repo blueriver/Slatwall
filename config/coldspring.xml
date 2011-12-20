@@ -28,6 +28,7 @@
 	<bean id="promotionDAO" class="Slatwall.com.dao.PromotionDAO" />
 	<bean id="roundingRuleDAO" class="Slatwall.com.dao.RoundingRuleDAO" />
 	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
+	<bean id="vendorOrderDAO" class="Slatwall.com.dao.VendorOrderDAO" />
 		
 	<!-- Service Components - Utility, these are to be injected where needed for misc tasks -->
 	<bean id="utilityService" class="Slatwall.com.service.UtilityService" />
@@ -157,5 +158,10 @@
     </bean>
     <bean id="vendorService" parent="parentService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
+    </bean>
+	<bean id="vendorOrderService" parent="parentService" class="Slatwall.com.service.VendorOrderService">
+        <property name="DAO"><ref bean="VendorOrderDAO" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
+		<property name="taxService"><ref bean="taxService" /></property>
     </bean>
 </beans>

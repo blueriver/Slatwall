@@ -723,5 +723,10 @@ component displayname="Base Object" accessors="true" output="false" {
 	public void function logSlatwall(required string message){
 		getService("logService").logMessage(message=arguments.message, generalLog=false);		
 	}
+	
+	// TODO: Confirm with Greg what he intends to do with this method. 
+	/*public string function getExternalSiteLink(required string address) {
+		return arguments.address;	
+	}*/
 		
 }
