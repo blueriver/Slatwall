@@ -93,26 +93,11 @@ Notes:
 			</ul>
 		
 			<div id="tabVendorOrderItems">
-				WIP
+				#view("vendorOrder/vendorOrdertabs/items")# 
 			</div>
 			<div id="tabVendorOrderDeliveries">
 				WIP
-				<!---<cfset local.vendorOrderDeliveries = rc.vendorOrder.getVendorOrderDeliveries() />
-				<cfset local.deliveryNumber = 0 />
-				<cfif arrayLen(local.vendorOrderDeliveries)>
-					<cfloop array="#local.vendorOrderDeliveries#" index="local.thisVendorOrderDelivery">
-						<cfset local.deliveryNumber++ />
-						<!--- set up vendorOrder delivery in params struct to pass into view which shows information specific to the fulfillment method--->
-						<cfset local.params.vendorOrderDelivery = local.thisVendorOrderDelivery />
-						<cfset local.params.vendorOrderID = rc.vendorOrder.getVendorOrderID() />
-						<cfset local.params.deliveryNumber = local.deliveryNumber />
-						#view("vendorOrder/vendorOrdertabs/delivery", local.params)# 
-					</cfloop>
-				<cfelse>
-					#$.slatwall.rbKey("admin.vendorOrder.detail.novendorOrderdeliveries")#
-				</cfif>--->
 			</div>
-
 		</div> <!-- tabs -->
 	</div>
 </div>

@@ -208,6 +208,11 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:roundingrule.create" type="list">
 								<cf_SlatwallActionCaller action="admin:roundingrule.list" type="list">
 							</ul>
+							<ul>
+								<li class="title">Locations</li>
+								<cf_SlatwallActionCaller action="admin:location.createlocation" type="list">
+								<cf_SlatwallActionCaller action="admin:location.listlocations" type="list">
+							</ul>
 						</div>
 					</div>
 					<div class="subMenu adminhelp">
