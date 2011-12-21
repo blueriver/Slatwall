@@ -58,7 +58,9 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="emailAddresses" singularname="emailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
-	/*property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";*/
+	//property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";
+	
+
 	
 	public Vendor function init(){
 		// set default collections for association management methods
@@ -72,6 +74,10 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	   
 		if(isNull(variables.emailAddresses)) {
 			variables.emailAddresses = [];
+		}
+		
+		if(isNull(variables.brands)) {
+			variables.brands = [];
 		}
 
 		return super.init();

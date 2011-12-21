@@ -48,4 +48,7 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	public boolean function isDeletable() {
+		return getLocationName() != "Default";
+	}
 }

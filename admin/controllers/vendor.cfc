@@ -82,6 +82,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	// These both will return blank objects if the rc fields are empty (no IDs).
     	rc.vendor = getVendorService().getVendor(rc.vendorID, true);
+
     	rc.vendorAddress = getVendorService().getVendorAddress(rc.vendorAddressId, true);
     	
     	// If vendorAddress is new then it won't contain an "Address" (vendorAddress is only a relational entity), so create a new one.
@@ -140,6 +141,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		editVendor(rc);
 
 		var wasNew = rc.Vendor.isNew();
+		
+		
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
@@ -191,7 +194,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				}
 			}
 			rc.edit = true;
-			//rc.itemTitle = rc.Vendor.isNew() ? rc.$.Slatwall.rbKey("admin.Vendor.createVendor") : rc.$.Slatwall.rbKey("admin.Vendor.editVendor") & ": #rc.Vendor.getVendorName()#";
+			rc.itemTitle = rc.Vendor.isNew() ? rc.$.Slatwall.rbKey("admin.Vendor.createVendor") : rc.$.Slatwall.rbKey("admin.Vendor.editVendor") & ": #rc.Vendor.getVendorName()#";
 			getFW().setView(action="admin:vendor.detailVendor");
 		}	
 		

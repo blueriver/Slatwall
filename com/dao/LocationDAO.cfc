@@ -36,21 +36,5 @@
 Notes:
 
 */
-component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" table="SlatwallVendorOrderItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityIn" ormtype="integer";
-	property name="quantityOut" ormtype="integer";
-	property name="cost" ormtype="big_decimal" formatType="currency";
-	
-	// Related Object Properties (Many-to-One)
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+component extends="BaseDAO" {
 }

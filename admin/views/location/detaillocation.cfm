@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,36 @@
 
 Notes:
 
-*/
-component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" table="SlatwallVendorOrderItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityIn" ormtype="integer";
-	property name="quantityOut" ormtype="integer";
-	property name="cost" ormtype="big_decimal" formatType="currency";
-	
-	// Related Object Properties (Many-to-One)
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-}
+--->
+<cfparam name="rc.edit" type="boolean">
+<cfparam name="rc.location" type="any">
+
+<ul id="navTask">
+	<cf_SlatwallActionCaller action="admin:location.listLocations" type="list">
+	<cfif !rc.edit>
+		<cf_SlatwallActionCaller action="admin:location.editLocation" queryString="locationID=#rc.location.getLocationID()#" type="list">
+	</cfif>
+</ul>
+
+<cfoutput>
+	<div class="svoadminlocationdetail">
+		<cfif rc.edit>
+			
+			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.location, formName="LocationEdit")#
+			
+			<form name="LocationEdit" id="LocationEdit" action="#buildURL('admin:location.saveLocation')#" method="post">
+				<input type="hidden" name="LocationID" value="#rc.Location.getLocationID()#" />
+		</cfif>
+		
+		<dl class="twoColumn">
+			<cf_SlatwallPropertyDisplay object="#rc.Location#" property="locationName" edit="#rc.edit#" first="true">
+		</dl>
+		
+		<cfif rc.edit>
+			<cf_SlatwallActionCaller action="admin:location.listlocations" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:location.savelocation" type="submit" class="button">
+			</form>
+		</cfif>
+		
+	</div>		
+</cfoutput>

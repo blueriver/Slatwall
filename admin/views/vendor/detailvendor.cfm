@@ -49,7 +49,9 @@ Notes:
 <cfoutput>
 	<div class="svoadminvendordetail">
 		<cfif rc.edit>
-			<form name="vendorEdit" action="#buildURL(action='admin:vendor.savevendor')#" method="post">
+			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendor, formName="vendorEdit")#
+			
+			<form name="vendorEdit" id="vendorEdit" action="#buildURL(action='admin:vendor.savevendor')#" method="post">
 				<input type="hidden" name="vendorID" value="#rc.vendor.getVendorID()#" />
 		</cfif>
 		<dl class="twoColumn">
@@ -57,6 +59,13 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="accountNumber" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorWebsite" edit="#rc.edit#" valueLink="#rc.Vendor.getVendorWebsite()#">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
+			
+			<!--- Build a list of ids for the "selected" brands --->
+			<!---<cfset idsList = "">
+			<cfloop array="#rc.vendor.getBrands()#" index="brand">
+				<cfset idsList = ListAppend(idsList, brand.getBrandId())>
+			</cfloop>
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
 		</dl>
 
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">

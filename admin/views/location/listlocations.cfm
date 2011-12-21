@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,22 +35,36 @@
 
 Notes:
 
-*/
-component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" table="SlatwallVendorOrderItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityIn" ormtype="integer";
-	property name="quantityOut" ormtype="integer";
-	property name="cost" ormtype="big_decimal" formatType="currency";
-	
-	// Related Object Properties (Many-to-One)
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-}
+--->
+<cfparam name="rc.locationSmartList" type="any" />
+
+<cfoutput>
+<ul id="navTask">
+    <cf_SlatwallActionCaller action="admin:location.createlocation" type="list">
+</ul>
+
+<div class="svoadminlocationlist">
+<cfif arrayLen(rc.locationSmartList.getPageRecords()) gt 0>
+	<table id="Locations" class="listing-grid stripe">
+		<tr>
+			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.location.locationName")#</th>
+			<th>&nbsp;</th>
+		</tr>
+		<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.Location">
+			<tr>
+				<td class="varWidth">#local.Location.getLocationName()#</td>
+				<td class="administration">
+		          <ul class="three">
+                      <cf_SlatwallActionCaller action="admin:location.editlocation" querystring="locationID=#local.location.getLocationID()#" class="edit" type="list">            
+					  <cf_SlatwallActionCaller action="admin:location.detaillocation" querystring="locationID=#local.location.getLocationID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:location.deletelocation" querystring="locationID=#local.location.getLocationID()#" class="delete" type="list" disabled="#NOT local.location.isDeletable()#" confirmrequired="true">
+		          </ul>     						
+				</td>
+			</tr>
+		</cfloop>
+	</table>
+<cfelse>
+	<em>#rc.$.Slatwall.rbKey("admin.location.nolocationsdefined")#</em>
+</cfif>
+</div>
+</cfoutput>
