@@ -45,7 +45,7 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	// Related Object Properties (Many-to-One)
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="stockID" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

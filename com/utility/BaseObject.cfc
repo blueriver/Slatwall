@@ -263,7 +263,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 
 	public any function getFormattedValue(required string propertyName, string formatType ) {
-		arguments.value = invokeMethod("get#arguments.propertyName#");
+			arguments.value = invokeMethod("get#arguments.propertyName#");
 		
 		// This is the null format option
 		if(isNull(arguments.value)) {

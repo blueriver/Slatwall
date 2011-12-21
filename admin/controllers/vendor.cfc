@@ -63,7 +63,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.vendor = getVendorService().getVendor(rc.vendorID);
     	
     	if(isNull(rc.vendor)) {
-    		getFW().redirect(action="admin:vendor.listvendorss");
+    		getFW().redirect(action="admin:vendor.listvendors");
     	}
 			
 		var orderParams['vendorID'] = rc.vendorID;
@@ -75,6 +75,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		editVendor(rc);
 	}
 	
+	// Display edit interface
 	public void function editVendor(required struct rc) {
 		param name="rc.vendorID" default="";
     	param name="rc.vendorAddressID" default="";
@@ -97,6 +98,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function deleteVendor(required struct rc) {
+		param name="rc.vendorID";
 		var vendor = getVendorService().getVendor(rc.vendorID);
 		var deleteOK = getVendorService().deleteVendor(vendor);
 		
@@ -107,8 +109,24 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.messageType="error";
 		}
 		
-		getFW().redirect(action="admin:vendor.listvendor",preserve="message,messageType");
+		getFW().redirect(action="admin:vendor.listvendors",preserve="message,messageType");
 	}
+	
+	public void function deletevendoraddress(required struct rc) {
+		param name="rc.vendorAddressID";
+		var vendorAddress = getVendorService().getVendorAddress(rc.vendorAddressID);
+		var deleteOK = getVendorService().deleteVendorAddress(vendorAddress);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.vendor.deleteVendorAddress_success");
+		} else {
+			rc.message = rbKey("admin.vendor.deleteVendorAddress_error");
+			rc.messageType="error";
+		}
+		
+		getFW().redirect(action="admin:vendor.detailvendor", querystring="vendorId=#vendorAddress.getVendor().getVendorId()#", preserve="message,messageType");
+	}
+	
 
 	public void function listVendor(required struct rc) {
 		param name="rc.keyword" default="";
@@ -118,7 +136,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function saveVendor(required struct rc) {
 		param name="rc.vendorID" default="";
-		
+		param name="rc.vendorAddressID" default="";
 		editVendor(rc);
 
 		var wasNew = rc.Vendor.isNew();
@@ -126,6 +144,26 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
 
+		// Popualate new Address with RC. Both entities will be blank if no ID specified. 
+		var vendorAddress = getAddressService().getVendorAddress(rc.vendoraddresses[1].vendorAddressID, true);
+		var addressId = "";
+		if(!isNull(vendorAddress.getAddress())) {
+			addressId = vendorAddress.getAddress().getAddressId();		
+		}
+		
+		// Address will be either a new entity (if is is empty) or an address from the DB. 
+		var address = getAddressService().getAddress(addressId, true);
+		
+		//dumpScreen(rc);
+		// This does an RC -> Entity population, and flags the entities to be saved.
+		getAddressService().saveAddress(address, rc.vendoraddresses[1].address);
+		vendorAddress.setAddress(address);
+		vendorAddress.setVendor(rc.Vendor);
+		//dumpScreen(vendorAddress);
+		
+		// This does an RC -> Entity population, and flags the entities to be saved.
+		getAddressService().saveVendorAddress(vendorAddress);
+	
 		if(!rc.Vendor.hasErrors()) {
 			// If added or edited a Price Group Rate
 			if(wasNew) {

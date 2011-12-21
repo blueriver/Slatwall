@@ -53,9 +53,10 @@ Notes:
 				<input type="hidden" name="vendorID" value="#rc.vendor.getVendorID()#" />
 		</cfif>
 		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorName" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="accountNumber" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorWebsite" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorName" edit="#rc.edit#" first="true">
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="accountNumber" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorWebsite" edit="#rc.edit#" valueLink="#rc.Vendor.getVendorWebsite()#">
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
 		</dl>
 
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">

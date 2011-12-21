@@ -49,6 +49,7 @@ Notes:
 			<th class="varWidth">Vendor Name</th>
 			<th>Account Number</th>
 			<th>Website</th>
+			<th>Email Address</th>
 			<th>&nbsp;</th>
 		</tr>
 		<cfloop array="#rc.vendorSmartList.getPageRecords()#" index="Local.Vendor">
@@ -56,7 +57,7 @@ Notes:
 				<td class="varWidth"><a href="#BuildURL(action='vendor.detailvendor', querystring='VendorID=#local.Vendor.getVendorID()#')#">#local.Vendor.getVendorName()#</a></td>
 				<td>#Local.Vendor.getAccountNumber()#</td>
 				<td><a href="#<!---getExternalSiteLink(--->local.Vendor.getVendorWebsite()<!---)--->#">#local.Vendor.getVendorWebsite()#</a></td>
-				
+				<td><a href="mailto:#Local.Vendor.getEmailAddress()#">#Local.Vendor.getEmailAddress()#</a></td>
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:vendor.editvendor" querystring="vendorID=#local.vendor.getVendorID()#" class="edit" type="list">            

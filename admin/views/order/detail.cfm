@@ -83,7 +83,7 @@ Notes:
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<table class="listing-grid stripe">
+		<table class="listing-grid stripe" >
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
 				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>

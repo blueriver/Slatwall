@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Vendor Order" entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" table="SlatwallVendorOrder" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="vendorOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -48,13 +48,108 @@ component displayname="Vendor Order" entityname="SlatwallVendorOrder" table="Sla
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (Many-To-One)
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all";
 	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
 	
+	// Related Object Properties (One-To-Many)
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all";
+	property name="vendorOrderDeliveries" singularname="vendorOrderDelivery" cfc="VendorOrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	
+	// Non persistent properties
+	property name="total" persistent="false" formatType="currency"; 
+	property name="subTotal" persistent="false" formatType="currency"; 
+	property name="taxTotal" persistent="false" formatType="currency"; 
+	//property name="itemAmountTotal" persistent="false" formatType="currency" ; 
+	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency" ; 
+	property name="orderAmountTotal" persistent="false" formatType="currency"; 
+	property name="fulfillmentTotal" persistent="false" formatType="currency";
+	
+	public any function init() {
+		if(isNull(variables.vendorOrderItems)) {
+			variables.vendorOrderItems = [];
+		}
+		
+		// Set the default order type as purchase order
+		if(isNull(getVendorOrderType())) {
+			variables.vendorOrderType = getService("typeService").getTypeBySystemCode('votPurchaseOrder');
+		}
+		
+		
+		return super.init();
+	}
+	
+	/*public numeric function getTotalItems() {
+		return arrayLen(getVendorOrderItems());
+	}*/
+	
+	// TODO: may need to refactor the next 4 methods to more efficient HQL
+	/*public numeric function getTotalQuantity() {
+		if(!structKeyExists(variables,"totalQuantity")) {
+			var vendorOrderItems = getOrderItems();
+			variables.totalQuantity = 0;
+			for(var i=1; i<=arrayLen(vendorOrderItems); i++) {
+				variables.totalQuantity += vendorOrderItems[i].getQuantity(); 
+			}			
+		}
+		return variables.totalQuantity;
+	}*/
+	
+	public numeric function getSubtotal() {
+		return 999.99;
+		
+		var subtotal = 0;
+		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
+			subtotal += getVendorOrderItems()[i].getExtendedPrice();
+		}
+		return subtotal;
+	}
+	
+	public numeric function getTaxTotal() {
+		return 999.99;
+		
+		var taxTotal = 0;
+		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
+			taxTotal += getVendorOrderItems()[i].getTaxAmount();
+		}
+		return taxTotal;
+	}
+	
+	public numeric function getItemAmountTotal() {
+		return 999.99;
+		
+		var Total = 0;
+		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
+			Total += getVendorOrderItems()[i].getAmount();
+		}
+		return Total;
+	}
+	
+	/*public numeric function getFulfillmentAmountTotal() {
+		return 0;
+	}
+	
+	public numeric function getVendorOrderAmountTotal() {
+		return 0;
+	}*/
+	
+
+	/*public numeric function getFulfillmentTotal() {
+		var fulfillmentTotal = 0;
+		for(var i=1; i<=arrayLen(getVendorOrderFulfillments()); i++) {
+			fulfillmentTotal += getVendorOrderFulfillments()[i].getFulfillmentCharge();
+		}
+		return fulfillmentTotal;
+	}*/
 	
 	public numeric function getTotal() {
-		return 999;
+		return 999.99;
+		//return getSubtotal() + getTaxTotal() + getFulfillmentTotal();
+	}
+	
+	public void function removeAllVendorOrderItems() {
+		for(var i=arrayLen(getVendorOrderItems()); i >= 1; i--) {
+			getVendorOrderItems()[i].removeVendorOrder(this);
+		}
 	}
 }

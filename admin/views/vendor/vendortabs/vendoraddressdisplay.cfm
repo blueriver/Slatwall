@@ -55,7 +55,10 @@ Notes:
 	property name="countryCode" ormtype="string"
 			--->
 			
-			<cf_SlatwallPropertyDisplay object="#rc.vendorAddress.getAddress()#" property="streetAddress" fieldName="vendorAddresses[1].addresses[1].streetAddress" edit="#rc.edit#" />
+			<input type="hidden" name="vendorAddresses[1].vendorAddressId" value="#rc.vendorAddress.getVendorAddressId()#"/>
+			<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" edit="#rc.edit#" fieldNamePrefix="vendorAddresses[1].address." />
+			
+			<!---<cf_SlatwallPropertyDisplay object="#rc.vendorAddress.getAddress()#" property="streetAddress" fieldName="vendorAddresses[1].addresses[1].streetAddress" edit="#rc.edit#" />--->
 			<!--- More to come! --->
 		</dl>
 	</div>

@@ -40,19 +40,19 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	property name="vendorOrderService" type="any";
 
-	public any function saveVendorAddress(required any vendorAddress, struct data) {
+	/*public any function saveVendorAddress(required any vendorAddress, struct data) {
 
-		dumpScreen("here!");
+		//dumpScreen("here!");
 		// Populates entity based on RC contents and validates entity. 
 		arguments.vendorAddress = super.save(entity=arguments.vendorAddress, data=arguments.data);
 		
 		 
-	}
+	}*/
 	
-	public any function saveVendor(required any vendor, required struct data) {
+	/* any function saveVendor(required any vendor, required struct data) {
 		
 		dumpScreen(data);
-		/*
+		
 		
 		// Call the super.save() to do population and validation
 		arguments.vendor = super.save(entity=arguments.vendor, data=arguments.data);
@@ -90,8 +90,8 @@ component extends="BaseService" accessors="true" output="false" {
 			}
 		}
 		
-		return arguments.vendor;*/
-	}
+		return arguments.vendor;
+	}*/
 	
 
 	/*public any function getVendorSmartList(struct data={}) {

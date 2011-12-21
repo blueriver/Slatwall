@@ -67,6 +67,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorOrderType")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
 			<th>&nbsp</th>
 		</tr>
@@ -75,10 +76,11 @@ Notes:
 				<td>#Local.VendorOrder.getVendorOrderNumber()#</td>
 				<td>#DateFormat(Local.VendorOrder.getCreatedDateTime(), "medium")#</td>
 				<td class="varWidth">#Local.VendorOrder.getVendor().getVendorName()#</td>
+				<td >#Local.VendorOrder.getVendorOrderType().getType()#</td>
 				<td>#local.vendorOrder.getFormattedValue('total', 'currency')#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:vendororder.detail" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:vendororder.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>

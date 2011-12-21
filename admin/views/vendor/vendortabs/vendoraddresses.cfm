@@ -48,6 +48,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.address.countryCode")#</th>
 			<th>&nbsp</th>
 		</tr>
+
 		<cfloop array="#rc.vendor.getVendorAddresses()#" index="local.vendorAddress">	
 			<tr>
 				<td class="varWidth">#Local.vendorAddress.getAddress().getStreetAddress()#</td>
@@ -58,9 +59,9 @@ Notes:
 				<td>#Local.vendorAddress.getAddress().getCountryCode()#</td>
 				<td class="administration">
 					<ul class="three">
-						<cf_SlatwallActionCaller action="admin:vendor.editvendoraddress" querystring="vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="edit" type="list">
-						<cf_SlatwallActionCaller action="admin:vendor.detailvendoraddress" querystring="vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="detail" type="list">
-						<cf_SlatwallActionCaller action="admin:vendor.deletevendoraddress" querystring="vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="delete" type="list" disabled="#NOT local.vendorAddress.isDeletable()#" confirmrequired="true">
+						<cf_SlatwallActionCaller action="admin:vendor.editvendor" querystring="vendorId=#rc.vendor.getVendorId()#&vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="edit" type="list">
+						<!---<cf_SlatwallActionCaller action="admin:vendor.detailvendoraddress" querystring="vendorId=#rc.vendor.getVendorId()#&vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="detail" type="list">--->
+						<cf_SlatwallActionCaller action="admin:vendor.deletevendoraddress" querystring="vendorId=#rc.vendor.getVendorId()#&vendorAddressID=#local.vendorAddress.getVendorAddressID()#" class="delete" type="list" disabled="#NOT local.vendorAddress.isDeletable()#" confirmrequired="true">
 					</ul>     						
 				</td>
 			</tr>
@@ -77,7 +78,7 @@ Notes:
 		<div id="vendorAddressInputs" <cfif rc.vendorAddress.isNew() AND !rc.vendorAddress.hasErrors()>class="ui-helper-hidden"</cfif> >
 			<strong>#rc.$.Slatwall.rbKey("admin.vendoraddress.edit.addVendorAddress")#</strong>
 			<cfinclude template="vendoraddressdisplay.cfm">
-			<input type="hidden" name="vendorAddresses[1].vendorAddressId" value="#rc.vendorAddress.getVendorAddressId()#"/>
+			
 			
 			<!--- The populateSubProperties is read by the implicit save() handler to determine if it should process the saveVendorAddress() method. --->
 			<cfif rc.vendorAddress.isNew() && not rc.vendorAddress.hasErrors()>

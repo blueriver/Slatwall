@@ -61,14 +61,37 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.vendorOrderSmartList = getVendorOrderService().searchVendorOrders(data=arguments.rc);
     }    
 	
-	public void function detail(required struct rc) {
-	   rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
+	public void function detailVendorOrder(required struct rc) {
+		param name="rc.vendorOrderID" default="";
+    	param name="rc.edit" default="false";
+    		
+    	// Get the vendor, but to NOT create a new vendor if the ID is not found (hense lack of second parameter=true).
+    	rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
+    	
+    	if(!isNull(rc.vendorOrder) and !rc.vendorOrder.isNew()) {
+	       rc.itemTitle &= ": Vendor Order No. " & rc.vendorOrder.getVendorOrderNumber();
+	   } else {
+    		getFW().redirect(action="admin:vendororder.listVendorOrders");
+    	}
+    	
+    	// Get Items
+		var orderParams['vendorOrderID'] = rc.vendorOrderID;
+		var orderParams.orderBy = "createdDateTime|DESC";
+		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList(data=orderParams);
+			
+		// Get Deliveries
+		var orderParams['vendorOrderID'] = rc.vendorOrderID;
+		var orderParams.orderBy = "createdDateTime|DESC";
+		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);
+
+  	  				
+	  /* rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
 	   //rc.shippingServices = getService("settingService").getShippingServices();
 	   if(!isNull(rc.vendorOrder) and !rc.vendorOrder.isNew()) {
 	       rc.itemTitle &= ": Vendor Order No. " & rc.vendorOrder.getVendorOrderNumber();
 	   } else {
 	       getFW().redirect("admin:vendorOrder.listVendorOrders");
-	   }
+	   }*/
 	}
 
 
