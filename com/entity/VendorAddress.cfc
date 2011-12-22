@@ -43,15 +43,28 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 		
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	//property name="vendorAddressType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorAddressTypeID";
-	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID" cascade="all";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	
-	/*public string function getAddressType() {
-		return getVendorAddressType().getType();
-	}*/
+	/******* Association management methods for bidirectional relationships **************/
 	
-	// Function which verifies that the vendor address can be deleted. Right now it does nothing.
-	public boolean function isDeletable() {
-		return true;
+	// vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasVendorAddress(this)) {
+			arrayAppend(arguments.vendor.getVendorAddresses(),this);
+		}
 	}
+	
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getVendorAddresses(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getVendorAddresses(),index);
+		}
+		structDelete(variables,"vendor");
+	}
+	
+	/******* END: Association management methods for bidirectional relationships **************/
 }

@@ -49,7 +49,7 @@ Notes:
 			<th>&nbsp</th>
 		</tr>
 
-		<cfloop array="#rc.vendor.getVendorAddresses()#" index="local.vendorAddress">	
+		<cfloop array="#rc.vendor.getVendorAddresses()#" index="local.vendorAddress">
 			<tr>
 				<td class="varWidth">#Local.vendorAddress.getAddress().getStreetAddress()#</td>
 				<td>#Local.vendorAddress.getAddress().getStreet2Address()#</td>

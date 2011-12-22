@@ -92,42 +92,40 @@ component displayname="Base Object" accessors="true" output="false" {
 					// If the primaryID exists then we can set the relationship
 					if(structKeyExists(manyToOneStructData, primaryIDPropertyName)) {
 						
-						// If the value passed in for the ID is blank, then set the value of the currentProperty to NULL
-						if(manyToOneStructData[primaryIDPropertyName] == "") {
-							_setProperty(currentProperty.name);
+						// set the service to use to get the specific entity
+						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+						
+						// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
+						if(structCount(manyToOneStructData) gt 1) {
 							
-						// If it was an actual ID, then we will try to load that entity
+							// Load the specifiv entity, if one doesn't exist, this will return a new entity
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
+							
+							// Set the value of the property as the loaded entity
+							_setProperty(currentProperty.name, thisEntity );
+							
+							// Call the save method for this sub property entity and pass in the data
+							thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=manyToOneStructData});
+							
+							// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
+							if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
+								arrayAppend(getPopulatedSubProperties(), currentProperty.name);
+							}
+							
+						// If there were no additional values in the strucuture then we just try to get the entity and set it... in this way a null is a valid option
 						} else {
-							
-							// set the service to use to get the specific entity
-							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
-							
-							// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
-							if(structCount(manyToOneStructData) gt 1) {
-								
-								// Load the specifiv entity, if one doesn't exist, this will return a new entity
-								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
-								
-								// Set the value of the property as the loaded entity
-								_setProperty(currentProperty.name, thisEntity );
-								
-								// Call the save method for this sub property entity and pass in the data
-								thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=manyToOneStructData});
-								
-								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
-								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
-									arrayAppend(getPopulatedSubProperties(), currentProperty.name);
-								}
-								
-							// If there were no additional values in the strucuture then we just try to get the entity and set it... in this way a null is a valid option
+							// If the value passed in for the ID is blank, then set the value of the currentProperty to NULL
+							if(manyToOneStructData[primaryIDPropertyName] == "") {
+								_setProperty(currentProperty.name);
+						
+							// If it was an actual ID, then we will try to load that entity
 							} else {
-								
+							
 								// Load the specifiv entity, if one doesn't exist... this will be null
 								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
-								
+							
 								// Set the value of the property as the loaded entity
 								_setProperty(currentProperty.name, thisEntity );
-								
 							}
 						}
 					}
@@ -240,19 +238,25 @@ component displayname="Base Object" accessors="true" output="false" {
 		for(var p=1; p<=arrayLen(getPopulatedSubProperties()); p++) {
 			
 			// Get the values of this sub property
-			var subPropertyValuesArray = invokeMethod("get#getPopulatedSubProperties()[p]#");
+			var subPropertyValue = invokeMethod("get#getPopulatedSubProperties()[p]#");
 			
-			// Loop over each object in the subProperty array and validate it
-			for(var e=1; e<=arrayLen(subPropertyValuesArray); e++ ) {
-			
-				// If after validation that sub object has errors, add a failure to this object
-				if(subPropertyValuesArray[e].hasErrors()) {
-					getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
+			// If the results are an array, then loop over them
+			if(isArray(subPropertyValue)) {
+				
+				// Loop over each object in the subProperty array and validate it
+				for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
+				
+					// If after validation that sub object has errors, add a failure to this object
+					if(subPropertyValue[e].hasErrors()) {
+						getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
+					}
+				}	
+			} else if(isObject(subPropertyValue)) {
+				if(subPropertyValue.hasErrors()) {
+					getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
 				}
 			}
-			
 		}
-		
 		
 		// Return the VTResult object that was populated by ValidateThis
 		return getVTResult();
@@ -752,5 +756,4 @@ component displayname="Base Object" accessors="true" output="false" {
 	/*public string function getExternalSiteLink(required string address) {
 		return arguments.address;	
 	}*/
-		
 }
