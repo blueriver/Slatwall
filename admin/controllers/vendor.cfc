@@ -142,12 +142,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		var wasNew = rc.Vendor.isNew();
 		
-		
+		dumpScreen(rc);
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
 
-dumpScreen(request.slatwallcache.cachelog);
 		// Popualate new Address with RC. Both entities will be blank if no ID specified. 
 		var vendorAddress = getAddressService().getVendorAddress(rc.vendoraddresses[1].vendorAddressID, true);
 		var addressId = "";
