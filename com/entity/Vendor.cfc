@@ -52,15 +52,13 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (one-to-many)
-	property name="vendorOrders" singularname="vendorOrder" type="array" cfc="VendorOrder" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
-	property name="vendorAddresses" singularname="vendorAddress" type="array" cfc="VendorAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
+	property name="vendorOrders" singularname="vendorOrder" type="array" cfc="VendorOrder" fieldtype="one-to-many" fkcolumn="vendorID" cascade="save-update" inverse="true";
+	property name="vendorAddresses" singularname="vendorAddress" type="array" cfc="VendorAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all-delete-orphan" inverse="true";
 	//property name="phoneNumbers" singularname="phoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	property name="emailAddresses" singularname="emailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";
-	
-
 	
 	public Vendor function init(){
 		// set default collections for association management methods
@@ -88,4 +86,16 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 		return ArrayLen(getVendorOrders()) == 0;
 	}
 	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// vendorAddresses (one-to-many)
+	public void function addVendorAddress(required any vendorAddress) {
+	   arguments.vendorAddress.setVendor(this);
+	}
+	
+	public void function removeVendorAddress(required any vendorAddress) {
+	   arguments.vendorAddress.removeVendor(this);
+	}
+	
+	/******* END: Association management methods for bidirectional relationships **************/
 }

@@ -43,7 +43,7 @@ Notes:
 	
 <div class="svoVendorList">
 	<h3 class="tableheader">Vendors</h3>
-	<table class="listtable">
+	<table class="listtable stripe">
 		<tr>
 			<th class="varWidth">Vendor Name</th>
 			<th>#rc.$.Slatwall.rbKey("entity.vendor.accountNumber")#</th>
