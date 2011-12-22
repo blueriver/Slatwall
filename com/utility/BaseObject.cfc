@@ -756,5 +756,4 @@ component displayname="Base Object" accessors="true" output="false" {
 	/*public string function getExternalSiteLink(required string address) {
 		return arguments.address;	
 	}*/
-		
 }
