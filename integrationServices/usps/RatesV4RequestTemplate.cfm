@@ -36,6 +36,17 @@
 	Notes:
 	
 --->
+<cfsilent>
+	<cfset local.totalWeight = arguments.requestBean.getTotalWeight()>
+	<cfif arguments.requestBean.getTotalWeight() gt 0>
+		<cfset local.pounds = listFirst(numberFormat(arguments.requestBean.getTotalWeight(),"0.00"), ".") />
+		<cfset local.poundDec = "." & listLast(numberFormat(arguments.requestBean.getTotalWeight(),"0.00"), ".") />
+		<cfset local.ounces = numberFormat(local.poundDec * 16,"0") />
+	<cfelse>
+		<cfset local.pounds = 1 />
+		<cfset local.ounces = 0 />
+	</cfif>
+</cfsilent>
 <cfoutput>
 <RateV4Request USERID="#variables.userID#">
 	<Revision>2</Revision>
@@ -43,8 +54,8 @@
 		<Service>ALL</Service>
 		<ZipOrigination>#variables.shipFromPostalCode#</ZipOrigination>
 		<ZipDestination>#arguments.requestBean.getShipToPostalCode()#</ZipDestination>
-		<cfif arguments.requestBean.getTotalWeight() gt 0><Pounds>#numberFormat(arguments.requestBean.getTotalWeight(),"0")#</Pounds><cfelse><Pounds>1</Pounds></cfif>
-		<Ounces>0</Ounces>
+		<Pounds>#local.pounds#</Pounds>
+		<Ounces>#local.ounces#</Ounces>
 		<Container/>
 		<Size>REGULAR</Size>
 		<Machinable>true</Machinable>
