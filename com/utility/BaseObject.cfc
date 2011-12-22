@@ -53,6 +53,8 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format
 	public any function populate( required struct data={} ) {
+		// Param the ignoreProperties key so that we can count on it later
+		param name="arguments.data.ignoreProperties" default="";
 		
 		// Get an array of All the properties for this object
 		var properties = getProperties();
@@ -64,7 +66,7 @@ component displayname="Base Object" accessors="true" output="false" {
 			var currentProperty = properties[p];
 			
 			// Check to see if this property has a key in the data that was passed in
-			if( structKeyExists(arguments.data, currentProperty.name) ) {
+			if( structKeyExists(arguments.data, currentProperty.name) && !listFind(arguments.data.ignoreProperties, currentProperty.name) ) {
 			
 				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
@@ -100,11 +102,33 @@ component displayname="Base Object" accessors="true" output="false" {
 							// set the service to use to get the specific entity
 							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
 							
-							// Load the specifiv entity, if one doesn't exist... this will be null
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
-							
-							// Set the value of the property as the newly loaded entity
-							_setProperty(currentProperty.name, thisEntity );
+							// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
+							if(structCount(manyToOneStructData) gt 1) {
+								
+								// Load the specifiv entity, if one doesn't exist, this will return a new entity
+								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
+								
+								// Set the value of the property as the loaded entity
+								_setProperty(currentProperty.name, thisEntity );
+								
+								// Call the save method for this sub property entity and pass in the data
+								thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=manyToOneStructData});
+								
+								// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
+								if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
+									arrayAppend(getPopulatedSubProperties(), currentProperty.name);
+								}
+								
+							// If there were no additional values in the strucuture then we just try to get the entity and set it... in this way a null is a valid option
+							} else {
+								
+								// Load the specifiv entity, if one doesn't exist... this will be null
+								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
+								
+								// Set the value of the property as the loaded entity
+								_setProperty(currentProperty.name, thisEntity );
+								
+							}
 						}
 					}
 					
