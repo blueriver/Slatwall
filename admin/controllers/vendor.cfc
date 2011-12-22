@@ -141,6 +141,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		editVendor(rc);
 
 		var wasNew = rc.Vendor.isNew();
+		
+		
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
