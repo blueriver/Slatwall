@@ -23,6 +23,33 @@ jQuery(document).ready(function(){
 	
 	stripe('stripe');
 	
+	// Add $item.listAppendVal() method to jQuery
+	jQuery.fn.listAppendVal = function(str, delimiter) {
+		var newList = $(this).val();
+		if(!delimiter)
+			var delimiter = ",";
+		
+		if(newList.length && newList.charAt(newList.length-1) != delimiter) {
+			newList += delimiter;
+		}
+		
+		$(this).val(newList += str);	
+	}
+	
+	// Add $item.listAppendVal() method to jQuery
+	jQuery.fn.listDeleteVal = function(str, delimiter) {
+		var newList = $(this).val();
+		
+		if(!delimiter)
+			var delimiter = ",";
+		
+		newList = newList.replace(delimiter + str + delimiter, delimiter);
+		newList = newList.replace(str + delimiter, "");
+		newList = newList.replace(delimiter + str, "");
+		newList = newList.replace(str, "");
+		$(this).val(newList);	
+	}
+	
 });
 
 

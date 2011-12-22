@@ -141,12 +141,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		editVendor(rc);
 
 		var wasNew = rc.Vendor.isNew();
-		
-		
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
 
+dumpScreen(request.slatwallcache.cachelog);
 		// Popualate new Address with RC. Both entities will be blank if no ID specified. 
 		var vendorAddress = getAddressService().getVendorAddress(rc.vendoraddresses[1].vendorAddressID, true);
 		var addressId = "";
@@ -166,6 +165,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		// This does an RC -> Entity population, and flags the entities to be saved.
 		getAddressService().saveVendorAddress(vendorAddress);
+	
+	
 	
 		if(!rc.Vendor.hasErrors()) {
 			// If added or edited a Price Group Rate

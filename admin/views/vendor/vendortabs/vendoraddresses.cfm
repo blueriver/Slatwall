@@ -82,9 +82,9 @@ Notes:
 			
 			<!--- The populateSubProperties is read by the implicit save() handler to determine if it should process the saveVendorAddress() method. --->
 			<cfif rc.vendorAddress.isNew() && not rc.vendorAddress.hasErrors()>
-				<input type="hidden" name="populateSubProperties" id="populateSubProperties" value="false"/>
+				<input type="hidden" name="ignoreProperties" id="ignoreProperties" value="vendoraddress"/>
 			<cfelse>
-				<input type="hidden" name="populateSubProperties" value="true"/>
+				<input type="hidden" name="ignoreProperties" id="ignoreProperties" value=""/>
 			</cfif>
 		</div>
 

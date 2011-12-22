@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfoutput>
-
 <ul id="navTask">
     <cf_SlatwallActionCaller action="admin:vendor.createvendor" type="list">
 </ul>	
