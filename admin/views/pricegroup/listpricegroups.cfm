@@ -75,6 +75,7 @@ Notes:
 			</tr>
 		</cfloop>
 	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.vendorSmartList#">
 <cfelse>
 <em>#rc.$.Slatwall.rbKey("admin.pricegroup.nopricegroupsdefined")#</em>
 </cfif>

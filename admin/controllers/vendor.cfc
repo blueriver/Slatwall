@@ -90,49 +90,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     		rc.vendorAddress.setAddress(getAddressService().getAddress(0, true));	
     	}
     	
-    	var orderParams['vendorID'] = rc.vendorID;
+    	var orderParams["vendorID"] = rc.vendorID;
 		var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderSmartList = getVendorOrderService().getVendorOrderSmartList(data=orderParams);
     	
     	rc.edit = true; 
     	getFW().setView("admin:vendor.detailvendor");  
-	}
-	
-	public void function deleteVendor(required struct rc) {
-		param name="rc.vendorID";
-		var vendor = getVendorService().getVendor(rc.vendorID);
-		var deleteOK = getVendorService().deleteVendor(vendor);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.vendor.delete_success");
-		} else {
-			rc.message = rbKey("admin.vendor.delete_error");
-			rc.messageType="error";
-		}
-		
-		getFW().redirect(action="admin:vendor.listvendors",preserve="message,messageType");
-	}
-	
-	public void function deletevendoraddress(required struct rc) {
-		param name="rc.vendorAddressID";
-		var vendorAddress = getVendorService().getVendorAddress(rc.vendorAddressID);
-		var deleteOK = getVendorService().deleteVendorAddress(vendorAddress);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.vendor.deleteVendorAddress_success");
-		} else {
-			rc.message = rbKey("admin.vendor.deleteVendorAddress_error");
-			rc.messageType="error";
-		}
-		
-		getFW().redirect(action="admin:vendor.detailvendor", querystring="vendorId=#vendorAddress.getVendor().getVendorId()#", preserve="message,messageType");
-	}
-	
-
-	public void function listVendor(required struct rc) {
-		param name="rc.keyword" default="";
-		
-		rc.vendorSmartList = getVendorService().getVendorSmartList(data=arguments.rc);
 	}
 	
 	public void function saveVendor(required struct rc) {
@@ -142,10 +105,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		var wasNew = rc.Vendor.isNew();
 		
-		dumpScreen(rc);
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
-		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);
+		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);	
+		
+		/*
 
 		// Popualate new Address with RC. Both entities will be blank if no ID specified. 
 		var vendorAddress = getAddressService().getVendorAddress(rc.vendoraddresses[1].vendorAddressID, true);
@@ -167,7 +131,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		// This does an RC -> Entity population, and flags the entities to be saved.
 		getAddressService().saveVendorAddress(vendorAddress);
 	
+		*/
 	
+		//dumpScreen(vendorAddress.hasErrors() & " " & address.hasErrors() & " " & rc.Vendor.hasErrors());
 	
 		if(!rc.Vendor.hasErrors()) {
 			// If added or edited a Price Group Rate
@@ -214,5 +180,42 @@ component extends="BaseController" persistent="false" accessors="true" output="f
         	getFW().redirect(action="admin:vendor.listvendor",preserve="message");	
 		}
 		*/
+	}
+	
+	public void function deleteVendor(required struct rc) {
+		param name="rc.vendorID";
+		var vendor = getVendorService().getVendor(rc.vendorID);
+		var deleteOK = getVendorService().deleteVendor(vendor);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.vendor.delete_success");
+		} else {
+			rc.message = rbKey("admin.vendor.delete_error");
+			rc.messageType="error";
+		}
+		
+		getFW().redirect(action="admin:vendor.listvendors", preserve="message,messageType");
+	}
+	
+	public void function deletevendoraddress(required struct rc) {
+		param name="rc.vendorAddressID";
+		var vendorAddress = getVendorService().getVendorAddress(rc.vendorAddressID);
+		var deleteOK = getVendorService().deleteVendorAddress(vendorAddress);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.vendor.deleteVendorAddress_success");
+		} else {
+			rc.message = rbKey("admin.vendor.deleteVendorAddress_error");
+			rc.messageType="error";
+		}
+		
+		getFW().redirect(action="admin:vendor.detailvendor", querystring="vendorId=#vendorAddress.getVendor().getVendorId()#", preserve="message,messageType");
+	}
+	
+
+	public void function listVendor(required struct rc) {
+		param name="rc.keyword" default="";
+		
+		rc.vendorSmartList = getVendorService().getVendorSmartList(data=arguments.rc);
 	}
 }

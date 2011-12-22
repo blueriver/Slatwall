@@ -25,7 +25,7 @@ jQuery(document).ready(function(){
 	
 	// Add $item.listAppendVal() method to jQuery
 	jQuery.fn.listAppendVal = function(str, delimiter) {
-		var newList = $(this).val();
+		var newList = jQuery(this).val();
 		if(!delimiter)
 			var delimiter = ",";
 		
@@ -33,12 +33,12 @@ jQuery(document).ready(function(){
 			newList += delimiter;
 		}
 		
-		$(this).val(newList += str);	
+		jQuery(this).val(newList += str);	
 	}
 	
-	// Add $item.listAppendVal() method to jQuery
+	// Add $item.listDeleteVal() method to jQuery
 	jQuery.fn.listDeleteVal = function(str, delimiter) {
-		var newList = $(this).val();
+		var newList = jQuery(this).val();
 		
 		if(!delimiter)
 			var delimiter = ",";
@@ -47,7 +47,7 @@ jQuery(document).ready(function(){
 		newList = newList.replace(str + delimiter, "");
 		newList = newList.replace(delimiter + str, "");
 		newList = newList.replace(str, "");
-		$(this).val(newList);	
+		jQuery(this).val(newList);	
 	}
 	
 });
