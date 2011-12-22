@@ -41,6 +41,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="vendorOrderService" type="any";
 	property name="vendorService" type="any";
+	property name="productService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.vendorOrderID" default="";
@@ -89,10 +90,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);*/
-		rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
 		
-
-		
+		//rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
   	  				
 	  /* rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
 	   //rc.shippingServices = getService("settingService").getShippingServices();
@@ -148,8 +147,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().setView(action="admin:vendorOrder.detailVendorOrder");
 		}	
 	}
-
 	
+	/*
+		Handlers for the "Add product to vendor order" dialog
+	*/
+	public void function editVendorOrderProductAssignment(required struct rc) {
+    	param name="rc.vendorOrderID" default="";
+    	param name="rc.productID" default="";
+    	
+    	initVendorOrder(rc);
+    	rc.product = getProductService().getProduct(rc.productId);
+    	
+    	rc.edit = true; 
+    	getFW().setView("admin:vendorOrder.vendorOrderDialogs.editvendororderproductassignment");  
+
+	}
 	
 	/*public void function cancelorder(required struct rc) {
 		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
