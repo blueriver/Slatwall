@@ -102,13 +102,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.vendorID" default="";
 		param name="rc.vendorAddressID" default="";
 		editVendor(rc);
-
-		var wasNew = rc.Vendor.isNew();
 		
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.Vendor = getVendorService().saveVendor(rc.Vendor, rc);	
 		
+		//dumpScreen(rc.Vendor);
 		/*
 
 		// Popualate new Address with RC. Both entities will be blank if no ID specified. 
@@ -134,10 +133,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		*/
 	
 		//dumpScreen(vendorAddress.hasErrors() & " " & address.hasErrors() & " " & rc.Vendor.hasErrors());
-	
+
 		if(!rc.Vendor.hasErrors()) {
 			// If added or edited a Price Group Rate
-			if(wasNew) {
+			if(rc.Vendor.isNew()) {
 				rc.message=rbKey("admin.vendor.saveVendor_success");
 				//getFW().redirect(action="admin:vendor.editVendor", querystring="Vendorid=#rc.Vendor.getVendorID()#", preserve="message");
 				getFW().redirect(action="admin:vendor.listvendors", preserve="message");	
@@ -145,7 +144,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				rc.message=rc.message=rbKey("admin.vendor.saveVendor_success");
 				
 				// If any of the sub properties (such as address or email) has changed during this edit, then stay on the details page, otherwise, list.
-				if(rc.populateSubProperties)
+				if(isPostingVendorAddress(rc))
 					getFW().redirect(action="admin:vendor.editVendor", querystring="vendorID=#rc.Vendor.getVendorID()#", preserve="message");
 				else
 					getFW().redirect(action="admin:vendor.listVendors", preserve="message");
@@ -217,5 +216,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.keyword" default="";
 		
 		rc.vendorSmartList = getVendorService().getVendorSmartList(data=arguments.rc);
+	}
+	
+	private boolean function isPostingVendorAddress(required struct rc) {
+		return NOT findNoCase(rc.ignoreProperties, "vendoraddress");
 	}
 }

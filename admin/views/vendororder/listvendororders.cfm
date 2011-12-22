@@ -42,6 +42,10 @@ Notes:
 <cfparam name="rc.showAdvancedSearch" default=false />
 
 <cfoutput>
+	
+<ul id="navTask">
+    <cf_SlatwallActionCaller action="admin:vendorOrder.createVendorOrder" type="list">
+</ul>
 
 <div class="svoadminVendorOrderlist">
 	<form action="#buildURL('admin:vendororder.listvendororders')#" method="post">
@@ -87,6 +91,5 @@ Notes:
 		</cfloop>
 	</table>
 	<cf_SlatwallSmartListPager smartList="#rc.vendorOrderSmartList#">
-
 </div>
 </cfoutput>

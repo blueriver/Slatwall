@@ -56,49 +56,76 @@ Notes:
 	</cfif>
 </cfloop>--->
 
+
+
+
 <div class="svoadminvendororderdetail">
-	<div class="basicOrderInfo">
-		<table class="listing-grid stripe" id="basicVendorOrderInfo" style="width:400px;">
-			<tr>
-				<th colspan="2">#$.Slatwall.rbKey("admin.vendorOrder.detail.basicvendorOrderinfo")#</th>
-			</tr>
-			<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="VendorOrderNumber" edit="false" displayType="table">
-			<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendorOrderType()#" property="Type" edit="false"  displayType="table">
-			<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="createdDateTime" edit="false"  displayType="table">
-			<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="vendorName" edit="false"  displayType="table">
-			<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="emailAddress" edit="false" displayType="table">
-			<!---<cf_SlatwallPropertyDisplay object="#local.vendor#" property="primaryPhoneNumber" edit="false" displayType="table">--->
-		</table>
-	</div>
-	<div class="paymentInfo">
-		<p><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.vendorOrdertotals")#</strong></p>
-		<dl class="orderTotals">
-			<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.subtotal")#</dt> 
-			<dd>#rc.vendorOrder.getFormattedValue('subtotal', 'currency')#</dd>
-			<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totaltax")#</dt>
-			<dd>#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#</dd>
-			<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalFulfillmentCharge")#</dt>--->
-			<!---<dd>#rc.vendorOrder.getFormattedValue('fulfillmentTotal', 'currency')#</dd>--->
-			<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalDiscounts")#</dt>--->
-			<!---<dd>#rc.vendorOrder.getFormattedValue('discountTotal', 'currency')#</dd>--->
-			<dt><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.total")#</strong></dt> 
-			<dd><strong>#rc.vendorOrder.getFormattedValue('total', 'currency')#</strong></dd>
-		</dl>
-	</div>
-	<div class="clear">
-		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
-			<ul>	
-				<li><a href="##tabVendorOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderItems")#</span></a></li>
-				<li><a href="##tabVendorOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderDeliveries")#</span></a></li>
-			</ul>
+	
+	<cfif rc.edit>
+			
+		#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendorOrder, formName="VendorOrderEdit")#
 		
-			<div id="tabVendorOrderItems">
-				#view("vendorOrder/vendorOrdertabs/items")# 
-			</div>
-			<div id="tabVendorOrderDeliveries">
-				WIP
-			</div>
-		</div> <!-- tabs -->
-	</div>
+		<form name="VendorOrderEdit" id="VendorOrderEdit" action="#buildURL('admin:vendorOrder.saveVendorOrder')#" method="post">
+			<input type="hidden" name="VendorOrderID" value="#rc.VendorOrder.getVendorOrderID()#" />
+	
+			<dl class="twoColumn">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
+			</dl>
+			
+			<cf_SlatwallActionCaller action="admin:vendorOrder.listvendorOrders" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			<cf_SlatwallActionCaller action="admin:vendorOrder.savevendorOrder" type="submit" class="button">
+		</form>
+	</cfif>
+	
+	
+	<cfif NOT rc.edit>
+		<div class="basicOrderInfo">
+			<table class="listing-grid stripe" id="basicVendorOrderInfo" style="width:400px;">
+				<tr>
+					<th colspan="2">#$.Slatwall.rbKey("admin.vendorOrder.detail.basicvendorOrderinfo")#</th>
+				</tr>
+				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="VendorOrderNumber" edit="false" displayType="table">
+				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendorOrderType()#" property="Type" edit="false"  displayType="table">
+				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="createdDateTime" edit="false"  displayType="table">
+				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="vendorName" edit="false"  displayType="table">
+				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="emailAddress" edit="false" displayType="table">
+				<!---<cf_SlatwallPropertyDisplay object="#local.vendor#" property="primaryPhoneNumber" edit="false" displayType="table">--->
+			</table>
+		</div>
+		<div class="paymentInfo">
+			<p><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.vendorOrdertotals")#</strong></p>
+			<dl class="orderTotals">
+				<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.subtotal")#</dt> 
+				<dd>#rc.vendorOrder.getFormattedValue('subtotal', 'currency')#</dd>
+				<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totaltax")#</dt>
+				<dd>#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#</dd>
+				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalFulfillmentCharge")#</dt>--->
+				<!---<dd>#rc.vendorOrder.getFormattedValue('fulfillmentTotal', 'currency')#</dd>--->
+				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalDiscounts")#</dt>--->
+				<!---<dd>#rc.vendorOrder.getFormattedValue('discountTotal', 'currency')#</dd>--->
+				<dt><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.total")#</strong></dt> 
+				<dd><strong>#rc.vendorOrder.getFormattedValue('total', 'currency')#</strong></dd>
+			</dl>
+		</div>
+		<div class="clear">
+			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
+				<ul>	
+					<li><a href="##tabVendorOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderItems")#</span></a></li>
+					<li><a href="##tabVendorOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderDeliveries")#</span></a></li>
+					<li><a href="##tabVendorOrderProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderProducts")#</span></a></li>
+				</ul>
+			
+				<div id="tabVendorOrderItems">
+					#view("vendorOrder/vendorOrdertabs/items")# 
+				</div>
+				<div id="tabVendorOrderDeliveries">
+					WIP
+				</div>
+				<div id="tabVendorOrderProducts">
+					#view("vendorOrder/vendorOrdertabs/products")# 
+				</div>
+			</div> <!-- tabs -->
+		</div>
+	</cfif>
 </div>
 </cfoutput>

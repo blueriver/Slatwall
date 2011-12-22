@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -38,12 +38,47 @@ Notes:
 --->
 
 <cfoutput>
-	<div class="vendorAddressDisplay">
-		<dl class="twoColumn">
-			<input type="hidden" name="vendorAddresses[1].vendor.vendorId" value="#rc.vendor.getVendorId()#"/>
-			<input type="hidden" name="vendorAddresses[1].address.addressId" value="#rc.vendorAddress.getAddress().getAddressId()#"/>
-			<input type="hidden" name="vendorAddresses[1].vendorAddressId" value="#rc.vendorAddress.getVendorAddressId()#"/>
-			<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" edit="#rc.edit#" fieldNamePrefix="vendorAddresses[1].address." />
+	<table class="listing-grid stripe">
+		<tr>
+			<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
+			<th></th>
+		</tr>
+			
+		<cfloop array="#rc.vendorProducts#" index="local.product">
+			<tr>
+				<td class="varWidth">#local.product.getProductName()# <cfif len(local.product.getProductCode())>(#local.product.getProductCode()#)</cfif></td>
+				<td>
+					<cfif rc.vendorOrder.isProductInVendorOrder(local.product.getProductId())>
+						<a href="##">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_edit")#</a>
+					<cfelse>
+						<a href="##">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_addToOrder")#</a>
+					</cfif>
+				</td>
+			</tr>
+		</cfloop>
+	</table>
+	
+	<div class="totals" style="width:300px; float:right;">
+		<dl class="fulfillmentTotals">
+			<dt>
+				#$.slatwall.rbKey("entity.vendorOrder.subtotal")#:
+			</dt>
+			<dd>
+				#rc.vendorOrder.getFormattedValue('subTotal', 'currency')#
+			</dd>
+			<dt>
+				#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
+			</dt>
+			<dd>
+				#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
+			</dd>
+			<dt>
+				#$.slatwall.rbKey("entity.vendorOrder.total")#:
+			</dt>
+			<dd>
+				#rc.vendorOrder.getFormattedValue('total', 'currency')#
+			</dd>
 		</dl>
 	</div>
+	<div class="clear"></div>
 </cfoutput>

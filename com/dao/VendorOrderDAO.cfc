@@ -36,5 +36,5 @@
 Notes:
 
 */
-component extends="BaseDAO" {		
+component extends="BaseDAO" {	
 }

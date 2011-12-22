@@ -1,4 +1,4 @@
-﻿<!---
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -38,12 +38,10 @@ Notes:
 --->
 
 <cfoutput>
-	<div class="vendorAddressDisplay">
-		<dl class="twoColumn">
-			<input type="hidden" name="vendorAddresses[1].vendor.vendorId" value="#rc.vendor.getVendorId()#"/>
-			<input type="hidden" name="vendorAddresses[1].address.addressId" value="#rc.vendorAddress.getAddress().getAddressId()#"/>
-			<input type="hidden" name="vendorAddresses[1].vendorAddressId" value="#rc.vendorAddress.getVendorAddressId()#"/>
-			<cf_SlatwallAddressDisplay address="#rc.vendorAddress.getAddress()#" edit="#rc.edit#" fieldNamePrefix="vendorAddresses[1].address." />
-		</dl>
-	</div>
+	<!--- Build a list of ids for the "selected" brands --->
+	<cfset idsList = "">
+	<cfloop array="#rc.vendor.getBrands()#" index="brand">
+		<cfset idsList = ListAppend(idsList, brand.getBrandId())>
+	</cfloop>
+	<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="true"  fieldType="multiselect" value="#idsList#"  />
 </cfoutput>

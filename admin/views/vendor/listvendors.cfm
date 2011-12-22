@@ -58,7 +58,7 @@ Notes:
 				<td>#Local.Vendor.getAccountNumber()#</td>
 				<td><a href="#<!---getExternalSiteLink(--->local.Vendor.getVendorWebsite()<!---)--->#">#local.Vendor.getVendorWebsite()#</a></td>
 				<td><a href="mailto:#Local.Vendor.getEmailAddress()#">#Local.Vendor.getEmailAddress()#</a></td>
-				<td><!---#ArrayLen(Local.Vendor.getBrands())#---></td>
+				<td>#ArrayLen(Local.Vendor.getBrands())#</td>
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:vendor.editvendor" querystring="vendorID=#local.vendor.getVendorID()#" class="edit" type="list">            

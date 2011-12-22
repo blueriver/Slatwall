@@ -53,8 +53,8 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
 	
 	// Related Object Properties (One-To-Many)
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all";
-	property name="vendorOrderDeliveries" singularname="vendorOrderDelivery" cfc="VendorOrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" filedtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="vendorOrderDeliveries" singularname="vendorOrderDelivery" cfc="VendorOrderDelivery" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 
@@ -70,11 +70,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			variables.vendorOrderItems = [];
 		}
 		
-		// Set the default order type as purchase order
-		if(isNull(getVendorOrderType())) {
-			variables.vendorOrderType = getService("typeService").getTypeBySystemCode('votPurchaseOrder');
+		if(isNull(variables.vendorOrderDeliveries)) {
+			variables.vendorOrderDeliveries = [];
 		}
 		
+		// Set the default order type as purchase order
+		if(isNull(variables.vendorOrderType)) {
+			variables.vendorOrderType = getService("typeService").getTypeBySystemCode('votPurchaseOrder');
+		}
 		
 		return super.init();
 	}
@@ -151,5 +154,10 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		for(var i=arrayLen(getVendorOrderItems()); i >= 1; i--) {
 			getVendorOrderItems()[i].removeVendorOrder(this);
 		}
+	}
+	
+	public boolean function isProductInVendorOrder(required any productID) {
+		// TODO!
+		return false;
 	}
 }

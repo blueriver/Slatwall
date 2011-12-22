@@ -58,24 +58,21 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="accountNumber" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorWebsite" edit="#rc.edit#" valueLink="#rc.Vendor.getVendorWebsite()#">
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
-			
-			<!--- Build a list of ids for the "selected" brands --->
-			<!---<cfset idsList = "">
-			<cfloop array="#rc.vendor.getBrands()#" index="brand">
-				<cfset idsList = ListAppend(idsList, brand.getBrandId())>
-			</cfloop>
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="true"  fieldType="multiselect" value="#idsList#"  />--->
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">	
 		</dl>
 
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
 			<ul>
 				<li><a href="##tabVendorAddresses" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.vendoraddresses")#</span></a></li>
+				<li><a href="##tabVendorBrands" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.vendorbrands")#</span></a></li>
 				<li><a href="##tabVendorOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendororders")#</span></a></li>
 			</ul>
 
 			<div id="tabVendorAddresses">
 				#view("admin:vendor/vendortabs/vendoraddresses")#
+			</div>
+			<div id="tabVendorBrands">
+				#view("admin:vendor/vendortabs/vendorbrands")#
 			</div>
 			<div id="tabVendorOrders">
 				#view("admin:vendor/vendortabs/vendororders")#

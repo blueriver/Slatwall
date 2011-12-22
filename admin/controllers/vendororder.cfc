@@ -40,6 +40,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="vendorOrderService" type="any";
+	property name="vendorService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.vendorOrderID" default="";
@@ -49,7 +50,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function default(required struct rc) {
 		getFW().redirect("admin:vendorOrder.listVendorOrders");
 	}
-
+	
     public void function listVendorOrders(required struct rc) {
 		param name="rc.vendorOrderby" default="createdDateTime|DESC";
 		param name="rc.vendorOrderDateStart" default="";
@@ -65,12 +66,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.vendorOrderID" default="";
     	param name="rc.edit" default="false";
     		
-    	// Get the vendor, but to NOT create a new vendor if the ID is not found (hense lack of second parameter=true).
-    	rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
+    	initVendorOrder(rc);
     	
-    	if(!isNull(rc.vendorOrder) and !rc.vendorOrder.isNew()) {
+    	// Redirect the user back to list if the Vendor Order was found to be new (possibly bad or blank ID).
+    	if(!rc.vendorOrder.isNew()) {
 	       rc.itemTitle &= ": Vendor Order No. " & rc.vendorOrder.getVendorOrderNumber();
-	   } else {
+		} else {
     		getFW().redirect(action="admin:vendororder.listVendorOrders");
     	}
     	
@@ -84,6 +85,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);
 
+		// Get Vendor's Products
+		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
+		var orderParams.orderBy = "createdDateTime|DESC";
+		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);*/
+		rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
+		
+
+		
   	  				
 	  /* rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
 	   //rc.shippingServices = getService("settingService").getShippingServices();
@@ -93,7 +102,52 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	       getFW().redirect("admin:vendorOrder.listVendorOrders");
 	   }*/
 	}
+	
+	public void function initVendorOrder(required struct rc) {
+    	param name="rc.vendorOrderID" default="";
+	
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId, true);
+	}
+	
+	/*public void function editVendorOrder(required struct rc) {
+    	param name="rc.vendorOrderID" default="";
+    	
+    	initVendorOrder(rc);
+    	rc.edit = true; 
+    	getFW().setView("admin:vendorOrder.detailVendorOrder");  
+	}*/
 
+	public void function createVendorOrder(required struct rc) {
+		initVendorOrder(rc);
+		rc.edit = true;
+		getFW().setView("admin:vendorOrder.detailVendorOrder");  
+	}
+	
+	public void function saveVendorOrder(required struct rc) {
+		initVendorOrder(rc);
+		
+		//dumpScreen(rc);
+
+		// this does an RC -> Entity population, and flags the entities to be saved.
+		getVendorOrderService().saveVendorOrder(rc.vendorOrder, rc);
+
+		if(!rc.vendorOrder.hasErrors()) {
+			// If added or edited a Price Group Rate
+			if(rc.VendorOrder.isNew()) {
+				rc.message=rbKey("admin.vendorOrder.savevendorOrder_nowaddorderitems");
+				getFW().redirect(action="admin:vendorOrder.editVendorOrder", querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#", preserve="message");	
+			} else {
+				rc.message=rc.message=rbKey("admin.vendorOrder.savevendorOrder_success");
+				getFW().redirect(action="admin:vendorOrder.listVendorOrders", querystring="", preserve="message");
+			}
+			
+		} 
+		else { 			
+			rc.edit = true;
+			rc.itemTitle = rc.VendorOrder.isNew() ? rc.$.Slatwall.rbKey("admin.vendorOrder.createVendorOrder") : rc.$.Slatwall.rbKey("admin.vendorOrder.editVendorOrder") & ": #rc.vendorOrder.getVendorOrderName()#";
+			getFW().setView(action="admin:vendorOrder.detailVendorOrder");
+		}	
+	}
 
 	
 	

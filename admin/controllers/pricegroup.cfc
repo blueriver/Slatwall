@@ -84,34 +84,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function savePriceGroup(required struct rc) {
 		editPriceGroup(rc);
 
-		var wasNew = rc.PriceGroup.isNew();
-
-		//dumpScreen(rc);
-		
-		// In order for the automated population / save logic to work, map certain fields in the RC to their matching entity fields
-		/*if(StructKeyExists(rc, "priceGroupRateType") && rc.priceGroupRateType != ""){
-			
-			rc.PriceGroupRates[1].percentageOff = ] = 
-			
-			rc["PriceGroupRates[1].amounOff"] = rc["PriceGroupRates[1].amount"] = "";
-			if(rc.priceGroupRateType EQ "percentageOff")
-				rc["PRICEGROUPRATES[1].PERCENTAGEOFF"] = rc.priceGroupRateValue;
-			else if(rc.priceGroupRateType EQ "amountOff")
-				rc["PRICEGROUPRATES[1].AMOUNTOFF"] = rc.priceGroupRateValue;
-			else if(rc.priceGroupRateType EQ "amount")
-				rc["PRICEGROUPRATES[1].AMOUNT"] = rc.priceGroupRateValue;
-			else
-				throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
-		} */
-		
-		//dumpScreen(rc);
-
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.priceGroup = getPriceGroupService().savePriceGroup(rc.priceGroup, rc);
 
 		if(!rc.priceGroup.hasErrors()) {
 			// If added or edited a Price Group Rate
-			if(wasNew) {
+			if(rc.PriceGroup.isNew()) {
 				rc.message=rbKey("admin.pricegroup.savepricegroup_nowaddrates");
 				getFW().redirect(action="admin:priceGroup.editPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");	
 			} else {
