@@ -40,8 +40,8 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	
 	// Persistent Properties
 	property name="vendorOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityIn" ormtype="integer";
-	property name="quantityOut" ormtype="integer";
+	property name="quantityIn" ormtype="integer" default=0;
+	property name="quantityOut" ormtype="integer" default=0;
 	property name="cost" ormtype="big_decimal" formatType="currency";
 	
 	// Related Object Properties (Many-to-One)
@@ -53,4 +53,23 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	
+	
+	// Maintain bidirectional relationships (many-to-one). Notice that the child (VendorOrderItem) is the handler of the relationship, while the parent (VendorOrder), has inverse="true".
+	public void function setVendorOrder(required any vendorOrder) {
+	   variables.vendorOrder = arguments.vendorOrder;
+	   if(isNew() or !arguments.vendorOrder.hasVendorOrderItem(this)) {
+	       arrayAppend(arguments.vendorOrder.getVendorOrderItems(), this);
+	   }
+	}
+	
+	public void function removeVendorOrder() {
+       var index = arrayFind(variables.vendorOrder.getVendorOrderItems(), this);
+       if(index > 0) {
+           arrayDeleteAt(variables.vendorOrder.getVendorOrderItems(), index);
+       }
+       structDelete(variables,"vendorOrder");
+    }
+	
 }

@@ -38,16 +38,19 @@ Notes:
 --->
 
 <cfoutput>
-	<table class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
-			<th></th>
-		</tr>
-			
-		<!---<cfloop array="#rc.vendorProducts#" index="local.product">--->
-		<tbody class="productsFromVendorOutput">
-			<cfloop array="#rc.vendorOrder.getVendor().getBrands()#" index="local.brand">
-				<cfloop array="#local.brand.getProducts()#" index="local.product">
+	<cfif ArrayLen(rc.vendorProductSmartList.getPageRecords())>
+		<table class="listing-grid stripe">
+			<tr>
+				<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
+				<th></th>
+			</tr>
+				
+			<!---<cfloop array="#rc.vendorProducts#" index="local.product">--->
+			<tbody class="productsFromVendorOutput">
+				<!---<cfloop array="#rc.vendorOrder.getVendor().getBrands()#" index="local.brand">
+					<cfloop array="#local.brand.getProducts()#" index="local.product">--->
+				<cfloop array="#rc.vendorProductSmartList.getPageRecords()#" index="local.product">	
+					
 					<tr data-productid="#local.product.getProductId()#">
 						<td class="varWidth">#local.product.getProductName()# <cfif len(local.product.getProductCode())>(#local.product.getProductCode()#)</cfif></td>
 						<td>
@@ -57,13 +60,16 @@ Notes:
 							<cfelse>
 								<cfset local.label = $.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_addToOrder")>
 							</cfif>
-							<a href="#BuildURL(action='vendorOrder.editVendorOrderProductAssignment', querystring='VendorOrderID=#rc.VendorOrder.getVendorOrderID()#&productID=#local.product.getProductId()#')#">#local.label#</a>
+							<a href="#BuildURL(action='vendorOrder.editVendorOrderItems', querystring='VendorOrderID=#rc.VendorOrder.getVendorOrderID()#&productID=#local.product.getProductId()#')#">#local.label#</a>
 						</td>
 					</tr>
+					<!---</cfloop>--->
 				</cfloop>
-			</cfloop>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	<cfelse>
+		#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproducts_empty")#
+	</cfif>
 	
 	<div class="totals" style="width:300px; float:right;">
 		<dl class="fulfillmentTotals">
