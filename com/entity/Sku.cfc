@@ -264,9 +264,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 			path = getResizedImagePath(argumentcollection=arguments);	
 		}
 		
-		// Read the Image
-		var img = imageRead(expandPath(path));
-		
 		// Setup Alt & Class for the image
 		if(arguments.alt == "") {
 			arguments.alt = "#getProduct().getTitle()#";
@@ -274,7 +271,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		if(arguments.class == "") {
 			arguments.class = "skuImage";	
 		}
-		return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';
+		
+		// Try to read and return the image, otherwise don't specify the height and width
+		try {
+			var img = imageRead(expandPath(path));
+			return '<img src="#path#" width="#imageGetWidth(img)#" height="#imageGetHeight(img)#" alt="#arguments.alt#" class="#arguments.class#" />';	
+		} catch(any e) {
+			return '<img src="#path#" alt="#arguments.alt#" class="#arguments.class#" />';
+		}
 	}
 	
 	public string function getResizedImagePath(string size, numeric width=0, numeric height=0, string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
