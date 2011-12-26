@@ -53,6 +53,5 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	// Related Object Properties
 	property name="phoneNumbers" singularname="phoneNumber" type="array" cfc="VendorPhoneNumber" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	property name="emailAddresses" singularname="emailAddress" type="array" cfc="VendorEmailAddress" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
-	property name="brands" singularname="brand" type="array" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="vendorID" cascade="all" inverse="true";
 	
 }
