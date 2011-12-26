@@ -146,11 +146,4 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getProductService().deleteProductCategory(rc.$.event("categoryID"));
 	}
 	
-	public void function onAdminModuleNav(required any rc) {
-		// Add necessary html to the header
-		if( getFW().secureDisplay("admin:main.dashboard") ){
-			getService("utilityTagService").cfhtmlhead(getFW().view("admin:toolbar/menu"));
-		}
-	}
-
 }
