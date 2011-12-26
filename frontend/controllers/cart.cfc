@@ -58,9 +58,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function update(required struct rc) {
 		
 		// Conditional logic to see if we should use the deprecated method
-		if(isArray(rc.orderItems)) {
+		if(structKeyExists(rc, "orderItems") && isArray(rc.orderItems)) {
 			getOrderService().saveOrder(rc.$.slatwall.cart(), rc);
-		} else if (isStruct(rc.orderItems)) {
+		} else if (structKeyExists(rc, "orderItem") && isStruct(rc.orderItem)) {
 			// This is the deprecated method
 			getOrderService().updateOrderItems(order=rc.$.slatwall.cart(), data=rc);	
 		}
