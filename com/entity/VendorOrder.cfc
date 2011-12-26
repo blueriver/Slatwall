@@ -53,7 +53,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
 	
 	// Related Object Properties (One-To-Many)
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all-delete-orphan";
 	property name="vendorOrderDeliveries" singularname="vendorOrderDelivery" cfc="VendorOrderDelivery" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
 	
 	// Non persistent properties
@@ -159,5 +159,39 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	public boolean function isProductInVendorOrder(required any productID) {
 		// TODO!
 		return false;
+	}
+	
+	/*
+		Helper methods for Add Product / Vendor Order Item dialog
+	*/
+	
+	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
+	public any function getVendorOrderItemForSkuAndLocation(skuID, locationID) {
+		var stock = getService("VendorOrderService").getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
+		if(!isNull(stock)) {
+			// Find any existing VendorOrderItem that has this stock (there should only be zero or one).
+			var vendorOrderItems = getVendorOrderItems(); 
+			for(var i=1; i <= ArrayLen(vendorOrderItems); i++){
+				if(vendorOrderItems[i].getStock().getStockID() == stock.getStockID()) {
+					return vendorOrderItems[i];
+				}
+			}	
+		}
+		
+		// Otherwise, if stock was null (could not find one with that sku and location) or no VendorOrderItem was found with the located stock, return a new VendorOrderItem
+		return getService("VendorOrderService").getVendorOrderItem(0, true);
+	}
+	
+	public any function getVendorOrderItemCostForSku(skuID) {
+		// Search over all VendorOrderItems to find one that has a stock for the given skuID
+		var vendorOrderItems = getVendorOrderItems(); 
+		for(var i=1; i <= ArrayLen(vendorOrderItems); i++){
+			if(vendorOrderItems[i].getStock().getSku().getSkuID() == arguments.skuID) {
+				return vendorOrderItems[i].getCost();
+			}
+		}
+		
+		// Otherwise, if nothing could be found, the cost is 0.
+		return 0;	
 	}
 }

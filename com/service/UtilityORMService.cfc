@@ -88,6 +88,9 @@ component extends="BaseService" accessors="true" {
 			
 		} else if ( left(arguments.entityName, len("SlatwallVendorAddress")) == "SlatwallVendorAddress")  {
 			serviceName = "vendorService";	
+			
+		} else if ( left(arguments.entityName, len("SlatwallStock")) == "SlatwallStock" || left(arguments.entityName, len("SlatwallVendorOrderItem")) == "SlatwallVendorOrderItem")  {
+			serviceName = "vendorOrderService";	
 		}
 		
 		// Return the actual service

@@ -40,6 +40,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	property name="addressService";
 	property name="taxService";
+	property name="DAO";
 	
 	public any function getVendorOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallVendorOrder";
@@ -111,6 +112,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 
 		return getVendorOrderSmartList(params);
+	}
+	
+	
+	public any function getStockForSkuAndLocation(skuID, locationID){
+		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 	}
 	
 	/*public void function addVendorOrderItem(required any vendorOrder, required any sku, numeric quantity=1) {

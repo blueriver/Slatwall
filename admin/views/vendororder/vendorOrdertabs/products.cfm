@@ -38,25 +38,38 @@ Notes:
 --->
 
 <cfoutput>
-	<table class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
-			<th></th>
-		</tr>
-			
-		<cfloop array="#rc.vendorProducts#" index="local.product">
+	<cfif ArrayLen(rc.vendorProductSmartList.getPageRecords())>
+		<table class="listing-grid stripe">
 			<tr>
-				<td class="varWidth">#local.product.getProductName()# <cfif len(local.product.getProductCode())>(#local.product.getProductCode()#)</cfif></td>
-				<td>
-					<cfif rc.vendorOrder.isProductInVendorOrder(local.product.getProductId())>
-						<a href="##">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_edit")#</a>
-					<cfelse>
-						<a href="##">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_addToOrder")#</a>
-					</cfif>
-				</td>
+				<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
+				<th></th>
 			</tr>
-		</cfloop>
-	</table>
+				
+			<!---<cfloop array="#rc.vendorProducts#" index="local.product">--->
+			<tbody class="productsFromVendorOutput">
+				<!---<cfloop array="#rc.vendorOrder.getVendor().getBrands()#" index="local.brand">
+					<cfloop array="#local.brand.getProducts()#" index="local.product">--->
+				<cfloop array="#rc.vendorProductSmartList.getPageRecords()#" index="local.product">	
+					
+					<tr data-productid="#local.product.getProductId()#">
+						<td class="varWidth">#local.product.getProductName()# <cfif len(local.product.getProductCode())>(#local.product.getProductCode()#)</cfif></td>
+						<td>
+								<!--- Show different textual label depending on whether the product is in the vendor order already. --->
+							<cfif rc.vendorOrder.isProductInVendorOrder(local.product.getProductId())>
+								<cfset local.label = $.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_edit")>
+							<cfelse>
+								<cfset local.label = $.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_addToOrder")>
+							</cfif>
+							<a href="#BuildURL(action='vendorOrder.editVendorOrderItems', querystring='VendorOrderID=#rc.VendorOrder.getVendorOrderID()#&productID=#local.product.getProductId()#')#">#local.label#</a>
+						</td>
+					</tr>
+					<!---</cfloop>--->
+				</cfloop>
+			</tbody>
+		</table>
+	<cfelse>
+		#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproducts_empty")#
+	</cfif>
 	
 	<div class="totals" style="width:300px; float:right;">
 		<dl class="fulfillmentTotals">
@@ -81,4 +94,6 @@ Notes:
 		</dl>
 	</div>
 	<div class="clear"></div>
+	
+	<div id="addEditProductToOrder" class="ui-helper-hidden"><img style="" src="staticAssets/images/ajax-loader.gif"></div>
 </cfoutput>

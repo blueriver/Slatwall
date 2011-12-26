@@ -81,6 +81,7 @@ function actionDialog($dialogDiv, okHandler, cancelHandler, onClosedHandler){
 	//$dialogDiv.attr("title", title);
     $dialogDiv.dialog({
         resizable: false,
+		width: 'auto',
         modal: true,
         buttons: {
             'Ok': function() {

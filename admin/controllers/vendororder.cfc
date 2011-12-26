@@ -41,6 +41,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="vendorOrderService" type="any";
 	property name="vendorService" type="any";
+	property name="productService" type="any";
+	property name="locationService" type="any";
+	property name="skuService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.vendorOrderID" default="";
@@ -76,9 +79,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	}
     	
     	// Get Items
-		var orderParams['vendorOrderID'] = rc.vendorOrderID;
-		var orderParams.orderBy = "createdDateTime|DESC";
-		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList(data=orderParams);
+		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
+		//var orderParams.orderBy = "createdDateTime|DESC";
+		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
+		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 			
 		// Get Deliveries
 		var orderParams['vendorOrderID'] = rc.vendorOrderID;
@@ -89,10 +93,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);*/
-		rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
 		
-
+		// Get Vendor's Products
+		rc.vendorProductSmartList = getProductService().getProductSmartList();
+		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
 		
+		//rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
   	  				
 	  /* rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
 	   //rc.shippingServices = getService("settingService").getShippingServices();
@@ -120,22 +126,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function createVendorOrder(required struct rc) {
 		initVendorOrder(rc);
 		rc.edit = true;
+	
 		getFW().setView("admin:vendorOrder.detailVendorOrder");  
 	}
 	
 	public void function saveVendorOrder(required struct rc) {
 		initVendorOrder(rc);
-		
-		//dumpScreen(rc);
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
+		var wasNew = rc.VendorOrder.isNew();
 		getVendorOrderService().saveVendorOrder(rc.vendorOrder, rc);
 
 		if(!rc.vendorOrder.hasErrors()) {
 			// If added or edited a Price Group Rate
-			if(rc.VendorOrder.isNew()) {
+			if(wasNew) { 
 				rc.message=rbKey("admin.vendorOrder.savevendorOrder_nowaddorderitems");
-				getFW().redirect(action="admin:vendorOrder.editVendorOrder", querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#", preserve="message");	
+				getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#", preserve="message");	
 			} else {
 				rc.message=rc.message=rbKey("admin.vendorOrder.savevendorOrder_success");
 				getFW().redirect(action="admin:vendorOrder.listVendorOrders", querystring="", preserve="message");
@@ -148,7 +154,97 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().setView(action="admin:vendorOrder.detailVendorOrder");
 		}	
 	}
+	
+	/*
+		Handlers for the "Add product to vendor order" dialog
+	*/
+	public void function editVendorOrderItems(required struct rc) {
+    	param name="rc.vendorOrderID" default="";
+    	param name="rc.productID" default="";
+    	
+    	initVendorOrder(rc);
+    	rc.product = getProductService().getProduct(rc.productId);
+    	
+    	// Get Location
+		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
+		//var orderParams.orderBy = "createdDateTime|DESC";
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+    	rc.edit = true; 
+    	rc.itemTitle = rbKey("admin.vendororder.editvendororderproductassignment");
+    	rc.itemTitle = ReplaceNoCase(rc.itemTitle, "{1}", rc.product.getProductName());
+    	getFW().setView("admin:vendorOrder.editvendororderitems");  
+	}
+	
+	// Called from vendor order items / sku assignment dialog
+	public void function saveVendorOrderItems(required struct rc) {
+		param name="rc.vendorOrderID";
+		var vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
+		var skuCosts = {};
+	
+		// Sku costs are provided by fields named like: cost_skuid(4028b8813414708a01341514ad67001e). Loop over rc and find these fields. Build an associative array keyed on sku, containing the cost. This will be used to populate the cost into each vendorOrderItem in the next loop.
+		for (var key IN rc) {
+			//key = "qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba)";
+			var res = REFindNoCase("cost_skuid\((.+)\)", key, 1, true);
 
+			if(ArrayLen(res.pos) == 2) {
+				var skuID = mid(key, res.pos[2], res.len[2]);
+				var cost = val(rc[key]);
+				if(len(skuID)) {
+					skuCosts[skuID] = cost;
+				}
+			}
+		}
+	
+		// Sku / location quantities are provided by fields named like: qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba). Loop over rc and find these fields
+		for (var key IN rc) {
+			//key = "qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba)";
+			var res = REFindNoCase("qty_skuid\((.+)\)_locationid\((.+)\)", key, 1, true);
+
+			if(ArrayLen(res.pos) == 3) {
+				var skuID = mid(key, res.pos[2], res.len[2]);
+				var locationID= mid(key, res.pos[3], res.len[3]);
+				var quantityIn = val(rc[key]);
+				if(len(skuID) && len(locationID)) {
+					// We've found one of the inputs. See if a VendorOrderItem already exists with this sku and location. If so, then update it. Otherwise, we will have to create one, and possibly even the stock!
+					var vendorOrderItem = vendorOrder.getVendorOrderItemForSkuAndLocation(skuID, locationID);
+					
+					if(vendorOrderItem.isNew()) {
+						// Only proceed if we have a positive value
+						if(quantityIn > 0) {
+							// The vendorOrderItem is new. See if we already have a stock for that sku and location and use if it so, otherwise, creat a new stock
+							var stock = getVendorOrderService().getStockForSkuAndLocation(skuID, locationID);
+							
+							if(isNull(stock)) {
+								stock = getVendorOrderService().getStock(0, true);
+								stock.setSku(getSkuService().getSku(skuID));
+								stock.setLocation(getLocationService().getLocation(locationID));
+								getVendorOrderService().saveStock(stock);
+							} 
+
+							vendorOrderItem.setStock(stock);
+							vendorOrderItem.setVendorOrder(vendorOrder);
+							vendorOrderItem.setQuantityIn(quantityIn);
+							vendorOrderItem.setCost(skuCosts[skuID]);
+							getVendorOrderService().saveVendorOrderItem(vendorOrderItem);
+						}	
+						
+					} else {
+						// vendorOrderItem existed. If qty is positive number, simply update the quantity. If 0, delete VendorOrderItem
+						if(quantityIn > 0) {
+							vendorOrderItem.setQuantityIn(quantityIn);
+							vendorOrderItem.setCost(skuCosts[skuID]);
+						} else {
+							getVendorOrderService().deleteVendorOrderItem(vendorOrderItem);		// TODO!!!!!!!!!! Make sure this does not delete the stock!
+						}	
+					}
+				}
+			}	
+		}	
+			
+		rc.message=rbKey("admin.vendorOrder.savevendorOrderItems_success");
+		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderID=#vendorOrder.getVendorOrderID()#", preserve="message");
+	}
+	
 	
 	
 	/*public void function cancelorder(required struct rc) {

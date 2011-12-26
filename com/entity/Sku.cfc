@@ -415,5 +415,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		super.preInsert();
     }
     
+    /* 
+   		Start of Stock related methods
+   	*/
+   	public any function getStockByLocation(required any locationID){
+   		// Returns a new entity if one doesn't exist.
+   	}
+    
 	
 }

@@ -43,5 +43,5 @@ Notes:
 	<cfloop array="#rc.vendor.getBrands()#" index="brand">
 		<cfset idsList = ListAppend(idsList, brand.getBrandId())>
 	</cfloop>
-	<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="true"  fieldType="multiselect" value="#idsList#"  />
+	<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect" value="#idsList#"  />
 </cfoutput>

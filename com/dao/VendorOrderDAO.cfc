@@ -36,5 +36,17 @@
 Notes:
 
 */
-component extends="BaseDAO" {	
+component extends="BaseDAO" {
+
+	public any function getStockForSkuAndLocation(skuID, locationID) {
+		var params = [arguments.skuID, arguments.locationID];
+		var hql = " SELECT s
+					FROM SlatwallStock s
+					INNER JOIN s.sku sk
+					INNER JOIN s.location l
+					WHERE sk.skuID = ?
+					AND l.locationID = ?    ";
+	
+		return ormExecuteQuery(hql, params, true);	
+	}	
 }

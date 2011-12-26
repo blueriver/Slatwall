@@ -85,11 +85,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		editPriceGroup(rc);
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
+		var wasNew = rc.priceGroup.isNew();
 		rc.priceGroup = getPriceGroupService().savePriceGroup(rc.priceGroup, rc);
 
 		if(!rc.priceGroup.hasErrors()) {
 			// If added or edited a Price Group Rate
-			if(rc.PriceGroup.isNew()) {
+			if(wasNew) {
 				rc.message=rbKey("admin.pricegroup.savepricegroup_nowaddrates");
 				getFW().redirect(action="admin:priceGroup.editPriceGroup", querystring="pricegroupid=#rc.pricegroup.getPriceGroupID()#", preserve="message");	
 			} else {
