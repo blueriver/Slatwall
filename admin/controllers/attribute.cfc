@@ -51,7 +51,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     
 	public void function createAttributeSet(required struct rc) {
 		rc.edit = true;
-		getFW().setView("admin:attribute.detailAttributeSet");
+		getFW().setView("admin:attribute.detailattributeset");
 		
 		rc.attributeSet = getAttributeService().newAttributeSet();
 		rc.attribute = getAttributeService().newAttribute();
@@ -62,7 +62,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.attributeID" default="";
 		
 		rc.edit = true;
-		getFW().setView("admin:attribute.detailAttributeSet");
+		getFW().setView("admin:attribute.detailattributeset");
 		
 		rc.attributeSet = getAttributeService().getAttributeSet(rc.attributeSetID);
 		rc.attribute = getAttributeService().getAttribute(rc.attributeID, true);
