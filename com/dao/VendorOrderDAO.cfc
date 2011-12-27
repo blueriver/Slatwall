@@ -49,4 +49,29 @@ component extends="BaseDAO" {
 	
 		return ormExecuteQuery(hql, params, true);	
 	}	
+	
+	public any function isProductInVendorOrder(productId, vendorOrderId) {
+		var params = [arguments.productId, arguments.vendorOrderId];
+		/*var hql = " SELECT p
+					FROM SlatwallProduct p
+					INNER JOIN p.skus sk
+					INNER JOIN sk.stocks s
+					INNER JOIN s.vendorOrderItems i
+					INNER JOIN i.vendorOrder o 
+					WHERE p.productID = ?    
+					AND o.vendorOrderId = ?			";*/
+					
+		var hql = " SELECT  o 
+					FROM SlatwallVendorOrder o
+					INNER JOIN o.vendorOrderItems i
+					INNER JOIN i.stock s
+					INNER JOIN s.sku sk
+					INNER JOIN sk.product p
+					WHERE p.productID = ?    
+					AND o.vendorOrderID = ?			";
+	
+		return !isNull(ormExecuteQuery(hql, params, true));	
+	}	
+	
+	
 }

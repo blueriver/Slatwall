@@ -119,6 +119,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 	}
 	
+	public any function isProductInVendorOrder(productID, vendorOrderID){
+		return getDAO().isProductInVendorOrder(arguments.productID, arguments.vendorOrderID);
+	}
+	
+	
 	/*public void function addVendorOrderItem(required any vendorOrder, required any sku, numeric quantity=1) {
 		
 		var vendorOrderItems = arguments.vendorOrder.getVendorOrderItems();

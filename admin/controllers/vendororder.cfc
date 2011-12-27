@@ -161,7 +161,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function editVendorOrderItems(required struct rc) {
     	param name="rc.vendorOrderID" default="";
     	param name="rc.productID" default="";
-    	
+    	param name="rc.inDialog" default="false";
+
     	initVendorOrder(rc);
     	rc.product = getProductService().getProduct(rc.productId);
     	
@@ -234,6 +235,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 							vendorOrderItem.setQuantityIn(quantityIn);
 							vendorOrderItem.setCost(skuCosts[skuID]);
 						} else {
+							vendorOrder.removeVendorOrderItem(vendorOrderItem);
 							getVendorOrderService().deleteVendorOrderItem(vendorOrderItem);		// TODO!!!!!!!!!! Make sure this does not delete the stock!
 						}	
 					}

@@ -157,8 +157,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}
 	
 	public boolean function isProductInVendorOrder(required any productID) {
-		// TODO!
-		return false;
+		return getService("VendorOrderService").isProductInVendorOrder(arguments.productID, this.getVendorOrderId());
 	}
 	
 	/*
