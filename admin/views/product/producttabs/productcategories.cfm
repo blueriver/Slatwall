@@ -39,8 +39,8 @@ Notes:
 
 <cfoutput>
 	<cfif rc.edit>
-		<input type="hidden" name="categoryID" value="" />
-		<input type="hidden" name="featuredCategories" value="" />
+		<input type="hidden" name="productCategories" value="" />
+		<input type="hidden" name="productCategoriesFeatured" value="" />
 		<cfif rc.categories.recordCount gt 0>
 			<table id="productCategories" class="listing-grid stripe">
 				<tr>
@@ -51,7 +51,8 @@ Notes:
 				<cfloop query="rc.categories">
 					<tr>
 						<td>
-							<input type="checkbox" id="#rc.categories.categoryID#" name="categoryID" value="#listChangeDelims(rc.categories.idPath,' ')#"<cfif listFind(rc.product.getCategoryIDs(),rc.categories.categoryID)> checked="checked"</cfif> /> 
+							<input type="hidden" name="pcPath_#rc.categories.categoryID#" value="#rc.categories.idPath#">
+							<input type="checkbox" name="productCategories" value="#rc.categories.categoryID#" <cfif listFind(rc.product.getCategoryIDs(), rc.categories.categoryID)> checked="checked"</cfif>/> 
 						</td>
 						<cfset local.thisNest = rc.categories.treeDepth eq 0 ? "neston" : "nest" & rc.categories.treeDepth & "on" />
 						<td class="varWidth">
@@ -60,7 +61,7 @@ Notes:
 							</ul> 
 						</td>
 						<td>
-							<input type="checkbox" id="#rc.categories.categoryID#featured" name="featuredCategories" value="#rc.categories.categoryID#"<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)> checked="checked"</cfif> /> 
+							<input type="checkbox" name="productCategoriesFeatured" value="#rc.categories.categoryID#"<cfif listFind(rc.product.getCategoryIDs(featured="true"),rc.categories.categoryID)> checked="checked"</cfif> /> 
 						</td>
 					</tr>	
 				</cfloop>

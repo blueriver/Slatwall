@@ -50,6 +50,10 @@ Notes:
 		<cfset doAction(missingMethodArguments.$, "frontend:event.#lcase(missingMethodName)#") />
 	</cffunction>
 	
+	<cffunction name="onAdminModuleNav">
+		<cfreturn '<li><a href="' & application.configBean.getContext() & '/plugins/Slatwall">Slatwall</a></li>' />
+	</cffunction>
+	
 	<cffunction name="onRenderStart">
 		<cfargument name="$" />
 

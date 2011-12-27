@@ -178,15 +178,41 @@ component extends="BaseService" accessors="true" {
 	/**
 	/* @hint associates this product with Mura categories
 	*/
-	public void function assignProductCategories(required any product,required string categoryID,string featuredCategories) {
-		for(var i=1;i<=listLen(arguments.categoryID);i++) {
-			local.isFeatured = false;
-			local.thisCategoryID = listGetAt(arguments.categoryID,i);
-			if(listFindNoCase(arguments.featuredCategories,listLast(local.thisCategoryID," "))) {
-				local.isFeatured = true;
+	public void function assignProductCategories(required any product, required struct data) {
+		// Loop over any existing relationship to either remove or remove from the toAdd list
+		for(var i=arrayLen(arguments.product.getProductCategories()); i>=1; i--) {
+			// If an old relationship doesn't exist any more then remove it
+			if(!listFindNoCase(arguments.data.productCategories, arguments.product.getProductCategories()[i].getProductCategoryID())) {
+				arguments.product.getProductCategories()[i].removeProduct( arguments.product );
+				
+			// else the old relationship does exist in new data
+			} else {
+				// remove from the productCategories so that it doesn't get added again
+				arguments.data.productCategories = listDeleteAt(arguments.data.productCategories, listFindNoCase(arguments.data.productCategories, arguments.product.getProductCategories()[i].getProductCategoryID()));
+				
+				// Set the featured flag appropriatly
+				if(listFindNoCase(arguments.data.productCategoriesFeatured, arguments.product.getProductCategories()[i].getProductCategoryID())) {
+					arguments.product.getProductCategories()[i].setFeaturedFlag( true );
+				} else {
+					arguments.product.getProductCategories()[i].setFeaturedFlag( false );
+				}
 			}
-			local.thisProductCategory = this.newSlatwallProductCategory({categoryID=listLast(local.thisCategoryID," "),categoryPath=listChangeDelims(local.thisCategoryID,","," "),featuredFlag=local.isFeatured});
-			arguments.product.addProductCategory(local.thisProductCategory);
+		}
+		
+		for(var i=1; i<=listLen(arguments.data.productCategories); i++) {
+			var thisCategoryID = listGetAt(arguments.data.productCategories, i);
+			var thisProductCategory = this.newProductCategory();
+			
+			thisProductCategory.setCategoryID(thisCategoryID);
+			thisProductCategory.setCategoryPath(arguments.data["pcPath_#thisCategoryID#"]);
+			
+			if(listFindNoCase(arguments.data.productCategoriesFeatured, thisCategoryID)) {
+				thisProductCategory.setFeaturedFlag( true );
+			} else {
+				thisProductCategory.setFeaturedFlag( false );
+			}
+			
+			arguments.product.addProductCategory(thisProductCategory);
 		}
 	}
 
@@ -330,11 +356,9 @@ component extends="BaseService" accessors="true" {
 		}
 		
 		// set up associations between product and mura categories
-		/*		
-		if(structKeyExists(arguments.data, "categoryID")) {
-			assignProductCategories(arguments.Product,arguments.data.categoryID,arguments.data.featuredCategories);
+		if(structKeyExists(arguments.data, "productCategories")) {
+			assignProductCategories(arguments.product, arguments.data);
 		}
-		*/
 		
 		// check for images to upload
 		if(structKeyExists(arguments.data,"images")) {
