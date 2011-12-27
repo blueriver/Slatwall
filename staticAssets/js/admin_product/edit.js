@@ -66,9 +66,7 @@ jQuery(document).ready(function() {
 		} else {
 			$('.alternateImageUpload:last').after($newImage);	
 		}
-		$newImage.children("dd").find("textarea.wysiwyg").each(function(i){
-			setRTE($(this));
-		});
+		$newImage.children("dd").find("textarea.wysiwyg").attr("id","imageDescription" + current).ckeditor();
         $newImage.removeAttr("id");
 		$newImage.attr("class","alternateImageUpload");
     });
