@@ -50,8 +50,12 @@ Notes:
 	<script language="JavaScript">
 		currentMask="#rc.VendorOrder.formatValue(0, 'currency')#";
 	</script>
-
-	<form name="editVendorOrderProductAssignment" action="#buildURL('admin:vendorOrder.saveVendorOrderItems')#" method="post">
+	
+	<cfif rc.inDialog EQ "true">
+		<h3>#Replace($.Slatwall.rbKey("admin.vendorOrder.vendorOrderItemsDialogTitle"), "{1}", rc.product.getProductName())#</h3>
+	</cfif>
+	
+	<form name="editVendorOrderProductAssignment" id="editVendorOrderProductAssignment" action="#buildURL('admin:vendorOrder.saveVendorOrderItems')#" method="post">
 		<input type="hidden" name="VendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		
 		<table class="listing-grid stripe">

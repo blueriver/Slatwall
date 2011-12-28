@@ -40,6 +40,7 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	
 	// Persistent Properties
 	property name="vendorOrderReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="vendorOrderReceiverType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderReceiverTypeID";
 	property name="boxCount"  ormtype="integer";
 	
 	// Audit properties
@@ -57,6 +58,12 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	   if(isNull(variables.vendorOrderReceiverItems)) {
 	       variables.vendorOrderReceiverItems = [];
 	   }    
+	   
+		// Set the default order type as purchase order
+		if(isNull(variables.vendorOrderReceiverType)) {
+			variables.vendorOrderReceiverType = getService("typeService").getTypeBySystemCode('vortPurchaseOrder');
+		}
+		
 	   return Super.init();
 	}
 	
@@ -72,19 +79,19 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	
 	// Order (many-to-one)
 	
-	public void function setOrder(required Order Order) {
-	   variables.order = arguments.order;
-	   if(!arguments.order.hasVendorOrderReceiver(this)) {
-	       arrayAppend(arguments.order.getOrderReceivers(), this);
+	public void function setVendorOrder(required any VendorOrder) {
+	   variables.vendorOrder = arguments.VendorOrder;
+	   if(!arguments.VendorOrder.hasVendorOrderReceiver(this)) {
+	       arrayAppend(arguments.vendorOrder.getVendorOrderReceivers(), this);
 	   }
 	}
 	
-	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderReceivers(), this);
+	public void function removeVendorOrder(required any VendorOrder) {
+       var index = arrayFind(arguments.vendorOrder.getVendorOrderReceivers(), this);
        if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderReceivers(), index);
+           arrayDeleteAt(arguments.VendorOrder.getVendorOrderReceivers(), index);
        }    
-       structDelete(variables, "order");
+       structDelete(variables, "vendorOrder");
     }
     
 	

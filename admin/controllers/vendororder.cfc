@@ -82,10 +82,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		//var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
+		rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
 		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
+		
 			
 		// Get Receivers
 		rc.vendorOrderReceiverSmartList = getVendorOrderService().getVendorOrderReceiverSmartList();
+		rc.vendorOrderReceiverSmartList.setPageRecordsShow(9999999);
 		rc.vendorOrderReceiverSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 
 		// Get Vendor's Products
@@ -95,6 +98,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		// Get Vendor's Products
 		rc.vendorProductSmartList = getProductService().getProductSmartList();
+		rc.vendorProductSmartList.setPageRecordsShow(9999999);
 		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
 		
 		//rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
@@ -169,6 +173,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		//var orderParams.orderBy = "createdDateTime|DESC";
 		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.setPageRecordsShow(9999999);
+		
     	rc.edit = true; 
     	rc.itemTitle = rbKey("admin.vendororder.editvendororderproductassignment");
     	rc.itemTitle = ReplaceNoCase(rc.itemTitle, "{1}", rc.product.getProductName());
@@ -197,7 +203,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 		// Sku / location quantities are provided by fields named like: qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba). Loop over rc and find these fields
 		for (var key IN rc) {
-			//key = "qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba)";
 			var res = REFindNoCase("qty_skuid\((.+)\)_locationid\((.+)\)", key, 1, true);
 
 			if(ArrayLen(res.pos) == 3) {
@@ -277,23 +282,105 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.fulfillmentSmartList = getVendorOrderService().getVendorOrderReceiverSmartList(data=arguments.rc);
 	}*/
 	
+
 	public void function detailVendorOrderReceiver(required struct rc) {
-		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverID);
+		param name="rc.vendorOrderReceiverID" default="";
+		
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverId, true);
+
 		if(isNull(rc.vendorOrderReceiver)) {
 			getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers");
 		}
+		
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.VendorOrderReceiver.getVendorOrder().getVendorOrderId());
+		
+		rc.edit = false;
+		getFW().setView("admin:vendorOrder.detailvendororderreceiver");  
 	}
 	
 	public void function createVendorOrderReceiver(required struct rc){
 		param name="rc.vendorOrderID" default="";
-	
-		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
 		
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(0, true);
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
+		
+		if(isNull(rc.vendorOrder)) {
+			getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers");
+		}
+	
 		// Get Items
 		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
+		rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
 		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 		
+		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
 		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.setPageRecordsShow(9999999);
+		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+
+		rc.edit = true;
+		getFW().setView("admin:vendorOrder.createvendororderreceiver");  
+	}
+	
+	// Currently we only support adding new Vendor Order Receivers. Not editing.
+	public void function saveVendorOrderReceiver(required struct rc){
+		param name="rc.vendorOrderID";
+		param name="rc.receiveForLocationId";
+		
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(0, true);
+		rc.vendorOrderReceiver.setVendorOrder(rc.vendorOrder);
+		rc.vendorOrderReceiver.setBoxCount(rc.boxCount);
+		
+		// We need to do some combining of Receiver Items, so we'll store them in a stockID keyed struct
+		var vendorOrderReceiverItemsByStockId = {};
+		
+		// Sku / location quantities are provided by fields named like: qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba). Loop over rc and find these fields
+		for (var key IN rc) {
+			var res = REFindNoCase("cost_stockid\((.+)\)", key, 1, true);
+
+			if(ArrayLen(res.pos) == 2) {
+				var stockID = mid(key, res.pos[2], res.len[2]);
+				var cost = val(rc[key]);
+				
+				if(len(stockID)) {
+					// Pull the quantity
+					var quantity = rc["quantity_stockid(#stockID#)"];
+					
+					if(isNumeric(quantity) && isNumeric(cost)) {
+						var stock = getVendorOrderService().getStock(stockID);
+						var vendorOrderReceiverItem = getVendorOrderService().getVendorOrderReceiverItem(0, true);
+						//vendorOrderReceiverItem.setVendorOrderReceiver(rc.vendorOrderReceiver);
+						vendorOrderReceiverItem.setQuantity(quantity);
+						vendorOrderReceiverItem.setCost(cost);
+						
+						// If the "receiveForLocationID" passed in (the drop down) matches this stock's location, then use that. Otherwise, find the stock to the corresponding location
+						stock = getVendorOrderService().getStockForSkuAndLocation(stock.getSku().getSkuID(), rc.receiveForLocationId);
+						vendorOrderReceiverItem.setStock(stock);
+						
+						// Search the stockID keyed struc for this stock. The only way that we would find the item already present is if the user is trying to receive the same SKU from multiple locations.
+						if(StructKeyExists(vendorOrderReceiverItemsByStockId, stock.getStockId())) {
+							vendorOrderReceiverItemsByStockId[stock.getStockId()].setQuantity(vendorOrderReceiverItemsByStockId[stock.getStockId()].getQuantity() + quantity);
+						} else {
+							// Otherwise it did not exist, so tie the item to the receiver, and a it to the struct.
+							vendorOrderReceiverItem.setVendorOrderReceiver(rc.vendorOrderReceiver);
+							vendorOrderReceiverItemsByStockId[stock.getStockId()] = vendorOrderReceiverItem;
+						}
+					}
+				}
+			}
+		}
+		
+		// Loop over the Items struct and finally assign them to the Receiever.
+		for (var key IN vendorOrderReceiverItemsByStockId) {
+			vendorOrderReceiverItemsByStockId[key].setVendorOrderReceiver(rc.vendorOrderReceiver);
+		}
+		
+		getVendorOrderService().saveVendorOrderReceiver(rc.vendorOrderReceiver);
+			
+		rc.message=rbKey("admin.vendorOrder.savevendorOrderReceiver_success");
+		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#", preserve="message");
 	}
 	
 	/*public void function processVendorOrderReceiver(required struct rc) {

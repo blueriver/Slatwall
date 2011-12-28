@@ -115,12 +115,16 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	
-	public any function getStockForSkuAndLocation(skuID, locationID){
+	public any function getStockForSkuAndLocation(required any skuID, required any locationID){
 		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 	}
 	
-	public any function isProductInVendorOrder(productID, vendorOrderID){
+	public any function isProductInVendorOrder(required any productID, required any vendorOrderID){
 		return getDAO().isProductInVendorOrder(arguments.productID, arguments.vendorOrderID);
+	}
+	
+	public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
+		return getDAO().getQuantityOfStockAlreadyOnOrder(arguments.vendorOrderId, arguments.stockID);
 	}
 	
 	

@@ -37,6 +37,7 @@ Notes:
 
 --->
 
+<cfparam name="rc.vendorOrderReceiverSmartList">
 
 <cfoutput>
 	<div class="buttons">
@@ -45,13 +46,22 @@ Notes:
 	
 	<table class="listing-grid stripe">
 		<tr>
-			<th>#$.slatwall.rbKey("entity.vendorOrderReceiver.createdDateTime")#</th>
+			<th class="varWidth">#$.slatwall.rbKey("entity.vendorOrderReceiver.createdDateTime")#</th>
+			<th>#$.slatwall.rbKey("entity.vendorOrderReceiver.boxCount")#</th>
+			<th></th>
 		</tr>
 			
 		<cfloop array="#rc.vendorOrderReceiverSmartList.getPageRecords()#" index="local.vendorOrderReceiver">
 			<tr>
-				<td>#DateFormat(local.vendorOrderReceiver.getCreatedDateTime(), "medium")#</td>
+				<td class="varWidth">#DateFormat(local.vendorOrderReceiver.getCreatedDateTime(), "medium")#</td>
+				<td>#local.vendorOrderReceiver.getBoxCount()#</td>
+				<td class="administration">
+					<ul class="one">
+					  <cf_SlatwallActionCaller action="admin:vendororder.detailVendorOrderReceiver" querystring="vendorOrderReceiverID=#local.vendorOrderReceiver.getVendorOrderReceiverID()#" class="detail" type="list">
+					</ul>     						
+				</td>
 			</tr>
+			
 		</cfloop>
 	</table>
 	

@@ -1,9 +1,38 @@
 jQuery(function() {
+	
+	/*
+	 * Functions for the Vendor Order receiver interface. 
+	 */
+	
+	// Bind onchange to the location select box so that we can "dim" out TRs that are not of that location
+	jQuery(".receiveForLocationID").change(function(e){
+		var locationID = jQuery(this).val().toLowerCase();
+		
+		// Loop over all TRs in the table and check if they have the clicked locationID. If not, dim, and if so, remove the dim
+		jQuery("#detailVendorOrderReceiver tr").each(function(){
+			var foundLocationId = jQuery(this).data("locationid");
+			foundLocationId = foundLocationId != undefined ? foundLocationId.toLowerCase() : "";
+			
+			if(foundLocationId == locationID){
+				jQuery(this).removeClass("dim");
+			} else if(foundLocationId != "") {
+				jQuery(this).addClass("dim");
+			}
+		})	
+	});
+
+	
+	/*
+	 *  Functions for Vendor Order Item dialog
+	 */
+	
 	// Initialize the dialog.
 	jQuery("#addEditProductToOrder").dialog({
        autoOpen: false,
        modal: true,
-       width: "80%"
+       width: "80%",
+	   draggable: false,
+	   dialogClass: "vendorOrderItemDialog"
 	});
 	
 	// Bind the actual opening action of the dialog to the <A> click.
@@ -12,7 +41,10 @@ jQuery(function() {
 		//jQuery("#addEditProductToOrder iframe").attr("src", jQuery(this.attr("href"))); 
 		
 		// Inject the iframe and open the dialog.
-		$("#addEditProductToOrder").load(jQuery(this).attr("href") + "&inDialog=true");
+		$("#addEditProductToOrder").load(jQuery(this).attr("href") + "&inDialog=true", function(){
+			// Trigger the keyup event once on one of the inputs so that the value populate on page load
+			jQuery("input.skucost").first().trigger("keyup");	
+		});
 		$("#addEditProductToOrder").dialog("open");
 		
 		// Prevent the default href action.
@@ -20,24 +52,8 @@ jQuery(function() {
 	});
 	
 	
-	// Move up the dom and find the <tr>, and pull it's data-productid attribute.
-		//var productid = $(this).parents("tr").first().data("productid");
-	
-		
-		//var $div = jQuery("#addEditProductToOrder");
-		//actionDialog($div, function(){}, function(){}, function(){});*/
-		
-	
-	
-	
-	/*
-	 *  Functions for Price group item dialog
-	 */
-	
-	
 	// Bind the change handlers
-	jQuery("input.skulocationqty, input.skucost").keyup(function(){
-		
+	jQuery("input.skulocationqty, input.skucost").live("keyup", function(){
 		// Update each of the sku totals (on the right) by grabbing the cost of this row, then looping over all qry fields, adding them up.
 		jQuery("td.skutotal").each(function(){
 			// For each skutotal TD, get the cost field, and total up all of the qty fields, in that TR
@@ -79,7 +95,5 @@ jQuery(function() {
 		})
 	})
 
-	// Trigger the keyup event once on one of the inputs so that the value populate on page load
-	jQuery("input.skucost").first().trigger("keyup");
 });
 	

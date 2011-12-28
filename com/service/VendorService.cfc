@@ -45,6 +45,9 @@ component extends="BaseService" accessors="true" output="false" {
 		return getDAO().getProductsForVendor(arguments.vendorID);
 	}
 
+	
+
+	
 
 	/*public any function saveVendorAddress(required any vendorAddress, struct data) {
 

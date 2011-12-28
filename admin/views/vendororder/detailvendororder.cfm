@@ -70,6 +70,7 @@ Notes:
 	
 			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="true">
 			</dl>
 			
 			<cf_SlatwallActionCaller action="admin:vendorOrder.listvendorOrders" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">

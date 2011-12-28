@@ -51,16 +51,7 @@ component extends="BaseDAO" {
 	}	
 	
 	public any function isProductInVendorOrder(productId, vendorOrderId) {
-		var params = [arguments.productId, arguments.vendorOrderId];
-		/*var hql = " SELECT p
-					FROM SlatwallProduct p
-					INNER JOIN p.skus sk
-					INNER JOIN sk.stocks s
-					INNER JOIN s.vendorOrderItems i
-					INNER JOIN i.vendorOrder o 
-					WHERE p.productID = ?    
-					AND o.vendorOrderId = ?			";*/
-					
+		var params = [arguments.productId, arguments.vendorOrderId];				
 		var hql = " SELECT  o 
 					FROM SlatwallVendorOrder o
 					INNER JOIN o.vendorOrderItems i
@@ -73,5 +64,28 @@ component extends="BaseDAO" {
 		return !isNull(ormExecuteQuery(hql, params, true));	
 	}	
 	
+	public numeric function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
+		var params = [arguments.vendorOrderID, arguments.stockID];
+		/*var hql = " SELECT new map(sum(vori.quantity) as quantity)
+					FROM SlatwallVendorOrderReceiverItem vori
+					INNER JOIN vori.vendorOrderReceiver vor
+					INNER JOIN vori.stock s
+					INNER JOIN vor.vendorOrder vo
+					WHERE vo.vendorOrderID = ?    
+					AND s.stockID = ?                ";
+			*/		
+		var hql = " SELECT new map(sum(vori.quantity) as quantity)
+					FROM SlatwallVendorOrderReceiverItem vori
+					WHERE vori.vendorOrderReceiver.vendorOrder.vendorOrderID = ?    
+					AND vori.stock.stockID = ?                ";
 	
+		var result = ormExecuteQuery(hql, params);
+		
+		
+		if(!structKeyExists(result[1], "quantity")) {
+			return 0;
+		} else {
+			return result[1]["quantity"];
+		}
+	}
 }
