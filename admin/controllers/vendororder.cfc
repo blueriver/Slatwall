@@ -284,6 +284,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 	}
 	
+	public void function createVendorOrderReceiver(required struct rc){
+		param name="rc.vendorOrderID" default="";
+	
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
+		
+		// Get Items
+		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
+		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
+		
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+	}
+	
 	/*public void function processVendorOrderReceiver(required struct rc) {
 		
 		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverID);

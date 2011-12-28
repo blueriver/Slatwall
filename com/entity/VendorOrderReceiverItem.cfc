@@ -36,48 +36,49 @@
 Notes:
 
 */
-component displayname="Vendor VendorOrder Delivery Item" entityname="SlatwallVendorOrderDeliveryItem" table="SlatwallVendorOrderDeliveryItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Vendor Order Receiver Item" entityname="SlatwallVendorOrderReceiverItem" table="SlatwallVendorOrderReceiverItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="vendorOrderDeliveryItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityDelivered" ormtype="integer";
+	property name="vendorOrderReceiverItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="quantity" ormtype="integer";
+	property name="cost" ormtype="big_decimal" formatType="currency";
 	
 	// Related Object Properties
-	property name="vendorOrderDelivery" cfc="VendorOrderDelivery" fieldtype="many-to-one" fkcolumn="vendorOrderDeliveryID";
-	property name="vendorOrderItem" cfc="VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";
+	property name="vendorOrderReceiver" cfc="VendorOrderReceiver" fieldtype="many-to-one" fkcolumn="vendorOrderReceiverID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
    /******* Association management methods for bidirectional relationships **************/
 	
-	// VendorOrderDelivery (many-to-one)
+	// VendorOrderReceiver (many-to-one)
 	
-	public void function setVendorOrderDelivery(required VendorOrderDelivery vendorOrderDelivery) {
-	   variables.vendorOrderDelivery = arguments.vendorOrderDelivery;
-	   if(isNew() or !arguments.vendorOrderDelivery.hasVendorOrderDeliveryItem(this)) {
-	       arrayAppend(arguments.vendorOrderDelivery.getVendorOrderDeliveryItems(),this);
+	public void function setVendorOrderReceiver(required VendorOrderReceiver vendorOrderReceiver) {
+	   variables.vendorOrderReceiver = arguments.vendorOrderReceiver;
+	   if(isNew() or !arguments.vendorOrderReceiver.hasVendorOrderReceiverItem(this)) {
+	       arrayAppend(arguments.vendorOrderReceiver.getVendorOrderReceiverItems(),this);
 	   }
 	}
 	
-	public void function removeVendorOrderDelivery(required VendorOrderDelivery vendorOrderDelivery) {
-       var index = arrayFind(arguments.vendorOrderDelivery.getVendorOrderDeliveryItems(),this);
+	public void function removeVendorOrderReceiver(required VendorOrderReceiver vendorOrderReceiver) {
+       var index = arrayFind(arguments.vendorOrderReceiver.getVendorOrderReceiverItems(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.vendorOrderDelivery.getVendorOrderDeliveryItems(),index);
+           arrayDeleteAt(arguments.vendorOrderReceiver.getVendorOrderReceiverItems(),index);
        }    
-       structDelete(variables,"vendorOrderDelivery");
+       structDelete(variables,"vendorOrderReceiver");
 	}
 	
 	// VendorOrderItem (many-to-one)
 	
 	public void function setVendorOrderItem(required VendorOrderItem VendorOrderItem) {
 	   variables.vendorOrderItem = arguments.vendorOrderItem;
-	   if(isNew() or !arguments.vendorOrderItem.hasVendorOrderDeliveryItem(this)) {
-	       arrayAppend(arguments.vendorOrderItem.getVendorOrderDeliveryItems(),this);
+	   if(isNew() or !arguments.vendorOrderItem.hasVendorOrderReceiverItem(this)) {
+	       arrayAppend(arguments.vendorOrderItem.getVendorOrderReceiverItems(),this);
 	   }
 	}
 	
 	public void function removeVendorOrderItem(required VendorOrderItem VendorOrderItem) {
-       var index = arrayFind(arguments.vendorOrderItem.getVendorOrderDeliveryItems(),this);
+       var index = arrayFind(arguments.vendorOrderItem.getVendorOrderReceiverItems(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.vendorOrderItem.getVendorOrderDeliveryItems(),index);
+           arrayDeleteAt(arguments.vendorOrderItem.getVendorOrderReceiverItems(),index);
        }    
        structDelete(variables,"vendorOrderItem");
 	}	

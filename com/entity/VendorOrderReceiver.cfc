@@ -40,8 +40,7 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	
 	// Persistent Properties
 	property name="vendorOrderReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="receiverOpenDateTime" ormtype="timestamp";
-	property name="receiverCloseDateTime" ormtype="timestamp";
+	property name="boxCount"  ormtype="integer";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -53,10 +52,6 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	property name="vendorOrderReceiverItems" singularname="vendorOrderReceiverItem" cfc="VendorOrderReceiverItem" fieldtype="one-to-many" fkcolumn="vendorOrderReceiverID" cascade="all-delete-orphan" inverse="true";
 	
-	// Special Related Discriminator Property
-	/*property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
-	property name="fulfillmentMethodID" length="255" insert="false" update="false";*/
-	
 	public VendorOrderReceiver function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.vendorOrderReceiverItems)) {
@@ -65,13 +60,13 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	   return Super.init();
 	}
 	
-	public any function getTotalQuanityDelivered() {
+	/*public any function getTotalQuanityDelivered() {
 		var totalDelivered = 0;
 		for(var i=1; i<=arrayLen(getVendorOrderReceiverItems()); i++) {
 			totalDelivered += getVendorOrderReceiverItems()[i].getQuantityDelivered();
 		}
 		return totalDelivered;
-	}
+	}*/
    
     /******* Association management methods for bidirectional relationships **************/
 	
@@ -80,16 +75,16 @@ component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderRec
 	public void function setOrder(required Order Order) {
 	   variables.order = arguments.order;
 	   if(!arguments.order.hasVendorOrderReceiver(this)) {
-	       arrayAppend(arguments.order.getOrderDeliveries(),this);
+	       arrayAppend(arguments.order.getOrderReceivers(), this);
 	   }
 	}
 	
 	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderDeliveries(),this);
+       var index = arrayFind(arguments.order.getOrderReceivers(), this);
        if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderDeliveries(),index);
+           arrayDeleteAt(arguments.order.getOrderReceivers(), index);
        }    
-       structDelete(variables,"order");
+       structDelete(variables, "order");
     }
     
 	

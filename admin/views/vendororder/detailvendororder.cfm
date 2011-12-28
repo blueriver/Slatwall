@@ -111,7 +111,7 @@ Notes:
 			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 				<ul>	
 					<li><a href="##tabVendorOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderItems")#</span></a></li>
-					<li><a href="##tabVendorOrderReceivers" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderRecievers")#</span></a></li>
+					<li><a href="##tabVendorOrderReceivers" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderReceivers")#</span></a></li>
 					<li><a href="##tabVendorOrderProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderProducts")#</span></a></li>
 				</ul>
 			

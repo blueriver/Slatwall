@@ -37,9 +37,12 @@ Notes:
 
 --->
 
-<cfparam name="rc.vendorOrderReceiverSmartList">
 
 <cfoutput>
+	<div class="buttons">
+		<cf_SlatwallActionCaller action="admin:vendororder.createvendororderreceiver" text="#$.slatwall.rbKey('admin.vendorOrderReceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
+	</div>
+	
 	<table class="listing-grid stripe">
 		<tr>
 			<th>#$.slatwall.rbKey("entity.vendorOrderReceiver.createdDateTime")#</th>
