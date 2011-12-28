@@ -84,9 +84,9 @@ Notes:
 			<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
 			</dt>
-			<dd>
+			<!---<dd>
 				#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
-			</dd>
+			</dd>--->
 			<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.total")#:
 			</dt>

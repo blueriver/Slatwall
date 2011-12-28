@@ -59,7 +59,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 
 	property name="subTotal" persistent="false" formatType="currency"; 
-	property name="taxTotal" persistent="false" formatType="currency"; 
+	//property name="taxTotal" persistent="false" formatType="currency"; 
 	//property name="itemAmountTotal" persistent="false" formatType="currency" ; 
 	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency" ; 
 	property name="orderAmountTotal" persistent="false" formatType="currency"; 
@@ -99,16 +99,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}*/
 	
 	public numeric function getSubtotal() {
-		return 999.99;
-		
 		var subtotal = 0;
 		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
-			subtotal += getVendorOrderItems()[i].getExtendedPrice();
+			subtotal += getVendorOrderItems()[i].getCost();
 		}
 		return subtotal;
 	}
 	
-	public numeric function getTaxTotal() {
+	/*public numeric function getTaxTotal() {
 		return 999.99;
 		
 		var taxTotal = 0;
@@ -116,9 +114,9 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			taxTotal += getVendorOrderItems()[i].getTaxAmount();
 		}
 		return taxTotal;
-	}
+	}*/
 	
-	public numeric function getItemAmountTotal() {
+	/*public numeric function getItemAmountTotal() {
 		return 999.99;
 		
 		var Total = 0;
@@ -126,7 +124,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			Total += getVendorOrderItems()[i].getAmount();
 		}
 		return Total;
-	}
+	}/*
 	
 	/*public numeric function getFulfillmentAmountTotal() {
 		return 0;
@@ -146,8 +144,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}*/
 	
 	public numeric function getTotal() {
-		return 999.99;
-		//return getSubtotal() + getTaxTotal() + getFulfillmentTotal();
+		return getSubtotal() /*+ getTaxTotal() + getFulfillmentTotal()*/;
 	}
 	
 	public void function removeAllVendorOrderItems() {

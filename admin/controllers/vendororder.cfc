@@ -84,10 +84,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
 		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 			
-		// Get Deliveries
-		var orderParams['vendorOrderID'] = rc.vendorOrderID;
-		var orderParams.orderBy = "createdDateTime|DESC";
-		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);
+		// Get Receivers
+		rc.vendorOrderReceiverSmartList = getVendorOrderService().getVendorOrderReceiverSmartList();
+		rc.vendorOrderReceiverSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 
 		// Get Vendor's Products
 		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
@@ -268,45 +267,48 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	
 	
-	/****** Order Fulfillments *****/
+	/* 
+		Vendor Order Receivers 
+	*/
 	
-	/*public void function listOrderFulfillments(required struct rc) {
+		
+	/*public void function listVendorOrderReceivers(required struct rc) {
 		param name="rc['F:order_orderstatustype_systemcode']" default="ostNew,ostProcessing";
-		rc.fulfillmentSmartList = getVendorOrderService().getVendorOrderFulfillmentSmartList(data=arguments.rc);
-	}
+		rc.fulfillmentSmartList = getVendorOrderService().getVendorOrderReceiverSmartList(data=arguments.rc);
+	}*/
 	
-	public void function detailOrderFulfillment(required struct rc) {
-		rc.vendorOrderFulfillment = getVendorOrderService().getVendorOrderFulfillment(rc.vendorOrderfulfillmentID);
-		if(isNull(rc.vendorOrderFulfillment)) {
-			getFW().redirect(action="admin:vendorOrder.listVendorOrdersOrderFulfillments");
+	public void function detailVendorOrderReceiver(required struct rc) {
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverID);
+		if(isNull(rc.vendorOrderReceiver)) {
+			getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers");
 		}
 	}
 	
-	public void function processOrderFulfillment(required struct rc) {
+	/*public void function processVendorOrderReceiver(required struct rc) {
 		
-		rc.vendorOrderFulfillment = getVendorOrderService().getVendorOrderFulfillment(rc.vendorOrderFulfillmentID);
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverID);
 		
-		if(rc.vendorOrderFulfillment.isProcessable()) {
+		if(rc.vendorOrderReceiver.isProcessable()) {
 			var orderDeliveryItemsStruct = rc.vendorOrderItems;
 			// call service to process fulfillment. Returns an orderDelivery
-			var orderDelivery = getVendorOrderService().processOrderFulfillment(rc.vendorOrderfulfillment,orderDeliveryItemsStruct);
+			var orderDelivery = getVendorOrderService().processVendorOrderReceiver(rc.vendorOrderReceiver,orderDeliveryItemsStruct);
 			if(!orderDelivery.hasErrors()) {
 				
 				getFW().redirect(action="admin:print", queryString="returnAction=admin:vendorOrder.listVendorOrders&printAction=packingSlip&orderDeliveryShippingID=#orderDelivery.getVendorOrderDeliveryID()#");
 				
-				// rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
-				// getFW().redirect(action="admin:vendorOrder.listVendorOrdersorderfulfillments", preserve="message");
+				// rc.message = rc.$.slatwall.rbKey("admin.order.processvendorOrderReceiver_success");
+				// getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers", preserve="message");
 			} else {
-				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
+				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailVendorOrderReceiver");
 				rc.message = orderDelivery.getError("orderDeliveryItems")[1];
 				rc.messagetype = "warning";
-				getFW().setView("admin:vendorOrder.detailOrderFulfillment");
+				getFW().setView("admin:vendorOrder.detailVendorOrderReceiver");
 			}
 		} else {
-			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
-			rc.message = rc.$.slatwall.rbKey("admin.order.processOrderFulfillment.notProcessable");
+			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailVendorOrderReceiver");
+			rc.message = rc.$.slatwall.rbKey("admin.order.processVendorOrderReceiver.notProcessable");
 			rc.messagetype = "error";
-			getFW().setView("admin:vendorOrder.detailOrderFulfillment");			
+			getFW().setView("admin:vendorOrder.detailVendorOrderReceiver");			
 		}
 	}*/
 

@@ -37,44 +37,23 @@ Notes:
 
 --->
 
+<cfparam name="rc.vendorOrderReceiverSmartList">
+
 <cfoutput>
 	<table class="listing-grid stripe">
 		<tr>
-			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
-			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
-			<!---<th>#$.slatwall.rbKey("admin.vendorOrder.list.actions")#</th>--->
-			<!---<th>#$.slatwall.rbKey("entity.vendorOrderitem.status")#</th>--->
-			<th>#$.slatwall.rbKey("entity.vendorOrderitem.stockLocation")#</th>
-			<th>#$.slatwall.rbKey("entity.vendorOrderitem.quantityIn")#</th>
-			<th>#$.slatwall.rbKey("entity.vendorOrderitem.detail.cost")#</th>
+			<th>#$.slatwall.rbKey("entity.vendorOrderReceiver.createdDateTime")#</th>
 		</tr>
 			
-		<cfloop array="#rc.vendorOrderItemSmartList.getPageRecords()#" index="local.vendorOrderItem">
+		<cfloop array="#rc.vendorOrderReceiverSmartList.getPageRecords()#" index="local.vendorOrderReceiver">
 			<tr>
-				<td>#local.vendorOrderItem.getStock().getSku().getSkuCode()#</td>
-				<td class="varWidth">#local.vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()# - #local.vendorOrderItem.getStock().getSku().getProduct().getProductName()#
-				</td>
-				<td>#local.vendorOrderItem.getStock().getLocation().getLocationName()#</td>								
-				<td>#int(local.vendorOrderItem.getQuantityIn())#</td>
-				<td>#local.vendorOrderItem.getFormattedValue('cost', 'currency')#</td>
+				<td>#DateFormat(local.vendorOrderReceiver.getCreatedDateTime(), "medium")#</td>
 			</tr>
 		</cfloop>
 	</table>
 	
-	<div class="totals" style="width:300px; float:right;">
+	<!---<div class="totals" style="width:300px; float:right;">
 		<dl class="fulfillmentTotals">
-			<!---<dt>
-				#$.slatwall.rbKey("entity.vendorOrder.subtotal")#:
-			</dt>
-			<dd>
-				#rc.vendorOrder.getFormattedValue('subTotal', 'currency')#
-			</dd>--->
-			<!---<dt>
-				#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
-			</dt>
-			<dd>
-				#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
-			</dd>--->
 			<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.total")#:
 			</dt>
@@ -82,6 +61,6 @@ Notes:
 				#rc.vendorOrder.getFormattedValue('total', 'currency')#
 			</dd>
 		</dl>
-	</div>
+	</div>--->
 	<div class="clear"></div>
 </cfoutput>
