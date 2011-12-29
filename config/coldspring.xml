@@ -114,7 +114,7 @@
 		<property name="contentManager"><ref bean="ContentManager" /></property>
 		<property name="feedManager"><ref bean="FeedManager" /></property>
     </bean>
-	<bean id="priceGroupService" parent="parentService" class="Slatwall.com.service.priceGroupService">
+	<bean id="priceGroupService" parent="parentService" class="Slatwall.com.service.PriceGroupService">
         <property name="DAO"><ref bean="PriceGroupDAO" /></property>
 		<property name="sessionService"><ref bean="SessionService" /></property>
 		<property name="skuService"><ref bean="SkuService" /></property>
