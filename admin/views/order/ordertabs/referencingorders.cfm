@@ -39,33 +39,37 @@ Notes:
 
 <cfoutput>
 	<div class="buttons">
-		<cf_SlatwallActionCaller action="admin:order.createReturnOrder" text="#$.slatwall.rbKey('admin.order.return.createReturnOrder')#" queryString="orderID=#rc.Order.getOrderID()#" class="button" />	
+		<cf_SlatwallActionCaller action="admin:order.createReturnOrder" text="#$.slatwall.rbKey('admin.order.createReturnOrder')#" queryString="orderID=#rc.Order.getOrderID()#" class="button" />	
 	</div>
 	
-	<cfif arrayLen(rc.order.getOrderReturns())>
+	<cfif arrayLen(rc.order.getReferencingOrders ())>
 		<table id="OrderReturnList" class="listing-grid stripe">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
 				<th>&nbsp</th>
 			</tr>
-			<cfloop array="#rc.order.getOrderReturns()#" index="local.orderReturn">
+			<cfloop array="#rc.order.getReferencingOrders ()#" index="local.referencingOrder">
 				<tr>
-					<td>#Local.orderReturn.getOrderNumber()#</td>
-					<td>#DateFormat(Local.orderReturn.getOrderOpenDateTime(), "medium")#</td>
-					<td>#Local.orderReturn.getOrderStatusType().getType()#</td>
-					<td>#local.orderReturn.getFormattedValue('total', 'currency')#</td>
+					<td>#Local.referencingOrder.getOrderNumber()#</td>
+					<td>#DateFormat(Local.referencingOrder.getOrderOpenDateTime(), "medium")#</td>
+					<td class="varWidth">
+						#Local.referencingOrder.getAccount().getFullName()# <cfif local.referencingOrder.getAccount().isGuestAccount()>(#$.slatwall.rbKey('admin.order.account.isguestaccount')#)</cfif>
+					</td>
+					<td>#Local.referencingOrder.getOrderStatusType().getType()#</td>
+					<td>#local.referencingOrder.getFormattedValue('total', 'currency')#</td>
 					<td class="administration">
 						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:order.detailOrderReturn" querystring="orderID=#local.orderReturn.getOrderID()#" class="detail" type="list">
+						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.referencingOrder.getOrderID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>
 			</cfloop>
 		</table>
 	<cfelse>
-		#$.slatwall.rbKey("admin.order.detail.noorderreturns")#
+		#$.slatwall.rbKey("admin.order.detail.noreferencingorders")#
 	</cfif>
 </cfoutput>
