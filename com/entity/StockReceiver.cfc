@@ -36,11 +36,12 @@
 Notes:
 
 */
-component displayname="Stock Hold" entityname="SlatwallStockHold" table="SlatwallStockHold" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="receiverType"  {
 	
 	// Persistent Properties
-	property name="stockHoldID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="stockHoldExpirationDateTime" ormtype="timestamp";
+	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="packingSlipNumber" ormtype="string";
+	property name="boxCount" ormtype="integer";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -48,9 +49,7 @@ component displayname="Stock Hold" entityname="SlatwallStockHold" table="Slatwal
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties (many-to-one)
-	property name="orderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cfc="OrderItem";
-	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
-	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
+	// Related Object Properties (one-to-many)
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
 	
 }

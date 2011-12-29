@@ -36,11 +36,12 @@
 Notes:
 
 */
-component displayname="Stock Hold" entityname="SlatwallStockHold" table="SlatwallStockHold" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverItem" table="SlatwallStockReceiverItem" persistent=true accessors=true output=false extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="stockHoldID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="stockHoldExpirationDateTime" ormtype="timestamp";
+	property name="stockReceiverItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="quantity" ormtype="integer";
+	property name="cost" ormtype="big_decimal";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -49,8 +50,8 @@ component displayname="Stock Hold" entityname="SlatwallStockHold" table="Slatwal
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (many-to-one)
-	property name="orderItem" fieldtype="many-to-one" fkcolumn="orderItemID" cfc="OrderItem";
-	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
+	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
+	
 	
 }
