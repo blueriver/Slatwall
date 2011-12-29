@@ -65,8 +65,8 @@ component displayname="Base Object" accessors="true" output="false" {
 			// Set the current property into variable of meta data
 			var currentProperty = properties[p];
 			
-			// Check to see if this property has a key in the data that was passed in
-			if( structKeyExists(arguments.data, currentProperty.name) && !listFind(arguments.data.ignoreProperties, currentProperty.name) ) {
+			// Check to see if this property has a key in the data that was passed in, and also make sure that key isn't in the ignoreProperties list
+			if( structKeyExists(arguments.data, currentProperty.name) && !listFindNoCase(arguments.data.ignoreProperties, currentProperty.name) ) {
 			
 				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
