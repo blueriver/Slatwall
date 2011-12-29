@@ -100,13 +100,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function saveVendor(required struct rc) {
 		param name="rc.vendorID" default="";
 		param name="rc.vendorAddressID" default="";
-		
+
 		// Load up the vendor
 		rc.vendor = getVendorService().getVendor(rc.vendorID, true);
-		
+
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.vendor = getVendorService().saveVendor(rc.vendor, rc);	
-		
+
 		if(!rc.vendor.hasErrors()) {
 			// If added or edited a Price Group Rate
 			if(rc.vendor.isNew()) {
@@ -123,7 +123,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 					getFW().redirect(action="admin:vendor.listVendors", preserve="message");
 			}	
 		} 
-		else { 			
+		else { 	
+			rc.vendorAddress = getVendorService().getVendorAddress(0, true);
+    		rc.vendorAddress.setAddress(getAddressService().getAddress(0, true));	
+				
 			// If one of the sub properties had the error, then find out which one and populate it
 			if(rc.Vendor.hasError("VendorAddress")) {
 				for(var i=1; i<=arrayLen(rc.Vendor.getVendorAddresses()); i++) {
@@ -133,6 +136,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 					}
 				}
 			}
+
 			rc.edit = true;
 			rc.itemTitle = rc.Vendor.isNew() ? rc.$.Slatwall.rbKey("admin.Vendor.createVendor") : rc.$.Slatwall.rbKey("admin.Vendor.editVendor") & ": #rc.Vendor.getVendorName()#";
 			getFW().setView(action="admin:vendor.detailVendor");
@@ -178,6 +182,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	private boolean function isPostingVendorAddress(required struct rc) {
-		return NOT findNoCase(rc.ignoreProperties, "vendoraddress");
+		return NOT findNoCase(rc.ignoreProperties, "vendorAddresses");
 	}
 }

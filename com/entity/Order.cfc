@@ -60,21 +60,22 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
-	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
+	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referenceOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID" cascade="save-update";
 	
 	// Non persistent properties
-	property name="total" persistent="false" formatType="currency" ; 
-	property name="subTotal" persistent="false" formatType="currency" ; 
-	property name="taxTotal" persistent="false" formatType="currency" ; 
-	property name="itemDiscountAmountTotal" persistent="false" formatType="currency" ; 
-	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency" ; 
-	property name="orderDiscountAmountTotal" persistent="false" formatType="currency" ; 
-	property name="discountTotal" persistent="false" formatType="currency" ; 
-	property name="fulfillmentTotal" persistent="false" formatType="currency" ; 
+	property name="total" persistent="false" formatType="currency";
+	property name="subTotal" persistent="false" formatType="currency";
+	property name="taxTotal" persistent="false" formatType="currency";
+	property name="itemDiscountAmountTotal" persistent="false" formatType="currency";
+	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
+	property name="orderDiscountAmountTotal" persistent="false" formatType="currency"; 
+	property name="discountTotal" persistent="false" formatType="currency";
+	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillments)) {
@@ -83,6 +84,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(isNull(variables.orderDeliveries)) {
 			variables.orderDeliveries = [];
 		}
+		if(isNull(variables.orderReturns)) {
+			variables.orderReturns = [];
+		}
+		
 		if(isNull(variables.orderItems)) {
 			variables.orderItems = [];
 		}
@@ -205,7 +210,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
-	
 	public void function addOrderItem(required OrderItem OrderItem) {
 	   arguments.orderItem.setOrder(this);
 	}
@@ -215,7 +219,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// OrderFulfillments (one-to-many)
-	
 	public void function addOrderFulfillment(required OrderFulfillment orderFulfillment) {
 	   arguments.orderFulfillment.setOrder(this);
 	}
@@ -225,7 +228,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// OrderDeliveries (one-to-many)
-	
 	public void function addOrderDelivery(required OrderDelivery orderDelivery) {
 	   arguments.orderDelivery.setOrder(this);
 	}
@@ -234,8 +236,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	   arguments.orderDelivery.removeOrder(this);
 	}
 	
-	// OrderPayments (one-to-many)
+	// Order Returns (one-to-many)
+	public void function addOrderReturn(required Order orderReturn) {
+	   arguments.orderReturn.setOriginalOrder(this);
+	}
 	
+	public void function removeOrderReturn(required Order orderReturn) {
+	   arguments.orderReturn.removeOriginalOrder(this);
+	}
+	
+	// OrderPayments (one-to-many)
 	public void function addOrderPayment(required OrderPayment OrderPayment) {
 	   arguments.orderPayment.setOrder(this);
 	}
@@ -245,7 +255,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// Account (many-to-one)
-	
 	public void function setAccount(required Account account) {
 		// If this is an order that hasn't been placed... remove any account specific aspects
 		if(getOrderStatusType().getSystemCode() == "ostNotPlaced" && (isNull(variables.account) || variables.account.getAccountID() != arguments.account.getAccountID())) {
@@ -253,7 +262,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		variables.account = arguments.account;
 		if(!arguments.account.hasOrder(this)) {
-			arrayAppend(arguments.account.getOrders(),this);
+			arrayAppend(arguments.account.getOrders(), this);
 		}
 	}
 	
@@ -262,11 +271,32 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			if(!structKeyExists(arguments, "account")) {
 				arguments.account = variables.account;
 			}
-			var index = arrayFind(arguments.account.getOrders(),this);
+			var index = arrayFind(arguments.account.getOrders(), this);
 			if(index > 0) {
-				arrayDeleteAt(arguments.account.getOrders(),index);
+				arrayDeleteAt(arguments.account.getOrders(), index);
 			}    
 			structDelete(variables,"account");
+		}
+    }
+    
+    // Order Return (many-to-one)
+	public void function setOriginalOrder(required Order originalOrder) {
+		variables.originalOrder = arguments.originalOrder;
+		if(!arguments.originalOrder.hasOrderReturn(this)) {
+			arrayAppend(arguments.originalOrder.getOrdersReturns(), this);
+		}
+	}
+	
+	public void function removeOriginalOrder(Order originalOrder) {
+		if(structKeyExists(variables,"originalOrder")) {
+			if(!structKeyExists(arguments, "originalOrder")) {
+				arguments.originalOrder = variables.originalOrder;
+			}
+			var index = arrayFind(arguments.originalOrder.getReturnOrders(), this);
+			if(index > 0) {
+				arrayDeleteAt(arguments.originalOrder.getReturnOrders(), index);
+			}    
+			structDelete(variables, "originalOrder");
 		}
     }
 	

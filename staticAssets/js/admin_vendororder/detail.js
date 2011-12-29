@@ -44,8 +44,8 @@ jQuery(function() {
 		$("#addEditProductToOrder").load(jQuery(this).attr("href") + "&inDialog=true", function(){
 			// Trigger the keyup event once on one of the inputs so that the value populate on page load
 			jQuery("input.skucost").first().trigger("keyup");	
+			$("#addEditProductToOrder").dialog("open");
 		});
-		$("#addEditProductToOrder").dialog("open");
 		
 		// Prevent the default href action.
 		e.preventDefault();

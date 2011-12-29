@@ -90,7 +90,7 @@ Notes:
 			
 			<dl class="twoColumn">
 				
-				<cfif !rc.edit>
+				<cfif rc.edit>
 					<dt class="title"><label>#$.Slatwall.rbKey("admin.vendorOrderReceiver.receiveForLocation")#</strong></label></dt> 
 					<dd class="value">
 					

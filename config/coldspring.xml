@@ -162,6 +162,7 @@
     </bean>
     <bean id="vendorService" parent="parentService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
 	<bean id="vendorOrderService" parent="parentService" class="Slatwall.com.service.VendorOrderService">
         <property name="DAO"><ref bean="VendorOrderDAO" /></property>

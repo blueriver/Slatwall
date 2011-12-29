@@ -36,29 +36,36 @@
 Notes:
 
 --->
-<cfparam name="rc.vendor" type="any" />
 
 <cfoutput>
-	<table id="VendorOrderList" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
-			<th>&nbsp</th>
-		</tr>
-		<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
+	<div class="buttons">
+		<cf_SlatwallActionCaller action="admin:order.createReturnOrder" text="#$.slatwall.rbKey('admin.order.return.createReturnOrder')#" queryString="orderID=#rc.Order.getOrderID()#" class="button" />	
+	</div>
+	
+	<cfif arrayLen(rc.order.getOrderReturns())>
+		<table id="OrderReturnList" class="listing-grid stripe">
 			<tr>
-				<td class="varWidth">#Local.VendorOrder.getVendorOrderNumber()#</td>
-				<td>#DateFormat(Local.VendorOrder.getCreatedDateTime(), "medium")#</td>
-				<td>#Local.VendorOrder.getVendorOrderType().getType()#</td>
-				<td>#local.VendorOrder.getFormattedValue('total', 'currency')#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:vendorOrder.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
-					</ul>     						
-				</td>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
+				<th>&nbsp</th>
 			</tr>
-		</cfloop>
-	</table>
+			<cfloop array="#rc.order.getOrderReturns()#" index="local.orderReturn">
+				<tr>
+					<td>#Local.orderReturn.getOrderNumber()#</td>
+					<td>#DateFormat(Local.orderReturn.getOrderOpenDateTime(), "medium")#</td>
+					<td>#Local.orderReturn.getOrderStatusType().getType()#</td>
+					<td>#local.orderReturn.getFormattedValue('total', 'currency')#</td>
+					<td class="administration">
+						<ul class="one">
+						  <cf_SlatwallActionCaller action="admin:order.detailOrderReturn" querystring="orderID=#local.orderReturn.getOrderID()#" class="detail" type="list">
+						</ul>     						
+					</td>
+				</tr>
+			</cfloop>
+		</table>
+	<cfelse>
+		#$.slatwall.rbKey("admin.order.detail.noorderreturns")#
+	</cfif>
 </cfoutput>
