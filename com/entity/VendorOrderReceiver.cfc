@@ -36,12 +36,12 @@
 Notes:
 
 */
-component displayname="Vendor Order Delivery" entityname="SlatwallVendorOrderDelivery" table="SlatwallVendorOrderDelivery" persistent="true" accessors="true" output="false" extends="BaseEntity" discriminatorcolumn="fulfillmentMethodID" {
+component displayname="Vendor Order Receiver" entityname="SlatwallVendorOrderReceiver" table="SlatwallVendorOrderReceiver" persistent="true" accessors="true" output="false" extends="BaseEntity" discriminatorcolumn="fulfillmentMethodID" {
 	
 	// Persistent Properties
-	property name="vendorOrderDeliveryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="deliveryOpenDateTime" ormtype="timestamp";
-	property name="deliveryCloseDateTime" ormtype="timestamp";
+	property name="vendorOrderReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="vendorOrderReceiverType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderReceiverTypeID";
+	property name="boxCount"  ormtype="integer";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -51,56 +51,58 @@ component displayname="Vendor Order Delivery" entityname="SlatwallVendorOrderDel
 	
 	// Related Object Properties
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	property name="vendorOrderDeliveryItems" singularname="vendorOrderDeliveryItem" cfc="VendorOrderDeliveryItem" fieldtype="one-to-many" fkcolumn="vendorOrderDeliveryID" cascade="all-delete-orphan" inverse="true";
+	property name="vendorOrderReceiverItems" singularname="vendorOrderReceiverItem" cfc="VendorOrderReceiverItem" fieldtype="one-to-many" fkcolumn="vendorOrderReceiverID" cascade="all-delete-orphan" inverse="true";
 	
-	// Special Related Discriminator Property
-	/*property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
-	property name="fulfillmentMethodID" length="255" insert="false" update="false";*/
-	
-	public VendorOrderDelivery function init(){
+	public VendorOrderReceiver function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.vendorOrderDeliveryItems)) {
-	       variables.vendorOrderDeliveryItems = [];
+	   if(isNull(variables.vendorOrderReceiverItems)) {
+	       variables.vendorOrderReceiverItems = [];
 	   }    
+	   
+		// Set the default order type as purchase order
+		if(isNull(variables.vendorOrderReceiverType)) {
+			variables.vendorOrderReceiverType = getService("typeService").getTypeBySystemCode('vortPurchaseOrder');
+		}
+		
 	   return Super.init();
 	}
 	
-	public any function getTotalQuanityDelivered() {
+	/*public any function getTotalQuanityDelivered() {
 		var totalDelivered = 0;
-		for(var i=1; i<=arrayLen(getVendorOrderDeliveryItems()); i++) {
-			totalDelivered += getVendorOrderDeliveryItems()[i].getQuantityDelivered();
+		for(var i=1; i<=arrayLen(getVendorOrderReceiverItems()); i++) {
+			totalDelivered += getVendorOrderReceiverItems()[i].getQuantityDelivered();
 		}
 		return totalDelivered;
-	}
+	}*/
    
     /******* Association management methods for bidirectional relationships **************/
 	
 	// Order (many-to-one)
 	
-	public void function setOrder(required Order Order) {
-	   variables.order = arguments.order;
-	   if(!arguments.order.hasVendorOrderDelivery(this)) {
-	       arrayAppend(arguments.order.getOrderDeliveries(),this);
+	public void function setVendorOrder(required any VendorOrder) {
+	   variables.vendorOrder = arguments.VendorOrder;
+	   if(!arguments.VendorOrder.hasVendorOrderReceiver(this)) {
+	       arrayAppend(arguments.vendorOrder.getVendorOrderReceivers(), this);
 	   }
 	}
 	
-	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderDeliveries(),this);
+	public void function removeVendorOrder(required any VendorOrder) {
+       var index = arrayFind(arguments.vendorOrder.getVendorOrderReceivers(), this);
        if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderDeliveries(),index);
+           arrayDeleteAt(arguments.VendorOrder.getVendorOrderReceivers(), index);
        }    
-       structDelete(variables,"order");
+       structDelete(variables, "vendorOrder");
     }
     
 	
-	// VendorOrderDeliveryItems (one-to-many)
+	// VendorOrderReceiverItems (one-to-many)
 	
-	public void function addVendorOrderDeliveryItem(required VendorOrderDeliveryItem vendorOrderDeliveryItem) {
-	   arguments.vendorOrderDeliveryItem.setVendorOrderDelivery(this);
+	public void function addVendorOrderReceiverItem(required VendorOrderReceiverItem vendorOrderReceiverItem) {
+	   arguments.vendorOrderReceiverItem.setVendorOrderReceiver(this);
 	}
 	
-	public void function removeVendorOrderDeliveryItem(required VendorOrderDeliveryItem VendorOrderDeliveryItem) {
-	   arguments.vendorOrderDeliveryItem.removeVendorOrderDelivery(this);
+	public void function removeVendorOrderReceiverItem(required VendorOrderReceiverItem VendorOrderReceiverItem) {
+	   arguments.vendorOrderReceiverItem.removeVendorOrderReceiver(this);
 	}
     /************   END Association Management Methods   *******************/
 }

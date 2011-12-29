@@ -39,10 +39,23 @@ Notes:
 <cfparam name="rc.product">
 <cfparam name="rc.vendorOrder">
 <cfparam name="rc.locationSmartList">
+<cfparam name="rc.inDialog" default="false">
 
+<cfif rc.inDialog EQ "true">
+	<cfset request.layout = false>
+</cfif>
 
 <cfoutput>
-	<form name="editVendorOrderProductAssignment" action="#buildURL('admin:vendorOrder.saveVendorOrderItems')#" method="post">
+	<!--- This is referenced inside of admin/vendor_order/detail.js to format currency. --->
+	<script language="JavaScript">
+		currentMask="#rc.VendorOrder.formatValue(0, 'currency')#";
+	</script>
+	
+	<cfif rc.inDialog EQ "true">
+		<h3>#Replace($.Slatwall.rbKey("admin.vendorOrder.vendorOrderItemsDialogTitle"), "{1}", rc.product.getProductName())#</h3>
+	</cfif>
+	
+	<form name="editVendorOrderProductAssignment" id="editVendorOrderProductAssignment" action="#buildURL('admin:vendorOrder.saveVendorOrderItems')#" method="post">
 		<input type="hidden" name="VendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		
 		<table class="listing-grid stripe">
@@ -89,7 +102,7 @@ Notes:
 			</tr>
 		</table>
 
-		<cf_SlatwallActionCaller action="admin:vendorOrder.detailVendorOrder" type="link" class="button" queryString="vendorOrderId=#rc.vendorOrder.getVendorOrderID()#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cf_SlatwallActionCaller action="admin:vendorOrder.detailVendorOrder" type="link" class="cancel button" queryString="vendorOrderId=#rc.vendorOrder.getVendorOrderID()#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 		<cf_SlatwallActionCaller action="admin:vendorOrder.saveVendorOrderItems" type="submit" class="button">
 	</form>
 </cfoutput>

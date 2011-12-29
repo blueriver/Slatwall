@@ -39,7 +39,7 @@ Notes:
 
 <cfparam name="attributes.fieldType" type="string" />
 <cfparam name="attributes.fieldName" type="string" />
-<cfparam name="attributes.fieldClass" type="string" />
+<cfparam name="attributes.fieldClass" type="string" default="" />
 <cfparam name="attributes.value" type="any" default="" />
 <cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
 

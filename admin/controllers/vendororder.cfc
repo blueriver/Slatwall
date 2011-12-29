@@ -82,12 +82,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		//var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
+		rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
 		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
+		
 			
-		// Get Deliveries
-		var orderParams['vendorOrderID'] = rc.vendorOrderID;
-		var orderParams.orderBy = "createdDateTime|DESC";
-		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);
+		// Get Receivers
+		rc.vendorOrderReceiverSmartList = getVendorOrderService().getVendorOrderReceiverSmartList();
+		rc.vendorOrderReceiverSmartList.setPageRecordsShow(9999999);
+		rc.vendorOrderReceiverSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 
 		// Get Vendor's Products
 		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
@@ -96,6 +98,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		// Get Vendor's Products
 		rc.vendorProductSmartList = getProductService().getProductSmartList();
+		rc.vendorProductSmartList.setPageRecordsShow(9999999);
 		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
 		
 		//rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
@@ -161,7 +164,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function editVendorOrderItems(required struct rc) {
     	param name="rc.vendorOrderID" default="";
     	param name="rc.productID" default="";
-    	
+    	param name="rc.inDialog" default="false";
+
     	initVendorOrder(rc);
     	rc.product = getProductService().getProduct(rc.productId);
     	
@@ -169,6 +173,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		//var orderParams.orderBy = "createdDateTime|DESC";
 		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.setPageRecordsShow(9999999);
+		
     	rc.edit = true; 
     	rc.itemTitle = rbKey("admin.vendororder.editvendororderproductassignment");
     	rc.itemTitle = ReplaceNoCase(rc.itemTitle, "{1}", rc.product.getProductName());
@@ -197,7 +203,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 		// Sku / location quantities are provided by fields named like: qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba). Loop over rc and find these fields
 		for (var key IN rc) {
-			//key = "qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba)";
 			var res = REFindNoCase("qty_skuid\((.+)\)_locationid\((.+)\)", key, 1, true);
 
 			if(ArrayLen(res.pos) == 3) {
@@ -234,6 +239,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 							vendorOrderItem.setQuantityIn(quantityIn);
 							vendorOrderItem.setCost(skuCosts[skuID]);
 						} else {
+							vendorOrder.removeVendorOrderItem(vendorOrderItem);
 							getVendorOrderService().deleteVendorOrderItem(vendorOrderItem);		// TODO!!!!!!!!!! Make sure this does not delete the stock!
 						}	
 					}
@@ -266,45 +272,142 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	
 	
-	/****** Order Fulfillments *****/
+	/* 
+		Vendor Order Receivers 
+	*/
 	
-	/*public void function listOrderFulfillments(required struct rc) {
+		
+	/*public void function listVendorOrderReceivers(required struct rc) {
 		param name="rc['F:order_orderstatustype_systemcode']" default="ostNew,ostProcessing";
-		rc.fulfillmentSmartList = getVendorOrderService().getVendorOrderFulfillmentSmartList(data=arguments.rc);
-	}
+		rc.fulfillmentSmartList = getVendorOrderService().getVendorOrderReceiverSmartList(data=arguments.rc);
+	}*/
 	
-	public void function detailOrderFulfillment(required struct rc) {
-		rc.vendorOrderFulfillment = getVendorOrderService().getVendorOrderFulfillment(rc.vendorOrderfulfillmentID);
-		if(isNull(rc.vendorOrderFulfillment)) {
-			getFW().redirect(action="admin:vendorOrder.listVendorOrdersOrderFulfillments");
+
+	public void function detailVendorOrderReceiver(required struct rc) {
+		param name="rc.vendorOrderReceiverID" default="";
+		
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverId, true);
+
+		if(isNull(rc.vendorOrderReceiver)) {
+			getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers");
 		}
+		
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.VendorOrderReceiver.getVendorOrder().getVendorOrderId());
+		
+		rc.edit = false;
+		getFW().setView("admin:vendorOrder.detailvendororderreceiver");  
 	}
 	
-	public void function processOrderFulfillment(required struct rc) {
+	public void function createVendorOrderReceiver(required struct rc){
+		param name="rc.vendorOrderID" default="";
 		
-		rc.vendorOrderFulfillment = getVendorOrderService().getVendorOrderFulfillment(rc.vendorOrderFulfillmentID);
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(0, true);
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
 		
-		if(rc.vendorOrderFulfillment.isProcessable()) {
+		if(isNull(rc.vendorOrder)) {
+			getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers");
+		}
+	
+		// Get Items
+		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
+		rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
+		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
+		
+		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.setPageRecordsShow(9999999);
+		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+
+		rc.edit = true;
+		getFW().setView("admin:vendorOrder.createvendororderreceiver");  
+	}
+	
+	// Currently we only support adding new Vendor Order Receivers. Not editing.
+	public void function saveVendorOrderReceiver(required struct rc){
+		param name="rc.vendorOrderID";
+		param name="rc.receiveForLocationId";
+		
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(0, true);
+		rc.vendorOrderReceiver.setVendorOrder(rc.vendorOrder);
+		rc.vendorOrderReceiver.setBoxCount(rc.boxCount);
+		
+		// We need to do some combining of Receiver Items, so we'll store them in a stockID keyed struct
+		var vendorOrderReceiverItemsByStockId = {};
+		
+		// Sku / location quantities are provided by fields named like: qty_skuid(4028b8813414708a01341514ad67001e)_locationid(4028e6893463040e0134672d027900ba). Loop over rc and find these fields
+		for (var key IN rc) {
+			var res = REFindNoCase("cost_stockid\((.+)\)", key, 1, true);
+
+			if(ArrayLen(res.pos) == 2) {
+				var stockID = mid(key, res.pos[2], res.len[2]);
+				var cost = val(rc[key]);
+				
+				if(len(stockID)) {
+					// Pull the quantity
+					var quantity = rc["quantity_stockid(#stockID#)"];
+					
+					if(isNumeric(quantity) && isNumeric(cost)) {
+						var stock = getVendorOrderService().getStock(stockID);
+						var vendorOrderReceiverItem = getVendorOrderService().getVendorOrderReceiverItem(0, true);
+						//vendorOrderReceiverItem.setVendorOrderReceiver(rc.vendorOrderReceiver);
+						vendorOrderReceiverItem.setQuantity(quantity);
+						vendorOrderReceiverItem.setCost(cost);
+						
+						// If the "receiveForLocationID" passed in (the drop down) matches this stock's location, then use that. Otherwise, find the stock to the corresponding location
+						stock = getVendorOrderService().getStockForSkuAndLocation(stock.getSku().getSkuID(), rc.receiveForLocationId);
+						vendorOrderReceiverItem.setStock(stock);
+						
+						// Search the stockID keyed struc for this stock. The only way that we would find the item already present is if the user is trying to receive the same SKU from multiple locations.
+						if(StructKeyExists(vendorOrderReceiverItemsByStockId, stock.getStockId())) {
+							vendorOrderReceiverItemsByStockId[stock.getStockId()].setQuantity(vendorOrderReceiverItemsByStockId[stock.getStockId()].getQuantity() + quantity);
+						} else {
+							// Otherwise it did not exist, so tie the item to the receiver, and a it to the struct.
+							vendorOrderReceiverItem.setVendorOrderReceiver(rc.vendorOrderReceiver);
+							vendorOrderReceiverItemsByStockId[stock.getStockId()] = vendorOrderReceiverItem;
+						}
+					}
+				}
+			}
+		}
+		
+		// Loop over the Items struct and finally assign them to the Receiever.
+		for (var key IN vendorOrderReceiverItemsByStockId) {
+			vendorOrderReceiverItemsByStockId[key].setVendorOrderReceiver(rc.vendorOrderReceiver);
+		}
+		
+		getVendorOrderService().saveVendorOrderReceiver(rc.vendorOrderReceiver);
+			
+		rc.message=rbKey("admin.vendorOrder.savevendorOrderReceiver_success");
+		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#", preserve="message");
+	}
+	
+	/*public void function processVendorOrderReceiver(required struct rc) {
+		
+		rc.vendorOrderReceiver = getVendorOrderService().getVendorOrderReceiver(rc.vendorOrderReceiverID);
+		
+		if(rc.vendorOrderReceiver.isProcessable()) {
 			var orderDeliveryItemsStruct = rc.vendorOrderItems;
 			// call service to process fulfillment. Returns an orderDelivery
-			var orderDelivery = getVendorOrderService().processOrderFulfillment(rc.vendorOrderfulfillment,orderDeliveryItemsStruct);
+			var orderDelivery = getVendorOrderService().processVendorOrderReceiver(rc.vendorOrderReceiver,orderDeliveryItemsStruct);
 			if(!orderDelivery.hasErrors()) {
 				
 				getFW().redirect(action="admin:print", queryString="returnAction=admin:vendorOrder.listVendorOrders&printAction=packingSlip&orderDeliveryShippingID=#orderDelivery.getVendorOrderDeliveryID()#");
 				
-				// rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");
-				// getFW().redirect(action="admin:vendorOrder.listVendorOrdersorderfulfillments", preserve="message");
+				// rc.message = rc.$.slatwall.rbKey("admin.order.processvendorOrderReceiver_success");
+				// getFW().redirect(action="admin:vendorOrder.listVendorOrderReceivers", preserve="message");
 			} else {
-				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
+				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailVendorOrderReceiver");
 				rc.message = orderDelivery.getError("orderDeliveryItems")[1];
 				rc.messagetype = "warning";
-				getFW().setView("admin:vendorOrder.detailOrderFulfillment");
+				getFW().setView("admin:vendorOrder.detailVendorOrderReceiver");
 			}
 		} else {
-			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
-			rc.message = rc.$.slatwall.rbKey("admin.order.processOrderFulfillment.notProcessable");
+			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailVendorOrderReceiver");
+			rc.message = rc.$.slatwall.rbKey("admin.order.processVendorOrderReceiver.notProcessable");
 			rc.messagetype = "error";
-			getFW().setView("admin:vendorOrder.detailOrderFulfillment");			
+			getFW().setView("admin:vendorOrder.detailVendorOrderReceiver");			
 		}
 	}*/
 

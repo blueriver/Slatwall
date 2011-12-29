@@ -52,8 +52,7 @@ Notes:
 		<cfloop array="#rc.vendorOrderItemSmartList.getPageRecords()#" index="local.vendorOrderItem">
 			<tr>
 				<td>#local.vendorOrderItem.getStock().getSku().getSkuCode()#</td>
-				<td class="varWidth">#local.vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()# - #local.vendorOrderItem.getStock().getSku().getProduct().getProductName()#
-				</td>
+				<td class="varWidth">#local.vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()# - #local.vendorOrderItem.getStock().getSku().getProduct().getProductName()#</td>
 				<td>#local.vendorOrderItem.getStock().getLocation().getLocationName()#</td>								
 				<td>#int(local.vendorOrderItem.getQuantityIn())#</td>
 				<td>#local.vendorOrderItem.getFormattedValue('cost', 'currency')#</td>
@@ -63,18 +62,18 @@ Notes:
 	
 	<div class="totals" style="width:300px; float:right;">
 		<dl class="fulfillmentTotals">
-			<dt>
+			<!---<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.subtotal")#:
 			</dt>
 			<dd>
 				#rc.vendorOrder.getFormattedValue('subTotal', 'currency')#
-			</dd>
-			<dt>
+			</dd>--->
+			<!---<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
 			</dt>
 			<dd>
 				#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
-			</dd>
+			</dd>--->
 			<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.total")#:
 			</dt>

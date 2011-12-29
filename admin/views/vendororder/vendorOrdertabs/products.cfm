@@ -37,6 +37,7 @@ Notes:
 
 --->
 
+
 <cfoutput>
 	<cfif ArrayLen(rc.vendorProductSmartList.getPageRecords())>
 		<table class="listing-grid stripe">
@@ -60,7 +61,7 @@ Notes:
 							<cfelse>
 								<cfset local.label = $.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct_addToOrder")>
 							</cfif>
-							<a href="#BuildURL(action='vendorOrder.editVendorOrderItems', querystring='VendorOrderID=#rc.VendorOrder.getVendorOrderID()#&productID=#local.product.getProductId()#')#">#local.label#</a>
+							<a class="dialogLink" href="#BuildURL(action='vendorOrder.editVendorOrderItems', querystring='VendorOrderID=#rc.VendorOrder.getVendorOrderID()#&productID=#local.product.getProductId()#')#">#local.label#</a>
 						</td>
 					</tr>
 					<!---</cfloop>--->
@@ -79,12 +80,13 @@ Notes:
 			<dd>
 				#rc.vendorOrder.getFormattedValue('subTotal', 'currency')#
 			</dd>
+			
 			<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
 			</dt>
-			<dd>
+			<!---<dd>
 				#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
-			</dd>
+			</dd>--->
 			<dt>
 				#$.slatwall.rbKey("entity.vendorOrder.total")#:
 			</dt>
@@ -95,5 +97,5 @@ Notes:
 	</div>
 	<div class="clear"></div>
 	
-	<div id="addEditProductToOrder" class="ui-helper-hidden"><img style="" src="staticAssets/images/ajax-loader.gif"></div>
+	<div id="addEditProductToOrder" class="ui-helper-hidden"></div>
 </cfoutput>

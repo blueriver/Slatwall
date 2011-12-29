@@ -47,4 +47,7 @@ component extends="BaseDAO" {
 	
 		return ormExecuteQuery(hql, params);
 	}	
+	
+	
+	
 }

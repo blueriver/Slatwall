@@ -70,6 +70,7 @@ Notes:
 	
 			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendor" edit="true">
+				<cf_SlatwallPropertyDisplay object="#rc.vendorOrder#" property="vendorOrderNumber" edit="true">
 			</dl>
 			
 			<cf_SlatwallActionCaller action="admin:vendorOrder.listvendorOrders" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
@@ -95,10 +96,10 @@ Notes:
 		<div class="paymentInfo">
 			<p><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.vendorOrdertotals")#</strong></p>
 			<dl class="orderTotals">
-				<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.subtotal")#</dt> 
-				<dd>#rc.vendorOrder.getFormattedValue('subtotal', 'currency')#</dd>
-				<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totaltax")#</dt>
-				<dd>#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#</dd>
+				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.subtotal")#</dt>
+				<dd>#rc.vendorOrder.getFormattedValue('subtotal', 'currency')#</dd>---> 
+				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totaltax")#</dt>--->
+				<!---<dd>#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#</dd>--->
 				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalFulfillmentCharge")#</dt>--->
 				<!---<dd>#rc.vendorOrder.getFormattedValue('fulfillmentTotal', 'currency')#</dd>--->
 				<!---<dt>#$.Slatwall.rbKey("admin.vendorOrder.detail.totalDiscounts")#</dt>--->
@@ -111,15 +112,15 @@ Notes:
 			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 				<ul>	
 					<li><a href="##tabVendorOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderItems")#</span></a></li>
-					<li><a href="##tabVendorOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderDeliveries")#</span></a></li>
+					<li><a href="##tabVendorOrderReceivers" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderReceivers")#</span></a></li>
 					<li><a href="##tabVendorOrderProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderProducts")#</span></a></li>
 				</ul>
 			
 				<div id="tabVendorOrderItems">
 					#view("vendorOrder/vendorOrdertabs/items")# 
 				</div>
-				<div id="tabVendorOrderDeliveries">
-					WIP
+				<div id="tabVendorOrderReceivers">
+					#view("vendorOrder/vendorOrdertabs/receivers")# 
 				</div>
 				<div id="tabVendorOrderProducts">
 					#view("vendorOrder/vendorOrdertabs/products")# 

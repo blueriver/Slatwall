@@ -54,12 +54,12 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	
 	// Related Object Properties (One-To-Many)
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all-delete-orphan";
-	property name="vendorOrderDeliveries" singularname="vendorOrderDelivery" cfc="VendorOrderDelivery" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
+	property name="vendorOrderReceivers" singularname="vendorOrderReceiver" cfc="vendorOrderReceiver" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 
 	property name="subTotal" persistent="false" formatType="currency"; 
-	property name="taxTotal" persistent="false" formatType="currency"; 
+	//property name="taxTotal" persistent="false" formatType="currency"; 
 	//property name="itemAmountTotal" persistent="false" formatType="currency" ; 
 	//property name="fulfillmentAmountTotal" persistent="false" formatType="currency" ; 
 	property name="orderAmountTotal" persistent="false" formatType="currency"; 
@@ -99,16 +99,14 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}*/
 	
 	public numeric function getSubtotal() {
-		return 999.99;
-		
 		var subtotal = 0;
 		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
-			subtotal += getVendorOrderItems()[i].getExtendedPrice();
+			subtotal += getVendorOrderItems()[i].getCost();
 		}
 		return subtotal;
 	}
 	
-	public numeric function getTaxTotal() {
+	/*public numeric function getTaxTotal() {
 		return 999.99;
 		
 		var taxTotal = 0;
@@ -116,9 +114,9 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			taxTotal += getVendorOrderItems()[i].getTaxAmount();
 		}
 		return taxTotal;
-	}
+	}*/
 	
-	public numeric function getItemAmountTotal() {
+	/*public numeric function getItemAmountTotal() {
 		return 999.99;
 		
 		var Total = 0;
@@ -126,7 +124,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			Total += getVendorOrderItems()[i].getAmount();
 		}
 		return Total;
-	}
+	}/*
 	
 	/*public numeric function getFulfillmentAmountTotal() {
 		return 0;
@@ -146,8 +144,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}*/
 	
 	public numeric function getTotal() {
-		return 999.99;
-		//return getSubtotal() + getTaxTotal() + getFulfillmentTotal();
+		return getSubtotal() /*+ getTaxTotal() + getFulfillmentTotal()*/;
 	}
 	
 	public void function removeAllVendorOrderItems() {
@@ -157,8 +154,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	}
 	
 	public boolean function isProductInVendorOrder(required any productID) {
-		// TODO!
-		return false;
+		return getService("VendorOrderService").isProductInVendorOrder(arguments.productID, this.getVendorOrderId());
 	}
 	
 	/*
@@ -166,7 +162,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	*/
 	
 	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
-	public any function getVendorOrderItemForSkuAndLocation(skuID, locationID) {
+	public any function getVendorOrderItemForSkuAndLocation(required any skuID, required any locationID) {
 		var stock = getService("VendorOrderService").getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 		if(!isNull(stock)) {
 			// Find any existing VendorOrderItem that has this stock (there should only be zero or one).
@@ -182,7 +178,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		return getService("VendorOrderService").getVendorOrderItem(0, true);
 	}
 	
-	public any function getVendorOrderItemCostForSku(skuID) {
+	public any function getVendorOrderItemCostForSku(required any skuID) {
 		// Search over all VendorOrderItems to find one that has a stock for the given skuID
 		var vendorOrderItems = getVendorOrderItems(); 
 		for(var i=1; i <= ArrayLen(vendorOrderItems); i++){
@@ -193,5 +189,10 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		
 		// Otherwise, if nothing could be found, the cost is 0.
 		return 0;	
+	}
+	
+	public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
+		return getService("VendorOrderService").getQuantityOfStockAlreadyOnOrder(arguments.vendorOrderId, arguments.stockID);
+		
 	}
 }

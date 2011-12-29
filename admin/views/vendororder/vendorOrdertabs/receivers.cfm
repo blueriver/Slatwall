@@ -36,13 +36,44 @@
 Notes:
 
 --->
-<cfparam name="rc.orderFulfillment" type="any" />
 
-<cfset local.method = rc.orderfulfillment.getFulfillmentMethodID() />
+<cfparam name="rc.vendorOrderReceiverSmartList">
 
-<cfset local.params.orderFulfillment = rc.orderFulfillment />
-<div class="svoadminorderfulfillmentdetail">
 <cfoutput>
-	#view("order/fulfillment/#local.method#",local.params)#
+	<div class="buttons">
+		<cf_SlatwallActionCaller action="admin:vendororder.createvendororderreceiver" text="#$.slatwall.rbKey('admin.vendorOrderReceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
+	</div>
+	
+	<table class="listing-grid stripe">
+		<tr>
+			<th class="varWidth">#$.slatwall.rbKey("entity.vendorOrderReceiver.createdDateTime")#</th>
+			<th>#$.slatwall.rbKey("entity.vendorOrderReceiver.boxCount")#</th>
+			<th></th>
+		</tr>
+			
+		<cfloop array="#rc.vendorOrderReceiverSmartList.getPageRecords()#" index="local.vendorOrderReceiver">
+			<tr>
+				<td class="varWidth">#DateFormat(local.vendorOrderReceiver.getCreatedDateTime(), "medium")#</td>
+				<td>#local.vendorOrderReceiver.getBoxCount()#</td>
+				<td class="administration">
+					<ul class="one">
+					  <cf_SlatwallActionCaller action="admin:vendororder.detailVendorOrderReceiver" querystring="vendorOrderReceiverID=#local.vendorOrderReceiver.getVendorOrderReceiverID()#" class="detail" type="list">
+					</ul>     						
+				</td>
+			</tr>
+			
+		</cfloop>
+	</table>
+	
+	<!---<div class="totals" style="width:300px; float:right;">
+		<dl class="fulfillmentTotals">
+			<dt>
+				#$.slatwall.rbKey("entity.vendorOrder.total")#:
+			</dt>
+			<dd>
+				#rc.vendorOrder.getFormattedValue('total', 'currency')#
+			</dd>
+		</dl>
+	</div>--->
+	<div class="clear"></div>
 </cfoutput>
-</div>
