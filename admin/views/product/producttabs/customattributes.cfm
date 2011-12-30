@@ -68,7 +68,7 @@ it is set to 0
 							<cfcase value="atTextArea">
 								<textarea name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#">#local.attributeValue.getAttributeValue()#</textarea>
 							</cfcase>
-							<cfcase value="atRichTextEditor">
+							<cfcase value="atRichTextEditor,atWysiwyg">
 								<textarea name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" class="wysiwyg" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#">#local.attributeValue.getAttributeValue()#</textarea>
 							</cfcase>
 							<cfcase value="atCheckBox,atCheckBoxGroup">
