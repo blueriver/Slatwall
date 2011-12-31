@@ -44,10 +44,10 @@ component displayname="Stock Receiver Vendor Order" entityname="SlatwallStockRec
 	// Related Object Properties
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	
-	public StockReceiverVendorOrder function init() {
+	public any function init() {
 		// Not needed for object persistance, but is used to determine when type this TPC entity is before persistance.
 		setReceiverType("vendorOrder");
 		
-		return this;
+		return super.init();
 	}
 }

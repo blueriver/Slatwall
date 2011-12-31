@@ -48,6 +48,7 @@ Notes:
 		<tr>
 			<th class="varWidth">#$.slatwall.rbKey("entity.stockreceiver.createdDateTime")#</th>
 			<th>#$.slatwall.rbKey("entity.stockreceiver.boxCount")#</th>
+			<th>#$.slatwall.rbKey("entity.stockreceiver.packingSlipNumber")#</th>
 			<th></th>
 		</tr>
 			
@@ -55,6 +56,7 @@ Notes:
 			<tr>
 				<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
 				<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>
+				<td>#local.stockReceiverVendorOrder.getPackingSlipNumber()#</td>
 				<td class="administration">
 					<ul class="one">
 					  <cf_SlatwallActionCaller action="admin:stockreceiver.detailStockReceiverVendorOrder" querystring="stockReceiverID=#local.stockReceiverVendorOrder.getStockReceiverID()#" class="detail" type="list">

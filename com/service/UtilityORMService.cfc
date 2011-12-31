@@ -92,7 +92,9 @@ component extends="BaseService" accessors="true" {
 		} else if ( left(arguments.entityName, len("SlatwallVendorOrderItem")) == "SlatwallVendorOrderItem")  {
 			serviceName = "vendorOrderService";
 			
-		} else if ( left(arguments.entityName, len("SlatwallStockReceiverItem")) == "SlatwallStockReceiverItem")  {
+		} else if ( left(arguments.entityName, len("SlatwallStockReceiverItem")) == "SlatwallStockReceiverItem"
+		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrder")) == "SlatwallStockReceiverVendorOrder"
+		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrderItem")) == "SlatwallStockReceiverVendorOrderItem")  {
 			serviceName = "stockService";
 					
 		}

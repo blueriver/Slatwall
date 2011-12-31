@@ -42,7 +42,8 @@ Notes:
 <cfparam name="rc.locationSmartList">
 
 <cfoutput>
-
+	<input type="hidden" name="vendorOrderId" value="#rc.vendorOrder.getVendorOrderId()#">
+	
 	<table class="listing-grid stripe">
 		<!--- Two levels of table titles --->
 		<tr>
@@ -56,9 +57,9 @@ Notes:
 		<tr>
 			<th class="varWidth"></th>
 			<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
-				<th>Qty Ordered</th>
-				<th>Qty Received</th>
-				<th>Qty Due In</th>
+				<th data-locationid="#local.location["value"]#">Qty Ordered</th>
+				<th data-locationid="#local.location["value"]#">Qty Received</th>
+				<th data-locationid="#local.location["value"]#">Qty Due In</th>
 			</cfloop>
 			<th class="receivingInLocationTitle"></th>
 			<th class="dueInAfterLocationTitle"></th>
@@ -77,19 +78,19 @@ Notes:
 					<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
 						<!--- Quantity Ordered --->
 						<cfset local.qtyOrdered = rc.VendorOrder.getQuantityOfStockAlreadyOnOrder(local.sku.getSkuID(), local.location["value"])>
-						<td>#local.qtyOrdered#</td>
+						<td data-locationid="#local.location["value"]#">#local.qtyOrdered#</td>
 						
 						<!--- Quantity received --->
 						<cfset local.qtyReceived = rc.VendorOrder.getQuantityOfStockAlreadyReceived(local.sku.getSkuID(), local.location["value"])>
-						<td>#local.qtyReceived#</td>
+						<td data-locationid="#local.location["value"]#">#local.qtyReceived#</td>
 						
 						<!--- Quantity Due in --->
-						<td>#local.qtyOrdered - local.qtyReceived#</td>
+						<td class="dueInQuantity" data-locationid="#local.location["value"]#">#local.qtyOrdered - local.qtyReceived#</td>
 					</cfloop>
 
 					<td>
 						<cfif rc.edit>
-							<input type="text">
+							<input type="text" class="receivingQuantityInput" name="quantity_skuid(#local.sku.getSkuID()#)">
 						<cfelse>
 							?
 						</cfif>

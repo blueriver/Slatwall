@@ -51,7 +51,6 @@ Notes:
 
 
 	<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
-		<input type="hidden" name="VendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 
 		<div class="clear">
 			<!--- These are common fields to all StockReceivers --->

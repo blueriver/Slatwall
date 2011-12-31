@@ -131,44 +131,48 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	getFW().setView("admin:stockreceiver.detailStockReceiver");  
 	}*/
 	
+	public void function saveStockReceiverVendorOrder(required struct rc) {
+		rc.stockReceiverType = "vendorOrder";
+		var vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
+		
+		saveStockReceiver(rc);
+		
+		rc.StockReceiver.setVendorOrder(vendorOrder);
+		
+		rc.message=rbKey("admin.vendorOrder.saveStockReceiverVendorOrder_success");
+		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderId=#rc.vendorOrderId#", preserve="message");
+	} 
+	
 
+	// Only to be called from the type-specific save methods
 	public void function saveStockReceiver(required struct rc) {
 		initStockReceiver(rc);
 
-		/*// this does an RC -> Entity population, and flags the entities to be saved.
+		// this does an RC -> Entity population, and flags the entities to be saved.
 		var wasNew = rc.stockReceiver.isNew();
-		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
 
-		if(!rc.stockReceiver.hasErrors()) {
-			// If added or edited a Price Group Rate
-			if(wasNew) {
-				rc.message=rbKey("admin.stockreceiver.savestockreceiver_nowaddrates");
-				getFW().redirect(action="admin:stockReceiver.editStockReceiver", querystring="stockreceiverid=#rc.stockreceiver.getStockReceiverID()#", preserve="message");	
-			} else {
-				rc.message=rc.message=rbKey("admin.stockReceiver.savestockreceiver_success");
-				
-				// If the price group rate has changed during this edit, then stay on the details page, otherwise, list.
-				if(rc.populateSubProperties)
-					getFW().redirect(action="admin:stockReceiver.editStockReceiver", querystring="stockreceiverid=#rc.stockreceiver.getStockReceiverID()#", preserve="message");
-				else
-					getFW().redirect(action="admin:stockReceiver.listStockReceivers", querystring="", preserve="message");
-			}
-			
-		} 
-		else { 			
-			// If one of the rates had the error, then find out which one and populate it
-			if(rc.stockreceiver.hasError("stockReceiverRates")) {
-				for(var i=1; i<=arrayLen(rc.stockreceiver.getStockReceiverRates()); i++) {
-					if(rc.stockreceiver.getStockReceiverRates()[i].hasErrors()) {
-						rc.stockReceiverRate = rc.stockreceiver.getStockReceiverRates()[i];
-						break;
-					}
+		// Quantities provided by fields named like: quantity_skuid(4028b8813414708a01341514ad67001e). Loop over rc and find these fields. 
+		for (var key IN rc) {
+			var res = REFindNoCase("quantity_skuid\((.+)\)", key, 1, true);
+
+			if(ArrayLen(res.pos) == 2) {
+				var skuID = mid(key, res.pos[2], res.len[2]);
+				var quantity = val(rc[key]);
+				if(len(skuID) && isNumeric(quantity)) {
+					// Take the sku, location (selected), and quantity, and build a StockRecieverItem
+					var stockReceiverItem = getStockService().getStockReceiverItem(0, true);
+					stockReceiverItem.setStockReceiver(rc.stockReceiver);
+					stockReceiverItem.setQuantity(quantity);
+					stockReceiverItem.setStock(getStockService().getStockForSkuAndLocation(skuID, rc.receiveForLocationID));
 				}
 			}
-			rc.edit = true;
-			rc.itemTitle = rc.StockReceiver.isNew() ? rc.$.Slatwall.rbKey("admin.stockreceiver.createStockReceiver") : rc.$.Slatwall.rbKey("admin.stockreceiver.editStockReceiver") & ": #rc.stockreceiver.getStockReceiverName()#";
-			getFW().setView(action="admin:stockReceiver.detailStockReceiver");
-		}*/	
+		}
+		
+		// For some reason, saving with population was causing a NullPointerException, so ended up doing population manually.
+		//rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
+		rc.stockReceiver.setBoxCount = rc.boxCount;
+		rc.stockReceiver.setPackingSlipNumber = rc.packingSlipNumber; 
+		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver);
 	}
 	
 	/*public void function deleteStockReceiver(required struct rc) {

@@ -45,6 +45,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	property name="stockService" type="any";
+	property name="settingService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.vendorOrderID" default="";

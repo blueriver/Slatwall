@@ -54,4 +54,20 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
 	
 	
+	// Maintain bidirectional relationships (many-to-one). Notice that the child (StockReceiverItem) is the handler of the relationship, while the parent (StockReceiver), has inverse="true".
+	public void function setStockReceiver(required any stockReceiver) {
+	   variables.stockReceiver = arguments.stockReceiver;
+	   if(isNew() && !arguments.stockReceiver.hasStockReceiverItem(this)) {
+	       arrayAppend(arguments.stockReceiver.getStockReceiverItems(), this);
+	   }
+	}
+	
+	public void function removeStockReceiver() {
+       var index = arrayFind(variables.stockReceiver.getStockReceiverItems(), this);
+       if(index > 0) {
+           arrayDeleteAt(variables.stockReceiver.getStockReceiverItems(), index);
+       }
+       structDelete(variables,"stockReceiver");
+    }
+	
 }

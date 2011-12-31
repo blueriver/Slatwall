@@ -1,25 +1,6 @@
 jQuery(function() {
 	
-	/*
-	 * Functions for the Vendor Order receiver interface. 
-	 */
 	
-	// Bind onchange to the location select box so that we can "dim" out TRs that are not of that location
-	jQuery(".receiveForLocationID").change(function(e){
-		var locationID = jQuery(this).val().toLowerCase();
-		
-		// Loop over all TRs in the table and check if they have the clicked locationID. If not, dim, and if so, remove the dim
-		jQuery("#detailVendorOrderReceiver tr").each(function(){
-			var foundLocationId = jQuery(this).data("locationid");
-			foundLocationId = foundLocationId != undefined ? foundLocationId.toLowerCase() : "";
-			
-			if(foundLocationId == locationID){
-				jQuery(this).removeClass("dim");
-			} else if(foundLocationId != "") {
-				jQuery(this).addClass("dim");
-			}
-		})	
-	});
 
 	
 	/*

@@ -113,11 +113,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 		return getVendorOrderSmartList(params);
 	}
-	
-	
-	public any function getStockForSkuAndLocation(required any skuID, required any locationID){
-		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
-	}
+
 	
 	public any function isProductInVendorOrder(required any productID, required any vendorOrderID){
 		return getDAO().isProductInVendorOrder(arguments.productID, arguments.vendorOrderID);

@@ -1069,3 +1069,9 @@ div.optionsSelector ul {
 
 /* Hide "close" bar on the vendor order dialog */
 .vendorOrderItemDialog > div{display:none;}
+
+#detailStockReceiver tbody tr.alt td.highlighted{background-color:#f8ff34;}
+#detailStockReceiver tbody td.highlighted {background-color:#dbe152;}
+/*#detailStockReceiver tbody .highlighted th{url("../../images/admin.ui.listing-grid_th_bg.jpg") repeat-x scroll left bottom #FFFEFE}*/
+
+

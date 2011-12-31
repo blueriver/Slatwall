@@ -54,15 +54,16 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	// Related Object Properties (one-to-many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
 	
-	public StockReceiver function init(){
+	public any function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.stockReceiverItems)) {
 	       variables.stockReceiverItems = [];
 	   }    
-	   
+
 	   return Super.init();
 	}
 	
+	// Not actually required for TPC implemention. Just providing type tracking for new entities.
 	public void function setReceiverType(required string type) {
 		var listAllowableTypes = "vendorOrder,order,stockAdjustment";
 		
