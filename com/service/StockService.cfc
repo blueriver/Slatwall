@@ -36,28 +36,13 @@
 Notes:
 
 */
-component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" persistent=true accessors=true output=false extends="BaseEntity" {
+component extends="BaseService" accessors="true" output="false" {
+	property name="stockDAO" type="any";
+
+	/*public array function getProductsForVendor(required any vendorID) {
+		return getDAO().getProductsForVendor(arguments.vendorID);
+	}*/
+
 	
-	// Persistent Properties
-	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qoh" ormtype="integer" hint="Quantity On Hand, This gets decrimented when an item is Shipped, and incrimented when an item is received or transfered in";
-	property name="qc" ormtype="integer" hint="Quantity Committed, This gets incrimented when an order is placed, and decremented when an order ships.  It is used to calculated availability";
-	property name="qexp" ormtype="integer" hint="Quantity Expected, This is the quantity expected on either a PO or from an order that is being returned.";
-	
-	// Remote properties
-	property name="remoteID" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Related Object Properties
-	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
-	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
-	
-	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="vendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true";
-	
+
 }

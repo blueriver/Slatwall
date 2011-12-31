@@ -36,18 +36,18 @@
 Notes:
 
 */
-component displayname="Stock Receiver Vendor Order" entityname="SlatwallStockReceiverVendorOrder" table="SlatwallStockReceiver" persistent="true" output="false" accessors="true" extends="StockReceiver" discriminatorvalue="vendorOrder" {
+component extends="BaseDAO" {
+
+	/*public any function getStockForSkuAndLocation(skuID, locationID) {
+		var params = [arguments.skuID, arguments.locationID];
+		var hql = " SELECT s
+					FROM SlatwallStock s
+					INNER JOIN s.sku sk
+					INNER JOIN s.location l
+					WHERE sk.skuID = ?
+					AND l.locationID = ?    ";
 	
-	// Persistent Properties
-	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+		return ormExecuteQuery(hql, params, true);	
+	}*/	
 	
-	// Related Object Properties
-	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
-	
-	public StockReceiverVendorOrder function init() {
-		// Not needed for object persistance, but is used to determine when type this TPC entity is before persistance.
-		setReceiverType("vendorOrder");
-		
-		return this;
-	}
 }

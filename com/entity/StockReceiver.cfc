@@ -37,6 +37,8 @@ Notes:
 
 */
 component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="receiverType"  {
+	// Discriminator (values: vendorOrder, order, stockAdjustment)
+	property name="receiverType" insert="false" update="false";
 	
 	// Persistent Properties
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -51,5 +53,24 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	
 	// Related Object Properties (one-to-many)
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
+	
+	public StockReceiver function init(){
+	   // set default collections for association management methods
+	   if(isNull(variables.stockReceiverItems)) {
+	       variables.stockReceiverItems = [];
+	   }    
+	   
+	   return Super.init();
+	}
+	
+	public void function setReceiverType(required string type) {
+		var listAllowableTypes = "vendorOrder,order,stockAdjustment";
+		
+		if(ListFind(listAllowableTypes, arguments.type) == 0) {
+			throw("The type (#arguments.type#) is not allowed! The allowed StockReceiver types are: #listAllowedTypes#");
+		} else {
+			variables.receiverType = arguments.type;
+		}
+	}
 	
 }

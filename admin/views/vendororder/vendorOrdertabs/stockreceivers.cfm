@@ -37,27 +37,27 @@ Notes:
 
 --->
 
-<cfparam name="rc.vendorOrderReceiverSmartList">
+<cfparam name="rc.stockReceiverVendorOrderSmartList">
 
 <cfoutput>
 	<div class="buttons">
-		<cf_SlatwallActionCaller action="admin:vendororder.createvendororderreceiver" text="#$.slatwall.rbKey('admin.vendorOrderReceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
+		<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
 	</div>
 	
 	<table class="listing-grid stripe">
 		<tr>
-			<th class="varWidth">#$.slatwall.rbKey("entity.vendorOrderReceiver.createdDateTime")#</th>
-			<th>#$.slatwall.rbKey("entity.vendorOrderReceiver.boxCount")#</th>
+			<th class="varWidth">#$.slatwall.rbKey("entity.stockreceiver.createdDateTime")#</th>
+			<th>#$.slatwall.rbKey("entity.stockreceiver.boxCount")#</th>
 			<th></th>
 		</tr>
 			
-		<cfloop array="#rc.vendorOrderReceiverSmartList.getPageRecords()#" index="local.vendorOrderReceiver">
+		<cfloop array="#rc.stockReceiverVendorOrderSmartList.getPageRecords()#" index="local.stockReceiverVendorOrder">
 			<tr>
-				<td class="varWidth">#DateFormat(local.vendorOrderReceiver.getCreatedDateTime(), "medium")#</td>
-				<td>#local.vendorOrderReceiver.getBoxCount()#</td>
+				<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
+				<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>
 				<td class="administration">
 					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:vendororder.detailVendorOrderReceiver" querystring="vendorOrderReceiverID=#local.vendorOrderReceiver.getVendorOrderReceiverID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:stockreceiver.detailStockReceiverVendorOrder" querystring="stockReceiverID=#local.stockReceiverVendorOrder.getStockReceiverID()#" class="detail" type="list">
 					</ul>     						
 				</td>
 			</tr>
@@ -65,15 +65,5 @@ Notes:
 		</cfloop>
 	</table>
 	
-	<!---<div class="totals" style="width:300px; float:right;">
-		<dl class="fulfillmentTotals">
-			<dt>
-				#$.slatwall.rbKey("entity.vendorOrder.total")#:
-			</dt>
-			<dd>
-				#rc.vendorOrder.getFormattedValue('total', 'currency')#
-			</dd>
-		</dl>
-	</div>--->
 	<div class="clear"></div>
 </cfoutput>

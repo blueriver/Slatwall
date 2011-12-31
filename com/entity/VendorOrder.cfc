@@ -54,7 +54,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	
 	// Related Object Properties (One-To-Many)
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all-delete-orphan";
-	property name="vendorOrderReceivers" singularname="vendorOrderReceiver" cfc="vendorOrderReceiver" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
+	//property name="stockReceiverVendorOrders" singularname="stockReceiverVendorOrder" cfc="stockReceiverVendorOrder" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 
@@ -161,6 +161,11 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		Helper methods for Add Product / Vendor Order Item dialog
 	*/
 	
+	
+	/*
+		Check if the bellow methods are still needed.
+	*/
+	
 	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
 	public any function getVendorOrderItemForSkuAndLocation(required any skuID, required any locationID) {
 		var stock = getService("VendorOrderService").getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
@@ -191,8 +196,23 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		return 0;	
 	}
 	
-	public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
+	/*public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
 		return getService("VendorOrderService").getQuantityOfStockAlreadyOnOrder(arguments.vendorOrderId, arguments.stockID);
-		
 	}
+	
+	public any function getQuantityOfStockAlreadyReceived(required any vendorOrderID, required any stockID) {
+		return getService("VendorOrderService").getQuantityOfStockAlreadyReceived(arguments.vendorOrderId, arguments.stockID);
+	}*/
+	public any function getQuantityOfStockAlreadyOnOrder(required any skuID, required any locationID) {
+		return getService("VendorOrderService").getQuantityOfStockAlreadyOnOrder(getVendorOrderID(), arguments.skuID, arguments.locationID);
+	}
+	
+	public any function getQuantityOfStockAlreadyReceived(required any skuID, required any locationID) {
+		return getService("VendorOrderService").getQuantityOfStockAlreadyReceived(getVendorOrderID(), arguments.skuID, arguments.locationID);
+	}
+	
+	public any function getSkusOrdered() {
+		return getService("VendorOrderService").getSkusOrdered(getVendorOrderId());
+	}
+	
 }

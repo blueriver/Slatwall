@@ -37,6 +37,15 @@ Notes:
 
 --->
 
+
+<!---
+
+			INTERFACE NOT BEING USED! DELETE.
+
+
+
+--->
+
 <cfparam name="rc.vendorOrder">
 <cfparam name="rc.vendorOrderReceiver">
 <cfparam name="rc.vendorOrderItemSmartList">

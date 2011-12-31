@@ -44,6 +44,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="productService" type="any";
 	property name="locationService" type="any";
 	property name="skuService" type="any";
+	property name="stockService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.vendorOrderID" default="";
@@ -87,9 +88,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 			
 		// Get Receivers
-		rc.vendorOrderReceiverSmartList = getVendorOrderService().getVendorOrderReceiverSmartList();
-		rc.vendorOrderReceiverSmartList.setPageRecordsShow(9999999);
-		rc.vendorOrderReceiverSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
+		rc.stockReceiverVendorOrderSmartList = getStockService().getStockReceiverVendorOrderSmartList();
+		rc.stockReceiverVendorOrderSmartList.setPageRecordsShow(9999999);
+		rc.stockReceiverVendorOrderSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 
 		// Get Vendor's Products
 		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
@@ -208,14 +209,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			if(ArrayLen(res.pos) == 3) {
 				var skuID = mid(key, res.pos[2], res.len[2]);
 				var locationID= mid(key, res.pos[3], res.len[3]);
-				var quantityIn = val(rc[key]);
+				var quantity = val(rc[key]);
 				if(len(skuID) && len(locationID)) {
 					// We've found one of the inputs. See if a VendorOrderItem already exists with this sku and location. If so, then update it. Otherwise, we will have to create one, and possibly even the stock!
 					var vendorOrderItem = vendorOrder.getVendorOrderItemForSkuAndLocation(skuID, locationID);
 					
 					if(vendorOrderItem.isNew()) {
 						// Only proceed if we have a positive value
-						if(quantityIn > 0) {
+						if(quantity > 0) {
 							// The vendorOrderItem is new. See if we already have a stock for that sku and location and use if it so, otherwise, creat a new stock
 							var stock = getVendorOrderService().getStockForSkuAndLocation(skuID, locationID);
 							
@@ -228,15 +229,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 							vendorOrderItem.setStock(stock);
 							vendorOrderItem.setVendorOrder(vendorOrder);
-							vendorOrderItem.setQuantityIn(quantityIn);
+							vendorOrderItem.setQuantity(quantity);
 							vendorOrderItem.setCost(skuCosts[skuID]);
 							getVendorOrderService().saveVendorOrderItem(vendorOrderItem);
 						}	
 						
 					} else {
 						// vendorOrderItem existed. If qty is positive number, simply update the quantity. If 0, delete VendorOrderItem
-						if(quantityIn > 0) {
-							vendorOrderItem.setQuantityIn(quantityIn);
+						if(quantity > 0) {
+							vendorOrderItem.setQuantity(quantity);
 							vendorOrderItem.setCost(skuCosts[skuID]);
 						} else {
 							vendorOrder.removeVendorOrderItem(vendorOrderItem);
@@ -282,7 +283,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.fulfillmentSmartList = getVendorOrderService().getVendorOrderReceiverSmartList(data=arguments.rc);
 	}*/
 	
-
+/*
 	public void function detailVendorOrderReceiver(required struct rc) {
 		param name="rc.vendorOrderReceiverID" default="";
 		
@@ -382,6 +383,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.message=rbKey("admin.vendorOrder.savevendorOrderReceiver_success");
 		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderID=#rc.vendorOrder.getVendorOrderID()#", preserve="message");
 	}
+	
+	*/
 	
 	/*public void function processVendorOrderReceiver(required struct rc) {
 		

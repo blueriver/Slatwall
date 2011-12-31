@@ -112,15 +112,15 @@ Notes:
 			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 				<ul>	
 					<li><a href="##tabVendorOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderItems")#</span></a></li>
-					<li><a href="##tabVendorOrderReceivers" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderReceivers")#</span></a></li>
+					<li><a href="##tabStockReceiverVendorOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.stockReceiverVendorOrders")#</span></a></li>
 					<li><a href="##tabVendorOrderProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendorOrder.detail.tab.vendorOrderProducts")#</span></a></li>
 				</ul>
 			
 				<div id="tabVendorOrderItems">
 					#view("vendorOrder/vendorOrdertabs/items")# 
 				</div>
-				<div id="tabVendorOrderReceivers">
-					#view("vendorOrder/vendorOrdertabs/receivers")# 
+				<div id="tabStockReceiverVendorOrders">
+					#view("vendorOrder/vendorOrdertabs/stockreceivers")# 
 				</div>
 				<div id="tabVendorOrderProducts">
 					#view("vendorOrder/vendorOrdertabs/products")# 

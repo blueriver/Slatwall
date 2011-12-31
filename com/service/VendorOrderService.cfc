@@ -123,9 +123,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().isProductInVendorOrder(arguments.productID, arguments.vendorOrderID);
 	}
 	
-	public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
+	/*public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
 		return getDAO().getQuantityOfStockAlreadyOnOrder(arguments.vendorOrderId, arguments.stockID);
+	}*/
+	
+	public any function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any skuID, required any stockID) {
+		return getDAO().getQuantityOfStockAlreadyOnOrder(arguments.vendorOrderId, arguments.skuID, arguments.stockID);
 	}
+	
+	public any function getQuantityOfStockAlreadyReceived(required any vendorOrderID, required any skuID, required any stockID) {
+		return getDAO().getQuantityOfStockAlreadyReceived(arguments.vendorOrderId, arguments.skuID, arguments.stockID);
+	}
+	
+	public any function getSkusOrdered(required any vendorOrderID) {
+		return getDAO().getSkusOrdered(arguments.vendorOrderId);
+	}
+	
 	
 	
 	/*public void function addVendorOrderItem(required any vendorOrder, required any sku, numeric quantity=1) {
