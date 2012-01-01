@@ -38,7 +38,6 @@ Notes:
 --->
 
 <cfparam name="rc.vendorOrder">
-<!---<cfparam name="rc.vendorOrderItemSmartList">--->
 <cfparam name="rc.locationSmartList">
 
 <cfoutput>
@@ -47,23 +46,23 @@ Notes:
 	<table class="listing-grid stripe">
 		<!--- Two levels of table titles --->
 		<tr>
-			<th class="varWidth">Sku</th>
+			<th class="varWidth">#$.Slatwall.rbKey("admin.stockReceiver.detail.sku")#</th>
 			<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
 				<th colspan="3">#local.location["name"]#</th>
 			</cfloop>
-			<th>Receiving</th>
-			<th colspan="2">Due in After</th>
+			<th>#$.Slatwall.rbKey("admin.stockReceiver.detail.receiving")#</th>
+			<th colspan="2">#$.Slatwall.rbKey("admin.stockReceiver.detail.dueInAfter")#</th>
 		</tr>
 		<tr>
 			<th class="varWidth"></th>
 			<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
-				<th data-locationid="#local.location["value"]#">Qty Ordered</th>
-				<th data-locationid="#local.location["value"]#">Qty Received</th>
-				<th data-locationid="#local.location["value"]#">Qty Due In</th>
+				<th data-locationid="#local.location["value"]#">#$.Slatwall.rbKey("admin.stockReceiver.detail.quantityOrdered")#</th>
+				<th data-locationid="#local.location["value"]#">#$.Slatwall.rbKey("admin.stockReceiver.detail.quantityReceived")#</th>
+				<th data-locationid="#local.location["value"]#">#$.Slatwall.rbKey("admin.stockReceiver.detail.quantityDueIn")#</th>
 			</cfloop>
 			<th class="receivingInLocationTitle"></th>
 			<th class="dueInAfterLocationTitle"></th>
-			<th>All Locations</th>
+			<th>#$.Slatwall.rbKey("admin.stockReceiver.detail.allLocations")#</th>
 		</tr>
 		
 		<tbody>

@@ -74,4 +74,8 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 		}
 	}
 	
+	// This method is kind of a hack as it will pull the first stock and extract the location based on that. We didn't want to change the model to contain a LocationID at the StockReceiver level since we might want to receive from multiple locations. 
+	//public any function getLocationForStockReceiver() {	
+	//}
+	
 }

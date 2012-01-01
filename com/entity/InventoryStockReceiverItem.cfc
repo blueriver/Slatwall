@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -33,39 +33,17 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
+Notes: TPC child of entity: Inventory.
 
---->
+*/
 
-<cfparam name="rc.stockReceiverVendorOrderSmartList">
 
-<cfoutput>
-	<div class="buttons">
-		<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
-	</div>
+component displayname="Inventory Stock Receiver Item" entityname="SlatwallInventoryStockReceiverItem" table="SlatwallInventory" persistent="true" output="false" accessors="true" extends="Inventory" discriminatorvalue="stockReceiverItem" {
 	
-	<table class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#$.slatwall.rbKey("entity.stockreceiver.createdDateTime")#</th>
-			<th>#$.slatwall.rbKey("entity.stockreceiver.boxCount")#</th>
-			<th>#$.slatwall.rbKey("entity.stockreceiver.packingSlipNumber")#</th>
-			<th></th>
-		</tr>
-			
-		<cfloop array="#rc.stockReceiverVendorOrderSmartList.getPageRecords()#" index="local.stockReceiverVendorOrder">
-			<tr>
-				<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
-				<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>
-				<td>#local.stockReceiverVendorOrder.getPackingSlipNumber()#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:stockReceiver.detailStockReceiverVendorOrder" querystring="stockReceiverID=#local.stockReceiverVendorOrder.getStockReceiverID()#&vendorOrderId=#rc.VendorOrderId#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-			
-		</cfloop>
-	</table>
+	// Persistent Properties
+	property name="inventoryStockReceiverItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	<div class="clear"></div>
-</cfoutput>
+	// Related Object Properties
+	property name="stockReceiverItem" cfc="StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
+	
+}

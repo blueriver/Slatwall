@@ -785,6 +785,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
+	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
+		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
+	}
+	
 	/**************** LEGACY DEPRECATED METHOD ****************************/
 	/*
 	 * This method is only called from the cart controller if the data passed in for 'orderItems'

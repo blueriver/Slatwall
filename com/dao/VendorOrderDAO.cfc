@@ -105,8 +105,7 @@ component extends="BaseDAO" {
 	}
 	
 	public array function getSkusOrdered(required any vendorOrderID) {
-		var params = [arguments.vendorOrderID];
-	                
+		var params = [arguments.vendorOrderID];           
 		var hql = " SELECT distinct sk
 					FROM SlatwallSku sk, SlatwallVendorOrder vo
 					INNER JOIN vo.vendorOrderItems voi

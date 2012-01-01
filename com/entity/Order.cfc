@@ -56,12 +56,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
+	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
+	property name="referencingOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencingOrderID";	// Points at the "parent" order.
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
+	
+	// -------------------I don't think that this should be inverse.
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referenceOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
@@ -103,6 +107,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
 		}
 		
+		// Set the default type to purchase order
+		if(isNull(getOrderType())) {
+			variables.orderType = getService("typeService").getTypeBySystemCode('otPurchaseOrder');
+		}
+
 		return super.init();
 	}
 	

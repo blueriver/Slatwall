@@ -59,11 +59,12 @@ Notes:
 				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.packingSlipNumber")#" object="#rc.StockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
 				
 				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
-					<dd class="value">
-						<cfset valueOptions = duplicate(rc.locationSmartList.getPageRecords())>
-						<!---<cfset ArrayPrepend(valueOptions, {name=$.Slatwall.rbKey("admin.stockReceiver.selectReceiveForLocation"), value=""})>--->
-						<cf_SlatwallFormField  fieldType="select" fieldName="receiveForLocationID" valueOptions="#valueOptions#" fieldClass="receiveForLocationID">
-					</dd>
+				<dd class="value">
+					<cfset valueOptions = duplicate(rc.locationSmartList.getPageRecords())>
+					<!---<cfset ArrayPrepend(valueOptions, {name=$.Slatwall.rbKey("admin.stockReceiver.selectReceiveForLocation"), value=""})>--->
+					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#valueOptions#" fieldClass="receiveForLocationID">
+				</dd>
+				
 			</dl>
 	
 			<!--- The receiver table bellow is chosen dynamically based on the type of stock receiver --->

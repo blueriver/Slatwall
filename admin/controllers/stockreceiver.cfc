@@ -79,19 +79,36 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
 	}
     
+    /*public void function detailStockReceiver(required struct rc) {
+    	param name="rc.stockReceiverID" default="";
+    	
+    	initStockReceiver(rc);
+    	
+    	if(isNull(rc.stockReceiver)) {
+    		getFW().redirect(action="admin:stockReceiver.listStockReceivers");
+    	}
+    	
+    	// Proceed to the type-specific detail
+    	if(rc.stockReceiver.getReceiverType() == "vendorOrder") {
+    		detailStockReceiverVendorOrder(rc);
+    	} else if(rc.stockReceiver.getReceiverType() == "order") {
+    		detailStockReceiverOrder(rc);
+    	} else {
+    		throw("Unrecognized StockReceiver type: #rc.stockReceiver.getReceiverType()#");
+    	}
+    	
+    	rc.edit = false;
+		rc.itemTitle = rc.StockReceiver.isNew() ? rc.$.Slatwall.rbKey("admin.stockreceiver.createStockReceiver") : rc.$.Slatwall.rbKey("admin.stockreceiver.editStockReceiver") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
+		getFW().setView(action="admin:stockReceiver.detailStockReceiver");  	
+    }*/
     
     /*
     	Vendor Order related.
     */
-    /*public void function detailStockReceiverVendorOrder(required struct rc) {
-    	param name="rc.stockReceiverID" default="";
-    	param name="rc.edit" default="false";
+    /* public void function detailStockReceiverVendorOrder(required struct rc) {
+		param name="rc.vendorOrderID";
     	
-    	rc.stockReceiver = getStockService().getStockReceiver(rc.stockReceiverID);
-    	
-    	if(isNull(rc.stockReceiver)) {
-    		getFW().redirect(action="admin:stockreceiver.listStockReceivers");
-    	}
+    	rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);	
     }*/
 
     public void function createStockReceiverVendorOrder(required struct rc) {
@@ -136,9 +153,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
 		
 		saveStockReceiver(rc);
-		
 		rc.StockReceiver.setVendorOrder(vendorOrder);
-		
+
 		rc.message=rbKey("admin.vendorOrder.saveStockReceiverVendorOrder_success");
 		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderId=#rc.vendorOrderId#", preserve="message");
 	} 
@@ -158,36 +174,31 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			if(ArrayLen(res.pos) == 2) {
 				var skuID = mid(key, res.pos[2], res.len[2]);
 				var quantity = val(rc[key]);
+				var stock = getStockService().getStockForSkuAndLocation(skuID, rc.receiveForLocationID);
 				if(len(skuID) && isNumeric(quantity)) {
 					// Take the sku, location (selected), and quantity, and build a StockRecieverItem
 					var stockReceiverItem = getStockService().getStockReceiverItem(0, true);
 					stockReceiverItem.setStockReceiver(rc.stockReceiver);
 					stockReceiverItem.setQuantity(quantity);
-					stockReceiverItem.setStock(getStockService().getStockForSkuAndLocation(skuID, rc.receiveForLocationID));
+					stockReceiverItem.setStock(stock);
+					
+					// Save the stockReceiverItem now, so that we get an ID populated
+					getStockService().saveStockReceiverItem(stockReceiverItem);
+					
+					// Create the associated "Inventory" tracking entity.
+					var inventory = getStockService().getInventoryStockReceiverItem(0, true);
+					inventory.setQuantityIn(quantity);
+					inventory.setStock(stock);
+					inventory.setStockReceiverItem(stockReceiverItem);
+					getStockService().saveInventory(inventory);
 				}
 			}
 		}
 		
 		// For some reason, saving with population was causing a NullPointerException, so ended up doing population manually.
 		//rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
-		rc.stockReceiver.setBoxCount = rc.boxCount;
-		rc.stockReceiver.setPackingSlipNumber = rc.packingSlipNumber; 
+		rc.stockReceiver.setBoxCount(rc.boxCount);
+		rc.stockReceiver.setPackingSlipNumber(rc.packingSlipNumber); 
 		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver);
 	}
-	
-	/*public void function deleteStockReceiver(required struct rc) {
-		var stockReceiver = getStockService().getStockReceiver(rc.stockReceiverId);
-		var deleteOK = getStockService().deleteStockReceiver(stockReceiver);
-		
-		if( deleteOK ) {
-			rc.message = rbKey("admin.stockreceiver.deleteStockReceiver_success");
-		} else {
-			rc.message = rbKey("admin.stockreceiver.deleteStockReceiver_failure");
-			rc.messagetype="error";
-		}
-		
-		getFW().redirect(action="admin:stockReceiver.listStockReceivers", preserve="message,messagetype");
-	}*/
-	
-	
 }

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,37 +35,35 @@
 
 Notes:
 
---->
-
-<cfparam name="rc.stockReceiverVendorOrderSmartList">
-
-<cfoutput>
-	<div class="buttons">
-		<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
-	</div>
+*/
+component displayname="Inventory" entityname="SlatwallInventory" table="SlatwallInventory" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="inventoryType"  {
+	// Discriminator (values: stockReceiver,stockPhisical,orderDelivery,vendorOrderReturnDelivery,stockAdjustmentDelivery)
+	property name="inventoryType" insert="false" update="false";
 	
-	<table class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#$.slatwall.rbKey("entity.stockreceiver.createdDateTime")#</th>
-			<th>#$.slatwall.rbKey("entity.stockreceiver.boxCount")#</th>
-			<th>#$.slatwall.rbKey("entity.stockreceiver.packingSlipNumber")#</th>
-			<th></th>
-		</tr>
-			
-		<cfloop array="#rc.stockReceiverVendorOrderSmartList.getPageRecords()#" index="local.stockReceiverVendorOrder">
-			<tr>
-				<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
-				<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>
-				<td>#local.stockReceiverVendorOrder.getPackingSlipNumber()#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:stockReceiver.detailStockReceiverVendorOrder" querystring="stockReceiverID=#local.stockReceiverVendorOrder.getStockReceiverID()#&vendorOrderId=#rc.VendorOrderId#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-			
-		</cfloop>
-	</table>
+	// Persistent Properties
+	property name="inventoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="quantityIn" ormtype="integer";
+	property name="quantityOut" ormtype="integer";
 	
-	<div class="clear"></div>
-</cfoutput>
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+
+	// Related Object Properties (many-to-one)
+	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
+	
+	public any function init(){
+	   return Super.init();
+	}
+	
+	// Not actually required for TPC implemention. Just providing type tracking for new entities.
+	public void function setinventoryType(required string type) {
+		var listAllowableTypes = "stockReceiver,stockPhisical,orderDelivery,vendorOrderReturnDelivery,stockAdjustmentDelivery";
+		
+		if(ListFind(listAllowableTypes, arguments.type) == 0) {
+			throw("The type (#arguments.type#) is not allowed! The allowed Inventory types are: #listAllowedTypes#");
+		} else {
+			variables.inventoryType = arguments.type;
+		}
+	}
+	
+}
