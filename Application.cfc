@@ -149,7 +149,7 @@ component extends="org.fw1.framework" output="false" {
 		/******************* CFStatic Setup *************************/
 		
 		// Create The cfStatic object (Can set to minifyMode = 'none' or 'package' to control minification).
-		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.cfstatic").init(
+		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
 			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
 			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
 			minifyMode = 'none',
@@ -289,13 +289,14 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupResponse() {
-		// Add the CSS and JS to the header
-		if( !listFind("frontend", getSubsystem(request.action)) || request.action == "frontend:event.onRenderEnd" || request.action == "frontend:event.onAdminModuleNav") {
+		// Add the CSS and JS to the header if this isn't a frontend request, or if it is a frontend but the user is logged in
+		if( !listFind("frontend", getSubsystem(request.action)) || (request.action == "frontend:event.onRenderEnd" && secureDisplay("admin:main.default"))) {
+			// Make sure that there is supposed to be a layout
 			if(!structKeyExists(request,"layout") || request.layout) {
 				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
-				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );
+				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );	
 			}
-		}
+		}		
 		
 		endSlatwallLifecycle();
 	}
