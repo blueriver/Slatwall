@@ -256,6 +256,9 @@ component extends="org.fw1.framework" output="false" {
 			controller("admin:BaseController.subSystemBefore");
 		} else if (getSubsystem(request.context.slatAction) == "frontend") {
 			controller("frontend:BaseController.subSystemBefore");
+		} else {
+			request.context.sectionTitle = getSubsystem(request.context.slatAction);
+			request.context.itemTitle = getSection(request.context.slatAction);
 		}
 	}
 	
