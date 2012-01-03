@@ -252,9 +252,9 @@ component extends="org.fw1.framework" output="false" {
 		}
 		
 		// Run subsytem specific logic.
-		if(isAdminRequest()) {
+		if(getSubsystem(request.context.slatAction) == "admin") {
 			controller("admin:BaseController.subSystemBefore");
-		} else {
+		} else if (getSubsystem(request.context.slatAction) == "frontend") {
 			controller("frontend:BaseController.subSystemBefore");
 		}
 	}
