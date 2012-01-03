@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -33,32 +33,17 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes:
+Notes: TPC child of entity: Inventory.
 
---->
-<cfparam name="rc.vendor" type="any" />
+*/
 
-<cfoutput>
-	<table id="VendorOrderList" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
-			<th>&nbsp</th>
-		</tr>
-		<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
-			<tr>
-				<td class="varWidth">#Local.VendorOrder.getVendorOrderNumber()#</td>
-				<td>#DateFormat(Local.VendorOrder.getCreatedDateTime(), "medium")#</td>
-				<td>#Local.VendorOrder.getVendorOrderType().getType()#</td>
-				<td>#local.VendorOrder.getFormattedValue('total', 'currency')#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:vendorOrder.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-</cfoutput>
+
+component displayname="Inventory Stock Receiver Item" entityname="SlatwallInventoryStockReceiverItem" table="SlatwallInventory" persistent="true" output="false" accessors="true" extends="Inventory" discriminatorvalue="stockReceiverItem" {
+	
+	// Persistent Properties
+	property name="inventoryStockReceiverItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Object Properties
+	property name="stockReceiverItem" cfc="StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
+	
+}

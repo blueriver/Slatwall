@@ -38,18 +38,6 @@ Notes:
 */
 component extends="BaseDAO" {
 
-	public any function getStockForSkuAndLocation(skuID, locationID) {
-		var params = [arguments.skuID, arguments.locationID];
-		var hql = " SELECT s
-					FROM SlatwallStock s
-					INNER JOIN s.sku sk
-					INNER JOIN s.location l
-					WHERE sk.skuID = ?
-					AND l.locationID = ?    ";
-	
-		return ormExecuteQuery(hql, params, true);	
-	}	
-	
 	public any function isProductInVendorOrder(productId, vendorOrderId) {
 		var params = [arguments.productId, arguments.vendorOrderId];				
 		var hql = " SELECT  o 
@@ -64,20 +52,13 @@ component extends="BaseDAO" {
 		return !isNull(ormExecuteQuery(hql, params, true));	
 	}	
 	
-	public numeric function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
-		var params = [arguments.vendorOrderID, arguments.stockID];
-		/*var hql = " SELECT new map(sum(vori.quantity) as quantity)
-					FROM SlatwallVendorOrderReceiverItem vori
-					INNER JOIN vori.vendorOrderReceiver vor
-					INNER JOIN vori.stock s
-					INNER JOIN vor.vendorOrder vo
-					WHERE vo.vendorOrderID = ?    
-					AND s.stockID = ?                ";
-			*/		
-		var hql = " SELECT new map(sum(vori.quantity) as quantity)
-					FROM SlatwallVendorOrderReceiverItem vori
-					WHERE vori.vendorOrderReceiver.vendorOrder.vendorOrderID = ?    
-					AND vori.stock.stockID = ?                ";
+	/*public numeric function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any stockID) {
+		var params = [arguments.vendorOrderID, arguments.stockID];	
+
+		var hql = " SELECT new map(sum(sri.quantity) as quantity)
+					FROM SlatwallStockReceiverItem sri
+					WHERE sri.stockReceiver.vendorOrder.vendorOrderID = ?    
+					AND sri.stock.stockID = ?                ";
 	
 		var result = ormExecuteQuery(hql, params);
 		
@@ -87,5 +68,56 @@ component extends="BaseDAO" {
 		} else {
 			return result[1]["quantity"];
 		}
+	}*/
+	
+	public numeric function getQuantityOfStockAlreadyOnOrder(required any vendorOrderID, required any skuID, required any locationID) {
+		var params = [arguments.vendorOrderID, arguments.skuID, arguments.locationID];	
+		var hql = " SELECT new map(sum(voi.quantity) as quantity)
+					FROM SlatwallVendorOrderItem voi
+					WHERE voi.vendorOrder.vendorOrderID = ?
+					AND voi.stock.sku.skuID = ?    
+					AND voi.stock.location.locationID = ?                ";
+	
+		var result = ormExecuteQuery(hql, params);
+
+		if(!structKeyExists(result[1], "quantity")) {
+			return 0;
+		} else {
+			return result[1]["quantity"];
+		}
 	}
+	
+	public numeric function getQuantityOfStockAlreadyReceived(required any vendorOrderID, required any skuID, required any locationID) {
+		var params = [arguments.vendorOrderID, arguments.skuID, arguments.locationID];	
+		var hql = " SELECT new map(sum(sri.quantity) as quantity)
+					FROM SlatwallStockReceiverItem sri
+					WHERE sri.stockReceiver.vendorOrder.vendorOrderID = ?    
+					AND sri.stock.sku.skuID = ?  
+					AND sri.stock.location.locationID = ?                 ";
+	
+		var result = ormExecuteQuery(hql, params);
+
+		if(!structKeyExists(result[1], "quantity")) {
+			return 0;
+		} else {
+			return result[1]["quantity"];
+		}
+	}
+	
+	public array function getSkusOrdered(required any vendorOrderID) {
+		var params = [arguments.vendorOrderID];           
+		var hql = " SELECT distinct sk
+					FROM SlatwallSku sk, SlatwallVendorOrder vo
+					INNER JOIN vo.vendorOrderItems voi
+					INNER JOIN voi.stock s
+					WHERE s.sku.skuID = sk.skuID
+					AND vo.vendorOrderID = ?
+					                ";              
+	
+		var result = ormExecuteQuery(hql, params);
+
+		return result;
+	}
+	
+	
 }

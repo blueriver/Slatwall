@@ -51,6 +51,8 @@ Notes:
 		<cfif rc.edit>
 			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendor, formName="vendorEdit")#
 			
+			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendor, formName="vendorEdit")#
+			
 			<form name="vendorEdit" id="vendorEdit" action="#buildURL(action='admin:vendor.savevendor')#" method="post">
 				<input type="hidden" name="vendorID" value="#rc.vendor.getVendorID()#" />
 		</cfif>
@@ -65,7 +67,10 @@ Notes:
 			<ul>
 				<li><a href="##tabVendorAddresses" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.vendoraddresses")#</span></a></li>
 				<li><a href="##tabVendorBrands" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.account.detail.tab.vendorbrands")#</span></a></li>
-				<li><a href="##tabVendorOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendororders")#</span></a></li>
+				
+				<cfif !rc.vendor.isNew()>
+					<li><a href="##tabVendorOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendororders")#</span></a></li>
+				</cfif>
 			</ul>
 
 			<div id="tabVendorAddresses">
@@ -74,9 +79,12 @@ Notes:
 			<div id="tabVendorBrands">
 				#view("admin:vendor/vendortabs/vendorbrands")#
 			</div>
-			<div id="tabVendorOrders">
-				#view("admin:vendor/vendortabs/vendororders")#
-			</div>
+			
+			<cfif !rc.vendor.isNew()>
+				<div id="tabVendorOrders">
+					#view("admin:vendor/vendortabs/vendororders")#
+				</div>
+			</cfif>
 			
 		</div>
 		

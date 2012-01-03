@@ -88,12 +88,15 @@ component extends="BaseService" accessors="true" {
 			
 		} else if ( left(arguments.entityName, len("SlatwallVendorAddress")) == "SlatwallVendorAddress")  {
 			serviceName = "vendorService";	
+				
+		} else if ( left(arguments.entityName, len("SlatwallVendorOrderItem")) == "SlatwallVendorOrderItem")  {
+			serviceName = "vendorOrderService";
 			
-		} else if ( left(arguments.entityName, len("SlatwallStock")) == "SlatwallStock" 
-			|| left(arguments.entityName, len("SlatwallVendorOrderItem")) == "SlatwallVendorOrderItem"
-			|| left(arguments.entityName, len("SlatwallVendorOrderReceiver")) == "SlatwallVendorOrderReceiver"
-			|| left(arguments.entityName, len("SlatwallVendorOrderReceiverItem")) == "SlatwallVendorOrderReceiverItem")  {
-			serviceName = "vendorOrderService";	
+		} else if ( left(arguments.entityName, len("SlatwallStockReceiverItem")) == "SlatwallStockReceiverItem"
+		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrder")) == "SlatwallStockReceiverVendorOrder"
+		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrderItem")) == "SlatwallStockReceiverVendorOrderItem")  {
+			serviceName = "stockService";
+					
 		}
 		
 		// Return the actual service

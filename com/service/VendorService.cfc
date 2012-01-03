@@ -39,13 +39,12 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 	
 	property name="vendorOrderService" type="any";
+	property name="addressService" type="any";
 	property name="vendorDAO" type="any";
 
 	public array function getProductsForVendor(required any vendorID) {
 		return getDAO().getProductsForVendor(arguments.vendorID);
 	}
-
-	
 
 	
 

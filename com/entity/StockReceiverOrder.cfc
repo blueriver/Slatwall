@@ -35,7 +35,13 @@
 
 Notes:
 
+This entity represents a single instance of receiving a batch of items back FROM a shopping-cart order.
+
 */
+
+
+
+
 component displayname="Stock Receiver Vendor Order" entityname="SlatwallStockReceiverOrder" table="SlatwallStockReceiver" persistent="true" output="false" accessors="true" extends="StockReceiver" discriminatorvalue="order" {
 	
 	// Persistent Properties

@@ -37,6 +37,15 @@ Notes:
 
 --->
 
+
+<!---
+
+			INTERFACE NOT BEING USED! DELETE.
+
+
+
+--->
+
 <cfparam name="rc.vendorOrder">
 <cfparam name="rc.vendorOrderReceiver">
 <cfparam name="rc.vendorOrderItemSmartList">
@@ -90,7 +99,7 @@ Notes:
 			
 			<dl class="twoColumn">
 				
-				<cfif !rc.edit>
+				<cfif rc.edit>
 					<dt class="title"><label>#$.Slatwall.rbKey("admin.vendorOrderReceiver.receiveForLocation")#</strong></label></dt> 
 					<dd class="value">
 					

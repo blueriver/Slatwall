@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,30 +35,20 @@
 
 Notes:
 
---->
-<cfparam name="rc.vendor" type="any" />
+*/
+component extends="BaseDAO" {
 
-<cfoutput>
-	<table id="VendorOrderList" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderCreatedDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderType")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.total")#</th>
-			<th>&nbsp</th>
-		</tr>
-		<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
-			<tr>
-				<td class="varWidth">#Local.VendorOrder.getVendorOrderNumber()#</td>
-				<td>#DateFormat(Local.VendorOrder.getCreatedDateTime(), "medium")#</td>
-				<td>#Local.VendorOrder.getVendorOrderType().getType()#</td>
-				<td>#local.VendorOrder.getFormattedValue('total', 'currency')#</td>
-				<td class="administration">
-					<ul class="one">
-					  <cf_SlatwallActionCaller action="admin:vendorOrder.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-</cfoutput>
+	
+	public any function getStockForSkuAndLocation(skuID, locationID) {
+		var params = [arguments.skuID, arguments.locationID];
+		var hql = " SELECT s
+					FROM SlatwallStock s
+					INNER JOIN s.sku sk
+					INNER JOIN s.location l
+					WHERE sk.skuID = ?
+					AND l.locationID = ?    ";
+	
+		return ormExecuteQuery(hql, params, true);	
+	}	
+	
+}

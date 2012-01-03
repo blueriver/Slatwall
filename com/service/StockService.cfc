@@ -36,36 +36,12 @@
 Notes:
 
 */
-component displayname="Vendor Address" entityname="SlatwallVendorAddress" table="SlatwallVendorAddress" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="vendorAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-		
-	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
+component extends="BaseService" accessors="true" output="false" {
+	property name="stockDAO" type="any";
 
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// vendor (many-to-one)
-	public void function setVendor(required any vendor) {
-		variables.vendor = arguments.vendor;
-		if(isNew() or !arguments.vendor.hasVendorAddress(this)) {
-			arrayAppend(arguments.vendor.getVendorAddresses(),this);
-		}
+		
+	public any function getStockForSkuAndLocation(required any skuID, required any locationID){
+		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 	}
-	
-	public void function removeVendor(any vendor) {
-		if(!structKeyExists(arguments, "vendor")) {
-			arguments.vendor = variables.vendor;
-		}
-		var index = arrayFind(arguments.vendor.getVendorAddresses(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.vendor.getVendorAddresses(),index);
-		}
-		structDelete(variables,"vendor");
-	}
-	
-	/******* END: Association management methods for bidirectional relationships **************/
+
 }

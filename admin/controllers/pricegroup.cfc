@@ -41,8 +41,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="priceGroupService" type="any";
 	property name="productService" type="any";
-	property name="requestCacheService" type="any";
-	property name="settingService" type="any";
+	//property name="requestCacheService" type="any";
+	//property name="settingService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:pricegroup.list");

@@ -82,7 +82,7 @@ Notes:
 							<!--- This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. ---> 
 							<cfset local.VendorOrderItem = rc.VendorOrder.getVendorOrderItemForSkuAndLocation(local.sku.getSkuId(), local.location.getLocationId())>
 							<input type="hidden">
-							<td><input type="text" class="skulocationqty" data-skuid="#local.sku.getSkuID()#" data-locationid="#local.location.getLocationID()#" name="qty_skuid(#local.sku.getSkuID()#)_locationid(#local.location.getLocationId()#)" value="#local.VendorOrderItem.getQuantityIn()#"></td>
+							<td><input type="text" class="skulocationqty" data-skuid="#local.sku.getSkuID()#" data-locationid="#local.location.getLocationID()#" name="qty_skuid(#local.sku.getSkuID()#)_locationid(#local.location.getLocationId()#)" value="#local.VendorOrderItem.getQuantity()#"></td>
 						</cfloop>
 						
 						<td class="skutotal" data-skuid="#local.sku.getSkuID()#"></td>

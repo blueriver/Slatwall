@@ -36,38 +36,40 @@
 Notes:
 
 --->
-<cfparam name="rc.fulfillmentSmartList" type="any" />
 
 <cfoutput>
+	<div class="buttons">
+		<cf_SlatwallActionCaller action="admin:order.createOrderReturn" text="#$.slatwall.rbKey('admin.order.createOrderReturn')#" queryString="orderID=#rc.Order.getOrderID()#" class="button" />	
+	</div>
 	
-<div class="svoadminorderfulfillmentlist">
-	<form action="#buildURL('admin:order.listorderfulfillments')#" method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.order.search")#</button>
-	</form>
-	
-	<table id="OrderFulfillmentList" class="listing-grid stripe">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.orderFulfillment.fulfillmentMethod")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.account.accountName")#</th>
-			<th>#$.slatwall.rbKey("entity.orderFulfillment.total")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.fulfillmentSmartList.getPageRecords()#" index="local.fulfillment">
-			<cfset local.thisOrder = local.fulfillment.getOrder() />
-			<cfset local.thisAccount = local.thisOrder.getAccount() />
+	<cfif arrayLen(rc.order.getReferencingOrders ())>
+		<table id="OrderReturnList" class="listing-grid stripe">
 			<tr>
-				<td>#dateFormat(local.thisOrder.getOrderOpenDateTime(),"medium")#</td>
-				<td>#local.thisOrder.getOrderNumber()#</td>
-				<td>#$.slatwall.rbKey("entity.orderfulfillment.fulfillmentmethod." & local.fulfillment.getfulfillmentMethodID())#</td>
-				<td><cf_SlatwallPropertyDisplay object="#local.thisAccount#" property="fullName" displayType="plain" valueLink="?slatAction=admin:account.detail&accountID=#local.thisAccount.getAccountID()#">
-				<td>#local.fulfillment.getFormattedValue('totalCharge', 'currency')#</td>
-				<td>
-					<cf_SlatwallActionCaller action="admin:order.detailorderfulfillment" querystring="orderfulfillmentID=#local.fulfillment.getorderfulfillmentID()#" type="link" text="#rc.$.slatwall.rbKey('admin.order.processorderfulfillment_nav')#" />
-				</td>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullName")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.orderStatusType")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
+				<th>&nbsp</th>
 			</tr>
-		</cfloop>
-	</table>
-</div>
+			<cfloop array="#rc.order.getReferencingOrders ()#" index="local.referencingOrder">
+				<tr>
+					<td>#Local.referencingOrder.getOrderNumber()#</td>
+					<td>#DateFormat(Local.referencingOrder.getOrderOpenDateTime(), "medium")#</td>
+					<td class="varWidth">
+						#Local.referencingOrder.getAccount().getFullName()# <cfif local.referencingOrder.getAccount().isGuestAccount()>(#$.slatwall.rbKey('admin.order.account.isguestaccount')#)</cfif>
+					</td>
+					<td>#Local.referencingOrder.getOrderStatusType().getType()#</td>
+					<td>#local.referencingOrder.getFormattedValue('total', 'currency')#</td>
+					<td class="administration">
+						<ul class="one">
+						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.referencingOrder.getOrderID()#" class="detail" type="list">
+						</ul>     						
+					</td>
+				</tr>
+			</cfloop>
+		</table>
+	<cfelse>
+		#$.slatwall.rbKey("admin.order.detail.noreferencingorders")#
+	</cfif>
 </cfoutput>
