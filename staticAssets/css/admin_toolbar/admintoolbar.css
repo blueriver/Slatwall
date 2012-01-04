@@ -208,6 +208,9 @@ div.svoadmintoolbarmenu li#navOrders>a {
 div.svoadmintoolbarmenu li#navAccounts>a {
 	background: url(../../images/grayIcons16/users.png) no-repeat scroll 14px 6px transparent ;
 }
+div.svoadmintoolbarmenu li#navVendors>a {
+	background: url(../../images/grayIcons16/briefcase.png) no-repeat scroll 14px 6px transparent ;
+}
 div.svoadmintoolbarmenu li#navSettings>a {
 	background: url(../../images/grayIcons16/tools.png) no-repeat scroll 14px 6px transparent ;
 }
@@ -274,6 +277,9 @@ div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminaccount {
 }
 div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminsetting {
 	background-image:url(../../images/grayIcons32/tools.png) ;
+}
+div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminvendor {
+	background-image:url(../../images/grayIcons32/briefcase.png) ;
 }
 div.svoadmintoolbarmenu li#mainMenu ul.menu li a.adminattribute {
 	background-image:url(../../images/grayIcons32/process.png) ;

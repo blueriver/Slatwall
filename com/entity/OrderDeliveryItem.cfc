@@ -42,9 +42,10 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	property name="orderDeliveryItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantityDelivered" ormtype="integer";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
    /******* Association management methods for bidirectional relationships **************/
 	
@@ -83,5 +84,16 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	}	
 	
     /************   END Association Management Methods   *******************/
+    
+    //  -------------------- ORM Event Metods -------------------
+	public void function preInsert(){
+		getService("StockService").createInventory(this);
+		super.preInsert();
+	}
+	
+	public void function preUpdate(Struct oldData){
+		throw("Order delivery updates are not allowed.");
+	}
+	//  -------------------- END: ORM Event Metods -------------------
 	
 }

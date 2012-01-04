@@ -785,6 +785,114 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		getPromotionService().updateOrderAmountsWithPromotions(order=arguments.order);
 	}
 	
+	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
+		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
+	}
+	
+	public numeric function getQuantityShipped(required any orderID, required any skuID) {
+		return getDAO().getQuantityShipped(arguments.orderId, arguments.skuID);
+	}
+	
+	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
+		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
+	}
+	
+	public void function createOrderReturn(required struct data) {
+		var originalOrder = getOrderService().getOrder(data.originalOrderID);
+		
+		// Create a new order
+		var order = getOrderService().newOrder();
+		//order.setOrderNumber(999);
+		//order.setOrderOpenDateTime();
+		//order.setOrderCloseDateTime();
+		order.setAccount(originalOrder.getAccount());
+		order.setOrderStatusType(getService("typeService").getTypeBySystemCode("ostClosed"));
+		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnOrder"));
+		order.setReferencedOrder(originalOrder);
+		
+		// Save order here so that we can get an ID.
+		getOrderService().saveOrder(order);
+		
+		// Create OrderReturn entity (to save the fulfillment amount) 
+		var orderReturn = getService("OrderService").newOrderReturn();
+		var location = getService("LocationService").getLocation(data.returnToLocationID);
+		orderReturn.setOrder(order);
+		orderReturn.setFulfillmentRefundAmount(data.refundShippingAmount);
+		orderReturn.setReturnLocation(location);
+		getService("OrderService").saveOrderReturn(orderReturn);
+		
+		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be further populated with StockRecieverItems, one for each item being returned.
+			
+		//.... Create Stock Receiver
+		var stockReceiver = getStockService().newStockReceiver();
+		//....
+		//....
+		
+		
+		// Load order with order items. Loop over all delivered order items
+		for(var i=1; i <= ArrayLen(originalOrder.getDeliveredOrderItems()); i++) {
+			var originalOrderItem = originalOrder.getOrderDeliveryItems().getOrderItem();	
+			var quantityReturning = data["quantity_orderItemId(#originalOrderItem.getOrderItemID()#)"];
+			var priceReturning = data["price_orderItemId(#originalOrderItem.getOrderItemID()#)"];
+			
+			// Validation should be pushed into ValidateThis???
+			if(!isNumeric(priceReturning) || !isNumeric(quantityReturning == "")) {
+				throw("Could not get value for price or quantity");
+			}
+			
+			// Check that the quantity returning is valid. This should be moved into a ValidateThis rule.
+			var quantityAlreadyReturned = originalOrderItem.getQuantityPriceAlreadyReturned().quantity;
+			var quantityAllowedToReturn = abs(originalOrderItem.getQuantityShipped() - quantityAlreadyReturned);
+			if(quantityReturning > quantityAllowedToReturn) {
+				throw("The quantity of items being returned (#quantityReturning#) is greater than the quantity allowed (#quantityAllowedToReturn#)");
+			}
+				
+			// Create a new orderItem and populate it's basic properties from the original order item, and from the user submitted input
+			var orderItem = getService("OrderService").newOrderItem();	
+			orderItem.setReferencedOrderItem(originalOrderItem);
+			orderItem.setOrder(order);
+			orderItem.setPrice(priceReturning);
+			orderItem.setQuantity(quantityReturning);
+			orderItem.setSku(originalOrderItem.getSku());
+			orderItem.setOrderItemStatusType(getService("typeService").getTypeBySystemCode('oistFulfilled'));
+			
+			// Populate the Tax on this order by creating new tax entities, but using the same rate as the original orderItem
+			for(var j=1; j <= ArrayLen(originalOrderItem.getAppliedTaxes()); j++) {
+				var originalAppliedTax = originalOrderItem.getAppliedTaxes()[j];
+				var appliedTax = getService("taxService").newOrderItemAppliedTax();
+				
+				appliedTax.setOrderItem(orderItem);
+				appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate);
+				appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
+				appliedTax.setTaxAmount(originalAppliedTax.getTaxRate() * (orderItem.getQuantity() * priceReturning));
+			}
+			
+			// Add this order item to the OrderReturns entity
+			orderItem.setOrderReturn(orderReturn);
+			
+			// Add stock receiver item to stock receiver
+			var stock = getStockService().getStockForSkuAndLocation(originalOrderItem.getSku().getSkuID(), location.getLocationID());
+			var stockReceiverItem = getStockService().getStockReceiverItem(0, true);
+			stockReceiverItem.setStockReceiver(stockReceiver);
+			stockReceiverItem.setQuantity(quantityReturning);
+			stockReceiverItem.setStock(stock);
+			// .....
+			// .....
+			
+			
+			// Create the associated "Inventory" tracking entity (using the subclassed InventoryStockReceiver).
+			var inventory = getStockService().getInventoryStockReceiverItem(0, true);
+			inventory.setQuantityIn(quantityReturning);
+			inventory.setStock(stock);
+			inventory.setStockReceiverItem(stockReceiverItem);
+			getStockService().saveInventory(inventory);
+			
+			
+		}
+		
+	}
+	
+	
 	/**************** LEGACY DEPRECATED METHOD ****************************/
 	/*
 	 * This method is only called from the cart controller if the data passed in for 'orderItems'

@@ -56,25 +56,31 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
+	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
+	property name="referencedOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
-	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" cascade="all-delete-orphan" inverse="true";
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
+	
+	// -------------------I don't think that this should be inverse.
+	// This is a collection of "return orders".
+	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID" cascade="save-update";
 	
 	// Non persistent properties
-	property name="total" persistent="false" formatType="currency" ; 
-	property name="subTotal" persistent="false" formatType="currency" ; 
-	property name="taxTotal" persistent="false" formatType="currency" ; 
-	property name="itemDiscountAmountTotal" persistent="false" formatType="currency" ; 
-	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency" ; 
-	property name="orderDiscountAmountTotal" persistent="false" formatType="currency" ; 
-	property name="discountTotal" persistent="false" formatType="currency" ; 
-	property name="fulfillmentTotal" persistent="false" formatType="currency" ; 
+	property name="total" persistent="false" formatType="currency";
+	property name="subTotal" persistent="false" formatType="currency";
+	property name="taxTotal" persistent="false" formatType="currency";
+	property name="itemDiscountAmountTotal" persistent="false" formatType="currency";
+	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
+	property name="orderDiscountAmountTotal" persistent="false" formatType="currency"; 
+	property name="discountTotal" persistent="false" formatType="currency";
+	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
 	public any function init() {
 		if(isNull(variables.orderFulfillments)) {
@@ -83,6 +89,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(isNull(variables.orderDeliveries)) {
 			variables.orderDeliveries = [];
 		}
+		if(isNull(variables.referencingOrders)) {
+			variables.referencingOrders = [];
+		}
+		
 		if(isNull(variables.orderItems)) {
 			variables.orderItems = [];
 		}
@@ -98,6 +108,11 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			variables.orderStatusType = getService("typeService").getTypeBySystemCode('ostNotPlaced');
 		}
 		
+		// Set the default type to purchase order
+		if(isNull(getOrderType())) {
+			variables.orderType = getService("typeService").getTypeBySystemCode('otPurchaseOrder');
+		}
+
 		return super.init();
 	}
 	
@@ -205,7 +220,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     /******* Association management methods for bidirectional relationships **************/
 	
 	// OrderItems (one-to-many)
-	
 	public void function addOrderItem(required OrderItem OrderItem) {
 	   arguments.orderItem.setOrder(this);
 	}
@@ -215,7 +229,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// OrderFulfillments (one-to-many)
-	
 	public void function addOrderFulfillment(required OrderFulfillment orderFulfillment) {
 	   arguments.orderFulfillment.setOrder(this);
 	}
@@ -225,7 +238,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// OrderDeliveries (one-to-many)
-	
 	public void function addOrderDelivery(required OrderDelivery orderDelivery) {
 	   arguments.orderDelivery.setOrder(this);
 	}
@@ -234,8 +246,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	   arguments.orderDelivery.removeOrder(this);
 	}
 	
-	// OrderPayments (one-to-many)
+	// Order Returns (one-to-many)
+	public void function addReferencingOrder(required Order referencingOrder) {
+	   arguments.referencingOrder.setReferencedOrder(this);
+	}
 	
+	public void function removeReferencingOrder(required Order referencingOrder) {
+	   arguments.referencingOrder.removeReferencedOrder(this);
+	}
+	
+	// OrderPayments (one-to-many)
 	public void function addOrderPayment(required OrderPayment OrderPayment) {
 	   arguments.orderPayment.setOrder(this);
 	}
@@ -245,7 +265,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// Account (many-to-one)
-	
 	public void function setAccount(required Account account) {
 		// If this is an order that hasn't been placed... remove any account specific aspects
 		if(getOrderStatusType().getSystemCode() == "ostNotPlaced" && (isNull(variables.account) || variables.account.getAccountID() != arguments.account.getAccountID())) {
@@ -253,7 +272,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		variables.account = arguments.account;
 		if(!arguments.account.hasOrder(this)) {
-			arrayAppend(arguments.account.getOrders(),this);
+			arrayAppend(arguments.account.getOrders(), this);
 		}
 	}
 	
@@ -262,11 +281,32 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			if(!structKeyExists(arguments, "account")) {
 				arguments.account = variables.account;
 			}
-			var index = arrayFind(arguments.account.getOrders(),this);
+			var index = arrayFind(arguments.account.getOrders(), this);
 			if(index > 0) {
-				arrayDeleteAt(arguments.account.getOrders(),index);
+				arrayDeleteAt(arguments.account.getOrders(), index);
 			}    
 			structDelete(variables,"account");
+		}
+    }
+    
+    // Order Return (many-to-one)
+	public void function setReferencedOrder(required Order referencedOrder) {
+		variables.referencedOrder = arguments.referencedOrder;
+		if(!arguments.referencedOrder.hasReferencingOrder(this)) {
+			arrayAppend(arguments.referencedOrder.getReferencingOrders(), this);
+		}
+	}
+	
+	public void function removeReferencedOrder(Order referencedOrder) {
+		if(structKeyExists(variables,"referencedOrder")) {
+			if(!structKeyExists(arguments, "referencedOrder")) {
+				arguments.referencedOrder = variables.referencedOrder;
+			}
+			var index = arrayFind(arguments.referencedOrder.getReferencingOrders(), this);
+			if(index > 0) {
+				arrayDeleteAt(arguments.referencedOrder.getReferencingOrders(), index);
+			}    
+			structDelete(variables, "referencedOrder");
 		}
     }
 	
@@ -340,6 +380,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			setOrderCloseDateTime(now());
 		}
 	} 
+	
+	public numeric function getPreviouslyReturnedFulfillmentTotal() {
+		return getService("OrderService").getPreviouslyReturnedFulfillmentTotal(getOrderId());
+	}
+	
+	
+	// A helper to loop over all deliveries, and grab all of the items of each and put them into a single array 
+	public array function getDeliveredOrderItems() {
+		var arr = [];
+		var deliveries = getDeliveries();
+		for(var i=1; i <= ArrayLen(deliveries); i++) {
+			var deliveryItems = getDeliveries()[i].getOrderDeliveryItems();
+			
+			for(var j=1; j <= ArrayLen(deliveryItems); j++) {
+				ArrayAppend(arr, deliveryItems[j].getOrderItem());
+			}
+		}
+		
+		return arr;
+	}
 	
 	//  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){

@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,9 +35,13 @@
 
 Notes:
 
---->
-<cfoutput>
-<div class="svoVendorDetail">
+*/
+component extends="BaseService" accessors="true" output="false" {
+	property name="stockDAO" type="any";
+
+		
+	public any function getStockForSkuAndLocation(required any skuID, required any locationID){
+		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
+	}
 	
-</div>
-</cfoutput>
+}

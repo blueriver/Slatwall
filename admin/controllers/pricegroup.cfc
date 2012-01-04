@@ -41,8 +41,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="priceGroupService" type="any";
 	property name="productService" type="any";
-	property name="requestCacheService" type="any";
-	property name="settingService" type="any";
+	//property name="requestCacheService" type="any";
+	//property name="settingService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:pricegroup.list");
@@ -78,36 +78,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	rc.edit = true; 
     	getFW().setView("admin:pricegroup.detailPriceGroup");  
-	
 	}
 	
 
 	public void function savePriceGroup(required struct rc) {
 		editPriceGroup(rc);
 
-		var wasNew = rc.PriceGroup.isNew();
-
-		//dumpScreen(rc);
-		
-		// In order for the automated population / save logic to work, map certain fields in the RC to their matching entity fields
-		/*if(StructKeyExists(rc, "priceGroupRateType") && rc.priceGroupRateType != ""){
-			
-			rc.PriceGroupRates[1].percentageOff = ] = 
-			
-			rc["PriceGroupRates[1].amounOff"] = rc["PriceGroupRates[1].amount"] = "";
-			if(rc.priceGroupRateType EQ "percentageOff")
-				rc["PRICEGROUPRATES[1].PERCENTAGEOFF"] = rc.priceGroupRateValue;
-			else if(rc.priceGroupRateType EQ "amountOff")
-				rc["PRICEGROUPRATES[1].AMOUNTOFF"] = rc.priceGroupRateValue;
-			else if(rc.priceGroupRateType EQ "amount")
-				rc["PRICEGROUPRATES[1].AMOUNT"] = rc.priceGroupRateValue;
-			else
-				throw("Unacceptable value for priceGroupRateType (#rc.priceGroupRateType#)");
-		} */
-		
-		//dumpScreen(rc);
-
 		// this does an RC -> Entity population, and flags the entities to be saved.
+		var wasNew = rc.priceGroup.isNew();
 		rc.priceGroup = getPriceGroupService().savePriceGroup(rc.priceGroup, rc);
 
 		if(!rc.priceGroup.hasErrors()) {

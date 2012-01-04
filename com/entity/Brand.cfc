@@ -53,10 +53,15 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties
-	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";    
+	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
+	//property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";    
 	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
 	
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
+	
+	// Related Object Properties (many-to-many)
+	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID" cascade="save-update";
+	
 	
 	
 	public Brand function init(){

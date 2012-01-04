@@ -16,7 +16,7 @@ jQuery(document).ready(function(){
 	});
 	
 	jQuery("a#clearDates").click(function(){
-		jQuery("input.date").val("");
+		jQuery("input.datepicker").val("");
 		return false;
 	});
 });

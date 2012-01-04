@@ -41,7 +41,6 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	// Persistent Properties
 	property name="locationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="locationName" ormtype="string";
-	property name="sellStockOnWebFlag" ormtype="boolean";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -49,4 +48,7 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	public boolean function isDeletable() {
+		return getLocationName() != "Default";
+	}
 }

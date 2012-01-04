@@ -61,10 +61,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().getSmartList(argumentcollection=arguments);
 	}
 	
-	public boolean function delete(required any entity){
+	public boolean function delete(required any entity, string context="delete"){
 		
 		// Validate that this entity can be deleted
-		arguments.entity.validate(context="delete");
+		arguments.entity.validate(context=arguments.entity.getValidationContext( arguments.context ));
 		
 		// If the entity Passes validation
 		if(!arguments.entity.hasErrors()) {
@@ -84,18 +84,17 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	}
 	
 	// @hint the default save method will populate, validate, and if not errors delegate to the DAO where entitySave() is called.
-    public any function save(required any entity, struct data) {
+    public any function save(required any entity, struct data, string context="save") {
     	// Run the save in a Try/Catch block to handle issues with incorrect objects being passed in
-    	try {
+    	try{
     		// If data was passed in to this method then populate it with the new data
 	        if(structKeyExists(arguments,"data")){
 	        	
 	        	// Populate this object
 				arguments.entity.populate(argumentCollection=arguments);
-			
+				
 			    // Validate this object now that it has been populated
-			    arguments.entity.validate(context="save");
-	        	
+			    arguments.entity.validate(context=arguments.entity.getValidationContext( arguments.context ));    
 	        }
 	        
 	        // If the object passed validation then call save in the DAO, otherwise set the errors flag
@@ -104,12 +103,12 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 	        } else {
 	            getService("requestCacheService").setValue("ormHasErrors", true);
 	        }
-	        
+
 	        // Return the entity
 	        return arguments.entity;
-    	} catch (any e) {
-    		throw("The entity being passed to this service is not a persistent entity.  Make sure that you aren't calling the oMM method with named arguments.");
-    	}
+		} catch (any e) {
+			throw("The entity being passed to this service is not a persistent entity. Make sure that you aren't calling the oMM method with named arguments. Also, make sure to check the spelling of your 'fieldname' attributes.");
+		}
     }
     
     
@@ -219,7 +218,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		
 		var entityName = missingMethodName.substring( 3,entityNameLength + 3 );
 		var data = {};
-		if( !isNull(missingMethodArguments[ 1 ]) && isStruct(missingMethodArguments[ 1 ]) ) {
+		if( structCount(missingMethodArguments) && !isNull(missingMethodArguments[ 1 ]) && isStruct(missingMethodArguments[ 1 ]) ) {
 			data = missingMethodArguments[ 1 ];
 		}
 		

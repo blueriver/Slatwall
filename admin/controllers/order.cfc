@@ -41,6 +41,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
+	property name="LocationService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.orderID" default="";
@@ -73,6 +74,29 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	       getFW().redirect("admin:order.list");
 	   }
 	}
+
+	public void function createOrderReturn(required struct rc) {
+		rc.order = getOrderService().getOrder(rc.orderID);
+		//rc.shippingServices = getService("settingService").getShippingServices();
+		
+		if(isNull(rc.order)) {
+		   getFW().redirect("admin:order.list");
+		}
+		
+		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.setPageRecordsShow(9999999);
+		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+
+		rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+		getFW().setView(action="admin:order.createorderreturn");
+	}
+	
+	public void function saveOrderReturn(required struct rc) {
+		getService("OrderService").createOrderReturn(rc);
+	}
+	
 
     public void function listcart(required struct rc) {
 		rc["F:orderStatusType_systemCode"] ="ostNotPlaced";
