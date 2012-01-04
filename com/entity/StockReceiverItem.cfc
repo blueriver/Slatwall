@@ -69,5 +69,16 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
        }
        structDelete(variables,"stockReceiver");
     }
+    
+    //  -------------------- ORM Event Metods -------------------
+	public void function preInsert(){
+		getService("StockService").createInventory(this);
+		super.preInsert();
+	}
 	
+	public void function preUpdate(Struct oldData){
+		throw("Stock updates are not allowed.");
+	}
+	//  -------------------- END: ORM Event Metods -------------------
+    
 }

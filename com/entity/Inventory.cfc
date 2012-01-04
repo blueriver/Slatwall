@@ -36,9 +36,7 @@
 Notes:
 
 */
-component displayname="Inventory" entityname="SlatwallInventory" table="SlatwallInventory" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="inventoryType"  {
-	// Discriminator (values: stockReceiver,stockPhisical,orderDelivery,vendorOrderReturnDelivery,stockAdjustmentDelivery)
-	property name="inventoryType" insert="false" update="false";
+component displayname="Inventory" entityname="SlatwallInventory" table="SlatwallInventory" persistent=true accessors=true output=false extends="BaseEntity"   {
 	
 	// Persistent Properties
 	property name="inventoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -50,6 +48,9 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 
 	// Related Object Properties (many-to-one)
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
+	property name="stockReceiverItem" cfc="StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
+	property name="orderDeliveryItem" cfc="orderDeliveryItem" fieldtype="many-to-one" fkcolumn="orderDeliveryItemID";
+	
 	
 	public any function init(){
 	   return Super.init();
