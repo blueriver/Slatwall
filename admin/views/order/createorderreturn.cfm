@@ -141,86 +141,103 @@ Notes:
 				</dd>
 			</dl>
 			
-			<h4>Return These Items (Already Delivered)</h4>
+			
 
 		
 			<input type="hidden" name="originalOrderID" value="#rc.order.getOrderID()#" />
 
-			<table id="OrderReturnEditTable" class="listing-grid stripe">
-				<thead>
-				<tr>
-					<th>SKU Code</th>
-					<th class="varWidth">Brand - Product Name</th>
-					<th>Originally Ordered Qty</th>
-					<th>Qty Shipped</th>
-					<th>Original Discount Amount</th>
-					<th>Extended Price After Discount</th>
-					<th>Previously Returned Quantity</th>
-					<th>Previously Returned Amount</th>
-					<th>Return Price</th>
-					<th>Returning</th>
-					<th>Return Extended Amount</th>
-				</tr>
-				</thead>
-				<tbody>
-					<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem"> <!---<cfthrow message="#local.orderItem.getCombinedTaxRate()#">--->
-						<tr data-taxrate="#local.orderItem.getCombinedTaxRate()#">
-							<td>#local.orderItem.getSku().getSkuCode()#</td>
-							<td class="varWidth">
-								<strong>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</strong>
-								<cfif local.orderItem.hasAttributeValue() or arrayLen(local.orderItem.getSku().getOptions())>
-								  <ul class="inlineAdmin">
-						          	<li class="zoomIn">           
-										<a class="customizations detail" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
-									</li>
-									<li class="zoomOut">           
-										<a class="customizations detail" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
-									</li>
-						          </ul>
-								  <div class="clear" style="display:none;">
-								  <hr>
-									<cfif arrayLen(local.orderItem.getSku().getOptions())>
-										<div><h5>Options</h5>
-											<ul>
-											<cfloop array="#local.orderItem.getSku().getOptions()#" index="local.option" >
-												<li>#local.option.getOptionGroup().getOptionGroupName()#: #local.option.getOptionName()#</li>
-											</cfloop>
-											</ul>
-										</div>
-									</cfif>
-									<cfif arrayLen(local.orderItem.getAttributeValues())>
-										<div><h5>Customizations</h5>
-											#local.orderItem.displayCustomizations(format="htmlList")#
-										</div>
-									</cfif>
-								  </div> 
-								</cfif>
-							</td>					
-							<td>#local.orderItem.getQuantity()#</td>
-							<td>#local.orderItem.getQuantityShipped()#</td>
-							<td>#local.orderItem.getFormattedValue('discountAmount', 'currency')#</td>
-							<td>#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
-							
-							<cfset local.quantityPriceAlreadyReturned = local.orderItem.getQuantityPriceAlreadyReturned()>
-							<td>#local.quantityPriceAlreadyReturned.quantity#</td>
-							<td>#local.quantityPriceAlreadyReturned.price#</td>
-							
-							<!--- In order to guess the previous per-item price, take the qty ordered, and the ext price, and devide --->
-							<td><input type="text" name="price_orderItemId(#local.orderItem.getOrderItemId()#)" class="priceReturningInput" value="#local.orderItem.getExtendedPriceAfterDiscount() / local.orderItem.getQuantity()#"></td>
-							<td>
-								<select name="quantity_orderItemId(#local.orderItem.getOrderItemId()#)" class="quantityReturningSelect">
-									<cfloop from="0" to="#abs(local.orderItem.getQuantityShipped() - local.quantityPriceAlreadyReturned.quantity)#" index="local.i">
-										<option value="#local.i#">#local.i#</option>
-									</cfloop>
-								</select>
-							</td>
-							<td class="returnExtendedAmount"></td>
-						</tr>
-					</cfloop>
-				</tbody>
-			</table>
+			<cfloop array="#rc.order.getOrderDeliveries()#" index="local.orderDelivery">
+				<cfset local.orderItems = local.orderDelivery.getOrderItems()>
+
+				<h4>Return These Delivered Items:</h4>
+				
+				<cfif not isNull(local.orderDelivery.getShippingAddress())>
+				<div class="shippingAddress">
+					<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
+					<cf_SlatwallAddressDisplay address="#local.orderDelivery.getShippingAddress()#" edit="false" />
+				</div>
+				</cfif>
+				<div class="shippingMethod">
+					<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
+					#local.orderDelivery.getShippingMethod().getShippingMethodName()#<br>
+					(#local.orderDelivery.getShippingMethod().getShippingProviderMethodName()#)<br>
+					#$.slatwall.rbKey("entity.orderDeliveryShipping.trackingNumber")#: #local.orderDelivery.getTrackingNumber()#
+				</div>
 	
-	
+				<table id="OrderReturnEditTable" class="listing-grid stripe" data-deliveryid="#local.orderDelivery.getOrderDeliveryID()#">
+					<thead>
+					<tr>
+						<th>SKU Code</th>
+						<th class="varWidth">Brand - Product Name</th>
+						<th>Originally Ordered Qty</th>
+						<th>Qty Shipped</th>
+						<th>Original Discount Amount</th>
+						<th>Extended Price After Discount</th>
+						<th>Previously Returned Quantity</th>
+						<th>Previously Returned Amount</th>
+						<th>Return Price</th>
+						<th>Returning</th>
+						<th>Return Extended Amount</th>
+					</tr>
+					</thead>
+					<tbody>
+						<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem"> <!---<cfthrow message="#local.orderItem.getCombinedTaxRate()#">--->
+							<tr data-taxrate="#local.orderItem.getCombinedTaxRate()#">
+								<td>#local.orderItem.getSku().getSkuCode()#</td>
+								<td class="varWidth">
+									<strong>#local.orderItem.getSku().getProduct().getBrand().getBrandName()# #local.orderItem.getSku().getProduct().getProductName()#</strong>
+									<cfif local.orderItem.hasAttributeValue() or arrayLen(local.orderItem.getSku().getOptions())>
+									  <ul class="inlineAdmin">
+							          	<li class="zoomIn">           
+											<a class="customizations detail" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
+										</li>
+										<li class="zoomOut">           
+											<a class="customizations detail" id="show_#local.orderItem.getOrderItemID()#" title="#$.slatwall.rbKey('admin.order.orderItem.optionsandcustomizations')#" href="##">#$.slatwall.rbKey("admin.order.orderItem.optionsandcustomizations")#</a>
+										</li>
+							          </ul>
+									  <div class="clear" style="display:none;">
+									  <hr>
+										<cfif arrayLen(local.orderItem.getSku().getOptions())>
+											<div><h5>Options</h5>
+												<ul>
+												<cfloop array="#local.orderItem.getSku().getOptions()#" index="local.option" >
+													<li>#local.option.getOptionGroup().getOptionGroupName()#: #local.option.getOptionName()#</li>
+												</cfloop>
+												</ul>
+											</div>
+										</cfif>
+										<cfif arrayLen(local.orderItem.getAttributeValues())>
+											<div><h5>Customizations</h5>
+												#local.orderItem.displayCustomizations(format="htmlList")#
+											</div>
+										</cfif>
+									  </div> 
+									</cfif>
+								</td>					
+								<td>#local.orderItem.getQuantity()#</td>
+								<td>#local.orderItem.getQuantityShipped()#</td>
+								<td>#local.orderItem.getFormattedValue('discountAmount', 'currency')#</td>
+								<td>#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
+								
+								<cfset local.quantityPriceAlreadyReturned = local.orderItem.getQuantityPriceAlreadyReturned()>
+								<td>#local.quantityPriceAlreadyReturned.quantity#</td>
+								<td>#local.quantityPriceAlreadyReturned.price#</td>
+								
+								<!--- In order to guess the previous per-item price, take the qty ordered, and the ext price, and devide --->
+								<td><input type="text" name="price_orderItemId(#local.orderItem.getOrderItemId()#)" class="priceReturningInput" value="#local.orderItem.getExtendedPriceAfterDiscount() / local.orderItem.getQuantity()#"></td>
+								<td>
+									<select name="quantity_orderItemId(#local.orderItem.getOrderItemId()#)" class="quantityReturningSelect">
+										<cfloop from="0" to="#abs(local.orderItem.getQuantityShipped() - local.quantityPriceAlreadyReturned.quantity)#" index="local.i">
+											<option value="#local.i#">#local.i#</option>
+										</cfloop>
+									</select>
+								</td>
+								<td class="returnExtendedAmount"></td>
+							</tr>
+						</cfloop>
+					</tbody>
+				</table>
+			</cfloop>
 	
 			<div class="totals">
 				<dl class="fulfillmentTotals">

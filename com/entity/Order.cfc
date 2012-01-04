@@ -385,6 +385,22 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getService("OrderService").getPreviouslyReturnedFulfillmentTotal(getOrderId());
 	}
 	
+	
+	// A helper to loop over all deliveries, and grab all of the items of each and put them into a single array 
+	public array function getDeliveredOrderItems() {
+		var arr = [];
+		var deliveries = getDeliveries();
+		for(var i=1; i <= ArrayLen(deliveries); i++) {
+			var deliveryItems = getDeliveries()[i].getOrderDeliveryItems();
+			
+			for(var j=1; j <= ArrayLen(deliveryItems); j++) {
+				ArrayAppend(arr, deliveryItems[j].getOrderItem());
+			}
+		}
+		
+		return arr;
+	}
+	
 	//  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){
 		confirmOrderNumberOpenDateCloseDate();
