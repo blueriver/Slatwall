@@ -47,7 +47,7 @@ component extends="BaseService" accessors="true" output="false" {
 	// entity will be one of StockReceiverItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
 		// Check that this product tracks inventory, and if so, create the required inventory entity
-		throw("implement me!");
+		throw("Implement me Mr. Greg!");
 		
 		var inventory = this.newInventory();
 		// Set...

@@ -147,7 +147,7 @@ Notes:
 			<input type="hidden" name="originalOrderID" value="#rc.order.getOrderID()#" />
 
 			<cfloop array="#rc.order.getOrderDeliveries()#" index="local.orderDelivery">
-				<cfset local.orderItems = local.orderDelivery.getOrderItems()>
+				<cfset local.orderDeliveryItems = local.orderDelivery.getOrderDeliveryItems()>
 
 				<h4>Return These Delivered Items:</h4>
 				
@@ -181,7 +181,9 @@ Notes:
 					</tr>
 					</thead>
 					<tbody>
-						<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem"> <!---<cfthrow message="#local.orderItem.getCombinedTaxRate()#">--->
+						<cfloop array="#local.orderDeliveryItems#" index="local.orderDeliveryItem"> 
+							<cfset local.orderItem = local.orderDeliveryItem.getOrderItem()>
+							
 							<tr data-taxrate="#local.orderItem.getCombinedTaxRate()#">
 								<td>#local.orderItem.getSku().getSkuCode()#</td>
 								<td class="varWidth">
