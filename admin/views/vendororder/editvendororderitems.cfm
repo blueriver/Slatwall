@@ -58,7 +58,7 @@ Notes:
 	<form name="editVendorOrderProductAssignment" id="editVendorOrderProductAssignment" action="#buildURL('admin:vendorOrder.saveVendorOrderItems')#" method="post">
 		<input type="hidden" name="VendorOrderID" value="#rc.vendorOrder.getVendorOrderID()#" />
 		
-		<table class="listing-grid stripe">
+		<table class="listing-grid stripepopup">
 			<tr>
 				<th class="varWidth">Sku</th>
 				<th>Cost</th>

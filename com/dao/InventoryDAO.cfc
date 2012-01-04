@@ -33,17 +33,9 @@
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
 
-Notes: TPC child of entity: Inventory.
+Notes:
 
 */
+component extends="BaseDAO" {
 
-
-component displayname="Inventory Stock Receiver Item" entityname="SlatwallInventoryStockReceiverItem" table="SlatwallInventory" persistent="true" output="false" accessors="true" extends="Inventory" discriminatorvalue="stockReceiverItem" {
-	
-	// Persistent Properties
-	property name="inventoryStockReceiverItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
-	// Related Object Properties
-	property name="stockReceiverItem" cfc="StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
-	
 }

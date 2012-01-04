@@ -57,7 +57,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
-	property name="referencingOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencingOrderID";	// Points at the "parent" order.
+	property name="referencedOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
@@ -66,7 +66,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
 	
 	// -------------------I don't think that this should be inverse.
-	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referenceOrderID" cascade="all-delete-orphan" inverse="true";
+	// This is a collection of "return orders".
+	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID" cascade="save-update";
@@ -88,8 +89,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(isNull(variables.orderDeliveries)) {
 			variables.orderDeliveries = [];
 		}
-		if(isNull(variables.orderReturns)) {
-			variables.orderReturns = [];
+		if(isNull(variables.referencingOrders)) {
+			variables.referencingOrders = [];
 		}
 		
 		if(isNull(variables.orderItems)) {
@@ -246,12 +247,12 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	// Order Returns (one-to-many)
-	public void function addOrderReturn(required Order orderReturn) {
-	   arguments.orderReturn.setOriginalOrder(this);
+	public void function addReferencingOrder(required Order referencingOrder) {
+	   arguments.referencingOrder.setReferencedOrder(this);
 	}
 	
-	public void function removeOrderReturn(required Order orderReturn) {
-	   arguments.orderReturn.removeOriginalOrder(this);
+	public void function removeReferencingOrder(required Order referencingOrder) {
+	   arguments.referencingOrder.removeReferencedOrder(this);
 	}
 	
 	// OrderPayments (one-to-many)
@@ -289,23 +290,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     }
     
     // Order Return (many-to-one)
-	public void function setOriginalOrder(required Order originalOrder) {
-		variables.originalOrder = arguments.originalOrder;
-		if(!arguments.originalOrder.hasOrderReturn(this)) {
-			arrayAppend(arguments.originalOrder.getOrdersReturns(), this);
+	public void function setReferencedOrder(required Order referencedOrder) {
+		variables.referencedOrder = arguments.referencedOrder;
+		if(!arguments.referencedOrder.hasReferencingOrder(this)) {
+			arrayAppend(arguments.referencedOrder.getReferencingOrders(), this);
 		}
 	}
 	
-	public void function removeOriginalOrder(Order originalOrder) {
-		if(structKeyExists(variables,"originalOrder")) {
-			if(!structKeyExists(arguments, "originalOrder")) {
-				arguments.originalOrder = variables.originalOrder;
+	public void function removeReferencedOrder(Order referencedOrder) {
+		if(structKeyExists(variables,"referencedOrder")) {
+			if(!structKeyExists(arguments, "referencedOrder")) {
+				arguments.referencedOrder = variables.referencedOrder;
 			}
-			var index = arrayFind(arguments.originalOrder.getReturnOrders(), this);
+			var index = arrayFind(arguments.referencedOrder.getReferencingOrders(), this);
 			if(index > 0) {
-				arrayDeleteAt(arguments.originalOrder.getReturnOrders(), index);
+				arrayDeleteAt(arguments.referencedOrder.getReferencingOrders(), index);
 			}    
-			structDelete(variables, "originalOrder");
+			structDelete(variables, "referencedOrder");
 		}
     }
 	
@@ -379,6 +380,26 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			setOrderCloseDateTime(now());
 		}
 	} 
+	
+	public numeric function getPreviouslyReturnedFulfillmentTotal() {
+		return getService("OrderService").getPreviouslyReturnedFulfillmentTotal(getOrderId());
+	}
+	
+	
+	// A helper to loop over all deliveries, and grab all of the items of each and put them into a single array 
+	public array function getDeliveredOrderItems() {
+		var arr = [];
+		var deliveries = getDeliveries();
+		for(var i=1; i <= ArrayLen(deliveries); i++) {
+			var deliveryItems = getDeliveries()[i].getOrderDeliveryItems();
+			
+			for(var j=1; j <= ArrayLen(deliveryItems); j++) {
+				ArrayAppend(arr, deliveryItems[j].getOrderItem());
+			}
+		}
+		
+		return arr;
+	}
 	
 	//  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){

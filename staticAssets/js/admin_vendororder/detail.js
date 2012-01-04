@@ -23,6 +23,9 @@ jQuery(function() {
 		
 		// Inject the iframe and open the dialog.
 		$("#addEditProductToOrder").load(jQuery(this).attr("href") + "&inDialog=true", function(){
+			// Apply the "stripe" class to the new table loaded dynamically.
+			stripe("stripepopup");
+			
 			// Trigger the keyup event once on one of the inputs so that the value populate on page load
 			jQuery("input.skucost").first().trigger("keyup");	
 			$("#addEditProductToOrder").dialog("open");
