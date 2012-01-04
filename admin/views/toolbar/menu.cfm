@@ -49,6 +49,7 @@ Notes:
 					<cf_SlatwallActionCaller action="admin:product" type="list">
 					<cf_SlatwallActionCaller action="admin:order" type="list">
 					<cf_SlatwallActionCaller action="admin:account" type="list">
+					<cf_SlatwallActionCaller action="admin:vendor" type="list">
 					<cf_SlatwallActionCaller action="admin:promotion" type="list">
 					<cf_SlatwallActionCaller action="admin:report" type="list">
 					<cf_SlatwallActionCaller action="admin:setting" type="list">
@@ -64,6 +65,7 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:product.listproducttypes" type="list">
 								<cf_SlatwallActionCaller action="admin:brand.list" type="list">
 								<cf_SlatwallActionCaller action="admin:account.list" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.listvendor" type="list">
 								<cf_SlatwallActionCaller action="admin:promotion.list" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
 							</ul>
@@ -119,6 +121,21 @@ Notes:
 								<li class="title">Accounts</li>
 								<cf_SlatwallActionCaller action="admin:account.create" type="list">
 								<cf_SlatwallActionCaller action="admin:account.list" type="list">
+							</ul>
+						</div>
+					</div>
+					<div class="subMenu adminvendor">
+						<h3>#$.slatwall.rbkey('admin.vendor')#</h3>
+						<div class="oneColumn">
+							<ul>
+								<li class="title">Vendors</li>
+								<cf_SlatwallActionCaller action="admin:vendor.createvendor" type="list">
+								<cf_SlatwallActionCaller action="admin:vendor.listvendors" type="list">
+							</ul>
+							<ul>
+								<li class="title">Vendor Orders</li>
+								<cf_SlatwallActionCaller action="admin:vendororder.createvendororder" type="list">
+								<cf_SlatwallActionCaller action="admin:vendororder.listvendororders" type="list">
 							</ul>
 						</div>
 					</div>
@@ -190,6 +207,11 @@ Notes:
 								<li class="title">Rounding Rules</li>
 								<cf_SlatwallActionCaller action="admin:roundingrule.create" type="list">
 								<cf_SlatwallActionCaller action="admin:roundingrule.list" type="list">
+							</ul>
+							<ul>
+								<li class="title">Locations</li>
+								<cf_SlatwallActionCaller action="admin:location.createlocation" type="list">
+								<cf_SlatwallActionCaller action="admin:location.listlocations" type="list">
 							</ul>
 						</div>
 					</div>

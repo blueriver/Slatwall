@@ -59,5 +59,15 @@
 		<Record stateCode="AA" stateName="AA (Armed Forces Americas)" countryCode="US" />
 		<Record stateCode="AE" stateName="AE (Armed Forces Europe)" countryCode="US" />
 		<Record stateCode="AP" stateName="AP (Armed Forces Pacific)" countryCode="US" />
+		<Record stateCode="AB" stateName="Alberta" countryCode="CA" />
+		<Record stateCode="BC" stateName="British Columbia" countryCode="CA" />
+		<Record stateCode="MB" stateName="Manitoba" countryCode="CA" />
+		<Record stateCode="NB" stateName="New Brunswick" countryCode="CA" />
+		<Record stateCode="NL" stateName="Newfoundland and Labrador" countryCode="CA" />
+		<Record stateCode="NS" stateName="Nova Scotia" countryCode="CA" />
+		<Record stateCode="ON" stateName="Ontario" countryCode="CA" />
+		<Record stateCode="PE" stateName="Prince Edward Island" countryCode="CA" />
+		<Record stateCode="QC" stateName="Quebec" countryCode="CA" />
+		<Record stateCode="SK" stateName="Saskatchewan" countryCode="CA" />
 	</Records>
 </Table>

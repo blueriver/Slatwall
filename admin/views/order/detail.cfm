@@ -83,7 +83,7 @@ Notes:
 		</table>
 	</div>
 	<div class="paymentInfo">
-		<table class="listing-grid stripe">
+		<table class="listing-grid stripe" >
 			<tr>
 				<th class="varWidth">#$.Slatwall.rbKey("entity.orderPayment.paymentMethod")#</th>
 				<th>#$.Slatwall.rbKey("entity.orderPayment.amount")#</th>
@@ -134,6 +134,7 @@ Notes:
 			<ul>
 				<li><a href="##tabOrderFulfillments" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderFulfillments")#</span></a></li>	
 				<li><a href="##tabOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderDeliveries")#</span></a></li>
+				<li><a href="##tabReferencingOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.referencingOrders")#</span></a></li>
 <!---				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>--->
 			</ul>
 		
@@ -168,6 +169,10 @@ Notes:
 				<cfelse>
 					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#
 				</cfif>
+			</div>
+			
+			<div id="tabReferencingOrders">
+				#view("order/ordertabs/referencingorders")# 
 			</div>
 		<!---	<div id="tabOrderActivityLog">
 				

@@ -259,6 +259,12 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	arguments.orderItemAppliedTax.removeOrderItem(this);
     }
     
-	/************   END Association Management Methods   *******************/
+    /************   END Association Management Methods   *******************/
+    
+    public struct function getQuantityPriceAlreadyReturned(){
+    	return getService("OrderService").getQuantityPriceSkuAlreadyReturned(getOrder().getOrderID(), getSku().getSkuID());
+    }
+    
+	
 	
 }

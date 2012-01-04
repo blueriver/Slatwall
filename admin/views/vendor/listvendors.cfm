@@ -37,23 +37,40 @@ Notes:
 
 --->
 <cfoutput>
+<ul id="navTask">
+    <cf_SlatwallActionCaller action="admin:vendor.createvendor" type="list">
+</ul>	
+	
 <div class="svoVendorList">
 	<h3 class="tableheader">Vendors</h3>
-	<table class="listtable">
+	<table class="listtable stripe">
 		<tr>
-			<th>Vendor Name</th>
-			<th>Account Number</th>
-			<th>Website</th>
+			<th class="varWidth">Vendor Name</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendor.accountNumber")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorWebsite")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendor.emailAddress")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.vendor.numberBrands")#</th>
+			<th>&nbsp;</th>
 		</tr>
 		<cfloop array="#rc.vendorSmartList.getPageRecords()#" index="Local.Vendor">
 			<tr>
-				<td><a href="#BuildURL(action='vendor.detail', querystring='VendorID=#local.Vendor.getVendorID()#')#">#local.Vendor.getVendorName()#</a></td>
+				<td class="varWidth"><a href="#BuildURL(action='vendor.detailvendor', querystring='VendorID=#local.Vendor.getVendorID()#')#">#local.Vendor.getVendorName()#</a></td>
 				<td>#Local.Vendor.getAccountNumber()#</td>
-				<td><a href="#getExternalSiteLink(local.Vendor.getVendorWebsite())#">#local.Vendor.getVendorWebsite()#</a></td>
+				<td><a href="#<!---getExternalSiteLink(--->local.Vendor.getVendorWebsite()<!---)--->#">#local.Vendor.getVendorWebsite()#</a></td>
+				<td><a href="mailto:#Local.Vendor.getEmailAddress()#">#Local.Vendor.getEmailAddress()#</a></td>
+				<td>#ArrayLen(Local.Vendor.getBrands())#</td>
+				<td class="administration">
+		          <ul class="three">
+                      <cf_SlatwallActionCaller action="admin:vendor.editvendor" querystring="vendorID=#local.vendor.getVendorID()#" class="edit" type="list">            
+					  <cf_SlatwallActionCaller action="admin:vendor.detailvendor" querystring="vendorID=#local.vendor.getVendorID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:vendor.deletevendor" querystring="vendorID=#local.vendor.getVendorID()#" class="delete" type="list" disabled="#NOT local.vendor.isDeletable()#" confirmrequired="true">
+		          </ul>     						
+				</td>
 			</tr>
 			
 		</cfloop>
 	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.vendorSmartList#">
 </div>
 </cfoutput>
 <!---

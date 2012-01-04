@@ -155,5 +155,50 @@ component extends="BaseDAO" {
 		}
 		return qOrders.execute().getResult();
 	}
-			
+	
+	public struct function getQuantityPriceSkuAlreadyReturned(required any orderID, required any skuID) {
+		var params = [arguments.orderID, arguments.skuID];	
+		/*var hql = " SELECT new map(sum(oi.quantity) as quantity)
+					FROM SlatwallOrderItem oi
+					WHERE oi.order.relatedOrder.vendorOrderID = ?
+					AND voi.stock.sku.skuID = ?    
+					AND voi.stock.location.locationID = ?                ";
+					
+		var hql = " SELECT distinct oi
+					FROM SlatwallOrderItem oi, SlatwallOrder o
+					JOIN o.referencingOrders ros
+					JOIN ros.orderItem oi2
+					JOIN oi2.
+					JOIN voi.stock s
+					WHERE s.sku.skuID = sk.skuID
+					AND vo.vendorOrderID = ?"; */
+
+		/*var hql = " SELECT new map(sum(oi.quantity) as quantity, sum(oi.price) as price)
+					FROM SlatwallOrderItem oi
+					WHERE oi.order.referencingOrder.orderID = ?
+					AND oi.sku.skuID = ?
+					AND oi.order.referencingOrder.orderType.systemCode = 'otReturnAuthorization'    ";*/
+					
+		// We are pulling quantity out of the OrderDeliveryItem entity
+		var hql = " SELECT new map(sum(odi.quantityDelivered) as quantity, sum(odi.orderItem.price) as price)
+					FROM SlatwallOrderDeliveryItem odi
+					WHERE odi.orderItem.order.referencingOrder.orderID = ?
+					AND odi.orderItem.sku.skuID = ?
+					AND odi.orderItem.order.referencingOrder.orderType.systemCode = 'otReturnAuthorization'    ";  
+	
+		var result = ormExecuteQuery(hql, params);
+		var retStruct = {price = 0, quantity = 0};
+		
+		dumpScreen(result);
+		
+		if(structKeyExists(result[1], "price")) {
+			retStruct.price = result[1]["price"];
+		}
+
+		if(structKeyExists(result[1], "quantity")) {
+			retStruct.quantity = result[1]["quantity"];
+		}
+		
+		return retStruct;
+	}		
 }

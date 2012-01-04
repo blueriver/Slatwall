@@ -12,6 +12,7 @@
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
 	<bean id="logDAO" class="Slatwall.com.dao.LogDAO" />
+	<bean id="locationDAO" class="Slatwall.com.dao.LocationDAO" />
 	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
 	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
 	<bean id="reportDAO" class="Slatwall.com.dao.ReportDAO" />
@@ -23,11 +24,13 @@
 	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
+	<bean id="stockDAO" class="Slatwall.com.dao.StockDAO" />
 	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
 	<bean id="priceGroupDAO" class="Slatwall.com.dao.PriceGroupDAO" />
 	<bean id="promotionDAO" class="Slatwall.com.dao.PromotionDAO" />
 	<bean id="roundingRuleDAO" class="Slatwall.com.dao.RoundingRuleDAO" />
 	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
+	<bean id="vendorOrderDAO" class="Slatwall.com.dao.VendorOrderDAO" />
 		
 	<!-- Service Components - Utility, these are to be injected where needed for misc tasks -->
 	<bean id="utilityService" class="Slatwall.com.service.UtilityService" />
@@ -79,6 +82,9 @@
     </bean>
 	<bean id="logService" parent="parentService" class="Slatwall.com.service.LogService">
         <property name="DAO"><ref bean="LogDAO" /></property>
+	</bean>
+	<bean id="locationService" parent="parentService" class="Slatwall.com.service.LocationService">
+        <property name="DAO"><ref bean="LocationDAO" /></property>
 	</bean>
     <bean id="optionService" parent="parentService" class="Slatwall.com.service.OptionService">
         <property name="DAO"><ref bean="OptionDAO" /></property>
@@ -148,6 +154,9 @@
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="integrationService"><ref bean="integrationService" /></property>
     </bean>
+	<bean id="stockService" parent="parentService" class="Slatwall.com.service.StockService">
+        <property name="DAO"><ref bean="stockDAO" /></property>
+    </bean>
 	<bean id="taxService" parent="parentService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
@@ -157,5 +166,11 @@
     </bean>
     <bean id="vendorService" parent="parentService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
+    </bean>
+	<bean id="vendorOrderService" parent="parentService" class="Slatwall.com.service.VendorOrderService">
+        <property name="DAO"><ref bean="VendorOrderDAO" /></property>
+		<property name="addressService"><ref bean="addressService" /></property>
+		<property name="taxService"><ref bean="taxService" /></property>
     </bean>
 </beans>

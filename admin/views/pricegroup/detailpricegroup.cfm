@@ -139,9 +139,9 @@ Notes:
 				
 				<!--- The populateSubProperties is read by the implicit save() handler to determine if it should process the savePriceGroupRate() method. --->
 				<cfif rc.priceGroupRate.isNew() && not rc.priceGroupRate.hasErrors()>
-					<input type="hidden" name="populateSubProperties" id="addPriceGroupRateHidden" value="false"/>
+					<input type="hidden" name="populateSubProperties" id="populateSubProperties" value="false"/>
 				<cfelse>
-					<input type="hidden" name="populateSubProperties" value="true"/>
+					<input type="hidden" name="populateSubProperties" id="populateSubProperties" value="true"/>
 				</cfif>
 			</div>
 
