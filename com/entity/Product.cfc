@@ -63,7 +63,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productImages" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
@@ -128,6 +128,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   if(isNull(variables.productReviews)) {
 	       variables.productReviews = [];
+	   }
+	   if(isNull(variables.productImages)) {
+	       variables.productImages = [];
 	   }
 	   return Super.init();
 	}
@@ -204,6 +207,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.templateOptions;
 	}
 	
+	public any function getImages() {
+		return variables.productImages;
+	}
+    
 	// Non-Persistent Helpers
 	
 	public string function getContentIDs() { 
@@ -480,6 +487,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removePromotionReward(required any promotionReward) {
 	   arguments.promotionReward.removeProduct(this);
+	}
+	
+	// product images (one-to-many)
+	public void function addProductImage(required any productImage) {
+	   arguments.productImage.setProduct(this);
+	}
+	
+	public void function removeProductImage(required any productImage) {
+	   arguments.productImage.removeProduct(this);
 	}
 	
 	/************   END Association Management Methods   *******************/
