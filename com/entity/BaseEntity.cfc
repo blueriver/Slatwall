@@ -184,8 +184,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// End: ORM EventHandler Methods
 	
 	
-	
-	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
 		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
@@ -202,10 +200,8 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				variables[ cacheKey ] = [];
 				
 				var propertyName = left(cacheKey, len(cacheKey)-7);
-				var entityName = "Slatwall" & getPropertyMetaData( propertyName ).cfc;
-				
-				var entityService = getService("utilityORMService").getServiceByEntityName( entityName );
-				var smartList = entityService.invokeMethod("get#entityName#SmartList", {1={}});
+				var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( propertyName ).cfc );
+				var smartList = entityService.invokeMethod("get#getPropertyMetaData( propertyName ).cfc#SmartList", arguments.missingMethodArguments);
 				
 				var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
 				
@@ -219,6 +215,33 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 				if(getPropertyMetaData( propertyName ).fieldType == "many-to-one") {
 					arrayPrepend(variables[ cacheKey ], {value="", name=rbKey('define.select')});	
 				}
+			}
+			
+			return variables[ cacheKey ];
+		
+		// getXXXSmartList()	Where XXX is a one-to-many or many-to-many property where we to return a smartList instead of just an array
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 9) == "SmartList") {
+			
+			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			
+			if(!structKeyExists(variables, cacheKey)) {
+				variables[ cacheKey ] = [];
+				
+				var propertyName = left(cacheKey, len(cacheKey)-9);
+				var entityService = getService("utilityORMService").getServiceByEntityName( getPropertyMetaData( propertyName ).cfc );
+				var smartList = entityService.invokeMethod("get#getPropertyMetaData( propertyName ).cfc#SmartList", arguments.missingMethodArguments);
+				
+				// Create an example entity so that we can read the meta data
+				var exampleEntity = createObject("component", "Slatwall.com.entity.#getPropertyMetaData( propertyName ).cfc#");
+				
+				// Loop over the properties in the example entity to 
+				for(var i=1; i<=arrayLen(exampleEntity.getProperties()); i++) {
+					if( structKeyExists(exampleEntity.getProperties()[i], "fkcolumn") && exampleEntity.getProperties()[i].fkcolumn == getPropertyMetaData( propertyName ).fkcolumn ) {
+						smartList.addFilter("#exampleEntity.getProperties()[i].name#.#getPrimaryIDPropertyName()#", getPrimaryIDValue());
+					}
+				}
+				
+				variables[ cacheKey ] = smartList;
 			}
 			
 			return variables[ cacheKey ];
