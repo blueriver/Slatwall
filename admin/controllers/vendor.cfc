@@ -86,7 +86,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	// If vendorAddress is new then it won't contain an "Address" (vendorAddress is only a relational entity), so create a new one.
     	if(rc.vendorAddress.isNew()) {
-    		rc.vendorAddress.setAddress(getAddressService().getAddress(0, true));	
+    		rc.vendorAddress.setAddress(getAddressService().newAddress());	
     	}
     	
     	var orderParams["vendorID"] = rc.vendorID;
@@ -124,8 +124,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}	
 		} 
 		else { 	
-			rc.vendorAddress = getVendorService().getVendorAddress(0, true);
-    		rc.vendorAddress.setAddress(getAddressService().getAddress(0, true));	
+			rc.vendorAddress = getVendorService().newVendorAddress();
+    		rc.vendorAddress.setAddress(getAddressService().newAddress());	
 				
 			// If one of the sub properties had the error, then find out which one and populate it
 			if(rc.Vendor.hasError("VendorAddress")) {
