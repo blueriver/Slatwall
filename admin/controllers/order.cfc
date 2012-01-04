@@ -41,6 +41,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
+	property name="LocationService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.orderID" default="";
@@ -81,30 +82,36 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(isNull(rc.order)) {
 		   getFW().redirect("admin:order.list");
 		}
+		
+		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.setPageRecordsShow(9999999);
+		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
 
 		rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
 		getFW().setView(action="admin:order.createorderreturn");
 	}
 	
 	public void function saveOrderReturn(required struct rc) {
-		var referencingOrder = getOrderService().getOrder(rc.orderID);
+		var originalOrder = getOrderService().getOrder(rc.originalOrderID);
 		
 		// Create a new order
-		var order = getOrderService().getOrder(0, true);
-		order.setOrderNumber(999);
+		var order = getOrderService().newOrder();
+		//order.setOrderNumber(999);
 		//order.setOrderOpenDateTime();
 		//order.setOrderCloseDateTime();
-		order.setAccount(referencingOrder.getAccount());
-		order.setOrderStatusType(getService("typeService").getTypeBySystemCode("ostNew"));
-		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnAuthorization"));
-		order.setReferencingOrder(referencingOrder);
+		order.setAccount(originalOrder.getAccount());
+		order.setOrderStatusType(getService("typeService").getTypeBySystemCode("ostClosed"));
+		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnOrder"));
+		order.setReferencedOrder(originalOrder);
 		
-		// Save order here so that we can get an ID
+		// Save order here so that we can get an ID.
 		getOrderService().saveOrder(order);
-		
-		
+
+		/*
 		// Fill with the same fulfillment method used in the previous order. Use Shipping as default, or take the FIRST order fulfillment as the master.
-		if(ArrayLen(referencingOrder.getOrderFulfillments()) == 0 || referencingOrder.getOrderFulfillments()[1].getFulfillmentMethodId() == "shipping") {
+		if(ArrayLen(originalOrder.getOrderFulfillments()) == 0 || originalOrder.getOrderFulfillments()[1].getFulfillmentMethodId() == "shipping") {
 			var fulfillment = getFulfillmentService().getFulfillmentShipping(0, true);
 		} else {
 			throw("Unknown filfillment method.");
@@ -114,54 +121,91 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		order.addFulfillment(fulfillment);
 		
 		// Assign all of the order items to the fulfillment
-		for(var i=1; i <= ArrayLen(rc.referencingOrder.getOrderItems()); i++) {
-			var orderItem = rc.referencingOrder.getOrderItems()[i];
+		for(var i=1; i <= ArrayLen(rc.originalOrder.getOrderItems()); i++) {
+			var orderItem = rc.originalOrder.getOrderItems()[i];
 			orderItem.setOrderFulfillment(fulfillment);	
 		}
 		
 		if(filfillment.getfulfillmentMethodID() == "shipping")
 		
 		getFulfillmentService().saveFulfillment(fulfillment);
+		*/
+		
+		// Create OrderReturn entity (to save the fulfillment amount) 
+		var orderReturn = getService("OrderService").newOrderReturn();
+		var location = getService("LocationService").getLocation(rc.returnToLocationID);
+		orderReturn.setOrder(order);
+		orderReturn.setFulfillmentRefundAmount(rc.refundShippingAmount);
+		orderReturn.setReturnLocation(location);
+		getService("OrderService").saveOrderReturn(orderReturn);
+		
+		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be further populated with StockRecieverItems, one for each item being returned.
+			
+		//.... Create Stock Receiver
+		var stockReceiver = getStockService().newStockReceiver();
+		//....
+		//....
 		
 		
 		// Load order with order items.
-		for(var i=1; i <= ArrayLen(rc.referencingOrder.getOrderItems()); i++) {
-			var orderItem = rc.referencingOrder.getOrderItems()[i];
-			price = rc["price_orderitemid(" + orderItem.getOrderItemId() + ")"];
-			quantity = rc["quantity_orderitemid(" + orderItem.getOrderItemId() + ")"];
+		for(var i=1; i <= ArrayLen(rc.originalOrder.getOrderDeliveryItems()); i++) {
+			var originalOrderItem = rc.originalOrder.getOrderDeliveryItems().getOrderItem();	
+			var quantityReturning = rc["quantity_orderItemId(#originalOrderItem.getOrderItemID()#)"];
+			var priceReturning = rc["price_orderItemId(#originalOrderItem.getOrderItemID()#)"];
 			
-			if(price == "" || quantity == "") {
+			if(!isNumeric(priceReturning) || !isNumeric(quantityReturning == "")) {
 				throw("Could not get value for price or quantity");
 			}
-		}
-		
-		
-		// Store tax (TaxApplied table)
-		
-		
-		// Create OrderReturn entity (to save the fulfillment amount) 
-		
-		
-		var quantityAndPrice = {}; // Keyed on orderItemId
-
-		
-		for (var key IN rc) {
-			// Sku return prices are provided by fields named like: cost_skuid(4028b8813414708a01341514ad67001e). Loop over rc and find these fields. Build an associative array keyed on sku, containing the cost. This will be used to populate the cost into each vendorOrderItem in the next loop.	
-			var res = REFindNoCase("price_orderitemid\((.+)\)", key, 1, true);
-
-			if(ArrayLen(res.pos) == 2) {
-				var orderItemID = mid(key, res.pos[2], res.len[2]);
-				var price = val(rc[key]);
-				if(len(orderItemID)) {
-					param name="quantityAndPrice[#orderItemID#]" default="#{price = 0, quantity = 0}#";
-					quantityAndPrice[orderItemID].price = price;
-				}
+			
+			// Check that the quantity returning is valid
+			var quantityAlreadyReturned = originalOrderItem.getQuantityPriceAlreadyReturned().quantity;
+			var quantityAllowedToReturn = abs(originalOrderItem.getQuantityShipped() - quantityAlreadyReturned);
+			if(quantityReturning > quantityAllowedToReturn) {
+				throw("The quantity of items being returned (#quantityReturning#) is greater than the quantity allowed (#quantityAllowedToReturn#)");
 			}
+				
+			// Create a new orderItem and populate it's basic properties from the original order item, and from the user submitted input
+			var orderItem = getService("OrderService").newOrderItem();	
+			orderItem.setReferencedOrderItem(originalOrderItem);
+			orderItem.setOrder(order);
+			orderItem.setPrice(priceReturning);
+			orderItem.setQuantity(quantityReturning);
+			orderItem.setSku(originalOrderItem.getSku());
+			orderItem.setOrderItemStatusType(getService("typeService").getTypeBySystemCode('oistFulfilled'));
+			
+			// Populate the Tax on this order by creating new tax entities, but using the same rate as the original orderItem
+			for(var j=1; j <= ArrayLen(originalOrderItem.getAppliedTaxes()); j++) {
+				var originalAppliedTax = originalOrderItem.getAppliedTaxes()[j];
+				var appliedTax = getService("taxService").newOrderItemAppliedTax();
+				
+				appliedTax.setOrderItem(orderItem);
+				appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate);
+				appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
+				appliedTax.setTaxAmount(originalAppliedTax.getTaxRate() * (orderItem.getQuantity() * priceReturning));
+			}
+			
+			// Add this order item to the OrderReturns entity
+			orderItem.setOrderReturn(orderReturn);
+			
+			// Add stock receiver item to stock receiver
+			var stock = getStockService().getStockForSkuAndLocation(originalOrderItem.getSku().getSkuID)(), location.getLocationID());
+			var stockReceiverItem = getStockService().getStockReceiverItem(0, true);
+			stockReceiverItem.setStockReceiver(stockReceiver);
+			stockReceiverItem.setQuantity(quantityReturning);
+			stockReceiverItem.setStock(stock);
+			// .....
+			// .....
+			
+			
+			// Create the associated "Inventory" tracking entity (using the subclassed InventoryStockReceiver).
+			var inventory = getStockService().getInventoryStockReceiverItem(0, true);
+			inventory.setQuantityIn(quantityReturning);
+			inventory.setStock(stock);
+			inventory.setStockReceiverItem(stockReceiverItem);
+			getStockService().saveInventory(inventory);
+			
+			
 		}
-
-
-
-
 
 	}
 	

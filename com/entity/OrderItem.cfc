@@ -49,15 +49,20 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID";
+	
+	// Related Object Properties (one-to-many)
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedTaxes" singularname="appliedTax" cfc="OrderItemAppliedTax" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	//property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all-delete-orphan";
 
 	// Non persistent properties
 	property name="extendedPrice" persistent="false" formatType="currency" ; 
@@ -259,12 +264,25 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	arguments.orderItemAppliedTax.removeOrderItem(this);
     }
     
+    
+    // This method returns a single percentage rate for all taxes. So an item with tax 5% and 8% would return 13.
+    public numeric function getCombinedTaxRate() {
+    	var taxRate = 0;
+    	for(var i=1; i <= ArrayLen(getAppliedTaxes()); i++) {
+    		taxRate += getAppliedTaxes()[i].taxRate;
+    	}
+    	
+    	return taxRate;
+    }
+    
     /************   END Association Management Methods   *******************/
     
-    public struct function getQuantityPriceAlreadyReturned(){
+    public struct function getQuantityPriceAlreadyReturned() {
     	return getService("OrderService").getQuantityPriceSkuAlreadyReturned(getOrder().getOrderID(), getSku().getSkuID());
     }
     
-	
+	public numeric function getQuantityShipped() {
+    	return getService("OrderService").getQuantityShipped(getOrder().getOrderID(), getSku().getSkuID());
+    }
 	
 }

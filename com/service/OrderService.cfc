@@ -789,6 +789,15 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
 	}
 	
+	public numeric function getQuantityShipped(required any orderID, required any skuID) {
+		return getDAO().getQuantityShipped(arguments.orderId, arguments.skuID);
+	}
+	
+	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
+		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
+	}
+	
+	
 	/**************** LEGACY DEPRECATED METHOD ****************************/
 	/*
 	 * This method is only called from the cart controller if the data passed in for 'orderItems'

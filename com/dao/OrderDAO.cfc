@@ -173,23 +173,14 @@ component extends="BaseDAO" {
 					WHERE s.sku.skuID = sk.skuID
 					AND vo.vendorOrderID = ?"; */
 
-		/*var hql = " SELECT new map(sum(oi.quantity) as quantity, sum(oi.price) as price)
+		var hql = " SELECT new map(sum(oi.quantity) as quantity, sum(oi.price) as price)
 					FROM SlatwallOrderItem oi
-					WHERE oi.order.referencingOrder.orderID = ?
+					WHERE oi.order.referencedOrder.orderID = ?
 					AND oi.sku.skuID = ?
-					AND oi.order.referencingOrder.orderType.systemCode = 'otReturnAuthorization'    ";*/
-					
-		// We are pulling quantity out of the OrderDeliveryItem entity
-		var hql = " SELECT new map(sum(odi.quantityDelivered) as quantity, sum(odi.orderItem.price) as price)
-					FROM SlatwallOrderDeliveryItem odi
-					WHERE odi.orderItem.order.referencingOrder.orderID = ?
-					AND odi.orderItem.sku.skuID = ?
-					AND odi.orderItem.order.referencingOrder.orderType.systemCode = 'otReturnAuthorization'    ";  
+					AND oi.order.referencedOrder.orderType.systemCode = 'otReturnAuthorization'    "; 
 	
 		var result = ormExecuteQuery(hql, params);
 		var retStruct = {price = 0, quantity = 0};
-		
-		dumpScreen(result);
 		
 		if(structKeyExists(result[1], "price")) {
 			retStruct.price = result[1]["price"];
@@ -200,5 +191,39 @@ component extends="BaseDAO" {
 		}
 		
 		return retStruct;
-	}		
+	}
+	
+	public numeric function getQuantityShipped(required any orderID, required any skuID) {
+		var params = [arguments.orderID, arguments.skuID];	
+		var hql = " SELECT new map(sum(odi.quantityDelivered) as quantity)
+					FROM SlatwallOrderDeliveryItem odi
+					WHERE odi.orderItem.order.orderID = ?
+					AND odi.orderItem.sku.skuID = ?       "; 
+	
+		var result = ormExecuteQuery(hql, params);
+
+		if(structKeyExists(result[1], "quantity")) {
+			return result[1]["quantity"];
+		} else {
+			return 0;
+		}
+	}
+	
+	// This method pulls the sum of all OriginalOrder -> Order (return) -> OrderReturn fulfillmentRefundAmounts
+	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
+		var params = [arguments.orderID];	
+		var hql = " SELECT new map(sum(r.fulfillmentRefundAmount) as total)
+					FROM SlatwallOrderReturn r
+					WHERE r.order.referencedOrder.orderID = ?  "; 
+	
+		var result = ormExecuteQuery(hql, params);
+
+		if(structKeyExists(result[1], "total")) {
+			return result[1]["total"];
+		} else {
+			return 0;
+		}
+	}
+	
+		
 }
