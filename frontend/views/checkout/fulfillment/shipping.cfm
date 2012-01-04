@@ -114,9 +114,9 @@ Notes:
 							</dd>
 						</dl>
 						<dl style="display:none;" class="accountAddressName">
-							<dt><label for="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddressName">Address Nickname</label></dt>
+							<dt><label for="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressName">Address Nickname</label></dt>
 							<dd>
-								<input type="text" name="orderFulfillments[#params.orderFulfillmentIndex#].saveAccountAddressName" value="" />
+								<input type="text" name="orderFulfillments[#params.orderFulfillmentIndex#].accountAddressName" value="" />
 							</dd>
 						</dl>
 					</cfif>
