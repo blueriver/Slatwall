@@ -60,6 +60,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.vendorOrderby" default="createdDateTime|DESC";
 		param name="rc.vendorOrderDateStart" default="";
 		param name="rc.vendorOrderDateEnd" default="";
+		
 		// show advanced search fields if they have been filled
 		if(len(trim(rc.vendorOrderDateStart)) > 0 || len(trim(rc.vendorOrderDateEnd)) > 0) {
 			rc.showAdvancedSearch = 1;
@@ -81,37 +82,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	}
     	
     	// Get Items
-		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
-		//var orderParams.orderBy = "createdDateTime|DESC";
 		rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
-		rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
 		rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
-		
 			
 		// Get Receivers
 		rc.stockReceiverVendorOrderSmartList = getStockService().getStockReceiverVendorOrderSmartList();
-		rc.stockReceiverVendorOrderSmartList.setPageRecordsShow(9999999);
 		rc.stockReceiverVendorOrderSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
-
-		// Get Vendor's Products
-		/*var orderParams['vendorOrderID'] = rc.vendorOrderID;
-		var orderParams.orderBy = "createdDateTime|DESC";
-		rc.vendorOrderDeliverySmartList = getVendorOrderService().getVendorOrderDeliverySmartList(data=orderParams);*/
 		
 		// Get Vendor's Products
 		rc.vendorProductSmartList = getProductService().getProductSmartList();
 		rc.vendorProductSmartList.setPageRecordsShow(9999999);
 		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
-		
-		//rc.vendorProducts = getVendorService().getProductsForVendor(rc.vendorOrder.getVendor().getVendorId());
-  	  				
-	  /* rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
-	   //rc.shippingServices = getService("settingService").getShippingServices();
-	   if(!isNull(rc.vendorOrder) and !rc.vendorOrder.isNew()) {
-	       rc.itemTitle &= ": Vendor Order No. " & rc.vendorOrder.getVendorOrderNumber();
-	   } else {
-	       getFW().redirect("admin:vendorOrder.listVendorOrders");
-	   }*/
 	}
 	
 	public void function initVendorOrder(required struct rc) {
@@ -175,7 +156,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		//var orderParams['vendorOrderID'] = rc.vendorOrderID;
 		//var orderParams.orderBy = "createdDateTime|DESC";
 		rc.locationSmartList = getLocationService().getLocationSmartList();
-		rc.locationSmartList.setPageRecordsShow(9999999);
 		
     	rc.edit = true; 
     	rc.itemTitle = rbKey("admin.vendororder.editvendororderproductassignment");

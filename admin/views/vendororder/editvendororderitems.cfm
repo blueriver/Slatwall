@@ -63,7 +63,7 @@ Notes:
 				<th class="varWidth">Sku</th>
 				<th>Cost</th>
 				
-				<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
+				<cfloop array="#rc.locationSmartList.getRecords()#" index="local.location">
 					<th>Qty for: #local.location.getLocationName()#</th>
 				</cfloop>
 				
@@ -78,7 +78,7 @@ Notes:
 						<td class="varWidth">#local.sku.getSkuCode()#</td>
 						<td><input type="text" class="skucost" data-skuid="#local.sku.getSkuID()#" name="cost_skuid(#local.sku.getSkuID()#)" value="#rc.VendorOrder.getVendorOrderItemCostForSku(local.sku.getSkuID())#"></td>
 						
-						<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
+						<cfloop array="#rc.locationSmartList.getRecords()#" index="local.location">
 							<!--- This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. ---> 
 							<cfset local.VendorOrderItem = rc.VendorOrder.getVendorOrderItemForSkuAndLocation(local.sku.getSkuId(), local.location.getLocationId())>
 							<input type="hidden">
@@ -94,7 +94,7 @@ Notes:
 				<td class="varWidth"><strong>Total:</strong></td>
 				<td></td>
 				
-				<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.location">
+				<cfloop array="#rc.locationSmartList.getRecords()#" index="local.location">
 					<td class="locationtotal" data-locationid="#local.location.getLocationID()#"></td>
 				</cfloop>
 				

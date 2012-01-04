@@ -39,7 +39,7 @@ Notes:
 
 
 <cfoutput>
-	<cfif ArrayLen(rc.vendorProductSmartList.getPageRecords())>
+	<cfif ArrayLen(rc.vendorProductSmartList.getRecords())>
 		<table class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
@@ -50,7 +50,7 @@ Notes:
 			<tbody class="productsFromVendorOutput">
 				<!---<cfloop array="#rc.vendorOrder.getVendor().getBrands()#" index="local.brand">
 					<cfloop array="#local.brand.getProducts()#" index="local.product">--->
-				<cfloop array="#rc.vendorProductSmartList.getPageRecords()#" index="local.product">	
+				<cfloop array="#rc.vendorProductSmartList.getRecords()#" index="local.product">	
 					
 					<tr data-productid="#local.product.getProductId()#">
 						<td class="varWidth">#local.product.getProductName()# <cfif len(local.product.getProductCode())>(#local.product.getProductCode()#)</cfif></td>
