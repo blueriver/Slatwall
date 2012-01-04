@@ -252,17 +252,20 @@ component extends="org.fw1.framework" output="false" {
 		}
 		
 		// Run subsytem specific logic.
-		if(isAdminRequest()) {
+		if(getSubsystem(request.context.slatAction) == "admin") {
 			controller("admin:BaseController.subSystemBefore");
-		} else {
+		} else if (getSubsystem(request.context.slatAction) == "frontend") {
 			controller("frontend:BaseController.subSystemBefore");
+		} else {
+			request.context.sectionTitle = getSubsystem(request.context.slatAction);
+			request.context.itemTitle = getSection(request.context.slatAction);
 		}
 	}
 	
 	public void function setupView() {
 		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction))) {
+		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
 		}
 		

@@ -171,7 +171,9 @@ Notes:
 				<cfset querySetCell(Ret,"idPath", thisIDPath) />
 				<cfset thisIDPath = "" /> <!--- resets variable for the next item --->
 				<cfloop list="#theQuery.ColumnList#" index="ColName"><!--- loop over the original querys columns to copy the data to our return query --->
-					<cfset QuerySetCell(Ret, ColName, theQuery[ColName][RowID]) />
+					<cfif theQuery[ColName][RowID] neq "">
+						<cfset QuerySetCell(Ret, ColName, theQuery[ColName][RowID]) />
+					</cfif>
 				</cfloop>
 			</cfif>
 			

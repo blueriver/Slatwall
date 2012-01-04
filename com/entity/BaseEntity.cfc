@@ -49,6 +49,11 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return super.init();
 	}
 	
+	// @hint this method is defined so that it can be overriden in entities and a different validation context can be applied based on what this entity knows about itself
+	public any function getValidationContext(required string context) {
+		return arguments.context;
+	}
+	
 	// @hint public method that returns if this entity has persisted to the database yet or not.
 	public boolean function isNew() {
 		if(getPrimaryIDValue() == "") {
