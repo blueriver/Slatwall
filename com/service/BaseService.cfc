@@ -218,7 +218,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		
 		var entityName = missingMethodName.substring( 3,entityNameLength + 3 );
 		var data = {};
-		if( !isNull(missingMethodArguments[ 1 ]) && isStruct(missingMethodArguments[ 1 ]) ) {
+		if( structCount(missingMethodArguments) && !isNull(missingMethodArguments[ 1 ]) && isStruct(missingMethodArguments[ 1 ]) ) {
 			data = missingMethodArguments[ 1 ];
 		}
 		
