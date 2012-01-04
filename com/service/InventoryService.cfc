@@ -37,11 +37,22 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" output="false" {
-	property name="stockDAO" type="any";
+	property name="inventoryDAO" type="any";
+
+	// entity will be one of StockReceiverItem, OrderDeliveryItem
+	public void function createInventory(required any entity) {
+		// Check that this product tracks inventory, and if so, create the required inventory entity
+		throw("Implement me Mr. Greg!");
+		
+		var inventory = this.newInventory();
+		// Set...
+		
+		if(entity.getEntityName() == "SlatwallStockReceiver") {
+			inventory.setStockReceiver(arguments.entity);	
+		} else if(entity.getEntityName() == "SlatwallOrderDeliveryItem") {
+			inventory.setOrdereDeliveryItem(arguments.entity);	
+		}
 
 		
-	public any function getStockForSkuAndLocation(required any skuID, required any locationID){
-		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 	}
-	
 }
