@@ -240,23 +240,20 @@ component displayname="Base Object" accessors="true" output="false" {
 			// Get the values of this sub property
 			var subPropertyValue = invokeMethod("get#getPopulatedSubProperties()[p]#");
 			
-			// CF will delete the subPropertyValue variable if invokemethod returns null, so do a check for null
-			if(!isNull(subPropertyValue)){
-				// If the results are an array, then loop over them
-				if(isArray(subPropertyValue)) {
-					
-					// Loop over each object in the subProperty array and validate it
-					for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
-					
-						// If after validation that sub object has errors, add a failure to this object
-						if(subPropertyValue[e].hasErrors()) {
-							getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
-						}
-					}	
-				} else if(isObject(subPropertyValue)) {
-					if(subPropertyValue.hasErrors()) {
-						getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
+			// If the results are an array, then loop over them
+			if(isArray(subPropertyValue)) {
+				
+				// Loop over each object in the subProperty array and validate it
+				for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
+				
+					// If after validation that sub object has errors, add a failure to this object
+					if(subPropertyValue[e].hasErrors()) {
+						getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
 					}
+				}	
+			} else if(isObject(subPropertyValue)) {
+				if(subPropertyValue.hasErrors()) {
+					getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
 				}
 			}
 		}
