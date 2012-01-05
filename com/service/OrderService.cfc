@@ -564,11 +564,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// copy the shipping address from the order fulfillment and set it in the delivery
 				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
-				
-				// Process inventory adjustment. Create a StockReciever, and load it with StockReceiverItems, one for each item delivered.
-				var stockReciever = getStockSerice().newStockReceiver();
-				
-				
 			}
 			default:{}
 		}
@@ -594,6 +589,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
 					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
+					
+					// Grab the stock that matches the item and the location from which we are delivering
+					var stock = getStockService().getStockForSkuAndLocation(thisOrderItem.getSku().getSkuID(), arguments.data.deliverFromLocationID);
+					orderDeliveryItem.setStock(stock);
+					
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
 					//order item was fulfilled
@@ -827,7 +827,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be further populated with StockRecieverItems, one for each item being returned.
 			
 		//.... Create Stock Receiver
-		var stockReceiver = getStockService().newStockReceiver();
+		var stockReceiver = getStockService().newStockReceiverOrder();
 		//....
 		//....
 		

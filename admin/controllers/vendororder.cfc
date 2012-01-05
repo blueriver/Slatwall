@@ -67,6 +67,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		rc.vendorOrderSmartList = getVendorOrderService().searchVendorOrders(data=arguments.rc);
     }    
+    
+    public void function initVendorOrder(required struct rc) {
+    	param name="rc.vendorOrderID" default="";
+	
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId, true);
+	}
 	
 	public void function detailVendorOrder(required struct rc) {
 		param name="rc.vendorOrderID" default="";
@@ -93,13 +99,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.vendorProductSmartList = getProductService().getProductSmartList();
 		rc.vendorProductSmartList.setPageRecordsShow(9999999);
 		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
+		
+		rc.edit = false;
+		getFW().setView("admin:vendorOrder.detailVendorOrder"); 
 	}
 	
-	public void function initVendorOrder(required struct rc) {
-    	param name="rc.vendorOrderID" default="";
 	
-		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId, true);
-	}
 	
 	/*public void function editVendorOrder(required struct rc) {
     	param name="rc.vendorOrderID" default="";
@@ -112,7 +117,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function createVendorOrder(required struct rc) {
 		initVendorOrder(rc);
 		rc.edit = true;
-	
 		getFW().setView("admin:vendorOrder.detailVendorOrder");  
 	}
 	
