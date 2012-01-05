@@ -44,6 +44,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	//property name="deliveredFromLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="deliveredFromlocationID";
 	
 	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 

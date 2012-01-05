@@ -44,6 +44,7 @@ Notes:
 <form name="ProcessFulfillment" action=#buildURL(action="admin:order.processorderfulfillment")# method="post">
 	<input type="hidden" name="orderfulfillmentID" value="#local.orderFulfillment.getOrderFulfillmentID()#" />
 </cfif>
+
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
 		<cf_SlatwallAddressDisplay address="#local.orderFulfillment.getShippingAddress()#" edit="false" />

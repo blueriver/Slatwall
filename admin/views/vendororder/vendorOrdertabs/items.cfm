@@ -38,49 +38,55 @@ Notes:
 --->
 
 <cfoutput>
-	<table class="listing-grid stripe">
-		<tr>
-			<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
-			<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
-			<!---<th>#$.slatwall.rbKey("admin.vendorOrder.list.actions")#</th>--->
-			<!---<th>#$.slatwall.rbKey("entity.vendorOrderitem.status")#</th>--->
-			<th>#$.slatwall.rbKey("entity.vendorOrderitem.stockLocation")#</th>
-			<th>#$.slatwall.rbKey("entity.vendorOrderitem.quantityIn")#</th>
-			<th>#$.slatwall.rbKey("entity.vendorOrderitem.detail.cost")#</th>
-		</tr>
-			
-		<cfloop array="#rc.vendorOrderItemSmartList.getRecords()#" index="local.vendorOrderItem">
-			<tr>
-				<td>#local.vendorOrderItem.getStock().getSku().getSkuCode()#</td>
-				<td class="varWidth">#local.vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()# - #local.vendorOrderItem.getStock().getSku().getProduct().getProductName()#</td>
-				<td>#local.vendorOrderItem.getStock().getLocation().getLocationName()#</td>								
-				<td>#int(local.vendorOrderItem.getQuantity())#</td>
-				<td>#local.vendorOrderItem.getFormattedValue('cost', 'currency')#</td>
-			</tr>
-		</cfloop>
-	</table>
 	
-	<div class="totals" style="width:300px; float:right;">
-		<dl class="fulfillmentTotals">
-			<!---<dt>
-				#$.slatwall.rbKey("entity.vendorOrder.subtotal")#:
-			</dt>
-			<dd>
-				#rc.vendorOrder.getFormattedValue('subTotal', 'currency')#
-			</dd>--->
-			<!---<dt>
-				#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
-			</dt>
-			<dd>
-				#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
-			</dd>--->
-			<dt>
-				#$.slatwall.rbKey("entity.vendorOrder.total")#:
-			</dt>
-			<dd>
-				#rc.vendorOrder.getFormattedValue('total', 'currency')#
-			</dd>
-		</dl>
-	</div>
-	<div class="clear"></div>
+	<cfif ArrayLen(rc.vendorOrderItemSmartList.getRecords()) GT 0>
+	
+		<table class="listing-grid stripe">
+			<tr>
+				<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
+				<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
+				<!---<th>#$.slatwall.rbKey("admin.vendorOrder.list.actions")#</th>--->
+				<!---<th>#$.slatwall.rbKey("entity.vendorOrderitem.status")#</th>--->
+				<th>#$.slatwall.rbKey("entity.vendorOrderitem.stockLocation")#</th>
+				<th>#$.slatwall.rbKey("entity.vendorOrderitem.quantityIn")#</th>
+				<th>#$.slatwall.rbKey("entity.vendorOrderitem.detail.cost")#</th>
+			</tr>
+				
+			<cfloop array="#rc.vendorOrderItemSmartList.getRecords()#" index="local.vendorOrderItem">
+				<tr>
+					<td>#local.vendorOrderItem.getStock().getSku().getSkuCode()#</td>
+					<td class="varWidth">#local.vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()# - #local.vendorOrderItem.getStock().getSku().getProduct().getProductName()#</td>
+					<td>#local.vendorOrderItem.getStock().getLocation().getLocationName()#</td>								
+					<td>#int(local.vendorOrderItem.getQuantity())#</td>
+					<td>#local.vendorOrderItem.getFormattedValue('cost', 'currency')#</td>
+				</tr>
+			</cfloop>
+		</table>
+		
+		<div class="totals" style="width:300px; float:right;">
+			<dl class="fulfillmentTotals">
+				<!---<dt>
+					#$.slatwall.rbKey("entity.vendorOrder.subtotal")#:
+				</dt>
+				<dd>
+					#rc.vendorOrder.getFormattedValue('subTotal', 'currency')#
+				</dd>--->
+				<!---<dt>
+					#$.slatwall.rbKey("entity.vendorOrder.taxTotal")#:
+				</dt>
+				<dd>
+					#rc.vendorOrder.getFormattedValue('taxTotal', 'currency')#
+				</dd>--->
+				<dt>
+					#$.slatwall.rbKey("entity.vendorOrder.total")#:
+				</dt>
+				<dd>
+					#rc.vendorOrder.getFormattedValue('total', 'currency')#
+				</dd>
+			</dl>
+		</div>
+		<div class="clear"></div>
+	<cfelse>
+		#$.slatwall.rbKey("admin.vendorOrder.detail.tab.items.noItems")#
+	</cfif>
 </cfoutput>

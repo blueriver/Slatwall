@@ -40,6 +40,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	property name="accountService";
 	property name="addressService";
+	property name="locationService";
 	property name="paymentService";
 	property name="promotionService";
 	property name="sessionService";
@@ -48,6 +49,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityTagService";
 	property name="utilityService";
 	property name="utilityEmailService";
+	
 	
 	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
@@ -589,6 +591,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
 					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
+					
+					// Grab the stock that matches the item and the location from which we are delivering
+					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), getLocationService().getLocation(arguments.data.deliverFromLocationID));
+					orderDeliveryItem.setStock(stock);
+					
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
 					//order item was fulfilled
@@ -822,7 +829,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be further populated with StockRecieverItems, one for each item being returned.
 			
 		//.... Create Stock Receiver
-		var stockReceiver = getStockService().newStockReceiver();
+		var stockReceiver = getStockService().newStockReceiverOrder();
 		//....
 		//....
 		
@@ -869,7 +876,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			orderItem.setOrderReturn(orderReturn);
 			
 			// Add stock receiver item to stock receiver
-			var stock = getStockService().getStockForSkuAndLocation(originalOrderItem.getSku().getSkuID(), location.getLocationID());
+			var stock = getStockService().getStockBySkuAndLocation(originalOrderItem.getSku(), location);
 			var stockReceiverItem = getStockService().newStockReceiverItem();
 			stockReceiverItem.setStockReceiver(stockReceiver);
 			stockReceiverItem.setQuantity(quantityReturning);

@@ -67,6 +67,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		rc.vendorOrderSmartList = getVendorOrderService().searchVendorOrders(data=arguments.rc);
     }    
+    
+    public void function initVendorOrder(required struct rc) {
+    	param name="rc.vendorOrderID" default="";
+	
+		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId, true);
+	}
 	
 	public void function detailVendorOrder(required struct rc) {
 		param name="rc.vendorOrderID" default="";
@@ -93,13 +99,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.vendorProductSmartList = getProductService().getProductSmartList();
 		rc.vendorProductSmartList.setPageRecordsShow(9999999);
 		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
+		
+		rc.edit = false;
+		getFW().setView("admin:vendorOrder.detailVendorOrder"); 
 	}
 	
-	public void function initVendorOrder(required struct rc) {
-    	param name="rc.vendorOrderID" default="";
 	
-		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId, true);
-	}
 	
 	/*public void function editVendorOrder(required struct rc) {
     	param name="rc.vendorOrderID" default="";
@@ -112,7 +117,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function createVendorOrder(required struct rc) {
 		initVendorOrder(rc);
 		rc.edit = true;
-	
 		getFW().setView("admin:vendorOrder.detailVendorOrder");  
 	}
 	
@@ -199,15 +203,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 						// Only proceed if we have a positive value
 						if(quantity > 0) {
 							// The vendorOrderItem is new. See if we already have a stock for that sku and location and use if it so, otherwise, creat a new stock
-							var stock = getStockService().getStockForSkuAndLocation(skuID, locationID);
+							var stock = getStockService().getStockBySkuAndLocation(getSkuService().getSku(skuID), getLocationService().getLocation(locationID));
 							
-							if(isNull(stock)) {
-								stock = getVendorOrderService().getStock(0, true);
-								stock.setSku(getSkuService().getSku(skuID));
-								stock.setLocation(getLocationService().getLocation(locationID));
-								getVendorOrderService().saveStock(stock);
-							} 
-
 							vendorOrderItem.setStock(stock);
 							vendorOrderItem.setVendorOrder(vendorOrder);
 							vendorOrderItem.setQuantity(quantity);
@@ -338,7 +335,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 						vendorOrderReceiverItem.setCost(cost);
 						
 						// If the "receiveForLocationID" passed in (the drop down) matches this stock's location, then use that. Otherwise, find the stock to the corresponding location
-						stock = getVendorOrderService().getStockForSkuAndLocation(stock.getSku().getSkuID(), rc.receiveForLocationId);
+						stock = getVendorOrderService().getStockBySkuAndLocation(stock.getSku().getSkuID(), rc.receiveForLocationId);
 						vendorOrderReceiverItem.setStock(stock);
 						
 						// Search the stockID keyed struc for this stock. The only way that we would find the item already present is if the user is trying to receive the same SKU from multiple locations.

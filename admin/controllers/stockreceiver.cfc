@@ -42,6 +42,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="stockService" type="any";
 	property name="vendorOrderService" type="any";
 	property name="locationService" type="any";
+	property name="skuService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:stockreceiver.list");
@@ -64,9 +65,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     		rc.stockReceiver = getStockService().getStockReceiver(rc.stockReceiverID, true);
     	} else {
     		if(rc.stockReceiverType == "vendorOrder") {
-    			rc.stockReceiver = getStockService().getStockReceiverVendorOrder(rc.stockReceiverID, true);
+    			rc.stockReceiver = getStockService().newStockReceiverVendorOrder();
     		} else if(rc.stockReceiverType == "order") {
-    			rc.stockReceiver = getStockService().getStockReceiverOrder(rc.stockReceiverID, true);
+    			rc.stockReceiver = getStockService().newStockReceiverOrder();
     		} else {
     			throw("Unknown StockReceiver type: #rc.stockReceiverType#");
     		}
@@ -128,7 +129,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		//rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
 		//rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
 
-    	rc.backAction = "admin.vendorOrder.detailVendorOrder";
+    	rc.backAction = "admin:vendorOrder.detailVendorOrder";
     	rc.backQueryString = "vendorOrderID=#rc.vendorOrderId#";
     	rc.action = "admin:stockReceiver.saveStockReceiverVendorOrder";
     	
@@ -152,7 +153,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.stockReceiverType = "vendorOrder";
 		var vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
 		
+		// Call the generic save method.
 		saveStockReceiver(rc);
+		
+		// Since this is a vendor order reciever, also add the vendororder
 		rc.StockReceiver.setVendorOrder(vendorOrder);
 
 		rc.message=rbKey("admin.vendorOrder.saveStockReceiverVendorOrder_success");
@@ -171,14 +175,19 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		for (var key IN rc) {
 			var res = REFindNoCase("quantity_skuid\((.+)\)", key, 1, true);
 
+			//logSlatwall("Found: #key#");
+
 			if(ArrayLen(res.pos) == 2) {
 				var skuID = mid(key, res.pos[2], res.len[2]);
 				var quantity = val(rc[key]);
-				var stock = getStockService().getStockForSkuAndLocation(skuID, rc.receiveForLocationID);
+				var stock = getStockService().getStockBySkuAndLocation(getSkuService().getSku(skuID), getLocationService().getLocation(rc.receiveForLocationID));
+				
+				//logSlatwall("Found: #key# - #skuID# - #quantity#");
+				
 				if(len(skuID) && isNumeric(quantity)) {
 					// Take the sku, location (selected), and quantity, and build a StockRecieverItem
 					var stockReceiverItem = getStockService().newStockReceiverItem();
-					stockReceiverItem.setStockReceiver(rc.stockReceiver);
+					stockReceiverItem.setStockReceiver(rc.stockReceiver);		
 					stockReceiverItem.setQuantity(quantity);
 					stockReceiverItem.setStock(stock);
 				}

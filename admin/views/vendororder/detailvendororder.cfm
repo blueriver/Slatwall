@@ -120,13 +120,13 @@ Notes:
 				</ul>
 			
 				<div id="tabVendorOrderItems">
-					#view("vendorOrder/vendorOrdertabs/items")# 
+					#view("vendorOrder/vendorordertabs/items")# 
 				</div>
 				<div id="tabStockReceiverVendorOrders">
-					#view("vendorOrder/vendorOrdertabs/stockreceivers")# 
+					#view("vendorOrder/vendorordertabs/stockreceivers")# 
 				</div>
 				<div id="tabVendorOrderProducts">
-					#view("vendorOrder/vendorOrdertabs/products")# 
+					#view("vendorOrder/vendorordertabs/products")# 
 				</div>
 			</div> <!-- tabs -->
 		</div>

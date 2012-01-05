@@ -57,7 +57,9 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	// Maintain bidirectional relationships (many-to-one). Notice that the child (StockReceiverItem) is the handler of the relationship, while the parent (StockReceiver), has inverse="true".
 	public void function setStockReceiver(required any stockReceiver) {
 	   variables.stockReceiver = arguments.stockReceiver;
-	   if(isNew() && !arguments.stockReceiver.hasStockReceiverItem(this)) {
+	   
+	   //logSlatwall("About to append stock receiver item: #this.getStockReceiverItemId()# - isNew(): #isNew()# - #!arguments.stockReceiver.hasStockReceiverItem(this)#");
+	   if(isNew() || !arguments.stockReceiver.hasStockReceiverItem(this)) {
 	       arrayAppend(arguments.stockReceiver.getStockReceiverItems(), this);
 	   }
 	}
