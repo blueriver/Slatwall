@@ -71,9 +71,10 @@ Notes:
 			</tbody>
 		</table>
 	<cfelse>
-		
+		#$.slatwall.rbKey("admin.vendorOrder.detail.tab.products.noProducts")#
 	</cfif>
 	
+	<!--- Why is this here?
 	<div class="totals" style="width:300px; float:right;">
 		<dl class="fulfillmentTotals">
 			<dt>
@@ -97,7 +98,7 @@ Notes:
 			</dd>
 		</dl>
 	</div>
-	<div class="clear"></div>
+	<div class="clear"></div> --->
 	
 	<div id="addEditProductToOrder" class="ui-helper-hidden"></div>
 </cfoutput>

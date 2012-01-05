@@ -49,7 +49,6 @@ Notes:
 	
 	<!--- For now, there is no basic order info, but in future, we might want to make this section dynamic like the bellow table, based on the type provided --->
 
-
 	<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
 
 		<div class="clear">
@@ -60,9 +59,7 @@ Notes:
 				
 				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
 				<dd class="value">
-					<cfset valueOptions = duplicate(rc.locationSmartList.getPageRecords())>
-					<!---<cfset ArrayPrepend(valueOptions, {name=$.Slatwall.rbKey("admin.stockReceiver.selectReceiveForLocation"), value=""})>--->
-					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#valueOptions#" fieldClass="receiveForLocationID">
+					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
 				</dd>
 				
 			</dl>

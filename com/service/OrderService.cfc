@@ -589,6 +589,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
 					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
+					
+					// Grab the stock that matches the item and the location from which we are delivering
+					var stock = getStockService().getStockForSkuAndLocation(thisOrderItem.getSku().getSkuID(), arguments.data.deliverFromLocationID);
+					orderDeliveryItem.setStock(stock);
+					
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
 					//order item was fulfilled
@@ -822,7 +827,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be further populated with StockRecieverItems, one for each item being returned.
 			
 		//.... Create Stock Receiver
-		var stockReceiver = getStockService().newStockReceiver();
+		var stockReceiver = getStockService().newStockReceiverOrder();
 		//....
 		//....
 		
