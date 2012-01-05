@@ -51,4 +51,27 @@ component displayname="Vendor Email Address" entityname="SlatwallVendorEmailAddr
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasVendorEmailAddress(this)) {
+			arrayAppend(arguments.vendor.getVendorEmailAddresses(),this);
+		}
+	}
+	
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getVendorEmailAddresses(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getVendorEmailAddresses(),index);
+		}
+		structDelete(variables,"vendor");
+	}
+	
+	/******* END: Association management methods for bidirectional relationships **************/
 }
