@@ -97,6 +97,7 @@
         <property name="DAO"><ref bean="OrderDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
+		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="paymentService"><ref bean="paymentService" /></property>
 		<property name="promotionService"><ref bean="promotionService" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>

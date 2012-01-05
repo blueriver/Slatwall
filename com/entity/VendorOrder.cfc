@@ -168,15 +168,12 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	
 	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
 	public any function getVendorOrderItemForSkuAndLocation(required any skuID, required any locationID) {
-		var stock = getService("StockService").getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
-		if(!isNull(stock)) {
-			// Find any existing VendorOrderItem that has this stock (there should only be zero or one).	
-			var vendorOrderItems = getVendorOrderItems(); 
-			for(var i=1; i <= ArrayLen(vendorOrderItems); i++){
-				if(vendorOrderItems[i].getStock().getStockID() == stock.getStockID()) {
-					return vendorOrderItems[i];
-				}
-			}	
+		var stock = getService("StockService").getStockBySkuAndLocation(arguments.skuID, arguments.locationID);
+		
+		for(var i=1; i<=arrayLen(getVendorOrderItems()); i++) {
+			if(getVendorOrderItems()[i].hasStock(stock)) {
+				return vendorOrderItems[i];
+			}
 		}
 		
 		// Otherwise, if stock was null (could not find one with that sku and location) or no VendorOrderItem was found with the located stock, return a new VendorOrderItem
