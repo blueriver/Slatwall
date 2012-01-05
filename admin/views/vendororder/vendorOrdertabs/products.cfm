@@ -40,6 +40,8 @@ Notes:
 
 <cfoutput>
 	<cfif ArrayLen(rc.vendorProductSmartList.getRecords())>
+		#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproducts_description")#
+		
 		<table class="listing-grid stripe">
 			<tr>
 				<th class="varWidth">#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproduct")#</th>
@@ -69,7 +71,7 @@ Notes:
 			</tbody>
 		</table>
 	<cfelse>
-		#$.slatwall.rbKey("admin.vendorOrder.detail.vendorproducts_empty")#
+		
 	</cfif>
 	
 	<div class="totals" style="width:300px; float:right;">
