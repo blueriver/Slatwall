@@ -240,6 +240,11 @@ component displayname="Base Object" accessors="true" output="false" {
 			// Get the values of this sub property
 			var subPropertyValue = invokeMethod("get#getPopulatedSubProperties()[p]#");
 			
+			// If the value is Null then throw an error because the populatedSubProperties array should have never had this propertyName in it
+			if(isNull(subPropertyValue)) {
+				throw("the property name: #getPopulatedSubProperties()[p]# was in the populatedSubProperties array, however it must not have actually been populated because the value is null.  Or the property was populated, but something later set it back to null.");
+			}
+			
 			// If the results are an array, then loop over them
 			if(isArray(subPropertyValue)) {
 				
