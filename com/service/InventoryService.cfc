@@ -39,20 +39,43 @@ Notes:
 component extends="BaseService" accessors="true" output="false" {
 	property name="inventoryDAO" type="any";
 
-	// entity will be one of StockReceiverItem, OrderDeliveryItem
+	// entity will be one of StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
-		// Check that this product tracks inventory, and if so, create the required inventory entity
-		throw("Implement me Mr. Greg!");
 		
-		var inventory = this.newInventory();
-		// Set...
-		
-		if(entity.getEntityName() == "SlatwallStockReceiver") {
-			inventory.setStockReceiver(arguments.entity);	
-		} else if(entity.getEntityName() == "SlatwallOrderDeliveryItem") {
-			inventory.setOrdereDeliveryItem(arguments.entity);	
+		switch(entity.getEntityName()) {
+			case "SlatwallStockReceiverItem": {
+				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventory")) {
+					var inventory = this.newInventory();
+					inventory.setQuantityIn(arguments.entity.getQuantity());
+					inventory.setStock(arguments.entity.getStock());
+					inventory.setStockReceiverItem(arguments.entity);
+					getDAO().save(inventory);
+				}
+				break;
+			}
+			case "SlatwallStockPhysicalItem": {
+				break;
+			}
+			case "SlatwallStrockAdjustmentDeliveryItem": {
+				break;
+			}
+			case "SlatwallVendorOrderDeliveryItem": {
+				break;
+			}
+			case "SlatwallOrderDeliveryItem": {
+				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventory")) {
+					var inventory = this.newInventory();
+					inventory.setQuantityIn(arguments.entity.getQuantityDelivered());
+					inventory.setStock(arguments.entity.getStock());
+					inventory.setOrderDeliveryItem(arguments.entity);
+					getDAO().save(inventory);
+				}
+				break;
+			}
+			default: {
+				throw("You are trying to create an inventory record for an entity that is not one of the 5 entities that manage inventory.  Those entities are: StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem");
+			}
 		}
-
 		
 	}
 }
