@@ -40,9 +40,9 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	
 	// Persistent Properties
 	property name="vendorID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="vendorName";
-	property name="vendorWebsite";
-	property name="accountNumber";
+	property name="vendorName" ormtype="string";
+	property name="vendorWebsite" ormtype="string";
+	property name="accountNumber" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
