@@ -72,12 +72,12 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
     
     //  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){
-		getService("StockService").createInventory(this);
+		getService("inventoryService").createInventory( this );
 		super.preInsert();
 	}
 	
 	public void function preUpdate(Struct oldData){
-		throw("Stock updates are not allowed.");
+		throw("Updates to Stock Receiver Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
 	//  -------------------- END: ORM Event Metods -------------------
     
