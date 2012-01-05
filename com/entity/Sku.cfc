@@ -67,17 +67,30 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 	
+	// Calculated Quantity Properties
+	property name="qoh" formula="SELECT isNull(sum(inventory.quantityIn),0) - isNull(sum(inventory.quantityOut),0) FROM SlatwallInventory inventory INNER JOIN SlatwallStock stock on inventory.stockID = stock.stockID WHERE stock.skuID = skuID";
+	
+	// Non-Persistent Quantity Properties
+	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	
 	// Non-Persistent Properties
 	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
-	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
-	property name="qc" persistent="false" type="numeric" hint="quantity committed";
-	property name="qexp" persistent="false" type="numeric" hint="quantity exptected";
-	property name="webQOH" persistent="false" type="numeric";
-	property name="webQC" persistent="false" type="numeric";
-	property name="webQEXP" persistent="false" type="numeric";
-	property name="webWholesaleQOH" persistent="false" type="numeric";
-	property name="webWholesaleQC" persistent="false" type="numeric";
-	property name="webWholesaleQEXP" persistent="false" type="numeric";
 	
 	public Sku function init() {
        // set default collections for association management methods
@@ -90,6 +103,22 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
       
        return super.init();
     }
+    
+    /************** Quantity Methods *********************/
+	public numeric function getQOSH() {
+		
+	}
+    
+	// @hint quantity immediately available
+	public numeric function getQIA() {
+		return getQOH() - getQC();
+	}
+
+	// @hint quantity expected available
+	public numeric function getQEA() {
+		return (getQOH() - getQC()) + getQEXP();
+	}
+    /************** END: Quantity Methods ****************/
     
     public boolean function isNotDefaultSku() {
     	if(getProduct().getDefaultSku().getSkuID() != getSkuID()) {
@@ -197,60 +226,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	return this.getImageDirectory() & this.getImageFile();
     }
     
-    public numeric function getQOH() {
-    	if(isNull(variables.qoh)) {
-    		variables.qoh = 0;
-    		var stocks = getStocks();
-    		if(isDefined("stocks")) {
-	    		for(var i = 1; i<= arrayLen(stocks); i++) {
-	    			variables.qoh += stocks[i].getQOH();
-	    		}
-	    	}
-    	}
-    	return variables.qoh;
-    }
-    
-    public numeric function getQC() {
-    	if(isNull(variables.qc)) {
-    		variables.qc = 0;
-    		var stocks = getStocks();
-    		if(isDefined("stocks")) {
-	    		for(var i = 1; i<= arrayLen(stocks); i++) {
-	    			variables.qc += stocks[i].getQC();
-	    		}
-	    	}
-    	}
-    	return variables.qc;
-    }
-    
-    public numeric function getQEXP() {
-       	if(isNull(variables.qexp)) {
-    		variables.qc = 0;
-    		var stocks = getStocks();
-        	if(isDefined("stocks")) {
-	    		for(var i = 1; i<= arrayLen(stocks); i++) {
-	    			variables.qexp += stocks[i].getQEXP();
-	    		}
-    		}
-    	}
-    	return variables.qc;
-    }
-	
-	/**
-	/* @hint quantity immediately available
-	*/
-	public numeric function getQIA() {
-		return getQOH() - getQC();
-	}
-
-	/**
-	/* @hint quantity expected available
-	*/	
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+    public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		// Get the expected Image Path
 		var path=getImagePath();
 		
@@ -425,6 +401,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
    	public any function getStockByLocation(required any locationID){
    		// Returns a new entity if one doesn't exist.
    	}
+   	
+   	
     
 	
 }

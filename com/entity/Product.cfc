@@ -84,6 +84,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Calculated Quantity Properties
+	property name="qoh" formula="SELECT isNull(sum(inventory.quantityIn),0) - isNull(sum(inventory.quantityOut),0) FROM SlatwallInventory inventory INNER JOIN SlatwallStock stock on inventory.stockID = stock.stockID INNER JOIN SlatwallSku sku on stock.skuID = sku.skuID WHERE sku.productID = productID" lazy="extra";
+	
+	// Non-Persistent Quantity Properties
+	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
 	property name="onTermSaleFlag" type="boolean" persistent="false";
@@ -94,11 +116,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="shippingWeight" type="numeric" persistent="false";
-	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
-	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
-	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
-	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -135,8 +152,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   return Super.init();
 	}
 
-	// Related Object Helpers
-	
+    /************** Quantity Methods *********************/
+	public numeric function getQOSH() {
+		
+	}
+    
+	// @hint quantity immediately available
+	public numeric function getQIA() {
+		return getQOH() - getQC();
+	}
+
+	// @hint quantity expected available
+	public numeric function getQEA() {
+		return (getQOH() - getQC()) + getQEXP();
+	}
+    /************** END: Quantity Methods ****************/
+
+
 	public string function getBrandName() {
 		if( structKeyExists(variables,"brand") ) {
 			return getBrand().getBrandName();
@@ -144,18 +176,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		else {	
 			return "";
 		}
-	}
-	
-	public any function getBrandOptions() {
-		if(!structKeyExists(variables, "brandOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
-			smartList.addOrder("brandName|ASC");
-			variables.brandOptions = smartList.getRecords();
-			arrayPrepend(variables.brandOptions, {value="", name=rbKey('define.select')});
-		}
-		return variables.brandOptions;
 	}
 	
 	public any function getProductTypeOptions() {
@@ -246,53 +266,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getListingProductURL(string filename=$.content('filename')) {
 		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
-	}
-	
-	public numeric function getQOH() {
-		if(isNull(variables.qoh)) {
-    		variables.qoh = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qoh += skus[i].getQOH();
-	    		}	
-    		}
-    	}
-    	return variables.qoh;
-	}
-	
-	public numeric function getQC() {
-		if(isNull(variables.qc)) {
-    		variables.qc = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qc += skus[i].getQC();
-	    		}	
-    		}
-    	}
-    	return variables.qc;
-	}
-	
-	public numeric function getQEXP() {
-		if(isNull(variables.qexp)) {
-    		variables.qexp = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qexp += skus[i].getQEXP();
-	    		}	
-    		}
-    	}
-    	return variables.qexp;
-	}
-	
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-	
-	public numeric function getQIA() {
-		return getQOH() - getQC();
 	}
 	
 	public string function getTemplate() {

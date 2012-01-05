@@ -53,11 +53,32 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
 	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
 	
 	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="vendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
 	
+	// Calculated Quantity Properties
+	property name="qoh" hint="Quantity On Hand" formula="SELECT isNull(sum(inventory.quantityIn),0) - isNull(sum(inventory.quantityOut),0) FROM SlatwallInventory inventory WHERE inventory.stockID = stockID";
+	
+	// Non-Persistent Quantity Properties
+	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
 }

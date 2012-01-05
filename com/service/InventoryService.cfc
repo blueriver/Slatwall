@@ -65,7 +65,7 @@ component extends="BaseService" accessors="true" output="false" {
 			case "SlatwallOrderDeliveryItem": {
 				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
 					var inventory = this.newInventory();
-					inventory.setQuantityIn(arguments.entity.getQuantityDelivered());
+					inventory.setQuantityOut(arguments.entity.getQuantityDelivered());
 					inventory.setStock(arguments.entity.getStock());
 					inventory.setOrderDeliveryItem(arguments.entity);
 					getDAO().save(inventory);
