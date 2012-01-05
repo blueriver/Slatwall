@@ -589,7 +589,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					totalQuantity += thisQuantity;
 					// Create and Populate the delivery item
 					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
-					
+
 					// Grab the stock that matches the item and the location from which we are delivering
 					var stock = getStockService().getStockForSkuAndLocation(thisOrderItem.getSku().getSkuID(), arguments.data.deliverFromLocationID);
 					orderDeliveryItem.setStock(stock);
@@ -628,7 +628,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return orderDelivery;
 	}
 	
-	private any function createOrderDeliveryItem(required any orderItem, required numeric quantity, required any orderDelivery) {
+	private any function createOrderDeliveryItem(required any orderItem, locationID, required numeric quantity, required any orderDelivery) {
 		var orderDeliveryItem = this.newOrderDeliveryItem();
 		orderDeliveryItem.setOrderItem(arguments.orderItem);
 		orderDeliveryItem.setQuantityDelivered(arguments.quantity);
