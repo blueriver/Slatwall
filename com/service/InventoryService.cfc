@@ -44,7 +44,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		switch(entity.getEntityName()) {
 			case "SlatwallStockReceiverItem": {
-				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventory")) {
+				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityIn(arguments.entity.getQuantity());
 					inventory.setStock(arguments.entity.getStock());
@@ -63,7 +63,7 @@ component extends="BaseService" accessors="true" output="false" {
 				break;
 			}
 			case "SlatwallOrderDeliveryItem": {
-				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventory")) {
+				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityIn(arguments.entity.getQuantityDelivered());
 					inventory.setStock(arguments.entity.getStock());
