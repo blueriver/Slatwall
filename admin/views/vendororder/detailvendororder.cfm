@@ -89,8 +89,7 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendorOrderType()#" property="Type" edit="false"  displayType="table">
 				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder#" property="createdDateTime" edit="false"  displayType="table">
 				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="vendorName" edit="false"  displayType="table">
-				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor()#" property="emailAddress" edit="false" displayType="table">
-				<!---<cf_SlatwallPropertyDisplay object="#local.vendor#" property="primaryPhoneNumber" edit="false" displayType="table">--->
+				<cf_SlatwallPropertyDisplay object="#rc.VendorOrder.getVendor().getPrimaryEmailAddress()#" property="emailAddress" edit="false" displayType="table">
 			</table>
 		</div>
 		<div class="paymentInfo">
