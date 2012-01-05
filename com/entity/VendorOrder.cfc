@@ -170,7 +170,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	public any function getVendorOrderItemForSkuAndLocation(required any skuID, required any locationID) {
 		var stock = getService("StockService").getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
 		if(!isNull(stock)) {
-			// Find any existing VendorOrderItem that has this stock (there should only be zero or one).
+			// Find any existing VendorOrderItem that has this stock (there should only be zero or one).	
 			var vendorOrderItems = getVendorOrderItems(); 
 			for(var i=1; i <= ArrayLen(vendorOrderItems); i++){
 				if(vendorOrderItems[i].getStock().getStockID() == stock.getStockID()) {
@@ -180,7 +180,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 		}
 		
 		// Otherwise, if stock was null (could not find one with that sku and location) or no VendorOrderItem was found with the located stock, return a new VendorOrderItem
-		return getService("VendorOrderService").getVendorOrderItem(0, true);
+		return getService("VendorOrderService").newVendorOrderItem();
 	}
 	
 	public any function getVendorOrderItemCostForSku(required any skuID) {

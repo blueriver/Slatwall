@@ -65,11 +65,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	// If vendorAddress is new then it won't contain an "Address" (vendorAddress is only a relational entity), so create a new one.
     	if(rc.vendorAddress.isNew()) {
-    		rc.vendorAddress.setAddress(getAddressService().getAddress(0, true));	
+    		rc.vendorAddress.setAddress(getAddressService().newAddress());	
     	}
     	
-		rc.vendorOrderSmartList = rc.vendor.getVendorOrderSmartList().setOrderBy("createdDateTime|DESC");
-
+		rc.vendorOrderSmartList = rc.vendor.getVendorOrdersSmartList();
+		rc.vendorOrderSmartList.addOrder("createdDateTime|DESC");
 	}
 	
 	public void function detailVendor(required struct rc) {
@@ -85,12 +85,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function createVendor(required struct rc) {
 		initVendor(rc);
+		
+		rc.edit = true; 
+    	getFW().setView("admin:vendor.detailvendor");  
 	}
 	
 	// Display edit interface
 	public void function editVendor(required struct rc) {
 		param name="rc.vendorID" default="";
     	param name="rc.vendorAddressID" default="";
+
+		initVendor(rc);
 
     	rc.edit = true; 
     	getFW().setView("admin:vendor.detailvendor");  
@@ -100,7 +105,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.vendorID" default="";
 		param name="rc.vendorAddressID" default="";
 		
-		initVendor();
+		initVendor(rc);
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		rc.vendor = getVendorService().saveVendor(rc.vendor, rc);	
@@ -122,8 +127,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}	
 		} 
 		else { 	
-			rc.vendorAddress = getVendorService().getVendorAddress(0, true);
-    		rc.vendorAddress.setAddress(getAddressService().getAddress(0, true));	
+			rc.vendorAddress = getVendorService().newVendorAddress();
+    		rc.vendorAddress.setAddress(getAddressService().newAddress());	
 
 			// If one of the sub properties had the error, then find out which one and populate it
 			if(rc.Vendor.hasError("VendorAddresses")) {

@@ -872,7 +872,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Add stock receiver item to stock receiver
 			var stock = getStockService().getStockForSkuAndLocation(originalOrderItem.getSku().getSkuID(), location.getLocationID());
-			var stockReceiverItem = getStockService().getStockReceiverItem(0, true);
+			var stockReceiverItem = getStockService().newStockReceiverItem();
 			stockReceiverItem.setStockReceiver(stockReceiver);
 			stockReceiverItem.setQuantity(quantityReturning);
 			stockReceiverItem.setStock(stock);
@@ -881,7 +881,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			
 			// Create the associated "Inventory" tracking entity (using the subclassed InventoryStockReceiver).
-			var inventory = getStockService().getInventoryStockReceiverItem(0, true);
+			var inventory = getStockService().newInventoryStockReceiverItem();
 			inventory.setQuantityIn(quantityReturning);
 			inventory.setStock(stock);
 			inventory.setStockReceiverItem(stockReceiverItem);

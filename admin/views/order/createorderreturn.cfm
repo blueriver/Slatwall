@@ -141,13 +141,15 @@ Notes:
 				</dd>
 			</dl>
 			
-			
-
-		
 			<input type="hidden" name="originalOrderID" value="#rc.order.getOrderID()#" />
 
-			<cfloop array="#rc.order.getOrderDeliveries()#" index="local.orderDelivery">
+			<cfloop from="1" to="#ArrayLen(rc.order.getOrderDeliveries())#" index="i">
+				<cfset local.orderDelivery = rc.order.getOrderDeliveries()[i]>
 				<cfset local.orderDeliveryItems = local.orderDelivery.getOrderDeliveryItems()>
+
+				<cfif i NEQ 1>
+					<hr>
+				</cfif>
 
 				<h4>Return These Delivered Items:</h4>
 				
@@ -239,7 +241,10 @@ Notes:
 						</cfloop>
 					</tbody>
 				</table>
+				
 			</cfloop>
+			
+			
 	
 			<div class="totals">
 				<dl class="fulfillmentTotals">
