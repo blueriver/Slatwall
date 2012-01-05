@@ -438,8 +438,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 	public any function saveOrderFulfillment(required any orderFulfillment, struct data={}) {
 		
-		arguments.orderFulfillment.populate(arguments.data);
-		
 		// If fulfillment method is shipping do this
 		if(arguments.orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
 			// define some variables for backward compatibility
