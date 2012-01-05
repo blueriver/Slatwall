@@ -123,7 +123,7 @@ Notes:
 						<cfif attributes.edit>
 							<cfset thisValueList = listAppend(thisValueList, thisValue.getIdentifierValue()) />
 						<cfelse>
-							<cfset thisValueList = listAppend(thisValueList, " #attributes.value.getSimpleRepresentation()#") />
+							<cfset thisValueList = listAppend(thisValueList, " #thisValue.getSimpleRepresentation()#") />
 						</cfif>
 					</cfif>
 				</cfloop>
