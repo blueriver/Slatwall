@@ -60,9 +60,7 @@ Notes:
 				
 				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
 				<dd class="value">
-					<cfset valueOptions = duplicate(rc.locationSmartList.getPageRecords())>
-					<!---<cfset ArrayPrepend(valueOptions, {name=$.Slatwall.rbKey("admin.stockReceiver.selectReceiveForLocation"), value=""})>--->
-					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#valueOptions#" fieldClass="receiveForLocationID">
+					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
 				</dd>
 				
 			</dl>

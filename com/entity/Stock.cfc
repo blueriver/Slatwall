@@ -58,6 +58,6 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
 	
 	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
-	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="vendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
 	
 }
