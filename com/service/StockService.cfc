@@ -40,9 +40,9 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="stockDAO" type="any";
 
 		
-	public any function getStockForSkuAndLocation(required any sku, required any location){
+	public any function getStockBySkuAndLocation(required any sku, required any location){
 		
-		var stock = getDAO().getStockForSkuAndLocation(argumentCollection=arguments);
+		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
 		
 		if(isNull(stock)) {
 			stock = this.newStock();

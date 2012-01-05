@@ -39,7 +39,7 @@ Notes:
 component extends="BaseDAO" {
 
 	
-	public any function getStockForSkuAndLocation(required any sku, required any location) {
+	public any function getStockBySkuAndLocation(required any sku, required any location) {
 		var params = [arguments.sku.getSkuID(), arguments.location.getLocationID()];
 		var hql = " SELECT s
 					FROM SlatwallStock s

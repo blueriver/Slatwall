@@ -42,6 +42,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="stockService" type="any";
 	property name="vendorOrderService" type="any";
 	property name="locationService" type="any";
+	property name="skuService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:stockreceiver.list");
@@ -179,7 +180,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			if(ArrayLen(res.pos) == 2) {
 				var skuID = mid(key, res.pos[2], res.len[2]);
 				var quantity = val(rc[key]);
-				var stock = getStockService().getStockForSkuAndLocation(skuID, rc.receiveForLocationID);
+				var stock = getStockService().getStockBySkuAndLocation(getSkuService().getSku(skuID), getLocationService().getLocation(rc.receiveForLocationID));
 				
 				//logSlatwall("Found: #key# - #skuID# - #quantity#");
 				

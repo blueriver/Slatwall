@@ -203,15 +203,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 						// Only proceed if we have a positive value
 						if(quantity > 0) {
 							// The vendorOrderItem is new. See if we already have a stock for that sku and location and use if it so, otherwise, creat a new stock
-							var stock = getStockService().getStockForSkuAndLocation(skuID, locationID);
+							var stock = getStockService().getStockBySkuAndLocation(getSkuService().getSku(skuID), getLocationService().getLocation(locationID));
 							
-							if(isNull(stock)) {
-								stock = getVendorOrderService().getStock(0, true);
-								stock.setSku(getSkuService().getSku(skuID));
-								stock.setLocation(getLocationService().getLocation(locationID));
-								getVendorOrderService().saveStock(stock);
-							} 
-
 							vendorOrderItem.setStock(stock);
 							vendorOrderItem.setVendorOrder(vendorOrder);
 							vendorOrderItem.setQuantity(quantity);
@@ -342,7 +335,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 						vendorOrderReceiverItem.setCost(cost);
 						
 						// If the "receiveForLocationID" passed in (the drop down) matches this stock's location, then use that. Otherwise, find the stock to the corresponding location
-						stock = getVendorOrderService().getStockForSkuAndLocation(stock.getSku().getSkuID(), rc.receiveForLocationId);
+						stock = getVendorOrderService().getStockBySkuAndLocation(stock.getSku().getSkuID(), rc.receiveForLocationId);
 						vendorOrderReceiverItem.setStock(stock);
 						
 						// Search the stockID keyed struc for this stock. The only way that we would find the item already present is if the user is trying to receive the same SKU from multiple locations.
