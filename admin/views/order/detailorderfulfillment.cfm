@@ -37,20 +37,12 @@ Notes:
 
 --->
 <cfparam name="rc.orderFulfillment" type="any" />
-<cfparam name="rc.locationSmartList">
+
 
 <cfset local.method = rc.orderfulfillment.getFulfillmentMethodID() />
 <cfset local.params.orderFulfillment = rc.orderFulfillment />
 
-<cfoutput>
-	<!--- These fields are common fields to all Fulfillments --->
-	<dl class="twoColumn">
-		<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.deliverFromLocation")#</strong></label></dt> 
-		<dd class="value">
-			<cf_SlatwallFormField fieldType="select" fieldName="deliverFromLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="deliverFromLocationID">
-		</dd>
-	</dl>	
-	
+<cfoutput>	
 	<div class="svoadminorderfulfillmentdetail">
 		#view("order/fulfillment/#local.method#",local.params)#
 	</div>

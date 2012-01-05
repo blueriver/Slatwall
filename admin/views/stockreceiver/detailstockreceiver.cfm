@@ -49,7 +49,6 @@ Notes:
 	
 	<!--- For now, there is no basic order info, but in future, we might want to make this section dynamic like the bellow table, based on the type provided --->
 
-
 	<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
 
 		<div class="clear">

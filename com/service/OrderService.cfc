@@ -564,6 +564,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// copy the shipping address from the order fulfillment and set it in the delivery
 				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
+				
+				// Process inventory adjustment. Create a StockReciever, and load it with StockReceiverItems, one for each item delivered.
+				var stockReciever = getStockSerice().newStockReceiver();
+				
+				
 			}
 			default:{}
 		}
