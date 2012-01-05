@@ -40,8 +40,18 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="stockDAO" type="any";
 
 		
-	public any function getStockForSkuAndLocation(required any skuID, required any locationID){
-		return getDAO().getStockForSkuAndLocation(arguments.skuID, arguments.locationID);
+	public any function getStockForSkuAndLocation(required any sku, required any location){
+		
+		var stock = getDAO().getStockForSkuAndLocation(argumentCollection=arguments);
+		
+		if(isNull(stock)) {
+			stock = this.newStock();
+			stock.setSku(arguments.sku);
+			stock.setLocation(arguments.location);
+			getDAO().save(stock);
+		}
+		
+		return stock;
 	}
 	
 }
