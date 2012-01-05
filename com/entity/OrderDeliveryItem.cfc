@@ -85,14 +85,14 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	
     /************   END Association Management Methods   *******************/
     
-    //  -------------------- ORM Event Metods -------------------
+	//  -------------------- ORM Event Metods -------------------
 	public void function preInsert(){
-		getService("StockService").createInventory(this);
+		getService("inventoryService").createInventory( this );
 		super.preInsert();
 	}
 	
 	public void function preUpdate(Struct oldData){
-		throw("Order delivery updates are not allowed.");
+		throw("Updates to Order Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
 	//  -------------------- END: ORM Event Metods -------------------
 	
