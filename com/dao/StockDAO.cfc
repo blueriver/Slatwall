@@ -39,8 +39,8 @@ Notes:
 component extends="BaseDAO" {
 
 	
-	public any function getStockForSkuAndLocation(skuID, locationID) {
-		var params = [arguments.skuID, arguments.locationID];
+	public any function getStockBySkuAndLocation(required any sku, required any location) {
+		var params = [arguments.sku.getSkuID(), arguments.location.getLocationID()];
 		var hql = " SELECT s
 					FROM SlatwallStock s
 					INNER JOIN s.sku sk
