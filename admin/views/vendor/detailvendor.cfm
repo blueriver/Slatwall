@@ -60,11 +60,14 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="accountNumber" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorWebsite" edit="#rc.edit#" valueLink="#rc.Vendor.getVendorWebsite()#">
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
-				
-			<!---<input type="hidden" name="emailAddresses[1].emailAddressID" value="#rc.emailAddress.getEmailAddressID()#"/>
-			<cf_SlatwallPropertyDisplay object="#rc.emailAddress()#" edit="#rc.edit#" fieldNamePrefix="emailAddresses[1]." />--->	
-					
+			<cfif not isNull(rc.vendor.getPrimaryEmailAddress())>
+				<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="#rc.Vendor.getPrimaryEmailAddress().getVendorEmailAddressID()#" />
+				<cf_SlatwallPropertyDisplay object="#rc.Vendor.getPrimaryEmailAddress()#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
+			<cfelse>
+				<cfset newVendorEmail = $.slatwall.getService("vendorService").newVendorEmailAddress() />
+				<input type="hidden" name="primaryEmailAddress.vendorEmailAddressID" value="" />
+				<cf_SlatwallPropertyDisplay object="#newVendorEmail#" property="emailAddress" fieldName="primaryEmailAddress.emailAddress" edit="#rc.edit#" valueLink="">
+			</cfif>
 		</dl>
 
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">
