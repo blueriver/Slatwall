@@ -40,8 +40,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="stockService" type="any";
-	property name="VendorOrderService" type="any";
-	property name="LocationService" type="any";
+	property name="vendorOrderService" type="any";
+	property name="locationService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:stockreceiver.list");
@@ -181,24 +181,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 					stockReceiverItem.setStockReceiver(rc.stockReceiver);
 					stockReceiverItem.setQuantity(quantity);
 					stockReceiverItem.setStock(stock);
-					
-					// Save the stockReceiverItem now, so that we get an ID populated
-					getStockService().saveStockReceiverItem(stockReceiverItem);
-					
-					// Create the associated "Inventory" tracking entity.
-					var inventory = getStockService().newInventoryStockReceiverItem();
-					inventory.setQuantityIn(quantity);
-					inventory.setStock(stock);
-					inventory.setStockReceiverItem(stockReceiverItem);
-					getStockService().saveInventory(inventory);
 				}
 			}
 		}
 		
-		// For some reason, saving with population was causing a NullPointerException, so ended up doing population manually.
-		//rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
-		rc.stockReceiver.setBoxCount(rc.boxCount);
-		rc.stockReceiver.setPackingSlipNumber(rc.packingSlipNumber); 
-		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver);
+		// Populate with box count & packing slip, validate, and save
+		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
 	}
 }
