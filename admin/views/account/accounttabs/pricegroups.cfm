@@ -38,28 +38,5 @@ Notes:
 --->
 
 <cfoutput>
-	
 	<cf_SlatwallPropertyDisplay object="#rc.account#" property="priceGroups" edit="#rc.edit#" displayType="plain" />
-	<!---
-	<table id="PriceGroupList" class="listing-grid stripe" style="width:50%;">
-		<tr>
-			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.name")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.pricegroup.enabledOnAccount")#</th>
-		</tr>
-		<cfloop array="#rc.priceGroups#" index="local.priceGroup">
-
-			<tr>
-				<td>#local.priceGroup.getPriceGroupName()#</td>
-				<td>
-					<cfif rc.edit>
-						<input type="checkbox" name="priceGroupIdsAssigned" value="#local.priceGroup.getPriceGroupId()#" <cfif rc.Account.isPriceGroupAssigned(local.priceGroup.getPriceGroupId())>checked="checked"</cfif> /></td>
-					<cfelse>
-						#rc.Account.isPriceGroupAssigned(local.priceGroup.getPriceGroupId())#
-					</cfif>
-				</td>
-			</tr>
-
-		</cfloop>
-	</table>
-	--->
 </cfoutput>
