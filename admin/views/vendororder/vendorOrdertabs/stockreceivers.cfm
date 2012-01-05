@@ -40,9 +40,9 @@ Notes:
 <cfparam name="rc.stockReceiverVendorOrderSmartList">
 
 <cfoutput>
-	<div class="buttons">
+	<!---<div class="buttons">
 		<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
-	</div>
+	</div>--->
 	
 	<table class="listing-grid stripe">
 		<tr>
@@ -52,7 +52,7 @@ Notes:
 			<th></th>
 		</tr>
 			
-		<cfloop array="#rc.stockReceiverVendorOrderSmartList.getPageRecords()#" index="local.stockReceiverVendorOrder">
+		<cfloop array="#rc.stockReceiverVendorOrderSmartList.getRecords()#" index="local.stockReceiverVendorOrder">
 			<tr>
 				<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
 				<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>

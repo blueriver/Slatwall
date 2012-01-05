@@ -107,6 +107,10 @@ Notes:
 				<dt><strong>#$.Slatwall.rbKey("admin.vendorOrder.detail.total")#</strong></dt> 
 				<dd><strong>#rc.vendorOrder.getFormattedValue('total', 'currency')#</strong></dd>
 			</dl>
+			
+			<div class="buttons">
+				<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" disabled="#ArrayLen(rc.vendorOrderItemSmartList.getRecords()) EQ 0#" disabledtext="#$.Slatwall.rbKey("admin.vendorOrder.detail.disabledReceive")#" />
+			</div>
 		</div>
 		<div class="clear">
 			<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">

@@ -60,7 +60,11 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorName" edit="#rc.edit#" first="true">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="accountNumber" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="vendorWebsite" edit="#rc.edit#" valueLink="#rc.Vendor.getVendorWebsite()#">
-			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">	
+			<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="emailAddress" edit="#rc.edit#" valueLink="mailto:#rc.Vendor.getEmailAddress()#">
+				
+			<!---<input type="hidden" name="emailAddresses[1].emailAddressID" value="#rc.emailAddress.getEmailAddressID()#"/>
+			<cf_SlatwallPropertyDisplay object="#rc.emailAddress()#" edit="#rc.edit#" fieldNamePrefix="emailAddresses[1]." />--->	
+					
 		</dl>
 
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all clear">

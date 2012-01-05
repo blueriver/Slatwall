@@ -177,7 +177,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				var stock = getStockService().getStockForSkuAndLocation(skuID, rc.receiveForLocationID);
 				if(len(skuID) && isNumeric(quantity)) {
 					// Take the sku, location (selected), and quantity, and build a StockRecieverItem
-					var stockReceiverItem = getStockService().getStockReceiverItem(0, true);
+					var stockReceiverItem = getStockService().newStockReceiverItem();
 					stockReceiverItem.setStockReceiver(rc.stockReceiver);
 					stockReceiverItem.setQuantity(quantity);
 					stockReceiverItem.setStock(stock);
@@ -186,7 +186,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 					getStockService().saveStockReceiverItem(stockReceiverItem);
 					
 					// Create the associated "Inventory" tracking entity.
-					var inventory = getStockService().getInventoryStockReceiverItem(0, true);
+					var inventory = getStockService().newInventoryStockReceiverItem();
 					inventory.setQuantityIn(quantity);
 					inventory.setStock(stock);
 					inventory.setStockReceiverItem(stockReceiverItem);

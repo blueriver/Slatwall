@@ -49,7 +49,7 @@ Notes:
 			<th>#$.slatwall.rbKey("entity.vendorOrderitem.detail.cost")#</th>
 		</tr>
 			
-		<cfloop array="#rc.vendorOrderItemSmartList.getPageRecords()#" index="local.vendorOrderItem">
+		<cfloop array="#rc.vendorOrderItemSmartList.getRecords()#" index="local.vendorOrderItem">
 			<tr>
 				<td>#local.vendorOrderItem.getStock().getSku().getSkuCode()#</td>
 				<td class="varWidth">#local.vendorOrderItem.getStock().getSku().getProduct().getBrand().getBrandName()# - #local.vendorOrderItem.getStock().getSku().getProduct().getProductName()#</td>
