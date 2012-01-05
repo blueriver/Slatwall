@@ -5,12 +5,7 @@
 			<rule type="required" contexts="save" />
 		</property>
 		<property name="vendorWebsite">
-			<rule type="required" contexts="save" />
 			<rule type="url" contexts="save" />
-		</property>
-		<property name="emailAddress">
-			<rule type="required" contexts="save" />
-			<rule type="email" contexts="save" />
 		</property>
 	</objectProperties>
 </validateThis>
