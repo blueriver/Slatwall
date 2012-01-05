@@ -43,5 +43,12 @@ Notes:
 	<cfloop array="#rc.vendor.getBrands()#" index="brand">
 		<cfset idsList = ListAppend(idsList, brand.getBrandId())>
 	</cfloop>
-	<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect" value="#idsList#"  />
+	
+	<cfif !rc.edit AND ArrayLen(rc.Vendor.getBrands()) EQ 0>
+		#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendorOrders.noBrands")#
+	<cfelse>
+		<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect" value="#idsList#"  />
+	</cfif>
+	
+	
 </cfoutput>

@@ -199,7 +199,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 						// Only proceed if we have a positive value
 						if(quantity > 0) {
 							// The vendorOrderItem is new. See if we already have a stock for that sku and location and use if it so, otherwise, creat a new stock
-							var stock = getVendorOrderService().getStockForSkuAndLocation(skuID, locationID);
+							var stock = getStockService().getStockForSkuAndLocation(skuID, locationID);
 							
 							if(isNull(stock)) {
 								stock = getVendorOrderService().getStock(0, true);
