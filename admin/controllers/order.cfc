@@ -218,15 +218,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function processOrderFulfillment(required struct rc) {
+		param name="rc.locationID";
 		
 		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
 		
 		if(rc.orderFulfillment.isProcessable()) {
 			var orderDeliveryItemsStruct = rc.orderItems;
 			// call service to process fulfillment. Returns an orderDelivery
-			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
+			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment, orderDeliveryItemsStruct, rc.locationID);
 			if(!orderDelivery.hasErrors()) {
-				
 				getFW().redirect(action="admin:print", queryString="returnAction=admin:order.list&printAction=packingSlip&orderDeliveryShippingID=#orderDelivery.getOrderDeliveryID()#");
 				
 				// rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");

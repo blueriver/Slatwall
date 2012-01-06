@@ -746,7 +746,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	public any function dumpScreen(required any obj){
 		GetPageContext().getOut().clearBuffer();
     	savecontent variable="local.theContent" {
-    		writeDump(obj);
+    		writeDump(var=obj, top=2);
     	}
     	GetPageContext().getResponse().getWriter().write(theContent);
     	abort;

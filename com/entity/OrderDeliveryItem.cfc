@@ -73,7 +73,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	public void function setOrderItem(required OrderItem OrderItem) {
 	   variables.orderItem = arguments.orderItem;
 	   if(isNew() or !arguments.orderItem.hasOrderDeliveryItem(this)) {
-	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(),this);
+	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(), this);
 	   }
 	}
 	
