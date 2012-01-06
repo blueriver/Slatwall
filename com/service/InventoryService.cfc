@@ -38,7 +38,7 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	property name="inventoryDAO" type="any";
-
+	
 	// entity will be one of StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
 		
@@ -65,7 +65,7 @@ component extends="BaseService" accessors="true" output="false" {
 			case "SlatwallOrderDeliveryItem": {
 				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
 					var inventory = this.newInventory();
-					inventory.setQuantityIn(arguments.entity.getQuantityDelivered());
+					inventory.setQuantityOut(arguments.entity.getQuantityDelivered());
 					inventory.setStock(arguments.entity.getStock());
 					inventory.setOrderDeliveryItem(arguments.entity);
 					getDAO().save(inventory);
@@ -78,4 +78,38 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 	}
+	
+	public numeric function getQOH(string stockID, string skuID, string productID) {
+		return getDAO().getQOH(argumentCollection=arguments);
+	}
+	
+	public numeric function getQOSH(string stockID, string skuID, string productID) {
+		return getDAO().getQOSH(argumentCollection=arguments);
+	}
+	
+	public numeric function getQNDOO(string stockID, string skuID, string productID) {
+		return getDAO().getQNDOO(argumentCollection=arguments);
+	}
+	
+	public numeric function getQNDORVO(string stockID, string skuID, string productID) {
+		return getDAO().getQNDORVO(argumentCollection=arguments);
+	}
+	
+	public numeric function getQNDSA(string stockID, string skuID, string productID) {
+		return getDAO().getQNDSA(argumentCollection=arguments);
+	}
+	
+	public numeric function getQNRORO(string stockID, string skuID, string productID) {
+		return getDAO().getQNRORO(argumentCollection=arguments);
+	}
+	
+	public numeric function getQNROVO(string stockID, string skuID, string productID) {
+		return getDAO().getQNROVO(argumentCollection=arguments);
+	}
+	
+	public numeric function getQNROSA(string stockID, string skuID, string productID) {
+		return getDAO().getQNROSA(argumentCollection=arguments);
+	}
+	
+	
 }

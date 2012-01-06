@@ -63,6 +63,7 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	
 	// Related Object Properties (many-to-many)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";
+	//property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID" cascade="save-update";
 	
 	public Vendor function init(){
 		// set default collections for association management methods

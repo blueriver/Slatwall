@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,13 +35,6 @@
 
 Notes:
 
---->
-
-<cfoutput>
-	<cfif !rc.edit AND ArrayLen(rc.Vendor.getBrands()) EQ 0>
-		#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendorOrders.noBrands")#
-	<cfelse>
-		<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect"  />
-		<!--- <cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="products" edit="#rc.edit#"  fieldType="multiselect" /> --->
-	</cfif>
-</cfoutput>
+*/
+component extends="BaseDAO" {
+}

@@ -55,6 +55,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Related Object Properties (One-To-One)
+	property name="skuCache" fieldType="one-to-one" cfc="SkuCache";
+	
 	// Related Object Properties (Many-to-One)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
 	
@@ -69,15 +72,36 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Non-Persistent Properties
 	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
-	property name="qoh" persistent="false" type="numeric" hint="quantity on hand";
-	property name="qc" persistent="false" type="numeric" hint="quantity committed";
-	property name="qexp" persistent="false" type="numeric" hint="quantity exptected";
-	property name="webQOH" persistent="false" type="numeric";
-	property name="webQC" persistent="false" type="numeric";
-	property name="webQEXP" persistent="false" type="numeric";
-	property name="webWholesaleQOH" persistent="false" type="numeric";
-	property name="webWholesaleQC" persistent="false" type="numeric";
-	property name="webWholesaleQEXP" persistent="false" type="numeric";
+	
+	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
+	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	
+	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	
+	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
+	
+	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
 	public Sku function init() {
        // set default collections for association management methods
@@ -197,60 +221,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	return this.getImageDirectory() & this.getImageFile();
     }
     
-    public numeric function getQOH() {
-    	if(isNull(variables.qoh)) {
-    		variables.qoh = 0;
-    		var stocks = getStocks();
-    		if(isDefined("stocks")) {
-	    		for(var i = 1; i<= arrayLen(stocks); i++) {
-	    			variables.qoh += stocks[i].getQOH();
-	    		}
-	    	}
-    	}
-    	return variables.qoh;
-    }
-    
-    public numeric function getQC() {
-    	if(isNull(variables.qc)) {
-    		variables.qc = 0;
-    		var stocks = getStocks();
-    		if(isDefined("stocks")) {
-	    		for(var i = 1; i<= arrayLen(stocks); i++) {
-	    			variables.qc += stocks[i].getQC();
-	    		}
-	    	}
-    	}
-    	return variables.qc;
-    }
-    
-    public numeric function getQEXP() {
-       	if(isNull(variables.qexp)) {
-    		variables.qc = 0;
-    		var stocks = getStocks();
-        	if(isDefined("stocks")) {
-	    		for(var i = 1; i<= arrayLen(stocks); i++) {
-	    			variables.qexp += stocks[i].getQEXP();
-	    		}
-    		}
-    	}
-    	return variables.qc;
-    }
-	
-	/**
-	/* @hint quantity immediately available
-	*/
-	public numeric function getQIA() {
-		return getQOH() - getQC();
-	}
-
-	/**
-	/* @hint quantity expected available
-	*/	
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-	
-	public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
+    public string function getImage(string size, numeric width=0, numeric height=0, string alt="", string class="", string resizeMethod="scale", string cropLocation="",numeric cropXStart=0, numeric cropYStart=0,numeric scaleWidth=0,numeric scaleHeight=0) {
 		// Get the expected Image Path
 		var path=getImagePath();
 		
@@ -425,6 +396,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
    	public any function getStockByLocation(required any locationID){
    		// Returns a new entity if one doesn't exist.
    	}
+   	
+   	public numeric function getQOH() {
+		if(!structKeyExists(variables, "qoh")) {
+			variables.qoh = getService("inventoryService").getQOH(skuID=getSkuID());
+		}
+		return variables.qoh;
+	}
     
-	
 }

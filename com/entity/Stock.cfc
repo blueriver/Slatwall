@@ -40,9 +40,6 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	
 	// Persistent Properties
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qoh" ormtype="integer" hint="Quantity On Hand, This gets decrimented when an item is Shipped, and incrimented when an item is received or transfered in";
-	property name="qc" ormtype="integer" hint="Quantity Committed, This gets incrimented when an order is placed, and decremented when an order ships.  It is used to calculated availability";
-	property name="qexp" ormtype="integer" hint="Quantity Expected, This is the quantity expected on either a PO or from an order that is being returned.";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -53,11 +50,41 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
 	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
 	
 	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
+	
+	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
+	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	
+	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	
+	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
+	
+	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
 }

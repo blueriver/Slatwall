@@ -94,11 +94,36 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="shippingWeight" type="numeric" persistent="false";
-	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
-	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
-	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
-	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
+	
+	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
+	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	
+	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	
+	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
+	
+	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -134,28 +159,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   return Super.init();
 	}
-
-	// Related Object Helpers
 	
-	public string function getBrandName() {
+	public string function getSimpleRepresentationPropertyName() {
+		return "productName";
+	}
+
+    public string function getBrandName() {
 		if( structKeyExists(variables,"brand") ) {
 			return getBrand().getBrandName();
 		}
 		else {	
 			return "";
 		}
-	}
-	
-	public any function getBrandOptions() {
-		if(!structKeyExists(variables, "brandOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
-			smartList.addOrder("brandName|ASC");
-			variables.brandOptions = smartList.getRecords();
-			arrayPrepend(variables.brandOptions, {value="", name=rbKey('define.select')});
-		}
-		return variables.brandOptions;
 	}
 	
 	public any function getProductTypeOptions() {
@@ -246,53 +261,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getListingProductURL(string filename=$.content('filename')) {
 		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
-	}
-	
-	public numeric function getQOH() {
-		if(isNull(variables.qoh)) {
-    		variables.qoh = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qoh += skus[i].getQOH();
-	    		}	
-    		}
-    	}
-    	return variables.qoh;
-	}
-	
-	public numeric function getQC() {
-		if(isNull(variables.qc)) {
-    		variables.qc = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qc += skus[i].getQC();
-	    		}	
-    		}
-    	}
-    	return variables.qc;
-	}
-	
-	public numeric function getQEXP() {
-		if(isNull(variables.qexp)) {
-    		variables.qexp = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qexp += skus[i].getQEXP();
-	    		}	
-    		}
-    	}
-    	return variables.qexp;
-	}
-	
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-	
-	public numeric function getQIA() {
-		return getQOH() - getQC();
 	}
 	
 	public string function getTemplate() {
@@ -735,6 +703,23 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
 	
+	public numeric function getQOH() {
+		if(!structKeyExists(variables, "qoh")) {
+			variables.qoh = getService("inventoryService").getQOH(productID=getProductID());
+		}
+		return variables.qoh;
+	}
+	
+	//  -------------------- ORM Event Methods -------------------
+	public void function preInsert(){
+		super.preInsert();
+		//getService("skuCacheService").updateFromProduct( this );
+	}
+	
+	public void function postUpdate() {
+		super.postUpdate();
+		//getService("skuCacheService").updateFromProduct( this );
+	}
+	//  -------------------- END: ORM Event Metods -------------------
+	
 }
-
-

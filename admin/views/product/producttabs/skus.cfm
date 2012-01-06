@@ -105,11 +105,11 @@ Notes:
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QC")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QIA")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QEA")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QOH")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QC")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QE")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QATS")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QIATS")#</th>
 				</cfif>
 				<cfif rc.edit>
 				  <th class="administration">&nbsp;</th>
@@ -207,11 +207,11 @@ Notes:
 					<td><cf_SlatwallPropertyDisplay object="#local.thisSku#" fieldName="skus[#local.skuCount#].remoteID" property="remoteID" edit="#rc.edit#" displaytype="plain"></td>
 				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-				<td>#local.thisSku.getQOH()#</td>
-				<td>#local.thisSku.getQEXP()#</td>
-				<td>#local.thisSku.getQC()#</td>
-				<td>#local.thisSku.getQIA()#</td>
-				<td>#local.thisSku.getQEA()#</td>
+					<td>#local.thisSku.getQOH()#</td>
+					<td>#local.thisSku.getQC()#</td>
+					<td>#local.thisSku.getQE()#</td>
+					<td>#local.thisSku.getQATS()#</td>
+					<td>#local.thisSku.getQIATS()#</td>
 				</cfif>
 				<cfif rc.edit>
 					<td class="administration">
