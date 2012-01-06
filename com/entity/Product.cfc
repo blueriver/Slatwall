@@ -84,28 +84,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Calculated Quantity Properties
-	property name="qoh" formula="SELECT isNull(sum(inventory.quantityIn),0) - isNull(sum(inventory.quantityOut),0) FROM SlatwallInventory inventory INNER JOIN SlatwallStock stock on inventory.stockID = stock.stockID INNER JOIN SlatwallSku sku on stock.skuID = sku.skuID WHERE sku.productID = productID" lazy="extra";
-	
-	// Non-Persistent Quantity Properties
-	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
-	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
-	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
-	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
-	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
-	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
-	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
-	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
-	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
-	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
-	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
-	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
-	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
-	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
-	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
-	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
-	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
-	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
 	property name="onTermSaleFlag" type="boolean" persistent="false";
@@ -116,6 +94,33 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="shippingWeight" type="numeric" persistent="false";
+	
+	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
+	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
+	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -152,24 +157,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   return Super.init();
 	}
 
-    /************** Quantity Methods *********************/
-	public numeric function getQOSH() {
-		
-	}
-    
-	// @hint quantity immediately available
-	public numeric function getQIA() {
-		return getQOH() - getQC();
-	}
-
-	// @hint quantity expected available
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-    /************** END: Quantity Methods ****************/
-
-
-	public string function getBrandName() {
+    public string function getBrandName() {
 		if( structKeyExists(variables,"brand") ) {
 			return getBrand().getBrandName();
 		}
@@ -706,6 +694,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
 		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
+	}
+	
+	public numeric function getQOH() {
+		if(!structKeyExists(variables, "qoh")) {
+			getService("inventoryService").getQOH(productID=getProductID());
+		}
+		return variables.qoh;
 	}
 	
 }

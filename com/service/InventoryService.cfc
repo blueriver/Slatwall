@@ -38,7 +38,7 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 	property name="inventoryDAO" type="any";
-
+	
 	// entity will be one of StockReceiverItem, StockPhysicalItem, StrockAdjustmentDeliveryItem, VendorOrderDeliveryItem, OrderDeliveryItem
 	public void function createInventory(required any entity) {
 		
@@ -78,4 +78,6 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 	}
+	
+	
 }

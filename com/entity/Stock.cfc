@@ -40,9 +40,6 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	
 	// Persistent Properties
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qoh" ormtype="integer" hint="Quantity On Hand, This gets decrimented when an item is Shipped, and incrimented when an item is received or transfered in";
-	property name="qc" ormtype="integer" hint="Quantity Committed, This gets incrimented when an order is placed, and decremented when an order ships.  It is used to calculated availability";
-	property name="qexp" ormtype="integer" hint="Quantity Expected, This is the quantity expected on either a PO or from an order that is being returned.";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -60,25 +57,31 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
 	
-	// Calculated Quantity Properties
-	property name="qoh" hint="Quantity On Hand" formula="SELECT isNull(sum(inventory.quantityIn),0) - isNull(sum(inventory.quantityOut),0) FROM SlatwallInventory inventory WHERE inventory.stockID = stockID";
-	
-	// Non-Persistent Quantity Properties
+	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
 	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
 	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
 	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
-	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
 	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
 	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
 	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
 	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
 	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
 	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
 	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
 	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
-	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
-	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
-	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
 	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
 	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
+	
 }

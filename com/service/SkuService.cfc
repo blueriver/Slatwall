@@ -40,6 +40,54 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 	property name="optionService" type="any";
 	property name="productService" type="any";
+	
+	// This method allows for the saving of the skuCache entities which are used to aid the listings of products.
+	// It is important to note that this method automatically gets called by numerous postUpdate() orm event hooks in entities like product, promotionReward, stockReceiver ect.
+	public void function updateSkuCache(any product, any sku) {
+			
+		// If a sku was passed in, the pull the sku record out of the skuCache, and set all of the values
+		if(structKeyExists(arguments, "sku")) {
+			var skuCache = this.getSkuCache(arguments.sku.getSkuID(), true);
+			
+			// If this is a new skuCache entity, or a product was passed into this method as well (most likely via recursion from below) we need to update all of the setting flags
+			if(skuCache.isNew() || structKeyExists(arguments, "product")) {
+				
+			}
+			
+			// If the sku is new, then we need to make sure that the skuID and productID get populated in the record
+			if(skuCache.isNew()) {
+				skuCache.setSku(arguments.sku);
+				skuCache.setProduct(arguments.sku.getProduct());
+			}
+			
+			// Set the Price, and all of the quantities for this sku
+			skuCache.setLivePrice( arguments.sku.getLivePrice() );
+			skuCache.setQOH( arguments.sku.getQOH() );
+			skuCache.setQOSH( arguments.sku.getQOSH() );
+			skuCache.setQNDOO( arguments.sku.getQNDOO() );
+			skuCache.setQNDORVO( arguments.sku.getQNDORVO() );
+			skuCache.setQNDOSA( arguments.sku.getQNDOSA() );
+			skuCache.setQNRORO( arguments.sku.getQNRORO() );
+			skuCache.setQNROVO( arguments.sku.getQNROVO() );
+			skuCache.setQNROSA( arguments.sku.getQNROSA() );
+			skuCache.setQHB( arguments.sku.getQHB() );
+			
+			getDAO().save(skuCache);
+			
+			
+		// If a product got passed in, then we loop over all skus and update the cache for them
+		} else if( structKeyExists(arguments, "product") ) {
+			for(var i=1; i<=arrayLen(arguments.product.getSkus()); i++) {
+				// It is important to pass the product in as well, so that the flags get set 
+				this.updateSkuCache(sku=arguments.product.getSkus()[i], product=arguments.product);
+			}
+				
+		// If neither were passed in then throw an exception
+		} else {
+			throw("You need to either pass in either a product or a sku to this method.");
+			
+		}
+	}
 
 	public any function getSkuSmartList(string productID, struct data={}){
 		arguments.entityName = "SlatwallSku";

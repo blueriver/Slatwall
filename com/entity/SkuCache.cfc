@@ -36,60 +36,22 @@
 Notes:
 
 */
-component extends="BaseDAO" {
-
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		var hql = "SELECT sum(inventory.quantityIn), sum(inventory.quantityOut) FROM SlatwallInventory inventory WHERE ";
-		var params = [];
-		
-		if(structKeyExists(arguments, "stockID")) {
-			params[1] = arguments.stockID;
-			hql &= "inventory.stockID = ?";
-		} else if (structKeyExists(arguments, "stockID")) {
-			params[1] = arguments.stockID;
-			hql &= "inventory.stockID = ?";
-		} else if (structKeyExists(arguments, "productID")) {
-			params[1] = arguments.stockID;
-			hql &= "inventory.stockID = ?";
-		} else {
-			throw("You must specify a stockID, skuID, or productID to this method.");
-		}
-		
-		var results = ormExecuteQuery(hql, params);
-		writeDump(results);
-		abort;
-	}
+component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallSkuCache" persistent=true accessors=true output=false extends="BaseEntity" {
 	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
+	// Related Object Properties (many-to-one)
+	property name="sku" fieldtype="many-to-one,id" fkcolumn="skuID" cfc="Sku";
+	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
 	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
+	// Persistent Properties
+	property name="livePrice" ormtype="big_decimal";
+	property name="qoh" ormtype="integer" default=0;
+	property name="qosh" ormtype="integer" default=0;
+	property name="qndoo" ormtype="integer" default=0;
+	property name="qndorvo" ormtype="integer" default=0;
+	property name="qndosa" ormtype="integer" default=0;
+	property name="qnroro" ormtype="integer" default=0;
+	property name="qnrovo" ormtype="integer" default=0;
+	property name="qnrosa" ormtype="integer" default=0;
+	property name="qhb" ormtype="integer" default=0;
 	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
-	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
-	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
-	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
-	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
-	
-	public numeric function getQOH(string productID, string skuID, string stockID) {
-		
-	}
-
 }

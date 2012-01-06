@@ -67,30 +67,35 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 	
-	// Calculated Quantity Properties
-	property name="qoh" formula="SELECT isNull(sum(inventory.quantityIn),0) - isNull(sum(inventory.quantityOut),0) FROM SlatwallInventory inventory INNER JOIN SlatwallStock stock on inventory.stockID = stock.stockID WHERE stock.skuID = skuID";
+	// Non-Persistent Properties
+	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
 	
-	// Non-Persistent Quantity Properties
+	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
 	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
 	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
 	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
-	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
 	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
 	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
 	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
 	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
 	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
 	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
 	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
 	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
-	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
-	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
-	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
 	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
 	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
-	
-	// Non-Persistent Properties
-	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
 	public Sku function init() {
        // set default collections for association management methods
@@ -103,22 +108,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
       
        return super.init();
     }
-    
-    /************** Quantity Methods *********************/
-	public numeric function getQOSH() {
-		
-	}
-    
-	// @hint quantity immediately available
-	public numeric function getQIA() {
-		return getQOH() - getQC();
-	}
-
-	// @hint quantity expected available
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-    /************** END: Quantity Methods ****************/
     
     public boolean function isNotDefaultSku() {
     	if(getProduct().getDefaultSku().getSkuID() != getSkuID()) {
