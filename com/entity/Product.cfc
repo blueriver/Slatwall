@@ -698,11 +698,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public numeric function getQOH() {
 		if(!structKeyExists(variables, "qoh")) {
-			getService("inventoryService").getQOH(productID=getProductID());
+			variables.qoh = getService("inventoryService").getQOH(productID=getProductID());
 		}
 		return variables.qoh;
 	}
 	
 }
-
-
