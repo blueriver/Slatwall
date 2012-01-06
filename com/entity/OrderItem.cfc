@@ -284,5 +284,18 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	public numeric function getQuantityShipped() {
     	return getService("OrderService").getQuantityShipped(getOrder().getOrderID(), getSku().getSkuID());
     }
+    
+    
+    //  -------------------- ORM Event Methods -------------------
+	public void function postInsert(){
+		super.postInsert();
+		//getService("skuCacheService").updateFromOrderItem( this );
+	}
 	
+	public void function postUpdate() {
+		super.preUpdate();
+		//getService("skuCacheService").updateFromOrderItem( this );
+	}
+	//  -------------------- END: ORM Event Metods -------------------
+   
 }

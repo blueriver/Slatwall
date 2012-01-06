@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,68 +35,71 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-
-	public numeric function getQOH(string stockID, string skuID, string productID) {
-		
-		var params = [];
-		var hql = "SELECT NEW MAP(sum(inventory.quantityIn) as quantityIn, sum(inventory.quantityOut) as quantityOut) FROM SlatwallInventory inventory WHERE ";
-		
-		if(structKeyExists(arguments, "stockID")) {
-			params[1] = arguments.stockID;
-			hql &= "inventory.stock.stockID = ?";
-		} else if (structKeyExists(arguments, "skuID")) {
-			params[1] = arguments.skuID;
-			hql &= "inventory.stock.sku.skuID = ?";
-		} else if (structKeyExists(arguments, "productID")) {
-			params[1] = arguments.productID;
-			hql &= "inventory.stock.sku.product.productID = ?";
-		} else {
-			throw("You must specify a stockID, skuID, or productID to this method.");
+--->
+<cfcomponent extends="BaseDAO">
+	
+	<cfscript>
+		public numeric function getQOH(string stockID, string skuID, string productID) {
+			
+			var params = [];
+			var hql = "SELECT NEW MAP(sum(inventory.quantityIn) as quantityIn, sum(inventory.quantityOut) as quantityOut) FROM SlatwallInventory inventory WHERE ";
+			
+			if(structKeyExists(arguments, "stockID")) {
+				params[1] = arguments.stockID;
+				hql &= "inventory.stock.stockID = ?";
+			} else if (structKeyExists(arguments, "skuID")) {
+				params[1] = arguments.skuID;
+				hql &= "inventory.stock.sku.skuID = ?";
+			} else if (structKeyExists(arguments, "productID")) {
+				params[1] = arguments.productID;
+				hql &= "inventory.stock.sku.product.productID = ?";
+			} else {
+				throw("You must specify a stockID, skuID, or productID to this method.");
+			}
+			
+			var results = ormExecuteQuery(hql, params, true);
+			
+			var quantityIn = 0;
+			var quantityOut = 0;
+			
+			if(structKeyExists(results, "quantityIn")) {
+				quantityIn = results[ "quantityIn" ];
+			}
+			if(structKeyExists(results, "quantityOut")) {
+				quantityOut = results[ "quantityOut" ];
+			}
+			
+			return quantityIn - quantityOut;
 		}
 		
-		var results = ormExecuteQuery(hql, params, true);
-		
-		var quantityIn = 0;
-		var quantityOut = 0;
-		
-		if(structKeyExists(results, "quantityIn")) {
-			quantityIn = results[ "quantityIn" ];
-		}
-		if(structKeyExists(results, "quantityOut")) {
-			quantityOut = results[ "quantityOut" ];
+		public numeric function getQOSH(string stockID, string skuID, string productID) {
+			// TODO: Setup Sales Hold
+			return 0;
 		}
 		
-		return quantityIn - quantityOut;
-	}
+		public numeric function getQNDOO(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+		
+		public numeric function getQNDORVO(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+		
+		public numeric function getQNDSA(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+		
+		public numeric function getQNRORO(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+		
+		public numeric function getQNROVO(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+		
+		public numeric function getQNROSA(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+	</cfscript>
 	
-	public numeric function getQOSH(string stockID, string skuID, string productID) {
-		// TODO: Setup Sales Hold
-		return 0;
-	}
-	
-	public numeric function getQNDOO(string stockID, string skuID, string productID) {
-		throw("impliment me");
-	}
-	
-	public numeric function getQNDORVO(string stockID, string skuID, string productID) {
-		throw("impliment me");
-	}
-	
-	public numeric function getQNDSA(string stockID, string skuID, string productID) {
-		throw("impliment me");
-	}
-	
-	public numeric function getQNRORO(string stockID, string skuID, string productID) {
-		throw("impliment me");
-	}
-	
-	public numeric function getQNROVO(string stockID, string skuID, string productID) {
-		throw("impliment me");
-	}
-	
-	public numeric function getQNROSA(string stockID, string skuID, string productID) {
-		throw("impliment me");
-	}
-}
+</cfcomponent>

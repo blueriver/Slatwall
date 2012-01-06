@@ -97,22 +97,25 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Non-Persistent Calculated Quantity Properties (these are all deligated to the DAO)
 	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
-	property name="qoso" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
 	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
 	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
 	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
 	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
 	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
 	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	
 	// Non-Persistent Calculated Quantity Properties (these are just reporting calculations that are deligated to DAO)
 	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
 	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	
 	// Non-Persistent Calculated Quantity Properties (these are local calculations in the entity itself)
 	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
 	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
 	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
 	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
-	property name="qfats" type="numeric" persistent="false" hint="Quantity Future Available To Sell";
+	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
+	
 	// Non-Persistent Setting Quantity Properties (these use custom logic that is deligated to service)
 	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
 	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
@@ -155,6 +158,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	       variables.productImages = [];
 	   }
 	   return Super.init();
+	}
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "productName";
 	}
 
     public string function getBrandName() {
@@ -702,5 +709,17 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		return variables.qoh;
 	}
+	
+	//  -------------------- ORM Event Methods -------------------
+	public void function preInsert(){
+		super.preInsert();
+		//getService("skuCacheService").updateFromProduct( this );
+	}
+	
+	public void function postUpdate() {
+		super.postUpdate();
+		//getService("skuCacheService").updateFromProduct( this );
+	}
+	//  -------------------- END: ORM Event Metods -------------------
 	
 }

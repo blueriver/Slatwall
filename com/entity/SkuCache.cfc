@@ -37,13 +37,13 @@ Notes:
 
 */
 component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallSkuCache" persistent=true accessors=true output=false extends="BaseEntity" {
+
+	// Related Object Properties (Many-to-One)
+	property name="skuID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='sku'}";
+	property name="sku" fieldtype="one-to-one" cfc="Sku" constrained="true";
 	
-	// Related Object Properties (many-to-one)
-	property name="sku" fieldtype="many-to-one,id" fkcolumn="skuID" cfc="Sku";
-	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
-	
-	// Persistent Properties
-	property name="livePrice" ormtype="big_decimal";
+	// Persistent Properties (Calculations)
+	property name="livePrice" ormtype="big_decimal" default=0;
 	property name="qoh" ormtype="integer" default=0;
 	property name="qosh" ormtype="integer" default=0;
 	property name="qndoo" ormtype="integer" default=0;
@@ -52,6 +52,19 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="qnroro" ormtype="integer" default=0;
 	property name="qnrovo" ormtype="integer" default=0;
 	property name="qnrosa" ormtype="integer" default=0;
+	// Persistent Properties (Settings)
+	property name="qmin" ormtype="integer" default=0;
+	property name="qmax" ormtype="integer" default=0;
 	property name="qhb" ormtype="integer" default=0;
+	property name="qomin" ormtype="integer" default=0;
+	property name="qomax" ormtype="integer" default=0;
+	property name="qvomin" ormtype="integer" default=0;
+	property name="qvomax" ormtype="integer" default=0;
+	property name="allowShippingFlag" ormtype="boolean" default=0;
+	property name="allowPreorderFlag" ormtype="boolean" default=0;
+	property name="allowBackorderFlag" ormtype="boolean" default=0;
+	property name="allowDropshipFlag" ormtype="boolean" default=0;
+	property name="callToOrderFlag" ormtype="boolean" default=0;
+	property name="trackInventoryFlag" ormtype="boolean" default=0;
 	
 }
