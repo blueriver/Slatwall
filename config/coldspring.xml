@@ -105,7 +105,8 @@
 		<property name="utilityEmailService"><ref bean="utilityEmailService" /></property>
 		<property name="utilityFormService"><ref bean="utilityFormService" /></property>
 		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
-		<property name="settingService"><ref bean="settingService" /></property>
+		<!--<property name="settingService"><ref bean="settingService" /></property>-->
+		<property name="stockService"><ref bean="stockService" /></property>
     </bean>
 	<bean id="paymentService" parent="parentService" class="Slatwall.com.service.PaymentService">
         <property name="DAO"><ref bean="paymentDAO" /></property>

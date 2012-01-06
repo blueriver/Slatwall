@@ -49,7 +49,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityTagService";
 	property name="utilityService";
 	property name="utilityEmailService";
-	property name="SettingService";
+	property name="stockService";
+	//property name="SettingService";
 	
 	
 	public any function getOrderSmartList(struct data={}) {
@@ -594,12 +595,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(thisQuantity > 0 && thisQuantity <= thisOrderItem.getQuantityUndelivered()) {
 					// keep track of the total quantity fulfilled
 					totalQuantity += thisQuantity;
-					// Create and Populate the delivery item
-					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
-
+					
 					// Grab the stock that matches the item and the location from which we are delivering
 					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), deliverFromLocation);
-					orderDeliveryItem.setStock(stock);
+					
+					// Create and Populate the delivery item
+					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, stock, thisQuantity, orderDelivery);
 					
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
@@ -635,16 +636,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return orderDelivery;
 	}
 	
-	private any function createOrderDeliveryItem(required any orderItem, required numeric quantity, required any orderDelivery) {
-
+	private any function createOrderDeliveryItem(required any orderItem, required any stock, required numeric quantity, required any orderDelivery) {
+	
 		var orderDeliveryItem = this.newOrderDeliveryItem();
 		orderDeliveryItem.setOrderItem(arguments.orderItem);
 		orderDeliveryItem.setQuantityDelivered(arguments.quantity);
 		orderDeliveryItem.setOrderDelivery(arguments.orderDelivery);
+		orderDeliveryItem.setStock(arguments.stock);
 		
-		//writeDump(var=orderDeliveryItem, top=2);
+		//writeDump(var=arguments, top=2);
 		 
-		return this.saveOrderDeliveryItem(orderDeliveryItem);
+		return orderDeliveryItem;
 	}
 	
 	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {

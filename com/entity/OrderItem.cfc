@@ -269,7 +269,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     public numeric function getCombinedTaxRate() {
     	var taxRate = 0;
     	for(var i=1; i <= ArrayLen(getAppliedTaxes()); i++) {
-    		taxRate += getAppliedTaxes()[i].taxRate;
+    		taxRate += getAppliedTaxes()[i].getTaxRate();
     	}
     	
     	return taxRate;
