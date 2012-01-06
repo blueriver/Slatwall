@@ -45,6 +45,8 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	// Related Object Properties (many-to-one)
 	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	
+	// This may be left null
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
    /******* Association management methods for bidirectional relationships **************/
@@ -71,7 +73,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	public void function setOrderItem(required OrderItem OrderItem) {
 	   variables.orderItem = arguments.orderItem;
 	   if(isNew() or !arguments.orderItem.hasOrderDeliveryItem(this)) {
-	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(),this);
+	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(), this);
 	   }
 	}
 	

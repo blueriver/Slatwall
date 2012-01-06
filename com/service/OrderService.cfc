@@ -49,6 +49,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityTagService";
 	property name="utilityService";
 	property name="utilityEmailService";
+	property name="stockService";
+	//property name="SettingService";
 	
 	
 	public any function getOrderSmartList(struct data={}) {
@@ -542,7 +544,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	/*@param data  struct of orderItemID keys with values that represent quantities to be processed (delivered)
 	/*@returns orderDelivery entity
 	*/
-	public any function processOrderFulfillment(required any orderFulfillment, struct data={}) {
+	public any function processOrderFulfillment(required any orderFulfillment, struct data={}, required any locationID) {
 		// Get the Order from the fulfillment
 		var order = arguments.orderFulfillment.getOrder();
 		
@@ -554,8 +556,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Set the Order As the Order for this Delivery
 		orderDelivery.setOrder(order);
-		
 		orderDelivery.setDeliveryOpenDateTime(now());
+		
+		// Set the location from which this order will be fulfilled. deliverFromLocation is also used when setting the stock on OrderDeliveryItems.
+		var deliverFromLocation = getLocationService().getLocation(arguments.locationID);
+		orderDelivery.setLocation(deliverFromLocation);
 		
 		// TODO: change close date to indicate when item was received, downloaded, picked up, etc.
 		orderDelivery.setDeliveryCloseDateTime(now());
@@ -581,6 +586,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for( var i=1; i<=arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()); i++) {
 			
 			var thisOrderItem = arguments.orderFulfillment.getOrderFulfillmentItems()[i];
+
 			// Check to see if this fulfillment item has any quantity passed to it
 			if(structKeyExists(arguments.data, thisOrderItem.getOrderItemID())) {
 				var thisQuantity = arguments.data[thisOrderItem.getOrderItemID()];
@@ -589,12 +595,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				if(thisQuantity > 0 && thisQuantity <= thisOrderItem.getQuantityUndelivered()) {
 					// keep track of the total quantity fulfilled
 					totalQuantity += thisQuantity;
-					// Create and Populate the delivery item
-					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, thisQuantity, orderDelivery);
 					
 					// Grab the stock that matches the item and the location from which we are delivering
-					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), getLocationService().getLocation(arguments.data.deliverFromLocationID));
-					orderDeliveryItem.setStock(stock);
+					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), deliverFromLocation);
+					
+					// Create and Populate the delivery item
+					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, stock, thisQuantity, orderDelivery);
 					
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
@@ -630,12 +636,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return orderDelivery;
 	}
 	
-	private any function createOrderDeliveryItem(required any orderItem, required numeric quantity, required any orderDelivery) {
+	private any function createOrderDeliveryItem(required any orderItem, required any stock, required numeric quantity, required any orderDelivery) {
+	
 		var orderDeliveryItem = this.newOrderDeliveryItem();
 		orderDeliveryItem.setOrderItem(arguments.orderItem);
 		orderDeliveryItem.setQuantityDelivered(arguments.quantity);
 		orderDeliveryItem.setOrderDelivery(arguments.orderDelivery);
-		return this.saveOrderDeliveryItem(orderDeliveryItem);
+		orderDeliveryItem.setStock(arguments.stock);
+		
+		//writeDump(var=arguments, top=2);
+		 
+		return orderDeliveryItem;
 	}
 	
 	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {
