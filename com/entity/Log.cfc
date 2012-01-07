@@ -53,6 +53,10 @@ component displayname="Log" entityname="SlatwallLog" table="SlatwallLog" persist
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
 	

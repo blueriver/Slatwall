@@ -76,6 +76,10 @@ component displayname="Order Item Attribute Value" entityname="SlatwallOrderItem
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================

@@ -58,6 +58,10 @@ component displayname="History Sku" entityname="SlatwallHistorySku" table="Slatw
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
 	

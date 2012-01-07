@@ -56,6 +56,10 @@ component displayname="History Order" entityname="SlatwallHistoryOrder" table="S
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
 	
