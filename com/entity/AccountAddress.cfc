@@ -40,30 +40,36 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	
 	// Persistent Properties
 	property name="accountAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	// name for this account Address
-	property name="accountAddressName" ormtype="string";
+	property name="accountAddressName" ormtype="string" hint="Nickname for this account Address"; 
 	
 	// Related Object Properties
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
-	//property name="accountAddressType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountAddressTypeID";
 	
-	/*
-	public string function getAddressType() {
-		return getAccountAddressType().getType();
-	}
-	*/
-
-	/******* Association management methods for bidirectional relationships **************/
 	
-    // Account (many-to-one)
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)
 	public void function setAccount(required any account) {
 	   variables.account = arguments.account;
 	   if(isNew() or !arguments.account.hasAccountAddress(this)) {
 	       arrayAppend(arguments.account.getAccountAddresses(),this);
 	   }
 	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAccountAddresses(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAccountAddresses(), index);
+		}
+		structDelete(variables, "account");
+	}
 	
-	/************   END Association Management Methods   *******************/
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
 	
+	// ===================  END:  ORM Event Hooks  =========================
 }

@@ -87,4 +87,16 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
 	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
+		
+	// =================== START: Quantity Methods =========================
+	
+	// ===================  END:  Quantity Methods =========================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }
