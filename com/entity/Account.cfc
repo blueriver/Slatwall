@@ -60,7 +60,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Related Object Properties (many-to-many)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID" cascade="save-update";
-		
+
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
