@@ -53,4 +53,17 @@ component displayname="Vendor Sku Stock" entityname="SlatwallVendorSkuStock" tab
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";	
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

@@ -178,6 +178,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
 	}
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Account Addresses (one-to-many)

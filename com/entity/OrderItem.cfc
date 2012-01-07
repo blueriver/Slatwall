@@ -285,17 +285,26 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	return getService("OrderService").getQuantityShipped(getOrder().getOrderID(), getSku().getSkuID());
     }
     
-    
-    //  -------------------- ORM Event Methods -------------------
+   
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
 	public void function postInsert(){
 		super.postInsert();
 		//getService("skuCacheService").updateFromOrderItem( this );
 	}
 	
 	public void function postUpdate() {
-		super.preUpdate();
+		super.postUpdate();
 		//getService("skuCacheService").updateFromOrderItem( this );
 	}
-	//  -------------------- END: ORM Event Metods -------------------
-   
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

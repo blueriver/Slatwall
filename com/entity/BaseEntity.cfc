@@ -127,63 +127,6 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return variables.modifiedDateTime;
 	}
 	
-	// Start: ORM EventHandler Methods
-	public void function preInsert(){
-		var timestamp = now();
-		
-		if(structKeyExists(this,"setCreatedDateTime")){
-			this.setCreatedDateTime(timestamp);
-		}
-		if(structKeyExists(this,"setCreatedByAccount")){
-			setCreatedByAccount(getService("SessionService").getCurrentAccount());
-		}
-		
-		if(structKeyExists(this,"setModifiedDateTime")){
-			this.setModifiedDateTime(timestamp);
-		}
-		if(structKeyExists(this,"setModifiedByAccount")){
-			setModifiedByAccount(getService("SessionService").getCurrentAccount());
-		}
-		
-	}
-	
-	public void function preUpdate(Struct oldData){
-		var timestamp = now();
-		
-		if(structKeyExists(this,"setModifiedDateTime")){
-			this.setModifiedDateTime(timestamp);
-		}
-		if(structKeyExists(this,"setModifiedByAccount")){
-			setModifiedByAccount(getService("SessionService").getCurrentAccount());
-		}
-	}
-	
-	public void function preDelete(any entity){
-
-	}
-	
-	public void function preLoad(any entity){
-
-	}
-	
-	public void function postInsert(any entity){
-
-	}
-	
-	public void function postUpdate(any entity){
-
-	}
-	
-	public void function postDelete(any entity){
-
-	}
-	
-	public void function postLoad(any entity){
-
-	}
-	// End: ORM EventHandler Methods
-	
-	
 	// @hint Generic abstract dynamic ORM methods by convention via onMissingMethod.
 	public any function onMissingMethod(required string missingMethodName, required struct missingMethodArguments) {
 		// hasUniqueXXX() 		Where XXX is a property to check if that property value is currenly unique in the DB
@@ -267,4 +210,69 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		throw( 'No matching method for #missingMethodName#().' );
 	}	
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		var timestamp = now();
+		
+		if(structKeyExists(this,"setCreatedDateTime")){
+			this.setCreatedDateTime(timestamp);
+		}
+		if(structKeyExists(this,"setCreatedByAccount")){
+			setCreatedByAccount(getService("SessionService").getCurrentAccount());
+		}
+		
+		if(structKeyExists(this,"setModifiedDateTime")){
+			this.setModifiedDateTime(timestamp);
+		}
+		if(structKeyExists(this,"setModifiedByAccount")){
+			setModifiedByAccount(getService("SessionService").getCurrentAccount());
+		}
+		
+	}
+	
+	public void function preUpdate(Struct oldData){
+		var timestamp = now();
+		
+		if(structKeyExists(this,"setModifiedDateTime")){
+			this.setModifiedDateTime(timestamp);
+		}
+		if(structKeyExists(this,"setModifiedByAccount")){
+			setModifiedByAccount(getService("SessionService").getCurrentAccount());
+		}
+	}
+	
+	public void function preDelete(any entity){
+
+	}
+	
+	public void function preLoad(any entity){
+
+	}
+	
+	public void function postInsert(any entity){
+
+	}
+	
+	public void function postUpdate(any entity){
+
+	}
+	
+	public void function postDelete(any entity){
+
+	}
+	
+	public void function postLoad(any entity){
+
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

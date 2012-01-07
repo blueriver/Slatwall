@@ -34,7 +34,12 @@
     exception statement from your version.
 
 Notes:
-
+	
+	List of Discriminator Values and their respective cfc's
+	
+	orderItem 			| OrderItemAppliedTax.cfc
+	orderFulfillment 	| OrderFulfillmentAppliedTax.cfc
+	order 				| OrderAppliedTax.cfc
 */
 component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="SlatwallTaxApplied" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="appliedType" {
 	
@@ -55,13 +60,16 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 	// Special Related Discriminator Property
 	property name="appliedType" length="255" insert="false" update="false";
 	
-	/*
-	List of Discriminator Values and their respective cfc's
 	
-	orderItem 			| OrderItemAppliedTax.cfc
-	orderFulfillment 	| OrderFulfillmentAppliedTax.cfc
-	order 				| OrderAppliedTax.cfc
+	// ============ START: Non-Persistent Property Methods =================
 	
-	*/
-
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

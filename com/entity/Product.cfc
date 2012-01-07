@@ -709,10 +709,20 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		}
 		return variables.qoh;
 	}
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
 	
-	//  -------------------- ORM Event Methods -------------------
-	public void function preInsert(){
-		super.preInsert();
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function postInsert(){
+		super.postInsert();
 		//getService("skuCacheService").updateFromProduct( this );
 	}
 	
@@ -720,6 +730,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		super.postUpdate();
 		//getService("skuCacheService").updateFromProduct( this );
 	}
-	//  -------------------- END: ORM Event Metods -------------------
 	
+	// ===================  END:  ORM Event Hooks  =========================
 }

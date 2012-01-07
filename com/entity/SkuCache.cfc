@@ -67,4 +67,16 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="callToOrderFlag" ormtype="boolean" default=0;
 	property name="trackInventoryFlag" ormtype="boolean" default=0;
 	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

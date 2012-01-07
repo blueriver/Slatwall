@@ -48,4 +48,15 @@ component displayname="Product Customization" entityname="SlatwallProductCustomi
 	property name="attributeSet" cfc="AttributeSet" fieldtype="one-to-one" constrained="true";
 
 
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

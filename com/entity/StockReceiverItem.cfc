@@ -70,15 +70,24 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
        structDelete(variables,"stockReceiver");
     }
     
-    //  -------------------- ORM Event Metods -------------------
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
 	public void function preInsert(){
-		getService("inventoryService").createInventory( this );
 		super.preInsert();
+		getService("inventoryService").createInventory( this );
 	}
 	
 	public void function preUpdate(Struct oldData){
 		throw("Updates to Stock Receiver Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
-	//  -------------------- END: ORM Event Metods -------------------
-    
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

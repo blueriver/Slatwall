@@ -38,5 +38,17 @@ Notes:
 */
 component displayname="Order Item Status Action" entityname="SlatwallOrderItemStatusAction" table="SlatwallOrderItemStatusAction" persistent="true" output="false" accessors="true" extends="OrderItemStatusActionAbstract" discriminatorvalue="global" {
 
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

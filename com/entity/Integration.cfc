@@ -136,4 +136,15 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		return getService("integrationService").getIntegrationCFCSettings(getIntegrationCFC(arguments.integrationType));
 	}
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

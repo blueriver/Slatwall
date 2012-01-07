@@ -66,5 +66,18 @@ component displayname="Country" entityname="SlatwallCountry" table="SlatwallCoun
 	property name="postalCodeLabel" ormtype="string";
 	property name="postalCodeShowFlag" ormtype="boolean";
 	property name="postalCodeRequiredFlag" ormtype="boolean";
+
+
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
+
 }

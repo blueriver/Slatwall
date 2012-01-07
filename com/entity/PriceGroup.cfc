@@ -143,4 +143,18 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
     	return ArrayLen(getChildPriceGroups()) NEQ 0;
     }
     
+    
+        
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================    
 }

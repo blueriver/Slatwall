@@ -52,4 +52,15 @@ component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode"
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

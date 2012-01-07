@@ -50,4 +50,16 @@ component displayname="Stock Receiver Vendor Order" entityname="SlatwallStockRec
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }
