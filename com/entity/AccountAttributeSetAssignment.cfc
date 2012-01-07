@@ -49,6 +49,24 @@ component displayname="Account Attribute Set Assignment" entityname="SlatwallAcc
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+	   variables.account = arguments.account;
+	   if(isNew() or !arguments.account.hasAttributeSetAssignment(this)) {
+	       arrayAppend(arguments.account.getAttributeSetAssignments(),this);
+	   }
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAttributeSetAssignments(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAttributeSetAssignments(), index);
+		}
+		structDelete(variables, "account");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 		
 	// =================== START: ORM Event Hooks  =========================
