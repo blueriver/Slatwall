@@ -186,26 +186,26 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Account Addresses (one-to-many)
 	public void function addAccountAddress(required any accountAddress) {
-		arguments.accountAddress.setAccount(this);
+		arguments.accountAddress.setAccount( this );
 	}
 	public void function removeAccountAddress(required any accountAddress) {
-		arguments.accountAddress.setAccount(this);
+		arguments.accountAddress.removeAccount( this );
 	}
 	
 	// Account Email Addresses (one-to-many)
-	public void function addAccountEmailAddress(required any AccountEmailAddress) {    
-		arguments.AccountEmailAddress.setAccount(this);    
+	public void function addAccountEmailAddress(required any accountEmailAddress) {    
+		arguments.accountEmailAddress.setAccount( this );    
 	}    
-	public void function removeAccountEmailAddress(required any AccountEmailAddress) {    
-		arguments.AccountEmailAddress.removeAccount(this);    
+	public void function removeAccountEmailAddress(required any accountEmailAddress) {    
+		arguments.accountEmailAddress.removeAccount( this );    
 	}
 	
-	// Account Phone Numbers (one-to-many)
-	public void function addAccountPhoneNumber(required any AccountPhoneNumber) {
-		arguments.AccountPhoneNumber.setAccount(this);
-	}	
-	public void function removeAccountPhoneNumber(required any AccountPhoneNumber) {
-		arguments.AccountPhoneNumber.removeAccount(this);
+	// Account Phone Numbers (one-to-many)    
+	public void function addAccountPhoneNumber(required any accountPhoneNumber) {    
+		arguments.accountPhoneNumber.setAccount( this );    
+	}    
+	public void function removeAccountPhoneNumber(required any accountPhoneNumber) {    
+		arguments.accountPhoneNumber.removeAccount( this );    
 	}
 	
 	// Account Attribute Sets (one-to-many)
@@ -232,8 +232,13 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		arguments.productReview.removeAccount(this);
 	}
 	
+
 	// =============  END:  Bidirectional Helper Methods ===================
-		
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================

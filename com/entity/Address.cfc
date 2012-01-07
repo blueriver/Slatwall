@@ -59,6 +59,8 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	
 	// Non persistent cached properties
 	property name="country" persistent="false";
+	property name="countryCodeOptions" persistent="false" type="array";
+	property name="stateCodeOptions" persistent="false" type="array";
 	
 	public any function init() {
 		if(isNull(variables.countryCode)) {
@@ -67,6 +69,62 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		
 		return super.init();
 	}
+		
+	public string function getFullAddress(string delimiter = ", ") {
+		var address = "";
+		address = listAppend(address,getCompany());
+		address = listAppend(address, getStreetAddress());
+		address = listAppend(address,getStreet2Address());
+		address = listAppend(address,getCity());
+		address = listAppend(address,getStateCode());
+		address = listAppend(address,getPostalCode());
+		address = listAppend(address,getCountryCode());
+		// this will remove any empty elements and insert any passed-in delimiter
+		address = listChangeDelims(address,arguments.delimiter,",","no");
+		return address;
+	}
+	
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getCountry() {
+		if(!structKeyExists(variables, "country")) {
+			variables.country = getService("addressService").getCountry(getCountryCode());
+		}
+		return variables.country;
+	}
+	
+	public array function getCountryCodeOptions() {
+		if(!structKeyExists(variables, "countryCodeOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCountry");
+			smartList.addSelect(propertyIdentifier="countryName", alias="name");
+			smartList.addSelect(propertyIdentifier="countryCode", alias="value");
+			smartList.addOrder("countryName|ASC");
+			variables.countryCodeOptions = smartList.getRecords();
+		}
+		return variables.countryCodeOptions;
+	}
+	
+	public array function getStateCodeOptions() {
+		if(!structKeyExists(variables, "stateCodeOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallState");
+			smartList.addSelect(propertyIdentifier="stateName", alias="name");
+			smartList.addSelect(propertyIdentifier="stateCode", alias="value");
+			smartList.addFilter("countryCode", getCountryCode()); 
+			smartList.addOrder("stateName|ASC");
+			variables.stateCodeOptions = smartList.getRecords();
+			arrayPrepend(variables.stateCodeOptions, {value="", name=rbKey('define.select')});
+		}
+		return variables.stateCodeOptions;
+	}
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
 	
 	// This overrides the base validation method to dynamically add rules based on country specific requirements
 	public any function validate() {
@@ -98,57 +156,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		super.validate(argumentCollection=arguments);
 	}
 	
-	public string function getFullAddress(string delimiter = ", ") {
-		var address = "";
-		address = listAppend(address,getCompany());
-		address = listAppend(address, getStreetAddress());
-		address = listAppend(address,getStreet2Address());
-		address = listAppend(address,getCity());
-		address = listAppend(address,getStateCode());
-		address = listAppend(address,getPostalCode());
-		address = listAppend(address,getCountryCode());
-		// this will remove any empty elements and insert any passed-in delimiter
-		address = listChangeDelims(address,arguments.delimiter,",","no");
-		return address;
-	}
-	
-	public array function getCountryCodeOptions() {
-		if(!structKeyExists(variables, "countryCodeOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCountry");
-			smartList.addSelect(propertyIdentifier="countryName", alias="name");
-			smartList.addSelect(propertyIdentifier="countryCode", alias="value");
-			smartList.addOrder("countryName|ASC");
-			variables.countryCodeOptions = smartList.getRecords();
-		}
-		return variables.countryCodeOptions;
-	}
-	
-	public array function getStateCodeOptions() {
-		if(!structKeyExists(variables, "stateCodeOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallState");
-			smartList.addSelect(propertyIdentifier="stateName", alias="name");
-			smartList.addSelect(propertyIdentifier="stateCode", alias="value");
-			smartList.addFilter("countryCode", getCountryCode()); 
-			smartList.addOrder("stateName|ASC");
-			variables.stateCodeOptions = smartList.getRecords();
-			arrayPrepend(variables.stateCodeOptions, {value="", name=rbKey('define.select')});
-		}
-		return variables.stateCodeOptions;
-	}
-	
-	public any function getCountry() {
-		if(!structKeyExists(variables, "country")) {
-			variables.country = getService("addressService").getCountry(getCountryCode());
-		}
-		return variables.country;
-	}
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-	
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
+	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
 	
