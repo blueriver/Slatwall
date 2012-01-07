@@ -174,54 +174,63 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
-    /******* Association management methods for bidirectional relationships **************/
+	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
+		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
+	}
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Addresses (one-to-many)
+	public void function addAccountAddress(required any accountAddress) {
+		arguments.accountAddress.setAccount(this);
+	}
+	public void function removeAccountAddress(required any accountAddress) {
+		arguments.accountAddress.setAccount(this);
+	}
+	
+	// Account Email Addresses (one-to-many)
+	public void function addAccountEmailAddress(required any AccountEmailAddress) {    
+		arguments.AccountEmailAddress.setAccount(this);    
+	}    
+	public void function removeAccountEmailAddress(required any AccountEmailAddress) {    
+		arguments.AccountEmailAddress.removeAccount(this);    
+	}
+	
+	// Account Phone Numbers (one-to-many)
+	public void function addAccountPhoneNumber(required any AccountPhoneNumber) {
+		arguments.AccountPhoneNumber.setAccount(this);
+	}	
+	public void function removeAccountPhoneNumber(required any AccountPhoneNumber) {
+		arguments.AccountPhoneNumber.removeAccount(this);
+	}
+	
+	// Account Attribute Sets (one-to-many)
+	public void function addAccountAttributeSet(required any accountAttributeSet) {
+		arguments.accountAttributeSet.setAccount( this );
+	}
+	public void function removeAccountAttributeSet(required any accountAttributeSet) {
+	   arguments.accountAttributeSet.removeAccount( this );
+	}
 	
 	// Orders (one-to-many)
 	public void function addOrder(required any Order) {
 	   arguments.order.setAccount(this);
 	}
-	
 	public void function removeOrder(required any Order) {
 	   arguments.order.removeAccount(this);
 	}
 	
 	// Product Reviews (one-to-many)
 	public void function addProductReview(required any productReview) {
-	   arguments.productReview.setAccount(this);
+		arguments.productReview.setAccount(this);
 	}
-	
 	public void function removeProductReview(required any productReview) {
-	   arguments.productReview.removeAccount(this);
+		arguments.productReview.removeAccount(this);
 	}
 	
-	// Addresses (one-to-many)
-	public void function addAccountAddress(required any accountAddress) {
-	   arguments.accountAddress.setAccount(this);
-	}
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
 	
-	// Account Email Addresses (one-to-many)
-	public void function addAccountEmailAddress(required any AccountEmailAddress) {    
-	   arguments.AccountEmailAddress.setAccount(this);    
-	}    
-
-	public void function removeAccountEmailAddress(required any AccountEmailAddress) {    
-	   arguments.AccountEmailAddress.removeAccount(this);    
-	}
-	
-	
-	// Account Phone Numbers (one-to-many)
-	public void function addAccountPhoneNumber(required any AccountPhoneNumber) {
-	   arguments.AccountPhoneNumber.setAccount(this);
-	}
-	
-	public void function removeAccountPhoneNumber(required any AccountPhoneNumber) {
-	   arguments.AccountPhoneNumber.removeAccount(this);
-	}
-	
-	/************   END Association Management Methods   *******************/
-	
-	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
-		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
-	}
-	
+	// ===================  END:  ORM Event Hooks  =========================
 }
