@@ -42,4 +42,16 @@ component displayname="Account Attribute Set Assignment" entityname="SlatwallAcc
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

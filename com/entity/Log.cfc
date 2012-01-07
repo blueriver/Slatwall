@@ -46,4 +46,16 @@ component displayname="Log" entityname="SlatwallLog" table="SlatwallLog" persist
 	property name="logMessage" ormtype="string";
 	property name="logDetail" ormtype="string" length="4000";
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
+	
 }

@@ -49,5 +49,17 @@ component displayname="Product Relationship" entityname="SlatwallProductRelation
 	property name="relatedProducts" singularname="relatedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProduct" fkcolumn="productRelationshipID" inversejoincolumn="productID" cascade="save-update";
 	property name="relatedSkus" singularname="relatedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallProductRelationshipSku" fkcolumn="productRelationshipID" inversejoincolumn="skuID" cascade="save-update";
 	property name="relationshipType" cfc="Type" fieldtype="many-to-one" fkcolumn="relationshipTypeID";
+
+
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

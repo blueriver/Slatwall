@@ -53,4 +53,16 @@ component displayname="Stock Hold" entityname="SlatwallStockHold" table="Slatwal
 	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
 	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

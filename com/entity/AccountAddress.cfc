@@ -46,6 +46,9 @@ component displayname="Account Address" entityname="SlatwallAccountAddress" tabl
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	

@@ -52,9 +52,20 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 	property name="stockReceiverItem" cfc="StockReceiverItem" fieldtype="many-to-one" fkcolumn="stockReceiverItemID";
 	property name="orderDeliveryItem" cfc="orderDeliveryItem" fieldtype="many-to-one" fkcolumn="orderDeliveryItemID";
 	
-	//  -------------------- ORM Event Metods -------------------	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
 	public void function preUpdate(Struct oldData){
 		throw("Updates to an Inventory Record are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
-	//  -------------------- END: ORM Event Metods -------------------
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

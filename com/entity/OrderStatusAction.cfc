@@ -45,4 +45,17 @@ component displayname="Order Status Action" entityname="SlatwallOrderStatusActio
 	property name="orderStatusType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderStatusTypeID";
 	property name="orderActionType" fieldtype="many-to-one" cfc="Type" fkcolumn="orderActionTypeID";
 	
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

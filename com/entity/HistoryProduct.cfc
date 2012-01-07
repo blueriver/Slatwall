@@ -49,5 +49,16 @@ component displayname="History Product" entityname="SlatwallHistoryProduct" tabl
 	
 	// Related Object Properties
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
+
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }
