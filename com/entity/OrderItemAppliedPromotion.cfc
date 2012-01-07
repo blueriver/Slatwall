@@ -78,6 +78,10 @@ component displayname="Order Item Applied Promotion" entityname="SlatwallOrderIt
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================

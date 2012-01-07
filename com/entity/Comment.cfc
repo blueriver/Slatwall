@@ -67,6 +67,10 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preUpdate(struct oldData) {
