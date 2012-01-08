@@ -49,7 +49,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="sortOrder" ormtype="integer";
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
-	property name="activeFlag" ormtype="boolean";
+	property name="activeFlag" ormtype="boolean" default=1;
 
 	// Related Object Properties (Many-To-One)
 	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
@@ -65,13 +65,12 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	// Non-Persistent Properties
+	property name="attributeTypeOptions" persistent="false";
+	property name="validationTypeOptions" persistent="false";
+	
 	
 	public Attribute function init(){
-		// By default new attributes should be active
-		if(isNull(variables.activeFlag)) {
-			variables.activeFlag = 1;
-		}
-		
 		// set default collections for association management methods
 		if(isNull(variables.attributeOptions)) {
 	   	   variables.attributeOptions = [];
@@ -80,7 +79,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		return super.init();
 	}
 
-	public array function getAttributeOptions(orderby, sortType="text", direction="asc") {
+	public array function getAttributeOptions(string orderby, string sortType="text", string direction="asc") {
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.AttributeOptions;
 		} else {
@@ -88,7 +87,9 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		}
 	}
 
-    public array function getAttributeTypeOptions() {
+    // ============ START: Non-Persistent Property Methods =================
+	
+	public array function getAttributeTypeOptions() {
 		if(!structKeyExists(variables, "attributeTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
@@ -111,8 +112,6 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		}
 		return variables.validationTypeOptions;
     }
-    
-    // ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	

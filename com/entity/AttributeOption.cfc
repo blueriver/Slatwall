@@ -54,7 +54,6 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
-	
 	public string function getAttributeOptionLabel() {
 		if(structkeyExists(variables,"attributeOptionLabel")) {
 			return variables["attributeOptionLabel"];
