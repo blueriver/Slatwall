@@ -747,12 +747,12 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint Used as a debugging to to perform a <cfdump> from anywhere within the application and have it show as full screen output. Provide any object as argument.
-	private any function dumpScreen(){
+	private any function dumpScreen(required any var, numeric top=3){
 		var theContent="";
 		
 		getPageContext().getOut().clearBuffer();
     	savecontent variable="theContent" {
-    		writeDump(argumentsCollection=arguments);
+    		writeDump(var=arguments.var, top=arguments.top);
     	}
     	getPageContext().getResponse().getWriter().write(theContent);
     	abort;
