@@ -802,6 +802,29 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.qiats;
 	}
 	
+	// TODO: These methods are just here so that the calculation stuff will work.  The actuall settings need to be setup
+	public numeric function getQMIN() {
+		return 0;
+	}
+	public numeric function getQMAX() {
+		return 0;
+	}
+	public numeric function getQHB() {
+		return 0;
+	}
+	public numeric function getQOMIN() {
+		return 0;
+	}
+	public numeric function getQOMAX() {
+		return 0;
+	}
+	public numeric function getQVOMIN() {
+		return 0;
+	}
+	public numeric function getQVOMAX() {
+		return 0;
+	}
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================

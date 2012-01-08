@@ -95,7 +95,7 @@ component extends="BaseService" accessors="true" output="false" {
 		return getDAO().getQNDORVO(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNDSA(string stockID, string skuID, string productID) {
+	public numeric function getQNDOSA(string stockID, string skuID, string productID) {
 		return getDAO().getQNDSA(argumentCollection=arguments);
 	}
 	
@@ -132,7 +132,7 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQATS(required any entity) {
-		return arguments.entity.getQNC() + arguments.entity.QE() - arguments.entity.getQHB();
+		return arguments.entity.getQNC() + arguments.entity.getQE() - arguments.entity.getQHB();
 	}
 	
 	public numeric function getQIATS(required any entity) {
