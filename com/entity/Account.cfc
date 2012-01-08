@@ -104,37 +104,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return super.init();
 	}
 	
-	public string function getFullName() {
-		return "#getFirstName()# #getLastName()#";
-	}
-	
 	public boolean function isGuestAccount() {
 		if(isNull(getMuraUserID())) {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	
-	public string function getPhoneNumber() {
-		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
-			return getPrimaryPhoneNumber().getPhoneNumber();
-		}
-		return "";
-	}
-	
-	public string function getEmailAddress() {
-		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
-			return getPrimaryEmailAddress().getEmailAddress();
-		}
-		return "";
-	}
-	
-	public string function getAddress() {
-		if(!isNull(getPrimaryAddress()) && !isNull(getPrimaryAddress().getAddress())) {
-			return getPrimaryAddress().getAddress();
-		} else {
-			return getService("addressService").newAddress();
 		}
 	}
 	
@@ -179,6 +153,32 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getPhoneNumber() {
+		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
+			return getPrimaryPhoneNumber().getPhoneNumber();
+		}
+		return "";
+	}
+	
+	public string function getEmailAddress() {
+		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
+			return getPrimaryEmailAddress().getEmailAddress();
+		}
+		return "";
+	}
+	
+	public string function getAddress() {
+		if(!isNull(getPrimaryAddress()) && !isNull(getPrimaryAddress().getAddress())) {
+			return getPrimaryAddress().getAddress();
+		} else {
+			return getService("addressService").newAddress();
+		}
+	}
+	
+	public string function getFullName() {
+		return "#getFirstName()# #getLastName()#";
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
