@@ -741,20 +741,21 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
+	// @hint Private helper function for using the Slatwall Log service.
+	private void function logSlatwall(required string message, boolean generalLog=flase){
+		getService("logService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
+	}
 	
-	// Used as a debugging to to perform a <cfdump> from anywhere within the application and have it show as full screen output. Provide any object as argument.
-	public any function dumpScreen(required any obj){
-		GetPageContext().getOut().clearBuffer();
-    	savecontent variable="local.theContent" {
-    		writeDump(var=obj, top=2);
+	// @hint Used as a debugging to to perform a <cfdump> from anywhere within the application and have it show as full screen output. Provide any object as argument.
+	private any function dumpScreen(){
+		var theContent="";
+		
+		getPageContext().getOut().clearBuffer();
+    	savecontent variable="theContent" {
+    		writeDump(argumentsCollection=arguments);
     	}
-    	GetPageContext().getResponse().getWriter().write(theContent);
+    	getPageContext().getResponse().getWriter().write(theContent);
     	abort;
 	}
-	
-	// This can be expanded, but kept it simple for now.
-	public void function logSlatwall(required string message){
-		getService("logService").logMessage(message=arguments.message, generalLog=false);		
-	}
-		
+
 }
