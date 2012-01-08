@@ -52,13 +52,6 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	
-	// Override the base class simple Representation value
-	public string function getSimpleRepresentationPropertyName() {
-		return "emailAddress";
-	}
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -86,6 +79,10 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "emailAddress";
+	}
 	
 	// ==================  END:  Overridden Methods ========================
 	

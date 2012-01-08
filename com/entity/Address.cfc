@@ -57,7 +57,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Non persistent cached properties
+	// Non Persistent Properties
 	property name="country" persistent="false";
 	property name="countryCodeOptions" persistent="false" type="array";
 	property name="stateCodeOptions" persistent="false" type="array";
