@@ -100,6 +100,14 @@ Notes:
 		public numeric function getQNROSA(string stockID, string skuID, string productID) {
 			throw("impliment me");
 		}
+		
+		public numeric function getQR(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
+		
+		public numeric function getQS(string stockID, string skuID, string productID) {
+			throw("impliment me");
+		}
 	</cfscript>
 	
 </cfcomponent>

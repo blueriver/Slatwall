@@ -111,5 +111,33 @@ component extends="BaseService" accessors="true" output="false" {
 		return getDAO().getQNROSA(argumentCollection=arguments);
 	}
 	
+	public numeric function getQR(string stockID, string skuID, string productID) {
+		return getDAO().getQR(argumentCollection=arguments);
+	}
+	
+	public numeric function getQS(string stockID, string skuID, string productID) {
+		return getDAO().getQS(argumentCollection=arguments);
+	}
+	
+	public numeric function getQC(required any entity) {
+		return arguments.entity.getQNDOO() + arguments.entity.getQNDORVO() + arguments.entity.getQNDOSA();
+	}
+	
+	public numeric function getQE(required any entity) {
+		return arguments.entity.getQNRORO() + arguments.entity.getQNROVO() + arguments.entity.getQNROSA();
+	}
+	
+	public numeric function getQNC(required any entity) {
+		return arguments.entity.getQOH() - arguments.entity.getQC();
+	}
+	
+	public numeric function getQATS(required any entity) {
+		return arguments.entity.getQNC() + arguments.entity.QE() - arguments.entity.getQHB();
+	}
+	
+	public numeric function getQIATS(required any entity) {
+		return arguments.entity.getQNC() - arguments.entity.getQHB();
+	}
+	
 	
 }
