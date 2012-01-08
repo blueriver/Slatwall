@@ -411,6 +411,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Alternate Sku Codes (one-to-many)
+	public void function addAlternateSkuCode(required any alternateSkuCode) {
+		arguments.alternateSkuCode.setSku( this );
+	}
+	public void function removeAlternateSkuCode(required any alternateSkuCode) {
+		arguments.alternateSkuCode.removeSku( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// =================== START: ORM Event Hooks  =========================

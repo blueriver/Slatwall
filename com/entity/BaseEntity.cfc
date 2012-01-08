@@ -205,6 +205,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			}
 			
 			return variables[ cacheKey ];
+			
+		// getXXXCount()		Where XXX is a one-to-many or many-to-many property where we want to get the count of that property
+		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 5) == "Count") {
+			
+			var propertyName = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			propertyName = left(propertyName, len(propertyName)-5);
+			
+			return arrayLen(variabels[propertyName]);
 		}
 		
 		throw( 'No matching method for #missingMethodName#().' );
