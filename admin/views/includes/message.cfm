@@ -59,7 +59,9 @@ Message type is in rc.messagetype, which styles the message appropriately. Curre
 	<cfset local.errors = rc.errorBean.getErrors() />
 	<ul class="errors">
 	<cfloop collection="#local.errors#" item="local.thisError">
-		<li>#local.errors[local.thisError]#</li>
+		<cfloop array="#local.errors[local.thisError]#" index="local.em" >
+			<li>#local.em#</li>
+		</cfloop>
 	</cfloop>
 	</ul>
 </cfif>
