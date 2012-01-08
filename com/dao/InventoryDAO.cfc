@@ -42,7 +42,7 @@ Notes:
 		public numeric function getQOH(string stockID, string skuID, string productID) {
 			
 			var params = [];
-			var hql = "SELECT NEW MAP(sum(inventory.quantityIn) as quantityIn, sum(inventory.quantityOut) as quantityOut) FROM SlatwallInventory inventory WHERE ";
+			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ), coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
 			
 			if(structKeyExists(arguments, "stockID")) {
 				params[1] = arguments.stockID;
@@ -59,17 +59,7 @@ Notes:
 			
 			var results = ormExecuteQuery(hql, params, true);
 			
-			var quantityIn = 0;
-			var quantityOut = 0;
-			
-			if(structKeyExists(results, "quantityIn")) {
-				quantityIn = results[ "quantityIn" ];
-			}
-			if(structKeyExists(results, "quantityOut")) {
-				quantityOut = results[ "quantityOut" ];
-			}
-			
-			return quantityIn - quantityOut;
+			return results[1] - results[2];
 		}
 		
 		public numeric function getQOSH(string stockID, string skuID, string productID) {
@@ -78,36 +68,37 @@ Notes:
 		}
 		
 		public numeric function getQNDOO(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQNDORVO(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQNDSA(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQNRORO(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQNROVO(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQNROSA(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQR(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
 		
 		public numeric function getQS(string stockID, string skuID, string productID) {
-			throw("impliment me");
+			return 0;
 		}
+		
 	</cfscript>
 	
 </cfcomponent>
