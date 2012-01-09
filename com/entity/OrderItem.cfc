@@ -76,11 +76,15 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 
 	public any function init() {
 		
+		// set the type to sale by default
+		if( !structKeyExists(variables,"orderItemType") ) {
+			setOrderItemType( getService("typeService").getTypeBySystemCode("oitSale") );
+		}
 		// set status to new by default
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
-			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
-			setOrderItemStatusType(statusType);
+			setOrderItemStatusType( getService("typeService").getTypeBySystemCode("oistNew") );
 		}
+		
 		// set default collections for association management methods
 		if(isNull(variables.orderDeliveryItems)) {
 		   variables.orderDeliveryItems = [];

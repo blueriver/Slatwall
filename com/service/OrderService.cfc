@@ -50,6 +50,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityService";
 	property name="utilityEmailService";
 	property name="stockService";
+	property name="typeService";
 	//property name="SettingService";
 	
 	
