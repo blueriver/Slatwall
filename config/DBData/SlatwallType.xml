@@ -96,6 +96,10 @@
 		<Record typeID="444df2dafc8a46af86aedf6aa15bb35a" type="Vendor Order Types" systemCode="vendorOrderType" />
 		<Record typeID="444df2dbfde8c38ab64bb21c724d46e0" parentTypeID="444df2dafc8a46af86aedf6aa15bb35a" type="Purchase Order" systemCode="votPurchaseOrder" />
 		<Record typeID="444df2dc91afb63f25074c7d9512248b" parentTypeID="444df2dafc8a46af86aedf6aa15bb35a" type="Return Order" systemCode="votReturnOrder" />
+		
+		<Record typeID="444df2ebdcb8c577cd35625496dcaf56" type="Vendor Order Status Types" systemCode="vendorOrderStatusType" />
+		<Record typeID="444df2ece8c9034485e247d16edba399" parentTypeID="444df2ebdcb8c577cd35625496dcaf56" type="New" systemCode="vostNew" />
+		<Record typeID="444df2eda295fa04086515696436a4f0" parentTypeID="444df2ebdcb8c577cd35625496dcaf56" type="Closed" systemCode="vostClosed" />
 
 		<Record typeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Validation Types" systemCode="validationType" />
 		<Record typeID="444df2adb8774aa68279f91db58b8711" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Date" systemCode="vtDate" />
@@ -105,20 +109,11 @@
 		<Record typeID="444df2b201a098f5b277febb17a7cb0a" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Zip Code" systemCode="vtZipCode" />
 		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
 		
-		
-		
-		
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
-
-
-
-444df2ebdcb8c577cd35625496dcaf56
-444df2ece8c9034485e247d16edba399
-444df2eda295fa04086515696436a4f0
 444df2eeaa187f8f633304d856fd8eda
 444df2ef9cb25116d6396b34d89c9312
 444df2f0fed139ff94191de8fcd1f61b
