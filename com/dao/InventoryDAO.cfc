@@ -82,7 +82,7 @@ Notes:
 					  AND
 					    orderItem.order.orderStatusType.systemCode != 'ostClosed'
 					  AND
-					  	orderItem.orderItemStatusType.systemCode = 'oitSale'
+					  	orderItem.orderItemType.systemCode = 'oitSale'
 					  AND ";
 			
 			if(structKeyExists(arguments, "stockID")) {
