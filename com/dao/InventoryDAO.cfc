@@ -39,13 +39,12 @@ Notes:
 <cfcomponent extends="BaseDAO">
 	
 	<cfscript>
-		/* 
-			Quantity on hand. Physically at any location
-		*/
+		
+		// Quantity on hand. Physically at any location
 		public numeric function getQOH(string stockID, string skuID, string productID) {
 			
 			var params = [];
-			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ), coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
+			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ) - coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
 			
 			if(structKeyExists(arguments, "stockID")) {
 				params[1] = arguments.stockID;
@@ -60,64 +59,81 @@ Notes:
 				throw("You must specify a stockID, skuID, or productID to this method.");
 			}
 			
-			var results = ormExecuteQuery(hql, params, true);
-			
-			return results[1] - results[2];
+			return ormExecuteQuery(hql, params, true);
 		}
 		
-		/* 
-			Quantity on stock hold. Quantity on hold based on business requirement. Could be used to hold inventory for centain amount of time when user
-			adds item to cart. Another use is when the item is reserved/held for a customer in store.
-		*/
+		// Quantity On Sales Hold
 		public numeric function getQOSH(string stockID, string skuID, string productID) {
 			// TODO: Setup Sales Hold
 			return 0;
 		}
 		
-		/* 
-			Quantity not delivered on order
-		*/
+		// Quantity Not Delivered on Order 
 		public numeric function getQNDOO(string stockID, string skuID, string productID) {
 			
 			var params = [];
-			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) FROM SlatwallOrderItem orderItem 
-						WHERE orderItem.order.orderStatusType.systemCode != 'ostNotPlaced'
-						AND orderItem.orderItemStatusType.systemCode != 'oistFulfilled' 
-						 ";
+			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantityDelivered), 0 )
+					FROM
+						SlatwallOrderItem orderItem
+					  LEFT JOIN
+				  		orderItem.orderDeliveryItems orderDeliveryItem
+					WHERE
+						orderItem.order.orderStatusType.systemCode != 'ostNotPlaced'
+					  AND
+					    orderItem.order.orderStatusType.systemCode != 'ostClosed'
+					  AND ";
 			
 			if(structKeyExists(arguments, "stockID")) {
-				// TODO: stock is unknown at this point. This option should be removed.
-				throw("Stock unknown at this point");
+				params[1] = arguments.stockID;
+				hql &= "orderItem.stock.stockID = ?";
 			} else if (structKeyExists(arguments, "skuID")) {
 				params[1] = arguments.skuID;
-				hql &= "AND orderItem.sku.skuID = ?";
+				hql &= "orderItem.sku.skuID = ?";
 			} else if (structKeyExists(arguments, "productID")) {
 				params[1] = arguments.productID;
-				hql &= "AND orderItem.sku.product.productID = ?";
+				hql &= "orderItem.sku.product.productID = ?";
 			} else {
 				throw("You must specify a stockID, skuID, or productID to this method.");
 			}
 			
-			var results = ormExecuteQuery(hql, params, true);
-			
-			return results;
+			return ormExecuteQuery(hql, params, true);
 		}
 		
-		/* 
-			Quantity not delivered on return vendor order
-		*/
+		// Quantity not delivered on return vendor order 
 		public numeric function getQNDORVO(string stockID, string skuID, string productID) {
+			// TODO: Impliment this later when we add return vendor orders
 			return 0;
 		}
 		
-		/* 
-			Quantity not delivered on stock adjustment
-		*/
+		// Quantity not delivered on stock adjustment
 		public numeric function getQNDOSA(string stockID, string skuID, string productID) {
-
-			var results = getQOUTOSA(argumentcollection=arguments) - getQOSAD(argumentcollection=arguments);
+			return 0;
+			var params = [];
+			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) FROM
+					SlatwallStockAdjustmentItem stockAdjustmentItem
+				  LEFT JOIN
+				  	stockAdjustmentItem.stockAdjustmentDeliveryItems stockAdjustmentDeliveryItem
+				WHERE
+					stockAdjustmentItem.stockAdjustment.stockAdjustmentStatusType.systemCode != 'sastClosed'
+				AND ";
 			
-			return results;
+			if(structKeyExists(arguments, "stockID")) {
+				params[1] = arguments.stockID;
+				hql &= "stockAdjustmentItem.fromStock.stockID = ?";
+			} else if (structKeyExists(arguments, "skuID")) {
+				params[1] = arguments.skuID;
+				hql &= "stockAdjustmentItem.fromStock.sku.skuID = ?";
+			} else if (structKeyExists(arguments, "productID")) {
+				params[1] = arguments.productID;
+				hql &= "stockAdjustmentItem.fromStock.sku.product.productID = ?";
+			} else {
+				throw("You must specify a stockID, skuID, or productID to this method.");
+			}
+			
+			//var results = getQOUTOSA(argumentcollection=arguments) - getQOSAD(argumentcollection=arguments);
+			var results = ormExecuteQuery(hql, params, true);
+			
+			return results[1];
 		}
 		
 		/* 
@@ -168,7 +184,7 @@ Notes:
 		/* helper methods */
 		/******************************************************************************/
 		
-		/* 
+		/*
 			Quantity on return order
 		*/
 		public numeric function getQORO(string stockID, string skuID, string productID) {
@@ -386,8 +402,6 @@ Notes:
 			
 			return results;
 		}
-		
-
 	</cfscript>
 	
 </cfcomponent>

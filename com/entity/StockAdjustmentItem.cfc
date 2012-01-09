@@ -47,36 +47,41 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	property name="fromStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="fromStockID";
 	property name="toStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="toStockID";
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Stock Adjustment (many-to-one)
-	public void function setStockAdjustment(required any stockAdjustment) {
-		variables.stockAdjustment = arguments.stockAdjustment;
-		if(isNew() || !arguments.stockAdjustment.hasStockAdjustmentItem( this )) {
-			arrayAppend(arguments.stockAdjustment.getStockAdjustmentItems(), this);
-		}
-	}
-	
-	public void function removeStockAdjustment(any stockAdjustment) {
-		if(!structKeyExists(arguments, "stockAdjustment")) {
-			arguments.stockAdjustment = variables.stockAdjustment;
-		}
-		var index = arrayFind(arguments.stockAdjustment.getStockAdjustmentItems(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.stockAdjustment.getStockAdjustmentItems(), this);
-		}    
-		structDelete(variables,"stockAdjustment");
-    }
-	
-	/************   END Association Management Methods   *******************/
+	// Related Object Properties (one-to-many)
+	property name="stockReveiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
 	
 	
-
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Adjustment (many-to-one)    
+	public void function setStockAdjustment(required any stockAdjustment) {    
+		variables.stockAdjustment = arguments.stockAdjustment;    
+		if(isNew() or !arguments.stockAdjustment.hasStockAdjustmentItem( this )) {    
+			arrayAppend(arguments.stockAdjustment.getStockAdjustmentItems(), this);    
+		}    
+	}    
+	public void function removeStockAdjustment(any stockAdjustment) {    
+		if(!structKeyExists(arguments, "stockAdjustment")) {    
+			arguments.stockAdjustment = variables.stockAdjustment;    
+		}    
+		var index = arrayFind(arguments.stockAdjustment.getStockAdjustmentItems(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getStockAdjustmentItems(), index);    
+		}    
+		structDelete(variables, "stockAdjustment");    
+	}
+	
+	// Stock Receiver Items (one-to-many)
+	public void function addStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.setStockAdjustmentItem( this );
+	}
+	public void function removeStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.removeStockAdjustmentItem( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
