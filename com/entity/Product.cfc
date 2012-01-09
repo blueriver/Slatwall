@@ -729,7 +729,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		if(!structKeyExists(variables, "qndorvo")) {
 			variables.qndorvo = getService("inventoryService").getQNDORVO(productID=getProductID());
 		}
-		return variables.qoh;
+		return variables.qndorvo;
 	}
 	public numeric function getQNDOSA() {
 		if(!structKeyExists(variables, "qndosa")) {

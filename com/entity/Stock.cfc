@@ -113,7 +113,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 		if(!structKeyExists(variables, "qndorvo")) {
 			variables.qndorvo = getService("inventoryService").getQNDORVO(stockID=getStockID());
 		}
-		return variables.qoh;
+		return variables.qndorvo;
 	}
 	public numeric function getQNDOSA() {
 		if(!structKeyExists(variables, "qndosa")) {

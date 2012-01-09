@@ -414,7 +414,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		if(!structKeyExists(variables, "qndorvo")) {
 			variables.qndorvo = getService("inventoryService").getQNDORVO(skuID=getSkuID());
 		}
-		return variables.qoh;
+		return variables.qndorvo;
 	}
 	public numeric function getQNDOSA(string locationID) {
 		if(structKeyExists(arguments, "locationID")) {
