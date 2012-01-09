@@ -113,7 +113,7 @@ Notes:
 		/* 
 			Quantity not delivered on stock adjustment
 		*/
-		public numeric function getQNDSA(string stockID, string skuID, string productID) {
+		public numeric function getQNDOSA(string stockID, string skuID, string productID) {
 
 			var results = getQOUTOSA(argumentcollection=arguments) - getQOSAD(argumentcollection=arguments);
 			

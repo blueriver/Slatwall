@@ -96,7 +96,7 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQNDOSA(string stockID, string skuID, string productID) {
-		return getDAO().getQNDSA(argumentCollection=arguments);
+		return getDAO().getQNDOSA(argumentCollection=arguments);
 	}
 	
 	public numeric function getQNRORO(string stockID, string skuID, string productID) {
