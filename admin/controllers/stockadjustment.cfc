@@ -40,12 +40,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="stockService" type="any";
-	property name="vendorOrderService" type="any";
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	
 	public void function default(required struct rc) {
-		getFW().redirect("admin:stockadjustment.list");
+		getFW().redirect("admin:stockadjustment.listStockAdjustments");
 	}
 	
 	public void function listStockAdjustments(required struct rc) {

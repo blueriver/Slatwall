@@ -95,6 +95,11 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:option.createoptiongroup" type="list">
 								<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="list">
 							</ul>
+							<ul>
+								<li class="title">Stock Adjustments</li>
+								<cf_SlatwallActionCaller action="admin:stockadjustment.createStockAdjustment" type="list">
+								<cf_SlatwallActionCaller action="admin:stockadjustment.listStockAdjustments" type="list">
+							</ul>
 						</div>
 						<div class="oneColumn">
 							<ul>

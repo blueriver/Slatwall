@@ -21,7 +21,7 @@ jQuery(function() {
 		// Set the source of the iframe to the href of the clicked link.
 		//jQuery("#addEditProductToOrder iframe").attr("src", jQuery(this.attr("href"))); 
 		
-		// Inject the iframe and open the dialog.
+		// Load the content and open the dialog.
 		$("#addEditProductToOrder").load(jQuery(this).attr("href") + "&inDialog=true", function(){
 			// Apply the "stripe" class to the new table loaded dynamically.
 			stripe("stripepopup");

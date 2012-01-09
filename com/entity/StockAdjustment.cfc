@@ -71,6 +71,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
+	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================

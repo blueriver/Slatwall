@@ -44,37 +44,47 @@ Notes:
 </ul>
 
 <div class="svoadminstockadjustmentlist">
-<cfif arrayLen(rc.priceGroupSmartList.getPageRecords()) gt 0>
+<cfif arrayLen(rc.stockAdjustmentSmartList.getPageRecords()) gt 0>
 	<table id="StockAdjustments" class="listing-grid stripe">
 		<tr>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.stockadjustment.createDateTime")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.location")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.fromLocation")#</th>
+			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.toLocation")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.stockadjustment.type")#</th>
 			<th>&nbsp;</th>
 		</tr>
-		<cfloop array="#rc.priceGroupSmartList.getPageRecords()#" index="local.PriceGroup">
+		<cfloop array="#rc.stockAdjustmentSmartList.getPageRecords()#" index="local.StockAdjustment">
 			<tr>
-				<td class="varWidth">#local.PriceGroup.getPriceGroupName()#</td>
-				<td>#local.PriceGroup.getPriceGroupCode()#</td>
+				<td class="varWidth">#DateFormat(local.StockAdjustment.getCreatedDateTime(), "medium")#</td>
 				<td>
-					<cfif !isNull(local.priceGroup.getParentPriceGroup())>
-						<a href="#buildURL(action='admin:stockadjustment.detailstockadjustment', querystring='priceGroupId=#local.priceGroup.getParentPriceGroup().getPriceGroupId()#')#">#local.priceGroup.getParentPriceGroup().getPriceGroupName()#</a>
+					<cfif !isNull(local.StockAdjustment.getFromLocation().getName())>
+						#local.StockAdjustment.getFromLocation().getName()#
+					</cfif>
+				</td>
+				<td>
+					<cfif !isNull(local.StockAdjustment.getToLocation().getName())>
+						#local.StockAdjustment.getToLocation().getName()#
+					</cfif>
+				</td>
+				<td>
+					<cfif !isNull(local.stockAdjustment.getParentStockAdjustment())>
+						<a href="#buildURL(action='admin:stockadjustment.detailstockadjustment', querystring='stockAdjustmentId=#local.stockAdjustment.getParentStockAdjustment().getStockAdjustmentId()#')#">#local.stockAdjustment.getParentStockAdjustment().getStockAdjustmentName()#</a>
 					<cfelse>
 						#rc.$.Slatwall.rbKey("entity.stockadjustment.inheritsFromNothing")#
 					</cfif>	
 				</td>
-				<td>#yesNoFormat(local.PriceGroup.getActiveFlag())#</td>
+				<td>#yesNoFormat(local.StockAdjustment.getActiveFlag())#</td>
 				<td class="administration">
 		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:stockadjustment.editstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getPriceGroupID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:stockadjustment.detailstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getPriceGroupID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:stockadjustment.deletestockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getPriceGroupID()#" class="delete" type="list" disabled="#local.stockadjustment.isNotDeletable()#" confirmrequired="true">
+                      <cf_SlatwallActionCaller action="admin:stockadjustment.editstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="edit" type="list">            
+					  <cf_SlatwallActionCaller action="admin:stockadjustment.detailstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="detail" type="list">
+					  <cf_SlatwallActionCaller action="admin:stockadjustment.deletestockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="delete" type="list" disabled="#local.stockadjustment.isNotDeletable()#" confirmrequired="true">
 		          </ul>     						
 				</td>
 			</tr>
 		</cfloop>
 	</table>
-	<cf_SlatwallSmartListPager smartList="#rc.priceGroupSmartList#">
+	<cf_SlatwallSmartListPager smartList="#rc.stockAdjustmentSmartList#">
 <cfelse>
 <em>#rc.$.Slatwall.rbKey("admin.stockadjustment.nostockadjustmentsdefined")#</em>
 </cfif>
