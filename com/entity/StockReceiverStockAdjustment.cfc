@@ -35,21 +35,21 @@
 
 Notes:
 
-This entity represents a single instance of receiving a batch of items back FROM a shopping-cart order.
-
 */
-
-
-
-
-component displayname="Stock Receiver Order" entityname="SlatwallStockReceiverOrder" table="SlatwallStockReceiver" persistent="true" output="false" accessors="true" extends="StockReceiver" discriminatorvalue="order" {
+component displayname="Stock Receiver Stock Adjustment" entityname="SlatwallStockReceiverStockAdjustment" table="SlatwallStockReceiver" persistent="true" output="false" accessors="true" extends="StockReceiver" discriminatorvalue="stockAdjustment" {
 	
 	// Persistent Properties
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
 	// Related Object Properties
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
 	
+	public any function init() {
+		// Not needed for object persistance, but is used to determine when type this TPC entity is before persistance.
+		setReceiverType("stockAdjustment");
+		
+		return super.init();
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
