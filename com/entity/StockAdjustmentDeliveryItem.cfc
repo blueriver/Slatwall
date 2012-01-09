@@ -49,65 +49,48 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	// This may be left null
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
-   /******* Association management methods for bidirectional relationships **************/
-	
-	// StockAdjustmentDelivery (many-to-one)
-	
-	public void function setStockAdjustmentDelivery(required StockAdjustmentDelivery stockAdjustmentDelivery) {
-	   variables.stockAdjustmentDelivery = arguments.stockAdjustmentDelivery;
-	   if(isNew() or !arguments.stockAdjustmentDelivery.hasStockAdjustmentDeliveryItem(this)) {
-	       arrayAppend(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(),this);
-	   }
-	}
-	
-	public void function removeStockAdjustmentDelivery(required StockAdjustmentDelivery stockAdjustmentDelivery) {
-       var index = arrayFind(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(),index);
-       }    
-       structDelete(variables,"stockAdjustmentDelivery");
-	}
-	
-	// StockAdjustmentItem (many-to-one)
-	
-	public void function setStockAdjustmentItem(required StockAdjustmentItem StockAdjustmentItem) {
-	   variables.stockAdjustmentItem = arguments.stockAdjustmentItem;
-	   if(isNew() or !arguments.stockAdjustmentItem.hasStockAdjustmentDeliveryItem(this)) {
-	       arrayAppend(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(), this);
-	   }
-	}
-	
-	public void function removeStockAdjustmentItem(required StockAdjustmentItem StockAdjustmentItem) {
-       var index = arrayFind(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(),index);
-       }    
-       structDelete(variables,"stockAdjustmentItem");
-	}	
-	
-    /************   END Association Management Methods   *******************/
-    
-	//  -------------------- ORM Event Methods -------------------
-	public void function preInsert(){
-		getService("inventoryService").createInventory( this );
-		super.preInsert();
-	}
-	
-	public void function preUpdate(Struct oldData){
-		throw("Updates to StockAdjustment Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
-	}
-	
-	public void function postUpdate() {
-		super.preUpdate();
-		//getService("skuCacheService").updateFromStockAdjustmentDeliveryItem( this );
-	}
-	//  -------------------- END: ORM Event Metods -------------------
-	
+
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Adjustment Delivery (many-to-one)
+	public void function setStockAdjustmentDelivery(required any stockAdjustmentDelivery) {
+		variables.stockAdjustmentDelivery = arguments.stockAdjustmentDelivery;
+		if(isNew() or !arguments.stockAdjustmentDelivery.hasStockAdjustmentDeliveryItem( this )) {
+			arrayAppend(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(), this);
+		}
+	}
+	public void function removeStockAdjustmentDelivery(any stockAdjustmentDelivery) {
+		if(!structKeyExists(arguments, "stockAdjustmentDelivery")) {
+			arguments.stockAdjustmentDelivery = variables.stockAdjustmentDelivery;
+		}
+		var index = arrayFind(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getStockAdjustmentDeliveryItems(), index);
+		}
+		structDelete(variables, "stockAdjustmentDelivery");
+	}
+	
+	// Stock Adjustment Item (many-to-one)
+	public void function setStockAdjustmentItem(required any stockAdjustmentItem) {
+		variables.stockAdjustmentItem = arguments.stockAdjustmentItem;
+		if(isNew() or !arguments.stockAdjustmentItem.hasStockAdjustmentDeliveryItem( this )) {
+			arrayAppend(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(), this);
+		}
+	}
+	public void function removeStockAdjustmentItem(any stockAdjustmentItem) {
+		if(!structKeyExists(arguments, "stockAdjustmentItem")) {
+			arguments.stockAdjustmentItem = variables.stockAdjustmentItem;
+		}
+		var index = arrayFind(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getStockAdjustmentDeliveryItems(), index);
+		}
+		structDelete(variables, "stockAdjustmentItem");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
@@ -116,6 +99,15 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		getService("inventoryService").createInventory( this );
+		super.preInsert();
+	}
+	
+	public void function preUpdate(Struct oldData){
+		throw("Updates to StockAdjustment Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }
