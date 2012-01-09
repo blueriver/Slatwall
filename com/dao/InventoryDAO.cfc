@@ -107,7 +107,7 @@ Notes:
 		
 		// Quantity not delivered on stock adjustment
 		public numeric function getQNDOSA(string stockID, string skuID, string productID) {
-			return 0;
+			
 			var params = [];
 			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) FROM
 					SlatwallStockAdjustmentItem stockAdjustmentItem
@@ -130,10 +130,7 @@ Notes:
 				throw("You must specify a stockID, skuID, or productID to this method.");
 			}
 			
-			//var results = getQOUTOSA(argumentcollection=arguments) - getQOSAD(argumentcollection=arguments);
-			var results = ormExecuteQuery(hql, params, true);
-			
-			return results[1];
+			return ormExecuteQuery(hql, params, true);
 		}
 		
 		/* 

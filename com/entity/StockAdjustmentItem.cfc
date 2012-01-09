@@ -48,7 +48,9 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	property name="toStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="toStockID";
 	
 	// Related Object Properties (one-to-many)
+	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
 	property name="stockReveiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
+	
 	
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -75,6 +77,14 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 		structDelete(variables, "stockAdjustment");    
 	}
 	
+	// Stock Adjustment Delivery Items (one-to-many)
+	public void function addStockAdjustmentDeliveryItem(required any stockAdjustmentDeliveryItem) {
+		arguments.stockAdjustmentDeliveryItem.setStockAdjustmentItem( this );
+	}
+	public void function removeStockAdjustmentDeliveryItem(required any stockAdjustmentDeliveryItem) {
+		arguments.stockAdjustmentDeliveryItem.removeStockAdjustmentItem( this );
+	}
+	
 	// Stock Receiver Items (one-to-many)
 	public void function addStockReceiverItem(required any stockReceiverItem) {
 		arguments.stockReceiverItem.setStockAdjustmentItem( this );
@@ -82,6 +92,7 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	public void function removeStockReceiverItem(required any stockReceiverItem) {
 		arguments.stockReceiverItem.removeStockAdjustmentItem( this );
 	}
+	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
