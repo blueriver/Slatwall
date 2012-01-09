@@ -133,19 +133,45 @@ Notes:
 			return ormExecuteQuery(hql, params, true);
 		}
 		
-		/* 
-			Quantity not received on return order
-		*/
+		// Quantity not received on return order
 		public numeric function getQNRORO(string stockID, string skuID, string productID) {
+			
+			
+			var params = [];
+			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantityDelivered), 0 )
+					FROM
+						SlatwallOrderItem orderItem
+					  LEFT JOIN
+				  		orderItem.orderDeliveryItems orderDeliveryItem
+					WHERE
+						orderItem.order.orderStatusType.systemCode != 'ostNotPlaced'
+					  AND
+					    orderItem.order.orderStatusType.systemCode != 'ostClosed'
+					  AND ";
+			
+			if(structKeyExists(arguments, "stockID")) {
+				params[1] = arguments.stockID;
+				hql &= "orderItem.stock.stockID = ?";
+			} else if (structKeyExists(arguments, "skuID")) {
+				params[1] = arguments.skuID;
+				hql &= "orderItem.sku.skuID = ?";
+			} else if (structKeyExists(arguments, "productID")) {
+				params[1] = arguments.productID;
+				hql &= "orderItem.sku.product.productID = ?";
+			} else {
+				throw("You must specify a stockID, skuID, or productID to this method.");
+			}
+			
+			return ormExecuteQuery(hql, params, true);
+			
+			
 			
 			var results = getQORO(argumentcollection=arguments) - getQOROR(argumentcollection=arguments);
 			
 			return results;
 		}
 		
-		/* 
-			Quantity not received on vendor order
-		*/
+		// Quantity not received on vendor order
 		public numeric function getQNROVO(string stockID, string skuID, string productID) {
 			
 			var results = getQOVO(argumentcollection=arguments) - getQOVOR(argumentcollection=arguments);
@@ -153,26 +179,39 @@ Notes:
 			return results;
 		}
 		
-		/* 
-			Quantity not received on stock adjustment
-		*/
+		// Quantity not received on stock adjustment
 		public numeric function getQNROSA(string stockID, string skuID, string productID) {
-
-			var results = getQINOSA(argumentcollection=arguments) - getQOSAR(argumentcollection=arguments);
+			var params = [];
+			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 ) FROM
+					SlatwallStockAdjustmentItem stockAdjustmentItem
+				  LEFT JOIN
+				  	stockAdjustmentItem.stockReceiverItems stockReceiverItem
+				WHERE
+					stockAdjustmentItem.stockAdjustment.stockAdjustmentStatusType.systemCode != 'sastClosed'
+				AND ";
 			
-			return results;
+			if(structKeyExists(arguments, "stockID")) {
+				params[1] = arguments.stockID;
+				hql &= "stockAdjustmentItem.toStock.stockID = ?";
+			} else if (structKeyExists(arguments, "skuID")) {
+				params[1] = arguments.skuID;
+				hql &= "stockAdjustmentItem.toStock.sku.skuID = ?";
+			} else if (structKeyExists(arguments, "productID")) {
+				params[1] = arguments.productID;
+				hql &= "stockAdjustmentItem.toStock.sku.product.productID = ?";
+			} else {
+				throw("You must specify a stockID, skuID, or productID to this method.");
+			}
+			
+			return ormExecuteQuery(hql, params, true);
 		}
 		
-		/* 
-			Quantity received
-		*/
+		// Quantity received
 		public numeric function getQR(string stockID, string skuID, string productID) {
 			return 0;
 		}
 		
-		/* 
-			Quantity sold
-		*/
+		// Quantity sold
 		public numeric function getQS(string stockID, string skuID, string productID) {
 			return 0;
 		}
