@@ -101,6 +101,9 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
+		if(isNull(stockAdjustmentItem())) {
+			throw("You must relate an stock adjustment delivery item to a stock adjustment item");
+		}
 		getService("inventoryService").createInventory( this );
 		super.preInsert();
 	}
