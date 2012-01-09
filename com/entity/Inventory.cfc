@@ -68,7 +68,7 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preUpdate(Struct oldData){
-		throw("Updates to an Inventory Record are not allowed because this illustrates a fundimental flaw in inventory tracking.");
+		//throw("Updates to an Inventory Record are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

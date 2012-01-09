@@ -57,7 +57,7 @@ component extends="BaseDAO" {
 				SlatwallOrderItem.price,
 				SlatwallOrderItem.quantity,
 				(SlatwallOrderItem.price * SlatwallOrderItem.quantity) as extendedPrice,
-				SlatwallOrderDeliveryItem.quantityDelivered,
+				SlatwallOrderDeliveryItem.quantity,
 				(SELECT sum(taxAmount) From SlatwallTaxApplied where SlatwallTaxApplied.orderItemID = SlatwallOrderItem.orderItemID) as taxAmount,
 				SlatwallOrderFulfillment.fulfillmentCharge,
 				SlatwallShippingMethod.shippingMethodName,
@@ -195,7 +195,7 @@ component extends="BaseDAO" {
 	
 	public numeric function getQuantityShipped(required any orderID, required any skuID) {
 		var params = [arguments.orderID, arguments.skuID];	
-		var hql = " SELECT new map(sum(odi.quantityDelivered) as quantity)
+		var hql = " SELECT new map(sum(odi.quantity) as quantity)
 					FROM SlatwallOrderDeliveryItem odi
 					WHERE odi.orderItem.order.orderID = ?
 					AND odi.orderItem.sku.skuID = ?       "; 

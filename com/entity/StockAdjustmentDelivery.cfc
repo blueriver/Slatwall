@@ -64,7 +64,7 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
 	public any function getTotalQuanityDelivered() {
 		var totalDelivered = 0;
 		for(var i=1; i<=arrayLen(getStockAdjustmentDeliveryItems()); i++) {
-			totalDelivered += getStockAdjustmentDeliveryItems()[i].getQuantityDelivered();
+			totalDelivered += getStockAdjustmentDeliveryItems()[i].getQuantity();
 		}
 		return totalDelivered;
 	}

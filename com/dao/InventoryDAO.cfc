@@ -72,7 +72,7 @@ Notes:
 		public numeric function getQNDOO(string stockID, string skuID, string productID) {
 			
 			var params = [];
-			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantityDelivered), 0 )
+			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantity), 0 )
 					FROM
 						SlatwallOrderItem orderItem
 					  LEFT JOIN
