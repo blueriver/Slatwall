@@ -58,19 +58,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     */
     public void function initStockAdjustment(required struct rc) {
     	param name="rc.stockAdjustmentID" default="";
-    	param name="rc.stockAdjustmentType" default="";
     	
-    	if(len(rc.StockAdjustmentID)) {
-    		rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID, true);
-    	} else {
-    		if(rc.stockAdjustmentType == "vendorOrder") {
-    			rc.stockAdjustment = getStockService().newStockAdjustmentVendorOrder();
-    		} else if(rc.stockAdjustmentType == "order") {
-    			rc.stockAdjustment = getStockService().newStockAdjustmentOrder();
-    		} else {
-    			throw("Unknown StockAdjustment type: #rc.stockAdjustmentType#");
-    		}
-    	}
+    	rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID, true);
     	
     	// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
 		rc.locationSmartList = getLocationService().getLocationSmartList();
@@ -89,8 +78,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	}
     	
     	// Proceed to the type-specific detail
-    	if(rc.stockAdjustment.getReceiverType() == "vendorOrder") {
-    		detailStockAdjustmentVendorOrder(rc);
+    	if(rc.stockAdjustment.getReceiverType() == "stockAdjustment") {
+    		detailStockAdjustmentstockAdjustment(rc);
     	} else if(rc.stockAdjustment.getReceiverType() == "order") {
     		detailStockAdjustmentOrder(rc);
     	} else {
@@ -98,42 +87,27 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	}
     	
     	rc.edit = false;
-		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockreceiver.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockreceiver.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
+		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockadjustment.typeName_#rc.stockadjustment.getReceiverType()#");
 		getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");  	
     }*/
     
     /*
     	Vendor Order related.
     */
-    /* public void function detailStockAdjustmentVendorOrder(required struct rc) {
-		param name="rc.vendorOrderID";
+    /* public void function detailStockAdjustmentstockAdjustment(required struct rc) {
+		param name="rc.stockAdjustmentID";
     	
-    	rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);	
+    	rc.stockAdjustment = getgetStockService().getStockAdjustment(rc.stockAdjustmentID);	
     }*/
 
     public void function createStockAdjustment(required struct rc) {
-    	//param name="rc.vendorOrderId" default="";
-    	rc.stockAdjustmentType = "vendorOrder";
     	initStockAdjustment(rc);
     	
     	// Populate Vendor Order specific data
-		rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);
-		
-		if(isNull(rc.vendorOrder)) {
-			getFW().redirect(action="admin:vendorOrder.detailOrderReceivers", queryString="VendorOrderID=#rc.VendorOrder.getVendorOrderID()#");
-		}
-	
-		// Get Items
-		//rc.vendorOrderItemSmartList = getVendorOrderService().getVendorOrderItemSmartList();
-		//rc.vendorOrderItemSmartList.setPageRecordsShow(9999999);
-		//rc.vendorOrderItemSmartList.addFilter("vendorOrder.vendorOrderID", rc.vendorOrderID);
-
-    	rc.backAction = "admin:vendorOrder.detailVendorOrder";
-    	rc.backQueryString = "vendorOrderID=#rc.vendorOrderId#";
-    	rc.action = "admin:stockAdjustment.saveStockAdjustmentVendorOrder";
+		rc.stockAdjustment = getgetStockService().getStockAdjustment(rc.stockAdjustmentID);
     	
     	rc.edit = true;
-		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockreceiver.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockreceiver.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
+		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockadjustment.typeName_#rc.stockadjustment.getReceiverType()#");
 		getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");
 	}
     
@@ -145,21 +119,21 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.stockAdjustmentRate = getStockService().getStockAdjustmentRate(rc.stockAdjustmentRateId, true);
     	
     	rc.edit = true; 
-    	getFW().setView("admin:stockreceiver.detailStockAdjustment");  
+    	getFW().setView("admin:stockadjustment.detailStockAdjustment");  
 	}*/
 	
-	public void function saveStockAdjustmentVendorOrder(required struct rc) {
-		rc.stockAdjustmentType = "vendorOrder";
-		var vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
+	public void function saveStockAdjustmentstockAdjustment(required struct rc) {
+		rc.stockAdjustmentType = "stockAdjustment";
+		var stockAdjustment = getgetStockService().getStockAdjustment(rc.stockAdjustmentId);
 		
 		// Call the generic save method.
 		saveStockAdjustment(rc);
 		
-		// Since this is a vendor order reciever, also add the vendororder
-		rc.StockAdjustment.setVendorOrder(vendorOrder);
+		// Since this is a vendor order reciever, also add the stockAdjustment
+		rc.StockAdjustment.setstockAdjustment(stockAdjustment);
 
-		rc.message=rbKey("admin.vendorOrder.saveStockAdjustmentVendorOrder_success");
-		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderId=#rc.vendorOrderId#", preserve="message");
+		rc.message=rbKey("admin.stockAdjustment.saveStockAdjustmentstockAdjustment_success");
+		getFW().redirect(action="admin:stockAdjustment.detailstockAdjustment", querystring="stockAdjustmentId=#rc.stockAdjustmentId#", preserve="message");
 	} 
 	
 

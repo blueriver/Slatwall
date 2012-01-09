@@ -37,8 +37,8 @@ Notes:
 
 --->
 
-<!--- Generic properties for all StockReceivers --->
-<cfparam name="rc.stockReceiver">
+<!--- Generic properties for all stockAdjustments --->
+<cfparam name="rc.stockAdjustment">
 <cfparam name="rc.backAction">
 <cfparam name="rc.locationSmartList">
 
@@ -49,15 +49,15 @@ Notes:
 	
 	<!--- For now, there is no basic order info, but in future, we might want to make this section dynamic like the bellow table, based on the type provided --->
 
-	<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
+	<form name="detailstockAdjustment" id="detailstockAdjustment" action="#BuildURL(rc.action)#" method="post">
 
 		<div class="clear">
-			<!--- These are common fields to all StockReceivers --->
+			<!--- These are common fields to all stockAdjustments --->
 			<dl class="twoColumn">
-				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.boxCount")#" object="#rc.StockReceiver#" property="boxCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.packingSlipNumber")#" object="#rc.StockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockAdjustment.boxCount")#" object="#rc.stockAdjustment#" property="boxCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockAdjustment.packingSlipNumber")#" object="#rc.stockAdjustment#" property="packingSlipNumber" edit="#rc.edit#">
 				
-				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
+				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockAdjustment.receiveForLocation")#</strong></label></dt> 
 				<dd class="value">
 					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
 				</dd>
@@ -65,7 +65,7 @@ Notes:
 			</dl>
 	
 			<!--- The receiver table bellow is chosen dynamically based on the type of stock receiver --->
-			#view("stockreceiver/receivertypes/#rc.stockReceiver.getReceiverType()#")# 
+			#view("stockAdjustment/receivertypes/#rc.stockAdjustment.getReceiverType()#")# 
 			
 			<!---<cf_SlatwallActionCaller action="" type="link" class="cancel button" queryString="#rc.backQueryString#" text="#rc.$.Slatwall.rbKey('admin.nav.back')#">--->
 			
