@@ -68,4 +68,17 @@ component displayname="Vendor Address" entityname="SlatwallVendorAddress" table=
 	}
 	
 	/******* END: Association management methods for bidirectional relationships **************/
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

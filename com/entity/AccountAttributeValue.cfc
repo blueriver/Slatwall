@@ -43,24 +43,37 @@ component displayname="Account Attribute Value" entityname="SlatwallAccountAttri
 	
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
 	
-	/******* Association management methods for bidirectional relationships **************/
-	// Account (many-to-one)
+	// ============ START: Non-Persistent Property Methods =================
 	
-	public void function setAccount(required Account account) {
-		variables.account = arguments.account;
-		if(isNew() || !arguments.account.hasAttributeValue(this)) {
-		   arrayAppend(arguments.account.getAttributeValues(),this);
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+	   variables.account = arguments.account;
+	   if(isNew() or !arguments.account.hasAttributeValue(this)) {
+	       arrayAppend(arguments.account.getAttributeValues(),this);
+	   }
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
 		}
+		var index = arrayFind(arguments.account.getAttributeValues(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAttributeValues(), index);
+		}
+		structDelete(variables, "account");
 	}
 	
-	public void function removeAccount(required Account account) {
-		var index = arrayFind(arguments.account.getAttributeValues(),this);
-		if(index > 0) {
-		   arrayDeleteAt(arguments.account.getAttributeValues(),index);
-		}    
-		structDelete(variables,"account");
-    }
-    
-	/************   END Association Management Methods   *******************/
-
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

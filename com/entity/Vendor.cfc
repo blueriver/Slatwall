@@ -50,7 +50,7 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties (one-to-many)
+	// Related Object Properties (many-to-one)
 	property name="primaryEmailAddress" cfc="VendorEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="VendorPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
 	property name="primaryAddress" cfc="VendorAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
@@ -63,6 +63,7 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	
 	// Related Object Properties (many-to-many)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="vendorID" inversejoincolumn="brandID" cascade="save-update";
+	//property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallVendorProduct" fkcolumn="vendorID" inversejoincolumn="productID" cascade="save-update";
 	
 	public Vendor function init(){
 		// set default collections for association management methods
@@ -142,4 +143,16 @@ component displayname="Vendor" entityname="SlatwallVendor" table="SlatwallVendor
 	}
 	
 	/******* END: Association management methods for bidirectional relationships **************/
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

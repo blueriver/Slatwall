@@ -49,27 +49,28 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 	property name="sortOrder" ormtype="integer";
 	property name="validationMessage" ormtype="string";
 	property name="validationRegex" ormtype="string";
-	property name="activeFlag" ormtype="boolean";
+	property name="activeFlag" ormtype="boolean" default=1;
 
+	// Related Object Properties (Many-To-One)
+	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
+	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
+	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
+
+	// Related Object Properties (One-To-Many)
+	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder" ;
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="attributeType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeTypeID" hint="This is used to define how the UI for the attribute looks example: text, radio, wysiwyg, checkbox";
-	property name="attributeSet" cfc="AttributeSet" fieldtype="many-to-one" fkcolumn="attributeSetID";
-	property name="attributeOptions" singularname="attributeOption" cfc="AttributeOption" fieldtype="one-to-many" fkcolumn="attributeID" inverse="true" cascade="all" orderby="sortOrder" ;
-	property name="validationType" cfc="Type" fieldtype="many-to-one" fkcolumn="validationTypeID" hint="This is used to define validation for attribute example: Numeric, date, regex etc.";
-
-
+	// Non-Persistent Properties
+	property name="attributeTypeOptions" persistent="false";
+	property name="validationTypeOptions" persistent="false";
+	
+	
 	public Attribute function init(){
-		// By default new attributes should be active
-		if(isNull(variables.activeFlag)) {
-			variables.activeFlag = 1;
-		}
-		
 		// set default collections for association management methods
 		if(isNull(variables.attributeOptions)) {
 	   	   variables.attributeOptions = [];
@@ -78,46 +79,17 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		return super.init();
 	}
 
-	public array function getAttributeOptions(orderby, sortType="text", direction="asc") {
+	public array function getAttributeOptions(string orderby, string sortType="text", string direction="asc") {
 		if(!structKeyExists(arguments,"orderby")) {
 			return variables.AttributeOptions;
 		} else {
 			return getService("utilityService").sortObjectArray(variables.AttributeOptions,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Attribute Set (many-to-one)
-	
-	public void function setAttributeSet(required AttributeSet attributeSet) {
-		variables.attributeSet = arguments.attributeSet;
-		if(!arguments.AttributeSet.hasAttribute(this)) {
-		   arrayAppend(arguments.AttributeSet.getAttributes(),this);
-		}
-	}
-	
-	public void function removeAttributeSet(required AttributeSet attributeSet) {
-		var index = arrayFind(arguments.attributeSet.getAttributes(),this);
-		if(index > 0) {
-		   arrayDeleteAt(arguments.attributeSet.getAttributes(),index);
-		}    
-		structDelete(variables,"attributeSet");
-    }
-    
-	// Attribute Options (one-to-many)
-	
-	public void function addAttributeOption(required any attributeOption) {
-	   arguments.AttributeOption.setAttribute(this);
-	}
-	
-	public void function removeAttributeOption(required any attributeOption) {
-	   arguments.attributeOption.removeAttribute(this);
-	}
-	
-	/************   END Association Management Methods   *******************/
 
-    public array function getAttributeTypeOptions() {
+    // ============ START: Non-Persistent Property Methods =================
+	
+	public array function getAttributeTypeOptions() {
 		if(!structKeyExists(variables, "attributeTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
 			smartList.addSelect(propertyIdentifier="type", alias="name");
@@ -140,4 +112,44 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		}
 		return variables.validationTypeOptions;
     }
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+    // ============= START: Bidirectional Helper Methods ===================
+    
+	// Attribute Set (many-to-one)    
+	public void function setAttributeSet(required any attributeSet) {    
+		variables.attributeSet = arguments.attributeSet;
+		if(isNew() or !arguments.attributeSet.hasAttribute( this )) {
+			arrayAppend(arguments.attributeSet.getAttributes(), this);
+		}
+	}
+	public void function removeAttributeSet(any attributeSet) {    
+		if(!structKeyExists(arguments, "attributeSet")) {    
+			arguments.attributeSet = variables.attributeSet;    
+		}    
+		var index = arrayFind(arguments.attributeSet.getAttributes(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getAttributes(), index);    
+		}    
+		structDelete(variables, "attributeSet");    
+	}
+    
+	// Attribute Options (one-to-many)    
+	public void function addAttributeOption(required any attributeOption) {    
+		arguments.attributeOption.setAttribute( this );    
+	}    
+	public void function removeAttributeOption(required any attributeOption) {    
+		arguments.attributeOption.removeAttribute( this );    
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

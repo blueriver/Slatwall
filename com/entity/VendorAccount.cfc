@@ -45,4 +45,17 @@ component displayname="Vendor Account" entityname="SlatwallVendorAccount" table=
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="roleType" cfc="Type" fieldtype="many-to-one" fkcolumn="roleTypeID";
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

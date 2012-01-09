@@ -93,4 +93,17 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	
     /************   END Association Management Methods   *******************/
 	
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

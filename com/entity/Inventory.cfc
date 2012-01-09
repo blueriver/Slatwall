@@ -45,6 +45,7 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 
 	// Related Object Properties (many-to-one)
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
@@ -52,19 +53,23 @@ component displayname="Inventory" entityname="SlatwallInventory" table="Slatwall
 	property name="orderDeliveryItem" cfc="orderDeliveryItem" fieldtype="many-to-one" fkcolumn="orderDeliveryItemID";
 	
 	
-	public any function init(){
-	   return Super.init();
-	}
+	// ============ START: Non-Persistent Property Methods =================
 	
-	// Not actually required for TPC implemention. Just providing type tracking for new entities.
-	public void function setinventoryType(required string type) {
-		var listAllowableTypes = "stockReceiver,stockPhisical,orderDelivery,vendorOrderReturnDelivery,stockAdjustmentDelivery";
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 		
-		if(ListFind(listAllowableTypes, arguments.type) == 0) {
-			throw("The type (#arguments.type#) is not allowed! The allowed Inventory types are: #listAllowedTypes#");
-		} else {
-			variables.inventoryType = arguments.type;
-		}
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preUpdate(Struct oldData){
+		throw("Updates to an Inventory Record are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
 	
+	// ===================  END:  ORM Event Hooks  =========================
 }

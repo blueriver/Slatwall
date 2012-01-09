@@ -94,12 +94,38 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="shippingWeight" type="numeric" persistent="false";
-	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
-	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
-	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
-	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
 	
+	// Non-Persistent Quantity Properties For On Hand & Inventory in Motion (Deligated to the DAO)
+	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
+	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
+	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
+	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
+	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
+	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
+	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
+	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
+	
+	// Non-Persistent Quantity Properties For Reporting (Deligated to DAO)
+	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
+	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
+	
+	// Non-Persistent Quantity Properties For Logic & Display Based on On Hand & Inventory in Motion values (Could be calculated here, but delegated to the Service, for Consitency of Product / Sku / Stock)
+	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
+	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
+	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
+	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
+	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
+	
+	// Non-Persistent Quantity Properties For Settings (Because these can be defined in multiple locations it is delectaed to the Service)
+	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
+	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
+	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
+	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
+	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
+	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
+	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";	
+
+
 	public Product function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.activeFlag)) {
@@ -134,28 +160,18 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   return Super.init();
 	}
-
-	// Related Object Helpers
 	
-	public string function getBrandName() {
+	public string function getSimpleRepresentationPropertyName() {
+		return "productName";
+	}
+
+    public string function getBrandName() {
 		if( structKeyExists(variables,"brand") ) {
 			return getBrand().getBrandName();
 		}
 		else {	
 			return "";
 		}
-	}
-	
-	public any function getBrandOptions() {
-		if(!structKeyExists(variables, "brandOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
-			smartList.addOrder("brandName|ASC");
-			variables.brandOptions = smartList.getRecords();
-			arrayPrepend(variables.brandOptions, {value="", name=rbKey('define.select')});
-		}
-		return variables.brandOptions;
 	}
 	
 	public any function getProductTypeOptions() {
@@ -246,53 +262,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getListingProductURL(string filename=$.content('filename')) {
 		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
-	}
-	
-	public numeric function getQOH() {
-		if(isNull(variables.qoh)) {
-    		variables.qoh = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qoh += skus[i].getQOH();
-	    		}	
-    		}
-    	}
-    	return variables.qoh;
-	}
-	
-	public numeric function getQC() {
-		if(isNull(variables.qc)) {
-    		variables.qc = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qc += skus[i].getQC();
-	    		}	
-    		}
-    	}
-    	return variables.qc;
-	}
-	
-	public numeric function getQEXP() {
-		if(isNull(variables.qexp)) {
-    		variables.qexp = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qexp += skus[i].getQEXP();
-	    		}	
-    		}
-    	}
-    	return variables.qexp;
-	}
-	
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-	
-	public numeric function getQIA() {
-		return getQOH() - getQC();
 	}
 	
 	public string function getTemplate() {
@@ -735,6 +704,144 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// Non-Persistent Quantity Properties For On Hand & Inventory in Motion (Deligated to the DAO)
+	public numeric function getQOH() {
+		if(!structKeyExists(variables, "qoh")) {
+			variables.qoh = getService("inventoryService").getQOH(productID=getProductID());
+		}
+		return variables.qoh;
+	}
+	public numeric function getQOSH() {
+		if(!structKeyExists(variables, "qosh")) {
+			variables.qosh = getService("inventoryService").getQOSH(productID=getProductID());
+		}
+		return variables.qosh;
+	}
+	public numeric function getQNDOO() {
+		if(!structKeyExists(variables, "qndoo")) {
+			variables.qndoo = getService("inventoryService").getQNDOO(productID=getProductID());
+		}
+		return variables.qndoo;
+	}
+	public numeric function getQNDORVO() {
+		if(!structKeyExists(variables, "qndorvo")) {
+			variables.qndorvo = getService("inventoryService").getQNDORVO(productID=getProductID());
+		}
+		return variables.qoh;
+	}
+	public numeric function getQNDOSA() {
+		if(!structKeyExists(variables, "qndosa")) {
+			variables.qndosa = getService("inventoryService").getQNDOSA(productID=getProductID());
+		}
+		return variables.qndosa;
+	}
+	public numeric function getQNRORO() {
+		if(!structKeyExists(variables, "qnroro")) {
+			variables.qnroro = getService("inventoryService").getQNRORO(productID=getProductID());
+		}
+		return variables.qnroro;
+	}
+	public numeric function getQNROVO() {
+		if(!structKeyExists(variables, "qnrovo")) {
+			variables.qnrovo = getService("inventoryService").getQNROVO(productID=getProductID());
+		}
+		return variables.qnrovo;
+	}
+	public numeric function getQNROSA() {
+		if(!structKeyExists(variables, "qnrosa")) {
+			variables.qnrosa = getService("inventoryService").getQNROSA(productID=getProductID());
+		}
+		return variables.qnrosa;
+	}
+	
+	// Non-Persistent Quantity Properties For Reporting (Deligated to DAO)
+	public numeric function getQR() {
+		if(!structKeyExists(variables, "qr")) {
+			variables.qr = getService("inventoryService").getQR(productID=getProductID());
+		}
+		return variables.qr;
+	}
+	public numeric function getQS() {
+		if(!structKeyExists(variables, "qs")) {
+			variables.qs = getService("inventoryService").getQS(productID=getProductID());
+		}
+		return variables.qs;
+	}
+	
+	// Non-Persistent Quantity Properties For Logic & Display Based on On Hand & Inventory in Motion values (Could be calculated here, but delegated to the Service, for Consitency of Product / Sku / Stock)
+	public numeric function getQC() {
+		if(!structKeyExists(variables, "qc")) {
+			variables.qc = getService("inventoryService").getQC(entity=this);
+		}
+		return variables.qc;
+	}
+	public numeric function getQE() {
+		if(!structKeyExists(variables, "qe")) {
+			variables.qe = getService("inventoryService").getQE(entity=this);
+		}
+		return variables.qe;
+	}
+	public numeric function getQNC() {
+		if(!structKeyExists(variables, "qnc")) {
+			variables.qnc = getService("inventoryService").getQNC(entity=this);
+		}
+		return variables.qnc;
+	}
+	public numeric function getQATS() {
+		if(!structKeyExists(variables, "qats")) {
+			variables.qats = getService("inventoryService").getQATS(entity=this);
+		}
+		return variables.qats;
+	}
+	public numeric function getQIATS() {
+		if(!structKeyExists(variables, "qiats")) {
+			variables.qiats = getService("inventoryService").getQIATS(entity=this);
+		}
+		return variables.qiats;
+	}
+	
+	// TODO: These methods are just here so that the calculation stuff will work.  The actuall settings need to be setup
+	public numeric function getQMIN() {
+		return 0;
+	}
+	public numeric function getQMAX() {
+		return 0;
+	}
+	public numeric function getQHB() {
+		return 0;
+	}
+	public numeric function getQOMIN() {
+		return 0;
+	}
+	public numeric function getQOMAX() {
+		return 0;
+	}
+	public numeric function getQVOMIN() {
+		return 0;
+	}
+	public numeric function getQVOMAX() {
+		return 0;
+	}
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function postInsert(){
+		super.postInsert();
+		//getService("skuCacheService").updateFromProduct( this );
+	}
+	
+	public void function postUpdate() {
+		super.postUpdate();
+		//getService("skuCacheService").updateFromProduct( this );
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }
-
-

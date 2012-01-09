@@ -48,4 +48,18 @@ component displayname="Order Item Status Action Abstract" entityname="SlatwallOr
 	// Special Related Discriminator Property
 	property name="orderItemStatusActionType" length="255" insert="false" update="false";
 	
+	
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

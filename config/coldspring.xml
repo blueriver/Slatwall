@@ -21,6 +21,7 @@
 	<bean id="orderDAO" class="Slatwall.com.dao.OrderDAO" />
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
+	<bean id="skuCacheDAO" class="Slatwall.com.dao.SkuCacheDAO" />
     <bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
 	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
@@ -145,6 +146,9 @@
     <bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
 		<property name="optionService"><ref bean="optionService" /></property> 
+    </bean>
+	<bean id="skuCacheService" parent="parentService" class="Slatwall.com.service.SkuCacheService">
+        <property name="DAO"><ref bean="SkuCacheDAO" /></property>
     </bean>
     <bean id="sessionService" parent="parentService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>

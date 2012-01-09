@@ -60,4 +60,17 @@ component displayname="Session" entityname="SlatwallSession" table="SlatwallSess
 			structDelete(variables, "order");	
 		}
 	}
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

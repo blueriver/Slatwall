@@ -134,5 +134,21 @@ component displayname="Option Group" entityname="SlatwallOptionGroup" table="Sla
 	
     public string function getImagePath() {
         return getImageDirectory() & getOptionGroupImage();
-    } 
+    }
+    
+    // ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

@@ -42,7 +42,7 @@ This entity represents a single instance of receiving a batch of items back FROM
 
 
 
-component displayname="Stock Receiver Vendor Order" entityname="SlatwallStockReceiverOrder" table="SlatwallStockReceiver" persistent="true" output="false" accessors="true" extends="StockReceiver" discriminatorvalue="order" {
+component displayname="Stock Receiver Order" entityname="SlatwallStockReceiverOrder" table="SlatwallStockReceiver" persistent="true" output="false" accessors="true" extends="StockReceiver" discriminatorvalue="order" {
 	
 	// Persistent Properties
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -50,4 +50,16 @@ component displayname="Stock Receiver Vendor Order" entityname="SlatwallStockRec
 	// Related Object Properties
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

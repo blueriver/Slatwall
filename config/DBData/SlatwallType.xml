@@ -36,6 +36,11 @@
 		<Record typeID="444df2a7a2c39796d2b15516840344ea" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Rich Text Editor" systemCode="atWysiwyg" />
 		<Record typeID="444df2d8eb236c42dbbef7ea66200f1b" parentTypeID="444df2a4e7c799436c29759e09b6e2c5" type="Yes / No" systemCode="atYesNo" />
 		
+		<Record typeID="444df2deab6476cb2c429946d6538436" type="Order Types" systemCode="orderType" />
+		<Record typeID="444df2df9f923d6c6fd0942a466e84cc" parentTypeID="444df2deab6476cb2c429946d6538436" type="Sales Order" systemCode="otSalesOrder" />
+		<Record typeID="444df2dd05a67eab0777ba14bef0aab1" parentTypeID="444df2deab6476cb2c429946d6538436" type="Return Order" systemCode="otReturnOrder" />
+		<Record typeID="444df2e00b455a2bae38fb55f640c204" parentTypeID="444df2deab6476cb2c429946d6538436" type="Exchange Order" systemCode="otExchangeOrder" />
+		
 		<Record typeID="444df2b3df09f67ddcb27918f02c2d83" type="Order Status Types" systemCode="orderStatusType" />
 		<Record typeID="444df2b498de93b4b33001593e96f4be" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Not Placed" systemCode="ostNotPlaced" />
 		<Record typeID="444df2b5c8f9b37338229d4f7dd84ad1" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="New" systemCode="ostNew" />
@@ -44,10 +49,14 @@
 		<Record typeID="444df2b8b98441f8e8fc6b5b4266548c" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Closed" systemCode="ostClosed" />
 		<Record typeID="444df2b90f62f72711eb5b3c90848e7e" parentTypeID="444df2b3df09f67ddcb27918f02c2d83" type="Canceled" systemCode="ostCanceled" />
 		
-		<Record typeID="444df2deab6476cb2c429946d6538436" type="Order Types" systemCode="orderType" />
-		<Record typeID="444df2df9f923d6c6fd0942a466e84cc" parentTypeID="444df2deab6476cb2c429946d6538436" type="Sales Order" systemCode="otSalesOrder" />
-		<Record typeID="444df2dd05a67eab0777ba14bef0aab1" parentTypeID="444df2deab6476cb2c429946d6538436" type="Return Order" systemCode="otReturnOrder" />
-		<Record typeID="444df2e00b455a2bae38fb55f640c204" parentTypeID="444df2deab6476cb2c429946d6538436" type="Exchange Order" systemCode="otExchangeOrder" />
+		<Record typeID="444df2e4e0ec725f718318de5bd3b973" type="Stock Adjustment Types" systemCode="stockAdjustmentType" />
+		<Record typeID="444df2e5cb27169f418279f3f859a4f7" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Location Transfer" systemCode="satLocationTransfer" />
+		<Record typeID="444df2e60db81c12589c9b39346009f2" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Manual In" systemCode="satManualIn" />
+		<Record typeID="444df2e7dba550b7a24a03acbb37e717" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Manual Out" systemCode="satManualOut" />
+		
+		<Record typeID="444df2e1afee04d4971094d467a2c619" type="Stock Adjustment Status Types" systemCode="stockAdjustmentStatusType" />
+		<Record typeID="444df2e2f66ddfaf9c60caf5c76349a6" parentTypeID="444df2e1afee04d4971094d467a2c619" type="New" systemCode="sastNew" />
+		<Record typeID="444df2e3cd41522453f5582a5950342e" parentTypeID="444df2e1afee04d4971094d467a2c619" type="Closed" systemCode="sastClosed" />
 		
 		<Record typeID="444df2dafc8a46af86aedf6aa15bb35a" type="Vendor Order Types" systemCode="vendorOrderType" />
 		<Record typeID="444df2dbfde8c38ab64bb21c724d46e0" parentTypeID="444df2dafc8a46af86aedf6aa15bb35a" type="Purchase Order" systemCode="votPurchaseOrder" />
@@ -105,13 +114,6 @@ Below Are UUID's to use... delete after using
 
 
 
-444df2e1afee04d4971094d467a2c619
-444df2e2f66ddfaf9c60caf5c76349a6
-444df2e3cd41522453f5582a5950342e
-444df2e4e0ec725f718318de5bd3b973
-444df2e5cb27169f418279f3f859a4f7
-444df2e60db81c12589c9b39346009f2
-444df2e7dba550b7a24a03acbb37e717
 444df2e8db2712fe6cf790d12afc9661
 444df2e9a6622ad1614ea75cd5b982ce
 444df2eac18fa589af0f054442e12733

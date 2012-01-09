@@ -46,17 +46,24 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 	property name="globalFlag" ormtype="boolean" default="0" ;
 	property name="sortOrder" ormtype="integer";
 	
+	// Related Onject Properties (One-To-One)
+	property name="productCustomization" fieldtype="one-to-one" cfc="ProductCustomization" cascade="all";
+	
+	// Related Object Properties (Many-To-One)
+	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
+	
+	// Related Object Properties (One-To-Many)
+	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder" ;
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="attributeSetType" cfc="Type" fieldtype="many-to-one" fkcolumn="attributeSetTypeID" hint="This is used to define if this attribute is applied to a profile, account, product, ext";
-	property name="attributes" singularname="attribute" cfc="Attribute" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan" orderby="sortOrder" ;
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AttributeSetAssignment" fieldtype="one-to-many" fkcolumn="attributeSetID" inverse="true" cascade="all-delete-orphan";
-	property name="productCustomization" fieldtype="one-to-one" cfc="ProductCustomization" cascade="all";     
+	// Non-Persistent Properties
+	property name="attributeSetTypeOptions" persistent="false" type="array"; 
 	
 	public AttributeSet function init(){
        // set default collections for association management methods
@@ -76,31 +83,14 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 			return getService("utilityService").sortObjectArray(variables.Attributes,arguments.orderby,arguments.sortType,arguments.direction);
 		}
 	}
-	
-    /******* Association management methods for bidirectional relationships **************/
-	
-	// Attribute (one-to-many)
-	
-	public void function addAttribute(required Attribute attribute) {
-	   arguments.attribute.setAttributeSet(this);
-	}
-	
-	public void function removeAttribute(required Attribute attribute) {
-	   arguments.attribute.removeAttributeSet(this);
-	}
-	
-	// Attribute Set Assignment (one-to-many)
-	
-	public void function addAttributeSetAssignment(required AttributeSetAssignment attributeSetAssignment) {
-	   arguments.attributeSetAssignment.setAttributeSet(this);
-	}
-	
-	public void function removeAttributeSetAssignment(required AttributeSetAssignment attributeSetAssignment) {
-	   arguments.attributeSetAssignment.removeAttributeSet(this);
-	}
-	
-    /************   END Association Management Methods   *******************/
+
     
+   	public numeric function getAttributeCount() {
+		return arrayLen(this.getAttributes());
+	}
+
+	// ============ START: Non-Persistent Property Methods =================
+
     public array function getAttributeSetTypeOptions() {
 		if(!structKeyExists(variables, "attributeSetTypeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
@@ -113,8 +103,33 @@ component displayname="AttributeSet" entityname="SlatwallAttributeSet" table="Sl
 		return variables.attributeSetTypeOptions;
     }
     
-   	public numeric function getAttributeCount() {
-		return arrayLen(this.getAttributes());
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Attributes (one-to-many)
+	public void function addAttribute(required any attribute) {
+		arguments.attribute.setAttributeSet( this );
 	}
-
+	public void function removeAttribute(required any attribute) {
+		arguments.attribute.removeAttributeSet( this );
+	}
+	
+	// Attribute Set Assignments (one-to-many)
+	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.setAttributeSet( this );
+	}
+	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.removeAttributeSet( this );
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

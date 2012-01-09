@@ -42,14 +42,48 @@ component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode"
 	property name="alternateSkuCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="alternateSkuCode" ormtype="string";
 	
+	// Related Object Properties (Many-To-One)
+	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="alternateSkuCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="skuTypeID";
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Sku (many-to-one)
+	public void function setSku(required any sku) {
+		variables.sku = arguments.sku;
+		if(isNew() or !arguments.sku.hasAlternateSkuCode( this )) {
+			arrayAppend(arguments.sku.getAlternateSkuCodes(), this);
+		}
+	}
+	public void function removeSku(any sku) {
+		if(!structKeyExists(arguments, "sku")) {
+			arguments.sku = variables.sku;
+		}
+		var index = arrayFind(arguments.sku.getAlternateSkuCodes(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAlternateSkuCodes(), index);
+		}
+		structDelete(variables, "sku");
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

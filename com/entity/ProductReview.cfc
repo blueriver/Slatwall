@@ -107,12 +107,26 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	
 	
 	// Event Handler Methods	
-	public void function preInsert(){
-		super.preInsert(argumentcollection=arguments);
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
 		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		
+		// This bit of logic sets a product review as whatever the current account is (We might want to move this to the service)
 		if( isNull(variables.account) && !isNull(getService("SessionService").getCurrentAccount()) ) {
 			setAccount(getService("SessionService").getCurrentAccount());
 		}
 	}
 	
+	// ===================  END:  ORM Event Hooks  =========================
 }

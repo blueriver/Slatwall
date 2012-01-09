@@ -46,5 +46,22 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
 	
 	// Quick Lookup Properties
-	property name="attributeID" length="32" insert="false" update="false"; 
+	property name="attributeID" length="32" insert="false" update="false";
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  ========================= 
 }

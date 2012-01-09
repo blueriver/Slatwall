@@ -42,5 +42,6 @@ Notes:
 		#rc.$.Slatwall.rbKey("admin.vendor.detail.tab.vendorOrders.noBrands")#
 	<cfelse>
 		<cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="brands" edit="#rc.edit#"  fieldType="multiselect"  />
+		<!--- <cf_SlatwallPropertyDisplay object="#rc.Vendor#" property="products" edit="#rc.edit#"  fieldType="multiselect" /> --->
 	</cfif>
 </cfoutput>

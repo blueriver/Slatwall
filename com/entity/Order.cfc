@@ -401,16 +401,29 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arr;
 	}
 	
-	//  -------------------- ORM Event Metods -------------------
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
 	public void function preInsert(){
-		confirmOrderNumberOpenDateCloseDate();
 		super.preInsert();
+		confirmOrderNumberOpenDateCloseDate();
 	}
 	
 	public void function preUpdate(Struct oldData){
-		confirmOrderNumberOpenDateCloseDate();
 		super.preUpdate();
+		confirmOrderNumberOpenDateCloseDate();
 	}
-	//  -------------------- END: ORM Event Metods -------------------
 	
+	// ===================  END:  ORM Event Hooks  =========================
 }

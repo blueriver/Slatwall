@@ -73,22 +73,18 @@ Notes:
 				<td>#local.Product.getProductCode()#</td>
 				<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 				<td>#yesNoFormat(local.Product.getPublishedFlag())#</td>
-				<!--- Temporarily doing away with the getSetting("") check for the product --->
-				<!---
-					This was the original code that should be replaced once getSetting() is fixed.
-					
-				<cfif local.Product.getSetting("trackInventoryFlag")>
-					<td>#local.Product.getQOH()#</td>
-					<td>#local.Product.getQC()#</td>
-					<td>#local.Product.getQEXP()#</td>
-					<td>#local.Product.getQIA()#</td>
-					<td>#local.Product.getQEA()#</td>
+				
+				<cfif !isNull(local.Product.getDefaultSku().getSkuCache()) && local.Product.getDefaultSku().getSkuCache().getTrackInventoryFlag()>
+					<td>#local.product.getQOH(useCache=true)#</td>
+					<td>#local.Product.getQC(useCache=true)#</td>
+					<td>#local.Product.getQE(useCache=true)#</td>
+					<td>#local.Product.getQATS(useCache=true)#</td>
+					<td>#local.Product.getQIATS(useCache=true)#</td>
 				<cfelse>
-				--->
-				<td colspan="5">
-					<em>#rc.$.Slatwall.rbKey("admin.product.list.inventoryNotTracked")#</em>
-				</td>
-				<!---</cfif>--->
+					<td colspan="5">
+						<em>#rc.$.Slatwall.rbKey("admin.product.list.inventoryNotTracked")#</em>
+					</td>
+				</cfif>
 				<td class="administration">
 					<cfset local.ProductID = local.Product.getProductID() />
 		          <ul class="four">

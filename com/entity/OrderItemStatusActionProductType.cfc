@@ -42,4 +42,18 @@ component displayname="Order Item Status Action Product Type" entityname="Slatwa
 	
 	property name="productType" fieldtype="many-to-one" cfc="ProductType" fkcolumn="productTypeID";
 	
+	
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }
