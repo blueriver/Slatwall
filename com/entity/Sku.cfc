@@ -380,49 +380,73 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// Non-Persistent Quantity Properties For On Hand & Inventory in Motion (Deligated to the DAO)
-	public numeric function getQOH() {
+	public numeric function getQOH(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQOH();
+		}
 		if(!structKeyExists(variables, "qoh")) {
 			variables.qoh = getService("inventoryService").getQOH(skuID=getSkuID());
 		}
 		return variables.qoh;
 	}
-	public numeric function getQOSH() {
+	public numeric function getQOSH(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQOSH();
+		}
 		if(!structKeyExists(variables, "qosh")) {
 			variables.qosh = getService("inventoryService").getQOSH(skuID=getSkuID());
 		}
 		return variables.qosh;
 	}
-	public numeric function getQNDOO() {
+	public numeric function getQNDOO(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNDOO();
+		}
 		if(!structKeyExists(variables, "qndoo")) {
 			variables.qndoo = getService("inventoryService").getQNDOO(skuID=getSkuID());
 		}
 		return variables.qndoo;
 	}
-	public numeric function getQNDORVO() {
+	public numeric function getQNDORVO(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNDORVO();
+		}
 		if(!structKeyExists(variables, "qndorvo")) {
 			variables.qndorvo = getService("inventoryService").getQNDORVO(skuID=getSkuID());
 		}
 		return variables.qoh;
 	}
-	public numeric function getQNDOSA() {
+	public numeric function getQNDOSA(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNDOSA();
+		}
 		if(!structKeyExists(variables, "qndosa")) {
 			variables.qndosa = getService("inventoryService").getQNDOSA(skuID=getSkuID());
 		}
 		return variables.qndosa;
 	}
-	public numeric function getQNRORO() {
+	public numeric function getQNRORO(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNRORO();
+		}
 		if(!structKeyExists(variables, "qnroro")) {
 			variables.qnroro = getService("inventoryService").getQNRORO(skuID=getSkuID());
 		}
 		return variables.qnroro;
 	}
-	public numeric function getQNROVO() {
+	public numeric function getQNROVO(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNROVO();
+		}
 		if(!structKeyExists(variables, "qnrovo")) {
 			variables.qnrovo = getService("inventoryService").getQNROVO(skuID=getSkuID());
 		}
 		return variables.qnrovo;
 	}
-	public numeric function getQNROSA() {
+	public numeric function getQNROSA(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNROSA();
+		}
 		if(!structKeyExists(variables, "qnrosa")) {
 			variables.qnrosa = getService("inventoryService").getQNROSA(skuID=getSkuID());
 		}
@@ -430,13 +454,19 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	// Non-Persistent Quantity Properties For Reporting (Deligated to DAO)
-	public numeric function getQR() {
+	public numeric function getQR(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQR();
+		}
 		if(!structKeyExists(variables, "qr")) {
 			variables.qr = getService("inventoryService").getQR(skuID=getSkuID());
 		}
 		return variables.qr;
 	}
-	public numeric function getQS() {
+	public numeric function getQS(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQS();
+		}
 		if(!structKeyExists(variables, "qs")) {
 			variables.qs = getService("inventoryService").getQS(skuID=getSkuID());
 		}
@@ -444,31 +474,46 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	// Non-Persistent Quantity Properties For Logic & Display Based on On Hand & Inventory in Motion values (Could be calculated here, but delegated to the Service, for Consitency of Product / Sku / Stock)
-	public numeric function getQC() {
+	public numeric function getQC(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQC();
+		}
 		if(!structKeyExists(variables, "qc")) {
 			variables.qc = getService("inventoryService").getQC(entity=this);
 		}
 		return variables.qc;
 	}
-	public numeric function getQE() {
+	public numeric function getQE(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQE();
+		}
 		if(!structKeyExists(variables, "qe")) {
 			variables.qe = getService("inventoryService").getQE(entity=this);
 		}
 		return variables.qe;
 	}
-	public numeric function getQNC() {
+	public numeric function getQNC(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQNC();
+		}
 		if(!structKeyExists(variables, "qnc")) {
 			variables.qnc = getService("inventoryService").getQNC(entity=this);
 		}
 		return variables.qnc;
 	}
-	public numeric function getQATS() {
+	public numeric function getQATS(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQATS();
+		}
 		if(!structKeyExists(variables, "qats")) {
 			variables.qats = getService("inventoryService").getQATS(entity=this);
 		}
 		return variables.qats;
 	}
-	public numeric function getQIATS() {
+	public numeric function getQIATS(string locationID) {
+		if(structKeyExists(arguments, "locationID")) {
+			return getService("stockService").getStockBySkuAndLocation(getSkuID(), arguments.locationID).getQIATS();
+		}
 		if(!structKeyExists(variables, "qiats")) {
 			variables.qiats = getService("inventoryService").getQIATS(entity=this);
 		}
