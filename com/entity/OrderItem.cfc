@@ -57,11 +57,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID";
 	
+	
 	// Related Object Properties (one-to-many)
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="appliedTaxes" singularname="appliedTax" cfc="OrderItemAppliedTax" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" cascade="all-delete-orphan" inverse="true";
 	//property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all-delete-orphan";
 
 	// Non persistent properties
@@ -291,6 +293,14 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Receiver Items (one-to-many)
+	public void function addStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.setOrderItem( this );
+	}
+	public void function removeStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.removeOrderItem( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

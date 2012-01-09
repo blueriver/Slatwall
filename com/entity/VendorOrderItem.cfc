@@ -47,6 +47,9 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	property name="vendorOrder" cfc="VendorOrder" fieldtype="many-to-one" fkcolumn="vendorOrderID";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
+	// Related Object Properties (One-to-Many)
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="vendorOrderItemID" cascade="all-delete-orphan" inverse="true";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
@@ -76,6 +79,14 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Receiver Items (one-to-many)    
+	public void function addStockReceiverItem(required any stockReceiverItem) {    
+		arguments.stockReceiverItem.setVendorOrderItem( this );    
+	}
+	public void function removeStockReceiverItem(required any stockReceiverItem) {    
+		arguments.stockReceiverItem.removeVendorOrderItem( this );    
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

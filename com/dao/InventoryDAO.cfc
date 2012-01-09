@@ -79,6 +79,14 @@ Notes:
 		*/
 		public numeric function getQNDOO(string stockID, string skuID, string productID) {
 			
+			/*
+			
+			Select all order items with the order status != closed and != notPlaced
+			Join all deliveryItems and subtract the two values.
+			
+			*/
+			
+			
 			var params = [];
 			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) FROM SlatwallOrderItem orderItem 
 						WHERE orderItem.order.orderStatusType.systemCode != 'ostNotPlaced'
@@ -107,6 +115,7 @@ Notes:
 			Quantity not delivered on return vendor order
 		*/
 		public numeric function getQNDORVO(string stockID, string skuID, string productID) {
+			// TODO: Impliment this later when we add return vendor orders
 			return 0;
 		}
 		
@@ -114,10 +123,35 @@ Notes:
 			Quantity not delivered on stock adjustment
 		*/
 		public numeric function getQNDOSA(string stockID, string skuID, string productID) {
-
-			var results = getQOUTOSA(argumentcollection=arguments) - getQOSAD(argumentcollection=arguments);
 			
-			return results;
+			var params = [];
+			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) FROM
+					SlatwallStockAdjustmentItem stockAdjustmentItem
+				  INNER JOIN
+				  	stockAdjustmentItem.stockAdjustment stockAdjustment
+				  LEFT JOIN
+				  	stockAdjustmentItem.stockAdjustmentDeliveryItems stockAdjustmentDeliveryItem
+				WHERE
+					stockAdjustment.stockAdjustmentStatusType.systemCode != 'sastClosed'
+				AND ";
+			
+			if(structKeyExists(arguments, "stockID")) {
+				params[1] = arguments.stockID;
+				hql &= "stockAdjustmentItem.fromStock.stockID = ?";
+			} else if (structKeyExists(arguments, "skuID")) {
+				params[1] = arguments.skuID;
+				hql &= "stockAdjustmentItem.fromStock.sku.skuID = ?";
+			} else if (structKeyExists(arguments, "productID")) {
+				params[1] = arguments.productID;
+				hql &= "stockAdjustmentItem.fromStock.sku.product.productID = ?";
+			} else {
+				throw("You must specify a stockID, skuID, or productID to this method.");
+			}
+			
+			//var results = getQOUTOSA(argumentcollection=arguments) - getQOSAD(argumentcollection=arguments);
+			var results = ormExecuteQuery(hql, params, true);
+			
+			return results[1];
 		}
 		
 		/* 

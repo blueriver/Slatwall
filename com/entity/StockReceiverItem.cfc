@@ -50,6 +50,9 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	// Related Object Properties (many-to-one)
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
 	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
+	property name="vendorOrderItem" cfc="VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";
+	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
 	
 	// Maintain bidirectional relationships (many-to-one). Notice that the child (StockReceiverItem) is the handler of the relationship, while the parent (StockReceiver), has inverse="true".
@@ -70,11 +73,79 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
        structDelete(variables,"stockReceiver");
     }
     
+    private boolean function hasOneAndOnlyOneRelatedItem() {
+    	var relationshipCount = 0;
+    	if(!isNull(getVendorOrderItem())) {
+    		relationshipCount++;
+    	}
+    	if(!isNull(getOrderItem())) {
+    		relationshipCount++;
+    	}
+    	if(!isNull(getStockAdjustmentItem())) {
+    		relationshipCount++;
+    	}
+    	return relationshipCount == 1;
+    }
+    
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Adjustment Item (many-to-one)    
+	public void function setStockAdjustmentItem(required any stockAdjustmentItem) {    
+		variables.stockAdjustmentItem = arguments.stockAdjustmentItem;    
+		if(isNew() or !arguments.stockAdjustmentItem.hasStockReceiverItem( this )) {    
+			arrayAppend(arguments.stockAdjustmentItem.getStockReceiverItems(), this);    
+		}    
+	}    
+	public void function removeStockAdjustmentItem(any stockAdjustmentItem) {    
+		if(!structKeyExists(arguments, "stockAdjustmentItem")) {    
+			arguments.stockAdjustmentItem = variables.stockAdjustmentItem;    
+		}    
+		var index = arrayFind(arguments.stockAdjustmentItem.getStockReceiverItems(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);    
+		}    
+		structDelete(variables, "stockAdjustmentItem");    
+	}
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasStockReceiverItem( this )) {
+			arrayAppend(arguments.orderItem.getStockReceiverItems(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getStockReceiverItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
+	
+	// Vendor Order Item (many-to-one)
+	public void function setVendorOrderItem(required any vendorOrderItem) {
+		variables.vendorOrderItem = arguments.vendorOrderItem;
+		if(isNew() or !arguments.vendorOrderItem.hasStockReceiverItem( this )) {
+			arrayAppend(arguments.vendorOrderItem.getStockReceiverItems(), this);
+		}
+	}
+	public void function removeVendorOrderItem(any vendorOrderItem) {
+		if(!structKeyExists(arguments, "vendorOrderItem")) {
+			arguments.vendorOrderItem = variables.vendorOrderItem;
+		}
+		var index = arrayFind(arguments.vendorOrderItem.getStockReceiverItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);
+		}
+		structDelete(variables, "vendorOrderItem");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
@@ -82,6 +153,9 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	
 	public void function preInsert(){
 		super.preInsert();
+		if(!hasOneAndOnlyOneRelatedItem()) {
+			throw("The Stock Receiver Item Needs to have a relationship with 'OrderItem', 'VendorOrderItem', or 'StockAdjustmentItem' and only one of those can exist.");
+		}
 		getService("inventoryService").createInventory( this );
 	}
 	
