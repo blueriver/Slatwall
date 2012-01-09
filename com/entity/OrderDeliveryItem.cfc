@@ -40,7 +40,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	
 	// Persistent Properties
 	property name="orderDeliveryItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityDelivered" ormtype="integer";
+	property name="quantity" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
 	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
@@ -99,8 +99,8 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		getService("inventoryService").createInventory( this );
 		super.preInsert();
+		getService("inventoryService").createInventory( this );
 	}
 	
 	public void function preUpdate(Struct oldData){

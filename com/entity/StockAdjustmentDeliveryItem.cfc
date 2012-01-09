@@ -99,8 +99,8 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		getService("inventoryService").createInventory( this );
 		super.preInsert();
+		getService("inventoryService").createInventory( this );
 	}
 	
 	public void function preUpdate(Struct oldData){

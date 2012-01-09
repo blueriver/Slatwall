@@ -152,10 +152,10 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		super.preInsert();
 		if(!hasOneAndOnlyOneRelatedItem()) {
 			throw("The Stock Receiver Item Needs to have a relationship with 'OrderItem', 'VendorOrderItem', or 'StockAdjustmentItem' and only one of those can exist.");
 		}
+		super.preInsert();
 		getService("inventoryService").createInventory( this );
 	}
 	

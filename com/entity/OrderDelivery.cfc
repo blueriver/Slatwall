@@ -72,7 +72,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	public any function getTotalQuanityDelivered() {
 		var totalDelivered = 0;
 		for(var i=1; i<=arrayLen(getOrderDeliveryItems()); i++) {
-			totalDelivered += getOrderDeliveryItems()[i].getQuantityDelivered();
+			totalDelivered += getOrderDeliveryItems()[i].getQuantity();
 		}
 		return totalDelivered;
 	}

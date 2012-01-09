@@ -603,7 +603,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Create and Populate the delivery item
 					var orderDeliveryItem = this.newOrderDeliveryItem();
 					orderDeliveryItem.setOrderItem( thisOrderItem );
-					orderDeliveryItem.setQuantityDelivered( thisQuantity );
+					orderDeliveryItem.setQuantity( thisQuantity );
 					orderDeliveryItem.setOrderDelivery( orderDelivery);
 					orderDeliveryItem.setStock( stock );
 					

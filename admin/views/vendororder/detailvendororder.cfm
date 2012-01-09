@@ -51,7 +51,7 @@ Notes:
 <!--- Display buttons of available vendorOrder actions --->
 <!---<cfloop array="#local.vendorOrderActionOptions#" index="local.thisAction">
 <cfset local.action = lcase( replace(local.thisAction.getVendorOrderActionType().getSystemCode(),"oat","","one") ) />
-	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.vendorOrder.getQuantityDelivered())>
+	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.vendorOrder.getQuantity())>
 	<cf_SlatwallActionCaller action="admin:vendorOrder.#local.action#vendorOrder" querystring="vendorOrderid=#rc.VendorOrder.getVendorOrderID()#" class="button" confirmRequired="true" />
 	</cfif>
 </cfloop>--->

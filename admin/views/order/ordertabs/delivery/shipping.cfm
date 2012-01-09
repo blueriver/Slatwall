@@ -68,7 +68,7 @@ Notes:
 					<td>#local.thisOrderDeliveryItem.getOrderItem().getSku().getSkuCode()#</td>
 					<td class="varWidth">#local.thisOrderDeliveryItem.getOrderItem().getSku().getProduct().getBrand().getBrandName()# #local.thisOrderDeliveryItem.getOrderItem().getSku().getProduct().getProductName()#</td>				
 					<td>#local.thisOrderDeliveryItem.getOrderItem().getFormattedValue('price', 'currency')#</td>
-					<td>#local.thisOrderDeliveryItem.getQuantityDelivered()#</td>
+					<td>#local.thisOrderDeliveryItem.getQuantity()#</td>
 					<td>#local.thisOrderDeliveryItem.getOrderItem().getFormattedValue('extendedPrice', 'currency')#</td>
 				</tr>
 			</cfloop>

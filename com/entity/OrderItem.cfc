@@ -144,7 +144,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			variables.quantityDelivered = 0;
 			var deliveryItems = getOrderDeliveryItems();
 			for( var thisDeliveryItem in deliveryItems ) {
-				variables.quantityDelivered += thisDeliveryItem.getQuantityDelivered();				
+				variables.quantityDelivered += thisDeliveryItem.getQuantity();				
 			}			
 		}
 		return variables.quantityDelivered;
