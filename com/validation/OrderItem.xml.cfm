@@ -5,4 +5,9 @@
 			<rule type="required" contexts="save" />
 		</property>
 	</objectProperties>
+	<objectProperties>
+		<property name="orderItemStatusType">
+			<rule type="required" contexts="save" />
+		</property>
+	</objectProperties>
 </validateThis>

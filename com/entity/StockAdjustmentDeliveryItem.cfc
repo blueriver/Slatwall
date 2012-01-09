@@ -45,8 +45,6 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	// Related Object Properties (many-to-one)
 	property name="stockAdjustmentDelivery" cfc="StockAdjustmentDelivery" fieldtype="many-to-one" fkcolumn="stockAdjustmentDeliveryID";
 	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
-	
-	// This may be left null
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
 
@@ -101,9 +99,6 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		if(isNull(stockAdjustmentItem())) {
-			throw("You must relate an stock adjustment delivery item to a stock adjustment item");
-		}
 		getService("inventoryService").createInventory( this );
 		super.preInsert();
 	}

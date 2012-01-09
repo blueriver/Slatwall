@@ -99,9 +99,6 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
-		if(isNull(getOrderItem())) {
-			throw("You must relate an order delivery item to an order item");
-		}
 		getService("inventoryService").createInventory( this );
 		super.preInsert();
 	}

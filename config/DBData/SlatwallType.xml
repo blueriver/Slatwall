@@ -76,14 +76,7 @@
 		
 		<Record typeID="444df34bcafb2e904eefff689e4c52ab" type="Order Item Action Types" systemCode="orderItemActionType" />
 		<Record typeID="444df34ae09ebeac9ada5d47a210eefe" parentTypeID="444df34bcafb2e904eefff689e4c52ab" type="Fulfill Item" systemCode="oiatFulfill" />
-		
-		<Record typeID="444df2bfcce010ca2fc46bf1d2122904" type="Order Shipping Status Types" systemCode="orderShippingStatusType" />
-		<Record typeID="444df2c0ba0f0ddc3d80060c4be1dd42" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Not Placed" systemCode="osstNotPlaced" />
-		<Record typeID="444df2c1adba9a6971a24cc5e2f6826b" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="New" systemCode="osstNew" />
-		<Record typeID="444df2c2e64c3d14495edf52677ad126" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Processing" systemCode="osstProcessing" />
-		<Record typeID="444df2c390d333aa4eb20892ed6a510f" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Partially Shipped" systemCode="osstPartiallyShipped" />
-		<Record typeID="444df2c40b655fbdfdaf70647b61f9ea" parentTypeID="444df2bfcce010ca2fc46bf1d2122904" type="Shipped" systemCode="osstShipped" />
-				
+
 		<Record typeID="444df2e4e0ec725f718318de5bd3b973" type="Stock Adjustment Types" systemCode="stockAdjustmentType" />
 		<Record typeID="444df2e5cb27169f418279f3f859a4f7" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Location Transfer" systemCode="satLocationTransfer" />
 		<Record typeID="444df2e60db81c12589c9b39346009f2" parentTypeID="444df2e4e0ec725f718318de5bd3b973" type="Manual In" systemCode="satManualIn" />
