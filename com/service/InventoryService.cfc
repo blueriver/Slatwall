@@ -56,18 +56,13 @@ component extends="BaseService" accessors="true" output="false" {
 			case "SlatwallStockPhysicalItem": {
 				break;
 			}
-			case "SlatwallStrockAdjustmentDeliveryItem": {
-				break;
-			}
-			case "SlatwallVendorOrderDeliveryItem": {
-				break;
-			}
-			case "SlatwallOrderDeliveryItem": {
+			// One case can handle all 'Delivery types' because they are formatted the exact same way
+			case "SlatwallOrderDeliveryItem": case "SlatwallVendorOrderDeliveryItem": case "SlatwallStockAdjustmentDeliveryItem": {
 				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
 					var inventory = this.newInventory();
-					inventory.setQuantityOut(arguments.entity.getQuantityDelivered());
+					inventory.setQuantityOut(arguments.entity.getQuantity());
 					inventory.setStock(arguments.entity.getStock());
-					inventory.setOrderDeliveryItem(arguments.entity);
+					inventory.setStockAdjustmentDeliveryItem(arguments.entity);
 					getDAO().save(inventory);
 				}
 				break;

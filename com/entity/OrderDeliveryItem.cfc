@@ -40,74 +40,55 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	
 	// Persistent Properties
 	property name="orderDeliveryItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityDelivered" ormtype="integer";
+	property name="quantity" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
 	property name="orderDelivery" cfc="OrderDelivery" fieldtype="many-to-one" fkcolumn="orderDeliveryID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
-	
-	// This may be left null
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
-   /******* Association management methods for bidirectional relationships **************/
-	
-	// OrderDelivery (many-to-one)
-	
-	public void function setOrderDelivery(required OrderDelivery orderDelivery) {
-	   variables.orderDelivery = arguments.orderDelivery;
-	   if(isNew() or !arguments.orderDelivery.hasOrderDeliveryItem(this)) {
-	       arrayAppend(arguments.orderDelivery.getOrderDeliveryItems(),this);
-	   }
-	}
-	
-	public void function removeOrderDelivery(required OrderDelivery orderDelivery) {
-       var index = arrayFind(arguments.orderDelivery.getOrderDeliveryItems(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.orderDelivery.getOrderDeliveryItems(),index);
-       }    
-       structDelete(variables,"orderDelivery");
-	}
-	
-	// OrderItem (many-to-one)
-	
-	public void function setOrderItem(required OrderItem OrderItem) {
-	   variables.orderItem = arguments.orderItem;
-	   if(isNew() or !arguments.orderItem.hasOrderDeliveryItem(this)) {
-	       arrayAppend(arguments.orderItem.getOrderDeliveryItems(), this);
-	   }
-	}
-	
-	public void function removeOrderItem(required OrderItem OrderItem) {
-       var index = arrayFind(arguments.orderItem.getOrderDeliveryItems(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.orderItem.getOrderDeliveryItems(),index);
-       }    
-       structDelete(variables,"orderItem");
-	}	
-	
-    /************   END Association Management Methods   *******************/
-    
-	//  -------------------- ORM Event Methods -------------------
-	public void function preInsert(){
-		getService("inventoryService").createInventory( this );
-		super.preInsert();
-	}
-	
-	public void function preUpdate(Struct oldData){
-		throw("Updates to Order Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
-	}
-	
-	public void function postUpdate() {
-		super.preUpdate();
-		//getService("skuCacheService").updateFromOrderDeliveryItem( this );
-	}
-	//  -------------------- END: ORM Event Metods -------------------
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Delivery (many-to-one)
+	public void function setOrderDelivery(required any orderDelivery) {
+		variables.orderDelivery = arguments.orderDelivery;
+		if(isNew() or !arguments.orderDelivery.hasOrderDeliveryItem( this )) {
+			arrayAppend(arguments.orderDelivery.getOrderDeliveryItems(), this);
+		}
+	}
+	public void function removeOrderDelivery(any orderDelivery) {
+		if(!structKeyExists(arguments, "orderDelivery")) {
+			arguments.orderDelivery = variables.orderDelivery;
+		}
+		var index = arrayFind(arguments.orderDelivery.getOrderDeliveryItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrderDeliveryItems(), index);
+		}
+		structDelete(variables, "orderDelivery");
+	}
+
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
+		variables.orderItem = arguments.orderItem;
+		if(isNew() or !arguments.orderItem.hasOrderDeliveryItem( this )) {
+			arrayAppend(arguments.orderItem.getOrderDeliveryItems(), this);
+		}
+	}
+	public void function removeOrderItem(any orderItem) {
+		if(!structKeyExists(arguments, "orderItem")) {
+			arguments.orderItem = variables.orderItem;
+		}
+		var index = arrayFind(arguments.orderItem.getOrderDeliveryItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrderDeliveryItems(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
@@ -116,6 +97,15 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	// ==================  END:  Overridden Methods ========================
 		
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		getService("inventoryService").createInventory( this );
+	}
+	
+	public void function preUpdate(Struct oldData){
+		throw("Updates to Order Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
+	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

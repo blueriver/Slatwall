@@ -43,21 +43,23 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	property name="deliveryOpenDateTime" ormtype="timestamp";
 	property name="deliveryCloseDateTime" ormtype="timestamp";
 	
+	// Related Object Properties (Many-To-One)
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
+	
+	// Related Object Properties (One-To-Many)
+	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
+	
+	// Special Related Discriminator Property
+	property name="fulfillmentMethodID" length="255" insert="false" update="false";
+	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderDeliveryID" cascade="all-delete-orphan" inverse="true";
-	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
-	
-	
-	// Special Related Discriminator Property
-	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
-	property name="fulfillmentMethodID" length="255" insert="false" update="false";
 	
 	public OrderDelivery function init(){
 	   // set default collections for association management methods
@@ -70,47 +72,42 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 	public any function getTotalQuanityDelivered() {
 		var totalDelivered = 0;
 		for(var i=1; i<=arrayLen(getOrderDeliveryItems()); i++) {
-			totalDelivered += getOrderDeliveryItems()[i].getQuantityDelivered();
+			totalDelivered += getOrderDeliveryItems()[i].getQuantity();
 		}
 		return totalDelivered;
 	}
    
-    /******* Association management methods for bidirectional relationships **************/
-	
-	// Order (many-to-one)
-	
-	public void function setOrder(required Order Order) {
-	   variables.order = arguments.order;
-	   if(!arguments.order.hasOrderDelivery(this)) {
-	       arrayAppend(arguments.order.getOrderDeliveries(),this);
-	   }
-	}
-	
-	public void function removeOrder(required Order Order) {
-       var index = arrayFind(arguments.order.getOrderDeliveries(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.order.getOrderDeliveries(),index);
-       }    
-       structDelete(variables,"order");
-    }
-    
-	
-	// OrderDeliveryItems (one-to-many)
-	
-	public void function addOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
-	   arguments.orderDeliveryItem.setOrderDelivery(this);
-	}
-	
-	public void function removeOrderDeliveryItem(required OrderDeliveryItem OrderDeliveryItem) {
-	   arguments.orderDeliveryItem.removeOrderDelivery(this);
-	}
-    /************   END Association Management Methods   *******************/
-    
     // ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasOrderDelivery( this )) {
+			arrayAppend(arguments.order.getOrderDeliveries(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getOrderDeliveries(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrderDeliveries(), index);
+		}
+		structDelete(variables, "order");
+	}
+	
+	// Order Delivery Items (one-to-many)
+	public void function addOrderDeliveryItem(required any orderDeliveryItem) {
+		arguments.orderDeliveryItem.setOrderDelivery( this );
+	}
+	public void function removeOrderDeliveryItem(required any orderDeliveryItem) {
+		arguments.orderDeliveryItem.removeOrderDelivery( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

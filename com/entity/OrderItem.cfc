@@ -51,12 +51,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
-	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
+	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
 	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID";
-	
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
 	// Related Object Properties (one-to-many)
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
@@ -64,7 +65,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" cascade="all-delete-orphan" inverse="true";
-	//property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all-delete-orphan";
+	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all";
 
 	// Non persistent properties
 	property name="extendedPrice" persistent="false" formatType="currency" ; 
@@ -75,11 +76,15 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 
 	public any function init() {
 		
+		// set the type to sale by default
+		if( !structKeyExists(variables,"orderItemType") ) {
+			setOrderItemType( getService("typeService").getTypeBySystemCode("oitSale") );
+		}
 		// set status to new by default
 		if( !structKeyExists(variables,"orderItemStatusType") ) {
-			var statusType = getService("orderService").getTypeBySystemCode("oistNew");
-			setOrderItemStatusType(statusType);
+			setOrderItemStatusType( getService("typeService").getTypeBySystemCode("oistNew") );
 		}
+		
 		// set default collections for association management methods
 		if(isNull(variables.orderDeliveryItems)) {
 		   variables.orderDeliveryItems = [];
@@ -139,7 +144,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 			variables.quantityDelivered = 0;
 			var deliveryItems = getOrderDeliveryItems();
 			for( var thisDeliveryItem in deliveryItems ) {
-				variables.quantityDelivered += thisDeliveryItem.getQuantityDelivered();				
+				variables.quantityDelivered += thisDeliveryItem.getQuantity();				
 			}			
 		}
 		return variables.quantityDelivered;
@@ -309,6 +314,21 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert() {
+		if(isNull(getOrderItemType())) {
+			throw("You must specify what type of order item this is: sale or return");
+		}
+		super.preInsert();
+		
+	}
+	
+	public void function preUpdate() {
+		if(isNull(getOrderItemType())) {
+			throw("You must specify what type of order item this is: sale or return");
+		}
+		super.preUpdate();
+	}
 	
 	public void function postInsert(){
 		super.postInsert();

@@ -59,11 +59,6 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.product.productCode")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.publishedFlag")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qexp")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qia")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qea")#</th>
 			<th>&nbsp</th>
 		</tr>	
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
@@ -73,18 +68,6 @@ Notes:
 				<td>#local.Product.getProductCode()#</td>
 				<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 				<td>#yesNoFormat(local.Product.getPublishedFlag())#</td>
-				
-				<cfif !isNull(local.Product.getDefaultSku().getSkuCache()) && local.Product.getDefaultSku().getSkuCache().getTrackInventoryFlag()>
-					<td>#local.product.getQOH(useCache=true)#</td>
-					<td>#local.Product.getQC(useCache=true)#</td>
-					<td>#local.Product.getQE(useCache=true)#</td>
-					<td>#local.Product.getQATS(useCache=true)#</td>
-					<td>#local.Product.getQIATS(useCache=true)#</td>
-				<cfelse>
-					<td colspan="5">
-						<em>#rc.$.Slatwall.rbKey("admin.product.list.inventoryNotTracked")#</em>
-					</td>
-				</cfif>
 				<td class="administration">
 					<cfset local.ProductID = local.Product.getProductID() />
 		          <ul class="four">

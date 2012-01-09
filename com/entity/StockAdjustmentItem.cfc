@@ -49,7 +49,7 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	
 	// Related Object Properties (one-to-many)
 	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
-	property name="stockReveiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
 	
 	
 	

@@ -86,7 +86,7 @@ Notes:
 				<td>#local.orderItem.getOrderItemStatusType().getType()#</td>				
 				<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
-				<td>#local.orderItem.getQuantityDelivered()#</td>
+				<td>#local.orderItem.getQuantity()#</td>
 				<td>#local.orderItem.getFormattedValue('extendedPrice', 'currency')#</td>
 			</tr>
 		</cfloop>

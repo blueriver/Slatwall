@@ -50,6 +50,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="utilityService";
 	property name="utilityEmailService";
 	property name="stockService";
+	property name="typeService";
 	//property name="SettingService";
 	
 	
@@ -558,12 +559,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		orderDelivery.setOrder(order);
 		orderDelivery.setDeliveryOpenDateTime(now());
 		
-		// Set the location from which this order will be fulfilled. deliverFromLocation is also used when setting the stock on OrderDeliveryItems.
-		var deliverFromLocation = getLocationService().getLocation(arguments.locationID);
-		orderDelivery.setLocation(deliverFromLocation);
-		
 		// TODO: change close date to indicate when item was received, downloaded, picked up, etc.
 		orderDelivery.setDeliveryCloseDateTime(now());
+		
+		// Set the location from which this order will be fulfilled. deliverFromLocation is also used when setting the stock on OrderDeliveryItems.
+		orderDelivery.setLocation( getLocationService().getLocation(arguments.locationID) );
 				
 		// Per Fulfillment method set whatever other details need to be set
 		switch(fulfillmentMethodID) {
@@ -571,6 +571,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// copy the shipping address from the order fulfillment and set it in the delivery
 				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
 				orderDelivery.setShippingMethod(arguments.orderFulfillment.getShippingMethod());
+				break;
 			}
 			default:{}
 		}
@@ -597,10 +598,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					totalQuantity += thisQuantity;
 					
 					// Grab the stock that matches the item and the location from which we are delivering
-					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), deliverFromLocation);
+					var stock = getStockService().getStockBySkuAndLocation(thisOrderItem.getSku(), orderDelivery.getLocation());
 					
 					// Create and Populate the delivery item
-					var orderDeliveryItem = createOrderDeliveryItem(thisOrderItem, stock, thisQuantity, orderDelivery);
+					var orderDeliveryItem = this.newOrderDeliveryItem();
+					orderDeliveryItem.setOrderItem( thisOrderItem );
+					orderDeliveryItem.setQuantity( thisQuantity );
+					orderDeliveryItem.setOrderDelivery( orderDelivery);
+					orderDeliveryItem.setStock( stock );
 					
 					// change status of the order item
 					if(thisQuantity == thisOrderItem.getQuantityUndelivered()) {
@@ -620,12 +625,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!orderDelivery.hasErrors()) {
 			// update the status of the order
 			if(totalQuantity < order.getQuantityUndelivered()) {
-				order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostProcessing"));
 			} else {
 				if(order.isPaid()) {
-					order.setOrderStatusType(this.getTypeBySystemCode("ostClosed"));
+					order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 				} else {
-					order.setOrderStatusType(this.getTypeBySystemCode("ostProcessing"));
+					order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostProcessing"));
 				}
 			}
 			arguments.entity = getDAO().save(target=orderDelivery);
@@ -634,19 +639,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 				
 		return orderDelivery;
-	}
-	
-	private any function createOrderDeliveryItem(required any orderItem, required any stock, required numeric quantity, required any orderDelivery) {
-	
-		var orderDeliveryItem = this.newOrderDeliveryItem();
-		orderDeliveryItem.setOrderItem(arguments.orderItem);
-		orderDeliveryItem.setQuantityDelivered(arguments.quantity);
-		orderDeliveryItem.setOrderDelivery(arguments.orderDelivery);
-		orderDeliveryItem.setStock(arguments.stock);
-		
-		//writeDump(var=arguments, top=2);
-		 
-		return orderDeliveryItem;
 	}
 	
 	public any function saveOrderPaymentCreditCard(required any orderPayment, struct data={}) {
