@@ -37,17 +37,26 @@ Notes:
 
 */
 component extends="BaseService" accessors="true" output="false" {
-	property name="stockDAO" type="any";
 
+	property name="locationService" type="any";
+	property name="skuService" type="any";
+	
+	public any function getStockBySkuAndLocation(required any skuOrSkuID, required any locationOrLocationID){
 		
-	public any function getStockBySkuAndLocation(required any sku, required any location){
+		if(isSimpleValue(arguments.skuOrSkuID)) {
+			arguments.skuOrSkuID = getSkuService().getSku(arguments.skuOrSkuID);
+		}
 		
-		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
+		if(isSimpleValue(arguments.locationOrLocationID)) {
+			arguments.locationOrLocationID = getLocationService().getLocation(arguments.locationOrLocationID);
+		}
+		
+		var stock = getDAO().getStockBySkuAndLocation(sku=arguments.skuOrSkuID, location=arguments.locationOrLocationID);
 		
 		if(isNull(stock)) {
 			stock = this.newStock();
-			stock.setSku(arguments.sku);
-			stock.setLocation(arguments.location);
+			stock.setSku(arguments.skuOrSkuID);
+			stock.setLocation(arguments.locationOrLocationID);
 			getDAO().save(stock);
 		}
 		
