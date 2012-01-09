@@ -193,7 +193,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		// If the sku doesn't exist in the order, then create a new order item and add it
 		if(!itemExists) {
 			var newItem = this.newOrderItem();
-			newItem.setOrderItemType(getTypeService().getTypeBySystemCode("oitSale"));
 			newItem.setSku(arguments.sku);
 			newItem.setQuantity(arguments.quantity);
 			newItem.setOrder(arguments.order);
