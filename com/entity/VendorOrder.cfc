@@ -51,6 +51,7 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	// Related Object Properties (Many-To-One)
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
 	property name="vendorOrderType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderTypeID";
+	property name="vendorOrderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="vendorOrderStatusTypeID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all-delete-orphan";

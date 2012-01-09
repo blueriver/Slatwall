@@ -176,7 +176,7 @@ Notes:
 					  LEFT JOIN
 				  		vendorOrderItem.stockReceiverItems stockReceiverItem
 					WHERE
-						vendorOrderItem.vendorOrder.orderStatusType.systemCode != 'ostClosed'
+						vendorOrderItem.vendorOrder.vendorOrderStatusType.systemCode != 'ostClosed'
 					  AND
 					  	vendorOrderItem.vendorOrder.vendorOrderType = 'votPurchaseOrder'
 					  AND ";
