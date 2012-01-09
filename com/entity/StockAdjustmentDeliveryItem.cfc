@@ -47,6 +47,9 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 
 	// ============ START: Non-Persistent Property Methods =================
 	
