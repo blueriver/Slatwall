@@ -40,6 +40,8 @@ component extends="BaseDAO" {
 
 	
 	public any function getStockBySkuAndLocation(required any sku, required any location) {
+		return entityLoad("SlatwallStock", {location=arguments.location, sku=arguments.sku}, true);
+		/*
 		var params = [arguments.sku.getSkuID(), arguments.location.getLocationID()];
 		var hql = " SELECT s
 					FROM SlatwallStock s
@@ -48,7 +50,8 @@ component extends="BaseDAO" {
 					WHERE sk.skuID = ?
 					AND l.locationID = ?    ";
 	
-		return ormExecuteQuery(hql, params, true);	
+		return ormExecuteQuery(hql, params, true);
+		*/	
 	}	
 	
 }

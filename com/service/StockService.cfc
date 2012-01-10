@@ -41,23 +41,25 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="locationService" type="any";
 	property name="skuService" type="any";
 	
-	public any function getStockBySkuAndLocation(required any skuOrSkuID, required any locationOrLocationID){
-		
-		if(isSimpleValue(arguments.skuOrSkuID)) {
-			arguments.skuOrSkuID = getSkuService().getSku(arguments.skuOrSkuID);
-		}
-		
-		if(isSimpleValue(arguments.locationOrLocationID)) {
-			arguments.locationOrLocationID = getLocationService().getLocation(arguments.locationOrLocationID);
-		}
-		
-		var stock = getDAO().getStockBySkuAndLocation(sku=arguments.skuOrSkuID, location=arguments.locationOrLocationID);
+	public any function getStockBySkuAndLocation(required any sku, required any location){
+		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
 		
 		if(isNull(stock)) {
-			stock = this.newStock();
-			stock.setSku(arguments.skuOrSkuID);
-			stock.setLocation(arguments.locationOrLocationID);
-			getDAO().save(stock);
+			
+			if(getRequestCacheService().hasValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#")) {
+				// Set the stock in the requestCache so that duplicates for this stock don't get created.
+				stock = getRequestCacheService().getValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#");
+				
+			} else {
+				stock = this.newStock();
+				stock.setSku(arguments.sku);
+				stock.setLocation(arguments.location);
+				getDAO().save(stock);
+				
+				// Set the stock in the requestCache so that duplicates for this stock don't get created.
+				getRequestCacheService().setValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#", stock);
+				
+			}
 		}
 		
 		return stock;
