@@ -226,5 +226,10 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		getService("skuCacheService").updateFromProductType( productType=this, oldData=arguments.oldData );
+	}
+	
 	// ===================  END:  ORM Event Hooks  =========================
 }

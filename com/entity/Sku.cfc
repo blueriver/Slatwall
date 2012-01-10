@@ -46,15 +46,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="shippingWeight" ormtype="big_decimal" formatType="weight" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
 
-	// Remote properties
-	property name="remoteID" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
 	// Related Object Properties (One-To-One)
 	property name="skuCache" fieldType="one-to-one" cfc="SkuCache";
 	
@@ -70,9 +61,18 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
 	// Non-Persistent Properties
 	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
-	
+	property name="salePrice" formatType="currency" persistent="false";
 	
 	// Non-Persistent Quantity Properties For Settings (Because these can be defined in multiple locations it is delectaed to the Service)
 	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
