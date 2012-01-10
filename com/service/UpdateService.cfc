@@ -42,38 +42,27 @@ Notes:
 	<cffunction name="update">
 		<cfargument name="branch" type="string" default="master">
 		
-		<!--- this coule take a while... --->
+		<!--- this could take a while... --->
 		<cfsetting requesttimeout="600" />
 		
 		<cfset var downloadURL = {} />
 		<cfset downloadURL["master"] = "https://github.com/ten24/Slatwall/zipball/master" />	
 		<cfset downloadURL["develop"] = "https://github.com/ten24/Slatwall/zipball/develop" />
-		<cfset var pluginRootPath = expandPath( "/plugins/" ) />
-		<cfset var slatwallRootPath = pluginRootPath & "Slatwall/" />
-		<cfset var tempDirectoryPath = slatwallRootPath & "temp" />
+		<cfset var slatwallRootPath = getSlatwallRootDirectory() />
 		<cfset var downloadFileName = "slatwall.zip" />
-		<cfset var directoryDeleteExclusionList = "integrationServices" />
-		
-		<!--- create the temp directory --->
-		<cfif Not directoryExists(tempDirectoryPath)>
-			<cfset directoryCreate(tempDirectoryPath) />
-		</cfif>
 		
 		<!--- before we do anything, make a backup --->
 		<!---<cfzip action="zip" file="#pluginRootPath#/slatwall_bak.zip" source="#slatwallRootPath#" recurse="yes" overwrite="yes" />--->
 		
 		<!--- start download --->
-		<cfhttp url="#downloadURL[arguments.branch]#" method="get" path="#tempDirectoryPath#" file="#downloadFileName#" />
+		<cfhttp url="#downloadURL[arguments.branch]#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" />
 		
 		<!--- now read and unzip the downloaded file --->
 		<cfset var dirList = "" />
-		<cfzip action="unzip" destination="#tempDirectoryPath#" file="#tempDirectoryPath#/#downloadFileName#" >
-		<cfzip action="list" file="#tempDirectoryPath#/#downloadFileName#" name="dirList" >
-		<cfset var sourcePath = tempDirectoryPath & "/#listFirst(dirList.name[1],'/')#" />
-		<cfset getUtilityFileService().duplicateDirectory(sourcePath,slatwallRootPath,true,true,".svn,.gitignore",true,directoryDeleteExclusionList) />
-		
-		<!--- update done, let's cleanup --->
-		<cfset directoryDelete(tempDirectoryPath,true) />
+		<cfzip action="unzip" destination="#getTempDirectory()#" file="#getTempDirectory()##downloadFileName#" >
+		<cfzip action="list" file="#getTempDirectory()##downloadFileName#" name="dirList" >
+		<cfset var sourcePath = getTempDirectory() & "#listFirst(dirList.name[1],'/')#" />
+		<cfset getUtilityFileService().duplicateDirectory(source=sourcePath, destination=getSlatwallRootDirectory(), overwrite=true, recurse=true, copyContentExclusionList=".svn,.gitignore", deleteDestinationContent=true, deleteDestinationContentExclusionList="integrationServices" ) />
 		
 	</cffunction>
 	
