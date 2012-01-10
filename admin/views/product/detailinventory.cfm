@@ -43,7 +43,7 @@ Notes:
 	<div class="svoinventorydetailproduct">
 		<table class="listing-grid stripe">
 			<tr>
-				<th class="varWidth" colspan="3">Product Name / Sku / Location</th>
+				<th colspan="3">Product Name / Sku / Location</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qoh.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qosh.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qndoo.full')#</th>
@@ -58,26 +58,15 @@ Notes:
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qats.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qiats.full')#</th>
 			</tr>
-			<tr class="product">
-				<td class="varWidth" colspan="3">#rc.product.getProductName()#</td>
-				<td>#rc.product.getQuantity('QOH')#</td>
-				<td>#rc.product.getQuantity('QOSH')#</td>
-				<td>#rc.product.getQuantity('QNDOO')#</td>
-				<td>#rc.product.getQuantity('QNDORVO')#</td>
-				<td>#rc.product.getQuantity('QNDOSA')#</td>
-				<td>#rc.product.getQuantity('QNRORO')#</td>
-				<td>#rc.product.getQuantity('QNROVO')#</td>
-				<td>#rc.product.getQuantity('QNROSA')#</td>
-				<td>#rc.product.getQuantity('QC')#</td>
-				<td>#rc.product.getQuantity('QE')#</td>
-				<td>#rc.product.getQuantity('QNC')#</td>
-				<td>#rc.product.getQuantity('QATS')#</td>
-				<td>#rc.product.getQuantity('QIATS')#</td>
-			</tr>
 			<cfloop array="#rc.product.getSkus()#" index="local.sku">
 				<tr class="sku">
 					<td style="text-align:left;">#local.sku.getSkuCode()#</td>
-					<td class="varWidth" colspan="2">#local.sku.displayOptions()#</td>
+					<cfif arrayLen(rc.locations) gt 1>
+						<td style="text-align:left;">#local.sku.displayOptions()#</td>
+						<td>All Locations</td>
+					<cfelse>
+						<td style="text-align:left;" colspan="2">#local.sku.displayOptions()#</td>
+					</cfif>
 					<td>#local.sku.getQuantity('QOH')#</td>
 					<td>#local.sku.getQuantity('QOSH')#</td>
 					<td>#local.sku.getQuantity('QNDOO')#</td>
@@ -95,7 +84,8 @@ Notes:
 				<cfif arrayLen(rc.locations) gt 1>
 					<cfloop array="#rc.locations#" index="local.location">
 						<tr class="stock">
-							<td class="varWidth" colspan="3">#local.location.getLocationName()#</td>
+							<td class="varWidth" colspan="2">&nbsp;</td>
+							<td>#local.location.getLocationName()#</td>
 							<td>#local.sku.getQuantity('QOH', local.location.getLocationID())#</td>
 							<td>#local.sku.getQuantity('QOSH', local.location.getLocationID())#</td>
 							<td>#local.sku.getQuantity('QNDOO', local.location.getLocationID())#</td>
@@ -113,6 +103,22 @@ Notes:
 					</cfloop>
 				</cfif>
 			</cfloop>
+			<tr class="product">
+				<td colspan="3">TOTAL</td>
+				<td>#rc.product.getQuantity('QOH')#</td>
+				<td>#rc.product.getQuantity('QOSH')#</td>
+				<td>#rc.product.getQuantity('QNDOO')#</td>
+				<td>#rc.product.getQuantity('QNDORVO')#</td>
+				<td>#rc.product.getQuantity('QNDOSA')#</td>
+				<td>#rc.product.getQuantity('QNRORO')#</td>
+				<td>#rc.product.getQuantity('QNROVO')#</td>
+				<td>#rc.product.getQuantity('QNROSA')#</td>
+				<td>#rc.product.getQuantity('QC')#</td>
+				<td>#rc.product.getQuantity('QE')#</td>
+				<td>#rc.product.getQuantity('QNC')#</td>
+				<td>#rc.product.getQuantity('QATS')#</td>
+				<td>#rc.product.getQuantity('QIATS')#</td>
+			</tr>
 		</table>
 	</div>
 </cfoutput>
