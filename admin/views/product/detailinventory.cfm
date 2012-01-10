@@ -43,7 +43,7 @@ Notes:
 	<div class="svoinventorydetailproduct">
 		<table class="listing-grid stripe">
 			<tr>
-				<th class="varWidth" colspan="2">Product Name / Sku / Location</th>
+				<th class="varWidth" colspan="3">Product Name / Sku / Location</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qoh.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qosh.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qndoo.full')#</th>
@@ -52,8 +52,6 @@ Notes:
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qnroro.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qnrovo.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qnrosa.full')#</th>
-				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qr.full')#</th>
-				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qs.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qc.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qe.full')#</th>
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qnc.full')#</th>
@@ -61,63 +59,56 @@ Notes:
 				<th style="white-space:normal; vertical-align: text-bottom;">#$.slatwall.rbKey('define.qiats.full')#</th>
 			</tr>
 			<tr class="product">
-				<td class="varWidth" colspan="2">#rc.product.getProductName()#</td>
-				<td>#rc.product.getQOH()#</td>
-				<td>#rc.product.getQOSH()#</td>
-				<td>#rc.product.getQNDOO()#</td>
-				<td>#rc.product.getQNDORVO()#</td>
-				<td>#rc.product.getQNDOSA()#</td>
-				<td>#rc.product.getQNRORO()#</td>
-				<td>#rc.product.getQNROVO()#</td>
-				<td>#rc.product.getQNROSA()#</td>
-				<td>#rc.product.getQR()#</td>
-				<td>#rc.product.getQS()#</td>
-				<td>#rc.product.getQC()#</td>
-				<td>#rc.product.getQE()#</td>
-				<td>#rc.product.getQNC()#</td>
-				<td>#rc.product.getQATS()#</td>
-				<td>#rc.product.getQIATS()#</td>
+				<td class="varWidth" colspan="3">#rc.product.getProductName()#</td>
+				<td>#rc.product.getQuantity('QOH')#</td>
+				<td>#rc.product.getQuantity('QOSH')#</td>
+				<td>#rc.product.getQuantity('QNDOO')#</td>
+				<td>#rc.product.getQuantity('QNDORVO')#</td>
+				<td>#rc.product.getQuantity('QNDOSA')#</td>
+				<td>#rc.product.getQuantity('QNRORO')#</td>
+				<td>#rc.product.getQuantity('QNROVO')#</td>
+				<td>#rc.product.getQuantity('QNROSA')#</td>
+				<td>#rc.product.getQuantity('QC')#</td>
+				<td>#rc.product.getQuantity('QE')#</td>
+				<td>#rc.product.getQuantity('QNC')#</td>
+				<td>#rc.product.getQuantity('QATS')#</td>
+				<td>#rc.product.getQuantity('QIATS')#</td>
 			</tr>
 			<cfloop array="#rc.product.getSkus()#" index="local.sku">
 				<tr class="sku">
 					<td style="text-align:left;">#local.sku.getSkuCode()#</td>
-					<td class="varWidth">#local.sku.displayOptions()#</td>
-					<td>#local.sku.getQOH()#</td>
-					<td>#local.sku.getQOSH()#</td>
-					<td>#local.sku.getQNDOO()#</td>
-					<td>#local.sku.getQNDORVO()#</td>
-					<td>#local.sku.getQNDOSA()#</td>
-					<td>#local.sku.getQNRORO()#</td>
-					<td>#local.sku.getQNROVO()#</td>
-					<td>#local.sku.getQNROSA()#</td>
-					<td>#local.sku.getQR()#</td>
-					<td>#local.sku.getQS()#</td>
-					<td>#local.sku.getQC()#</td>
-					<td>#local.sku.getQE()#</td>
-					<td>#local.sku.getQNC()#</td>
-					<td>#local.sku.getQATS()#</td>
-					<td>#local.sku.getQIATS()#</td>
+					<td class="varWidth" colspan="2">#local.sku.displayOptions()#</td>
+					<td>#local.sku.getQuantity('QOH')#</td>
+					<td>#local.sku.getQuantity('QOSH')#</td>
+					<td>#local.sku.getQuantity('QNDOO')#</td>
+					<td>#local.sku.getQuantity('QNDORVO')#</td>
+					<td>#local.sku.getQuantity('QNDOSA')#</td>
+					<td>#local.sku.getQuantity('QNRORO')#</td>
+					<td>#local.sku.getQuantity('QNROVO')#</td>
+					<td>#local.sku.getQuantity('QNROSA')#</td>
+					<td>#local.sku.getQuantity('QC')#</td>
+					<td>#local.sku.getQuantity('QE')#</td>
+					<td>#local.sku.getQuantity('QNC')#</td>
+					<td>#local.sku.getQuantity('QATS')#</td>
+					<td>#local.sku.getQuantity('QIATS')#</td>
 				</tr>
 				<cfif arrayLen(rc.locations) gt 1>
 					<cfloop array="#rc.locations#" index="local.location">
 						<tr class="stock">
-							<td>&nbsp;</td>
-							<td class="varWidth">#local.location.getLocationName()#</td>
-							<td>#local.sku.getQOH(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQOSH(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNDOO(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNDORVO(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNDOSA(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNRORO(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNROVO(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNROSA(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQR(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQS(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQC(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQE(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQNC(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQATS(locationID=local.location.getLocationID())#</td>
-							<td>#local.sku.getQIATS(locationID=local.location.getLocationID())#</td>
+							<td class="varWidth" colspan="3">#local.location.getLocationName()#</td>
+							<td>#local.sku.getQuantity('QOH', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QOSH', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNDOO', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNDORVO', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNDOSA', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNRORO', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNROVO', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNROSA', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QC', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QE', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QNC', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QATS', local.location.getLocationID())#</td>
+							<td>#local.sku.getQuantity('QIATS', local.location.getLocationID())#</td>
 						</tr>
 					</cfloop>
 				</cfif>
