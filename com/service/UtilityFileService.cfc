@@ -213,12 +213,35 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 		arguments.source = replace(arguments.source,"\","/","all");
 		arguments.destination = replace(arguments.destination,"\","/","all");
 		
+		// set baseSourceDir so it's persisted through recursion
 		if(isNull(arguments.baseSourceDir)){
 			arguments.baseSourceDir = arguments.source;
 		}
 		
+		// set baseDestinationDir so it's persisted through recursion, baseDestinationDir is passed in recursion so, this will run only once
 		if(isNull(arguments.baseDestinationDir)){
 			arguments.baseDestinationDir = arguments.destination;
+			// Loop through destination and delete the files and folder if needed
+			if(arguments.deleteDestinationContent){
+				var destinationDirList = directoryList(arguments.destination,false,"query");
+				for(var i = 1; i <= destinationDirList.recordCount; i++){
+					if(destinationDirList.type[i] == "Dir"){
+						// get the current directory without the base path
+						var currentDir = replacenocase(replacenocase(destinationDirList.directory[i],'\','/','all'),arguments.baseDestinationDir,'') & "/" & destinationDirList.name[i];
+						// if the directory exists and not part of exclusion the delete
+						if(directoryExists("#arguments.destination##currentDir#") && findNoCase(currentDir,arguments.deleteDestinationContentExclusionList) EQ 0){
+							directoryDelete("#arguments.destination##currentDir#",true);
+						}
+					} else if(destinationDirList.type[i] == "File") {
+						// get the current file path without the base path
+						var currentFile = replacenocase(replacenocase(destinationDirList.directory[i],'\','/','all'),arguments.baseDestinationDir,'') & "/" & destinationDirList.name[i];
+						// if the file exists and not part of exclusion the delete
+						if(fileExists("#arguments.destination##currentFile#") && findNoCase(currentFile,arguments.deleteDestinationContentExclusionList) EQ 0){
+							fileDelete("#arguments.destination##currentFile#");
+						}
+					}
+				}
+			}
 		}
 		
 		var dirList = directoryList(arguments.source,false,"query");
@@ -228,13 +251,6 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 				var copyTo = "#arguments.destination##replacenocase(replacenocase(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
 			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.copyContentExclusionList,dirList.name[i])){
-				if(arguments.deleteDestinationContent && !listFindNoCase(arguments.deleteDestinationContentExclusionList,dirList.name[i])){
-					var currentDir = replacenocase(replacenocase(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'') & "/" & dirList.name[i];
-					// We are checking directory here, so make sure we don't delete the root folder
-					if(directoryExists("#arguments.destination##currentDir#") && findNoCase(currentDir,arguments.deleteDestinationContentExclusionList) EQ 0){
-						directoryDelete("#arguments.destination##currentDir#",true);
-					}
-				}
 				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationContent=arguments.deleteDestinationContent, deleteDestinationContentExclusionList=arguments.deleteDestinationContentExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
 			}
 		}
