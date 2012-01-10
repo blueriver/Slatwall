@@ -175,6 +175,9 @@
     <bean id="typeService" parent="parentService" class="Slatwall.com.service.TypeService">
         <property name="DAO"><ref bean="TypeDAO" /></property>
     </bean>
+    <bean id="updateService" parent="parentService" class="Slatwall.com.service.UpdateService">
+    	<property name="utilityFileService"><ref bean="utilityFileService" /></property>
+    </bean>
     <bean id="vendorService" parent="parentService" class="Slatwall.com.service.VendorService">
         <property name="DAO"><ref bean="VendorDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>

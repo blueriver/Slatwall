@@ -209,12 +209,16 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 		return arguments.filename;
 	}
 
-	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='' ){
+	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='', boolean deleteDestinationDir=false, string deleteDestinationDirExclusionList="" ){
 		arguments.source = replace(arguments.source,"\","/","all");
 		arguments.destination = replace(arguments.destination,"\","/","all");
 		
 		if(isNull(arguments.baseSourceDir)){
 			arguments.baseSourceDir = arguments.source;
+		}
+		
+		if(isNull(arguments.baseDestinationDir)){
+			arguments.baseDestinationDir = arguments.destination;
 		}
 		
 		var dirList = directoryList(arguments.source,false,"query");
@@ -224,7 +228,14 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
 			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
-				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=arguments.baseSourceDir);
+				if(arguments.deleteDestinationDir && !listFindNoCase(arguments.deleteDestinationDirExclusionList,dirList.name[i])){
+					var destinationDir = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#";
+					// Do not delete the root destinaton dir
+					if(destinationDir != baseDestinationDir && directoryExists(destinationDir)){
+						//directoryDelete(destinationDir,true);
+					}
+				}
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, nameExclusionList=arguments.nameExclusionList, deleteDestinationDir=arguments.deleteDestinationDir, deleteDestinationDirExclusionList=arguments.deleteDestinationDirExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
 			}
 		}
 	}

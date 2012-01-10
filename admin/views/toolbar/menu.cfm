@@ -186,6 +186,7 @@ Notes:
 							</ul>
 							<ul>
 								<li class="title">Tools</li>
+								<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detaildbtools" type="list">
 								<cfif $.currentUser().getS2()>
