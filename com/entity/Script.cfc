@@ -40,14 +40,13 @@ component displayname="Script" entityname="SlatwallScript" table="SlatwallScript
 	
 	// Persistent Properties
 	property name="scriptID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="scriptFileName" ormtype="string";
+	property name="scriptPath" ormtype="string";
 	property name="loadOrder" ormtype="integer";
 	property name="maxExecutionCount" ormtype="integer";
 	property name="executionCount" ormtype="integer";
 	property name="lastExecutedDateTime" ormtype="timestamp";
-	property name="successFlag" ormtype="boolean";
-	
-	
+	property name="lastExecutioinSuccessFlag" ormtype="boolean";
+		
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

@@ -76,4 +76,8 @@ Notes:
 		<cfset directoryDelete(tempDirectoryPath,true) />
 		
 	</cffunction>
+	
+	<cffunction name="runScripts">
+		<!--- TODO: Impliment Me! --->
+	</cffunction>
 </cfcomponent>
