@@ -68,10 +68,12 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="callToOrderFlag" ormtype="boolean" default=0;
 	property name="trackInventoryFlag" ormtype="boolean" default=0;
 	
-	// Audit Properties
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	// Next Experation property so that we can automatically refresh this if it expires
+	property name="skuCacheExpirationDateTime" ormtype="timestamp";
 	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="modifiedDateTime" ormtype="timestamp";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

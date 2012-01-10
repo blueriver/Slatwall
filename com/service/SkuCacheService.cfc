@@ -57,6 +57,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="skuService" type="any";
 
 	variables.skusToUpdate = [];
+	variables.updatingSkus = [];
+	variables.nextExpirationDateTime = now();
 
 	public void function updateFromOrderDeliveryItem(required any orderDeliveryItem) {
 		arrayAppend(variables.skusToUpdate, {propertyList="qoh,qndoo", skuID=arguments.orderDeliveryItem.getStock().getSku().getSkuID()});
@@ -98,6 +100,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	public void function updateFromVendorOrderItem(required any vendorOrderItem) {
 		
+	}
+	
+	public any function setNextExpirationDateTime() {
+		getDAO().
 	}
 	
 	public void function executeSkuCacheUpdates() {

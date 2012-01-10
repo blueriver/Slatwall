@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,6 +35,28 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-}
+--->
+<cfcomponent extends="BaseDAO">
+	
+	<cffunction name="getNextExpirationDateTime">
+		<cfquery name="rs">
+			SELECT
+				MIN(skuCacheExpirationDateTime) as 'nextExpiration'
+			FROM
+				SlatwallSkuCache
+		</cfquery>
+		<cfreturn rs.nextExpiration />
+	</cffunction>
+	
+	<cffunction name="getExpiredSkuCacheSkus">
+		<cfquery name="rs">
+			SELECT
+				skuID
+			FROM
+				SlatwallSkuCache
+			WHERE
+				skuCacheExpirationDateTime < <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+		</cfquery>
+		<cfreturn rs.nextExpiration />
+	</cffunction>
+</cfcomponent>
