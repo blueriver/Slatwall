@@ -225,17 +225,17 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 		for(var i = 1; i <= dirList.recordCount; i++){
 			if(dirList.type[i] == "File" && !listFindNoCase(arguments.copyContentExclusionList,dirList.name[i])){
 				var copyFrom = "#replace(dirList.directory[i],'\','/','all')#/#dirList.name[i]#";
-				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
+				var copyTo = "#arguments.destination##replacenocase(replacenocase(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
 			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.copyContentExclusionList,dirList.name[i])){
-				if(arguments.deleteDestinationDir && !listFindNoCase(arguments.deleteDestinationDirExclusionList,dirList.name[i])){
-					var destinationDir = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#";
-					// Do not delete the root destinaton dir
-					if(destinationDir != baseDestinationDir && directoryExists(destinationDir)){
-						//directoryDelete(destinationDir,true);
+				if(arguments.deleteDestinationContent && !listFindNoCase(arguments.deleteDestinationContentExclusionList,dirList.name[i])){
+					var currentDir = replacenocase(replacenocase(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'') & "/" & dirList.name[i];
+					// We are checking directory here, so make sure we don't delete the root folder
+					if(directoryExists("#arguments.destination##currentDir#") && findNoCase(currentDir,arguments.deleteDestinationContentExclusionList) EQ 0){
+						directoryDelete("#arguments.destination##currentDir#",true);
 					}
 				}
-				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationDir=arguments.deleteDestinationDir, deleteDestinationDirExclusionList=arguments.deleteDestinationDirExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationContent=arguments.deleteDestinationContent, deleteDestinationContentExclusionList=arguments.deleteDestinationContentExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
 			}
 		}
 	}
