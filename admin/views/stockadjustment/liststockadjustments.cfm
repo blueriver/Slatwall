@@ -57,23 +57,17 @@ Notes:
 			<tr>
 				<td class="varWidth">#DateFormat(local.StockAdjustment.getCreatedDateTime(), "medium")#</td>
 				<td>
-					<cfif !isNull(local.StockAdjustment.getFromLocation().getName())>
-						#local.StockAdjustment.getFromLocation().getName()#
+					<cfif !isNull(local.StockAdjustment.getFromLocation().getLocationName())>
+						#local.StockAdjustment.getFromLocation().getLocationName()#
 					</cfif>
 				</td>
 				<td>
-					<cfif !isNull(local.StockAdjustment.getToLocation().getName())>
-						#local.StockAdjustment.getToLocation().getName()#
+					<cfif !isNull(local.StockAdjustment.getToLocation().getLocationName())>
+						#local.StockAdjustment.getToLocation().getLocationName()#
 					</cfif>
 				</td>
-				<td>
-					<cfif !isNull(local.stockAdjustment.getParentStockAdjustment())>
-						<a href="#buildURL(action='admin:stockadjustment.detailstockadjustment', querystring='stockAdjustmentId=#local.stockAdjustment.getParentStockAdjustment().getStockAdjustmentId()#')#">#local.stockAdjustment.getParentStockAdjustment().getStockAdjustmentName()#</a>
-					<cfelse>
-						#rc.$.Slatwall.rbKey("entity.stockadjustment.inheritsFromNothing")#
-					</cfif>	
-				</td>
-				<td>#yesNoFormat(local.StockAdjustment.getActiveFlag())#</td>
+				<td>#local.StockAdjustment.getStockAdjustmentType()#</td>
+				
 				<td class="administration">
 		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:stockadjustment.editstockadjustment" querystring="stockadjustmentID=#local.stockadjustment.getStockAdjustmentID()#" class="edit" type="list">            

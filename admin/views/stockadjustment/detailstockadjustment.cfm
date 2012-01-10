@@ -39,38 +39,108 @@ Notes:
 
 <!--- Generic properties for all stockAdjustments --->
 <cfparam name="rc.stockAdjustment">
-<cfparam name="rc.backAction">
 <cfparam name="rc.locationSmartList">
+<cfparam name="rc.stockAdjustmentTypeSmartList">
 
 <cfoutput>
 	<ul id="navTask">
-		<cf_SlatwallActionCaller action="#rc.backAction#" queryString="#rc.backQueryString#" type="list">
+		<cf_SlatwallActionCaller action="admin:stockadjustment.listStockAdjustments" type="list">
 	</ul>
 	
-	<!--- For now, there is no basic order info, but in future, we might want to make this section dynamic like the bellow table, based on the type provided --->
-
-	<form name="detailstockAdjustment" id="detailstockAdjustment" action="#BuildURL(rc.action)#" method="post">
-
-		<div class="clear">
-			<!--- These are common fields to all stockAdjustments --->
-			<dl class="twoColumn">
-				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockAdjustment.boxCount")#" object="#rc.stockAdjustment#" property="boxCount" edit="#rc.edit#">
-				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockAdjustment.packingSlipNumber")#" object="#rc.stockAdjustment#" property="packingSlipNumber" edit="#rc.edit#">
-				
-				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockAdjustment.receiveForLocation")#</strong></label></dt> 
-				<dd class="value">
-					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
-				</dd>
-				
-			</dl>
+	<cfif rc.edit>
+		
+		#$.slatwall.getValidateThis().getValidationScript(theObject=rc.stockAdjustment, formName="StockAdjustmentDetail")#
+		
+		<form name="StockAdjustmentDetail" id="StockAdjustmentDetail" action="#buildURL('admin:StockAdjustment.saveStockAdjustment')#" method="post">
+			<input type="hidden" name="StockAdjustmentID" value="#rc.StockAdjustment.getStockAdjustmentID()#" />
+	</cfif>
 	
-			<!--- The receiver table bellow is chosen dynamically based on the type of stock receiver --->
-			#view("stockAdjustment/receivertypes/#rc.stockAdjustment.getReceiverType()#")# 
+	<dl class="twoColumn">
+		
+		<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="stockAdjustmentType" edit="#rc.edit#" valueOptions="#rc.stockAdjustmentTypeSmartList.getRecords()#" fieldClass="stockAdjustmentTypeID">
+		
+	
+		<div id="fromLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="fromLocation" fieldName="fromLocation.locationID" edit="#rc.edit#"></div>
+		<div id="toLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="toLocation" fieldName="toLocation.locationID" edit="#rc.edit#"></div>
+		
+		<cfif rc.edit>
+			<dt class="title"><label>#$.Slatwall.rbKey("admin.stockadjustment.edit.product")#</strong></label></dt> 
+				<dd class="value">
+	
+					<cf_SlatwallFormField fieldType="select" fieldName="productID" valueOptions="#rc.productSmartList.getRecords()#" fieldClass="productID">
+
+					
+					<!--- This is temporary 
+					<select name="productId" id="productID">
+						<option value="4028e6893463040e01346f7b520501b1">New Prod</option>
+					</select>--->
+					
+					<button type="button" id="addProductButton" value="true">#rc.$.Slatwall.rbKey("admin.stockadjustment.edit.addProduct")#</button>
+				</dd>
+			</dt>
+		</cfif>	
 			
-			<!---<cf_SlatwallActionCaller action="" type="link" class="cancel button" queryString="#rc.backQueryString#" text="#rc.$.Slatwall.rbKey('admin.nav.back')#">--->
 			
-			<cf_SlatwallActionCaller action="#rc.backAction#" type="link" class="cancel button" queryString="vendorOrderId=#rc.vendorOrder.getVendorOrderID()#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="#rc.action#" type="submit" class="button">
-		</div>
-	</form>
+		
+		
+		
+		<!---<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="activeFlag" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="StockAdjustmentName" edit="#rc.edit#" first="true">
+		<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="StockAdjustmentCode" edit="#rc.edit#" >--->
+
+	</dl>
+	
+
+	<cfif arrayLen(rc.StockAdjustment.getStockAdjustmentItems()) GT 0>
+		<!---<strong>#$.slatwall.rbKey('admin.StockAdjustment.edit.StockAdjustmentRates')#</strong>
+	
+		<table id="StockAdjustmentRates" class="listing-grid stripe">
+			<thead>
+				<tr>
+					<th>#rc.$.Slatwall.rbKey("entity.StockAdjustmentRate.StockAdjustmentRateType")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.StockAdjustmentRate.StockAdjustmentRateAmount")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.StockAdjustmentRate.StockAdjustmentRateAppliesTo")#</th>
+					<cfif rc.edit><th class="administration">&nbsp;</th></cfif>
+				</tr>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.StockAdjustment.getStockAdjustmentRates()#" index="local.StockAdjustmentRate">
+					<cfif not local.StockAdjustmentRate.hasErrors()>
+						<tr>
+							<td class="varWidth">#$.Slatwall.rbKey('entity.StockAdjustmentRate.StockAdjustmentRateType.' & local.StockAdjustmentRate.getType())#</td>
+							<td>#local.StockAdjustmentRate.getAmountRepresentation()#</td>
+							<td>#local.StockAdjustmentRate.getAppliesToRepresentation()#</td>
+							<cfif rc.edit>
+								<td class="administration">
+									<ul class="two">
+										<cf_SlatwallActionCaller action="admin:StockAdjustment.editStockAdjustment" querystring="StockAdjustmentID=#rc.StockAdjustment.getStockAdjustmentID()#&StockAdjustmentRateId=#local.StockAdjustmentRate.getStockAdjustmentRateId()#" class="edit" type="list">
+										<cf_SlatwallActionCaller action="admin:StockAdjustment.deleteStockAdjustmentRate" querystring="StockAdjustmentID=#rc.StockAdjustment.getStockAdjustmentID()#&StockAdjustmentRateId=#local.StockAdjustmentRate.getStockAdjustmentRateId()#" class="delete" type="list" confirmrequired="true">
+									</ul>
+								</td>
+							</cfif>
+						</tr>
+					</cfif>
+				</cfloop>
+			</tbody>
+		</table>
+		--->
+		
+		
+	<!--- No stock adjustment items defined --->	
+	<cfelse>
+		
+		#rc.$.Slatwall.rbKey("admin.stockadjustment.noStockAdjustmentItemsDefined")#
+		
+		<br /><br />	
+	</cfif>
+	
+
+	<cfif rc.edit>
+		<cf_SlatwallActionCaller action="admin:StockAdjustment.listStockAdjustments" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cf_SlatwallActionCaller action="admin:StockAdjustment.saveStockAdjustment" type="submit" class="button">
+		<cf_SlatwallActionCaller action="admin:StockAdjustment.processStockAdjustment" type="button" class="button">
+		</form>
+	</cfif>	
+
+	<div id="addEditStockAdjustmentItems" class="ui-helper-hidden"></div>
 </cfoutput>

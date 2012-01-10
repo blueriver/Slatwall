@@ -42,6 +42,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="stockService" type="any";
 	property name="locationService" type="any";
 	property name="skuService" type="any";
+	property name="typeService" type="any";
+	property name="productService" type="any";
 	
 	public void function default(required struct rc) {
 		getFW().redirect("admin:stockadjustment.listStockAdjustments");
@@ -63,9 +65,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
 		rc.locationSmartList = getLocationService().getLocationSmartList();
-		rc.locationSmartList.setPageRecordsShow(9999999);
 		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
 		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+		
+		rc.stockAdjustmentTypeSmartList = getTypeService().getTypeSmartList();
+		rc.stockAdjustmentTypeSmartList.addSelect(propertyIdentifier="type", alias="name");
+		rc.stockAdjustmentTypeSmartList.addSelect(propertyIdentifier="typeID", alias="value");
+		rc.stockAdjustmentTypeSmartList.addFilter(propertyIdentifier="parentType_systemCode", value="stockAdjustmentType"); 
+		rc.stockAdjustmentTypeSmartList.addOrder("type|ASC");
+		
+		rc.productSmartList = getProductService().getSmartList("Product");
+		rc.productSmartList.addSelect(propertyIdentifier="productName", alias="name");
+		rc.productSmartList.addSelect(propertyIdentifier="productID", alias="value");
 	}
     
     /*public void function detailStockAdjustment(required struct rc) {
@@ -97,14 +108,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     /* public void function detailStockAdjustmentstockAdjustment(required struct rc) {
 		param name="rc.stockAdjustmentID";
     	
-    	rc.stockAdjustment = getgetStockService().getStockAdjustment(rc.stockAdjustmentID);	
+    	rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID);	
     }*/
 
     public void function createStockAdjustment(required struct rc) {
     	initStockAdjustment(rc);
-    	
-    	// Populate Vendor Order specific data
-		rc.stockAdjustment = getgetStockService().getStockAdjustment(rc.stockAdjustmentID);
     	
     	rc.edit = true;
 		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockadjustment.typeName_#rc.stockadjustment.getReceiverType()#");
@@ -122,20 +130,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	getFW().setView("admin:stockadjustment.detailStockAdjustment");  
 	}*/
 	
-	public void function saveStockAdjustmentstockAdjustment(required struct rc) {
-		rc.stockAdjustmentType = "stockAdjustment";
-		var stockAdjustment = getgetStockService().getStockAdjustment(rc.stockAdjustmentId);
-		
-		// Call the generic save method.
-		saveStockAdjustment(rc);
-		
-		// Since this is a vendor order reciever, also add the stockAdjustment
-		rc.StockAdjustment.setstockAdjustment(stockAdjustment);
-
-		rc.message=rbKey("admin.stockAdjustment.saveStockAdjustmentstockAdjustment_success");
-		getFW().redirect(action="admin:stockAdjustment.detailstockAdjustment", querystring="stockAdjustmentId=#rc.stockAdjustmentId#", preserve="message");
-	} 
-	
 
 	// Only to be called from the type-specific save methods
 	public void function saveStockAdjustment(required struct rc) {
@@ -143,31 +137,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		var wasNew = rc.stockAdjustment.isNew();
-
-		// Quantities provided by fields named like: quantity_skuid(4028b8813414708a01341514ad67001e). Loop over rc and find these fields. 
-		for (var key IN rc) {
-			var res = REFindNoCase("quantity_skuid\((.+)\)", key, 1, true);
-
-			//logSlatwall("Found: #key#");
-
-			if(ArrayLen(res.pos) == 2) {
-				var skuID = mid(key, res.pos[2], res.len[2]);
-				var quantity = val(rc[key]);
-				var stock = getStockService().getStockBySkuAndLocation(getSkuService().getSku(skuID), getLocationService().getLocation(rc.receiveForLocationID));
-				
-				//logSlatwall("Found: #key# - #skuID# - #quantity#");
-				
-				if(len(skuID) && isNumeric(quantity)) {
-					// Take the sku, location (selected), and quantity, and build a StockRecieverItem
-					var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
-					stockAdjustmentItem.setStockAdjustment(rc.stockAdjustment);		
-					stockAdjustmentItem.setQuantity(quantity);
-					stockAdjustmentItem.setStock(stock);
-				}
-			}
-		}
-		
-		// Populate with box count & packing slip, validate, and save
+		//dumpScreen(rc);
 		rc.stockAdjustment = getStockService().saveStockAdjustment(rc.stockAdjustment, rc);
+		
+		if(!rc.stockAdjustment.hasErrors()) {
+			rc.message=rbKey("admin.stockadjustment.savestockadjustment_success");
+			getFW().redirect(action="admin:stockAdjustment.listStockAdjustments", preserve="message");		
+		} else { 			
+			rc.edit = true;
+			rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment");
+			getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");
+		}	
+		
 	}
 }
