@@ -226,9 +226,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	public void function preInsert(){
+		super.preInsert();
+		getService("skuCacheService").updateFromProductType( this );
+	}
+	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromProductType( productType=this, oldData=arguments.oldData );
+		getService("skuCacheService").updateFromProductType( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

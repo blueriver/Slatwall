@@ -110,8 +110,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						try {
 							for(var i=arrayLen(variables.updatingSkus); i>=1; i--) {
 								updateSkuCache(propertyList=variables.updatingSkus[i]["propertyList"], skuID=variables.updatingSkus[i]["skuID"]);
-								writeLog(text="Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#", file="Slatwall");
-								ormFlush();
+								getDAO().flushORMSession();
+								logSlatwall("Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#");
 							}
 						} catch(any e) {
 							for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {

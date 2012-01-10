@@ -421,8 +421,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	// Override the preInsert method to set sku code and Image name
-    public void function preInsert() {
+	public void function preInsert() {
+    	// Set sku code and Image name if they are null or blank
     	if(isNull(getSkuCode()) || getSkuCode() == "") {
     		setSkuCode(generateSkuCode());
     	}
@@ -430,7 +430,13 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     		setImageFile(generateImageFileName());
     	}
 		super.preInsert();
+		getService("skuCacheService").updateFromSku( this );
     }
+    
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		getService("skuCacheService").updateFromSku( this );
+	}
     
 	// ===================  END:  ORM Event Hooks  =========================
 }

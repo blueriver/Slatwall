@@ -316,28 +316,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert() {
-		if(isNull(getOrderItemType())) {
-			throw("You must specify what type of order item this is: sale or return");
-		}
 		super.preInsert();
-		
+		getService("skuCacheService").updateFromOrderItem( this );
 	}
 	
-	public void function preUpdate() {
-		if(isNull(getOrderItemType())) {
-			throw("You must specify what type of order item this is: sale or return");
-		}
-		super.preUpdate();
-	}
-	
-	public void function postInsert(){
-		super.postInsert();
-		//getService("skuCacheService").updateFromOrderItem( this );
-	}
-	
-	public void function postUpdate() {
-		super.postUpdate();
-		//getService("skuCacheService").updateFromOrderItem( this );
+	public void function preUpdate(struct oldData) {
+		super.preUpdate(argumentcollection=arguments);
+		getService("skuCacheService").updateFromOrderItem( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

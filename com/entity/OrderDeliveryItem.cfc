@@ -103,7 +103,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 		getService("inventoryService").createInventory( this );
 	}
 	
-	public void function preUpdate(Struct oldData){
+	public void function preUpdate(struct oldData){
 		throw("Updates to Order Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
 	}
 	
