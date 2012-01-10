@@ -43,7 +43,7 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="sku" fieldtype="one-to-one" cfc="Sku" constrained="true";
 	
 	// Persistent Properties (Calculations)
-	property name="livePrice" ormtype="big_decimal" default=0;
+	property name="salePrice" ormtype="big_decimal" default=0;
 	property name="qoh" ormtype="integer" default=0;
 	property name="qosh" ormtype="integer" default=0;
 	property name="qndoo" ormtype="integer" default=0;
@@ -52,6 +52,7 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="qnroro" ormtype="integer" default=0;
 	property name="qnrovo" ormtype="integer" default=0;
 	property name="qnrosa" ormtype="integer" default=0;
+	
 	// Persistent Properties (Settings)
 	property name="qmin" ormtype="integer" default=0;
 	property name="qmax" ormtype="integer" default=0;
@@ -67,6 +68,12 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="callToOrderFlag" ormtype="boolean" default=0;
 	property name="trackInventoryFlag" ormtype="boolean" default=0;
 	
+	// Next Experation property so that we can automatically refresh this if it expires
+	property name="skuCacheExpirationDateTime" ormtype="timestamp";
+	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="modifiedDateTime" ormtype="timestamp";
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

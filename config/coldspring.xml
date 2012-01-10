@@ -145,10 +145,11 @@
 	</bean>
     <bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
         <property name="DAO"><ref bean="SkuDAO" /></property>
-		<property name="optionService"><ref bean="optionService" /></property> 
+		<property name="optionService"><ref bean="optionService" /></property>
     </bean>
 	<bean id="skuCacheService" parent="parentService" class="Slatwall.com.service.SkuCacheService">
         <property name="DAO"><ref bean="SkuCacheDAO" /></property>
+		<property name="skuService"><ref bean="skuService" /></property>
     </bean>
     <bean id="sessionService" parent="parentService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>

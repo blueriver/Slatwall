@@ -343,5 +343,15 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	
 	// =================== START: ORM Event Hooks  =========================
 	
+	public void function preInsert(){
+		super.preInsert();
+		getService("skuCacheService").updateFromPromotionRewardProduct( this );
+	}
+	
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		getService("skuCacheService").updateFromPromotionRewardProduct( this );
+	}
+	
 	// ===================  END:  ORM Event Hooks  =========================
 }

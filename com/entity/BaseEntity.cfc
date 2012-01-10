@@ -251,7 +251,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		
 	}
 	
-	public void function preUpdate(Struct oldData){
+	public void function preUpdate(struct oldData){
 		var timestamp = now();
 		
 		if(structKeyExists(this,"setModifiedDateTime")){
