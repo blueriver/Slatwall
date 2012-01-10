@@ -88,103 +88,20 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
 	
 	
+	public numeric function getQuantity(required string quantityType) {
+		if(!structKeyExists(variables, quantityType)) {
+			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {stockID=getStockID()});	
+			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+			} else {
+				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
+			}
+		}
+		return variables[quantityType];
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
-	
-	// Non-Persistent Quantity Properties For On Hand & Inventory in Motion (Deligated to the DAO)
-	public numeric function getQOH() {
-		if(!structKeyExists(variables, "qoh")) {
-			variables.qoh = getService("inventoryService").getQOH(stockID=getStockID());
-		}
-		return variables.qoh;
-	}
-	public numeric function getQOSH() {
-		if(!structKeyExists(variables, "qosh")) {
-			variables.qosh = getService("inventoryService").getQOSH(stockID=getStockID());
-		}
-		return variables.qosh;
-	}
-	public numeric function getQNDOO() {
-		if(!structKeyExists(variables, "qndoo")) {
-			variables.qndoo = getService("inventoryService").getQNDOO(stockID=getStockID());
-		}
-		return variables.qndoo;
-	}
-	public numeric function getQNDORVO() {
-		if(!structKeyExists(variables, "qndorvo")) {
-			variables.qndorvo = getService("inventoryService").getQNDORVO(stockID=getStockID());
-		}
-		return variables.qoh;
-	}
-	public numeric function getQNDOSA() {
-		if(!structKeyExists(variables, "qndosa")) {
-			variables.qndosa = getService("inventoryService").getQNDOSA(stockID=getStockID());
-		}
-		return variables.qndosa;
-	}
-	public numeric function getQNRORO() {
-		if(!structKeyExists(variables, "qnroro")) {
-			variables.qnroro = getService("inventoryService").getQNRORO(stockID=getStockID());
-		}
-		return variables.qnroro;
-	}
-	public numeric function getQNROVO() {
-		if(!structKeyExists(variables, "qnrovo")) {
-			variables.qnrovo = getService("inventoryService").getQNROVO(stockID=getStockID());
-		}
-		return variables.qnrovo;
-	}
-	public numeric function getQNROSA() {
-		if(!structKeyExists(variables, "qnrosa")) {
-			variables.qnrosa = getService("inventoryService").getQNROSA(stockID=getStockID());
-		}
-		return variables.qnrosa;
-	}
-	
-	// Non-Persistent Quantity Properties For Reporting (Deligated to DAO)
-	public numeric function getQR() {
-		if(!structKeyExists(variables, "qr")) {
-			variables.qr = getService("inventoryService").getQR(stockID=getStockID());
-		}
-		return variables.qr;
-	}
-	public numeric function getQS() {
-		if(!structKeyExists(variables, "qs")) {
-			variables.qs = getService("inventoryService").getQS(stockID=getStockID());
-		}
-		return variables.qs;
-	}
-	
-	// Non-Persistent Quantity Properties For Logic & Display Based on On Hand & Inventory in Motion values (Could be calculated here, but delegated to the Service, for Consitency of Product / Sku / Stock)
-	public numeric function getQC() {
-		if(!structKeyExists(variables, "qc")) {
-			variables.qc = getService("inventoryService").getQC(entity=this);
-		}
-		return variables.qc;
-	}
-	public numeric function getQE() {
-		if(!structKeyExists(variables, "qe")) {
-			variables.qe = getService("inventoryService").getQE(entity=this);
-		}
-		return variables.qe;
-	}
-	public numeric function getQNC() {
-		if(!structKeyExists(variables, "qnc")) {
-			variables.qnc = getService("inventoryService").getQNC(entity=this);
-		}
-		return variables.qnc;
-	}
-	public numeric function getQATS() {
-		if(!structKeyExists(variables, "qats")) {
-			variables.qats = getService("inventoryService").getQATS(entity=this);
-		}
-		return variables.qats;
-	}
-	public numeric function getQIATS() {
-		if(!structKeyExists(variables, "qiats")) {
-			variables.qiats = getService("inventoryService").getQIATS(entity=this);
-		}
-		return variables.qiats;
-	}
 	
 	// TODO: These methods are just here so that the calculation stuff will work.  The actuall settings need to be setup
 	public numeric function getQMIN() {

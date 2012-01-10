@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,34 +35,38 @@
 
 Notes:
 
-*/
-component extends="BaseService" accessors="true" output="false" {
-
-	property name="locationService" type="any";
-	property name="skuService" type="any";
+--->
+<cfcomponent extends="BaseService" accessors="true">
+	<cfproperty name="utilityFileService" type="any" />
 	
-	public any function getStockBySkuAndLocation(required any sku, required any location){
-		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
+	<cffunction name="update">
+		<cfargument name="branch" type="string" default="master">
 		
-		if(isNull(stock)) {
-			
-			if(getRequestCacheService().hasValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#")) {
-				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				stock = getRequestCacheService().getValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#");
-				
-			} else {
-				stock = this.newStock();
-				stock.setSku(arguments.sku);
-				stock.setLocation(arguments.location);
-				getDAO().save(stock);
-				
-				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				getRequestCacheService().setValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#", stock);
-				
-			}
-		}
+		<!--- this could take a while... --->
+		<cfsetting requesttimeout="600" />
 		
-		return stock;
-	}
+		<cfset var downloadURL = {} />
+		<cfset downloadURL["master"] = "https://github.com/ten24/Slatwall/zipball/master" />	
+		<cfset downloadURL["develop"] = "https://github.com/ten24/Slatwall/zipball/develop" />
+		<cfset var slatwallRootPath = getSlatwallRootDirectory() />
+		<cfset var downloadFileName = "slatwall.zip" />
+		
+		<!--- before we do anything, make a backup --->
+		<!---<cfzip action="zip" file="#pluginRootPath#/slatwall_bak.zip" source="#slatwallRootPath#" recurse="yes" overwrite="yes" />--->
+		
+		<!--- start download --->
+		<cfhttp url="#downloadURL[arguments.branch]#" method="get" path="#getTempDirectory()#" file="#downloadFileName#" />
+		
+		<!--- now read and unzip the downloaded file --->
+		<cfset var dirList = "" />
+		<cfzip action="unzip" destination="#getTempDirectory()#" file="#getTempDirectory()##downloadFileName#" >
+		<cfzip action="list" file="#getTempDirectory()##downloadFileName#" name="dirList" >
+		<cfset var sourcePath = getTempDirectory() & "#listFirst(dirList.name[1],'/')#" />
+		<cfset getUtilityFileService().duplicateDirectory(source=sourcePath, destination=getSlatwallRootDirectory(), overwrite=true, recurse=true, copyContentExclusionList=".svn,.gitignore", deleteDestinationContent=true, deleteDestinationContentExclusionList="integrationServices" ) />
+		
+	</cffunction>
 	
-}
+	<cffunction name="runScripts">
+		<!--- TODO: Impliment Me! --->
+	</cffunction>
+</cfcomponent>

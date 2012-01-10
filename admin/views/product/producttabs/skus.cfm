@@ -207,11 +207,11 @@ Notes:
 					<td><cf_SlatwallPropertyDisplay object="#local.thisSku#" fieldName="skus[#local.skuCount#].remoteID" property="remoteID" edit="#rc.edit#" displaytype="plain"></td>
 				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-					<td>#local.thisSku.getQOH()#</td>
-					<td>#local.thisSku.getQC()#</td>
-					<td>#local.thisSku.getQE()#</td>
-					<td>#local.thisSku.getQATS()#</td>
-					<td>#local.thisSku.getQIATS()#</td>
+					<td>#local.thisSku.getQuantity('QOH')#</td>
+					<td>#local.thisSku.getQuantity('QC')#</td>
+					<td>#local.thisSku.getQuantity('QE')#</td>
+					<td>#local.thisSku.getQuantity('QATS')#</td>
+					<td>#local.thisSku.getQuantity('QIATS')#</td>
 				</cfif>
 				<cfif rc.edit>
 					<td class="administration">

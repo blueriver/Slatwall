@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,23 +35,22 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-
-	
-	public any function getStockBySkuAndLocation(required any sku, required any location) {
-		return entityLoad("SlatwallStock", {location=arguments.location, sku=arguments.sku}, true);
-		/*
-		var params = [arguments.sku.getSkuID(), arguments.location.getLocationID()];
-		var hql = " SELECT s
-					FROM SlatwallStock s
-					INNER JOIN s.sku sk
-					INNER JOIN s.location l
-					WHERE sk.skuID = ?
-					AND l.locationID = ?    ";
-	
-		return ormExecuteQuery(hql, params, true);
-		*/	
-	}	
-	
-}
+--->
+<cfset local.updateOptions = [{name="Stable", value="master"},{name="Bleeding Edge", value="develop"}] />
+<cfoutput>
+	<div class="svoadminsettingdetailslatwallupdate">
+		<ul id="navTask">
+			
+		</ul>
+		<h2>Update Slatwall</h2>
+		<form method="post">
+			<input type="hidden" name="slatAction" value="admin:setting.updateSlatwall" />
+			<select name="updateBranch">
+				<cfloop array="#local.updateOptions#" index="local.updateOption" >
+					<option value="#local.updateOption.value#">#local.updateOption.name#</option>
+				</cfloop>
+			</select>
+			<cf_SlatwallActionCaller action="admin:setting.updateSlatwall" type="submit" class="button" confirmRequired="true">
+		</form>
+	</div>
+</cfoutput>

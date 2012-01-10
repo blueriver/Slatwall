@@ -209,7 +209,7 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 		return arguments.filename;
 	}
 
-	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string nameExclusionList='' ){
+	public void function duplicateDirectory(required string source, required string destination, boolean overwrite=false, boolean recurse=true, string copyContentExclusionList='', boolean deleteDestinationContent=false, string deleteDestinationContentExclusionList="" ){
 		arguments.source = replace(arguments.source,"\","/","all");
 		arguments.destination = replace(arguments.destination,"\","/","all");
 		
@@ -217,14 +217,25 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 			arguments.baseSourceDir = arguments.source;
 		}
 		
+		if(isNull(arguments.baseDestinationDir)){
+			arguments.baseDestinationDir = arguments.destination;
+		}
+		
 		var dirList = directoryList(arguments.source,false,"query");
 		for(var i = 1; i <= dirList.recordCount; i++){
-			if(dirList.type[i] == "File" && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
+			if(dirList.type[i] == "File" && !listFindNoCase(arguments.copyContentExclusionList,dirList.name[i])){
 				var copyFrom = "#replace(dirList.directory[i],'\','/','all')#/#dirList.name[i]#";
 				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
-			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.nameExclusionList,dirList.name[i])){
-				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#",destination=arguments.destination,overwrite=arguments.overwrite,arguments.recurse=recurse,nameExclusionList=arguments.nameExclusionList,baseSourceDir=arguments.baseSourceDir);
+			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.copyContentExclusionList,dirList.name[i])){
+				if(arguments.deleteDestinationContent && !listFindNoCase(arguments.deleteDestinationContentExclusionList,dirList.name[i])){
+					var destinationDir = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#";
+					// Do not delete the root destinaton dir
+					if(destinationDir != baseDestinationDir && directoryExists(destinationDir)){
+						//directoryDelete(destinationDir,true);
+					}
+				}
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationContent=arguments.deleteDestinationContent, deleteDestinationContentExclusionList=arguments.deleteDestinationContentExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
 			}
 		}
 	}

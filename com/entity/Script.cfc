@@ -36,33 +36,26 @@
 Notes:
 
 */
-component extends="BaseService" accessors="true" output="false" {
-
-	property name="locationService" type="any";
-	property name="skuService" type="any";
+component displayname="Script" entityname="SlatwallScript" table="SlatwallScript" persistent="true" accessors="true" output="true" extends="BaseEntity" {
 	
-	public any function getStockBySkuAndLocation(required any sku, required any location){
-		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
+	// Persistent Properties
+	property name="scriptID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="scriptPath" ormtype="string";
+	property name="loadOrder" ormtype="integer";
+	property name="maxExecutionCount" ormtype="integer";
+	property name="executionCount" ormtype="integer";
+	property name="lastExecutedDateTime" ormtype="timestamp";
+	property name="lastExecutioinSuccessFlag" ormtype="boolean";
 		
-		if(isNull(stock)) {
-			
-			if(getRequestCacheService().hasValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#")) {
-				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				stock = getRequestCacheService().getValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#");
-				
-			} else {
-				stock = this.newStock();
-				stock.setSku(arguments.sku);
-				stock.setLocation(arguments.location);
-				getDAO().save(stock);
-				
-				// Set the stock in the requestCache so that duplicates for this stock don't get created.
-				getRequestCacheService().setValue("stock_#arguments.sku.getSkuID()#_#arguments.location.getLocationID()#", stock);
-				
-			}
-		}
-		
-		return stock;
-	}
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

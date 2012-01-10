@@ -134,6 +134,9 @@ component extends="org.fw1.framework" output="false" {
 		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
 		getBeanFactory().getBean("DataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
 		
+		// Run Scripts
+		getBeanFactory().getBean("UpdateService").runScripts();
+		
 		// Load all Slatwall Settings
 		getBeanFactory().getBean("settingService").reloadConfiguration();
 		
