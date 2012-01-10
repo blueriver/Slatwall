@@ -56,20 +56,48 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	public void function init() {
+		if(isNull(variables.stockAdjustmentItems)) {
+			variables.stockAdjustmentItems = [];
+		}
+		
+		// Set the default status type
+		if(isNull(variables.stockAdjustmentStatusType)) {
+			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode('sastNew');
+		}
+	}
+	
+	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
+	public any function getStockAdjustmentItemForSkuAndLocation(required any skuID, required any locationID) {
+		var sku = getService("SkuService").getSku(arguments.skuID);
+		var location = getService("LocationService").getLocation(arguments.locationID);
+		var stock = getService("StockService").getStockBySkuAndLocation(sku, location);
+		
+		for(var i=1; i<=arrayLen(getStockAdjustmentItems()); i++) {
+			if(getStockAdjustmentItems()[i].getFromStock().getStockId() EQ stock.getStockId()) {
+				return vendorOrderItems[i];
+			}
+		}
+		
+		// Otherwise, if stock was null (could not find one with that sku and location) or no VendorOrderItem was found with the located stock, return a new VendorOrderItem
+		return getService("VendorOrderService").newVendorOrderItem();
+	}
+	
 	/******* Association management methods for bidirectional relationships **************/
 	
 	// Stock Adjustment Items (one-to-many)
 	public void function addStockAdjustmentItem(required any stockAdjustmentItem) {
-	   arguments.orderItem.setStockAdjustment( this );
+	   arguments.stockAdjustmentItem.setStockAdjustment( this );
 	}
 	
 	public void function removeStockAdjustmentItem(required any stockAdjustmentItem) {
-	   arguments.orderItem.removeStockAdjustment( this );
+	   arguments.stockAdjustmentItem.removeStockAdjustment( this );
 	}
 	
 	/************   END Association Management Methods   *******************/
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
