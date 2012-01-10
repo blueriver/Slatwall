@@ -228,14 +228,14 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 				var copyTo = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#/#dirList.name[i]#";
 				copyFile(copyFrom,copyTo,arguments.overwrite);
 			} else if(dirList.type[i] == "Dir" && arguments.recurse && !listFindNoCase(arguments.copyContentExclusionList,dirList.name[i])){
-				if(arguments.deleteDestinationDir && !listFindNoCase(arguments.deleteDestinationDirExclusionList,dirList.name[i])){
+				if(arguments.deleteDestinationDir && !listFindNoCase(arguments.deleteDestinationContentExclusionList,dirList.name[i])){
 					var destinationDir = "#arguments.destination##replace(replace(dirList.directory[i],'\','/','all'),arguments.baseSourceDir,'')#";
 					// Do not delete the root destinaton dir
 					if(destinationDir != baseDestinationDir && directoryExists(destinationDir)){
 						//directoryDelete(destinationDir,true);
 					}
 				}
-				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationDir=arguments.deleteDestinationDir, deleteDestinationDirExclusionList=arguments.deleteDestinationDirExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
+				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationDir=arguments.deleteDestinationDir, deleteDestinationContentExclusionList=arguments.deleteDestinationContentExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
 			}
 		}
 	}
