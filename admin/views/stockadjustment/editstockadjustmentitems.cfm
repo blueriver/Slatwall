@@ -38,19 +38,21 @@ Notes:
 --->
 <cfparam name="rc.product">
 <cfparam name="rc.stockAdjustment">
-<cfparam name="rc.inDialog" default="false">
+<!---<cfparam name="rc.inDialog" default="false">--->
 
-<cfif rc.inDialog EQ "true">
+<cfset local.location = rc.StockAdjustment.getOneLocation()>
+
+<!---<cfif rc.inDialog EQ "true">--->
 	<cfset request.layout = false>
-</cfif>
+<!---</cfif>--->
 
 <cfoutput>
 	<cfif rc.inDialog EQ "true">
 		<h3>#Replace($.Slatwall.rbKey("admin.stockAdjustment.stockAdjustmentItemsDialogTitle"), "{1}", rc.product.getProductName())#</h3>
 	</cfif>
 	
-	<form name="editStockAdjustmentProductAssignment" id="editStockAdjustmentProductAssignment" action="#buildURL('admin:stockAdjustment.saveStockAdjustmentItems')#" method="post">
-		<input type="hidden" name="StockAdjustmentID" value="#rc.stockAdjustment.getStockAdjustmentID()#" />
+	<!---<form name="editStockAdjustmentProductAssignment" id="editStockAdjustmentProductAssignment" action="#buildURL('admin:stockAdjustment.saveStockAdjustmentItems')#" method="post">
+		<input type="hidden" name="StockAdjustmentID" value="#rc.stockAdjustment.getStockAdjustmentID()#" />--->
 		
 		<table class="listing-grid stripepopup">
 			<tr>
@@ -61,11 +63,11 @@ Notes:
 			<tbody>
 				<cfloop array="#rc.product.getSkus()#" index="local.sku">
 					<!--- See if we already have a stockAdjustment item that matches this SKU. --->
-					<cfset local.StockAdjustmentItem = rc.stockAdjustment.getStockAdjustmentItemForSku(local.sku.getSkuId())>
+					<cfset local.StockAdjustmentItem = rc.stockAdjustment.getStockAdjustmentItemForSkuAndLocation(local.sku.getSkuId(), local.location.getLocationId())>
 					
 					<tr data-skuid="#local.sku.getSkuID()#">
 						<td class="varWidth">#local.sku.getSkuCode()#</td>
-						<td><input type="text" class="skuty" name="qty_skuid(#local.sku.getSkuID()#)_locationid(#local.location.getLocationId()#)" value="#local.StockAdjustmentItem.getQuantity()#"></td>
+						<td><input type="text" class="skuqWty" name="qty_skuid(#local.sku.getSkuID()#)_locationid(#local.location.getLocationId()#)" value="#local.StockAdjustmentItem.getQuantity()#"></td>
 					</tr>
 				</cfloop>
 			</tbody>
@@ -82,7 +84,7 @@ Notes:
 			</tr>
 		</table>
 
-		<cf_SlatwallActionCaller action="admin:stockAdjustment.detailStockAdjustment" type="link" class="cancel button" queryString="stockAdjustmentId=#rc.stockAdjustment.getStockAdjustmentID()#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cf_SlatwallActionCaller action="admin:stockAdjustment.detailStockAdjustment" type="link" class="cancel button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 		<cf_SlatwallActionCaller action="admin:stockAdjustment.saveStockAdjustmentItems" type="submit" class="button">
-	</form>
+	<!---</form>--->
 </cfoutput>

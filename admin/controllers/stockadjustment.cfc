@@ -131,7 +131,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}*/
 	
 
-	// Only to be called from the type-specific save methods
 	public void function saveStockAdjustment(required struct rc) {
 		initStockAdjustment(rc);
 
@@ -150,4 +149,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}	
 		
 	}
+	
+	public void function editStockAdjustmentItems(required struct rc) {
+		initStockAdjustment(rc);
+
+		rc.product = getProductService().getProduct(rc.productID);
+	
+		getFW().setView(action="admin:stockAdjustment.editStockAdjustmentItems");
+	}
+	
 }

@@ -57,11 +57,11 @@ Notes:
 	
 	<dl class="twoColumn">
 		
-		<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="stockAdjustmentType" edit="#rc.edit#" valueOptions="#rc.stockAdjustmentTypeSmartList.getRecords()#" fieldClass="stockAdjustmentTypeID">
+		<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="stockAdjustmentType" edit="#rc.stockAdjustment.isNew()#" valueOptions="#rc.stockAdjustmentTypeSmartList.getRecords()#" fieldClass="stockAdjustmentTypeID">
 		
 	
-		<div id="fromLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="fromLocation" fieldName="fromLocation.locationID" edit="#rc.edit#"></div>
-		<div id="toLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="toLocation" fieldName="toLocation.locationID" edit="#rc.edit#"></div>
+		<div id="fromLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="fromLocation" fieldName="fromLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
+		<div id="toLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="toLocation" fieldName="toLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
 		
 		<cfif rc.edit>
 			<dt class="title"><label>#$.Slatwall.rbKey("admin.stockadjustment.edit.product")#</strong></label></dt> 
@@ -75,7 +75,8 @@ Notes:
 						<option value="4028e6893463040e01346f7b520501b1">New Prod</option>
 					</select>--->
 					
-					<button type="button" id="addProductButton" value="true">#rc.$.Slatwall.rbKey("admin.stockadjustment.edit.addProduct")#</button>
+					<!---<button type="button" id="addProductButton" value="true">#rc.$.Slatwall.rbKey("admin.stockadjustment.edit.addProduct")#</button>--->
+						<cf_SlatwallActionCaller action="admin:StockAdjustment.editStockAdjustmentItems" type="link" class="button addProductButton" text="#rc.$.Slatwall.rbKey('admin.stockadjustment.edit.addProduct')#">
 				</dd>
 			</dt>
 		</cfif>	
@@ -134,6 +135,8 @@ Notes:
 		<br /><br />	
 	</cfif>
 	
+	<!--- The modal dialog div is placed inside of the form, so when it posts, it posts this form, so that we can update the StockAdjustment AND items simultaniously.  --->
+	<div id="addEditStockAdjustmentItems" class="ui-helper-hidden"></div>
 
 	<cfif rc.edit>
 		<cf_SlatwallActionCaller action="admin:StockAdjustment.listStockAdjustments" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
@@ -142,5 +145,5 @@ Notes:
 		</form>
 	</cfif>	
 
-	<div id="addEditStockAdjustmentItems" class="ui-helper-hidden"></div>
+	
 </cfoutput>

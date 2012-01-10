@@ -56,7 +56,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public void function init() {
+	public any function init() {
 		if(isNull(variables.stockAdjustmentItems)) {
 			variables.stockAdjustmentItems = [];
 		}
@@ -65,6 +65,8 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		if(isNull(variables.stockAdjustmentStatusType)) {
 			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode('sastNew');
 		}
+		
+		return super.init();	
 	}
 	
 	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
@@ -81,6 +83,15 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		
 		// Otherwise, if stock was null (could not find one with that sku and location) or no VendorOrderItem was found with the located stock, return a new VendorOrderItem
 		return getService("VendorOrderService").newVendorOrderItem();
+	}
+	
+	// For use with Adjustment Items interface, get one location that we will use for stock lookup. 
+	public any function getOneLocation() {
+		if(getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || getStockAdjustmentType().getSystemCode() == "satManualIn") {
+			return getToLocation();
+		} else {
+			return getFromLocation();
+		}
 	}
 	
 	/******* Association management methods for bidirectional relationships **************/

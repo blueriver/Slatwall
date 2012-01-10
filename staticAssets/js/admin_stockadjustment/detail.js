@@ -27,13 +27,13 @@ jQuery(function() {
 	jQuery("#addEditStockAdjustmentItems").dialog({
        autoOpen: false,
        modal: true,
-       width: "80%",
+       //width: "80%",
 	   draggable: false,
 	   dialogClass: "stockAdjustmentItemsDialog"
 	});
 	
 	// Bind the actual opening action of the dialog to the <A> click.
-	jQuery(".productsFromVendorOutput a.dialogLink").click(function(e){
+	jQuery(".addProductButton").click(function(e){
 		// Set the source of the iframe to the href of the clicked link.
 		//jQuery("#addEditProductToOrder iframe").attr("src", jQuery(this.attr("href"))); 
 		
@@ -42,14 +42,21 @@ jQuery(function() {
 			// Apply the "stripe" class to the new table loaded dynamically.
 			stripe("stripepopup");
 			
-			// Trigger the keyup event once on one of the inputs so that the value populate on page load
-			jQuery("input.skucost").first().trigger("keyup");	
-			$("#addEditProductToOrder").dialog("open");
+			// Trigger the keyup event once on one of the inputs so that the value populate on page load	
+			$("#addEditStockAdjustmentItems").dialog("open");
 		});
 		
 		// Prevent the default href action.
 		e.preventDefault();
 	});
+	
+	jQuery("#... .cancel").click(function(e){
+		$("#addEditStockAdjustmentItems").dialog("close");
+		
+		// Since we cancelled, erase any HTML that was loaded into the dailog's div so that it doesn't save.
+		$("#addEditStockAdjustmentItems").html("");
+		e.preventDefault();
+	})
 	
 	// Jog the change event so that the location inputs initialize
 	jQuery(".stockAdjustmentTypeID").trigger("change");
