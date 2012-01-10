@@ -516,7 +516,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function updateSlatwall(required struct rc) {
 		getUpdateService().update(branch=rc.updateBranch);
 		rc.message = rbKey("admin.setting.updateslatwall_success");
-		getFW().redirect(action="admin:setting.detailslatwallupdate", preserve="message");	
+		getFW().redirect(action="admin:setting.detailslatwallupdate?reload=true", preserve="message");	
 	}
 	
 	
