@@ -56,7 +56,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public void function init() {
+	public any function init() {
 		if(isNull(variables.stockAdjustmentItems)) {
 			variables.stockAdjustmentItems = [];
 		}
@@ -65,6 +65,7 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		if(isNull(variables.stockAdjustmentStatusType)) {
 			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode('sastNew');
 		}
+		return super.init();
 	}
 	
 	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
