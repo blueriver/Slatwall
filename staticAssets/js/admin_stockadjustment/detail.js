@@ -27,7 +27,7 @@ jQuery(function() {
 	jQuery("#addEditStockAdjustmentItems").dialog({
        autoOpen: false,
        modal: true,
-       //width: "80%",
+       width: "80%",
 	   draggable: false,
 	   dialogClass: "stockAdjustmentItemsDialog"
 	});
@@ -36,9 +36,10 @@ jQuery(function() {
 	jQuery(".addProductButton").click(function(e){
 		// Set the source of the iframe to the href of the clicked link.
 		//jQuery("#addEditProductToOrder iframe").attr("src", jQuery(this.attr("href"))); 
-		
+	
+		//alert(jQuery(this).attr("href") + "&productID=" + jQuery(".productID").first().val() + "&inDialog=true");
 		// Load the content and open the dialog.
-		$("#addEditProductToOrder").load(jQuery(this).attr("href") + "&inDialog=true", function(){
+		$("#addEditStockAdjustmentItems").load(jQuery(this).attr("href") + "&productID=" + jQuery(".productID").first().val() + "&inDialog=true", function(){
 			// Apply the "stripe" class to the new table loaded dynamically.
 			stripe("stripepopup");
 			

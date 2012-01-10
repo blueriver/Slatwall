@@ -140,8 +140,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.stockAdjustment = getStockService().saveStockAdjustment(rc.stockAdjustment, rc);
 		
 		if(!rc.stockAdjustment.hasErrors()) {
-			rc.message=rbKey("admin.stockadjustment.savestockadjustment_success");
-			getFW().redirect(action="admin:stockAdjustment.listStockAdjustments", preserve="message");		
+			if(wasNew) { 
+				rc.message=rbKey("admin.stockadjustment.savestockadjustment_successnowadditems");
+				getFW().redirect(action="admin:stockAdjustment.editStockAdjustment", querystring="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#", preserve="message");
+			} else {
+				rc.message=rbKey("admin.stockadjustment.savestockadjustment_success");
+				getFW().redirect(action="admin:stockAdjustment.listStockAdjustments", preserve="message");
+			}		
 		} else { 			
 			rc.edit = true;
 			rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment");

@@ -63,7 +63,8 @@ Notes:
 		<div id="fromLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="fromLocation" fieldName="fromLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
 		<div id="toLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="toLocation" fieldName="toLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
 		
-		<cfif rc.edit>
+		
+		<cfif rc.edit && !rc.stockAdjustment.isNew()>
 			<dt class="title"><label>#$.Slatwall.rbKey("admin.stockadjustment.edit.product")#</strong></label></dt> 
 				<dd class="value">
 	
@@ -128,7 +129,7 @@ Notes:
 		
 		
 	<!--- No stock adjustment items defined --->	
-	<cfelse>
+	<cfelseif !rc.StockAdjustment.isNew()>
 		
 		#rc.$.Slatwall.rbKey("admin.stockadjustment.noStockAdjustmentItemsDefined")#
 		
@@ -141,7 +142,7 @@ Notes:
 	<cfif rc.edit>
 		<cf_SlatwallActionCaller action="admin:StockAdjustment.listStockAdjustments" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 		<cf_SlatwallActionCaller action="admin:StockAdjustment.saveStockAdjustment" type="submit" class="button">
-		<cf_SlatwallActionCaller action="admin:StockAdjustment.processStockAdjustment" type="button" class="button">
+		<cfif !rc.StockAdjustment.isNew()><cf_SlatwallActionCaller action="admin:StockAdjustment.processStockAdjustment" type="button" class="button"></cfif>
 		</form>
 	</cfif>	
 

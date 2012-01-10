@@ -61,6 +61,11 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 			variables.stockAdjustmentItems = [];
 		}
 		
+		// Set the default type
+		if(isNull(variables.stockAdjustmentType)) {
+			variables.stockAdjustmentType = getService("typeService").getTypeBySystemCode('satLocationTransfer');
+		}
+		
 		// Set the default status type
 		if(isNull(variables.stockAdjustmentStatusType)) {
 			variables.stockAdjustmentStatusType = getService("typeService").getTypeBySystemCode('sastNew');
