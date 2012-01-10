@@ -103,7 +103,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public any function setNextExpirationDateTime() {
-		getDAO().
+		
 	}
 	
 	public void function executeSkuCacheUpdates() {
