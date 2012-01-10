@@ -97,8 +97,7 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 			arguments.entity.populate(argumentCollection=arguments);
 
 		    // Validate this object now that it has been populated
-		    arguments.entity.validate(context=arguments.entity.getValidationContext( arguments.context ));  
-		    throw("3");  
+		    arguments.entity.validate(context=arguments.entity.getValidationContext( arguments.context ));
         }
         
         // If the object passed validation then call save in the DAO, otherwise set the errors flag
