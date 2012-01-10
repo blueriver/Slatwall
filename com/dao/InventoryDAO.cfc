@@ -42,7 +42,6 @@ Notes:
 		
 		// Quantity on hand. Physically at any location
 		public numeric function getQOH(string stockID, string skuID, string productID) {
-			
 			var params = [];
 			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ) - coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
 			

@@ -114,24 +114,25 @@ component extends="BaseService" accessors="true" output="false" {
 		return getDAO().getQS(argumentCollection=arguments);
 	}
 	
+	// These methods are derived quantity methods from respective DAO methods
 	public numeric function getQC(required any entity) {
-		return arguments.entity.getQNDOO() + arguments.entity.getQNDORVO() + arguments.entity.getQNDOSA();
+		return arguments.entity.getQuantity('QNDOO') + arguments.entity.getQuantity('QNDORVO') + arguments.entity.getQuantity('QNDOSA');
 	}
 	
 	public numeric function getQE(required any entity) {
-		return arguments.entity.getQNRORO() + arguments.entity.getQNROVO() + arguments.entity.getQNROSA();
+		return arguments.entity.getQuantity('QNRORO') + arguments.entity.getQuantity('QNROVO') + arguments.entity.getQuantity('QNROSA');
 	}
 	
 	public numeric function getQNC(required any entity) {
-		return arguments.entity.getQOH() - arguments.entity.getQC();
+		return arguments.entity.getQuantity('QOH') - arguments.entity.getQuantity('QC');
 	}
 	
 	public numeric function getQATS(required any entity) {
-		return arguments.entity.getQNC() + arguments.entity.getQE() - arguments.entity.getQHB();
+		return arguments.entity.getQuantity('QNC') + arguments.entity.getQuantity('QE') - arguments.entity.getQHB();
 	}
 	
 	public numeric function getQIATS(required any entity) {
-		return arguments.entity.getQNC() - arguments.entity.getQHB();
+		return arguments.entity.getQuantity('QNC') - arguments.entity.getQHB();
 	}
 	
 	
