@@ -105,8 +105,8 @@ Notes:
 	<cfif rc.edit>
 		<div id="actionButtons" class="clearfix">
 			<cf_SlatwallActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasSubProductType()>
-			<cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
+			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasChildProductType()>
+				<cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
 			</cfif>
 			<cf_SlatwallActionCaller action="admin:product.saveproducttype" type="submit" class="button">
 		</div>

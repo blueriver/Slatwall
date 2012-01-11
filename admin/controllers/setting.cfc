@@ -91,8 +91,8 @@ component extends="BaseController" output="false" accessors="true" {
 				}
 			}
 		}
-		
-		getFW().redirect(action="admin:setting.detail", queryString="reload=true");
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.detail");
 	}
 	
 	// User Permissions
