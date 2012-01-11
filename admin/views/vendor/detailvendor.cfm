@@ -51,8 +51,6 @@ Notes:
 		<cfif rc.edit>
 			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendor, formName="vendorEdit")#
 			
-			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.vendor, formName="vendorEdit")#
-			
 			<form name="vendorEdit" id="vendorEdit" action="#buildURL(action='admin:vendor.savevendor')#" method="post">
 				<input type="hidden" name="vendorID" value="#rc.vendor.getVendorID()#" />
 		</cfif>

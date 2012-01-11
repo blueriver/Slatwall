@@ -51,16 +51,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function listStockAdjustments(required struct rc) {
         param name="rc.orderBy" default="stockAdjustmentId|ASC";
-        
         rc.stockAdjustmentSmartList = getStockService().getStockAdjustmentSmartList(data=arguments.rc);  
     }
-    
-    /*
-    	Generic to all Stock Receiver types
-    */
+
     public void function initStockAdjustment(required struct rc) {
     	param name="rc.stockAdjustmentID" default="";
-    	
     	rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID, true);
     	
     	// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
@@ -86,10 +81,17 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockadjustment.typeName_#rc.stockadjustment.getReceiverType()#");
 		getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");
 	}
-    
-   public void function editStockAdjustment(required struct rc) {
+	
+	public void function detailStockAdjustment(required struct rc) {
     	param name="rc.stockAdjustmentID" default="";
-    	
+    	initStockAdjustment(rc);
+
+    	rc.edit = false; 
+    	getFW().setView("admin:stockadjustment.detailStockAdjustment");  
+	}
+    
+	public void function editStockAdjustment(required struct rc) {
+    	param name="rc.stockAdjustmentID" default="";
     	initStockAdjustment(rc);
     	
     	rc.edit = true; 
@@ -105,29 +107,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		var wasNew = rc.stockAdjustment.isNew();
 		//dumpScreen(rc);
 		rc.stockAdjustment = getStockService().saveStockAdjustment(rc.stockAdjustment, rc);
-		//rc.product = getProductService().getProduct(rc.productID);
-		
-		// Assign StockAdjustmentItems. Look over all product skus and get the quantity from the rc
-		/*for(var i=1; i <= ArrayLen(rc.product.getSkus()); i++) {
-			var sku = rc.product.getSkus()[i];
-			var qty = rc["qty_skuid(#sku.getSkuID#)"];
-			
-			if(isNumeric(qty) && qty > 0) {
-				var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
-				stockAdjustmentItem.setStockAdjustment(rc.stockAdjustment);
-				stockAdjustmentItem.setQuantity(qty);
-				
-				if(rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satManualIn") {
-					var stock = getStockService().getStockBySkuAndLocation(sku, rc.stockAdjustment.getToLocation());
-					stockAdjustmentItem.setStockIn(stock);	
-				}
-				
-				if(rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satManualOut") {
-					var stock = getStockService().getStockBySkuAndLocation(sku, rc.stockAdjustment.getFromLocation());
-					stockAdjustmentItem.setStockOut(stock);	
-				}
-			}
-		}*/
 
 		if(!rc.stockAdjustment.hasErrors()) {
 			if(wasNew) { 
@@ -166,7 +145,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			if(isNumeric(qty) && qty > 0) {
 				
 				if(stockAdjustmentItem.isNew()) {
-					//var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
 					stockAdjustmentItem.setStockAdjustment(rc.stockAdjustment);
 
 					if(rc.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
@@ -187,11 +165,19 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 		}
 
-		dumpScreen(rc.stockAdjustment.getStockAdjustmentItems());
-		 
 		rc.message=rbKey("admin.stockadjustment.savestockadjustment_success");
 		getFW().redirect(action="admin:stockAdjustment.editStockAdjustment", querystring="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#", preserve="message");
 		
+	}
+	
+	public void function processStockAdjustment(required struct rc) {
+		param name="stockAdjustmentId";
+		initStockAdjustment(rc);
+
+		getStockService().processStockAdjustment(rc.stockAdjustment);
+		
+		rc.message=rbKey("admin.stockadjustment.processstockadjustment_success");
+		getFW().redirect(action="admin:stockAdjustment.listStockAdjustments", preserve="message");
 	}
 	
 	public void function editStockAdjustmentItems(required struct rc) {
@@ -201,6 +187,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.product = getProductService().getProduct(rc.productID);
 	
 		getFW().setView(action="admin:stockAdjustment.editStockAdjustmentItems");
+	}
+	
+	public void function deleteStockAdjustment(required struct rc) {
+    	param name="rc.stockAdjustmentID" default="";
+		rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID);
+
+    	var deleteOK = getStockService().deleteStockAdjustment(rc.stockAdjustment);
+	
+		if( deleteOK ) {
+			rc.message = rbKey("admin.stockadjustment.deleteStockAdjustment_success");
+		} else {
+			rc.message = rbKey("admin.stockadjustment.deleteStockAdjustment_error");
+			rc.messageType="error";
+		}
+		
+		getFW().redirect(action="admin:stockAdjustment.listStockAdjustments", preserve="message,messageType");
 	}
 	
 }

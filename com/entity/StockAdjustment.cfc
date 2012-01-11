@@ -114,6 +114,9 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		return local.arr;
 	}
 	
+	public boolean function isNotDeletable() {
+		return getStockAdjustmentStatusType().getSystemCode() == "sastClosed";
+	}
 	
 	
 	/******* Association management methods for bidirectional relationships **************/

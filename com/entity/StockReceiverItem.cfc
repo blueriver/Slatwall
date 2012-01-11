@@ -50,6 +50,8 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	// Related Object Properties (many-to-one)
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
 	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
+	
+	// Only one of these will be filled in at any given time. We are not using TPC here, but we could.
 	property name="vendorOrderItem" cfc="VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";
 	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
