@@ -177,7 +177,11 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="displayTemplate" edit="#rc.edit#" displayType="plain" fieldType="select" valueOptions="#rc.productType.getDisplayTemplateOptions()#">
+				<cfif rc.edit>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="displayTemplate" edit="true" displayType="plain" fieldType="select" valueOptions="#rc.productType.getDisplayTemplateOptions()#">
+				<cfelse>
+					#rc.Product.getInheritedSetting("displayTemplate")#
+				</cfif>
 			</td>
 			<td>
 				<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("displayTemplate") />
@@ -206,8 +210,10 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<input type="radio" name="inheritQuantityHeldBack" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityHeldBack" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<input type="radio" name="inheritQuantityHeldBack" value="1" class="checkClear" data-checkClear=".quantityheldbackfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityHeldBack")# )
+				<cfif rc.edit><input type="radio" name="inheritQuantityHeldBack" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityHeldBack" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritQuantityHeldBack" value="1" class="checkClear" data-checkClear=".quantityheldbackfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityHeldBack")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -236,8 +242,10 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<input type="radio" name="inheritQuantityMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<input type="radio" name="inheritQuantityMinimum" value="1" class="checkClear" data-checkClear=".quantityminimumfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMinimum")# )
+				<cfif rc.edit><input type="radio" name="inheritQuantityMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritQuantityMinimum" value="1" class="checkClear" data-checkClear=".quantityminimumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMinimum")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -266,8 +274,10 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<input type="radio" name="inheritQuantityMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<input type="radio" name="inheritQuantityMaximum" value="1" class="checkClear" data-checkClear=".quantitymaximumfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMaximum")# )
+				<cfif rc.edit><input type="radio" name="inheritQuantityMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritQuantityMaximum" value="1" class="checkClear" data-checkClear=".quantitymaximumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+					#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityMaximum")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -296,8 +306,8 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<input type="radio" name="inheritQuantityOrderMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<input type="radio" name="inheritQuantityOrderMinimum" value="1" class="checkClear" data-checkClear=".quantityorderminimumfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMinimum")# )
+				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="1" class="checkClear" data-checkClear=".quantityorderminimumfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMinimum")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -326,8 +336,10 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<input type="radio" name="inheritQuantityOrderMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<input type="radio" name="inheritQuantityOrderMaximum" value="1" class="checkClear" data-checkClear=".quantityordermaximumfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMaximum")# )
+				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMaximum" value="1" class="checkClear" data-checkClear=".quantityordermaximumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMaximum")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -356,9 +368,10 @@ Notes:
 				</a>
 			</td>
 			<td>
-				
-				<input type="radio" name="inheritShippingWeight" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="shippingWeight" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<input type="radio" name="inheritShippingWeight" value="1" class="checkClear" data-checkClear=".shippingweightfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("shippingWeight")# )
+				<cfif rc.edit><input type="radio" name="inheritShippingWeight" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="shippingWeight" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritShippingWeight" value="1" class="checkClear" data-checkClear=".shippingweightfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("shippingWeight")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">

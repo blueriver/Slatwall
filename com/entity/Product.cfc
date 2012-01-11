@@ -62,6 +62,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="quantityMaximum" ormtype="integer";
 	property name="quantityOrderMinimum" ormtype="integer";
 	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
 	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
@@ -102,7 +103,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
-	property name="shippingWeight" type="numeric" persistent="false";
 	
 	public Product function init(){
 	   // set default collections for association management methods
