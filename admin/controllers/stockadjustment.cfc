@@ -78,38 +78,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.productSmartList.addSelect(propertyIdentifier="productName", alias="name");
 		rc.productSmartList.addSelect(propertyIdentifier="productID", alias="value");
 	}
-    
-    /*public void function detailStockAdjustment(required struct rc) {
-    	param name="rc.stockAdjustmentID" default="";
-    	
-    	initStockAdjustment(rc);
-    	
-    	if(isNull(rc.stockAdjustment)) {
-    		getFW().redirect(action="admin:stockAdjustment.listStockAdjustments");
-    	}
-    	
-    	// Proceed to the type-specific detail
-    	if(rc.stockAdjustment.getReceiverType() == "stockAdjustment") {
-    		detailStockAdjustmentstockAdjustment(rc);
-    	} else if(rc.stockAdjustment.getReceiverType() == "order") {
-    		detailStockAdjustmentOrder(rc);
-    	} else {
-    		throw("Unrecognized StockAdjustment type: #rc.stockAdjustment.getReceiverType()#");
-    	}
-    	
-    	rc.edit = false;
-		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockadjustment.typeName_#rc.stockadjustment.getReceiverType()#");
-		getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");  	
-    }*/
-    
-    /*
-    	Vendor Order related.
-    */
-    /* public void function detailStockAdjustmentstockAdjustment(required struct rc) {
-		param name="rc.stockAdjustmentID";
-    	
-    	rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID);	
-    }*/
 
     public void function createStockAdjustment(required struct rc) {
     	initStockAdjustment(rc);
@@ -119,26 +87,48 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");
 	}
     
-   /* public void function editStockAdjustment(required struct rc) {
+   public void function editStockAdjustment(required struct rc) {
     	param name="rc.stockAdjustmentID" default="";
-    	param name="rc.stockAdjustmentRateID" default="";
     	
-    	rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentID, true);
-    	rc.stockAdjustmentRate = getStockService().getStockAdjustmentRate(rc.stockAdjustmentRateId, true);
+    	initStockAdjustment(rc);
     	
     	rc.edit = true; 
     	getFW().setView("admin:stockadjustment.detailStockAdjustment");  
-	}*/
+	}
 	
 
 	public void function saveStockAdjustment(required struct rc) {
+		param name="productId";
 		initStockAdjustment(rc);
 
 		// this does an RC -> Entity population, and flags the entities to be saved.
 		var wasNew = rc.stockAdjustment.isNew();
 		//dumpScreen(rc);
 		rc.stockAdjustment = getStockService().saveStockAdjustment(rc.stockAdjustment, rc);
+		//rc.product = getProductService().getProduct(rc.productID);
 		
+		// Assign StockAdjustmentItems. Look over all product skus and get the quantity from the rc
+		/*for(var i=1; i <= ArrayLen(rc.product.getSkus()); i++) {
+			var sku = rc.product.getSkus()[i];
+			var qty = rc["qty_skuid(#sku.getSkuID#)"];
+			
+			if(isNumeric(qty) && qty > 0) {
+				var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
+				stockAdjustmentItem.setStockAdjustment(rc.stockAdjustment);
+				stockAdjustmentItem.setQuantity(qty);
+				
+				if(rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satManualIn") {
+					var stock = getStockService().getStockBySkuAndLocation(sku, rc.stockAdjustment.getToLocation());
+					stockAdjustmentItem.setStockIn(stock);	
+				}
+				
+				if(rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSytemCode() == "satManualOut") {
+					var stock = getStockService().getStockBySkuAndLocation(sku, rc.stockAdjustment.getFromLocation());
+					stockAdjustmentItem.setStockOut(stock);	
+				}
+			}
+		}*/
+
 		if(!rc.stockAdjustment.hasErrors()) {
 			if(wasNew) { 
 				rc.message=rbKey("admin.stockadjustment.savestockadjustment_successnowadditems");
@@ -151,12 +141,62 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			rc.edit = true;
 			rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment");
 			getFW().setView(action="admin:stockAdjustment.detailStockAdjustment");
-		}	
+		}		
+	}
+	
+	public void function saveStockAdjustmentItems(required struct rc) {
+		param name="productId";
+		param name="stockAdjustmentId";
+		initStockAdjustment(rc);
+
+		// this does an RC -> Entity population, and flags the entities to be saved.
+		var wasNew = rc.stockAdjustment.isNew();
+		//dumpScreen(rc);
+		rc.stockAdjustment = getStockService().saveStockAdjustment(rc.stockAdjustment, rc);
+		rc.product = getProductService().getProduct(rc.productID);
+		
+		// Assign StockAdjustmentItems. Look over all product skus and get the quantity from the rc
+		for(var i=1; i <= ArrayLen(rc.product.getSkus()); i++) {
+			var sku = rc.product.getSkus()[i];
+			var qty = rc["qty_skuid(#sku.getSkuID()#)"];
+			
+			// First, see if we already have a StockAdjustmentItem for this Sku
+			var stockAdjustmentItem = rc.StockAdjustment.getStockAdjustmentItemForSku(sku);
+			
+			if(isNumeric(qty) && qty > 0) {
+				
+				if(stockAdjustmentItem.isNew()) {
+					//var stockAdjustmentItem = getStockService().newStockAdjustmentItem();
+					stockAdjustmentItem.setStockAdjustment(rc.stockAdjustment);
+
+					if(rc.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
+						var stock = getStockService().getStockBySkuAndLocation(sku, rc.stockAdjustment.getToLocation());
+						stockAdjustmentItem.setToStock(stock);	
+					}
+					
+					if(rc.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || rc.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualOut") {
+						var stock = getStockService().getStockBySkuAndLocation(sku, rc.stockAdjustment.getFromLocation());
+						stockAdjustmentItem.setFromStock(stock);	
+					}	
+				}
+				
+				stockAdjustmentItem.setQuantity(qty); 
+			} else if(!stockAdjustmentItem.isNew()) {
+				// Otherwise, the user specified 0 quantity and this was an existing stock adjustment item, so remove the item!
+				rc.StockAdjustment.removeStockAdjustmentItem(stockAdjustmentItem);
+			}
+		}
+
+		dumpScreen(rc.stockAdjustment.getStockAdjustmentItems());
+		 
+		rc.message=rbKey("admin.stockadjustment.savestockadjustment_success");
+		getFW().redirect(action="admin:stockAdjustment.editStockAdjustment", querystring="stockAdjustmentID=#rc.stockAdjustment.getStockAdjustmentID()#", preserve="message");
 		
 	}
 	
 	public void function editStockAdjustmentItems(required struct rc) {
-		initStockAdjustment(rc);
+		param name="rc.stockAdjustmentId";
+		rc.stockAdjustment = getStockService().getStockAdjustment(rc.stockAdjustmentId);
 
 		rc.product = getProductService().getProduct(rc.productID);
 	

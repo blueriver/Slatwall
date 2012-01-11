@@ -57,16 +57,16 @@ Notes:
 			<tr>
 				<td class="varWidth">#DateFormat(local.StockAdjustment.getCreatedDateTime(), "medium")#</td>
 				<td>
-					<cfif !isNull(local.StockAdjustment.getFromLocation().getLocationName())>
+					<cfif !isNull(local.StockAdjustment.getFromLocation())>
 						#local.StockAdjustment.getFromLocation().getLocationName()#
 					</cfif>
 				</td>
 				<td>
-					<cfif !isNull(local.StockAdjustment.getToLocation().getLocationName())>
+					<cfif !isNull(local.StockAdjustment.getToLocation())>
 						#local.StockAdjustment.getToLocation().getLocationName()#
 					</cfif>
 				</td>
-				<td>#local.StockAdjustment.getStockAdjustmentType()#</td>
+				<td>#local.StockAdjustment.getStockAdjustmentType().getType()#</td>
 				
 				<td class="administration">
 		          <ul class="three">

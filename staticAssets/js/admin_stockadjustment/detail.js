@@ -27,7 +27,7 @@ jQuery(function() {
 	jQuery("#addEditStockAdjustmentItems").dialog({
        autoOpen: false,
        modal: true,
-       width: "80%",
+       width: "50%",
 	   draggable: false,
 	   dialogClass: "stockAdjustmentItemsDialog"
 	});
@@ -39,9 +39,26 @@ jQuery(function() {
 	
 		//alert(jQuery(this).attr("href") + "&productID=" + jQuery(".productID").first().val() + "&inDialog=true");
 		// Load the content and open the dialog.
-		$("#addEditStockAdjustmentItems").load(jQuery(this).attr("href") + "&productID=" + jQuery(".productID").first().val() + "&inDialog=true", function(){
+		var url = jQuery(this).attr("href") + "&inDialog=true";
+		
+
+		// Allow for a productID to be passed in the URL to override the logic of taking the ID from the select box.
+		if(jQuery(this).attr("href").indexOf("productID", 1) == -1) {
+			url += "&productID=" + jQuery(".productID").first().val();
+		}
+		
+		$("#addEditStockAdjustmentItems").load(url, function(){
 			// Apply the "stripe" class to the new table loaded dynamically.
 			stripe("stripepopup");
+			
+			// Wire up cancel button to close dialog
+			jQuery("#addEditStockAdjustmentItems .cancel").click(function(e){
+				$("#addEditStockAdjustmentItems").dialog("close");
+				
+				// Since we cancelled, erase any HTML that was loaded into the dailog's div so that it doesn't save.
+				$("#addEditStockAdjustmentItems").html("");
+				e.preventDefault();
+			})
 			
 			// Trigger the keyup event once on one of the inputs so that the value populate on page load	
 			$("#addEditStockAdjustmentItems").dialog("open");
@@ -51,13 +68,7 @@ jQuery(function() {
 		e.preventDefault();
 	});
 	
-	jQuery("#... .cancel").click(function(e){
-		$("#addEditStockAdjustmentItems").dialog("close");
-		
-		// Since we cancelled, erase any HTML that was loaded into the dailog's div so that it doesn't save.
-		$("#addEditStockAdjustmentItems").html("");
-		e.preventDefault();
-	})
+	
 	
 	// Jog the change event so that the location inputs initialize
 	jQuery(".stockAdjustmentTypeID").trigger("change");

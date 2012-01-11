@@ -60,9 +60,13 @@ Notes:
 		<cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="stockAdjustmentType" edit="#rc.stockAdjustment.isNew()#" valueOptions="#rc.stockAdjustmentTypeSmartList.getRecords()#" fieldClass="stockAdjustmentTypeID">
 		
 	
-		<div id="fromLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="fromLocation" fieldName="fromLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
-		<div id="toLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="toLocation" fieldName="toLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
+		<cfif rc.StockAdjustment.isNew() || rc.StockAdjustment.getStockAdjustmentType().getSystemCode() EQ "satLocationTransfer" || rc.StockAdjustment.getStockAdjustmentType().getSystemCode() EQ "satManualOut">
+			<div id="fromLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="fromLocation" fieldName="fromLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
+		</cfif>
 		
+		<cfif rc.StockAdjustment.isNew() || rc.StockAdjustment.getStockAdjustmentType().getSystemCode() EQ "satLocationTransfer" || rc.StockAdjustment.getStockAdjustmentType().getSystemCode() EQ "satManualIn">
+			<div id="toLocationDiv"><cf_SlatwallPropertyDisplay object="#rc.StockAdjustment#" property="toLocation" fieldName="toLocation.locationID" edit="#rc.stockAdjustment.isNew()#"></div>
+		</cfif>
 		
 		<cfif rc.edit && !rc.stockAdjustment.isNew()>
 			<dt class="title"><label>#$.Slatwall.rbKey("admin.stockadjustment.edit.product")#</strong></label></dt> 
@@ -77,7 +81,7 @@ Notes:
 					</select>--->
 					
 					<!---<button type="button" id="addProductButton" value="true">#rc.$.Slatwall.rbKey("admin.stockadjustment.edit.addProduct")#</button>--->
-						<cf_SlatwallActionCaller action="admin:StockAdjustment.editStockAdjustmentItems" type="link" class="button addProductButton" text="#rc.$.Slatwall.rbKey('admin.stockadjustment.edit.addProduct')#">
+					<cf_SlatwallActionCaller action="admin:StockAdjustment.editStockAdjustmentItems" queryString="stockAdjustmentId=#rc.StockAdjustment.getStockAdjustmentId()#" type="link" class="button addProductButton" text="#rc.$.Slatwall.rbKey('admin.stockadjustment.edit.addProduct')#">
 				</dd>
 			</dt>
 		</cfif>	
@@ -94,38 +98,28 @@ Notes:
 	
 
 	<cfif arrayLen(rc.StockAdjustment.getStockAdjustmentItems()) GT 0>
-		<!---<strong>#$.slatwall.rbKey('admin.StockAdjustment.edit.StockAdjustmentRates')#</strong>
+		<cfset local.stockAdjustmentItemsByProduct = rc.StockAdjustment.getStockAdjustmentItemsByProduct()>
+		
+		<cfloop array="#local.stockAdjustmentItemsByProduct#" index="local.curStruct">
+			<h4>#curStruct.product.getProductName()# [<cf_SlatwallActionCaller action="admin:StockAdjustment.editStockAdjustmentItems" queryString="stockAdjustmentId=#rc.StockAdjustment.getStockAdjustmentId()#&productID=#curStruct.product.getProductID()#" type="link" class="addProductButton" text="#rc.$.Slatwall.rbKey('admin.stockadjustment.edit.editLink')#">]</h4>
 	
-		<table id="StockAdjustmentRates" class="listing-grid stripe">
-			<thead>
+			<table class="listing-grid stripe">
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.StockAdjustmentRate.StockAdjustmentRateType")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.StockAdjustmentRate.StockAdjustmentRateAmount")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.StockAdjustmentRate.StockAdjustmentRateAppliesTo")#</th>
-					<cfif rc.edit><th class="administration">&nbsp;</th></cfif>
+					<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
+					<th class="varWidth">#$.slatwall.rbKey("entity.product.brand")# - #$.slatwall.rbKey("entity.product.productname")#</th>
+					<th>#$.slatwall.rbKey("entity.stockAdjustmentItem.quantity")#</th>
 				</tr>
-			</thead>
-			<tbody>
-				<cfloop array="#rc.StockAdjustment.getStockAdjustmentRates()#" index="local.StockAdjustmentRate">
-					<cfif not local.StockAdjustmentRate.hasErrors()>
-						<tr>
-							<td class="varWidth">#$.Slatwall.rbKey('entity.StockAdjustmentRate.StockAdjustmentRateType.' & local.StockAdjustmentRate.getType())#</td>
-							<td>#local.StockAdjustmentRate.getAmountRepresentation()#</td>
-							<td>#local.StockAdjustmentRate.getAppliesToRepresentation()#</td>
-							<cfif rc.edit>
-								<td class="administration">
-									<ul class="two">
-										<cf_SlatwallActionCaller action="admin:StockAdjustment.editStockAdjustment" querystring="StockAdjustmentID=#rc.StockAdjustment.getStockAdjustmentID()#&StockAdjustmentRateId=#local.StockAdjustmentRate.getStockAdjustmentRateId()#" class="edit" type="list">
-										<cf_SlatwallActionCaller action="admin:StockAdjustment.deleteStockAdjustmentRate" querystring="StockAdjustmentID=#rc.StockAdjustment.getStockAdjustmentID()#&StockAdjustmentRateId=#local.StockAdjustmentRate.getStockAdjustmentRateId()#" class="delete" type="list" confirmrequired="true">
-									</ul>
-								</td>
-							</cfif>
-						</tr>
-					</cfif>
+					
+				<cfloop array="#local.curStruct.stockAdjustmentItems#" index="local.stockAdjustmentItem">
+					<cfset local.stock = local.stockAdjustmentItem.getOneStock()>
+					<tr>
+						<td>#local.stock .getSku().getSkuCode()#</td>
+						<td class="varWidth">#local.stock .getSku().getProduct().getBrand().getBrandName()# - #local.stock .getSku().getProduct().getProductName()#</td>							
+						<td>#int(local.stockAdjustmentItem.getQuantity())#</td>
+					</tr>
 				</cfloop>
-			</tbody>
-		</table>
-		--->
+			</table>
+		</cfloop>
 		
 		
 	<!--- No stock adjustment items defined --->	
@@ -136,15 +130,18 @@ Notes:
 		<br /><br />	
 	</cfif>
 	
-	<!--- The modal dialog div is placed inside of the form, so when it posts, it posts this form, so that we can update the StockAdjustment AND items simultaniously.  --->
-	<div id="addEditStockAdjustmentItems" class="ui-helper-hidden"></div>
+	
 
 	<cfif rc.edit>
 		<cf_SlatwallActionCaller action="admin:StockAdjustment.listStockAdjustments" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-		<cf_SlatwallActionCaller action="admin:StockAdjustment.saveStockAdjustment" type="submit" class="button">
-		<cfif !rc.StockAdjustment.isNew()><cf_SlatwallActionCaller action="admin:StockAdjustment.processStockAdjustment" type="button" class="button"></cfif>
+		<cfif rc.StockAdjustment.isNew()>
+			<cf_SlatwallActionCaller action="admin:StockAdjustment.saveStockAdjustment" type="submit" class="button">
+		<cfelse>
+			<cf_SlatwallActionCaller action="admin:StockAdjustment.processStockAdjustment" type="button" class="button" disabled="#arrayLen(rc.StockAdjustment.getStockAdjustmentItems()) EQ 0#" disabledText="#rc.$.Slatwall.rbKey("admin.stockadjustment.cannotProcess")#">
+		</cfif>
 		</form>
 	</cfif>	
 
+	<div id="addEditStockAdjustmentItems" class="ui-helper-hidden"></div>
 	
 </cfoutput>

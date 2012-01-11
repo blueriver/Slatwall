@@ -65,4 +65,15 @@ component extends="BaseService" accessors="true" output="false" {
 		return stock;
 	}
 	
+	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment){
+		var stockAdjustmentItem = getDAO().getStockAdjustmentItemForSku(arguments.sku, arguments.stockAdjustment);
+		
+		if(isNull(stockAdjustmentItem)) {
+			stockAdjustmentItem = this.newStockAdjustmentItem();
+		}
+
+		return stockAdjustmentItem;
+	}
+	
+	
 }

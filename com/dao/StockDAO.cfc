@@ -54,4 +54,37 @@ component extends="BaseDAO" {
 		*/	
 	}	
 	
+	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment) {
+		var params = [arguments.sku.getSkuID(), arguments.stockAdjustment.getStockAdjustmentID()];
+		
+	 	// Epic hack. In order to find the stockAdjustment Item for this Sku, we don't know if it will be in the fromStock or toStock, so try them both.
+		
+		var hql = " SELECT i
+					FROM SlatwallStockAdjustmentItem i
+					WHERE i.fromStock.sku.skuID = ? 
+					AND i.stockAdjustment.stockAdjustmentID = ? ";
+	
+		var stockAdjustmentItem =  ormExecuteQuery(hql, params, true);
+		
+		if(!isNull(stockAdjustmentItem)) {
+			return stockAdjustmentItem;
+		}
+		
+		var hql = " SELECT i
+					FROM SlatwallStockAdjustmentItem i
+					WHERE i.toStock.sku.skuID = ? 
+					AND i.stockAdjustment.stockAdjustmentID = ? ";
+	
+		var stockAdjustmentItem = ormExecuteQuery(hql, params, true);
+		
+		if(!isNull(stockAdjustmentItem)) {
+			return stockAdjustmentItem;
+		} else {
+			// Return void
+			return;
+		}
+
+	}	
+	
+	
 }

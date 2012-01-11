@@ -73,22 +73,6 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 		return super.init();
 	}
 	
-	// This method first finds the Stock with the provided sku and location, then searches in the VendorOrder's Items list for an item with that stock. If either are not found, it returns a blank VendorOrderItem
-	public any function getStockAdjustmentItemForSkuAndLocation(required any skuID, required any locationID) {
-		var sku = getService("SkuService").getSku(arguments.skuID);
-		var location = getService("LocationService").getLocation(arguments.locationID);
-		var stock = getService("StockService").getStockBySkuAndLocation(sku, location);
-		
-		for(var i=1; i<=arrayLen(getStockAdjustmentItems()); i++) {
-			if(getStockAdjustmentItems()[i].getFromStock().getStockId() EQ stock.getStockId()) {
-				return vendorOrderItems[i];
-			}
-		}
-		
-		// Otherwise, if stock was null (could not find one with that sku and location) or no VendorOrderItem was found with the located stock, return a new VendorOrderItem
-		return getService("VendorOrderService").newVendorOrderItem();
-	}
-	
 	// For use with Adjustment Items interface, get one location that we will use for stock lookup. 
 	public any function getOneLocation() {
 		if(getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || getStockAdjustmentType().getSystemCode() == "satManualIn") {
@@ -97,6 +81,40 @@ component displayname="Stock Adjustment" entityname="SlatwallStockAdjustment" ta
 			return getFromLocation();
 		}
 	}
+	
+	public any function getStockAdjustmentItemForSku(required any sku) {
+		return getService("StockService").getStockAdjustmentItemForSku(arguments.sku, this);
+	}
+	
+	// Returns an array of structs, each struct containing a product, and an array of stockAdjustmentItems
+	public any function getStockAdjustmentItemsByProduct() {
+		var keyByProductId = {};
+	
+		for(var i=1; i <= ArrayLen(getStockAdjustmentItems()); i++) {
+			var product = getStockAdjustmentItems()[i].getOneStock().getSku().getProduct();
+			if(structKeyExists(keyByProductId, product.getProductId())) {
+				// We already have this product in the array, so simply append the stockAdjustmentItem to the items array
+				arrayAppend(keyByProductId[product.getProductId()].stockAdjustmentItems, getStockAdjustmentItems()[i]);
+			} else {
+				// We did not find the product, so add it to the array
+				var struct = {
+					product = product, 
+					stockAdjustmentItems = [getStockAdjustmentItems()[i]]
+				};
+				keyByProductId[product.getProductId()] = struct;
+			}
+		}
+		
+		// Transform the assocaitive array into an array
+		var local.arr = [];
+		for (var struct IN keyByProductId) {
+			arrayAppend(local.arr, keyByProductId[struct]);
+		}
+
+		return local.arr;
+	}
+	
+	
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
