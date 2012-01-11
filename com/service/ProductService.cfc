@@ -309,7 +309,8 @@ component extends="BaseService" accessors="true" {
 	}
 	
 	public any function saveProduct(required any product, required struct data) {
-		
+		writeDump(arguments);
+		abort;
 		// populate bean from values in the data Struct
 		arguments.product.populate(arguments.data);
 		
