@@ -742,7 +742,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint Private helper function for using the Slatwall Log service.
-	private void function logSlatwall(required string message, boolean generalLog=flase){
+	private void function logSlatwall(required string message, boolean generalLog=false){
 		getService("logService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
 	}
 	
