@@ -40,6 +40,7 @@ component extends="BaseService" accessors="true" output="false" {
 
 	property name="locationService" type="any";
 	property name="skuService" type="any";
+	property name="typeService" type="any";
 	
 	public any function getStockBySkuAndLocation(required any sku, required any location){
 		var stock = getDAO().getStockBySkuAndLocation(argumentCollection=arguments);
@@ -64,5 +65,59 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		return stock;
 	}
+	
+	public any function getStockAdjustmentItemForSku(required any sku, required any stockAdjustment){
+		var stockAdjustmentItem = getDAO().getStockAdjustmentItemForSku(arguments.sku, arguments.stockAdjustment);
+		
+		if(isNull(stockAdjustmentItem)) {
+			stockAdjustmentItem = this.newStockAdjustmentItem();
+		}
+
+		return stockAdjustmentItem;
+	}
+	
+	public void function processStockAdjustment(required any stockAdjustment) {
+		// Create StockReceivers/StockReceiverItems and StockDelivery
+		
+		// Incoming
+		if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualIn") {
+			var stockReceiver = this.newStockReceiverStockAdjustment();
+			stockReceiver.setStockAdjustment(arguments.stockAdjustment);
+			
+			for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
+				var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
+				var stockReceiverItem = this.newStockReceiverItem();
+				stockReceiverItem.setStockReceiver(stockReceiver);
+				stockReceiverItem.setStockAdjustmentItem(stockAdjustmentItem);
+				stockReceiverItem.setQuantity(stockAdjustmentItem.getQuantity());
+				stockReceiverItem.setCost(0);
+				stockReceiverItem.setStock(stockAdjustmentItem.getToStock());
+			}
+			
+			this.saveStockReceiver(stockReceiver);
+		}
+		
+		// Outgoing
+		if(arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satLocationTransfer" || arguments.stockAdjustment.getStockAdjustmentType().getSystemCode() == "satManualOut") {
+			var stockAdjustmentDelivery = this.newStockAdjustmentDelivery();
+			stockAdjustmentDelivery.setStockAdjustment(arguments.stockAdjustment);
+			
+			for(var i=1; i <= ArrayLen(arguments.stockAdjustment.getStockAdjustmentItems()); i++) {
+				var stockAdjustmentItem = arguments.stockAdjustment.getStockAdjustmentItems()[i];
+				var stockAdjustmentDeliveryItem = this.newStockAdjustmentDeliveryItem();
+				stockAdjustmentDeliveryItem.setStockAdjustmentDelivery(stockAdjustmentDelivery);
+				stockAdjustmentDeliveryItem.setStockAdjustmentItem(stockAdjustmentItem);
+				stockAdjustmentDeliveryItem.setQuantity(stockAdjustmentItem.getQuantity());
+				stockAdjustmentDeliveryItem.setStock(stockAdjustmentItem.getFromStock());
+			}
+			
+			this.saveStockAdjustmentDelivery(stockAdjustmentDelivery);
+		}
+		
+		
+		// Set the status to closed
+		arguments.stockAdjustment.setStockAdjustmentStatusType(getTypeService().getTypeBySystemCode("sastClosed"));
+	}
+	
 	
 }

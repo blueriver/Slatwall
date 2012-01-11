@@ -170,6 +170,7 @@
         <property name="DAO"><ref bean="stockDAO" /></property>
 		<property name="locationService"><ref bean="locationService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
+		<property name="typeService"><ref bean="typeService" /></property>
     </bean>
 	<bean id="taxService" parent="parentService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>

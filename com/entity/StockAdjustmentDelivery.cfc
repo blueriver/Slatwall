@@ -73,7 +73,8 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
 	
 	// StockAdjustment (many-to-one)
 	
-	public void function setStockAdjustment(required StockAdjustment StockAdjustment) {
+	// I commented these out since StockAdjustments don't have the bidirectional relation
+	/*public void function setStockAdjustment(required StockAdjustment StockAdjustment) {
 	   variables.stockAdjustment = arguments.stockAdjustment;
 	   if(!arguments.stockAdjustment.hasStockAdjustmentDelivery(this)) {
 	       arrayAppend(arguments.stockAdjustment.getStockAdjustmentDeliveries(),this);
@@ -86,7 +87,7 @@ component displayname="Stock Adjustment Delivery" entityname="SlatwallStockAdjus
            arrayDeleteAt(arguments.stockAdjustment.getStockAdjustmentDeliveries(),index);
        }    
        structDelete(variables,"stockAdjustment");
-    }
+    }*/
     
 	
 	// StockAdjustmentDeliveryItems (one-to-many)

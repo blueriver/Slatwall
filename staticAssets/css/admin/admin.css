@@ -1068,7 +1068,7 @@ div.optionsSelector ul {
 #editVendorOrderProductAssignment input, #detailStockReceiver input, #orderReturnEdit input{width:60px;}
 
 /* Hide "close" bar on the vendor order dialog */
-.vendorOrderItemDialog > div{display:none;}
+.vendorOrderItemDialog > div, .stockAdjustmentItemsDialog > div{display:none;}
 
 #detailStockReceiver tbody tr.alt td.highlighted{background-color:#f8ff34;}
 #detailStockReceiver tbody td.highlighted {background-color:#dbe152;}

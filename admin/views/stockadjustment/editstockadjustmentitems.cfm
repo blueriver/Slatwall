@@ -38,19 +38,22 @@ Notes:
 --->
 <cfparam name="rc.product">
 <cfparam name="rc.stockAdjustment">
-<cfparam name="rc.inDialog" default="false">
+<!---<cfparam name="rc.inDialog" default="false">--->
 
-<cfif rc.inDialog EQ "true">
+<cfset local.location = rc.StockAdjustment.getOneLocation()>
+
+<!---<cfif rc.inDialog EQ "true">--->
 	<cfset request.layout = false>
-</cfif>
+<!---</cfif>--->
 
 <cfoutput>
-	<cfif rc.inDialog EQ "true">
+	<!---<cfif rc.inDialog EQ "true">--->
 		<h3>#Replace($.Slatwall.rbKey("admin.stockAdjustment.stockAdjustmentItemsDialogTitle"), "{1}", rc.product.getProductName())#</h3>
-	</cfif>
+	<!---</cfif>--->
 	
-	<form name="editStockAdjustmentProductAssignment" id="editStockAdjustmentProductAssignment" action="#buildURL('admin:stockAdjustment.saveStockAdjustmentItems')#" method="post">
+	<form name="editStockAdjustmentItems" id="editStockAdjustmentItems" action="#buildURL('admin:stockAdjustment.saveStockAdjustmentItems')#" method="post">
 		<input type="hidden" name="StockAdjustmentID" value="#rc.stockAdjustment.getStockAdjustmentID()#" />
+		<input type="hidden" name="productID" value="#rc.product.getProductId()#"/>
 		
 		<table class="listing-grid stripepopup">
 			<tr>
@@ -61,28 +64,17 @@ Notes:
 			<tbody>
 				<cfloop array="#rc.product.getSkus()#" index="local.sku">
 					<!--- See if we already have a stockAdjustment item that matches this SKU. --->
-					<cfset local.StockAdjustmentItem = rc.stockAdjustment.getStockAdjustmentItemForSku(local.sku.getSkuId())>
+					<cfset local.StockAdjustmentItem = rc.stockAdjustment.getStockAdjustmentItemForSku(local.sku)>
 					
 					<tr data-skuid="#local.sku.getSkuID()#">
 						<td class="varWidth">#local.sku.getSkuCode()#</td>
-						<td><input type="text" class="skuty" name="qty_skuid(#local.sku.getSkuID()#)_locationid(#local.location.getLocationId()#)" value="#local.StockAdjustmentItem.getQuantity()#"></td>
+						<td><input type="text" name="qty_skuid(#local.sku.getSkuID()#)" value="#local.StockAdjustmentItem.getQuantity()#"></td>
 					</tr>
 				</cfloop>
 			</tbody>
-			
-			<tr>
-				<td class="varWidth"><strong>Total:</strong></td>
-				<td></td>
-				
-				<cfloop array="#rc.locationSmartList.getRecords()#" index="local.location">
-					<td class="locationtotal" data-locationid="#local.location.getLocationID()#"></td>
-				</cfloop>
-				
-				<td></td>
-			</tr>
 		</table>
 
-		<cf_SlatwallActionCaller action="admin:stockAdjustment.detailStockAdjustment" type="link" class="cancel button" queryString="stockAdjustmentId=#rc.stockAdjustment.getStockAdjustmentID()#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+		<cf_SlatwallActionCaller action="admin:stockAdjustment.editStockAdjustment" type="link" class="cancel button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 		<cf_SlatwallActionCaller action="admin:stockAdjustment.saveStockAdjustmentItems" type="submit" class="button">
 	</form>
 </cfoutput>

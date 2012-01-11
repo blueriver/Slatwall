@@ -52,6 +52,14 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
 	
 	
+	// For use with Adjustment Items interface, get one stock that we will use displaying sku info. 
+	public any function getOneStock() {
+		if(!isNull(variables.fromStock)) {
+			return getFromStock();
+		} else {
+			return getToStock();
+		}
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -72,7 +80,7 @@ component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmen
 		}    
 		var index = arrayFind(arguments.stockAdjustment.getStockAdjustmentItems(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getStockAdjustmentItems(), index);    
+			arrayDeleteAt(arguments.stockAdjustment.getStockAdjustmentItems(), index);    
 		}    
 		structDelete(variables, "stockAdjustment");    
 	}
