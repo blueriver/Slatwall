@@ -306,8 +306,10 @@ Notes:
 				</a>
 			</td>
 			<td>
-				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>><cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
-				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="1" class="checkClear" data-checkClear=".quantityorderminimumfield" <cfif not local.definedHere>checked="checked"</cfif>>#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMinimum")# )
+				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMinimum" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMinimum" value="1" class="checkClear" data-checkClear=".quantityorderminimumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
+				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMinimum")# )
 			</td>
 			<td>
 				<cfif local.thisSettingSource.type eq "Global">
@@ -337,7 +339,7 @@ Notes:
 			</td>
 			<td>
 				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMaximum" value="0" <cfif local.definedHere>checked="checked"</cfif>></cfif>
-					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
+				<cf_SlatwallPropertyDisplay object="#rc.productType#" property="quantityOrderMaximum" edit="#rc.edit#" displayType="plain" fieldType="text">
 				<cfif rc.edit><input type="radio" name="inheritQuantityOrderMaximum" value="1" class="checkClear" data-checkClear=".quantityordermaximumfield" <cfif not local.definedHere>checked="checked"</cfif>></cfif>
 				#rc.$.Slatwall.rbKey('setting.inherit')# ( #rc.ProductType.getInheritedSetting("quantityOrderMaximum")# )
 			</td>
