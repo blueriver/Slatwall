@@ -314,7 +314,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// END: Quantity Helper Methods
 	
 	// Generic setting accessor
-	public boolean function getSetting( required string settingName ) {
+	public any function getSetting( required string settingName ) {
 		if(structKeyExists(variables, arguments.settingName)) {
 			return variables[arguments.settingName];
 		}
@@ -323,7 +323,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	// Get the setting inherited
-	public boolean function getInheritedSetting( required string settingName ) {
+	public any function getInheritedSetting( required string settingName ) {
 		return getProduct().getSetting( arguments.settingName );
 	}
 	

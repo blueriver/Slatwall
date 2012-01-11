@@ -79,6 +79,10 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 
+	// Non-Persistent Properties
+	property name="displayTemplateOptions" type="array" persistent="false";
+	property name="parentProductTypeOptions" type="array" persistent="false";
+
 	public ProductType function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.Products)){
@@ -98,7 +102,67 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return getService("ProductService").getProductTypeTree();
 	}
 	
-	public any function getParentProductTypeOptions() {
+	public array function getInheritedAttributeSetAssignments(){
+		// Todo get by all the parent productTypeIDs
+		var attributeSetAssignments = getService("AttributeService").getAttributeSetAssignmentSmartList().getRecords();
+		if(!arrayLen(attributeSetAssignments)){
+			attributeSetAssignments = [];
+		}
+		return attributeSetAssignments;
+	}
+	
+	public void function setProducts(required array Products) {
+		// first, clear existing collection
+		variables.Products = [];
+		for( var product in arguments.Products ) {
+			addProduct(product);
+		}
+	}
+	
+    public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
+	}
+    
+    // START: Setting Methods
+    public any function getSetting(required string settingName) {
+        if(structKeyExists(variables, arguments.settingName)) {
+            return variables[arguments.settingName];
+        }
+		
+		return getInheritedSetting( arguments.settingName );
+    }
+
+    public any function getInheritedSetting( required string settingName ) {
+    	if(!isNull(getParentProductType())) {
+    		return getParentProductType().getSetting( arguments.settingName );
+    	}
+    	
+    	return setting("product_#arguments.settingName#");
+    }
+    
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product Type", name=getProductTypeName(), id=getProductTypeID()};
+    	} else if (!isNull(getParentProductType())) {
+    		return getParentProductType().getWhereSettingDefined( arguments.settingName );
+    	}
+    	
+    	return {type="Global"};
+    }
+    // END: Setting Methods
+    
+    // ============ START: Non-Persistent Property Methods =================
+    
+	public any function getDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "displayTemplateOptions")) {
+			variables.displayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.displayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('displayTemplate')# )"});
+		}
+		
+		return variables.displayTemplateOptions;
+	}
+    
+    public any function getParentProductTypeOptions() {
 		if(!structKeyExists(variables, "parentProductTypeOptions")) {
 			variables.parentProductTypeOptions=[];
 			
@@ -123,57 +187,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		
 		return variables.parentProductTypeOptions;
 	}
-
-	public array function getInheritedAttributeSetAssignments(){
-		// Todo get by all the parent productTypeIDs
-		var attributeSetAssignments = getService("AttributeService").getAttributeSetAssignmentSmartList().getRecords();
-		if(!arrayLen(attributeSetAssignments)){
-			attributeSetAssignments = [];
-		}
-		return attributeSetAssignments;
-	}
-	
-	public void function setProducts(required array Products) {
-		// first, clear existing collection
-		variables.Products = [];
-		for( var product in arguments.Products ) {
-			addProduct(product);
-		}
-	}
-	
-    public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
-		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
-	}
-    
-    // START: Setting Methods
-    public boolean function getSetting(required string settingName) {
-        if(structKeyExists(variables, arguments.settingName)) {
-            return variables[arguments.settingName];
-        }
-		
-		return getInheritedSetting( arguments.settingName );
-    }
-
-    public boolean function getInheritedSetting( required string settingName ) {
-    	if(!isNull(getParentProductType())) {
-    		return getParentProductType().getSetting( arguments.settingName );
-    	}
-    	
-    	return setting("product_#arguments.settingName#");
-    }
-    
-    public any function getWhereSettingDefined( required string settingName ) {
-    	if(structKeyExists(variables,arguments.settingName)) {
-    		return {type="Product Type", name=getProductTypeName(), id=getProductTypeID()};
-    	} else if (!isNull(getParentProductType())) {
-    		return getParentProductType().getWhereSettingDefined( arguments.settingName );
-    	}
-    	
-    	return {type="Global"};
-    }
-    // END: Setting Methods
-    
-    // ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

@@ -56,7 +56,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
-	property name="productDisplayTemplate" ormtype="string";
+	property name="displayTemplate" ormtype="string";
 	property name="quantityHeldBack" ormtype="integer";
 	property name="quantityMinimum" ormtype="integer";
 	property name="quantityMaximum" ormtype="integer";
@@ -95,6 +95,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
 	property name="brandName" type="string" persistent="false";
+	property name="displayTemplateOptions" type="array" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -615,7 +616,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Start: Setting Methods
 	
 	// Generic setting accessor
-	public boolean function getSetting( required string settingName ) {
+	public any function getSetting( required string settingName ) {
 		if(structKeyExists(variables,arguments.settingName)) {
 			return variables[arguments.settingName];
 		}
@@ -624,7 +625,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	// Get the setting inherited
-	public boolean function getInheritedSetting( required string settingName ) {
+	public any function getInheritedSetting( required string settingName ) {
 		if(!isNull(getProductType())) {
 			return getProductType().getSetting(arguments.settingName);
 		}
@@ -648,6 +649,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// END: Setting Methods
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "displayTemplateOptions")) {
+			variables.displayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.displayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('displayTemplate')# )"});
+		}
+		
+		return variables.displayTemplateOptions;
+	}
 	
 	public string function getBrandName() {
 		if(!structKeyExists(variables, "brandName")) {
