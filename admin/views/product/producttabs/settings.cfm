@@ -48,6 +48,7 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey('define.definedin')#</th>
 		</tr>
 		
+		
 		<!--- Start: First two settings can only be set in the product and can't inherit --->
 		<tr>
 			<td class="property varWidth">
