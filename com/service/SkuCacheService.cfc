@@ -106,27 +106,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 	}
 	
-	// NOTE: The commented out code in this method is only for testing and debugging purposes
 	public void function executeSkuCacheUpdates() {
 		if(arrayLen(variables.skusToUpdate)) {
 			lock timeout="60" scope="Application" {
 				if(arrayLen(variables.skusToUpdate)) {
 					variables.updatingSkus = duplicate(variables.skusToUpdate);
 					variables.skusToUpdate = [];
-					//thread action="run" name="updateSkuCache-#createUUID()#" {
-						//try {
+					thread action="run" name="updateSkuCache-#createUUID()#" {
+						try {
 							for(var i=arrayLen(variables.updatingSkus); i>=1; i--) {
 								updateSkuCache(propertyList=variables.updatingSkus[i]["propertyList"], skuID=variables.updatingSkus[i]["skuID"]);
 								getDAO().flushORMSession();
 								logSlatwall("Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#");
 							}
-						//} catch(any e) {
-							//for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {
-								//arrayAppend(variables.skusToUpdate, variables.updatingSkus[a]);	
-							//}
-							//rethrow;
-						//}
-					//}
+						} catch(any e) {
+							for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {
+								arrayAppend(variables.skusToUpdate, variables.updatingSkus[a]);	
+							}
+							rethrow;
+						}
+					}
 				}
 			}
 		}
