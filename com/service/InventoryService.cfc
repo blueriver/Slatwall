@@ -128,11 +128,11 @@ component extends="BaseService" accessors="true" output="false" {
 	}
 	
 	public numeric function getQATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') + arguments.entity.getQuantity('QE') - arguments.entity.getQHB();
+		return arguments.entity.getQuantity('QNC') + arguments.entity.getQuantity('QE') - arguments.entity.getSetting("quantityHeldBack");
 	}
 	
 	public numeric function getQIATS(required any entity) {
-		return arguments.entity.getQuantity('QNC') - arguments.entity.getQHB();
+		return arguments.entity.getQuantity('QNC') - arguments.entity.getSetting("quantityHeldBack");
 	}
 	
 	

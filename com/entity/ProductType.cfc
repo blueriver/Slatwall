@@ -41,13 +41,22 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="productTypeName" ormtype="string";
-    property name="productTypeDescription" ormtype="string" length="2000";
-    property name="trackInventoryFlag" ormtype="boolean";
-    property name="callToOrderFlag" ormtype="boolean";
-    property name="allowShippingFlag" ormtype="boolean";
-    property name="allowPreorderFlag" ormtype="boolean";
-    property name="allowBackorderFlag" ormtype="boolean";
-    property name="allowDropshipFlag" ormtype="boolean";
+	property name="productTypeDescription" ormtype="string" length="2000";
+	
+	// Persistent Properties - Inheritence Settings
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowBackorderFlag" ormtype="boolean";
+	property name="allowDropshipFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="displayTemplate" ormtype="string";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="quantityMinimum" ormtype="integer";
+	property name="quantityMaximum" ormtype="integer";
+	property name="quantityOrderMinimum" ormtype="integer";
+	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
+	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -61,15 +70,15 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties (Many-To-One)
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
 	
-	// Related Object Properties (Many-To-One)
-	property name="subProductTypes" cfc="ProductType" singularname="SubProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
-	property name="products" singularname="Product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
-	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all" ;
+	// Related Object Properties (One-To-Many)
+	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
+	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" inverse="true" fkcolumn="productTypeID" lazy="extra" cascade="all";
+	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductTypeAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productTypeID" cascade="all-delete-orphan";
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
-	
+
 	public ProductType function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.Products)){
@@ -115,26 +124,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return variables.parentProductTypeOptions;
 	}
 
-	private array function getSettingOptions(required string settingName) {
-		var settingOptions = [
-		  {id="1", name=rbKey("sitemanager.yes")},
-		  {id="0", name=rbKey("sitemanager.no")}
-		];
-		return settingOptions;
-	}
-	
 	public array function getInheritedAttributeSetAssignments(){
-		//Todo get by all the parent productTypeIDs
+		// Todo get by all the parent productTypeIDs
 		var attributeSetAssignments = getService("AttributeService").getAttributeSetAssignmentSmartList().getRecords();
 		if(!arrayLen(attributeSetAssignments)){
 			attributeSetAssignments = [];
 		}
 		return attributeSetAssignments;
 	}
-	
-    /******* Association management methods for bidirectional relationships **************/
-	
-	// Products (one-to-many)
 	
 	public void function setProducts(required array Products) {
 		// first, clear existing collection
@@ -144,83 +141,85 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 	}
 	
-	public void function addProduct(required Product Product) {
-	   arguments.Product.setProductType(this);
-	}
-	
-	public void function removeProduct(required Product Product) {
-	   arguments.Product.removeProductType(this);
-	}
-	
-	// attributeValues (one-to-many))
-	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
-	   arguments.attributeSetAssignment.setProductType(this);
-	}
-	
-	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
-		arguments.attributeSetAssignment.removeProductType(this);
-		
-		//Todo: not sure why the remove method is not deleting the child entity.  This line makes sure that the record is actually deleted.
-		getService("AttributeService").delete(attributeSetAssignment);
-	}
-	
-	// promotionRewards (many-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.addProductType(this);
-	}
-	
-	public void function removePromotionReward(required any promotionReward) {
-	   arguments.promotionReward.removeProductType(this);
-	}
-	
-    /************   END Association Management Methods   *******************/
-    
-    public void function removeParentProductType() {
-    	if(structKeyExists(variables,"parentProductType")) {
-    		structDelete(variables,"parentProductType");
-    	}
-    }
-    
-    public boolean function getSetting(required string settingName) {
-        if(structKeyExists(variables,arguments.settingName)) {
-            return variables[arguments.settingName];
-        } else {
-            return getInheritedSetting( arguments.settingName );
-        }
-    }
-
-    public boolean function getInheritedSetting( required string settingName ) {
-    	if( this.hasParentProductType() ) {
-	        var settingValue = getService("ProductService").getProductTypeSetting( getParentProductType().getProductTypeID(),arguments.settingName );
-	    } else {
-	    	var settingValue = "";
-	    }
-        if(len(settingValue) > 0) {
-            return settingValue;
-        } else {
-        	// if setting hasn't been defined at the product type level, return the global setting
-            return setting("product_#arguments.settingName#");
-        }
-    }
-    
-    public any function getWhereSettingDefined( required string settingName ) {
-    	if(structKeyExists(variables,arguments.settingName)) {
-    		return {type="Product Type", name=getProductTypeName(),id=getProductTypeID()};
-    	} else {
-    		return getService("ProductService").getWhereSettingDefined( getProductTypeID(),arguments.settingName );
-    	}
-    }
-    
     public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
 		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
     
+    // START: Setting Methods
+    public boolean function getSetting(required string settingName) {
+        if(structKeyExists(variables, arguments.settingName)) {
+            return variables[arguments.settingName];
+        }
+		
+		return getInheritedSetting( arguments.settingName );
+    }
+
+    public boolean function getInheritedSetting( required string settingName ) {
+    	if(!isNull(getParentProductType())) {
+    		return getParentProductType().getSetting( arguments.settingName );
+    	}
+    	
+    	return setting("product_#arguments.settingName#");
+    }
+    
+    public any function getWhereSettingDefined( required string settingName ) {
+    	if(structKeyExists(variables,arguments.settingName)) {
+    		return {type="Product Type", name=getProductTypeName(), id=getProductTypeID()};
+    	} else if (!isNull(getParentProductType())) {
+    		return getParentProductType().getWhereSettingDefined( arguments.settingName );
+    	}
+    	
+    	return {type="Global"};
+    }
+    // END: Setting Methods
     
     // ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Parent Product Type (many-to-one)
+	public void function setParentProductType(required any parentProductType) {
+		variables.parentProductType = arguments.parentProductType;
+		if(isNew() or !arguments.parentProductType.hasChildProductType( this )) {
+			arrayAppend(arguments.parentProductType.getChildProductTypes(), this);
+		}
+	}
+	public void function removeParentProductType(any parentProductType) {
+		if(!structKeyExists(arguments, "parentProductType")) {
+			arguments.parentProductType = variables.parentProductType;
+		}
+		var index = arrayFind(arguments.parentProductType.getChildProductTypes(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getChildProductTypes(), index);
+		}
+		structDelete(variables, "parentProductType");
+	}
+	
+	// Child Product Types (one-to-many)
+	public void function addchildProductType(required any ChildProductType) {
+		arguments.ChildProductType.setParentProductType( this );
+	}
+	public void function removechildProductType(required any ChildProductType) {
+		arguments.ChildProductType.removeParentProductType( this );
+	}
+	
+	// Products (one-to-many)
+	public void function addProduct(required any product) {
+		arguments.product.setProductType( this );
+	}
+	public void function removeProduct(required any product) {
+		arguments.product.removeProductType( this );
+	}
+	
+	// Attribute Set Assignments (one-to-many)
+	public void function addAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.setProductType( this );
+	}
+	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
+		arguments.attributeSetAssignment.removeProductType( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

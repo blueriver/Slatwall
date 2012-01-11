@@ -193,6 +193,16 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
+	public numeric function calculateSkuSalePrice(required any sku) {
+		// TODO: Impliment me!
+		return arguments.sku.getPrice();
+	}
+	
+	public date function calculateSkuSalePriceExpirationDateTime(required any sku) {
+		// TODO: Impliment me!
+		return now()+30;
+	}
+	
 	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
 		var discountAmount = 0;
 		

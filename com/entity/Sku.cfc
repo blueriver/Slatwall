@@ -43,8 +43,21 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuCode" ormtype="string" unique="true" length="50";
 	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="price" ormtype="big_decimal" formatType="currency" default="0";
-	property name="shippingWeight" ormtype="big_decimal" formatType="weight" dbdefault="0" default="0" hint="This Weight is used to calculate shipping charges";
 	property name="imageFile" ormtype="string" length="50";
+	
+	// Persistent Properties - Inheritence Settings
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowBackorderFlag" ormtype="boolean";
+	property name="allowDropshipFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="quantityMinimum" ormtype="integer";
+	property name="quantityMaximum" ormtype="integer";
+	property name="quantityOrderMinimum" ormtype="integer";
+	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="big_decimal" formatType="weight";
+	property name="trackInventoryFlag" ormtype="boolean";
 
 	// Related Object Properties (One-To-One)
 	property name="skuCache" fieldType="one-to-one" cfc="SkuCache";
@@ -71,18 +84,10 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="livePrice" formatType="currency" persistent="false" hint="this property should calculate after term sale";
-	property name="salePrice" formatType="currency" persistent="false";
-	
-	// Non-Persistent Quantity Properties For Settings (Because these can be defined in multiple locations it is delectaed to the Service)
-	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
-	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
-	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
-	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
-	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
-	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
-	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
-	
+	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
+	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="salePrice" type="numeric" formatType="currency" persistent="false";
+	property name="salePriceExpirationDateTime" type="date" persistent="false";
 	
 	public Sku function init() {
        // set default collections for association management methods
@@ -92,7 +97,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
  	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
 	   }
-      
+
        return super.init();
     }
     
@@ -103,6 +108,57 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	return false;
     }
     
+    // @hint this method validates that this skus has a unique option combination that no other sku has
+	public any function hasUniqueOptions() {
+		var optionsList = "";
+		
+		for(var i=1; i<=arrayLen(getOptions()); i++){
+			optionsList = listAppend(optionsList, getOptions()[i].getOptionID());
+		}
+		
+		var skus = getProduct().getSkusBySelectedOptions(selectedOptions=optionsList);
+		if(!arrayLen(skus) || (arrayLen(skus) == 1 && skus[1].getSkuID() == getSkuID() )) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// @hint this method validates that this skus has a unique option combination that no other sku has
+	public any function hasOneOptionPerOptionGroup() {
+		var optionGroupList = "";
+		
+		for(var i=1; i<=arrayLen(getOptions()); i++){
+			if(listFind(optionGroupList, getOptions()[i].getOptionGroup().getOptionGroupID())) {
+				return false;
+			} else {
+				optionGroupList = listAppend(optionGroupList, getOptions()[i].getOptionGroup().getOptionGroupID());	
+			}
+		}
+		
+		return true;
+	}
+	
+	//@hint Generates the image path based upon product code, and image options for this sku
+	public string function generateImageFileName() {
+		var optionString = "";
+		for(var option in getOptions()){
+			if(option.getOptionGroup().getImageGroupFlag()){
+				optionString &= "-#option.getOptionCode()#";
+			}
+		}
+		return "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
+	}
+	
+	//@hint this method generated sku code based on assigned options
+	public any function generateSkuCode () {
+		var newSkuCode = getProduct().getProductCode();
+		for(var option in getOptions() ) {
+			newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
+		}
+		return newSkuCode;
+	}
+    
     public string function displayOptions(delimiter=" ") {
     	var options = getOptions(sorted=true);
     	var dspOptions = "";
@@ -112,6 +168,8 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     	}
 		return dspOptions;
     }
+    
+    // Start: Option Helper Methods
     
     // override generated setter to get options sorted by optiongroup sortorder
     public array function getOptions(boolean sorted = false) {
@@ -131,66 +189,29 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	    	return variables.sortedOptions;
 	    }
     }
-
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Product (many-to-one)
-	
-	public void function setProduct(required any Product) {
-	   variables.product = arguments.product;
-	   if(isNew() or !arguments.product.hasSku(this)) {
-	       arrayAppend(arguments.product.getSkus(),this);
-	   }
+    
+    public any function getOptionsByGroupIDStruct() {
+		if(!structKeyExists(variables, "OptionsByGroupIDStruct")) {
+			variables.OptionsByGroupIDStruct = structNew();
+			var options = getOptions();
+			for(var i=1; i<=arrayLen(options); i++) {
+				if( !structKeyExists(variables.OptionsByGroupIDStruct, options[i].getOptionGroup().getOptionGroupID())){
+					variables.OptionsByGroupIDStruct[options[i].getOptionGroup().getOptionGroupID()] = options[i];
+				}
+			}
+		}
+		return variables.OptionsByGroupIDStruct;
 	}
 	
-	public void function removeProduct(any Product) {
-	   if(!structKeyExists(arguments,"Product")) {
-	   		arguments.Product = variables.product;
-	   }
-       var index = arrayFind(arguments.Product.getSkus(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.Product.getSkus(),index);
-       }    
-       structDelete(variables,"Product");
-    }
-    
-    // Option (many-to-many)
-    public void function addOption(required any Option) {
-        if(!hasOption(arguments.option)) {
-        	// first add option to this Sku
-        	arrayAppend(this.getOptions(),arguments.option);
-        	// add this Sku to the option
-        	arrayAppend(arguments.Option.getSkus(),this);
-        }	
-    }
-    
-    public void function removeOption(required any Option) {
-       // first remove the option from this Sku
-       if(hasOption(arguments.option)) {
-	       var index = arrayFind(this.getOptions(),arguments.option);
-	       if(index>0) {
-	           arrayDeleteAt(this.getOptions(),index);
-	       }
-	      // then remove this Sku from the Option
-	       var index = arrayFind(arguments.Option.getSkus(),this);
-	       if(index > 0) {
-	           arrayDeleteAt(arguments.Option.getSkus(),index);
-	       }
-	   }
-    }
-    
-	// promotionRewards (many-to-many)
-	public void function addPromotionReward(required any promotionReward) {
-	   arguments.promotionReward.addSku(this);
+	public any function getOptionByOptionGroupID(required string optionGroupID) {
+		var optionsStruct = getOptionsByGroupIDStruct();
+		return optionsStruct[arguments.optionGroupID];
 	}
-	
-	public void function removePromotionReward(required any promotionReward) {
-	   arguments.promotionReward.removeSku(this);
-	}
-	
-    /************   END Association Management Methods   *******************/
     
-    public string function getImageDirectory() {
+    // END: Option Helper Methods
+    
+    // START: Image Methods
+	public string function getImageDirectory() {
     	return "#$.siteConfig().getAssetPath()#/assets/Image/Slatwall/product/default/";	
     }
     
@@ -254,47 +275,12 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 	}
 	
-	public any function getOptionsByGroupIDStruct() {
-		if(!structKeyExists(variables, "OptionsByGroupIDStruct")) {
-			variables.OptionsByGroupIDStruct = structNew();
-			var options = getOptions();
-			for(var i=1; i<=arrayLen(options); i++) {
-				if( !structKeyExists(variables.OptionsByGroupIDStruct, options[i].getOptionGroup().getOptionGroupID())){
-					variables.OptionsByGroupIDStruct[options[i].getOptionGroup().getOptionGroupID()] = options[i];
-				}
-			}
-		}
-		return variables.OptionsByGroupIDStruct;
-	}
+	// END: Image Methods
 	
-	public any function getOptionByOptionGroupID(required string optionGroupID) {
-		var optionsStruct = getOptionsByGroupIDStruct();
-		return optionsStruct[arguments.optionGroupID];
-	}
-	
-	// This will give the price based on User logged in, current term sales, volume discounts, ect.
-	public numeric function getLivePrice() {
-		var prices = [getPrice()];
-		
-		arrayAppend(prices, getBestPriceByLivePromotions());
-		arrayAppend(prices, getPriceByCurrentAccount());
-		
-		arraySort(prices, "numeric", "asc");
-		
-		return prices[1];
-	}
-	
-	public numeric function getBestPriceByLivePromotions() {
-		//return getService("promotionService").calculateBestSkuPriceBasedOnLivePromotions(sku=this);
-		return getPrice();
-	}
+	// START: Price Methods
 	
 	public numeric function getPriceByPromotion( required any promotion) {
 		return getService("promotionService").calculateSkuPriceBasedOnPromotion(sku=this, promotion=arguments.promotion);
-	}
-	
-	public numeric function getPriceByCurrentAccount() {
-		return getService("priceGroupService").calculateSkuPriceBasedOnCurrentAccount(sku=this);
 	}
 	
 	public numeric function getPriceByPriceGroup( required any priceGroup) {
@@ -305,56 +291,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return getService("priceGroupService").getRateForSkuBasedOnPriceGroup(sku=this, priceGroup=arguments.priceGroup);
 	}
 	
-	// @hint this method validates that this skus has a unique option combination that no other sku has
-	public any function hasUniqueOptions() {
-		var optionsList = "";
-		
-		for(var i=1; i<=arrayLen(getOptions()); i++){
-			optionsList = listAppend(optionsList, getOptions()[i].getOptionID());
-		}
-		
-		var skus = getProduct().getSkusBySelectedOptions(selectedOptions=optionsList);
-		if(!arrayLen(skus) || (arrayLen(skus) == 1 && skus[1].getSkuID() == getSkuID() )) {
-			return true;
-		}
-		
-		return false;
-	}
+	// END: Price Methods
 	
-	// @hint this method validates that this skus has a unique option combination that no other sku has
-	public any function hasOneOptionPerOptionGroup() {
-		var optionGroupList = "";
-		
-		for(var i=1; i<=arrayLen(getOptions()); i++){
-			if(listFind(optionGroupList, getOptions()[i].getOptionGroup().getOptionGroupID())) {
-				return false;
-			} else {
-				optionGroupList = listAppend(optionGroupList, getOptions()[i].getOptionGroup().getOptionGroupID());	
-			}
-		}
-		
-		return true;
-	}
-	
-	//@hint Generates the image path based upon product code, and image options for this sku
-	public string function generateImageFileName() {
-		var optionString = "";
-		for(var option in getOptions()){
-			if(option.getOptionGroup().getImageGroupFlag()){
-				optionString &= "-#option.getOptionCode()#";
-			}
-		}
-		return "#getProduct().getProductCode()##optionString#.#setting('product_imageextension')#";
-	}
-	
-	//@hint this method generated sku code based on assigned options
-	public any function generateSkuCode () {
-		var newSkuCode = getProduct().getProductCode();
-		for(var option in getOptions() ) {
-			newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
-		}
-		return newSkuCode;
-	}
+	// Start: Quantity Helper Methods
 	
 	public numeric function getQuantity(required string quantityType, string locationID) {
 		if(structKeyExists(arguments, "locationID")) {
@@ -371,35 +310,103 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		return variables[quantityType];
 	}
+	
+	// END: Quantity Helper Methods
+	
+	// Generic setting accessor
+	public boolean function getSetting( required string settingName ) {
+		if(structKeyExists(variables, arguments.settingName)) {
+			return variables[arguments.settingName];
+		}
+		
+		return getInheritedSetting( arguments.settingName );
+	}
+	
+	// Get the setting inherited
+	public boolean function getInheritedSetting( required string settingName ) {
+		return getProduct().getSetting( arguments.settingName );
+	}
+	
+	// Get source of setting
+	public any function getWhereSettingDefined( required string settingName ) {
+		if(structKeyExists(variables, arguments.settingName)) {
+			return {type="Sku"};
+		}
+		return getProduct().getWhereSettingDefined( arguments.settingName );
+	}
+	
+	// END: Setting Methods
     
 	// ============ START: Non-Persistent Property Methods =================
 	
-	// TODO: These methods are just here so that the calculation stuff will work.  The actuall settings need to be setup
-	public numeric function getQMIN() {
-		return 0;
+	public any function getCurrentAccountPrice() {
+		if(!structKeyExists(variables, "currentAccountPrice")) {
+			variables.currentAccountPrice = getService("priceGroupService").calculateSkuPriceBasedOnCurrentAccount(sku=this);
+		}
+		return variables.currentAccountPrice;
 	}
-	public numeric function getQMAX() {
-		return 0;
+	
+	public any function getLivePrice() {
+		if(!structKeyExists(variables, "livePrice")) {
+			// Create a prices array, and add the 
+			var prices = [getPrice()];
+			
+			// Add the current account price, and sale price
+			arrayAppend(prices, getSalePrice());
+			arrayAppend(prices, getCurrentAccountPrice());
+			
+			// Sort by best price
+			arraySort(prices, "numeric", "asc");
+			
+			// set that in the variables scope
+			variables.livePrice = prices[1];
+		}
+		return variables.livePrice;
 	}
-	public numeric function getQHB() {
-		return 0;
+	
+	public any function getSalePrice() {
+		if(!structKeyExists(variables, "salePrice")) {
+			variables.salePrice = getService("promotionService").calculateSkuSalePrice(sku=this);
+		}
+		return variables.salePrice;
 	}
-	public numeric function getQOMIN() {
-		return 0;
-	}
-	public numeric function getQOMAX() {
-		return 0;
-	}
-	public numeric function getQVOMIN() {
-		return 0;
-	}
-	public numeric function getQVOMAX() {
-		return 0;
+	
+	public any function getSalePriceExpirationDateTime() {
+		if(!structKeyExists(variables, "salePrice")) {
+			variables.salePrice = getService("promotionService").calculateSkuSalePriceExpirationDateTime(sku=this);
+		}
+		return variables.salePrice;
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Product (many-to-one)
+	public void function setProduct(required any product) {
+		variables.product = arguments.product;
+		if(isNew() or !arguments.product.hasSku( this )) {
+			arrayAppend(arguments.product.getSkus(), this);
+		}
+	}
+	public void function removeProduct(any product) {
+		if(!structKeyExists(arguments, "product")) {
+			arguments.product = variables.product;
+		}
+		var index = arrayFind(arguments.product.getSkus(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getSkus(), index);
+		}
+		structDelete(variables, "product");
+	}
+	
+	// Stocks (one-to-many)
+	public void function addStock(required any stock) {
+		arguments.stock.setSku( this );
+	}
+	public void function removeStock(required any stock) {
+		arguments.stock.removeSku( this );
+	}
 	
 	// Alternate Sku Codes (one-to-many)
 	public void function addAlternateSkuCode(required any alternateSkuCode) {

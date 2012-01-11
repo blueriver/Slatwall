@@ -59,7 +59,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	variables.skusToUpdate = [];
 	variables.updatingSkus = [];
 	variables.nextExpirationDateTime = now();
-
+	
 	public void function updateFromOrderDeliveryItem(required any orderDeliveryItem) {
 		arrayAppend(variables.skusToUpdate, {propertyList="qoh,qndoo", skuID=arguments.orderDeliveryItem.getStock().getSku().getSkuID()});
 	}
@@ -106,26 +106,27 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 	}
 	
+	// NOTE: The commented out code in this method is only for testing and debugging purposes
 	public void function executeSkuCacheUpdates() {
 		if(arrayLen(variables.skusToUpdate)) {
-			lock timeout="2" scope="Application" {
+			lock timeout="60" scope="Application" {
 				if(arrayLen(variables.skusToUpdate)) {
 					variables.updatingSkus = duplicate(variables.skusToUpdate);
 					variables.skusToUpdate = [];
-					thread action="run" name="updateSkuCache-#createUUID()#" {
-						try {
+					//thread action="run" name="updateSkuCache-#createUUID()#" {
+						//try {
 							for(var i=arrayLen(variables.updatingSkus); i>=1; i--) {
 								updateSkuCache(propertyList=variables.updatingSkus[i]["propertyList"], skuID=variables.updatingSkus[i]["skuID"]);
 								getDAO().flushORMSession();
 								logSlatwall("Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#");
 							}
-						} catch(any e) {
-							for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {
-								arrayAppend(variables.skusToUpdate, variables.updatingSkus[a]);	
-							}
-							rethrow;
-						}
-					}
+						//} catch(any e) {
+							//for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {
+								//arrayAppend(variables.skusToUpdate, variables.updatingSkus[a]);	
+							//}
+							//rethrow;
+						//}
+					//}
 				}
 			}
 		}
@@ -137,70 +138,73 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var skuCache = this.getSkuCache(arguments.skuID, true);
 		var sku = getSkuService().getSku(arguments.skuID, true);
 		
-		if(listFindNoCase(arguments.propertyList, "qoh") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "salePrice") || skuCache.isNew()) {
+			skuCache.setSalePrice( sku.getSalePrice() );
+		}
+		if(listFindNoCase(arguments.propertyList, "salePriceExpirationDateTime") || skuCache.isNew()) {
+			skuCache.setSalePriceExpirationDateTime( sku.getSalePriceExpirationDateTime() );
+		}
+		if(listFindNoCase(arguments.propertyList, "qoh") || skuCache.isNew()) {
 			skuCache.setQOH( sku.getQuantity("QOH") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qosh") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qosh") || skuCache.isNew()) {
 			skuCache.setQOSH( sku.getQuantity("QOSH") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qndoo") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qndoo") || skuCache.isNew()) {
 			skuCache.setQNDOO( sku.getQuantity("QNDOO") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qndorvo") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qndorvo") || skuCache.isNew()) {
 			skuCache.setQNDORVO( sku.getQuantity("QNDORVO") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qndosa") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qndosa") || skuCache.isNew()) {
 			skuCache.setQNDOSA( sku.getQuantity("QNDOSA") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qnroro") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qnroro") || skuCache.isNew()) {
 			skuCache.setQNRORO( sku.getQuantity("QNRORO") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qnrovo") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qnrovo") || skuCache.isNew()) {
 			skuCache.setQNROVO( sku.getQuantity("QNROVO") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qnrosa") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "qnrosa") || skuCache.isNew()) {
 			skuCache.setQNROSA( sku.getQuantity("QNROSA") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qmin") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQMIN( sku.getQMIN() );
+		if(listFindNoCase(arguments.propertyList, "allowShippingFlag") || skuCache.isNew()) {
+			skuCache.setAllowShippingFlag( sku.getSetting("allowShippingFlag") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qmax") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQMAX( sku.getQMAX() );
+		if(listFindNoCase(arguments.propertyList, "allowPreorderFlag") || skuCache.isNew()) {
+			skuCache.setAllowPreorderFlag( sku.getSetting("allowPreorderFlag") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qhb") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQHB( sku.getQHB() );
+		if(listFindNoCase(arguments.propertyList, "allowBackorderFlag") || skuCache.isNew()) {
+			skuCache.setAllowBackorderFlag( sku.getSetting("allowBackorderFlag") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qomin") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQOMIN( sku.getQOMIN() );
+		if(listFindNoCase(arguments.propertyList, "allowDropshipFlag") || skuCache.isNew()) {
+			skuCache.setAllowDropshipFlag( sku.getSetting("allowDropshipFlag") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qomax") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQOMAX( sku.getQOMAX() );
+		if(listFindNoCase(arguments.propertyList, "callToOrderFlag") || skuCache.isNew()) {
+			skuCache.setCallToOrderFlag( sku.getSetting("callToOrderFlag") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qvomin") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQVOMIN( sku.getQVOMIN() );
+		if(listFindNoCase(arguments.propertyList, "quantityHeldBack") || skuCache.isNew()) {
+			skuCache.setQuantityHeldBack( sku.getSetting("quantityHeldBack") );
 		}
-		if(listFindNoCase(arguments.propertyList, "qvomax") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setQVOMAX( sku.getQVOMAX() );
+		if(listFindNoCase(arguments.propertyList, "quantityMinimum") || skuCache.isNew()) {
+			skuCache.setQuantityMinimum( sku.getSetting("quantityMinimum") );
 		}
-		if(listFindNoCase(arguments.propertyList, "allowShippingFlag") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setAllowShippingFlag( sku.getProduct().getSetting("allowShippingFlag") );
+		if(listFindNoCase(arguments.propertyList, "quantityMaximum") || skuCache.isNew()) {
+			skuCache.setQuantityMaximum( sku.getSetting("quantityMaximum") );
 		}
-		if(listFindNoCase(arguments.propertyList, "allowPreorderFlag") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setAllowPreorderFlag( sku.getProduct().getSetting("allowPreorderFlag") );
+		if(listFindNoCase(arguments.propertyList, "quantityOrderMinimum") || skuCache.isNew()) {
+			skuCache.setQuantityOrderMinimum( sku.getSetting("quantityOrderMinimum") );
 		}
-		if(listFindNoCase(arguments.propertyList, "allowBackorderFlag") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setAllowBackorderFlag( sku.getProduct().getSetting("allowBackorderFlag") );
+		if(listFindNoCase(arguments.propertyList, "quantityOrderMaximum") || skuCache.isNew()) {
+			skuCache.setQuantityOrderMaximum( sku.getSetting("quantityOrderMaximum") );
 		}
-		if(listFindNoCase(arguments.propertyList, "allowDropshipFlag") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setAllowDropshipFlag( sku.getProduct().getSetting("allowDropshipFlag") );
+		if(listFindNoCase(arguments.propertyList, "shippingWeight") || skuCache.isNew()) {
+			skuCache.setShippingWeight( sku.getSetting("shippingWeight") );
 		}
-		if(listFindNoCase(arguments.propertyList, "callToOrderFlag") || arguments.propertyList == "all" || skuCache.isNew()) {
-			skuCache.setCallToOrderFlag( sku.getProduct().getSetting("callToOrderFlag") );
-		}
-		if(listFindNoCase(arguments.propertyList, "trackInventoryFlag") || arguments.propertyList == "all" || skuCache.isNew()) {
+		if(listFindNoCase(arguments.propertyList, "trackInventoryFlag") || skuCache.isNew()) {
 			skuCache.setTrackInventoryFlag( sku.getProduct().getSetting("trackInventoryFlag") );
 		}
-
+		
 		// Sku goes last otherwise the isNew() methods above wouldn't work on truly new skus
 		if(skuCache.isNew()) {
 			skuCache.setSku( sku );

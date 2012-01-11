@@ -73,20 +73,6 @@ Notes:
 						<th class="varWidth">#rc.$.Slatwall.rbKey('setting')#</th>
 						<th>#rc.$.Slatwall.rbKey('setting.value')#</th>	
 					</tr>
-					<tr class="spdproduct_defaulttemplate">
-						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.product.defaultProductTemplate')#</td>
-						<cfif rc.edit>
-							<td id="spdproduct_defaulttemplate" class="value">
-								<select name="product_defaulttemplate">
-									<cfloop query="rc.productTemplateOptions">
-										<option value="#rc.productTemplateOptions.filename#" <cfif rc.allSettings.product_defaultTemplate.getSettingValue() eq rc.productTemplateOptions.filename>selected="selected"</cfif>>#rc.productTemplateOptions.menutitle#</option>
-									</cfloop>
-								</select>
-							</td>
-						<cfelse>
-							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_defaultTemplate.getSettingValue()#</td>	
-						</cfif>
-					</tr>
 					<tr class="spdproduct_rootProductCategory">
 						<td class="title varWidth">#rc.$.slatwall.rbKey('setting.product.rootProductCategory')#</td>
 						<cfif rc.edit>
@@ -112,12 +98,32 @@ Notes:
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imagewidthlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imagewidthlarge')#" fieldName="product_imagewidthlarge">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_imageheightlarge#" title="#rc.$.Slatwall.rbKey('setting.product.imageheightlarge')#" fieldName="product_imageheightlarge">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_titleString#" title="#rc.$.Slatwall.rbKey('setting.product.titleString')#" fieldName="product_titleString">
-					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" fieldName="product_trackInventoryFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" fieldName="product_callToOrderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" fieldName="product_allowShippingFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" fieldName="product_allowShippingFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" fieldName="product_allowPreorderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowBackorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowBackorderFlag')#" fieldName="product_allowBackorderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowDropshipFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowDropshipFlag')#" fieldName="product_allowDropshipFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" fieldName="product_callToOrderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
+					<tr class="spdproduct_displaytemplate">
+						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.product.displayTemplate')#</td>
+						<cfif rc.edit>
+							<td id="spdproduct_displayttemplate" class="value">
+								<select name="product_displayTemplate">
+									<cfloop query="rc.productTemplateOptions">
+										<option value="#rc.productTemplateOptions.filename#" <cfif rc.allSettings.product_displayTemplate.getSettingValue() eq rc.productTemplateOptions.filename>selected="selected"</cfif>>#rc.productTemplateOptions.menutitle#</option>
+									</cfloop>
+								</select>
+							</td>
+						<cfelse>
+							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_defaultTemplate.getSettingValue()#</td>	
+						</cfif>
+					</tr>
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityHeldBack#" title="#rc.$.Slatwall.rbKey('setting.product.quantityHeldBack')#" fieldName="product_quantityHeldBack">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityMinimum#" title="#rc.$.Slatwall.rbKey('setting.product.quantityMinimum')#" fieldName="product_quantityMinimum">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityMaximum#" title="#rc.$.Slatwall.rbKey('setting.product.quantityMaximum')#" fieldName="product_quantityMaximum">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityOrderMinimum#" title="#rc.$.Slatwall.rbKey('setting.product.quantityOrderMinimum')#" fieldName="product_quantityOrderMinimum">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityOrderMaximum#" title="#rc.$.Slatwall.rbKey('setting.product.quantityOrderMaximum')#" fieldName="product_quantityOrderMaximum">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_shippingWeight#" title="#rc.$.Slatwall.rbKey('setting.product.shippingWeight')#" fieldName="product_shippingWeight">
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" fieldName="product_trackInventoryFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 				</table>
 			</div>
 			<div id="tabOrder">
