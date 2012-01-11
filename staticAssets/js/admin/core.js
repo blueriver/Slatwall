@@ -50,6 +50,10 @@ jQuery(document).ready(function(){
 		jQuery(this).val(newList);	
 	}
 	
+	jQuery('.checkClear').click(function(e){
+		jQuery(jQuery(this).data('checkclear')).val('');
+	});
+	
 });
 
 

@@ -707,16 +707,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.livePrice;
 	}
 
-	public numeric function getShippingWeight() {
-		if(!structKeyExists(variables, "shippingWeight")) {
-			variables.shippingWeight = 0;
-			if( structKeyExists(variables, "shippingWeight") ) {
-				variables.shippingWeight = getDefaultSku().getShippingWeight();
-			}
-		}
-		return variables.shippingWeight;
-	}
-	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
