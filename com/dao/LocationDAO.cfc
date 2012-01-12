@@ -37,4 +37,38 @@ Notes:
 
 */
 component extends="BaseDAO" {
+
+	public boolean function isLocationBeingUsed(required any location) {
+		// Check for stock using this location
+		var params = [arguments.location.getLocationID()];
+		var hql = " SELECT s
+					FROM SlatwallStock s
+					INNER JOIN s.location l
+					WHERE l.locationID = ?    ";
+	
+		return ArrayLen(ormExecuteQuery(hql, params, false, {maxResults=1})) > 0;
+	}
+	
+	public boolean function getLocationCount() {
+		// Check for stock using this location
+		/*var params = [arguments.location.getLocationID()];
+		var hql = " SELECT count(s)
+					FROM SlatwallStock s
+					INNER JOIN s.location l
+					WHERE l.locationID = ?    ";
+	
+		return ArrayLen(ormExecuteQuery(hql, params, false, {maxResults=1}) > 0);
+		*/
+
+		var hql = " SELECT new map(count(l) as thecount)
+					FROM SlatwallLocation l     ";
+	
+		var result = ormExecuteQuery(hql);
+
+		if(!structKeyExists(result[1], "thecount")) {
+			return 0;
+		} else {
+			return result[1]["thecount"];
+		}
+	}
 }

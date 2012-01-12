@@ -60,7 +60,7 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public boolean function isDeletable() {
-		return getLocationName() != "Default";
+		return !(getService("LocationService").isLocationBeingUsed(this) || getService("LocationService").getLocationCount() == 1);
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

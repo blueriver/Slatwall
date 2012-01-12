@@ -39,8 +39,10 @@ Notes:
 
 <!--- Generic properties for all StockReceivers --->
 <cfparam name="rc.stockReceiver">
+<cfparam name="rc.backQueryString">
 <cfparam name="rc.backAction">
 <cfparam name="rc.locationSmartList">
+
 
 <cfoutput>
 	<ul id="navTask">
@@ -49,7 +51,9 @@ Notes:
 	
 	<!--- For now, there is no basic order info, but in future, we might want to make this section dynamic like the bellow table, based on the type provided --->
 
-	<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
+	<cfif rc.edit>
+		<form name="detailStockReceiver" id="detailStockReceiver" action="#BuildURL(rc.action)#" method="post">
+	</cfif>
 
 		<div class="clear">
 			<!--- These are common fields to all StockReceivers --->
@@ -57,20 +61,31 @@ Notes:
 				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.boxCount")#" object="#rc.StockReceiver#" property="boxCount" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay title="#$.Slatwall.rbKey("entity.stockReceiver.packingSlipNumber")#" object="#rc.StockReceiver#" property="packingSlipNumber" edit="#rc.edit#">
 				
-				<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
-				<dd class="value">
-					<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
-				</dd>
-				
+				<cfif rc.edit>
+					<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.receiveForLocation")#</strong></label></dt> 
+					<dd class="value">
+						<cf_SlatwallFormField fieldType="select" fieldName="receiveForLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="receiveForLocationID">
+					</dd>
+				</cfif>
 			</dl>
 	
-			<!--- The receiver table bellow is chosen dynamically based on the type of stock receiver --->
-			#view("stockreceiver/receivertypes/#rc.stockReceiver.getReceiverType()#")# 
+			<cfif rc.edit>
+				<!--- The receiver table bellow is chosen dynamically based on the type of stock receiver --->
+				#view("stockreceiver/receivertypes/#rc.stockReceiver.getReceiverType()#")# 
+			<cfelse>
+				#view("stockreceiver/viewstockreceiver")# 
+			</cfif>
+			
 			
 			<!---<cf_SlatwallActionCaller action="" type="link" class="cancel button" queryString="#rc.backQueryString#" text="#rc.$.Slatwall.rbKey('admin.nav.back')#">--->
 			
-			<cf_SlatwallActionCaller action="#rc.backAction#" type="link" class="cancel button" queryString="vendorOrderId=#rc.vendorOrder.getVendorOrderID()#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="#rc.action#" type="submit" class="button">
+			<cf_SlatwallActionCaller action="#rc.backAction#" type="link" class="cancel button" queryString="#rc.backQueryString#" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
+			
+			<cfif rc.edit>
+				<cf_SlatwallActionCaller action="#rc.action#" type="submit" class="button">
+			</cfif>
 		</div>
-	</form>
+	<cfif rc.edit>
+		</form>
+	</cfif>
 </cfoutput>

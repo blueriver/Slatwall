@@ -132,6 +132,8 @@ Notes:
 	<div class="clear">
 		
 		<form name="orderReturnEdit" id="orderReturnEdit" action="#buildURL(action='admin:order.saveorderreturn')#" method="post">
+			<input type="hidden" name="orderID" value="#rc.order.getOrderID()#" />
+			
 			<dl class="twoColumn">
 				<dt class="title"><label>Return To (Restock) Location:</strong></label></dt> 
 				<dd class="value">
@@ -141,8 +143,6 @@ Notes:
 				</dd>
 			</dl>
 			
-			<input type="hidden" name="originalOrderID" value="#rc.order.getOrderID()#" />
-
 			<cfloop from="1" to="#ArrayLen(rc.order.getOrderDeliveries())#" index="i">
 				<cfset local.orderDelivery = rc.order.getOrderDeliveries()[i]>
 				<cfset local.orderDeliveryItems = local.orderDelivery.getOrderDeliveryItems()>
@@ -270,7 +270,7 @@ Notes:
 					</dd>
 					
 					<dt>
-						#$.slatwall.rbKey("entity.Order.previouslyrefundedshipping")#:
+						#$.slatwall.rbKey("entity.Order.previouslyrefundedfulfillment")#:
 					</dt>
 					<dd >
 						#rc.order.getFormattedValue('previouslyReturnedFulfillmentTotal', 'currency')#

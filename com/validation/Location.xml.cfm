@@ -4,5 +4,8 @@
 		<property name="locationName">
 			<rule type="required" contexts="save" />
 		</property>
+		<property name="primaryAddress">
+			<rule type="required" contexts="save" />
+		</property>
 	</objectProperties>
 </validateThis>

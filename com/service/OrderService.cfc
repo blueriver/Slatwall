@@ -805,11 +805,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
 	}
 	
-	public void function createOrderReturn(required struct data) {
-		var originalOrder = getOrderService().getOrder(data.originalOrderID);
+	public boolean function createOrderReturn(required struct data) {
+		var originalOrder = this.getOrder(data.orderID);
+		
 		
 		// Create a new order
-		var order = getOrderService().newOrder();
+		var order = this.newOrder();
 		//order.setOrderNumber(999);
 		//order.setOrderOpenDateTime();
 		//order.setOrderCloseDateTime();
@@ -819,7 +820,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setReferencedOrder(originalOrder);
 		
 		// Save order here so that we can get an ID.
-		getOrderService().saveOrder(order);
+		this.saveOrder(order);
 		
 		// Create OrderReturn entity (to save the fulfillment amount) 
 		var orderReturn = getService("OrderService").newOrderReturn();
@@ -839,13 +840,13 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Load order with order items. Loop over all delivered order items
 		for(var i=1; i <= ArrayLen(originalOrder.getDeliveredOrderItems()); i++) {
-			var originalOrderItem = originalOrder.getOrderDeliveryItems().getOrderItem();	
+			var originalOrderItem = originalOrder.getDeliveredOrderItems()[i];	
 			var quantityReturning = data["quantity_orderItemId(#originalOrderItem.getOrderItemID()#)"];
 			var priceReturning = data["price_orderItemId(#originalOrderItem.getOrderItemID()#)"];
-			
+				
 			// Validation should be pushed into ValidateThis???
-			if(!isNumeric(priceReturning) || !isNumeric(quantityReturning == "")) {
-				throw("Could not get value for price or quantity");
+			if(!isNumeric(priceReturning) || !isNumeric(quantityReturning)) {
+				throw("Could not get value for price or quantity. Was looking for Id: #originalOrderItem.getOrderItemId()#");
 			}
 			
 			// Check that the quantity returning is valid. This should be moved into a ValidateThis rule.
@@ -870,7 +871,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var appliedTax = getService("taxService").newOrderItemAppliedTax();
 				
 				appliedTax.setOrderItem(orderItem);
-				appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate);
+				appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
 				appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
 				appliedTax.setTaxAmount(originalAppliedTax.getTaxRate() * (orderItem.getQuantity() * priceReturning));
 			}
@@ -884,20 +885,19 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			stockReceiverItem.setStockReceiver(stockReceiver);
 			stockReceiverItem.setQuantity(quantityReturning);
 			stockReceiverItem.setStock(stock);
-			// .....
-			// .....
 			
-			
+			/*
 			// Create the associated "Inventory" tracking entity (using the subclassed InventoryStockReceiver).
 			var inventory = getStockService().newInventoryStockReceiverItem();
 			inventory.setQuantityIn(quantityReturning);
 			inventory.setStock(stock);
 			inventory.setStockReceiverItem(stockReceiverItem);
 			getStockService().saveInventory(inventory);
-			
+			*/
 			
 		}
-		
+	
+		return true;	
 	}
 	
 	

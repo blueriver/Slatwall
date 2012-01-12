@@ -72,7 +72,7 @@ Notes:
 				<td>#local.orderItem.getOrderItemStatusType().getType()#</td>
 				<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
-				<td>#local.orderItem.getQuantity()#</td>
+				<td>#local.orderItem.getQuantity() - local.orderItem.getQuantityUndelivered()#</td>
 				<td>#local.orderItem.getFormattedValue('price', 'extendedPrice')#</td>
 				<td>
 				<cfif local.orderItem.getQuantityUndelivered() gt 0>

@@ -373,5 +373,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 		return SerializeJSON(priceGroupData);
 	}
+	
+	public boolean function isLocationBeingUsed(required any location) {
+		return getDAO().isLocationBeingUsed(arguments.location);
+	}
+	
+	public numeric function getLocationCount() {
+		return getDAO().getLocationCount();
+	}
+	
 			
 }

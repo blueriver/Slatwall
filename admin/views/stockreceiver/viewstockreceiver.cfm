@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -37,39 +37,29 @@ Notes:
 
 --->
 
-<cfparam name="rc.stockReceiverVendorOrderSmartList">
+<cfparam name="rc.stockReceiver">
 
 <cfoutput>
-	<!---<div class="buttons">
-		<cf_SlatwallActionCaller action="admin:stockreceiver.createStockReceiverVendorOrder" text="#$.slatwall.rbKey('admin.stockreceiver.create')#" queryString="vendorOrderID=#rc.VendorOrder.getVendorOrderID()#" class="button" />
-	</div>--->
-	
-	<cfif ArrayLen(rc.stockReceiverVendorOrderSmartList.getRecords()) GT 0>
-	
-		<table class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#$.slatwall.rbKey("entity.stockreceiver.createdDateTime")#</th>
-				<th>#$.slatwall.rbKey("entity.stockreceiver.boxCount")#</th>
-				<th>#$.slatwall.rbKey("entity.stockreceiver.packingSlipNumber")#</th>
-				<th></th>
-			</tr>
+	<table class="listing-grid stripe">
+		<!--- Two levels of table titles --->
+		<tr>
+			<th class="varWidth">#$.Slatwall.rbKey("admin.stockReceiver.detail.sku")#</th>
+			<th>#$.Slatwall.rbKey("admin.stockReceiver.detail.location")#</th>
+			<th>#$.Slatwall.rbKey("admin.stockReceiver.detail.receiving")#</th>
+		</tr>
+		
+		<tbody>
+			<!---<cfloop from="1" to="#ArrayLen(rc.vendorOrderItemSmartList.getPageRecords())#" index="local.i">--->
+			<cfloop array="#rc.stockReceiver.getStockReceiverItems()#" index="local.stockReceiverItem">
+				<cfset local.stock = local.stockReceiverItem.getStock()>
+				<cfset local.sku = stock.getSku()>
 				
-			<cfloop array="#rc.stockReceiverVendorOrderSmartList.getRecords()#" index="local.stockReceiverVendorOrder">
 				<tr>
-					<td class="varWidth">#DateFormat(local.stockReceiverVendorOrder.getCreatedDateTime(), "medium")#</td>
-					<td>#local.stockReceiverVendorOrder.getBoxCount()#</td>
-					<td>#local.stockReceiverVendorOrder.getPackingSlipNumber()#</td>
-					<td class="administration">
-						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:stockReceiver.detailStockReceiver" querystring="stockReceiverID=#local.stockReceiverVendorOrder.getStockReceiverID()#&vendorOrderId=#rc.VendorOrderId#" class="detail" type="list">
-						</ul>     						
-					</td>
+					<td class="varWidth">#local.sku.getSkuCode()#</td>
+					<td>#local.stock.getLocation().getLocationName()#</td>
+					<td>#local.stockReceiverItem.getQuantity()#</td>
 				</tr>
-				
 			</cfloop>
-		</table>
-	<cfelse>
-		#$.slatwall.rbKey("admin.vendorOrder.detail.tab.stockReceivers.noStockReceivers")#
-	</cfif>
-	<div class="clear"></div>
+		</tbody>
+	</table>
 </cfoutput>
