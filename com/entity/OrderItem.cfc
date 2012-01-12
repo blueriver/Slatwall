@@ -106,7 +106,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		var maxQTY = getSku().getSetting('quantityOrderMaximum');
 		
 		if(getSku().getSetting('trackInventoryFlag') && !getSku().getSetting('allowBackorderFlag')) {
-			maxQTY = getSKU().getQuantity('QATS');
+			if(getSKU().getQuantity('QATS') < maxQTY) {
+				maxQTY = getSKU().getQuantity('QATS');
+			}
 		}
 		
 		return maxQTY;
