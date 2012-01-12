@@ -54,10 +54,30 @@ component extends="BaseService" accessors="true" output="false" {
 				break;
 			}
 			case "SlatwallStockPhysicalItem": {
+				throw("Impliment ME!");
 				break;
 			}
-			// One case can handle all 'Delivery types' because they are formatted the exact same way
-			case "SlatwallOrderDeliveryItem": case "SlatwallVendorOrderDeliveryItem": case "SlatwallStockAdjustmentDeliveryItem": {
+			case "SlatwallOrderDeliveryItem": {
+				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
+					var inventory = this.newInventory();
+					inventory.setQuantityOut(arguments.entity.getQuantity());
+					inventory.setStock(arguments.entity.getStock());
+					inventory.setOrderDeliveryItem(arguments.entity);
+					getDAO().save(inventory);
+				}
+				break;
+			}
+			case "SlatwallVendorOrderDeliveryItem": {
+				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
+					var inventory = this.newInventory();
+					inventory.setQuantityOut(arguments.entity.getQuantity());
+					inventory.setStock(arguments.entity.getStock());
+					inventory.setVendorOrderDeliveryItem(arguments.entity);
+					getDAO().save(inventory);
+				}
+				break;
+			}
+			case "SlatwallStockAdjustmentDeliveryItem": {
 				if(arguments.entity.getStock().getSku().getProduct().getSetting("trackInventoryFlag")) {
 					var inventory = this.newInventory();
 					inventory.setQuantityOut(arguments.entity.getQuantity());
