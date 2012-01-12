@@ -33,6 +33,7 @@ jQuery(document).ready(function(){
 	jQuery("#orderReturnEdit .refundShippingAmountLink").click(function(e){
 		// refundFulfillmentAmountDefault is global variable pulled from a <script> tag in the view.
 		jQuery("#refundShippingAmountInput").val(refundFulfillmentAmountDefault);
+		jQuery("#refundShippingAmountInput").trigger("keyup");
 		e.preventDefault();
 	})
 	
@@ -40,6 +41,7 @@ jQuery(document).ready(function(){
 	updateSummary = function() {
 		var subTotal = 0;
 		var taxTotal = 0;
+		var fulfillmentReturnAmount = 0;
 		
 		if(typeof(currentMask) == "undefined") {
 			currentMask = "0.00";
@@ -60,10 +62,9 @@ jQuery(document).ready(function(){
 			var rate = jQuery(this).data("taxrate") / 100;
 			taxTotal += rate * jQuery(".returnExtendedAmount", jQuery(this)).data("total");
 		});
-		
-		var fulfillmentReturnAmount = jQuery("#refundShippingAmountInput").val();
-		if(!jQuery.isNumeric(fulfillmentReturnAmount)) {
-			fulfillmentReturnAmount = 0;
+				
+		if(jQuery.isNumeric(jQuery("#refundShippingAmountInput").val())) {
+			fulfillmentReturnAmount = parseInt(jQuery("#refundShippingAmountInput").val());
 		}
 		
 		jQuery("#summaryTaxTotal").html(currentMask.replace("0.00", taxTotal.toFixed(2)));
@@ -92,7 +93,7 @@ jQuery(document).ready(function(){
 	
 	jQuery("#orderReturnEdit .priceReturningInput").keyup(updateRowFn);
 	jQuery("#orderReturnEdit .quantityReturningSelect").change(updateRowFn);
-	jQuery("#orderReturnEdit .refundShippingAmountInput").keyup(updateSummary);
+	jQuery("#orderReturnEdit #refundShippingAmountInput").keyup(updateSummary);
 	
 	// Initialize by first triggering the keyup even on all return price inputs
 	jQuery("#orderReturnEdit .priceReturningInput").trigger("keyup");

@@ -94,7 +94,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function saveOrderReturn(required struct rc) {
-		getService("OrderService").createOrderReturn(rc);
+		param name="rc.orderID";
+		rc.order = getOrderService().getOrder(rc.orderID);
+		
+		if(getService("OrderService").createOrderReturn(rc)) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_success");
+		} else {
+			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_error");
+		}
+		getFW().redirect(action="admin:order.detail", queryString="orderID=#rc.order.getOrderID()#", preserve="message");
 	}
 	
 

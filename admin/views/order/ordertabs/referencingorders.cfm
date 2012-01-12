@@ -38,9 +38,9 @@ Notes:
 --->
 
 <cfoutput>
-	<div class="buttons">
+	<!---<div class="buttons">
 		<cf_SlatwallActionCaller action="admin:order.createOrderReturn" text="#$.slatwall.rbKey('admin.order.createOrderReturn')#" queryString="orderID=#rc.Order.getOrderID()#" class="button" />	
-	</div>
+	</div>--->
 	
 	<cfif arrayLen(rc.order.getReferencingOrders ())>
 		<table id="OrderReturnList" class="listing-grid stripe">

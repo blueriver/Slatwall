@@ -292,7 +292,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     // Order Return (many-to-one)
 	public void function setReferencedOrder(required Order referencedOrder) {
 		variables.referencedOrder = arguments.referencedOrder;
-		if(!arguments.referencedOrder.hasReferencingOrder(this)) {
+		if(!arguments.referencedOrder.hasReferencingOrder(this)) {	throw("here");
 			arrayAppend(arguments.referencedOrder.getReferencingOrders(), this);
 		}
 	}
@@ -389,9 +389,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// A helper to loop over all deliveries, and grab all of the items of each and put them into a single array 
 	public array function getDeliveredOrderItems() {
 		var arr = [];
-		var deliveries = getDeliveries();
+		var deliveries = getOrderDeliveries();
 		for(var i=1; i <= ArrayLen(deliveries); i++) {
-			var deliveryItems = getDeliveries()[i].getOrderDeliveryItems();
+			var deliveryItems = deliveries[i].getOrderDeliveryItems();
 			
 			for(var j=1; j <= ArrayLen(deliveryItems); j++) {
 				ArrayAppend(arr, deliveryItems[j].getOrderItem());

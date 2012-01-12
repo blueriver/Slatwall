@@ -50,13 +50,6 @@ Notes:
 	<cf_SlatwallActionCaller action="admin:order.listcart" type="list">
 </ul>
 
-<!--- Display buttons of available order actions --->
-<cfloop array="#local.orderActionOptions#" index="local.thisAction">
-<cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
-	<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.order.getQuantityDelivered())>
-	<cf_SlatwallActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
-	</cfif>
-</cfloop>
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
@@ -65,6 +58,7 @@ Notes:
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
 			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
+			<cf_SlatwallPropertyDisplay object="#rc.Order.getOrderType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderType')#" property="Type" edit="#rc.edit#"  displayType="table">
 			<cf_SlatwallPropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
 			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
 			<tr>
@@ -115,26 +109,52 @@ Notes:
 			</tr>
 			</cfloop>
 		</table>
-		<p><strong>#$.Slatwall.rbKey("admin.order.detail.ordertotals")#</strong></p>
-		<dl class="orderTotals">
-			<dt>#$.Slatwall.rbKey("admin.order.detail.subtotal")#</dt> 
-			<dd>#rc.order.getFormattedValue('subtotal', 'currency')#</dd>
-			<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
-			<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
-			<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentCharge")#</dt>
-			<dd>#rc.order.getFormattedValue('fulfillmentTotal', 'currency')#</dd>
-			<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
-			<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>
-			<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
-			<dd><strong>#rc.order.getFormattedValue('total', 'currency')#</strong></dd>
-		</dl>
+		
+		<div style="display:inline-block; width:300px;">
+				<p><strong>#$.Slatwall.rbKey("admin.order.detail.ordertotals")#</strong></p>
+				<dl class="orderTotals">
+					<dt>#$.Slatwall.rbKey("admin.order.detail.subtotal")#</dt> 
+					<dd>#rc.order.getFormattedValue('subtotal', 'currency')#</dd>
+					<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
+					<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
+					<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentCharge")#</dt>
+					<dd>#rc.order.getFormattedValue('fulfillmentTotal', 'currency')#</dd>
+					<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
+					<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>
+					<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
+					<dd><strong>#rc.order.getFormattedValue('total', 'currency')#</strong></dd>
+				</dl>
+			</dt>
+		</div>
+		<div style="display:inline-block; width:300px;">		
+			<div class="buttons">
+				<!--- Only show return button if order is a sales order --->
+				<cfif rc.order.getOrderType().getSystemCode() EQ "otSalesOrder">
+					<cf_SlatwallActionCaller action="admin:order.createOrderReturn" text="#$.slatwall.rbKey('admin.order.createOrderReturn')#" queryString="orderID=#rc.Order.getOrderID()#" class="button" />
+				</cfif>	
+				
+				<!--- Display buttons of available order actions --->
+				<cfloop array="#local.orderActionOptions#" index="local.thisAction">
+				<cfset local.action = lcase( replace(local.thisAction.getOrderActionType().getSystemCode(),"oat","","one") ) />
+					<cfif local.action neq "cancel" or (local.action eq "cancel" and !rc.order.getQuantityDelivered())>
+					<cf_SlatwallActionCaller action="admin:order.#local.action#order" querystring="orderid=#rc.Order.getOrderID()#" class="button" confirmRequired="true" />
+					</cfif>
+				</cfloop>
+			</div>	
+		</div>
+		
+		
 	</div>
+	
 	<div class="clear">
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
 				<li><a href="##tabOrderFulfillments" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderFulfillments")#</span></a></li>	
 				<li><a href="##tabOrderDeliveries" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderDeliveries")#</span></a></li>
-				<li><a href="##tabReferencingOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.referencingOrders")#</span></a></li>
+				
+				<cfif arrayLen(rc.order.getReferencingOrders())>
+					<li><a href="##tabReferencingOrders" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.referencingOrders")#</span></a></li>
+				</cfif>
 <!---				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>--->
 			</ul>
 		
@@ -171,9 +191,11 @@ Notes:
 				</cfif>
 			</div>
 			
-			<div id="tabReferencingOrders">
-				#view("order/ordertabs/referencingorders")# 
-			</div>
+			<cfif arrayLen(rc.order.getReferencingOrders())>
+				<div id="tabReferencingOrders">
+					#view("order/ordertabs/referencingorders")# 
+				</div>
+			</cfif>
 		<!---	<div id="tabOrderActivityLog">
 				
 			</div>--->

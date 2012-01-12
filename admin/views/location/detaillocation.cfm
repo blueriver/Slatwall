@@ -58,6 +58,19 @@ Notes:
 		
 		<dl class="twoColumn">
 			<cf_SlatwallPropertyDisplay object="#rc.Location#" property="locationName" edit="#rc.edit#" first="true">
+			
+			<cfif not isNull(rc.location.getPrimaryAddress())>
+				<input type="hidden" name="primaryAddress.LocationAddressID" value="#rc.location.getPrimaryAddress().getLocationAddressID()#" />
+				<cf_SlatwallAddressDisplay address="#rc.location.getPrimaryAddress().getAddress()#" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
+				<!---<cf_SlatwallPropertyDisplay object="#rc.location.getPrimaryAddress()#" property="Address" fieldName="primaryAddress.Address" edit="#rc.edit#" valueLink="mailto:#rc.location.getAddress()#">--->
+			<cfelse>
+				<cfset newLocationAddress = $.slatwall.getService("addressService").newAddress() />
+				<input type="hidden" name="primaryAddress.LocationAddressID" value="" />
+				<cf_SlatwallAddressDisplay address="#newLocationAddress#" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
+				<!---<cf_SlatwallPropertyDisplay object="#newlocationEmail#" property="Address" fieldName="primaryAddress.Address" edit="#rc.edit#" valueLink="">--->
+			</cfif>
+
+			<!---<cf_SlatwallAddressDisplay address="#rc.locationAddress.getAddress()#" edit="#rc.edit#" fieldNamePrefix="locationAddresses[1].address." />--->
 		</dl>
 		
 		<cfif rc.edit>

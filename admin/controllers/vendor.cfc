@@ -120,7 +120,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				rc.message=rc.message=rbKey("admin.vendor.saveVendor_success");
 				
 				// If any of the sub properties (such as address or email) has changed during this edit, then stay on the details page, otherwise, list.
-				if(isPostingVendorAddress(rc))
+				if(NOT findNoCase(rc.ignoreProperties, "vendorAddresses"))
 					getFW().redirect(action="admin:vendor.editVendor", querystring="vendorID=#rc.Vendor.getVendorID()#", preserve="message");
 				else
 					getFW().redirect(action="admin:vendor.listVendors", preserve="message");
@@ -184,7 +184,4 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.vendorSmartList = getVendorService().getVendorSmartList(data=arguments.rc);
 	}
 	
-	private boolean function isPostingVendorAddress(required struct rc) {
-		return NOT findNoCase(rc.ignoreProperties, "vendorAddresses");
-	}
 }
