@@ -128,6 +128,15 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arrayLen(getOrderItems());
 	}
 	
+	public boolean function hasItemsQuantityWithinMaxOrderQuantity() {
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			if(!getOrderItems()[i].hasQuantityWithinMaxOrderQuantity()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	// TODO: may need to refactor the next 4 methods to more efficient HQL
 	public numeric function getTotalQuantity() {
 		if(!structKeyExists(variables,"totalQuantity")) {

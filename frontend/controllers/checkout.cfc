@@ -56,6 +56,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 		}
 		
+		// Insure that all items in the cart are within their max constraint
+		if(!rc.$.slatwall.cart().hasItemsQuantityWithinMaxOrderQuantity()) {
+			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart',queryString='slatAction=frontend:cart.forceItemQuantityUpdate'));
+		}
+		
 		// Recaluclate Order Totals In Case something has changed
 		getOrderService().recalculateOrderAmounts(rc.$.slatwall.cart());
 		
@@ -141,6 +146,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.orderID" default="";
 		
 		rc.guestAccountOK = true;
+		
+		// Insure that all items in the cart are within their max constraint
+		if(!rc.$.slatwall.cart().hasItemsQuantityWithinMaxOrderQuantity()) {
+			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart',queryString='slatAction=frontend:cart.forceItemQuantityUpdate'));
+		}
 		
 		// Attemp to process the order 
 		var result = getOrderService().processOrder(data=rc);

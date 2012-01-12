@@ -102,6 +102,20 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return super.init();
 	}
 
+	public numeric function getMaximumOrderQuantity() {
+		var maxQTY = getSku().getSetting('quantityOrderMaximum');
+		
+		if(getSku().getSetting('allowBackorderFlag') && !getSku().getSetting('allowBackorderFlag')) {
+			maxQTY = getSKQ().getQuantity('QATS');
+		}
+		
+		return maxQTY;
+	}
+	
+	public numeric function hasQuantityWithinMaxOrderQuantity() {
+		return getQuantity() <= getMaxOrderQuantity();
+	}
+	
 	
 	public string function getStatus(){
 		return getOrderItemStatusType().getType();
