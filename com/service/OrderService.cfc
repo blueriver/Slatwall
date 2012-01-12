@@ -819,8 +819,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnOrder"));
 		order.setReferencedOrder(originalOrder);
 		
-		// Save order here so that we can get an ID.
-		this.saveOrder(order);
+		
 		
 		// Create OrderReturn entity (to save the fulfillment amount) 
 		var orderReturn = getService("OrderService").newOrderReturn();
@@ -832,12 +831,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be further populated with StockRecieverItems, one for each item being returned.
 			
-		//.... Create Stock Receiver
+		// Create Stock Receiver
 		var stockReceiver = getStockService().newStockReceiverOrder();
-		//....
-		//....
-		
-		
+				
 		// Load order with order items. Loop over all delivered order items
 		for(var i=1; i <= ArrayLen(originalOrder.getDeliveredOrderItems()); i++) {
 			var originalOrderItem = originalOrder.getDeliveredOrderItems()[i];	
@@ -883,8 +879,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			var stock = getStockService().getStockBySkuAndLocation(originalOrderItem.getSku(), location);
 			var stockReceiverItem = getStockService().newStockReceiverItem();
 			stockReceiverItem.setStockReceiver(stockReceiver);
+			stockReceiverItem.setOrderItem(orderItem);
 			stockReceiverItem.setQuantity(quantityReturning);
 			stockReceiverItem.setStock(stock);
+				
 			
 			/*
 			// Create the associated "Inventory" tracking entity (using the subclassed InventoryStockReceiver).
@@ -896,7 +894,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			*/
 			
 		}
-	
+		
+		getStockService().saveStockReceiver(stockReceiver);
+		this.saveOrder(order);
+		
 		return true;	
 	}
 	

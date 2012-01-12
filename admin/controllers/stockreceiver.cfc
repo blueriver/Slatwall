@@ -154,13 +154,66 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 	public void function saveStockReceiverVendorOrder(required struct rc) {
 		rc.stockReceiverType = "vendorOrder";
+		initStockReceiver(rc);
+		
 		var vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderId);
 		
 		// Call the generic save method.
-		saveStockReceiver(rc);
+		//saveStockReceiver(rc);
 		
 		// Since this is a vendor order reciever, also add the vendororder
 		rc.StockReceiver.setVendorOrder(vendorOrder);
+
+		// Quantities provided by fields named like: quantity_skuid(4028b8813414708a01341514ad67001e). Loop over rc and find these fields. 
+		for (var key IN rc) {
+			var res = REFindNoCase("quantity_skuid\((.+)\)", key, 1, true);
+
+			if(ArrayLen(res.pos) == 2) {
+				var skuID = mid(key, res.pos[2], res.len[2]);
+				var quantity = val(rc[key]);
+				var stock = getStockService().getStockBySkuAndLocation(getSkuService().getSku(skuID), getLocationService().getLocation(rc.receiveForLocationID));
+				
+				//logSlatwall("Found: #key# - #skuID# - #quantity#");
+				
+				if(len(skuID) && isNumeric(quantity)) {
+					// Take the sku, location (selected), and quantity, and build a StockRecieverItem
+					var stockReceiverItem = getStockService().newStockReceiverItem();
+					stockReceiverItem.setStockReceiver(rc.stockReceiver);		
+					stockReceiverItem.setQuantity(quantity);
+					stockReceiverItem.setStock(stock);
+					
+					// Set the vendorOrderItem of the StockReceiverItem to that of the vendorOrder
+					var vendorOrderItem = vendorOrder.getVendorOrderItemForSkuAndLocation(stockReceiverItem.getStock().getSku().getSkuID(), stockReceiverItem.getStock().getLocation().getLocationID());
+					getStockService().saveVendorOrderItem(vendorOrderItem);
+					stockReceiverItem.setVendorOrderItem(vendorOrderItem);
+					
+					// Save the vendorOrderItem, as it may be new (if one wasn't found)
+					/*if(vendorOrderItem.isNew()) {
+						vendorOrderItem.setQuantity(0);
+						getStockService().saveVendorOrderItem(vendorOrderItem);
+					}*/
+				}
+			}
+		}
+		
+		// Populate with box count & packing slip, validate, and save
+		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
+		
+		/*
+		// Loop over each stockReceiverItem and set the vendorOrderItem to that of the vendorOrder
+		var stockReceiverItems = rc.StockReceiver.getStockReceiverItems();
+		for(var i=0; i <= ArrayLen(stockReceiverItems); i++) {
+			var vendorOrderItem = vendorOrder.getVendorOrderItemForSkuAndLocation(stockReceiverItems[i].getStock().getSku().getSkuID(), stockReceiverItems[i].getStock().getLocation().getLocationID());
+			stockReceiverItems.setVendorOrderItem(vendorOrderItem);
+			
+			// Save the vendorOrderItem, as it may be new (if one wasn't found)
+			if(vendorOrderItem.isNew()) {
+				vendorOrderItem.setQuantity(0);
+				getStockService().saveVendorOrderItem(vendorOrderItem);
+			}
+			
+		}
+		*/
 
 		rc.message=rbKey("admin.vendorOrder.saveStockReceiverVendorOrder_success");
 		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderId=#rc.vendorOrderId#", preserve="message");
@@ -168,17 +221,12 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	
 
 	// Only to be called from the type-specific save methods
-	public void function saveStockReceiver(required struct rc) {
+	/*public void function saveStockReceiver(required struct rc) {
 		initStockReceiver(rc);
-
-		// this does an RC -> Entity population, and flags the entities to be saved.
-		var wasNew = rc.stockReceiver.isNew();
 
 		// Quantities provided by fields named like: quantity_skuid(4028b8813414708a01341514ad67001e). Loop over rc and find these fields. 
 		for (var key IN rc) {
 			var res = REFindNoCase("quantity_skuid\((.+)\)", key, 1, true);
-
-			//logSlatwall("Found: #key#");
 
 			if(ArrayLen(res.pos) == 2) {
 				var skuID = mid(key, res.pos[2], res.len[2]);
@@ -199,5 +247,5 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		// Populate with box count & packing slip, validate, and save
 		rc.stockReceiver = getStockService().saveStockReceiver(rc.stockReceiver, rc);
-	}
+	}*/
 }

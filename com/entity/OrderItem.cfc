@@ -98,6 +98,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(isNull(variables.appliedTaxes)) {
 		   variables.appliedTaxes = [];
 		}
+		if(isNull(variables.stockReceiverItems)) {
+			variables.stockReceiverItems = [];	
+		}
 		
 		return super.init();
 	}
