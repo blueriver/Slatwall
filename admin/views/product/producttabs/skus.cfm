@@ -100,7 +100,7 @@ Notes:
 					</th>
 				</cfloop>
 				
-				<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
+				<!---<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>--->
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>
@@ -195,7 +195,7 @@ Notes:
 						</cfif>
 					</td>	
 				</cfloop>
-
+				<!---
 				<td>
 					<cfif rc.edit>
 						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
@@ -203,6 +203,7 @@ Notes:
 						#local.thisSku.getShippingWeight()#
 					</cfif>
 				</td>
+				--->
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<td><cf_SlatwallPropertyDisplay object="#local.thisSku#" fieldName="skus[#local.skuCount#].remoteID" property="remoteID" edit="#rc.edit#" displaytype="plain"></td>
 				</cfif>
@@ -258,9 +259,6 @@ Notes:
 			<td></td>
 		</cfloop>
 		
-		<td>
-			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
-		</td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
 	        <td></td>
 	        <td></td>

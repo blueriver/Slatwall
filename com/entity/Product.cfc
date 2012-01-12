@@ -48,13 +48,22 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
-	property name="trackInventoryFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer";
+	
+	// Persistent Properties - Inheritence Settings
 	property name="allowShippingFlag" ormtype="boolean";
 	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
-	property name="sortOrder" ormtype="integer";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="displayTemplate" ormtype="string";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="quantityMinimum" ormtype="integer";
+	property name="quantityMaximum" ormtype="integer";
+	property name="quantityOrderMinimum" ormtype="integer";
+	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
+	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
@@ -75,10 +84,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 
-	// Remote properties
+	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
-	// Audit properties
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
@@ -86,46 +95,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
-	property name="onTermSaleFlag" type="boolean" persistent="false";
-	property name="onClearanceSaleFlag" type="boolean" persistent="false";
-	property name="dateFirstReceived" type="date" persistent="false";
-	property name="dateLastReceived" type="date" persistent="false";
+	property name="brandName" type="string" persistent="false";
+	property name="displayTemplateOptions" type="array" persistent="false";
+	
+	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
-	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
-	property name="shippingWeight" type="numeric" persistent="false";
+	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="salePrice" type="numeric" formatType="currency" persistent="false";
 	
-	// Non-Persistent Quantity Properties For On Hand & Inventory in Motion (Deligated to the DAO)
-	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
-	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
-	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
-	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
-	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
-	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
-	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
-	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
-	
-	// Non-Persistent Quantity Properties For Reporting (Deligated to DAO)
-	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
-	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
-	
-	// Non-Persistent Quantity Properties For Logic & Display Based on On Hand & Inventory in Motion values (Could be calculated here, but delegated to the Service, for Consitency of Product / Sku / Stock)
-	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
-	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
-	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
-	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
-	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
-	
-	// Non-Persistent Quantity Properties For Settings (Because these can be defined in multiple locations it is delectaed to the Service)
-	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
-	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
-	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
-	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
-	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
-	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
-	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";	
-
-
 	public Product function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.activeFlag)) {
@@ -161,20 +139,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   return Super.init();
 	}
 	
-	public string function getSimpleRepresentationPropertyName() {
-		return "productName";
-	}
-
-    public string function getBrandName() {
-		if( structKeyExists(variables,"brand") ) {
-			return getBrand().getBrandName();
-		}
-		else {	
-			return "";
-		}
-	}
-	
-	public any function getProductTypeOptions() {
+    public any function getProductTypeOptions() {
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			var productTypeTree = getProductTypeTree();
 			var productTypeOptions = [];
@@ -252,9 +217,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return categoryIDs;
 	}
 	
-	public string function getTitle() {
-		return getService("utilityService").replaceStringTemplate(template=setting('product_titleString'), object=this);
-	}
+	
 	
 	public string function getProductURL() {
 		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
@@ -295,42 +258,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public string function getURLTitle() {
 		return getFileName();
 	}
-
-	
-	/******* Product Setting methods **************/
-	
-	// Generic setting accessor
-	public boolean function getSetting( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return variables[arguments.settingName];
-		} else {
-			return getInheritedSetting( arguments.settingName );
-		}
-	}	
-	
-	public boolean function getInheritedSetting( required string settingName ) {
-		if(!isNull(getProductType())) {
-			return getProductType().getSetting(arguments.settingName);
-		} else {
-			// so a CF error won't be thrown during validtion if the product type wasn't selected
-			return setting("product_" & arguments.settingName);
-		}
-	}
-	
-	// Get source of setting
-	public any function getWhereSettingDefined( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return {type="Product"};
-		} else if(isNull(getProductType())) {
-			return {type=""};
-		} else {
-			return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
-		}
-	}
-	
-	
-	/***************************************************/
-	
 
 	/******* Association management methods for bidirectional relationships **************/
 	
@@ -563,45 +490,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return imageGalleryArray;
 	}
 	
-	public numeric function getPrice() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getPrice();
-		} else {
-			return 0;
-		}
-	}
-	
-	public numeric function getListPrice() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getListPrice();
-		} else {
-			return 0;
-		}
-	}
-	
-	public numeric function getLivePrice() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getLivePrice();
-		} else {
-			return 0;
-		}
-	}
 
-	public numeric function getShippingWeight() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			if(isNumeric(getDefaultSku().getShippingWeight())) {
-				return getDefaultSku().getShippingWeight();	
-			} else {
-				return 0;
-			}
-		} else {
-			return 0;
-		}
-	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();
@@ -700,9 +589,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
-	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup ) {
 		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
+	
+	// Start: Quantity Methods
 	
 	public numeric function getQuantity(required string quantityType, string skuID, string locationID) {
 		if(structKeyExists(arguments, "skuID")) {
@@ -720,36 +611,115 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables[quantityType];
 	}
 	
+	// END: Quantity Methods
+	
+	// Start: Setting Methods
+	
+	// Generic setting accessor
+	public any function getSetting( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return variables[arguments.settingName];
+		}
+		
+		return getInheritedSetting( arguments.settingName );
+	}
+	
+	// Get the setting inherited
+	public any function getInheritedSetting( required string settingName ) {
+		if(!isNull(getProductType())) {
+			return getProductType().getSetting(arguments.settingName);
+		}
+		
+		// so a CF error won't be thrown during validtion if the product type wasn't selected
+		return setting("product_" & arguments.settingName);
+	}
+	
+	// Get source of setting
+	public any function getWhereSettingDefined( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return {type="Product"};
+		} else if(!isNull(getProductType())) {
+			return getProductType().getWhereSettingDefined( arguments.settingName );
+		}
+
+		// so a CF error won't be thrown during validtion if the product type wasn't selected
+		return {type="Global"};
+	}
+	
+	// END: Setting Methods
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	// TODO: These methods are just here so that the calculation stuff will work.  The actuall settings need to be setup
-	public numeric function getQMIN() {
-		return 0;
-	}
-	public numeric function getQMAX() {
-		return 0;
-	}
-	public numeric function getQHB() {
-		return 0;
-	}
-	public numeric function getQOMIN() {
-		return 0;
-	}
-	public numeric function getQOMAX() {
-		return 0;
-	}
-	public numeric function getQVOMIN() {
-		return 0;
-	}
-	public numeric function getQVOMAX() {
-		return 0;
+	public any function getDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "displayTemplateOptions")) {
+			variables.displayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.displayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('displayTemplate')# )"});
+		}
+		
+		return variables.displayTemplateOptions;
 	}
 	
+	public string function getBrandName() {
+		if(!structKeyExists(variables, "brandName")) {
+			variables.brandName = "";
+			if( structKeyExists(variables, "brand") ) {
+				return getBrand().getBrandName();
+			}
+		}
+		return variables.brandName;
+	}
+	
+	public string function getTitle() {
+		if(!structKeyExists(variables, "title")) {
+			variables.title = getService("utilityService").replaceStringTemplate(template=setting('product_titleString'), object=this);
+		}
+		return variables.title;
+	}
+	
+	
+	public numeric function getPrice() {
+		if(!structKeyExists(variables, "price")) {
+			variables.price = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.price = getDefaultSku().getPrice();
+			}
+		}
+		return variables.price;
+	}
+	
+	public numeric function getListPrice() {
+		if(!structKeyExists(variables, "listPrice")) {
+			variables.listPrice = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.listPrice = getDefaultSku().getListPrice();
+			}	
+		}
+		return variables.listPrice;
+	}
+	
+	public numeric function getLivePrice() {
+		if(!structKeyExists(variables, "livePrice")) {
+			variables.livePrice = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.livePrice = getDefaultSku().getLivePrice();
+			}	
+		}
+		return variables.livePrice;
+	}
+
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "productName";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

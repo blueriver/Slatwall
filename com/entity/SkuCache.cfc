@@ -44,6 +44,7 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	
 	// Persistent Properties (Calculations)
 	property name="salePrice" ormtype="big_decimal" default=0;
+	property name="salePriceExpirationDateTime" ormtype="timestamp";
 	property name="qoh" ormtype="integer" default=0;
 	property name="qosh" ormtype="integer" default=0;
 	property name="qndoo" ormtype="integer" default=0;
@@ -54,22 +55,18 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="qnrosa" ormtype="integer" default=0;
 	
 	// Persistent Properties (Settings)
-	property name="qmin" ormtype="integer" default=0;
-	property name="qmax" ormtype="integer" default=0;
-	property name="qhb" ormtype="integer" default=0;
-	property name="qomin" ormtype="integer" default=0;
-	property name="qomax" ormtype="integer" default=0;
-	property name="qvomin" ormtype="integer" default=0;
-	property name="qvomax" ormtype="integer" default=0;
-	property name="allowShippingFlag" ormtype="boolean" default=0;
-	property name="allowPreorderFlag" ormtype="boolean" default=0;
-	property name="allowBackorderFlag" ormtype="boolean" default=0;
-	property name="allowDropshipFlag" ormtype="boolean" default=0;
-	property name="callToOrderFlag" ormtype="boolean" default=0;
-	property name="trackInventoryFlag" ormtype="boolean" default=0;
-	
-	// Next Experation property so that we can automatically refresh this if it expires
-	property name="skuCacheExpirationDateTime" ormtype="timestamp";
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowBackorderFlag" ormtype="boolean";
+	property name="allowDropshipFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="quantityMinimum" ormtype="integer";
+	property name="quantityMaximum" ormtype="integer";
+	property name="quantityOrderMinimum" ormtype="integer";
+	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
+	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";

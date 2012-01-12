@@ -38,10 +38,10 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="getNextExpirationDateTime">
+	<cffunction name="getNextSalePriceExpirationDateTime">
 		<cfquery name="rs">
 			SELECT
-				MIN(skuCacheExpirationDateTime) as 'nextExpiration'
+				MIN(salePriceExpirationDateTime) as 'nextExpiration'
 			FROM
 				SlatwallSkuCache
 		</cfquery>
