@@ -134,7 +134,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	// Vendor Order Item (many-to-one)
 	public void function setVendorOrderItem(required any vendorOrderItem) {
 		variables.vendorOrderItem = arguments.vendorOrderItem;
-		if(isNew() or !arguments.vendorOrderItem.hasStockReceiverItem( this )) {
+		if(isNew() or !arguments.vendorOrderItem.hasStockReceiverItem( this )) {	
 			arrayAppend(arguments.vendorOrderItem.getStockReceiverItems(), this);
 		}
 	}

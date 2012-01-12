@@ -56,6 +56,13 @@ component displayname="Vendor Order Item" entityname="SlatwallVendorOrderItem" t
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	public any function init() {
+		if(isNull(variables.stockReceiverItems)) {
+			variables.stockReceiverItems = [];	
+		}
+	
+		return super.init();
+	}
 	
 	
 	// Maintain bidirectional relationships (many-to-one). Notice that the child (VendorOrderItem) is the handler of the relationship, while the parent (VendorOrder), has inverse="true".

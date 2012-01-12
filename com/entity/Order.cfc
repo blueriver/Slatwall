@@ -292,7 +292,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
     // Order Return (many-to-one)
 	public void function setReferencedOrder(required Order referencedOrder) {
 		variables.referencedOrder = arguments.referencedOrder;
-		if(!arguments.referencedOrder.hasReferencingOrder(this)) {	throw("here");
+		if(!arguments.referencedOrder.hasReferencingOrder(this)) {
 			arrayAppend(arguments.referencedOrder.getReferencingOrders(), this);
 		}
 	}
