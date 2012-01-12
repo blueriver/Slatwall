@@ -57,37 +57,6 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Non-Persistent Quantity Properties For On Hand & Inventory in Motion (Deligated to the DAO)
-	property name="qoh" type="numeric" persistent="false" hint="Quantity On Hand";
-	property name="qosh" type="numeric" persistent="false" hint="Quantity On Stock Hold";
-	property name="qndoo" type="numeric" persistent="false" hint="Quantity Not Delivered On Order";
-	property name="qndorvo" type="numeric" persistent="false" hint="Quantity Not Delivered On Return Vendor Order";
-	property name="qndosa" type="numeric" persistent="false" hint="Quantity Not Delivered On Stock Adjustment";
-	property name="qnroro" type="numeric" persistent="false" hint="Quantity Not Received On Return Order";
-	property name="qnrovo" type="numeric" persistent="false" hint="Quantity Not Received On Vendor Order";
-	property name="qnrosa" type="numeric" persistent="false" hint="Quantity Not Received On Stock Adjustment";
-	
-	// Non-Persistent Quantity Properties For Reporting (Deligated to DAO)
-	property name="qr" type="numeric" persistent="false" hint="Quantity Received";
-	property name="qs" type="numeric" persistent="false" hint="Quantity Sold";
-	
-	// Non-Persistent Quantity Properties For Logic & Display Based on On Hand & Inventory in Motion values (Could be calculated here, but delegated to the Service, for Consitency of Product / Sku / Stock)
-	property name="qc" type="numeric" persistent="false" hint="Quantity Commited";
-	property name="qe" type="numeric" persistent="false" hint="Quantity Expected";
-	property name="qnc" type="numeric" persistent="false" hint="Quantity Not Commited";
-	property name="qats" type="numeric" persistent="false" hint="Quantity Available To Sell";
-	property name="qiats" type="numeric" persistent="false" hint="Quantity Immediately Available To Sell";
-	
-	// Non-Persistent Quantity Properties For Settings (Because these can be defined in multiple locations it is delectaed to the Service)
-	property name="qmin" type="numeric" persistent="false" hint="Quantity Minimum";
-	property name="qmax" type="numeric" persistent="false" hint="Quantity Maximum";
-	property name="qhb" type="numeric" persistent="false" hint="Quantity Held Back";
-	property name="qomin" type="numeric" persistent="false" hint="Quantity Order Minimum";
-	property name="qomax" type="numeric" persistent="false" hint="Quantity Order Maximum";
-	property name="qvomin" type="numeric" persistent="false" hint="Quantity Vendor Order Minimum";
-	property name="qvomax" type="numeric" persistent="false" hint="Quantity Vendor Order Maximum";
-	
-	
 	public numeric function getQuantity(required string quantityType) {
 		if(!structKeyExists(variables, quantityType)) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
@@ -101,30 +70,11 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 		return variables[quantityType];
 	}
 	
-	// ============ START: Non-Persistent Property Methods =================
+	public any function getSetting(required string settingName) {
+		return getSku().getSetting(arguments.settingName);
+	}
 	
-	// TODO: These methods are just here so that the calculation stuff will work.  The actuall settings need to be setup
-	public numeric function getQMIN() {
-		return 0;
-	}
-	public numeric function getQMAX() {
-		return 0;
-	}
-	public numeric function getQHB() {
-		return 0;
-	}
-	public numeric function getQOMIN() {
-		return 0;
-	}
-	public numeric function getQOMAX() {
-		return 0;
-	}
-	public numeric function getQVOMIN() {
-		return 0;
-	}
-	public numeric function getQVOMAX() {
-		return 0;
-	}
+	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
