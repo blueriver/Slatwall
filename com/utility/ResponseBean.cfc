@@ -40,15 +40,11 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 	
 	property name="data" type="any";
 	property name="statusCode" type="string";
-	property name="errorBean" type="any";
-	property name="messageBeans" type="array";
 	
 	public any function init() {
 		// Set Defaults
 		this.setStatusCode("");
 		this.setData({});
-		this.setMessageBeans([]);
-		this.setErrorBean(new Slatwall.com.utility.ErrorBean());
 		
 		// Populate all keys passed in
 		for(var key in arguments) {
@@ -60,40 +56,5 @@ component accessors="true" displayname="ResponseBean" hint="bean to encapsulate 
 		
 		return this;
 	} 
-	
-	public void function addMessage() {
-		arrayAppend(getMessageBeans(), new MessageBean(argumentcollection=arguments));
-		getService("logService").logMessage(argumentcollection=arguments);
-	}
-	
-	public void function addError( required string errorName, required string errorMessage ) {
-		getErrorBean().addError(argumentcollection=arguments);
-		getService("logService").logMessage(messageCode=arguments.errorName, message=arguments.errorMessage, messageType="Response Error");
-	}
-	
-	public string function getMessageString() {
-		var messageString = "";
-		
-		for(var i=1; i<=arrayLen(getMessageBeans()); i++) {
-			if(i>1) {
-				messageString &= "~";
-			}
-			messageString &= "#getMessageBeans()[1].getMessageCode()#|#getMessageBeans()[1].getMessageType()#|#getMessageBeans()[1].getMessage()#";
-		}
-		
-		return messageString;
-	}
-	
-	public string function getAllErrorMessages() {
-		var returnString = "";
-		
-		for(var errorName in getErrors()) {
-			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
-				returnString &= "<p>" & getErrors()[errorName][i] & "</p>";
-			}
-		}
-		
-		return returnString;
-	}
 	
 } 
