@@ -36,53 +36,63 @@
 Notes:
 
 */
-component displayname="Location" entityname="SlatwallLocation" table="SlatwallLocation" persistent=true accessors=true output=false extends="BaseEntity" {
+component displayname="Location Address" entityname="SlatwallLocationAddress" table="SlatwallLocationAddress" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="locationID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="locationName" ormtype="string";
+	property name="locationAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties (Many-to-One)
-	property name="primaryAddress" cfc="LocationAddress" fieldtype="many-to-one" fkcolumn="locationAddressID";
+	// Related Object Properties (many-to-one)
+	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
 	
-	// Related Object Properties (One-to-Many)
-	property name="locationAddresses" singularname="locationAddress" cfc="LocationAddress" type="array" fieldtype="one-to-many" fkcolumn="locationID" cascade="all-delete-orphan" inverse="true";
+	// Related Object Properties (one-to-many)
 	
-	// Related Object Properties (Many-to-Many)
+	// Related Object Properties (many-to-many)
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
-	// Audit properties
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public boolean function isDeletable() {
-		return getLocationName() != "Default";
-	}
+	// Non-Persistent Properties
+
+
+
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-	
+		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Location Addresses (one-to-many)
-	public void function addLocationAddress(required any locationAddress) {
-		arguments.locationAddress.setLocation( this );
+	// Location (many-to-one)
+	public void function setLocation(required any location) {
+		variables.location = arguments.location;
+		if(isNew() or !arguments.location.hasLocationAddress( this )) {
+			arrayAppend(arguments.location.getLocationAddresses(), this);
+		}
 	}
-	public void function removeLocationAddress(required any locationAddress) {
-		arguments.locationAddress.removeLocation( this );
+	public void function removeLocation(any location) {
+		if(!structKeyExists(arguments, "location")) {
+			arguments.location = variables.location;
+		}
+		var index = arrayFind(arguments.location.getLocationAddresses(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getLocationAddresses(), index);
+		}
+		structDelete(variables, "location");
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
-	
+
 	// ================== START: Overridden Methods ========================
 	
 	// ==================  END:  Overridden Methods ========================
-		
+	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
