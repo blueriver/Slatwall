@@ -80,6 +80,11 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 			variables.vendorOrderType = getService("typeService").getTypeBySystemCode('votPurchaseOrder');
 		}
 		
+		// Set the default status type as open
+		if(isNull(variables.vendorOrderStatusType)) {
+			variables.vendorOrderStatusType = getService("typeService").getTypeBySystemCode('vostNew');
+		}
+		
 		return super.init();
 	}
 	

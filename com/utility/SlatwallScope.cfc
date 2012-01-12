@@ -245,6 +245,8 @@ component accessors="true" output="false" extends="BaseObject" {
 		return outputScript;
 	}
 	
+	
+	
 	// Public methods that expose some of the base objects private methods
 	public string function rbKey(required string key, string local) {
 		return super.rbKey(argumentCollection=arguments);
