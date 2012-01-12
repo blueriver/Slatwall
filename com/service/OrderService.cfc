@@ -819,8 +819,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnOrder"));
 		order.setReferencedOrder(originalOrder);
 		
-		// Save order here so that we can get an ID.
-		this.saveOrder(order);
+		
 		
 		// Create OrderReturn entity (to save the fulfillment amount) 
 		var orderReturn = getService("OrderService").newOrderReturn();
@@ -897,7 +896,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		getStockService().saveStockReceiver(stockReceiver);
-	
+		this.saveOrder(order);
+		
 		return true;	
 	}
 	
