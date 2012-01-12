@@ -35,7 +35,7 @@
 	
 Notes:
 	
-	IMPORANT TO UNDERSTAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	IMPORANT TO UNDERSTAN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	The SkuCache service & entity play an important role in allowing for productListing to be performant.
 	Any time an entity is saved that impacts quantity, price, or settings or a given sku, there is a corisponding
@@ -54,11 +54,12 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	// Injected properties from coldspring
 	property name="skuService" type="any";
 
 	variables.skusToUpdate = [];
 	variables.updatingSkus = [];
-	variables.nextExpirationDateTime = now();
+	variables.nextSalePriceExpirationDateTime = "";
 	
 	public void function updateFromOrderDeliveryItem(required any orderDeliveryItem) {
 		arrayAppend(variables.skusToUpdate, {propertyList="qoh,qndoo", skuID=arguments.orderDeliveryItem.getStock().getSku().getSkuID()});
@@ -102,11 +103,17 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 	}
 	
-	public any function setNextExpirationDateTime() {
-		
-	}
-	
+	// This gets called on every request
 	public void function executeSkuCacheUpdates() {
+		if(variables.nextSalePriceExpirationDateTime == "") {
+			variables.nextSalePriceExpirationDateTime = getDAO().getNextSalePriceExpirationDateTime();
+		}
+		if(variables.nextSalePriceExpirationDateTime < now()) {
+			// TODO: Impliment this
+			// get list of skuID's with nextSalePriceExpiration < now
+			// add those skuID's to the array
+		}
+		
 		if(arrayLen(variables.skusToUpdate)) {
 			lock timeout="60" scope="Application" {
 				if(arrayLen(variables.skusToUpdate)) {
@@ -123,8 +130,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {
 								arrayAppend(variables.skusToUpdate, variables.updatingSkus[a]);	
 							}
+							variables.nextSalePriceExpirationDateTime = getDAO().getNextSalePriceExpirationDateTime();
 							rethrow;
 						}
+						variables.nextSalePriceExpirationDateTime = getDAO().getNextSalePriceExpirationDateTime();
 					}
 				}
 			}
@@ -137,12 +146,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var skuCache = this.getSkuCache(arguments.skuID, true);
 		var sku = getSkuService().getSku(arguments.skuID, true);
 		
+		
 		if(listFindNoCase(arguments.propertyList, "salePrice") || skuCache.isNew()) {
 			skuCache.setSalePrice( sku.getSalePrice() );
 		}
 		if(listFindNoCase(arguments.propertyList, "salePriceExpirationDateTime") || skuCache.isNew()) {
 			skuCache.setSalePriceExpirationDateTime( sku.getSalePriceExpirationDateTime() );
 		}
+		
+		
 		if(listFindNoCase(arguments.propertyList, "qoh") || skuCache.isNew()) {
 			skuCache.setQOH( sku.getQuantity("QOH") );
 		}
