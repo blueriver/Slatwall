@@ -80,13 +80,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
 	}
     
-    /*public void function detailStockReceiver(required struct rc) {
+    public void function detailStockReceiver(required struct rc) {
     	param name="rc.stockReceiverID" default="";
     	
     	initStockReceiver(rc);
     	
     	if(isNull(rc.stockReceiver)) {
-    		getFW().redirect(action="admin:stockReceiver.listStockReceivers");
+    		//getFW().redirect(action="admin:stockReceiver.listStockReceivers");
+    		throw("No stock receiver found!")
     	}
     	
     	// Proceed to the type-specific detail
@@ -97,20 +98,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	} else {
     		throw("Unrecognized StockReceiver type: #rc.stockReceiver.getReceiverType()#");
     	}
-    	
-    	rc.edit = false;
-		rc.itemTitle = rc.StockReceiver.isNew() ? rc.$.Slatwall.rbKey("admin.stockreceiver.createStockReceiver") : rc.$.Slatwall.rbKey("admin.stockreceiver.editStockReceiver") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
-		getFW().setView(action="admin:stockReceiver.detailStockReceiver");  	
-    }*/
+			
+		rc.edit = false;
+		rc.itemTitle = rc.$.Slatwall.rbKey("admin.stockreceiver.detailStockReceiver") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
+		getFW().setView(action="admin:stockReceiver.detailStockReceiver");
+		  	
+    }
     
     /*
-    	Vendor Order related.
+    	Vendor Order related. Some of these are not meant to be called as public event handlers.
     */
-    /* public void function detailStockReceiverVendorOrder(required struct rc) {
+    public void function detailStockReceiverVendorOrder(required struct rc) {
 		param name="rc.vendorOrderID";
     	
-    	rc.vendorOrder = getVendorOrderService().getVendorOrder(rc.vendorOrderID);	
-    }*/
+    	rc.backAction = "admin:vendorOrder.detailVendorOrder";
+    	rc.backQueryString = "vendorOrderID=#rc.vendorOrderId#";
+    }
 
     public void function createStockReceiverVendorOrder(required struct rc) {
     	param name="rc.vendorOrderId" default="";

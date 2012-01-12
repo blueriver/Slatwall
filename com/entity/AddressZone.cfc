@@ -56,7 +56,7 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public void function init() {
+	public any function init() {
 		if(isNull(variables.addressZoneLocations)) {
 			variables.addressZoneLocations = arrayNew(1);
 		}
