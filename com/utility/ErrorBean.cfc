@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayName="ErrorBean" persistent="false" accessors="true" hint="Bean to manage validation errors" output="false" {
+component displayName="Error Bean" persistent="false" accessors="true" hint="Bean to manage validation errors" output="false" {
 
 	// @hint stores any validation errors for the entity
 	property name="errors" type="struct";

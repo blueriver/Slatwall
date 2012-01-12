@@ -901,6 +901,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return true;	
 	}
 	
+	public any function forceItemQuantityUpdate(required any order, required any messageBean) {
+		// Loop over each order Item
+		for(var i=arrayLen(arguments.order.getOrderItems()); i>=1; i--) {
+			if( !arguments.order.getOrderItems()[i].hasQuantityWithinMaxOrderQuantity() ) {
+				if(arguments.order.getOrderItems()[i].getMaximumOrderQuantity() > 0) {
+					arguments.messageBean.addMessage(messageName="forcedItemQuantityAdjusted", message="#arguments.order.getOrderItems()[i].getSku().getProduct().getTitle()# #arguments.order.getOrderItems()[i].getSku().displayOptions()# on your order had the quantity updated from #arguments.order.getOrderItems()[i].getQuantity()# to #arguments.order.getOrderItems()[i].getMaximumOrderQuantity()# because of inventory constraints.");
+					arguments.order.getOrderItems()[i].setQuantity( arguments.order.getOrderItems()[i].getMaximumOrderQuantity() );
+				} else {
+					arguments.messageBean.addMessage(messageName="forcedItemRemoved", message="#arguments.order.getOrderItems()[i].getSku().getProduct().getTitle()# #arguments.order.getOrderItems()[i].getSku().displayOptions()# was removed from your order because of inventory constraints");
+					arguments.order.getOrderItems()[i].removeOrder();
+				}
+			}
+		}
+	}
+	
 	
 	/**************** LEGACY DEPRECATED METHOD ****************************/
 	/*

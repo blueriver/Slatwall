@@ -134,4 +134,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:cart.detail");
 	}
 	
+	public void function forceItemQuantityUpdate(required struct rc) {
+		
+		getOrderService().forceItemQuantityUpdate(order=rc.$.slatwall.cart(), messageBean=rc.$.slatwall.getMessageBean());
+		
+		getFW().setView("frontend:cart.detail");
+	}
+	
 }

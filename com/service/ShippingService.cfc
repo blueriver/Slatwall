@@ -180,7 +180,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			} else {
 				// Populate the orderFulfillment with the processing error
-				arguments.orderFulfillmentShipping.addError('processing', ratesResponseBean.getAllErrorMessages());
+				arguments.orderFulfillmentShipping.addError('processing', ratesResponseBean.getAllErrorsHTML());
 			}
 			
 		}
