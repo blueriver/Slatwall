@@ -197,7 +197,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		for(var messageName in getMessages()) {
 			for(var i=1; i<=arrayLen(getMessages()[messageName]); i++) {
-				returnString &= "<p class='message'>" & getMessages()[messageName][i] & "</p>";
+				returnString &= "<p class='message #lcase(messageName)#'>" & getMessages()[messageName][i] & "</p>";
 			}
 		}
 		
