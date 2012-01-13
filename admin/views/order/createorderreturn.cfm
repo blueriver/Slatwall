@@ -219,7 +219,7 @@ Notes:
 									</cfif>
 								</td>					
 								<td>#local.orderItem.getQuantity()#</td>
-								<td>#local.orderItem.getQuantityShipped()#</td>
+								<td>#local.orderDeliveryItem.getQuantity()#</td>
 								<td>#local.orderItem.getFormattedValue('discountAmount', 'currency')#</td>
 								<td>#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#</td>
 								
@@ -228,10 +228,10 @@ Notes:
 								<td>#local.quantityPriceAlreadyReturned.price#</td>
 								
 								<!--- In order to guess the previous per-item price, take the qty ordered, and the ext price, and devide --->
-								<td><input type="text" name="price_orderItemId(#local.orderItem.getOrderItemId()#)" class="priceReturningInput" value="#local.orderItem.getExtendedPriceAfterDiscount() / local.orderItem.getQuantity()#"></td>
+								<td><input type="text" name="price_orderItemId(#local.orderItem.getOrderItemId()#)_orderDeliveryId(#rc.order.getOrderDeliveries()[i].getOrderDeliveryID()#)" class="priceReturningInput" value="#local.orderItem.getExtendedPriceAfterDiscount() / local.orderItem.getQuantity()#"></td>
 								<td>
-									<select name="quantity_orderItemId(#local.orderItem.getOrderItemId()#)" class="quantityReturningSelect">
-										<cfloop from="0" to="#abs(local.orderItem.getQuantityShipped() - local.quantityPriceAlreadyReturned.quantity)#" index="local.i">
+									<select name="quantity_orderItemId(#local.orderItem.getOrderItemId()#)_orderDeliveryId(#rc.order.getOrderDeliveries()[i].getOrderDeliveryID()#)" class="quantityReturningSelect">
+										<cfloop from="0" to="#abs(local.orderDeliveryItem.getQuantity() - local.quantityPriceAlreadyReturned.quantity)#" index="local.i">
 											<option value="#local.i#">#local.i#</option>
 										</cfloop>
 									</select>

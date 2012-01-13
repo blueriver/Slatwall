@@ -49,6 +49,13 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 	// Related Object Properties (one-to-many)
 	property name="orderReturnItems" singularname="orderReturnItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderReturnID" cascade="all" inverse="true";
 	
+	public any function init() {
+		if(isNull(variables.orderReturnItems)) {
+			variables.orderReturnItems = [];
+		}
+
+		return super.init();
+	}
 	    
 
 	// ============ START: Non-Persistent Property Methods =================
