@@ -93,8 +93,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function saveOrderReturn(required struct rc) {
-		//param name="rc.orderID";
-		//rc.order = getOrderService().getOrder(rc.orderID);
+		param name="rc.orderID";
+		rc.order = getOrderService().getOrder(rc.orderID);
 		
 		if(getService("OrderService").createOrderReturn(rc)) {
 			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_success");
