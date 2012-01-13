@@ -104,7 +104,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	}
 	
 	public void function preUpdate(struct oldData){
-		throw("Updates to Order Delivery Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
+		throw("Updates to Order Delivery Items are not allowed because this illustrates a fundamental flaw in inventory tracking.");
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
