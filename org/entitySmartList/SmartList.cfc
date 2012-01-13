@@ -235,7 +235,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public void function addSelect(required string propertyIdentifier, required string alias) {
-		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.alias;
+		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false)] = arguments.alias;
 	}
 	
 	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1, boolean fetch) {
