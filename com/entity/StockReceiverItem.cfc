@@ -50,32 +50,11 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	// Related Object Properties (many-to-one)
 	property name="stock" fieldtype="many-to-one" fkcolumn="stockID" cfc="Stock";
 	property name="stockReceiver" fieldtype="many-to-one" fkcolumn="stockReceiverID" cfc="StockReceiver";
-	
-	// Only one of these will be filled in at any given time. We are not using TPC here, but we could.
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="vendorOrderItem" cfc="VendorOrderItem" fieldtype="many-to-one" fkcolumn="vendorOrderItemID";
 	property name="stockAdjustmentItem" cfc="StockAdjustmentItem" fieldtype="many-to-one" fkcolumn="stockAdjustmentItemID";
-	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
-	
-	// Maintain bidirectional relationships (many-to-one). Notice that the child (StockReceiverItem) is the handler of the relationship, while the parent (StockReceiver), has inverse="true".
-	public void function setStockReceiver(required any stockReceiver) {
-	   variables.stockReceiver = arguments.stockReceiver;
-	   
-	   //logSlatwall("About to append stock receiver item: #this.getStockReceiverItemId()# - isNew(): #isNew()# - #!arguments.stockReceiver.hasStockReceiverItem(this)#");
-	   if(isNew() || !arguments.stockReceiver.hasStockReceiverItem(this)) {
-	       arrayAppend(arguments.stockReceiver.getStockReceiverItems(), this);
-	   }
-	}
-	
-	public void function removeStockReceiver() {
-       var index = arrayFind(variables.stockReceiver.getStockReceiverItems(), this);
-       if(index > 0) {
-           arrayDeleteAt(variables.stockReceiver.getStockReceiverItems(), index);
-       }
-       structDelete(variables,"stockReceiver");
-    }
-    
-    private boolean function hasOneAndOnlyOneRelatedItem() {
+	private boolean function hasOneAndOnlyOneRelatedItem() {
     	var relationshipCount = 0;
     	if(!isNull(getVendorOrderItem())) {
     		relationshipCount++;
@@ -95,6 +74,24 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Stock Receiver (many-to-one)    
+	public void function setStockReceiver(required any stockReceiver) {    
+		variables.stockReceiver = arguments.stockReceiver;    
+		if(isNew() or !arguments.stockReceiver.hasStockReceiverItem( this )) {    
+			arrayAppend(arguments.stockReceiver.getStockReceiverItems(), this);    
+		}    
+	}    
+	public void function removeStockReceiver(any stockReceiver) {    
+		if(!structKeyExists(arguments, "stockReceiver")) {    
+			arguments.stockReceiver = variables.stockReceiver;    
+		}    
+		var index = arrayFind(arguments.stockReceiver.getStockReceiverItems(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);    
+		}    
+		structDelete(variables, "stockReceiver");    
+	}
+
 	// Stock Adjustment Item (many-to-one)    
 	public void function setStockAdjustmentItem(required any stockAdjustmentItem) {    
 		variables.stockAdjustmentItem = arguments.stockAdjustmentItem;    

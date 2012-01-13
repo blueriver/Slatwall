@@ -50,14 +50,14 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (many-to-one)
+	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
+	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
+	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
+	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
-	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
-	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
 	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID";
-	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
 	// Related Object Properties (one-to-many)
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
@@ -200,97 +200,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		smartList.addFilter("orderItemStatusType_typeID", getOrderItemStatusType().getTypeID());
 		return smartList.getRecords();
 	}
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Order (many-to-one)
-	
-	public void function setOrder(required Order order) {
-		variables.order = arguments.order;
-		if(isNew() || !arguments.order.hasOrderItem(this)) {
-			arrayAppend(arguments.order.getOrderItems(),this);
-		}
-	}
-	
-	public void function removeOrder(Order order) {
-		if(!structKeyExists(arguments, "order")) {
-			arguments.order = variables.order;
-		}
-		var index = arrayFind(arguments.order.getOrderItems(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.order.getOrderItems(),index);
-		}    
-		structDelete(variables,"order");
-		
-		// Remove from order fulfillment to trigger those actions
-		removeOrderFulfillment();
-    }
-    
-    // Order Fulfillment (many-to-one)
-    
-    public void function setOrderFulfillment(required OrderFulfillment orderFulfillment) {
-		variables.orderFulfillment = arguments.orderFulfillment;
-		if(isNew() || !arguments.orderFulfillment.hasOrderFulfillmentItems(this)) {
-			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(),this);
-			
-			// Run Item's Changed Function
-			variables.orderFulfillment.orderFulfillmentItemsChanged();
-		}
-    }
-    
-    public void function removeOrderFulfillment(OrderFulfillment orderFulfillment) {
-    	if(!structKeyExists(arguments, "orderFulfillment")) {
-    		arguments.orderFulfillment = variables.orderFulfillment;
-    	}
-    	var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
-    	if(index > 0) {
-    		arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
-    		
-    		// Run Item's Changed Function
-			variables.orderFulfillment.orderFulfillmentItemsChanged();
-    	}
-    	
-    	structDelete(variables, "orderFulfillment");
-    }
-    
-    // Order Delivery Item (one-to-many)
-    
-    public void function addOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
-    	arguments.orderDeliveryItem.setOrderItem(this);
-    }
-    
-    public void function removeOrderDeliveryItem(required OrderDeliveryItem orderDeliveryItem) {
-    	arguments.orderDeliveryItem.removeOrderItem(this);
-    }
-    
-	// Attribute Values (one-to-many)
-    public void function addAttributeValue(required OrderItemAttributeValue attributeValue) {
-    	arguments.attributeValue.setOrderItem(this);
-    }
-    
-    public void function removeAttributeValue(required OrderItemAttributeValue attributeValue) {
-    	arguments.attributeValue.removeOrderItem(this);
-    }
-    
-    // Applied Promotions (one-to-many)
-    public void function addAppliedPromotion(required OrderItemAppliedPromotion orderItemAppliedPromotion) {
-    	arguments.orderItemAppliedPromotion.setOrderItem(this);
-    }
-
-    public void function removeAppliedPromotion(required OrderItemAppliedPromotion orderItemAppliedPromotion) {
-    	arguments.orderItemAppliedPromotion.removeOrderItem(this);
-    }
-    
-    // Applied Taxes (one-to-many)
-    public void function addAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
-    	arguments.orderItemAppliedTax.setOrderItem(this);
-    }
-    
-    public void function removeAppliedTax(required OrderItemAppliedTax orderItemAppliedTax) {
-    	arguments.orderItemAppliedTax.removeOrderItem(this);
-    }
-    
-    
+ 
     // This method returns a single percentage rate for all taxes. So an item with tax 5% and 8% would return 13.
     public numeric function getCombinedTaxRate() {
     	var taxRate = 0;
@@ -300,8 +210,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	
     	return taxRate;
     }
-    
-    /************   END Association Management Methods   *******************/
     
     public struct function getQuantityPriceAlreadyReturned() {
     	return getService("OrderService").getQuantityPriceSkuAlreadyReturned(getOrder().getOrderID(), getSku().getSkuID());
@@ -318,12 +226,134 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasOrderItem( this )) {
+			arrayAppend(arguments.order.getOrderItems(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getOrderItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrderItems(), index);
+		}
+		structDelete(variables, "order");
+		
+		// Remove from order fulfillment to trigger those actions
+		removeOrderFulfillment();
+	}
+	
+	// Order Fulfillment (many-to-one)
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasOrderFulfillmentItem( this )) {
+			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
+			
+			// Run Item's Changed Function
+			variables.orderFulfillment.orderFulfillmentItemsChanged();
+		}
+	}
+	public void function removeOrderFulfillment(any orderFulfillment) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
+		}
+		var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrderFulfillmentItems(), index);
+			
+			// Run Item's Changed Function
+			variables.orderFulfillment.orderFulfillmentItemsChanged();
+		}
+		structDelete(variables, "orderFulfillment");
+	}
+
+
+	// Order Return (many-to-one)
+	public void function setOrderReturn(required any orderReturn) {
+		variables.orderReturn = arguments.orderReturn;
+		if(isNew() or !arguments.orderReturn.hasorderReturnItem( this )) {
+			arrayAppend(arguments.orderReturn.getorderReturnItems(), this);
+		}
+	}
+	public void function removeOrderReturn(any orderReturn) {
+		if(!structKeyExists(arguments, "orderReturn")) {
+			arguments.orderReturn = variables.orderReturn;
+		}
+		var index = arrayFind(arguments.orderReturn.getorderReturnItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getorderReturnItems(), index);
+		}
+		structDelete(variables, "orderReturn");
+	}
+	
+	// Refrenced Order Item (many-to-one)
+	public void function setRefrencedOrderItem(required any refrencedOrderItem) {
+		variables.refrencedOrderItem = arguments.refrencedOrderItem;
+		if(isNew() or !arguments.refrencedOrderItem.hasRefrencingOrderItems( this )) {
+			arrayAppend(arguments.refrencedOrderItem.getRefrencingOrderItem(), this);
+		}
+	}
+	public void function removeRefrencedOrderItem(any refrencedOrderItem) {
+		if(!structKeyExists(arguments, "refrencedOrderItem")) {
+			arguments.refrencedOrderItem = variables.refrencedOrderItem;
+		}
+		var index = arrayFind(arguments.refrencedOrderItem.getRefrencingOrderItem(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getRefrencingOrderItem(), index);
+		}
+		structDelete(variables, "refrencedOrderItem");
+	}
+	
+	// Applied Promotions (one-to-many)
+	public void function addAppliedPromotion(required any appliedPromotion) {
+		arguments.appliedPromotion.setOrderItem( this );
+	}
+	public void function removeAppliedPromotion(required any appliedPromotion) {
+		arguments.appliedPromotion.removeOrderItem( this );
+	}
+	
+	// Applied Taxes (one-to-many)
+	public void function addAppliedTax(required any appliedTax) {
+		arguments.appliedTax.setOrderItem( this );
+	}
+	public void function removeAppliedTax(required any appliedTax) {
+		arguments.appliedTax.removeOrderItem( this );
+	}
+	
+	// Attribute Values (one-to-many)
+	public void function addAttributeValue(required any attributeValue) {
+		arguments.attributeValue.setOrderItem( this );
+	}
+	public void function removeAttributeValue(required any attributeValue) {
+		arguments.attributeValue.removeOrderItem( this );
+	}
+	
+	// Order Delivery Items (one-to-many)
+	public void function addOrderDeliveryItem(required any orderDeliveryItem) {
+		arguments.orderDeliveryItem.setOrderItem( this );
+	}
+	public void function removeOrderDeliveryItem(required any orderDeliveryItem) {
+		arguments.orderDeliveryItem.removeOrderItem( this );
+	}
+	
 	// Stock Receiver Items (one-to-many)
 	public void function addStockReceiverItem(required any stockReceiverItem) {
 		arguments.stockReceiverItem.setOrderItem( this );
 	}
 	public void function removeStockReceiverItem(required any stockReceiverItem) {
 		arguments.stockReceiverItem.removeOrderItem( this );
+	}
+	
+	// Refrencing Order Items (one-to-many)
+	public void function addRefrencingOrderItem(required any refrencingOrderItem) {
+		arguments.refrencingOrderItem.setRefrencedOrderItem( this );
+	}
+	public void function removeRefrencingOrderItem(required any refrencingOrderItem) {
+		arguments.refrencingOrderItem.removeRefrencedOrderItem( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
