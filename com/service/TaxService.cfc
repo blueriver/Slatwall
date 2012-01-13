@@ -74,7 +74,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					}
 				}
 				
-			} else if (orderItem.getOrderItemType().getStatusCode() == "oitReturn") {
+			} else if (orderItem.getOrderItemType().getSystemCode() == "oitReturn") {
 				
 				// TODO: Impliment Return Tax
 				

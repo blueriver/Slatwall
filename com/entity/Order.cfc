@@ -55,18 +55,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
-	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
 	property name="referencedOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
+	property name="orderType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderTypeID";
+	property name="orderStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderStatusTypeID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="orderItems" singularname="orderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
-	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="orderDeliveries" singularname="orderDelivery" cfc="OrderDelivery" fieldtype="one-to-many" fkcolumn="orderID"  cascade="all-delete-orphan" inverse="true";
-	
-	// -------------------I don't think that this should be inverse.
-	// This is a collection of "return orders".
+	property name="orderFulfillments" singularname="orderFulfillment" cfc="OrderFulfillment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderPayments" singularname="orderPayment" cfc="OrderPayment" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
+	property name="orderReturns" singularname="orderReturn" cfc="OrderReturn" type="array" fieldtype="one-to-many" fkcolumn="orderID" cascade="all-delete-orphan" inverse="true";
 	property name="referencingOrders" singularname="referencingOrder" cfc="Order" fieldtype="one-to-many" fkcolumn="referencedOrderID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (Many-To-Many)
@@ -83,21 +81,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
 	public any function init() {
-		if(isNull(variables.orderFulfillments)) {
-			variables.orderFulfillments = [];
+		if(isNull(variables.orderItems)) {
+			variables.orderItems = [];
 		}
 		if(isNull(variables.orderDeliveries)) {
 			variables.orderDeliveries = [];
 		}
-		if(isNull(variables.referencingOrders)) {
-			variables.referencingOrders = [];
-		}
-		
-		if(isNull(variables.orderItems)) {
-			variables.orderItems = [];
+		if(isNull(variables.orderFulfillments)) {
+			variables.orderFulfillments = [];
 		}
 		if(isNull(variables.orderPayments)) {
 			variables.orderPayments = [];
+		}
+		if(isNull(variables.orderReturns)) {
+			variables.orderReturns = [];
+		}
+		if(isNull(variables.referencingOrders)) {
+			variables.referencingOrders = [];
 		}
 		if(isNull(variables.promotionCodes)) {
 			variables.promotionCodes = [];
@@ -110,7 +110,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		
 		// Set the default type to purchase order
 		if(isNull(getOrderType())) {
-			variables.orderType = getService("typeService").getTypeBySystemCode('otPurchaseOrder');
+			variables.orderType = getService("typeService").getTypeBySystemCode('otSalesOrder');
 		}
 
 		return super.init();
@@ -226,102 +226,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return variables.orderNumber;
 	}
 	
-    /******* Association management methods for bidirectional relationships **************/
-	
-	// OrderItems (one-to-many)
-	public void function addOrderItem(required OrderItem OrderItem) {
-	   arguments.orderItem.setOrder(this);
-	}
-	
-	public void function removeOrderItem(required OrderItem OrderItem) {
-	   arguments.orderItem.removeOrder(this);
-	}
-	
-	// OrderFulfillments (one-to-many)
-	public void function addOrderFulfillment(required OrderFulfillment orderFulfillment) {
-	   arguments.orderFulfillment.setOrder(this);
-	}
-	
-	public void function removeOrderFulfillment(required OrderFulfillment orderFulfillment) {
-	   arguments.orderFulfillment.removeOrder(this);
-	}
-	
-	// OrderDeliveries (one-to-many)
-	public void function addOrderDelivery(required OrderDelivery orderDelivery) {
-	   arguments.orderDelivery.setOrder(this);
-	}
-	
-	public void function removeOrderDelivery(required OrderDelivery orderDelivery) {
-	   arguments.orderDelivery.removeOrder(this);
-	}
-	
-	// Order Returns (one-to-many)
-	public void function addReferencingOrder(required Order referencingOrder) {
-	   arguments.referencingOrder.setReferencedOrder(this);
-	}
-	
-	public void function removeReferencingOrder(required Order referencingOrder) {
-	   arguments.referencingOrder.removeReferencedOrder(this);
-	}
-	
-	// OrderPayments (one-to-many)
-	public void function addOrderPayment(required OrderPayment OrderPayment) {
-	   arguments.orderPayment.setOrder(this);
-	}
-	
-	public void function removeOrderPayment(required OrderPayment OrderPayment) {
-	   arguments.orderPayment.removeOrder(this);
-	}
-	
-	// Account (many-to-one)
-	public void function setAccount(required Account account) {
-		// If this is an order that hasn't been placed... remove any account specific aspects
-		if(getOrderStatusType().getSystemCode() == "ostNotPlaced" && (isNull(variables.account) || variables.account.getAccountID() != arguments.account.getAccountID())) {
-			getService("orderService").removeAccountSpecificOrderDetails(this);	
-		}
-		variables.account = arguments.account;
-		if(!arguments.account.hasOrder(this)) {
-			arrayAppend(arguments.account.getOrders(), this);
-		}
-	}
-	
-	public void function removeAccount(Account account) {
-		if(structKeyExists(variables,"account")) {
-			if(!structKeyExists(arguments, "account")) {
-				arguments.account = variables.account;
-			}
-			var index = arrayFind(arguments.account.getOrders(), this);
-			if(index > 0) {
-				arrayDeleteAt(arguments.account.getOrders(), index);
-			}    
-			structDelete(variables,"account");
-		}
-    }
-    
-    // Order Return (many-to-one)
-	public void function setReferencedOrder(required Order referencedOrder) {
-		variables.referencedOrder = arguments.referencedOrder;
-		if(!arguments.referencedOrder.hasReferencingOrder(this)) {
-			arrayAppend(arguments.referencedOrder.getReferencingOrders(), this);
-		}
-	}
-	
-	public void function removeReferencedOrder(Order referencedOrder) {
-		if(structKeyExists(variables,"referencedOrder")) {
-			if(!structKeyExists(arguments, "referencedOrder")) {
-				arguments.referencedOrder = variables.referencedOrder;
-			}
-			var index = arrayFind(arguments.referencedOrder.getReferencingOrders(), this);
-			if(index > 0) {
-				arrayDeleteAt(arguments.referencedOrder.getReferencingOrders(), index);
-			}    
-			structDelete(variables, "referencedOrder");
-		}
-    }
-	
-    /************   END Association Management Methods   *******************/
-	
-	// Get the sum of all the payment amounts
+    // Get the sum of all the payment amounts
 	public numeric function getPaymentAmountTotal() {
 		var totalPayments = 0;
 		
@@ -410,11 +315,97 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arr;
 	}
 	
+    
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
 	// ============= START: Bidirectional Helper Methods ===================
+
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasOrder( this )) {
+			arrayAppend(arguments.account.getOrders(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getOrders(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrders(), index);
+		}
+		structDelete(variables, "account");
+	}
+	
+	// Refrenced Order (many-to-one)
+	public void function setRefrencedOrder(required any refrencedOrder) {
+		variables.refrencedOrder = arguments.refrencedOrder;
+		if(isNew() or !arguments.refrencedOrder.hasRefrencingOrder( this )) {
+			arrayAppend(arguments.refrencedOrder.getRefrencingOrders(), this);
+		}
+	}
+	public void function removeRefrencedOrder(any refrencedOrder) {
+		if(!structKeyExists(arguments, "refrencedOrder")) {
+			arguments.refrencedOrder = variables.refrencedOrder;
+		}
+		var index = arrayFind(arguments.refrencedOrder.getRefrencingOrders(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getRefrencingOrders(), index);
+		}
+		structDelete(variables, "refrencedOrder");
+	}
+
+	// Order Items (one-to-many)
+	public void function addOrderItem(required any orderItem) {
+		arguments.orderItem.setOrder( this );
+	}
+	public void function removeOrderItem(required any orderItem) {
+		arguments.orderItem.removeOrder( this );
+	}
+
+	// Order Deliveries (one-to-many)
+	public void function addOrderDelivery(required any orderDelivery) {
+		arguments.orderDelivery.setOrder( this );
+	}
+	public void function removeOrderDelivery(required any orderDelivery) {
+		arguments.orderDelivery.removeOrder( this );
+	}
+
+	// Order Fulfillments (one-to-many)
+	public void function addOrderFulfillment(required any orderFulfilment) {
+		arguments.orderFulfilment.setOrder( this );
+	}
+	public void function removeOrderFulfillment(required any orderFulfilment) {
+		arguments.orderFulfilment.removeOrder( this );
+	}
+
+	// Order Payments (one-to-many)
+	public void function addOrderPayment(required any orderPayment) {
+		arguments.orderPayment.setOrder( this );
+	}
+	public void function removeOrderPayment(required any orderPayment) {
+		arguments.orderPayment.removeOrder( this );
+	}
+
+	// Order Returns (one-to-many)
+	public void function addOrderReturn(required any orderReturn) {
+		arguments.orderReturn.setOrder( this );
+	}
+	public void function removeOrderReturn(required any orderReturn) {
+		arguments.orderReturn.removeOrder( this );
+	}
+	
+	// Refrencing Order Items (one-to-many)
+	public void function addRefrencingOrderItem(required any refrencingOrderItem) {
+		arguments.refrencingOrderItem.setRefrencedOrder( this );
+	}
+	public void function removeRefrencingOrderItem(required any refrencingOrderItem) {
+		arguments.refrencingOrderItem.removeRefrencedOrder( this );
+	}
+	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

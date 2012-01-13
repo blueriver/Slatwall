@@ -74,7 +74,7 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preUpdate(struct oldData) {
-		throw("You cannot update a comment because this would display a fundimental flaw in comment management.");
+		throw("You cannot update a comment because this would display a fundamental flaw in comment management.");
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

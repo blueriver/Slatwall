@@ -64,6 +64,32 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasOrderReturn( this )) {
+			arrayAppend(arguments.order.getOrderReturns(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getOrderReturns(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getOrderReturns(), index);
+		}
+		structDelete(variables, "order");
+	}
+	
+	// Order Return Items (one-to-many)
+	public void function addOrderReturnItem(required any orderReturnItem) {
+		arguments.orderReturnItem.setOrderReturn( this );
+	}
+	public void function removeOrderReturnItem(required any orderReturnItem) {
+		arguments.orderReturnItem.removeOrderReturn( this );
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// =================== START: ORM Event Hooks  =========================
