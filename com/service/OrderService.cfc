@@ -994,18 +994,17 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		//order.setOrderOpenDateTime();
 		//order.setOrderCloseDateTime();
 		order.setAccount(originalOrder.getAccount());
-		order.setOrderStatusType(getService("typeService").getTypeBySystemCode("ostClosed"));
-		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnOrder"));
+		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
+		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
 		order.setReferencedOrder(originalOrder);
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
-		var orderReturn = getService("OrderService").newOrderReturn();
-		var location = getService("LocationService").getLocation(data.returnToLocationID);
+		var orderReturn = this.newOrderReturn();
+		var location = getLocationService().getLocation(data.returnToLocationID);
 		orderReturn.setOrder(order);
 		orderReturn.setFulfillmentRefundAmount(val(data.refundShippingAmount));
 		orderReturn.setReturnLocation(location);
 		
-	
 		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
 		// further populated with StockRecieverItems, one for each item being returned.
 		var stockReceiver = getStockService().newStockReceiverOrder();
@@ -1036,21 +1035,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 				// Create a new orderItem and populate it's basic properties from the original order item, and 
 				// from the user submitted input.
-				var orderItem = getService("OrderService").newOrderItem();
+				var orderItem = this.newOrderItem();
 				orderItem.setReferencedOrderItem(originalOrderItem);
 				orderItem.setOrder(order);
 				orderItem.setPrice(priceReturning);
 				orderItem.setQuantity(quantityReturning);
 				orderItem.setSku(originalOrderItem.getSku());
-				orderItem.setOrderItemStatusType(getService("typeService").getTypeBySystemCode('oistFulfilled'));
-				orderItem.setOrderItemType(getService("typeService").getTypeBySystemCode('oitReturn'));
+				orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
+				orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
 			
 				// Populate the Tax on this order by creating new tax entities, but using the same rate as the 
 				// original orderItem.
 				for(var k=1; k <= ArrayLen(originalOrderItem.getAppliedTaxes()); k++)
 				{
 					var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
-					var appliedTax = getService("taxService").newOrderItemAppliedTax();
+					var appliedTax = getTaxService().newOrderItemAppliedTax();
 					
 					appliedTax.setOrderItem(orderItem);
 					appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
