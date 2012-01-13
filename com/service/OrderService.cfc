@@ -1043,6 +1043,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				orderItem.setQuantity(quantityReturning);
 				orderItem.setSku(originalOrderItem.getSku());
 				orderItem.setOrderItemStatusType(getService("typeService").getTypeBySystemCode('oistFulfilled'));
+				orderItem.setOrderItemType(getService("typeService").getTypeBySystemCode('oitReturn'));
 			
 				// Populate the Tax on this order by creating new tax entities, but using the same rate as the 
 				//original orderItem
