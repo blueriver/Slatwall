@@ -171,15 +171,15 @@ Notes:
 					<tr>
 						<th>SKU Code</th>
 						<th class="varWidth">Brand - Product Name</th>
-						<th>Originally Ordered Qty</th>
-						<th>Qty Shipped</th>
-						<th>Original Discount Amount</th>
-						<th>Extended Price After Discount</th>
-						<th>Previously Returned Quantity</th>
-						<th>Previously Returned Amount</th>
-						<th>Return Price</th>
-						<th>Returning</th>
-						<th>Return Extended Amount</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Originally Ordered Qty</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Qty Shipped</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Original Discount Amount</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Extended Price After Discount</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Previously Returned Quantity</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Previously Returned Amount</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Return Price</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Returning</th>
+						<th style="white-space:normal; vertical-align: text-bottom;">Return Extended Amount</th>
 					</tr>
 					</thead>
 					<tbody>
