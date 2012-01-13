@@ -85,7 +85,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
 		rc.locationSmartList = getLocationService().getLocationSmartList();
-		rc.locationSmartList.setPageRecordsShow(9999999);
 		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
 		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
 
@@ -94,8 +93,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	}
 	
 	public void function saveOrderReturn(required struct rc) {
-		param name="rc.orderID";
-		rc.order = getOrderService().getOrder(rc.orderID);
+		//param name="rc.orderID";
+		//rc.order = getOrderService().getOrder(rc.orderID);
 		
 		if(getService("OrderService").createOrderReturn(rc)) {
 			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_success");
