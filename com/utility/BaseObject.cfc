@@ -772,6 +772,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		return expandPath("/plugins/Slatwall");
 	}
 	
+	// @hint Private helper function to get the database type
+	private string function getDBType() {
+		return application.configbean.getDBType();
+	}
+	
 	// @hint Private helper function to return the Slatwall RB Factory in any component
 	private any function getRBFactory() {
 		return getPluginConfig().getApplication().getValue("rbFactory");

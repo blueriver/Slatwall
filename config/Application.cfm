@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,27 +35,6 @@
 
 Notes:
 
-*/
-component displayname="Update Script" entityname="SlatwallUpdateScript" table="SlatwallUpdateScript" persistent="true" accessors="true" output="true" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="updateScriptID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="scriptPath" ormtype="string";
-	property name="loadOrder" ormtype="integer";
-	property name="maxExecutionCount" ormtype="integer";
-	property name="successfulExecutionCount" ormtype="integer" default="0";
-	property name="executionCount" ormtype="integer" default="0" ;
-	property name="lastExecutedDateTime" ormtype="timestamp";
-		
-	// ============ START: Non-Persistent Property Methods =================
-	
-	// ============  END:  Non-Persistent Property Methods =================
-		
-	// ============= START: Bidirectional Helper Methods ===================
-	
-	// =============  END:  Bidirectional Helper Methods ===================
-	
-	// =================== START: ORM Event Hooks  =========================
-	
-	// ===================  END:  ORM Event Hooks  =========================
-}
+--->
+<cfoutput>Access denied</cfoutput>
+<cfabort>

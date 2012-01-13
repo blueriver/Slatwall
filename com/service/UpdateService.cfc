@@ -77,6 +77,39 @@ Notes:
 	</cffunction>
 	
 	<cffunction name="runScripts">
-		<!--- TODO: Impliment Me! --->
+		<cfset var scripts = this.listUpdateScriptOrderByLoadOrder() />
+		<cfset var script = "" />
+		<cfloop array="#scripts#" index="script">
+			<cfif isNull(script.getSuccessfulExecutionCount())>
+				<cfset script.setSuccessfulExecutionCount(0) />
+			</cfif>
+			<cfif isNull(script.getExecutionCount())>
+				<cfset script.setExecutionCount(0) />
+			</cfif>
+			<!--- Run the script if never ran successfully or success count < max count ---->
+			<cfif script.getSuccessfulExecutionCount() EQ 0 OR script.getSuccessfulExecutionCount() LT script.getMaxExecutionCount()>
+				<!---- try to run the script --->
+				<cftry>
+					<!--- if it's a database script look for db specific file --->
+					<cfif findNoCase("database/",script.getScriptPath())>
+						<cfset var dbSpecificFileName = replaceNoCase(script.getScriptPath(),".cfm",".#getDBType()#.cfm") />
+						<cfif fileExists("#getSlatwallRootDirectory()#/config/scripts/#dbSpecificFileName#")>
+							<cfinclude template="#getSlatwallRootPath()#/config/scripts/#dbSpecificFileName#" />
+						<cfelseif fileExists("#getSlatwallRootDirectory()#/config/scripts/#script.getScriptPath()#")>
+							<cfinclude template="#getSlatwallRootPath()#/config/scripts/#script.getScriptPath()#" />
+						<cfelse>
+							<cfthrow message="update script file doesn't exist" />
+						</cfif>
+					</cfif>
+					<cfset script.setSuccessfulExecutionCount(script.getSuccessfulExecutionCount()+1) />
+					<cfcatch>
+						<!--- failed, let's log this execution count --->
+						<cfset script.setExecutionCount(script.getExecutionCount()+1) />
+					</cfcatch>
+				</cftry>
+				<cfset script.setLastExecutedDateTime(now()) />
+				<cfset this.save(script) />
+			</cfif>
+		</cfloop>
 	</cffunction>
 </cfcomponent>

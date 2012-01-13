@@ -31,6 +31,7 @@
 	<bean id="priceGroupDAO" class="Slatwall.com.dao.PriceGroupDAO" />
 	<bean id="promotionDAO" class="Slatwall.com.dao.PromotionDAO" />
 	<bean id="roundingRuleDAO" class="Slatwall.com.dao.RoundingRuleDAO" />
+	<bean id="updateDAO" class="Slatwall.com.dao.updateDAO" />
 	<bean id="vendorDAO" class="Slatwall.com.dao.VendorDAO" />
 	<bean id="vendorOrderDAO" class="Slatwall.com.dao.VendorOrderDAO" />
 		
@@ -180,6 +181,7 @@
         <property name="DAO"><ref bean="TypeDAO" /></property>
     </bean>
     <bean id="updateService" parent="parentService" class="Slatwall.com.service.UpdateService">
+    	<property name="DAO"><ref bean="updateDAO" /></property>
     	<property name="utilityFileService"><ref bean="utilityFileService" /></property>
     </bean>
     <bean id="vendorService" parent="parentService" class="Slatwall.com.service.VendorService">
