@@ -137,9 +137,7 @@ Notes:
 			<dl class="twoColumn">
 				<dt class="title"><label>Return To (Restock) Location:</strong></label></dt> 
 				<dd class="value">
-					<cfset valueOptions = duplicate(rc.locationSmartList.getPageRecords())>
-					<!---<cfset ArrayPrepend(valueOptions, {name=$.Slatwall.rbKey("admin.stockReceiver.selectReceiveForLocation"), value=""})>--->
-					<cf_SlatwallFormField fieldType="select" fieldName="returnToLocationID" valueOptions="#valueOptions#" fieldClass="returnToLocationID">
+					<cf_SlatwallFormField fieldType="select" fieldName="returnToLocationID" valueOptions="#rc.locationSmartList.getRecords()#" fieldClass="returnToLocationID">
 				</dd>
 			</dl>
 			

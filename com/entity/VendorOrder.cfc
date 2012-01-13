@@ -55,7 +55,6 @@ component displayname="Vendor VendorOrder" entityname="SlatwallVendorOrder" tabl
 	
 	// Related Object Properties (One-To-Many)
 	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="vendorOrderID" inverse="true" cascade="all-delete-orphan";
-	//property name="stockReceiverVendorOrders" singularname="stockReceiverVendorOrder" cfc="stockReceiverVendorOrder" fieldtype="one-to-many" inverse="true"  cascade="all-delete-orphan"; 
 	
 	// Non persistent properties
 	property name="total" persistent="false" formatType="currency"; 

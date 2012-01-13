@@ -233,6 +233,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	// =================== START: ORM Event Hooks  =========================
 	
 	public void function preInsert(){
+		if(this.hasErrors()) {
+			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
+		}
+		
 		var timestamp = now();
 		
 		if(structKeyExists(this,"setCreatedDateTime")){
@@ -252,6 +256,10 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 	}
 	
 	public void function preUpdate(struct oldData){
+		if(this.hasErrors()) {
+			throw("An ormFlush has been called on the hibernate session, however there is a #getEntityName()# entity in the hibernate session with errors");
+		}
+		
 		var timestamp = now();
 		
 		if(structKeyExists(this,"setModifiedDateTime")){

@@ -36,8 +36,7 @@
 Notes:
 
 */
-component extends="BaseService" persistent="false" accessors="true" output="false"
-{
+component extends="BaseService" persistent="false" accessors="true" output="false" {
 
 	property name="accountService";
 	property name="addressService";
@@ -54,13 +53,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="typeService";
 	//property name="SettingService";
 	
-	public any function getOrderSmartList(struct data={})
-	{
+	public any function getOrderSmartList(struct data={}) {
 		arguments.entityName = "SlatwallOrder";
 	
 		// Set the defaul showing to 25
-		if(!structKeyExists(arguments.data, "P:Show"))
-		{
+		if(!structKeyExists(arguments.data, "P:Show")) {
 			arguments.data["P:Show"] = 25;
 		}
 	
@@ -974,11 +971,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
 	}
 	
-	public numeric function getQuantityShipped(required any orderID, required any skuID)
-	{
-		return getDAO().getQuantityShipped(arguments.orderId, arguments.skuID);
-	}
-	
 	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID)
 	{
 		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
@@ -990,12 +982,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		
 		// Create a new order
 		var order = this.newOrder();
-		//order.setOrderNumber(999);
-		//order.setOrderOpenDateTime();
-		//order.setOrderCloseDateTime();
 		order.setAccount(originalOrder.getAccount());
-		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
+		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 		order.setReferencedOrder(originalOrder);
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
@@ -1018,20 +1007,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var originalOrderItem = orderDelivery.getOrderDeliveryItems()[i].getOrderItem();
 				var quantityReturning = data["quantity_orderItemId(#originalOrderItem.getOrderItemID()#)_orderDeliveryId(#orderDelivery.getOrderDeliveryID()#)"];
 				var priceReturning = data["price_orderItemId(#originalOrderItem.getOrderItemID()#)_orderDeliveryId(#orderDelivery.getOrderDeliveryID()#)"];
-				
-				// Validation should be pushed into ValidateThis???
-				if(!isNumeric(priceReturning) || !isNumeric(quantityReturning))
-				{
-					throw("Could not get value for price or quantity. Was looking for Qty: #priceReturning# price: #priceReturning# OrderItemId: #originalOrderItem.getOrderItemId()# OrderDeliveryId: #orderDelivery.getOrderDeliveryID()#");
-				}
-			
-				// Check that the quantity returning is valid. This should be moved into a ValidateThis rule.
-				var quantityAlreadyReturned = originalOrderItem.getQuantityPriceAlreadyReturned().quantity;
-				var quantityAllowedToReturn = abs(originalOrderItem.getQuantityShipped() - quantityAlreadyReturned);
-				if(quantityReturning > quantityAllowedToReturn)
-				{
-					throw("The quantity of items being returned (#quantityReturning#) is greater than the quantity allowed (#quantityAllowedToReturn#)");
-				}
 			
 				// Create a new orderItem and populate it's basic properties from the original order item, and 
 				// from the user submitted input.
@@ -1043,6 +1018,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				orderItem.setSku(originalOrderItem.getSku());
 				orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
 				orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
+			
+			/*
 			
 				// Populate the Tax on this order by creating new tax entities, but using the same rate as the 
 				// original orderItem.
@@ -1056,6 +1033,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
 					appliedTax.setTaxAmount(originalAppliedTax.getTaxRate() * (orderItem.getQuantity() * priceReturning));
 				}
+			*/
 			
 				// Add this order item to the OrderReturns entity
 				orderItem.setOrderReturn(orderReturn);
@@ -1067,25 +1045,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				stockReceiverItem.setOrderItem(orderItem);
 				stockReceiverItem.setQuantity(quantityReturning);
 				stockReceiverItem.setStock(stock);
-			
-				//dumpScreen(stockReceiverItem.getStockReceiver());
-			
-				/*
-				// Create the associated "Inventory" tracking entity (using the subclassed 
-				InventoryStockReceiver).
-				var inventory = getStockService().newInventoryStockReceiverItem();
-				inventory.setQuantityIn(quantityReturning);
-				inventory.setStock(stock);
-				inventory.setStockReceiverItem(stockReceiverItem);
-				getStockService().saveInventory(inventory);
-				*/
 			}
 		}
 	
 		this.saveOrder(order);
 		getStockService().saveStockReceiver(stockReceiver);
-		this.saveOrderReturn(orderReturn);
-	
+		
 		return true;
 	}
 	

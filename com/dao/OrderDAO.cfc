@@ -193,22 +193,6 @@ component extends="BaseDAO" {
 		return retStruct;
 	}
 	
-	public numeric function getQuantityShipped(required any orderID, required any skuID) {
-		var params = [arguments.orderID, arguments.skuID];	
-		var hql = " SELECT new map(sum(odi.quantity) as quantity)
-					FROM SlatwallOrderDeliveryItem odi
-					WHERE odi.orderItem.order.orderID = ?
-					AND odi.orderItem.sku.skuID = ?       "; 
-	
-		var result = ormExecuteQuery(hql, params);
-
-		if(structKeyExists(result[1], "quantity")) {
-			return result[1]["quantity"];
-		} else {
-			return 0;
-		}
-	}
-	
 	// This method pulls the sum of all OriginalOrder -> Order (return) -> OrderReturn fulfillmentRefundAmounts
 	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID) {
 		var params = [arguments.orderID];	
@@ -224,6 +208,5 @@ component extends="BaseDAO" {
 			return 0;
 		}
 	}
-	
-		
+
 }
