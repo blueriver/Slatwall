@@ -68,12 +68,13 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all";
 
 	// Non persistent properties
-	property name="extendedPrice" persistent="false" formatType="currency" ; 
+	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;
+	property name="extendedPrice" persistent="false" formatType="currency";
 	property name="extendedPriceAfterDiscount" persistent="false" formatType="currency" ; 
+	property name="quantityDelivered" persistent="false";
+	property name="quantityUndelivered" persistent="false";
 	property name="taxAmount" persistent="false" formatType="currency" ; 
-	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ; 
-
-
+	 
 	public any function init() {
 		
 		// set the type to sale by default
@@ -130,49 +131,6 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getOrderItemStatusType().getSystemCode();
 	}
 	
-	public numeric function getExtendedPrice() {
-		return getPrice() * getQuantity();
-	}
-	
-	public numeric function getExtendedPriceAfterDiscount() {
-		return getExtendedPrice() - getDiscountAmount();
-	}
-	
-	public numeric function getTaxAmount() {
-		if(!structKeyExists(variables,"taxAmount")) {
-			variables.taxAmount = 0;
-			for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
-				variables.taxAmount += getAppliedTaxes()[i].getTaxAmount();
-			}
-		}
-		return variables.taxAmount;
-	}
-	
-	public numeric function getDiscountAmount() {
-		if(!structKeyExists(variables,"discountAmount")) {
-			variables.discountAmount = 0;
-			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
-				variables.discountAmount += getAppliedPromotions()[i].getDiscountAmount();
-			}
-		}
-		return variables.discountAmount;
-	}
-	
-	public numeric function getQuantityDelivered() {
-		if(!structKeyExists(variables,"quantityDelivered") || !isNumeric(variables.quantityDelivered)) {
-			variables.quantityDelivered = 0;
-			var deliveryItems = getOrderDeliveryItems();
-			for( var thisDeliveryItem in deliveryItems ) {
-				variables.quantityDelivered += thisDeliveryItem.getQuantity();				
-			}			
-		}
-		return variables.quantityDelivered;
-	}
-	
-	public numeric function getQuantityUndelivered() {
-		return getQuantity() - getQuantityDelivered();
-	}
-	
 	public string function displayCustomizations(format="list") {
 		var customizations = "";
 		if(arguments.format == 'htmlList' && this.hasAttributeValue()) {
@@ -215,12 +173,52 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
     	return getService("OrderService").getQuantityPriceSkuAlreadyReturned(getOrder().getOrderID(), getSku().getSkuID());
     }
     
-	public numeric function getQuantityShipped() {
-    	return getService("OrderService").getQuantityShipped(getOrder().getOrderID(), getSku().getSkuID());
-    }
-    
    
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public numeric function getDiscountAmount() {
+		if(!structKeyExists(variables,"discountAmount")) {
+			variables.discountAmount = 0;
+			for(var i=1; i<=arrayLen(getAppliedPromotions()); i++) {
+				variables.discountAmount += getAppliedPromotions()[i].getDiscountAmount();
+			}
+		}
+		return variables.discountAmount;
+	}
+	
+	public numeric function getExtendedPrice() {
+		return getPrice() * getQuantity();
+	}
+	
+	public numeric function getExtendedPriceAfterDiscount() {
+		return getExtendedPrice() - getDiscountAmount();
+	}
+	
+	public numeric function getTaxAmount() {
+		if(!structKeyExists(variables,"taxAmount")) {
+			variables.taxAmount = 0;
+			for(var i=1; i<=arrayLen(getAppliedTaxes()); i++) {
+				variables.taxAmount += getAppliedTaxes()[i].getTaxAmount();
+			}
+		}
+		return variables.taxAmount;
+	}
+	
+	public numeric function getQuantityDelivered() {
+		if(!structKeyExists(variables,"quantityDelivered") || !isNumeric(variables.quantityDelivered)) {
+			variables.quantityDelivered = 0;
+			var deliveryItems = getOrderDeliveryItems();
+			for( var thisDeliveryItem in deliveryItems ) {
+				variables.quantityDelivered += thisDeliveryItem.getQuantity();				
+			}			
+		}
+		return variables.quantityDelivered;
+	}
+	
+	public numeric function getQuantityUndelivered() {
+		return getQuantity() - getQuantityDelivered();
+	}
+	
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

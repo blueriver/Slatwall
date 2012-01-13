@@ -974,11 +974,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getQuantityPriceSkuAlreadyReturned(arguments.orderId, arguments.skuID);
 	}
 	
-	public numeric function getQuantityShipped(required any orderID, required any skuID)
-	{
-		return getDAO().getQuantityShipped(arguments.orderId, arguments.skuID);
-	}
-	
 	public numeric function getPreviouslyReturnedFulfillmentTotal(required any orderID)
 	{
 		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
@@ -1027,7 +1022,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 				// Check that the quantity returning is valid. This should be moved into a ValidateThis rule.
 				var quantityAlreadyReturned = originalOrderItem.getQuantityPriceAlreadyReturned().quantity;
-				var quantityAllowedToReturn = abs(originalOrderItem.getQuantityShipped() - quantityAlreadyReturned);
+				var quantityAllowedToReturn = abs(originalOrderItem.getQuantityDelivered() - quantityAlreadyReturned);
 				if(quantityReturning > quantityAllowedToReturn)
 				{
 					throw("The quantity of items being returned (#quantityReturning#) is greater than the quantity allowed (#quantityAllowedToReturn#)");
