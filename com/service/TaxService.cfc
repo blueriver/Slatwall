@@ -49,28 +49,37 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				orderItem.getAppliedTaxes()[ta].removeOrderItem();
 			}
 			
-			// Get this items fulfillment
-			var fulfillment = orderItem.getOrderFulfillment();
-			
-			// If the method is shipping then apply taxes
-			if(fulfillment.getFulfillmentMethodID() == "shipping") {
+			if(orderItem.getOrderItemType().getSystemCode() == "oitSale") {
 				
-				// TODO: This is a hack because we only have one tax category for products right now
-				var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
-				var address = fulfillment.getShippingAddress();
+				// Get this items fulfillment
+				var fulfillment = orderItem.getOrderFulfillment();
 				
-				if(!isNull(address)) {
-					for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
-						if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone())) {
-							var newAppliedTax = this.newOrderItemAppliedTax();
-							newAppliedTax.setTaxAmount(orderItem.getExtendedPriceAfterDiscount() * (taxCategory.getTaxCategoryRates()[r].getTaxRate() / 100));
-							newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
-							newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
-							newAppliedTax.setOrderItem(orderItem);
+				// If the method is shipping then apply taxes
+				if(fulfillment.getFulfillmentMethodID() == "shipping") {
+					
+					// TODO: This is a hack because we only have one tax category for products right now
+					var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
+					var address = fulfillment.getShippingAddress();
+					
+					if(!isNull(address)) {
+						for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
+							if(isNull(taxCategory.getTaxCategoryRates()[r].getAddressZone()) || getAddressService().isAddressInZone(address=address, addressZone=taxCategory.getTaxCategoryRates()[r].getAddressZone())) {
+								var newAppliedTax = this.newOrderItemAppliedTax();
+								newAppliedTax.setTaxAmount(orderItem.getExtendedPriceAfterDiscount() * (taxCategory.getTaxCategoryRates()[r].getTaxRate() / 100));
+								newAppliedTax.setTaxRate(taxCategory.getTaxCategoryRates()[r].getTaxRate());
+								newAppliedTax.setTaxCategoryRate(taxCategory.getTaxCategoryRates()[r]);
+								newAppliedTax.setOrderItem(orderItem);
+							}
 						}
 					}
 				}
+				
+			} else if (orderItem.getOrderItemType().getStatusCode() == "oitReturn") {
+				
+				// TODO: Impliment Return Tax
+				
 			}
+			
 		}
 	}
 
