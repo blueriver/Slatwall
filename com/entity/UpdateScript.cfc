@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="Script" entityname="SlatwallScript" table="SlatwallScript" persistent="true" accessors="true" output="true" extends="BaseEntity" {
+component displayname="Update Script" entityname="SlatwallUpdateScript" table="SlatwallUpdateScript" persistent="true" accessors="true" output="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="scriptID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="updateScriptID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="scriptPath" ormtype="string";
 	property name="loadOrder" ormtype="integer";
 	property name="maxExecutionCount" ormtype="integer";

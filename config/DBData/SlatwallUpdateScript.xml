@@ -1,12 +1,12 @@
-<Table tableName="SlatwallScript">
+<Table tableName="SlatwallUpdateScript">
 	<Columns>
-		<column name="scriptID" fieldtype="id" />
+		<column name="updateScriptID" fieldtype="id" />
 		<column name="scriptPath" />
-		<column name="loadOrder" />
-		<column name="maxExecutionCount" />
+		<column name="loadOrder" dataType="integer" />
+		<column name="maxExecutionCount" dataType="integer" />
 	</Columns>
 	<Records>
-		<Record scriptID="d7f98d32a446859f1be70bd05255a1c8" scriptPath="database/v1_3.cfm" loadOrder="1" maxExecutionCount="1" />
+		<Record updateScriptID="d7f98d32a446859f1be70bd05255a1c8" scriptPath="database/v1_3.cfm" loadOrder="1" maxExecutionCount="1" />
 	</Records>
 </Table>
 
