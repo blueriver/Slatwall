@@ -250,8 +250,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// Order Fulfillment (many-to-one)
 	public void function setOrderFulfillment(required any orderFulfillment) {
 		variables.orderFulfillment = arguments.orderFulfillment;
-		if(isNew() or !arguments.orderFulfillment.hasOrderItem( this )) {
-			arrayAppend(arguments.orderFulfillment.getOrderItems(), this);
+		if(isNew() or !arguments.orderFulfillment.hasOrderFulfillmentItem( this )) {
+			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
 			
 			// Run Item's Changed Function
 			variables.orderFulfillment.orderFulfillmentItemsChanged();
@@ -261,30 +261,31 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		if(!structKeyExists(arguments, "orderFulfillment")) {
 			arguments.orderFulfillment = variables.orderFulfillment;
 		}
-		var index = arrayFind(arguments.orderFulfillment.getOrderItems(), this);
+		var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderItems(), index);
+			arrayDeleteAt(arguments.account.getOrderFulfillmentItems(), index);
 			
 			// Run Item's Changed Function
 			variables.orderFulfillment.orderFulfillmentItemsChanged();
 		}
 		structDelete(variables, "orderFulfillment");
 	}
-	
+
+
 	// Order Return (many-to-one)
 	public void function setOrderReturn(required any orderReturn) {
 		variables.orderReturn = arguments.orderReturn;
-		if(isNew() or !arguments.orderReturn.hasOrderItem( this )) {
-			arrayAppend(arguments.orderReturn.getOrderItems(), this);
+		if(isNew() or !arguments.orderReturn.hasorderReturnItem( this )) {
+			arrayAppend(arguments.orderReturn.getorderReturnItems(), this);
 		}
 	}
 	public void function removeOrderReturn(any orderReturn) {
 		if(!structKeyExists(arguments, "orderReturn")) {
 			arguments.orderReturn = variables.orderReturn;
 		}
-		var index = arrayFind(arguments.orderReturn.getOrderItems(), this);
+		var index = arrayFind(arguments.orderReturn.getorderReturnItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderItems(), index);
+			arrayDeleteAt(arguments.account.getorderReturnItems(), index);
 		}
 		structDelete(variables, "orderReturn");
 	}

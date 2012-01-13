@@ -81,21 +81,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	
 	public any function init() {
-		if(isNull(variables.orderFulfillments)) {
-			variables.orderFulfillments = [];
+		if(isNull(variables.orderItems)) {
+			variables.orderItems = [];
 		}
 		if(isNull(variables.orderDeliveries)) {
 			variables.orderDeliveries = [];
 		}
-		if(isNull(variables.referencingOrders)) {
-			variables.referencingOrders = [];
-		}
-		
-		if(isNull(variables.orderItems)) {
-			variables.orderItems = [];
+		if(isNull(variables.orderFulfillments)) {
+			variables.orderFulfillments = [];
 		}
 		if(isNull(variables.orderPayments)) {
 			variables.orderPayments = [];
+		}
+		if(isNull(variables.orderReturns)) {
+			variables.orderReturns = [];
+		}
+		if(isNull(variables.referencingOrders)) {
+			variables.referencingOrders = [];
 		}
 		if(isNull(variables.promotionCodes)) {
 			variables.promotionCodes = [];
