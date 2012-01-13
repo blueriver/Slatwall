@@ -160,7 +160,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 	}
 	
 	public void function preUpdate(Struct oldData){
-		throw("Updates to Stock Receiver Items are not allowed because this illustrates a fundimental flaw in inventory tracking.");
+		throw("Updates to Stock Receiver Items are not allowed because this illustrates a fundamental flaw in inventory tracking.");
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================

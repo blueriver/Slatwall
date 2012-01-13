@@ -110,7 +110,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		
 		// Set the default type to purchase order
 		if(isNull(getOrderType())) {
-			variables.orderType = getService("typeService").getTypeBySystemCode('otPurchaseOrder');
+			variables.orderType = getService("typeService").getTypeBySystemCode('otSalesOrder');
 		}
 
 		return super.init();

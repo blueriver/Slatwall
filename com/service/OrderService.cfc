@@ -994,22 +994,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		//order.setOrderOpenDateTime();
 		//order.setOrderCloseDateTime();
 		order.setAccount(originalOrder.getAccount());
-		order.setOrderStatusType(getService("typeService").getTypeBySystemCode("ostClosed"));
-		order.setOrderType(getService("typeService").getTypeBySystemCode("otReturnOrder"));
+		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
+		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
 		order.setReferencedOrder(originalOrder);
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
-		var orderReturn = getService("OrderService").newOrderReturn();
-		var location = getService("LocationService").getLocation(data.returnToLocationID);
+		var orderReturn = this.newOrderReturn();
+		var location = getLocationService().getLocation(data.returnToLocationID);
 		orderReturn.setOrder(order);
 		orderReturn.setFulfillmentRefundAmount(val(data.refundShippingAmount));
 		orderReturn.setReturnLocation(location);
-		getService("OrderService").saveOrderReturn(orderReturn);
-	
+		
 		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
-		//further populated with StockRecieverItems, one for each item being returned.
-		// Create Stock Receiver
+		// further populated with StockRecieverItems, one for each item being returned.
 		var stockReceiver = getStockService().newStockReceiverOrder();
+		stockReceiver.setOrder(order);
 		
 		// Load order with order items. Loop over all deliveries, then delivered items
 		for(var j = 1; j <= ArrayLen(originalOrder.getOrderDeliveries()); j++) {
@@ -1035,21 +1034,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			
 				// Create a new orderItem and populate it's basic properties from the original order item, and 
-				//from the user submitted input
-				var orderItem = getService("OrderService").newOrderItem();
+				// from the user submitted input.
+				var orderItem = this.newOrderItem();
 				orderItem.setReferencedOrderItem(originalOrderItem);
 				orderItem.setOrder(order);
 				orderItem.setPrice(priceReturning);
 				orderItem.setQuantity(quantityReturning);
 				orderItem.setSku(originalOrderItem.getSku());
-				orderItem.setOrderItemStatusType(getService("typeService").getTypeBySystemCode('oistFulfilled'));
+				orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
+				orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
 			
 				// Populate the Tax on this order by creating new tax entities, but using the same rate as the 
-				//original orderItem
+				// original orderItem.
 				for(var k=1; k <= ArrayLen(originalOrderItem.getAppliedTaxes()); k++)
 				{
 					var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
-					var appliedTax = getService("taxService").newOrderItemAppliedTax();
+					var appliedTax = getTaxService().newOrderItemAppliedTax();
 					
 					appliedTax.setOrderItem(orderItem);
 					appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
@@ -1068,6 +1068,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				stockReceiverItem.setQuantity(quantityReturning);
 				stockReceiverItem.setStock(stock);
 			
+				//dumpScreen(stockReceiverItem.getStockReceiver());
+			
 				/*
 				// Create the associated "Inventory" tracking entity (using the subclassed 
 				InventoryStockReceiver).
@@ -1080,8 +1082,9 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 	
-		getStockService().saveStockReceiver(stockReceiver);
 		this.saveOrder(order);
+		getStockService().saveStockReceiver(stockReceiver);
+		this.saveOrderReturn(orderReturn);
 	
 		return true;
 	}
