@@ -1019,7 +1019,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
 				orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
 			
-			
+			/*
 			
 				// Populate the Tax on this order by creating new tax entities, but using the same rate as the 
 				// original orderItem.
@@ -1033,7 +1033,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
 					appliedTax.setTaxAmount(originalAppliedTax.getTaxRate() * (orderItem.getQuantity() * priceReturning));
 				}
-			
+			*/
 			
 				// Add this order item to the OrderReturns entity
 				orderItem.setOrderReturn(orderReturn);

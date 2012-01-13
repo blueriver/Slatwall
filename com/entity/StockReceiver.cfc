@@ -37,23 +37,25 @@ Notes:
 
 */
 component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table="SlatwallStockReceiver" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="receiverType"  {
-	// Discriminator (values: vendorOrder, order, stockAdjustment)
-	property name="receiverType" insert="false" update="false";
+	
 	
 	// Persistent Properties
 	property name="stockReceiverID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="packingSlipNumber" ormtype="string";
 	property name="boxCount" ormtype="integer";
 	
+	// Related Object Properties (one-to-many)
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
+		
+	// Discriminator (values: vendorOrder, order, stockAdjustment)
+	property name="receiverType" insert="false" update="false";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Related Object Properties (one-to-many)
-	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" fieldtype="one-to-many" fkcolumn="stockReceiverID" cascade="all-delete-orphan" inverse="true";
-	
+		
 	public any function init(){
 	   // set default collections for association management methods
 	   if(isNull(variables.stockReceiverItems)) {
@@ -80,6 +82,14 @@ component displayname="Stock Receiver" entityname="SlatwallStockReceiver" table=
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Receiver Items (one-to-many)
+	public void function addStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.setStockReceiver( this );
+	}
+	public void function removeStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.removeStockReceiver( this );
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
