@@ -237,7 +237,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		var index = arrayFind(arguments.order.getOrderItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderItems(), index);
+			arrayDeleteAt(arguments.order.getOrderItems(), index);
 		}
 		structDelete(variables, "order");
 		
@@ -261,7 +261,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderFulfillmentItems(), index);
+			arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
 			
 			// Run Item's Changed Function
 			variables.orderFulfillment.orderFulfillmentItemsChanged();
