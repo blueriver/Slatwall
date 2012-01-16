@@ -15,4 +15,9 @@
 			<rule type="required" contexts="save" />
 		</property>
 	</objectProperties>
+	<objectProperties>
+		<property name="quantity">
+			<rule type="numeric" contexts="save" />
+		</property>
+	</objectProperties>
 </validateThis>
