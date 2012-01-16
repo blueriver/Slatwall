@@ -526,12 +526,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		var attributeSets = [];
 		// get all the parent product types
 		if(!isNull(getProductType())){
-			var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
-			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
+			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(getProductType().getIDPathList()));
 		} else {
 			return attributeSets;
 		}
-		
 	}
 	
 	//get attribute value
