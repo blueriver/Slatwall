@@ -513,6 +513,21 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	// slatwall update
+	public void function detailSlatwallUpdate(required struct rc) {
+		
+		var versions = getUpdateService().getAvailableVersions();
+		rc.availableDevelopVersion = versions.develop;
+		rc.availableMasterVersion = versions.master;
+		
+		rc.currentVersion = getPluginConfig().getApplication().getValue('SlatwallVersion');
+		if(find("-", rc.currentVersion)) {
+			rc.currentBranch = "develop";
+		} else {
+			rc.currentBranch = "master";
+		}
+		
+	}
+	
 	public void function updateSlatwall(required struct rc) {
 		getUpdateService().update(branch=rc.updateBranch);
 		rc.message = rbKey("admin.setting.updateslatwall_success");

@@ -36,6 +36,11 @@
 Notes:
 
 --->
+<cfparam name="rc.currentVersion" type="string" />
+<cfparam name="rc.currentBranch" type="string" />
+<cfparam name="rc.availableDevelopVersion" type="string" />
+<cfparam name="rc.availableMasterVersion" type="string" />
+
 <cfset local.updateOptions = [{name="Stable", value="master"},{name="Bleeding Edge", value="develop"}] />
 <cfoutput>
 	<div class="svoadminsettingdetailslatwallupdate">
@@ -43,11 +48,26 @@ Notes:
 			
 		</ul>
 		<h2>Update Slatwall</h2>
+		<dl class="twoColumn">
+			<dt>Current Version</dt>
+			<dd>#rc.currentVersion#</dd>
+			<dt>Current Release Type</dt>
+			<cfif rc.currentBranch eq "master">
+				<dd>Stable</dd>
+			<cfelse>
+				<dd>Bleeding Edge</dd>
+			</cfif>
+			<dt>Available Stable Version</dt>
+			<dd>#rc.availableMasterVersion#</dd>
+			<dt>Available Bleeding Edge Version</dt>
+			<dd>#rc.availableDevelopVersion#</dd>
+		</dl>
+		<hr class="clear" />
 		<form method="post">
 			<input type="hidden" name="slatAction" value="admin:setting.updateSlatwall" />
 			<select name="updateBranch">
 				<cfloop array="#local.updateOptions#" index="local.updateOption" >
-					<option value="#local.updateOption.value#">#local.updateOption.name#</option>
+					<option value="#local.updateOption.value#" <cfif rc.currentBranch eq local.updateOption.value>selected="selected"</cfif>>#local.updateOption.name#</option>
 				</cfloop>
 			</select>
 			<cf_SlatwallActionCaller action="admin:setting.updateSlatwall" type="submit" class="button" confirmRequired="true">
