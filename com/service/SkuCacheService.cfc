@@ -153,7 +153,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// This is the only updateXXX method that should touch the variables.skusToUpdate
 	public void function updateFromSku(required any sku, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
-		arrayAppend(variables.skusToUpdate, {skuID=arguments.sku.getSkuID, propertyList=arguments.propertyList});	
+		arrayAppend(variables.skusToUpdate, {skuID=arguments.sku.getSkuID(), propertyList=arguments.propertyList});	
 	}
 	
 	// This gets called on every request
