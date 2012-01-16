@@ -125,29 +125,7 @@ component extends="org.fw1.framework" output="false" {
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
 		
-		/******************* END: Coldsping Setup **************************/		
-		
-		// Build RB Factory
-		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
-		
-		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/dbdata"));
-		
-		// Run Scripts
-		getBeanFactory().getBean("updateService").runScripts();
-		
-		// Load all Slatwall Settings
-		getBeanFactory().getBean("settingService").reloadConfiguration();
-		
-		// Reload All Integrations
-		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-		
-		// Set the first request to True so that it runs
-		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
-		
-		// Set the frameworks baseURL to be used by the buildURL() method
-		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
+		/******************* END: Coldsping Setup **************************/
 		
 		/******************* CFStatic Setup *************************/
 		
@@ -182,6 +160,27 @@ component extends="org.fw1.framework" output="false" {
 		
 		/******************* END: ValidateThis Setup **************************/
 		
+		// Build RB Factory
+		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
+		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
+		
+		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
+		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/dbdata"));
+		
+		// Run Scripts
+		getBeanFactory().getBean("updateService").runScripts();
+		
+		// Load all Slatwall Settings
+		getBeanFactory().getBean("settingService").reloadConfiguration();
+		
+		// Reload All Integrations
+		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+		
+		// Set the first request to True so that it runs
+		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
+		
+		// Set the frameworks baseURL to be used by the buildURL() method
+		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 		
 		// Log that the application is finished setting up
 		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);

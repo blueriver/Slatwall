@@ -108,8 +108,22 @@ Notes:
 					</cfcatch>
 				</cftry>
 				<cfset script.setLastExecutedDateTime(now()) />
-				<cfset this.save(script) />
+				<cfset this.saveUpdateScript(script) />
 			</cfif>
 		</cfloop>
+	</cffunction>
+	
+	<cffunction name="getAvailableVersions">
+		<cfset var masterVersion = "" />
+		<cfset var developVersion = "" />
+		<cfset var versions = {} />
+		
+		<cfhttp method="get" url="https://raw.github.com/ten24/Slatwall/master/version.txt" result="masterVersion">
+		<cfhttp method="get" url="https://raw.github.com/ten24/Slatwall/develop/version.txt" result="developVersion">
+		
+		<cfset versions.master = trim(masterVersion.filecontent) />
+		<cfset versions.develop = trim(developVersion.filecontent) />
+		
+		<cfreturn versions />
 	</cffunction>
 </cfcomponent>
