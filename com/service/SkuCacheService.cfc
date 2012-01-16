@@ -41,15 +41,21 @@ Notes:
 	Any time an entity is saved that impacts quantity, price, or settings or a given sku, there is a corisponding
 	skuCache entity that needs to be updated.  The Entities that affect skuCache are as follows:
 	
-	OrderDeliveryItem
-	OrderItem
+	Sku
 	Product
 	ProductType
-	PromotionRewardProduct
-	Sku
-	StockAdjustmentItem
-	StockReceiverItem
+	
+	OrderItem
 	VendorOrderItem
+	StockAdjustmentItem
+	
+	OrderDeliveryItem
+	VendorOrderDeliveryItem
+	StockAdjustmentDeliveryItem
+	
+	PromotionRewardProduct
+	
+	StockReceiverItem
 
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
@@ -61,46 +67,93 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	variables.updatingSkus = [];
 	variables.nextSalePriceExpirationDateTime = "";
 	
-	public void function updateFromOrderDeliveryItem(required any orderDeliveryItem) {
-		arrayAppend(variables.skusToUpdate, {propertyList="qoh,qndoo", skuID=arguments.orderDeliveryItem.getStock().getSku().getSkuID()});
-	}
-	
 	public void function updateFromOrderItem(required any orderItem) {
-		arrayAppend(variables.skusToUpdate, {propertyList="qndoo", skuID=arguments.orderItem.getSku().getSkuID()});
-	}
-	
-	public void function updateFromProduct(required any product) {
-		for(var i=1; i<=arrayLen(arguments.product.getSkus()); i++) {
-			arrayAppend(variables.skusToUpdate, {propertyList="allowShippingFlag,allowPreorderFlag,allowBackorderFlag,callToOrderFlag,trackInventoryFlag", skuID=arguments.product.getSkus()[i].getSkuID()});
-		}
-	}
-	
-	public void function updateFromProductType(required any productType) {
-		for(var p=1; p<=arrayLen(arguments.productType.getProducts()); p++) {
-			for(var s=1; s<=arrayLen(arguments.productType.getProducts()[p].getSkus()); s++) {
-				arrayAppend(variables.skusToUpdate, {propertyList="allowShippingFlag,allowPreorderFlag,allowBackorderFlag,callToOrderFlag,trackInventoryFlag", skuID=arguments.productType.getProducts()[p].getSkus()[s].getSkuID()});
-			}
-		}
-	}
-	
-	public void function updateFromPromotionRewardProduct(required any promotionRewardProduct) {
-		
-	}
-	
-	public void function updateFromSku(required any sku) {
-		
-	}
-	
-	public void function updateFromStockAdjustmentItem(required any stockAdjustmentItem) {
-		
-	}
-	
-	public void function updateFromStockReceiverItem(required any stockReceiverItem) {
-		
+		updateFromSku(sku=arguments.orderItem.getSku(), propertyList="qndoo,qnroro");
 	}
 	
 	public void function updateFromVendorOrderItem(required any vendorOrderItem) {
+		updateFromSku(sku=arguments.vendorOrderItem.getStock().getSku(), propertyList="qndorvo,qnrovo");
+	}
+	
+	public void function updateFromStockAdjustmentItem(required any stockAdjustmentItem) {
+		if(!isNull(arguments.stockAdjustmentItem.getFromStock())) {
+			updateFromSku(sku=arguments.stockAdjustmentItem.getFromStock().getSku(), propertyList="qoh,qndosa");
+		}
+		if(!isNull(arguments.stockAdjustmentItem.getToStock())) {
+			updateFromSku(sku=arguments.stockAdjustmentItem.getToStock().getSku(), propertyList="qoh,qnrosa");
+		}
+	}
+	
+	public void function updateFromOrderDeliveryItem(required any orderDeliveryItem) {
+		updateFromSku(sku=arguments.orderDeliveryItem.getStock().getSku(), propertyList="qoh,qndoo");
+	}
+	
+	public void function updateFromVendorOrderDeliveryItem(required any vendorOrderDeliveryItem) {
+		updateFromSku(sku=arguments.vendorOrderDeliveryItem.getStock().getSku(), propertyList="qoh,qndovo");
+	}
+	
+	public void function updateFromStockAdjustmentDeliveryItem(required any stockAdjustmentDeliveryItem) {
+		updateFromSku(sku=arguments.stockAdjustmentDeliveryItem.getStock().getSku(), propertyList="qoh,qndosa");
+	}
+	
+	public void function updateFromStockReceiverItem(required any stockReceiverItem) {
+		updateFromSku(sku=arguments.stockReceiverItem.getStock().getSku(), propertyList="qoh,qnroro,qnrovo,qnrosa,qndosa");
+	}
+	
+	public void function updateFromPromotionRewardProduct(required any promotionRewardProduct) {
+		// Loop over Brands on this Promotion Reward and update the related product skus
+		for(var b=1; b<=arrayLen(arguments.promotionRewardProduct.getBrands()); b++) {
+			for(var p=1; p<=arrayLen(arguments.promotionRewardProduct.getBrands()[b].getProducts()); p++) {
+				updateFromProduct(product=arguments.promotionRewardProduct.getBrands()[b].getProducts()[p], propertyList="salePrice,salePriceExpirationDateTime");
+			}
+		}
 		
+		// Loop over Options on this Promotion Reward and update the related skus
+		for(var o=1; o<=arrayLen(arguments.promotionRewardProduct.getOptions()); o++) {
+			for(var s=1; s<=arrayLen(arguments.promotionRewardProduct.getOptions()[o].getSkus()); s++) {
+				updateFromSku(sku=arguments.promotionRewardProduct.getOptions()[o].getSkus()[s], propertyList="salePrice,salePriceExpirationDateTime");
+			}
+		}
+		
+		// Loop over ProductTypes on this Promotion Reward and update the related product skus
+		for(var pt=1; pt<=arrayLen(arguments.promotionRewardProduct.getProductTypes()); pt++) {
+			updateFromProductType(productType=arguments.promotionRewardProduct.getProductTypes()[pt], propertyList="salePrice,salePriceExpirationDateTime");
+		}
+		
+		// Loop over Products on this Promotion Reward and update their skus
+		for(var p=1; p<=arrayLen(arguments.promotionRewardProduct.getProducts()); p++) {
+			updateFromProduct(product=arguments.promotionRewardProduct.getProducts()[p], propertyList="salePrice,salePriceExpirationDateTime");
+		}
+		
+		// Loop over Skus on this Promotion Reward and update them
+		for(var s=1; s<=arrayLen(arguments.promotionRewardProduct.getSkus()); s++) {
+			updateFromSku(sku=arguments.promotionRewardProduct.getSkus()[s], propertyList="salePrice,salePriceExpirationDateTime");
+		}
+	}
+	
+	
+	public void function updateFromProductType(required any productType, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+		// Loop over all products this productType and add call the updateFromProduct method
+		for(var p=1; p<=arrayLen(arguments.productType.getProducts()); p++) {
+			updateFromProduct(arguments.productType.getProducts()[p]);
+		}
+		// Loop over all child productTypes and call this method on them (recursion)
+		for(var c=1; c<=arrayLen(arguments.productType.getChildProductTypes()); c++) {
+			updateFromProductType(arguments.productType.getChildProductTypes()[c]);	
+		}
+	}
+	
+	public void function updateFromProduct(required any product, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+		// Loop over the skus of the product and add to skuCache
+		for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
+			updateFromSku(sku=arguments.product.getSkus(), propertyList=arguments.propertyList);
+		}
+	}
+	
+	
+	// This is the only updateXXX method that should touch the variables.skusToUpdate
+	public void function updateFromSku(required any sku, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+		arrayAppend(variables.skusToUpdate, {skuID=arguments.sku.getSkuID, propertyList=arguments.propertyList});	
 	}
 	
 	// This gets called on every request
@@ -153,8 +206,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(listFindNoCase(arguments.propertyList, "salePriceExpirationDateTime") || skuCache.isNew()) {
 			skuCache.setSalePriceExpirationDateTime( sku.getSalePriceExpirationDateTime() );
 		}
-		
-		
 		if(listFindNoCase(arguments.propertyList, "qoh") || skuCache.isNew()) {
 			skuCache.setQOH( sku.getQuantity("QOH") );
 		}
@@ -193,6 +244,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		if(listFindNoCase(arguments.propertyList, "callToOrderFlag") || skuCache.isNew()) {
 			skuCache.setCallToOrderFlag( sku.getSetting("callToOrderFlag") );
+		}
+		if(listFindNoCase(arguments.propertyList, "displayTemplate") || skuCache.isNew()) {
+			skuCache.setQuantityHeldBack( sku.getSetting("displayTemplate") );
 		}
 		if(listFindNoCase(arguments.propertyList, "quantityHeldBack") || skuCache.isNew()) {
 			skuCache.setQuantityHeldBack( sku.getSetting("quantityHeldBack") );

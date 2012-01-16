@@ -55,11 +55,12 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="qnrosa" ormtype="integer" default=0;
 	
 	// Persistent Properties (Settings)
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowShippingFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
+	property name="displayTemplate" ormtype="string";
 	property name="quantityHeldBack" ormtype="integer";
 	property name="quantityMinimum" ormtype="integer";
 	property name="quantityMaximum" ormtype="integer";
