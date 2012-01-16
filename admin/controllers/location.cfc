@@ -71,7 +71,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.location = getLocationService().getLocation(rc.locationID, true);
     	
     	rc.edit = true; 
-    	getFW().setView("admin:location.detailLocation");  
+    	getFW().setView("admin:location.detaillocation");  
 	}
 	
 
