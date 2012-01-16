@@ -87,7 +87,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			}
 		}
 		
-		if(!isNull(sku)) {
+		if(!isNull(sku) && isNumeric(rc.quantity)) {
 			// Persist the Current Order by setting it in the session
 			rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
 			
