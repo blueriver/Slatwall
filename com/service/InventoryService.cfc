@@ -94,43 +94,43 @@ component extends="BaseService" accessors="true" output="false" {
 		
 	}
 	
-	public numeric function getQOH(string stockID, string skuID, string productID) {
+	public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQOH(argumentCollection=arguments);
 	}
 	
-	public numeric function getQOSH(string stockID, string skuID, string productID) {
+	public numeric function getQOSH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQOSH(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNDOO(string stockID, string skuID, string productID) {
+	public numeric function getQNDOO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQNDOO(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNDORVO(string stockID, string skuID, string productID) {
+	public numeric function getQNDORVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQNDORVO(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNDOSA(string stockID, string skuID, string productID) {
+	public numeric function getQNDOSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQNDOSA(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNRORO(string stockID, string skuID, string productID) {
+	public numeric function getQNRORO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQNRORO(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNROVO(string stockID, string skuID, string productID) {
+	public numeric function getQNROVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQNROVO(argumentCollection=arguments);
 	}
 	
-	public numeric function getQNROSA(string stockID, string skuID, string productID) {
+	public numeric function getQNROSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQNROSA(argumentCollection=arguments);
 	}
 	
-	public numeric function getQR(string stockID, string skuID, string productID) {
+	public numeric function getQR(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQR(argumentCollection=arguments);
 	}
 	
-	public numeric function getQS(string stockID, string skuID, string productID) {
+	public numeric function getQS(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 		return getDAO().getQS(argumentCollection=arguments);
 	}
 	

@@ -41,7 +41,7 @@ Notes:
 	<cfscript>
 		
 		// Quantity on hand. Physically at any location
-		public numeric function getQOH(string stockID, string skuID, string productID) {
+		public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			var params = [];
 			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ) - coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
 			
@@ -62,13 +62,13 @@ Notes:
 		}
 		
 		// Quantity On Sales Hold
-		public numeric function getQOSH(string stockID, string skuID, string productID) {
+		public numeric function getQOSH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			// TODO: Setup Sales Hold
 			return 0;
 		}
 		
 		// Quantity Not Delivered on Order 
-		public numeric function getQNDOO(string stockID, string skuID, string productID) {
+		public numeric function getQNDOO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			
 			var params = [];
 			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(orderDeliveryItem.quantity), 0 )
@@ -101,13 +101,13 @@ Notes:
 		}
 		
 		// Quantity not delivered on return vendor order 
-		public numeric function getQNDORVO(string stockID, string skuID, string productID) {
+		public numeric function getQNDORVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			// TODO: Impliment this later when we add return vendor orders
 			return 0;
 		}
 		
 		// Quantity not delivered on stock adjustment
-		public numeric function getQNDOSA(string stockID, string skuID, string productID) {
+		public numeric function getQNDOSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			
 			var params = [];
 			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockAdjustmentDeliveryItem.quantity), 0 ) FROM
@@ -135,7 +135,7 @@ Notes:
 		}
 		
 		// Quantity not received on return order
-		public numeric function getQNRORO(string stockID, string skuID, string productID) {
+		public numeric function getQNRORO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			var params = [];
 			var hql = "SELECT coalesce( sum(orderItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 )
 					FROM
@@ -167,7 +167,7 @@ Notes:
 		}
 		
 		// Quantity not received on vendor order
-		public numeric function getQNROVO(string stockID, string skuID, string productID) {
+		public numeric function getQNROVO(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			var params = [];
 			var hql = "SELECT coalesce( sum(vendorOrderItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 )
 					FROM
@@ -197,7 +197,7 @@ Notes:
 		}
 		
 		// Quantity not received on stock adjustment
-		public numeric function getQNROSA(string stockID, string skuID, string productID) {
+		public numeric function getQNROSA(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			var params = [];
 			var hql = "SELECT coalesce( sum(stockAdjustmentItem.quantity), 0 ) - coalesce( sum(stockReceiverItem.quantity), 0 ) FROM
 					SlatwallStockAdjustmentItem stockAdjustmentItem
@@ -224,12 +224,12 @@ Notes:
 		}
 		
 		// Quantity received
-		public numeric function getQR(string stockID, string skuID, string productID) {
+		public numeric function getQR(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			return 0;
 		}
 		
 		// Quantity sold
-		public numeric function getQS(string stockID, string skuID, string productID) {
+		public numeric function getQS(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
 			return 0;
 		}
 	</cfscript>

@@ -60,7 +60,7 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	public numeric function getQuantity(required string quantityType) {
 		if(!structKeyExists(variables, quantityType)) {
 			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
-				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {stockID=getStockID()});	
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {stockID=getStockID(), stockRemoteID=getRemoteID()});	
 			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
 				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
 			} else {
