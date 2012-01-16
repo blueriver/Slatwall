@@ -717,6 +717,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return "productName";
 	}
 	
+	public boolean function isDeletable() {
+		var pot = getService("productService").getProductIsOnTransaction(product=this);
+		if(!pot) {
+			return super.isDeletable();
+		}
+		return false;
+	}
+	
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================

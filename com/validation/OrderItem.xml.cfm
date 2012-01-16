@@ -10,4 +10,9 @@
 			<rule type="required" contexts="save" />
 		</property>
 	</objectProperties>
+	<objectProperties>
+		<property name="sku">
+			<rule type="required" contexts="save" />
+		</property>
+	</objectProperties>
 </validateThis>

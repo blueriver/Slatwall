@@ -70,11 +70,10 @@ Notes:
 				<td>#yesNoFormat(local.Product.getPublishedFlag())#</td>
 				<td class="administration">
 					<cfset local.ProductID = local.Product.getProductID() />
-		          <ul class="four">
+		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
 					  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="detail" type="list">
 					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-					  <cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 				
