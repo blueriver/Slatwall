@@ -208,11 +208,11 @@ Notes:
 					<td><cf_SlatwallPropertyDisplay object="#local.thisSku#" fieldName="skus[#local.skuCount#].remoteID" property="remoteID" edit="#rc.edit#" displaytype="plain"></td>
 				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-					<td>#local.thisSku.getQuantity('QOH')#</td>
-					<td>#local.thisSku.getQuantity('QC')#</td>
-					<td>#local.thisSku.getQuantity('QE')#</td>
-					<td>#local.thisSku.getQuantity('QATS')#</td>
-					<td>#local.thisSku.getQuantity('QIATS')#</td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qoh')#">#local.thisSku.getQuantity('QOH')#</a></a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qc')#">#local.thisSku.getQuantity('QC')#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qe')#">#local.thisSku.getQuantity('QE')#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qats')#">#local.thisSku.getQuantity('QATS')#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qiats')#">#local.thisSku.getQuantity('QIATS')#</a></td>
 				</cfif>
 				<cfif rc.edit>
 					<td class="administration">
