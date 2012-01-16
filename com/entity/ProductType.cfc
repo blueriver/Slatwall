@@ -80,6 +80,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
 
 	// Non-Persistent Properties
+	property name="idPathList" type="string" persistent="false";
 	property name="displayTemplateOptions" type="array" persistent="false";
 	property name="parentProductTypeOptions" type="array" persistent="false";
 
@@ -152,6 +153,23 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     // END: Setting Methods
     
     // ============ START: Non-Persistent Property Methods =================
+    
+    public string function getIDPathList() {
+		if(!structKeyExists(variables, "idPathList")) {
+			variables.idPathList = "";
+			var thisProductType = this;
+			var hasParent = true;
+			do {
+				variables.idPathList = listPrepend(variables.idPathList, thisProductType.getProductTypeID());
+				if( isNull(thisProductType.getParentProductType()) ) {
+					hasParent = false;
+				} else {
+					thisProductType = thisProductType.getParentProductType();
+				}
+			} while( hasParent );
+		}
+		return variables.idPathList;
+	}
     
 	public any function getDisplayTemplateOptions() {
 		if(!structKeyExists(variables, "displayTemplateOptions")) {
