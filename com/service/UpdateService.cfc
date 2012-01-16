@@ -87,8 +87,8 @@ Notes:
 				<cfset script.setExecutionCount(0) />
 			</cfif>
 			<!--- Run the script if never ran successfully or success count < max count ---->
-			<cfif script.getSuccessfulExecutionCount() EQ 0 OR script.getSuccessfulExecutionCount() LT script.getMaxExecutionCount()>
-				<!---- try to run the script --->
+			<cfif isNull(script.getMaxExecutionCount()) OR script.getSuccessfulExecutionCount() EQ 0 OR script.getSuccessfulExecutionCount() LT script.getMaxExecutionCount()>
+				<!---- try to run the script ---> 
 				<cftry>
 					<!--- if it's a database script look for db specific file --->
 					<cfif findNoCase("database/",script.getScriptPath())>
