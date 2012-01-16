@@ -84,6 +84,8 @@ component extends="BaseService" accessors="true" output="false" {
 	
 	public any function saveAccount(required any account, required struct data, required string siteID) {
 		
+		var wasNew = arguments.account.isNew();
+		
 		// Call the super.save() to do population and validation
 		arguments.account = super.save(entity=arguments.account, data=arguments.data);
 		
@@ -122,7 +124,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 		
 		// If the account doesn't have errors, is new, has and email address and password, has a password passed in, and not supposed to be a guest account. then attempt to setup the username and password in Mura
-		if( !arguments.account.hasErrors() && arguments.account.isNew() && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
+		if( !arguments.account.hasErrors() && wasNew && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
 			
 			// Try to get the user out of the mura database using the primaryEmail as the username
 			var muraUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
@@ -155,7 +157,7 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// If the account isn't new, and it has a muraUserID then update the mura user from the account
-		if(!arguments.account.isNew() && !isNull(arguments.account.getMuraUserID())) {
+		if(!wasNew && !isNull(arguments.account.getMuraUserID())) {
 			
 			// Load existing mura user
 			var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());

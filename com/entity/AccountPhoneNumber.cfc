@@ -66,17 +66,17 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	// Account (many-to-one)    
 	public void function setAccount(required any account) {    
 		variables.account = arguments.account;    
-		if(isNew() or !arguments.account.hasPhoneNumber( this )) {    
-			arrayAppend(arguments.account.getPhoneNumbers(), this);    
+		if(isNew() or !arguments.account.hasAccountPhoneNumber( this )) {    
+			arrayAppend(arguments.account.getAccountPhoneNumbers(), this);    
 		}    
 	}    
 	public void function removeAccount(any account) {    
 		if(!structKeyExists(arguments, "account")) {    
 			arguments.account = variables.account;    
 		}    
-		var index = arrayFind(arguments.account.getPhoneNumbers(), this);    
+		var index = arrayFind(arguments.account.getAccountPhoneNumbers(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getPhoneNumbers(), index);    
+			arrayDeleteAt(arguments.account.getAccountPhoneNumbers(), index);    
 		}    
 		structDelete(variables, "account");    
 	}
