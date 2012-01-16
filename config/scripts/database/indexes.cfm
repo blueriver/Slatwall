@@ -36,30 +36,20 @@
 Notes:
 
 --->
-<cftry>
-	<cfquery name="updateQuantity">
-		UPDATE SlatwallOrderDeliveryItem
-		SET quantity = quantityDelivered
-	</cfquery>
-	<cfcatch />
-</cftry>
 
-<cftry>
-	<cfquery name="dropQuantityDelivered">
-		ALTER TABLE SlatwallOrderDeliveryItem
-		DROP COLUMN quantityDelivered
-	</cfquery>
-	<cfcatch />
-</cftry>
-
-<cfquery name="updateOrder">
-	UPDATE SlatwallOrder
-	SET orderTypeID = (SELECT typeID FROM SlatwallType WHERE systemCode = 'otSalesOrder')
-	WHERE orderTypeID IS NULL
+<!--- INDEX to inforce SlatwallStock has unique Sku & Location combo --->
+<cfdbinfo type="Index" name="dbiSkuLocation" table="SlatwallStock">
+<cfquery name="indexExists" dbtype="query">
+	SELECT
+		*
+	FROM
+		dbiSkuLocation
+	WHERE
+		INDEX_NAME = <cfqueryparam cfsqltype="cf_sql_varchar" value="SkuLocation">
 </cfquery>
 
-<cfquery name="updateOrderItem">
-	UPDATE SlatwallOrderItem
-	SET orderItemTypeID = (SELECT typeID FROM SlatwallType WHERE systemCode = 'oitSale')
-	WHERE orderItemTypeID IS NULL
-</cfquery>
+<cfif not indexExists.recordcount>
+	<cfquery name="createIndex">
+		CREATE UNIQUE INDEX SkuLocation ON SlatwallStock (locationID,skuID)
+	</cfquery>
+</cfif>
