@@ -61,13 +61,10 @@ component displayname="Base Service" persistent="false" accessors="true" output=
 		return getDAO().getSmartList(argumentcollection=arguments);
 	}
 	
-	public boolean function delete(required any entity, string context="delete"){
-		
-		// Validate that this entity can be deleted
-		arguments.entity.validate(context=arguments.entity.getValidationContext( arguments.context ));
+	public boolean function delete(required any entity){
 		
 		// If the entity Passes validation
-		if(!arguments.entity.hasErrors()) {
+		if(arguments.entity.isDeletable()) {
 			
 			// Call delete in the DAO
 			getDAO().delete(target=arguments.entity);
