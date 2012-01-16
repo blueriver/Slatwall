@@ -158,7 +158,7 @@ Notes:
 					</cfif>	
 					
 					<cfif rc.edit>
-						<a class="button uploadImage" href="/plugins/Slatwall/?slatAction=admin:product.uploadSkuImage&skuID=#local.thisSku.getSkuID()#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
+						<a class="button uploadImage" href="#buildURL(action='admin:product.uploadSkuImage', queryString='skuID=#local.thisSku.getSkuID()#')#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
 					</cfif>
 				</td>
 	
