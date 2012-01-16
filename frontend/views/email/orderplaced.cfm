@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfparam name="$" type="any" />
-<cfparam name="local" type="struct" />
 <cfparam name="order" type="any" />
 
 <cfoutput>
@@ -92,19 +91,19 @@ Notes:
 						</tr>
 					</thead>
 					<tbody>
-						<cfloop array="#order.getOrderItems()#" index="orderItem">
+						<cfloop array="#order.getOrderItems()#" index="local.orderItem">
 							<tr>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderItem.getSku().getSkuCode()#</td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderItem.getSku().getProduct().getTitle()#</td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><cfif len(orderItem.getSku().displayOptions())>#orderItem.getSku().displayOptions()#</cfif></td>
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#orderItem.getFormattedValue('price', 'currency')# </td> 
-								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#NumberFormat(orderItem.getQuantity())# </td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.orderItem.getSku().getSkuCode()#</td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.orderItem.getSku().getProduct().getTitle()#</td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;"><cfif len(local.orderItem.getSku().displayOptions())>#local.orderItem.getSku().displayOptions()#</cfif></td>
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#local.orderItem.getFormattedValue('price', 'currency')# </td> 
+								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">#NumberFormat(local.orderItem.getQuantity())# </td>
 								<td style="border: 1px solid ##d8d8d8; padding:0px 5px;">
 									<cfif orderItem.getDiscountAmount() GT 0>
 										<span style="text-decoration:line-through; color:##cc0000;">#orderItem.getFormattedValue('extendedPrice', 'currency')#</span><br />
-										#orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#
+										#local.orderItem.getFormattedValue('extendedPriceAfterDiscount', 'currency')#
 									<cfelse>
-										#orderItem.getFormattedValue('extendedPrice', 'currency')#
+										#local.orderItem.getFormattedValue('extendedPrice', 'currency')#
 									</cfif>
 								</td>
 							</tr>
