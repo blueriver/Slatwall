@@ -60,7 +60,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="trackInventoryFlag" ormtype="boolean";
 
 	// Related Object Properties (One-To-One)
-	property name="skuCache" fieldType="one-to-one" cfc="SkuCache";
+	property name="skuCache" fieldType="one-to-one" cfc="SkuCache" cascade="delete";
 	
 	// Related Object Properties (Many-to-One)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";

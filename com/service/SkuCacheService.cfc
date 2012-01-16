@@ -146,7 +146,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function updateFromProduct(required any product, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
 		// Loop over the skus of the product and add to skuCache
 		for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
-			updateFromSku(sku=arguments.product.getSkus(), propertyList=arguments.propertyList);
+			updateFromSku(sku=arguments.product.getSkus()[s], propertyList=arguments.propertyList);
 		}
 	}
 	

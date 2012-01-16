@@ -401,6 +401,7 @@ component extends="BaseService" accessors="true" {
 		return arguments.product;
 	}
 	
+	/*
 	public boolean function deleteProduct( required any product ) {
 		
 		// Set the default sku temporarily in this local so we can reset if delete fails
@@ -421,6 +422,7 @@ component extends="BaseService" accessors="true" {
 		
 		return true;
 	}
+	*/
 	
 	public boolean function deleteProductType(required any productType) {
 		
