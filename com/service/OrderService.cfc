@@ -841,6 +841,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				// from the user submitted input.
 				var orderItem = this.newOrderItem();
 				orderItem.setReferencedOrderItem(originalOrderItem);
+				orderItem.setReferencedOrderDeliveryItem(orderDelivery.getOrderDeliveryItems()[i]);
 				orderItem.setOrder(order);
 				orderItem.setPrice(priceReturning);
 				orderItem.setQuantity(quantityReturning);
