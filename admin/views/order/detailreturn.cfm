@@ -119,7 +119,7 @@ Notes:
 					<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
 					<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
 					<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentRefund")#</dt>
-					<dd>#rc.order.getOrderReturn().getFormattedValue('fulfillmentRefundAmount', 'currency')#</dd>
+					<dd>#rc.order.getFormattedValue('fulfillmentRefundTotal', 'currency')#</dd>
 					<!---<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
 					<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>--->
 					<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
@@ -149,7 +149,7 @@ Notes:
 	
 	<div class="clear">
 	
-		<!---
+		
 		<table class="listing-grid stripe">
 			<tr>
 				<th>#$.slatwall.rbKey("entity.sku.skucode")#</th>
@@ -161,7 +161,7 @@ Notes:
 				<th>#$.slatwall.rbKey("entity.orderitem.extendedprice")#</th>
 			</tr>
 				
-			<cfloop array="#local.orderItems#" index="local.orderItem">
+			<cfloop array="#rc.order.getOrderItems()#" index="local.orderItem">
 				<tr>
 					<td>#local.orderItem.getSku().getSkuCode()#</td>
 					<td class="varWidth">
@@ -209,25 +209,25 @@ Notes:
 			<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingMethod")#</h5>
 			#local.orderFulfillment.getShippingMethod().getShippingMethodName()#	
 		</div>--->
-		<div class="totals">
+		<!---<div class="totals">
 			<dl class="fulfillmentTotals">
 				<dt>
 					#$.slatwall.rbKey("entity.orderFulfillment.subtotal")#:
 				</dt>
 				<dd>
-					#local.orderFulfillment.getFormattedValue('subTotal', 'currency')#
+					#local.order.getFormattedValue('subTotal', 'currency')#
 				</dd>
 				<dt>
 					#$.slatwall.rbKey("entity.orderFulfillment.shippingCharge")#:
 				</dt>
 				<dd>
-					#local.orderFulfillment.getFormattedValue('shippingCharge', 'currency')#
+					#local.order.getFormattedValue('fulfillmentRefundTotal', 'currency')#
 				</dd>
 				<dt>
 					#$.slatwall.rbKey("entity.orderFulfillment.tax")#:
 				</dt>
 				<dd>
-					#local.orderFulfillment.getFormattedValue('tax', 'currency')#
+					#local.order.getFormattedValue('taxTotal', 'currency')#
 				</dd>
 				<!--- discounts for fulfillment --->
 				<cfif local.orderFulfillment.getItemDiscountAmountTotal() gt 0>
@@ -254,9 +254,9 @@ Notes:
 				</dd>
 			</dl>
 		</div>
-		<div class="clear"></div>
+		<div class="clear"></div>--->
 		
-		--->
+	
 		
 	</div>
 </div>
