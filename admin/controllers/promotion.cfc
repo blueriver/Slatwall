@@ -56,9 +56,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
 		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
 		
-		// Get a smart list of Promotion Codes for the view
-		rc.promotionCodeSmartList = getPromotionService().getPromotionCodeSmartList(data=rc);
-		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
 		}

@@ -153,6 +153,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// This is the only updateXXX method that should touch the variables.skusToUpdate
 	public void function updateFromSku(required any sku, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+		logSlatwall("On Next request Sku ID: #arguments.sku.getSkuID()# will have sku cache updated for these properties: #arguments.propertyList#");
 		arrayAppend(variables.skusToUpdate, {skuID=arguments.sku.getSkuID(), propertyList=arguments.propertyList});	
 	}
 	
@@ -170,17 +171,20 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		if(arrayLen(variables.skusToUpdate)) {
 			lock timeout="60" scope="Application" {
 				if(arrayLen(variables.skusToUpdate)) {
+					logSlatwall("Sku Cache Updated Started with #arrayLen(variables.skusToUpdate)# skus to be updated");
 					variables.updatingSkus = duplicate(variables.skusToUpdate);
 					variables.skusToUpdate = [];
 					thread action="run" name="updateSkuCache-#createUUID()#" {
 						try {
 							for(var i=arrayLen(variables.updatingSkus); i>=1; i--) {
+								logSlatwall("Sku Cache Updated Called For: #variables.updatingSkus[i]["skuID"]#");
 								updateSkuCache(propertyList=variables.updatingSkus[i]["propertyList"], skuID=variables.updatingSkus[i]["skuID"]);
 								getDAO().flushORMSession();
 								logSlatwall("Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#");
 							}
 						} catch(any e) {
 							for(var a=1; a<=arrayLen(variables.updatingSkus); a++) {
+								logSlatwall("The Sku: #variables.updatingSkus[a]["skuID"]# was added back to the skusToUpdate because of an error when executing");
 								arrayAppend(variables.skusToUpdate, variables.updatingSkus[a]);	
 							}
 							variables.nextSalePriceExpirationDateTime = getDAO().getNextSalePriceExpirationDateTime();
