@@ -815,6 +815,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setAccount(originalOrder.getAccount());
 		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
 		order.setReferencedOrder(originalOrder);
+		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
 		var orderReturn = this.newOrderReturn();
@@ -823,10 +824,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		orderReturn.setFulfillmentRefundAmount(val(data.refundShippingAmount));
 		orderReturn.setReturnLocation(location);
 		
-		// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
-		// further populated with StockRecieverItems, one for each item being returned.
-		var stockReceiver = getStockService().newStockReceiverOrder();
-		stockReceiver.setOrder(order);
+		
 		
 		// Load order with order items. Loop over all deliveries, then delivered items
 		for(var j = 1; j <= ArrayLen(originalOrder.getOrderDeliveries()); j++) {
@@ -878,11 +876,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 
 		this.saveOrder(order);
 		
-		// We have to set this AFTER the save, or else the save's recalculateOrderAmounts() method will error out if it finds a "closed" order
-		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
-		
-		getStockService().saveStockReceiver(stockReceiver);
-		
+		if(!order.hasErrors()) {
+			// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
+			// further populated with StockRecieverItems, one for each item being returned.
+			var stockReceiver = getStockService().newStockReceiverOrder();
+			stockReceiver.setOrder(order);
+			
+			getStockService().saveStockReceiver(stockReceiver);
+			
+			if(!stockReceiver.hasErrors()) {
+				// This must be called AFTER the save or else the type-validation will fail
+				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
+			}
+	
+		}
+
 		return true;
 	}
 	
