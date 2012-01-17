@@ -47,6 +47,8 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
+	// Related Object Properties (one-to-many)
+	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderDeliveryItemID" inverse="true" cascade="all"; // Used For Returns
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -88,6 +90,14 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 			arrayDeleteAt(arguments.account.getOrderDeliveryItems(), index);
 		}
 		structDelete(variables, "orderItem");
+	}
+	
+	// Referencing Order Items (one-to-many)
+	public void function addReferencingOrderItem(required any referencingOrderItem) {
+		arguments.referencingOrderItem.setReferencedOrderDeliveryItem( this );
+	}
+	public void function removeReferencingOrderItem(required any referencingOrderItem) {
+		arguments.referencingOrderItem.removeReferencedOrderDeliveryItem( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
