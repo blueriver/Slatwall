@@ -307,6 +307,24 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		structDelete(variables, "refrencedOrderItem");
 	}
 	
+	// Referenced Order Delivery Item (many-to-one)
+	public void function setReferencedOrderDeliveryItem(required any referencedOrderDeliveryItem) {
+		variables.referencedOrderDeliveryItem = arguments.referencedOrderDeliveryItem;
+		if(isNew() or !arguments.referencedOrderDeliveryItem.hasReferencingOrderItem( this )) {
+			arrayAppend(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), this);
+		}
+	}
+	public void function removeReferencedOrderDeliveryItem(any referencedOrderDeliveryItem) {
+		if(!structKeyExists(arguments, "referencedOrderDeliveryItem")) {
+			arguments.referencedOrderDeliveryItem = variables.referencedOrderDeliveryItem;
+		}
+		var index = arrayFind(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getReferencingOrderItems(), index);
+		}
+		structDelete(variables, "referencedOrderDeliveryItem");
+	}
+	
 	// Applied Promotions (one-to-many)
 	public void function addAppliedPromotion(required any appliedPromotion) {
 		arguments.appliedPromotion.setOrderItem( this );

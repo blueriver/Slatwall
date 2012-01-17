@@ -47,6 +47,21 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
 	
+	// Related Object Properties (one-to-many)
+	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderDeliveryItemID" inverse="true" cascade="all"; // Used For Returns
+	
+	// Non-Persistent Properties
+	property name="quantityReturned";
+	
+	public numeric function getQuantityReturned() {
+		if(!structKeyExists(variables, "quantityReturned")) {
+			variables.quantityReturned = 0;
+			for(var i=1; i<=arrayLen(getReferencingOrderItems()); i++) {
+				variables.quantityReturned += getReferencingOrderItems()[i].getQuantity();
+			}
+		}
+		return variables.quantityReturned;
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -88,6 +103,14 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 			arrayDeleteAt(arguments.account.getOrderDeliveryItems(), index);
 		}
 		structDelete(variables, "orderItem");
+	}
+	
+	// Referencing Order Items (one-to-many)
+	public void function addReferencingOrderItem(required any referencingOrderItem) {
+		arguments.referencingOrderItem.setReferencedOrderDeliveryItem( this );
+	}
+	public void function removeReferencingOrderItem(required any referencingOrderItem) {
+		arguments.referencingOrderItem.removeReferencedOrderDeliveryItem( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
