@@ -136,7 +136,7 @@ component accessors="true" output="false" extends="Slatwall.com.utility.RequestB
 		for(var i=1; i <= arrayLen(arguments.orderFulfillmentItems); i++) {
 			addShippingItem(
 				value=arguments.orderFulfillmentItems[i].getSku().getPrice(),
-				weight=arguments.orderFulfillmentItems[i].getSku().getShippingWeight(),
+				weight=arguments.orderFulfillmentItems[i].getSku().getSetting( 'shippingWeight' ),
 				quantity=arguments.orderFulfillmentItems[i].getQuantity()
 			);
 		}
