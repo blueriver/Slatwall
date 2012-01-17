@@ -814,7 +814,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var order = this.newOrder();
 		order.setAccount(originalOrder.getAccount());
 		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
-		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
+		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
 		order.setReferencedOrder(originalOrder);
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
@@ -875,6 +875,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 
 		this.saveOrder(order);
+		
+		// If !order.hasErrors() Then create stockReceiver & stockReceiverItems save stockReceiver
+		 
+		// If !stockReceiver.hasErrors() Then set orderStatus to closed
+		
 		getStockService().saveStockReceiver(stockReceiver);
 		
 		return true;
