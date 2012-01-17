@@ -85,18 +85,24 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="parentProductTypeOptions" type="array" persistent="false";
 
 	public ProductType function init(){
-	   // set default collections for association management methods
-	   if(isNull(variables.Products)){
-	       variables.Products = [];
-	   }
-	   if(isNull(variables.attributeSetAssignments)){
-	   		variables.attributeSetAssignments = [];
-	   }
-	   if(isNull(variables.promotionRewards)) {
-	       variables.promotionRewards = [];
-	   }
-	   
-	   return Super.init();
+		// set default collections for association management methods
+		if(isNull(variables.childProductTypes)){
+			variables.childProductTypes = [];
+		}
+		if(isNull(variables.products)){
+			variables.products = [];
+		}
+		if(isNull(variables.attributeSetAssignments)){
+			variables.attributeSetAssignments = [];
+		}
+		if(isNull(variables.promotionRewards)) {
+			variables.promotionRewards = [];
+		}
+		if(isNull(variables.promotionRewards)) {
+			variables.priceGroupRates = [];
+		}
+		
+		return super.init();
 	}
 	
 	public any function getProductTypeTree() {
