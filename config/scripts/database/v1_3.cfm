@@ -36,19 +36,32 @@
 Notes:
 
 --->
+
+<!--- Move qunatityDelivered to quantity for order items. --->
 <cftry>
 	<cfquery name="updateQuantity">
 		UPDATE SlatwallOrderDeliveryItem
 		SET quantity = quantityDelivered
 	</cfquery>
-	<cfcatch />
-</cftry>
-
-<cftry>
+	<!--- Remove the quantityDelivered field --->
 	<cfquery name="dropQuantityDelivered">
 		ALTER TABLE SlatwallOrderDeliveryItem
 		DROP COLUMN quantityDelivered
 	</cfquery>
+	<cfcatch />
+</cftry>
+
+<!--- Remove the old format of the vendorBrand table--->
+<cftry>
+	<cfquery name="vendorBrandRecords">
+		Select count(*) as 'count' from SlatwallVendorBrand
+	</cfquery>
+	<cfif not vendorBrandRecords.count>
+		<cfquery name="dropVendorBrandTable">
+			DROP TABLE SlatwallVendorBrand
+		</cfquery>
+		<cfset ormReload() />
+	</cfif>
 	<cfcatch />
 </cftry>
 

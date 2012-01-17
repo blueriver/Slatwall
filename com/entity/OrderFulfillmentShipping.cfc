@@ -130,7 +130,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	    	variables.totalShippingWeight = 0;
 	    	var items = getOrderFulfillmentItems();
 	    	for( var i=1; i<=arrayLen(items); i++ ) {
-	    		variables.totalShippingWeight += (items[i].getSku().getShippingWeight() * items[i].getQuantity());
+	    		variables.totalShippingWeight += (items[i].getSku().getSetting('shippingWeight') * items[i].getQuantity());
 	    	}			
   		}
     	return variables.totalShippingWeight;

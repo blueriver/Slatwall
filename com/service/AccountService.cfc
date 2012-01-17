@@ -101,6 +101,7 @@ component extends="BaseService" accessors="true" output="false" {
 			// Validate This Object
 			accountEmailAddress.validate();
 			if(accountEmailAddress.hasErrors()) {
+				getRequestCacheService().setValue("ormHasErrors", true);
 				arguments.account.addError("emailAddress", "The Email address has errors");
 			}
 
@@ -118,6 +119,7 @@ component extends="BaseService" accessors="true" output="false" {
 			// Validate This Object
 			accountPhoneNumber.validate();
 			if(accountPhoneNumber.hasErrors()) {
+				getRequestCacheService().setValue("ormHasErrors", true);
 				arguments.account.addError("phoneNumber", "The Phone Number has errors");
 			}
 		}
