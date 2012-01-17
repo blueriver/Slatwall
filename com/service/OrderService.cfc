@@ -814,7 +814,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var order = this.newOrder();
 		order.setAccount(originalOrder.getAccount());
 		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
-		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 		order.setReferencedOrder(originalOrder);
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
@@ -837,43 +836,51 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var quantityReturning = data["quantity_orderItemId(#originalOrderItem.getOrderItemID()#)_orderDeliveryId(#orderDelivery.getOrderDeliveryID()#)"];
 				var priceReturning = data["price_orderItemId(#originalOrderItem.getOrderItemID()#)_orderDeliveryId(#orderDelivery.getOrderDeliveryID()#)"];
 			
-				// Create a new orderItem and populate it's basic properties from the original order item, and 
-				// from the user submitted input.
-				var orderItem = this.newOrderItem();
-				orderItem.setReferencedOrderItem(originalOrderItem);
-				orderItem.setOrder(order);
-				orderItem.setPrice(priceReturning);
-				orderItem.setQuantity(quantityReturning);
-				orderItem.setSku(originalOrderItem.getSku());
-				orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
-				orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
-			
-				// Populate the Tax on this order by creating new tax entities, but using the same rate as the 
-				// original orderItem.
-				for(var k=1; k <= ArrayLen(originalOrderItem.getAppliedTaxes()); k++) {
-					var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
-					var appliedTax = getTaxService().newOrderItemAppliedTax();
-					
-					appliedTax.setOrderItem(orderItem);
-					appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
-					appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
-					appliedTax.setTaxAmount(originalAppliedTax.getTaxRate() * (orderItem.getQuantity() * priceReturning));
+				if(quantityReturning GT 0) {
+					// Create a new orderItem and populate it's basic properties from the original order item, and from the user submitted input.
+					var orderItem = this.newOrderItem();
+					orderItem.setReferencedOrderItem(originalOrderItem);
+					orderItem.setOrder(order);
+					orderItem.setPrice(priceReturning);
+					orderItem.setQuantity(quantityReturning);
+					orderItem.setSku(originalOrderItem.getSku());
+					orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
+					orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
+				
+					// Populate the Tax on this order by creating new tax entities, but using the same rate as the original orderItem.
+					//dumpScreen(originalOrderItem.getAppliedTaxes());
+					for(var k=1; k <= ArrayLen(originalOrderItem.getAppliedTaxes()); k++) {
+						var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
+						var appliedTax = getTaxService().newOrderItemAppliedTax();
+						
+						//throw("Num Taxes: " & ArrayLen(originalOrderItem.getAppliedTaxes()) & ", Using tax rate: " & originalAppliedTax.getTaxRate() & ", against price: " & (orderItem.getQuantity() * priceReturning));
+						
+						appliedTax.setOrderItem(orderItem);
+						appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
+						appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
+						appliedTax.setTaxAmount((originalAppliedTax.getTaxRate() / 100) * (orderItem.getQuantity() * priceReturning));
+						getTaxService().saveAppliedTax(appliedTax);
+					}
+				
+					// Add this order item to the OrderReturns entity
+					orderItem.setOrderReturn(orderReturn);
+				
+					// Add stock receiver item to stock receiver
+					var stock = getStockService().getStockBySkuAndLocation(originalOrderItem.getSku(), location);
+					var stockReceiverItem = getStockService().newStockReceiverItem();
+					stockReceiverItem.setStockReceiver(stockReceiver);
+					stockReceiverItem.setOrderItem(orderItem);
+					stockReceiverItem.setQuantity(quantityReturning);
+					stockReceiverItem.setStock(stock);
 				}
-			
-				// Add this order item to the OrderReturns entity
-				orderItem.setOrderReturn(orderReturn);
-			
-				// Add stock receiver item to stock receiver
-				var stock = getStockService().getStockBySkuAndLocation(originalOrderItem.getSku(), location);
-				var stockReceiverItem = getStockService().newStockReceiverItem();
-				stockReceiverItem.setStockReceiver(stockReceiver);
-				stockReceiverItem.setOrderItem(orderItem);
-				stockReceiverItem.setQuantity(quantityReturning);
-				stockReceiverItem.setStock(stock);
 			}
 		}
 
 		this.saveOrder(order);
+		
+		// We have to set this AFTER the save, or else the save's recalculateOrderAmounts() method will error out if it finds a "closed" order
+		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
+		
 		getStockService().saveStockReceiver(stockReceiver);
 		
 		return true;
