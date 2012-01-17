@@ -57,7 +57,8 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="orderReturn" cfc="OrderReturn" fieldtype="many-to-one" fkcolumn="orderReturnID";
-	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID";
+	property name="referencedOrderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="referencedOrderItemID"; // Used For Returns
+	property name="referencedOrderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="many-to-one" fkcolumn="referencedOrderDeliveryItemID"; // Used For Returns
 	
 	// Related Object Properties (one-to-many)
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="OrderItemAppliedPromotion" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
@@ -65,7 +66,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="attributeValues" singularname="attributeValue" cfc="OrderItemAttributeValue" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all-delete-orphan";
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true";
-	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all";
+	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all"; // Used For Returns
 
 	// Non persistent properties
 	property name="discountAmount" persistent="false" formatType="currency" hint="This is the discount amount after quantity (talk to Greg if you don't understand)" ;
@@ -74,7 +75,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="quantityDelivered" persistent="false";
 	property name="quantityUndelivered" persistent="false";
 	property name="taxAmount" persistent="false" formatType="currency" ; 
-	 
+
 	public any function init() {
 		
 		// set the type to sale by default
