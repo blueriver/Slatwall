@@ -816,6 +816,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
 		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
 		order.setReferencedOrder(originalOrder);
+		
+		var stockReceiver = getStockService().newStockReceiverOrder();
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
 		var orderReturn = this.newOrderReturn();
@@ -875,7 +877,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!order.hasErrors()) {
 			// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
 			// further populated with StockRecieverItems, one for each item being returned.
-			var stockReceiver = getStockService().newStockReceiverOrder();
+			
 			stockReceiver.setOrder(order);
 			getStockService().saveStockReceiver(stockReceiver);
 			
