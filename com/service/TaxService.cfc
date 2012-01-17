@@ -59,7 +59,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					
 					// TODO: This is a hack because we only have one tax category for products right now
 					var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');
-					var address = fulfillment.getShippingAddress();
+					var address = fulfillment.getAddress();
 					
 					if(!isNull(address)) {
 						for(var r=1; r<= arrayLen(taxCategory.getTaxCategoryRates()); r++) {
@@ -76,7 +76,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 			} else if (orderItem.getOrderItemType().getSystemCode() == "oitReturn") {
 				
-				// TODO: Impliment Return Tax
+				var originalAppliedTaxes = orderItem.getReferencedOrderItem().getAppliedTaxes();
+				for(var i=1; i<=arrayLen(originalAppliedTaxes); i++) {
+					var newAppliedTax = this.newOrderItemAppliedTax();
+					newAppliedTax.setTaxAmount(orderItem.getExtendedPriceAfterDiscount() * (originalAppliedTaxes[i].getTaxRate() / 100));
+					newAppliedTax.setTaxRate( originalAppliedTaxes[i].getTaxRate() );
+					newAppliedTax.setTaxCategoryRate( originalAppliedTaxes[i].getTaxCategoryRate() );
+					newAppliedTax.setOrderItem( orderItem );
+				}
 				
 			}
 			

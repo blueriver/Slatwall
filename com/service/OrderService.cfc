@@ -817,8 +817,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
 		order.setReferencedOrder(originalOrder);
 		
-		var stockReceiver = getStockService().newStockReceiverOrder();
-	
 		// Create OrderReturn entity (to save the fulfillment amount)
 		var orderReturn = this.newOrderReturn();
 		var location = getLocationService().getLocation(data.returnToLocationID);
@@ -846,28 +844,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
 					orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
 				
-					// Populate the Tax on this order by creating new tax entities, but using the same rate as the original orderItem.
-					//dumpScreen(originalOrderItem.getAppliedTaxes());
-					for(var k=1; k <= ArrayLen(originalOrderItem.getAppliedTaxes()); k++) {
-						var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
-						var appliedTax = getTaxService().newOrderItemAppliedTax();
-						
-						appliedTax.setOrderItem(orderItem);
-						appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
-						appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
-						appliedTax.setTaxAmount((originalAppliedTax.getTaxRate() / 100) * (orderItem.getQuantity() * priceReturning));
-					}
-				
 					// Add this order item to the OrderReturns entity
 					orderItem.setOrderReturn(orderReturn);
 				
-					// Add stock receiver item to stock receiver
-					var stock = getStockService().getStockBySkuAndLocation(originalOrderItem.getSku(), location);
-					var stockReceiverItem = getStockService().newStockReceiverItem();
-					stockReceiverItem.setStockReceiver(stockReceiver);
-					stockReceiverItem.setOrderItem(orderItem);
-					stockReceiverItem.setQuantity(quantityReturning);
-					stockReceiverItem.setStock(stock);
+					
 				}
 			}
 		}
@@ -877,9 +857,21 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!order.hasErrors()) {
 			// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
 			// further populated with StockRecieverItems, one for each item being returned.
+			var stockReceiver = getStockService().newStockReceiverOrder();
 			
 			stockReceiver.setOrder(order);
-			getStockService().saveStockReceiver(stockReceiver);
+			
+			// Loop over all of the orderItems and create stockReceiverItmes
+			for(var i=1; i<=arrayLen(order.getOrderItems()); i++) {
+				var stock = getStockService().getStockBySkuAndLocation(order.getOrderItems()[i].getSku(), order.getOrderItems()[i].getOrderReturn().getLocation());
+				var stockReceiverItem = getStockService().newStockReceiverItem();
+				stockReceiverItem.setStockReceiver( stockReceiver );
+				stockReceiverItem.setOrderItem( order.getOrderItems()[i] );
+				stockReceiverItem.setQuantity( order.getOrderItems()[i].getQuantity() );
+				stockReceiverItem.setStock( stock );
+			}
+			
+			getStockService().saveStockReceiver( stockReceiver );
 			
 			if(!stockReceiver.hasErrors()) {
 				// This must be called AFTER the save or else the type-validation will fail
