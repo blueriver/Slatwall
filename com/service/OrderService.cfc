@@ -814,8 +814,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var order = this.newOrder();
 		order.setAccount(originalOrder.getAccount());
 		order.setOrderType(getTypeService().getTypeBySystemCode("otReturnOrder"));
-		order.setReferencedOrder(originalOrder);
 		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
+		order.setReferencedOrder(originalOrder);
 	
 		// Create OrderReturn entity (to save the fulfillment amount)
 		var orderReturn = this.newOrderReturn();
@@ -823,8 +823,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		orderReturn.setOrder(order);
 		orderReturn.setFulfillmentRefundAmount(val(data.refundShippingAmount));
 		orderReturn.setReturnLocation(location);
-		
-		
 		
 		// Load order with order items. Loop over all deliveries, then delivered items
 		for(var j = 1; j <= ArrayLen(originalOrder.getOrderDeliveries()); j++) {
@@ -838,6 +836,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Create a new orderItem and populate it's basic properties from the original order item, and from the user submitted input.
 					var orderItem = this.newOrderItem();
 					orderItem.setReferencedOrderItem(originalOrderItem);
+					orderItem.setReferencedOrderDeliveryItem(orderDelivery.getOrderDeliveryItems()[i]);
 					orderItem.setOrder(order);
 					orderItem.setPrice(priceReturning);
 					orderItem.setQuantity(quantityReturning);
@@ -851,13 +850,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
 						var appliedTax = getTaxService().newOrderItemAppliedTax();
 						
-						//throw("Num Taxes: " & ArrayLen(originalOrderItem.getAppliedTaxes()) & ", Using tax rate: " & originalAppliedTax.getTaxRate() & ", against price: " & (orderItem.getQuantity() * priceReturning));
-						
 						appliedTax.setOrderItem(orderItem);
 						appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
 						appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
 						appliedTax.setTaxAmount((originalAppliedTax.getTaxRate() / 100) * (orderItem.getQuantity() * priceReturning));
-						getTaxService().saveAppliedTax(appliedTax);
 					}
 				
 					// Add this order item to the OrderReturns entity
@@ -881,14 +877,12 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// further populated with StockRecieverItems, one for each item being returned.
 			var stockReceiver = getStockService().newStockReceiverOrder();
 			stockReceiver.setOrder(order);
-			
 			getStockService().saveStockReceiver(stockReceiver);
 			
 			if(!stockReceiver.hasErrors()) {
 				// This must be called AFTER the save or else the type-validation will fail
 				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 			}
-	
 		}
 
 		return true;
