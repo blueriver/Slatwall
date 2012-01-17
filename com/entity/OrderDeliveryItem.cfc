@@ -50,6 +50,19 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 	// Related Object Properties (one-to-many)
 	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderDeliveryItemID" inverse="true" cascade="all"; // Used For Returns
 	
+	// Non-Persistent Properties
+	property name="quantityReturned";
+	
+	public numeric function getQuantityReturned() {
+		if(!structKeyExists(variables, "quantityReturned")) {
+			variables.quantityReturned = 0;
+			for(var i=1; i<=arrayLen(getReferencingOrderItems()); i++) {
+				variables.quantityReturned += getReferencingOrderItems()[i].getQuantity();
+			}
+		}
+		return variables.quantityReturned;
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
