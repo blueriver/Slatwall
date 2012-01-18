@@ -327,7 +327,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	private void function clearAccountRelatedInfo() {
 		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			if(getOrderFulfillments()[i].getFulfillmentMethod() == "shipping") {
+			if(getOrderFulfillments()[i].getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
 				getOrderFulfillments()[i].removeShippingAddress();
 				getOrderFulfillments()[i].removeAccountAddress();
 			}
