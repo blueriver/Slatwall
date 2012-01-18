@@ -68,6 +68,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	variables.nextSalePriceExpirationDateTime = "";
 	
 	public void function updateFromOrder(required any order) {
+		logSlatwall("Sku Cache UpdateFromOrder() Called");
 		if(!listFindNoCase("ostNotPlaced,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
 			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
 				updateFromSku(sku=arguments.order.getOrderItems()[i].getSku(), propertyList="qndoo,qnroro");	
@@ -76,10 +77,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public void function updateFromVendorOrderItem(required any vendorOrderItem) {
+		logSlatwall("Sku Cache UpdateFromVendorOrderItem() Called");
 		updateFromSku(sku=arguments.vendorOrderItem.getStock().getSku(), propertyList="qndorvo,qnrovo");
 	}
 	
 	public void function updateFromStockAdjustmentItem(required any stockAdjustmentItem) {
+		logSlatwall("Sku Cache UpdateFromStockAdjustmentItem() Called");
 		if(!isNull(arguments.stockAdjustmentItem.getFromStock())) {
 			updateFromSku(sku=arguments.stockAdjustmentItem.getFromStock().getSku(), propertyList="qoh,qndosa");
 		}
@@ -89,22 +92,27 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public void function updateFromOrderDeliveryItem(required any orderDeliveryItem) {
+		logSlatwall("Sku Cache UpdateFromOrderDeliveryItem() Called");
 		updateFromSku(sku=arguments.orderDeliveryItem.getStock().getSku(), propertyList="qoh,qndoo");
 	}
 	
 	public void function updateFromVendorOrderDeliveryItem(required any vendorOrderDeliveryItem) {
+		logSlatwall("Sku Cache UpdateFromVendorOrderDeliveryItem() Called");
 		updateFromSku(sku=arguments.vendorOrderDeliveryItem.getStock().getSku(), propertyList="qoh,qndovo");
 	}
 	
 	public void function updateFromStockAdjustmentDeliveryItem(required any stockAdjustmentDeliveryItem) {
+		logSlatwall("Sku Cache UpdateFromStockAdjustmentDeliveryItem() Called");
 		updateFromSku(sku=arguments.stockAdjustmentDeliveryItem.getStock().getSku(), propertyList="qoh,qndosa");
 	}
 	
 	public void function updateFromStockReceiverItem(required any stockReceiverItem) {
+		logSlatwall("Sku Cache UpdateFromStockAdjustmentDeliveryItem() Called");
 		updateFromSku(sku=arguments.stockReceiverItem.getStock().getSku(), propertyList="qoh,qnroro,qnrovo,qnrosa,qndosa");
 	}
 	
 	public void function updateFromPromotionRewardProduct(required any promotionRewardProduct) {
+		logSlatwall("Sku Cache UpdateFromPromotionRewardProduct() Called");
 		// Loop over Brands on this Promotion Reward and update the related product skus
 		for(var b=1; b<=arrayLen(arguments.promotionRewardProduct.getBrands()); b++) {
 			for(var p=1; p<=arrayLen(arguments.promotionRewardProduct.getBrands()[b].getProducts()); p++) {
@@ -137,6 +145,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	
 	public void function updateFromProductType(required any productType, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+		logSlatwall("Sku Cache UpdateFromProductType() Called");
 		// Loop over all products this productType and add call the updateFromProduct method
 		for(var p=1; p<=arrayLen(arguments.productType.getProducts()); p++) {
 			updateFromProduct(arguments.productType.getProducts()[p]);
@@ -148,6 +157,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public void function updateFromProduct(required any product, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+		logSlatwall("Sku Cache UpdateFromProduct() Called");
 		// Loop over the skus of the product and add to skuCache
 		for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
 			updateFromSku(sku=arguments.product.getSkus()[s], propertyList=arguments.propertyList);
@@ -183,7 +193,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							for(var i=arrayLen(variables.updatingSkus); i>=1; i--) {
 								logSlatwall("Sku Cache Updated Called For: #variables.updatingSkus[i]["skuID"]#");
 								updateSkuCache(propertyList=variables.updatingSkus[i]["propertyList"], skuID=variables.updatingSkus[i]["skuID"]);
-								//getDAO().flushORMSession();
+								getDAO().flushORMSession();
 								logSlatwall("Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#");
 							}
 						} catch(any e) {

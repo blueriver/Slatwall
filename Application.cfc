@@ -316,8 +316,9 @@ component extends="org.fw1.framework" output="false" {
 			ormClearSession();
 			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
 		} else {
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Started");
 			ormFlush();
-			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Ended");
 		}
 	}
 
