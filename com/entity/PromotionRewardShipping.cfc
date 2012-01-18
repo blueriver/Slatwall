@@ -45,7 +45,7 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	property name="shippingAmount" ormType="big_decimal";
 	
 	// Related Entities
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID" cascade="save-update";
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID";
 	
 
 	public any function init() {

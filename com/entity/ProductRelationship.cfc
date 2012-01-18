@@ -48,9 +48,9 @@ component displayname="Product Relationship" entityname="SlatwallProductRelation
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	
 	// Related Object Properties (many-to-many)
-	property name="relatedProductTypes" singularname="relatedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProductType" fkcolumn="productRelationshipID" inversejoincolumn="productTypeID" cascade="save-update";
-	property name="relatedProducts" singularname="relatedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProduct" fkcolumn="productRelationshipID" inversejoincolumn="productID" cascade="save-update";
-	property name="relatedSkus" singularname="relatedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallProductRelationshipSku" fkcolumn="productRelationshipID" inversejoincolumn="skuID" cascade="save-update";
+	property name="relatedProductTypes" singularname="relatedProductType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProductType" fkcolumn="productRelationshipID" inversejoincolumn="productTypeID";
+	property name="relatedProducts" singularname="relatedProduct" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductRelationshipProduct" fkcolumn="productRelationshipID" inversejoincolumn="productID";
+	property name="relatedSkus" singularname="relatedSku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallProductRelationshipSku" fkcolumn="productRelationshipID" inversejoincolumn="skuID";
 	
 
 	// ============ START: Non-Persistent Property Methods =================
