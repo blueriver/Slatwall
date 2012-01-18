@@ -401,6 +401,27 @@ component extends="BaseService" accessors="true" {
 		return arguments.product;
 	}
 	
+	public boolean function deleteProduct(required any product) {
+	
+		// Set the default sku temporarily in this local so we can reset if delete fails
+		var defaultSku = arguments.product.getDefaultSku();
+		
+		// Remove the default sku so that we can delete this entity
+		arguments.product.setDefaultSku(javaCast("null", ""));
+	
+		// Use the base delete method to check validation
+		var deleteOK = super.delete(arguments.product);
+		
+		// If the delete failed, then we just reset the default sku into the product and return false
+		if(!deleteOK) {
+			arguments.product.setDefaultSku(defaultSku);
+		
+			return false;
+		}
+	
+		return true;
+	}
+		
 	public boolean function deleteProductType(required any productType) {
 		
 		// Use the base delete method to check validation

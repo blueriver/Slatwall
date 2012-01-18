@@ -729,13 +729,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	public void function preInsert() {
-		super.preInsert();
+	public void function postInsert() {
+		super.postInsert();
 		getService("skuCacheService").updateFromProduct( this );
 	}
 	
-	public void function preUpdate(struct oldData) {
-		super.preUpdate(argumentcollection=arguments);
+	public void function postUpdate() {
+		super.postUpdate(argumentcollection=arguments);
 		getService("skuCacheService").updateFromProduct( this );
 	}
 	
