@@ -44,6 +44,7 @@ component displayName="Error Bean" persistent="false" accessors="true" hint="Bea
 	// @hint Constructor for error bean. Initializes the error bean.
 	public function init() {
 		variables.errors = structNew();
+		
 		return this;
 	}
 	
@@ -73,6 +74,8 @@ component displayName="Error Bean" persistent="false" accessors="true" hint="Bea
 	public boolean function hasErrors() {
 		return !structIsEmpty(variables.errors) ;
 	}
+	
+	
 	
 }
 
