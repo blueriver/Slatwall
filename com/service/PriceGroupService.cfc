@@ -373,5 +373,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 		return SerializeJSON(priceGroupData);
 	}
+	
+	public boolean function isPriceGroupBeingUsed(required any priceGroup) {
+		return getDAO().isPriceGroupBeingUsed(arguments.priceGroup);
+	}
 			
 }

@@ -37,5 +37,16 @@ Notes:
 
 */
 component extends="BaseDAO" {
+	public boolean function isPriceGroupBeingUsed(required any priceGroup) {
+		// Check for stock using this location
+		var params = [arguments.priceGroup.getPriceGroupID()];
+		var hql = " SELECT sku
+					FROM SlatwallSku sku
+					INNER JOIN sku.priceGroupRates r
+					INNER JOIN r.priceGroup p
+					WHERE p.priceGroupID = ? ";
+	
+		return ArrayLen(ormExecuteQuery(hql, params, false, {maxResults=1})) > 0;
 		
+	}
 }
