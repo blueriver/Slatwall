@@ -154,6 +154,8 @@
     </bean>
     <bean id="sessionService" parent="parentService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>
+		<property name="accountService"><ref bean="accountService" /></property>
+		<property name="orderService"><ref bean="orderService" /></property>
 		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
     <bean id="settingService" parent="parentService" class="Slatwall.com.service.SettingService">

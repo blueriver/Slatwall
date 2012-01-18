@@ -242,7 +242,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			var accountData = data.account;
 			var account = getAccountService().getAccount(accountData.accountID, true);
 			account = getAccountService().saveAccount(account, accountData, data.siteID);
-			arguments.order.setAccount(account);
+			
+			// If the account has changed, then we need to duplicate the cart
+			if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getAccountID() != account.getAccountID()) {
+				arguments.order = duplicateOrderWithNewAccount( arguments.order, account );
+				getSessionService().getCurrent().setOrder( arguments.order );
+			} else {
+				arguments.order.setAccount(account);
+			}
 		}
 	
 		if(isNull(arguments.order.getAccount()) || arguments.order.getAccount().hasErrors()) {
@@ -930,6 +937,37 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				}
 			}
 		}
+	}
+	
+	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
+		
+		var newOrder = this.newOrder();
+		var newOrderFulfillment = this.newOrderFulfillmentShipping();
+		
+		newOrderFulfillment.setOrder( newOrder );
+		
+		// Copy Order Items
+		for(var i=1; i<=arrayLen(arguments.originalOrder.getOrderItems()); i++) {
+			var newOrderItem = this.newOrderItem();
+			
+			newOrderItem.setPrice( arguments.originalOrder.getOrderItems()[i].getPrice() );
+			newOrderItem.setQuantity( arguments.originalOrder.getOrderItems()[i].getQuantity() );
+			newOrderItem.setOrderItemType( arguments.originalOrder.getOrderItems()[i].getOrderItemType() );
+			newOrderItem.setOrderItemStatusType( arguments.originalOrder.getOrderItems()[i].getOrderItemStatusType() );
+			newOrderItem.setSku( arguments.originalOrder.getOrderItems()[i].getSku() );
+			if(!isNull(arguments.originalOrder.getOrderItems()[i].getStock())) {
+				newOrderItem.setStock( arguments.originalOrder.getOrderItems()[i].getStock() );
+			}
+			newOrderItem.setOrder( newOrder );
+			newOrderItem.setOrderFulfillment( newOrderFulfillment );
+
+		}
+		
+		newOrder.setAccount( arguments.newAccount );
+		
+		this.saveOrder( newOrder );
+		
+		return newOrder;
 	}
 	
 	/**************** LEGACY DEPRECATED METHOD ****************************/

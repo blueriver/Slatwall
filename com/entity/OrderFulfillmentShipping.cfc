@@ -53,6 +53,12 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		if(isNull(variables.orderShippingMethodOptions)) {
 			variables.orderShippingMethodOptions = [];
 		}
+		if(isNull(getFulfillmentMethod())) {
+			setFulfillmentMethod(getService("fulfillmentService").getFulfillmentMethod("shipping"));
+		}
+		if(isNull(getFulfillmentMethodID())) {
+			setFulfillmentMethodID("shipping");
+		}
 		
 		return super.init();
 	}
