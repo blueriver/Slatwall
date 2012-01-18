@@ -50,7 +50,6 @@ Notes:
 	<cf_SlatwallActionCaller action="admin:order.listcart" type="list">
 </ul>
 
-
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">
 		<table class="listing-grid stripe" id="basicOrderInfo">
@@ -58,7 +57,7 @@ Notes:
 				<th colspan="2">#$.Slatwall.rbKey("admin.order.detail.basicorderinfo")#</th>
 			</tr>
 			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderNumber" edit="#rc.edit#" displayType="table">
-			<cf_SlatwallPropertyDisplay object="#rc.Order.getReferencedOrder()#" property="OrderNumber" edit="#rc.edit#" displayType="table" title="#rc.$.Slatwall.rbKey('entity.order.OrderNumberToOriginal')#">
+			<cf_SlatwallPropertyDisplay object="#rc.Order.getReferencedOrder()#" property="OrderNumber" edit="#rc.edit#" displayType="table" title="#rc.$.Slatwall.rbKey('entity.order.OrderNumberToOriginal')#" valueLink="#buildURL(action='admin:order.detail',queryString='orderID=#rc.Order.getReferencedOrder().getOrderID()#')#">
 			<cf_SlatwallPropertyDisplay object="#rc.Order.getOrderType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderType')#" property="Type" edit="#rc.edit#"  displayType="table">
 			<cf_SlatwallPropertyDisplay object="#rc.Order.getOrderStatusType()#" title="#rc.$.Slatwall.rbKey('entity.order.orderStatusType')#" property="Type" edit="#rc.edit#"  displayType="table">
 			<cf_SlatwallPropertyDisplay object="#rc.Order#" property="OrderOpenDateTime" edit="#rc.edit#"  displayType="table">
@@ -87,7 +86,7 @@ Notes:
 			<cfloop array="#local.payments#" index="local.thisPayment">
 			<tr>
 				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
-				<td>#local.thisPayment.getFormattedValue('amount', 'currency')#</td>
+				<td>(#local.thisPayment.getFormattedValue('amount', 'currency')#)</td>
 				<td class="administration">
 		          <ul class="one">
 		          	<li class="zoomIn">           
@@ -115,15 +114,15 @@ Notes:
 				<p><strong>#$.Slatwall.rbKey("admin.order.detail.ordertotals")#</strong></p>
 				<dl class="orderTotals">
 					<dt>#$.Slatwall.rbKey("admin.order.detail.subtotal")#</dt> 
-					<dd>#rc.order.getFormattedValue('subtotal', 'currency')#</dd>
+					<dd>(#rc.order.getFormattedValue('subtotal', 'currency')#)</dd>
 					<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
-					<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
+					<dd>(#rc.order.getFormattedValue('taxTotal', 'currency')#)</dd>
 					<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentRefund")#</dt>
-					<dd>#rc.order.getFormattedValue('fulfillmentRefundTotal', 'currency')#</dd>
+					<dd>(#rc.order.getFormattedValue('fulfillmentRefundTotal', 'currency')#)</dd>
 					<!---<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
 					<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>--->
 					<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
-					<dd><strong>#rc.order.getFormattedValue('total', 'currency')#</strong></dd>
+					<dd><strong>(#rc.order.getFormattedValue('total', 'currency')#)</strong></dd>
 				</dl>
 			</dt>
 		</div>

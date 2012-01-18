@@ -66,13 +66,18 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }    
 	
 	public void function detail(required struct rc) {
-	   rc.order = getOrderService().getOrder(rc.orderID);
-	   rc.shippingServices = getService("settingService").getShippingServices();
-	   if(!isNull(rc.order) and !rc.order.isNew()) {
-	       rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
-	   } else {
-	       getFW().redirect("admin:order.list");
-	   }
+		rc.order = getOrderService().getOrder(rc.orderID);
+		rc.shippingServices = getService("settingService").getShippingServices();
+		if(!isNull(rc.order) and !rc.order.isNew()) {
+			if(rc.order.getOrderType().getSystemCode() == "otReturnOrder") {
+				rc.itemTitle &= ": Return Order No. " & rc.order.getOrderNumber();
+				getFW().setView("admin:order.detailreturn");
+			} else {
+				rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+			}
+		} else {
+			getFW().redirect("admin:order.list");
+		}
 	}
 	
 	public void function detailReturn(required struct rc) {
@@ -105,13 +110,20 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function saveOrderReturn(required struct rc) {
 		param name="rc.orderID";
 		rc.order = getOrderService().getOrder(rc.orderID);
+		rc.returnOrder = getService("OrderService").createOrderReturn(rc);
 		
-		if(getService("OrderService").createOrderReturn(rc)) {
+		if(!rc.returnOrder.hasErrors()) {
 			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_success");
+			getFW().redirect(action="admin:order.detail", queryString="orderID=#rc.returnOrder.getOrderID()#", preserve="message");
 		} else {
-			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_error");
+			// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+			rc.locationSmartList = getLocationService().getLocationSmartList();
+			rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+			rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+	
+			rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+			getFW().setView(action="admin:order.createorderreturn");
 		}
-		getFW().redirect(action="admin:order.detail", queryString="orderID=#rc.order.getOrderID()#", preserve="message");
 	}
 	
 
@@ -237,7 +249,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function processOrderFulfillment(required struct rc) {
 		param name="rc.locationID";
 		
-		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
+		detailOrderFulfillment(rc);
 		
 		if(rc.orderFulfillment.isProcessable()) {
 			var orderDeliveryItemsStruct = rc.orderItems;

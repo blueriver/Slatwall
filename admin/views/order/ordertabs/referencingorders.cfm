@@ -52,7 +52,7 @@ Notes:
 				<th>#rc.$.Slatwall.rbKey("entity.order.total")#</th>
 				<th>&nbsp</th>
 			</tr>
-			<cfloop array="#rc.order.getReferencingOrders ()#" index="local.referencingOrder">
+			<cfloop array="#rc.order.getReferencingOrders()#" index="local.referencingOrder">
 				<tr>
 					<td>#Local.referencingOrder.getOrderNumber()#</td>
 					<td>#DateFormat(Local.referencingOrder.getOrderOpenDateTime(), "medium")#</td>
@@ -64,7 +64,7 @@ Notes:
 					<td class="administration">
 						<ul class="one">
 							<!--- In the future this action might need to be dynamic, as we're hardcoding all "referincing orders" to returns --->
-							<cf_SlatwallActionCaller action="admin:order.detailReturn" querystring="orderID=#local.referencingOrder.getOrderID()#" class="detail" type="list">
+							<cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.referencingOrder.getOrderID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>
