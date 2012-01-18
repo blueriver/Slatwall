@@ -46,13 +46,13 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	
 	// Related Object Properties (Many-To-One)
 	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID";
-	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" inverse="true" fkcolumn="parentPriceGroupID" lazy="extra" cascade="all";
 	
 	// Related Object Properties (One-To-Many)
+	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" fkcolumn="parentPriceGroupID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
 	
 	// Related Object Properties (many-to-many)
-	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID" cascade="all";
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID";
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
