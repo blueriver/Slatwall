@@ -847,7 +847,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					// Add this order item to the OrderReturns entity
 					orderItem.setOrderReturn(orderReturn);
 				
-					
 				}
 			}
 		}
@@ -874,6 +873,28 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			getStockService().saveStockReceiver( stockReceiver );
 			
 			if(!stockReceiver.hasErrors()) {
+				
+				// Create and credit a refund order payment
+				
+				// Find the orginal orderpayment credit card transaction where charge is gt 0
+				for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
+					if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountCharged() gt 0) {
+						
+						// Create a new order Payment based on the original order payment
+						var newOrderPayment = this.newOrderPaymentCreditCard();
+						newOrderPayment.setNameOnCreditCard(order.getReferencedOrder().getOrderPayments()[1].getNameOnCreditCard());
+						newOrderPayment.setCreditCardLastFour(order.getReferencedOrder().getOrderPayments()[1].getCreditCardLastFour());
+						newOrderPayment.setCreditCardType(order.getReferencedOrder().getOrderPayments()[1].getCreditCardType());
+						newOrderPayment.setExpirationMonth(order.getReferencedOrder().getOrderPayments()[1].getExpirationMonth());
+						newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
+						newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
+						newOrderPayment.setOrder(order);
+						
+						// Pass this new order payment along with the original transaction ID to the process() method. 
+						var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
+					}
+				}
+				
 				// This must be called AFTER the save or else the type-validation will fail
 				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 			}
