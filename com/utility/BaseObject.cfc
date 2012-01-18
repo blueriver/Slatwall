@@ -83,6 +83,8 @@ component displayname="Base Object" accessors="true" output="false" {
 		return variables.populatedSubProperties; 
 	}
 	
+	
+	
 	// =========================  END:  ACCESSOR OVERRIDES ==========================================
 	
 	// =============================== START: ERRORS ================================================
@@ -138,7 +140,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 		
 	// @hint helper method to add an error to the error bean	
-	public void function addError( required string errorName, required string errorMessage ) {
+	public void function addError( required string errorName, required string errorMessage) {
 		getErrorBean().addError(argumentCollection=arguments);
 	}
 	
