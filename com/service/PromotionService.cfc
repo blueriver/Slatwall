@@ -114,83 +114,87 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
 	public void function updateOrderAmountsWithPromotions(required any order) {
-		// Get All of the active current promotions
-		var promotions = getDAO().getAllActivePromotions();
-
-		// Clear all previously applied promotions for order items
-		for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
-			for(var pa=1; pa<=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa++) {
-				arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
-			}
-		}
-		// TODO: Clear all previously applied promotions from fulfillments
-		// TODO: Clear all previously applied promotions from order
-							
 		
-		// Loop over each promotion to determine if it applies to this order
-		for(var p=1; p<=arrayLen(promotions); p++) {
-			var promotion = promotions[p];
-			
-			var qc = getPromotionQualificationCount(promotion=promotion, order=arguments.order);
-			
-			if(qc >= 0) {
-				for(var r=1; r<=arrayLen(promotions[p].getPromotionRewards()); r++) {
-					var reward = promotions[p].getPromotionRewards()[r];
-					
-					// If this reward is a product then run this logic
-					if(reward.getRewardType() eq "product") {
-						// Loop over each of the items to see if the promotion gets applied
-						for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-							
-							// Get The order Item
-							var orderItem = arguments.order.getOrderItems()[i];
-							
-							if(
-								( !arrayLen( reward.getProductTypes() ) || reward.hasProductType( orderItem.getSku().getProduct().getProductType() ) )
-								&&
-								( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
-								&&
-								( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
-							) {
-								// Now that we know that this orderItem gets this reward we can figure out the amount
-								var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+		if(arguments.order.getOrderType().getSystemCode() == "otSalesOrder") {
+			// Get All of the active current promotions
+			var promotions = getDAO().getAllActivePromotions();
+	
+			// Clear all previously applied promotions for order items
+			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
+				for(var pa=1; pa<=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa++) {
+					arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
+				}
+			}
+			// TODO: Clear all previously applied promotions from fulfillments
+			// TODO: Clear all previously applied promotions from order
 								
-								var addNew = false;
+			
+			// Loop over each promotion to determine if it applies to this order
+			for(var p=1; p<=arrayLen(promotions); p++) {
+				var promotion = promotions[p];
+				
+				var qc = getPromotionQualificationCount(promotion=promotion, order=arguments.order);
+				
+				if(qc >= 0) {
+					for(var r=1; r<=arrayLen(promotions[p].getPromotionRewards()); r++) {
+						var reward = promotions[p].getPromotionRewards()[r];
+						
+						// If this reward is a product then run this logic
+						if(reward.getRewardType() eq "product") {
+							// Loop over each of the items to see if the promotion gets applied
+							for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
 								
-								// If there aren't any promotions applied to this order item yet, then we can add this one
-								if(!arrayLen(orderItem.getAppliedPromotions())) {
-									addNew = true;
-								// If one has already been set then we just need to check if this new discount amount is greater
-								} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
-									// If the promotion is the same, then we just update the amount
-									if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
-										orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
-									// If the promotion is a different then remove the original and set addNew to true
-									} else {
-										orderItem.getAppliedPromotions()[1].removeOrderItem();
+								// Get The order Item
+								var orderItem = arguments.order.getOrderItems()[i];
+								
+								if(
+									( !arrayLen( reward.getProductTypes() ) || reward.hasProductType( orderItem.getSku().getProduct().getProductType() ) )
+									&&
+									( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
+									&&
+									( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
+								) {
+									// Now that we know that this orderItem gets this reward we can figure out the amount
+									var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+									
+									var addNew = false;
+									
+									// If there aren't any promotions applied to this order item yet, then we can add this one
+									if(!arrayLen(orderItem.getAppliedPromotions())) {
 										addNew = true;
+									// If one has already been set then we just need to check if this new discount amount is greater
+									} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+										// If the promotion is the same, then we just update the amount
+										if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
+											orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+										// If the promotion is a different then remove the original and set addNew to true
+										} else {
+											orderItem.getAppliedPromotions()[1].removeOrderItem();
+											addNew = true;
+										}
+									}
+									
+									// Add the new appliedPromotion
+									if(addNew) {
+										var newAppliedPromotion = this.newOrderItemAppliedPromotion();
+										newAppliedPromotion.setPromotion(promotions[p]);
+										newAppliedPromotion.setOrderItem(orderItem);
+										newAppliedPromotion.setDiscountAmount(discountAmount);
 									}
 								}
-								
-								// Add the new appliedPromotion
-								if(addNew) {
-									var newAppliedPromotion = this.newOrderItemAppliedPromotion();
-									newAppliedPromotion.setPromotion(promotions[p]);
-									newAppliedPromotion.setOrderItem(orderItem);
-									newAppliedPromotion.setDiscountAmount(discountAmount);
-								}
 							}
+							
+						} else if(reward.getRewardType() eq "fulfillment") {
+							// TODO: Allow for fulfillment Rewards
+						} else if(reward.getRewardType() eq "order") {
+							// TODO: Allow for order Rewards
 						}
 						
-					} else if(reward.getRewardType() eq "fulfillment") {
-						// TODO: Allow for fulfillment Rewards
-					} else if(reward.getRewardType() eq "order") {
-						// TODO: Allow for order Rewards
 					}
-					
 				}
 			}
 		}
+		
 	}
 	
 	public numeric function calculateSkuSalePrice(required any sku) {
