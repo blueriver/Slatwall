@@ -888,15 +888,18 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 						newOrderPayment.setExpirationMonth(order.getReferencedOrder().getOrderPayments()[1].getExpirationMonth());
 						newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
 						newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
-						newOrderPayment.setOrder(order);
+						newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
+						newOrderPayment.setAmount( order.getTotal() );
+						newOrderPayment.setOrder( order );
 						
 						// Pass this new order payment along with the original transaction ID to the process() method. 
 						var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
+						
+						if(refundOK) {
+							order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));			
+						}
 					}
 				}
-				
-				// This must be called AFTER the save or else the type-validation will fail
-				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
 			}
 		}
 

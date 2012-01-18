@@ -42,8 +42,9 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="amount" ormtype="big_decimal" notnull="true";
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
 	
 	// Special Related Discriminator Property
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
@@ -56,6 +57,10 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	public any function init() {
+		// set the payment type to charge by default
+		if( !structKeyExists(variables,"orderPaymentType") ) {
+			setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCharge") );
+		}
 		if(isNull(variables.amount)) {
 			variables.amount = 0;
 		}
