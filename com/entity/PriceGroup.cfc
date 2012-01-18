@@ -140,7 +140,7 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
     
     // Check if this PriceGroup can be deleted. Right now, only check if it has inheriting price groups
     public boolean function isNotDeletable() {
-    	return ArrayLen(getChildPriceGroups()) NEQ 0 || getService("PriceGroupService").isPriceGroupBeingUsed(this);
+    	return ArrayLen(getChildPriceGroups()) NEQ 0;
     }
     
     
