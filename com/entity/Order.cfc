@@ -325,6 +325,16 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return arr;
 	}
 	
+	private void function clearAccountRelatedInfo() {
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			if(getOrderFulfillments()[i].getFulfillmentMethod() == "shipping") {
+				getOrderFulfillments()[i].removeShippingAddress();
+				getOrderFulfillments()[i].removeAccountAddress();
+			}
+		}
+		setOrderPayments([]);
+	}	
+	
     
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -336,6 +346,10 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public void function setAccount(required any account) {
 		variables.account = arguments.account;
 		if(isNew() or !arguments.account.hasOrder( this )) {
+			
+			// This gets called to clear out any shipping addresses or anything else that might have been account specific with an old account that was assigned to this order
+			clearAccountRelatedInfo();
+			
 			arrayAppend(arguments.account.getOrders(), this);
 		}
 	}
