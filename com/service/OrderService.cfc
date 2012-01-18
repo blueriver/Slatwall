@@ -245,7 +245,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// If the account has changed, then we need to duplicate the cart
 			if(!isNull(arguments.order.getAccount()) && arguments.order.getAccount().getAccountID() != account.getAccountID()) {
-				arguments.order = duplicateCartWithNewAccount( account );
+				arguments.order = duplicateOrderWithNewAccount( arguments.order, account );
+				getSessionService().getCurrent().setOrder( arguments.order );
 			} else {
 				arguments.order.setAccount(account);
 			}
@@ -938,24 +939,24 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 	}
 	
-	public any function duplicateCartWithNewAccount(required any newAccount) {
-		var currentCart = getSessionService().getCurrent().getOrder();
+	public any function duplicateOrderWithNewAccount(required any originalOrder, required any newAccount) {
+		
 		var newOrder = this.newOrder();
-		var newOrderFulfillment = this.newOrderFulfillment();
+		var newOrderFulfillment = this.newOrderFulfillmentShipping();
 		
 		newOrderFulfillment.setOrder( newOrder );
 		
 		// Copy Order Items
-		for(var i=1; i<=arrayLen(currentCart.getOrderItems()); i++) {
+		for(var i=1; i<=arrayLen(arguments.originalOrder.getOrderItems()); i++) {
 			var newOrderItem = this.newOrderItem();
 			
-			newOrderItem.setPrice( currentCart.getOrderItems()[i].getPrice() );
-			newOrderItem.setQuantity( currentCart.getOrderItems()[i].getQuantity() );
-			newOrderItem.setOrderItemType( currentCart.getOrderItems()[i].getOrderItemType() );
-			newOrderItem.setOrderItemStatusType( currentCart.getOrderItems()[i].getOrderItemStatusType() );
-			newOrderItem.setSku( currentCart.getOrderItems()[i].getSku() );
-			if(!isNull(currentCart.getOrderItems()[i].getStock())) {
-				newOrderItem.setStock( currentCart.getOrderItems()[i].getStock() );
+			newOrderItem.setPrice( arguments.originalOrder.getOrderItems()[i].getPrice() );
+			newOrderItem.setQuantity( arguments.originalOrder.getOrderItems()[i].getQuantity() );
+			newOrderItem.setOrderItemType( arguments.originalOrder.getOrderItems()[i].getOrderItemType() );
+			newOrderItem.setOrderItemStatusType( arguments.originalOrder.getOrderItems()[i].getOrderItemStatusType() );
+			newOrderItem.setSku( arguments.originalOrder.getOrderItems()[i].getSku() );
+			if(!isNull(arguments.originalOrder.getOrderItems()[i].getStock())) {
+				newOrderItem.setStock( arguments.originalOrder.getOrderItems()[i].getStock() );
 			}
 			newOrderItem.setOrder( newOrder );
 			newOrderItem.setOrderFulfillment( newOrderFulfillment );
@@ -963,7 +964,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		}
 		
 		newOrder.setAccount( arguments.newAccount );
-		getSessionService().getCurrent().setOrder( newOrder );
 		
 		this.saveOrder( newOrder );
 		

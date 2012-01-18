@@ -97,7 +97,8 @@ component extends="BaseService" accessors="true" output="false" {
 				if( isNull(currentSession.getOrder().getAccount()) ) {
 					currentSession.getOrder().setAccount(slatwallAccount);	
 				} else if (currentSession.getOrder().getAccount().getAccountID() != slatwallAccount.getAccountID() ) {
-					getOrderService().duplicateCartWithNewAccount( slatwallAccount );
+					var newOrder = getOrderService().duplicateOrderWithNewAccount( currentSession.getOrder(), slatwallAccount ); 
+					currentSession.setOrder( newOrder );
 				}
 			}
 		} else {
