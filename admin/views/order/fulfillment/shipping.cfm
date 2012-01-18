@@ -40,10 +40,8 @@ Notes:
 <cfparam name="local.orderFulfillment" type="any" />
 
 <cfoutput>
-<cfif local.orderFulfillment.isProcessable()>
-<form name="ProcessFulfillment" action=#buildURL(action="admin:order.processorderfulfillment")# method="post">
-	<input type="hidden" name="orderfulfillmentID" value="#local.orderFulfillment.getOrderFulfillmentID()#" />
-</cfif>
+
+
 	<div class="shippingAddress">
 		<h5>#$.slatwall.rbKey("entity.orderFulfillment.shippingAddress")#</h5>
 		<cf_SlatwallAddressDisplay address="#local.orderFulfillment.getShippingAddress()#" edit="false" />
@@ -74,7 +72,7 @@ Notes:
 				<td>#local.orderItem.getOrderItemStatusType().getType()#</td>
 				<td>#local.orderItem.getFormattedValue('price', 'currency')#</td>
 				<td>#int(local.orderItem.getQuantity())#</td>
-				<td>#local.orderItem.getQuantityDelivered()#</td>
+				<td>#local.orderItem.getQuantity() - local.orderItem.getQuantityUndelivered()#</td>
 				<td>#local.orderItem.getFormattedValue('price', 'extendedPrice')#</td>
 				<td>
 				<cfif local.orderItem.getQuantityUndelivered() gt 0>
@@ -126,5 +124,5 @@ Notes:
 			</dd>
 		</dl>
 	</div>
-	</form>
+	
 </cfoutput>

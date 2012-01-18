@@ -65,28 +65,33 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	
 	*/
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
 		
-	// promotion (many-to-one)
-	public void function setPromotion(required any promotion) {
-	   variables.promotion = arguments.promotion;
-	   if(isNew() or !arguments.promotion.hasAppliedPromotion(this)) {
-	       arrayAppend(arguments.promotion.getAppliedPromotions(),this);
-	   }
-	}
+	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Promotion (many-to-one)
+	public void function setPromotion(required any promotion) {
+		variables.promotion = arguments.promotion;
+		if(isNew() or !arguments.promotion.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.promotion.getAppliedPromotions(), this);
+		}
+	}
 	public void function removePromotion(any promotion) {
 		if(!structKeyExists(arguments, "promotion")) {
 			arguments.promotion = variables.promotion;
 		}
-		var index = arrayFind(arguments.promotion.getProducts(),this);
+		var index = arrayFind(arguments.promotion.getAppliedPromotions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.promotion.getProducts(),index);
+			arrayDeleteAt(arguments.promotion.getAppliedPromotions(), index);
 		}
-		structDelete(variables,"promotion");
-    }
-	
-    /************   END Association Management Methods   *******************/
+		structDelete(variables, "promotion");
+	}	
 
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

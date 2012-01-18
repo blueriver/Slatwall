@@ -44,36 +44,15 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 	property name="attributeOptionLabel" ormtype="string";
 	property name="sortOrder" ormtype="integer";
 	
+	// Related Object Properties (Many-To-One)
+	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";	
-	
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-	// Attribute (many-to-one)
-	
-	public void function setAttribute(required Attribute attribute) {
-		variables.attribute = arguments.attribute;
-		if(isNew() || !arguments.attribute.hasAttributeOption(this)) {
-		   arrayAppend(arguments.attribute.getAttributeOptions(),this);
-		}
-	}
-	
-	public void function removeAttribute(required Attribute attribute) {
-		var index = arrayFind(arguments.attribute.getAttributeOptions(),this);
-		if(index > 0) {
-		   arrayDeleteAt(arguments.attribute.getAttributeOptions(),index);
-		}    
-		structDelete(variables,"attribute");
-    }
-	
-	/************   END Association Management Methods   *******************/
 	
 	public string function getAttributeOptionLabel() {
 		if(structkeyExists(variables,"attributeOptionLabel")) {
@@ -82,4 +61,38 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 			return htmlEditFormat( getAttributeOptionValue() );
 		}
 	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Attribute (many-to-one)    
+	public void function setAttribute(required any attribute) {    
+		variables.attribute = arguments.attribute;    
+		if(isNew() or !arguments.attribute.hasAttributeOption( this )) {    
+			arrayAppend(arguments.attribute.getAttributeOptions(), this);    
+		}    
+	}    
+	public void function removeAttribute(any attribute) {    
+		if(!structKeyExists(arguments, "attribute")) {    
+			arguments.attribute = variables.attribute;    
+		}    
+		var index = arrayFind(arguments.attribute.getAttributeOptions(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.attribute.getAttributeOptions(), index);    
+		}    
+		structDelete(variables, "attribute");    
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

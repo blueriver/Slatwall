@@ -55,8 +55,8 @@ Notes:
 			</tr>
 		</thead>
 		<tbody>
-		<cfloop from="1" to="#arrayLen(rc.promotionCodeSmartList.getPageRecords())#" index="local.promotionCodeCount">
-			<cfset local.thisPromotionCode = rc.promotionCodeSmartList.getPageRecords()[local.promotionCodeCount] />
+		<cfloop from="1" to="#arrayLen(rc.promotion.getPromotionCodesSmartList().getPageRecords())#" index="local.promotionCodeCount">
+			<cfset local.thisPromotionCode = rc.promotion.getPromotionCodesSmartList().getPageRecords()[local.promotionCodeCount] />
 			<tr id="PromotionCode#local.promotionCodeCount#" class="promotionCodeRow">
 				<input type="hidden" name="promotionCodes[#local.promotionCodeCount#].promotionCodeID" value="#local.thisPromotionCode.getPromotionCodeID()#" />
 				<td class="alignLeft">
@@ -130,7 +130,7 @@ Notes:
 	</tbody>
 </table>
 
-<cf_SlatwallSmartListPager smartList="#rc.PromotionCodeSmartList#">
+<cf_SlatwallSmartListPager smartList="#rc.promotion.getPromotionCodesSmartList()#">
 
 <cfif rc.edit>
 <table id="promotionCodeTableTemplate" class="hideElement">

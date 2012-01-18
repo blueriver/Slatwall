@@ -54,4 +54,17 @@ component displayname="Postal Code" entityname="SlatwallPostalCode" table="Slatw
 	property name="country" cfc="Country" fieldtype="many-to-one" fkcolumn="countryCode" insert="false" update="false";
 	property name="state" cfc="State" fieldtype="many-to-one" fkcolumn="stateCode,countryCode";
 	
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

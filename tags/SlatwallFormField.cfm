@@ -39,7 +39,7 @@ Notes:
 
 <cfparam name="attributes.fieldType" type="string" />
 <cfparam name="attributes.fieldName" type="string" />
-<cfparam name="attributes.fieldClass" type="string" />
+<cfparam name="attributes.fieldClass" type="string" default="" />
 <cfparam name="attributes.value" type="any" default="" />
 <cfparam name="attributes.valueOptions" type="array" default="#arrayNew(1)#" />
 
@@ -127,8 +127,8 @@ Notes:
 			<cfoutput>
 				<select name="#attributes.fieldName#" class="#attributes.fieldClass#">
 					<cfloop array="#attributes.valueOptions#" index="option">
-						<cfset thisOptionValue = isSimpleValue(option)?option:structFind(option, 'value') />
-						<cfset thisOptionName = isSimpleValue(option)?option:structFind(option, 'name') />
+						<cfset thisOptionValue = isSimpleValue(option) ? option : structFind(option, 'value') />
+						<cfset thisOptionName = isSimpleValue(option) ? option : structFind(option, 'name') />
 						<option value="#thisOptionValue#" <cfif attributes.value EQ thisOptionValue> selected="selected"</cfif>>#thisOptionName#</option>
 					</cfloop>
 				</select>

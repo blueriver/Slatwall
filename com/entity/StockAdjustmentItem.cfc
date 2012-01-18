@@ -36,16 +36,85 @@
 Notes:
 
 */
-component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmentItem" table="SlatwallStockAdjustmentItem" persistent=true accessors=true output=false extends="BaseEntity" {
-	
+component displayname="Stock Adjustment Item" entityname="SlatwallStockAdjustmentItem" table="SlatwallStockAdjustmentItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+
 	// Persistent Properties
 	property name="stockAdjustmentItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="adjustmentQuantity" ormtype="integer";
-	property name="newQuantity" ormtype="integer";
+	property name="quantity" ormtype="integer" default=0;
 	
-	// Related Object Properties
+	// Related Object Properties (many-to-one)
 	property name="stockAdjustment" cfc="StockAdjustment" fieldtype="many-to-one" fkcolumn="stockAdjustmentID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
+	property name="fromStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="fromStockID";
+	property name="toStock" cfc="Stock" fieldtype="many-to-one" fkcolumn="toStockID";
+	
+	// Related Object Properties (one-to-many)
+	property name="stockAdjustmentDeliveryItems" singularname="stockAdjustmentDeliveryItem" cfc="StockAdjustmentDeliveryItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="stockAdjustmentItemID" cascade="all-delete-orphan" inverse="true";
 	
 	
+	// For use with Adjustment Items interface, get one stock that we will use displaying sku info. 
+	public any function getOneStock() {
+		if(!isNull(variables.fromStock)) {
+			return getFromStock();
+		} else {
+			return getToStock();
+		}
+	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Stock Adjustment (many-to-one)    
+	public void function setStockAdjustment(required any stockAdjustment) {    
+		variables.stockAdjustment = arguments.stockAdjustment;    
+		if(isNew() or !arguments.stockAdjustment.hasStockAdjustmentItem( this )) {    
+			arrayAppend(arguments.stockAdjustment.getStockAdjustmentItems(), this);    
+		}    
+	}    
+	public void function removeStockAdjustment(any stockAdjustment) {    
+		if(!structKeyExists(arguments, "stockAdjustment")) {    
+			arguments.stockAdjustment = variables.stockAdjustment;    
+		}    
+		var index = arrayFind(arguments.stockAdjustment.getStockAdjustmentItems(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.stockAdjustment.getStockAdjustmentItems(), index);    
+		}    
+		structDelete(variables, "stockAdjustment");    
+	}
+	
+	// Stock Adjustment Delivery Items (one-to-many)
+	public void function addStockAdjustmentDeliveryItem(required any stockAdjustmentDeliveryItem) {
+		arguments.stockAdjustmentDeliveryItem.setStockAdjustmentItem( this );
+	}
+	public void function removeStockAdjustmentDeliveryItem(required any stockAdjustmentDeliveryItem) {
+		arguments.stockAdjustmentDeliveryItem.removeStockAdjustmentItem( this );
+	}
+	
+	// Stock Receiver Items (one-to-many)
+	public void function addStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.setStockAdjustmentItem( this );
+	}
+	public void function removeStockReceiverItem(required any stockReceiverItem) {
+		arguments.stockReceiverItem.removeStockAdjustmentItem( this );
+	}
+	
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preInsert(){
+		super.preInsert();
+		getService("skuCacheService").updateFromStockAdjustmentItem( this );
+	}
+	
+	public void function preUpdate(struct oldData){
+		super.preUpdate(argumentcollection=arguments);
+		getService("skuCacheService").updateFromStockAdjustmentItem( this );
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

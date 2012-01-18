@@ -39,15 +39,16 @@ Notes:
 component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
-	property name="productService" type="Slatwall.com.service.ProductService";
-	property name="brandService" type="Slatwall.com.service.BrandService";
-	property name="skuService" type="Slatwall.com.service.SkuService";
 	property name="attributeService" type="Slatwall.com.service.AttributeService";
+	property name="brandService" type="Slatwall.com.service.BrandService";
+	property name="productService" type="Slatwall.com.service.ProductService";
+	property name="skuService" type="Slatwall.com.service.SkuService";
+	property name="locationService" type="Slatwall.com.service.LocationService";
 	property name="priceGroupService" type="Slatwall.com.service.PriceGroupService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
 	property name="utilityORMService" type="Slatwall.com.service.UtilityORMService";
-	
+		
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
 		param name="rc.keyword" default="";
@@ -101,7 +102,7 @@ component extends="BaseController" output=false accessors=true {
 	
 	public void function save(required struct rc) {
 		param name="rc.productID" default="";
-
+		
 		// We are going to be flushing ORM, so we need to check if the product was new before that flush
 		var productWasNew = true;
 		
@@ -132,6 +133,13 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			edit( rc );
 		}
+	}
+	
+	public void function detailInventory(required struct rc) {
+		param name="rc.productID" default="";
+		
+		rc.product = getProductService().getProduct(rc.productID);
+		rc.locations = getLocationService().listLocation();
 	}
 	
 	public void function deleteImage(required struct rc) {

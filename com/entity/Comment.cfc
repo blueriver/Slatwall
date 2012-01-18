@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,9 +35,47 @@
 
 Notes:
 
---->
-<cfoutput>
-<div class="svoVendorDetail">
+*/
+component displayname="Comment" entityname="SlatwallComment" table="SlatwallComment" persistent="true" accessors="true" extends="BaseEntity" {
 	
-</div>
-</cfoutput>
+	// Persistent Properties
+	property name="commentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	
+	// Non-Persistent Properties
+
+
+
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preUpdate(struct oldData) {
+		throw("You cannot update a comment because this would display a fundamental flaw in comment management.");
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
+}

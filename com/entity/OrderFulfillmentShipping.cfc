@@ -41,15 +41,23 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
+	// Related Object Properties (Many-To-One)
 	property name="shippingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="shippingAddressID";
 	property name="accountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="accountAddressID";
 	property name="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-one" fkcolumn="shippingMethodID";
+	//property name="deliveredFromLocation" cfc="Location" fieldtype="many-to-one" fkcolumn="deliveredFromlocationID";
 	
 	property name="orderShippingMethodOptions" singularname="orderShippingMethodOption" cfc="OrderShippingMethodOption" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all-delete-orphan" inverse="true";
 
 	public any function init() {
 		if(isNull(variables.orderShippingMethodOptions)) {
 			variables.orderShippingMethodOptions = [];
+		}
+		if(isNull(getFulfillmentMethod())) {
+			setFulfillmentMethod(getService("fulfillmentService").getFulfillmentMethod("shipping"));
+		}
+		if(isNull(getFulfillmentMethodID())) {
+			setFulfillmentMethodID("shipping");
 		}
 		
 		return super.init();
@@ -128,7 +136,7 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 	    	variables.totalShippingWeight = 0;
 	    	var items = getOrderFulfillmentItems();
 	    	for( var i=1; i<=arrayLen(items); i++ ) {
-	    		variables.totalShippingWeight += (items[i].getSku().getShippingWeight() * items[i].getQuantity());
+	    		variables.totalShippingWeight += (items[i].getSku().getSetting('shippingWeight') * items[i].getQuantity());
 	    	}			
   		}
     	return variables.totalShippingWeight;
@@ -143,4 +151,20 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
     		return ;
     	}
     }
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

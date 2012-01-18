@@ -67,7 +67,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				getRequestCacheService().setValue("currentProduct", product);
 				getRequestCacheService().setValue("currentProductID", product.getProductID());
 				rc.$.event('slatAction', 'frontend:product.detail');
-				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getTemplate(), rc.$.event('siteid'), true));
+				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getSetting('displayTemplate'), rc.$.event('siteid'), true));
 				
 				// Check if this came from a product listing page and setup the base crumb list array
 				if( keyLocation gt 2) {
@@ -146,11 +146,4 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getProductService().deleteProductCategory(rc.$.event("categoryID"));
 	}
 	
-	public void function onAdminModuleNav(required any rc) {
-		// Add necessary html to the header
-		if( getFW().secureDisplay("admin:main.dashboard") ){
-			getService("utilityTagService").cfhtmlhead(getFW().view("admin:toolbar/menu"));
-		}
-	}
-
 }

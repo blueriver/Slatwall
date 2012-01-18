@@ -53,4 +53,18 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	public any function getIntegration() {
 		return getService("integrationService").getIntegrationByIntegrationPackage(getProviderGateway());
 	}
+	
+	    
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

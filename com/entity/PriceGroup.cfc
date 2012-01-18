@@ -44,21 +44,21 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
 	property name="priceGroupName" ormtype="string";
 	property name="priceGroupCode" ormtype="string";
 	
+	// Related Object Properties (Many-To-One)
+	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID";
+	
+	// Related Object Properties (One-To-Many)
+	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" fkcolumn="parentPriceGroupID" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
+	
+	// Related Object Properties (many-to-many)
+	property name="accounts" singularname="account" cfc="Account" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="priceGroupID" inversejoincolumn="accountID";
+
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Related Object Properties (Many-To-One)
-	property name="parentPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="parentPriceGroupID";
-	
-	// Track which PriceGroups are inheriting from THIS price group. Should be maintaining this property through parentPriceGroup
-	property name="childPriceGroups" singularname="ChildPriceGroup" cfc="PriceGroup" fieldtype="one-to-many" inverse="true" fkcolumn="parentPriceGroupID" lazy="extra" cascade="all";
-	
-	
-	// Related Object Properties (One-To-Many)
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="one-to-many" fkcolumn="priceGroupID" cascade="all-delete-orphan" inverse="true";    
 	
 	public PriceGroup function init(){
 		// set default collections for association management methods
@@ -143,4 +143,18 @@ component displayname="Price Group" entityname="SlatwallPriceGroup" table="Slatw
     	return ArrayLen(getChildPriceGroups()) NEQ 0;
     }
     
+    
+        
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================    
 }

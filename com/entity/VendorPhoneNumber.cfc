@@ -50,5 +50,40 @@ component displayname="Vendor Phone" entityname="SlatwallVendorPhoneNumber" tabl
 	
 	// Related Object Properties
 	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
+	
+	
+	/******* Association management methods for bidirectional relationships **************/
+	
+	// vendor (many-to-one)
+	public void function setVendor(required any vendor) {
+		variables.vendor = arguments.vendor;
+		if(isNew() or !arguments.vendor.hasVendorPhoneNumber(this)) {
+			arrayAppend(arguments.vendor.getVendorPhoneNumbers(),this);
+		}
+	}
+	
+	public void function removeVendor(any vendor) {
+		if(!structKeyExists(arguments, "vendor")) {
+			arguments.vendor = variables.vendor;
+		}
+		var index = arrayFind(arguments.vendor.getPhoneNumbers(),this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.vendor.getPhoneNumbers(),index);
+		}
+		structDelete(variables,"vendor");
+	}
+	
+	/******* END: Association management methods for bidirectional relationships **************/
 
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

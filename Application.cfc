@@ -125,26 +125,7 @@ component extends="org.fw1.framework" output="false" {
 		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
 		setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
 		
-		/******************* END: Coldsping Setup **************************/		
-		
-		// Build RB Factory
-		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
-		
-		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		getBeanFactory().getBean("DataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/DBData"));
-		
-		// Load all Slatwall Settings
-		getBeanFactory().getBean("settingService").reloadConfiguration();
-		
-		// Reload All Integrations
-		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-		
-		// Set the first request to True so that it runs
-		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
-		
-		// Set the frameworks baseURL to be used by the buildURL() method
-		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
+		/******************* END: Coldsping Setup **************************/
 		
 		/******************* CFStatic Setup *************************/
 		
@@ -179,18 +160,40 @@ component extends="org.fw1.framework" output="false" {
 		
 		/******************* END: ValidateThis Setup **************************/
 		
+		// Build RB Factory
+		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
+		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
+		
+		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
+		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/dbdata"));
+		
+		// Run Scripts
+		getBeanFactory().getBean("updateService").runScripts();
+		
+		// Load all Slatwall Settings
+		getBeanFactory().getBean("settingService").reloadConfiguration();
+		
+		// Reload All Integrations
+		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+		
+		// Set the first request to True so that it runs
+		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
+		
+		// Set the frameworks baseURL to be used by the buildURL() method
+		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
 		
 		// Log that the application is finished setting up
 		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
 	}
 	
 	public void function setupRequest() {
-		getBeanFactory().getBean("logService").logMessage(message="Slatwall Lifecycle Started: #request.context.slatAction#");
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
+		
+		getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
 		
 		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
 			// Log that this started
@@ -252,17 +255,20 @@ component extends="org.fw1.framework" output="false" {
 		}
 		
 		// Run subsytem specific logic.
-		if(isAdminRequest()) {
+		if(getSubsystem(request.context.slatAction) == "admin") {
 			controller("admin:BaseController.subSystemBefore");
-		} else {
+		} else if (getSubsystem(request.context.slatAction) == "frontend") {
 			controller("frontend:BaseController.subSystemBefore");
+		} else {
+			request.context.sectionTitle = getSubsystem(request.context.slatAction);
+			request.context.itemTitle = getSection(request.context.slatAction);
 		}
 	}
 	
 	public void function setupView() {
 		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
-		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction))) {
+		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
 		}
 		
@@ -310,10 +316,10 @@ component extends="org.fw1.framework" output="false" {
 			ormClearSession();
 			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
 		} else {
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Started");
 			ormFlush();
-			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
+			getBeanFactory().getBean("logService").logMessage("ormFlush() Ended");
 		}
-		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
 	}
 
 	/********************** APPLICATION HELPER FUNCTIONS ***************************/

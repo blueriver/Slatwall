@@ -45,26 +45,37 @@ component displayname="Order Item Applied Promotion" entityname="SlatwallOrderIt
 	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
 	
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============ START: Non-Persistent Property Methods =================
 	
-	// Order (many-to-one)
-	public void function setOrderItem(required OrderItem orderItem) {
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Order Item (many-to-one)
+	public void function setOrderItem(required any orderItem) {
 		variables.orderItem = arguments.orderItem;
-		if(isNew() || !arguments.orderItem.hasAppliedPromotion(this)) {
-			arrayAppend(arguments.orderItem.getAppliedPromotions(),this);
+		if(isNew() or !arguments.orderItem.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.orderItem.getAppliedPromotions(), this);
 		}
 	}
-	
-	public void function removeOrderItem(OrderItem orderItem) {
+	public void function removeOrderItem(any orderItem) {
 		if(!structKeyExists(arguments, "orderItem")) {
 			arguments.orderItem = variables.orderItem;
 		}
-		var index = arrayFind(arguments.orderItem.getAppliedPromotions(),this);
+		var index = arrayFind(arguments.orderItem.getAppliedPromotions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(),index);
-		}    
-		structDelete(variables,"orderItem");
-    }
-    
-	/************   END Association Management Methods   *******************/
+			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(), index);
+		}
+		structDelete(variables, "orderItem");
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

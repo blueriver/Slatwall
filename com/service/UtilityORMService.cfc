@@ -50,41 +50,57 @@ component extends="BaseService" accessors="true" {
 		var serviceName = "baseService";
 		
 		// Run lookups to see if a given entity should be handeled by a specific service
-		if ( left(arguments.entityName, 15) == "SlatwallAccount" ) {
+		if ( left(arguments.entityName, len("SlatwallAccount")) == "SlatwallAccount" ) {
 			serviceName = "accountService";
 				
-		} else if ( left(arguments.entityName, 15) == "SlatwallAddress" ) {
+		} else if ( left(arguments.entityName, len("SlatwallAddress")) == "SlatwallAddress" ) {
 			serviceName = "addressService";
 			
-		} else if ( left(arguments.entityName, 17) == "SlatwallAttribute" ) {
+		} else if ( left(arguments.entityName, len("SlatwallAttribute")) == "SlatwallAttribute" ) {
 			serviceName = "attributeService";
 		
-		} else if ( left(arguments.entityName, 13) == "SlatwallBrand" ) {
+		} else if ( left(arguments.entityName, len("SlatwallBrand")) == "SlatwallBrand" ) {
 			serviceName = "brandService";
 
-		} else if ( left(arguments.entityName, 19) == "SlatwallFulfillment" ) {
+		} else if ( left(arguments.entityName, len("SlatwallFulfillment")) == "SlatwallFulfillment" ) {
 			serviceName = "fulfillmentService";
 
-		} else if ( left(arguments.entityName, 13) == "SlatwallOrder" ) {
+		} else if ( left(arguments.entityName, len("SlatwallOrder")) == "SlatwallOrder" ) {
 			serviceName = "orderService";
 		
-		} else if ( left(arguments.entityName, 14) == "SlatwallOption" ) {
+		} else if ( left(arguments.entityName, len("SlatwallOption")) == "SlatwallOption" ) {
 			serviceName = "optionService";
 		
-		} else if ( left(arguments.entityName, 15) == "SlatwallPayment" || listFindNoCase("SlatwallCreditCardTransaction", arguments.entityName)  )  {
+		} else if ( left(arguments.entityName, len("SlatwallPayment")) == "SlatwallPayment" || listFindNoCase("SlatwallCreditCardTransaction", arguments.entityName)  )  {
 			serviceName = "paymentService";
 			
-		} else if ( left(arguments.entityName, 22) == "SlatwallPriceGroupRate")  {
+		} else if ( left(arguments.entityName, len("SlatwallPriceGroupRate")) == "SlatwallPriceGroupRate")  {
 			serviceName = "priceGroupService";
 			
-		} else if ( left(arguments.entityName, 15) == "SlatwallProduct" ) {
+		} else if ( left(arguments.entityName, len("SlatwallProduct")) == "SlatwallProduct" ) {
 			serviceName = "productService";
 			
-		} else if ( left(arguments.entityName, 17) == "SlatwallPromotion" )  {
+		} else if ( left(arguments.entityName, len("SlatwallPromotion")) == "SlatwallPromotion" )  {
 			serviceName = "promotionService";
 			
-		} else if ( left(arguments.entityName, 11) == "SlatwallSku" || listFindNoCase("SlatwallAlternateSkuCode", arguments.entityName) )  {
+		} else if ( left(arguments.entityName, len("SlatwallSku")) == "SlatwallSku" || listFindNoCase("SlatwallAlternateSkuCode", arguments.entityName) )  {
 			serviceName = "skuService";
+			
+		} else if ( left(arguments.entityName, len("SlatwallVendorAddress")) == "SlatwallVendorAddress")  {
+			serviceName = "vendorService";	
+				
+		} else if ( left(arguments.entityName, len("SlatwallVendorOrderItem")) == "SlatwallVendorOrderItem")  {
+			serviceName = "vendorOrderService";
+			
+		} else if ( left(arguments.entityName, len("SlatwallStockAdjustmentDelivery")) == "SlatwallStockAdjustmentDelivery"
+		|| left(arguments.entityName, len("SlatwallStockAdjustmentDeliveryItem")) == "SlatwallStockAdjustmentDeliveryItem")  {
+			serviceName = "stockService";
+			
+		} else if ( left(arguments.entityName, len("SlatwallStockReceiverItem")) == "SlatwallStockReceiverItem"
+		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrder")) == "SlatwallStockReceiverVendorOrder"
+		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrderItem")) == "SlatwallStockReceiverVendorOrderItem")  {
+			serviceName = "stockService";
+					
 		}
 		
 		// Return the actual service

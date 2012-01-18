@@ -40,7 +40,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 	property name="optionService" type="any";
 	property name="productService" type="any";
-
+	
 	public any function getSkuSmartList(string productID, struct data={}){
 		arguments.entityName = "SlatwallSku";
 		var smartList = getDAO().getSmartList(argumentCollection=arguments);

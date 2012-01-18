@@ -48,22 +48,31 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productDescription" ormtype="string" length="4000" hint="HTML Formated description of the Product";
 	property name="manufactureDiscontinuedFlag" default="false"	ormtype="boolean" hint="This property can determine if a product can still be ordered by a vendor or not";
 	property name="publishedFlag" ormtype="boolean" default="false" hint="Should this product be sold on the web retail Site";
-	property name="trackInventoryFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
+	property name="sortOrder" ormtype="integer";
+	
+	// Persistent Properties - Inheritence Settings
 	property name="allowBackorderFlag" ormtype="boolean";
 	property name="allowDropshipFlag" ormtype="boolean";
-	property name="sortOrder" ormtype="integer";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="displayTemplate" ormtype="string";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="quantityMinimum" ormtype="integer";
+	property name="quantityMaximum" ormtype="integer";
+	property name="quantityOrderMinimum" ormtype="integer";
+	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
+	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
-	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID";
+	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";
 	
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="images" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
+	property name="productImages" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
@@ -72,13 +81,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
-	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" cascade="all" inverse="true";
-	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" cascade="all" inverse="true";
+	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 
-	// Remote properties
+	// Remote Properties
 	property name="remoteID" ormtype="string";
 	
-	// Audit properties
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
@@ -86,19 +95,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
-	property name="onTermSaleFlag" type="boolean" persistent="false";
-	property name="onClearanceSaleFlag" type="boolean" persistent="false";
-	property name="dateFirstReceived" type="date" persistent="false";
-	property name="dateLastReceived" type="date" persistent="false";
+	property name="brandName" type="string" persistent="false";
+	property name="displayTemplateOptions" type="array" persistent="false";
+	
+	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
-	property name="livePrice" type="numeric" formatType="currency" persistent="false";
 	property name="listPrice" type="numeric" formatType="currency" persistent="false";
-	property name="shippingWeight" type="numeric" persistent="false";
-	property name="qoh" type="numeric" persistent="false" hint="quantity on hand" ;
-	property name="qc" type="numeric" persistent="false" hint="quantity committed" ;
-	property name="qexp" type="numeric" persistent="false" hint="quantity expected" ;
-	property name="qia" type="numeric" persistent="false" hint="quantity immediately available";
-	property name="qea" type="numeric" persistent="false" hint="quantity expected available";
+	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="salePrice" type="numeric" formatType="currency" persistent="false";
 	
 	public Product function init(){
 	   // set default collections for association management methods
@@ -129,33 +133,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.productReviews)) {
 	       variables.productReviews = [];
 	   }
+	   if(isNull(variables.productImages)) {
+	       variables.productImages = [];
+	   }
 	   return Super.init();
 	}
-
-	// Related Object Helpers
 	
-	public string function getBrandName() {
-		if( structKeyExists(variables,"brand") ) {
-			return getBrand().getBrandName();
-		}
-		else {	
-			return "";
-		}
-	}
-	
-	public any function getBrandOptions() {
-		if(!structKeyExists(variables, "brandOptions")) {
-			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallBrand");
-			smartList.addSelect(propertyIdentifier="brandName", alias="name");
-			smartList.addSelect(propertyIdentifier="brandID", alias="value"); 
-			smartList.addOrder("brandName|ASC");
-			variables.brandOptions = smartList.getRecords();
-			arrayPrepend(variables.brandOptions, {value="", name=rbKey('define.select')});
-		}
-		return variables.brandOptions;
-	}
-	
-	public any function getProductTypeOptions() {
+    public any function getProductTypeOptions() {
 		if(!structKeyExists(variables, "productTypeOptions")) {
 			var productTypeTree = getProductTypeTree();
 			var productTypeOptions = [];
@@ -204,6 +188,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.templateOptions;
 	}
 	
+	public any function getImages() {
+		return variables.productImages;
+	}
+    
 	// Non-Persistent Helpers
 	
 	public string function getContentIDs() { 
@@ -229,9 +217,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return categoryIDs;
 	}
 	
-	public string function getTitle() {
-		return getService("utilityService").replaceStringTemplate(template=setting('product_titleString'), object=this);
-	}
+	
 	
 	public string function getProductURL() {
 		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
@@ -239,53 +225,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public string function getListingProductURL(string filename=$.content('filename')) {
 		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
-	}
-	
-	public numeric function getQOH() {
-		if(isNull(variables.qoh)) {
-    		variables.qoh = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qoh += skus[i].getQOH();
-	    		}	
-    		}
-    	}
-    	return variables.qoh;
-	}
-	
-	public numeric function getQC() {
-		if(isNull(variables.qc)) {
-    		variables.qc = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qc += skus[i].getQC();
-	    		}	
-    		}
-    	}
-    	return variables.qc;
-	}
-	
-	public numeric function getQEXP() {
-		if(isNull(variables.qexp)) {
-    		variables.qexp = 0;
-    		if(getSetting("trackInventoryFlag")) {
-	    		var skus = getSkus();
-	    		for(var i = 1; i<= arrayLen(skus); i++) {
-	    			variables.qexp += skus[i].getQEXP();
-	    		}	
-    		}
-    	}
-    	return variables.qexp;
-	}
-	
-	public numeric function getQEA() {
-		return (getQOH() - getQC()) + getQEXP();
-	}
-	
-	public numeric function getQIA() {
-		return getQOH() - getQC();
 	}
 	
 	public string function getTemplate() {
@@ -319,42 +258,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public string function getURLTitle() {
 		return getFileName();
 	}
-
-	
-	/******* Product Setting methods **************/
-	
-	// Generic setting accessor
-	public boolean function getSetting( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return variables[arguments.settingName];
-		} else {
-			return getInheritedSetting( arguments.settingName );
-		}
-	}	
-	
-	public boolean function getInheritedSetting( required string settingName ) {
-		if(!isNull(getProductType())) {
-			return getProductType().getSetting(arguments.settingName);
-		} else {
-			// so a CF error won't be thrown during validtion if the product type wasn't selected
-			return setting("product_" & arguments.settingName);
-		}
-	}
-	
-	// Get source of setting
-	public any function getWhereSettingDefined( required string settingName ) {
-		if(structKeyExists(variables,arguments.settingName)) {
-			return {type="Product"};
-		} else if(isNull(getProductType())) {
-			return {type=""};
-		} else {
-			return getService("ProductService").getWhereSettingDefined( getProductType().getProductTypeID(),arguments.settingName );
-		}
-	}
-	
-	
-	/***************************************************/
-	
 
 	/******* Association management methods for bidirectional relationships **************/
 	
@@ -482,6 +385,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.promotionReward.removeProduct(this);
 	}
 	
+	// product images (one-to-many)
+	public void function addProductImage(required any productImage) {
+	   arguments.productImage.setProduct(this);
+	}
+	
+	public void function removeProductImage(required any productImage) {
+	   arguments.productImage.removeProduct(this);
+	}
+	
 	/************   END Association Management Methods   *******************/
 
 	public struct function getOptionGroupsStruct() {
@@ -578,45 +490,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return imageGalleryArray;
 	}
 	
-	public numeric function getPrice() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getPrice();
-		} else {
-			return 0;
-		}
-	}
-	
-	public numeric function getListPrice() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getListPrice();
-		} else {
-			return 0;
-		}
-	}
-	
-	public numeric function getLivePrice() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			return getDefaultSku().getLivePrice();
-		} else {
-			return 0;
-		}
-	}
 
-	public numeric function getShippingWeight() {
-		// brand new products won't have a default SKU yet but need this method for create form
-		if( structKeyExists(variables,"defaultSku") ) {
-			if(isNumeric(getDefaultSku().getShippingWeight())) {
-				return getDefaultSku().getShippingWeight();	
-			} else {
-				return 0;
-			}
-		} else {
-			return 0;
-		}
-	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();
@@ -652,12 +526,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		var attributeSets = [];
 		// get all the parent product types
 		if(!isNull(getProductType())){
-			var productTypeIDs = getService("ProductService").getProductTypeFromTree(getProductType().getProductTypeID()).IDPath;
-			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(productTypeIDs));
+			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(getProductType().getIDPathList()));
 		} else {
 			return attributeSets;
 		}
-		
 	}
 	
 	//get attribute value
@@ -715,10 +587,157 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return productCrumbData;
 	}
 	
-	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
+	public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup ) {
 		return getService("priceGroupService").getRateForProductBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
 	
+	// Start: Quantity Methods
+	
+	public numeric function getQuantity(required string quantityType, string skuID, string locationID) {
+		if(structKeyExists(arguments, "skuID")) {
+			return getService("skuService").getSku(arguments.skuID).invokeMethod("getQuantity", arguments);
+		}
+		if(!structKeyExists(variables, quantityType)) {
+			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {productID=getProductID(), productRemoteID=getRemoteID()});	
+			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+			} else {
+				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
+			}
+		}
+		return variables[quantityType];
+	}
+	
+	// END: Quantity Methods
+	
+	// Start: Setting Methods
+	
+	// Generic setting accessor
+	public any function getSetting( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return variables[arguments.settingName];
+		}
+		
+		return getInheritedSetting( arguments.settingName );
+	}
+	
+	// Get the setting inherited
+	public any function getInheritedSetting( required string settingName ) {
+		if(!isNull(getProductType())) {
+			return getProductType().getSetting(arguments.settingName);
+		}
+		
+		// so a CF error won't be thrown during validtion if the product type wasn't selected
+		return setting("product_" & arguments.settingName);
+	}
+	
+	// Get source of setting
+	public any function getWhereSettingDefined( required string settingName ) {
+		if(structKeyExists(variables,arguments.settingName)) {
+			return {type="Product"};
+		} else if(!isNull(getProductType())) {
+			return getProductType().getWhereSettingDefined( arguments.settingName );
+		}
+
+		// so a CF error won't be thrown during validtion if the product type wasn't selected
+		return {type="Global"};
+	}
+	
+	// END: Setting Methods
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "displayTemplateOptions")) {
+			variables.displayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.displayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('displayTemplate')# )"});
+		}
+		
+		return variables.displayTemplateOptions;
+	}
+	
+	public string function getBrandName() {
+		if(!structKeyExists(variables, "brandName")) {
+			variables.brandName = "";
+			if( structKeyExists(variables, "brand") ) {
+				return getBrand().getBrandName();
+			}
+		}
+		return variables.brandName;
+	}
+	
+	public string function getTitle() {
+		if(!structKeyExists(variables, "title")) {
+			variables.title = getService("utilityService").replaceStringTemplate(template=setting('product_titleString'), object=this);
+		}
+		return variables.title;
+	}
+	
+	
+	public numeric function getPrice() {
+		if(!structKeyExists(variables, "price")) {
+			variables.price = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.price = getDefaultSku().getPrice();
+			}
+		}
+		return variables.price;
+	}
+	
+	public numeric function getListPrice() {
+		if(!structKeyExists(variables, "listPrice")) {
+			variables.listPrice = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.listPrice = getDefaultSku().getListPrice();
+			}	
+		}
+		return variables.listPrice;
+	}
+	
+	public numeric function getLivePrice() {
+		if(!structKeyExists(variables, "livePrice")) {
+			variables.livePrice = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.livePrice = getDefaultSku().getLivePrice();
+			}	
+		}
+		return variables.livePrice;
+	}
+
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "productName";
+	}
+	
+	public boolean function isDeletable() {
+		var pot = getService("productService").getProductIsOnTransaction(product=this);
+		if(!pot) {
+			return super.isDeletable();
+		}
+		return false;
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function postInsert() {
+		super.postInsert();
+		getService("skuCacheService").updateFromProduct( this );
+	}
+	
+	public void function postUpdate() {
+		super.postUpdate(argumentcollection=arguments);
+		getService("skuCacheService").updateFromProduct( this );
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }
-
-

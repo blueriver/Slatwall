@@ -40,7 +40,7 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="fulfillmentCharge" ormtype="big_decimal";
+	property name="fulfillmentCharge" ormtype="big_decimal" default=0;
 	
 	//non-persistent Properties
 	property name="subTotal" type="numeric" persistent="false";
@@ -159,5 +159,21 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
     	}
     	return variables.quantityUndelivered;
     }
-    
+
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

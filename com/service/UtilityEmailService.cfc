@@ -44,7 +44,6 @@ Notes:
 		<cfargument name="order" type="any">
 		
 		<cfset var $ = request.context.$ />
-		<cfset var local = {} />
 		
 		<cfmail to="#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()# <#arguments.order.getAccount().getEmailAddress()#>"
 				from="#setting('order_orderPlacedEmailFrom')#"

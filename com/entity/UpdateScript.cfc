@@ -36,13 +36,26 @@
 Notes:
 
 */
-component displayname="Vendor Brand" entityname="SlatwallVendorBrand" table="SlatwallVendorBrand" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Update Script" entityname="SlatwallUpdateScript" table="SlatwallUpdateScript" persistent="true" accessors="true" output="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="vendorBrandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="updateScriptID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="scriptPath" ormtype="string";
+	property name="loadOrder" ormtype="integer";
+	property name="maxExecutionCount" ormtype="integer";
+	property name="successfulExecutionCount" ormtype="integer" default="0";
+	property name="executionCount" ormtype="integer" default="0" ;
+	property name="lastExecutedDateTime" ormtype="timestamp";
+		
+	// ============ START: Non-Persistent Property Methods =================
 	
-	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
 	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

@@ -40,9 +40,13 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	
 	// Persistent Properties
 	property name="stockID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="qoh" ormtype="integer" hint="Quantity On Hand, This gets decrimented when an item is Shipped, and incrimented when an item is received or transfered in";
-	property name="qc" ormtype="integer" hint="Quantity Committed, This gets incrimented when an order is placed, and decremented when an order ships.  It is used to calculated availability";
-	property name="qexp" ormtype="integer" hint="Quantity Expected, This is the quantity expected on either a PO or from an order that is being returned.";
+	
+	// Related Object Properties (many-to-one)
+	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
+	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
+	
+	// Related Object Properties (one-to-many). Including this property to allow HQL to do  stock -> vendorOrderItem lookups
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" fieldtype="one-to-many" fkcolumn="stockID" inverse="true";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -53,8 +57,44 @@ component displayname="Stock" entityname="SlatwallStock" table="SlatwallStock" p
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="location" fieldtype="many-to-one" fkcolumn="locationID" cfc="Location";
-	property name="sku" fieldtype="many-to-one" fkcolumn="skuID" cfc="Sku";
+	public numeric function getQuantity(required string quantityType) {
+		if(!structKeyExists(variables, quantityType)) {
+			if(listFindNoCase("QOH,QOSH,QNDOO,QNDORVO,QNDOSA,QNRORO,QNROVO,QNROSA", arguments.quantityType)) {
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {stockID=getStockID(), stockRemoteID=getRemoteID()});	
+			} else if(listFindNoCase("QC,QE,QNC,QATS,QIATS", arguments.quantityType)) {
+				variables[quantityType] = getService("inventoryService").invokeMethod("get#arguments.quantityType#", {entity=this});
+			} else {
+				throw("The quantity type you passed in '#arguments.quantityType#' is not a valid quantity type.  Valid quantity types are: QOH, QOSH, QNDOO, QNDORVO, QNDOSA, QNRORO, QNROVO, QNROSA, QC, QE, QNC, QATS, QIATS");
+			}
+		}
+		return variables[quantityType];
+	}
 	
+	public any function getSetting(required string settingName) {
+		return getSku().getSetting(arguments.settingName);
+	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Vendor Order Items (one-to-many)
+	public void function addVendorOrderItem(required any vendorOrderItem) {
+		arguments.vendorOrderItem.setStock( this );
+	}
+	public void function removeVendorOrderItem(required any vendorOrderItem) {
+		arguments.vendorOrderItem.removeStock( this );
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

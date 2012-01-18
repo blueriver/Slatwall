@@ -42,4 +42,38 @@ component displayname="Account Attribute Set Assignment" entityname="SlatwallAcc
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID" inverse="true" cascade="all";
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+	   variables.account = arguments.account;
+	   if(isNew() or !arguments.account.hasAttributeSetAssignment(this)) {
+	       arrayAppend(arguments.account.getAttributeSetAssignments(),this);
+	   }
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAttributeSetAssignments(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAttributeSetAssignments(), index);
+		}
+		structDelete(variables, "account");
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

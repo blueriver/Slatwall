@@ -23,7 +23,39 @@ jQuery(document).ready(function(){
 	
 	stripe('stripe');
 	
+	// Add $item.listAppendVal() method to jQuery
+	jQuery.fn.listAppendVal = function(str, delimiter) {
+		var newList = jQuery(this).val();
+		if(!delimiter)
+			var delimiter = ",";
+		
+		if(newList.length && newList.charAt(newList.length-1) != delimiter) {
+			newList += delimiter;
+		}
+		
+		jQuery(this).val(newList += str);	
+	}
+	
+	// Add $item.listDeleteVal() method to jQuery
+	jQuery.fn.listDeleteVal = function(str, delimiter) {
+		var newList = jQuery(this).val();
+		
+		if(!delimiter)
+			var delimiter = ",";
+		
+		newList = newList.replace(delimiter + str + delimiter, delimiter);
+		newList = newList.replace(str + delimiter, "");
+		newList = newList.replace(delimiter + str, "");
+		newList = newList.replace(str, "");
+		jQuery(this).val(newList);	
+	}
+	
+	jQuery('.checkClear').click(function(e){
+		jQuery(jQuery(this).data('checkclear')).val('');
+	});
+	
 });
+
 
 
 function btnConfirmDialog(message,btn){
@@ -54,6 +86,7 @@ function actionDialog($dialogDiv, okHandler, cancelHandler, onClosedHandler){
 	//$dialogDiv.attr("title", title);
     $dialogDiv.dialog({
         resizable: false,
+		width: 'auto',
         modal: true,
         buttons: {
             'Ok': function() {

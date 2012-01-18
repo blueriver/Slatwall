@@ -186,7 +186,11 @@ Notes:
 				#arguments.tableName#
 			SET
 				<cfloop from="1" to="#arrayLen(updateColumns)#" index="i">
-					#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="#updateValues[i]#">
+					<cfif updateValues[i] eq "NULL">
+						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="" null="yes">
+					<cfelse>
+						#updateColumns[i]# = <cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="#updateValues[i]#">
+					</cfif>
 					<cfif arrayLen(updateColumns) gt i>,</cfif> 
 				</cfloop>
 			WHERE
@@ -207,7 +211,11 @@ Notes:
 				#arrayToList(insertColumns, ",")#
 			) VALUES (
 				<cfloop from="1" to="#arrayLen(insertValues)#" index="i">
-					<cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="#insertValues[i]#">
+					<cfif insertValues[i] eq "NULL">
+						<cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="" null="yes">
+					<cfelse>
+						<cfqueryparam cfsqltype="cf_sql_#columnDataTypes[i]#" value="#insertValues[i]#">
+					</cfif>
 					<cfif arrayLen(insertValues) gt i>,</cfif>
 				</cfloop>
 			)

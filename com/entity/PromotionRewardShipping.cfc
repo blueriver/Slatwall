@@ -45,7 +45,7 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	property name="shippingAmount" ormType="big_decimal";
 	
 	// Related Entities
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID" cascade="save-update";
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID";
 	
 
 	public any function init() {
@@ -151,5 +151,16 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 		}
 		return true;
 	}
+
+	// ============ START: Non-Persistent Property Methods =================
 	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================	
 }

@@ -122,9 +122,7 @@ Notes:
 <cfif rc.edit>
 	<div id="actionButtons" class="clearfix">
 		<cf_SlatwallActionCaller action="admin:product.list" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-		<cfif rc.product.isDeletable()>
-			<cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" type="link" class="button" confirmrequired="true">
-		</cfif>
+		<cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#rc.product.getproductID()#" disabled="#rc.product.isNotDeletable()#" type="link" class="button" confirmrequired="true">
 		<cf_SlatwallActionCaller action="admin:product.save" type="submit" class="button">
 	</div>
 	</form>

@@ -48,19 +48,19 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// Related Object Properties (many-to-one)
 	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
-	property name="primaryAccountAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAccountAddressID";
+	property name="primaryAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
 	
 	// Related Object Properties (one-to-many)
+	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
-	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (many-to-many)
-	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID" cascade="save-update";
-		
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" fieldtype="many-to-many" linktable="SlatwallAccountPriceGroup" fkcolumn="accountID" inversejoincolumn="priceGroupID";
+
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	property name="remoteEmployeeID" ormtype="string" hint="Only used when integrated with a remote system";
@@ -104,37 +104,11 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		return super.init();
 	}
 	
-	public string function getFullName() {
-		return "#getFirstName()# #getLastName()#";
-	}
-	
 	public boolean function isGuestAccount() {
 		if(isNull(getMuraUserID())) {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	
-	public string function getPhoneNumber() {
-		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
-			return getPrimaryPhoneNumber().getPhoneNumber();
-		}
-		return "";
-	}
-	
-	public string function getEmailAddress() {
-		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
-			return getPrimaryEmailAddress().getEmailAddress();
-		}
-		return "";
-	}
-	
-	public string function getAddress() {
-		if(!isNull(getPrimaryAccountAddress()) && !isNull(getPrimaryAccountAddress().getAddress())) {
-			return getPrimaryAccountAddress().getAddress();
-		} else {
-			return getService("addressService").newAddress();
 		}
 	}
 	
@@ -174,54 +148,98 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
-    /******* Association management methods for bidirectional relationships **************/
+	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
+		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
+	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getPhoneNumber() {
+		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
+			return getPrimaryPhoneNumber().getPhoneNumber();
+		}
+		return "";
+	}
+	
+	public string function getEmailAddress() {
+		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
+			return getPrimaryEmailAddress().getEmailAddress();
+		}
+		return "";
+	}
+	
+	public string function getAddress() {
+		if(!isNull(getPrimaryAddress()) && !isNull(getPrimaryAddress().getAddress())) {
+			return getPrimaryAddress().getAddress();
+		} else {
+			return getService("addressService").newAddress();
+		}
+	}
+	
+	public string function getFullName() {
+		return "#getFirstName()# #getLastName()#";
+	}
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Addresses (one-to-many)
+	public void function addAccountAddress(required any accountAddress) {
+		arguments.accountAddress.setAccount( this );
+	}
+	public void function removeAccountAddress(required any accountAddress) {
+		arguments.accountAddress.removeAccount( this );
+	}
+	
+	// Account Email Addresses (one-to-many)
+	public void function addAccountEmailAddress(required any accountEmailAddress) {    
+		arguments.accountEmailAddress.setAccount( this );    
+	}    
+	public void function removeAccountEmailAddress(required any accountEmailAddress) {    
+		arguments.accountEmailAddress.removeAccount( this );    
+	}
+	
+	// Account Phone Numbers (one-to-many)    
+	public void function addAccountPhoneNumber(required any accountPhoneNumber) {    
+		arguments.accountPhoneNumber.setAccount( this );    
+	}    
+	public void function removeAccountPhoneNumber(required any accountPhoneNumber) {    
+		arguments.accountPhoneNumber.removeAccount( this );    
+	}
+	
+	// Account Attribute Sets (one-to-many)
+	public void function addAccountAttributeSet(required any accountAttributeSet) {
+		arguments.accountAttributeSet.setAccount( this );
+	}
+	public void function removeAccountAttributeSet(required any accountAttributeSet) {
+	   arguments.accountAttributeSet.removeAccount( this );
+	}
 	
 	// Orders (one-to-many)
 	public void function addOrder(required any Order) {
 	   arguments.order.setAccount(this);
 	}
-	
 	public void function removeOrder(required any Order) {
 	   arguments.order.removeAccount(this);
 	}
 	
 	// Product Reviews (one-to-many)
 	public void function addProductReview(required any productReview) {
-	   arguments.productReview.setAccount(this);
+		arguments.productReview.setAccount(this);
 	}
-	
 	public void function removeProductReview(required any productReview) {
-	   arguments.productReview.removeAccount(this);
+		arguments.productReview.removeAccount(this);
 	}
 	
-	// Addresses (one-to-many)
-	public void function addAccountAddress(required any accountAddress) {
-	   arguments.accountAddress.setAccount(this);
-	}
-	
-	// Account Email Addresses (one-to-many)
-	public void function addAccountEmailAddress(required any AccountEmailAddress) {    
-	   arguments.AccountEmailAddress.setAccount(this);    
-	}    
 
-	public void function removeAccountEmailAddress(required any AccountEmailAddress) {    
-	   arguments.AccountEmailAddress.removeAccount(this);    
-	}
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
 	
+	// ==================  END:  Overridden Methods ========================
 	
-	// Account Phone Numbers (one-to-many)
-	public void function addAccountPhoneNumber(required any AccountPhoneNumber) {
-	   arguments.AccountPhoneNumber.setAccount(this);
-	}
+	// =================== START: ORM Event Hooks  =========================
 	
-	public void function removeAccountPhoneNumber(required any AccountPhoneNumber) {
-	   arguments.AccountPhoneNumber.removeAccount(this);
-	}
-	
-	/************   END Association Management Methods   *******************/
-	
-	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
-		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
-	}
-	
+	// ===================  END:  ORM Event Hooks  =========================
 }

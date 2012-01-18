@@ -87,7 +87,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			}
 		}
 		
-		if(!isNull(sku)) {
+		if(!isNull(sku) && isNumeric(rc.quantity)) {
 			// Persist the Current Order by setting it in the session
 			rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
 			
@@ -130,6 +130,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		var pc = getPromotionService().getPromotionCode(rc.promotionCodeID, true);
 		
 		getOrderService().removePromotionCode(order=rc.$.slatwall.cart(), promotionCode=pc);
+		
+		getFW().setView("frontend:cart.detail");
+	}
+	
+	public void function forceItemQuantityUpdate(required struct rc) {
+		
+		getOrderService().forceItemQuantityUpdate(order=rc.$.slatwall.cart(), messageBean=rc.$.slatwall.getMessageBean());
 		
 		getFW().setView("frontend:cart.detail");
 	}

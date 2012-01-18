@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayName="ErrorBean" persistent="false" accessors="true" hint="Bean to manage validation errors" output="false" {
+component displayName="Error Bean" persistent="false" accessors="true" hint="Bean to manage validation errors" output="false" {
 
 	// @hint stores any validation errors for the entity
 	property name="errors" type="struct";
@@ -44,6 +44,7 @@ component displayName="ErrorBean" persistent="false" accessors="true" hint="Bean
 	// @hint Constructor for error bean. Initializes the error bean.
 	public function init() {
 		variables.errors = structNew();
+		
 		return this;
 	}
 	
@@ -73,6 +74,8 @@ component displayName="ErrorBean" persistent="false" accessors="true" hint="Bean
 	public boolean function hasErrors() {
 		return !structIsEmpty(variables.errors) ;
 	}
+	
+	
 	
 }
 

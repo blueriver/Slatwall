@@ -42,43 +42,51 @@ component displayname="Account Email Address" entityname="SlatwallAccountEmailAd
 	property name="accountEmailAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="emailAddress" ormtype="string" inverse="true";
 	
-	// Audit properties
+	// Related Object Properties (Many-To-One)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
+	// ============ START: Non-Persistent Property Methods =================
 	
-	// Override the base class simple Representation value
-	public string function getSimpleRepresentation() {
-		return getEmailAddress();
-	}
+	// ============  END:  Non-Persistent Property Methods =================
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Account (many-to-one)
-	 
- 	public void function setAccount(required any Account) {     
- 	   variables.Account = arguments.Account;     
- 	   if(!arguments.Account.hasAccountEmailAddress(this)) {     
- 	       arrayAppend(arguments.Account.getAccountEmailAddresses(),this);     
- 	   }     
- 	}    
- 	     
-  	public void function removeAccount(any Account) {     
-  	   if(!structKeyExists(arguments,"Account")) {     
-  	   		arguments.Account = variables.Account;     
-  	   }     
-        var index = arrayFind(arguments.Account.getAccountEmailAddresses(),this);     
-        if(index > 0) {     
-            arrayDeleteAt(arguments.Account.getAccountEmailAddresses(),index);     
-        }         
-        structDelete(variables,"Account");     
-     }
-	 
-/************   END Association Management Methods   *******************/
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasAccountEmailAddress( this )) {
+			arrayAppend(arguments.account.getAccountEmailAddresses(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAccountEmailAddresses(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAccountEmailAddresses(), index);
+		}
+		structDelete(variables, "account");
+	}
 	
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "emailAddress";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

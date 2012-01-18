@@ -100,16 +100,16 @@ Notes:
 					</th>
 				</cfloop>
 				
-				<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>
+				<!---<th <cfif rc.edit>class="skuWeightColumn"</cfif>> #rc.$.Slatwall.rbKey("entity.sku.shippingWeight")#</th>--->
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<th>#rc.$.Slatwall.rbKey("entity.sku.remoteID")#</th>
 				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QOH")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QEXP")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QC")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QIA")#</th>
-					<th>#rc.$.Slatwall.rbKey("entity.sku.QEA")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QOH")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QC")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QE")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QATS")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.QIATS")#</th>
 				</cfif>
 				<cfif rc.edit>
 				  <th class="administration">&nbsp;</th>
@@ -158,7 +158,7 @@ Notes:
 					</cfif>	
 					
 					<cfif rc.edit>
-						<a class="button uploadImage" href="/plugins/Slatwall/?slatAction=admin:product.uploadSkuImage&skuID=#local.thisSku.getSkuID()#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
+						<a class="button uploadImage" href="#buildURL(action='admin:product.uploadSkuImage', queryString='skuID=#local.thisSku.getSkuID()#')#">#rc.$.Slatwall.rbKey("admin.sku.uploadImage")#</a>
 					</cfif>
 				</td>
 	
@@ -195,7 +195,7 @@ Notes:
 						</cfif>
 					</td>	
 				</cfloop>
-
+				<!---
 				<td>
 					<cfif rc.edit>
 						 <input type="text" size="6" name="skus[#local.skuCount#].shippingWeight" value="#local.thisSku.getShippingWeight()#" />         
@@ -203,15 +203,16 @@ Notes:
 						#local.thisSku.getShippingWeight()#
 					</cfif>
 				</td>
+				--->
 				<cfif $.slatwall.setting("advanced_showRemoteIDFields")>
 					<td><cf_SlatwallPropertyDisplay object="#local.thisSku#" fieldName="skus[#local.skuCount#].remoteID" property="remoteID" edit="#rc.edit#" displaytype="plain"></td>
 				</cfif>
 				<cfif rc.product.getSetting("trackInventoryFlag")>
-				<td>#local.thisSku.getQOH()#</td>
-				<td>#local.thisSku.getQEXP()#</td>
-				<td>#local.thisSku.getQC()#</td>
-				<td>#local.thisSku.getQIA()#</td>
-				<td>#local.thisSku.getQEA()#</td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qoh')#">#local.thisSku.getQuantity('QOH')#</a></a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qc')#">#local.thisSku.getQuantity('QC')#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qe')#">#local.thisSku.getQuantity('QE')#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qats')#">#local.thisSku.getQuantity('QATS')#</a></td>
+					<td><a href="#buildURL(action='admin:product.detailinventory', queryString='productID=#rc.product.getProductID()#&quantityType=qiats')#">#local.thisSku.getQuantity('QIATS')#</a></td>
 				</cfif>
 				<cfif rc.edit>
 					<td class="administration">
@@ -258,9 +259,6 @@ Notes:
 			<td></td>
 		</cfloop>
 		
-		<td>
-			<input type="text" size="6" name="shippingWeight" value="#rc.product.getDefaultSku().getShippingWeight()#" />
-		</td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
 	        <td></td>
 	        <td></td>

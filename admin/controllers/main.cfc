@@ -43,9 +43,9 @@ component extends="BaseController" output=false accessors=true {
 	property name="orderService" type="Slatwall.com.service.OrderService";
 	
 	public void function default(required struct rc) {
-		rc.productSmartList = getProductService().getSmartList(entityName="SlatwallProduct", data=arguments.rc);
+		rc.productSmartList = getProductService().getProductSmartList(data=arguments.rc);
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");
-		rc.orderSmartList = getOrderService().getSmartList(entityName="SlatwallOrder", data=arguments.rc);
+		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
 		rc.orderSmartList.addFilter("orderStatusType_systemCode", "ostNew");
 		rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
 	}

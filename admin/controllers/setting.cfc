@@ -50,6 +50,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="dataService" type="any";
 	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
+	property name="updateService" type="any";
 	
 	
 	// Mura Service Injection
@@ -90,8 +91,8 @@ component extends="BaseController" output="false" accessors="true" {
 				}
 			}
 		}
-		
-		getFW().redirect(action="admin:setting.detail", queryString="reload=true");
+		getSettingService().reloadConfiguration();
+		getFW().redirect(action="admin:setting.detail");
 	}
 	
 	// User Permissions
@@ -509,6 +510,28 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		getFW().redirect(action='admin:main.default');
+	}
+	
+	// slatwall update
+	public void function detailSlatwallUpdate(required struct rc) {
+		
+		var versions = getUpdateService().getAvailableVersions();
+		rc.availableDevelopVersion = versions.develop;
+		rc.availableMasterVersion = versions.master;
+		
+		rc.currentVersion = getPluginConfig().getApplication().getValue('SlatwallVersion');
+		if(find("-", rc.currentVersion)) {
+			rc.currentBranch = "develop";
+		} else {
+			rc.currentBranch = "master";
+		}
+		
+	}
+	
+	public void function updateSlatwall(required struct rc) {
+		getUpdateService().update(branch=rc.updateBranch);
+		rc.message = rbKey("admin.setting.updateslatwall_success");
+		getFW().redirect(action="admin:setting.detailslatwallupdate?reload=true", preserve="message");	
 	}
 	
 	

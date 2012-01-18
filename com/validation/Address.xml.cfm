@@ -5,7 +5,7 @@
 			<rule type="required" contexts="save,full" />
 		</property>
 		<property name="name">
-			<rule type="required" contexts="save,full" />
+			<rule type="required" contexts="full" />
 		</property>
 	</objectProperties>
 </validateThis>

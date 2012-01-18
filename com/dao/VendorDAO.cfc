@@ -37,4 +37,17 @@ Notes:
 
 */
 component extends="BaseDAO" {
+	public array function getProductsForVendor(required any vendorID) {
+		var params = [arguments.vendorId];
+		var hql = " SELECT p
+					FROM SlatwallProduct p
+					INNER JOIN p.brand b
+					INNER JOIN b.vendors v
+					WHERE v.vendorID = ?    ";
+	
+		return ormExecuteQuery(hql, params);
+	}	
+	
+	
+	
 }

@@ -41,18 +41,179 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	property name="vtResult" type="any";							// This propery holds the ValidateThis result bean once it has been set.
 	property name="errorBean" type="any";							// This porpery holds errors that are not part of ValidateThis, for example processing errors.
+	property name="messageBean" type="any";
 	property name="populatedSubProperties" type="array";
 	
 	// Constructor Metod
 	public any function init() {
-		// Sets the populated sub properties array to a new array
-		setPopulatedSubProperties([]);
-		
 		return this;
 	}
 	
+	// ========================= START: ACCESSOR OVERRIDES ==========================================
+	
+	// @hint Returns the ValidateThis result object, if one hasn't been setup yet it returns a new one
+	public any function getVTResult() {
+		if(!structKeyExists(variables, "vtResult")) {
+			variables.vtResult = getValidateThis().newResult(); 
+		}
+		return variables.vtResult;
+	}
+	
+	// @hint Returns the errorBean object, if one hasn't been setup yet it returns a new one
+	public any function getErrorBean() {
+		if(!structKeyExists(variables, "errorBean")) {
+			variables.errorBean = new Slatwall.com.utility.ErrorBean(); 
+		}
+		return variables.errorBean;
+	}
+	
+	// @hint Returns the messageBean object, if one hasn't been setup yet it returns a new one
+	public any function getMessageBean() {
+		if(!structKeyExists(variables, "messageBean")) {
+			variables.messageBean = new Slatwall.com.utility.MessageBean(); 
+		}
+		return variables.messageBean;
+	}
+	
+	// @hint Returns the populatedSubProperties array, if one hasn't been setup yet it returns a new one
+	public array function getPopulatedSubProperties() {
+		if(!structKeyExists(variables, "populatedSubProperties")) {
+			variables.populatedSubProperties = [];
+		}
+		return variables.populatedSubProperties; 
+	}
+	
+	
+	
+	// =========================  END:  ACCESSOR OVERRIDES ==========================================
+	
+	// =============================== START: ERRORS ================================================
+	
+	// @hint Returns a struct of all the errors for this entity
+	public struct function getErrors() {
+		var errorsStruct = {};
+		
+		// Check the VTResult for any errors
+		for(var key in getVTResult().getErrors()) {
+			errorsStruct[key] = getVTResult().getErrors()[key];	
+		}
+		
+		// Check the ErrorBean for any errors
+		for(var key in getErrorBean().getErrors()) {
+			if(structKeyExists(errorsStruct, key)) {
+				for(var i=1; i<=arrayLen(getErrorBean().getErrors()[key]); i++) {
+					arrayAppend(errorsStruct[key], getErrorBean().getErrors()[key][i]);	
+				}
+			} else {
+				errorsStruct[key] = getErrorBean().getErrors()[key];	
+			}
+		}
+		
+		// Default behavior if this object hasn't been validated is to return a blank struct
+		return errorsStruct;
+	}
+	
+	// @hint Returns the error message of a given error name
+	public array function getError( required string errorName ) {
+		
+		// Check First that the error exists, and if it does return it
+		if( hasError(arguments.errorName) ) {
+			return getErrors()[ arguments.errorName ];
+		}
+		
+		// Default behavior if the error isn't found is to return an empty array
+		return [];
+	}
+		
+	// @hint Returns true if this object has any errors.
+	public boolean function hasErrors() {
+		if(getVTResult().hasErrors() || getErrorBean().hasErrors()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	// @hint Returns true if a specific error key exists
+	public boolean function hasError( required string errorName ) {
+		return structKeyExists(getErrors(), arguments.errorName);
+	}
+		
+	// @hint helper method to add an error to the error bean	
+	public void function addError( required string errorName, required string errorMessage) {
+		getErrorBean().addError(argumentCollection=arguments);
+	}
+	
+	// @hint helper method that returns all error messages as <p> html tags
+	public string function getAllErrorsHTML( ) {
+		var returnString = "";
+		
+		for(var errorName in getErrors()) {
+			for(var i=1; i<=arrayLen(getErrors()[errorName]); i++) {
+				returnString &= "<p class='error'>" & getErrors()[errorName][i] & "</p>";
+			}
+		}
+		
+		return returnString;
+	}
+	
+	// ===============================  END:  ERRORS ================================================
+	
+	// ============================== START: MESSAGES ===============================================
+	
+	// @hint Returns a struct of all the messages for this object
+	public struct function getMessages() {
+		return getMessageBean().getMessages();
+	}
+	
+	// @hint Returns the error message of a given error name
+	public struct function getMessage( required string messageName ) {
+		
+		// Check First that the error exists, and if it does return it
+		if( getMessageBean().hasMessage(arguments.messageName) ) {
+			return getMessageBean().getMessage( arguments.messageName );
+		}
+		
+		// Default behavior if the error isn't found is to return an empty array
+		return [];
+	}
+	
+	// @hint Returns true if there are any messages
+	public boolean function hasMessages( ) {
+		return getMessageBean().hasMessages();
+	}
+	
+	// @hint Returns true if a specific message key exists
+	public boolean function hasMessage( required string messageName ) {
+		return getMessageBean().hasMessage( arguments.messageName );
+	}
+	
+	// @hint helper method to add an error to the error bean	
+	public void function addMessage( required string messageName, required string message ) {
+		getMessageBean().addMessage(argumentCollection=arguments);
+	}
+	
+	// @hint helper method that returns all messages as <p> html tags
+	public string function getAllMessagesHTML( ) {
+		var returnString = "";
+		
+		for(var messageName in getMessages()) {
+			for(var i=1; i<=arrayLen(getMessages()[messageName]); i++) {
+				returnString &= "<p class='message #lcase(messageName)#'>" & getMessages()[messageName][i] & "</p>";
+			}
+		}
+		
+		return returnString;
+	}
+	
+	// ==============================  END:  MESSAGES ===============================================
+	
+	// ======================= START: POPULATION & VALIDATION =======================================
+	
 	// @hint Public populate method to utilize a struct of data that follows the standard property form format
 	public any function populate( required struct data={} ) {
+		// Param the ignoreProperties key so that we can count on it later
+		param name="arguments.data.ignoreProperties" default="";
 		
 		// Get an array of All the properties for this object
 		var properties = getProperties();
@@ -63,8 +224,8 @@ component displayname="Base Object" accessors="true" output="false" {
 			// Set the current property into variable of meta data
 			var currentProperty = properties[p];
 			
-			// Check to see if this property has a key in the data that was passed in
-			if( structKeyExists(arguments.data, currentProperty.name) ) {
+			// Check to see if this property has a key in the data that was passed in, and also make sure that key isn't in the ignoreProperties list
+			if( structKeyExists(arguments.data, currentProperty.name) && !listFindNoCase(arguments.data.ignoreProperties, currentProperty.name) ) {
 			
 				// (SIMPLE) Do this logic if this property should be a simple value, and the data passed in is a simple value
 				if( (!structKeyExists(currentProperty, "fieldType") || currentProperty.fieldType == "column") && isSimpleValue(arguments.data[ currentProperty.name ]) ) {
@@ -90,21 +251,41 @@ component displayname="Base Object" accessors="true" output="false" {
 					// If the primaryID exists then we can set the relationship
 					if(structKeyExists(manyToOneStructData, primaryIDPropertyName)) {
 						
-						// If the value passed in for the ID is blank, then set the value of the currentProperty to NULL
-						if(manyToOneStructData[primaryIDPropertyName] == "") {
-							_setProperty(currentProperty.name);
+						// set the service to use to get the specific entity
+						var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
+						
+						// If there were additional values in the data, then we will get the entity by the primaryID and populate / validate by calling save in its service.
+						if(structCount(manyToOneStructData) gt 1) {
 							
-						// If it was an actual ID, then we will try to load that entity
-						} else {
+							// Load the specifiv entity, if one doesn't exist, this will return a new entity
+							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName],2=true});
 							
-							// set the service to use to get the specific entity
-							var entityService = getService( "utilityORMService" ).getServiceByEntityName( "Slatwall#currentProperty.cfc#" );
-							
-							// Load the specifiv entity, if one doesn't exist... this will be null
-							var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
-							
-							// Set the value of the property as the newly loaded entity
+							// Set the value of the property as the loaded entity
 							_setProperty(currentProperty.name, thisEntity );
+							
+							// Call the save method for this sub property entity and pass in the data
+							thisEntity = entityService.invokeMethod( "save#currentProperty.cfc#", {1=thisEntity, 2=manyToOneStructData});
+							
+							// Add this property to the array of populatedSubProperties so that when this object is validated, it also validates the sub-properties that were populated
+							if( !arrayFind(getPopulatedSubProperties(), currentProperty.name) ) {
+								arrayAppend(getPopulatedSubProperties(), currentProperty.name);
+							}
+							
+						// If there were no additional values in the strucuture then we just try to get the entity and set it... in this way a null is a valid option
+						} else {
+							// If the value passed in for the ID is blank, then set the value of the currentProperty to NULL
+							if(manyToOneStructData[primaryIDPropertyName] == "") {
+								_setProperty(currentProperty.name);
+						
+							// If it was an actual ID, then we will try to load that entity
+							} else {
+							
+								// Load the specifiv entity, if one doesn't exist... this will be null
+								var thisEntity = entityService.invokeMethod( "get#currentProperty.cfc#", {1=manyToOneStructData[primaryIDPropertyName]});
+							
+								// Set the value of the property as the loaded entity
+								_setProperty(currentProperty.name, thisEntity );
+							}
 						}
 					}
 					
@@ -216,23 +397,38 @@ component displayname="Base Object" accessors="true" output="false" {
 		for(var p=1; p<=arrayLen(getPopulatedSubProperties()); p++) {
 			
 			// Get the values of this sub property
-			var subPropertyValuesArray = invokeMethod("get#getPopulatedSubProperties()[p]#");
+			var subPropertyValue = invokeMethod("get#getPopulatedSubProperties()[p]#");
 			
-			// Loop over each object in the subProperty array and validate it
-			for(var e=1; e<=arrayLen(subPropertyValuesArray); e++ ) {
-			
-				// If after validation that sub object has errors, add a failure to this object
-				if(subPropertyValuesArray[e].hasErrors()) {
-					getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
-				}
+			// If the value is Null then throw an error because the populatedSubProperties array should have never had this propertyName in it
+			if(isNull(subPropertyValue)) {
+				throw("the property name: #getPopulatedSubProperties()[p]# was in the populatedSubProperties array, however it must not have actually been populated because the value is null.  Or the property was populated, but something later set it back to null.");
 			}
 			
+			// If the results are an array, then loop over them
+			if(isArray(subPropertyValue)) {
+				
+				// Loop over each object in the subProperty array and validate it
+				for(var e=1; e<=arrayLen(subPropertyValue); e++ ) {
+				
+					// If after validation that sub object has errors, add a failure to this object
+					if(subPropertyValue[e].hasErrors()) {
+						getVTResult().addFailure( failure={message="One or more items had invalid data"},propertyName=getPopulatedSubProperties()[p]);
+					}
+				}	
+			} else if(isObject(subPropertyValue)) {
+				if(subPropertyValue.hasErrors()) {
+					getVTResult().addFailure( failure={message="The #getPopulatedSubProperties()[p]# property has or more validation errors"},propertyName=getPopulatedSubProperties()[p]);
+				}
+			}
 		}
-		
 		
 		// Return the VTResult object that was populated by ValidateThis
 		return getVTResult();
 	}
+	
+	// =======================  END:  POPULATION & VALIDATION =======================================
+	
+	// =========================== START: UTILITY METHODS ===========================================
 	
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier) {
@@ -263,7 +459,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 
 	public any function getFormattedValue(required string propertyName, string formatType ) {
-		arguments.value = invokeMethod("get#arguments.propertyName#");
+			arguments.value = invokeMethod("get#arguments.propertyName#");
 		
 		// This is the null format option
 		if(isNull(arguments.value)) {
@@ -498,91 +694,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		return false;
 	}
 	
-	// @hint Returns the ValidateThis result object, if one hasn't been setup yet it returns a new one
-	public any function getVTResult() {
-		if(!structKeyExists(variables, "vtResult")) {
-			variables.vtResult = getValidateThis().newResult(); 
-		}
-		return variables.vtResult;
-	}
 	
-	// @hint Returns the errorBeant object, if one hasn't been setup yet it returns a new one
-	public any function getErrorBean() {
-		if(!structKeyExists(variables, "errorBean")) {
-			variables.errorBean = new Slatwall.com.utility.ErrorBean(); 
-		}
-		return variables.errorBean;
-	}
-	
-	// @hint Returns true if this object has any errors.
-	public boolean function hasErrors() {
-		if(getVTResult().hasErrors() || getErrorBean().hasErrors()) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	// @hint Returns a struct of all the errors for this entity
-	public struct function getErrors() {
-		var errorsStruct = {};
-		
-		// Check the VTResult for any errors
-		for(var key in getVTResult().getErrors()) {
-			errorsStruct[key] = getVTResult().getErrors()[key];	
-		}
-		
-		// Check the ErrorBean for any errors
-		for(var key in getErrorBean().getErrors()) {
-			if(structKeyExists(errorsStruct, key)) {
-				for(var i=1; i<=arrayLen(getErrorBean().getErrors()[key]); i++) {
-					arrayAppend(errorsStruct[key], getErrorBean().getErrors()[key][i]);	
-				}
-			} else {
-				errorsStruct[key] = getErrorBean().getErrors()[key];	
-			}
-		}
-		
-		// Default behavior if this object hasn't been validated is to return a blank struct
-		return errorsStruct;
-	}
-	
-	// @hint Returns true if a specific error key exists
-	public boolean function hasError( required string errorName ) {
-		return structKeyExists(getErrors(), arguments.errorName);
-	}
-	
-	// @hint Returns the error message of a given error name
-	public array function getError( required string errorName ) {
-		
-		// Check First that the error exists, and if it does return it
-		if( hasError(arguments.errorName) ) {
-			return getErrors()[ arguments.errorName ];
-		}
-		
-		// Default behavior if the error isn't found is to return an empty array
-		return [];
-	}
-	
-	// @hint helper method to add an error to the error bean	
-	public void function addError( required string errorName, required string errorMessage ) {
-		getErrorBean().addError(argumentCollection=arguments);
-	}
-	
+	// @hint this method allows you to properly format a value against a formatType
 	public any function formatValue( required string value, required string formatType ) {
-		/*
-			Valid formatType Strings are:
 		
-			none
-			yesno
-			truefalse
-			currency
-			datetime
-			date
-			time
-			weight
-			
-		*/
+		//	Valid formatType Strings are:	none	yesno	truefalse	currency	datetime	date	time	weight
 		
 		// Do a switch on the seperate formatTypes and return a formatted value
 		switch(arguments.formatType) {
@@ -637,8 +753,11 @@ component displayname="Base Object" accessors="true" output="false" {
 			// Remove the key from variables, represents setting as NULL for persistent entities
 			structDelete(variables, arguments.name);
 		}
-		
 	}
+	
+	// ===========================  END:  UTILITY METHODS ===========================================
+	
+	// ========================= START: DELIGATION HELPERS ==========================================
 	
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
@@ -653,6 +772,11 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint Private helper function the file system directory
 	private string function getSlatwallRootDirectory() {
 		return expandPath("/plugins/Slatwall");
+	}
+	
+	// @hint Private helper function to get the database type
+	private string function getDBType() {
+		return application.configbean.getDBType();
 	}
 	
 	// @hint Private helper function to return the Slatwall RB Factory in any component
@@ -708,20 +832,23 @@ component displayname="Base Object" accessors="true" output="false" {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
+	// @hint Private helper function for using the Slatwall Log service.
+	private void function logSlatwall(required string message, boolean generalLog=false){
+		getService("logService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
+	}
 	
-	// Used as a debugging to to perform a <cfdump> from anywhere within the application and have it show as full screen output. Provide any object as argument.
-	public any function dumpScreen(required any obj){
-		GetPageContext().getOut().clearBuffer();
-    	savecontent variable="local.theContent" {
-    		writeDump(obj);
+	// =========================  END:  DELIGATION HELPERS ==========================================
+	
+	// @hint Used as a debugging to to perform a <cfdump> from anywhere within the application and have it show as full screen output. Provide any object as argument.
+	private any function dumpScreen(required any var, numeric top=3){
+		var theContent="";
+		
+		getPageContext().getOut().clearBuffer();
+    	savecontent variable="theContent" {
+    		writeDump(var=arguments.var, top=arguments.top);
     	}
-    	GetPageContext().getResponse().getWriter().write(theContent);
+    	getPageContext().getResponse().getWriter().write(theContent);
     	abort;
 	}
 	
-	// This can be expanded, but kept it simple for now.
-	public void function logSlatwall(required string message){
-		getService("logService").logMessage(message=arguments.message, generalLog=false);		
-	}
-		
 }

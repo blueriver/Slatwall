@@ -41,6 +41,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	// fw1 Auto-Injected Service Properties
 	property name="orderService" type="any";
 	property name="paymentService" type="any";
+	property name="LocationService" type="any";
 	
 	public void function before(required struct rc) {
 		param name="rc.orderID" default="";
@@ -65,14 +66,66 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     }    
 	
 	public void function detail(required struct rc) {
+		rc.order = getOrderService().getOrder(rc.orderID);
+		rc.shippingServices = getService("settingService").getShippingServices();
+		if(!isNull(rc.order) and !rc.order.isNew()) {
+			if(rc.order.getOrderType().getSystemCode() == "otReturnOrder") {
+				rc.itemTitle &= ": Return Order No. " & rc.order.getOrderNumber();
+				getFW().setView("admin:order.detailreturn");
+			} else {
+				rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+			}
+		} else {
+			getFW().redirect("admin:order.list");
+		}
+	}
+	
+	public void function detailReturn(required struct rc) {
 	   rc.order = getOrderService().getOrder(rc.orderID);
-	   rc.shippingServices = getService("settingService").getShippingServices();
+	   
 	   if(!isNull(rc.order) and !rc.order.isNew()) {
 	       rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
 	   } else {
 	       getFW().redirect("admin:order.list");
 	   }
 	}
+
+	public void function createOrderReturn(required struct rc) {
+		rc.order = getOrderService().getOrder(rc.orderID);
+		//rc.shippingServices = getService("settingService").getShippingServices();
+		
+		if(isNull(rc.order)) {
+		   getFW().redirect("admin:order.list");
+		}
+		
+		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+
+		rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+		getFW().setView(action="admin:order.createorderreturn");
+	}
+	
+	public void function saveOrderReturn(required struct rc) {
+		param name="rc.orderID";
+		rc.order = getOrderService().getOrder(rc.orderID);
+		rc.returnOrder = getService("OrderService").createOrderReturn(rc);
+		
+		if(!rc.returnOrder.hasErrors()) {
+			rc.message = rc.$.slatwall.rbKey("admin.order.saveOrderReturn_success");
+			getFW().redirect(action="admin:order.detail", queryString="orderID=#rc.returnOrder.getOrderID()#", preserve="message");
+		} else {
+			// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+			rc.locationSmartList = getLocationService().getLocationSmartList();
+			rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+			rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
+	
+			rc.itemTitle &= ": Order No. " & rc.order.getOrderNumber();
+			getFW().setView(action="admin:order.createorderreturn");
+		}
+	}
+	
 
     public void function listcart(required struct rc) {
 		rc["F:orderStatusType_systemCode"] ="ostNotPlaced";
@@ -186,18 +239,23 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		if(isNull(rc.orderFulfillment)) {
 			getFW().redirect(action="admin:order.listOrderFulfillments");
 		}
+		
+		// Set up the locations smart list to return an array that is compatible with the cf_slatwallformfield output tag
+		rc.locationSmartList = getLocationService().getLocationSmartList();
+		rc.locationSmartList.addSelect(propertyIdentifier="locationName", alias="name");
+		rc.locationSmartList.addSelect(propertyIdentifier="locationId", alias="value");
 	}
 	
 	public void function processOrderFulfillment(required struct rc) {
+		param name="rc.locationID";
 		
-		rc.orderFulfillment = getOrderService().getOrderFulfillment(rc.orderFulfillmentID);
+		detailOrderFulfillment(rc);
 		
 		if(rc.orderFulfillment.isProcessable()) {
 			var orderDeliveryItemsStruct = rc.orderItems;
 			// call service to process fulfillment. Returns an orderDelivery
-			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment,orderDeliveryItemsStruct);
+			var orderDelivery = getOrderService().processOrderFulfillment(rc.orderfulfillment, orderDeliveryItemsStruct, rc.locationID);
 			if(!orderDelivery.hasErrors()) {
-				
 				getFW().redirect(action="admin:print", queryString="returnAction=admin:order.list&printAction=packingSlip&orderDeliveryShippingID=#orderDelivery.getOrderDeliveryID()#");
 				
 				// rc.message = rc.$.slatwall.rbKey("admin.order.processorderfulfillment_success");

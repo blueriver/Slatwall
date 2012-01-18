@@ -78,7 +78,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var isDuplicateTransaction = getDAO().isDuplicateCreditCardTransaction(orderPaymentID=arguments.orderPayment.getOrderPaymentID(),transactionType=arguments.transactionType,transactionAmount=arguments.transactionAmount);
 				if(isDuplicateTransaction){
 					processOK = true;
-					arguments.orderPayment.addError('processing', "This transaction is duplicate of an already processed transaction.");
+					arguments.orderPayment.addError('processing', "This transaction is duplicate of an already processed transaction.", true);
 				} else {
 					// Create a new Credit Card Transaction
 					var transaction = this.newCreditCardTransaction();
@@ -117,7 +117,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						transaction.setAmountCredited(response.getAmountCredited());
 						transaction.setAVSCode(response.getAVSCode());
 						transaction.setStatusCode(response.getStatusCode());
-						transaction.setMessage(response.getMessageString());
+						transaction.setMessage(serializeJSON(response.getMessages()));
 											
 						// Make sure that this transaction with all of it's info gets added to the DB
 						ormFlush();
@@ -126,11 +126,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							processOK = true;
 						} else {
 							// Populate the orderPayment with the processing error
-							arguments.orderPayment.addError('processing', response.getAllErrorMessages());
+							arguments.orderPayment.addError('processing', response.getAllErrorsHTML(), true);
 						}
 					} catch (any e) {
 						// Populate the orderPayment with the processing error
-						arguments.orderPayment.addError('processing', "An Unexpected Error Ocurred");
+						arguments.orderPayment.addError('processing', "An Unexpected Error Ocurred", true);
 						// Log the exception
 						getService("logService").logException(e);
 						rethrow;

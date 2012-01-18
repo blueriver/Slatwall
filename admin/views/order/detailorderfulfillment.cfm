@@ -37,12 +37,32 @@ Notes:
 
 --->
 <cfparam name="rc.orderFulfillment" type="any" />
+<cfparam name="rc.locationSmartList" />
 
 <cfset local.method = rc.orderfulfillment.getFulfillmentMethodID() />
-
 <cfset local.params.orderFulfillment = rc.orderFulfillment />
-<div class="svoadminorderfulfillmentdetail">
+
 <cfoutput>
-	#view("order/fulfillment/#local.method#",local.params)#
+	<cfif rc.orderFulfillment.isProcessable()>
+		<form name="ProcessFulfillment" action=#buildURL(action="admin:order.processorderfulfillment")# method="post">
+		<input type="hidden" name="orderfulfillmentID" value="#rc.orderFulfillment.getOrderFulfillmentID()#" />
+	</cfif>
+
+	<!--- These fields are common fields to all Fulfillments --->
+	<dl class="twoColumn">
+		<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.deliverFromLocation")#</strong></label></dt> 
+		<dd class="value">
+			<cf_SlatwallFormField fieldType="select" fieldName="locationID" valueOptions="#rc.locationSmartList.getRecords()#">
+		</dd>
+	</dl>
+
+		
+	<div class="svoadminorderfulfillmentdetail">
+		#view("order/fulfillment/#local.method#",local.params)#
+	</div>
+	
+	
+	<cfif rc.orderFulfillment.isProcessable()>
+		</form>
+	</cfif>
 </cfoutput>
-</div>

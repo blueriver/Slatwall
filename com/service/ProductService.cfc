@@ -54,12 +54,19 @@ component extends="BaseService" accessors="true" {
 	// Cached Properties
 	property name="productTypeTree" type="any";
 	
-	public any function getProductTemplates(required string siteID) {
+	public array function getProductTemplates(required string siteID) {
 		
 		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductTemplate", dataType="varchar" );
 		
-		return pageFeed.getQuery();
+		var query = pageFeed.getQuery();
+		var returnArray = [];
+		
+		for(var i=1; i<=query.recordcount; i++) {
+			arrayAppend(returnArray, {name=query["MENUTITLE"][i], value=query["FILENAME"][i]});
+		}
+		
+		return returnArray;
 	}
 	
 	public any function getContentFeed() {
@@ -394,27 +401,27 @@ component extends="BaseService" accessors="true" {
 		return arguments.product;
 	}
 	
-	public boolean function deleteProduct( required any product ) {
-		
+	public boolean function deleteProduct(required any product) {
+	
 		// Set the default sku temporarily in this local so we can reset if delete fails
 		var defaultSku = arguments.product.getDefaultSku();
 		
 		// Remove the default sku so that we can delete this entity
-		arguments.product.setDefaultSku(javaCast("null",""));
-		
+		arguments.product.setDefaultSku(javaCast("null", ""));
+	
 		// Use the base delete method to check validation
-		var deleteOK = super.delete( arguments.product );
+		var deleteOK = super.delete(arguments.product);
 		
 		// If the delete failed, then we just reset the default sku into the product and return false
-		if( !deleteOK ) {
+		if(!deleteOK) {
 			arguments.product.setDefaultSku(defaultSku);
-			
+		
 			return false;
 		}
-		
+	
 		return true;
 	}
-	
+		
 	public boolean function deleteProductType(required any productType) {
 		
 		// Use the base delete method to check validation
@@ -519,10 +526,11 @@ component extends="BaseService" accessors="true" {
 		return arguments.productType;
 	}
 	
-	
 	/**
 	* @hint recursively looks through the cached product type tree query to the the first non-empty value in the type lineage, or returns empty record if it wasn't set
 	*/
+	/*
+	
 	public any function getProductTypeRecordWhereSettingDefined( required string productTypeID,required string settingName ) {
 		// use q of q to get the setting, looking up the lineage of the product type tree if an empty string is encountered
 		var qoq = new Query();
@@ -571,6 +579,9 @@ component extends="BaseService" accessors="true" {
 		}		
 	}
 
+	*/
+	
+	
 	public string function getParentProductTypeIDs(string productTypeID) {
 		var qoq = new Query();
 		qoq.setAttributes(ptTable = getProductTypeTree());
@@ -636,6 +647,10 @@ component extends="BaseService" accessors="true" {
 	public any function addProductReview(required struct data) {
 		var newReview = this.newProductReview();
 		return this.saveProductReview(newReview, arguments.data);
+	}
+	
+	public boolean function getProductIsOnTransaction(required any product) {
+		return getDAO().getProductIsOnTransaction(product=arguments.product);
 	}
 	
 }

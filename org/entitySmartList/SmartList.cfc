@@ -89,24 +89,26 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		var currentPage = 1;
 		
 		for(var i in arguments.data) {
-			if(left(i,2) == "F#variables.dataKeyDelimiter#") {
-				addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
-			} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
-				addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
-			} else if(i == "OrderBy") {
-				for(var ii=1; ii <= listLen(arguments.data[i], variables.orderPropertyDelimiter); ii++ ) {
-					addOrder(orderStatement=listGetAt(arguments.data[i], ii, variables.orderPropertyDelimiter));
+			if(isSimpleValue(arguments.data[i])) {
+				if(left(i,2) == "F#variables.dataKeyDelimiter#") {
+					addFilter(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+				} else if(left(i,2) == "R#variables.dataKeyDelimiter#") {
+					addRange(propertyIdentifier=right(i, len(i)-2), value=arguments.data[i]);
+				} else if(i == "OrderBy") {
+					for(var ii=1; ii <= listLen(arguments.data[i], variables.orderPropertyDelimiter); ii++ ) {
+						addOrder(orderStatement=listGetAt(arguments.data[i], ii, variables.orderPropertyDelimiter));
+					}
+				} else if(i == "P#variables.dataKeyDelimiter#Show") {
+					if(arguments.data[i] == "ALL") {
+						setPageRecordsShow(1000000000);
+					} else if ( isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0 ) {
+						setPageRecordsShow(arguments.data[i]);	
+					}
+				} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
+					setPageRecordsStart(arguments.data[i]);
+				} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
+					variables.currentPageDeclaration = arguments.data[i];
 				}
-			} else if(i == "P#variables.dataKeyDelimiter#Show") {
-				if(arguments.data[i] == "ALL") {
-					setPageRecordsShow(1000000000);
-				} else if ( isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0 ) {
-					setPageRecordsShow(arguments.data[i]);	
-				}
-			} else if(i == "P#variables.dataKeyDelimiter#Start" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
-				setPageRecordsStart(arguments.data[i]);
-			} else if(i == "P#variables.dataKeyDelimiter#Current" && isNumeric(arguments.data[i]) && arguments.data[i] <= 1000000000 && arguments.data[i] > 0) {
-				variables.currentPageDeclaration = arguments.data[i];
 			}
 		}
 		if(structKeyExists(arguments.data, "keyword")) {
@@ -233,7 +235,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public void function addSelect(required string propertyIdentifier, required string alias) {
-		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier)] = arguments.alias;
+		variables.selects[getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier,fetch=false)] = arguments.alias;
 	}
 	
 	public void function addFilter(required string propertyIdentifier, required string value, numeric whereGroup=1, boolean fetch) {
@@ -330,7 +332,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				
 				var fetch = "";
-				if(variables.entities[i].fetch && arguments.allowFetch) {
+				if(variables.entities[i].fetch && arguments.allowFetch && !structCount(variables.selects)) {
 					fetch = "fetch";
 				}
 				

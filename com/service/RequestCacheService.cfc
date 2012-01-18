@@ -71,6 +71,10 @@ component output="false" {
 		}
 	}
 	
+	public boolean function hasValue(required string key) {
+		return keyExists(argumentcollection=arguments);
+	}
+	
 	public void function clearCache(string keys) {
 		verifyInitiation();
 		logCacheAction(method="enableRequestCache", key=arguments.keys);

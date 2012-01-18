@@ -42,48 +42,60 @@ component displayname="Account Phone Number" entityname="SlatwallAccountPhoneNum
 	property name="accountPhoneNumberID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="phoneNumber" type="string";
 	
+	// Related Object Properties (Many-To-One)
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
-	property name="accountPhoneType" cfc="Type" fieldtype="many-to-one" fkcolumn="accountPhoneTypeID";
-	
-	
-	// Override the base class simple Representation value
-	public string function getSimpleRepresentation() {
-		return getPhoneNumber();
-	}
 	
 	public string function getPhoneType() {
 		return getAccountPhoneType().getType();
 	}
+
+	// ============ START: Non-Persistent Property Methods =================
 	
- /******* Association management methods for bidirectional relationships **************/
- 
- // Account (many-to-one)
- 
- 	public void function setAccount(required any Account) { 
- 	   variables.Account = arguments.Account; 
- 	   if(!arguments.Account.hasAccountPhoneNumber(this)) { 
- 	       arrayAppend(arguments.Account.getAccountPhoneNumbers(),this); 
- 	   } 
- 	}
- 	 
-  	public void function removeAccount(any Account) { 
-  	   if(!structKeyExists(arguments,"Account")) { 
-  	   		arguments.Account = variables.Account; 
-  	   } 
-        var index = arrayFind(arguments.Account.getAccountPhoneNumbers(),this); 
-        if(index > 0) { 
-            arrayDeleteAt(arguments.Account.getAccountPhoneNumbers(),index); 
-        }     
-        structDelete(variables,"Account"); 
-     }
- 
- 
- /************   END Association Management Methods   *******************/
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account (many-to-one)    
+	public void function setAccount(required any account) {    
+		variables.account = arguments.account;    
+		if(isNew() or !arguments.account.hasAccountPhoneNumber( this )) {    
+			arrayAppend(arguments.account.getAccountPhoneNumbers(), this);    
+		}    
+	}    
+	public void function removeAccount(any account) {    
+		if(!structKeyExists(arguments, "account")) {    
+			arguments.account = variables.account;    
+		}    
+		var index = arrayFind(arguments.account.getAccountPhoneNumbers(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getAccountPhoneNumbers(), index);    
+		}    
+		structDelete(variables, "account");    
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	public string function getSimpleRepresentationPropertyName() {
+		return "phoneNumber";
+	}
+	
+	// ==================  END:  Overridden Methods ========================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

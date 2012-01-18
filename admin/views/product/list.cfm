@@ -59,11 +59,6 @@ Notes:
 			<th>#rc.$.Slatwall.rbKey("entity.product.productCode")#</th>
 			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
 			<th>#rc.$.Slatwall.rbKey("entity.product.publishedFlag")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qoh")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qc")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qexp")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qia")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.product.qea")#</th>
 			<th>&nbsp</th>
 		</tr>	
 		<cfloop array="#rc.ProductSmartList.getPageRecords()#" index="local.Product">
@@ -73,29 +68,12 @@ Notes:
 				<td>#local.Product.getProductCode()#</td>
 				<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 				<td>#yesNoFormat(local.Product.getPublishedFlag())#</td>
-				<!--- Temporarily doing away with the getSetting("") check for the product --->
-				<!---
-					This was the original code that should be replaced once getSetting() is fixed.
-					
-				<cfif local.Product.getSetting("trackInventoryFlag")>
-					<td>#local.Product.getQOH()#</td>
-					<td>#local.Product.getQC()#</td>
-					<td>#local.Product.getQEXP()#</td>
-					<td>#local.Product.getQIA()#</td>
-					<td>#local.Product.getQEA()#</td>
-				<cfelse>
-				--->
-				<td colspan="5">
-					<em>#rc.$.Slatwall.rbKey("admin.product.list.inventoryNotTracked")#</em>
-				</td>
-				<!---</cfif>--->
 				<td class="administration">
 					<cfset local.ProductID = local.Product.getProductID() />
-		          <ul class="four">
+		          <ul class="three">
                       <cf_SlatwallActionCaller action="admin:product.edit" querystring="productID=#local.ProductID#" class="edit" type="list">            
 					  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.ProductID#" class="detail" type="list">
 					  <li class="preview"><a href="#local.Product.getProductURL()#">Preview Product</a></li>
-					  <cf_SlatwallActionCaller action="admin:product.delete" querystring="productID=#local.ProductID#" class="delete" type="list" disabled="#local.product.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.product.delete_validateOrdered')#" confirmrequired="true">
 		          </ul>     						
 				</td>
 				

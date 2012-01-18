@@ -42,4 +42,17 @@ component displayname="Product Attribute Set Assignment" entityname="SlatwallPro
 	property name="attributeSetAssignmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID" inverse="true" cascade="all";
+	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

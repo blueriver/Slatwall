@@ -50,4 +50,20 @@ component displayname="History Sku" entityname="SlatwallHistorySku" table="Slatw
 	// Related Object Properties
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

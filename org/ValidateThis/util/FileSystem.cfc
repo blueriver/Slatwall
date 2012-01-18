@@ -92,7 +92,11 @@
 		<cfargument name="Destination" required="true" type="any" />
 		<cfargument name="FileName" required="true" type="any" />
 		
-		<cfreturn FileExists(arguments.Destination & arguments.FileName) />
+		<cftry>
+			<cfreturn FileExists(arguments.Destination & arguments.FileName) />
+			<cfcatch />
+		</cftry>
+		<cfreturn false />
 	</cffunction>
 
 	<cffunction name="CheckDirectoryExists" access="public" output="false" returntype="any">

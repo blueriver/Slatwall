@@ -83,7 +83,7 @@ Notes:
 	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onAfterCategoryUpdate" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onAfterCategoryDelete" component="fw1EventAdapter" persist="false"/>
-	<!--- Commented Out because it was causing errors on install <eventHandler event="onAdminModuleNav" component="fw1EventAdapter" persist="false"/>--->
+	<eventHandler event="onAdminModuleNav" component="fw1EventAdapter" persist="false"/>
 </eventHandlers>
 <displayobjects location="global">
 	<displayobject name="Account" displaymethod="account_detail" component="fw1DisplayAdapter" persist="false"/>

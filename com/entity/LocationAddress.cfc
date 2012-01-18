@@ -36,20 +36,64 @@
 Notes:
 
 */
-component displayname="Purchase Order" entityname="SlatwallPurchaseOrder" table="SlatwallPurchaseOrder" persistent="true" accessors="true" output="false" extends="BaseEntity" {
+component displayname="Location Address" entityname="SlatwallLocationAddress" table="SlatwallLocationAddress" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="purchaseOrderID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="purchaseOrderCode" ormtype="string";
-	property name="estimatedArrivalDateTime" ormtype="timestamp";
+	property name="locationAddressID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Audit properties
+	// Related Object Properties (many-to-one)
+	property name="location" cfc="Location" fieldtype="many-to-one" fkcolumn="locationID";
+	property name="address" cfc="Address" fieldtype="many-to-one" fkcolumn="addressID";
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="vendor" cfc="Vendor" fieldtype="many-to-one" fkcolumn="vendorID";
-	property name="purchaseOrderItem" singularname="purchaseOrderItem" cfc="PurchaseOrderItem" filedtype="one-to-many" fkcolumn="purchaseOrderID" inverse="true" cascade="all";
+	// Non-Persistent Properties
+
+
+
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+		
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Location (many-to-one)
+	public void function setLocation(required any location) {
+		variables.location = arguments.location;
+		if(isNew() or !arguments.location.hasLocationAddress( this )) {
+			arrayAppend(arguments.location.getLocationAddresses(), this);
+		}
+	}
+	public void function removeLocation(any location) {
+		if(!structKeyExists(arguments, "location")) {
+			arguments.location = variables.location;
+		}
+		var index = arrayFind(arguments.location.getLocationAddresses(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.location.getLocationAddresses(), index);
+		}
+		structDelete(variables, "location");
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

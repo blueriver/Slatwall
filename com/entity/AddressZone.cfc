@@ -42,24 +42,65 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	property name="addressZoneID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="addressZoneName" ormtype="string";
 	
+	// Related Object Properties (One-To-Many) - These are for doing delete validation to ensure that there are no entities using this address zone
+	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true";
+	
+	// Related Object Properties (Many-To-Many)
+	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	// Related Object Properties
-	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
-	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" ;
-	property name="shippingRates" singularname="shippingRate" cfc="ShippingRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" ;
-	property name="taxCategoryRates" singularname="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="one-to-many" fkcolumn="addressZoneID" inverse="true" ;
-	
-	public array function getAddressZoneLocations() {
+	public any function init() {
 		if(isNull(variables.addressZoneLocations)) {
 			variables.addressZoneLocations = arrayNew(1);
 		}
-		return variables.addressZoneLocations;
+		
+		return super.init();
 	}
-
 	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Shipping Methods (one-to-many)
+	public void function addShippingMethod(required any shippingMethod) {    
+		arguments.shippingMethod.setAddressZone( this );    
+	}    
+	public void function removeShippingMethod(required any shippingMethod) {    
+		arguments.shippingMethod.removeAddressZone( this );    
+	}
+	
+	// Shipping Rates (one-to-many)
+	public void function addShippingRate(required any shippingRate) {
+		arguments.shippingRate.setAddressZone( this );
+	}
+	public void function removeShippingRate(required any shippingRate) {
+		arguments.shippingRate.removeAddressZone( this );
+	}
+	
+	// Tax Category Rates (one-to-many)
+	public void function addTaxCategoryRate(required any taxCategoryRate) {
+		arguments.taxCategoryRate.setAddressZone( this );
+	}
+	public void function removeTaxCategoryRate(required any taxCategoryRate) {
+		arguments.taxCategoryRate.removeAddressZone( this );
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+		
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
 }

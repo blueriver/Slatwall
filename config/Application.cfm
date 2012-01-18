@@ -1,4 +1,4 @@
-/*
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,16 +35,6 @@
 
 Notes:
 
-*/
-component displayname="Purchase Order Item" entityname="SlatwallPurchaseOrderItem" table="SlatwallPurchaseOrderItem" persistent="true" accessors="true" output="false" extends="BaseEntity" {
-	
-	// Persistent Properties
-	property name="purchaseOrderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="quantityOrdered" ormtype="integer";
-	property name="quantityReceived" ormtype="integer";
-	property name="estimatedArrivalDateTime" ormtype="timestamp";
-	
-	// Related Object Properties
-	property name="purchaseOrder" cfc="PurchaseOrder" fieldtype="many-to-one" fkcolumn="purchaseOrderID";
-	property name="stock" cfc="Stock" fieldtype="many-to-one" fkcolumn="stockID";
-}
+--->
+<cfoutput>Access denied</cfoutput>
+<cfabort>
