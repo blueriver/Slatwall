@@ -76,3 +76,9 @@ Notes:
 	SET orderItemTypeID = (SELECT typeID FROM SlatwallType WHERE systemCode = 'oitSale')
 	WHERE orderItemTypeID IS NULL
 </cfquery>
+
+<cfquery name="updateOrderPayment">
+	UPDATE SlatwallOrderPayment
+	SET orderPaymentTypeID = (SELECT typeID FROM SlatwallType WHERE systemCode = 'optCharge')
+	WHERE orderPaymentTypeID IS NULL
+</cfquery>
