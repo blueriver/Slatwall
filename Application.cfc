@@ -187,7 +187,6 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupRequest() {
-		getBeanFactory().getBean("logService").logMessage(message="Slatwall Lifecycle Started: #request.context.slatAction#");
 		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
@@ -320,7 +319,6 @@ component extends="org.fw1.framework" output="false" {
 			ormFlush();
 			getBeanFactory().getBean("logService").logMessage("ormFlush() Called");
 		}
-		getBeanFactory().getBean("logService").logMessage("Slatwall Lifecycle Finished: #request.context.slatAction#");
 	}
 
 	/********************** APPLICATION HELPER FUNCTIONS ***************************/

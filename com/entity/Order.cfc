@@ -428,11 +428,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	public void function preInsert(){
 		super.preInsert();
 		confirmOrderNumberOpenDateCloseDate();
+		getService("skuCacheService").updateFromOrder( this );
 	}
 	
 	public void function preUpdate(Struct oldData){
 		super.preUpdate();
 		confirmOrderNumberOpenDateCloseDate();
+		getService("skuCacheService").updateFromOrder( this );
 	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
