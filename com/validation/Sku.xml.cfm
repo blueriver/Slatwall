@@ -6,6 +6,11 @@
 				<param name="methodName" value="isNotDefaultSku" />
 			</rule>
 		</property>
+		<property name="stocks">
+			<rule type="collectionSize" contexts="delete">
+				<param name="max" value="0" />
+			</rule>
+		</property>
 		<property name="price">
 			<rule type="required" contexts="save" />
 			<rule type="numeric" contexts="save" />
