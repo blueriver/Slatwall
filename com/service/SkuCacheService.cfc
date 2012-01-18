@@ -45,7 +45,7 @@ Notes:
 	Product
 	ProductType
 	
-	OrderItem
+	Order
 	VendorOrderItem
 	StockAdjustmentItem
 	
@@ -67,8 +67,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	variables.updatingSkus = [];
 	variables.nextSalePriceExpirationDateTime = "";
 	
-	public void function updateFromOrderItem(required any orderItem) {
-		updateFromSku(sku=arguments.orderItem.getSku(), propertyList="qndoo,qnroro");
+	public void function updateFromOrder(required any order) {
+		if(!listFindNoCase("ostNotPlaced,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
+			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+				updateFromSku(sku=arguments.order.getOrderItems()[i].getSku(), propertyList="qndoo,qnroro");	
+			}
+		}
 	}
 	
 	public void function updateFromVendorOrderItem(required any vendorOrderItem) {
@@ -179,7 +183,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							for(var i=arrayLen(variables.updatingSkus); i>=1; i--) {
 								logSlatwall("Sku Cache Updated Called For: #variables.updatingSkus[i]["skuID"]#");
 								updateSkuCache(propertyList=variables.updatingSkus[i]["propertyList"], skuID=variables.updatingSkus[i]["skuID"]);
-								getDAO().flushORMSession();
+								//getDAO().flushORMSession();
 								logSlatwall("Sku Cache Updated For: #variables.updatingSkus[i]["skuID"]#");
 							}
 						} catch(any e) {
