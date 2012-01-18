@@ -862,7 +862,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			
 			// Loop over all of the orderItems and create stockReceiverItmes
 			for(var i=1; i<=arrayLen(order.getOrderItems()); i++) {
-				var stock = getStockService().getStockBySkuAndLocation(order.getOrderItems()[i].getSku(), order.getOrderItems()[i].getOrderReturn().getLocation());
+				var stock = getStockService().getStockBySkuAndLocation(order.getOrderItems()[i].getSku(), order.getOrderItems()[i].getOrderReturn().getReturnLocation());
 				var stockReceiverItem = getStockService().newStockReceiverItem();
 				stockReceiverItem.setStockReceiver( stockReceiver );
 				stockReceiverItem.setOrderItem( order.getOrderItems()[i] );
