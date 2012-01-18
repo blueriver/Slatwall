@@ -81,7 +81,7 @@ component displayname="Attribute Option" entityname="SlatwallAttributeOption" ta
 		}    
 		var index = arrayFind(arguments.attribute.getAttributeOptions(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getAttributeOptions(), index);    
+			arrayDeleteAt(arguments.attribute.getAttributeOptions(), index);    
 		}    
 		structDelete(variables, "attribute");    
 	}

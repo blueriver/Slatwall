@@ -82,7 +82,7 @@ component displayname="Location Address" entityname="SlatwallLocationAddress" ta
 		}
 		var index = arrayFind(arguments.location.getLocationAddresses(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getLocationAddresses(), index);
+			arrayDeleteAt(arguments.location.getLocationAddresses(), index);
 		}
 		structDelete(variables, "location");
 	}

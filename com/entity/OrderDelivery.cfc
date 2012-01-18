@@ -96,7 +96,7 @@ component displayname="Order Delivery" entityname="SlatwallOrderDelivery" table=
 		}
 		var index = arrayFind(arguments.order.getOrderDeliveries(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderDeliveries(), index);
+			arrayDeleteAt(arguments.order.getOrderDeliveries(), index);
 		}
 		structDelete(variables, "order");
 	}

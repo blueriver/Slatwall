@@ -363,7 +363,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		var index = arrayFind(arguments.refrencedOrder.getRefrencingOrders(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getRefrencingOrders(), index);
+			arrayDeleteAt(arguments.refrencedOrder.getRefrencingOrders(), index);
 		}
 		structDelete(variables, "refrencedOrder");
 	}

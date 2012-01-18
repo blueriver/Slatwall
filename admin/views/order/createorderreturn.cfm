@@ -56,7 +56,14 @@ Notes:
 	<cf_SlatwallActionCaller action="admin:order.list" type="list">
 </ul>
 
-
+<cfif structKeyExists(rc,"returnOrder")>
+	<p class="messagebox error_message">
+	<cf_SlatwallErrorDisplay object="#rc.returnOrder#" displayType="br" />
+	<cfloop array="#rc.returnOrder.getOrderPayments()#" index="local.orderPayment">
+		<cf_SlatwallErrorDisplay object="#local.orderPayment#" displayType="br" />
+	</cfloop>
+	</p>
+</cfif>
 
 <div class="svoadminorderdetail">
 	<div class="basicOrderInfo">

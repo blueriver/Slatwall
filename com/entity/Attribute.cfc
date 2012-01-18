@@ -130,7 +130,7 @@ component displayname="Attribute" entityname="SlatwallAttribute" table="Slatwall
 		}    
 		var index = arrayFind(arguments.attributeSet.getAttributes(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getAttributes(), index);    
+			arrayDeleteAt(arguments.attributeSet.getAttributes(), index);    
 		}    
 		structDelete(variables, "attributeSet");    
 	}

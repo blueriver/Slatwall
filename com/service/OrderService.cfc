@@ -92,10 +92,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return smartlist.getRecords();
 	}
 	
-	public any function saveOrder(required any order, struct data={}) {
+	public any function saveOrder(required any order, struct data={}, string context="save") {
 	
 		// Call the super.save() method to do the base populate & validate logic
-		arguments.order = super.save(entity=arguments.order, data=arguments.data);
+		arguments.order = super.save(entity=arguments.order, data=arguments.data, context=arguments.context);
 	
 		// If the order has not been placed yet, loop over the orderItems to remove any that have a qty of 0
 		if(arguments.order.getStatusCode() == "ostNotPlaced") {
@@ -807,7 +807,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getDAO().getPreviouslyReturnedFulfillmentTotal(arguments.orderId);
 	}
 	
-	public boolean function createOrderReturn(required struct data) {
+	public any function createOrderReturn(required struct data) {
 		var originalOrder = this.getOrder(data.orderID);
 		
 		// Create a new order
@@ -817,8 +817,6 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostNew"));
 		order.setReferencedOrder(originalOrder);
 		
-		var stockReceiver = getStockService().newStockReceiverOrder();
-	
 		// Create OrderReturn entity (to save the fulfillment amount)
 		var orderReturn = this.newOrderReturn();
 		var location = getLocationService().getLocation(data.returnToLocationID);
@@ -846,48 +844,77 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					orderItem.setOrderItemStatusType(getTypeService().getTypeBySystemCode('oistReturned'));
 					orderItem.setOrderItemType(getTypeService().getTypeBySystemCode('oitReturn'));
 				
-					// Populate the Tax on this order by creating new tax entities, but using the same rate as the original orderItem.
-					//dumpScreen(originalOrderItem.getAppliedTaxes());
-					for(var k=1; k <= ArrayLen(originalOrderItem.getAppliedTaxes()); k++) {
-						var originalAppliedTax = originalOrderItem.getAppliedTaxes()[k];
-						var appliedTax = getTaxService().newOrderItemAppliedTax();
-						
-						appliedTax.setOrderItem(orderItem);
-						appliedTax.setTaxCategoryRate(originalAppliedTax.getTaxCategoryRate());
-						appliedTax.setTaxRate(originalAppliedTax.getTaxRate());
-						appliedTax.setTaxAmount((originalAppliedTax.getTaxRate() / 100) * (orderItem.getQuantity() * priceReturning));
-					}
-				
 					// Add this order item to the OrderReturns entity
 					orderItem.setOrderReturn(orderReturn);
 				
-					// Add stock receiver item to stock receiver
-					var stock = getStockService().getStockBySkuAndLocation(originalOrderItem.getSku(), location);
-					var stockReceiverItem = getStockService().newStockReceiverItem();
-					stockReceiverItem.setStockReceiver(stockReceiver);
-					stockReceiverItem.setOrderItem(orderItem);
-					stockReceiverItem.setQuantity(quantityReturning);
-					stockReceiverItem.setStock(stock);
 				}
 			}
 		}
 
-		this.saveOrder(order);
+		this.saveOrder(order=order,context="saveReturnOrder");
 		
 		if(!order.hasErrors()) {
 			// In order to handle the "stock" aspect of this return. Create a StockReceiver, which will be 
 			// further populated with StockRecieverItems, one for each item being returned.
+			var stockReceiver = getStockService().newStockReceiverOrder();
 			
 			stockReceiver.setOrder(order);
-			getStockService().saveStockReceiver(stockReceiver);
+			
+			// Loop over all of the orderItems and create stockReceiverItmes
+			for(var i=1; i<=arrayLen(order.getOrderItems()); i++) {
+				var stock = getStockService().getStockBySkuAndLocation(order.getOrderItems()[i].getSku(), order.getOrderItems()[i].getOrderReturn().getReturnLocation());
+				var stockReceiverItem = getStockService().newStockReceiverItem();
+				stockReceiverItem.setStockReceiver( stockReceiver );
+				stockReceiverItem.setOrderItem( order.getOrderItems()[i] );
+				stockReceiverItem.setQuantity( order.getOrderItems()[i].getQuantity() );
+				stockReceiverItem.setStock( stock );
+			}
+			
+			getStockService().saveStockReceiver( stockReceiver );
 			
 			if(!stockReceiver.hasErrors()) {
-				// This must be called AFTER the save or else the type-validation will fail
-				order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));
+				
+				// Create and credit a refund order payment
+				
+				var refundRequired = false;
+				var refundOK = false;
+				if(order.getTotal() > 0){
+					// Find the orginal orderpayment credit card transaction where charge is gt 0
+					for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
+						if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountCharged() gt 0) {
+							refundRequired = true;
+							
+							// Create a new order Payment based on the original order payment
+							var newOrderPayment = this.newOrderPaymentCreditCard();
+							newOrderPayment.setNameOnCreditCard(order.getReferencedOrder().getOrderPayments()[1].getNameOnCreditCard());
+							newOrderPayment.setCreditCardLastFour(order.getReferencedOrder().getOrderPayments()[1].getCreditCardLastFour());
+							newOrderPayment.setCreditCardType(order.getReferencedOrder().getOrderPayments()[1].getCreditCardType());
+							newOrderPayment.setExpirationMonth(order.getReferencedOrder().getOrderPayments()[1].getExpirationMonth());
+							newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
+							newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
+							newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
+							newOrderPayment.setAmount( order.getTotal() );
+							newOrderPayment.setOrder( order );
+							
+							// Pass this new order payment along with the original transaction ID to the process() method. 
+							var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());
+							// refund is required for this order but didn't go through. Don't persist anything.
+							if(!refundOK){
+								getService("requestCacheService").setValue("ormHasErrors", true);
+							}
+							// Once a transaction with a charge is found no need to loop any further
+							break;
+						}
+					}
+				}
+				// If refund is not required or refund is OK close the order
+				if(!refundRequired || refundOK) {
+					order.setOrderStatusType(getTypeService().getTypeBySystemCode("ostClosed"));			
+				}
 			}
 		}
 
-		return true;
+		return order;
 	}
 	
 	public any function forceItemQuantityUpdate(required any order, required any messageBean) {

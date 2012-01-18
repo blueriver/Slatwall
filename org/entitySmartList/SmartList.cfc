@@ -332,7 +332,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				
 				var fetch = "";
-				if(variables.entities[i].fetch && arguments.allowFetch) {
+				if(variables.entities[i].fetch && arguments.allowFetch && !structCount(variables.selects)) {
 					fetch = "fetch";
 				}
 				
