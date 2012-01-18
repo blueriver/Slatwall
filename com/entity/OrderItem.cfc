@@ -288,7 +288,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		var index = arrayFind(arguments.orderReturn.getorderReturnItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getorderReturnItems(), index);
+			arrayDeleteAt(arguments.orderReturn.getorderReturnItems(), index);
 		}
 		structDelete(variables, "orderReturn");
 	}
@@ -306,7 +306,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		var index = arrayFind(arguments.refrencedOrderItem.getRefrencingOrderItem(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getRefrencingOrderItem(), index);
+			arrayDeleteAt(arguments.refrencedOrderItem.getRefrencingOrderItem(), index);
 		}
 		structDelete(variables, "refrencedOrderItem");
 	}
@@ -324,7 +324,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		}
 		var index = arrayFind(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getReferencingOrderItems(), index);
+			arrayDeleteAt(arguments.referencedOrderDeliveryItem.getReferencingOrderItems(), index);
 		}
 		structDelete(variables, "referencedOrderDeliveryItem");
 	}

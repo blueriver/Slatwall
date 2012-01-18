@@ -87,7 +87,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 		}    
 		var index = arrayFind(arguments.stockReceiver.getStockReceiverItems(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);    
+			arrayDeleteAt(arguments.stockReceiver.getStockReceiverItems(), index);    
 		}    
 		structDelete(variables, "stockReceiver");    
 	}
@@ -105,7 +105,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 		}    
 		var index = arrayFind(arguments.stockAdjustmentItem.getStockReceiverItems(), this);    
 		if(index > 0) {    
-			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);    
+			arrayDeleteAt(arguments.stockAdjustmentItem.getStockReceiverItems(), index);    
 		}    
 		structDelete(variables, "stockAdjustmentItem");    
 	}
@@ -123,7 +123,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 		}
 		var index = arrayFind(arguments.orderItem.getStockReceiverItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);
+			arrayDeleteAt(arguments.orderItem.getStockReceiverItems(), index);
 		}
 		structDelete(variables, "orderItem");
 	}
@@ -141,7 +141,7 @@ component displayname="Stock Receiver Item" entityname="SlatwallStockReceiverIte
 		}
 		var index = arrayFind(arguments.vendorOrderItem.getStockReceiverItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getStockReceiverItems(), index);
+			arrayDeleteAt(arguments.vendorOrderItem.getStockReceiverItems(), index);
 		}
 		structDelete(variables, "vendorOrderItem");
 	}
