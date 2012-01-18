@@ -15,7 +15,7 @@
 		}
 		var index = arrayFind(arguments.$${propertyName}.get$${ForiegnMethod}(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.get$${ForiegnMethod}(), index);
+			arrayDeleteAt(arguments.$${propertyName}.get$${ForiegnMethod}(), index);
 		}
 		structDelete(variables, "$${propertyName}");
 	}]]></starttext>
