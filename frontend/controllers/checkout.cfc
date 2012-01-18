@@ -52,7 +52,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		param name="rc.guestAccountOK" default="false";
 		
 		// Insure that the cart is not new, and that it has order items in it.  otherwise redirect to the shopping cart
-		if(rc.$.slatwall.cart().isNew() || !arrayLen(rc.$.slatwall.cart().getOrderItems())) {
+		if(!arrayLen(rc.$.slatwall.cart().getOrderItems())) {
 			getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'));
 		}
 		

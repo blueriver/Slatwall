@@ -38,8 +38,9 @@ Notes:
 */
 component extends="BaseService" accessors="true" output="false" {
 
-	property name="accountService" type="Slatwall.com.service.AccountService";
-	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
+	property name="accountService" type="any";
+	property name="orderService" type="any";
+	property name="utilityTagService" type="any";
 	
 	public void function confirmSession() {
 		getCurrent();
@@ -91,9 +92,13 @@ component extends="BaseService" accessors="true" output="false" {
 			// Set the account in the current session
 			currentSession.setAccount(slatwallAccount);
 			
-			// Make sure that the account on the current order is whoever is logged in
+			// Make sure that the account on the current order is whoever is logged in, if the currentCart already had an account assigned, and it isn't who logged in... then just duplicate the cart
 			if(!isNull(currentSession.getOrder()) && !currentSession.getOrder().isNew()) {
-				currentSession.getOrder().setAccount(slatwallAccount);
+				if( isNull(currentSession.getOrder().getAccount()) ) {
+					currentSession.getOrder().setAccount(slatwallAccount);	
+				} else if (currentSession.getOrder().getAccount().getAccountID() != slatwallAccount.getAccountID() ) {
+					getOrderService().duplicateCartWithNewAccount( slatwallAccount );
+				}
 			}
 		} else {
 			// Remove any account associated with the session
