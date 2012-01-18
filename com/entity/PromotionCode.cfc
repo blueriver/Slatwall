@@ -54,7 +54,7 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Related Object Properties (Many-To-Many)
-	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID" cascade="save-update";
+	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
