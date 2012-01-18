@@ -395,7 +395,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		}
 		var index = arrayFind(arguments.product.getSkus(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getSkus(), index);
+			arrayDeleteAt(arguments.product.getSkus(), index);
 		}
 		structDelete(variables, "product");
 	}

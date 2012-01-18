@@ -64,7 +64,7 @@ component displayname="Order Item Applied Promotion" entityname="SlatwallOrderIt
 		}
 		var index = arrayFind(arguments.orderItem.getAppliedPromotions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getAppliedPromotions(), index);
+			arrayDeleteAt(arguments.orderItem.getAppliedPromotions(), index);
 		}
 		structDelete(variables, "orderItem");
 	}

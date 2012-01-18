@@ -70,7 +70,7 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 		}
 		var index = arrayFind(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getStockAdjustmentDeliveryItems(), index);
+			arrayDeleteAt(arguments.stockAdjustmentDelivery.getStockAdjustmentDeliveryItems(), index);
 		}
 		structDelete(variables, "stockAdjustmentDelivery");
 	}
@@ -88,7 +88,7 @@ component displayname="StockAdjustment Delivery Item" entityname="SlatwallStockA
 		}
 		var index = arrayFind(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getStockAdjustmentDeliveryItems(), index);
+			arrayDeleteAt(arguments.stockAdjustmentItem.getStockAdjustmentDeliveryItems(), index);
 		}
 		structDelete(variables, "stockAdjustmentItem");
 	}

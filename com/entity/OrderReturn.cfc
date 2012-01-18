@@ -77,7 +77,7 @@ component displayname="Order Return" entityname="SlatwallOrderReturn" table="Sla
 		}
 		var index = arrayFind(arguments.order.getOrderReturns(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderReturns(), index);
+			arrayDeleteAt(arguments.order.getOrderReturns(), index);
 		}
 		structDelete(variables, "order");
 	}

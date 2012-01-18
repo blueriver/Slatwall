@@ -229,7 +229,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 		var index = arrayFind(arguments.parentProductType.getChildProductTypes(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getChildProductTypes(), index);
+			arrayDeleteAt(arguments.parentProductType.getChildProductTypes(), index);
 		}
 		structDelete(variables, "parentProductType");
 	}

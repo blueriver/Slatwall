@@ -82,7 +82,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 		}
 		var index = arrayFind(arguments.orderDelivery.getOrderDeliveryItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderDeliveryItems(), index);
+			arrayDeleteAt(arguments.orderDelivery.getOrderDeliveryItems(), index);
 		}
 		structDelete(variables, "orderDelivery");
 	}
@@ -100,7 +100,7 @@ component displayname="Order Delivery Item" entityname="SlatwallOrderDeliveryIte
 		}
 		var index = arrayFind(arguments.orderItem.getOrderDeliveryItems(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getOrderDeliveryItems(), index);
+			arrayDeleteAt(arguments.orderItem.getOrderDeliveryItems(), index);
 		}
 		structDelete(variables, "orderItem");
 	}

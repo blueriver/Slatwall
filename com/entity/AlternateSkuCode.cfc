@@ -72,7 +72,7 @@ component displayname="Alternate Sku Code" entityname="SlatwallAlternateSkuCode"
 		}
 		var index = arrayFind(arguments.sku.getAlternateSkuCodes(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.account.getAlternateSkuCodes(), index);
+			arrayDeleteAt(arguments.sku.getAlternateSkuCodes(), index);
 		}
 		structDelete(variables, "sku");
 	}
