@@ -136,14 +136,13 @@ component accessors="true" output="false" displayname="USPS" implements="Slatwal
 		ratesResponseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
-			ratesResponseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
+			ratesResponseBean.addMessage(messageName="communicationError", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
 			ratesResponseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			if(structKeyExists(xmlResponse.RateV4Response.Package, "Error")) {
 				ratesResponseBean.addMessage(
-					messageCode=xmlResponse.RateV4Response.Package.Error.HelpContext.xmlText,
-					messageType=xmlResponse.RateV4Response.Package.Error.Source.xmlText,
+					messageName=xmlResponse.RateV4Response.Package.Error.Source.xmlText,
 					message=xmlResponse.RateV4Response.Package.Error.Description.xmlText
 				);
 				ratesResponseBean.addError(xmlResponse.RateV4Response.Package.Error.HelpContext.xmlText, xmlResponse.RateV4Response.Package.Error.Description.xmlText);

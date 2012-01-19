@@ -204,7 +204,7 @@ component accessors="true" output="false" displayname="Authorize.net" implements
 		response.setData(data);
 		
 		// Add message for what happened
-		response.addMessage(messageCode=responseData.responseReasonCode, message=responseData.responseReasonText);
+		response.addMessage(messageName=responseData.responseReasonCode, message=responseData.responseReasonText);
 		
 		// Set the response Code
 		response.setStatusCode( responseData.responseCode );
