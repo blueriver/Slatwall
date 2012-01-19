@@ -119,15 +119,14 @@ component accessors="true" output="false" displayname="FedEx" implements="Slatwa
 		responseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
-			responseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
+			responseBean.addMessage(messageName="communicationError", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
 			responseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from FedEx into the response bean
 			for(var i=1; i<=arrayLen(xmlResponse.RateReply.Notifications); i++) {
 				responseBean.addMessage(
-					messageCode=xmlResponse.RateReply.Notifications[i].Code.xmltext,
-					messageType=xmlResponse.RateReply.Notifications[i].Severity.xmltext,
+					messageName=xmlResponse.RateReply.Notifications[i].Code.xmltext,
 					message=xmlResponse.RateReply.Notifications[i].Message.xmltext
 				);
 				if(FindNoCase("Error", xmlResponse.RateReply.Notifications[i].Severity.xmltext)) {

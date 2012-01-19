@@ -165,7 +165,7 @@ component accessors="true" output="false" displayname="SagePay" implements="Slat
 		response.setData(data);
 	
 		// Add message for what happened
-		response.addMessage(messageCode=responseData.status,message=responseData.statusDetail);
+		response.addMessage(messageName=responseData.status,message=responseData.statusDetail);
 		// Set the status Code
 		response.setStatusCode(responseData.status);
 	

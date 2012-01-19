@@ -148,20 +148,19 @@ component accessors="true" output="false" displayname="UPS" implements="Slatwall
 		responseBean.setData(xmlResponse);
 		
 		if(isDefined('xmlResponse.Fault')) {
-			responseBean.addMessage(messageCode="0", messageType="Unexpected", message="An unexpected communication error occured, please notify system administrator.");
+			responseBean.addMessage(messageName="communicationError", message="An unexpected communication error occured, please notify system administrator.");
 			// If XML fault then log error
 			responseBean.addError("unknown", "An unexpected communication error occured, please notify system administrator.");
 		} else {
 			// Log all messages from FedEx into the response bean
 			for(var i=1; i<=arrayLen(xmlResponse.RatingServiceSelectionResponse.Response); i++) {
 				responseBean.addMessage(
-					messageCode=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusCode.xmltext,
+					messageName=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusCode.xmltext,
 					message=xmlResponse.RatingServiceSelectionResponse.Response[i].ResponseStatusDescription.xmltext
 				);
 				if(structKeyExists(xmlResponse.RatingServiceSelectionResponse.Response[i], "Error")) {
 					responseBean.addMessage(
-						messageCode=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorCode.xmltext,
-						messageType=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorSeverity.xmltext,
+						messageName=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorCode.xmltext,
 						message=xmlResponse.RatingServiceSelectionResponse.Response[i].Error.ErrorDescription.xmltext
 					);
 					responseBean.addError(
