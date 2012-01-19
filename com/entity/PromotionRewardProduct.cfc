@@ -333,6 +333,15 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		return true;
 	}
 	
+	public boolean function hasAnyOption(required array options) {
+		for(var option in arguments.options) {
+			if(hasOption(option)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

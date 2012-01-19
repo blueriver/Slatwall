@@ -247,7 +247,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					
 					// Set the promotionCode start and end time into local variables
 					var promotionCodeStartDateTime = arguments.promotion.getPromotionCodes()[p].getStartDateTime();
-					var promotionCodeEndDateTime = arguments.promotion.getPromotionCodes()[p].getStartDateTime();
+					var promotionCodeEndDateTime = arguments.promotion.getPromotionCodes()[p].getEndDateTime();
 					
 					// If start and end aren't set, then use the promotions start and end.
 					if(isNull(promotionCodeStartDateTime)) {
