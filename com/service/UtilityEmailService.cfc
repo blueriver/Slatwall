@@ -50,11 +50,11 @@ Notes:
 				subject="#getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)#"
 				bcc="#setting('order_orderPlacedEmailBCC')#"
 				cc="#setting('order_orderPlacedEmailCC')#" >
-			<cfmailpart type="text/html">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm" />	
-			</cfmailpart>
 			<cfmailpart type="text/plain">
 				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlacedText.cfm" />
+			</cfmailpart>
+			<cfmailpart type="text/html">
+				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm" />	
 			</cfmailpart>
 		</cfmail>
 		
