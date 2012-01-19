@@ -153,6 +153,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 									( !arrayLen( reward.getProducts() ) || reward.hasProduct( orderItem.getSku().getProduct() ) )
 									&&
 									( !arrayLen( reward.getSkus() ) || reward.hasSku( orderItem.getSku() ) )
+									&&
+									( !arrayLen( reward.getBrands() ) || reward.hasBrand( orderItem.getSku().getProduct().getBrand() ) )
+									&&
+									( !arrayLen( reward.getOptions() ) || reward.hasAnyOption( orderItem.getSku().getOptions() ) )
 								) {
 									// Now that we know that this orderItem gets this reward we can figure out the amount
 									var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());

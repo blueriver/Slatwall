@@ -169,7 +169,18 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 			return getService("dataService").isUniqueProperty(propertyName=right(arguments.missingMethodName, len(arguments.missingMethodName) - 9), entity=this);
 		
-		// getXXXOptions()		Where XXX is a many-to-one or many-to-many property that we need an array of valid options returned 		
+		// hasAnyXXX() 			Where XXX is one-to-many or many-to-many property and we want to see if it has any of an array of entities
+		} else if( left(arguments.missingMethodName, 6) == "hasAny") {
+			
+			for(var object in arguments.missingMethodArguments[1]) {
+				// evaluate is used instead of invokeMethod() because hasXXX() is an implicit orm function
+				if( evaluate("has#right(arguments.missingMethodName, len(arguments.missingMethodName) - 6)#( object)") ){
+					return true;
+				}
+			}
+			return false;
+		
+		// getXXXOptions()		Where XXX is a one-to-many or many-to-many property that we need an array of valid options returned 		
 		} else if ( left(arguments.missingMethodName, 3) == "get" && right(arguments.missingMethodName, 7) == "Options") {
 			
 			var cacheKey = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
