@@ -74,7 +74,7 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	
 	public string function getReviewerGravatarURL(numeric size=80) {
 		if(!isNull(getAccount())) {
-			return "http://www.gravatar.com/avatar/#hash(lcase(getAccount().getEmailAddress()))#?s=arguments.size";
+			return "http://www.gravatar.com/avatar/#hash(lcase(getAccount().getEmailAddress()))#?s=#arguments.size#";
 		}
 		return "http://www.gravatar.com/avatar/00000000000000000000000000000000?s=#arguments.size#";
 	}	
