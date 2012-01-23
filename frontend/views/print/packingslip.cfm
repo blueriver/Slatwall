@@ -103,7 +103,7 @@ Notes:
 				<tr>
 					<td class="skuCode">#item.getOrderItem().getSku().getSkuCode()#</td>
 					<td class="item">#item.getOrderItem().getSku().getProduct().getTitle()# - #item.getOrderItem().getSku().displayOptions()#</td>
-					<td class="quantity">#item.getQuantityDelivered()#</td>
+					<td class="quantity">#item.getQuantity()#</td>
 				</tr>
 			</cfloop>
 				<tr class="total">
