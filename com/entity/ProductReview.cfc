@@ -50,6 +50,9 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="productID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
