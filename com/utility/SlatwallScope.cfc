@@ -99,10 +99,10 @@ component accessors="true" output="false" extends="BaseObject" {
 				var contentBean = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
 			}
 			
-			if(contentBean.get("showSubPageProducts") eq "") {
+			if(contentBean.getShowSubPageProducts() eq "") {
 				data.showSubPageProducts = 1;
 			} else {
-				data.showSubPageProducts = contentBean.get("showSubPageProducts");	
+				data.showSubPageProducts = contentBean.getShowSubPageProducts();	
 			}
 		}
 		
