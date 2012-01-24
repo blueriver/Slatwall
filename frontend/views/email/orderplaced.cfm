@@ -117,11 +117,11 @@ Notes:
 			<div id="bottom" style="margin-top: 15px; float: left; clear: both; width: 600px;">
 				<div id="shippingAddress" style="width:190px; margin-right:10px; float:left;">
 					<strong>Shipping Address</strong><br /><br />
-					<cfif len(order.getOrderFulfillments()[1].getShippingAddress().getName())>#order.getOrderFulfillments()[1].getShippingAddress().getName()#<br /></cfif>
-					<cfif len(order.getOrderFulfillments()[1].getShippingAddress().getStreetAddress())>#order.getOrderFulfillments()[1].getShippingAddress().getStreetAddress()#<br /></cfif>
-					<cfif len(order.getOrderFulfillments()[1].getShippingAddress().getStreet2Address())>#order.getOrderFulfillments()[1].getShippingAddress().getStreet2Address()#<br /></cfif>
-					#order.getOrderFulfillments()[1].getShippingAddress().getCity()#, #order.getOrderFulfillments()[1].getShippingAddress().getStateCode()# #order.getOrderFulfillments()[1].getShippingAddress().getPostalCode()#<br />
-					#order.getOrderFulfillments()[1].getShippingAddress().getCountryCode()#
+					<cfif len(order.getOrderFulfillments()[1].getAddress().getName())>#order.getOrderFulfillments()[1].getAddress().getName()#<br /></cfif>
+					<cfif len(order.getOrderFulfillments()[1].getAddress().getStreetAddress())>#order.getOrderFulfillments()[1].getAddress().getStreetAddress()#<br /></cfif>
+					<cfif len(order.getOrderFulfillments()[1].getAddress().getStreet2Address())>#order.getOrderFulfillments()[1].getAddress().getStreet2Address()#<br /></cfif>
+					#order.getOrderFulfillments()[1].getAddress().getCity()#, #order.getOrderFulfillments()[1].getAddress().getStateCode()# #order.getOrderFulfillments()[1].getAddress().getPostalCode()#<br />
+					#order.getOrderFulfillments()[1].getAddress().getCountryCode()#
 				</div>
 				<div id="shippingMethod" style="width:190px; margin-right:10px; float:left;">
 					<strong>Shipping Method</strong><br /><br />
