@@ -39,13 +39,16 @@ Notes:
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
 	public numeric function roundValueByRoundingRule(required any value, required any roundingRule) {
-		
+		return roundValue(value=arguments.value, roundingExpression=arguments.roundingRule.getRoundingRuleExpression(), roundingDirection=arguments.roundingRule.getRoundingRuleDirection());
+	}
+	
+	public string function roundValue(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
 		var inputValue = numberFormat(arguments.value, "0.00");
 		var returnValue = javaCast("null", "");
 		var returnDelta = javaCast("null", "");
 		
-		for(var i=1; i<=listLen(arguments.roundingRule.getRoundingRuleExpression()); i++) {
-			var rr = listGetAt(arguments.roundingRule.getRoundingRuleExpression(), i);
+		for(var i=1; i<=listLen(arguments.roundingExpression); i++) {
+			var rr = listGetAt(arguments.roundingExpression, i);
 			var rrPower = 1 * (10 ^ (len(rr)-3));
 			
 			if(len(inputValue) > len(rr)) {
@@ -75,7 +78,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					valueOptionTwoDelta = valueOptionTwoDelta*-1;
 				}
 				
-				switch(arguments.roundingRule.getRoundingRuleDirection()) {
+				switch(arguments.roundingDirection) {
 					case "Closest": {
 						if(isNull(returnDelta) || valueOptionOneDelta < returnDelta ) {
 							returnValue = valueOptionOne;
@@ -119,5 +122,4 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			return inputValue;	
 		}
 	}
-	
 }

@@ -759,6 +759,11 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
+	// @hint helper rounding function
+	private string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
+		return getService("roundingRuleService").roundValue(argumentcollection=arguments);
+	}
+	
 	// @hint helper function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
 		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.serviceName);

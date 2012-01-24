@@ -252,6 +252,10 @@ component accessors="true" output="false" extends="BaseObject" {
 		return super.rbKey(argumentCollection=arguments);
 	}
 	
+	public string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
+		return super.round(argumentCollection=arguments);
+	}
+	
 	public string function setting(required string settingName) {
 		return super.setting(argumentcollection=arguments);
 	}
