@@ -72,51 +72,54 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 		return super.init();
 	}
 	
-	/******* Association management methods for bidirectional relationships **************/
-	
-    // Product (many-to-one)
-	public void function setProduct(required any product) {
-	   variables.product = arguments.product;
-	   if(isNew() or !arguments.product.hasProductReview(this)) {
-	       arrayAppend(arguments.product.getProductReviews(),this);
-	   }
-	}
-	
-	public void function removeProduct(required any product) {
-       var index = arrayFind(arguments.product.getProductReviews(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.product.getProductReviews(),index);
-       }    
-       structDelete(variables,"product");
-    }
-    
-    // Account (many-to-one)
-	public void function setAccount(required any account) {
-	   variables.account = arguments.account;
-	   if(isNew() or !arguments.account.hasProductReview(this)) {
-	       arrayAppend(arguments.account.getProductReviews(),this);
-	   }
-	}
-	
-	public void function removeAccount(required any account) {
-       var index = arrayFind(arguments.account.getProductReviews(),this);
-       if(index > 0) {
-           arrayDeleteAt(arguments.account.getProductReviews(),index);
-       }
-       structDelete(variables,"account");
-    }
-	
-	/************   END Association Management Methods   *******************/
-	
-	
-	// Event Handler Methods	
-	
+	public string function getReviewerGravatarURL(numeric size=80) {
+		if(!isNull(getAccount())) {
+			return "http://www.gravatar.com/avatar/#hash(lcase(getAccount().getEmailAddress()))#?s=#arguments.size#";
+		}
+		return "http://www.gravatar.com/avatar/00000000000000000000000000000000?s=#arguments.size#";
+	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Product (many-to-one)
+	public void function setProduct(required any product) {
+		variables.product = arguments.product;
+		if(isNew() or !arguments.product.hasProductReview( this )) {
+			arrayAppend(arguments.product.getProductReviews(), this);
+		}
+	}
+	public void function removeProduct(any product) {
+		if(!structKeyExists(arguments, "product")) {
+			arguments.product = variables.product;
+		}
+		var index = arrayFind(arguments.product.getProductReviews(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.product.getProductReviews(), index);
+		}
+		structDelete(variables, "product");
+	}
+	
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasProductReview( this )) {
+			arrayAppend(arguments.account.getProductReviews(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getProductReviews(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getProductReviews(), index);
+		}
+		structDelete(variables, "account");
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
