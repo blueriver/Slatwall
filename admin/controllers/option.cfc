@@ -75,7 +75,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.option = getOptionService().getOption(rc.optionID, true);
     	
     	rc.edit = true;
-    	getFW().setView("admin:option.detailOptionGroup"); 
+    	getFW().setView("admin:option.detailoptiongroup"); 
     }
     
     public void function saveOptionGroup(required struct rc) {
@@ -141,14 +141,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.optionGroupIDs" default="";
 		
 		getOptionService().saveOptionGroupSort(rc.optionGroupIDs);
-		getFW().redirect("admin:option.listOptionGroups");
+		getFW().redirect("admin:option.listoptiongroups");
 	}
 	
 	public void function saveOptionSort(required struct rc) {
 		param name="rc.optionIDs" default="";
 		
 		getOptionService().saveOptionSort(rc.optionIDs);
-		getFW().redirect("admin:option.listOptionGroups");
+		getFW().redirect("admin:option.listoptiongroups");
 	}
 	
 }
