@@ -81,12 +81,16 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		if(structKeyExists(arguments, "data")) {
 			applyData(data=arguments.data);	
 		}
-				
+		
 		return this;
 	}
 	
 	public void function applyData(required struct data) {
 		var currentPage = 1;
+		
+		if(structKeyExists(arguments.data, "savedStateID")) {
+			loadSavedState(arguments.data.savedStateID);
+		}
 		
 		for(var i in arguments.data) {
 			if(isSimpleValue(arguments.data[i])) {
@@ -122,7 +126,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		
 	}
-		
+
+
 	private void function confirmWhereGroup(required numeric whereGroup) {
 		for(var i=1; i<=arguments.whereGroup; i++) {
 			if(arrayLen(variables.whereGroups) < i) {
@@ -344,6 +349,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 
 	public string function getHQLWhere(boolean suppressWhere=false) {
 		var hqlWhere = "";
+		variables.hqlParams = {};
 		
 		// Loop over where groups
 		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
@@ -505,30 +511,12 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return sortedArray;
 	}
 	
-	public void function setRecords(required any records) {
-		variables.records = arrayNew(1);
-		
-		if(isArray(arguments.records)) {
-			if(arrayLen(variables.keywords) && structCount(keywordProperties)) {
-				variables.records = applySearchScore(arguments.records);
-			} else {
-				variables.records = arguments.records;
-			}
-		} else if (isQuery(arguments.records)) {
-			// TODO: add the ability to pass in a query.
-			throw("Passing in a query is a feature that hasn't been finished yet");
-		} else {
-			throw("You must either pass an array of records, or a query or records");
-		}
-	}
-	
 	public array function getRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-			setRecords(ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true"}));
+			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true"});
 		}
 		return variables.records;
 	}
-	
 	
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
@@ -742,5 +730,34 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.whereGroups = originalWhereGroup;
 		
 		return results;
+	}
+	
+	public void function loadSavedState(required string savedStateID) {
+		for(var key in session.entitySmartList[ savedStateID ]) {
+			variables[key] = duplicate(session.entitySmartList[ savedStateID ][key]);
+		}
+		structDelete(session.entitySmartList, savedStateID);
+	}
+	
+	public string function getSavedStateID() {
+		var savedStateID = createUUID();
+		
+		if(!structKeyExists(session, "entitySmartList")) {
+			session.entitySmartList = structNew();
+		}
+		
+		session.entitySmartList[ savedStateID ] = structNew();
+		
+		session.entitySmartList[ savedStateID ][ "entities" ] = variables["entities"];
+		session.entitySmartList[ savedStateID ][ "whereGroups" ] = variables["whereGroups"];
+		session.entitySmartList[ savedStateID ][ "orders" ] = variables["orders"];
+		session.entitySmartList[ savedStateID ][ "keywordProperties" ] = variables["keywordProperties"];
+		session.entitySmartList[ savedStateID ][ "searchScoreProperties" ] = variables["searchScoreProperties"];
+		session.entitySmartList[ savedStateID ][ "keywords" ] = variables["keywords"];
+		session.entitySmartList[ savedStateID ][ "hqlParams" ] = variables["hqlParams"];
+		session.entitySmartList[ savedStateID ][ "pageRecordsStart" ] = variables["pageRecordsStart"];
+		session.entitySmartList[ savedStateID ][ "pageRecordsShow" ] = variables["pageRecordsShow"];
+		
+		return savedStateID;
 	}
 }
