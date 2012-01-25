@@ -686,4 +686,61 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		return exists;
 	}
+	
+	public array function getFilterOptions(required string valuePropertyIdentifier, required string namePropertyIdentifier) {
+		var nameProperty = getAliasedProperty(propertyIdentifier=arguments.namePropertyIdentifier,fetch=false);
+		var valueProperty = getAliasedProperty(propertyIdentifier=arguments.valuePropertyIdentifier,fetch=false);
+		
+		var originalWhereGroup = duplicate(variables.whereGroups);
+		
+		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
+			for(var key in variables.whereGroups[i].filters) {
+				if(key == valueProperty) {
+					structDelete(variables.whereGroups[i].filters, key);
+				}
+			}
+		}
+		
+		var results = ormExecuteQuery("SELECT NEW MAP(
+			#nameProperty# as name,
+			#valueProperty# as value,
+			count(#nameProperty#) as count
+			)
+		#getHQLFrom(allowFetch=false)#
+		#getHQLWhere()#
+		GROUP BY
+			#nameProperty#,
+			#valueProperty#
+		ORDER BY
+			#nameProperty# ASC", getHQLParams());
+			
+		variables.whereGroups = originalWhereGroup;
+		
+		return results;
+	}
+	
+	public struct function getRangeMinMax(required string propertyIdentifier) {
+		var rangeProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier, fetch=false);
+		
+		var originalWhereGroup = duplicate(variables.whereGroups);
+		
+		for(var i=1; i<=arrayLen(variables.whereGroups); i++) {
+			for(var key in variables.whereGroups[i].ranges) {
+				if(key == rangeProperty) {
+					structDelete(variables.whereGroups[i].filters, key);
+				}
+			}
+		}
+		
+		var results = ormExecuteQuery("SELECT NEW MAP(
+			min(#rangeProperty#) as min,
+			max(#rangeProperty#) as max
+			)
+		#getHQLFrom(allowFetch=false)#
+		#getHQLWhere()#", getHQLParams(), true);
+			
+		variables.whereGroups = originalWhereGroup;
+		
+		return results;
+	}
 }
