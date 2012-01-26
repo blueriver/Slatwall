@@ -258,7 +258,7 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function editPaymentMethod(required struct rc) {
 		detailPaymentMethod(rc);
 		rc.edit = true;
-		getFW().setView("admin:setting.detailPaymentMethod");
+		getFW().setView("admin:setting.detailpaymentmethod");
 	}
 	
 	public void function savePaymentMethod(required struct rc) {
