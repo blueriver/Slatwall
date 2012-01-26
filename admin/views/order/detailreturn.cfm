@@ -114,15 +114,15 @@ Notes:
 				<p><strong>#$.Slatwall.rbKey("admin.order.detail.ordertotals")#</strong></p>
 				<dl class="orderTotals">
 					<dt>#$.Slatwall.rbKey("admin.order.detail.subtotal")#</dt> 
-					<dd>(#rc.order.getFormattedValue('subtotal', 'currency')#)</dd>
+					<dd>#rc.order.getFormattedValue('subtotal', 'currency')#</dd>
 					<dt>#$.Slatwall.rbKey("admin.order.detail.totaltax")#</dt>
-					<dd>(#rc.order.getFormattedValue('taxTotal', 'currency')#)</dd>
+					<dd>#rc.order.getFormattedValue('taxTotal', 'currency')#</dd>
 					<dt>#$.Slatwall.rbKey("admin.order.detail.totalFulfillmentRefund")#</dt>
-					<dd>(#rc.order.getFormattedValue('fulfillmentRefundTotal', 'currency')#)</dd>
+					<dd>#rc.order.getFormattedValue('fulfillmentRefundTotal', 'currency')#</dd>
 					<!---<dt>#$.Slatwall.rbKey("admin.order.detail.totalDiscounts")#</dt>
 					<dd>#rc.order.getFormattedValue('discountTotal', 'currency')#</dd>--->
 					<dt><strong>#$.Slatwall.rbKey("admin.order.detail.total")#</strong></dt> 
-					<dd><strong>(#rc.order.getFormattedValue('total', 'currency')#)</strong></dd>
+					<dd><strong>#rc.order.getFormattedValue('total', 'currency')#</strong></dd>
 				</dl>
 			</dt>
 		</div>

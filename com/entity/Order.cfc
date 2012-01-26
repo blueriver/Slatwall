@@ -71,15 +71,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
 	
 	// Non persistent properties
-	property name="total" persistent="false" formatType="currency";
-	property name="subTotal" persistent="false" formatType="currency";
-	property name="taxTotal" persistent="false" formatType="currency";
+	property name="discountTotal" persistent="false" formatType="currency";
 	property name="itemDiscountAmountTotal" persistent="false" formatType="currency";
 	property name="fulfillmentDiscountAmountTotal" persistent="false" formatType="currency";
-	property name="orderDiscountAmountTotal" persistent="false" formatType="currency"; 
-	property name="discountTotal" persistent="false" formatType="currency";
 	property name="fulfillmentTotal" persistent="false" formatType="currency";
 	property name="fulfillmentRefundTotal" persistent="false" formatType="currency";
+	property name="orderDiscountAmountTotal" persistent="false" formatType="currency";
+	property name="paymentAmountTotal" persistent="false" formatType="currency";
+	property name="paymentAuthorizedTotal" persistent="false" formatType="currency";
+	property name="paymentAmountReceivedTotal" persistent="false" formatType="currency";
+	property name="quantityDelivered" persistent="false";
+	property name="quantityUndelivered" persistent="false";
+	property name="subTotal" persistent="false" formatType="currency";
+	property name="subTotalAfterItemDiscounts" persistent="false" formatType="currency";
+	property name="taxTotal" persistent="false" formatType="currency";
+	property name="total" persistent="false" formatType="currency";
+	property name="totalItems" persistent="false";
+	property name="totalQuantity" persistent="false";
 	
 	public any function init() {
 		if(isNull(variables.orderItems)) {
@@ -125,9 +133,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getOrderStatusType().getSystemCode();
 	}
 	
-	public numeric function getTotalItems() {
-		return arrayLen(getOrderItems());
-	}
 	
 	public boolean function hasItemsQuantityWithinMaxOrderQuantity() {
 		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
@@ -136,90 +141,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			}
 		}
 		return true;
-	}
-	
-	// TODO: may need to refactor the next 4 methods to more efficient HQL
-	public numeric function getTotalQuantity() {
-		if(!structKeyExists(variables,"totalQuantity")) {
-			var orderItems = getOrderItems();
-			variables.totalQuantity = 0;
-			for(var i=1; i<=arrayLen(orderItems); i++) {
-				variables.totalQuantity += orderItems[i].getQuantity(); 
-			}			
-		}
-		return variables.totalQuantity;
-	}
-	
-	public numeric function getQuantityDelivered() {
-		if(!structKeyExists(variables,"quantityDelivered")) {
-			var orderItems = getOrderItems();
-			var variables.quantityDelivered = 0;
-			for(var i=1; i<=arrayLen(orderitems); i++) {
-				variables.quantityDelivered += orderItems[i].getQuantityDelivered();
-			}
-		}
-		return variables.quantityDelivered;
-	}
-	
-	public numeric function getQuantityUndelivered() {
-		return this.getTotalQuantity() - this.getQuantityDelivered();
-	}
-	
-	public numeric function getSubtotal() {
-		var subtotal = 0;
-		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
-			subtotal += getOrderItems()[i].getExtendedPrice();
-		}
-		return subtotal;
-	}
-	
-	public numeric function getTaxTotal() {
-		var taxTotal = 0;
-		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
-			taxTotal += getOrderItems()[i].getTaxAmount();
-		}
-		return taxTotal;
-	}
-	
-	public numeric function getItemDiscountAmountTotal() {
-		var discountTotal = 0;
-		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
-			discountTotal += getOrderItems()[i].getDiscountAmount();
-		}
-		return discountTotal;
-	}
-	
-	public numeric function getFulfillmentDiscountAmountTotal() {
-		return 0;
-	}
-	
-	public numeric function getOrderDiscountAmountTotal() {
-		return 0;
-	}
-	
-	public numeric function getDiscountTotal() {
-		return getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal();
-	}
-	
-	public numeric function getFulfillmentTotal() {
-		var fulfillmentTotal = 0;
-		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
-			fulfillmentTotal += getOrderFulfillments()[i].getFulfillmentCharge();
-		}
-		return fulfillmentTotal;
-	}
-	
-	public numeric function getFulfillmentRefundTotal() {
-		var fulfillmentRefundTotal = 0;
-		for(var i=1; i<=arrayLen(getOrderReturns()); i++) {
-			fulfillmentRefundTotal += getOrderReturns()[i].getFulfillmentRefundAmount();
-		}
-		
-		return fulfillmentRefundTotal;
-	}
-	
-	public numeric function getTotal() {
-		return getSubtotal() + getTaxTotal() + getFulfillmentTotal() + getFulfillmentRefundTotal() - getDiscountTotal();
 	}
 	
 	public void function removeAllOrderItems() {
@@ -236,41 +157,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return variables.orderNumber;
 	}
 	
-    // Get the sum of all the payment amounts
-	public numeric function getPaymentAmountTotal() {
-		var totalPayments = 0;
-		
-		var orderPayments = getOrderPayments();
-		for(var i=1; i<=arrayLen(orderPayments); i++) {
-			totalPayments += orderPayments[i].getAmount();
-		}
-		
-		return totalPayments;
-	}
-	
-	public numeric function getPaymentAmountAuthorizedTotal() {
-		var totalPaymentsAuthorized = 0;
-		
-		var orderPayments = getOrderPayments();
-		for(var i=1; i<=arrayLen(orderPayments); i++) {
-			totalPaymentsAuthorized += orderPayments[i].getAmountAuthorized();
-		}
-		
-		return totalPaymentsAuthorized;
-	}
-	
-	public numeric function getPaymentAmountReceivedTotal() {
-		var totalPaymentsReceived = 0;
-		
-		var orderPayments = getOrderPayments();
-		for(var i=1; i<=arrayLen(orderPayments); i++) {
-			totalPaymentsReceived += orderPayments[i].getAmountReceived();
-		}
-		
-		return totalPaymentsReceived;
-	}
-	
-	public boolean function isPaid() {
+    public boolean function isPaid() {
 		if(this.getPaymentAmountReceivedTotal() < getTotal()) {
 			return false;
 		} else {
@@ -309,7 +196,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getService("OrderService").getPreviouslyReturnedFulfillmentTotal(getOrderId());
 	}
 	
-	
 	// A helper to loop over all deliveries, and grab all of the items of each and put them into a single array 
 	public array function getDeliveredOrderItems() {
 		var arr = [];
@@ -326,6 +212,147 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
     
 	// ============ START: Non-Persistent Property Methods =================
+	public numeric function getDiscountTotal() {
+		return getItemDiscountAmountTotal() + getFulfillmentDiscountAmountTotal() + getOrderDiscountAmountTotal();
+	}
+	
+	public numeric function getItemDiscountAmountTotal() {
+		var discountTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			if( getOrderItems()[i].getTypeCode() == "oitSale" ) {
+				discountTotal += getOrderItems()[i].getDiscountAmount();
+			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
+				discountTotal -= getOrderItems()[i].getDiscountAmount();
+			} else {
+				throw("there was an issue calculating the itemDiscountAmountTotal because of a orderItemType associated with one of the items");
+			}
+		}
+		return discountTotal;
+	}
+	
+	public numeric function getFulfillmentDiscountAmountTotal() {
+		return 0;
+	}
+
+	public numeric function getFulfillmentTotal() {
+		var fulfillmentTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderFulfillments()); i++) {
+			fulfillmentTotal += getOrderFulfillments()[i].getFulfillmentCharge();
+		}
+		return fulfillmentTotal;
+	}
+	
+	public numeric function getFulfillmentRefundTotal() {
+		var fulfillmentRefundTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderReturns()); i++) {
+			fulfillmentRefundTotal += getOrderReturns()[i].getFulfillmentRefundAmount();
+		}
+		
+		return fulfillmentRefundTotal;
+	}
+	
+	public numeric function getOrderDiscountAmountTotal() {
+		return 0;
+	}
+	
+	public numeric function getPaymentAmountTotal() {
+		var totalPayments = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPayments += orderPayments[i].getAmount();
+		}
+		
+		return totalPayments;
+	}
+	
+	public numeric function getPaymentAmountAuthorizedTotal() {
+		var totalPaymentsAuthorized = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPaymentsAuthorized += orderPayments[i].getAmountAuthorized();
+		}
+		
+		return totalPaymentsAuthorized;
+	}
+	
+	public numeric function getPaymentAmountReceivedTotal() {
+		var totalPaymentsReceived = 0;
+		
+		var orderPayments = getOrderPayments();
+		for(var i=1; i<=arrayLen(orderPayments); i++) {
+			totalPaymentsReceived += orderPayments[i].getAmountReceived();
+		}
+		
+		return totalPaymentsReceived;
+	}
+	
+	public numeric function getQuantityDelivered() {
+		if(!structKeyExists(variables,"quantityDelivered")) {
+			var orderItems = getOrderItems();
+			var variables.quantityDelivered = 0;
+			for(var i=1; i<=arrayLen(orderitems); i++) {
+				variables.quantityDelivered += orderItems[i].getQuantityDelivered();
+			}
+		}
+		return variables.quantityDelivered;
+	}
+	
+	public numeric function getQuantityUndelivered() {
+		return this.getTotalQuantity() - this.getQuantityDelivered();
+	}
+	
+	public numeric function getSubtotal() {
+		var subtotal = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			if( getOrderItems()[i].getTypeCode() == "oitSale" ) {
+				subtotal += getOrderItems()[i].getExtendedPrice();	
+			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
+				subtotal -= getOrderItems()[i].getExtendedPrice();
+			} else {
+				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
+			}
+		}
+		return subtotal;
+	}
+	
+	public numeric function getSubtotalAfterItemDiscounts() {
+		return getSubtotal() - getItemDiscountAmountTotal();
+	}
+	
+	public numeric function getTaxTotal() {
+		var taxTotal = 0;
+		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
+			if( getOrderItems()[i].getTypeCode() == "oitSale" ) {
+				taxTotal += getOrderItems()[i].getTaxAmount();	
+			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
+				taxTotal -= getOrderItems()[i].getTaxAmount();
+			} else {
+				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
+			}
+		}
+		return taxTotal;
+	}
+	
+	public numeric function getTotal() {
+		return getSubtotal() + getTaxTotal() + getFulfillmentTotal() + getFulfillmentRefundTotal() - getDiscountTotal();
+	}
+	
+	public numeric function getTotalItems() {
+		return arrayLen(getOrderItems());
+	}
+	
+	public numeric function getTotalQuantity() {
+		if(!structKeyExists(variables,"totalQuantity")) {
+			var orderItems = getOrderItems();
+			variables.totalQuantity = 0;
+			for(var i=1; i<=arrayLen(orderItems); i++) {
+				variables.totalQuantity += orderItems[i].getQuantity(); 
+			}			
+		}
+		return variables.totalQuantity;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 	
