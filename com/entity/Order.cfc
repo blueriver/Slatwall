@@ -345,7 +345,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	}
 	
 	public numeric function getTotal() {
-		return getSubtotal() + getTaxTotal() + getFulfillmentTotal() + getFulfillmentRefundTotal() - getDiscountTotal();
+		return getSubtotal() + getTaxTotal() + getFulfillmentTotal() - getFulfillmentRefundTotal() - getDiscountTotal();
 	}
 	
 	public numeric function getTotalItems() {
