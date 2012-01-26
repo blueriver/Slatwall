@@ -885,7 +885,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				
 				var refundRequired = false;
 				var refundOK = false;
-				if(order.getTotal() > 0){
+				if(order.getTotal() < 0){
 					// Find the orginal orderpayment credit card transaction where charge is gt 0
 					for(var t=1; t<=arrayLen(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()); t++) {
 						if(order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getAmountCharged() gt 0) {
@@ -900,7 +900,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							newOrderPayment.setExpirationYear(order.getReferencedOrder().getOrderPayments()[1].getExpirationYear());
 							newOrderPayment.setBillingAddress(order.getReferencedOrder().getOrderPayments()[1].getBillingAddress());
 							newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
-							newOrderPayment.setAmount( order.getTotal() );
+							newOrderPayment.setAmount( order.getTotal()*-1 );
 							newOrderPayment.setOrder( order );
 							
 							// Pass this new order payment along with the original transaction ID to the process() method. 

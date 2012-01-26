@@ -123,13 +123,20 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 		return getQuantity() <= getMaximumOrderQuantity();
 	}
 	
-	
 	public string function getStatus(){
 		return getOrderItemStatusType().getType();
 	}
 	
 	public string function getStatusCode() {
 		return getOrderItemStatusType().getSystemCode();
+	}
+	
+	public string function getType(){
+		return getOrderItemType().getType();
+	}
+	
+	public string function getTypeCode(){
+		return getOrderItemType().getSystemCode();
 	}
 	
 	public string function displayCustomizations(format="list") {

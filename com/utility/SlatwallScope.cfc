@@ -73,74 +73,76 @@ component accessors="true" output="false" extends="BaseObject" {
 		}
 	}
 	
-	private any function getProductList(string contentID) {
-		if(!structKeyExists(arguments,"contentID")) {
-			return getCurrentProductList();
-		} else if (arguments.contentID == "" || arguments.contentID == "00000000000000000000000000000000001") {
-			if(!getService("requestCacheService").keyExists("allProductList")) {
+	private struct function getProductListData(string contentID="") {
+		var data = {};
+		
+		// Setup Basic Filters
+		data["F:activeFlag"] = 1;
+		data["F:publishedFlag"] = 1;
+		if(structKeyExists(request, "context")) {
+			structAppend(data, request.context);
+		} else {
+			structAppend(data, form);
+			structAppend(data, url);
+		}
+		
+		// Setup Category stuff
+		if($.event("categoryID") != "") {
+			data["F:productCategories_categoryID"] = $.event("categoryID");
+		}
+		
+		// Setup Content Related filters and settings
+		if(len(arguments.contentID)) {
+			if(arguments.contentID == $.content('contentID')) {
+				var contentBean = $.content();
+			} else {
+				var contentBean = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
+			}
+			
+			if(contentBean.getShowSubPageProducts() eq "") {
+				data.showSubPageProducts = 1;
+			} else {
+				data.showSubPageProducts = contentBean.getShowSubPageProducts();	
+			}
+		}
+		
+		return data;
+	}
+	
+	public any function getProductList(string contentID="", setupData=true) {
+		if(len(arguments.contentID)) {
+			if(!getService("requestCacheService").keyExists("contentProductList#arguments.contentID##yesNoFormat(arguments.setupData)#")) {
+				
 				var data = {};
-				data["F:activeFlag"] = 1;
-				data["F:publishedFlag"] = 1;
-				if(structKeyExists(request, "context")) {
-					structAppend(data, request.context);
-				} else {
-					structAppend(data, form);
-					structAppend(data, url);
+				if(arguments.setupData) {
+					data = getProductListData(arguments.contentID);
 				}
+				
 				var currentURL = $.createHREF(filename=$.content('filename'));
 				if(len(CGI.QUERY_STRING)) {
 					currentURL &= "?" & CGI.QUERY_STRING;
 				}
-				getService("requestCacheService").setValue("allProductList", getService("productService").getProductSmartList(data=data, currentURL=currentURL));
+				
+				getService("requestCacheService").setValue("contentProductList#arguments.contentID##yesNoFormat(arguments.setupData)#", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL));
 			}
-			return getService("requestCacheService").getValue("allProductList");
+			return getService("requestCacheService").getValue("contentProductList#arguments.contentID##yesNoFormat(arguments.setupData)#");
 		} else {
-			if(!getService("requestCacheService").keyExists("contentProductList#arguments.contentID#")) {
-				var content = $.getBean("content").loadBy(contentID=arguments.contentID, siteID=$.event('siteID'));
+			if(!getService("requestCacheService").keyExists("allProductList#yesNoFormat(arguments.setupData)#")) {
+				
 				var data = {};
-				data["F:activeFlag"] = 1;
-				data["F:publishedFlag"] = 1;
-				if(content.getExtendedAttribute("showSubPageProducts") eq "") {
-					data.showSubPageProducts = 0;
-				} else {
-					data.showSubPageProducts = content.getExtendedAttribute("showSubPageProducts");	
+				if(arguments.setupData) {
+					data = getProductListData(arguments.contentID);
 				}
-				var currentURL = $.createHREF(filename=content.getFileName());
+				
+				var currentURL = $.createHREF(filename=$.content('filename'));
 				if(len(CGI.QUERY_STRING)) {
 					currentURL &= "?" & CGI.QUERY_STRING;
 				}
-				getService("requestCacheService").setValue("contentProductList#arguments.contentID#", getService("productService").getProductContentSmartList(contentID=arguments.contentID, data=data, currentURL=currentURL));
+				
+				getService("requestCacheService").setValue("allProductList#yesNoFormat(arguments.setupData)#", getService("productService").getProductSmartList(data=data, currentURL=currentURL));
 			}
-			return getService("requestCacheService").getValue("contentProductList#arguments.contentID#");
+			return getService("requestCacheService").getValue("allProductList#yesNoFormat(arguments.setupData)#");
 		}
-	}
-	
-	private any function getCurrentProductList() {
-		if(!getService("requestCacheService").keyExists("currentProductList")) {
-			var data = {};
-			data["F:activeFlag"] = 1;
-			data["F:publishedFlag"] = 1;
-			if(structKeyExists(request, "context")) {
-				structAppend(data, request.context);
-			} else {
-				structAppend(data, form);
-				structAppend(data, url);
-			}
-			if($.content("showSubPageProducts") eq "") {
-				data.showSubPageProducts = 0;
-			} else {
-				data.showSubPageProducts = $.content("showSubPageProducts");	
-			}
-			if($.event("categoryID") != "") {
-				data["F:productCategories_categoryID"] = $.event("categoryID");
-			}
-			var currentURL = $.createHREF(filename=$.content('filename'));
-			if(len(CGI.QUERY_STRING)) {
-				currentURL &= "?" & CGI.QUERY_STRING;
-			}
-			getService("requestCacheService").setValue("currentProductList", getService("productService").getProductContentSmartList(contentID=$.content("contentID"), data=data, currentURL=currentURL));
-		}
-		return getService("requestCacheService").getValue("currentProductList");
 	}
 	
 	public any function account(string property, string value) {
@@ -174,24 +176,16 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	public any function productList(string property, string value, string contentID) {
+		if(!structKeyExists(arguments, "contentID")) {
+			arguments.contentID = $.content('contentID');
+		}
+		
 		if(structKeyExists(arguments, "property") && structKeyExists(arguments, "value")) {
-			if(structKeyExists(arguments, "contentID")) {
-				return evaluate("getProductList(arguments.contentID).set#arguments.property#(#arguments.value#)");	
-			} else {
-				return evaluate("getCurrentProductList().set#arguments.property#(#arguments.value#)");
-			}
+			return evaluate("getProductList(arguments.contentID).set#arguments.property#(#arguments.value#)");	
 		} else if (structKeyExists(arguments, "property")) {
-			if(structKeyExists(arguments, "contentID")) {
-				return evaluate("getProductList(arguments.contentID).get#arguments.property#()");
-			} else {
-				return evaluate("getCurrentProductList().get#arguments.property#()");
-			}
+			return evaluate("getProductList(arguments.contentID).get#arguments.property#()");
 		} else {
-			if(structKeyExists(arguments, "contentID")) {
-				return getProductList(arguments.contentID);
-			} else {
-				return getCurrentProductList();
-			}
+			return getProductList(arguments.contentID);
 		}
 	}
 	
