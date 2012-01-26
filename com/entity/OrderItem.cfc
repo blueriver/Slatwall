@@ -136,7 +136,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	}
 	
 	public string function getTypeCode(){
-		return getOrderItemType().getType();
+		return getOrderItemType().getSystemCode();
 	}
 	
 	public string function displayCustomizations(format="list") {

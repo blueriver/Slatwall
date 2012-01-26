@@ -133,6 +133,13 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		return getOrderStatusType().getSystemCode();
 	}
 	
+	public string function getType(){
+		return getOrderType().getType();
+	}
+	
+	public string function getTypeCode(){
+		return getOrderType().getSystemCode();
+	}
 	
 	public boolean function hasItemsQuantityWithinMaxOrderQuantity() {
 		for(var i=1; i<=arrayLen(getOrderItems()); i++) {
@@ -311,6 +318,8 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 			} else if ( getOrderItems()[i].getTypeCode() == "oitReturn" ) {
 				subtotal -= getOrderItems()[i].getExtendedPrice();
 			} else {
+				writeDump(getOrderItems()[i].getTypeCode());
+				abort;
 				throw("there was an issue calculating the subtotal because of a orderItemType associated with one of the items");
 			}
 		}
