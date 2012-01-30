@@ -40,13 +40,13 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	// Persistent Properties
 	property name="brandID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="activeFlag" ormtype="boolean" hint="As Products Get Old, They would be marked as Not Active";
-	property name="filename" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
+	property name="activeFlag" ormtype="boolean" hint="As Brands Get Old, They would be marked as Not Active";
+	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" hint="This is the Website of the brand";
 	
 	// Persistent Properties - Inheritence Settings
-	property name="displayTemplate" ormtype="string";
+	property name="brandDisplayTemplate" ormtype="string";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -61,13 +61,10 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="products" singularname="product" cfc="Product" fieldtype="one-to-many" fkcolumn="brandID" inverse="true";
 	//property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";    
 	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
-	
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID";
-	
-	
 	
 	public Brand function init(){
 	   // set default collections for association management methods
