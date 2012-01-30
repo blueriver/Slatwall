@@ -40,7 +40,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			
 	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="filename" ormtype="string" unique="true" hint="This is the name that is used in the URL string";
+	property name="filename" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="productTypeName" ormtype="string";
 	property name="productTypeDescription" ormtype="string" length="2000";
 	
