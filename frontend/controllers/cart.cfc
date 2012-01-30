@@ -38,10 +38,12 @@ Notes:
 */
 component persistent="false" accessors="true" output="false" extends="BaseController" {
 
+	property name="locationService" type="any";
 	property name="orderService" type="any";
 	property name="productService" type="any";
 	property name="promotionService" type="any";
 	property name="skuService" type="any";
+	property name="stockService" type="any";
 	property name="utilityFormService" type="any";
 	
 	// This method is deprecated as of 7/19/2011, the new method is clearCart
@@ -69,33 +71,52 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function addItem(required struct rc) {
+		param name="rc.stockID" default="";
 		param name="rc.skuID" default="";
 		param name="rc.productID" default="";
+		param name="rc.locationID" default="";
 		param name="rc.selectedOptions" default="";
 		param name="rc.quantity" default=1;
-		
-		var sku = getSkuService().getSku(rc.skuID);
-		
-		if(isNull(sku)) {
-			var product = getProductService().getProduct(rc.productID);
-			if(!isNull(product)) {
-				if(rc.selectedOptions != "") {
-					var sku = product.getSkuBySelectedOptions(rc.selectedOptions);
-				} else if (arrayLen(product.getSkus()) == 1) {
-					var sku = product.getSkus()[1];
+				
+		if(isNumeric(rc.quantity) && rc.quantity > 0) {
+			
+			var stock = getStockService().getStock(rc.stockID);
+			
+			if(!isNull(stock)) {
+				var sku = stock.getSku();
+			} else {
+				var sku = getSkuService().getSku(rc.skuID);
+				if(isNull(sku)) {
+					var product = getProductService().getProduct(rc.productID);
+					if(!isNull(product)) {
+						if(rc.selectedOptions != "") {
+							sku = product.getSkuBySelectedOptions(rc.selectedOptions);
+						} else if (arrayLen(product.getSkus()) == 1) {
+							sku = product.getSkus()[1];
+						}	
+					}
+				}
+				
+				var location = getLocationService().getLocation(rc.locationID);
+				if(!isNull(sku) && !isNull(location)) {
+					stock = getStockService().getStockBySkuAndLocation(sku=sku, location=location);
 				}	
 			}
-		}
-		
-		if(!isNull(sku) && isNumeric(rc.quantity)) {
-			// Persist the Current Order by setting it in the session
-			rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
 			
-			// Build up any possible product customizations
-			var cusomtizationData = getUtilityFormService().buildFormCollections(rc);
-			
-			// Add to the cart() order the new sku with quantity and shipping id
-			getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);
+			if(!isNull(sku)) {
+				// Persist the Current Order by setting it in the session
+				rc.$.slatwall.session().setOrder(rc.$.slatwall.cart());
+				
+				// Build up any possible product customizations
+				var cusomtizationData = getUtilityFormService().buildFormCollections(rc);
+				
+				// Add to the cart() order the new sku with quantity and shipping id
+				if(!isNull(stock)) {
+					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, stock=stock, quantity=rc.quantity, customizatonData=cusomtizationData);	
+				} else {
+					getOrderService().addOrderItem(order=rc.$.slatwall.cart(), sku=sku, quantity=rc.quantity, customizatonData=cusomtizationData);
+				}
+			}
 		}
 		
 		getFW().redirectExact(rc.$.createHREF(filename='shopping-cart'), false);

@@ -150,7 +150,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		return getOrderSmartList(params);
 	}
 	
-	public void function addOrderItem(required any order, required any sku, numeric quantity=1, any orderFulfillment,struct customizatonData)	{
+	public void function addOrderItem(required any order, required any sku, any stock, numeric quantity=1, any orderFulfillment, struct customizatonData)	{
 	
 		// Check to see if the order has already been closed or canceled
 		if(arguments.order.getOrderStatusType().getSystemCode() == "ostClosed" || arguments.order.getOrderStatusType().getSystemCode() == "ostCanceled") {
@@ -180,10 +180,19 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		if(!structKeyExists(arguments, "customizatonData") || !structKeyExists(arguments.customizatonData,"attribute"))	{
 			// Check the existing order items and increment quantity if possible.
 			for(var i = 1; i <= arrayLen(orderItems); i++) {
+				
+				// This is a simple check inside of the loop to find any sku that matches
 				if(orderItems[i].getSku().getSkuID() == arguments.sku.getSkuID() && orderItems[i].getOrderFulfillment().getOrderFulfillmentID() == arguments.orderFulfillment.getOrderFulfillmentID()) {
-					itemExists = true;
-					orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
-					orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+					
+					// This verifies that the stock being passed in matches the stock on the order item, or that both are null
+					if( ( !isNull(arguments.stock) && !isNull(orderItems[i].getStock()) && arguments.stock.getStockID() == orderItems[i].getStock().getStockID() ) || ( isNull(arguments.stock) && isNull(orderItems[i].getStock()) ) ) {
+						
+						itemExists = true;
+						orderItems[i].setQuantity(orderItems[i].getQuantity() + arguments.quantity);
+						orderItems[i].getOrderFulfillment().orderFulfillmentItemsChanged();
+						break;
+						
+					}
 				}
 			}
 		}
@@ -196,6 +205,11 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newItem.setOrder(arguments.order);
 			newItem.setOrderFulfillment(arguments.orderFulfillment);
 			newItem.setPrice(arguments.sku.getLivePrice());
+			
+			// If a stock was passed in, then assign it to this new item
+			if(!isNull(arguments.stock)) {
+				newItem.setStock(arguments.stock);
+			}
 		
 			// Check for product customization
 			if(structKeyExists(arguments, "customizatonData") && structKeyExists(arguments.customizatonData, "attribute")) {
