@@ -61,9 +61,6 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 		return variables.type;
 	}
 	
-	public string function getSimpleRepresentationPropertyName() {
-    	return "type";
-    }
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -72,6 +69,14 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+
+	public string function getSimpleRepresentationPropertyName() {
+    	return "type";
+    }
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

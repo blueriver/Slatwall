@@ -219,11 +219,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	
 	public string function getProductURL() {
-		return $.createHREF(filename="#setting('product_urlKey')#/#getFilename()#");
+		return $.createHREF(filename="#setting('product_urlKey')#/#getURLTitle()#");
 	}
 	
 	public string function getListingProductURL(string filename=$.content('filename')) {
-		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getFilename()#");
+		return $.createHREF(filename="#arguments.filename#/#setting('product_urlKey')#/#getURLTitle()#");
 	}
 	
 	public string function getTemplate() {
@@ -252,13 +252,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     	return averageRating;
     }
 	
-	// Persistent property helpers
-	
-	public string function getURLTitle() {
-		return getFileName();
-	}
-
-	/******* Association management methods for bidirectional relationships **************/
 	
 	// Product Type (many-to-one)
 	

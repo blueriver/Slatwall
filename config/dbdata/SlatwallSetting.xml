@@ -22,7 +22,7 @@
 		<Record settingID="dbb3279aa919ec2609ab33bfbfa732e6" settingName="product_allowBackorderFlag" settingValue="0" />
 		<Record settingID="dbb32798ffe388844546d7457612a6c7" settingName="product_allowDropshipFlag" settingValue="0" />
 		<Record settingID="dbb32795f0ad81a6996c60a8e05702a7" settingName="product_callToOrderFlag" settingValue="0" />
-		<Record settingID="dbb327b7061c9ddd87d92b2075d1421b" settingName="product_displayTemplate" settingValue="default-product-template" />
+		<Record settingID="dbb327b7061c9ddd87d92b2075d1421b" settingName="product_productDisplayTemplate" settingValue="default-product-template" />
 		<Record settingID="dbb327b10d50e926dfe4052ecb129cdc" settingName="product_quantityHeldBack" settingValue="0" />
 		<Record settingID="dbb327b20825c08e8d4b95afe6e1aec7" settingName="product_quantityMinimum" settingValue="0" />
 		<Record settingID="dbb327b390ff6ebeae773bf7a5cad615" settingName="product_quantityMaximum" settingValue="1000" />
