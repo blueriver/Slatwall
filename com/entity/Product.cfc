@@ -640,13 +640,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
-	public any function getDisplayTemplateOptions() {
-		if(!structKeyExists(variables, "displayTemplateOptions")) {
-			variables.displayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
-			arrayPrepend(variables.displayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('displayTemplate')# )"});
+	public any function getProductDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {
+			variables.productDisplayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.productDisplayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('productDisplayTemplate')# )"});
 		}
 		
-		return variables.displayTemplateOptions;
+		return variables.productDisplayTemplateOptions;
 	}
 	
 	public string function getBrandName() {
