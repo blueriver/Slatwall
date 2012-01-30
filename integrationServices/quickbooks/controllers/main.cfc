@@ -176,7 +176,7 @@
 				<cfset product.setSortOrder(listLast(remoteProductID, "-")) />
 				
 				<!--- Update the Skus Image --->
-				<cfset sku.setImageFile( getSkuService().generateImageFileName(sku) ) />
+				<cfset sku.setImageFile( sku.generateImageFileName() ) />
 				
 				<cfset entitySave( product ) />
 				<cfset ormFlush() />
