@@ -612,19 +612,12 @@ component displayname="Base Object" accessors="true" output="false" {
 	// @hint return a simple representation of this entity
 	public string function getSimpleRepresentation() {
 		
-		// get the representation propertyName
-		var representationProperty = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
+		// Try to get the actual value of that property
+		var representation = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
 		
-		// Make sure it wasn't blank
-		if(representationProperty != "") {
-			
-			// Try to get the actual value of that property
-			var representation = this.invokeMethod("get#getSimpleRepresentationPropertyName()#");
-			
-			// If the value isn't null, and it is simple, then return it.
-			if(!isNull(representation) && isSimpleValue(representation)) {
-				return representation;
-			}	
+		// If the value isn't null, and it is simple, then return it.
+		if(!isNull(representation) && isSimpleValue(representation)) {
+			return representation;
 		}
 		
 		// Default case is to return a blank value
@@ -639,7 +632,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		
 		// Look for a property that's last 4 is "name"
 		for(var i=1; i<=arrayLen(properties); i++) {
-			if(right(properties[i].name, 4) == "name") {
+			if(properties[i].name == getClassName() & "name") {
 				return properties[i].name;
 			}
 		}

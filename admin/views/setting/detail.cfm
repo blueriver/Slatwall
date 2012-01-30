@@ -107,18 +107,18 @@ Notes:
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowPreorderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowPreorderFlag')#" fieldName="product_allowPreorderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_allowShippingFlag#" title="#rc.$.Slatwall.rbKey('setting.product.allowShippingFlag')#" fieldName="product_allowShippingFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 				    <cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_callToOrderFlag#" title="#rc.$.Slatwall.rbKey('setting.product.callToOrderFlag')#" fieldName="product_callToOrderFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
-					<tr class="spdproduct_displaytemplate">
-						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.product.displayTemplate')#</td>
+					<tr class="spdproduct_productdisplaytemplate">
+						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.product.productDisplayTemplate')#</td>
 						<cfif rc.edit>
-							<td id="spdproduct_displayttemplate" class="value">
-								<select name="product_displayTemplate">
+							<td id="spdproduct_productdisplayttemplate" class="value">
+								<select name="product_productDisplayTemplate">
 									<cfloop array="#rc.productTemplateOptions#" index="local.dtOption">
-										<option value="#local.dtOption.value#" <cfif rc.allSettings.product_displayTemplate.getSettingValue() eq local.dtOption.value>selected="selected"</cfif>>#local.dtOption.name#</option>
+										<option value="#local.dtOption.value#" <cfif rc.allSettings.product_productDisplayTemplate.getSettingValue() eq local.dtOption.value>selected="selected"</cfif>>#local.dtOption.name#</option>
 									</cfloop>
 								</select>
 							</td>
 						<cfelse>
-							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_displayTemplate.getSettingValue()#</td>	
+							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_productDisplayTemplate.getSettingValue()#</td>	
 						</cfif>
 					</tr>
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityHeldBack#" title="#rc.$.Slatwall.rbKey('setting.product.quantityHeldBack')#" fieldName="product_quantityHeldBack">

@@ -200,19 +200,19 @@ Notes:
 		<tr>
 			<td class="property varWidth">
 				<a href="##" class="tooltip">
-					#rc.$.Slatwall.rbKey("setting.product.displayTemplate")#
-					<span>#rc.$.Slatwall.rbKey("setting.product.displayTemplate_hint")#</span>
+					#rc.$.Slatwall.rbKey("setting.product.productDisplayTemplate")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.productDisplayTemplate_hint")#</span>
 				</a>
 			</td>
 			<td>
 				<cfif rc.edit>
-					<cf_SlatwallPropertyDisplay object="#rc.product#" property="displayTemplate" edit="true" displayType="plain" fieldType="select" valueOptions="#rc.product.getDisplayTemplateOptions()#">
+					<cf_SlatwallPropertyDisplay object="#rc.product#" property="productDisplayTemplate" edit="true" displayType="plain" fieldType="select" valueOptions="#rc.product.getProductDisplayTemplateOptions()#">
 				<cfelse>
-					#rc.Product.getInheritedSetting("displayTemplate")#
+					#rc.Product.getInheritedSetting("productDisplayTemplate")#
 				</cfif>
 			</td>
 			<td>
-				<cfset local.thisSettingSource = rc.product.getWhereSettingDefined("displayTemplate") />
+				<cfset local.thisSettingSource = rc.product.getWhereSettingDefined("productDisplayTemplate") />
 				<cfif local.thisSettingSource.type eq "Global">
 					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
 				<cfelseif local.thisSettingSource.type eq "Product Type">
