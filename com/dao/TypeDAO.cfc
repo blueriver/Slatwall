@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,8 +35,7 @@
 
 Notes:
 
-*/
-component extends="Slatwall.com.dao.BaseDAO" output="false" {
-
-}
-
+--->
+<cfcomponent extends="BaseDAO">
+	
+</cfcomponent>

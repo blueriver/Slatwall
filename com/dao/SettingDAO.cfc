@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,11 +35,7 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-	public any function getShippingMethodSmartList(required struct data) {
-		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallShippingMethod", data=arguments.data);
+--->
+<cfcomponent extends="BaseDAO">
 	
-		return smartList;
-	}
-}
+</cfcomponent>
