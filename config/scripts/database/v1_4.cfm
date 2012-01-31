@@ -57,18 +57,38 @@ Notes:
 	</cfcatch>
 </cftry>
 
-<!--- Move defaultTemplate to productDefaultTemplate for products. --->
+<!--- Move displayTemplate to productDisplayTemplate for products. --->
 <cftry>
 	<cfset var fieldExists = false />
 	<cfquery name="updateProduct">
 		UPDATE SlatwallProduct
-		SET productDefaultTemplate = defaultTemplate
+		SET productDisplayTemplate = displayTemplate
 	</cfquery>
 	<cfset fieldExists = true />
 	<!--- If field updated, then try to remove it --->
-	<cfquery name="dropDefaultTemplate">
+	<cfquery name="dropDisplayTemplate">
 		ALTER TABLE SlatwallProduct
-		DROP COLUMN defaultTemplate
+		DROP COLUMN displayTemplate
+	</cfquery>
+	<cfcatch>
+		<cfif fieldExists>
+			<cfrethrow />
+		</cfif>
+	</cfcatch>
+</cftry>
+
+<!--- Move displayTemplate to productDisplayTemplate for productTypes. --->
+<cftry>
+	<cfset var fieldExists = false />
+	<cfquery name="updateProductType">
+		UPDATE SlatwallProductType
+		SET productDisplayTemplate = displayTemplate
+	</cfquery>
+	<cfset fieldExists = true />
+	<!--- If field updated, then try to remove it --->
+	<cfquery name="dropDisplayTemplate">
+		ALTER TABLE SlatwallProductType
+		DROP COLUMN displayTemplate
 	</cfquery>
 	<cfcatch>
 		<cfif fieldExists>
