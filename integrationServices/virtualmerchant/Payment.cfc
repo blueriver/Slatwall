@@ -52,19 +52,18 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 
 	public any function init(){
 		// Set Defaults
-		setPartnerID("");
-		setVendorID("");
-		setUsername("");
-		setPassword("");
+		setMerchantID("");
+		setUserID("");
+		setPin("");
 		setLiveModeFlag(false);
 		
 		variables.transactionCodes = {
-			authorize="A",
-			authorizeAndCharge="S",
-			chargePreAuthorization="D",
-			credit="C",
-			void="V",
-			inquiry="I"
+			authorize="ccauthonly",
+			authorizeAndCharge="ccsale",
+			chargePreAuthorization="ccforce",
+			credit="cccredit",
+			void="ccvoid",
+			inquiry=""
 		};
 		
 		return this;
@@ -86,10 +85,9 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	private string function getRequestData(required any requestBean){
 		
 		var requestData = "";
-		requestData = "TRXTYPE=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&TENDER=C&VERBOSITY=#variables.verbosity#";
+		requestData = "ssl_transaction_type=#variables.transactionCodes[arguments.requestBean.getTransactionType()]#&ssl_show_form=false";
 		requestData = listAppend(requestData,getLoginNVP(),"&");
 		requestData = listAppend(requestData,getPaymentNVP(requestBean),"&");
-		requestData = listAppend(requestData,getCustomerNVP(requestBean),"&");
 		if(variables.transactionCodes[arguments.requestBean.getTransactionType()] == "C" || variables.transactionCodes[arguments.requestBean.getTransactionType()] == "D"){
 			requestData = listAppend(requestData,"ORIGID=#requestBean.getProviderTransactionID()#","&");
 		}
@@ -101,66 +99,37 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	private string function getLoginNVP(){
 		
 		var loginData = [];
-		arrayAppend(loginData,"USER=#getUserName()#");
-		arrayAppend(loginData,"PARTNER=#getPartnerID()#");
-		arrayAppend(loginData,"VENDOR=#getVendorID()#");
-		arrayAppend(loginData,"PWD=#getPassword()#");
-		return arrayToList(loginData,"&");
+		arrayAppend(loginData,"ssl_merchant_id=#getMerchantID()#");
+		arrayAppend(loginData,"ssl_user_id=#getUserID()#");
+		arrayAppend(loginData,"ssl_pin=#getPin()#");
 		
+		return arrayToList(loginData,"&");
 	}
 	
 	private string function getPaymentNVP(required any requestBean){
 		
 		var paymentData = [];
-		arrayAppend(paymentData,"ACCT[#len(requestBean.getCreditCardNumber())#]=#requestBean.getCreditCardNumber()#");
-		arrayAppend(paymentData,"EXPDATE[4]=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
-		arrayAppend(paymentData,"CVV2[#len(requestBean.getSecurityCode())#]=#requestBean.getSecurityCode()#");
-		arrayAppend(paymentData,"AMT[#len(requestBean.getTransactionAmount())#]=#requestBean.getTransactionAmount()#");
+		arrayAppend(paymentData,"ssl_card_number=#requestBean.getCreditCardNumber()#");
+		arrayAppend(paymentData,"ssl_card_present=N");
+		arrayAppend(paymentData,"ssl_exp_date=#Left(requestBean.getExpirationMonth(),2)##Right(requestBean.getExpirationYear(),2)#");
 		return arrayToList(paymentData,"&");
 		
-	}
-	
-	private string function getCustomerNVP(required any requestBean){
-		var customerData = [];
-		//arrayAppend(customerData,"CUSTREF[#len(requestBean.getOrderID())#]=#requestBean.getOrderID()#");
-		arrayAppend(customerData,"CUSTCODE[#len(requestBean.getAccountID())#]=#requestBean.getAccountID()#");
-		arrayAppend(customerData,"FIRSTNAME[#len(requestBean.getAccountFirstName())#]=#requestBean.getAccountFirstName()#");
-		arrayAppend(customerData,"LASTNAME[#len(requestBean.getAccountLastName())#]=#requestBean.getAccountLastName()#");
-		arrayAppend(customerData,"STREET[#len(requestBean.getBillingStreetAddress())#]=#requestBean.getBillingStreetAddress()#");
-		arrayAppend(customerData,"CITY[#len(requestBean.getBillingCity())#]=#requestBean.getBillingCity()#");
-		arrayAppend(customerData,"STATE[#len(requestBean.getBillingStateCode())#]=#requestBean.getBillingStateCode()#");
-		arrayAppend(customerData,"ZIP[#len(requestBean.getBillingPostalCode())#]=#requestBean.getBillingPostalCode()#");
-		arrayAppend(customerData,"EMAIL[#len(requestBean.getAccountPrimaryEmailAddress())#]=#requestBean.getAccountPrimaryEmailAddress()#");
-		arrayAppend(customerData,"PHONENUM[#len(requestBean.getAccountPrimaryPhoneNumber())#]=#requestBean.getAccountPrimaryPhoneNumber()#");
-		return arrayToList(customerData,"&");
 	}
 	
 	private any function postRequest(required string requestData, required string requestID){
 		
 		var httpRequest = new http();
 		httpRequest.setMethod("POST");
-		httpRequest.setUrl(getGatewayURL());
-		httpRequest.setPort(getGatewayPort());
-		httpRequest.setTimeout(variables.timeout);
+		httpRequest.setUrl(getGatewayAddress());
+		httpRequest.setPort(443);
+		httpRequest.setTimeout(45);
 		httpRequest.setResolveurl(false);
 		
 		httpRequest.addParam(type="header",name="Content-Type",VALUE="text/namevalue");
 		httpRequest.addParam(type="header",name="Content-Length",VALUE="#Len(requestData)#");
-		httpRequest.addParam(type="header",name="Host",value="#getGatewayAddress()#");
-		httpRequest.addParam(type="header",name="X-VPS-REQUEST-ID",VALUE="#arguments.requestID#");
-		httpRequest.addParam(type="header",name="X-VPS-CLIENT-TIMEOUT",VALUE="#variables.timeout#");
-		httpRequest.addParam(type="header",name="X-VPS-VIT-INTEGRATION-PRODUCT",VALUE="Slatwall");
 		httpRequest.addParam(type="body",value="#requestData#");
 		
 		return httpRequest.send().getPrefix();
-	}
-	
-	private string function getGatewayURL(){
-		return "https://" & getGatewayAddress() & "/";
-	}
-	
-	private numeric function getGatewayPort(){
-		return 443;
 	}
 	
 	private string function getGatewayAddress(){
@@ -172,9 +141,12 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 	}
 	
 	private any function getResponseBean(required struct rawResponse, required any requestData, required any requestBean){
+		
 		var response = new Slatwall.com.utility.payment.CreditCardTransactionResponseBean();
+		
 		var responseDataArray = listToArray(rawResponse.fileContent,"&");
-		var responseData = {result="",respmsg="",authcode="",pnref="",avsaddr="",avszip="",cvv2match=""};
+		var responseData = {};
+		
 		for(var item in responseDataArray){
 			responseData[listFirst(item,"=")] = listRest(item,"=");
 		}
@@ -187,15 +159,15 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 		response.setData(data);
 		
 		// Add message for what happened
-		response.addMessage(responseData["result"], responseData["respmsg"]);
+		response.addMessage(responseData["ssl_result"], responseData["ssl_result_message"]);
 		
 		// Set the status Code
-		response.setStatusCode(responseData["result"]);
+		response.setStatusCode(responseData["ssl_result"]);
 		
 		// Check to see if it was successful
-		if(responseData["result"] != 0) {
+		if(responseData["ssl_result"] != 0) {
 			// Transaction did not go through
-			response.addError(responseData["result"], responseData["respmsg"]);
+			response.addError(responseData["errorCode"], responseData["errorMessage"]);
 		} else {
 			if(requestBean.getTransactionType() == "authorize") {
 				response.setAmountAuthorized(requestBean.getTransactionAmount());
@@ -209,20 +181,11 @@ component accessors="true" output="false" displayname="VirtualMerchant" implemen
 			}
 		}
 		
-		response.setTransactionID(responseData["pnref"]);
-		response.setAuthorizationCode(responseData["authcode"]);
+		response.setTransactionID(responseData["ssl_txn_id"]);
+		response.setAuthorizationCode(responseData["ssl_approval_code"]);
+		response.setAVSCode( responseData["ssl_avs_response"] );
 		
-		if(responseData["avsaddr"] == 'Y' && responseData["avszip"] == 'Y') {
-			response.setAVSCode("Y");
-		} else if(responseData["avsaddr"] == 'N' && responseData["avszip"] == 'Y') {
-			response.setAVSCode("Z");
-		} else if(responseData["avsaddr"] == 'N' && responseData["avszip"] == 'N') {
-			response.setAVSCode("N");
-		} else {
-			response.setAVSCode("E");
-		}
-		
-		if(responseData["cvv2match"] == 'Y') {
+		if(responseData["ssl_cvv2_response"] == 'M') {
 			response.setSecurityCodeMatch(true);
 		} else {
 			response.setSecurityCodeMatch(false);
