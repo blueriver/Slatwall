@@ -372,17 +372,17 @@ component extends="BaseService" accessors="true" {
 			saveAlternateImages(arguments.Product,arguments.data.images);
 		}
 		
-		// if filename wasn't set in bean, default it to the product's name.
-		if(arguments.Product.getFileName() == "") {
-			arguments.Product.setFileName(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
+		// if urlTitle wasn't set in bean, default it to the product's name.
+		if(arguments.Product.getUrlTitle() == "") {
+			arguments.Product.setUrlTitle(getService("utilityFileService").filterFileName(arguments.Product.getProductName()));
 		}
 		
-		// make sure that the filename (product URL title) doesn't already exist, if it does then just rename with a number until it doesn't
+		// make sure that the UrlTitle doesn't already exist, if it does then just rename with a number until it doesn't
 		var lastAppended = 1;
-		var uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
-		while(!uniqueFilename) {
-			arguments.Product.setFileName(arguments.Product.getFileName() & lastAppended);	
-			uniqueFilename = getDataService().isUniqueProperty(propertyName="filename", entity=arguments.product);
+		var uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
+		while(!uniqueUrlTitle) {
+			arguments.Product.setUrlTitle(arguments.Product.getUrlTitle() & lastAppended);	
+			uniqueUrlTitle = getDataService().isUniqueProperty(propertyName="urlTitle", entity=arguments.product);
 			lastAppended += 1;
 		}
 				
