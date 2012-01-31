@@ -40,6 +40,7 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// Persistent Properties
 	property name="commentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="comment" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
 	
