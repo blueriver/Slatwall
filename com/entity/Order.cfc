@@ -69,6 +69,7 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
+	property name="comments" singularname="comment" cfc="Comment" type="array" fieldtype="many-to-many" linktable="SlatwallCommentOrder" fkcolumn="orderID" inversejoincolumn="commentID";
 	
 	// Non persistent properties
 	property name="discountTotal" persistent="false" formatType="currency";
@@ -110,6 +111,9 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		}
 		if(isNull(variables.promotionCodes)) {
 			variables.promotionCodes = [];
+		}
+		if(isNull(variables.comments)) {
+			variables.comments = [];
 		}
 		
 		// Set the default order status type as not placed

@@ -8,6 +8,7 @@
 	<bean id="attributeDAO" class="Slatwall.com.dao.AttributeDAO" />
 	<bean id="baseDAO" class="Slatwall.com.dao.BaseDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
+	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
@@ -72,6 +73,9 @@
 	</bean>
 	<bean id="brandService" parent="parentService" class="Slatwall.com.service.BrandService">
         <property name="DAO"><ref bean="BrandDAO" /></property>
+	</bean>
+	<bean id="commentService" parent="parentService" class="Slatwall.com.service.CommentService">
+        <property name="DAO"><ref bean="CommentDAO" /></property>
 	</bean>
 	<bean id="dataService" parent="parentService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="DataDAO" /></property>

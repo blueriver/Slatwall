@@ -40,12 +40,25 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// Persistent Properties
 	property name="commentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="comment" ormtype="string" length="4000";
 	
 	// Related Object Properties (many-to-one)
 	
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
+	property name="accounts" singularname="account" cfc="Account" type="array" fieldtype="many-to-many" linktable="SlatwallCommentAccount" fkcolumn="commentID" inversejoincolumn="accountID";
+	property name="brands" singularname="brand" cfc="Brand" type="array" fieldtype="many-to-many" linktable="SlatwallCommentBrand" fkcolumn="commentID" inversejoincolumn="brandID";
+	property name="orders" singularname="order" cfc="Order" type="array" fieldtype="many-to-many" linktable="SlatwallCommentOrder" fkcolumn="commentID" inversejoincolumn="orderID";
+	property name="orderItems" singularname="orderItem" cfc="OrderItem" type="array" fieldtype="many-to-many" linktable="SlatwallCommentOrderItem" fkcolumn="commentID" inversejoincolumn="orderItemID";
+	property name="products" singularname="product" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallCommentProduct" fkcolumn="commentID" inversejoincolumn="productID";
+	property name="stockAdjustments" singularname="stockAdjustment" cfc="StockAdjustment" type="array" fieldtype="many-to-many" linktable="SlatwallCommentStockAdjustment" fkcolumn="commentID" inversejoincolumn="stockAdjustmentID";
+	property name="stockAdjustmentItems" singularname="stockAdjustmentItem" cfc="StockAdjustmentItem" type="array" fieldtype="many-to-many" linktable="SlatwallCommentStockAdjustmentItem" fkcolumn="commentID" inversejoincolumn="stockAdjustmentItemID";
+	property name="stockReceivers" singularname="stockReceiver" cfc="StockReceiver" type="array" fieldtype="many-to-many" linktable="SlatwallCommentStockReceiver" fkcolumn="commentID" inversejoincolumn="stockReceiverID";
+	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="many-to-many" linktable="SlatwallCommentStockReceiverItem" fkcolumn="commentID" inversejoincolumn="stockReceiverItemID";
+	property name="vendors" singularname="vendor" cfc="Vendor" type="array" fieldtype="many-to-many" linktable="SlatwallCommentVendor" fkcolumn="commentID" inversejoincolumn="vendorID";
+	property name="vendorOrders" singularname="vendorOrder" cfc="VendorOrder" type="array" fieldtype="many-to-many" linktable="SlatwallCommentVendorOrder" fkcolumn="commentID" inversejoincolumn="vendorOrderID";
+	property name="vendorOrderItems" singularname="vendorOrderItem" cfc="VendorOrderItem" type="array" fieldtype="many-to-many" linktable="SlatwallCommentVendorOrderItem" fkcolumn="commentID" inversejoincolumn="vendorOrderItemID";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -56,8 +69,46 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	
 	// Non-Persistent Properties
 
-
-
+	public any function init() {
+		if(isNull(variables.accounts)) {
+			variables.accounts = [];
+		}
+		if(isNull(variables.brands)) {
+			variables.brands = [];
+		}
+		if(isNull(variables.orders)) {
+			variables.orders = [];
+		}
+		if(isNull(variables.orderItems)) {
+			variables.orderItems = [];
+		}
+		if(isNull(variables.products)) {
+			variables.products = [];
+		}
+		if(isNull(variables.stockAdjustments)) {
+			variables.stockAdjustments = [];
+		}
+		if(isNull(variables.stockAdjustmentItems)) {
+			variables.stockAdjustmentItems = [];
+		}
+		if(isNull(variables.stockReceivers)) {
+			variables.stockReceivers = [];
+		}
+		if(isNull(variables.stockReceiverItems)) {
+			variables.stockReceiverItems = [];
+		}
+		if(isNull(variables.vendors)) {
+			variables.vendors = [];
+		}
+		if(isNull(variables.vendorOrders)) {
+			variables.vendorOrders = [];
+		}
+		if(isNull(variables.vendorOrderItems)) {
+			variables.vendorOrderItems = [];
+		}
+		
+		return super.init();
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

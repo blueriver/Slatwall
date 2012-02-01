@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,7 +35,20 @@
 
 Notes:
 
---->
-<cfcomponent extends="BaseDAO">
+*/
+component extends="BaseController" persistent="false" accessors="true" output="false" {
+
+	// fw1 Auto-Injected Service Properties
+	property name="commentService" type="any";
 	
-</cfcomponent>
+	public void function create(required struct rc) {
+		param name="rc.returnURL";
+		
+		var comment = getCommentService().newComment();
+		
+		getCommentService().saveComment(comment, rc);
+		
+		getFW().redirectExact(rc.returnURL);
+    }
+
+}

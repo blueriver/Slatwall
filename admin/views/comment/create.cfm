@@ -36,6 +36,30 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
-	
-</cfcomponent>
+<cfoutput>
+<div class="svoadmincommentcreate">
+	<form name="addComment" method="post" action="#buildURL(action="admin:comment.create")#" />
+		
+		<cfif structKeyExists(rc, "brand") and isObject(rc.brand)>
+			<input type="hidden" name="brands" value="#rc.brand.getBrandID()#" />
+			<input type="hidden" name="returnURL" value="#buildURL(action='admin:brand.detail', queryString="brandID=#rc.brand.getBrandID()#")#" />
+		</cfif>
+		
+		<cfif structKeyExists(rc, "product") and isObject(rc.product)>
+			<input type="hidden" name="products" value="#rc.product.getProductID()#" />
+			<input type="hidden" name="returnURL" value="#buildURL(action='admin:product.detail', queryString="productID=#rc.product.getProductID()#")#" />
+		</cfif>
+		
+		<cfif structKeyExists(rc, "order") and isObject(rc.order)>
+			<input type="hidden" name="orders" value="#rc.order.getOrderID()#" />
+			<input type="hidden" name="returnURL" value="#buildURL(action='admin:order.detail', queryString="orderID=#rc.order.getOrderID()#")#" />
+		</cfif>
+		
+		<dl class="oneColumn">
+			<dt>New Comment</dt>
+			<dd><cf_SlatwallFormField fieldType="textarea" fieldName="comment"> </dd>
+		</dl>
+		<button type="submit">Add Comment</button>
+	</form>
+</div>
+</cfoutput>

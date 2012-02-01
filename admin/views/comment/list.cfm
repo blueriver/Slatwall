@@ -36,6 +36,25 @@
 Notes:
 
 --->
-<cfcomponent extends="BaseDAO">
-	
-</cfcomponent>
+<cfparam name="rc.comments" type="any" />
+
+<cfoutput>
+<div class="svoadmincommentlist">
+	<cfif arrayLen(rc.comments) gt 0>
+		<table class="listing-grid stripe">
+			<tr>
+				<th>#rc.$.Slatwall.rbKey("define.createdDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("define.createdByAccount")#</th>
+				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.comment.comment")#</th>
+			</tr>
+			<cfloop array="#rc.comments#" index="Local.comment">
+				<tr>
+					<td>#local.comment.getFormattedValue("createdDateTime")#</td>
+					<td>#local.comment.getCreatedByAccount().getFullName()#</td>
+					<td class="varWidth">#local.comment.getComment()#</td>
+				</tr>
+			</cfloop>
+		</table>
+	</cfif>
+</div>
+</cfoutput>

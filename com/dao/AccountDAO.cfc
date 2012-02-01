@@ -1,4 +1,4 @@
-/*
+<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,14 +35,19 @@
 
 Notes:
 
-*/
-component extends="BaseDAO" {
-			
-	public any function readByMuraUserID(required string muraUserID) {
-		return ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.muraUserID=:muraUserID", {muraUserID=arguments.muraUserID}, true);
-	}
+--->
+<cfcomponent extends="BaseDAO">
 	
-	public any function readByAccountEmail(required string email) {
-		return ormExecuteQuery("SELECT account FROM SlatwallAccountEmailAddress aSlatwallAccountEmail where aSlatwallAccountEmail.email=:email", {email=arguments.email}, true);
-	}
-}
+	<cffunction name="readByMuraUserID" returntype="any" access="public">
+		<cfargument name="muraUserID" required="true" type="string">
+		 
+		<cfreturn ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.muraUserID=:muraUserID", {muraUserID=arguments.muraUserID}, true) />
+	</cffunction>
+	
+	<cffunction name="readByAccountEmail" returntype="any" access="public">
+		<cfargument name="email" required="true" type="string">
+		
+		<cfreturn ormExecuteQuery("SELECT account FROM SlatwallAccountEmailAddress aSlatwallAccountEmail where aSlatwallAccountEmail.email=:email", {email=arguments.email}, true) />
+	</cffunction>
+	
+</cfcomponent>

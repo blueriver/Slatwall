@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,7 +35,45 @@
 
 Notes:
 
---->
-<cfcomponent extends="BaseDAO">
+*/
+component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+
+	property name="orderService" type="any";
+
+	public void function parseCommentAndCreateRelationships(required any comment) {
+		var wordArray = listToArray(arguments.comment.getComment(), " ");
+		for(var i=1; i<=arrayLen(wordArray); i++) {
+			if(wordArray[i] == "order" || wordArray[i] == "orderNumber" || wordArray[i] == "orderNo" || wordArray[i] == "orderNo." || wordArray[i] == "order##") {
+				var x = 0;
+				do {
+					x++;
+					var thisValue = reReplace(wordArray[i+x], "[^0-9]", "", "all");
+					if(isNumeric(thisValue) && thisValue > 0) {
+						var order = getOrderService().getOrderByOrderNumber(orderNumber=thisValue);
+						if(!isNull(order)) {
+							arguments.comment.addOrder( order );
+						}
+					}
+				} while (x < 4);
+			}
+		}
+	}
 	
-</cfcomponent>
+	public any function saveComment(required any comment, required any data) {
+		arguments.comment.populate( arguments.data );
+		
+		parseCommentAndCreateRelationships( arguments.comment );
+		
+		arguments.comment.validate("save");
+		
+		// If the object passed validation then call save in the DAO, otherwise set the errors flag
+        if(!arguments.comment.hasErrors()) {
+            arguments.comment = getDAO().save(target=arguments.comment);
+        } else {
+            getService("requestCacheService").setValue("ormHasErrors", true);
+        }
+        
+        return arguments.comment;
+	}
+	
+}
