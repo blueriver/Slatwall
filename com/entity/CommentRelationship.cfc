@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Comment" entityname="SlatwallComment" table="SlatwallComment" persistent="true" accessors="true" extends="BaseEntity" discriminatorColumn="relationshipType" {
+component displayname="Comment Relationship" entityname="SlatwallCommentRelationship" table="SlatwallCommentRelationship" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="commentRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -63,6 +63,24 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Comment (many-to-one)
+	public void function setComment(required any comment) {
+		variables.comment = arguments.comment;
+		if(isNew() or !arguments.comment.hasCommentRelationship( this )) {
+			arrayAppend(arguments.comment.getCommentRelationships(), this);
+		}
+	}
+	public void function removeComment(any comment) {
+		if(!structKeyExists(arguments, "comment")) {
+			arguments.comment = variables.comment;
+		}
+		var index = arrayFind(arguments.comment.getCommentRelationships(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.comment.getCommentRelationships(), index);
+		}
+		structDelete(variables, "comment");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================
@@ -70,10 +88,6 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function preUpdate(struct oldData) {
-		throw("You cannot update a comment because this would display a fundamental flaw in comment management.");
-	}
-	
+		
 	// ===================  END:  ORM Event Hooks  =========================
 }

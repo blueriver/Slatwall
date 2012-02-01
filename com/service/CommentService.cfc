@@ -80,4 +80,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
         return arguments.comment;
 	}
 	
+	public array function getRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {
+		return getDAO().getRelatedCommentsForEntity(argumentCollection=arguments);
+	}
+	
 }

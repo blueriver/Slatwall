@@ -212,9 +212,7 @@ Notes:
 				
 			</div>--->
 			<div id="tabOrderComments">
-				<cfset rc.comments = rc.order.getComments() />
-				#view("comment/list")#
-				#view("comment/create")#
+				<cf_SlatwallCommentDisplay entity="#rc.order#" returnURL="#buildURL(action='admin:order.detail', queryString='orderID=#rc.order.getOrderID()#')#" />
 			</div>
 		</div> <!-- tabs -->
 	</div>

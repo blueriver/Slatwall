@@ -48,25 +48,25 @@ Notes:
 				<cfif arrayLen(attributes.entity.getComments()) gt 0>
 					<table class="listing-grid stripe">
 						<tr>
-							<th>#rc.$.Slatwall.rbKey("define.createdDateTime")#</th>
-							<th>#rc.$.Slatwall.rbKey("define.createdByAccount")#</th>
-							<th class="varWidth">#rc.$.Slatwall.rbKey("entity.comment.comment")#</th>
+							<th>#request.muraScope.slatwall.rbKey("define.createdDateTime")#</th>
+							<th>#request.muraScope.slatwall.rbKey("define.createdByAccount")#</th>
+							<th class="varWidth">#request.muraScope.Slatwall.rbKey("entity.comment.comment")#</th>
 						</tr>
-						<cfloop array="#rc.comments#" index="Local.comment">
+						<cfloop array="#attributes.entity.getComments()#" index="comment">
 							<tr>
-								<td>#local.comment.getFormattedValue("createdDateTime")#</td>
-								<td>#local.comment.getCreatedByAccount().getFullName()#</td>
-								<td class="varWidth">#local.comment.getComment()#</td>
+								<td>#request.muraScope.slatwall.formatValue(comment['createdDateTime'], "datetime")#</td>
+								<td>#comment['createdByAccount'].getFullName()#</td>
+								<td class="varWidth">#comment['comment']#</td>
 							</tr>
 						</cfloop>
 					</table>
 				</cfif>
 			</div>
 			<div class="newComment">
-				<form name="addComment" method="post" action="#buildURL(action="admin:comment.create")#" />
-					<input type="hidden" name="commentRelationships[1].commentRelationshipID = "" />
-					<input type="hidden" name="commentRelationships[1].#rc.entity.getClassName()#.#rc.entity.getPrimaryIDPropertyName()#" value="#rc.entity.getPrimaryIDValue()#" />
-					<input type="hidden" name="returnURL" value="#cgi.host#" />
+				<form name="addComment" method="post" action="?slatAction=admin:comment.createComment" />
+					<input type="hidden" name="commentRelationships[1].commentRelationshipID" value="" />
+					<input type="hidden" name="commentRelationships[1].#attributes.entity.getClassName()#.#attributes.entity.getPrimaryIDPropertyName()#" value="#attributes.entity.getPrimaryIDValue()#" />
+					<input type="hidden" name="returnURL" value="#attributes.returnURL#" />
 					<dl class="oneColumn">
 						<dt>New Comment</dt>
 						<dd><cf_SlatwallFormField fieldType="textarea" fieldName="comment"> </dd>

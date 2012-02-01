@@ -51,6 +51,14 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 		return super.init();
 	}
 	
+	// @hint Returns an array of comments related to this entity
+	public array function getComments() {
+		if(!structKeyExists(variables, "comments")) {
+			variables.comments = getService("commentService").getRelatedCommentsForEntity(primaryIDPropertyName=getPrimaryIDPropertyName(), primaryIDValue=getPrimaryIDValue());
+		}
+		return variables.comments;
+	}
+	
 	// @hint Returns the persistableErrors array, if one hasn't been setup yet it returns a new one
 	public array function getPersistableErrors() {
 		if(!structKeyExists(variables, "persistableErrors")) {
@@ -260,6 +268,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			
 			return arrayLen(variabels[propertyName]);
 		}
+		
 		
 		throw( 'No matching method for #missingMethodName#().' );
 	}	

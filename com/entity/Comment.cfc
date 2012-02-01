@@ -58,7 +58,14 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Non-Persistent Properties
-
+	
+	public any function init() {
+		if(isNull(variables.commentRelationships)) {
+			variables.commentRelationships = [];
+		}
+		
+		return super.init();
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -66,6 +73,14 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
+	// Comment Relationships (one-to-many)
+	public void function addCommentRelationship(required any commentRelationship) {
+		arguments.commentRelationship.setComment( this );
+	}
+	public void function removeCommentRelationship(required any commentRelationship) {
+		arguments.commentRelationship.removeComment( this );
+	}
+
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// ================== START: Overridden Methods ========================

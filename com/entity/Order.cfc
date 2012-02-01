@@ -111,9 +111,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 		if(isNull(variables.promotionCodes)) {
 			variables.promotionCodes = [];
 		}
-		if(isNull(variables.comments)) {
-			variables.comments = [];
-		}
 		
 		// Set the default order status type as not placed
 		if(isNull(getOrderStatusType())) {
