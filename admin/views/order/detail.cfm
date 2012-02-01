@@ -160,6 +160,7 @@ Notes:
 					<li><a href="##tabReturnOrderItems" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.returnOrderItems")#</span></a></li>
 				</cfif>
 <!---				<li><a href="##tabOrderActivityLog" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.orderActivityLog")#</span></a></li>--->
+				<li><a href="##tabOrderComments" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.order.detail.tab.comments")#</span></a></li>
 			</ul>
 		
 			<div id="tabOrderFulfillments">
@@ -210,6 +211,11 @@ Notes:
 		<!---	<div id="tabOrderActivityLog">
 				
 			</div>--->
+			<div id="tabOrderComments">
+				<cfset rc.comments = rc.order.getComments() />
+				#view("comment/list")#
+				#view("comment/create")#
+			</div>
 		</div> <!-- tabs -->
 	</div>
 </div>

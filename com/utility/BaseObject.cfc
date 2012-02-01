@@ -338,6 +338,10 @@ component displayname="Base Object" accessors="true" output="false" {
 					// Get all of the existing related entities
 					var existingRelatedEntities = invokeMethod("get#currentProperty.name#");
 					
+					if(isNull(existingRelatedEntities)) {
+						throw("The Many-To-Many relationship for '#currentProperty.name#' could not be populated because it wasn't setup as an empty array on init.");
+					}
+					
 					// Loop over the existing related entities and check if the primaryID exists in the list of data that was passed in.
 					for(var m=arrayLen(existingRelatedEntities); m>=1; m-- ) {
 						

@@ -42,12 +42,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="commentService" type="any";
 	
 	public void function create(required struct rc) {
-		param name="rc.comment";
+		param name="rc.returnURL";
 		
-		param name="rc.productID";
-		param name="rc.orderID";
+		var comment = getCommentService().newComment();
 		
+		getCommentService().saveComment(comment, rc);
 		
+		getFW().redirectExact(rc.returnURL);
     }
 
 }
