@@ -99,7 +99,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			rc.edit = true;
 			rc.itemTitle = rc.AttributeSet.isNew() ? rc.$.Slatwall.rbKey("admin.attribute.createAttributeSet") : rc.$.Slatwall.rbKey("admin.attribute.editAttributeSet") & ": #rc.attributeSet.getAttributeSetName()#";
-			getFW().setView(action="admin:attribute.detailAttributeSet");
+			getFW().setView(action="admin:attribute.detailattributeset");
 		}
 	}
 	

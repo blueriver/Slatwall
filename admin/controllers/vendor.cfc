@@ -142,7 +142,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 			rc.edit = true;
 			rc.itemTitle = rc.Vendor.isNew() ? rc.$.Slatwall.rbKey("admin.Vendor.createVendor") : rc.$.Slatwall.rbKey("admin.Vendor.editVendor") & ": #rc.Vendor.getVendorName()#";
-			getFW().setView(action="admin:vendor.detailVendor");
+			getFW().setView(action="admin:vendor.detailvendor");
 		}	
 		
 	}

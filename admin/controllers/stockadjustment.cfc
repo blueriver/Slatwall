@@ -186,7 +186,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 		rc.product = getProductService().getProduct(rc.productID);
 	
-		getFW().setView(action="admin:stockAdjustment.editStockAdjustmentItems");
+		getFW().setView(action="admin:stockadjustment.editstockadjustmentitems");
 	}
 	
 	public void function deleteStockAdjustment(required struct rc) {

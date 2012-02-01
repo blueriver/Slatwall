@@ -101,7 +101,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			rc.edit = true;
 			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
-			getFW().setView(action="admin:option.detailOptionGroup");
+			getFW().setView(action="admin:option.detailoptiongroup");
 		}
 	}
 	public void function deleteOptionGroup(required struct rc) {

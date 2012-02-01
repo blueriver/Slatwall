@@ -85,7 +85,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		// This logic only runs if the entity has errors.  If it was a new entity show the create page, otherwise show the edit page
    		rc.edit = true;
 		rc.itemTitle = rc.roundingRule.isNew() ? rc.$.Slatwall.rbKey("admin.roundingRule.create") : rc.$.Slatwall.rbKey("admin.roundingRule.edit") & ": #rc.roundingRule.getBrandName()#";
-   		getFW().setView(action="admin:roundingRule.detail");
+   		getFW().setView(action="admin:roundingrule.detail");
 	}
 	
 	public void function delete(required struct rc) {
