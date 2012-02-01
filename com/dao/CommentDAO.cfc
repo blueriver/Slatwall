@@ -38,4 +38,28 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getRelatedCommentsForEntity" returntype="Array" access="public">
+		<cfargument name="primaryIDPropertyName" type="string" required="true" />
+		<cfargument name="primaryIDValue" type="string" required="true" />
+		
+		<cftry>
+			<cfset var results = ormExecuteQuery("SELECT NEW MAP(
+				scr.referencedRelationshipFlag as referencedRelationshipFlag,
+				scr.referencedExpressionStart as referencedExpressionStart,
+				scr.referencedExpressionEnd as referencedExpressionEnd,
+				scr.referencedExpressionEntity as referencedExpressionEntity,
+				scr.referencedExpressionProperty as referencedExpressionProperty,
+				scr.referencedExpressionValue as referencedExpressionValue,
+				c as comment
+			)
+			FROM
+				SlatwallCommentRelationship scr INNER JOIN scr.comment c WHERE scr.#left(arguments.primaryIDPropertyName,len(arguments.primaryIDPropertyName)-2)#.#arguments.primaryIDPropertyName# = ?", [arguments.primaryIDValue]) />
+			<cfcatch>
+				<cfthrow message="You have tried to get comments for an entity that does not have a comment relationship setup.  The primaryID column for the entity requesting is #arguments.primaryIDPropertyName# and you may just need to add a Many-To-One property for this entity to CommentRelationship.cfc" />
+			</cfcatch>
+		</cftry>
+		
+		<cfreturn results /> 
+	</cffunction>
+	
 </cfcomponent>
