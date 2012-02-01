@@ -79,7 +79,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	rc.edit = true;
 		rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment") & rc.$.Slatwall.rbKey("admin.stockadjustment.typeName_#rc.stockadjustment.getReceiverType()#");
-		getFW().setView(action="admin:stockAdjustment.detailstockadjustment");
+		getFW().setView(action="admin:stockadjustment.detailstockadjustment");
 	}
 	
 	public void function detailStockAdjustment(required struct rc) {
@@ -119,7 +119,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		} else { 			
 			rc.edit = true;
 			rc.itemTitle = rc.StockAdjustment.isNew() ? rc.$.Slatwall.rbKey("admin.stockadjustment.createStockAdjustment") : rc.$.Slatwall.rbKey("admin.stockadjustment.editStockAdjustment");
-			getFW().setView(action="admin:stockAdjustment.detailstockadjustment");
+			getFW().setView(action="admin:stockadjustment.detailstockadjustment");
 		}		
 	}
 	
