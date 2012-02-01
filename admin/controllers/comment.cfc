@@ -40,6 +40,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	// fw1 Auto-Injected Service Properties
 	property name="commentService" type="any";
+	property name="orderService" type="any";
 	
 	public void function createComment(required struct rc) {
 		param name="rc.commentRelatedEntityName";
@@ -53,13 +54,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		getFW().redirectExact(rc.returnURL);
     }
     
-    public void function redirectCommentLink(required struct rc) {
-    	param name="rc.referenceType";
-    	param name="rc.reference";
+    public void function link(required struct rc) {
+    	param name="rc.entity";
+    	param name="rc.property";
+    	param name="rc.value";
     	
-    	switch(rc.referenceType) {
-    		case "orderNumber": {
-    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.reference);
+    	switch(rc.entity) {
+    		case "order": {
+    			var order = getOrderService().getOrderByOrderNumber(orderNumber=rc.value);
     			getFW().redirect(action="admin:order.detail", queryString="orderID=#order.getOrderID()#");
     			break;
     		}

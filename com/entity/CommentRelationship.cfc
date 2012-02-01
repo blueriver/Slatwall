@@ -41,6 +41,11 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	// Persistent Properties
 	property name="commentRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="referencedRelationshipFlag" ormtype="boolean" default="false";
+	property name="referencedExpressionStart" ormtype="integer";
+	property name="referencedExpressionEnd" ormtype="integer";
+	property name="referencedExpressionEntity" ormtype="string";
+	property name="referencedExpressionProperty" ormtype="string";
+	property name="referencedExpressionValue" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="comment" cfc="Comment" fieldtype="many-to-one" fkcolumn="commentID";
@@ -56,6 +61,12 @@ component displayname="Comment Relationship" entityname="SlatwallCommentRelation
 	// Audit Properties
 	
 	// Non-Persistent Properties
+	
+	public any function getRelationshipEntity() {
+		if(!isNull(variables.order)) {
+			return variables.order;
+		}
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

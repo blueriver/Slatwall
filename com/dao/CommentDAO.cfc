@@ -45,9 +45,12 @@ Notes:
 		<cftry>
 			<cfset var results = ormExecuteQuery("SELECT NEW MAP(
 				scr.referencedRelationshipFlag as referencedRelationshipFlag,
-				c.comment as comment,
-				c.createdDateTime as createdDateTime,
-				c.createdByAccount as createdByAccount
+				scr.referencedExpressionStart as referencedExpressionStart,
+				scr.referencedExpressionEnd as referencedExpressionEnd,
+				scr.referencedExpressionEntity as referencedExpressionEntity,
+				scr.referencedExpressionProperty as referencedExpressionProperty,
+				scr.referencedExpressionValue as referencedExpressionValue,
+				c as comment
 			)
 			FROM
 				SlatwallCommentRelationship scr INNER JOIN scr.comment c WHERE scr.#left(arguments.primaryIDPropertyName,len(arguments.primaryIDPropertyName)-2)#.#arguments.primaryIDPropertyName# = ?", [arguments.primaryIDValue]) />

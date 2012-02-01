@@ -41,23 +41,37 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="orderService" type="any";
 
 	public void function parseCommentAndCreateRelationships(required any comment) {
+		
+		var accptablePreHashKeyEntityList = "order";
 		var wordArray = listToArray(arguments.comment.getComment(), " ");
-		for(var i=1; i<=arrayLen(wordArray); i++) {
-			if(wordArray[i] == "order" || wordArray[i] == "orderNumber" || wordArray[i] == "orderNo" || wordArray[i] == "orderNo." || wordArray[i] == "order##") {
-				var x = 0;
-				do {
-					x++;
-					var thisValue = reReplace(wordArray[i+x], "[^0-9]", "", "all");
-					if(isNumeric(thisValue) && thisValue > 0) {
-						var order = getOrderService().getOrderByOrderNumber(orderNumber=thisValue);
+		
+		for(var i=2; i<=arrayLen(wordArray); i++) {
+			
+			var expressionStart = i-1;
+			var expressionEnd = i;
+			
+			if( left(wordArray[expressionEnd], 1) == "##" && listFindNoCase(accptablePreHashKeyEntityList, wordArray[expressionStart]) ) {
+			
+				var expressionEntityType = wordArray[expressionStart];
+				var expressionValue = right(wordArray[expressionEnd], len(wordArray[expressionEnd]) - 1);
+				
+				switch(expressionEntityType) {
+					case "order" : {
+						var order = getOrderService().getOrderByOrderNumber(orderNumber=expressionValue);
 						if(!isNull(order)) {
 							var newRelationship = this.newCommentRelationship();
-							newRelationship.referencedRelationshipFlag( true );
+							newRelationship.setReferencedRelationshipFlag( true );
+							newRelationship.setReferencedExpressionStart( expressionStart );
+							newRelationship.setReferencedExpressionEnd( expressionEnd );
+							newRelationship.setReferencedExpressionEntity( expressionEntityType );
+							newRelationship.setReferencedExpressionProperty( "orderNumber" );
+							newRelationship.setReferencedExpressionValue( expressionValue );
 							newRelationship.setComment( arguments.comment );
 							newRelationship.setOrder( order );
 						}
+						break;
 					}
-				} while (x < 4);
+				}
 			}
 		}
 	}
@@ -78,6 +92,22 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
         }
         
         return arguments.comment;
+	}
+	
+	public string function getCommentWithLinks(required any comment) {
+		var returnCommentArray = listToArray(arguments.comment.getComment(), " ");
+		
+		if(arguments.comment.getCommentRelationshipsCount() gt 1) {
+			for(var i=1; i<=arrayLen(arguments.comment.getCommentRelationships()); i++) {
+				var relationship = arguments.comment.getCommentRelationships()[i];
+				if(relationship.getReferencedRelationshipFlag()) {
+					returnCommentArray[ relationship.getReferencedExpressionStart() ] = '<a href="?slatAction=admin:comment.link&entity=#relationship.getReferencedExpressionEntity()#&property=#relationship.getReferencedExpressionProperty()#&value=#relationship.getReferencedExpressionValue()#">' & returnCommentArray[ relationship.getReferencedExpressionStart() ];
+					returnCommentArray[ relationship.getReferencedExpressionEnd() ] = returnCommentArray[ relationship.getReferencedExpressionEnd() ]  & '</a>';
+				}
+			}	
+		}
+		
+		return arrayToList(returnCommentArray, " ");
 	}
 	
 	public array function getRelatedCommentsForEntity(required string primaryIDPropertyName, required string primaryIDValue) {

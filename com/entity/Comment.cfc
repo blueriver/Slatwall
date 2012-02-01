@@ -58,6 +58,8 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	
 	// Non-Persistent Properties
+	property name="primaryRelationship" persistent="false";
+	property name="commentWithLinks" persistent="false";
 	
 	public any function init() {
 		if(isNull(variables.commentRelationships)) {
@@ -68,6 +70,25 @@ component displayname="Comment" entityname="SlatwallComment" table="SlatwallComm
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public any function getPrimaryRelationship() {
+		if(!structKeyExists(variables, "primaryRelationship")) {
+			for(var i=1; i<=arrayLen(getCommentRelationships()); i++) {
+				if(!getCommentRelationships()[i].getReferencedRelationshipFlag()) {
+					variables.primaryRelationship = getCommentRelationships()[i];
+					break;
+				}
+			}
+		}
+		return variables.primaryRelationship;
+	}
+	
+	public string function getCommentWithLinks() {
+		if(!structKeyExists(variables, "commentWithLinks")) {
+			variables.commentWithLinks = getService("commentService").getCommentWithLinks(comment=this);
+		}
+		return variables.commentWithLinks;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		

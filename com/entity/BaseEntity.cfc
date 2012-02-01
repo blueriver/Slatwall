@@ -266,7 +266,7 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			var propertyName = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
 			propertyName = left(propertyName, len(propertyName)-5);
 			
-			return arrayLen(variabels[propertyName]);
+			return arrayLen(variables[ propertyName ]);
 		}
 		
 		

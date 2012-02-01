@@ -52,11 +52,25 @@ Notes:
 							<th>#request.muraScope.slatwall.rbKey("define.createdByAccount")#</th>
 							<th class="varWidth">#request.muraScope.Slatwall.rbKey("entity.comment.comment")#</th>
 						</tr>
-						<cfloop array="#attributes.entity.getComments()#" index="comment">
+						<cfloop array="#attributes.entity.getComments()#" index="commentRelationship">
 							<tr>
-								<td>#request.muraScope.slatwall.formatValue(comment['createdDateTime'], "datetime")#</td>
-								<td>#comment['createdByAccount'].getFullName()#</td>
-								<td class="varWidth">#comment['comment']#</td>
+								<cfif commentRelationship['referencedRelationshipFlag']>
+									<cfset originalEntity = commentRelationship['comment'].getPrimaryRelationship().getRelationshipEntity() />
+									<cfswitch expression="#originalEntity.getClassName()#">
+										<cfcase value="Order">
+											<td class="highlighted">#request.muraScope.slatwall.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+											<td class="highlighted">#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
+											<td class="varWidth highlighted" colspan="3">This #attributes.entity.getClassName()# was referenced in a comment on <a href="?slatAction=order.detail&orderID=#originalEntity.getOrderID()#">Order Number #originalEntity.getOrderNumber()#</a>.
+										</cfcase>
+										<cfdefaultcase>
+											<td class="varWidth" colspan="3">??? Programming Issue for #originalEntity.getClassName()# entity comments</td>
+										</cfdefaultcase>
+									</cfswitch>
+								<cfelse>
+									<td>#request.muraScope.slatwall.formatValue(commentRelationship['comment'].getCreatedDateTime(), "datetime")#</td>
+									<td>#commentRelationship['comment'].getCreatedByAccount().getFullName()#</td>
+									<td class="varWidth">#commentRelationship['comment'].getCommentWithLinks()#</td>
+								</cfif>
 							</tr>
 						</cfloop>
 					</table>
