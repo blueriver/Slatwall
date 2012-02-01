@@ -51,7 +51,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					if(isNumeric(thisValue) && thisValue > 0) {
 						var order = getOrderService().getOrderByOrderNumber(orderNumber=thisValue);
 						if(!isNull(order)) {
-							arguments.comment.addOrder( order );
+							var newRelationship = this.newCommentRelationship();
+							newRelationship.referencedRelationshipFlag( true );
+							newRelationship.setComment( arguments.comment );
+							newRelationship.setOrder( order );
 						}
 					}
 				} while (x < 4);
@@ -60,6 +63,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public any function saveComment(required any comment, required any data) {
+		
 		arguments.comment.populate( arguments.data );
 		
 		parseCommentAndCreateRelationships( arguments.comment );

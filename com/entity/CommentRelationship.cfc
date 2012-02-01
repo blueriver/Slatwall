@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,31 +35,45 @@
 
 Notes:
 
---->
-<cfoutput>
-<div class="svoadmincommentcreate">
-	<form name="addComment" method="post" action="#buildURL(action="admin:comment.create")#" />
+*/
+component displayname="Comment" entityname="SlatwallComment" table="SlatwallComment" persistent="true" accessors="true" extends="BaseEntity" discriminatorColumn="relationshipType" {
+	
+	// Persistent Properties
+	property name="commentRelationshipID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="referencedRelationshipFlag" ormtype="boolean" default="false";
+	
+	// Related Object Properties (many-to-one)
+	property name="comment" cfc="Comment" fieldtype="many-to-one" fkcolumn="commentID";
+	
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many)
+	
+	// Remote Properties
+	
+	// Audit Properties
+	
+	// Non-Persistent Properties
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
 		
-		<cfif structKeyExists(rc, "brand") and isObject(rc.brand)>
-			<input type="hidden" name="brands" value="#rc.brand.getBrandID()#" />
-			<input type="hidden" name="returnURL" value="#buildURL(action='admin:brand.detail', queryString="brandID=#rc.brand.getBrandID()#")#" />
-		</cfif>
-		
-		<cfif structKeyExists(rc, "product") and isObject(rc.product)>
-			<input type="hidden" name="products" value="#rc.product.getProductID()#" />
-			<input type="hidden" name="returnURL" value="#buildURL(action='admin:product.detail', queryString="productID=#rc.product.getProductID()#")#" />
-		</cfif>
-		
-		<cfif structKeyExists(rc, "order") and isObject(rc.order)>
-			<input type="hidden" name="orders" value="#rc.order.getOrderID()#" />
-			<input type="hidden" name="returnURL" value="#buildURL(action='admin:order.detail', queryString="orderID=#rc.order.getOrderID()#")#" />
-		</cfif>
-		
-		<dl class="oneColumn">
-			<dt>New Comment</dt>
-			<dd><cf_SlatwallFormField fieldType="textarea" fieldName="comment"> </dd>
-		</dl>
-		<button type="submit">Add Comment</button>
-	</form>
-</div>
-</cfoutput>
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	public void function preUpdate(struct oldData) {
+		throw("You cannot update a comment because this would display a fundamental flaw in comment management.");
+	}
+	
+	// ===================  END:  ORM Event Hooks  =========================
+}
