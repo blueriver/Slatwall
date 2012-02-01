@@ -101,7 +101,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			
 		rc.edit = false;
 		rc.itemTitle = rc.$.Slatwall.rbKey("admin.stockreceiver.detailStockReceiver") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
-		getFW().setView(action="admin:stockReceiver.detailStockReceiver");
+		getFW().setView(action="admin:stockreceiver.detailstockreceiver");
 		  	
     }
     
@@ -138,7 +138,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	
     	rc.edit = true;
 		rc.itemTitle = rc.StockReceiver.isNew() ? rc.$.Slatwall.rbKey("admin.stockreceiver.createStockReceiver") : rc.$.Slatwall.rbKey("admin.stockreceiver.editStockReceiver") & rc.$.Slatwall.rbKey("admin.stockreceiver.typeName_#rc.stockreceiver.getReceiverType()#");
-		getFW().setView(action="admin:stockReceiver.detailStockReceiver");
+		getFW().setView(action="admin:stockreceiver.detailstockreceiver");
 	}
     
    /* public void function editStockReceiver(required struct rc) {
@@ -149,7 +149,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.stockReceiverRate = getStockService().getStockReceiverRate(rc.stockReceiverRateId, true);
     	
     	rc.edit = true; 
-    	getFW().setView("admin:stockreceiver.detailStockReceiver");  
+    	getFW().setView("admin:stockreceiver.detailstockreceiver");  
 	}*/
 	
 	public void function saveStockReceiverVendorOrder(required struct rc) {

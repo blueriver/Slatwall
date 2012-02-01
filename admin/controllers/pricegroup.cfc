@@ -77,7 +77,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	rc.priceGroupRate = getPriceGroupService().getPriceGroupRate(rc.priceGroupRateId, true);
     	
     	rc.edit = true; 
-    	getFW().setView("admin:pricegroup.detailPriceGroup");  
+    	getFW().setView("admin:pricegroup.detailpricegroup");  
 	}
 	
 
@@ -116,7 +116,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			}
 			rc.edit = true;
 			rc.itemTitle = rc.PriceGroup.isNew() ? rc.$.Slatwall.rbKey("admin.pricegroup.createPriceGroup") : rc.$.Slatwall.rbKey("admin.pricegroup.editPriceGroup") & ": #rc.pricegroup.getPriceGroupName()#";
-			getFW().setView(action="admin:priceGroup.detailPriceGroup");
+			getFW().setView(action="admin:priceGroup.detailpricegroup");
 		}	
 	}
 	

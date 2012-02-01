@@ -66,7 +66,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 		rc.orderDeliveryShipping = getOrderService().getOrderDeliveryShipping(rc.orderDeliveryShippingID);
 		
-		getFW().setView("frontend:print.packingSlip");
+		getFW().setView("frontend:print.packingslip");
 	}
 	
 	

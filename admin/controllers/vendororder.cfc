@@ -101,13 +101,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.vendorProductSmartList.addFilter("brand.vendors.vendorID", rc.VendorOrder.getVendor().getVendorID());
 		
 		rc.edit = false;
-		getFW().setView("admin:vendorOrder.detailVendorOrder"); 
+		getFW().setView("admin:vendororder.detailvendororder"); 
 	}
 	
 	public void function createVendorOrder(required struct rc) {
 		initVendorOrder(rc);
 		rc.edit = true;
-		getFW().setView("admin:vendorOrder.detailVendorOrder");  
+		getFW().setView("admin:vendororder.detailvendororder");  
 	}
 	
 	public void function saveVendorOrder(required struct rc) {
@@ -131,7 +131,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		else { 			
 			rc.edit = true;
 			rc.itemTitle = rc.VendorOrder.isNew() ? rc.$.Slatwall.rbKey("admin.vendorOrder.createVendorOrder") : rc.$.Slatwall.rbKey("admin.vendorOrder.editVendorOrder") & ": #rc.vendorOrder.getVendorOrderName()#";
-			getFW().setView(action="admin:vendorOrder.detailVendorOrder");
+			getFW().setView(action="admin:vendororder.detailvendororder");
 		}	
 	}
 	

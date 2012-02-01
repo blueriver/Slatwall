@@ -92,7 +92,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		else { 			
 			rc.edit = true;
 			rc.itemTitle = rc.Location.isNew() ? rc.$.Slatwall.rbKey("admin.location.createLocation") : rc.$.Slatwall.rbKey("admin.location.editLocation") & ": #rc.location.getLocationName()#";
-			getFW().setView(action="admin:location.detailLocation");
+			getFW().setView(action="admin:location.detaillocation");
 		}	
 	}
 	

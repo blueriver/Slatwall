@@ -264,13 +264,13 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
 				rc.message = orderDelivery.getError("orderDeliveryItems")[1];
 				rc.messagetype = "warning";
-				getFW().setView("admin:order.detailOrderFulfillment");
+				getFW().setView("admin:order.detailorderfulfillment");
 			}
 		} else {
 			rc.itemTitle = rc.$.slatwall.rbKey("admin.order.detailOrderFulfillment");
 			rc.message = rc.$.slatwall.rbKey("admin.order.processOrderFulfillment.notProcessable");
 			rc.messagetype = "error";
-			getFW().setView("admin:order.detailOrderFulfillment");			
+			getFW().setView("admin:order.detailorderfulfillment");			
 		}
 	}
 
