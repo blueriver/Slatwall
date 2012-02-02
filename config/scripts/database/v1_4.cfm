@@ -37,74 +37,85 @@ Notes:
 
 --->
 
+<cfset local.scriptHasErrors = false />
+
 <!--- Move filename to urltitle for products. --->
 <cftry>
-	<cfset var fieldExists = false />
+	<cfset local.fieldExists = false />
 	<cfquery name="updateProduct">
 		UPDATE SlatwallProduct
 		SET urlTitle = fileName
 	</cfquery>
-	<cfset fieldExists = true />
+	<cfset local.fieldExists = true />
 	<!--- If field updated, then try to remove the fileName field --->
 	<cfquery name="dropFileName">
 		ALTER TABLE SlatwallProduct
 		DROP COLUMN fileName
 	</cfquery>
 	<cfcatch>
-		<cfif fieldExists>
-			<cfrethrow />
+		<cfif local.fieldExists>
+			<cfset local.scriptHasErrors = true />
 		</cfif>
 	</cfcatch>
 </cftry>
 
 <!--- Move displayTemplate to productDisplayTemplate for products. --->
 <cftry>
-	<cfset var fieldExists = false />
+	<cfset local.fieldExists = false />
 	<cfquery name="updateProduct">
 		UPDATE SlatwallProduct
 		SET productDisplayTemplate = displayTemplate
 	</cfquery>
-	<cfset fieldExists = true />
+	<cfset local.fieldExists = true />
 	<!--- If field updated, then try to remove it --->
 	<cfquery name="dropDisplayTemplate">
 		ALTER TABLE SlatwallProduct
 		DROP COLUMN displayTemplate
 	</cfquery>
 	<cfcatch>
-		<cfif fieldExists>
-			<cfrethrow />
+		<cfif local.fieldExists>
+			<cfset local.scriptHasErrors = true />
 		</cfif>
 	</cfcatch>
 </cftry>
 
 <!--- Move displayTemplate to productDisplayTemplate for productTypes. --->
 <cftry>
-	<cfset var fieldExists = false />
+	<cfset local.fieldExists = false />
 	<cfquery name="updateProductType">
 		UPDATE SlatwallProductType
 		SET productDisplayTemplate = displayTemplate
 	</cfquery>
-	<cfset fieldExists = true />
+	<cfset local.fieldExists = true />
 	<!--- If field updated, then try to remove it --->
 	<cfquery name="dropDisplayTemplate">
 		ALTER TABLE SlatwallProductType
 		DROP COLUMN displayTemplate
 	</cfquery>
 	<cfcatch>
-		<cfif fieldExists>
-			<cfrethrow />
+		<cfif local.fieldExists>
+			<cfset local.scriptHasErrors = true />
 		</cfif>
 	</cfcatch>
 </cftry>
 
-<cfquery name="updateSetting">
-	UPDATE SlatwallSetting
-	SET settingValue = (SELECT settingValue FROM SlatwallSetting WHERE settingName = 'product_defaultTemplate')
-	WHERE settingName = 'product_productDefaultTemplate'
+<cfquery name="oldProductTemplate">
+	SELECT settingValue FROM SlatwallSetting WHERE settingName = 'product_defaultTemplate'
 </cfquery>
 
-<cfquery name="deleteSetting">
-	DELETE SlatwallSetting
-	WHERE settingName = 'product_defaultTemplate'
-</cfquery>
+<cfif oldProductTemplate.recordcount>
+	<cfquery name="updateSetting">
+		UPDATE SlatwallSetting
+		SET settingValue = oldProductTemplate.settingValue
+		WHERE settingName = 'product_productDefaultTemplate'
+	</cfquery>
+	
+	<cfquery name="deleteSetting">
+		DELETE SlatwallSetting
+		WHERE settingName = 'product_defaultTemplate'
+	</cfquery>
+</cfif>
 
+<cfif local.scriptHasErrors>
+	<cfthrow detail="Part of Script v1_4 had errors when running">
+</cfif>

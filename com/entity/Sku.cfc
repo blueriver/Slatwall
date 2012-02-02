@@ -375,15 +375,24 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	
 	public any function getSalePrice() {
-		return getSalePriceDetails()[ "salePrice"];
+		if(structKeyExists(getSalePriceDetails(), "salePrice")) {
+			return getSalePriceDetails()[ "salePrice"];
+		}
+		return getPrice();
 	}
 	
 	public any function getSalePriceDiscountType() {
-		return getSalePriceDetails()[ "salePriceDiscountType"];
+		if(structKeyExists(getSalePriceDetails(), "salePriceDiscountType")) {
+			return getSalePriceDetails()[ "salePriceDiscountType"];
+		}
+		return "";
 	}
 	
 	public any function getSalePriceExpirationDateTime() {
-		return getSalePriceDetails()[ "salePriceExpirationDateTime"];
+		if(structKeyExists(getSalePriceDetails(), "salePriceExpirationDateTime")) {
+			return getSalePriceDetails()[ "salePriceExpirationDateTime"];
+		}
+		return "";
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

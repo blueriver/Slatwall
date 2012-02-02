@@ -193,7 +193,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	public struct function getSkuSalePriceDetails( required any skuID ) {
-		return getSalePriceDetailsForSkus()[ arguments.skuID ];
+		if(structKeyExists(getSalePriceDetailsForSkus(), arguments.skuID)) {
+			return getSalePriceDetailsForSkus()[ arguments.skuID ];
+		}
+		return {};
 	}
 	
 	// Non-Persistent Helpers

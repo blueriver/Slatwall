@@ -46,9 +46,11 @@ Notes:
 		<cfargument name="skuID" type="string">
 		<cfargument name="productID" type="string">
 		
-		<cfset var allDiscounts="" />
-		<cfset var pt="" />
-		<cfset var timeNow=now() />
+		<cfset var allDiscounts = "" />
+		<cfset var skuPrice = "" />
+		<cfset var skuResults = "" />
+		<cfset var timeNow = now() />
+		<cfset var isMySQL = application.configBean.getDbType() eq "MySQL" />
 		
 		<cfquery name="allDiscounts">
 			SELECT
@@ -59,17 +61,17 @@ Notes:
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN 'amount'
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN 'percentageOff'
-				END as 'discountType',
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
 				CASE
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN prSku.itemAmount
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - prSku.itemAmountOff
 					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prSku.itemPercentageOff / 100))
-				END as 'salePrice',
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
 				prSku.itemPercentageOff as 'percentageOff',
 				prSku.itemAmountOff as 'amountOff',
 				prSku.itemAmount as 'amount',
 				prSku.roundingRuleID as 'roundingRuleID',
-				pSku.endDateTime as 'endDateTime'
+				pSku.endDateTime as 'salePriceExpirationDateTime'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -102,17 +104,17 @@ Notes:
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN 'amount'
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN 'percentageOff'
-				END as 'discountType',
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
 				CASE
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN prProduct.itemAmount
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - prProduct.itemAmountOff
 					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProduct.itemPercentageOff / 100))
-				END as 'salePrice',
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
 				prProduct.itemPercentageOff as 'percentageOff',
 				prProduct.itemAmountOff as 'amountOff',
 				prProduct.itemAmount as 'amount',
 				prProduct.roundingRuleID as 'roundingRuleID',
-				pProduct.endDateTime as 'endDateTime'
+				pProduct.endDateTime as 'salePriceExpirationDateTime'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -145,17 +147,17 @@ Notes:
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN 'amount'
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN 'percentageOff'
-				END as 'discountType',
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
 				CASE
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN prBrand.itemAmount
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - prBrand.itemAmountOff
 					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prBrand.itemPercentageOff / 100))
-				END as 'salePrice',
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
 				prBrand.itemPercentageOff as 'percentageOff',
 				prBrand.itemAmountOff as 'amountOff',
 				prBrand.itemAmount as 'amount',
 				prBrand.roundingRuleID as 'roundingRuleID',
-				pBrand.endDateTime as 'endDateTime'
+				pBrand.endDateTime as 'salePriceExpirationDateTime'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -190,17 +192,17 @@ Notes:
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN 'amount'
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN 'percentageOff'
-				END as 'discountType',
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
 				CASE
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN prOption.itemAmount
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - prOption.itemAmountOff
 					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prOption.itemPercentageOff / 100))
-				END as 'salePrice',
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
 				prOption.itemPercentageOff as 'percentageOff',
 				prOption.itemAmountOff as 'amountOff',
 				prOption.itemAmount as 'amount',
 				prOption.roundingRuleID as 'roundingRuleID',
-				pOption.endDateTime as 'endDateTime'
+				pOption.endDateTime as 'salePriceExpirationDateTime'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -235,17 +237,17 @@ Notes:
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN 'amount'
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN 'percentageOff'
-				END as 'discountType',
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
 				CASE
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN prProductType.itemAmount
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - prProductType.itemAmountOff
 					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProductType.itemPercentageOff / 100))
-				END as 'salePrice',
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
 				prProductType.itemPercentageOff as 'percentageOff',
 				prProductType.itemAmountOff as 'amountOff',
 				prProductType.itemAmount as 'amount',
 				prProductType.roundingRuleID as 'roundingRuleID',
-				pProductType.endDateTime as 'endDateTime'
+				pProductType.endDateTime as 'salePriceExpirationDateTime'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -275,7 +277,38 @@ Notes:
 			</cfif>
 		</cfquery>
 		
-		<cfreturn allDiscounts /> 
+		<cfquery name="skuPrice" dbtype="query">
+			SELECT
+				skuID,
+				MIN(salePrice) as salePrice
+			FROM
+				allDiscounts
+			GROUP BY
+				skuID
+		</cfquery>
+		
+		<cfquery name="skuResults" dbtype="query">
+			SELECT
+				AllDiscounts.skuID,
+				AllDiscounts.originalPrice,
+				AllDiscounts.discountLevel,
+				AllDiscounts.salePriceDiscountType,
+				AllDiscounts.salePrice,
+				AllDiscounts.percentageOff,
+				AllDiscounts.amountOff,
+				AllDiscounts.amount,
+				AllDiscounts.roundingRuleID,
+				AllDiscounts.salePriceExpirationDateTime
+			FROM
+				allDiscounts,
+				skuPrice
+			WHERE
+				allDiscounts.skuID = skuPrice.skuID
+			  and
+			    allDiscounts.salePrice = skuPrice.salePrice
+		</cfquery>
+		
+		<cfreturn skuResults /> 
 	</cffunction>
 		
 </cfcomponent>

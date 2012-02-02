@@ -37,6 +37,8 @@ Notes:
 
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
+
+	property name="utilityService" type="any";
 	
 	public any function savePromotion(required any promotion, struct data={}) {
 		
@@ -276,68 +278,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public struct function getSalePriceDetailsForProductSkus(required string productID) {
-		var results = getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID);
-		var returnStruct = {};
-		
-		for(var i=1; i<=results.recordCount; i++) {
-			if( !structKeyExists(returnStruct, results["skuID"][i])){
-				returnStruct[ results["skuID"][i] ] = {};
-				returnStruct[ results["skuID"][i] ].salePrice = results["salePrice"][i];
-				returnStruct[ results["skuID"][i] ].salePriceDiscountType = results["discountType"][i];
-				returnStruct[ results["skuID"][i] ].salePriceExpirationDateTime = results["endDateTime"][i];
-			} else if (returnStruct[ results["skuID"][i] ].salePrice > results["salePrice"][i]) {
-				returnStruct[ results["skuID"][i] ].salePrice = results["salePrice"][i];
-				returnStruct[ results["skuID"][i] ].salePriceDiscountType = results["discountType"][i];
-				returnStruct[ results["skuID"][i] ].salePriceExpirationDateTime = results["endDateTime"][i];
-			}
-		}
-		
-		return returnStruct;
+		return getUtilityService().queryToStructOfStructures(getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
 	}
-	
-	public any function getSkuSalePriceAndExpiration(required string skuID) {
-		
-		var results = getDAO().getSalePricePromotionRewardsQuery(skuID = arguments.skuID);
-		
-		var bestPrice = 1000000000;
-		var bestPriceExpiration = now();
-		
-		var discountLevels = "sku,product,brand,option,productType";
-		var discountTypes = "PercentageOff,AmountOff,Amount";
-		 
-		// Loop Over Records
-		for(var i=1; i<=results.recordCount; i++) {
-			
-			// Loop Over Levels like sku, product, brand, option or productType
-			for(var l=1; l<=listLen(discountLevels); l++) {
-				
-				// Set the level up in a local var
-				var thisLevel = listGetAt(discountLevels, l);
-				
-				// If there is an endDateTime then we know there is a discountType at this level
-				if(results["#thisLevel#EndDateTime"][i] != "") {
-					
-					// Loop over the discount type to check for a best price
-					for(var t=1; t<=listLen(discountTypes); t++) {
-						
-						// Set the discountType up in a local var
-						var thisDT = listGetAt(discountTypes, t);
-						
-						// If this iteration has a value better than the default
-						if(results["#thisLevel##thisDT#"][i] != "" && results["#thisLevel##thisDT#"][i] < bestPrice) {
-							
-							bestPrice = results["#thisLevel##thisDT#"][i];
-							bestPriceExpiration = results["#thisLevel#EndDateTime"][i];
-							
-						}
-					}	
-				}
-			}
-		}
-		
-		return {salePrice=bestPrice, salePriceExpirationDateTime=bestPriceExpiration};
-	}
-	
 	
 	// ----------------- END: Apply Promotion Logic -------------------------
 		 
