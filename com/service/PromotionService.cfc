@@ -275,6 +275,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return qc;
 	}
 	
+	public any function getSkuSalePriceAndExpiration(required string SkuID) {
+		
+		var pq = getDAO().getSkuSalePricePromotionRewardsQuery(skuID = arguments.skuID);
+		
+		return {salePrice=0, salePriceExpirationDateTime=0};
+	}
+	
+	
 	// ----------------- END: Apply Promotion Logic -------------------------
 		 
 	/*

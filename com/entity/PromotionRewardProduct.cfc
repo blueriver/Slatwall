@@ -45,7 +45,10 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="itemAmountOff" ormType="big_decimal";
 	property name="itemAmount" ormType="big_decimal";
 	
-	// Related Entities
+	// Related Object Properties (many-to-one)
+	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
+	
+	// Related Object Properties (many-to-many)
 	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID";
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID";
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID";
