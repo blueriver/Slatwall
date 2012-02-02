@@ -109,6 +109,23 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return super.init();
 	}
 	
+	public any function buildProductTypeIDPath() {
+		var idPath = "";
+		var currentProductType = this;
+		var parentExists = true;
+		
+		do {
+			idPath = listPrepend(idPath, currentProductType.getProductTypeID());
+			if(!isNull(currentProductType.getParentProductType())) {
+				currentProductType = currentProductType.getParentProductType();		
+			} else {
+				parentExists = false;
+			}
+		} while (parentExists);
+		
+		return idPath;
+	}
+	
 	public any function getProductTypeTree() {
 		return getService("ProductService").getProductTypeTree();
 	}
@@ -268,11 +285,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public void function preInsert(){
 		super.preInsert();
+		setProductTypeIDPath( buildProductTypeIDPath() );
 		getService("skuCacheService").updateFromProductType( this );
+		
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
+		setProductTypeIDPath( buildProductTypeIDPath() );
 		getService("skuCacheService").updateFromProductType( this );
 	}
 	
