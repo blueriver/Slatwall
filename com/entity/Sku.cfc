@@ -86,8 +86,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Non-Persistent Properties
 	property name="currentAccountPrice" type="numeric" formatType="currency" persistent="false";
 	property name="livePrice" type="numeric" formatType="currency" persistent="false";
+	property name="salePriceDetails" type="struct" persistent="false";
 	property name="salePrice" type="numeric" formatType="currency" persistent="false";
-	property name="salePriceExpirationDateTime" type="date" persistent="false";
+	property name="salePriceDiscountType" type="string" persistent="false";
+	property name="salePriceDiscountAmount" type="string" persistent="false";
+	property name="salePriceExpirationDateTime" type="date" formatType="datetime" persistent="false";
 	
 	public Sku function init() {
        // set default collections for association management methods
@@ -364,18 +367,23 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 		return variables.livePrice;
 	}
 	
-	public any function getSalePrice() {
-		if(!structKeyExists(variables, "salePrice")) {
-			variables.salePrice = getService("promotionService").calculateSkuSalePrice(sku=this);
+	public any function getSalePriceDetails() {
+		if(!structKeyExists(variables, "salePriceDetails")) {
+			variables.salePriceDetails = getProduct().getSkuSalePriceDetails( getSkuID() );
 		}
-		return variables.salePrice;
+		return variables.salePriceDetails;
+	}
+	
+	public any function getSalePrice() {
+		return getSalePriceDetails()[ "salePrice"];
+	}
+	
+	public any function getSalePriceDiscountType() {
+		return getSalePriceDetails()[ "salePriceDiscountType"];
 	}
 	
 	public any function getSalePriceExpirationDateTime() {
-		if(!structKeyExists(variables, "salePrice")) {
-			variables.salePrice = getService("promotionService").calculateSkuSalePriceExpirationDateTime(sku=this);
-		}
-		return variables.salePrice;
+		return getSalePriceDetails()[ "salePriceExpirationDateTime"];
 	}
 	
 	// ============  END:  Non-Persistent Property Methods =================

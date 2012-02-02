@@ -275,21 +275,7 @@ Notes:
 			</cfif>
 		</cfquery>
 		
-		<cfquery name="bestPrice" dbtype="query">
-			SELECT
-				allDiscounts.skuID,
-				MIN(allDiscounts.salePrice)
-			FROM
-				allDiscounts
-			GROUP BY
-				allDiscounts.skuID
-		</cfquery>
-		
-		<cfdump var="#allDiscounts#" />
-		<cfdump var="#bestPrice#" abort />
-		
-		
-		<cfreturn rs /> 
+		<cfreturn allDiscounts /> 
 	</cffunction>
 		
 </cfcomponent>

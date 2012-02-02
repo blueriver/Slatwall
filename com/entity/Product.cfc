@@ -95,7 +95,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Non-Persistent Properties
 	property name="title" type="string" persistent="false";
 	property name="brandName" type="string" persistent="false";
-	property name="displayTemplateOptions" type="array" persistent="false";
+	property name="productDisplayTemplateOptions" type="array" persistent="false";
+	property name="salePriceDetailsForSkus" type="struct" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -190,7 +191,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	public any function getImages() {
 		return variables.productImages;
 	}
-    
+	
+	public struct function getSkuSalePriceDetails( required any skuID ) {
+		return getSalePriceDetailsForSkus()[ arguments.skuID ];
+	}
+	
 	// Non-Persistent Helpers
 	
 	public string function getContentIDs() { 
@@ -639,6 +644,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// END: Setting Methods
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public struct function getSalePriceDetailsForSkus() {
+		if(!structKeyExists(variables, "salePriceDetailsForSkus")) {
+			variables.salePriceDetailsForSkus = getService("promotionService").getSalePriceDetailsForProductSkus(productID=getProductID());
+		}
+		return variables.salePriceDetailsForSkus;
+	}
 	
 	public any function getProductDisplayTemplateOptions() {
 		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {

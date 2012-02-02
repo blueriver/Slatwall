@@ -41,9 +41,6 @@ Notes:
 
 <cfoutput>
 <div class="svoadminmaindefault">
-	<cfif structKeyExists(url, "showSku")>
-		<cfdump var="#$.slatwall.getService('promotionService').getSkuSalePriceAndExpiration(skuID='4028297034e8e7f40134f2d7d96c2951')#" />
-	</cfif>   
 	<div class="products dashboardSection">
 		<h3>Recently Updated Products</h3>
 		<table id="orderList" class="listing-grid stripe">

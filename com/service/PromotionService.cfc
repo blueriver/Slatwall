@@ -275,6 +275,26 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		return qc;
 	}
 	
+	public struct function getSalePriceDetailsForProductSkus(required string productID) {
+		var results = getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID);
+		var returnStruct = {};
+		
+		for(var i=1; i<=results.recordCount; i++) {
+			if( !structKeyExists(returnStruct, results["skuID"][i])){
+				returnStruct[ results["skuID"][i] ] = {};
+				returnStruct[ results["skuID"][i] ].salePrice = results["salePrice"][i];
+				returnStruct[ results["skuID"][i] ].salePriceDiscountType = results["discountType"][i];
+				returnStruct[ results["skuID"][i] ].salePriceExpirationDateTime = results["endDateTime"][i];
+			} else if (returnStruct[ results["skuID"][i] ].salePrice > results["salePrice"][i]) {
+				returnStruct[ results["skuID"][i] ].salePrice = results["salePrice"][i];
+				returnStruct[ results["skuID"][i] ].salePriceDiscountType = results["discountType"][i];
+				returnStruct[ results["skuID"][i] ].salePriceExpirationDateTime = results["endDateTime"][i];
+			}
+		}
+		
+		return returnStruct;
+	}
+	
 	public any function getSkuSalePriceAndExpiration(required string skuID) {
 		
 		var results = getDAO().getSalePricePromotionRewardsQuery(skuID = arguments.skuID);
