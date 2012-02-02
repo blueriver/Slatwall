@@ -473,6 +473,28 @@ Notes:
 		return sortedArray;
 	}
 	
+	public struct function queryToStructOfStructures(theQuery, primaryKey){
+       var theStructure  = structnew();
+       /* remove primary key from cols listing */
+       var cols          = ListToArray(ListDeleteAt(theQuery.columnlist, ListFindNoCase(theQuery.columnlist, primaryKey)));
+       var row           = 1;
+       var thisRow       = "";
+       var col           = 1;
+       var retainSort = false;
+       if(arrayLen(arguments) GT 2) retainSort = arguments[3];
+       if(retainSort){
+               theStructure = CreateObject("java", "java.util.LinkedHashMap").init();
+       }
+       for(row = 1; row LTE theQuery.recordcount; row = row + 1){
+               thisRow = structnew();
+               for(col = 1; col LTE arraylen(cols); col = col + 1){
+                       thisRow[cols[col]] = theQuery[cols[col]][row];
+               }
+               theStructure[theQuery[primaryKey][row]] = duplicate(thisRow);
+       }
+       return(theStructure);
+	}
+	
 	</cfscript>
 		
 	

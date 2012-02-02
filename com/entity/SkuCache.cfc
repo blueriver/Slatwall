@@ -60,12 +60,7 @@ component displayname="Sku Cache" entityname="SlatwallSkuCache" table="SlatwallS
 	property name="allowPreorderFlag" ormtype="boolean";
 	property name="allowShippingFlag" ormtype="boolean";
 	property name="callToOrderFlag" ormtype="boolean";
-	property name="displayTemplate" ormtype="string";
 	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
 	property name="shippingWeight" ormtype="integer";
 	property name="trackInventoryFlag" ormtype="boolean";
 	

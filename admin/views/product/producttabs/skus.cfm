@@ -74,7 +74,8 @@ Notes:
 					<th></th>
 				</cfif>--->
 				<th <cfif rc.edit>class="skuPriceColumn"</cfif>>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
-				
+				<th>#rc.$.Slatwall.rbKey("entity.sku.salePrice")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.sku.salePriceExpirationDateTime")#</th>
 				
 				<!--- Loop over all Price Groups and create column headers --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
@@ -169,6 +170,8 @@ Notes:
 						#local.thisSku.getFormattedValue('price')#
 					</cfif>
 				</td>
+				<td>#local.thisSku.getFormattedValue('salePrice')#</td>
+				<td>#local.thisSku.getFormattedValue('salePriceExpirationDateTime')#</td>
 				
 				<!--- Loop over all Price Groups and create actual values --->
 				<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">

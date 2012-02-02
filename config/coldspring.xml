@@ -141,6 +141,7 @@
 	</bean>
 	<bean id="promotionService" parent="parentService" class="Slatwall.com.service.PromotionService">
         <property name="DAO"><ref bean="PromotionDAO" /></property>
+		<property name="utilityService"><ref bean="utilityService" /></property>
 	</bean>
 	<bean id="reportService" parent="parentService" class="Slatwall.com.service.ReportService">
         <property name="DAO"><ref bean="ReportDAO" /></property>

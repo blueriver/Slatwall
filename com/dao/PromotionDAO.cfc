@@ -46,149 +46,269 @@ Notes:
 		<cfargument name="skuID" type="string">
 		<cfargument name="productID" type="string">
 		
-		<cfset var rs="" />
-		<cfset var pt="" />
+		<cfset var allDiscounts = "" />
+		<cfset var skuPrice = "" />
+		<cfset var skuResults = "" />
+		<cfset var timeNow = now() />
+		<cfset var isMySQL = application.configBean.getDbType() eq "MySQL" />
 		
-		<cfquery name="pt">
+		<cfquery name="allDiscounts">
 			SELECT
-				productTypeID
-			FROM
-				SlatwallProduct
-			  INNER JOIN
-			  	SlatwallSku on SlatwallProduct.productID = SlatwallSku.productID
-			WHERE
-				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
-		</cfquery>
-		
-		<cfset var productTypeList = getService('productService').getProductTypeFromTree(productTypeID = pt.productTypeID).idpath />
-		<cfset var loopCount = 0 />
-		<cfset var currentProductTypeID = "" />
-		
-		<cfquery name="rs">
-			SELECT DISTINCT
 				SlatwallSku.skuID as 'skuID',
 				SlatwallSku.price as 'originalPrice',
-				SlatwallSku.price - (SlatwallSku.price * (prSku.itemPercentageOff / 100)) as 'skuPercentageOff',
-				SlatwallSku.price - prSku.itemAmountOff as 'skuAmountOff',
-				prSku.itemAmount as 'skuAmount',
-				prSku.roundingRuleID as 'skuRoundingRule',
-				pSku.endDateTime as 'skuEndDateTime',
-				SlatwallSku.price - (SlatwallSku.price * (prProduct.itemPercentageOff / 100)) as 'productPercentageOff',
-				SlatwallSku.price - prProduct.itemAmountOff as 'productAmountOff',
-				prProduct.itemAmount as 'productAmount',
-				prProduct.roundingRuleID as 'productRoundingRuleID',
-				pProduct.endDateTime as 'productEndDateTime',
-				SlatwallSku.price - (SlatwallSku.price * (prBrand.itemPercentageOff / 100)) as 'brandPercentageOff',
-				SlatwallSku.price - prBrand.itemAmountOff as 'brandAmountOff',
-				prBrand.itemAmount as 'brandAmount',
-				prBrand.roundingRuleID as 'brandRoundingRuleID',
-				pBrand.endDateTime as 'brandEndDateTime',
-				SlatwallSku.price - (SlatwallSku.price * (prOption.itemPercentageOff / 100)) as 'optionPercentageOff',
-				SlatwallSku.price - prOption.itemAmountOff as 'optionAmountOff',
-				prOption.itemAmount as 'optionAmount',
-				prOption.roundingRuleID as 'optionRoundingRuleID',
-				pOption.endDateTime as 'optionEndDateTime',
-				SlatwallSku.price - (SlatwallSku.price * (prProductType.itemPercentageOff / 100)) as 'productTypePercentageOff',
-				SlatwallSku.price - prProductType.itemAmountOff as 'productTypeAmountOff',
-				prProductType.itemAmount as 'productTypeAmount',
-				prProductType.roundingRuleID as 'productTypeRoundingRuleID',
-				pProductType.endDateTime as 'productTypeEndDateTime'
+				'sku' as 'discountLevel',
+				CASE
+					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN 'amount'
+					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN 'itemAmountOff'
+					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN 'percentageOff'
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				CASE
+					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN prSku.itemAmount
+					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - prSku.itemAmountOff
+					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prSku.itemPercentageOff / 100))
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				prSku.itemPercentageOff as 'percentageOff',
+				prSku.itemAmountOff as 'amountOff',
+				prSku.itemAmount as 'amount',
+				prSku.roundingRuleID as 'roundingRuleID',
+				pSku.endDateTime as 'salePriceExpirationDateTime'
 			FROM
 				SlatwallSku
 			  INNER JOIN
-				SlatwallProduct on SlatwallProduct.productID = SlatwallSku.productID
-			  LEFT JOIN
-				SlatwallSkuOption on SlatwallSkuOption.skuID = SlatwallSku.skuID
-			  LEFT JOIN
-				SlatwallOption on SlatwallOption.optionID = SlatwallSkuOption.optionID
-			  LEFT JOIN
 			  	SlatwallPromotionRewardProductSku on SlatwallPromotionRewardProductSku.skuID = SlatwallSku.skuID
-			  LEFT JOIN
-				SlatwallPromotionRewardProductProduct on SlatwallPromotionRewardProductProduct.productID = SlatwallProduct.productID
-			  LEFT JOIN
-				SlatwallPromotionRewardProductBrand on SlatwallPromotionRewardProductBrand.brandID = SlatwallProduct.brandID
-			  LEFT JOIN
-				SlatwallPromotionRewardProductOption on SlatwallPromotionRewardProductOption.optionID = SlatwallOption.optionID
-			  LEFT JOIN
-				SlatwallPromotionRewardProductProductType on SlatwallPromotionRewardProductProductType.productTypeID IN (
-					<cfloop list="#productTypeList#" index="currentProductTypeID">
-						<cfset loopCount ++ />
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#currentProductTypeID#">
-						<cfif loopCount lt listLen(productTypeList)>
-							,
-						</cfif>
-					</cfloop>
-					)
-			  LEFT JOIN
+			  INNER JOIN
 			  	SlatwallPromotionReward prSku on prSku.promotionRewardID = SlatwallPromotionRewardProductSku.promotionRewardID
-			  LEFT JOIN
-			  	SlatwallPromotionReward prProduct on prProduct.promotionRewardID = SlatwallPromotionRewardProductProduct.promotionRewardID
-			  LEFT JOIN
-			  	SlatwallPromotionReward prBrand on prBrand.promotionRewardID = SlatwallPromotionRewardProductBrand.promotionRewardID
-			  LEFT JOIN
-			  	SlatwallPromotionReward prOption on prOption.promotionRewardID = SlatwallPromotionRewardProductOption.promotionRewardID
-			  LEFT JOIN
-			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductProductType.promotionRewardID
-			  LEFT JOIN
-				SlatwallPromotion pSku on prSku.promotionID = pSku.promotionID
-				  AND
-					(pSku.startDateTime is null or pSku.startDateTime <= GETDATE())
-				  AND
-					(pSku.endDateTime is null or pSku.endDateTime >= GETDATE())
-				  AND
-					(pSku.activeFlag is null or pSku.activeFlag = 1)
-				  AND
-				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pSku.promotionID)
-			  LEFT JOIN
-				SlatwallPromotion pProduct on prProduct.promotionID = pProduct.promotionID
-				  AND
-					(pProduct.startDateTime is null or pProduct.startDateTime <= GETDATE())
-				  AND
-					(pProduct.endDateTime is null or pProduct.endDateTime >= GETDATE())
-				  AND
-					(pProduct.activeFlag is null or pProduct.activeFlag = 1)
-				  AND
-				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProduct.promotionID)
-			  LEFT JOIN
-				SlatwallPromotion pBrand on prBrand.promotionID = pBrand.promotionID
-				  AND
-					(pBrand.startDateTime is null or pBrand.startDateTime <= GETDATE())
-				  AND
-					(pBrand.endDateTime is null or pBrand.endDateTime >= GETDATE())
-				  AND
-					(pBrand.activeFlag is null or pBrand.activeFlag = 1)
-				  AND
-				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pBrand.promotionID)
-			  LEFT JOIN
-				SlatwallPromotion pOption on prOption.promotionID = pOption.promotionID
-				  AND
-					(pOption.startDateTime is null or pOption.startDateTime <= GETDATE())
-				  AND
-					(pOption.endDateTime is null or pOption.endDateTime >= GETDATE())
-				  AND
-					(pOption.activeFlag is null or pOption.activeFlag = 1)
-				  AND
-				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pOption.promotionID)
-			  LEFT JOIN
-				SlatwallPromotion pProductType on prProductType.promotionID = pProductType.promotionID
-				  AND
-					(pProductType.startDateTime is null or pProductType.startDateTime <= GETDATE())
-				  AND
-					(pProductType.endDateTime is null or pProductType.endDateTime >= GETDATE())
-				  AND
-					(pProductType.activeFlag is null or pProductType.activeFlag = 1)
-				  AND
-				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProductType.promotionID)
-			<cfif structKeyExists(arguments, "skuID")>
+			  INNER JOIN
+			  	SlatwallPromotion pSku on pSku.promotionID = prSku.promotionID
 			WHERE
+				pSku.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pSku.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pSku.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			  AND
+			  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pSku.promotionID)
+			<cfif structKeyExists(arguments, "skuID")>
+			  AND
 				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
 			<cfelseif structKeyExists(arguments, "productID")>
+			  AND
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			</cfif>
+		  UNION
+			SELECT
+				SlatwallSku.skuID as 'skuID',
+				SlatwallSku.price as 'originalPrice',
+				'product' as 'discountLevel',
+				CASE
+					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN 'amount'
+					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN 'itemAmountOff'
+					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN 'percentageOff'
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				CASE
+					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN prProduct.itemAmount
+					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - prProduct.itemAmountOff
+					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProduct.itemPercentageOff / 100))
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				prProduct.itemPercentageOff as 'percentageOff',
+				prProduct.itemAmountOff as 'amountOff',
+				prProduct.itemAmount as 'amount',
+				prProduct.roundingRuleID as 'roundingRuleID',
+				pProduct.endDateTime as 'salePriceExpirationDateTime'
+			FROM
+				SlatwallSku
+			  INNER JOIN
+			  	SlatwallPromotionRewardProductProduct on SlatwallPromotionRewardProductProduct.productID = SlatwallSku.productID
+			  INNER JOIN
+			  	SlatwallPromotionReward prProduct on prProduct.promotionRewardID = SlatwallPromotionRewardProductProduct.promotionRewardID
+			  INNER JOIN
+			  	SlatwallPromotion pProduct on pProduct.promotionID = prProduct.promotionID
 			WHERE
-				SlatwallProduct.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
+				pProduct.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pProduct.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pProduct.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			  AND
+			  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProduct.promotionID)
+			<cfif structKeyExists(arguments, "skuID")>
+			  AND
+				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
+			<cfelseif structKeyExists(arguments, "productID")>
+			  AND
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			</cfif>
+		  UNION
+			SELECT
+				SlatwallSku.skuID as 'skuID',
+				SlatwallSku.price as 'originalPrice',
+				'brand' as 'discountLevel',
+				CASE
+					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN 'amount'
+					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN 'itemAmountOff'
+					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN 'percentageOff'
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				CASE
+					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN prBrand.itemAmount
+					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - prBrand.itemAmountOff
+					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prBrand.itemPercentageOff / 100))
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				prBrand.itemPercentageOff as 'percentageOff',
+				prBrand.itemAmountOff as 'amountOff',
+				prBrand.itemAmount as 'amount',
+				prBrand.roundingRuleID as 'roundingRuleID',
+				pBrand.endDateTime as 'salePriceExpirationDateTime'
+			FROM
+				SlatwallSku
+			  INNER JOIN
+			  	SlatwallProduct on SlatwallProduct.productID = SlatwallSku.productID
+			  INNER JOIN
+			  	SlatwallPromotionRewardProductBrand on SlatwallPromotionRewardProductBrand.brandID = SlatwallProduct.brandID
+			  INNER JOIN
+			  	SlatwallPromotionReward prBrand on prBrand.promotionRewardID = SlatwallPromotionRewardProductBrand.promotionRewardID
+			  INNER JOIN
+			  	SlatwallPromotion pBrand on pBrand.promotionID = prBrand.promotionID
+			WHERE
+				pBrand.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pBrand.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pBrand.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			  AND
+			  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pBrand.promotionID)
+			<cfif structKeyExists(arguments, "skuID")>
+			  AND
+				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
+			<cfelseif structKeyExists(arguments, "productID")>
+			  AND
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			</cfif>
+		  UNION
+		  	SELECT
+		  		SlatwallSku.skuID as 'skuID',
+				SlatwallSku.price as 'originalPrice',
+				'option' as 'discountLevel',
+				CASE
+					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN 'amount'
+					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN 'itemAmountOff'
+					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN 'percentageOff'
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				CASE
+					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN prOption.itemAmount
+					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - prOption.itemAmountOff
+					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prOption.itemPercentageOff / 100))
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				prOption.itemPercentageOff as 'percentageOff',
+				prOption.itemAmountOff as 'amountOff',
+				prOption.itemAmount as 'amount',
+				prOption.roundingRuleID as 'roundingRuleID',
+				pOption.endDateTime as 'salePriceExpirationDateTime'
+			FROM
+				SlatwallSku
+			  INNER JOIN
+			  	SlatwallSkuOption on SlatwallSkuOption.skuID = SlatwallSku.skuID
+			  INNER JOIN
+			  	SlatwallPromotionRewardProductOption on SlatwallPromotionRewardProductOption.optionID = SlatwallSkuOption.optionID
+			  INNER JOIN
+			  	SlatwallPromotionReward prOption on prOption.promotionRewardID = SlatwallPromotionRewardProductOption.promotionRewardID
+			  INNER JOIN
+			  	SlatwallPromotion pOption on pOption.promotionID = prOption.promotionID
+			WHERE
+				pOption.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pOption.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pOption.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			  AND
+			  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pOption.promotionID)
+			<cfif structKeyExists(arguments, "skuID")>
+			  AND
+				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
+			<cfelseif structKeyExists(arguments, "productID")>
+			  AND
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
+			</cfif>
+		  UNION
+		  	SELECT
+		  		SlatwallSku.skuID as 'skuID',
+				SlatwallSku.price as 'originalPrice',
+				'productType' as 'discountLevel',
+				CASE
+					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN 'amount'
+					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN 'itemAmountOff'
+					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN 'percentageOff'
+				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				CASE
+					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN prProductType.itemAmount
+					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - prProductType.itemAmountOff
+					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProductType.itemPercentageOff / 100))
+				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				prProductType.itemPercentageOff as 'percentageOff',
+				prProductType.itemAmountOff as 'amountOff',
+				prProductType.itemAmount as 'amount',
+				prProductType.roundingRuleID as 'roundingRuleID',
+				pProductType.endDateTime as 'salePriceExpirationDateTime'
+			FROM
+				SlatwallSku
+			  INNER JOIN
+			  	SlatwallProduct on SlatwallProduct.productID = SlatwallSku.productID
+			  INNER JOIN
+			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
+			  INNER JOIN
+			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE '%' + SlatwallPromotionRewardProductProductType.productTypeID + '%'
+			  INNER JOIN
+			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductProductType.promotionRewardID
+			  INNER JOIN
+			  	SlatwallPromotion pProductType on pProductType.promotionID = prProductType.promotionID
+			WHERE
+				pProductType.startDateTime <= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pProductType.endDateTime >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#timeNow#">
+			  AND
+				pProductType.activeFlag = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+			  AND
+			  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProductType.promotionID)
+			<cfif structKeyExists(arguments, "skuID")>
+			  AND
+				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
+			<cfelseif structKeyExists(arguments, "productID")>
+			  AND
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">	
 			</cfif>
 		</cfquery>
 		
-		<cfreturn rs /> 
+		<cfquery name="skuPrice" dbtype="query">
+			SELECT
+				skuID,
+				MIN(salePrice) as salePrice
+			FROM
+				allDiscounts
+			GROUP BY
+				skuID
+		</cfquery>
+		
+		<cfquery name="skuResults" dbtype="query">
+			SELECT
+				AllDiscounts.skuID,
+				AllDiscounts.originalPrice,
+				AllDiscounts.discountLevel,
+				AllDiscounts.salePriceDiscountType,
+				AllDiscounts.salePrice,
+				AllDiscounts.percentageOff,
+				AllDiscounts.amountOff,
+				AllDiscounts.amount,
+				AllDiscounts.roundingRuleID,
+				AllDiscounts.salePriceExpirationDateTime
+			FROM
+				allDiscounts,
+				skuPrice
+			WHERE
+				allDiscounts.skuID = skuPrice.skuID
+			  and
+			    allDiscounts.salePrice = skuPrice.salePrice
+		</cfquery>
+		
+		<cfreturn skuResults /> 
 	</cffunction>
 		
 </cfcomponent>

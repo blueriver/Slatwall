@@ -40,6 +40,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			
 	// Persistent Properties
 	property name="productTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="productTypeIDPath" ormtype="string";
 	property name="activeFlag" ormtype="boolean" hint="As A ProductType Get Old, They would be marked as Not Active";
 	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="productTypeName" ormtype="string";
@@ -106,6 +107,23 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 		
 		return super.init();
+	}
+	
+	public any function buildProductTypeIDPath() {
+		var idPath = "";
+		var currentProductType = this;
+		var parentExists = true;
+		
+		do {
+			idPath = listPrepend(idPath, currentProductType.getProductTypeID());
+			if(!isNull(currentProductType.getParentProductType())) {
+				currentProductType = currentProductType.getParentProductType();		
+			} else {
+				parentExists = false;
+			}
+		} while (parentExists);
+		
+		return idPath;
 	}
 	
 	public any function getProductTypeTree() {
@@ -267,11 +285,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public void function preInsert(){
 		super.preInsert();
+		setProductTypeIDPath( buildProductTypeIDPath() );
 		getService("skuCacheService").updateFromProductType( this );
+		
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
+		setProductTypeIDPath( buildProductTypeIDPath() );
 		getService("skuCacheService").updateFromProductType( this );
 	}
 	
