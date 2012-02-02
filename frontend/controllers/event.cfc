@@ -59,8 +59,8 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 
 		if( keyLocation && keyLocation < listLen(rc.path,"/") ) {
 			// Load Product
-			getRequestCacheService().setValue("currentProductFilename", listGetAt(rc.path, keyLocation+1, "/"));
-			var product = getProductService().getProductByFilename(getRequestCacheService().getValue("currentProductFilename"));
+			getRequestCacheService().setValue("currentProductURLTitle", listGetAt(rc.path, keyLocation+1, "/"));
+			var product = getProductService().getProductByURLTitle(getRequestCacheService().getValue("currentProductURLTitle"));
 			
 			// If Product Exists, is Active, and is published then put the product in the slatwall scope and setup product template for muras contentBean to be loaded later
 			if(!isNull(product)) {
