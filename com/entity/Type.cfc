@@ -61,6 +61,13 @@ component displayname="Type" entityname="SlatwallType" table="SlatwallType" pers
 		return variables.type;
 	}
 	
+	// This overrides the build in system code getter to look up to the parent if a system code doesn't exist for this type.
+	public string function getSystemCode() {
+		if(isNull(variables.systemCode)) {
+			return getParentType().getSystemCode();
+		}
+		return variables.systemCode;
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
