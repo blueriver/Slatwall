@@ -59,7 +59,9 @@ Notes:
 				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
 		</cfquery>
 		
-		<cfset var productTypeList = getService('productService').getProductTypeFromTree(productTypeID = pt.productTypeID).path />
+		<cfset var productTypeList = getService('productService').getProductTypeFromTree(productTypeID = pt.productTypeID).idpath />
+		<cfset var loopCount = 0 />
+		<cfset var currentProductTypeID = "" />
 		
 		<cfquery name="rs">
 			SELECT DISTINCT
@@ -107,7 +109,15 @@ Notes:
 			  LEFT JOIN
 				SlatwallPromotionRewardProductOption on SlatwallPromotionRewardProductOption.optionID = SlatwallOption.optionID
 			  LEFT JOIN
-				SlatwallPromotionRewardProductProductType on SlatwallPromotionRewardProductProductType.productTypeID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#productTypeList#">)
+				SlatwallPromotionRewardProductProductType on SlatwallPromotionRewardProductProductType.productTypeID IN (
+					<cfloop list="#productTypeList#" index="currentProductTypeID">
+						<cfset loopCount ++ />
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#currentProductTypeID#">
+						<cfif loopCount lt listLen(productTypeList)>
+							,
+						</cfif>
+					</cfloop>
+					)
 			  LEFT JOIN
 			  	SlatwallPromotionReward prSku on prSku.promotionRewardID = SlatwallPromotionRewardProductSku.promotionRewardID
 			  LEFT JOIN
@@ -171,8 +181,6 @@ Notes:
 			  AND
 				NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProductType.promotionID)
 		</cfquery>
-		
-		<cfdump var="#rs#" abort />
 		
 		<cfreturn rs /> 
 	</cffunction>
