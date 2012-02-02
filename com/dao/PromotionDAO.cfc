@@ -131,62 +131,61 @@ Notes:
 			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductProductType.promotionRewardID
 			  LEFT JOIN
 				SlatwallPromotion pSku on prSku.promotionID = pSku.promotionID
+				  AND
+					(pSku.startDateTime is null or pSku.startDateTime <= GETDATE())
+				  AND
+					(pSku.endDateTime is null or pSku.endDateTime >= GETDATE())
+				  AND
+					(pSku.activeFlag is null or pSku.activeFlag = 1)
+				  AND
+				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pSku.promotionID)
 			  LEFT JOIN
 				SlatwallPromotion pProduct on prProduct.promotionID = pProduct.promotionID
+				  AND
+					(pProduct.startDateTime is null or pProduct.startDateTime <= GETDATE())
+				  AND
+					(pProduct.endDateTime is null or pProduct.endDateTime >= GETDATE())
+				  AND
+					(pProduct.activeFlag is null or pProduct.activeFlag = 1)
+				  AND
+				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProduct.promotionID)
 			  LEFT JOIN
 				SlatwallPromotion pBrand on prBrand.promotionID = pBrand.promotionID
+				  AND
+					(pBrand.startDateTime is null or pBrand.startDateTime <= GETDATE())
+				  AND
+					(pBrand.endDateTime is null or pBrand.endDateTime >= GETDATE())
+				  AND
+					(pBrand.activeFlag is null or pBrand.activeFlag = 1)
+				  AND
+				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pBrand.promotionID)
 			  LEFT JOIN
 				SlatwallPromotion pOption on prOption.promotionID = pOption.promotionID
+				  AND
+					(pOption.startDateTime is null or pOption.startDateTime <= GETDATE())
+				  AND
+					(pOption.endDateTime is null or pOption.endDateTime >= GETDATE())
+				  AND
+					(pOption.activeFlag is null or pOption.activeFlag = 1)
+				  AND
+				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pOption.promotionID)
 			  LEFT JOIN
 				SlatwallPromotion pProductType on prProductType.promotionID = pProductType.promotionID
-			WHERE
+				  AND
+					(pProductType.startDateTime is null or pProductType.startDateTime <= GETDATE())
+				  AND
+					(pProductType.endDateTime is null or pProductType.endDateTime >= GETDATE())
+				  AND
+					(pProductType.activeFlag is null or pProductType.activeFlag = 1)
+				  AND
+				  	NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProductType.promotionID)
 			<cfif structKeyExists(arguments, "skuID")>
+			WHERE
 				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
-			  AND
-			</cfif>
-			<cfif structKeyExists(arguments, "productID")>
+			<cfelseif structKeyExists(arguments, "productID")>
+			WHERE
 				SlatwallProduct.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
-			  AND
 			</cfif>
-				(pSku.startDateTime is null or pSku.startDateTime <= GETDATE())
-			  AND
-				(pSku.endDateTime is null or pSku.endDateTime >= GETDATE())
-			  AND
-				(pProduct.startDateTime is null or pProduct.startDateTime <= GETDATE())
-			  AND
-				(pProduct.endDateTime is null or pProduct.endDateTime >= GETDATE())
-			  AND
-				(pBrand.startDateTime is null or pBrand.startDateTime <= GETDATE())
-			  AND
-				(pBrand.endDateTime is null or pBrand.endDateTime >= GETDATE())
-			  AND
-				(pOption.startDateTime is null or pOption.startDateTime <= GETDATE())
-			  AND
-				(pOption.endDateTime is null or pOption.endDateTime >= GETDATE())
-			  AND
-				(pProductType.startDateTime is null or pProductType.startDateTime <= GETDATE())
-			  AND
-				(pProductType.endDateTime is null or pProductType.endDateTime >= GETDATE())
-			  AND
-				(pSku.activeFlag is null or pSku.activeFlag = 1)
-			  AND
-				(pProduct.activeFlag is null or pProduct.activeFlag = 1)
-			  AND
-				(pBrand.activeFlag is null or pBrand.activeFlag = 1)
-			  AND
-				(pOption.activeFlag is null or pOption.activeFlag = 1)
-			  AND
-				(pProductType.activeFlag is null or pProductType.activeFlag = 1)
-			  AND
-				NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pSku.promotionID)
-			  AND
-				NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProduct.promotionID)
-			  AND
-				NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pBrand.promotionID)
-			  AND
-				NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pOption.promotionID)
-			  AND
-				NOT EXISTS(SELECT promotionID FROM SlatwallPromotionCode WHERE promotionID = pProductType.promotionID)
 		</cfquery>
 		
 		<cfreturn rs /> 

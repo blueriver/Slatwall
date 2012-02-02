@@ -279,8 +279,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		var results = getDAO().getSalePricePromotionRewardsQuery(skuID = arguments.skuID);
 		
-		var bestPrice = 10000000000000;
-		var bestPriceExpiration = now() + 100000000000000;
+		var bestPrice = 1000000000;
+		var bestPriceExpiration = now();
+		
 		var discountLevels = "sku,product,brand,option,productType";
 		var discountTypes = "PercentageOff,AmountOff,Amount";
 		 
@@ -304,8 +305,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 						
 						// If this iteration has a value better than the default
 						if(results["#thisLevel##thisDT#"][i] != "" && results["#thisLevel##thisDT#"][i] < bestPrice) {
+							
 							bestPrice = results["#thisLevel##thisDT#"][i];
 							bestPriceExpiration = results["#thisLevel#EndDateTime"][i];
+							
 						}
 					}	
 				}
