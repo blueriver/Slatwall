@@ -42,8 +42,9 @@ Notes:
 		<cfreturn ormExecuteQuery(" from SlatwallPromotion sp where sp.startDateTime < ? and sp.endDateTime > ? and sp.activeFlag = 1", [now(), now()]) />
 	</cffunction>
 	
-	<cffunction name="getSkuSalePricePromotionRewardsQuery">
-		<cfargument name="skuID" type="string" required="true">
+	<cffunction name="getSalePricePromotionRewardsQuery">
+		<cfargument name="skuID" type="string">
+		<cfargument name="productID" type="string">
 		
 		<cfset var rs="" />
 		<cfset var pt="" />
@@ -139,8 +140,14 @@ Notes:
 			  LEFT JOIN
 				SlatwallPromotion pProductType on prProductType.promotionID = pProductType.promotionID
 			WHERE
+			<cfif structKeyExists(arguments, "skuID")>
 				SlatwallSku.skuID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.skuID#">
 			  AND
+			</cfif>
+			<cfif structKeyExists(arguments, "productID")>
+				SlatwallProduct.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
+			  AND
+			</cfif>
 				(pSku.startDateTime is null or pSku.startDateTime <= GETDATE())
 			  AND
 				(pSku.endDateTime is null or pSku.endDateTime >= GETDATE())
