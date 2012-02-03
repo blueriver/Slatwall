@@ -55,5 +55,8 @@
 		<Services CertifiedMail="OFF" COD="OFF" DeliveryConfirmation="OFF" ElectronicReturnReceipt="OFF" InsuredMail="OFF" RestrictedDelivery="OFF" ReturnReceipt="OFF" SignatureConfirmation="OFF" />
 		<FromPostalCode>#variables.fromPostalCode#</FromPostalCode>
 		<ToPostalCode>#arguments.requestBean.getShipToPostalCode()#</ToPostalCode>
+		<cfif arguments.requestBean.getShipToCountryCode() neq "US">
+			<ToCountry>#getUSPSCountryFromCountryCode(arguments.requestBean.getShipToCountryCode())#</ToCountry>
+		</cfif>
 	</PostageRatesRequest>
 </cfoutput>
