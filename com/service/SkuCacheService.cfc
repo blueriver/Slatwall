@@ -208,7 +208,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 		
 		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#skusForThread#" {
-			logSlatwall("Thread for Sku Cache Update Started");
+			logSlatwall("Thread for Sku Cache Update Started with #arrayLen(updatingSkus)# skus to update");
+			var strartTime = getTickCount();
 			
 			utilityTagService.cfsetting(requesttimeout=1000);
 			
@@ -218,7 +219,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				var skuID = updatingSkus[i].skuID;
 				var propertyList = updatingSkus[i].propertyList;
 				
-				logSlatwall("Sku Cache Updating: #skuID#");
+				
 				
 				var skuRecordQuery = getDAO().getSkuQuery( skuID );
 				var skuCacheRecordQuery = getDAO().getSkuCacheQuery( skuID );
@@ -277,7 +278,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				}
 			}
 			
-			logSlatwall("Thread for Sku Cache Update Finished");
+			var endTime = getTickCount();
+			var duration = endTime - startTime;
+			var durationSeconds = duration/1000;
+			
+			logSlatwall("Thread for Sku Cache Update Finished in #durationSeconds# Seconds");
 		}
 	}
 }
