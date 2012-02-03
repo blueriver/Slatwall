@@ -122,6 +122,11 @@ Notes:
 	</cfcatch>
 </cftry>
 
+<!--- Delete Country codes no longer in use 'AN' & 'YU' --->
+<cfquery name="deleteCountries">
+	DELETE FROM SlatwallCountry WHERE countryCode ='AN' or countryCode = 'YU'
+</cfquery>
+
 <cfquery name="oldProductTemplate">
 	SELECT settingValue FROM SlatwallSetting WHERE settingName = 'product_defaultTemplate'
 </cfquery>
