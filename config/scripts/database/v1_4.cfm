@@ -38,64 +38,87 @@ Notes:
 --->
 
 <cfset local.scriptHasErrors = false />
-
 <!--- Move filename to urltitle for products. --->
 <cftry>
-	<cfset local.fieldExists = false />
-	<cfquery name="updateProduct">
-		UPDATE SlatwallProduct
-		SET urlTitle = fileName
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="index" table="SlatwallProduct" name="local.indexes" />
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallProduct" name="local.columns" />
+	<cfquery name="getColumnInfo" dbtype="query">
+		SELECT * 
+		FROM columns
+		WHERE COLUMN_NAME = 'filename'
 	</cfquery>
-	<cfset local.fieldExists = true />
-	<!--- If field updated, then try to remove the fileName field --->
-	<cfquery name="dropFileName">
-		ALTER TABLE SlatwallProduct
-		DROP COLUMN fileName
-	</cfquery>
-	<cfcatch>
-		<cfif local.fieldExists>
-			<cfset local.scriptHasErrors = true />
+	<cfif getColumnInfo.RecordCount>
+		<cfquery name="updateProduct">
+			UPDATE SlatwallProduct
+			SET urlTitle = fileName
+		</cfquery>
+		<!--- If field updated, then try to remove the fileName field --->
+		<cfquery name="getConstraint" dbtype="query">
+			SELECT INDEX_NAME 
+			FROM indexes
+			WHERE COLUMN_NAME = 'filename'
+		</cfquery>
+		<cfif getConstraint.recordcount>
+			<cfquery name="dropConstraint">
+				ALTER TABLE SlatwallProduct
+				DROP <cfif application.configBean.getDbType() eq "MySQL">INDEX<cfelse>CONSTRAINT</cfif> #getConstraint.INDEX_NAME#
+			</cfquery>
 		</cfif>
+		<cfquery name="dropFileName">
+			ALTER TABLE SlatwallProduct
+			DROP COLUMN fileName
+		</cfquery>
+	</cfif>
+	<cfcatch>
+		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
 
 <!--- Move displayTemplate to productDisplayTemplate for products. --->
 <cftry>
-	<cfset local.fieldExists = false />
-	<cfquery name="updateProduct">
-		UPDATE SlatwallProduct
-		SET productDisplayTemplate = displayTemplate
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallProduct" name="local.columns" />
+	<cfquery name="getColumnInfo" dbtype="query">
+		SELECT * 
+		FROM columns
+		WHERE COLUMN_NAME = 'displayTemplate'
 	</cfquery>
-	<cfset local.fieldExists = true />
-	<!--- If field updated, then try to remove it --->
-	<cfquery name="dropDisplayTemplate">
-		ALTER TABLE SlatwallProduct
-		DROP COLUMN displayTemplate
-	</cfquery>
+	<cfif getColumnInfo.RecordCount>
+		<cfquery name="updateProduct">
+			UPDATE SlatwallProduct
+			SET productDisplayTemplate = displayTemplate
+		</cfquery>
+		<!--- If field updated, then try to remove it --->
+		<cfquery name="dropDisplayTemplate">
+			ALTER TABLE SlatwallProduct
+			DROP COLUMN displayTemplate
+		</cfquery>
+	</cfif>
 	<cfcatch>
-		<cfif local.fieldExists>
-			<cfset local.scriptHasErrors = true />
-		</cfif>
+		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
 
 <!--- Move displayTemplate to productDisplayTemplate for productTypes. --->
 <cftry>
-	<cfset local.fieldExists = false />
-	<cfquery name="updateProductType">
-		UPDATE SlatwallProductType
-		SET productDisplayTemplate = displayTemplate
+	<cfdbinfo datasource="#application.configBean.getDataSource()#" type="Columns" table="SlatwallProductType" name="local.columns" />
+	<cfquery name="getColumnInfo" dbtype="query">
+		SELECT * 
+		FROM columns
+		WHERE COLUMN_NAME = 'displayTemplate'
 	</cfquery>
-	<cfset local.fieldExists = true />
-	<!--- If field updated, then try to remove it --->
-	<cfquery name="dropDisplayTemplate">
-		ALTER TABLE SlatwallProductType
-		DROP COLUMN displayTemplate
-	</cfquery>
+	<cfif getColumnInfo.RecordCount>
+		<cfquery name="updateProductType">
+			UPDATE SlatwallProductType
+			SET productDisplayTemplate = displayTemplate
+		</cfquery>
+		<!--- If field updated, then try to remove it --->
+		<cfquery name="dropDisplayTemplate">
+			ALTER TABLE SlatwallProductType
+			DROP COLUMN displayTemplate
+		</cfquery>
+	</cfif>
 	<cfcatch>
-		<cfif local.fieldExists>
-			<cfset local.scriptHasErrors = true />
-		</cfif>
+		<cfset local.scriptHasErrors = true />
 	</cfcatch>
 </cftry>
 
@@ -106,7 +129,7 @@ Notes:
 <cfif oldProductTemplate.recordcount>
 	<cfquery name="updateSetting">
 		UPDATE SlatwallSetting
-		SET settingValue = oldProductTemplate.settingValue
+		SET settingValue = '#oldProductTemplate.settingValue#'
 		WHERE settingName = 'product_productDefaultTemplate'
 	</cfquery>
 	
