@@ -175,6 +175,7 @@
 		<property name="inventoryService"><ref bean="inventoryService" /></property>
 		<property name="promotionService"><ref bean="promotionService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
+		<property name="utilityTagService"><ref bean="utilityTagService" /></property>
     </bean>
 	<bean id="stockService" parent="parentService" class="Slatwall.com.service.StockService">
         <property name="DAO"><ref bean="stockDAO" /></property>

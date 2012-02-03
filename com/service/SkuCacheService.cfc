@@ -65,6 +65,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="inventoryService" type="any";
 	property name="promotionService" type="any";
 	property name="skuService" type="any";
+	property name="utilityTagService" type="any";
 	
 	variables.skusToUpdate = [];
 	variables.updatingSkus = [];
@@ -81,7 +82,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		logSlatwall("Sku Cache UpdateFromOrder() Called");
 		if(!listFindNoCase("ostNotPlaced,ostClosed,ostCanceled", arguments.order.getOrderStatusType().getSystemCode())) {
 			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
-				updateFromSku(sku=arguments.order.getOrderItems()[i].getSku(), propertyList="qndoo,qnroro");	
+				updateFromSku(sku=arguments.order.getOrderItems()[i].getSku(), propertyList="qndoo,qnroro");
 			}
 		}
 	}
@@ -202,72 +203,81 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	private void function updateSkuCache() {
 		
 		lock timeout="60" scope="Application" {
-			var updatingSkus = duplicate(variables.skusToUpdate);
+			var skusForThread = duplicate(variables.skusToUpdate);
 			variables.skusToUpdate = [];
 		}
 		
-		var productSaleData = {};
+		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#skusForThread#" {
+			logSlatwall("Thread for Sku Cache Update Started");
+			
+			utilityTagService.cfsetting(requesttimeout=1000);
+			
+			var productSaleData = {};
 		
-		for(var i=1; i<=arrayLen(updatingSkus); i++) {
-			var skuID = updatingSkus[i].skuID;
-			var propertyList = updatingSkus[i].propertyList;
-			
-			var skuRecordQuery = getDAO().getSkuQuery( skuID );
-			var skuCacheRecordQuery = getDAO().getSkuCacheQuery( skuID );
-			
-			// Make sure that this is a valid sku
-			if(skuRecordQuery.recordcount) {
+			for(var i=1; i<=arrayLen(updatingSkus); i++) {
+				var skuID = updatingSkus[i].skuID;
+				var propertyList = updatingSkus[i].propertyList;
 				
-				// Check to see if there is a skuCache record yet, if not set the propertyList to "all"
-				if(!skuCacheRecordQuery.recordcount) {
-					propertyList = "all";
-				}
+				logSlatwall("Sku Cache Updating: #skuID#");
 				
-				var data = {};
+				var skuRecordQuery = getDAO().getSkuQuery( skuID );
+				var skuCacheRecordQuery = getDAO().getSkuCacheQuery( skuID );
 				
-				if(listFindNoCase(propertyList, "salePrice") || propertyList == "all") {
+				// Make sure that this is a valid sku
+				if(skuRecordQuery.recordcount) {
 					
-					if(!structKeyExists(productSaleData, skuRecordQuery.productID)) {
-						productSaleData[skuRecordQuery.productID] = getPromotionService().getSalePriceDetailsForProductSkus(productID = skuRecordQuery.productID);
+					// Check to see if there is a skuCache record yet, if not set the propertyList to "all"
+					if(!skuCacheRecordQuery.recordcount) {
+						propertyList = "all";
 					}
 					
-					if(structKeyExists(productSaleData[ skuRecordQuery.productID ], skuID)) {
-						data.salePrice = productSaleData[ skuRecordQuery.productID ][ skuID ].salePrice;
-						data.salePriceExpirationDateTime = productSaleData[ skuRecordQuery.productID ][ skuID ].salePriceExpirationDateTime;
-					} else {
-						data.salePrice = skuRecordQuery.price;
-						data.salePriceExpirationDateTime = "NULL";
+					var data = {};
+					
+					if(listFindNoCase(propertyList, "salePrice") || propertyList == "all") {
+						
+						if(!structKeyExists(productSaleData, skuRecordQuery.productID)) {
+							productSaleData[skuRecordQuery.productID] = getPromotionService().getSalePriceDetailsForProductSkus(productID = skuRecordQuery.productID);
+						}
+						
+						if(structKeyExists(productSaleData[ skuRecordQuery.productID ], skuID)) {
+							data.salePrice = productSaleData[ skuRecordQuery.productID ][ skuID ].salePrice;
+							data.salePriceExpirationDateTime = productSaleData[ skuRecordQuery.productID ][ skuID ].salePriceExpirationDateTime;
+						} else {
+							data.salePrice = skuRecordQuery.price;
+							data.salePriceExpirationDateTime = "NULL";
+						}
+					
 					}
-				
+					if(listFindNoCase(propertyList, "qoh") || propertyList == "all") {
+						data.qoh = getInventoryService().getQOH( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qosh") || propertyList == "all") {
+						data.qosh = getInventoryService().getQOSH( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qndoo") || propertyList == "all") {
+						data.qndoo = getInventoryService().getQNDOO( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qndorvo") || propertyList == "all") {
+						data.qndorvo = getInventoryService().getQNDORVO( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qndosa") || propertyList == "all") {
+						data.qndosa = getInventoryService().getQNDOSA( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qnroro") || propertyList == "all") {
+						data.qnroro = getInventoryService().getQNRORO( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qnrovo") || propertyList == "all") {
+						data.qnrovo = getInventoryService().getQNROVO( skuID=skuID );
+					}
+					if(listFindNoCase(propertyList, "qnrosa") || propertyList == "all") {
+						data.qnrosa = getInventoryService().getQNROSA( skuID=skuID );
+					}
+					
+					getDAO().updateSkuCache(skuID=skuID, data=data);
 				}
-				if(listFindNoCase(propertyList, "qoh") || propertyList == "all") {
-					data.qoh = getInventoryService().getQOH( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qosh") || propertyList == "all") {
-					data.qosh = getInventoryService().getQOSH( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qndoo") || propertyList == "all") {
-					data.qndoo = getInventoryService().getQNDOO( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qndorvo") || propertyList == "all") {
-					data.qndorvo = getInventoryService().getQNDORVO( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qndosa") || propertyList == "all") {
-					data.qndosa = getInventoryService().getQNDOSA( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qnroro") || propertyList == "all") {
-					data.qnroro = getInventoryService().getQNRORO( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qnrovo") || propertyList == "all") {
-					data.qnrovo = getInventoryService().getQNROVO( skuID=skuID );
-				}
-				if(listFindNoCase(propertyList, "qnrosa") || propertyList == "all") {
-					data.qnrosa = getInventoryService().getQNROSA( skuID=skuID );
-				}
-				
-				getDAO().updateSkuCache(skuID=skuID, data=data);
 			}
+			
+			logSlatwall("Thread for Sku Cache Update Finished");
 		}
 	}
-	
 }
