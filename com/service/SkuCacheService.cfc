@@ -250,28 +250,28 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					
 					}
 					if(listFindNoCase(propertyList, "qoh") || propertyList == "all") {
-						data.qoh = getInventoryService().getQOH( skuID=skuID );
+						data.qoh = getInventoryService().getQOH( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qosh") || propertyList == "all") {
-						data.qosh = getInventoryService().getQOSH( skuID=skuID );
+						data.qosh = getInventoryService().getQOSH( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qndoo") || propertyList == "all") {
-						data.qndoo = getInventoryService().getQNDOO( skuID=skuID );
+						data.qndoo = getInventoryService().getQNDOO( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qndorvo") || propertyList == "all") {
-						data.qndorvo = getInventoryService().getQNDORVO( skuID=skuID );
+						data.qndorvo = getInventoryService().getQNDORVO( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qndosa") || propertyList == "all") {
-						data.qndosa = getInventoryService().getQNDOSA( skuID=skuID );
+						data.qndosa = getInventoryService().getQNDOSA( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qnroro") || propertyList == "all") {
-						data.qnroro = getInventoryService().getQNRORO( skuID=skuID );
+						data.qnroro = getInventoryService().getQNRORO( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qnrovo") || propertyList == "all") {
-						data.qnrovo = getInventoryService().getQNROVO( skuID=skuID );
+						data.qnrovo = getInventoryService().getQNROVO( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					if(listFindNoCase(propertyList, "qnrosa") || propertyList == "all") {
-						data.qnrosa = getInventoryService().getQNROSA( skuID=skuID );
+						data.qnrosa = getInventoryService().getQNROSA( skuID=skuID, skuRemoteID=skuRecordQuery.remoteID );
 					}
 					
 					getDAO().updateSkuCache(skuID=skuID, data=data);
