@@ -39,6 +39,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean" />
 <cfparam name="rc.allSettings" type="struct" />
 <cfparam name="rc.productTemplateOptions" type="any" />
+<cfparam name="rc.shippingWeightUnitCodeOptions" type="any" />
 
 <cfsilent>
 	<cfset local.yesNoValueOptions = [{name=$.slatwall.rbKey('define.yes'), value=1},{name=$.slatwall.rbKey('define.no'), value=0}] />
@@ -118,7 +119,7 @@ Notes:
 								</select>
 							</td>
 						<cfelse>
-							<td id="spdproduct_defaulttemplate" class="value">#rc.allSettings.product_productDisplayTemplate.getSettingValue()#</td>	
+							<td id="spdproduct_productdisplayttemplate" class="value">#rc.allSettings.product_productDisplayTemplate.getSettingValue()#</td>	
 						</cfif>
 					</tr>
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityHeldBack#" title="#rc.$.Slatwall.rbKey('setting.product.quantityHeldBack')#" fieldName="product_quantityHeldBack">
@@ -127,6 +128,20 @@ Notes:
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityOrderMinimum#" title="#rc.$.Slatwall.rbKey('setting.product.quantityOrderMinimum')#" fieldName="product_quantityOrderMinimum">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_quantityOrderMaximum#" title="#rc.$.Slatwall.rbKey('setting.product.quantityOrderMaximum')#" fieldName="product_quantityOrderMaximum">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_shippingWeight#" title="#rc.$.Slatwall.rbKey('setting.product.shippingWeight')#" fieldName="product_shippingWeight">
+					<tr class="spdproduct_shippingweightunitcode">
+						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.product.shippingWeightUnitCode')#</td>
+						<cfif rc.edit>
+							<td id="spdproduct_shippingweightunitcode" class="value">
+								<select name="product_shippingWeightUnitCode">
+									<cfloop array="#rc.shippingWeightUnitCodeOptions#" index="local.option">
+										<option value="#local.option['value']#" <cfif rc.allSettings.product_shippingWeightUnitCode.getSettingValue() eq local.option['value']>selected="selected"</cfif>>#local.option['name']#</option>
+									</cfloop>
+								</select>
+							</td>
+						<cfelse>
+							<td id="spdproduct_shippingweightunitcode" class="value">#rc.allSettings.product_shippingWeightUnitCode.getSettingValue()#</td>	
+						</cfif>
+					</tr>
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.product_trackInventoryFlag#" title="#rc.$.Slatwall.rbKey('setting.product.trackInventoryFlag')#" fieldName="product_trackInventoryFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 				</table>
 			</div>

@@ -385,7 +385,35 @@ Notes:
 				</cfif>
 			</td>
 		</tr>
-				
+
+
+		<!--- Shipping Weight Unit Code --->
+		<tr>
+			<td class="property varWidth">
+				<a href="##" class="tooltip">
+					#rc.$.Slatwall.rbKey("setting.product.shippingWeightUnitCode")#
+					<span>#rc.$.Slatwall.rbKey("setting.product.shippingWeightUnitCode_hint")#</span>
+				</a>
+			</td>
+			<td>
+				<cfif rc.edit>
+					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="shippingWeightUnitCode" edit="true" displayType="plain" fieldType="select" valueOptions="#rc.productType.getShippingWeightUnitCodeOptions()#">
+				<cfelse>
+					#rc.productType.getInheritedSetting("shippingWeightUnitCode")#
+				</cfif>
+			</td>
+			<td>
+				<cfset local.thisSettingSource = rc.ProductType.getWhereSettingDefined("shippingWeightUnitCode") />
+				<cfif local.thisSettingSource.type eq "Global">
+					<a href="#buildURL(action='admin:setting.detail')#">#rc.$.Slatwall.rbKey('entity.setting.global')#</a>
+				<cfelseif local.thisSettingSource.type eq "Product Type" and local.thisSettingSource.id neq rc.ProductType.getProductTypeID()>
+					<a href="#buildURL(action='admin:product.detailProductType',queryString='productTypeID=#local.thisSettingSource.id#')#">#local.thisSettingSource.name#</a>
+				<cfelse>
+					#local.thisSettingSource.name#
+				</cfif>
+			</td>
+		</tr>
+		
 		
 		
 		<!--- Track Inventory Flag --->
