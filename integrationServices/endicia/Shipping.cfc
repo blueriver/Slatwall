@@ -152,8 +152,9 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		return arguments.pounds * 16;
 	}
 	
-	public any function getUSPSCountryFromCountryCode(required any countryCode) {
+	public string function getUSPSCountryFromCountryCode(required any countryCode) {
 		var countries = {};
+		
 		countries.AD="Andorra";
 		countries.AE="United Arab Emirates";
 		countries.AF="Afghanistan";
@@ -404,6 +405,6 @@ component accessors="true" output="false" displayname="Endicia" implements="Slat
 		countries.ZM="Zambia";
 		countries.ZW="Zimbabwe";
 
-		return countires[ arguments.countryCode ];
+		return countries[ arguments.countryCode ];
 	}
 }
