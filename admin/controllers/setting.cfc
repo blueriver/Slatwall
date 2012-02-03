@@ -46,6 +46,7 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="paymentService" type="any";
 	property name="settingService" type="any";
 	property name="shippingService" type="any";
+	property name="skuCacheService" type="any";
 	property name="taxService" type="any";
 	property name="dataService" type="any";
 	property name="utilityFormService" type="any";
@@ -534,5 +535,10 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:setting.detailslatwallupdate?reload=true", preserve="message");	
 	}
 	
+	public void function updateSkuCache(required struct rc) {
+		getSkuCacheService().updateAllSkus();
+		rc.message = rbKey("admin.setting.updateSkuCache_success");
+		getFW().redirect(action="admin:main.default", preserve="message");	
+	}
 	
 }
