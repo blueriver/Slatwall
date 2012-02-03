@@ -149,14 +149,6 @@
 	<bean id="roundingRuleService" parent="parentService" class="Slatwall.com.service.RoundingRuleService">
         <property name="DAO"><ref bean="RoundingRuleDAO" /></property>
 	</bean>
-    <bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
-        <property name="DAO"><ref bean="SkuDAO" /></property>
-		<property name="optionService"><ref bean="optionService" /></property>
-    </bean>
-	<bean id="skuCacheService" parent="parentService" class="Slatwall.com.service.SkuCacheService">
-        <property name="DAO"><ref bean="SkuCacheDAO" /></property>
-		<property name="skuService"><ref bean="skuService" /></property>
-    </bean>
     <bean id="sessionService" parent="parentService" class="Slatwall.com.service.SessionService">
         <property name="DAO"><ref bean="SessionDAO" /></property>
 		<property name="accountService"><ref bean="accountService" /></property>
@@ -173,6 +165,16 @@
         <property name="DAO"><ref bean="shippingDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
 		<property name="integrationService"><ref bean="integrationService" /></property>
+    </bean>
+	<bean id="skuService" parent="parentService" class="Slatwall.com.service.SkuService">
+        <property name="DAO"><ref bean="SkuDAO" /></property>
+		<property name="optionService"><ref bean="optionService" /></property>
+    </bean>
+	<bean id="skuCacheService" parent="parentService" class="Slatwall.com.service.SkuCacheService">
+        <property name="DAO"><ref bean="SkuCacheDAO" /></property>
+		<property name="inventoryService"><ref bean="inventoryService" /></property>
+		<property name="promotionService"><ref bean="promotionService" /></property>
+		<property name="skuService"><ref bean="skuService" /></property>
     </bean>
 	<bean id="stockService" parent="parentService" class="Slatwall.com.service.StockService">
         <property name="DAO"><ref bean="stockDAO" /></property>
