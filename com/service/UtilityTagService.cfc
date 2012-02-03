@@ -131,6 +131,6 @@ Notes:
 		<cffile attributecollection="#attributes#" action="#arguments.action#" result="result" >
 		
 		<cfreturn result />
-	</cffunction> 
+	</cffunction>
 	
 </cfcomponent>
