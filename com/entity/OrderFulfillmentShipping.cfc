@@ -62,13 +62,13 @@ component displayname="Order Fulfillment Shipping" entityname="SlatwallOrderFulf
 		
 		return super.init();
 	}
-
-	public void function removeAccountAddress() {     
+	
+	public void function removeAccountAddress() {
 		structDelete(variables,"AccountAddress");     
 	}
 	 
-	public void function removeShippingAddress() {     
-		structDelete(variables,"ShippingAddress");     
+	public void function removeShippingAddress() {
+		structDelete(variables,"ShippingAddress");
 	}
 	 
 	public any function getAccountAddressOptions() {

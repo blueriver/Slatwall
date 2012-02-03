@@ -45,7 +45,7 @@ Notes:
 		<cfif not listFind(rc.orderRequirementsList, 'account') and (rc.edit eq "" or rc.edit eq "fulfillment")>
 			<div id="checkoutFulfillmentContent" class="contentBlock">
 				<cfif listFind(rc.orderRequirementsList, 'fulfillment') || (rc.edit eq "fulfillment")>
-					<form name="fulfillmentShipping" method="post">
+					<form name="fulfillmentShipping" method="post" action="?update=1">
 						<input type="hidden" name="slatAction" value="frontend:checkout.saveOrderFulfillments" />
 				</cfif>
 				<cfset local.orderFulfillmentIndex = 1 />
