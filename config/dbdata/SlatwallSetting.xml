@@ -29,6 +29,7 @@
 		<Record settingID="dbb327b4072886150da55e5b3a74b04f" settingName="product_quantityOrderMinimum" settingValue="1" />
 		<Record settingID="dbb327b5b15c7c5b479c485de67bf57c" settingName="product_quantityOrderMaximum" settingValue="1000" />
 		<Record settingID="dbb327b6a5a78a0eae4baf0b0c3382b1" settingName="product_shippingWeight" settingValue="1" />
+		<Record settingID="dbb327b8fb8c0843e5cb7cd6525e2f6a" settingName="product_shippingWeightUnitCode" settingValue="lb" />
 		<Record settingID="dbb32785aa5997b2bfb21b2ac7e08a86" settingName="product_trackInventoryFlag" settingValue="0" />
 		
 		<Record settingID="dbb3279def932d8ce05d3405228630fe" settingName="paymentMethod_creditCard_creditCardTypes" settingValue="Mastercard,Visa,Amex,Discover" />
@@ -56,7 +57,7 @@
 Below Are UUID's to use... delete after using
 
 	
-	dbb327b8fb8c0843e5cb7cd6525e2f6a
+	
 	dbb327b9e285426311f9c61725aeee89
 	dbb327badb02af9dd10a31a0cc93692d
 	dbb327bba727c794a7661ef523b17973

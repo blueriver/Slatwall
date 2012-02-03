@@ -68,6 +68,8 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.allSettings = getSettingService().getSettings();
 		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
 		rc.muraCategories = getProductService().getMuraCategories(siteID=rc.$.event('siteID'),parentID=0);
+		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
+		
 		var rootCategoryID = rc.$.slatwall.setting("product_rootProductCategory");
 		if(rootCategoryID == "0") {
 			rc.rootCategory = rc.$.slatwall.rbKey("define.all");

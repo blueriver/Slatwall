@@ -57,6 +57,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="quantityOrderMinimum" ormtype="integer";
 	property name="quantityOrderMaximum" ormtype="integer";
 	property name="shippingWeight" ormtype="big_decimal" formatType="weight";
+	property name="shippingWeightUnitCode" ormtype="string";
 	property name="trackInventoryFlag" ormtype="boolean";
 
 	// Related Object Properties (One-To-One)

@@ -60,6 +60,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="quantityOrderMinimum" ormtype="integer";
 	property name="quantityOrderMaximum" ormtype="integer";
 	property name="shippingWeight" ormtype="integer";
+	property name="shippingWeightUnitCode" ormtype="string";
 	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Remote properties
@@ -84,9 +85,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 
 	// Non-Persistent Properties
-	property name="idPathList" type="string" persistent="false";
-	property name="displayTemplateOptions" type="array" persistent="false";
 	property name="parentProductTypeOptions" type="array" persistent="false";
+	property name="productDisplayTemplateOptions" type="array" persistent="false";
+	property name="shippingWeightUnitCodeOptions" type="array" persistent="false";
 
 	public ProductType function init(){
 		// set default collections for association management methods
@@ -109,21 +110,21 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return super.init();
 	}
 	
-	public any function buildProductTypeIDPath() {
-		var idPath = "";
-		var currentProductType = this;
-		var parentExists = true;
+	public string function buildIDPathList() {
+		var idPathList = "";
 		
+		var thisProductType = this;
+		var hasParent = true;
 		do {
-			idPath = listPrepend(idPath, currentProductType.getProductTypeID());
-			if(!isNull(currentProductType.getParentProductType())) {
-				currentProductType = currentProductType.getParentProductType();		
+			idPathList = listPrepend(idPathList, thisProductType.getProductTypeID());
+			if( isNull(thisProductType.getParentProductType()) ) {
+				hasParent = false;
 			} else {
-				parentExists = false;
+				thisProductType = thisProductType.getParentProductType();
 			}
-		} while (parentExists);
+		} while( hasParent );
 		
-		return idPath;
+		return idPathList;
 	}
 	
 	public any function getProductTypeTree() {
@@ -180,34 +181,8 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
     // END: Setting Methods
     
     // ============ START: Non-Persistent Property Methods =================
-    
-    public string function getIDPathList() {
-		if(!structKeyExists(variables, "idPathList")) {
-			variables.idPathList = "";
-			var thisProductType = this;
-			var hasParent = true;
-			do {
-				variables.idPathList = listPrepend(variables.idPathList, thisProductType.getProductTypeID());
-				if( isNull(thisProductType.getParentProductType()) ) {
-					hasParent = false;
-				} else {
-					thisProductType = thisProductType.getParentProductType();
-				}
-			} while( hasParent );
-		}
-		return variables.idPathList;
-	}
-    
-	public any function getProductDisplayTemplateOptions() {
-		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {
-			variables.productDisplayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
-			arrayPrepend(variables.productDisplayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('productDisplayTemplate')# )"});
-		}
-		
-		return variables.productDisplayTemplateOptions;
-	}
-    
-    public any function getParentProductTypeOptions() {
+	
+	public any function getParentProductTypeOptions() {
 		if(!structKeyExists(variables, "parentProductTypeOptions")) {
 			variables.parentProductTypeOptions=[];
 			
@@ -233,6 +208,23 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return variables.parentProductTypeOptions;
 	}
 	
+    public any function getProductDisplayTemplateOptions() {
+		if(!structKeyExists(variables, "productDisplayTemplateOptions")) {
+			variables.productDisplayTemplateOptions = getService("productService").getProductTemplates(siteID=$.event('siteid'));
+			arrayPrepend(variables.productDisplayTemplateOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('productDisplayTemplate')# )"});
+		}
+		
+		return variables.productDisplayTemplateOptions;
+	}
+	
+	public any function getShippingWeightUnitCodeOptions() {
+		if(!structKeyExists(variables, "shippingWeightUnitCodeOptions")) {
+			variables.shippingWeightUnitCodeOptions = getService("settingService").getMeaurementUnitOptions(measurementType="weight");
+			arrayPrepend(variables.shippingWeightUnitCodeOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('shippingWeightUnitCode')# )"});
+		}
+		return variables.shippingWeightUnitCodeOptions; 
+	}
+    
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
@@ -285,14 +277,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public void function preInsert(){
 		super.preInsert();
-		setProductTypeIDPath( buildProductTypeIDPath() );
+		setProductTypeIDPath( buildIDPathList() );
 		getService("skuCacheService").updateFromProductType( this );
 		
 	}
 	
 	public void function preUpdate(struct oldData){
 		super.preUpdate(argumentcollection=arguments);
-		setProductTypeIDPath( buildProductTypeIDPath() );
+		setProductTypeIDPath( buildIDPathList() );
 		getService("skuCacheService").updateFromProductType( this );
 	}
 	

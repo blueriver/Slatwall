@@ -62,6 +62,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="quantityOrderMinimum" ormtype="integer";
 	property name="quantityOrderMaximum" ormtype="integer";
 	property name="shippingWeight" ormtype="integer";
+	property name="shippingWeightUnitCode" ormtype="string";
 	property name="trackInventoryFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
@@ -97,6 +98,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="brandName" type="string" persistent="false";
 	property name="productDisplayTemplateOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
+	property name="shippingWeightUnitCodeOptions" type="array" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -526,7 +528,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		var attributeSets = [];
 		// get all the parent product types
 		if(!isNull(getProductType())){
-			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(getProductType().getIDPathList()));
+			return getService("ProductService").getAttributeSets(arguments.attributeSetTypeCode,listToArray(getProductType().getProductTypeIDPath()));
 		} else {
 			return attributeSets;
 		}
@@ -664,6 +666,14 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return variables.productDisplayTemplateOptions;
 	}
 	
+	public any function getShippingWeightUnitCodeOptions() {
+		if(!structKeyExists(variables, "shippingWeightUnitCodeOptions")) {
+			variables.shippingWeightUnitCodeOptions = getService("settingService").getMeaurementUnitOptions(measurementType="weight");
+			arrayPrepend(variables.shippingWeightUnitCodeOptions, {value="", name="#rbKey('setting.inherit')# ( #getInheritedSetting('shippingWeightUnitCode')# )"});
+		}
+		return variables.shippingWeightUnitCodeOptions; 
+	}
+
 	public string function getBrandName() {
 		if(!structKeyExists(variables, "brandName")) {
 			variables.brandName = "";

@@ -186,6 +186,17 @@ component extends="BaseService" output="false" accessors="true"  {
 		return settings;
 	}
 	
+	public array function getMeaurementUnitOptions(required string measurementType) {
+		var smartList = this.getMeasurementUnitSmartList();
+		smartList.addFilter("measurementType", arguments.measurementType);
+		
+		smartList.addSelect("unitCode", "value");
+		smartList.addSelect("unitName", "name");
+		
+		
+		return smartList.getRecords();
+	}
+	
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
 		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Started", generalLog=true);

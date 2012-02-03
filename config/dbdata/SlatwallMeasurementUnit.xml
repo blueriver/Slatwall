@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Table tableName="SlatwallMeasurementUnit">
+	<Columns>
+		<column name="unitCode" fieldtype="id" />
+		<column name="measurementType" />
+		<column name="unitName" />
+	</Columns>
+	<Records>
+		<Record unitCode="mg" measurementType="weight" unitName="Milligram" />
+		<Record unitCode="g" measurementType="weight" unitName="Gram" />
+		<Record unitCode="kg" measurementType="weight" unitName="Kilogram" />
+		<Record unitCode="oz" measurementType="weight" unitName="Ounce" />
+		<Record unitCode="lb" measurementType="weight" unitName="Pound" />
+	</Records>
+</Table>
