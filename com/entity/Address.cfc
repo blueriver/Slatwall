@@ -90,10 +90,6 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	public any function getCountry() {
 		if(!structKeyExists(variables, "country")) {
 			variables.country = getService("addressService").getCountry(getCountryCode());
-			if(isNull(variables.country)) {
-				writeDump(getCountryCode());
-				abort;
-			}
 		}
 		return variables.country;
 	}

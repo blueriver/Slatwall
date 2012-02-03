@@ -43,7 +43,11 @@
 			<AccountID>#variables.accountID#</AccountID>
 			<PassPhrase>#variables.passPhrase#</PassPhrase>
 		</CertifiedIntermediary>
-		<MailClass>Domestic</MailClass>
+		<cfif arguments.requestBean.getShipToCountryCode() eq "US">
+			<MailClass>Domestic</MailClass>
+		<cfelse>
+			<MailClass>International</MailClass>
+		</cfif>
 		<WeightOz>#totalItemsWeight#</WeightOz>
 		<MailpieceShape>Parcel</MailpieceShape>
 		<Machinable>True</Machinable>
