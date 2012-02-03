@@ -49,9 +49,11 @@ Notes:
 <cfparam name="attributes.showPostalCode" type="boolean" default="true" />
 <cfparam name="attributes.showCountry" type="boolean" default="true" />
 
+<cfset thisAddressID = createUUID() />
+
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<div class="addressDisplay">
+		<div id="#thisAddressID#" class="addressDisplay">
 			<cfif attributes.edit>
 				<dl>
 					<cfif attributes.showCountry>
@@ -91,7 +93,7 @@ Notes:
 							
 							var addressData = {
 								apiKey: '#request.context.$.slatwall.getAPIKey("DisplayAddressDisplay", "get")#',
-								addressID : jQuery('input[name="addressID"]').val(),
+								addressID : jQuery('input[name="#attributes.fieldNamePrefix#addressID"]').val(),
 								fieldNamePrefix : '#attributes.fieldNamePrefix#',
 								showName : '#attributes.showName#',
 								showCompany : '#attributes.showCompany#',
@@ -122,7 +124,7 @@ Notes:
 								dataType: "json",
 								context: document.body,
 								success: function(r) {
-									jQuery('div.addressDisplay').replaceWith(r);
+									jQuery('###thisAddressID#').replaceWith(r);
 								}
 							});
 							
