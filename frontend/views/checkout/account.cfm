@@ -55,7 +55,7 @@ Notes:
 					#view("account/login")#
 				</cfif>
 				<div class="accountDetails">
-					<form name="account" method="post">
+					<form name="account" method="post" action="?update=1">
 						<input type="hidden" name="slatAction" value="frontend:checkout.saveorderaccount" />
 						<input type="hidden" name="siteID" value="#$.event('siteID')#" />
 						<input type="hidden" name="account.accountID" value="#rc.account.getAccountID()#" />

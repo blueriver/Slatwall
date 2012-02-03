@@ -469,7 +469,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			param name="data.saveAccountAddress" default="0";
 			param name="data.saveAccountAddressName" default="";
 			param name="data.addressIndex" default="0";
-			
+
 			// Get Address
 			if(data.addressIndex != 0) {
 				var address = getAddressService().getAddress(data.accountAddresses[data.addressIndex].address.addressID, true);
@@ -484,6 +484,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			address.populate(newAddressDataStruct);
 			var serializedAddressAfter = address.getSimpleValuesSerialized();
 			
+			// If it has changed we need to update Taxes and Shipping Options
 			if(serializedAddressBefore != serializedAddressAfter) {
 				arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
 				getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
@@ -513,19 +514,40 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 					accountAddress.setAccountAddressName(data.accountAddresses[data.addressIndex].accountAddressName);
 				}
 			
-				arguments.orderFulfillment.removeShippingAddress();
+			
+				// If there was previously a shipping Address we need to remove it and recalculate
+				if(!isNull(arguments.orderFulfillment.getShippingAddress())) {
+					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					arguments.orderFulfillment.removeShippingAddress();
+				}
+				
+				// If there was previously an account address and we switch it, then we need to recalculate
+				if(!isNull(arguments.orderFulfillment.getAccountAddress()) && arguments.orderFulfillment.getAccountAddress().getAccountAddressID() != accountAddress.getAccountAddressID()) {
+					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+				}
+				
+				// Set the new account address in the order
 				arguments.orderFulfillment.setAccountAddress(accountAddress);
 			} else {
+				
+				// If there was previously an account address we need to remove and recalculate
+				if(!isNull(arguments.orderFulfillment.getAccountAddress())) {
+					arguments.orderFulfillment.removeShippingMethodAndMethodOptions();
+					getTaxService().updateOrderAmountsWithTaxes(arguments.orderFulfillment.getOrder());
+					arguments.orderFulfillment.removeAccountAddress();
+				}
+				
 				// Set the address in the order Fulfillment as shipping address
 				arguments.orderFulfillment.setShippingAddress(address);
-				arguments.orderFulfillment.removeAccountAddress();
 			}
 		
 			// Validate & Save Address
 			address.validate(context="full");
 		
 			address = getAddressService().saveAddress(address);
-		
+			
 			// Check for a shipping method option selected
 			if(structKeyExists(arguments.data, "orderShippingMethodOptionID")) {
 				var methodOption = this.getOrderShippingMethodOption(arguments.data.orderShippingMethodOptionID);
