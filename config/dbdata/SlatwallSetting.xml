@@ -50,15 +50,13 @@
 		<Record settingID="dbb327ac9f8ef0c160cd8b5c4f07ddfa" settingName="advanced_timeFormat" settingValue="hh:mm tt" />
 		<Record settingID="dbb327af9751c77495e36657075299c3" settingName="advanced_currencyLocale" settingValue="English (US)" />
 		<Record settingID="dbb327b0b5496521002aa35ab68ab120" settingName="advanced_currencyType" settingValue="Local" />
+		<Record settingID="dbb327b9e285426311f9c61725aeee89" settingName="advanced_useSkuCacheFlag" settingValue="1" />
 		
 	</Records>
 </Table>
 <!--
 Below Are UUID's to use... delete after using
 
-	
-	
-	dbb327b9e285426311f9c61725aeee89
 	dbb327badb02af9dd10a31a0cc93692d
 	dbb327bba727c794a7661ef523b17973
 	dbb327bca316435a854e3e0fef05d620

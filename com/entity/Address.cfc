@@ -97,6 +97,7 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	public array function getCountryCodeOptions() {
 		if(!structKeyExists(variables, "countryCodeOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallCountry");
+			smartList.addFilter(propertyIdentifier="activeFlag", value=1);
 			smartList.addSelect(propertyIdentifier="countryName", alias="name");
 			smartList.addSelect(propertyIdentifier="countryCode", alias="value");
 			smartList.addOrder("countryName|ASC");

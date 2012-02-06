@@ -77,7 +77,7 @@ Notes:
 				</cfif>
 			</div>
 			<div class="newComment">
-				<form name="addComment" method="post" action="?slatAction=admin:comment.createComment" />
+				<!---<form name="addComment" method="post" action="?slatAction=admin:comment.createComment" />--->
 					<input type="hidden" name="commentRelationships[1].commentRelationshipID" value="" />
 					<input type="hidden" name="commentRelationships[1].#attributes.entity.getClassName()#.#attributes.entity.getPrimaryIDPropertyName()#" value="#attributes.entity.getPrimaryIDValue()#" />
 					<input type="hidden" name="returnURL" value="#attributes.returnURL#" />
@@ -85,8 +85,13 @@ Notes:
 						<dt>New Comment</dt>
 						<dd><cf_SlatwallFormField fieldType="textarea" fieldName="comment"> </dd>
 					</dl>
-					<button type="submit">Add Comment</button>
-				</form>
+					<button id="submitComment">Add Comment</button>
+				<!---</form>--->
+				<script type="text/javascript">
+					jQuery('##submitComment').click(function(e){
+						
+					});
+				</script>
 			</div>
 		</div>
 	</cfoutput>
