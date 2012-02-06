@@ -26,7 +26,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	property name="selects" type="struct" hint="This struct holds any selects that are to be used in creating the records array";
 	
 	property name="whereGroups" type="array" hint="this holds all filters and ranges";
+	
 	property name="orders" type="array" hint="This struct holds the display order specification based on property";
+	
+	property name="whereConditions" type="array";
 	
 	property name="keywordProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
 	property name="searchScoreProperties" type="struct" hint="This struct holds the properties that searches reference and their relative weight";
@@ -57,6 +60,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		setSelects({});
 		setWhereGroups([]);
+		setWhereConditions([]);
 		setOrders([]);
 		setKeywordProperties({});
 		setKeywords([]);
@@ -272,6 +276,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		variables.whereGroups[arguments.whereGroup].filters[aliasedProperty] = arguments.value;
 	}
 	
+	public void function addWhereCondition(required string condition, struct conditionParams={}) {
+		arrayAppend(variables.whereConditions, arguments);
+	}
+	
 	public void function addLikeFilter(required string propertyIdentifier, required string value, numeric whereGroup=1) {
 		confirmWhereGroup(arguments.whereGroup);
 		var aliasedProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
@@ -436,6 +444,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			}
 		}
 		
+		
+		// Add Search Filters if keywords exist
 		if( arrayLen(variables.Keywords) && structCount(variables.keywordProperties) ) {
 			if(len(hqlWhere) == 0) {
 				if(!arguments.suppressWhere) {
@@ -453,6 +463,21 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 			}
 			hqlWhere = left(hqlWhere, len(hqlWhere)-3 ) & ")";
+		}
+		
+		// Add Where Conditions
+		if( arrayLen(getWhereConditions()) ) {
+			if(len(hqlWhere) == 0) {
+				if(!arguments.suppressWhere) {
+					hqlWhere &= " WHERE";
+				}
+			} else {
+				hqlWhere &= " AND";
+			}
+			for(var i=1; i<=arrayLen(getWhereConditions()); i++) {
+				structAppend(variables.hqlParams,getWhereConditions()[i].conditionParams);
+				hqlWhere &= " #getWhereConditions()[i].condition#";
+			}
 		}
 		
 		return hqlWhere;
@@ -777,6 +802,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		session.entitySmartList[ savedStateID ] = structNew();
 		session.entitySmartList[ savedStateID ][ "entities" ] = duplicate(variables["entities"]);
 		session.entitySmartList[ savedStateID ][ "whereGroups" ] = duplicate(variables["whereGroups"]);
+		session.entitySmartList[ savedStateID ][ "whereConditions" ] = duplicate(variables["whereConditions"]);
 		session.entitySmartList[ savedStateID ][ "orders" ] = duplicate(variables["orders"]);
 		session.entitySmartList[ savedStateID ][ "keywordProperties" ] = duplicate(variables["keywordProperties"]);
 		session.entitySmartList[ savedStateID ][ "searchScoreProperties" ] = duplicate(variables["searchScoreProperties"]);
