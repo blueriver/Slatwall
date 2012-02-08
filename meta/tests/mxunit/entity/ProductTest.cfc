@@ -36,16 +36,22 @@
 Notes:
 
 */
-component extends="mxunit.framework.TestCase" output="false" {
+component extends="Slatwall.meta.tests.mxunit.BaseTest" output="false" {
+
+	// @hint put things in here that you want to run befor EACH test
 	public void function SetUp() {
-		variables.productEntity = new Slatwall.com.entity.Product();
+		variables.product = getService("productService").newProduct();
 	}
 	
-	public void function testEntityMethodGetQIA() {
-		variables.productEntity.setQOH(6);
-		variables.productEntity.setQC(2);
-		variables.productEntity.setQOO(8);
-		assertEquals(4, variables.productEntity.getQIA());
+	// @hint put things in here that you want to run after EACH test
+	public void function tearDown() {
+		
+	}
+	
+	public void function productUrlIsCorrectlyFormatted() {
+		variables.product.setURLTitle("nike-air-jorden");
+		
+		assertEquals("/sp/nike-air-jorden/", variables.product.getProductURL());
 	}
 }
 

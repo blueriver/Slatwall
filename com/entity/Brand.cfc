@@ -68,8 +68,8 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	public Brand function init(){
 	   // set default collections for association management methods
-	   if(isNull(variables.Products)) {
-	   	   variables.Products = [];
+	   if(isNull(variables.products)) {
+	   	   variables.products = [];
 	   }
 	   
 	   return super.init();
