@@ -46,6 +46,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	property name="searchTime" type="numeric";
 	
+	property name="cacheable" type="boolean";
+	property name="cacheName" type="string";
+	
 	// Delimiter Settings
 	variables.subEntityDelimiters = "._";
 	variables.valueDelimiter = ",";
@@ -70,6 +73,9 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		setHQLParams({});
 		setCurrentURL("");
 		setCurrentPageDeclaration(1);
+		
+		setCacheable(false);
+		setCacheName("");
 		
 		// Set currentURL from the arguments
 		variables.currentURL = arguments.currentURL;
@@ -555,7 +561,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	
 	public array function getRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
-			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true"});
+			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
 		}
 		return variables.records;
 	}
@@ -572,7 +578,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 			// If no search criteria then we can speed up the process by setting the pageRecords using ormExecuteQuery with offset & maxRecords
 			} else {
-				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true"});
+				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 			}
 			
 		}
@@ -799,22 +805,40 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		
 		arrayPrepend(session.entitySmartList.savedStates, savedStateID);
 		
-		session.entitySmartList[ savedStateID ] = structNew();
-		session.entitySmartList[ savedStateID ][ "entities" ] = duplicate(variables["entities"]);
-		session.entitySmartList[ savedStateID ][ "whereGroups" ] = duplicate(variables["whereGroups"]);
-		session.entitySmartList[ savedStateID ][ "whereConditions" ] = duplicate(variables["whereConditions"]);
-		session.entitySmartList[ savedStateID ][ "orders" ] = duplicate(variables["orders"]);
-		session.entitySmartList[ savedStateID ][ "keywordProperties" ] = duplicate(variables["keywordProperties"]);
-		session.entitySmartList[ savedStateID ][ "searchScoreProperties" ] = duplicate(variables["searchScoreProperties"]);
-		session.entitySmartList[ savedStateID ][ "keywords" ] = duplicate(variables["keywords"]);
-		session.entitySmartList[ savedStateID ][ "pageRecordsStart" ] = duplicate(variables["pageRecordsStart"]);
-		session.entitySmartList[ savedStateID ][ "pageRecordsShow" ] = duplicate(variables["pageRecordsShow"]);
-		session.entitySmartList[ savedStateID ][ "entityJoinOrder" ] = duplicate(variables["entityJoinOrder"]);
-		
+		session.entitySmartList[ savedStateID ] = getStateStruct();
 		for(var s=arrayLen(session.entitySmartList.savedStates); s>=3; s--) {
 			removeSavedState(session.entitySmartList.savedStates[s]);
 		}
 		
 		return savedStateID;
 	}
+	
+	public struct function getStateStruct() {
+		var stateStruct = {};
+		
+		stateStruct.entities = duplicate(variables.entities);
+		stateStruct.whereGroups = duplicate(variables.whereGroups);
+		stateStruct.whereConditions = duplicate(variables.whereConditions);
+		stateStruct.orders = duplicate(variables.orders);
+		stateStruct.keywordProperties = duplicate(variables.keywordProperties);
+		stateStruct.searchScoreProperties = duplicate(variables.searchScoreProperties);
+		stateStruct.keywords = duplicate(variables.keywords);
+		stateStruct.pageRecordsStart = duplicate(variables.pageRecordsStart);
+		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
+		stateStruct.entityJoinOrder = duplicate(variables.entityJoinOrder);
+		
+		return stateStruct;
+	}
+	
+	public any function getCacheName() {
+		// Take the stateStruct, serialize it, and turn that list it into a an array
+		var valueArray = listToArray(serializeJSON(getStateStruct()));
+		
+		// Sort the array so that the values always end up the same
+		arraySort(valueArray,"text");
+		
+		// Turn the array back into a list, lcase, and hash for the name
+		return hash(lcase(arrayToList(valueArray,",")));
+	}
+	
 }
