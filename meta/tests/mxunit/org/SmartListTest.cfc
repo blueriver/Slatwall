@@ -36,9 +36,9 @@
 Notes:
 
 */
-import Slatwall.com.entity.SmartList;
-component extends="mxunit.framework.TestCase" output="false" {
+component extends="Slatwall.meta.tests.mxunit.BaseTest" output="false" {
 
+	/*
 	public void function the_only_required_attribute_to_use_getEntitiesArray_is_entityName() {
 		var smartList = new SmartList(entityName="SlatwallProduct");
 		var expected = arrayNew(1);
@@ -80,6 +80,7 @@ component extends="mxunit.framework.TestCase" output="false" {
 		var actual = smartList.getEntityStart();
 		assertEquals(expected, actual);
 	}
+	*/
 	
 }
 

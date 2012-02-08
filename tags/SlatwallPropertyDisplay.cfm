@@ -95,8 +95,6 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	
-	<cfset local = structNew() />
-	
 	<cfsilent>
 		<!--- Set Up The Value --->
 		<cfif attributes.value eq "">

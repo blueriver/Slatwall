@@ -36,19 +36,20 @@
 Notes:
 
 */
-component extends="mxunit.framework.TestCase" {
+component extends="Slatwall.meta.tests.mxunit.BaseTest" {
 
 	// @hint put things in here that you want to run befor EACH test
 	public void function setUp() {
-		
+		variables.brand = getService("brandService").newBrand();
 	}
 	
 	// @hint put things in here that you want to run after EACH test
 	public void function tearDown() {
+		
 	}
 	
 	public void function defaultsAreCorrect() {
-		
-	}	
+		assertEquals(variables.brand.getProducts(), []);
+	}
 }
 
