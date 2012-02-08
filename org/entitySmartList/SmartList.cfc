@@ -816,12 +816,11 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	public struct function getStateStruct() {
 		var stateStruct = {};
 		
+		stateStruct.baseEntityName = duplicate(variables.baseEntityName);
 		stateStruct.entities = duplicate(variables.entities);
 		stateStruct.whereGroups = duplicate(variables.whereGroups);
 		stateStruct.whereConditions = duplicate(variables.whereConditions);
 		stateStruct.orders = duplicate(variables.orders);
-		stateStruct.keywordProperties = duplicate(variables.keywordProperties);
-		stateStruct.searchScoreProperties = duplicate(variables.searchScoreProperties);
 		stateStruct.keywords = duplicate(variables.keywords);
 		stateStruct.pageRecordsStart = duplicate(variables.pageRecordsStart);
 		stateStruct.pageRecordsShow = duplicate(variables.pageRecordsShow);
@@ -840,5 +839,4 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		// Turn the array back into a list, lcase, and hash for the name
 		return hash(lcase(arrayToList(valueArray,",")));
 	}
-	
 }
