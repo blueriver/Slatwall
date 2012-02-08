@@ -67,7 +67,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				getRequestCacheService().setValue("currentProduct", product);
 				getRequestCacheService().setValue("currentProductID", product.getProductID());
 				rc.$.event('slatAction', 'frontend:product.detail');
-				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getSetting('displayTemplate'), rc.$.event('siteid'), true));
+				rc.$.event('contentBean', getContentManager().getActiveContentByFilename(product.getSetting('productDisplayTemplate'), rc.$.event('siteid'), true));
 				
 				// Check if this came from a product listing page and setup the base crumb list array
 				if( keyLocation gt 2) {
