@@ -51,9 +51,8 @@
 
 		try {
 			xmlResponse = XmlParse(httpRequest.send().getPrefix().fileContent);
-			catch {
-				/* An unexpected error happened, handled below */
-			}	
+		} catch(any e) {
+			/* An unexpected error happened, handled below */
 		}
 		
 		ratesResponseBean.setData(xmlResponse);
