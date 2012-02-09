@@ -102,6 +102,10 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			applyData(data=arguments.data);	
 		}
 		
+		if(!structKeyExists(application, "entitySmartList")) {
+			application.entitySmartList = structNew();
+		}
+		
 		return this;
 	}
 	
@@ -507,58 +511,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return "#getHQLSelect()##getHQLFrom()##getHQLWhere()##getHQLOrder()#";
 	}
 
-	public array function applySearchScore(required array records){
-		var searchStart = getTickCount();
-		var structSort = structNew();
-		var randomID = 0;
-		
-		// Loop Over each record
-		for(var i=1; i <= arrayLen(arguments.records); i++) {
-			var score = 0;
-			
-			// Loop over each keyword property to score
-			for(property in variables.searchScoreProperties) {
-				
-				var propertyArray = listToArray(property, "_");
-				
-				var evalString = "arguments.records[i]";
-				for(var pi=1; pi <= arrayLen(propertyArray); pi++) {
-					evalString &= ".get#propertyArray[pi]#()";
-				}
-	
-				var data = evaluate("#evalString#");	
-	
-				if(!isNull(data)) {
-					for(var ki=1; ki <= arrayLen(variables.keywords); ki++) {
-						var findValue = FindNoCase(variables.keywords[ki], data, 0);
-						while(findValue > 0) {
-							var score = score + (len(variables.keywords[ki]) * variables.searchScoreProperties[property]);
-							findValue = FindNoCase(variables.keywords[ki],  data, findValue+1);
-						}
-					}
-				}
-			}
-			
-			structSort[ score & i ] = arguments.records[i];
-		}
-		var scoreArray = structKeyArray(structSort);
-		
-		arraySort(scoreArray, "numeric", "desc");
-		var sortedArray = arrayNew(1);
-		
-		if(arrayLen(scoreArray)) {
-			arrayResize(sortedArray, arrayLen(scoreArray));
-			
-			for(var i=1; i <= arrayLen(scoreArray); i++) {
-				sortedArray[i] = structSort[scoreArray[i]];
-			}	
-		}
-		
-		setSearchTime(getTickCount()-searchStart);
-		
-		return sortedArray;
-	}
-	
 	public array function getRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "records") || arguments.refresh == true) {
 			variables.records = ormExecuteQuery(getHQL(), getHQLParams(), false, {ignoreCase="true", cacheable=getCacheable(), cachename="records-#getCacheName()#"});
@@ -569,30 +521,27 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	// Paging Methods
 	public array function getPageRecords(boolean refresh=false) {
 		if( !structKeyExists(variables, "pageRecords")) {
-			// If there is search criteria then we need to get all of the records and loop over them to create a subset
-			if(arrayLen(variables.keywords) && structCount(keywordProperties)) {
-				var records = getRecords(arguments.refresh);
-				variables.pageRecords = arrayNew(1);
-				for(var i=getPageRecordsStart(); i<=getPageRecordsEnd(); i++) {
-					arrayAppend(variables.pageRecords, records[i]);
-				}
-			// If no search criteria then we can speed up the process by setting the pageRecords using ormExecuteQuery with offset & maxRecords
-			} else {
-				variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
-			}
-			
+			variables.pageRecords = ormExecuteQuery(getHQL(), getHQLParams(), false, {offset=getPageRecordsStart()-1, maxresults=getPageRecordsShow(), ignoreCase="true", cacheable=getCacheable(), cachename="pageRecords-#getCacheName()#"});
 		}
 		return variables.pageRecords;
 	}
 	
 	public numeric function getRecordsCount() {
 		if(!structKeyExists(variables, "recordsCount")) {
-			if(!structKeyExists(variables,"records")) {
-				var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
-				var recordCount = ormExecuteQuery(HQL, getHQLParams(), false, {ignoreCase="true"});
-				variables.recordsCount = recordCount[1];
+			if(getCacheable() && structKeyExists(application.entitySmartList, getCacheName()) && structKeyExists(application.entitySmartList[getCacheName()], "recordsCount")) {
+				variables.recordsCount = application.entitySmartList[ getCacheName() ].recordsCount;
 			} else {
-				variables.recordsCount = arrayLen(getRecords());	
+				if(!structKeyExists(variables,"records")) {
+					var HQL = "#getHQLSelect(countOnly=true)##getHQLFrom(allowFetch=false)##getHQLWhere()#";
+					var recordCount = ormExecuteQuery(HQL, getHQLParams(), true, {ignoreCase="true"});
+					variables.recordsCount = recordCount;
+					if(getCacheable()) {
+						application.entitySmartList[ getCacheName() ] = {};
+						application.entitySmartList[ getCacheName() ].recordsCount = variables.recordsCount;
+					}
+				} else {
+					variables.recordsCount = arrayLen(getRecords());	
+				}
 			}
 		}
 		return variables.recordsCount;
