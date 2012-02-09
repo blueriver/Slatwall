@@ -47,6 +47,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Special Related Discriminator Property
 	property name="rewardType" length="255" insert="false" update="false";
 	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
