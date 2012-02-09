@@ -736,6 +736,10 @@ component displayname="Base Object" accessors="true" output="false" {
 		return arguments.value;
 	}
 	
+	private string function createSlatwallUUID() {
+		return replace(lcase(createUUID()), '-', '', 'all');
+	}
+	
 	// @help private method only used by populate
 	private void function _setProperty( required any name, any value ) {
 		
