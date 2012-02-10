@@ -131,7 +131,7 @@ Notes:
 		
 		<cfset var bitColumns = "allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,trackInventoryFlag" />
 		<cfset var dateTimeColumns = "salePriceExpirationDateTime" />
-		<cfset var decimalColumns = "salePrice" />
+		<cfset var moneyColumns = "salePrice" />
 		<cfset var integerColumns = "qoh,qosh,qndoo,qndorvo,qndosa,qnroro,qnrovo,qnrosa,quantityHeldBack,shippingWeight" />
 		
 		<cfquery name="rs" result="updateResult">
@@ -146,8 +146,8 @@ Notes:
 							#columnName# = <cfqueryparam cfsqltype="cf_sql_bit" value="#arguments.data[ columnName ]#">,
 						<cfelseif listFindNoCase(dateTimeColumns, columnName)>
 							#columnName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#arguments.data[ columnName ]#">,
-						<cfelseif listFindNoCase(decimalColumns, columnName)>
-							#columnName# = <cfqueryparam cfsqltype="cf_sql_decimal" value="#arguments.data[ columnName ]#">,
+						<cfelseif listFindNoCase(moneyColumns, columnName)>
+							#columnName# = <cfqueryparam cfsqltype="cf_sql_money" value="#arguments.data[ columnName ]#">,
 						<cfelseif listFindNoCase(integerColumns, columnName)>
 							#columnName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.data[ columnName ]#">,
 						</cfif>
@@ -175,8 +175,8 @@ Notes:
 								<cfqueryparam cfsqltype="cf_sql_bit" value="#arguments.data[ columnName ]#">,
 							<cfelseif listFindNoCase(dateTimeColumns, columnName)>
 								<cfqueryparam cfsqltype="cf_sql_timestamp" value="#arguments.data[ columnName ]#">,
-							<cfelseif listFindNoCase(decimalColumns, columnName)>
-								<cfqueryparam cfsqltype="cf_sql_decimal" value="#arguments.data[ columnName ]#">,
+							<cfelseif listFindNoCase(moneyColumns, columnName)>
+								<cfqueryparam cfsqltype="cf_sql_money" value="#arguments.data[ columnName ]#">,
 							<cfelseif listFindNoCase(integerColumns, columnName)>
 								<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.data[ columnName ]#">,
 							</cfif>
