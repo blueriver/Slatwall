@@ -717,9 +717,40 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 			variables.livePrice = 0;
 			if( structKeyExists(variables,"defaultSku") ) {
 				variables.livePrice = getDefaultSku().getLivePrice();
-			}	
+			}
 		}
 		return variables.livePrice;
+	}
+	
+	public numeric function getSalePrice() {
+		if(!structKeyExists(variables, "salePrice")) {
+			variables.salePrice = 0;
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.salePrice = getDefaultSku().getSalePrice();
+			}
+		}
+		return variables.salePrice;
+	}
+	
+	
+	public any function getSalePriceDiscountType() {
+		if(!structKeyExists(variables, "salePriceDiscountType")) {
+			variables.salePriceDiscountType = "none";
+			if( structKeyExists(variables, "defaultSku") ) {
+				variables.salePriceDiscountType = getDefaultSku().getSalePriceDiscountType();
+			}
+		}
+		return variables.salePriceDiscountType;
+	}
+	
+	public date function getSalePriceExpirationDateTime() {
+		if(!structKeyExists(variables, "salePriceExpirationDateTime")) {
+			variables.salePriceExpirationDateTime = now();
+			if( structKeyExists(variables,"defaultSku") ) {
+				variables.salePriceExpirationDateTime = getDefaultSku().getSalePricExpirationDateTime();
+			}
+		}
+		return variables.salePriceExpirationDateTime;
 	}
 
 	// ============  END:  Non-Persistent Property Methods =================
