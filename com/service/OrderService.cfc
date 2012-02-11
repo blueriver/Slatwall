@@ -42,6 +42,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	property name="addressService";
 	property name="locationService";
 	property name="paymentService";
+	property name="priceGroupService";
 	property name="promotionService";
 	property name="sessionService";
 	property name="taxService";
@@ -204,7 +205,10 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			newItem.setQuantity(arguments.quantity);
 			newItem.setOrder(arguments.order);
 			newItem.setOrderFulfillment(arguments.orderFulfillment);
-			newItem.setPrice(arguments.sku.getLivePrice());
+			
+			// All new items have the price and skuPrice set to the current price of the sku being added.  Later the price may be changed by the recalculateOrderAmounts() method
+			newItem.setPrice( arguments.sku.getPrice() );
+			newItem.setSkuPrice( arguments.sku.getPrice() );
 			
 			// If a stock was passed in, then assign it to this new item
 			if(!isNull(arguments.stock)) {
@@ -229,8 +233,8 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			}
 		}
 	
-		// Recalculate the order amounts for tax and promotions
-		recalculateOrderAmounts(arguments.order);
+		// Recalculate the order amounts for tax and promotions and priceGroups
+		recalculateOrderAmounts( arguments.order );
 	
 		save(arguments.order);
 	}
@@ -822,11 +826,22 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			throw("A recalculateOrderAmounts was called for an order that was already closed");
 		} else {
 			
-			// Re-Calculate the 'amounts' based on permotions ext.
-			getPromotionService().updateOrderAmountsWithPromotions(arguments.order);
+			// Loop over the orderItems to see if the skuPrice Changed
+			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++) {
+				if(arguments.order.getOrderItems()[i].getSkuPrice() != arguments.order.getOrderItems()[i].getSku().getPrice()) {
+					arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+					arguments.order.getOrderItems()[i].setSkuPrice( arguments.order.getOrderItems()[i].getSku().getPrice() );
+				}
+			}
 			
-			// Re-Calculate tax now that the new promotions have been applied
-			getTaxService().updateOrderAmountsWithTaxes(arguments.order);	
+			// First Re-Calculate the 'amounts' base on price groups
+			getPriceGroupService().updateOrderAmountsWithPriceGroups( arguments.order );
+			
+			// Then Re-Calculate the 'amounts' based on permotions ext.  This is done second so that the order already has priceGroup specific info added
+			getPromotionService().updateOrderAmountsWithPromotions( arguments.order );
+			
+			// Re-Calculate tax now that the new promotions and price groups have been applied
+			getTaxService().updateOrderAmountsWithTaxes( arguments.order );
 		}
 	}
 	

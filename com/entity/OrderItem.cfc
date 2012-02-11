@@ -41,9 +41,11 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	// Persistent Properties
 	property name="orderItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="price" ormtype="big_decimal";
+	property name="skuPrice" ormtype="big_decimal";
 	property name="quantity" ormtype="integer";
 	
 	// Related Object Properties (many-to-one)
+	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
 	property name="orderItemType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemTypeID";
 	property name="orderItemStatusType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderItemStatusTypeID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
@@ -202,6 +204,10 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	
 	public numeric function getExtendedPrice() {
 		return getPrice() * getQuantity();
+	}
+	
+	public numeric function getExtendedSkuPrice() {
+		return getSkuPrice() * getQuantity();
 	}
 	
 	public numeric function getExtendedPriceAfterDiscount() {
