@@ -118,6 +118,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	public void function updateOrderAmountsWithPromotions(required any order) {
 		
 		if(arguments.order.getOrderType().getSystemCode() == "otSalesOrder") {
+			
 			// Get All of the active current promotions
 			var promotions = getDAO().getAllActivePromotions();
 	
@@ -129,7 +130,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 			// TODO: Clear all previously applied promotions from fulfillments
 			// TODO: Clear all previously applied promotions from order
-								
 			
 			// Loop over each promotion to determine if it applies to this order
 			for(var p=1; p<=arrayLen(promotions); p++) {
@@ -160,24 +160,44 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 									&&
 									( !arrayLen( reward.getOptions() ) || reward.hasAnyOption( orderItem.getSku().getOptions() ) )
 								) {
-									// Now that we know that this orderItem gets this reward we can figure out the amount
-									var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+									
+									// If there is not applied Price Group, or if this reward has the applied pricegroup as an eligable one then use priceExtended... otherwise use skuPriceExtended and then adjust the discount.
+									if( isNull(orderItem.getAppliedPriceGroup()) || reward.hasEligiblePriceGroup( orderItem.getAppliedPriceGroup() ) ) {
+										
+										// Calculate based on price, which could be a priceGroup price
+										var discountAmount = getDiscountAmount(reward, orderItem.getExtendedPrice());
+											
+									} else {
+										
+										// Calculate based on skuPrice because the price on this item is a priceGroup price and we need to adjust the discount by the difference
+										var originalDiscountAmount = getDiscountAmount(reward, orderItem.getExtendedSkuPrice());
+										
+										// Take the original discount they were going to get without a priceGroup and subtract the difference of the discount that they are already receiving
+										discountAmount = originalDiscountAmount - (orderItem.getExtendedSkuPrice() - orderItem.getExtendedPrice());
+									}
+									
 									
 									var addNew = false;
 									
-									// If there aren't any promotions applied to this order item yet, then we can add this one
-									if(!arrayLen(orderItem.getAppliedPromotions())) {
-										addNew = true;
-									// If one has already been set then we just need to check if this new discount amount is greater
-									} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
-										// If the promotion is the same, then we just update the amount
-										if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
-											orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
-										// If the promotion is a different then remove the original and set addNew to true
-										} else {
-											orderItem.getAppliedPromotions()[1].removeOrderItem();
+									
+									// First we make sure that the discountAmount is > 0 before we check if we should add more discount
+									if(discountAmount > 0) {
+										
+										// If there aren't any promotions applied to this order item yet, then we can add this one
+										if(!arrayLen(orderItem.getAppliedPromotions())) {
 											addNew = true;
+										// If one has already been set then we just need to check if this new discount amount is greater
+										} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
+											// If the promotion is the same, then we just update the amount
+											if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
+												orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
+											// If the promotion is a different then remove the original and set addNew to true
+											} else {
+												orderItem.getAppliedPromotions()[1].removeOrderItem();
+												addNew = true;
+											}
 										}
+										
 									}
 									
 									// Add the new appliedPromotion

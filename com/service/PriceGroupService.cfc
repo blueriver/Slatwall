@@ -2,17 +2,17 @@
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
-
+	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
+	
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+	
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -101,74 +101,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	
 		return super.delete(priceGroup);
-	}
-	
-	// Helper method the delegates
-	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
-		if(!isNull(getSessionService().getCurrent().getAccount())) {
-			return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSessionService().getCurrent().getAccount());	
-		} else {
-			return sku.getPrice();
-		}
-	}
-	
-	// Takes the account and runs any price groups applied through the calculation for best rate.
-	public numeric function calculateSkuPriceBasedOnAccount(required any sku, required any account) {
-		
-		// Create a new array, and add the skus price as the first entry
-		var prices = [sku.getPrice()];
-		
-		// Loop over each of the price groups of this account, and get the price based on that pricegroup
-		for(var i=1; i<=arrayLen(account.getPriceGroups()); i++) {
-			
-			// Add this price groups price to the prices array
-			arrayAppend(prices, calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=account.getPriceGroups()[i]));	
-		}
-		
-		// Sort the array by lowest price
-		arraySort(prices, "numeric", "asc");
-		
-		// Return the lowest price
-		return prices[1];
-	}
-	
-	// Simple method that gets the appopriate rate to use for this sku no matter where it comes from, and then calculates the correct value.  If no rate is found, it is just a passthough of sku.getPrice()
-	public numeric function calculateSkuPriceBasedOnPriceGroup(required any sku, required any priceGroup) {
-		
-		// Figure out the rate for this particular sku
-		var rate = getRateForSkuBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup);
-		
-		// If the sku is supposed to have this rate applied, then calculate the rate and apply
-		if(!isNull(rate)) {
-			return calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, priceGroupRate=rate);
-		}
-		
-		// Return the sku price if there was no rate
-		return sku.getPrice();
-	}
-	
-	// This method will calculate the actual price of a sku based on a given price group rate
-	public numeric function calculateSkuPriceBasedOnPriceGroupRate(required any sku, required any priceGroupRate) {
-		
-		// setup the new price as the old price in the event of a passthrough
-		var newPrice = arguments.sku.getPrice();
-
-		// calculate the new price bassed on whatever was set up.
-		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
-			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
-			
-			// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
-			if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
-				newPrice = arguments.priceGroupRate.getRoundingRule().roundValue(newPrice);
-			}
-		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
-			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
-		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
-			var newPrice = arguments.priceGroupRate.getAmount();
-		}
-		
-		//return the newPrice and make sure that it is just a two decimal number
-		return numberFormat(newPrice, "0.00");
 	}
 	
 	// This method will return the rate that a given productType has based on a priceGroup, also this looks up to parent productTypes as well.
@@ -360,7 +292,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					id = thisRate.getPriceGroupRateId(),
 					name = thisRate.getAmountRepresentation()
 				};
-				ArrayAppend(priceGroupRates, rateStruct);
+				arrayAppend(priceGroupRates, rateStruct);
 			}
 			
 			var groupStruct = {
@@ -371,8 +303,115 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			priceGroupData[thisPriceGroup.getPriceGroupId()] = groupStruct;
 		}
 
-		return SerializeJSON(priceGroupData);
+		return serializeJSON(priceGroupData);
 	}
 	
+	// Helper method the delegates
+	public numeric function calculateSkuPriceBasedOnCurrentAccount(required any sku) {
+		if(!isNull(getSessionService().getCurrent().getAccount())) {
+			return calculateSkuPriceBasedOnAccount(sku=arguments.sku, account=getSessionService().getCurrent().getAccount());	
+		} else {
+			return sku.getPrice();
+		}
+	}
+	
+	// Takes the account and runs any price groups applied through the calculation for best rate.
+	public numeric function calculateSkuPriceBasedOnAccount(required any sku, required any account) {
+		
+		// Create a new array, and add the skus price as the first entry
+		var prices = [sku.getPrice()];
+		
+		// Loop over each of the price groups of this account, and get the price based on that pricegroup
+		for(var i=1; i<=arrayLen(account.getPriceGroups()); i++) {
 			
+			// Add this price groups price to the prices array
+			arrayAppend(prices, calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=account.getPriceGroups()[i]));	
+		}
+		
+		// Sort the array by lowest price
+		arraySort(prices, "numeric", "asc");
+		
+		// Return the lowest price
+		return prices[1];
+	}
+	
+	
+	// Simple method that gets the appopriate rate to use for this sku no matter where it comes from, and then calculates the correct value.  If no rate is found, it is just a passthough of sku.getPrice()
+	public numeric function calculateSkuPriceBasedOnPriceGroup(required any sku, required any priceGroup) {
+		
+		// Figure out the rate for this particular sku
+		var rate = getRateForSkuBasedOnPriceGroup(sku=arguments.sku, priceGroup=arguments.priceGroup);
+		
+		// If the sku is supposed to have this rate applied, then calculate the rate and apply
+		if(!isNull(rate)) {
+			return calculateSkuPriceBasedOnPriceGroupRate(sku=arguments.sku, priceGroupRate=rate);
+		}
+		
+		// Return the sku price if there was no rate
+		return sku.getPrice();
+	}
+	
+	// This method will calculate the actual price of a sku based on a given price group rate
+	public numeric function calculateSkuPriceBasedOnPriceGroupRate(required any sku, required any priceGroupRate) {
+		
+		// setup the new price as the old price in the event of a passthrough
+		var newPrice = arguments.sku.getPrice();
+
+		// calculate the new price bassed on whatever was set up.
+		if(!isNull(arguments.priceGroupRate.getPercentageOff())) {
+			var newPrice = arguments.sku.getPrice() - (arguments.sku.getPrice() * (arguments.priceGroupRate.getPercentageOff() / 100));
+			
+			// If a rounding rule is in place for this rate, take this newly formated price and apply the rounding rule to it
+			if(!isNull(arguments.priceGroupRate.getRoundingRule())) {
+				newPrice = arguments.priceGroupRate.getRoundingRule().roundValue(newPrice);
+			}
+		} else if (!isNull(arguments.priceGroupRate.getAmountOff())) {
+			var newPrice = arguments.sku.getPrice() - arguments.priceGroupRate.getAmountOff();
+		} else if (!isNull(arguments.priceGroupRate.getAmount())) {
+			var newPrice = arguments.priceGroupRate.getAmount();
+		}
+		
+		//return the newPrice and make sure that it is just a two decimal number
+		return numberFormat(newPrice, "0.00");
+	}
+	
+	// This returns a structure with price & priceGroup if one was found otherwise the priceGroup key will be empty
+	public struct function getBestPriceGroupDetailsBasedOnSkuAndAccount(required any sku, required any account) {
+		
+		// Create a new array, and add the skus price as the first entry
+		var bestPrice = {};
+		bestPrice.price = arguments.sku.getPrice();
+		bestPrice.priceGroup = "";
+		
+		// Loop over each of the price groups of this account, and get the price based on that pricegroup
+		for(var i=1; i<=arrayLen(arguments.account.getPriceGroups()); i++) {
+			
+			var thisPrice = calculateSkuPriceBasedOnPriceGroup(sku=arguments.sku, priceGroup=account.getPriceGroups()[i]);
+			
+			if(thisPrice < bestPrice.price) {
+				bestPrice.price = thisPrice;
+				bestPrice.priceGroup = account.getPriceGroups()[i];
+			}
+		}
+		
+		return bestPrice;
+	}
+	
+	public void function updateOrderAmountsWithPriceGroups(required any order) {
+		if( !isNull(arguments.order.getAccount()) && !arguments.order.getAccount().isGuestAccount() ) {
+			for(var i=1; i<=arrayLen(arguments.order.getOrderItems()); i++){
+				
+				var priceGroupDetails = getBestPriceGroupDetailsBasedOnSkuAndAccount(arguments.order.getOrderItems()[i].getSku(), arguments.order.getAccount());
+				
+				if(priceGroupDetails.price < arguments.order.getOrderItems()[i].getSkuPrice() && isObject(priceGroupDetails.priceGroup)) {
+					arguments.order.getOrderItems()[i].setPrice( priceGroupDetails.price );
+					arguments.order.getOrderItems()[i].setAppliedPriceGroup( priceGroupDetails.priceGroup );
+				} else {
+					arguments.order.getOrderItems()[i].setPrice( arguments.order.getOrderItems()[i].getSkuPrice() );
+					arguments.order.getOrderItems()[i].setAppliedPriceGroup( javaCast("null", "") );
+				}
+			}	
+		}
+	}
+	
 }
