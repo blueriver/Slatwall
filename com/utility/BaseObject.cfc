@@ -443,7 +443,7 @@ component displayname="Base Object" accessors="true" output="false" {
 		for(var i=1; i<=arrayLen(pa); i++) {
 			try {
 				if(isNull(value)) {
-					value = evaluate("get#pa[i]#()");
+					value = evaluate("this.get#pa[i]#()");
 				} else if(isArray(value)) {
 					for(var ii=1; ii<=arrayLen(value); ii++) {
 						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i]));
