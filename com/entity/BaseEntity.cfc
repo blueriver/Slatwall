@@ -267,6 +267,13 @@ component displayname="Base Entity" accessors="true" extends="Slatwall.com.utili
 			propertyName = left(propertyName, len(propertyName)-5);
 			
 			return arrayLen(variables[ propertyName ]);
+			
+		// getXXX() 			Where XXX is either and attributeID or attributeCode
+		} else if (left(arguments.missingMethodName, 3) == "get") {
+			
+			var propertyName = right(arguments.missingMethodName, len(arguments.missingMethodName)-3);
+			return getAttributeValue(propertyName);
+			
 		}
 		
 		
