@@ -82,7 +82,12 @@ it is set to 0
 									<input type="radio" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.option.getAttributeOptionValue()#" <cfif local.attributeValue.getAttributeValue() EQ local.option.getAttributeOptionValue()> checked</cfif>>#local.option.getAttributeOptionLabel()#</option>
 								</cfloop>					
 							</cfcase>
-							<cfdefaultcase></cfdefaultcase>
+							<cfcase value="atYesNo">
+								<cf_SlatwallFormField fieldType="yesno" fieldName="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.attributeValue.getAttributeValue()#" />
+							</cfcase>
+							<cfdefaultcase>
+								No attribute display format exists for: #local.attribute.getAttributeType().getSystemCode()#
+							</cfdefaultcase>
 						</cfswitch>
 					<cfelse>
 						#local.attributeValue.getAttributeValue()#
