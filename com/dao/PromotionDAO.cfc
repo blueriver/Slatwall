@@ -61,12 +61,12 @@ Notes:
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN 'amount'
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN 'percentageOff'
-				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				END as 'salePriceDiscountType',
 				CASE
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN prSku.itemAmount
 					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - prSku.itemAmountOff
 					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prSku.itemPercentageOff / 100))
-				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				END as 'salePrice',
 				prSku.itemPercentageOff as 'percentageOff',
 				prSku.itemAmountOff as 'amountOff',
 				prSku.itemAmount as 'amount',
@@ -104,12 +104,12 @@ Notes:
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN 'amount'
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN 'percentageOff'
-				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				END as 'salePriceDiscountType',
 				CASE
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN prProduct.itemAmount
 					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - prProduct.itemAmountOff
 					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProduct.itemPercentageOff / 100))
-				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				END as 'salePrice',
 				prProduct.itemPercentageOff as 'percentageOff',
 				prProduct.itemAmountOff as 'amountOff',
 				prProduct.itemAmount as 'amount',
@@ -147,12 +147,12 @@ Notes:
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN 'amount'
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN 'percentageOff'
-				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				END as 'salePriceDiscountType',
 				CASE
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN prBrand.itemAmount
 					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - prBrand.itemAmountOff
 					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prBrand.itemPercentageOff / 100))
-				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				END as 'salePrice',
 				prBrand.itemPercentageOff as 'percentageOff',
 				prBrand.itemAmountOff as 'amountOff',
 				prBrand.itemAmount as 'amount',
@@ -192,12 +192,12 @@ Notes:
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN 'amount'
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN 'percentageOff'
-				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				END as 'salePriceDiscountType',
 				CASE
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN prOption.itemAmount
 					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - prOption.itemAmountOff
 					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prOption.itemPercentageOff / 100))
-				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				END as 'salePrice',
 				prOption.itemPercentageOff as 'percentageOff',
 				prOption.itemAmountOff as 'amountOff',
 				prOption.itemAmount as 'amount',
@@ -237,12 +237,12 @@ Notes:
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN 'amount'
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN 'itemAmountOff'
 					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN 'percentageOff'
-				END <cfif isMySQL>CASE</cfif> as 'salePriceDiscountType',
+				END as 'salePriceDiscountType',
 				CASE
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN prProductType.itemAmount
 					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - prProductType.itemAmountOff
 					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProductType.itemPercentageOff / 100))
-				END <cfif isMySQL>CASE</cfif> as 'salePrice',
+				END as 'salePrice',
 				prProductType.itemPercentageOff as 'percentageOff',
 				prProductType.itemAmountOff as 'amountOff',
 				prProductType.itemAmount as 'amount',
@@ -255,7 +255,7 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
 			  INNER JOIN
-			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE '%' + SlatwallPromotionRewardProductProductType.productTypeID + '%'
+			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductProductType.productTypeID, '%')  
 			  INNER JOIN
 			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductProductType.promotionRewardID
 			  INNER JOIN
