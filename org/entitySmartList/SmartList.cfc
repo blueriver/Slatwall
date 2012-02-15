@@ -351,7 +351,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
 			} else {
-				hqlSelect &= "SELECT #variables.entities[getBaseEntityName()].entityAlias#";	
+				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";	
 			}
 		}
 		
