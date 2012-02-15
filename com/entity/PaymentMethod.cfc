@@ -42,7 +42,10 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	// @hint the paymentMethodID is intentionally 255 length because the values we store for the ID are NOT uuid's.  Checkout the Data for this table in the /config folder to know more.
 	property name="paymentMethodID" ormtype="string" length="255" fieldtype="id" unsavedvalue="" default="";
 	property name="providerGateway" ormtype="string";
-	property name="activeFlag" ormtype="boolean" default="false"; 
+	property name="activeFlag" ormtype="boolean" default="false";
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
 
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
