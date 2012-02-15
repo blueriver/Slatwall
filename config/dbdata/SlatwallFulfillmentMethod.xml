@@ -5,5 +5,6 @@
 	</Columns>
 	<Records>
 		<Record fulfillmentMethodID="shipping" activeFlag="1" />
+		<Record fulfillmentMethodID="pickup" activeFlag="0" />
 	</Records>
 </Table>
