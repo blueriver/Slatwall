@@ -50,7 +50,6 @@ Notes:
 		<cfset var skuPrice = "" />
 		<cfset var skuResults = "" />
 		<cfset var timeNow = now() />
-		<cfset var isMySQL = application.configBean.getDbType() eq "MySQL" />
 		
 		<cfquery name="allDiscounts">
 			SELECT
@@ -255,7 +254,11 @@ Notes:
 			  INNER JOIN
 			  	SlatwallProductType on SlatwallProduct.productTypeID = SlatwallProductType.productTypeID
 			  INNER JOIN
-			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductProductType.productTypeID, '%')  
+			  <cfif getDBType() eq "MySQL">
+			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE concat('%', SlatwallPromotionRewardProductProductType.productTypeID, '%')
+			  <cfelse>
+			  	SlatwallPromotionRewardProductProductType on SlatwallProductType.productTypeIDPath LIKE ('%' + SlatwallPromotionRewardProductProductType.productTypeID + '%')
+			  </cfif>
 			  INNER JOIN
 			  	SlatwallPromotionReward prProductType on prProductType.promotionRewardID = SlatwallPromotionRewardProductProductType.promotionRewardID
 			  INNER JOIN
