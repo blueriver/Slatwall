@@ -50,6 +50,9 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
 	property name="paymentMethodID" length="255" insert="false" update="false";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
