@@ -74,6 +74,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Related Object Properties (Many-To-One)
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
+	property name="merchandiseType" cfc="Type" fieldtype="many-to-one" fkcolumn="merchandiseTypeID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";

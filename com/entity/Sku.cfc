@@ -43,6 +43,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="skuCode" ormtype="string" unique="true" length="50";
 	property name="listPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="price" ormtype="big_decimal" formatType="currency" default="0";
+	property name="renewalPrice" ormtype="big_decimal" formatType="currency" default="0";
 	property name="imageFile" ormtype="string" length="50";
 	
 	// Persistent Properties - Inheritence Settings
@@ -65,6 +66,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// Related Object Properties (Many-to-One)
 	property name="product" fieldtype="many-to-one" fkcolumn="productID" cfc="Product";
+	property name="subscriptionTerm" cfc="SubscriptionTerm" fieldtype="many-to-one" fkcolumn="subscriptionTermID";
 	
 	// Related Object Properties (One-to-Many)
 	property name="stocks" singularname="stock" fieldtype="one-to-many" fkcolumn="skuID" cfc="Stock" inverse="true" cascade="all";
