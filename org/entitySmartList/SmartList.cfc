@@ -218,6 +218,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch") && arguments.parentEntityName == getBaseEntityName()) {
 				arguments.fetch = true;
+			} else if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
+				arguments.fetch = true;
 			} else if(!structKeyExists(arguments, "fetch")) {
 				arguments.fetch = false;
 			}
@@ -230,7 +232,6 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				parentAlias=variables.entities[ arguments.parentEntityName ].entityAlias,
 				parentRelationship=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype,
 				parentRelatedProperty=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].name,
-				fkColumn=variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fkcolumn,
 				joinType=arguments.joinType,
 				fetch=arguments.fetch
 			);
@@ -246,7 +247,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		return newEntityName;
 	}
 	
-	private void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string fkColumn="", string joinType="") {
+	private void function addEntity(required string entityName, required string entityAlias, required string entityFullName, required struct entityProperties, string parentAlias="", string parentRelationship="",string parentRelatedProperty="", string joinType="") {
 		variables.entities[arguments.entityName] = duplicate(arguments);
 	}
 	
@@ -350,7 +351,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
 			} else {
-				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";	
+				hqlSelect &= "SELECT #variables.entities[getBaseEntityName()].entityAlias#";	
 			}
 		}
 		

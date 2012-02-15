@@ -36,21 +36,11 @@
 Notes:
 
 */
-component displayname="Order Payment Paypal Express" entityname="SlatwallOrderPaymentPaypalExpress" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="OrderPayment" discriminatorvalue="paypalExpress" {
+component displayname="Order Fulfillment Pickup" entityname="SlatwallOrderFulfillmentPickup" table="SlatwallOrderFulfillment" persistent="true" output="false" accessors="true" extends="OrderFulfillment" discriminatorvalue="pickup" {
 	
 	// Persistent Properties
-	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	/*
-	property name="nameOnCreditCard" ormType="string";
-	property name="creditCardNumberEncrypted" ormType="string";
-	property name="creditCardLastFour" ormType="string";
-	property name="creditCardType" ormType="string";
-	property name="expirationMonth" ormType="string";
-	property name="expirationYear" ormType="string";
-	*/
-	
-	    
 
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -59,6 +49,10 @@ component displayname="Order Payment Paypal Express" entityname="SlatwallOrderPa
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
