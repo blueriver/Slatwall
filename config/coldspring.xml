@@ -26,6 +26,8 @@
     <bean id="optionDAO" class="Slatwall.com.dao.OptionDAO" />
 	<bean id="taxDAO" class="Slatwall.com.dao.TaxDAO" />
 	<bean id="typeDAO" class="Slatwall.com.dao.TypeDAO" />
+	<bean id="termDAO" class="Slatwall.com.dao.TermDAO" />
+    <bean id="subscriptionDAO" class="Slatwall.com.dao.SubscriptionDAO" />
 	<bean id="shippingDAO" class="Slatwall.com.dao.ShippingDAO" />
 	<bean id="stockDAO" class="Slatwall.com.dao.StockDAO" />
 	<bean id="paymentDAO" class="Slatwall.com.dao.PaymentDAO" />
@@ -184,12 +186,18 @@
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="typeService"><ref bean="typeService" /></property>
     </bean>
+    <bean id="subscriptionService" parent="parentService" class="Slatwall.com.service.SubscriptionService">
+        <property name="DAO"><ref bean="SubscriptionDAO" /></property>
+    </bean>
 	<bean id="taxService" parent="parentService" class="Slatwall.com.service.TaxService">
         <property name="DAO"><ref bean="taxDAO" /></property>
 		<property name="addressService"><ref bean="addressService" /></property>
     </bean>
     <bean id="typeService" parent="parentService" class="Slatwall.com.service.TypeService">
         <property name="DAO"><ref bean="TypeDAO" /></property>
+    </bean>
+    <bean id="termService" parent="parentService" class="Slatwall.com.service.TermService">
+        <property name="DAO"><ref bean="TermDAO" /></property>
     </bean>
     <bean id="updateService" parent="parentService" class="Slatwall.com.service.UpdateService">
     	<property name="DAO"><ref bean="updateDAO" /></property>

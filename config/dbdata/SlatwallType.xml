@@ -107,12 +107,6 @@
 		<Record typeID="444df2b201a098f5b277febb17a7cb0a" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Zip Code" systemCode="vtZipCode" />
 		<Record typeID="444df2b193d8c854256c8cde9d4921b3" parentTypeID="444df2ac94eaa8a4881d4cbb3c2e0b98" type="Regex" systemCode="vtRegex" />
 		
-		<Record typeID="444df2f6d8d39ec9124d75b6a2129014" parentTypeID="NULL" type="Merchandise Types" systemCode="merchandiseType" />
-		<Record typeID="444df2f7ea9c87e60051f3cd87b435a1" parentTypeID="444df2f6d8d39ec9124d75b6a2129014" type="Physical" systemCode="physical" />
-		<Record typeID="444df2f8bc336e798add992b742cd9d5" parentTypeID="444df2f6d8d39ec9124d75b6a2129014" type="Electronic" systemCode="electronic" />
-		<Record typeID="444df2f9c7deaa1582e021e894c0e299" parentTypeID="444df2f6d8d39ec9124d75b6a2129014" type="Subscription" systemCode="subscription" />
-		<Record typeID="444df2fad31783e9fff0ec7cc1418e00" parentTypeID="444df2f6d8d39ec9124d75b6a2129014" type="Service" systemCode="service" />
-
 		<Record typeID="444df2f201be608fee51e3de7bbf3960" parentTypeID="NULL" type="Subscription Access Code Types" systemCode="subscriptionAccessCodeType" />
 		<Record typeID="444df2f39c75e88f55a9b993e786aaf2" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Global" systemCode="global" />
 		<Record typeID="444df2f4d19ac22bba4bc12cc38b3ee0" parentTypeID="444df2f201be608fee51e3de7bbf3960" type="Per Benefit" systemCode="perBenefit" />

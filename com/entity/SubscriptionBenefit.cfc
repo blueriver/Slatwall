@@ -65,8 +65,30 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	
 	// Non-Persistent Properties
 
-
-
+	public Promotion function init(){
+		// set default collections for association management methods
+		if(isNull(variables.priceGroups)){
+		   variables.priceGroups = [];
+		}
+		if(isNull(variables.promotions)){
+		   variables.promotions = [];
+		}
+		return super.init();
+	}
+	
+    public array function getAccessCodeTypeOptions() {
+		if(!structKeyExists(variables, "accessCodeTypeOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallType");
+			smartList.addSelect(propertyIdentifier="type", alias="name");
+			smartList.addSelect(propertyIdentifier="typeID", alias="value");
+			smartList.addFilter(propertyIdentifier="parentType_systemCode", value="subscriptionAccessCodeType");
+			smartList.addOrder("type|ASC");
+			variables.accessCodeTypeOptions = smartList.getRecords();
+			arrayPrepend(variables.accessCodeTypeOptions,{name=rbKey("define.none"),value=""});
+		}
+		return variables.accessCodeTypeOptions;
+    }
+    
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

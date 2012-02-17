@@ -96,9 +96,9 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:option.listoptiongroups" type="list">
 							</ul>
 							<ul>
-								<li class="title">Stock Adjustments</li>
-								<cf_SlatwallActionCaller action="admin:stockadjustment.createStockAdjustment" type="list">
-								<cf_SlatwallActionCaller action="admin:stockadjustment.listStockAdjustments" type="list">
+								<li class="title">Subscriptions</li>
+								<cf_SlatwallActionCaller action="admin:subscription.listsubscriptionterms" type="list">
+								<cf_SlatwallActionCaller action="admin:subscription.listsubscriptionbenefits" type="list">
 							</ul>
 						</div>
 						<div class="oneColumn">
@@ -111,6 +111,11 @@ Notes:
 								<li class="title">Related</li>
 								<cf_SlatwallActionCaller action="admin:attribute" type="list">
 								<cf_SlatwallActionCaller action="admin:promotion" type="list">
+							</ul>
+							<ul>
+								<li class="title">Stock Adjustments</li>
+								<cf_SlatwallActionCaller action="admin:stockadjustment.createStockAdjustment" type="list">
+								<cf_SlatwallActionCaller action="admin:stockadjustment.listStockAdjustments" type="list">
 							</ul>
 							<ul>
 								<li class="title">Price Groups</li>
@@ -219,6 +224,11 @@ Notes:
 								<li class="title">Locations</li>
 								<cf_SlatwallActionCaller action="admin:location.createlocation" type="list">
 								<cf_SlatwallActionCaller action="admin:location.listlocations" type="list">
+							</ul>
+							<ul>
+								<li class="title">Terms</li>
+								<cf_SlatwallActionCaller action="admin:term.create" type="list">
+								<cf_SlatwallActionCaller action="admin:term.list" type="list">
 							</ul>
 						</div>
 					</div>

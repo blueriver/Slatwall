@@ -59,7 +59,7 @@ Notes:
         </td>
 		<td class="administration">
 		  <ul class="four">
-		  	  <cfset local.deleteDisabled = (rc.productTypes.isAssigned gt 0) or (rc.productTypes.childCount gt 0) />
+		  	  <cfset local.deleteDisabled = (rc.productTypes.isAssigned gt 0) or (rc.productTypes.childCount gt 0) or (rc.productTypes.systemCode neq "") />
 			  <!--- if this is currently a leaf node in the product type tree, its products will be reassigned to any child types that are added, so indicate whether
 			  	to show modal dialog to alert the user --->
 			  <cfset local.productsReassigned = not rc.productTypes.childCount />

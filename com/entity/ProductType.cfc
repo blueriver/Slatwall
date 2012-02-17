@@ -45,6 +45,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="productTypeName" ormtype="string";
 	property name="productTypeDescription" ormtype="string" length="4000";
+	property name="systemCode" ormtype="string";
 	
 	// Persistent Properties - Inheritence Settings
 	property name="allowBackorderFlag" ormtype="boolean";
@@ -74,7 +75,6 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Related Object Properties (Many-To-One)
 	property name="parentProductType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="parentProductTypeID";
-	property name="merchandiseType" cfc="Type" fieldtype="many-to-one" fkcolumn="merchandiseTypeID";
 	
 	// Related Object Properties (One-To-Many)
 	property name="childProductTypes" singularname="childProductType" cfc="ProductType" fieldtype="one-to-many" inverse="true" fkcolumn="parentProductTypeID" cascade="all";
@@ -188,7 +188,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 			variables.parentProductTypeOptions=[];
 			
 			// Add a null value to the options for none.
-			arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
+			//arrayAppend(variables.parentProductTypeOptions, {value="", name=rbKey('define.none')});
 			
 			// Get product type tree query
 			var ptt = getProductTypeTree();

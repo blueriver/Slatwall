@@ -55,7 +55,9 @@ Notes:
     	<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productTypeName" edit="#rc.edit#" first="true">
 		
 		<cfset local.parentLink = rc.productType.hasParentProductType() ? buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.productType.getParentProductType().getProductTypeID()#') : "" />
-		<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" valueLink="#local.parentLink#" edit="#rc.edit#">
+		<cfif isNull(rc.productType.getSystemCode()) or rc.productType.getSystemCode() eq "">
+			<cf_SlatwallPropertyDisplay object="#rc.productType#" property="parentProductType" valueLink="#local.parentLink#" edit="#rc.edit#">
+		</cfif>
 		
 		<!---
 		<cfif rc.edit>
@@ -105,8 +107,8 @@ Notes:
 	<cfif rc.edit>
 		<div id="actionButtons" class="clearfix">
 			<cf_SlatwallActionCaller action="admin:product.listProductTypes" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cfif !rc.productType.isNew() and !rc.productType.hasProduct() and !rc.productType.hasChildProductType()>
-				<cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" confirmrequired="true">
+			<cfif !rc.productType.isNew()>
+				<cf_SlatwallActionCaller action="admin:product.deleteproducttype" querystring="producttypeid=#rc.producttype.getproducttypeID()#" class="button" type="link" disabled="#rc.productType.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.producttype.delete_validateisassigned')#" confirmrequired="true">
 			</cfif>
 			<cf_SlatwallActionCaller action="admin:product.saveproducttype" type="submit" class="button">
 		</div>
