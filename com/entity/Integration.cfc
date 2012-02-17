@@ -130,7 +130,7 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 				break;
 			}
 			default : {
-				getService("integrationService").getIntegrationCFC(this);
+				return getService("integrationService").getIntegrationCFC(this);
 			}
 		}
 	}
