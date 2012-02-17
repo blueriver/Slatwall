@@ -48,6 +48,9 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

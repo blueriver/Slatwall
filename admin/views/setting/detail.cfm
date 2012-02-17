@@ -40,6 +40,7 @@ Notes:
 <cfparam name="rc.allSettings" type="struct" />
 <cfparam name="rc.productTemplateOptions" type="any" />
 <cfparam name="rc.shippingWeightUnitCodeOptions" type="any" />
+<cfparam name="rc.customIntegrations" type="array" />
 
 <cfsilent>
 	<cfset local.yesNoValueOptions = [{name=$.slatwall.rbKey('define.yes'), value=1},{name=$.slatwall.rbKey('define.no'), value=0}] />
@@ -155,6 +156,22 @@ Notes:
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailCC')#" fieldName="order_orderPlacedEmailCC">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailBCC#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailBCC')#" fieldName="order_orderPlacedEmailBCC">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.order_orderPlacedEmailSubject#" title="#rc.$.Slatwall.rbKey('setting.order.orderPlacedEmailSubject')#" fieldName="order_orderPlacedEmailSubject">
+					<tr class="spdorder_orderNumberGeneration">
+						<td class="title varWidth">#rc.$.Slatwall.rbKey('setting.order.orderNumberGeneration')#</td>
+						<cfif rc.edit>
+							<td id="spdorder_orderNumberGeneration" class="value">
+								<select name="order_orderNumberGeneration">
+									<option value="autoIncrement" <cfif rc.allSettings.order_orderNumberGeneration.getSettingValue() eq "autoIncrement">selected="selected"</cfif>>#$.slatwall.rbKey('define.autoIncrement')#</option>
+									<cfloop array="#rc.customIntegrations#" index="local.customIntegration">
+										<option value="#local.customIntegration.getIntegrationPackage()#" <cfif rc.allSettings.order_orderNumberGeneration.getSettingValue() eq local.customIntegration.getIntegrationPackage()>selected="selected"</cfif>>#local.customIntegration.getIntegrationName()#</option>	
+									</cfloop>
+									<!--- Loop over custom integrations --->
+								</select>
+							</td>
+						<cfelse>
+							<td id="spdorder_orderNumberGeneration" class="value">#rc.allSettings.order_orderNumberGeneration.getSettingValue()#</td>	
+						</cfif>
+					</tr>
 				</table>
 			</div>
 			<div id="tabAdvanced">

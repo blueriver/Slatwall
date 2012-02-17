@@ -44,15 +44,6 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	property name="orderOpenDateTime" ormtype="timestamp";
 	property name="orderCloseDateTime" ormtype="timestamp";
 	
-	// Remote properties
-	property name="remoteID" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
 	// Related Object Properties (Many-To-One)
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	property name="referencedOrder" cfc="Order" fieldtype="many-to-one" fkcolumn="referencedOrderID";	// Points at the "parent" (NOT return) order.
@@ -69,6 +60,15 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="orderID" inversejoincolumn="promotionCodeID";
+	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non persistent properties
 	property name="discountTotal" persistent="false" formatType="currency";
@@ -186,18 +186,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberOpenDateCloseDate() {
 		if((isNull(variables.orderNumber) || variables.orderNumber == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-			var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
-			if( arrayIsDefined(maxOrderNumber,1) ){
-				setOrderNumber(maxOrderNumber[1] + 1);
+			if(setting('order_orderNumberGeneration') == "autoIncrement" || setting('order_orderNumberGeneration') == "") {
+				var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+				if( arrayIsDefined(maxOrderNumber,1) ){
+					setOrderNumber(maxOrderNumber[1] + 1);
+				} else {
+					setOrderNumber(1);
+				}
 			} else {
-				setOrderNumber(1);
+				setOrderNumber( getService("integrationService").getIntegrationByIntegrationPackage( setting('order_orderNumberGeneration') ).getIntegrationCFC().getNewOrderNumber(order=this) );
 			}
-			setOrderOpenDateTime(now());
+			
+			setOrderOpenDateTime( now() );
 		}
 		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
-			setOrderCloseDateTime(now());
+			setOrderCloseDateTime( now() );
 		}
-	} 
+	}
 	
 	public numeric function getPreviouslyReturnedFulfillmentTotal() {
 		return getService("OrderService").getPreviouslyReturnedFulfillmentTotal(getOrderId());

@@ -69,6 +69,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
 		rc.muraCategories = getProductService().getMuraCategories(siteID=rc.$.event('siteID'),parentID=0);
 		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
+		rc.customIntegrations = getIntegrationService().listIntegrationFilterByCustomActiveFlag(1);
 		
 		var rootCategoryID = rc.$.slatwall.setting("product_rootProductCategory");
 		if(rootCategoryID == "0") {

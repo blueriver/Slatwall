@@ -41,6 +41,7 @@
 		<Record settingID="dbb327a4d656c212e50ddc136e8577cd" settingName="order_orderPlacedEmailCC" settingValue="" />
 		<Record settingID="dbb327a50c418cf3764398a164f677c1" settingName="order_orderPlacedEmailBCC" settingValue="" />
 		<Record settingID="dbb327a60fb3a58e2dd6dc93f164d46c" settingName="order_orderPlacedEmailSubject" settingValue="Order Confirmation - Order Number: ${orderNumber}" />
+		<Record settingID="dbb327badb02af9dd10a31a0cc93692d" settingName="order_orderNumberGeneration" settingValue="autoIncrement" />
 		
 		<Record settingID="dbb327a70153717c73ee75a97ad8e83b" settingName="advanced_logExceptionsToDatabaseFlag" settingValue="1" />
 		<Record settingID="dbb327a8b50ef28662b75a32d01ece1d" settingName="advanced_logDatabaseClearAfterDays" settingValue="30" />
@@ -57,7 +58,7 @@
 <!--
 Below Are UUID's to use... delete after using
 
-	dbb327badb02af9dd10a31a0cc93692d
+	
 	dbb327bba727c794a7661ef523b17973
 	dbb327bca316435a854e3e0fef05d620
 	dbb327bdce581788826d306add807b50

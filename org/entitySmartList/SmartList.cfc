@@ -218,7 +218,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 			
 			if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch") && arguments.parentEntityName == getBaseEntityName()) {
 				arguments.fetch = true;
-			} else if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "many-to-one" && !structKeyExists(arguments, "fetch")) {
+			} else if(variables.entities[ arguments.parentEntityName ].entityProperties[ arguments.relatedProperty ].fieldtype == "one-to-one" && !structKeyExists(arguments, "fetch")) {
 				arguments.fetch = true;
 			} else if(!structKeyExists(arguments, "fetch")) {
 				arguments.fetch = false;
@@ -351,7 +351,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				hqlSelect = left(hqlSelect, len(hqlSelect)-1) & ")";
 			} else {
-				hqlSelect &= "SELECT #variables.entities[getBaseEntityName()].entityAlias#";	
+				hqlSelect &= "SELECT DISTINCT #variables.entities[getBaseEntityName()].entityAlias#";	
 			}
 		}
 		

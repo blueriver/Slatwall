@@ -48,12 +48,6 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	property name="useRateTableFlag" ormtype="boolean";
 	property name="activeFlag" ormtype="boolean";
 	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
 	// Related Object Properties (Many-to-One)
 	property name="eligibleAddressZone" cfc="AddressZone" fieldtype="many-to-one" fkcolumn="eligibleAddressZoneID";
 	
@@ -64,6 +58,15 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	// Related Object Properties (Many-to-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
 
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
 	public any function init() {
 		if(isNull(variables.activeFlag)) {
 			variables.activeFlag = 1;

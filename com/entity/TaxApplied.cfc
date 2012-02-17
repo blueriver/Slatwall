@@ -51,6 +51,9 @@ component displayname="Tax Applied" entityname="SlatwallTaxApplied" table="Slatw
 	// Related Properties
 	property name="taxCategoryRate" cfc="TaxCategoryRate" fieldtype="many-to-one" fkcolumn="taxCategoryRate";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";

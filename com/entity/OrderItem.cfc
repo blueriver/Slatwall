@@ -43,6 +43,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="price" ormtype="big_decimal";
 	property name="skuPrice" ormtype="big_decimal";
 	property name="quantity" ormtype="integer";
+	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
 	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
@@ -63,6 +64,9 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="orderDeliveryItems" singularname="orderDeliveryItem" cfc="OrderDeliveryItem" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true" cascade="all";
 	property name="stockReceiverItems" singularname="stockReceiverItem" cfc="StockReceiverItem" type="array" fieldtype="one-to-many" fkcolumn="orderItemID" inverse="true";
 	property name="referencingOrderItems" singularname="referencingOrderItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="referencedOrderItemID" inverse="true" cascade="all"; // Used For Returns
+	
+	// Remote properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";

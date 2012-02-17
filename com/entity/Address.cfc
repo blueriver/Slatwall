@@ -51,6 +51,9 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 	property name="postalCode" ormtype="string";
 	property name="countryCode" ormtype="string";
 	
+	// Remote properties
+	property name="remoteID" ormtype="string";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
