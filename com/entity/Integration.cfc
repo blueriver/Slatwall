@@ -115,7 +115,7 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 		setIntegrationSettings(serializeJSON(allSettings));
 	}
 	
-	public any function getIntegrationCFC( string integrationType) {
+	public any function getIntegrationCFC( string integrationType="") {
 		switch (arguments.integrationType) {
 			case "data" : {
 				return getService("integrationService").getDataIntegrationCFC(this);
