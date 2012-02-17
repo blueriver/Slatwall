@@ -186,18 +186,23 @@ component displayname="Order" entityname="SlatwallOrder" table="SlatwallOrder" p
 	// @hint: This is called from the ORM Event to setup an OrderNumber when an order is placed
 	private void function confirmOrderNumberOpenDateCloseDate() {
 		if((isNull(variables.orderNumber) || variables.orderNumber == "") && !isNUll(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() != "ostNotPlaced") {
-			var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
-			if( arrayIsDefined(maxOrderNumber,1) ){
-				setOrderNumber(maxOrderNumber[1] + 1);
+			if(setting('order_orderNumberGeneration') == "autoIncrement" || setting('order_orderNumberGeneration') == "") {
+				var maxOrderNumber = ormExecuteQuery("SELECT max(cast(aslatwallorder.orderNumber as int)) as maxOrderNumber FROM SlatwallOrder aslatwallorder");
+				if( arrayIsDefined(maxOrderNumber,1) ){
+					setOrderNumber(maxOrderNumber[1] + 1);
+				} else {
+					setOrderNumber(1);
+				}
 			} else {
-				setOrderNumber(1);
+				setOrderNumber( getService("integrationService").getIntegrationByIntegrationPackage( setting('order_orderNumberGeneration') ).getIntegrationCFC().getNewOrderNumber(order=this) );
 			}
-			setOrderOpenDateTime(now());
+			
+			setOrderOpenDateTime( now() );
 		}
 		if(!isNull(getOrderStatusType()) && !isNull(getOrderStatusType().getSystemCode()) && getOrderStatusType().getSystemCode() == "ostClosed" && isNull(getOrderCloseDateTime())) {
-			setOrderCloseDateTime(now());
+			setOrderCloseDateTime( now() );
 		}
-	} 
+	}
 	
 	public numeric function getPreviouslyReturnedFulfillmentTotal() {
 		return getService("OrderService").getPreviouslyReturnedFulfillmentTotal(getOrderId());
