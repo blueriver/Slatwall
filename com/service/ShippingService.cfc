@@ -58,7 +58,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	}
 	
 	public array function populateOrderShippingMethodOptions(required any orderFulfillmentShipping) {
-		var shippingMethods = getDAO().list(entityName="SlatwallShippingMethod");
+		var shippingMethods = this.listShippingMethodFilterByActiveFlag(1);
 		var shippingProviders = [];
 		var providerRateResponseBeans = [];
 		var methodOptions = [];
