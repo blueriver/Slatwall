@@ -129,6 +129,9 @@ component displayname="Integration" entityname="SlatwallIntegration" table="Slat
 				return getService("integrationService").getShippingIntegrationCFC(this);
 				break;
 			}
+			default : {
+				getService("integrationService").getIntegrationCFC(this);
+			}
 		}
 	}
 	

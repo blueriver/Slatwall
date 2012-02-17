@@ -43,6 +43,7 @@ component displayname="Order Item" entityname="SlatwallOrderItem" table="Slatwal
 	property name="price" ormtype="big_decimal";
 	property name="skuPrice" ormtype="big_decimal";
 	property name="quantity" ormtype="integer";
+	property name="estimatedFulfillmentDateTime" ormtype="timestamp";
 	
 	// Related Object Properties (many-to-one)
 	property name="appliedPriceGroup" cfc="PriceGroup" fieldtype="many-to-one" fkcolumn="appliedPriceGroupID";
