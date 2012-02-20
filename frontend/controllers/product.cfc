@@ -46,11 +46,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function addReview(required struct rc) {
-		param name="rc.productID" default="";
+		var review = getProductService().newProductReview();
 		
-		var product = getProductService().getProduct(rc.productID);
-		
-		getProductService().addProductReview(data=rc);
+		review = getProductService().saveProductReview(review, rc);
 		
 		getFW().redirectExact(product.getProductURL(), false);
 	}
