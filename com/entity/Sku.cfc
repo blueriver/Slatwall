@@ -283,6 +283,11 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// END: Image Methods
 	
+	//get merchandisetype 
+	public any function getMerchandiseType() {
+		return this.getProduct().getMerchandiseType();
+	}
+	
 	// START: Price Methods
 	
 	public numeric function getPriceByPromotion( required any promotion) {

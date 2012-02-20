@@ -45,6 +45,7 @@ component extends="BaseController" output=false accessors=true {
 	property name="skuService" type="Slatwall.com.service.SkuService";
 	property name="locationService" type="Slatwall.com.service.LocationService";
 	property name="priceGroupService" type="Slatwall.com.service.PriceGroupService";
+	property name="subscriptionService" type="Slatwall.com.service.SubscriptionService";
 	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
 	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
 	property name="utilityORMService" type="Slatwall.com.service.UtilityORMService";
@@ -64,6 +65,7 @@ component extends="BaseController" output=false accessors=true {
 			rc.product = getProductService().newProduct();
 		}
 		rc.optionGroups = getProductService().listOptionGroupOrderBySortOrder();
+		rc.subscriptionTerms = getSubscriptionService().listSubscriptionTerm();
     }
 	
 	public void function detail(required struct rc) {
@@ -81,6 +83,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID(), data=rc);
 		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 		rc.priceGroupSmartList = getPriceGroupService().getPriceGroupSmartList();
+		rc.subscriptionTerms = getSubscriptionService().listSubscriptionTerm();
 	}
 	
 	public void function edit(required struct rc) {

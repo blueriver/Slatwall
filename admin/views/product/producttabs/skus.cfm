@@ -38,19 +38,9 @@ Notes:
 --->
 <cfoutput>
 	
-<!---	<script type="text/javascript">
-		jQuery(function(){
-			actionDialog("<input type='checkbox' style=''>test", function(){alert('clicked ok!'); return false;});	
-			
-		});
-		
-		
-	</script>
-	--->
-	
 <cfif rc.edit>
 <div class="buttons">
-	<cfif rc.Product.getOptionGroupCount() gt 0>
+	<cfif rc.Product.getOptionGroupCount() gt 0 OR arrayLen(rc.subscriptionTerms) GT arrayLen(rc.Product.getSkus())>
 	<a class="button" id="addSKU">#rc.$.Slatwall.rbKey("admin.product.edit.addsku")#</a>
 	</cfif>
 	<a class="button" id="remSKU" style="display:none;">#rc.$.Slatwall.rbKey("admin.product.edit.removesku")#</a>
@@ -64,16 +54,23 @@ Notes:
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.skuCode")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.isDefault")#</th>
-				<cfset local.optionGroups = rc.Product.getOptionGroups() />
-				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
-					<th>#local.thisOptionGroup.getOptionGroupName()#</th>
-				</cfloop>
+				<cfif rc.product.getMerchandiseType() EQ "subscription">
+					<th>#rc.$.Slatwall.rbKey("entity.sku.subscriptionTerm")#</th>
+				<cfelse>
+					<cfset local.optionGroups = rc.Product.getOptionGroups() />
+					<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
+						<th>#local.thisOptionGroup.getOptionGroupName()#</th>
+					</cfloop>
+				</cfif>
 				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.sku.imageFile")#</th>
 				<!---<th>#rc.$.Slatwall.rbKey("entity.sku.image.exists")#</th>
 				<cfif rc.edit>
 					<th></th>
 				</cfif>--->
 				<th <cfif rc.edit>class="skuPriceColumn"</cfif>>#rc.$.Slatwall.rbKey("entity.sku.price")#</th>
+				<cfif rc.product.getMerchandiseType() EQ "subscription">
+					<th>#rc.$.Slatwall.rbKey("entity.sku.renewalPrice")#</th>
+				</cfif>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.salePrice")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.sku.salePriceExpirationDateTime")#</th>
 				
@@ -142,9 +139,13 @@ Notes:
 				<cfelse>
 					<td><cfif rc.product.getDefaultSku().getSkuID() eq local.thisSku.getSkuID()><img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" /></cfif></td>
 				</cfif>
-				<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
-					<td>#local.thisSku.getOptionByOptionGroupID(local.thisOptionGroup.getOptionGroupID()).getOptionName()#</td>
-				</cfloop>
+				<cfif rc.product.getMerchandiseType() EQ "subscription">
+					<td>#local.thisSku.getSubscriptionTerm().getSubscriptionTermName()#</td>
+				<cfelse>
+					<cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
+						<td>#local.thisSku.getOptionByOptionGroupID(local.thisOptionGroup.getOptionGroupID()).getOptionName()#</td>
+					</cfloop>
+				</cfif>
 				<td class="varWidth">
 					<cfif local.thisSku.imageExists()>
 						<a href="#local.thisSku.getImagePath()#" class="lightbox preview">#local.thisSku.getImageFile()#</a>
@@ -170,6 +171,15 @@ Notes:
 						#local.thisSku.getFormattedValue('price')#
 					</cfif>
 				</td>
+				<cfif rc.product.getMerchandiseType() EQ "subscription">
+					<td>
+						<cfif rc.edit>
+							<input type="text" size="6" name="skus[#local.skuCount#].renewalPrice" value="#local.thisSku.getRenewalPrice()#" />
+						<cfelse>
+							#local.thisSku.getFormattedValue('renewalPrice')#
+						</cfif>
+					</td>
+				</cfif>
 				<td>#local.thisSku.getFormattedValue('salePrice')#</td>
 				<td>#local.thisSku.getFormattedValue('salePriceExpirationDateTime')#</td>
 				
@@ -242,26 +252,43 @@ Notes:
 			<input type="hidden" name="skuID" value="" />
         </td>
         <td><!-- default sku radio --></td>
-        <cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
-            <td>
-			   <select name="options">
-                    <cfset local.options = local.thisOptionGroup.getOptions() />
-                    <cfloop array="#local.options#" index="local.thisOption">
-                        <option value="#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</option>
-                    </cfloop>
+		<cfif rc.product.getMerchandiseType() EQ "subscription">
+			<td>
+			   <select name="subscriptionTerm.subscriptionTermID">
+					<cfloop array="#rc.subscriptionTerms#" index="local.thisSubscriptionTerm">
+						<option value="#local.thisSubscriptionTerm.getSubscriptionTermID()#">#local.thisSubscriptionTerm.getSubscriptionTermName()#</option>
+					</cfloop>
                 </select>
 			</td>
-        </cfloop>
+		<cfelse>
+	        <cfloop array="#local.optionGroups#" index="local.thisOptionGroup">
+	            <td>
+				   <select name="options">
+	                    <cfset local.options = local.thisOptionGroup.getOptions() />
+	                    <cfloop array="#local.options#" index="local.thisOption">
+	                        <option value="#local.thisOption.getOptionID()#">#local.thisOption.getOptionName()#</option>
+	                    </cfloop>
+	                </select>
+				</td>
+	        </cfloop>
+		</cfif>
         <td class="varWidth"><!--image path --></td>
         <td>
             <input type="text" size="6" name="price" value="#rc.product.getDefaultSku().getPrice()#" />
         </td>
-        
+        <cfif rc.product.getMerchandiseType() EQ "subscription">
+	        <td>
+	            <input type="text" size="6" name="renewalPrice" value="#rc.product.getDefaultSku().getRenewalPrice()#" />
+	        </td>
+		</cfif>
 		<!--- Loop though price groups --->
 		<cfloop from="1" to="#arrayLen(rc.priceGroupSmartList.getPageRecords())#" index="local.i">
 			<td></td>
 		</cfloop>
 		
+		<!--- sale price & sale price ends --->
+        <td></td>
+        <td></td>
         <cfif rc.product.getSetting("trackInventoryFlag")>
 	        <td></td>
 	        <td></td>

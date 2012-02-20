@@ -335,13 +335,7 @@ component extends="BaseService" accessors="true" {
 				
 		// set up sku(s) if this is a new product
 		if(arguments.product.isNew()) {
-
-			var optionsStruct = {};
-			if(structKeyExists(arguments.data, "options")) {
-				optionsStruct = arguments.data.options;
-			}
-			
-			getSkuService().createSkus(arguments.Product,optionsStruct,arguments.data.price);
+			getSkuService().createSkus(arguments.Product,arguments.data);
 		}
 		
 		// set up associations between product and content

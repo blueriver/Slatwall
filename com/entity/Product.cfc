@@ -492,7 +492,10 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 		return imageGalleryArray;
 	}
 	
-
+	//get merchandisetype 
+	public any function getMerchandiseType() {
+		return getProductType().getMerchandiseType();
+	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {
 		var smartList = getService("optionService").getOptionSmartList();

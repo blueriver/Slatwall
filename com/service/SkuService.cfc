@@ -40,6 +40,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 
 	property name="optionService" type="any";
 	property name="productService" type="any";
+	property name="subscriptionService" type="any";
 	
 	public any function getSkuSmartList(string productID, struct data={}){
 		arguments.entityName = "SlatwallSku";
@@ -55,16 +56,29 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	/**
 	/* @hint sets up initial skus when products are created
 	*/
-	public boolean function createSkus(required any product, required struct optionsStruct, required price ) {
+	public boolean function createSkus(required any product, required struct data ) {
 		// check to see if any options were selected
-		if(!structIsEmpty(arguments.optionsStruct)) {
-			var options = arguments.optionsStruct;
+		if(structKeyExists(arguments.data, "options") && !structIsEmpty(arguments.data.options)) {
+			var options = arguments.data.options;
 			var comboList = getOptionCombinations(options);
-			createSkusFromOptions(comboList,arguments.product,arguments.price);
+			createSkusFromOptions(comboList,arguments.product,arguments.data.price);
+		} else if(structKeyExists(arguments.data, "subscriptionTerm") && arrayLen(arguments.data.subscriptionTerm)) {  
+			// create subscription skus
+			for(var i=1; i <= arrayLen(arguments.data.subscriptionTerm); i++){
+				var thisSku = this.newSku();
+				thisSku.setProduct(arguments.product);
+				thisSku.setPrice(arguments.data.price);
+				thisSku.setRenewalPrice(arguments.data.price);
+				thisSku.setSubscriptionTerm(getSubscriptionService().getSubscriptionTerm(arguments.data.subscriptionTerm[i]));
+				thisSku.setSkuCode(arguments.product.getProductCode() & "-#i#");
+				if(i==1){
+					arguments.product.setDefaultSku(thisSku);
+				}
+			}
 		} else {  // no options were selected so create a default sku
 			var thisSku = this.newSku();
 			thisSku.setProduct(arguments.product);
-			thisSku.setPrice(arguments.price);
+			thisSku.setPrice(arguments.data.price);
 			thisSku.setSkuCode(arguments.product.getProductCode() & "-0000");
 			arguments.product.setDefaultSku(thisSku);
 		}

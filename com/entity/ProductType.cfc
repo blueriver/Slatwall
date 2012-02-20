@@ -149,6 +149,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 	}
 	
+	//get merchandisetype 
+	public any function getMerchandiseType() {
+		if(isNull(getSystemCode()) || getSystemCode() == ""){
+			return getService("ProductService").getProductType(listFirst(getProductTypeIDPath())).getSystemCode();
+		}
+		return getSystemCode();
+	}
+	
     public any function getAppliedPriceGroupRateByPriceGroup( required any priceGroup) {
 		return getService("priceGroupService").getRateForProductTypeBasedOnPriceGroup(product=this, priceGroup=arguments.priceGroup);
 	}
