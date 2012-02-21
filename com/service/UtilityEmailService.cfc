@@ -51,10 +51,10 @@ Notes:
 				bcc="#setting('order_orderPlacedEmailBCC')#"
 				cc="#setting('order_orderPlacedEmailCC')#" >
 			<cfmailpart type="text/plain">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlacedText.cfm" />
+				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplacedtext.cfm" />
 			</cfmailpart>
 			<cfmailpart type="text/html">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderPlaced.cfm" />	
+				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplaced.cfm" />	
 			</cfmailpart>
 		</cfmail>
 		

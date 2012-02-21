@@ -644,11 +644,6 @@ component extends="BaseService" accessors="true" {
 		getDAO().loadDataFromFile(arguments.fileURL,arguments.textQualifier);
 	}
 	
-	public any function addProductReview(required struct data) {
-		var newReview = this.newProductReview();
-		return this.saveProductReview(newReview, arguments.data);
-	}
-	
 	public boolean function getProductIsOnTransaction(required any product) {
 		return getDAO().getProductIsOnTransaction(product=arguments.product);
 	}

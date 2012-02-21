@@ -38,6 +38,37 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
+	variables.roundingRuleDetails = {};
+
+	// We override the default save so that we can clear the roundingRule Expressions that have been saved in the variables cache
+	public any function saveRoundingRule(required any entity, struct data, string context="save") {
+		if(!arguments.entity.isNew()) {
+			if(structKeyExists(variables.roundingRuleDetails, arguments.entity.getRoundingRuleID())) {
+				structDelete(variables.roundingRuleDetails, arguments.entity.getRoundingRuleID());	
+			}
+		}
+		
+		return super.save(argumentcollection=arguments);
+	}
+	
+	// This method adds a roundingRuleID / Expression to the variables scope, and looks for it there first.  This improves performance when doing things like rebuilding the skuCache
+	public struct function getRoundingRuleDetailsByID(required string roundingRuleID) {
+		if(!structKeyExists(variables.roundingRuleDetails, arguments.roundingRuleID)) {
+			
+			var detailsQuery = getDAO().getRoundingRuleQuery(roundingRuleID = arguments.roundingRuleID);
+			
+			variables.roundingRuleDetails[ arguments.roundingRuleID ] = {};
+			variables.roundingRuleDetails[ arguments.roundingRuleID ].roundingRuleExpression = detailsQuery.roundingRuleExpression;
+			variables.roundingRuleDetails[ arguments.roundingRuleID ].roundingRuleDirection = detailsQuery.roundingRuleDirection;
+		}
+		return variables.roundingRuleDetails[ arguments.roundingRuleID ];
+	}
+	
+	public numeric function roundValueByRoundingRuleID(required any value, required string roundingRuleID) {
+		var details = getRoundingRuleDetailsByID(arguments.roundingRuleID);
+		return roundValue(value=arguments.value, roundingExpression=details.roundingRuleExpression, roundingDirection=details.roundingRuleDirection);
+	}
+	
 	public numeric function roundValueByRoundingRule(required any value, required any roundingRule) {
 		return roundValue(value=arguments.value, roundingExpression=arguments.roundingRule.getRoundingRuleExpression(), roundingDirection=arguments.roundingRule.getRoundingRuleDirection());
 	}

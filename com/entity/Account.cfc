@@ -112,6 +112,10 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
+	public string function getGravatarURL(numeric size=80) {
+		return "http://www.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";
+	}
+		
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array attributeSetTypeCode){
 		var smartList = getService("attributeService").getAttributeSetSmartList();
