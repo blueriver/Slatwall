@@ -225,17 +225,27 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
+		var discountAmountPreRounding = 0;
 		var discountAmount = 0;
+		var roundedFinalAmount = 0;
 		
 		if(!isNull(reward.getItemAmount())) {
-			discountAmount = arguments.originalAmount - reward.getItemAmount();
+			discountAmountPreRounding = arguments.originalAmount - reward.getItemAmount();
 		} else if( !isNull(reward.getItemAmountOff()) ) {
-			discountAmount = reward.getItemAmountOff();
+			discountAmountPreRounding = reward.getItemAmountOff();
 		} else if( !isNull(reward.getItemPercentageOff()) ) {
-			discountAmount = arguments.originalAmount * (reward.getItemPercentageOff()/100);
+			discountAmountPreRounding = arguments.originalAmount * (reward.getItemPercentageOff()/100);
 		}
 		
-		if(reward.getItemAmountOff() > arguments.originalAmount) {
+		if(!isNull(reward.getRoundingRule())) {
+			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=arguments.originalAmount-discountAmountPreRounding, roundingRule=reward.getRoundingRule());
+			discountAmount = arguments.originalAmount - roundedFinalAmount;
+		} else {
+			discountAmount = discountAmountPreRounding;
+		}
+		
+		// This makes sure that the discount never exceeds the original amount
+		if(discountAmountPreRounding > arguments.originalAmount) {
 			discountAmount = arguments.originalAmount;
 		}
 		
