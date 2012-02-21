@@ -38,6 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="roundingRuleService" type="any";
 	property name="utilityService" type="any";
 	
 	public any function savePromotion(required any promotion, struct data={}) {
@@ -223,16 +224,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 	}
 	
-	public numeric function calculateSkuSalePrice(required any sku) {
-		// TODO: Impliment me!
-		return arguments.sku.getPrice();
-	}
-	
-	public date function calculateSkuSalePriceExpirationDateTime(required any sku) {
-		// TODO: Impliment me!
-		return now()+30;
-	}
-	
 	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
 		var discountAmount = 0;
 		
@@ -298,7 +289,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public struct function getSalePriceDetailsForProductSkus(required string productID) {
-		return getUtilityService().queryToStructOfStructures(getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
+		var priceDetails = getUtilityService().queryToStructOfStructures(getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
+		for(var key in priceDetails) {
+			if(priceDetails[key].roundingRuleID != "") {
+				priceDetails[key].salePrice = getRoundingRuleService().roundValueByRoundingRuleID(value=priceDetails[key].salePrice, roundingRuleID=priceDetails[key].roundingRuleID);
+			}
+		}
+		return priceDetails;
 	}
 	
 	// ----------------- END: Apply Promotion Logic -------------------------
