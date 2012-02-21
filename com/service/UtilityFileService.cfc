@@ -254,6 +254,11 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 				duplicateDirectory(source="#dirList.directory[i]#/#dirList.name[i]#", destination=arguments.destination, overwrite=arguments.overwrite, recurse=arguments.recurse, copyContentExclusionList=arguments.copyContentExclusionList, deleteDestinationContent=arguments.deleteDestinationContent, deleteDestinationContentExclusionList=arguments.deleteDestinationContentExclusionList, baseSourceDir=arguments.baseSourceDir, baseDestinationDir=arguments.baseDestinationDir);
 			}
 		}
+		
+		// set the file permission in linux
+		if(!findNoCase(server.os.name,"Windows")){
+			fileSetAccessMode(arguments.destination, "775");
+		}
 	}
 	
 	private void function copyFile(required string source, required string destination, boolean overwrite=false){
