@@ -110,6 +110,14 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		return super.init();
 	}
 	
+	// Overrides the implicet getter to make sure that a value exists
+	public string function getProductTypeIDPath() {
+		if(isNull(variables.productTypeIDPath)) {
+			variables.productTypeIDPath = buildIDPathList();
+		}
+		return variables.productTypeIDPath;
+	}
+	
 	public string function buildIDPathList() {
 		var idPathList = "";
 		
