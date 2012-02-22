@@ -241,9 +241,14 @@ Notes:
 			<li id="search">
 				<input type="text" class="search" id="SlatwallToolbarSearch" tabindex="1" />
 			</li>
-			<li id="pageTools">
-				<a href="#application.configBean.getContext()#/" class="website">Website</a>
+			<li id="website">
+				<a href="#application.configBean.getContext()#/" class="website">Website</a></li>	
 			</li>
+			<cfif len($.slatwall.product('productID'))>
+				<li id="productDetail">
+					<a href="#buildURL(action='admin:product.detail', queryString='productID=#$.slatwall.product('productID')#')#" class="website">Product Detail</a></li>	
+				</li>
+			</cfif>
 		</ul>
 		<ul class="favorites">
 			<li id="navDashboard">
