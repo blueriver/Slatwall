@@ -193,8 +193,11 @@ div.svoadmintoolbarmenu ul.favorites li {
 }
 
 
-div.svoadmintoolbarmenu li#pageTools>a.website {
+div.svoadmintoolbarmenu li#website a {
 	background: url(../../images/grayIcons16/email.png) no-repeat scroll 14px 6px transparent ;
+}
+div.svoadmintoolbarmenu li#productDetail a {
+	background: url(../../images/grayIcons16/edit.png) no-repeat scroll 14px 6px transparent ;
 }
 div.svoadmintoolbarmenu li#navDashboard>a {
 	background: url(../../images/grayIcons16/computer.png) no-repeat scroll 14px 6px transparent ;
