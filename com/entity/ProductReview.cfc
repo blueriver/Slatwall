@@ -73,10 +73,16 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	}
 	
 	public string function getReviewerGravatarURL(numeric size=80) {
-		if(!isNull(getAccount())) {
-			return "http://www.gravatar.com/avatar/#lcase(hash(lcase(getAccount().getEmailAddress()), "MD5" ))#?s=#arguments.size#";
+		var server = "http://www.gravatar.com/";
+		
+		if(cgi.server_port eq 443) {
+			server = "https://secure.gravatar.com/";
 		}
-		return "http://www.gravatar.com/avatar/00000000000000000000000000000000?s=#arguments.size#";
+		
+		if(!isNull(getAccount())) {
+			return "#server#/avatar/#lcase(hash(lcase(getAccount().getEmailAddress()), "MD5" ))#?s=#arguments.size#";
+		}
+		return "#server#/avatar/00000000000000000000000000000000?s=#arguments.size#";
 	}	
 	
 	// ============ START: Non-Persistent Property Methods =================
