@@ -683,6 +683,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public struct function getAttributeValuesByAttributeIDStruct() {
 		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
+			variables.attributeValuesByAttributeIDStruct = {};
 			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
 				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
 			}
@@ -693,6 +694,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public struct function getAttributeValuesByAttributeCodeStruct() {
 		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
+			variables.attributeValuesByAttributeCodeStruct = {};
 			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
 				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
 			}
