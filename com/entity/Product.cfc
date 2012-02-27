@@ -69,6 +69,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";
+	/*property name="defaultSkuCache" cfc="SkuCache" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";*/
 	
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
@@ -94,11 +95,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
-	property name="title" type="string" persistent="false";
+	property name="attributeValuesByAttributeIDStruct" type="struct" persistent="false";
+	property name="attributeValuesByAttributeCodeStruct" type="struct" persistent="false";
 	property name="brandName" type="string" persistent="false";
 	property name="productDisplayTemplateOptions" type="array" persistent="false";
 	property name="salePriceDetailsForSkus" type="struct" persistent="false";
 	property name="shippingWeightUnitCodeOptions" type="array" persistent="false";
+	property name="title" type="string" persistent="false";
 	
 	// Non-Persistent Properties - Delegated to default sku
 	property name="price" type="numeric" formatType="currency" persistent="false";
@@ -535,7 +538,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	//get attribute value
-	public any function getAttributeValue(required string attribute, returnEntity=false){
+	public any function getAttributeValueOld(required string attribute, returnEntity=false){
 		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProductAttributeValue");
 		
 		smartList.addFilter("product_productID",getProductID(),1);
@@ -559,6 +562,34 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 				return "";
 			}
 		}
+	}
+	
+	//get attribute value2
+	
+	public any function getAttributeValue(required string attribute, returnEntity=false){
+		
+		if(len(arguments.attribute) eq 32) {
+			if( structKeyExists(getAttributeValuesByAttributeIDStruct(), arguments.attribute) ) {
+				if(arguments.returnEntity) {
+					return getAttributeValuesByAttributeIDStruct()[arguments.attribute];
+				}
+				return getAttributeValuesByAttributeIDStruct()[arguments.attribute].getAttributeValue();
+			}
+		}
+		
+		if( structKeyExists(getAttributeValuesByAttributeCodeStruct(), arguments.attribute) ) {
+			if(arguments.returnEntity) {
+				return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ];
+			}
+			
+			return getAttributeValuesByAttributeCodeStruct()[ arguments.attribute ].getAttributeValue();
+		}
+				
+		if(arguments.returnEntity) {
+			return getService("ProductService").newProductAttributeValue();	
+		}
+		
+		return "";
 	}
 	
 	public struct function getCrumbData(required string path, required string siteID, required array baseCrumbArray) {
@@ -649,6 +680,28 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// END: Setting Methods
 	
 	// ============ START: Non-Persistent Property Methods =================
+	
+	public struct function getAttributeValuesByAttributeIDStruct() {
+		if(!structKeyExists(variables, "attributeValuesByAttributeIDStruct")) {
+			variables.attributeValuesByAttributeIDStruct = {};
+			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
+				variables.attributeValuesByAttributeIDStruct[ getAttributeValues()[i].getAttribute().getAttributeID() ] = getAttributeValues()[i];
+			}
+		}
+		
+		return variables.attributeValuesByAttributeIDStruct;
+	}
+	
+	public struct function getAttributeValuesByAttributeCodeStruct() {
+		if(!structKeyExists(variables, "attributeValuesByAttributeCodeStruct")) {
+			variables.attributeValuesByAttributeCodeStruct = {};
+			for(var i=1; i<=arrayLen(getAttributeValues()); i++){
+				variables.attributeValuesByAttributeCodeStruct[ getAttributeValues()[i].getAttribute().getAttributeCode() ] = getAttributeValues()[i];
+			}
+		}
+		
+		return variables.attributeValuesByAttributeCodeStruct;
+	}
 	
 	public struct function getSalePriceDetailsForSkus() {
 		if(!structKeyExists(variables, "salePriceDetailsForSkus")) {

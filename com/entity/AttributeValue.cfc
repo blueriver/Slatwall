@@ -43,7 +43,7 @@ component displayname="Attribute Value" entityname="SlatwallAttributeValue" tabl
 	property name="attributeValue" ormtype="string" length="4000";
 	
 	// Related Object Properties
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID";
+	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
 	
 	// Quick Lookup Properties
 	property name="attributeID" length="32" insert="false" update="false";
