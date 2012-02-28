@@ -120,27 +120,41 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		if(arguments.order.getOrderType().getSystemCode() == "otSalesOrder") {
 			
-			// Get All of the active current promotions
-			var promotions = getDAO().getAllActivePromotions();
-	
+			
+			// TODO: Clear all previously applied promotions from fulfillments, and apply new ones
+			// TODO: Clear all previously applied promotions from order, and apply new ones
+			
 			// Clear all previously applied promotions for order items
 			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
 				for(var pa=1; pa<=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa++) {
 					arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
 				}
 			}
-			// TODO: Clear all previously applied promotions from fulfillments
-			// TODO: Clear all previously applied promotions from order
 			
-			// Loop over each promotion to determine if it applies to this order
-			for(var p=1; p<=arrayLen(promotions); p++) {
-				var promotion = promotions[p];
+			// Loop over orderItems and apply Sale Prices
+			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
+				var orderItem = arguments.order.getOrderItems()[oi];
+				var salePriceDetails = orderItem.getSku().getSalePriceDetails();
+				
+				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
+					var discountAmount = (orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity());
+					
+					var newAppliedPromotion = this.newOrderItemAppliedPromotion();
+					newAppliedPromotion.setPromotion( this.getPromotion(salePriceDetails.promotionID) );
+					newAppliedPromotion.setOrderItem( orderItem );
+					newAppliedPromotion.setDiscountAmount( discountAmount );
+				}
+			}
+			
+			// Loop over the promotionCodes on the order
+			for(var pc=1; pc<=arrayLen(arguments.order.getPromotionCodes()); pc++) {
+				var promotion = arguments.order.getPromotionCodes()[pc].getPromotion();
 				
 				var qc = getPromotionQualificationCount(promotion=promotion, order=arguments.order);
 				
 				if(qc >= 0) {
-					for(var r=1; r<=arrayLen(promotions[p].getPromotionRewards()); r++) {
-						var reward = promotions[p].getPromotionRewards()[r];
+					for(var r=1; r<=arrayLen(promotion.getPromotionRewards()); r++) {
+						var reward = promotion.getPromotionRewards()[r];
 						
 						// If this reward is a product then run this logic
 						if(reward.getRewardType() eq "product") {
@@ -190,7 +204,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										// If one has already been set then we just need to check if this new discount amount is greater
 										} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
 											// If the promotion is the same, then we just update the amount
-											if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
+											if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotion.getPromotionID()) {
 												orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
 											// If the promotion is a different then remove the original and set addNew to true
 											} else {
@@ -204,9 +218,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 									// Add the new appliedPromotion
 									if(addNew) {
 										var newAppliedPromotion = this.newOrderItemAppliedPromotion();
-										newAppliedPromotion.setPromotion(promotions[p]);
-										newAppliedPromotion.setOrderItem(orderItem);
-										newAppliedPromotion.setDiscountAmount(discountAmount);
+										newAppliedPromotion.setPromotion( promotion );
+										newAppliedPromotion.setOrderItem( orderItem );
+										newAppliedPromotion.setDiscountAmount( discountAmount );
 									}
 								}
 							}
@@ -220,6 +234,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					}
 				}
 			}
+			
+		} else {
+			// DO THE LOGIC HERE FOR RETURNS AND EXCHANGES
 		}
 		
 	}

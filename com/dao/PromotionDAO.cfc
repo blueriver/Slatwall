@@ -70,7 +70,8 @@ Notes:
 				prSku.itemAmountOff as 'amountOff',
 				prSku.itemAmount as 'amount',
 				prSku.roundingRuleID as 'roundingRuleID',
-				pSku.endDateTime as 'salePriceExpirationDateTime'
+				pSku.endDateTime as 'salePriceExpirationDateTime',
+				pSku.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -113,7 +114,8 @@ Notes:
 				prProduct.itemAmountOff as 'amountOff',
 				prProduct.itemAmount as 'amount',
 				prProduct.roundingRuleID as 'roundingRuleID',
-				pProduct.endDateTime as 'salePriceExpirationDateTime'
+				pProduct.endDateTime as 'salePriceExpirationDateTime',
+				pProduct.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -156,7 +158,8 @@ Notes:
 				prBrand.itemAmountOff as 'amountOff',
 				prBrand.itemAmount as 'amount',
 				prBrand.roundingRuleID as 'roundingRuleID',
-				pBrand.endDateTime as 'salePriceExpirationDateTime'
+				pBrand.endDateTime as 'salePriceExpirationDateTime',
+				pBrand.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -201,7 +204,8 @@ Notes:
 				prOption.itemAmountOff as 'amountOff',
 				prOption.itemAmount as 'amount',
 				prOption.roundingRuleID as 'roundingRuleID',
-				pOption.endDateTime as 'salePriceExpirationDateTime'
+				pOption.endDateTime as 'salePriceExpirationDateTime',
+				pOption.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -246,7 +250,8 @@ Notes:
 				prProductType.itemAmountOff as 'amountOff',
 				prProductType.itemAmount as 'amount',
 				prProductType.roundingRuleID as 'roundingRuleID',
-				pProductType.endDateTime as 'salePriceExpirationDateTime'
+				pProductType.endDateTime as 'salePriceExpirationDateTime',
+				pProductType.promotionID as 'promotionID'
 			FROM
 				SlatwallSku
 			  INNER JOIN
@@ -301,7 +306,8 @@ Notes:
 				AllDiscounts.amountOff,
 				AllDiscounts.amount,
 				AllDiscounts.roundingRuleID,
-				AllDiscounts.salePriceExpirationDateTime
+				AllDiscounts.salePriceExpirationDateTime,
+				AllDiscounts.promotionID
 			FROM
 				allDiscounts,
 				skuPrice
