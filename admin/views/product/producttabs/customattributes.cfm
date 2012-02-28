@@ -62,6 +62,13 @@ it is set to 0
 									</cfloop>
 								</select>
 							</cfcase>
+							<cfcase value="atMultiselect">
+								<select name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#" multiple="true">
+									<cfloop array="#local.attribute.getAttributeOptions()#" index="local.option" >
+										<option value="#local.option.getAttributeOptionValue()#" <cfif local.attributeValue.getAttributeValue() EQ local.option.getAttributeOptionValue()> Selected</cfif>>#local.option.getAttributeOptionLabel()#</option>
+									</cfloop>
+								</select>
+							</cfcase>
 							<cfcase value="atText">
 								<input type="text" name="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" id="attribute.#local.attribute.getAttributeID()#.#local.attributeValueID#" value="#local.attributeValue.getAttributeValue()#" />
 							</cfcase>
