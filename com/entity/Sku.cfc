@@ -71,7 +71,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (Many-to-Many)
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" orderby="sortOrder ASC"; 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	
@@ -174,26 +174,6 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
     }
     
     // Start: Option Helper Methods
-    
-    // override generated setter to get options sorted by optiongroup sortorder
-    public array function getOptions(boolean sorted = false) {
-    	if(!sorted) {
-    		return variables.options;
-    	} else {
-	    	if(!structKeyExists(variables,"sortedOptions")) {
-		    	var options = ORMExecuteQuery(
-		    		"select opt from SlatwallOption opt
-		    		join opt.skus s
-		    		where s.skuID = :skuID
-		    		order by opt.optionGroup.sortOrder",
-		    		{skuID = this.getSkuID()}
-		    	);
-		    	variables.sortedOptions = options;
-	    	}
-	    	return variables.sortedOptions;
-	    }
-    }
-    
     public any function getOptionsByGroupIDStruct() {
 		if(!structKeyExists(variables, "OptionsByGroupIDStruct")) {
 			variables.OptionsByGroupIDStruct = structNew();
