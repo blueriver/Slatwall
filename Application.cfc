@@ -193,7 +193,7 @@ component extends="org.fw1.framework" output="false" {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
-		//getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
+		getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
 		
 		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
 			// Log that this started
