@@ -194,7 +194,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	public void function updateFromProduct(required any product, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+	public void function updateFromProduct(required any product, string propertyList="salePrice,allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
 		if(setting("advanced_useSkuCacheFlag")) {
 			// Loop over the skus of the product and add to skuCache
 			for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
@@ -206,9 +206,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	public void function updateFromSku(required any sku, string propertyList="allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+	public void function updateFromSku(required any sku, string propertyList="salePrice,allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
 		if(setting("advanced_useSkuCacheFlag")) {
 			updateSkuID(skuID = arguments.sku.getSkuID(), propertyList=arguments.propertyList);
+		}
+		if(setting("advanced_useProductCacheFlag")) {
+			updateProductID(productID = arguments.sku.getProduct().getProductID(), propertyList=arguments.propertyList);
 		}
 	}
 	// END: Methods Invoked preUpdate
