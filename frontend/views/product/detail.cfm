@@ -58,7 +58,8 @@ Notes:
 					<dt>Select Option</dt>
 					<dd>
 						<select name="skuID">
-							<cfloop array="#$.slatwall.product().getSkus(true)#" index="local.sku">
+							<cfset local.skus = $.slatwall.product().getSkus(sorted=true, fetchOptions=true) />
+							<cfloop array="#local.skus#" index="local.sku">
 								<option value="#local.sku.getSkuID()#">#local.sku.displayOptions()#</option>
 							</cfloop>
 						</select>
