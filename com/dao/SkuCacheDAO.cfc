@@ -111,6 +111,23 @@ Notes:
 		<cfreturn rs />
 	</cffunction>
 	
+	<cffunction name="getUniqueProductSkuImageFiles">
+		<cfargument name="productID" type="string" />
+		
+		<cfset var rs="" />
+		
+		<cfquery name="rs">
+			SELECT DISTINCT
+				SlatwallSku.imageFile
+			FROM
+				SlatwallSku
+			WHERE
+				SlatwallSku.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
+		</cfquery>
+		
+		<cfreturn rs />
+	</cffunction>
+	
 	<cffunction name="getSkuCacheQuery">
 		<cfargument name="skuID" type="string" required="true" />
 		
@@ -228,6 +245,7 @@ Notes:
 		<cfset var dateTimeColumns = "salePriceExpirationDateTime" />
 		<cfset var moneyColumns = "salePrice" />
 		<cfset var integerColumns = "qoh,qosh,qndoo,qndorvo,qndosa,qnroro,qnrovo,qnrosa,quantityHeldBack,shippingWeight" />
+		<cfset var varcharColumns = "skuImageFileList" />
 		
 		<cfquery name="rs" result="updateResult">
 			UPDATE
@@ -245,6 +263,8 @@ Notes:
 							#columnName# = <cfqueryparam cfsqltype="cf_sql_money" value="#arguments.data[ columnName ]#">,
 						<cfelseif listFindNoCase(integerColumns, columnName)>
 							#columnName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.data[ columnName ]#">,
+						<cfelseif listFindNoCase(varcharColumns, columnName)>
+							#columnName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.data[ columnName ]#">,
 						</cfif>
 					</cfif>
 				</cfloop>

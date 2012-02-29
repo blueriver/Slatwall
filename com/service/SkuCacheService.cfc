@@ -142,30 +142,30 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			// Loop over Brands on this Promotion Reward and update the related product skus
 			for(var b=1; b<=arrayLen(arguments.promotionRewardProduct.getBrands()); b++) {
 				for(var p=1; p<=arrayLen(arguments.promotionRewardProduct.getBrands()[b].getProducts()); p++) {
-					updateFromProduct(product=arguments.promotionRewardProduct.getBrands()[b].getProducts()[p], propertyList="salePrice,salePriceExpirationDateTime");
+					updateFromProduct(product=arguments.promotionRewardProduct.getBrands()[b].getProducts()[p], propertyList="salePrice");
 				}
 			}
 			
 			// Loop over Options on this Promotion Reward and update the related skus
 			for(var o=1; o<=arrayLen(arguments.promotionRewardProduct.getOptions()); o++) {
 				for(var s=1; s<=arrayLen(arguments.promotionRewardProduct.getOptions()[o].getSkus()); s++) {
-					updateFromSku(sku=arguments.promotionRewardProduct.getOptions()[o].getSkus()[s], propertyList="salePrice,salePriceExpirationDateTime");
+					updateFromSku(sku=arguments.promotionRewardProduct.getOptions()[o].getSkus()[s], propertyList="salePrice");
 				}
 			}
 			
 			// Loop over ProductTypes on this Promotion Reward and update the related product skus
 			for(var pt=1; pt<=arrayLen(arguments.promotionRewardProduct.getProductTypes()); pt++) {
-				updateFromProductType(productType=arguments.promotionRewardProduct.getProductTypes()[pt], propertyList="salePrice,salePriceExpirationDateTime");
+				updateFromProductType(productType=arguments.promotionRewardProduct.getProductTypes()[pt], propertyList="salePrice");
 			}
 			
 			// Loop over Products on this Promotion Reward and update their skus
 			for(var p=1; p<=arrayLen(arguments.promotionRewardProduct.getProducts()); p++) {
-				updateFromProduct(product=arguments.promotionRewardProduct.getProducts()[p], propertyList="salePrice,salePriceExpirationDateTime");
+				updateFromProduct(product=arguments.promotionRewardProduct.getProducts()[p], propertyList="salePrice");
 			}
 			
 			// Loop over Skus on this Promotion Reward and update them
 			for(var s=1; s<=arrayLen(arguments.promotionRewardProduct.getSkus()); s++) {
-				updateFromSku(sku=arguments.promotionRewardProduct.getSkus()[s], propertyList="salePrice,salePriceExpirationDateTime");
+				updateFromSku(sku=arguments.promotionRewardProduct.getSkus()[s], propertyList="salePrice");
 			}
 		}
 	}
@@ -194,7 +194,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	public void function updateFromProduct(required any product, string propertyList="salePrice,allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+	public void function updateFromProduct(required any product, string propertyList="salePrice,skuImageFileList,allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
 		if(setting("advanced_useSkuCacheFlag")) {
 			// Loop over the skus of the product and add to skuCache
 			for(var s=1; s<=arrayLen(arguments.product.getSkus()); s++) {
@@ -206,7 +206,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}
 	}
 	
-	public void function updateFromSku(required any sku, string propertyList="salePrice,allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
+	public void function updateFromSku(required any sku, string propertyList="salePrice,skuImageFileList,allowBackorderFlag,allowDropshipFlag,allowPreorderFlag,allowShippingFlag,callToOrderFlag,displayTemplate,quantityHeldBack,quantityMinimum,quantityMaximum,quantityOrderMinimum,quantityOrderMaximum,shippingWeight,trackInventoryFlag") {
 		if(setting("advanced_useSkuCacheFlag")) {
 			updateSkuID(skuID = arguments.sku.getSkuID(), propertyList=arguments.propertyList);
 		}
@@ -339,13 +339,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			variables.productsToUpdate = [];
 		}
 		
-		thread action="run" name="updateSkuCache-#createUUID()#" updatingProducts="#productsForThread#" {
+		thread action="run" name="updateProductCache-#createUUID()#" updatingProducts="#productsForThread#" {
 			logSlatwall("Thread for Product Cache Update Started with #arrayLen(updatingProducts)# products to update", true);
 			var startTime = getTickCount();
 			
 			utilityTagService.cfsetting(requesttimeout=1000);
 			
 			for(var i=1; i<=arrayLen(updatingProducts); i++) {
+				
 				var productID = updatingProducts[i].productID;
 				var propertyList = updatingProducts[i].propertyList;
 				
@@ -374,6 +375,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 							data.salePriceExpirationDateTime = "NULL";
 						}
 					
+					}
+					if(listFindNoCase(propertyList, "skuImageFileList") || propertyList == "all") {
+						data.skuImageFileList = "";
+						
+						var imageFileListQuery = getDAO().getUniqueProductSkuImageFiles( productID = productRecordQuery.productID);
+						for(var ifq=1; ifq<=imageFileListQuery.recordCount; ifq++) {
+							data.skuImageFileList = listAppend(data.skuImageFileList, imageFileListQuery["imageFile"][ifq]);
+						}
 					}
 					if(listFindNoCase(propertyList, "qoh") || propertyList == "all") {
 						data.qoh = getInventoryService().getQOH( productID=productRecordQuery.productID, productRemoteID=productRecordQuery.remoteID );

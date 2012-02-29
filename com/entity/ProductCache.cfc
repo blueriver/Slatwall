@@ -42,6 +42,9 @@ component displayname="Product Cache" entityname="SlatwallProductCache" table="S
 	property name="productID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='product'}";
 	property name="product" fieldtype="one-to-one" cfc="Product" constrained="true";
 	
+	// Persistent Properties
+	property name="skuImageFileList" ormtype="string";
+	
 	// Persistent Properties (Calculations)
 	property name="salePrice" ormtype="big_decimal" default=0;
 	property name="salePriceExpirationDateTime" ormtype="timestamp";
@@ -69,9 +72,6 @@ component displayname="Product Cache" entityname="SlatwallProductCache" table="S
 	property name="modifiedDateTime" ormtype="timestamp";
 	
 	// Non-Persistent Properties
-
-
-
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
