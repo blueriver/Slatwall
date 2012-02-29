@@ -92,9 +92,11 @@ Notes:
 			hql &= "INNER JOIN FETCH sku.options option ";	
 		}
 		var hql &= "WHERE sku.product.productID = :productID ";
+		/*
 		if(fetchOptions) {
 			hql &= "ORDER BY option.optionGroup.sortOrder ";	
 		}
+		*/
 		
 		var skus = ORMExecuteQuery(hql,	{productID = arguments.product.getProductID()});
 		
