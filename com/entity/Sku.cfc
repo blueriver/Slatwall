@@ -71,7 +71,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="alternateSkuCodes" singularname="alternateSkuCode" fieldtype="one-to-many" fkcolumn="skuID" cfc="AlternateSkuCode" inverse="true" cascade="all-delete-orphan";
 	
 	// Related Object Properties (Many-to-Many)
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID" orderby="sortOrder ASC"; 
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	
@@ -164,11 +164,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
     
     public string function displayOptions(delimiter=" ") {
-    	var options = getOptions(sorted=true);
     	var dspOptions = "";
-    	for(var i=1;i<=arrayLen(options);i++) {
-    		var thisOption = options[i];
-    		dspOptions = listAppend(dspOptions,thisOption.getOptionName(),arguments.delimiter);
+    	for(var i=1;i<=arrayLen(getOptions());i++) {
+    		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);
     	}
 		return dspOptions;
     }

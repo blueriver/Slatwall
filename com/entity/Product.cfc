@@ -166,15 +166,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
         return getService("ProductService").getProductTypeTree();
     }
     
-    public array function getSkus(boolean sorted=false) {
-        if(!sorted) {
+    public array function getSkus(boolean sorted=false, boolean fetchOptions=false) {
+        if(!arguments.sorted && !arguments.fetchOptions) {
         	return variables.skus;
-        } else {
-        	if(isNull(variables.sortedSkus)) {
-	        	variables.sortedSkus = getService("skuService").getSortedProductSkus(this);
-	        }
-        	return variables.sortedSkus;
         }
+        return getService("skuService").getProductSkus(product=this, sorted=arguments.sorted, fetchOptions=arguments.fetchOptions);
     }
 	
 	public any function getSkuByID(required string skuID) {
