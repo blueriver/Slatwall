@@ -214,6 +214,7 @@ Notes:
 							<td class="value">#rc.allSettings.advanced_currencyType.getSettingValue()#</td>
 						</cfif>
 					</tr>
+					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_useProductCacheFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.useProductCacheFlag')#" fieldName="advanced_useProductCacheFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 					<cf_SlatwallPropertyDisplay property="settingValue" edit="#rc.edit#" displaytype="table" titleClass="varWidth" object="#rc.allSettings.advanced_useSkuCacheFlag#" title="#rc.$.Slatwall.rbKey('setting.advanced.useSkuCacheFlag')#" fieldName="advanced_useSkuCacheFlag" fieldType="radiogroup" valueOptions="#local.yesNoValueOptions#" valueFormatType="yesno">
 				</table>
 			</div>

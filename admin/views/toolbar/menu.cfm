@@ -194,6 +194,7 @@ Notes:
 								<cf_SlatwallActionCaller action="admin:setting.detailslatwallupdate" type="list">
 								<cf_SlatwallActionCaller action="admin:setting.detailviewupdate" type="list">
 								<cfif $.slatwall.setting('advanced_useSkuCacheFlag')><cf_SlatwallActionCaller action="admin:setting.updateskucache" type="list"></cfif>
+								<cfif $.slatwall.setting('advanced_useProductCacheFlag')><cf_SlatwallActionCaller action="admin:setting.updateproductcache" type="list"></cfif>
 								<cf_SlatwallActionCaller action="admin:setting.detaildbtools" type="list">
 								<cfif $.currentUser().getS2()>
 									<li class="last"><a href="#$.slatwall.getSlatwallRootPath()#/api/index.cfm?dashboard">REST API Dashboard</a></li>

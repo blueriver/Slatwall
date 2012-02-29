@@ -65,11 +65,13 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="shippingWeightUnitCode" ormtype="string";
 	property name="trackInventoryFlag" ormtype="boolean";
 	
+	// Related Object Properties (One-To-One)
+	property name="productCache" fieldType="one-to-one" cfc="ProductCache" cascade="delete";
+		
 	// Related Object Properties (many-to-one)
 	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
 	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	property name="defaultSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";
-	/*property name="defaultSkuCache" cfc="SkuCache" fieldtype="many-to-one" fkcolumn="defaultSkuID" cascade="delete";*/
 	
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
