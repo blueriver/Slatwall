@@ -43,7 +43,7 @@ component displayname="Product Cache" entityname="SlatwallProductCache" table="S
 	property name="product" fieldtype="one-to-one" cfc="Product" constrained="true";
 	
 	// Persistent Properties
-	property name="skuImageFileList" ormtype="string";
+	property name="skuImageFileList" ormtype="string" length="4000";
 	
 	// Persistent Properties (Calculations)
 	property name="salePrice" ormtype="big_decimal" default=0;
