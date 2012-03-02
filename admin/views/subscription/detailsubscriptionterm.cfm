@@ -60,7 +60,6 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="gracePeriodTerm" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="allowProrateFlag" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="autoRetryPaymentDays" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="billedOnDayOfMonth" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionTerm#" property="subscriptionBenefits" edit="#rc.edit#">
 		</dl>
 		

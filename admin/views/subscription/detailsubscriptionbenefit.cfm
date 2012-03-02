@@ -60,8 +60,10 @@ Notes:
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="priceGroups" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotionQuantity" edit="#rc.edit#">
 			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="promotions" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="cmsGroupQuantity" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="cmsGroupIDs" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categoryQuantity" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="categories" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="contentQuantity" edit="#rc.edit#">
+			<cf_SlatwallPropertyDisplay object="#rc.subscriptionBenefit#" property="content" edit="#rc.edit#">
 		</dl>
 		
 		<cfif rc.edit>

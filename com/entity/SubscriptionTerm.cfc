@@ -43,7 +43,6 @@ component displayname="Subscription Term" entityname="SlatwallSubscriptionTerm" 
 	property name="subscriptionTermName" ormtype="string";
 	property name="allowProrateFlag" ormtype="boolean" formatType="yesno";
 	property name="autoRetryPaymentDays" ormtype="string";
-	property name="billedOnDayOfMonth" ormtype="integer";	
 	
 	// Related Object Properties (many-to-one)
 	property name="initialTerm" cfc="Term" fieldtype="many-to-one" fkcolumn="initialTermID";

@@ -43,8 +43,8 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	property name="subscriptionBenefitName" ormtype="string";
 	property name="priceGroupQuantity" ormtype="integer";
 	property name="promotionQuantity" ormtype="integer";
-	property name="cmsGroupIDs" ormtype="string" length="500" ;
-	property name="cmsGroupQuantity" ormtype="string";
+	property name="categoryQuantity" ormtype="string";
+	property name="contentQuantity" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	property name="accessCodeType" cfc="Type" fieldtype="many-to-one" fkcolumn="accessCodeTypeID";
@@ -54,6 +54,8 @@ component displayname="Subscription Benefit" entityname="SlatwallSubscriptionBen
 	// Related Object Properties (many-to-many)
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPriceGroup" fkcolumn="subscriptionBenefitID" inversejoincolumn="priceGroupID" cascade="all";
 	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPromotion" fkcolumn="subscriptionBenefitID" inversejoincolumn="promotionID" cascade="all";
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
+	property name="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
 		
 	// Remote Properties
 	

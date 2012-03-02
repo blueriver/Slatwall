@@ -1,4 +1,4 @@
-/*
+﻿/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,50 +36,50 @@
 Notes:
 
 */
-component displayname="Product Content" entityname="SlatwallProductContent" table="SlatwallProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Category" entityname="SlatwallCategory" table="SlatwallCategory" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="productContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
-	property name="contentID" ormtype="string" length="35";
-	property name="contentPath" ormtype="string";
+	property name="categoryID" ormtype="string" length="35" fieldtype="id";
+	property name="categoryPath" ormtype="string";
 	
-	// Related Object Properties
-	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="ProductID";
+	// Related Object Properties (many-to-one)
 	
+	// Related Object Properties (one-to-many)
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// Related Object Properties (many-to-many)
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="categoryID" inversejoincolumn="productID" inverse="true";
 	
-	// Product (many-to-one)
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
-	public void function setProduct(required any Product) {
-	   variables.product = arguments.Product;
-	   if(isNew() or !arguments.Product.hasProductContent(this)) {
-	       arrayAppend(arguments.Product.getProductContent(),this);
-	   }
-	}
-	
-	public void function removeProduct(any Product) {
-		if(!structKeyExists(arguments, 'product')) {
-			arguments.product = variables.product;
-		}
-		var index = arrayFind(arguments.Product.getProductContent(),this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.Product.getProductContent(),index);
-		}    
-		structDelete(variables, "product");
-    }
-    
-	/************   END Association Management Methods   *******************/
+	// Non-Persistent Properties
 
 
+
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+
+	// products (many-to-many)
+	public void function addProduct(required any product) {
+	   arguments.product.addCategory(this);
+	}
+	
+	public void function removeProduct(required any product) {
+	   arguments.product.removeCategory(this);
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

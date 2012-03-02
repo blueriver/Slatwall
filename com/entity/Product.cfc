@@ -73,16 +73,17 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Related Object Properties (one-to-many)
 	property name="skus" type="array" cfc="Sku" singularname="Sku" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productImages" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="productContent" cfc="ProductContent" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="productCategories" singularname="ProductCategory" cfc="ProductCategory" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productRelationships" singlularname="productRelationship" cfc="ProductRelationship" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
+	property name="content" cfc="Content" fieldtype="many-to-many" linktable="SlatwallProductContent" fkcolumn="productID" inversejoincolumn="contentID" inverse="true";
+	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID" inverse="true";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -297,47 +298,70 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
        structDelete(variables,"Brand");
     }
 	
-	// ProductContent (one-to-many)
+	// Content (many-to-many)
 	
-	public void function setProductContent(required array ProductContent) {
-		if( !arrayIsEmpty(arguments.ProductContent) ) {
-			for( var i=1; i<= arraylen(arguments.ProductContent); i++ ) {
-				var thisProductContent = arguments.ProductContent[i];
-				if(isObject(thisProductContent) && thisProductContent.getClassName() == "SlatwallProductContent") {
-					addProductContent(thisProductContent);
-				}
-			}
-		} 
-	}
-	
-	public void function clearProductContent() {
-		while(arraylen(getProductContent()) > 0) {
-			removeProductContent(getProductContent()[1]);
+	public void function clearContent() {
+		while(arraylen(getContent()) > 0) {
+			removeContent(getContent()[1]);
 		}
 	}
 	
-	public void function addProductContent(required ProductContent ProductContent) {
-	   arguments.ProductContent.setProduct(this);
+	public void function addContent(required any content) {
+		if(arguments.content.isNew() || !hasContent(arguments.content)) {
+			// first add content to this product
+			arrayAppend(this.getContent(),arguments.content);
+			//add this product to the content
+			arrayAppend(arguments.content.getProducts(),this);
+		}
 	}
+    
+    public void function removeContent(required any content) {
+       // first remove the content from this product
+       if(this.hasContent(arguments.content)) {
+	       var index = arrayFind(this.getContent(),arguments.content);
+	       if(index>0) {
+	           arrayDeleteAt(this.getContent(),index);
+	       }
+	      // then remove this product from the content
+	       var index = arrayFind(arguments.content.getProducts(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.content.getProducts(),index);
+	       }
+	   }
+    }
+    
 	
-	public void function removeProductContent(required ProductContent ProductContent) {
-	   arguments.ProductContent.removeProduct(this);
-	}
-	
-	// ProductCategories (one-to-many)
-	public void function clearProductCategories() {
-		for( var i=1; i<= arraylen(getProductCategories()); i++ ) {
-			removeProductCategory(getProductCategory()[i]);
+	// ProductCategories (many-to-many)
+	public void function clearCategories() {
+		for( var i=1; i<= arraylen(getCategories()); i++ ) {
+			removeCategory(getCategory()[i]);
 		}
 	}
 	
-	public void function addProductCategory(required any ProductCategory) {    
-	   arguments.ProductCategory.setProduct(this);    
-	}    
-	    
-	public void function removeProductCategory(required any ProductCategory) {    
-	   arguments.ProductCategory.removeProduct(this);    
+	public void function addCategory(required any category) {
+		if(arguments.category.isNew() || !hasCategory(arguments.category)) {
+			// first add category to this product
+			arrayAppend(this.getCategories(),arguments.category);
+			//add this product to the category
+			arrayAppend(arguments.category.getProducts(),this);
+		}
 	}
+    
+    public void function removeCategory(required any category) {
+       // first remove the category from this product
+       if(this.hasCategory(arguments.category)) {
+	       var index = arrayFind(this.getCategories(),arguments.category);
+	       if(index>0) {
+	           arrayDeleteAt(this.getCategories(),index);
+	       }
+	      // then remove this product from the category
+	       var index = arrayFind(arguments.category.getProducts(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.category.getProducts(),index);
+	       }
+	   }
+    }
+    
 	
 	// Skus (one-to-many)
 	
@@ -493,8 +517,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	}
 	
 	//get merchandisetype 
-	public any function getMerchandiseType() {
-		return getProductType().getMerchandiseType();
+	public any function getBaseProductType() {
+		return getProductType().getBaseProductType();
 	}
 	
 	public array function getOptionsByOptionGroup(required string optionGroupID) {

@@ -84,6 +84,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	// Related Object Properties (Many-To-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
 
 	// Non-Persistent Properties
 	property name="parentProductTypeOptions" type="array" persistent="false";
@@ -150,7 +151,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	
 	//get merchandisetype 
-	public any function getMerchandiseType() {
+	public any function getBaseProductType() {
 		if(isNull(getSystemCode()) || getSystemCode() == ""){
 			return getService("ProductService").getProductType(listFirst(getProductTypeIDPath())).getSystemCode();
 		}

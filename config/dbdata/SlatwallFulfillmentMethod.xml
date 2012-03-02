@@ -1,10 +1,11 @@
 <Table tableName="SlatwallFulfillmentMethod">
 	<Columns>
 		<column name="fulfillmentMethodID" fieldtype="id" />
+		<column name="fulfillmentMethodName" update="false" />
 		<column name="activeFlag" update="false" datatype="bit" />
 	</Columns>
 	<Records>
-		<Record fulfillmentMethodID="shipping" activeFlag="1" />
-		<Record fulfillmentMethodID="pickup" activeFlag="0" />
+		<Record fulfillmentMethodID="shipping" fulfillmentMethodName="Shipping" activeFlag="1" />
+		<Record fulfillmentMethodID="pickup" fulfillmentMethodName="Pickup" activeFlag="0" />
 	</Records>
 </Table>

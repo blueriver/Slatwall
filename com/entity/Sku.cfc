@@ -76,6 +76,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
+	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
@@ -283,9 +284,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	// END: Image Methods
 	
-	//get merchandisetype 
-	public any function getMerchandiseType() {
-		return this.getProduct().getMerchandiseType();
+	//get BaseProductType 
+	public any function getBaseProductType() {
+		return this.getProduct().getBaseProductType();
 	}
 	
 	// START: Price Methods
