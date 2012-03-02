@@ -61,13 +61,13 @@ component extends="org.fw1.framework" output="false" {
 	
 	public void function verifyApplicationSetup() {
 		// Check to see if out application stuff is initialized
-		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
+		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized || structKeyExists(url, variables.framework.reload)) {
 			
 			// If not, lock the application until this is finished
 			lock scope="Application" timeout="120"  {
 				
 				// Check again so that the qued requests don't back up
-				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
+				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized || structKeyExists(url, variables.framework.reload)) {
 					
 					// Log that the application is starting it's setup
 					writeLog(file="Slatwall", text="Application Setup Started");
@@ -316,11 +316,8 @@ component extends="org.fw1.framework" output="false" {
 		if(getBeanFactory().getBean("requestCacheService").getValue("ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").clearCache(keys="currentSession,currentProduct,currentProductList");
 			ormClearSession();
-			getBeanFactory().getBean("logService").logMessage("ormClearSession() Called");
 		} else {
-			getBeanFactory().getBean("logService").logMessage("ormFlush() Started");
 			ormFlush();
-			getBeanFactory().getBean("logService").logMessage("ormFlush() Ended");
 		}
 	}
 
