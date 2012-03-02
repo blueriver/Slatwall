@@ -251,7 +251,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			variables.skusToUpdate = [];
 		}
 		
-		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#variables.skusToUpdate#" {
+		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#skusForThread#" {
 			logSlatwall("Thread for Sku Cache Update Started with #arrayLen(updatingSkus)# skus to update", true);
 			var startTime = getTickCount();
 			

@@ -69,9 +69,7 @@ component extends="org.fw1.framework" output="false" {
 				// Check again so that the qued requests don't back up
 				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 					
-					// Log that the application is finished setting up
-					//getBeanFactory().getBean("logService").logMessage(message="Application Setup Started", generalLog=true);
-					
+					// Log that the application is starting it's setup
 					writeLog(file="Slatwall", text="Application Setup Started");
 					
 					application.slatwall = structNew();
