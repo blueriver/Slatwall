@@ -44,27 +44,9 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" hint="This is the Website of the brand";
-	
-	// Persistent Properties - Inheritence Settings just for brand
-	property name="brandDisplayTemplate" ormtype="string";
 
 	// Persistent Properties - Inheritence Settings
-	property name="allowBackorderFlag" ormtype="boolean";
-	property name="allowDropshipFlag" ormtype="boolean";
-	property name="allowPreorderFlag" ormtype="boolean";
-	property name="allowShippingFlag" ormtype="boolean";
-	property name="callToOrderFlag" ormtype="boolean";
-	property name="productDisplayTemplate" ormtype="string";
-	property name="productTypeDisplayTemplate" ormtype="string";
-	property name="quantityHeldBack" ormtype="integer";
-	property name="quantityMinimum" ormtype="integer";
-	property name="quantityMaximum" ormtype="integer";
-	property name="quantityOrderMinimum" ormtype="integer";
-	property name="quantityOrderMaximum" ormtype="integer";
-	property name="shippingWeight" ormtype="integer";
-	property name="shippingWeightUnitCode" ormtype="string";
-	property name="trackInventoryFlag" ormtype="boolean";
-	
+	property name="brandDisplayTemplate" ormtype="string";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

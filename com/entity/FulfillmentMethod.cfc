@@ -39,11 +39,13 @@ Notes:
 component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod" table="SlatwallFulfillmentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	// @hint the fulfillmentMethodID is intentionally 255 length because the values we store for the ID are NOT uuid's.  Checkout the Data for this table in the /config folder to know more.
-	property name="fulfillmentMethodID" ormtype="string" length="255" fieldtype="id" unsavedvalue="" default="";
+	property name="fulfillmentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentMethodName" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="false"; 
-
+	
+	// Fulfillment Type
+	property name="fulfillmentType" cfc="Type" fieldtype="many-to-one" fkcolumn="fulfillmentTypeID";
+	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";

@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,22 +36,35 @@
 Notes:
 
 */
-component displayname="Category" entityname="SlatwallCategory" table="SlatwallCategory" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Brand Product Type" entityname="SlatwallBrandProductType" table="SlatwallBrandProductType" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="categoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="cmsCategoryID" ormtype="string" length="35" fieldtype="id";
-	property name="cmsCategoryIDPath" ormtype="string";
+	property name="brandProductTypeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties (many-to-one)
+	// Persistent Properties - Inheritence Settings
+	property name="allowBackorderFlag" ormtype="boolean";
+	property name="allowDropshipFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="productDisplayTemplate" ormtype="string";
+	property name="productTypeDisplayTemplate" ormtype="string";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="quantityMinimum" ormtype="integer";
+	property name="quantityMaximum" ormtype="integer";
+	property name="quantityOrderMinimum" ormtype="integer";
+	property name="quantityOrderMaximum" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
+	property name="shippingWeightUnitCode" ormtype="string";
+	property name="trackInventoryFlag" ormtype="boolean";
 	
-	// Related Object Properties (one-to-many)
+	// Related Object Properties (Many-to-One)
+	property name="brand" cfc="Brand" fieldtype="many-to-one" fkcolumn="brandID";
+	property name="productType" cfc="ProductType" fieldtype="many-to-one" fkcolumn="productTypeID";
 	
-	// Related Object Properties (many-to-many)
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="categoryID" inversejoincolumn="productID" inverse="true";
+	// Related Object Properties (One-to-Many)
 	
-	// Remote properties
-	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
+	// Related Object Properties (Many-to-Many)
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -69,15 +82,6 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-
-	// products (many-to-many)
-	public void function addProduct(required any product) {
-	   arguments.product.addCategory(this);
-	}
-	
-	public void function removeProduct(required any product) {
-	   arguments.product.removeCategory(this);
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

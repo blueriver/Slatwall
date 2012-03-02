@@ -36,11 +36,12 @@
 Notes:
 
 */
-component displayname="Slatwall Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="contentID" ormtype="string" length="35" fieldtype="id";
-	property name="contentPath" ormtype="string";
+	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="cmsContentID" ormtype="string" length="35" fieldtype="id";
+	property name="cmsContentIDPath" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	
@@ -49,6 +50,8 @@ component displayname="Slatwall Content" entityname="SlatwallContent" table="Sla
 	// Related Object Properties (many-to-many)
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductContent" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
 
+	// Remote properties
+	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
