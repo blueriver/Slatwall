@@ -55,6 +55,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
+	property name="attributeValues" singularname="attributeValue" cfc="AccountAttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
 	property name="productReviews" singularname="productReview" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="ProductReview" inverse="true";
 	
@@ -98,6 +99,9 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		if(isNull(variables.attributeSetAssignments)) {
 			variables.attributeSetAssignments = [];
 		}
+		if(isNull(variables.attributeValues)) {
+			variables.attributeValues = [];
+		}
 		if(isNull(variables.priceGroups)) {
 			variables.priceGroups = [];
 		}
@@ -112,6 +116,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		}
 	}
 	
+	public string function getGravatarURL(numeric size=80) {
+		if(cgi.server_port eq 443) {
+			return "https://secure.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";
+		} else {
+			return "http://www.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";	
+		}
+	}
+		
 	// get all the assigned attribute sets
 	public array function getAttributeSets(array attributeSetTypeCode){
 		var smartList = getService("attributeService").getAttributeSetSmartList();
@@ -214,6 +226,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	public void function removeAccountAttributeSet(required any accountAttributeSet) {
 	   arguments.accountAttributeSet.removeAccount( this );
+	}
+	
+	// Attribute Values (one-to-many)    
+	public void function addAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.setAccount( this );    
+	}    
+	public void function removeAttributeValue(required any attributeValue) {    
+		arguments.attributeValue.removeAccount( this );    
 	}
 	
 	// Orders (one-to-many)

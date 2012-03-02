@@ -38,6 +38,7 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
+	property name="roundingRuleService" type="any";
 	property name="utilityService" type="any";
 	
 	public any function savePromotion(required any promotion, struct data={}) {
@@ -119,27 +120,41 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		
 		if(arguments.order.getOrderType().getSystemCode() == "otSalesOrder") {
 			
-			// Get All of the active current promotions
-			var promotions = getDAO().getAllActivePromotions();
-	
+			
+			// TODO: Clear all previously applied promotions from fulfillments, and apply new ones
+			// TODO: Clear all previously applied promotions from order, and apply new ones
+			
 			// Clear all previously applied promotions for order items
 			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
 				for(var pa=1; pa<=arrayLen(arguments.order.getOrderItems()[oi].getAppliedPromotions()); pa++) {
 					arguments.order.getOrderItems()[oi].getAppliedPromotions()[pa].removeOrderItem();
 				}
 			}
-			// TODO: Clear all previously applied promotions from fulfillments
-			// TODO: Clear all previously applied promotions from order
 			
-			// Loop over each promotion to determine if it applies to this order
-			for(var p=1; p<=arrayLen(promotions); p++) {
-				var promotion = promotions[p];
+			// Loop over orderItems and apply Sale Prices
+			for(var oi=1; oi<=arrayLen(arguments.order.getOrderItems()); oi++) {
+				var orderItem = arguments.order.getOrderItems()[oi];
+				var salePriceDetails = orderItem.getSku().getSalePriceDetails();
+				
+				if(structKeyExists(salePriceDetails, "salePrice") && salePriceDetails.salePrice < orderItem.getSku().getPrice()) {
+					var discountAmount = (orderItem.getSku().getPrice() * orderItem.getQuantity()) - (salePriceDetails.salePrice * orderItem.getQuantity());
+					
+					var newAppliedPromotion = this.newOrderItemAppliedPromotion();
+					newAppliedPromotion.setPromotion( this.getPromotion(salePriceDetails.promotionID) );
+					newAppliedPromotion.setOrderItem( orderItem );
+					newAppliedPromotion.setDiscountAmount( discountAmount );
+				}
+			}
+			
+			// Loop over the promotionCodes on the order
+			for(var pc=1; pc<=arrayLen(arguments.order.getPromotionCodes()); pc++) {
+				var promotion = arguments.order.getPromotionCodes()[pc].getPromotion();
 				
 				var qc = getPromotionQualificationCount(promotion=promotion, order=arguments.order);
 				
 				if(qc >= 0) {
-					for(var r=1; r<=arrayLen(promotions[p].getPromotionRewards()); r++) {
-						var reward = promotions[p].getPromotionRewards()[r];
+					for(var r=1; r<=arrayLen(promotion.getPromotionRewards()); r++) {
+						var reward = promotion.getPromotionRewards()[r];
 						
 						// If this reward is a product then run this logic
 						if(reward.getRewardType() eq "product") {
@@ -189,7 +204,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 										// If one has already been set then we just need to check if this new discount amount is greater
 										} else if ( orderItem.getAppliedPromotions()[1].getDiscountAmount() < discountAmount ) {
 											// If the promotion is the same, then we just update the amount
-											if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotions[p].getPromotionID()) {
+											if(orderItem.getAppliedPromotions()[1].getPromotion().getPromotionID() == promotion.getPromotionID()) {
 												orderItem.getAppliedPromotions()[1].setDiscountAmount(discountAmount);
 											// If the promotion is a different then remove the original and set addNew to true
 											} else {
@@ -203,9 +218,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 									// Add the new appliedPromotion
 									if(addNew) {
 										var newAppliedPromotion = this.newOrderItemAppliedPromotion();
-										newAppliedPromotion.setPromotion(promotions[p]);
-										newAppliedPromotion.setOrderItem(orderItem);
-										newAppliedPromotion.setDiscountAmount(discountAmount);
+										newAppliedPromotion.setPromotion( promotion );
+										newAppliedPromotion.setOrderItem( orderItem );
+										newAppliedPromotion.setDiscountAmount( discountAmount );
 									}
 								}
 							}
@@ -219,32 +234,35 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					}
 				}
 			}
+			
+		} else {
+			// DO THE LOGIC HERE FOR RETURNS AND EXCHANGES
 		}
 		
-	}
-	
-	public numeric function calculateSkuSalePrice(required any sku) {
-		// TODO: Impliment me!
-		return arguments.sku.getPrice();
-	}
-	
-	public date function calculateSkuSalePriceExpirationDateTime(required any sku) {
-		// TODO: Impliment me!
-		return now()+30;
 	}
 	
 	private numeric function getDiscountAmount(required any reward, required any originalAmount) {
+		var discountAmountPreRounding = 0;
 		var discountAmount = 0;
+		var roundedFinalAmount = 0;
 		
 		if(!isNull(reward.getItemAmount())) {
-			discountAmount = arguments.originalAmount - reward.getItemAmount();
+			discountAmountPreRounding = arguments.originalAmount - reward.getItemAmount();
 		} else if( !isNull(reward.getItemAmountOff()) ) {
-			discountAmount = reward.getItemAmountOff();
+			discountAmountPreRounding = reward.getItemAmountOff();
 		} else if( !isNull(reward.getItemPercentageOff()) ) {
-			discountAmount = arguments.originalAmount * (reward.getItemPercentageOff()/100);
+			discountAmountPreRounding = arguments.originalAmount * (reward.getItemPercentageOff()/100);
 		}
 		
-		if(reward.getItemAmountOff() > arguments.originalAmount) {
+		if(!isNull(reward.getRoundingRule())) {
+			roundedFinalAmount = getRoundingRuleService().roundValueByRoundingRule(value=arguments.originalAmount-discountAmountPreRounding, roundingRule=reward.getRoundingRule());
+			discountAmount = arguments.originalAmount - roundedFinalAmount;
+		} else {
+			discountAmount = discountAmountPreRounding;
+		}
+		
+		// This makes sure that the discount never exceeds the original amount
+		if(discountAmountPreRounding > arguments.originalAmount) {
 			discountAmount = arguments.originalAmount;
 		}
 		
@@ -298,7 +316,13 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public struct function getSalePriceDetailsForProductSkus(required string productID) {
-		return getUtilityService().queryToStructOfStructures(getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
+		var priceDetails = getUtilityService().queryToStructOfStructures(getDAO().getSalePricePromotionRewardsQuery(productID = arguments.productID), "skuID");
+		for(var key in priceDetails) {
+			if(priceDetails[key].roundingRuleID != "") {
+				priceDetails[key].salePrice = getRoundingRuleService().roundValueByRoundingRuleID(value=priceDetails[key].salePrice, roundingRuleID=priceDetails[key].roundingRuleID);
+			}
+		}
+		return priceDetails;
 	}
 	
 	// ----------------- END: Apply Promotion Logic -------------------------

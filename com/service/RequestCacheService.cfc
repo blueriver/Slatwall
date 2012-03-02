@@ -39,13 +39,6 @@ Notes:
 
 component output="false" {
 
-	public void function enableRequestCache() {
-		if( !isInitiated() ) {
-			initiate();
-		}
-		logCacheAction(method="enableRequestCache", key="");
-	}
-	
 	public void function setValue(required string key, required any value) {
 		verifyInitiation();
 		logCacheAction(method="setValue", key=arguments.key);
@@ -77,7 +70,7 @@ component output="false" {
 	
 	public void function clearCache(string keys) {
 		verifyInitiation();
-		logCacheAction(method="enableRequestCache", key=arguments.keys);
+		logCacheAction(method="clearCache", key=arguments.keys);
 		if(structKeyExists(arguments, "keys")) {
 			for(var i=1; i<=listLen(arguments.keys); i++) {
 				if( structKeyExists(request.slatwallCache, listGetAt(arguments.keys, i)) && listGetAt(arguments.keys, i) != "cacheInitiated" && listGetAt(arguments.keys, i) != "cacheLog") {
@@ -91,7 +84,7 @@ component output="false" {
 	
 	private void function verifyInitiation() {
 		if( !isInitiated() ) {
-			throw("The Request Cache has not Been Initiated Yet");
+			initiate();
 		}
 	}
 	
@@ -111,7 +104,7 @@ component output="false" {
 	}
 	
 	private void function logCacheAction(required string method, string key="") {
-		arrayAppend(request.slatwallCache.cacheLog, "#arguments.method#::#arguments.key#");
+		arrayAppend(request.slatwallCache.cacheLog, "#now()# :: #arguments.method# :: #arguments.key#");
 	}
 	
 }

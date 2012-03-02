@@ -36,35 +36,56 @@
 Notes:
 
 */
-component displayname="Attribute Value" entityname="SlatwallAttributeValue" table="SlatwallAttributeValue" persistent="true" output="false" accessors="true" discriminatorcolumn="attributeValueType" extends="BaseEntity" {
+component displayname="Product Cache" entityname="SlatwallProductCache" table="SlatwallProductCache" persistent="true" accessors="true" extends="BaseEntity" {
+	
+	// Related Object Properties (Many-to-One)
+	property name="productID" ormtype="string" length="32" fieldtype="id" generator="foreign" params="{property='product'}";
+	property name="product" fieldtype="one-to-one" cfc="Product" constrained="true";
 	
 	// Persistent Properties
-	property name="attributeValueID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="attributeValue" ormtype="string" length="4000";
+	property name="skuImageFileList" ormtype="string" length="4000";
 	
-	// Related Object Properties
-	property name="attribute" cfc="Attribute" fieldtype="many-to-one" fkcolumn="attributeID" lazy="false" fetch="join";  // Lazy is turned off because any time we get an attributeValue we also want the attribute
+	// Persistent Properties (Calculations)
+	property name="salePrice" ormtype="big_decimal" default=0;
+	property name="salePriceExpirationDateTime" ormtype="timestamp";
+	property name="qoh" ormtype="integer" default=0;
+	property name="qosh" ormtype="integer" default=0;
+	property name="qndoo" ormtype="integer" default=0;
+	property name="qndorvo" ormtype="integer" default=0;
+	property name="qndosa" ormtype="integer" default=0;
+	property name="qnroro" ormtype="integer" default=0;
+	property name="qnrovo" ormtype="integer" default=0;
+	property name="qnrosa" ormtype="integer" default=0;
 	
-	// Quick Lookup Properties
-	property name="attributeID" length="32" insert="false" update="false";
+	// Persistent Properties (Settings)
+	property name="allowBackorderFlag" ormtype="boolean";
+	property name="allowDropshipFlag" ormtype="boolean";
+	property name="allowPreorderFlag" ormtype="boolean";
+	property name="allowShippingFlag" ormtype="boolean";
+	property name="callToOrderFlag" ormtype="boolean";
+	property name="quantityHeldBack" ormtype="integer";
+	property name="shippingWeight" ormtype="integer";
+	property name="trackInventoryFlag" ormtype="boolean";
 	
-	// Remote properties
-	property name="remoteID" ormtype="string";
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="modifiedDateTime" ormtype="timestamp";
 	
+	// Non-Persistent Properties
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-	
+		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
-	
+
 	// ================== START: Overridden Methods ========================
 	
 	// ==================  END:  Overridden Methods ========================
-		
+	
 	// =================== START: ORM Event Hooks  =========================
 	
-	// ===================  END:  ORM Event Hooks  ========================= 
+	// ===================  END:  ORM Event Hooks  =========================
 }

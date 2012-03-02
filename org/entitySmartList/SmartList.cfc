@@ -373,6 +373,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 				}
 				
 				var fetch = "";
+				
 				if(variables.entities[i].fetch && arguments.allowFetch && !structCount(variables.selects)) {
 					fetch = "fetch";
 				}
@@ -382,7 +383,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 		}
 		return hqlFrom;
 	}
-
+	
 	public string function getHQLWhere(boolean suppressWhere=false) {
 		var hqlWhere = "";
 		variables.hqlParams = {};
@@ -674,8 +675,8 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public array function getFilterOptions(required string valuePropertyIdentifier, required string namePropertyIdentifier) {
-		var nameProperty = getAliasedProperty(propertyIdentifier=arguments.namePropertyIdentifier,fetch=false);
-		var valueProperty = getAliasedProperty(propertyIdentifier=arguments.valuePropertyIdentifier,fetch=false);
+		var nameProperty = getAliasedProperty(propertyIdentifier=arguments.namePropertyIdentifier);
+		var valueProperty = getAliasedProperty(propertyIdentifier=arguments.valuePropertyIdentifier);
 		
 		var originalWhereGroup = duplicate(variables.whereGroups);
 		
@@ -706,7 +707,7 @@ component displayname="Smart List" accessors="true" persistent="false" output="f
 	}
 	
 	public struct function getRangeMinMax(required string propertyIdentifier) {
-		var rangeProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier, fetch=false);
+		var rangeProperty = getAliasedProperty(propertyIdentifier=arguments.propertyIdentifier);
 		
 		var originalWhereGroup = duplicate(variables.whereGroups);
 		

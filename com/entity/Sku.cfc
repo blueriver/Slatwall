@@ -167,36 +167,14 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
     
     public string function displayOptions(delimiter=" ") {
-    	var options = getOptions(sorted=true);
     	var dspOptions = "";
-    	for(var i=1;i<=arrayLen(options);i++) {
-    		var thisOption = options[i];
-    		dspOptions = listAppend(dspOptions,thisOption.getOptionName(),arguments.delimiter);
+    	for(var i=1;i<=arrayLen(getOptions());i++) {
+    		dspOptions = listAppend(dspOptions, getOptions()[i].getOptionName(), arguments.delimiter);
     	}
 		return dspOptions;
     }
     
     // Start: Option Helper Methods
-    
-    // override generated setter to get options sorted by optiongroup sortorder
-    public array function getOptions(boolean sorted = false) {
-    	if(!sorted) {
-    		return variables.options;
-    	} else {
-	    	if(!structKeyExists(variables,"sortedOptions")) {
-		    	var options = ORMExecuteQuery(
-		    		"select opt from SlatwallOption opt
-		    		join opt.skus s
-		    		where s.skuID = :skuID
-		    		order by opt.optionGroup.sortOrder",
-		    		{skuID = this.getSkuID()}
-		    	);
-		    	variables.sortedOptions = options;
-	    	}
-	    	return variables.sortedOptions;
-	    }
-    }
-    
     public any function getOptionsByGroupIDStruct() {
 		if(!structKeyExists(variables, "OptionsByGroupIDStruct")) {
 			variables.OptionsByGroupIDStruct = structNew();

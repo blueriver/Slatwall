@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfset variables.framework=structNew() />
-<cfset variables.framework.applicationKey="Slatwall" />
+<cfset variables.framework.applicationKey="SlatwallFW1" />
 <cfset variables.framework.base="/Slatwall" />
 <cfset variables.framework.action="slatAction" />
 <cfset variables.framework.error="admin:main.error" />

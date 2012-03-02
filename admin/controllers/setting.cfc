@@ -544,4 +544,10 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:main.default", preserve="message");	
 	}
 	
+	public void function updateProductCache(required struct rc) {
+		getSkuCacheService().updateAllProducts();
+		rc.message = rbKey("admin.setting.updateProductCache_success");
+		getFW().redirect(action="admin:main.default", preserve="message");	
+	}
+	
 }

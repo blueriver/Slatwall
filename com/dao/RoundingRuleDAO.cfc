@@ -38,4 +38,22 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cffunction name="getRoundingRuleQuery">
+		<cfargument name="roundingRuleID" type="string" required="true" />
+		
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+			SELECT
+				roundingRuleExpression,
+				roundingRuleDirection
+			FROM
+				SlatwallRoundingRule
+			WHERE
+				roundingRuleID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.roundingRuleID#" /> 
+		</cfquery>
+		
+		<cfreturn rs />
+	</cffunction>
+	
 </cfcomponent>

@@ -180,7 +180,7 @@ Notes:
 				<cfif rc.edit>
 					<cf_SlatwallPropertyDisplay object="#rc.productType#" property="productDisplayTemplate" edit="true" displayType="plain" fieldType="select" valueOptions="#rc.productType.getProductDisplayTemplateOptions()#">
 				<cfelse>
-					#rc.Product.getInheritedSetting("displayTemplate")#
+					#rc.ProductType.getInheritedSetting("productDisplayTemplate")#
 				</cfif>
 			</td>
 			<td>

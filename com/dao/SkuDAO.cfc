@@ -38,6 +38,8 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
+	<cfproperty name="nextOptionGroupSortOrder" type="numeric" />
+	
 	<cfscript>	
 	// returns product skus which matches ALL options (list of optionIDs) that are passed in
 	public any function getSkusBySelectedOptions(required string selectedOptions, string productID) {
@@ -83,21 +85,24 @@ Notes:
 		return result;
 	}
 	
-/*	public array function getSortedProductSkus(required any product) {
-		var skus = ORMExecuteQuery(
-			"select sku from SlatwallSku sku
-			join sku.options opt
-			join opt.optionGroup og
-			where sku.product.productID = :productID
-			group by sku.skuID, sku.skuCode
-			order by 
-				sum(
-					(opt.sortOrder) * power(1000,(20 - og.sortOrder))
-					)",
-			{productID = arguments.product.getProductID()}
-		);
+	public array function getProductSkus(required any product, required any fetchOptions) {
+		
+		var hql = "SELECT sku FROM SlatwallSku sku ";
+		if(fetchOptions) {
+			hql &= "INNER JOIN FETCH sku.options option ";	
+		}
+		var hql &= "WHERE sku.product.productID = :productID ";
+		/*
+		if(fetchOptions) {
+			hql &= "ORDER BY option.optionGroup.sortOrder ";	
+		}
+		*/
+		
+		var skus = ORMExecuteQuery(hql,	{productID = arguments.product.getProductID()});
+		
 		return skus;
-	}*/
+	}
+	
 	</cfscript>
 
 	<cffunction name="getSortedProductSkusID">
@@ -122,21 +127,34 @@ Notes:
 			GROUP BY
 				SlatwallSku.skuID
 			ORDER BY
-				<!--- This formula came with help from Blar Gibb and Jacob West... their formula was better with varying max optoinSortOrder and optionGroupSortOrder... but it wasn't possible with SQL, well at least I couldn't figure it out -GM --->
-				<cfif application.configBean.getDbType() eq "MySQL">
-					sum( 
-						(SlatwallOption.sortOrder+0.0) * 
-						POWER( 100.0, (20.0 - SlatwallOptionGroup.sortOrder)) 
-					)
-				<cfelse>
-					sum(
-						CAST( SlatwallOption.sortOrder as float ) *
-						POWER( CAST(100 as float), CAST((20 - SlatwallOptionGroup.sortOrder) as float ) )
-						)
-				</cfif>
+				SUM(SlatwallOption.sortOrder * POWER(10, #getNextOptionGroupSortOrder()# - SlatwallOptionGroup.sortOrder)) ASC
 		</cfquery>
 		
 		<cfreturn sorted />
+	</cffunction>
+	
+	<cffunction name="getNextOptionGroupSortOrder" returntype="numeric" access="private">
+		<cfif not structKeyExists(variables, "nextOptionGroupSortOrder")>
+			<cfset variables.nextOptionGroupSortOrder = 1 />
+			
+			<cfset var rs = "" />
+			
+			<cfquery name="rs">
+				SELECT max(SlatwallOptionGroup.sortOrder) as 'max' FROM SlatwallOptionGroup
+			</cfquery>
+			<cfif rs.recordCount>
+				<cfset variables.nextOptionGroupSortOrder = rs.max + 1 />
+			</cfif>
+			
+		</cfif>
+		
+		<cfreturn variables.nextOptionGroupSortOrder />
+	</cffunction>
+	
+	<cffunction name="clearNextOptionGroupSortOrder" returntype="void" access="public">
+		<cfif not structKeyExists(variables, "nextOptionGroupSortOrder")>
+			<cfset structDelete(variables, "nextOptionGroupSortOrder") />
+		</cfif>
 	</cffunction>
 	
 </cfcomponent>

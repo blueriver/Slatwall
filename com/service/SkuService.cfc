@@ -168,6 +168,32 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		}	
 	}
 	
+	public array function getProductSkus(required any product, required boolean sorted, boolean fetchOptions=false) {
+		var skus = getDAO().getProductSkus(product=arguments.product, fetchOptions=arguments.fetchOptions);
+		
+		if(arguments.sorted && arrayLen(skus) gt 1) {
+			var sortedSkuIDQuery = getDAO().getSortedProductSkusID( productID = arguments.product.getProductID() );
+			var sortedArray = arrayNew(1);
+			var sortedArrayReturn = arrayNew(1);
+			
+			for(var i=1; i<=sortedSkuIDQuery.recordCount; i++) {
+				arrayAppend(sortedArray, sortedSkuIDQuery.skuID[i]);
+			}
+			
+			arrayResize(sortedArrayReturn, arrayLen(sortedArray));
+			
+			for(var i=1; i<=arrayLen(skus); i++) {
+				var skuID = skus[i].getSkuID();
+				var index = arrayFind(sortedArray, skuID);
+				sortedArrayReturn[index] = skus[i];
+			}
+			
+			skus = sortedArrayReturn;
+		}
+		
+		return skus;
+	}
+	
 	public array function getSortedProductSkus(required any product) {
 		var skus = arguments.product.getSkus();
 		if(arrayLen(skus) lt 2) {

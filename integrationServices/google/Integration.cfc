@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,30 +35,18 @@
 
 Notes:
 
---->
-<cfcomponent displayname="Utility - Email Service" extends="BaseService" output="false" accessors="true">
+*/
+component accessors="true" output="false" displayname="USA epay" extends="Slatwall.integrationServices.BaseIntegration" implements="Slatwall.integrationServices.IntegrationInterface" {
 	
-	<cfproperty name="utilityService" type="any" />
+	public any function init() {
+		return this;
+	}
 	
-	<cffunction name="sendOrderConfirmationEmail">
-		<cfargument name="order" type="any">
+	public string function getIntegrationTypes() {
+		return "custom";
+	}
 		
-		<cfset var $ = request.context.$ />
-		
-		<cfmail to="#arguments.order.getAccount().getFirstName()# #arguments.order.getAccount().getLastName()# <#arguments.order.getAccount().getEmailAddress()#>"
-				from="#setting('order_orderPlacedEmailFrom')#"
-				subject="#getUtilityService().replaceStringTemplate(template=setting('order_orderPlacedEmailSubject'), object=arguments.order)#"
-				bcc="#setting('order_orderPlacedEmailBCC')#"
-				cc="#setting('order_orderPlacedEmailCC')#" >
-			<cfmailpart type="text/plain">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplacedtext.cfm" />
-			</cfmailpart>
-			<cfmailpart type="text/html">
-				<cfinclude template="#application.configBean.getContext()#/#request.context.$.event('siteid')#/includes/display_objects/custom/slatwall/email/orderplaced.cfm" />	
-			</cfmailpart>
-		</cfmail>
-		
-	</cffunction>
-	
-</cfcomponent>
-	
+	public string function getDisplayName() {
+		return "Google";
+	}
+}

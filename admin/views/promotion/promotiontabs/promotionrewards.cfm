@@ -176,11 +176,14 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemPercentageOff" fieldName="promotionRewards[1].itemPercentageOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemAmountOff" fieldName="promotionRewards[1].itemAmountOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemAmount" fieldName="promotionRewards[1].itemAmount" edit="true" />
+				<cfset roundingRuleOptions = rc.promotionRewardProduct.getRoundingRuleOptions() />
+				<cfset roundingRuleOptions[1].name = $.slatwall.rbKey('define.none') /> 
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="roundingRule" fieldName="promotionRewards[1].roundingRule.roundingRuleID" valueOptions="#roundingRuleOptions#" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="brands" fieldName="promotionRewards[1].brands" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productTypes" fieldName="promotionRewards[1].productTypes" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="products" fieldName="promotionRewards[1].products" edit="true" />
-				<!---<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="skus" fieldName="promotionRewards[1].skus" edit="true" />--->
-				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="options" fieldName="promotionRewards[1].options" edit="true" />
+				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="skus" fieldName="promotionRewards[1].skus" edit="true" /> --->
+				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="options" fieldName="promotionRewards[1].options" edit="true" /> --->
 			</dl>
 			<input type="hidden" name="promotionRewards[1].promotionRewardID" value="#rc.promotionRewardProduct.getPromotionRewardID()#"/>
 		</div>

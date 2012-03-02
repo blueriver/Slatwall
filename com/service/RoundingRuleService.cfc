@@ -38,6 +38,37 @@ Notes:
 */
 component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 	
+	variables.roundingRuleDetails = {};
+
+	// We override the default save so that we can clear the roundingRule Expressions that have been saved in the variables cache
+	public any function saveRoundingRule(required any entity, struct data, string context="save") {
+		if(!arguments.entity.isNew()) {
+			if(structKeyExists(variables.roundingRuleDetails, arguments.entity.getRoundingRuleID())) {
+				structDelete(variables.roundingRuleDetails, arguments.entity.getRoundingRuleID());	
+			}
+		}
+		
+		return super.save(argumentcollection=arguments);
+	}
+	
+	// This method adds a roundingRuleID / Expression to the variables scope, and looks for it there first.  This improves performance when doing things like rebuilding the skuCache
+	public struct function getRoundingRuleDetailsByID(required string roundingRuleID) {
+		if(!structKeyExists(variables.roundingRuleDetails, arguments.roundingRuleID)) {
+			
+			var detailsQuery = getDAO().getRoundingRuleQuery(roundingRuleID = arguments.roundingRuleID);
+			
+			variables.roundingRuleDetails[ arguments.roundingRuleID ] = {};
+			variables.roundingRuleDetails[ arguments.roundingRuleID ].roundingRuleExpression = detailsQuery.roundingRuleExpression;
+			variables.roundingRuleDetails[ arguments.roundingRuleID ].roundingRuleDirection = detailsQuery.roundingRuleDirection;
+		}
+		return variables.roundingRuleDetails[ arguments.roundingRuleID ];
+	}
+	
+	public numeric function roundValueByRoundingRuleID(required any value, required string roundingRuleID) {
+		var details = getRoundingRuleDetailsByID(arguments.roundingRuleID);
+		return roundValue(value=arguments.value, roundingExpression=details.roundingRuleExpression, roundingDirection=details.roundingRuleDirection);
+	}
+	
 	public numeric function roundValueByRoundingRule(required any value, required any roundingRule) {
 		return roundValue(value=arguments.value, roundingExpression=arguments.roundingRule.getRoundingRuleExpression(), roundingDirection=arguments.roundingRule.getRoundingRuleDirection());
 	}
@@ -52,14 +83,14 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var rrPower = 1 * (10 ^ (len(rr)-3));
 			
 			if(len(inputValue) > len(rr)) {
-				var valueOptionOne = left(inputValue,len(inputValue)-len(rr)) & rr;
+				var valueOptionOne = left(inputValue, len(inputValue)-len(rr)) & rr;
 				
 				if(valueOptionOne > inputValue) {
 					var lowerValue = inputValue - rrPower;
-					var valueOptionTwo = left(lowerValue,len(inputValue)-len(rr)) & rr;
+					var valueOptionTwo = left(lowerValue, len(lowerValue)-len(rr)) & rr;
 				} else {
 					var higherValue = inputValue + rrPower;
-					var valueOptionTwo = left(higherValue,len(inputValue)-len(rr)) & rr;
+					var valueOptionTwo = left(higherValue, len(higherValue)-len(rr)) & rr;
 				}
 			} else {
 				var valueOptionOne = rr;

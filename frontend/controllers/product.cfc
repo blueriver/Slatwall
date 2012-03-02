@@ -46,12 +46,14 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function addReview(required struct rc) {
-		param name="rc.productID" default="";
+		if(structKeyExists(rc, "product") && structKeyExists(rc.product, "productID")) {
+			var product = getProductService().getProduct(rc.product.productID);
 		
-		var product = getProductService().getProduct(rc.productID);
-		
-		getProductService().addProductReview(data=rc);
-		
-		getFW().redirectExact(product.getProductURL(), false);
+			var review = getProductService().newProductReview();
+			
+			review = getProductService().saveProductReview(review, rc);
+			
+			getFW().redirectExact(product.getProductURL(), false);
+		}
 	}
 }
