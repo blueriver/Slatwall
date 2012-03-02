@@ -73,10 +73,10 @@ component displayname="Product Review" entityname="SlatwallProductReview" table=
 	}
 	
 	public string function getReviewerGravatarURL(numeric size=80) {
-		var server = "http://www.gravatar.com/";
+		var server = "http://www.gravatar.com";
 		
 		if(cgi.server_port eq 443) {
-			server = "https://secure.gravatar.com/";
+			server = "https://secure.gravatar.com";
 		}
 		
 		if(!isNull(getAccount())) {

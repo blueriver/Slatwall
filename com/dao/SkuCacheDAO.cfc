@@ -294,6 +294,8 @@ Notes:
 								<cfqueryparam cfsqltype="cf_sql_money" value="#arguments.data[ columnName ]#">,
 							<cfelseif listFindNoCase(integerColumns, columnName)>
 								<cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.data[ columnName ]#">,
+							<cfelseif listFindNoCase(varcharColumns, columnName)>
+								<cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.data[ columnName ]#">,
 							</cfif>
 						</cfif>
 					</cfloop>
