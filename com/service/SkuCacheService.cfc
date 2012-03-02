@@ -234,16 +234,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	// This gets called on every request
 	public void function executeSkuCacheUpdates() {
 		
-		if(setting("advanced_useSkuCacheFlag")) {
-			if(arrayLen(variables.skusToUpdate)) {
-				updateSkuCache();
-			}
+		if(setting("advanced_useSkuCacheFlag") && arrayLen(variables.skusToUpdate)) {
+			updateSkuCache();
 		}
 		
-		if(setting("advanced_useProductCacheFlag")) {
-			if(arrayLen(variables.productsToUpdate)) {
-				updateProductCache();
-			}
+		if(setting("advanced_useProductCacheFlag") && arrayLen(variables.productsToUpdate)) {
+			updateProductCache();
 		}
 	}
 	
@@ -255,7 +251,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			variables.skusToUpdate = [];
 		}
 		
-		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#skusForThread#" {
+		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#variables.skusToUpdate#" {
 			logSlatwall("Thread for Sku Cache Update Started with #arrayLen(updatingSkus)# skus to update", true);
 			var startTime = getTickCount();
 			
@@ -334,8 +330,11 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	
 	// This method is private on purpose... don't change it.
 	private void function updateProductCache() {
+		
+		var productsForThread = [];
+		
 		lock timeout="60" scope="Application" {
-			var productsForThread = duplicate(variables.productsToUpdate);
+			var productsForThread = variables.productsToUpdate;
 			variables.productsToUpdate = [];
 		}
 		
