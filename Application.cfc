@@ -1,18 +1,18 @@
 /*
-
+	
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
-
+	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
+	
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+	
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
@@ -20,7 +20,7 @@
     making a combined work based on this library.  Thus, the terms and
     conditions of the GNU General Public License cover the whole
     combination.
- 
+	
     As a special exception, the copyright holders of this library give you
     permission to link this library with independent modules to produce an
     executable, regardless of the license terms of these independent
@@ -32,13 +32,13 @@
     this exception to your version of the library, but you are not
     obligated to do so.  If you do not wish to do so, delete this
     exception statement from your version.
-
-Notes:
-
+	
+Notes: 
+	
 */
 component extends="org.fw1.framework" output="false" {
 
-	// If the page request was an admin request then we need to setup all of the defaults from mura
+	// If the page request was an admin request then we need to setup all of the defaults from mura 
 	if(isAdminRequest()) {
 		include "../../config/applicationSettings.cfm";
 		include "../../config/mappings.cfm";
@@ -58,162 +58,167 @@ component extends="org.fw1.framework" output="false" {
 			return application.slatwall.pluginConfig;	
 		}
 	}
-
-	// Start: Standard Application Functions. These are also called from the fw1EventAdapter.
-	public void function setupApplication(any $) {
-		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
-		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
-			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
-		}
-		
-		// This insures that the required session values are setup
-		setupMuraSessionRequirements();
-		
-		// This will allow for the Taffy API to reload on next request
-		if(structKeyExists(application, "_taffy")){
-			structDelete(application,"_taffy");	
-		}
-		
-		// This sets up the Plugin Config for later use
-		if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
-	  		include "plugin/config.cfm";
-		}
-		setPluginConfig(request.PluginConfig);
-		
-		// Make sure the correct version is in the plugin config
-		var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
-		if( fileExists( versionFile ) ) {
-			getPluginConfig().getApplication().setValue('SlatwallVersion', trim(fileRead(versionFile)));
-		}
-		
-		// Set this in the application scope to be used on the frontend
-		getPluginConfig().getApplication().setValue( "fw", this);
-		
-		// Set the setup confirmed as false
-		getPluginConfig().getApplication().setValue('applicationSetupConfirmed', false);
-		
-		// Set vfs root for slatwall
-		getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
-		
-		// Make's sure that our entities get updated
-		ormReload();
-		
-		/********************* Coldspring Setup *************************/
-		
-		// Get Coldspring Config
-		var serviceFactory = "";
-		var integrationService = "";
-		var rbFactory = "";
-		var xml = "";
-		var xmlPath = "";
-
-	    xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
-		xml = xmlParse(FileRead("#xmlPath#")); 
-		
-		// Build Coldspring factory
-		serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
-		serviceFactory.loadBeansFromXmlObj( xml );
-		
-		// Set mura as the parent Bean Factory
-		serviceFactory.setParent( application.serviceFactory );
-		
-		// Set a data service coldspring as the child factory, with the Slatwall as it's parent
-		integrationService = serviceFactory.getBean("integrationService");
-		serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
-		
-		// Place the service factory into the required application scopes
-		getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
-		setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
-		
-		/******************* END: Coldsping Setup **************************/
-		
-		/******************* CFStatic Setup *************************/
-		
-		// Create The cfStatic object (Can set to minifyMode = 'none' or 'package' to control minification).
-		var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
-			staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
-			staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
-			minifyMode = 'none',
-			checkForUpdates = true
-		);
-		
-		// Place the validation facade object in the plugin config application scope
-		getPluginConfig().getApplication().setValue("cfStatic", cfStatic);
-		
-		/******************* END: CFStatic Setup **************************/
-		
-		/******************* ValidateThis Setup *************************/
-		
-		// Setup the ValidateThis Framework
-		
-		var validateThisConfig = {
-			definitionPath = "/Slatwall/com/validation/",
-			injectResultIntoBO = true,
-			defaultFailureMessagePrefix = ""
-		};
-		
-		// Create The 
-		var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
-		
-		// Place the validation facade object in the plugin config application scope
-		getPluginConfig().getApplication().setValue("validateThis", vtFacade);
-		
-		/******************* END: ValidateThis Setup **************************/
-		
-		// Build RB Factory
-		rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
-		getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
-		
-		// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
-		getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/dbdata"));
-		
-		// Run Scripts
-		getBeanFactory().getBean("updateService").runScripts();
-		
-		// Load all Slatwall Settings
-		getBeanFactory().getBean("settingService").reloadConfiguration();
-		
-		// Reload All Integrations
-		getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-		
-		// Set the first request to True so that it runs
-		getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
-		
-		// Set the frameworks baseURL to be used by the buildURL() method
-		variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
-		
-		// Log that the application is finished setting up
-		getBeanFactory().getBean("logService").logMessage(message="Application Setup Complete", generalLog=true);
-	}
 	
+	public void function verifyApplicationSetup() {
+		// Check to see if out application stuff is initialized
+		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
+			
+			// If not, lock the application until this is finished
+			lock scope="Application" timeout="120"  {
+				
+				// Check again so that the qued requests don't back up
+				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
+					
+					// Log that the application is finished setting up
+					//getBeanFactory().getBean("logService").logMessage(message="Application Setup Started", generalLog=true);
+					
+					writeLog(file="Slatwall", text="Application Setup Started");
+					
+					application.slatwall = structNew();
+					application.slatwall.initialized = false;
+					
+					// This insures that the required session values are setup
+					setupMuraSessionRequirements();
+					
+					// This will force the Taffy API to reload on next request
+					if(structKeyExists(application, "_taffy")){
+						structDelete(application,"_taffy");	
+					}
+					
+					// This sets up the Plugin Config for later use
+					if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
+				  		include "plugin/config.cfm";
+					}
+					setPluginConfig(request.PluginConfig);
+					
+					// Make sure the correct version is in the plugin config
+					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
+					if( fileExists( versionFile ) ) {
+						getPluginConfig().getApplication().setValue('SlatwallVersion', trim(fileRead(versionFile)));
+					}
+					
+					// Set this in the application scope to be used on the frontend
+					getPluginConfig().getApplication().setValue( "fw", this);
+					
+					// Set the setup confirmed as false
+					getPluginConfig().getApplication().setValue('applicationSetupConfirmed', false);
+					
+					// Set vfs root for slatwall
+					getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
+					
+					// Make's sure that our entities get updated
+					ormReload();
+					
+					// ========================= Coldspring Setup =========================
+					
+					// Get Coldspring Config
+					var serviceFactory = "";
+					var integrationService = "";
+					var rbFactory = "";
+					var xml = "";
+					var xmlPath = "";
+			
+				    xmlPath = expandPath( '/plugins/Slatwall/config/coldspring.xml' );
+					xml = xmlParse(FileRead("#xmlPath#")); 
+					
+					// Build Coldspring factory
+					serviceFactory=createObject("component","coldspring.beans.DefaultXmlBeanFactory").init();
+					serviceFactory.loadBeansFromXmlObj( xml );
+					
+					// Set mura as the parent Bean Factory
+					serviceFactory.setParent( application.serviceFactory );
+					
+					// Set a data service coldspring as the child factory, with the Slatwall as it's parent
+					integrationService = serviceFactory.getBean("integrationService");
+					serviceFactory = integrationService.updateColdspringWithDataIntegration( serviceFactory, xml );
+					
+					// Place the service factory into the required application scopes
+					getpluginConfig().getApplication().setValue( "serviceFactory", serviceFactory );
+					setBeanFactory( getPluginConfig().getApplication().getValue( "serviceFactory" ) );
+					
+					//========================= END: Coldsping Setup =========================
+					
+					//========================= CFStatic Setup =========================
+					
+					// Create The cfStatic object (Can set to minifyMode = 'none' or 'package' to control minification).
+					var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
+						staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
+						staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
+						minifyMode = 'none',
+						checkForUpdates = true
+					);
+					
+					// Place the validation facade object in the plugin config application scope
+					getPluginConfig().getApplication().setValue("cfStatic", cfStatic);
+					
+					//========================= END: CFStatic Setup =========================
+					
+					//========================= ValidateThis Setup =========================
+					
+					// Setup the ValidateThis Framework
+					
+					var validateThisConfig = {
+						definitionPath = "/Slatwall/com/validation/",
+						injectResultIntoBO = true,
+						defaultFailureMessagePrefix = ""
+					};
+					
+					// Create The 
+					var vtFacade = new ValidateThis.ValidateThis(validateThisConfig);
+					
+					// Place the validation facade object in the plugin config application scope
+					getPluginConfig().getApplication().setValue("validateThis", vtFacade);
+					
+					//========================= END: ValidateThis Setup =========================
+					
+					// Build RB Factory
+					rbFactory= new mura.resourceBundle.resourceBundleFactory(application.settingsManager.getSite('default').getRBFactory(), getDirectoryFromPath(expandPath("/plugins/Slatwall/resourceBundles/") ));
+					getpluginConfig().getApplication().setValue( "rbFactory", rbFactory);
+					
+					// Setup Default Data... This is only for development and should be moved to the update function of the plugin once rolled out.
+					getBeanFactory().getBean("dataService").loadDataFromXMLDirectory(xmlDirectory = ExpandPath("/plugins/Slatwall/config/dbdata"));
+					
+					// Run Scripts
+					getBeanFactory().getBean("updateService").runScripts();
+					
+					// Load all Slatwall Settings
+					getBeanFactory().getBean("settingService").reloadConfiguration();
+					
+					// Reload All Integrations
+					getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
+					
+					// Set the first request to True so that it runs
+					getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
+					
+					// Set the frameworks baseURL to be used by the buildURL() method
+					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
+					
+					// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
+					getBeanFactory().getBean("settingService").verifyMuraRequirements();
+					
+					// Log that the application is finished setting up
+					writeLog(file="Slatwall", text="Application Setup Complete");
+					
+					application.slatwall.initialized = true;
+				}
+			}
+		}
+	}
+
 	public void function setupRequest() {
-		
 		// Check to see if the base application has been loaded, if not redirect then to the homepage of the site.
 		if( isAdminRequest() && (!structKeyExists(application, "appinitialized") || application.appinitialized == false)) {
 			location(url="http://#cgi.HTTP_HOST#", addtoken=false);
 		}
 		
-		getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
+		// Verify that the application is setup
+		verifyApplicationSetup();
 		
-		if( getPluginConfig().getApplication().getValue("firstRequestOfApplication", true) ) {
-			// Log that this started
-			getBeanFactory().getBean("logService").logMessage(message="First Request of Application Setup Started", generalLog=true);
-			
-			// Call the setup method of mura requirements in the setting service, this has to be done from the setup request instead of the setupApplication, because mura needs to have certain things in place first
-			getBeanFactory().getBean("settingService").verifyMuraRequirements();
-			
-			// Set this to false in the application so that it doesn't run again
-			getPluginConfig().getApplication().setValue("firstRequestOfApplication", false);
-			
-			// Log that this finished
-			getBeanFactory().getBean("logService").logMessage(message="First Request of Application Setup Finished", generalLog=true);
-		}
+		// Run Sku Cache & Product Cache Update Threads if needed
+		getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
 		
 		// This verifies that all mura session variables are setup
 		setupMuraSessionRequirements();
-		
-		// Enable the request cache service
-		getBeanFactory().getBean("requestCacheService").enableRequestCache();
 		
 		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
@@ -266,7 +271,6 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupView() {
-		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
 		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
