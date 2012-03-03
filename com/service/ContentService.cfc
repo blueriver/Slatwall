@@ -1,4 +1,4 @@
-<!---
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,34 +35,8 @@
 
 Notes:
 
---->
-<cfparam name="rc.orderFulfillment" type="any" />
-<cfparam name="rc.locationSmartList" />
+*/
+component extends="Slatwall.com.service.BaseService" persistent="false" accessors="true" output="false" {
 
-<cfset local.method = rc.orderfulfillment.getFulfillmentMethodType() />
-<cfset local.params.orderFulfillment = rc.orderFulfillment />
 
-<cfoutput>
-	<cfif rc.orderFulfillment.isProcessable()>
-		<form name="ProcessFulfillment" action=#buildURL(action="admin:order.processorderfulfillment")# method="post">
-		<input type="hidden" name="orderfulfillmentID" value="#rc.orderFulfillment.getOrderFulfillmentID()#" />
-	</cfif>
-
-	<!--- These fields are common fields to all Fulfillments --->
-	<dl class="twoColumn">
-		<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.deliverFromLocation")#</strong></label></dt> 
-		<dd class="value">
-			<cf_SlatwallFormField fieldType="select" fieldName="locationID" valueOptions="#rc.locationSmartList.getRecords()#">
-		</dd>
-	</dl>
-
-		
-	<div class="svoadminorderfulfillmentdetail">
-		#view("order/fulfillment/#local.method#",local.params)#
-	</div>
-	
-	
-	<cfif rc.orderFulfillment.isProcessable()>
-		</form>
-	</cfif>
-</cfoutput>
+}

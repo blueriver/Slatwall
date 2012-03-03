@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	// Slatwall Service Injection
 	property name="productService" type="any";
+	property name="contentService" type="any";
 	property name="accountService" type="any";
 	property name="sessionService" type="any";
 	property name="requestCacheService" type="any";
@@ -133,19 +134,35 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onAfterPageSlatwallProductListingSave(required any rc) {
-		getProductService().updateProductContentPaths(contentID=rc.$.content("contentID"), siteID=rc.$.event('siteID'));
+		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		content.setCmsSiteID(rc.$.event('siteID'));
+		content.setCmsContentID(rc.$.content("contentID"));
+		content.setCmsContentIDPath(rc.$.content("path"));
+		content.setContentName(rc.$.content("title"));
+		content = getContentService().saveContent(content);
 	}
 	
 	public void function onAfterPageSlatwallProductListingDelete(required any rc) {
-		getProductService().deleteProductContent(rc.$.content("contentID"));
+		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		if(!content.isNew()) {
+			getContentService().deleteContent(content);
+		}
 	}
 	
 	public void function onAfterCategoryUpdate(required any rc) {
-		getProductService().updateProductCategoryPaths(categoryID=rc.$.event("categoryID"), siteID=rc.$.event('siteID'));
+		var category = getContentService().getCategoryByCmsCategoryID(rc.$.event("categoryID"),true);
+		category.setCmsSiteID(rc.$.event('siteID'));
+		category.setCmsCategoryID(rc.$.event("categoryID"));
+		category.setCmsCategoryIDPath(rc.$.category("path"));
+		category.setCategoryName(rc.$.category("name"));
+		category = getContentService().saveCategory(category);
 	}
 	
 	public void function onAfterCategoryDelete(required any rc) {
-		getProductService().deleteProductCategory(rc.$.event("categoryID"));
+		var category = getContentService().getContentByCmsCategoryID(rc.$.event("categoryID"),true);
+		if(!category.isNew()) {
+			getContentService().deleteCategory(category);
+		}
 	}
 	
 }

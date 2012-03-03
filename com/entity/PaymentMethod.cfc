@@ -59,6 +59,7 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 			{name="Cash", value="cash"},
 			{name="Check", value="check"},
 			{name="Credit Card", value="creditCard"},
+			{name="External", value="external"},
 			{name="Gift Card", value="giftCard"}
 		];
 		return options;

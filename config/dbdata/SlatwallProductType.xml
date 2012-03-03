@@ -1,9 +1,9 @@
 <Table tableName="SlatwallProductType">
 	<Columns>
 		<column name="productTypeID" fieldtype="id" />
-		<column name="parentProductTypeID" update="false" />
+		<column name="parentProductTypeID" />
 		<column name="productTypeName" update="false" />
-		<column name="systemCode" update="false" />
+		<column name="systemCode" />
 		<column name="activeFlag" update="false" />
 	</Columns>
 	<Records>

@@ -40,8 +40,10 @@ component displayname="Category" entityname="SlatwallCategory" table="SlatwallCa
 	
 	// Persistent Properties
 	property name="categoryID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="cmsCategoryID" ormtype="string" length="35" fieldtype="id";
+	property name="categoryName" ormtype="string";
+	property name="cmsCategoryID" ormtype="string";
 	property name="cmsCategoryIDPath" ormtype="string";
+	property name="cmsSiteID" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
 	

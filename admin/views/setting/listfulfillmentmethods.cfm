@@ -55,7 +55,7 @@ Notes:
 			<cfloop array="#rc.fulfillmentMethods#" index="local.thisFulfillmentMethod">
 				<tr>
 					<cfset local.fulfillmentMethodMetaData = getMetaData(local.thisFulfillmentMethod) />
-					<td class="varWidth"><a href="#buildURL(action='admin:setting.detailfulfillmentmethod',querystring='fulfillmentmethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#')#">#$.Slatwall.rbKey("admin.setting.fulfillmentMethod." & local.thisFulfillmentMethod.getFulfillmentMethodID())#</a></td>
+					<td class="varWidth"><a href="#buildURL(action='admin:setting.detailfulfillmentmethod',querystring='fulfillmentmethodID=#local.thisFulfillmentMethod.getFulfillmentMethodID()#')#">#local.thisFulfillmentMethod.getFulfillmentMethodName()#</a></td>
 					<td>
 						<cfif local.thisFulfillmentMethod.getActiveFlag()>
 							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />

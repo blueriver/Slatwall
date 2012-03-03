@@ -46,16 +46,24 @@ component extends="BaseService" accessors="true" {
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
 	
+	/*
 	// Mura Service Injection
 	property name="categoryManager" type="any";
 	property name="contentManager" type="any";
 	property name="feedManager" type="any";
+	*/
 	
 	// Cached Properties
 	property name="productTypeTree" type="any";
 	
 	public array function getProductTemplates(required string siteID) {
-		
+		var productTemplates = getService("contentService").listTemplate(date={templateType="Product",siteID=arguments.siteID});
+		var returnArray = [];
+		for(var template in productTemplates) {
+			arrayAppend(returnArray, {name=template.getTemplateName(), value=template.getCmsUrlTitle()});
+		}
+		return returnArray;
+		/*
 		var pageFeed = getContentFeed().set({ siteID=arguments.siteID,sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
 		pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductTemplate", dataType="varchar" );
 		
@@ -67,8 +75,9 @@ component extends="BaseService" accessors="true" {
 		}
 		
 		return returnArray;
+		*/
 	}
-	
+	/*
 	public any function getContentFeed() {
 		return getFeedManager().getBean();
 	}
@@ -87,7 +96,7 @@ component extends="BaseService" accessors="true" {
 		}
 		
 	}
-
+	*/
 	public any function getProductSmartList(struct data={}, currentURL="") {
 		arguments.entityName = "SlatwallProduct";
 		
@@ -148,6 +157,7 @@ component extends="BaseService" accessors="true" {
 		return getSkuDAO().getSkusBySelectedOptions(argumentCollection=arguments);
 	}
 	
+	/*
 	public any function getMuraCategories(required string siteID, string parentID=0) {
 		var categories = getCategoryManager().getCategoriesBySiteID(siteID=arguments.siteID);
     	var categoryTree = getService("utilityService").queryTreeSort(
@@ -182,9 +192,7 @@ component extends="BaseService" accessors="true" {
 		}
 	}
 
-	/**
-	/* @hint associates this product with Mura categories
-	*/
+	// @hint associates this product with Mura categories
 	public void function assignProductCategories(required any product, required struct data) {
 		// Loop over any existing relationship to either remove or remove from the toAdd list
 		for(var i=arrayLen(arguments.product.getProductCategories()); i>=1; i--) {
@@ -261,6 +269,7 @@ component extends="BaseService" accessors="true" {
 			}
 		}
 	}
+	*/
 	
 	public void function saveAlternateImages(required any product, required array imagesArray) {
 		for(var i = 1; i <= arrayLen(arguments.imagesArray); i++) {
@@ -338,6 +347,7 @@ component extends="BaseService" accessors="true" {
 			getSkuService().createSkus(arguments.Product,arguments.data);
 		}
 		
+		/*
 		// set up associations between product and content
 		if(structKeyExists(arguments.data, "productContentIDPaths")) {
 			
@@ -360,6 +370,7 @@ component extends="BaseService" accessors="true" {
 		if(structKeyExists(arguments.data, "productCategories")) {
 			assignProductCategories(arguments.product, arguments.data);
 		}
+		*/
 		
 		// check for images to upload
 		if(structKeyExists(arguments.data,"images")) {
@@ -608,7 +619,8 @@ component extends="BaseService" accessors="true" {
 		var productTypeIDs = getChildProductTypeIDs(arguments.productTypeID);
 		return getDAO().searchProductsByProductType(arguments.term,productTypeIDs);
 	}	
-
+	
+	/*
 	private query function treeSort(required query productPages) {
 		// loop through query and construct an array of parent IDs from the 'path' column
 		var parentIDArray = [];
@@ -627,7 +639,8 @@ component extends="BaseService" accessors="true" {
     	);
 		return productPagesTree;
 	}
-
+	*/
+	
 	/* get the attribute sets for a product */
 	public array function getAttributeSets(array attributeSetTypeCode,array productTypeIDs = []){
 		return getDAO().getAttributeSets(arguments.attributeSetTypeCode,arguments.productTypeIDs);

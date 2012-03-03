@@ -41,6 +41,7 @@ component extends="BaseController" output=false accessors=true {
 	// fw1 Auto-Injected Service Properties
 	property name="attributeService" type="Slatwall.com.service.AttributeService";
 	property name="brandService" type="Slatwall.com.service.BrandService";
+	property name="contentService" type="Slatwall.com.service.ContentService";
 	property name="productService" type="Slatwall.com.service.ProductService";
 	property name="skuService" type="Slatwall.com.service.SkuService";
 	property name="locationService" type="Slatwall.com.service.LocationService";
@@ -78,10 +79,13 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.list");
 		}
-		rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
+		//rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
+		//rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
+		rc.productPages = getContentService().listContent(data={siteID=rc.$.event('siteid')});
+		rc.categories = getContentService().listCategory(data={siteID=rc.$.event('siteid')});
+		
 		rc.attributeSets = rc.Product.getAttributeSets(["astProduct"]);
 		rc.skuSmartList = getSkuService().getSkuSmartList(productID=rc.product.getProductID(), data=rc);
-		rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 		rc.priceGroupSmartList = getPriceGroupService().getPriceGroupSmartList();
 		rc.subscriptionTerms = getSubscriptionService().listSubscriptionTerm();
 	}

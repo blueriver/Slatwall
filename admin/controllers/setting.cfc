@@ -103,7 +103,8 @@ component extends="BaseController" output="false" accessors="true" {
 	public void function detailpermissions(required struct rc) {
 		param name="rc.edit" default="false";
 		
-		rc.muraUserGroups = getUserManager().getUserGroups();
+		// TODO: remove direct reference to mura userManager 
+		rc.cmsUserGroups = getUserManager().getUserGroups();
 		rc.permissionActions = getSettingService().getPermissionActions();
 		rc.permissionSettings = getSettingService().getPermissions();
 	}
@@ -115,7 +116,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 	public void function savepermissions(required struct rc) {
-		param name="rc.muraUserGroupID" default="";
+		param name="rc.cmsUserGroupID" default="";
 		
 		for(var item in rc) {
 			if(!isObject(item)) {

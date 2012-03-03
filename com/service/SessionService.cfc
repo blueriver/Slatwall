@@ -80,14 +80,14 @@ component extends="BaseService" accessors="true" output="false" {
 		}
 		
 		// Setup account here
-		var muraUser = getRequestCacheService().getValue("muraScope").currentUser();
+		var cmsUser = getRequestCacheService().getValue("muraScope").currentUser();
 		
-		if(muraUser.isLoggedIn()) {
+		if(cmsUser.isLoggedIn()) {
 			// Load the account
-			var slatwallAccount = getAccountService().getAccountByMuraUser(muraUser);
+			var slatwallAccount = getAccountService().getAccountByCmsUser(cmsUser);
 			
 			// Update the account with any changes in the mura user
-			slatwallAccount = getAccountService().updateAccountFromMuraUser(slatwallAccount, muraUser);
+			slatwallAccount = getAccountService().updateAccountFromCmsUser(slatwallAccount, cmsUser);
 			
 			// Set the account in the current session
 			currentSession.setAccount(slatwallAccount);

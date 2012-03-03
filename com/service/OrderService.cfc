@@ -592,13 +592,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		var order = arguments.orderFulfillment.getOrder();
 		
 		// Figure out the Fulfillment Method
-		var fulfillmentMethodID = arguments.orderFulfillment.getFulfillmentMethodID();
+		var fulfillmentMethodType = arguments.orderFulfillment.getFulfillmentMethodType();
 		
 		// Create A New Order Delivery Type Based on fulfillment method
-		var orderDelivery = this.new("SlatwallOrderDelivery#fulfillmentMethodID#");
+		var orderDelivery = this.new("SlatwallOrderDelivery#fulfillmentMethodType#");
 		
 		// Set the Order As the Order for this Delivery
 		orderDelivery.setOrder(order);
+		orderDelivery.setFulfillmentMethod(arguments.orderFulfillment.getFulfillmentMethod());
 		orderDelivery.setDeliveryOpenDateTime(now());
 	
 		// TODO: change close date to indicate when item was received, downloaded, picked up, etc.
@@ -610,7 +611,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 	
 		// Per Fulfillment method set whatever other details need to be set
 		
-		switch(fulfillmentMethodID) {
+		switch(fulfillmentMethodType) {
 			case("shipping"): {
 				// copy the shipping address from the order fulfillment and set it in the delivery
 				orderDelivery.setShippingAddress(getAddressService().copyAddress(arguments.orderFulfillment.getShippingAddress()));
@@ -953,6 +954,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 							newOrderPayment.setOrderPaymentType( getService("typeService").getTypeBySystemCode("optCredit") );
 							newOrderPayment.setAmount( order.getTotal()*-1 );
 							newOrderPayment.setOrder( order );
+							newOrderPayment.setPaymentMethod( order.getReferencedOrder().getOrderPayments()[1].getPaymentMethod() );
 							
 							// Pass this new order payment along with the original transaction ID to the process() method. 
 							var refundOK = getPaymentService().processPayment(newOrderPayment, "credit", order.getTotal(), order.getReferencedOrder().getOrderPayments()[1].getCreditCardTransactions()[t].getProviderTransactionID());

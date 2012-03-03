@@ -38,10 +38,10 @@ Notes:
 --->
 <cfcomponent extends="BaseDAO">
 	
-	<cffunction name="readByMuraUserID" returntype="any" access="public">
-		<cfargument name="muraUserID" required="true" type="string">
+	<cffunction name="readByCmsAccountID" returntype="any" access="public">
+		<cfargument name="cmsAccountID" required="true" type="string">
 		 
-		<cfreturn ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.muraUserID=:muraUserID", {muraUserID=arguments.muraUserID}, true) />
+		<cfreturn ormExecuteQuery(" from SlatwallAccount aSlatwallAccount where aSlatwallAccount.cmsAccountID=:cmsAccountID", {cmsAccountID=arguments.cmsAccountID}, true) />
 	</cffunction>
 	
 	<cffunction name="readByAccountEmail" returntype="any" access="public">

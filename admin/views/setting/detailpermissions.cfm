@@ -37,7 +37,7 @@ Notes:
 
 --->
 <cfparam name="rc.$" type="any">
-<cfparam name="rc.muraUserGroups" type="query">
+<cfparam name="rc.cmsUserGroups" type="query">
 <cfparam name="rc.permissionActions" type="struct">
 <cfparam name="rc.permissionSettings" type="struct">
 <cfparam name="rc.edit" type="boolean">
@@ -52,8 +52,8 @@ Notes:
 			<table class="listtable stripe">
 				<tr>
 					<th class="varWidth">Setting</th>
-					<cfloop query="local.rc.muraUserGroups">
-						<th>#local.rc.muraUserGroups.groupName#</th>
+					<cfloop query="local.rc.cmsUserGroups">
+						<th>#local.rc.cmsUserGroups.groupName#</th>
 					</cfloop>
 				</tr>
 				<cfset local.allControllers = structKeyList(local.rc.permissionActions) />
@@ -75,16 +75,16 @@ Notes:
 						</td>
 						
 						<input type="hidden" value="" name="permission_admin_#local.controller#_#variables.framework.defaultItem#" />
-						<cfloop query="local.rc.muraUserGroups">
+						<cfloop query="local.rc.cmsUserGroups">
 							<td style="background-color:##adceee;">
 								<cfset local.accessList = "" />
 								<cfif structKeyExists(local.rc.permissionSettings, "permission_admin_#local.controller#_#variables.framework.defaultItem#")>
 									<cfset local.accessList = local.rc.permissionSettings["permission_admin_#local.controller#_#variables.framework.defaultItem#"].getSettingValue() />
 								</cfif>
 								<cfif rc.edit>
-									<input type="checkbox" value="#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#" name="permission_admin_#local.controller#_#variables.framework.defaultItem#" <cfif listFind(local.accessList, "#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#")>checked="checked"</cfif> />
+									<input type="checkbox" value="#local.rc.cmsUserGroups.groupName#;#session.siteID#;#local.rc.cmsUserGroups.isPublic#" name="permission_admin_#local.controller#_#variables.framework.defaultItem#" <cfif listFind(local.accessList, "#local.rc.cmsUserGroups.groupName#;#session.siteID#;#local.rc.cmsUserGroups.isPublic#")>checked="checked"</cfif> />
 								<cfelse>
-									<cfif listFind(local.accessList, "#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#")>YES<cfelse>NO</cfif>
+									<cfif listFind(local.accessList, "#local.rc.cmsUserGroups.groupName#;#session.siteID#;#local.rc.cmsUserGroups.isPublic#")>YES<cfelse>NO</cfif>
 								</cfif>
 							</td>
 						</cfloop>
@@ -106,16 +106,16 @@ Notes:
 								</cfif>
 							</td>
 							<input type="hidden" value="" name="permission_admin_#local.controller#_#local.controllerAction#" />
-							<cfloop query="local.rc.muraUserGroups">
+							<cfloop query="local.rc.cmsUserGroups">
 								<td>
 									<cfset local.accessList = "" />
 									<cfif structKeyExists(local.rc.permissionSettings, "permission_admin_#local.controller#_#local.controllerAction#")>
 										<cfset local.accessList = local.rc.permissionSettings["permission_admin_#local.controller#_#local.controllerAction#"].getSettingValue() />
 									</cfif>
 									<cfif rc.edit>
-										<input type="checkbox" value="#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#" name="permission_admin_#local.controller#_#local.controllerAction#" <cfif listFind(local.accessList, "#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#")>checked="checked"</cfif> />
+										<input type="checkbox" value="#local.rc.cmsUserGroups.groupName#;#session.siteID#;#local.rc.cmsUserGroups.isPublic#" name="permission_admin_#local.controller#_#local.controllerAction#" <cfif listFind(local.accessList, "#local.rc.cmsUserGroups.groupName#;#session.siteID#;#local.rc.cmsUserGroups.isPublic#")>checked="checked"</cfif> />
 									<cfelse>
-										<cfif listFind(local.accessList, "#local.rc.muraUserGroups.groupName#;#session.siteID#;#local.rc.muraUserGroups.isPublic#")>YES<cfelse>NO</cfif>
+										<cfif listFind(local.accessList, "#local.rc.cmsUserGroups.groupName#;#session.siteID#;#local.rc.cmsUserGroups.isPublic#")>YES<cfelse>NO</cfif>
 									</cfif>
 								</td>
 							</cfloop>

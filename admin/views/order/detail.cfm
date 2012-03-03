@@ -85,7 +85,7 @@ Notes:
 			</tr>
 			<cfloop array="#local.payments#" index="local.thisPayment">
 			<tr>
-				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodID())#</td>
+				<td class="varWidth">#$.Slatwall.rbKey("entity.paymentMethod." & local.thisPayment.getPaymentMethod().getPaymentMethodType())#</td>
 				<td>#local.thisPayment.getFormattedValue('amount', 'currency')#</td>
 				<td class="administration">
 		          <ul class="one">
@@ -103,7 +103,7 @@ Notes:
 					<!--- set up order payment in params struct to pass into view which shows information specific to the payment method --->
 					<cfset local.params.orderPayment = local.thisPayment />
 					<div class="paymentDetails">
-					#view("order/payment/#lcase(local.thisPayment.getPaymentMethod().getPaymentMethodID())#", local.params)#
+					#view("order/payment/#lcase(local.thisPayment.getPaymentMethod().getPaymentMethodType())#", local.params)#
 					</div>
 				</td>
 			</tr>
@@ -175,7 +175,7 @@ Notes:
 					</div>
 					<!--- set up order fullfillment in params struct to pass into view which shows information specific to the fulfillment method --->
 					<cfset local.params.orderfulfillment = local.thisOrderFulfillment />
-					#view("order/ordertabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodID()#", local.params)#
+					#view("order/ordertabs/fulfillment/#local.thisOrderFulfillment.getFulfillmentMethodType()#", local.params)#
 				</cfloop>
 			</div>
 			
@@ -189,7 +189,7 @@ Notes:
 						<cfset local.params.orderDelivery = local.thisOrderDelivery />
 						<cfset local.params.orderID = rc.order.getOrderID() />
 						<cfset local.params.deliveryNumber = local.deliveryNumber />
-						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodID()#", local.params)# 
+						#view("order/ordertabs/delivery/#local.thisOrderDelivery.getFulfillmentMethod().getFulfillmentmethodType()#", local.params)# 
 					</cfloop>
 				<cfelse>
 					#$.slatwall.rbKey("admin.order.detail.noorderdeliveries")#

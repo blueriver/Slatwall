@@ -60,7 +60,7 @@ Notes:
 			<tr>
 				<td>#dateFormat(local.thisOrder.getOrderOpenDateTime(),"medium")#</td>
 				<td>#local.thisOrder.getOrderNumber()#</td>
-				<td>#$.slatwall.rbKey("entity.orderfulfillment.fulfillmentmethod." & local.fulfillment.getfulfillmentMethodID())#</td>
+				<td>#$.slatwall.rbKey("entity.orderfulfillment.fulfillmentmethod." & local.fulfillment.getfulfillmentMethodType())#</td>
 				<td><cf_SlatwallPropertyDisplay object="#local.thisAccount#" property="fullName" displayType="plain" valueLink="?slatAction=admin:account.detail&accountID=#local.thisAccount.getAccountID()#">
 				<td>#local.fulfillment.getFormattedValue('totalCharge', 'currency')#</td>
 				<td>

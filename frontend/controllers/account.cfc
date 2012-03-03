@@ -56,7 +56,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.forgotPasswordEmail != "") {
 			rc.forgotPasswordResult = getUserUtility().sendLoginByEmail(email=rc.forgotPasswordEmail, siteid=rc.$.event('siteID'));
 		} else {
-			var loginSuccess = getAccountService().loginMuraUser(username=rc.username, password=rc.password, siteID=rc.$.event('siteID'));
+			var loginSuccess = getAccountService().loginCmsUser(username=rc.username, password=rc.password, siteID=rc.$.event('siteID'));
 		
 			if(!loginSuccess) {
 				request.status = "failed";

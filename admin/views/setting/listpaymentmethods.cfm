@@ -55,7 +55,7 @@ Notes:
 			<cfloop array="#rc.paymentMethods#" index="local.thisPaymentMethod">
 				<tr>
 					<cfset local.paymentMethodMetaData = getMetaData(local.thisPaymentMethod) />
-					<td class="varWidth">#$.Slatwall.rbKey("admin.setting.paymentMethod." & local.thisPaymentMethod.getPaymentMethodID())#</td>
+					<td class="varWidth">#local.thisPaymentMethod.getPaymentMethodName()#</td>
 					<td>
 						<cfif local.thisPaymentMethod.getActiveFlag()>
 							<img src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.ui.check_green.png" with="16" height="16" alt="#rc.$.Slatwall.rbkey('sitemanager.yes')#" title="#rc.$.Slatwall.rbkey('sitemanager.yes')#" />

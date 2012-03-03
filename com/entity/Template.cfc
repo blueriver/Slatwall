@@ -1,4 +1,4 @@
-<!---
+﻿/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -35,34 +35,50 @@
 
 Notes:
 
---->
-<cfparam name="rc.orderFulfillment" type="any" />
-<cfparam name="rc.locationSmartList" />
+*/
+component displayname="Template" entityname="SlatwallTemplate" table="SlatwallTemplate" persistent="true" accessors="true" extends="BaseEntity" {
+	
+	// Persistent Properties
+	property name="templateID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="templateType" ormtype="string";
+	property name="templateName" ormtype="string";
+	property name="cmsTemplateID" ormtype="string";
+	property name="cmsSiteID" ormtype="string";
+	property name="cmsUrlTitle" ormtype="string";
+	
+	// Related Object Properties (many-to-one)
+	
+	// Related Object Properties (one-to-many)
+	
+	// Related Object Properties (many-to-many)
+	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit Properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	// Non-Persistent Properties
 
-<cfset local.method = rc.orderfulfillment.getFulfillmentMethodType() />
-<cfset local.params.orderFulfillment = rc.orderFulfillment />
 
-<cfoutput>
-	<cfif rc.orderFulfillment.isProcessable()>
-		<form name="ProcessFulfillment" action=#buildURL(action="admin:order.processorderfulfillment")# method="post">
-		<input type="hidden" name="orderfulfillmentID" value="#rc.orderFulfillment.getOrderFulfillmentID()#" />
-	</cfif>
 
-	<!--- These fields are common fields to all Fulfillments --->
-	<dl class="twoColumn">
-		<dt class="title"><label>#$.Slatwall.rbKey("admin.stockReceiver.deliverFromLocation")#</strong></label></dt> 
-		<dd class="value">
-			<cf_SlatwallFormField fieldType="select" fieldName="locationID" valueOptions="#rc.locationSmartList.getRecords()#">
-		</dd>
-	</dl>
-
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
 		
-	<div class="svoadminorderfulfillmentdetail">
-		#view("order/fulfillment/#local.method#",local.params)#
-	</div>
+	// ============= START: Bidirectional Helper Methods ===================
 	
+	// =============  END:  Bidirectional Helper Methods ===================
+
+	// ================== START: Overridden Methods ========================
 	
-	<cfif rc.orderFulfillment.isProcessable()>
-		</form>
-	</cfif>
-</cfoutput>
+	// ==================  END:  Overridden Methods ========================
+	
+	// =================== START: ORM Event Hooks  =========================
+	
+	// ===================  END:  ORM Event Hooks  =========================
+}

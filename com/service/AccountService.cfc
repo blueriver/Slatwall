@@ -46,7 +46,7 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="userManager" type="any";
 	property name="userUtility" type="any";
 	
-	public boolean function loginMuraUser(required string username, required string password, required string siteID) {
+	public boolean function loginCmsUser(required string username, required string password, required string siteID) {
 		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);
 		
 		if(loginResult) {
@@ -56,27 +56,27 @@ component extends="BaseService" accessors="true" output="false" {
 		return loginResult;
 	}
 	
-	public any function getAccountByMuraUser(required any muraUser) {
-		// Load Account based upon the logged in muraUserID
-		var account = getDAO().readByMuraUserID(muraUserID = arguments.muraUser.getUserID());
+	public any function getAccountByCmsUser(required any cmsUser) {
+		// Load Account based upon the logged in cmsAccountID
+		var account = getDAO().readByCmsAccountID(cmsAccountID = arguments.cmsUser.getUserID());
 		
 		if( isnull(account) ) {
-			// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this mura user id.
+			// TODO: Check to see if the e-mail exists and is assigned to an account.   If it does we should update that account with this cms user id.
 			
 			// Create new Account
 			account = this.newAccount();
 			
 			// Link account to thus mura user
-			account.setMuraUserID(arguments.muraUser.getUserID());
+			account.setCmsAccountID(arguments.cmsUser.getUserID());
 			
-			// update and save with values from mura user
-			account = updateAccountFromMuraUser(account, arguments.muraUser);
+			// update and save with values from cms user
+			account = updateAccountFromCmsUser(account, arguments.cmsUser);
 			getDAO().save(target=account);
 			
 		
 		} else {
 			// Update the existing account 
-			account = updateAccountFromMuraUser(account, arguments.muraUser);	
+			account = updateAccountFromCmsUser(account, arguments.cmsUser);	
 		}
 		
 		return account;
@@ -129,79 +129,79 @@ component extends="BaseService" accessors="true" output="false" {
 		if( !arguments.account.hasErrors() && wasNew && !isNull(arguments.account.getPrimaryEmailAddress()) && structKeyExists(arguments.data, "password") && (!structKeyExists(arguments.data, "guestAccount") || arguments.data.guestAccount == false) ) {
 			
 			// Try to get the user out of the mura database using the primaryEmail as the username
-			var muraUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
+			var cmsUser = getUserManager().getBean().loadBy(siteID=arguments.siteID, username=arguments.account.getPrimaryEmailAddress().getEmailAddress());
 			
-			if(!muraUser.getIsNew()) {
+			if(!cmsUser.getIsNew()) {
 				getRequestCacheService().setValue("ormHasErrors", true);
 				arguments.account.addError("primaryEmailAddress", "This E-Mail Address is already in use with another Account.");
 			} else {
 				// Setup a new mura user
-				muraUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
-				muraUser.setPassword(arguments.data.password);
-				muraUser.setSiteID(arguments.siteID);
+				cmsUser.setUsername(arguments.account.getPrimaryEmailAddress().getEmailAddress());
+				cmsUser.setPassword(arguments.data.password);
+				cmsUser.setSiteID(arguments.siteID);
 				
 				// Update mura user with values from account
-				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
-				muraUser.save();
+				cmsUser = updateCmsUserFromAccount(cmsUser, arguments.account);
+				cmsUser.save();
 				
 				// Set the mura userID in the account
-				arguments.account.setMuraUserID(muraUser.getUserID());
+				arguments.account.setCmsAccountID(cmsUser.getUserID());
 									
 				// If there currently isn't a user logged in, then log in this new account
 				var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
 				if(!currentUser.isLoggedIn()) {
 					// Login the mura User
-					getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);
+					getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);
 					// Set the account in the session scope
 					getSessionService().getCurrent().setAccount(arguments.account);
 				}
 			}
 		}
 		
-		// If the account isn't new, and it has a muraUserID then update the mura user from the account
-		if(!wasNew && !isNull(arguments.account.getMuraUserID())) {
+		// If the account isn't new, and it has a cmsAccountID then update the mura user from the account
+		if(!wasNew && !isNull(arguments.account.getCmsAccountID())) {
 			
 			// Load existing mura user
-			var muraUser = getUserManager().read(userID=arguments.account.getMuraUserID());
+			var cmsUser = getUserManager().read(userID=arguments.account.getCmsAccountID());
 			
 			// If that user exists, update from account and save
-			if(!muraUser.getIsNew()) {
-				muraUser = updateMuraUserFromAccount(muraUser, arguments.account);
+			if(!cmsUser.getIsNew()) {
+				cmsUser = updateCmsUserFromAccount(cmsUser, arguments.account);
 				
 				// If a pasword was passed in, then update the mura accout with the new password
 				if(structKeyExists(arguments.data, "password")) {
-					muraUser.setPassword(arguments.data.password);
+					cmsUser.setPassword(arguments.data.password);
 				// If a password wasn't submitted then just set the value to blank so that mura doesn't re-hash the password	
 				} else {
-					muraUser.setPassword("");	
+					cmsUser.setPassword("");	
 				}
 				
 				
-				muraUser.save();
+				cmsUser.save();
 			}
 			
 			// If the current user is the one whos account was just updated then Re-Login the current user so that the new values are saved.
 			var currentUser = getRequestCacheService().getValue("muraScope").currentUser();
-			if(currentUser.getUserID() == muraUser.getUserID()) {
-				getUserUtility().loginByUserID(muraUser.getUserID(), arguments.siteID);	
+			if(currentUser.getUserID() == cmsUser.getUserID()) {
+				getUserUtility().loginByUserID(cmsUser.getUserID(), arguments.siteID);	
 			}
 		}
 		
 		return arguments.account;
 	}
 	
-	public any function updateMuraUserFromAccount(required any muraUser, required any Account) {
+	public any function updateCmsUserFromAccount(required any cmsUser, required any Account) {
 		
 		// Sync Name & Company
-		arguments.muraUser.setFName(arguments.account.getFirstName());
-		arguments.muraUser.setLName(arguments.account.getLastName());
+		arguments.cmsUser.setFName(arguments.account.getFirstName());
+		arguments.cmsUser.setLName(arguments.account.getLastName());
 		if(!isNull(arguments.account.getCompany())) {
-			arguments.muraUser.setCompany(arguments.account.getCompany());	
+			arguments.cmsUser.setCompany(arguments.account.getCompany());	
 		}
 		
 		// Sync Primary Email
 		if(!isNull(arguments.account.getPrimaryEmailAddress())) {
-			arguments.muraUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
+			arguments.cmsUser.setEmail(arguments.account.getPrimaryEmailAddress().getEmailAddress());	
 		}
 		
 		// Reset the password as whatever was already in the database
@@ -209,35 +209,35 @@ component extends="BaseService" accessors="true" output="false" {
 		// TODO: Sync the mobile phone number
 		// TODO: Loop over addresses and sync them as well.
 				
-		return arguments.muraUser;
+		return arguments.cmsUser;
 	}
 	
-	public any function updateAccountFromMuraUser(required any account, required any muraUser) {
+	public any function updateAccountFromCmsUser(required any account, required any cmsUser) {
 		
 		// Sync Name & Company
-		if(arguments.account.getFirstName() != muraUser.getFName()){
-			arguments.account.setFirstName(muraUser.getFName());
+		if(arguments.account.getFirstName() != cmsUser.getFName()){
+			arguments.account.setFirstName(cmsUser.getFName());
 		}
-		if(arguments.account.getLastName() != muraUser.getLName()) {
-			arguments.account.setLastName(muraUser.getLName());
+		if(arguments.account.getLastName() != cmsUser.getLName()) {
+			arguments.account.setLastName(cmsUser.getLName());
 		}
-		if(arguments.account.getCompany() != muraUser.getCompany()) {
-			arguments.account.setCompany(muraUser.getCompany());
+		if(arguments.account.getCompany() != cmsUser.getCompany()) {
+			arguments.account.setCompany(cmsUser.getCompany());
 		}
 		
 		// Sync the primary email if out of sync
-		if( isNull(arguments.account.getPrimaryEmailAddress()) || arguments.account.getPrimaryEmailAddress().getEmailAddress() != arguments.muraUser.getEmail()) {
+		if( isNull(arguments.account.getPrimaryEmailAddress()) || arguments.account.getPrimaryEmailAddress().getEmailAddress() != arguments.cmsUser.getEmail()) {
 			// Setup the new primary email object
 			
 			// Attempt to find that e-mail address in all of our emails
 			for(var i=1; i<=arrayLen(arguments.account.getAccountEmailAddresses()); i++) {
-				if(arguments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.muraUser.getEmail()) {
+				if(arguments.account.getAccountEmailAddresses()[i].getEmailAddress() == arguments.cmsUser.getEmail()) {
 					var primaryEmail = arguments.account.getAccountEmailAddresses()[i];
 				}
 			}
 			if( isNull(primaryEmail) ) {
 				var primaryEmail = this.newAccountEmailAddress();
-				primaryEmail.setEmailAddress(arguments.muraUser.getEmail());
+				primaryEmail.setEmailAddress(arguments.cmsUser.getEmail());
 				primaryEmail.setAccount(arguments.account);
 			}
 			arguments.account.setPrimaryEmailAddress(primaryEmail);

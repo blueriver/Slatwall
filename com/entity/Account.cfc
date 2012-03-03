@@ -109,7 +109,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public boolean function isGuestAccount() {
-		if(isNull(getMuraUserID())) {
+		if(isNull(getCmsAccountID())) {
 			return true;
 		} else {
 			return false;
