@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" table="SlatwallOrderFulfillment" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="fulfillmentMethodID" {
+component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" table="SlatwallOrderFulfillment" persistent=true accessors=true output=false extends="BaseEntity" discriminatorcolumn="fulfillmentMethodType" {
 	
 	// Persistent Properties
 	property name="orderFulfillmentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -50,9 +50,10 @@ component displayname="Order Fulfillment" entityname="SlatwallOrderFulfillment" 
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderFulfillmentItems" singularname="orderFulfillmentItem" cfc="OrderItem" fieldtype="one-to-many" fkcolumn="orderFulfillmentID" cascade="all" inverse="true";
 	
-	// Special Related Discriminator Property
 	property name="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-one" fkcolumn="fulfillmentMethodID" length="32" insert="false" update="false";
-	property name="fulfillmentMethodID" length="255" insert="false" update="false";
+	
+	// Special Related Discriminator Property
+	property name="fulfillmentMethodType" length="255" insert="false" update="false";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";

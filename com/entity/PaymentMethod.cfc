@@ -39,11 +39,12 @@ Notes:
 component displayname="Payment Method" entityname="SlatwallPaymentMethod" table="SlatwallPaymentMethod" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	// @hint the paymentMethodID is intentionally 255 length because the values we store for the ID are NOT uuid's.  Checkout the Data for this table in the /config folder to know more.
-	property name="paymentMethodID" ormtype="string" length="255" fieldtype="id" unsavedvalue="" default="";
+	property name="paymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="paymentMethodName" ormtype="string";
+	property name="paymentMethodType" ormtype="string";
 	property name="providerGateway" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="false";
-	
+		
 	// Remote Properties
 	property name="remoteID" ormtype="string";
 
@@ -52,6 +53,16 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+	
+	public array function getPaymentMethodTypeOptions() {
+		var options = [
+			{name="Cash", value="cash"},
+			{name="Check", value="check"},
+			{name="Credit Card", value="creditCard"},
+			{name="Gift Card", value="giftCard"}
+		];
+		return options;
+	}
 	
 	public any function getIntegration() {
 		return getService("integrationService").getIntegrationByIntegrationPackage(getProviderGateway());

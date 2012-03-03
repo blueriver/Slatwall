@@ -41,10 +41,8 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	// Persistent Properties
 	property name="fulfillmentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="fulfillmentMethodName" ormtype="string";
+	property name="fulfillmentMethodType" ormtype="string";
 	property name="activeFlag" ormtype="boolean" default="false"; 
-	
-	// Fulfillment Type
-	property name="fulfillmentType" cfc="Type" fieldtype="many-to-one" fkcolumn="fulfillmentTypeID";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -52,6 +50,14 @@ component displayname="Fulfillment Method" entityname="SlatwallFulfillmentMethod
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
+	
+	public array function getFulfillmentMethodTypeOptions() {
+		var options = [
+			{name="Shipping", value="shipping"},
+			{name="Pickup", value="pickup"}
+		];
+		return options;
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

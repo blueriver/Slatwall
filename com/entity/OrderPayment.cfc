@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="paymentMethodID" {
+component displayname="Order Payment" entityname="SlatwallOrderPayment" table="SlatwallOrderPayment" persistent="true" output="false" accessors="true" extends="BaseEntity" discriminatorcolumn="paymentMethodType" {
 	
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -45,10 +45,10 @@ component displayname="Order Payment" entityname="SlatwallOrderPayment" table="S
 	// Related Object Properties (many-to-one)
 	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
 	property name="orderPaymentType" cfc="Type" fieldtype="many-to-one" fkcolumn="orderPaymentTypeID";
+	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32";
 	
 	// Special Related Discriminator Property
-	property name="paymentMethod" cfc="PaymentMethod" fieldtype="many-to-one" fkcolumn="paymentMethodID" length="32" insert="false" update="false";
-	property name="paymentMethodID" length="255" insert="false" update="false";
+	property name="paymentMethodType" length="255" insert="false" update="false";
 	
 	// Remote properties
 	property name="remoteID" ormtype="string";
