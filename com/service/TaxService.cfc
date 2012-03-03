@@ -55,7 +55,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 				var fulfillment = orderItem.getOrderFulfillment();
 				
 				// If the method is shipping then apply taxes
-				if(fulfillment.getFulfillmentMethodID() == "shipping") {
+				if(fulfillment.getFulfillmentMethodType() == "shipping") {
 					
 					// TODO: This is a hack because we only have one tax category for products right now
 					var taxCategory = this.getTaxCategory('444df2c8cce9f1417627bd164a65f133');

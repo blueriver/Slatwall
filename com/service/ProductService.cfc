@@ -138,9 +138,9 @@ component extends="BaseService" accessors="true" {
 		var smartList = getDAO().getSmartList(entityName="SlatwallProduct", data=arguments.data, currentURL=arguments.currentURL);
 		
 		if( structKeyExists(arguments.data, "showSubPageProducts") && arguments.data.showSubPageProducts) {
-			smartList.addLikeFilter(propertyIdentifier="productContent_contentPath", value="%#arguments.contentID#%");
+			smartList.addLikeFilter(propertyIdentifier="content_cmsContentIDPath", value="%#arguments.contentID#%");
 		} else {
-			smartList.addFilter(propertyIdentifier="productContent_contentID", value=arguments.contentID);	
+			smartList.addFilter(propertyIdentifier="content_contentID", value=arguments.contentID);	
 		}
 		
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);

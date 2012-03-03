@@ -59,7 +59,7 @@ Notes:
 					<cfelse>
 						<cfset params.edit = false />
 					</cfif> 
-					#view("frontend:checkout/payment/#local.orderPayment.getPaymentMethodID()#", params)# 
+					#view("frontend:checkout/payment/#local.orderPayment.getPaymentMethodType()#", params)# 
 				</cfloop>
 				<cfif not local.paymentShown>
 					<cfloop array="#rc.activePaymentMethods#" index="local.paymentMethod">
