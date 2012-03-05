@@ -87,10 +87,18 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 				
 				if(valueOptionOne > inputValue) {
 					var lowerValue = inputValue - rrPower;
-					var valueOptionTwo = left(lowerValue, len(lowerValue)-len(rr)) & rr;
+					if(len(lowerValue) > len(rr)) {
+						var valueOptionTwo = left(lowerValue, len(lowerValue)-len(rr)) & rr;	
+					} else {
+						var valueOptionTwo = rr;		
+					}
 				} else {
 					var higherValue = inputValue + rrPower;
-					var valueOptionTwo = left(higherValue, len(higherValue)-len(rr)) & rr;
+					if(len(higherValue) > len(rr)) {
+						var valueOptionTwo = left(higherValue, len(higherValue)-len(rr)) & rr;
+					} else {
+						var valueOptionTwo = rr;
+					}
 				}
 			} else {
 				var valueOptionOne = rr;
