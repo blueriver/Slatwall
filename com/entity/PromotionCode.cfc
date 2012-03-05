@@ -43,8 +43,8 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	property name="promotionCode" ormtype="string";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
-	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0";
-	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";	
+	property name="maximumUseCount" ormtype="integer";
+	property name="maximumAccountUseCount" ormtype="integer";	
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
