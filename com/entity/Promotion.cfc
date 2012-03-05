@@ -45,10 +45,13 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="promotionDescription" ormtype="string" length="4000";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
+	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0";
+	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";
 	property name="activeFlag" ormtype="boolean";
 	
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
+	// property name="promotionPeriods" singularname="promotionPeriod" cfc="PromotionPeriod" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
@@ -84,6 +87,14 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
  
 
 	/******* Association management methods for bidirectional relationships **************/
+
+	// promotionPeriods (one-to-many)
+/*	public void function addPromotionPeriod(required any PromotionPeriod) {
+		arguments.PromotionPeriod.setPromotion( this );
+	}
+	public void function removePromotionPeriod(required any PromotionPeriod) {
+		arguments.PromotionPeriod.removePromotion( this );
+	}*/
 	
 	// promotionCodes (one-to-many)
 	public void function addPromotionCode(required any promotionCode) {

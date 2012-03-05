@@ -63,6 +63,8 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" value="#dateFormat(rc.promotion.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">
 				
 				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<ul>

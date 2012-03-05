@@ -49,6 +49,8 @@ Notes:
 				<th>#rc.$.Slatwall.rbKey("entity.promotionCode.promotionCode")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.promotionCode.startDateTime")#</th>
 				<th>#rc.$.Slatwall.rbKey("entity.promotionCode.endDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.promotionCode.maximumUseCount")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.promotionCode.maximumAccountUseCount")#</th>
 				<cfif rc.edit>
 				  <th class="administration">&nbsp;</th>
 				</cfif>
@@ -70,7 +72,7 @@ Notes:
 				<td>
 					<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 					<cfif rc.edit>
-						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="dateTime" />
+						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="datetimepicker" />
 						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="startDateTime" for="promotionCodes[#local.promotionCodeCount#].startDateTime" />
 					<cfelse>
 						#local.startDateTime#
@@ -79,10 +81,26 @@ Notes:
 				<td>
 					<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 					<cfif rc.edit>
-						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="dateTime" />
+						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="datetimepicker" />
 						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="endDateTime" for="promotionCodes[#local.promotionCodeCount#].endDateTime" />         
 					<cfelse>
 						#local.endDateTime#
+					</cfif>
+				</td>
+				<td>
+					<cfif rc.edit>
+						<input type="text" size="5" name="promotionCodes[#local.promotionCodeCount#].maximumUseCount" value="#local.thisPromotionCode.getMaximumUseCount()#" />
+						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="maximumUseCount" for="promotionCodes[#local.promotionCodeCount#].maximumUseCount" />         
+					<cfelse>
+						#local.thisPromotionCode.getMaximumUseCount()#
+					</cfif>
+				</td>
+				<td>
+					<cfif rc.edit>
+						<input type="text" size="5" name="promotionCodes[#local.promotionCodeCount#].maximumAccountUseCount" value="#local.thisPromotionCode.getMaximumAccountUseCount()#" />
+						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="maximumAccountUseCount" for="promotionCodes[#local.promotionCodeCount#].maximumAccountUseCount" />         
+					<cfelse>
+						#local.thisPromotionCode.getMaximumAccountUseCount()#
 					</cfif>
 				</td>
 				<cfif rc.edit>
@@ -102,6 +120,7 @@ Notes:
 			</tr>
 		</cfloop>
 		<cfif rc.edit>
+			<!--- display promotion codes that haven't been saved yet if coming back from failed validation --->
 			<cfloop from="1" to="#arrayLen(rc.promotion.getPromotionCodes())#" index="local.promotionCodeCount">
 				<cfset local.thisPromotionCode = rc.promotion.getPromotionCodes()[local.promotionCodeCount] />
 				<cfif rc.promotion.isNew() OR local.thisPromotionCode.isNew()>
@@ -113,13 +132,21 @@ Notes:
 						</td>
 						<td>
 							<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
-							<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="dateTime" />
+							<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="datetimepicker" />
 							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="startDateTime" for="promotionCodes[#local.promotionCodeCount#].startDateTime" />
 						</td>
 						<td>
 							<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
-							<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="dateTime" />         
+							<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="datetimepicker" />         
 							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="endDateTime" for="promotionCodes[#local.promotionCodeCount#].endDateTime" />
+						</td>
+						<td>
+							<input type="text" size="5" name="promotionCodes[#local.promotionCodeCount#].maximumUseCount" value="#local.thisPromotionCode.getMaximumUseCount()#" />         
+							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="maximumUseCount" for="promotionCodes[#local.promotionCodeCount#].maximumUseCount" />
+						</td>
+						<td>
+							<input type="text" size="5" name="promotionCodes[#local.promotionCodeCount#].maximumAccountUseCount" value="#local.thisPromotionCode.getMaximumAccountUseCount()#" />         
+							<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="maximumAccountUseCount" for="promotionCodes[#local.promotionCodeCount#].maximumAccountUseCount" />
 						</td>
 						<td class="administration">
 						</td>
@@ -145,6 +172,12 @@ Notes:
         </td>
         <td>
             <input type="text" size="30" name="endDateTime" value="" />         
+        </td>
+        <td>
+            <input type="text" size="5" name="maximumUseCount" value="" />
+        </td>
+        <td>
+            <input type="text" size="5" name="maximumAccountUseCount" value="" />         
         </td>
         <td class="administration">
         </td>
