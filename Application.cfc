@@ -60,14 +60,19 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function verifyApplicationSetup() {
+		
+		if(structKeyExists(url, variables.framework.reload)) {
+			application.slatwall.initialized = false;
+		}
+		
 		// Check to see if out application stuff is initialized
-		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized || structKeyExists(url, variables.framework.reload)) {
+		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 			
 			// If not, lock the application until this is finished
 			lock scope="Application" timeout="120"  {
 				
 				// Check again so that the qued requests don't back up
-				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized || structKeyExists(url, variables.framework.reload)) {
+				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 					
 					// Log that the application is starting it's setup
 					writeLog(file="Slatwall", text="Application Setup Started");
