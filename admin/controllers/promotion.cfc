@@ -112,7 +112,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				}
 			}
 			rc.edit = true;
-			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.createPromotion") : rc.$.Slatwall.rbKey("admin.promotion.editPromotion") & ": #rc.promotion.getPromotionName()#";
+			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.create") : rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
 			getFW().setView(action="admin:promotion.detail");
 		}
 	}
