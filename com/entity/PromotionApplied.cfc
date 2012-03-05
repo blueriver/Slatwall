@@ -45,9 +45,6 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
-	// Special Discriminator Property
-	property name="appliedType" length="50" insert="false" update="false";
-	
 	// Remote properties
 	property name="remoteID" ormtype="string";
 	
