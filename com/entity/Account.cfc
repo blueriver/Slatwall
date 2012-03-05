@@ -54,6 +54,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
+	property name="accountPromotions" singularname="accountPromotion" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="PromotionAccount" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="AccountAttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="orders" singularname="order" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="Order" inverse="true" orderby="orderOpenDateTime desc";
@@ -218,6 +219,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeAccountPhoneNumber(required any accountPhoneNumber) {    
 		arguments.accountPhoneNumber.removeAccount( this );    
+	}
+
+	// Account Promotions (one-to-many)
+	public void function addAccountPromotion(required any AccountPromotion) {
+		arguments.AccountPromotion.setAccount( this );
+	}
+	public void function removeAccountPromotion(required any AccountPromotion) {
+		arguments.AccountPromotion.removeAccount( this );
 	}
 	
 	// Account Attribute Sets (one-to-many)

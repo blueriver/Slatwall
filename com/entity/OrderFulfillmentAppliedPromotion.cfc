@@ -36,38 +36,14 @@
 Notes:
 
 */
-component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" table="SlatwallPromotionApplied" persistent="true" extends="BaseEntity" discriminatorColumn="appliedType" {
+component displayname="Order Fulfillment Applied Promotion" entityname="SlatwallOrderFulfillmentAppliedPromotion" table="SlatwallPromotionApplied" persistent="true" extends="PromotionApplied" discriminatorValue="orderFulfillment" {
 	
 	// Persistent Properties
 	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="discountAmount" ormtype="big_decimal";
 	
 	// Related Entities
-	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderfulfillmentID";
 	
-	// Special Discriminator Property
-	property name="appliedType" length="50" insert="false" update="false";
-	
-	// Remote properties
-	property name="remoteID" ormtype="string";
-	
-	// Audit properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
-	
-	// Special Related Discriminator Property
-	property name="appliedType" length="255" insert="false" update="false";
-	
-	/*
-	List of Discriminator Values and their respective cfc's
-	
-	orderItem 			| OrderItemAppliedPromotion.cfc
-	orderFulfillment 	| OrderFulfillmentAppliedPromotion.cfc
-	order 				| OrderAppliedPromotion.cfc
-	
-	*/
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -75,25 +51,30 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Promotion (many-to-one)
-	public void function setPromotion(required any promotion) {
-		variables.promotion = arguments.promotion;
-		if(isNew() or !arguments.promotion.hasAppliedPromotion( this )) {
-			arrayAppend(arguments.promotion.getAppliedPromotions(), this);
+	// Order Fulfillment (many-to-one)
+	
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.orderFulfillment.getAppliedPromotions(), this);
 		}
 	}
-	public void function removePromotion(any promotion) {
-		if(!structKeyExists(arguments, "promotion")) {
-			arguments.promotion = variables.promotion;
+	public void function removeOrderFulfillment(any orderFulfillment) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
 		}
-		var index = arrayFind(arguments.promotion.getAppliedPromotions(), this);
+		var index = arrayFind(arguments.orderFulfillment.getAppliedPromotions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.promotion.getAppliedPromotions(), index);
+			arrayDeleteAt(arguments.account.getAppliedPromotions(), index);
 		}
-		structDelete(variables, "promotion");
-	}	
-
+		structDelete(variables, "orderFulfillment");
+	}
+	
 	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

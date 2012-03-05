@@ -36,66 +36,81 @@
 Notes:
 
 */
-component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" table="SlatwallPromotionApplied" persistent="true" extends="BaseEntity" discriminatorColumn="appliedType" {
+component displayname="Promotion Account" entityname="SlatwallPromotionAccount" table="SlatwallPromotionAccount" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="discountAmount" ormtype="big_decimal";
+	property name="promotionAccountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="startDateTime" ormtype="timestamp";
+	property name="endDateTime" ormtype="timestamp";
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
-	
-	// Special Discriminator Property
-	property name="appliedType" length="50" insert="false" update="false";
-	
-	// Remote properties
-	property name="remoteID" ormtype="string";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	//property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";   
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+ 
+
+	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Special Related Discriminator Property
-	property name="appliedType" length="255" insert="false" update="false";
+
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasAccountPromotion( this )) {
+			arrayAppend(arguments.account.getAccountPromotions(), this);
+		}
+	}
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
+		}
+		var index = arrayFind(arguments.account.getAccountPromotions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAccountPromotions(), index);
+		}
+		structDelete(variables, "account");
+	}
 	
-	/*
-	List of Discriminator Values and their respective cfc's
+	// Promotion (many-to-one)    	
+	public void function setPromotion(required any promotion) {    
+		variables.promotion = arguments.promotion;    
+		if(isNew() or !arguments.promotion.hasPromotionAccount( this )) {    
+			arrayAppend(arguments.promotion.getPromotionAccounts(), this);    
+		}    
+	}  
+	 
+	public void function removePromotion(any promotion) {    
+		if(!structKeyExists(arguments, "promotion")) {    
+			arguments.promotion = variables.promotion;    
+		}    
+		var index = arrayFind(arguments.promotion.getPromotionAccounts(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getPromotionAccounts(), index);    
+		}    
+		structDelete(variables, "promotion");    
+	}
 	
-	orderItem 			| OrderItemAppliedPromotion.cfc
-	orderFulfillment 	| OrderFulfillmentAppliedPromotion.cfc
-	order 				| OrderAppliedPromotion.cfc
 	
-	*/
-	
+   // =============  END:  Bidirectional Helper Methods ===================
+
+
+
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Promotion (many-to-one)
-	public void function setPromotion(required any promotion) {
-		variables.promotion = arguments.promotion;
-		if(isNew() or !arguments.promotion.hasAppliedPromotion( this )) {
-			arrayAppend(arguments.promotion.getAppliedPromotions(), this);
-		}
-	}
-	public void function removePromotion(any promotion) {
-		if(!structKeyExists(arguments, "promotion")) {
-			arguments.promotion = variables.promotion;
-		}
-		var index = arrayFind(arguments.promotion.getAppliedPromotions(), this);
-		if(index > 0) {
-			arrayDeleteAt(arguments.promotion.getAppliedPromotions(), index);
-		}
-		structDelete(variables, "promotion");
-	}	
-
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+	
+	
 }
