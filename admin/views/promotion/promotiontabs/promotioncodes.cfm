@@ -64,13 +64,14 @@ Notes:
 				<td class="alignLeft">
 					<cfif rc.edit>
 						<input type="text" size="40" name="promotionCodes[#local.promotionCodeCount#].promotionCode" value="#local.thisPromotionCode.getPromotionCode()#" />
+						#local.thisPromotionCode.getAllErrorsHTML()#
 						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="promotionCode" for="promotionCodes[#local.promotionCodeCount#].promotionCode" />
 					<cfelse>
 						#local.thisPromotionCode.getPromotionCode()#
 					</cfif>
 				</td>
 				<td>
-					<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
+					<cfset local.startDateTime = "#dateFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getStartDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 					<cfif rc.edit>
 						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].startDateTime" value="#trim(local.startDateTime)#" class="datetimepicker" />
 						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="startDateTime" for="promotionCodes[#local.promotionCodeCount#].startDateTime" />
@@ -79,7 +80,7 @@ Notes:
 					</cfif>
 				</td>
 				<td>
-					<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
+					<cfset local.endDateTime = "#dateFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_dateFormat'))# #timeFormat(local.thisPromotionCode.getEndDateTime(),rc.$.slatwall.setting('advanced_timeFormat'))#" />
 					<cfif rc.edit>
 						<input type="text" size="30" name="promotionCodes[#local.promotionCodeCount#].endDateTime" value="#trim(local.endDateTime)#" class="datetimepicker" />
 						<cf_SlatwallErrorDisplay object="#local.thisPromotionCode#" errorName="endDateTime" for="promotionCodes[#local.promotionCodeCount#].endDateTime" />         
