@@ -49,6 +49,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function detail(required struct rc) {
 		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
 		param name="rc.edit" default="false";
 		
 		// Get the promotion from the DB, and return a new promotion if necessary
