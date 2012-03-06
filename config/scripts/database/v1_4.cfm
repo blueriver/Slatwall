@@ -212,7 +212,7 @@ WHERE paymentMethodID IN ('cash','check','creditCard','dwolla','giftCard','paypa
 
 <!--- create a copy of product content --->
 <!---
-select * into SlatwallProductContentOld from SlatwallProductContent
+SELECT * INTO SlatwallProductContentOld FROM SlatwallProductContent;
 --->
 <!--- alter SlatwallProductContent and drop PK AND columns --->
 <!---
@@ -246,6 +246,16 @@ SET parentProductTypeID = [merchandise]
 WHERE parentProductTypeID IS NULL
 --->
 <!--- rebuild producttypeIDPath --->
+
+<!--- after orm reload --->
+<!---
+INSERT INTO SlatwallProductPage(productID,pageID)
+SELECT productID,pageID 
+FROM SlatwallProductContent INNER JOIN SlatwallPage ON SlatwallProductContent.contentID = SlatwallPage.cmsPageID 
+
+DROP TABLE SlatwallProductContent;
+--->
+
 
 <cfif local.scriptHasErrors>
 	<cfthrow detail="Part of Script v1_4 had errors when running">

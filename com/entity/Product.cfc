@@ -82,7 +82,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
-	property name="content" cfc="Content" fieldtype="many-to-many" linktable="SlatwallProductContent" fkcolumn="productID" inversejoincolumn="contentID";
+	property name="pages" cfc="page" fieldtype="many-to-many" linktable="SlatwallProductPage" fkcolumn="productID" inversejoincolumn="pageID";
 	property name="categories" singularname="category" cfc="Category" fieldtype="many-to-many" linktable="SlatwallProductCategory" fkcolumn="productID" inversejoincolumn="categoryID";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
@@ -117,11 +117,11 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.activeFlag)) {
 	       variables.activeFlag = 1;
 	   }
-	   if(isNull(variables.ProductContent)) {
-	       variables.ProductContent = [];
+	   if(isNull(variables.pages)) {
+	       variables.pages = [];
 	   }
-	   if(isNull(variables.ProductCategories)) {
-	       variables.ProductCategories = [];
+	   if(isNull(variables.categories)) {
+	       variables.categories = [];
 	   }
 	   if(isNull(variables.Skus)) {
 	       variables.Skus = [];
@@ -205,30 +205,21 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Non-Persistent Helpers
 	
-	public string function getContentIDs() { 
-		var contentIDs = "";
-		for( var i=1; i<= arrayLen(getProductContent()); i++ ) {
-			contentIDs = listAppend(contentIDs,getProductContent()[i].getContentID());
+	public string function getPageIDs() { 
+		var pageIDs = "";
+		for( var i=1; i<= arrayLen(getPages()); i++ ) {
+			pageIDs = listAppend(pageIDs,getPages()[i].getPageID());
 		}
-		return contentIDs;
+		return pageIDs;
 	}
 	
-	public string function getCategoryIDs(boolean featured=false) { 
+	public string function getCategoryIDs() { 
 		var categoryIDs = "";
-		for( var i=1; i<= arrayLen(getProductCategories()); i++ ) {
-			local.thisProductCategory = getProductCategories()[i];
-			local.addID = true;
-			if(arguments.featured) {
-				local.addID = local.thisProductCategory.getFeaturedFlag();
-			}
-			if(local.addID) {
-				categoryIDs = listAppend(categoryIDs,getProductCategories()[i].getCategoryID());	
-			}
+		for( var i=1; i<= arrayLen(getCategories()); i++ ) {
+			categoryIDs = listAppend(categoryIDs,getCategories()[i].getCategoryID());	
 		}
 		return categoryIDs;
 	}
-	
-	
 	
 	public string function getProductURL() {
 		return $.createHREF(filename="#setting('product_urlKey')#/#getURLTitle()#");
@@ -299,70 +290,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
        structDelete(variables,"Brand");
     }
 	
-	// Content (many-to-many)
-	
-	public void function clearContent() {
-		while(arraylen(getContent()) > 0) {
-			removeContent(getContent()[1]);
-		}
-	}
-	
-	public void function addContent(required any content) {
-		if(arguments.content.isNew() || !hasContent(arguments.content)) {
-			// first add content to this product
-			arrayAppend(this.getContent(),arguments.content);
-			//add this product to the content
-			arrayAppend(arguments.content.getProducts(),this);
-		}
-	}
-    
-    public void function removeContent(required any content) {
-       // first remove the content from this product
-       if(this.hasContent(arguments.content)) {
-	       var index = arrayFind(this.getContent(),arguments.content);
-	       if(index>0) {
-	           arrayDeleteAt(this.getContent(),index);
-	       }
-	      // then remove this product from the content
-	       var index = arrayFind(arguments.content.getProducts(),this);
-	       if(index > 0) {
-	           arrayDeleteAt(arguments.content.getProducts(),index);
-	       }
-	   }
-    }
-    
-	
-	// ProductCategories (many-to-many)
-	public void function clearCategories() {
-		for( var i=1; i<= arraylen(getCategories()); i++ ) {
-			removeCategory(getCategory()[i]);
-		}
-	}
-	
-	public void function addCategory(required any category) {
-		if(arguments.category.isNew() || !hasCategory(arguments.category)) {
-			// first add category to this product
-			arrayAppend(this.getCategories(),arguments.category);
-			//add this product to the category
-			arrayAppend(arguments.category.getProducts(),this);
-		}
-	}
-    
-    public void function removeCategory(required any category) {
-       // first remove the category from this product
-       if(this.hasCategory(arguments.category)) {
-	       var index = arrayFind(this.getCategories(),arguments.category);
-	       if(index>0) {
-	           arrayDeleteAt(this.getCategories(),index);
-	       }
-	      // then remove this product from the category
-	       var index = arrayFind(arguments.category.getProducts(),this);
-	       if(index > 0) {
-	           arrayDeleteAt(arguments.category.getProducts(),index);
-	       }
-	   }
-    }
-    
 	
 	// Skus (one-to-many)
 	

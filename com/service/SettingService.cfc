@@ -214,9 +214,8 @@ component extends="BaseService" output="false" accessors="true"  {
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
 		verifyMuraFrontendViews();
-		pullMuraContent();
+		pullMuraPage();
 		pullMuraCategory();
-		pullMuraTemplate();
 		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Finished", generalLog=true);
 	}
 	
@@ -420,32 +419,43 @@ component extends="BaseService" output="false" accessors="true"  {
 		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Finished");
 	}
 	
-	private void function pullMuraContent() {
-		getService("logService").logMessage("Setting Service - pullMuraContent - Started");
+	private void function pullMuraPage() {
+		getService("logService").logMessage("Setting Service - pullMuraPage - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Pull mura content For Site ID: #assignedSites["siteID"][i]#");
+			getService("logService").logMessage("Pull mura page For Site ID: #assignedSites["siteID"][i]#");
 			
+			// save all the listing pages
 			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
 			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
+			createPage(pageFeed,"listingTemplate");
 			
-			var pageQuery = pageFeed.getQuery();
-			for(var j=1; j<=pageQuery.recordcount; j++) {
-				// should move to DAO and add it using sql for performance
-				var content = getService("contentService").getContentByCmsContentID(pageQuery.contentID[j],true);
-				if(content.isNew()){
-					content.setCmsSiteID(pageQuery.siteID[j]);
-					content.setCmsContentID(pageQuery.contentID[j]);
-					content.setCmsContentIDPath(pageQuery.path[j]);
-					content.setContentName(pageQuery.title[j]);
-					content = getService("contentService").saveContent(content);
-				}
-			}
+			// save detail pages
+			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
+			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductTemplate", dataType="varchar" );
+			createPage(pageFeed,"detailTemplate");
+			
 		}
-		getService("logService").logMessage("Setting Service - pullMuraContent - Finished");
+		getService("logService").logMessage("Setting Service - pullMuraPage - Finished");
 		
 	}
 
+	private void function createPage(required any pageFeed, required string pageType) {
+		var pageQuery = arguments.pageFeed.getQuery();
+		for(var j=1; j<=pageQuery.recordcount; j++) {
+			// should move to DAO and add it using sql for performance
+			var page = getService("pageService").getPageByCmsPageID(pageQuery.contentID[j],true);
+			if(content.isNew()){
+				page.setCmsSiteID(pageQuery.siteID[j]);
+				page.setCmsPageID(pageQuery.contentID[j]);
+				page.setCmsPageIDPath(pageQuery.path[j]);
+				page.setPageName(pageQuery.title[j]);
+				page.setPageType(arguments.pageType);
+				page = getService("pageService").savePage(page);
+			}
+		}
+	}
+	
 	private void function pullMuraCategory() {
 		getService("logService").logMessage("Setting Service - pullMuraCategory - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
@@ -466,33 +476,6 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 		}
 		getService("logService").logMessage("Setting Service - pullMuraCategory - Finished");
-		
-	}
-
-	private void function pullMuraTemplate() {
-		getService("logService").logMessage("Setting Service - pullMuraTemplate - Started");
-		var assignedSites = getPluginConfig().getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Pull mura template For Site ID: #assignedSites["siteID"][i]#");
-			
-			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
-			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductTemplate", dataType="varchar" );
-			
-			var pageQuery = pageFeed.getQuery();
-			for(var j=1; j<=pageQuery.recordcount; j++) {
-				// should move to DAO and add it using sql for performance
-				var template = getService("contentService").getTemplateByCmsTemplateID(pageQuery.contentID[j],true);
-				if(template.isNew()){
-					template.setCmsSiteID(pageQuery.siteID[j]);
-					template.setCmsTemplateID(pageQuery.contentID[j]);
-					template.setTemplateName(pageQuery.title[j]);
-					template.setTemplateType("Product");
-					template.setCmsUrlTitle(pageQuery.fileName[j]);
-					template = getService("contentService").saveTemplate(template);
-				}
-			}
-		}
-		getService("logService").logMessage("Setting Service - pullMuraTemplate - Finished");
 		
 	}
 

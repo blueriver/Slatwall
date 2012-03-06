@@ -9,7 +9,6 @@
 	<bean id="baseDAO" class="Slatwall.com.dao.BaseDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
-	<bean id="contentDAO" class="Slatwall.com.dao.ContentDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
@@ -21,6 +20,7 @@
 	<bean id="reportDAO" class="Slatwall.com.dao.ReportDAO" />
 	<bean id="sessionDAO" class="Slatwall.com.dao.SessionDAO" />
 	<bean id="orderDAO" class="Slatwall.com.dao.OrderDAO" />
+	<bean id="pageDAO" class="Slatwall.com.dao.PageDAO" />
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
 	<bean id="skuCacheDAO" class="Slatwall.com.dao.SkuCacheDAO" />
@@ -77,8 +77,8 @@
 	<bean id="commentService" parent="parentService" class="Slatwall.com.service.CommentService">
         <property name="DAO"><ref bean="commentDAO" /></property>
 	</bean>
-	<bean id="contentService" parent="parentService" class="Slatwall.com.service.ContentService">
-        <property name="DAO"><ref bean="contentDAO" /></property>
+	<bean id="pageService" parent="parentService" class="Slatwall.com.service.PageService">
+        <property name="DAO"><ref bean="pageDAO" /></property>
 	</bean>
 	<bean id="dataService" parent="parentService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
