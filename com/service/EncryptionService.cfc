@@ -39,13 +39,57 @@ Notes:
 component extends="BaseService" {
 	
 	public string function encryptValue(required string value) {
-		// TODO: Encrypt the value
-		return arguments.value;
+		return encrypt(arguments.value,getEncryptionKey(),getEncrptionAlgorithm(),getEncrptionEncoding());
 	}
 
 	public string function decryptValue(required string value) {
-		// TODO: Decrypt the value
-		return arguments.value;
+		return decrypt(arguments.value,getEncryptionKey(),getEncrptionAlgorithm(),getEncrptionEncoding());
+	}
+	
+	public string function createEncryptionKey() {
+		var theKey = "";
+		if(structKeyexists(arguments,keySize)){
+			theKey = generateSecretKey(getEncrptionAlgorithm(),getEncrptionKeySize());
+		} else {
+			theKey = generateSecretKey(getEncrptionAlgorithm());
+		}
+		storeEncryptionKey(theKey);
+		return theKey;
+	}
+	
+	public string function getEncrptionAlgorithm() {
+		return "AES";	
+	}
+	
+	public string function getEncrptionEncoding() {
+		return "Base64";	
+	}
+	
+	public string function getEncryptionKey() {
+		var encryptionFileData = fileRead(getEncryptionKeyFilePath());
+		var encryptionInfoXML = xmlParse(encryptionFileData);
+		return encryptionInfoXML.crypt.key;
+	}
+	
+	private string function getEncrptionKeySize() {
+		return setting("advanced_encryptionKeySize") NEQ "" ? setting("advanced_encryptionKeySize") : "128";	
+	}
+	
+	private string function getEncryptionKeyFilePath() {
+		return getEncryptionKeyLocation() & getEncryptionKeyFileName();
+	}
+	
+	private string function getEncryptionKeyLocation() {
+		return setting("advanced_encryptionKeyLocation") NEQ "" ? setting("advanced_encryptionKeyLocation") : "#getSlatwallRootDirectory()#/config/";
+	}
+	
+	private string function getEncryptionKeyFileName() {
+		return "key.xml.cfm";
+	}
+	
+	private void function storeEncryptionKey(required string key) {
+		var theKey = "<crypt><key>#arguments.key#</key></crypt>"
+		fileWrite(getEncryptionKeyFilePath(),theKey);
 	}
 	
 }
