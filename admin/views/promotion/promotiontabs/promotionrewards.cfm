@@ -45,6 +45,8 @@ Notes:
 					<th>#rc.$.Slatwall.rbKey("entity.promotionReward.rewardType")#</th>
 					<th class="varWidth">#rc.$.Slatwall.rbKey("admin.promotion.promotionReward.item")#</th>
 					<th>#rc.$.Slatwall.rbKey("entity.promotionRewardProduct.itemRewardQuantity")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.promotionRewardProduct.maximumOrderRewardQuantity")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.promotionRewardProduct.rewardCanApplyToQualifierFlag")#</th>
 					<th>#rc.$.Slatwall.rbKey("admin.promotion.edit.discount")#</th>
 					<th class="administration">&nbsp;</th>
 				</tr>
@@ -102,28 +104,22 @@ Notes:
 								#local.itemName#
 							</td>
 							<td>
-								<cfif local.thisPromotionReward.getRewardType() eq "product">
-									#local.thisPromotionReward.getItemRewardQuantity()#
-								</cfif>
+								#local.thisPromotionReward.getRewardType() eq "product" ? local.thisPromotionReward.getItemRewardQuantity() : $.Slatwall.rbKey("define.na")#
 							</td>
 							<td>
-								<cfif local.thisPromotionReward.getRewardType() eq "product">
-									<cfif !isNull(local.thisPromotionReward.getPercentageOff()) && isNumeric(local.thisPromotionReward.getPercentageOff())>
-										#local.thisPromotionReward.getPercentageOff()#&##37; #$.Slatwall.rbKey("admin.promotion.discount.off")#
-									<cfelseif !isNull(local.thisPromotionReward.getAmountOff()) && isNumeric(local.thisPromotionReward.getAmountOff())>
-										#local.thisPromotionReward.getFormattedValue('amountOff', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.off")#
-									<cfelseif !isNull(local.thisPromotionReward.getAmount()) && isNumeric(local.thisPromotionReward.getAmount())>
-										#local.thisPromotionReward.getFormattedValue('amount', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.price")#
-									</cfif>
-								<cfelseif local.thisPromotionReward.getRewardType() eq "shipping">
-									<cfif !isNull(local.thisPromotionReward.getPercentageOff()) && isNumeric(local.thisPromotionReward.getPercentageOff())>
-										#local.thisPromotionReward.getPercentageOff()#&##37; #$.Slatwall.rbKey("admin.promotion.discount.off")#
-									<cfelseif !isNull(local.thisPromotionReward.getAmountOff()) && isNumeric(local.thisPromotionReward.getAmountOff())>
-										#local.thisPromotionReward.getFormattedValue('amountOff', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.off")#
-									<cfelseif !isNull(local.thisPromotionReward.getAmount()) && isNumeric(local.thisPromotionReward.getAmount())>
-										#local.thisPromotionReward.getFormattedValue('amount', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.price")#
-									</cfif>
-								</cfif>	
+								#local.thisPromotionReward.getRewardType() eq "product" ? local.thisPromotionReward.getMaximumOrderRewardQuantity() : $.Slatwall.rbKey("define.na")#
+							</td>
+							<td>
+								#local.thisPromotionReward.getRewardType() eq "product" ? local.thisPromotionReward.getRewardCanApplyToQualifierFlag() : $.Slatwall.rbKey("define.na")#
+							</td>
+							<td>
+								<cfif !isNull(local.thisPromotionReward.getPercentageOff()) && isNumeric(local.thisPromotionReward.getPercentageOff())>
+									#local.thisPromotionReward.getPercentageOff()#&##37; #$.Slatwall.rbKey("admin.promotion.discount.off")#
+								<cfelseif !isNull(local.thisPromotionReward.getAmountOff()) && isNumeric(local.thisPromotionReward.getAmountOff())>
+									#local.thisPromotionReward.getFormattedValue('amountOff', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.off")#
+								<cfelseif !isNull(local.thisPromotionReward.getAmount()) && isNumeric(local.thisPromotionReward.getAmount())>
+									#local.thisPromotionReward.getFormattedValue('amount', 'currency')# #$.Slatwall.rbKey("admin.promotion.discount.price")#
+								</cfif>
 							</td>
 							<td class="administration">
 								<ul class="two">
@@ -194,6 +190,9 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="percentageOff" fieldName="promotionRewards[1].percentageOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="amountOff" fieldName="promotionRewards[1].amountOff" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="amount" fieldName="promotionRewards[1].amount" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="rewardCanApplyToQualifierFlag" fieldName="promotionRewards[1].rewardCanApplyToQualifierFlag" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="itemRewardQuantity" fieldName="promotionRewards[1].itemRewardQuantity" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="maximumOrderRewardQuantity" fieldName="promotionRewards[1].maximumOrderRewardQuantity" edit="true" />
 				<cfset roundingRuleOptions = rc.promotionRewardProduct.getRoundingRuleOptions() />
 				<cfset roundingRuleOptions[1].name = $.slatwall.rbKey('define.none') /> 
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="roundingRule" fieldName="promotionRewards[1].roundingRule.roundingRuleID" valueOptions="#roundingRuleOptions#" edit="true" />
