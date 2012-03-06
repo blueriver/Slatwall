@@ -40,7 +40,7 @@ component displayname="Promotion Qualifier Fulfillment" entityname="SlatwallProm
 	
 	// Persistent Properties
 	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="maximumFulfillmentWeight" ormtype="decimal";
+	property name="maximumFulfillmentWeight" ormtype="float";
 	
 	// Related Entities
 	property name="fulfillmentMethods" singularname="fulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentFulfillmentMethod" fkcolumn="promotionQualifierID" inversejoincolumn="fulfillmentMethodID";
@@ -125,7 +125,7 @@ component displayname="Promotion Qualifier Fulfillment" entityname="SlatwallProm
 	
 	/*-----  End Relationship Management Methods  -----*/
 	
-	public array function getFullfillmentMethodsOptions() {
+	public array function getFullfillmentMethodOptions() {
 		var fullfillmentMethodsOptions = [];
 		var fulfillmentMethods = getService("fulfillmentService").listFulfillmentMethodFilterByActiveFlag( true );
 		

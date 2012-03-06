@@ -14,6 +14,12 @@ jQuery(function() {
 		return false;
 	});
 	
+	jQuery('#addPromotionQualifierButton').click(function(){
+		jQuery('#qualifierTypeSelector').show(300);
+		jQuery(this).remove();
+		return false;
+	});
+	
 	jQuery('#promotionRewardType').change(function(){
 		if( jQuery(this).val() == "product" ) {
 			jQuery('#savePromotionRewardProductHidden').val('true');
@@ -42,6 +48,46 @@ jQuery(function() {
 		else {
 			jQuery('#promotionRewardProductInputs').hide();
 			jQuery('#promotionRewardShippingInputs').hide();
+			jQuery('#promotionRewardOrderInputs').hide();
+			jQuery('#savePromotionRewardOrderHidden').val('false');
+			jQuery('#savePromotionRewardProductHidden').val('false');
+			jQuery('#savePromotionRewardShippingHidden').val('false');
+		}
+		updateDiscountType();
+	});
+	
+	jQuery('#promotionQualifierType').change(function(){
+		if( jQuery(this).val() == "product" ) {
+			jQuery('#savePromotionQualifierProductHidden').val('true');
+			jQuery('#savePromotionQualifierFulfillmentHidden').val('false');
+			jQuery('#savePromotionQualifierOrderHidden').val('false');
+			jQuery('#promotionQualifierProductInputs').hide();
+			jQuery('#promotionQualifierFulfillmentInputs').hide();
+			jQuery('#promotionQualifierProductInputs').fadeIn(400);
+		}
+		else if( jQuery(this).val() == "fulfillment" ) {
+			jQuery('#savePromotionQualifierFulfillmentHidden').val('true');
+			jQuery('#savePromotionQualifierProductHidden').val('false');
+			jQuery('#savePromotionQualifierOrderHidden').val('false');
+			jQuery('#promotionQualifierProductInputs').hide();
+			jQuery('#promotionQualifierOrderInputs').hide();
+			jQuery('#promotionQualifierFulfillmentInputs').fadeIn(400);
+		}
+		else if( jQuery(this).val() == "order" ) {
+			jQuery('#savePromotionQualifierOrderHidden').val('true');
+			jQuery('#savePromotionQualifierProductHidden').val('false');
+			jQuery('#savePromotionQualifierFulfillmentHidden').val('false');
+			jQuery('#promotionQualifierProductInputs').hide();
+			jQuery('#promotionQualifierFulfillmentInputs').hide();
+			jQuery('#promotionQualifierOrderInputs').fadeIn(400);
+		}
+		else {
+			jQuery('#promotionQualifierProductInputs').hide();
+			jQuery('#promotionQualifierFulfillmentInputs').hide();
+			jQuery('#promotionQualifierOrderInputs').hide();
+			jQuery('#savePromotionQualifierOrderHidden').val('false');
+			jQuery('#savePromotionQualifierProductHidden').val('false');
+			jQuery('#savePromotionQualifierFulfillmentHidden').val('false');
 		}
 		updateDiscountType();
 	});

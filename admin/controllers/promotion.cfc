@@ -50,6 +50,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function detail(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
+		param name="rc.promotionQualifierID" default="";
 		param name="rc.edit" default="false";
 		
 		// Get the promotion from the DB, and return a new promotion if necessary
@@ -57,6 +58,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
 		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
 		rc.promotionRewardOrder = getPromotionService().getPromotionRewardOrder(rc.promotionRewardID, true);
+		rc.promotionQualifierProduct = getPromotionService().getPromotionQualifierProduct(rc.promotionQualifierID, true);
+		rc.promotionQualifierFulfillment = getPromotionService().getPromotionQualifierFulfillment(rc.promotionQualifierID, true);
+		rc.promotionQualifierOrder = getPromotionService().getPromotionQualifierOrder(rc.promotionQualifierID, true);
 		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
@@ -71,6 +75,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function edit(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
+		param name="rc.promotionQualifierID" default="";
 		
 		detail(rc);
 		rc.edit = true;

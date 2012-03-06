@@ -138,7 +138,7 @@ Notes:
 	</cfif>
 	<cfif rc.edit>
 		<!--- If the Option is new, then that means that we are just editing the Option --->
-		<cfif rc.promotionRewardProduct.isNew() && not rc.promotionRewardProduct.hasErrors() && rc.promotionRewardShipping.isNew() && not rc.promotionRewardShipping.hasErrors()>
+		<cfif rc.promotionRewardProduct.isNew() && not rc.promotionRewardProduct.hasErrors() && rc.promotionRewardShipping.isNew() && not rc.promotionRewardShipping.hasErrors() && rc.promotionRewardOrder.isNew() && !rc.promotionRewardOrder.hasErrors()>
 			<button type="button" id="addPromotionRewardButton" value="true">#rc.$.Slatwall.rbKey("admin.promotion.detail.addPromotionReward")#</button>
 			<!---<button type="button" id="addPromotionRewardShippingButton" value="true">#rc.$.Slatwall.rbKey("admin.promotion.detail.addPromotionRewardShipping")#</button>--->
 			<input type="hidden" name="savePromotionRewardProduct" id="savePromotionRewardProductHidden" value="false"/>

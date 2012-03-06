@@ -69,12 +69,16 @@ Notes:
 				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<ul>
 						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
+						<li><a href="##tabPromotionQualifiers" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionQualifiers')#</span></a></li>
 						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>
 						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
 						<li><a href="##tabSummary" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabSummary')#</span></a></li>
 					</ul>
 					<div id="tabPromotionRewards">
 						#view("promotion/promotiontabs/promotionrewards")#
+					</div>
+					<div id="tabPromotionQualifiers">
+						#view("promotion/promotiontabs/promotionqualifiers")#
 					</div>
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
