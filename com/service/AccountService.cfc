@@ -42,9 +42,16 @@ component extends="BaseService" accessors="true" output="false" {
 	property name="priceGroupService" type="any";
 	property name="validationService" type="any";
 	
-	// Mura Injection
+	// Mura Injection on Init
 	property name="userManager" type="any";
 	property name="userUtility" type="any";
+	
+	public any function init() {
+		setUserManager( getCMSBean("userManager") );
+		setUserUtility( getCMSBean("userUtility") );
+		
+		return super.init();
+	}
 	
 	public boolean function loginCmsUser(required string username, required string password, required string siteID) {
 		var loginResult = getUserUtility().login(username=arguments.username, password=arguments.password, siteID=arguments.siteID);

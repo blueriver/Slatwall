@@ -843,18 +843,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		getService("logService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
 	}
 	
-	// =========================  END:  DELIGATION HELPERS ==========================================
+	// @hint Private helper function to get a bean for the underlying CMS (mura for now)
+	private any function getCMSBean( required any beanName ) {
+		application.serviceFactory.getBean( argumnets.beanName );
+	} 
 	
-	// @hint Used as a debugging to to perform a <cfdump> from anywhere within the application and have it show as full screen output. Provide any object as argument.
-	private any function dumpScreen(required any var, numeric top=3){
-		var theContent="";
-		
-		getPageContext().getOut().clearBuffer();
-    	savecontent variable="theContent" {
-    		writeDump(var=arguments.var, top=arguments.top);
-    	}
-    	getPageContext().getResponse().getWriter().write(theContent);
-    	abort;
-	}
+	// =========================  END:  DELIGATION HELPERS ==========================================
 	
 }

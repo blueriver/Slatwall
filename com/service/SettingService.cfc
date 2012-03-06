@@ -38,7 +38,7 @@ Notes:
 */
 component extends="BaseService" output="false" accessors="true"  {
 	
-	// Mura Service Injection
+	// Mura Service Injection on Init
 	property name="configBean" type="any";
 	property name="contentManager" type="any";
 	property name="categoryManager" type="any";
@@ -53,6 +53,15 @@ component extends="BaseService" output="false" accessors="true"  {
 	property name="paymentMethods" type="struct";
 	property name="paymentServices" type="struct";
 	property name="permissionActions" type="struct";
+	
+	public any function init() {
+		setConfigBean( getCMSBean("configBean") );
+		setContentManager( getCMSBean("contentManager") );
+		setCategoryManager( getCMSBean("categoryManager") );
+		setFeedManager( getCMSBean("feedManager") );
+		
+		return super.init();
+	}
 		
 	public void function reloadConfiguration() {
 		var settingsList = this.listSetting();

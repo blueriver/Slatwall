@@ -36,13 +36,14 @@
 Notes:
 
 */
-component displayname="Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Page" entityname="SlatwallPage" table="SlatwallPage" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="contentName" ormtype="string";
-	property name="cmsContentID" ormtype="string";
-	property name="cmsContentIDPath" ormtype="string";
+	property name="pageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="pageName" ormtype="string";
+	property name="pageType" ormtype="boolean";
+	property name="cmsPageID" ormtype="string";
+	property name="cmsPageIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
@@ -50,8 +51,7 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallProductContent" fkcolumn="contentID" inversejoincolumn="productID" inverse="true";
-
+	
 	// Remote properties
 	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
 	

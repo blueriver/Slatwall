@@ -124,7 +124,7 @@ component extends="org.fw1.framework" output="false" {
 					serviceFactory.loadBeansFromXmlObj( xml );
 					
 					// Set mura as the parent Bean Factory
-					serviceFactory.setParent( application.serviceFactory );
+					// serviceFactory.setParent( application.serviceFactory );
 					
 					// Set a data service coldspring as the child factory, with the Slatwall as it's parent
 					integrationService = serviceFactory.getBean("integrationService");

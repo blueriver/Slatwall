@@ -9,7 +9,7 @@
 	<bean id="baseDAO" class="Slatwall.com.dao.BaseDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
-	<bean id="slatwallContentDAO" class="Slatwall.com.dao.ContentDAO" />
+	<bean id="contentDAO" class="Slatwall.com.dao.ContentDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
@@ -61,9 +61,6 @@
         <property name="DAO"><ref bean="accountDAO" /></property>
 		<property name="sessionService"><ref bean="sessionService" /></property>
 		<property name="priceGroupService"><ref bean="priceGroupService" /></property>
-		<!-- Injected From Mua -->
-		<property name="userManager"><ref bean="userManager" /></property>
-		<property name="userUtility"><ref bean="userUtility" /></property>
     </bean>
 	<bean id="addressService" parent="parentService" class="Slatwall.com.service.AddressService">
         <property name="DAO"><ref bean="addressDAO" /></property>
@@ -81,7 +78,7 @@
         <property name="DAO"><ref bean="commentDAO" /></property>
 	</bean>
 	<bean id="contentService" parent="parentService" class="Slatwall.com.service.ContentService">
-        <property name="DAO"><ref bean="slatwallContentDAO" /></property>
+        <property name="DAO"><ref bean="contentDAO" /></property>
 	</bean>
 	<bean id="dataService" parent="parentService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
@@ -161,11 +158,6 @@
     </bean>
     <bean id="settingService" parent="parentService" class="Slatwall.com.service.SettingService">
         <property name="DAO"><ref bean="settingDAO" /></property>
-		<!-- Injected From Mura -->
-		<property name="configBean"><ref bean="ConfigBean" /></property>
-		<property name="contentManager"><ref bean="ContentManager" /></property>
-		<property name="categoryManager"><ref bean="CategoryManager" /></property>
-		<property name="feedManager"><ref bean="FeedManager" /></property>
     </bean>
 	<bean id="shippingService" parent="parentService" class="Slatwall.com.service.ShippingService">
         <property name="DAO"><ref bean="shippingDAO" /></property>
