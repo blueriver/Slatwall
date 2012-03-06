@@ -36,16 +36,16 @@
 Notes:
 
 */
-component displayname="Product Content" entityname="SlatwallProductContent" table="SlatwallProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Promotion Reward Product Content" entityname="SlatwallPromotionRewardProductProductContent" table="SlatwallPromotionRewardProductProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="productContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
+	property name="promotionRewardProductContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
 	property name="contentID" ormtype="string" length="35";
 	property name="contentPath" ormtype="string";
 	
 	// Related Object Properties
 	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="ProductID";
+	property name="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-one" fkcolumn="promotionRewardID";
 
 
 	// ============ START: Non-Persistent Property Methods =================
@@ -56,22 +56,22 @@ component displayname="Product Content" entityname="SlatwallProductContent" tabl
 
 	// Product (many-to-one)
 	
-	public void function setProduct(required any Product) {
-	   variables.product = arguments.Product;
-	   if(isNew() or !arguments.Product.hasProductContent(this)) {
-	       arrayAppend(arguments.Product.getProductContent(),this);
+	public void function setPromotionReward(required any promotionReward) {
+	   variables.promotionReward = arguments.promotionReward;
+	   if(isNew() or !arguments.promotionReward.hasProductContent(this)) {
+	       arrayAppend(arguments.promotionReward.getProductContent(),this);
 	   }
 	}
 	
-	public void function removeProduct(any Product) {
-		if(!structKeyExists(arguments, 'product')) {
-			arguments.product = variables.product;
+	public void function removePromotionReward(any promotionReward) {
+		if(!structKeyExists(arguments, 'promotionReward')) {
+			arguments.promotionReward = variables.promotionReward;
 		}
-		var index = arrayFind(arguments.Product.getProductContent(),this);
+		var index = arrayFind(arguments.promotionReward.getProductContent(),this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.Product.getProductContent(),index);
+			arrayDeleteAt(arguments.promotionReward.getProductContent(),index);
 		}    
-		structDelete(variables, "product");
+		structDelete(variables, "promotionReward");
     }
 	
 	// =============  END:  Bidirectional Helper Methods ===================

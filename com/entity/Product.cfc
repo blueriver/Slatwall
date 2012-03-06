@@ -85,6 +85,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	// Related Object Properties (many-to-many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 
 	// Remote Properties
@@ -134,6 +135,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
 	   }
+	   if(isNull(variables.promotionQualifiers)) {
+	       variables.promotionQualifiers = [];
+	   }
 	   if(isNull(variables.productRelationships)) {
 	       variables.productRelationships = [];
 	   }
@@ -142,6 +146,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   if(isNull(variables.productImages)) {
 	       variables.productImages = [];
+	   }
+	   if(isNull(variables.priceGroupRates)) {
+	       variables.priceGroupRates = [];
 	   }
 	   return Super.init();
 	}
@@ -262,7 +269,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
     	
     	return averageRating;
     }
-	
+
+	// ======== Association management methods for bidirectional relationships  ==========	
 	
 	// Product Type (many-to-one)
 	
@@ -388,6 +396,24 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.promotionReward.removeProduct(this);
 	}
 	
+	// promotionQualifiers (many-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+	   arguments.promotionQualifier.addProduct(this);
+	}
+	
+	public void function removePromotionQualifier(required any promotionQualifier) {
+	   arguments.promotionQualifier.removeProduct(this);
+	}
+	
+	// priceGroupRates (many-to-many)
+	public void function addPriceGroupRate(required any priceGroupRate) {
+	   arguments.priceGroupRate.addProduct(this);
+	}
+	
+	public void function removePriceGroupRate(required any priceGroupRate) {
+	   arguments.priceGroupRate.removeProduct(this);
+	}
+	
 	// product images (one-to-many)
 	public void function addProductImage(required any productImage) {
 	   arguments.productImage.setProduct(this);
@@ -397,7 +423,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   arguments.productImage.removeProduct(this);
 	}
 	
-	/************   END Association Management Methods   *******************/
+	// ========   END Association Management Methods  ==========
 
 	public struct function getOptionGroupsStruct() {
 		if( !structKeyExists(variables, "optionGroupsStruct") ) {

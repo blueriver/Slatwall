@@ -57,6 +57,7 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	// Related Object Properties (Many-to-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardShipping" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierFulfillment" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentShippingMethod" fkcolumn="shippingMethodID" inversejoincolumn="promotionQualifierID" inverse="true";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -73,6 +74,15 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 		}
 		if(isNull(variables.shippingRates)) {
 			variables.shippingRates = [];
+		}
+		if(isNull(variables.orderFulfillments)) {
+			variables.orderFulfillments = [];
+		}
+		if(isNull(variables.promotionRewards)) {
+			variables.promotionRewards = [];
+		}
+		if(isNull(variables.promotionQualifiers)) {
+			variables.promotionQualifiers = [];
 		}
 		if(isNull(variables.useRateTableFlag)) {
 			variables.useRateTableFlag = false;
@@ -128,6 +138,15 @@ component displayname="Shipping Method" entityname="SlatwallShippingMethod" tabl
 	
 	public void function removePromotionReward(required any promotionReward) {
 	   arguments.promotionReward.removeShippingMethod(this);
+	}
+	
+	// PromotionQualifiers (many-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+	   arguments.promotionQualifier.addShippingMethod(this);
+	}
+	
+	public void function removePromotionQualifier(required any promotionQualifier) {
+	   arguments.promotionQualifier.removeShippingMethod(this);
 	}
 	
 	/******* End: Association management methods for bidirectional relationships **************/

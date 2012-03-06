@@ -54,6 +54,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// property name="promotionPeriods" singularname="promotionPeriod" cfc="PromotionPeriod" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
 	// Remote Properties
@@ -112,6 +113,14 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	public void function removePromotionReward(required any promotionReward) {
 		arguments.promotionReward.removePromotion(this);
+	}
+	
+	// promotionQualifiers (one-to-many)    
+	public void function addPromotionQualifier(required any promotionQualifier) {    
+		arguments.promotionQualifier.setPromotion( this );    
+	}    
+	public void function removePromotionQualifier(required any promotionQualifier) {    
+		arguments.PromotionQualifier.removePromotion( this );    
 	}
 	
 	// appliedPromotions (one-to-many)

@@ -82,6 +82,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 
 	// Non-Persistent Properties
@@ -103,7 +104,10 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		if(isNull(variables.promotionRewards)) {
 			variables.promotionRewards = [];
 		}
-		if(isNull(variables.promotionRewards)) {
+		if(isNull(variables.promotionQualifiers)) {
+			variables.promotionQualifiers = [];
+		}
+		if(isNull(variables.priceGroupRates)) {
 			variables.priceGroupRates = [];
 		}
 		
@@ -277,6 +281,33 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
 		arguments.attributeSetAssignment.removeProductType( this );
+	}
+
+	// promotionRewards (many-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+	   arguments.promotionReward.addProductType(this);
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+	   arguments.promotionReward.removeProductType(this);
+	}
+	
+	// promotionQualifiers (many-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+	   arguments.promotionQualifier.addProductType(this);
+	}
+	
+	public void function removePromotionQualifier(required any promotionQualifier) {
+	   arguments.promotionQualifier.removeProductType(this);
+	}
+	
+	// priceGroupRates (many-to-many)
+	public void function addPriceGroupRate(required any priceGroupRate) {
+	   arguments.priceGroupRate.addProductType(this);
+	}
+	
+	public void function removePriceGroupRate(required any priceGroupRate) {
+	   arguments.priceGroupRate.removeProductType(this);
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

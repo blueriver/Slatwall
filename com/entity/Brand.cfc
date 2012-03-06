@@ -62,6 +62,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	//property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";    
 	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID";
@@ -71,7 +72,12 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   if(isNull(variables.products)) {
 	   	   variables.products = [];
 	   }
-	   
+ 	   if(isNull(variables.promotionRewards)) {
+	       variables.promotionRewards = [];
+	   }
+ 	   if(isNull(variables.promotionQualifiers)) {
+	       variables.promotionQualifiers = [];
+	   }	   
 	   return super.init();
 	}
  
@@ -95,6 +101,15 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	public void function removePromotionReward(required any promotionReward) {
 	   arguments.promotionReward.removeBrand(this);
+	}
+	
+	// promotionQualifiers (many-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addBrand( this );
+	}
+	
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeBrand( this );
 	}
 	
     /************   END Association Management Methods   *******************/

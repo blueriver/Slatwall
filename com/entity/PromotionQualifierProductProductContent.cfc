@@ -36,16 +36,16 @@
 Notes:
 
 */
-component displayname="Product Content" entityname="SlatwallProductContent" table="SlatwallProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Promotion Qualifier Product Content" entityname="SlatwallPromotionQualifierProductProductContent" table="SlatwallPromotionQualifierProductProductContent" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="productContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
+	property name="promotionQualifierProductContentID" ormtype="string" length="35" fieldtype="id" generator="uuid";
 	property name="contentID" ormtype="string" length="35";
 	property name="contentPath" ormtype="string";
 	
 	// Related Object Properties
 	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
-	property name="product" cfc="Product" fieldtype="many-to-one" fkcolumn="ProductID";
+	property name="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-one" fkcolumn="promotionQualifierID";
 
 
 	// ============ START: Non-Persistent Property Methods =================
@@ -56,22 +56,22 @@ component displayname="Product Content" entityname="SlatwallProductContent" tabl
 
 	// Product (many-to-one)
 	
-	public void function setProduct(required any Product) {
-	   variables.product = arguments.Product;
-	   if(isNew() or !arguments.Product.hasProductContent(this)) {
-	       arrayAppend(arguments.Product.getProductContent(),this);
+	public void function setPromotionQualifier(required any promotionQualifier) {
+	   variables.promotionQualifier = arguments.promotionQualifier;
+	   if(isNew() or !arguments.promotionQualifier.hasProductContent(this)) {
+	       arrayAppend(arguments.promotionQualifier.getProductContent(),this);
 	   }
 	}
 	
-	public void function removeProduct(any Product) {
-		if(!structKeyExists(arguments, 'product')) {
-			arguments.product = variables.product;
+	public void function removePromotionQualifier(any promotionQualifier) {
+		if(!structKeyExists(arguments, 'promotionQualifier')) {
+			arguments.promotionQualifier = variables.promotionQualifier;
 		}
-		var index = arrayFind(arguments.Product.getProductContent(),this);
+		var index = arrayFind(arguments.promotionQualifier.getProductContent(),this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.Product.getProductContent(),index);
+			arrayDeleteAt(arguments.promotionQualifier.getProductContent(),index);
 		}    
-		structDelete(variables, "product");
+		structDelete(variables, "promotionQualifier");
     }
 	
 	// =============  END:  Bidirectional Helper Methods ===================
