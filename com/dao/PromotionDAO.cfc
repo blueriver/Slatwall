@@ -57,18 +57,18 @@ Notes:
 				SlatwallSku.price as 'originalPrice',
 				'sku' as 'discountLevel',
 				CASE
-					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN 'amount'
-					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN 'itemAmountOff'
-					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN 'percentageOff'
+					WHEN prSku.percentageOff IS NULL AND prSku.amountOff IS NULL THEN 'amount'
+					WHEN prSku.percentageOff IS NULL AND prSku.amount IS NULL THEN 'amountOff'
+					WHEN prSku.amountOff IS NULL AND prSku.amount IS NULL THEN 'percentageOff'
 				END as 'salePriceDiscountType',
 				CASE
-					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmountOff IS NULL THEN prSku.itemAmount
-					WHEN prSku.itemPercentageOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - prSku.itemAmountOff
-					WHEN prSku.itemAmountOff IS NULL AND prSku.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prSku.itemPercentageOff / 100))
+					WHEN prSku.percentageOff IS NULL AND prSku.amountOff IS NULL THEN prSku.amount
+					WHEN prSku.percentageOff IS NULL AND prSku.amount IS NULL THEN SlatwallSku.price - prSku.amountOff
+					WHEN prSku.amountOff IS NULL AND prSku.amount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prSku.percentageOff / 100))
 				END as 'salePrice',
-				prSku.itemPercentageOff as 'percentageOff',
-				prSku.itemAmountOff as 'amountOff',
-				prSku.itemAmount as 'amount',
+				prSku.percentageOff as 'percentageOff',
+				prSku.amountOff as 'amountOff',
+				prSku.amount as 'amount',
 				prSku.roundingRuleID as 'roundingRuleID',
 				pSku.endDateTime as 'salePriceExpirationDateTime',
 				pSku.promotionID as 'promotionID'
@@ -101,18 +101,18 @@ Notes:
 				SlatwallSku.price as 'originalPrice',
 				'product' as 'discountLevel',
 				CASE
-					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN 'amount'
-					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN 'itemAmountOff'
-					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN 'percentageOff'
+					WHEN prProduct.percentageOff IS NULL AND prProduct.amountOff IS NULL THEN 'amount'
+					WHEN prProduct.percentageOff IS NULL AND prProduct.amount IS NULL THEN 'amountOff'
+					WHEN prProduct.amountOff IS NULL AND prProduct.amount IS NULL THEN 'percentageOff'
 				END as 'salePriceDiscountType',
 				CASE
-					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmountOff IS NULL THEN prProduct.itemAmount
-					WHEN prProduct.itemPercentageOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - prProduct.itemAmountOff
-					WHEN prProduct.itemAmountOff IS NULL AND prProduct.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProduct.itemPercentageOff / 100))
+					WHEN prProduct.percentageOff IS NULL AND prProduct.amountOff IS NULL THEN prProduct.amount
+					WHEN prProduct.percentageOff IS NULL AND prProduct.amount IS NULL THEN SlatwallSku.price - prProduct.amountOff
+					WHEN prProduct.amountOff IS NULL AND prProduct.amount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProduct.percentageOff / 100))
 				END as 'salePrice',
-				prProduct.itemPercentageOff as 'percentageOff',
-				prProduct.itemAmountOff as 'amountOff',
-				prProduct.itemAmount as 'amount',
+				prProduct.percentageOff as 'percentageOff',
+				prProduct.amountOff as 'amountOff',
+				prProduct.amount as 'amount',
 				prProduct.roundingRuleID as 'roundingRuleID',
 				pProduct.endDateTime as 'salePriceExpirationDateTime',
 				pProduct.promotionID as 'promotionID'
@@ -145,18 +145,18 @@ Notes:
 				SlatwallSku.price as 'originalPrice',
 				'brand' as 'discountLevel',
 				CASE
-					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN 'amount'
-					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN 'itemAmountOff'
-					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN 'percentageOff'
+					WHEN prBrand.percentageOff IS NULL AND prBrand.amountOff IS NULL THEN 'amount'
+					WHEN prBrand.percentageOff IS NULL AND prBrand.amount IS NULL THEN 'amountOff'
+					WHEN prBrand.amountOff IS NULL AND prBrand.amount IS NULL THEN 'percentageOff'
 				END as 'salePriceDiscountType',
 				CASE
-					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmountOff IS NULL THEN prBrand.itemAmount
-					WHEN prBrand.itemPercentageOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - prBrand.itemAmountOff
-					WHEN prBrand.itemAmountOff IS NULL AND prBrand.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prBrand.itemPercentageOff / 100))
+					WHEN prBrand.percentageOff IS NULL AND prBrand.amountOff IS NULL THEN prBrand.amount
+					WHEN prBrand.percentageOff IS NULL AND prBrand.amount IS NULL THEN SlatwallSku.price - prBrand.amountOff
+					WHEN prBrand.amountOff IS NULL AND prBrand.amount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prBrand.percentageOff / 100))
 				END as 'salePrice',
-				prBrand.itemPercentageOff as 'percentageOff',
-				prBrand.itemAmountOff as 'amountOff',
-				prBrand.itemAmount as 'amount',
+				prBrand.percentageOff as 'percentageOff',
+				prBrand.amountOff as 'amountOff',
+				prBrand.amount as 'amount',
 				prBrand.roundingRuleID as 'roundingRuleID',
 				pBrand.endDateTime as 'salePriceExpirationDateTime',
 				pBrand.promotionID as 'promotionID'
@@ -191,18 +191,18 @@ Notes:
 				SlatwallSku.price as 'originalPrice',
 				'option' as 'discountLevel',
 				CASE
-					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN 'amount'
-					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN 'itemAmountOff'
-					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN 'percentageOff'
+					WHEN prOption.percentageOff IS NULL AND prOption.amountOff IS NULL THEN 'amount'
+					WHEN prOption.percentageOff IS NULL AND prOption.amount IS NULL THEN 'amountOff'
+					WHEN prOption.amountOff IS NULL AND prOption.amount IS NULL THEN 'percentageOff'
 				END as 'salePriceDiscountType',
 				CASE
-					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmountOff IS NULL THEN prOption.itemAmount
-					WHEN prOption.itemPercentageOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - prOption.itemAmountOff
-					WHEN prOption.itemAmountOff IS NULL AND prOption.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prOption.itemPercentageOff / 100))
+					WHEN prOption.percentageOff IS NULL AND prOption.amountOff IS NULL THEN prOption.amount
+					WHEN prOption.percentageOff IS NULL AND prOption.amount IS NULL THEN SlatwallSku.price - prOption.amountOff
+					WHEN prOption.amountOff IS NULL AND prOption.amount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prOption.percentageOff / 100))
 				END as 'salePrice',
-				prOption.itemPercentageOff as 'percentageOff',
-				prOption.itemAmountOff as 'amountOff',
-				prOption.itemAmount as 'amount',
+				prOption.percentageOff as 'percentageOff',
+				prOption.amountOff as 'amountOff',
+				prOption.amount as 'amount',
 				prOption.roundingRuleID as 'roundingRuleID',
 				pOption.endDateTime as 'salePriceExpirationDateTime',
 				pOption.promotionID as 'promotionID'
@@ -237,18 +237,18 @@ Notes:
 				SlatwallSku.price as 'originalPrice',
 				'productType' as 'discountLevel',
 				CASE
-					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN 'amount'
-					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN 'itemAmountOff'
-					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN 'percentageOff'
+					WHEN prProductType.percentageOff IS NULL AND prProductType.amountOff IS NULL THEN 'amount'
+					WHEN prProductType.percentageOff IS NULL AND prProductType.amount IS NULL THEN 'amountOff'
+					WHEN prProductType.amountOff IS NULL AND prProductType.amount IS NULL THEN 'percentageOff'
 				END as 'salePriceDiscountType',
 				CASE
-					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmountOff IS NULL THEN prProductType.itemAmount
-					WHEN prProductType.itemPercentageOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - prProductType.itemAmountOff
-					WHEN prProductType.itemAmountOff IS NULL AND prProductType.itemAmount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProductType.itemPercentageOff / 100))
+					WHEN prProductType.percentageOff IS NULL AND prProductType.amountOff IS NULL THEN prProductType.amount
+					WHEN prProductType.percentageOff IS NULL AND prProductType.amount IS NULL THEN SlatwallSku.price - prProductType.amountOff
+					WHEN prProductType.amountOff IS NULL AND prProductType.amount IS NULL THEN SlatwallSku.price - (SlatwallSku.price * (prProductType.percentageOff / 100))
 				END as 'salePrice',
-				prProductType.itemPercentageOff as 'percentageOff',
-				prProductType.itemAmountOff as 'amountOff',
-				prProductType.itemAmount as 'amount',
+				prProductType.percentageOff as 'percentageOff',
+				prProductType.amountOff as 'amountOff',
+				prProductType.amount as 'amount',
 				prProductType.roundingRuleID as 'roundingRuleID',
 				pProductType.endDateTime as 'salePriceExpirationDateTime',
 				pProductType.promotionID as 'promotionID'

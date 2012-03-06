@@ -40,6 +40,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="percentageOff" ormType="big_decimal";
+	property name="amountOff" ormType="big_decimal";
+	property name="amount" ormType="big_decimal" hint="can't apply to order rewards";
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
@@ -55,6 +58,9 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+
+	// Non-persistent entities
+	property name="discountType" persistent="false";
 	
 	/******* Association management methods for bidirectional relationships **************/
 	
@@ -80,13 +86,58 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
     
     /************   END Association Management Methods   *******************/
 
+	public boolean function hasValidPercentageOffValue() {
+		if(getDiscountType() == "percentageOff" && ( isNull(getPercentageOff()) || !isNumeric(getPercentageOff()) || getPercentageOff() > 100 || getPercentageOff() < 0 ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidAmountOffValue() {
+		if(getDiscountType() == "amountOff" && ( isNull(getAmountOff()) || !isNumeric(getAmountOff()) ) ) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean function hasValidAmountValue() {
+		if(getDiscountType() == "amount" && ( isNull(getAmount()) || !isNumeric(getAmount()) ) ) {
+			return false;
+		}
+		return true;
+	}
+
 	// ============ START: Non-Persistent Property Methods =================
+
+	
+	public string function getDiscountType() {
+		if(isNull(variables.DiscountType)) {
+			if(!isNull(getPercentageOff()) && isNull(getAmountOff()) && isNull(getAmount())) {
+				variables.DiscountType = "percentageOff";
+			} else if (!isNull(getAmountOff()) && isNull(getPercentageOff()) && isNull(getAmount())) {
+				variables.DiscountType = "amountOff";
+			} else if (!isNull(getAmount()) && isNull(getPercentageOff()) && isNull( getAmountOff())) {
+				variables.DiscountType = "amount";
+			} else {
+				variables.DiscountType = "percentageOff";
+			}
+		}
+		return variables.DiscountType;
+	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	public array function getDiscountTypeOptions() {
+		return [
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
+		];
+	}
 	
 	// =================== START: ORM Event Hooks  =========================
 	

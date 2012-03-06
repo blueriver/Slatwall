@@ -40,10 +40,9 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="itemRewardQuantity" ormType="integer";
-	property name="itemPercentageOff" ormType="big_decimal";
-	property name="itemAmountOff" ormType="big_decimal";
-	property name="itemAmount" ormType="big_decimal";
+	property name="itemRewardQuantity" ormType="integer" hint="the quantity of items this reward applies to per instance of qualifier satisfied";
+	property name="maximumOrderRewardQuantity" ormtype="integer" hint="the maximum quantity of items this reward can apply to per order";
+	property name="rewardCanApplyToQualifierFlag" ormtype="boolean" default="0" dbdefault="0" hint="when true, qualifier is not excluded from reward (if qualifier and reward can be the same item)";
 	
 	// Related Object Properties (many-to-one)
 	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
@@ -55,9 +54,6 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID";
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID";
-	
-	// Non-persistent entities
-	property name="itemDiscountType" persistent="false";
 	
 	public any function init() {
 
@@ -292,50 +288,6 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
 		}
 		return skuIDs;
-	}
-	
-	public array function getItemDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
-		];
-	}
-	
-	public string function getItemDiscountType() {
-		if(isNull(variables.itemDiscountType)) {
-			if(!isNull(getItemPercentageOff()) && isNull(getItemAmountOff()) && isNull(getItemAmount())) {
-				variables.itemDiscountType = "percentageOff";
-			} else if (!isNull(getItemAmountOff()) && isNull(getItemPercentageOff()) && isNull(getItemAmount())) {
-				variables.itemDiscountType = "amountOff";
-			} else if (!isNull(getItemAmount()) && isNull(getItemPercentageOff()) && isNull( getItemAmountOff())) {
-				variables.itemDiscountType = "amount";
-			} else {
-				variables.itemDiscountType = "percentageOff";
-			}
-		}
-		return variables.itemDiscountType;
-	}
-	
-	public boolean function hasValidItemPercentageOffValue() {
-		if(getItemDiscountType() == "percentageOff" && ( isNull(getItemPercentageOff()) || !isNumeric(getItemPercentageOff()) || getItemPercentageOff() > 100 || getItemPercentageOff() < 0 ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidItemAmountOffValue() {
-		if(getItemDiscountType() == "amountOff" && ( isNull(getItemAmountOff()) || !isNumeric(getItemAmountOff()) ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidItemAmountValue() {
-		if(getItemDiscountType() == "amount" && ( isNull(getItemAmount()) || !isNumeric(getItemAmount()) ) ) {
-			return false;
-		}
-		return true;
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

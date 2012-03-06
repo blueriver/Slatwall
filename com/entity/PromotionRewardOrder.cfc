@@ -40,16 +40,35 @@ component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewa
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="orderPercentageOff" ormType="big_decimal";
-	property name="orderAmountOff" ormType="big_decimal";
+
 
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-		
+
+	public string function getDiscountType() {
+		if(isNull(variables.DiscountType)) {
+			if( !isNull(getPercentageOff()) && isNull(getAmountOff()) ) {
+				variables.DiscountType = "percentageOff";
+			} else if ( !isNull(getAmountOff()) && isNull(getPercentageOff()) ) {
+				variables.DiscountType = "amountOff";
+			} else {
+				variables.DiscountType = "percentageOff";
+			}
+		}
+		return variables.DiscountType;
+	}
+	
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
+
+	public array function getDiscountTypeOptions() {
+		return [
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
+			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"}
+		];
+	}
 	
 	// =================== START: ORM Event Hooks  =========================
 	

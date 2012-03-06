@@ -1,35 +1,49 @@
-/**
- * 
- * @depends /admin/core.js
- */
+
 
 jQuery(function() {
 	
-	updateItemDiscountType();
-	updateShippingDiscountType();
+	updateDiscountType();
 	
-	jQuery('select[name="promotionRewards[1].itemDiscountType"]').change(function() {
-		updateItemDiscountType();
-	});
+	jQuery('.discounttypefield').change(function() {
+		updateDiscountType();
+	});	
 	
-	jQuery('select[name="promotionRewards[1].shippingDiscountType"]').change(function() {
-		updateShippingDiscountType();
-	});
-	
-	jQuery('#addPromotionRewardProductButton').click(function(){
-	 	jQuery('#savePromotionRewardProductHidden').val('true');
-		jQuery('#promotionRewardProductInputs').fadeIn(400);
-		
-		jQuery('#addPromotionRewardShippingButton').remove();
+	jQuery('#addPromotionRewardButton').click(function(){
+		jQuery('#rewardTypeSelector').show(300);
 		jQuery(this).remove();
+		return false;
 	});
 	
-	jQuery('#addPromotionRewardShippingButton').click(function(){
-	 	jQuery('#savePromotionRewardShippingHidden').val('true');
-		jQuery('#promotionRewardShippingInputs').fadeIn(400);
-		
-		jQuery('#addPromotionRewardProductButton').remove();
-		jQuery(this).remove();
+	jQuery('#promotionRewardType').change(function(){
+		if( jQuery(this).val() == "product" ) {
+			jQuery('#savePromotionRewardProductHidden').val('true');
+			jQuery('#savePromotionRewardShippingHidden').val('false');
+			jQuery('#savePromotionRewardOrderHidden').val('false');
+			jQuery('#promotionRewardProductInputs').hide();
+			jQuery('#promotionRewardShippingInputs').hide();
+			jQuery('#promotionRewardProductInputs').fadeIn(400);
+		}
+		else if( jQuery(this).val() == "shipping" ) {
+			jQuery('#savePromotionRewardShippingHidden').val('true');
+			jQuery('#savePromotionRewardProductHidden').val('false');
+			jQuery('#savePromotionRewardOrderHidden').val('false');
+			jQuery('#promotionRewardProductInputs').hide();
+			jQuery('#promotionRewardOrderInputs').hide();
+			jQuery('#promotionRewardShippingInputs').fadeIn(400);
+		}
+		else if( jQuery(this).val() == "order" ) {
+			jQuery('#savePromotionRewardOrderHidden').val('true');
+			jQuery('#savePromotionRewardProductHidden').val('false');
+			jQuery('#savePromotionRewardShippingHidden').val('false');
+			jQuery('#promotionRewardProductInputs').hide();
+			jQuery('#promotionRewardShippingInputs').hide();
+			jQuery('#promotionRewardOrderInputs').fadeIn(400);
+		}
+		else {
+			jQuery('#promotionRewardProductInputs').hide();
+			jQuery('#promotionRewardShippingInputs').hide();
+		}
+		updateDiscountType();
 	});
 	
 	jQuery('#remPromotionCode').click(function() {
@@ -48,11 +62,11 @@ jQuery(function() {
 		current++;
 		var $newPromotionCode= jQuery( "#promotionCodeTableTemplate tbody>tr:last" ).clone(true);
 		$newPromotionCode.children("td").children("input[name=startDateTime]").datetimepicker({
-			ampm: true,
+			ampm: true
 		});
 		
 		$newPromotionCode.children("td").children("input[name=endDateTime]").datetimepicker({
-			ampm: true,
+			ampm: true
 		});
 		$newPromotionCode.children("td").children("input").each(function(i) {
 			var $currentElem= jQuery(this);
@@ -75,52 +89,28 @@ jQuery(function() {
 	
 });
 
-function updateItemDiscountType() {
-	if(jQuery('select[name="promotionRewards[1].itemDiscountType"] :selected').val() == 'percentageOff') {
-		jQuery('.itempercentageofftitle').show();
-		jQuery('.itempercentageoffvalue').show();
-		jQuery('.itemamountofftitle').hide();
-		jQuery('.itemamountoffvalue').hide();
-		jQuery('.itemamounttitle').hide();
-		jQuery('.itemamountvalue').hide();
-	} else if (jQuery('select[name="promotionRewards[1].itemDiscountType"] :selected').val() == 'amountOff') {
-		jQuery('.itempercentageofftitle').hide();
-		jQuery('.itempercentageoffvalue').hide();
-		jQuery('.itemamountofftitle').show();
-		jQuery('.itemamountoffvalue').show();
-		jQuery('.itemamounttitle').hide();
-		jQuery('.itemamountvalue').hide();
-	} else if (jQuery('select[name="promotionRewards[1].itemDiscountType"] :selected').val() == 'amount') {
-		jQuery('.itempercentageofftitle').hide();
-		jQuery('.itempercentageoffvalue').hide();
-		jQuery('.itemamountofftitle').hide();
-		jQuery('.itemamountoffvalue').hide();
-		jQuery('.itemamounttitle').show();
-		jQuery('.itemamountvalue').show();
-	}
-}
-
-function updateShippingDiscountType() {
-	if(jQuery('select[name="promotionRewards[1].shippingDiscountType"] :selected').val() == 'percentageOff') {
-		jQuery('.shippingpercentageofftitle').show();
-		jQuery('.shippingpercentageoffvalue').show();
-		jQuery('.shippingamountofftitle').hide();
-		jQuery('.shippingamountoffvalue').hide();
-		jQuery('.shippingamounttitle').hide();
-		jQuery('.shippingamountvalue').hide();
-	} else if (jQuery('select[name="promotionRewards[1].shippingDiscountType"] :selected').val() == 'amountOff') {
-		jQuery('.shippingpercentageofftitle').hide();
-		jQuery('.shippingpercentageoffvalue').hide();
-		jQuery('.shippingamountofftitle').show();
-		jQuery('.shippingamountoffvalue').show();
-		jQuery('.shippingamounttitle').hide();
-		jQuery('.shippingamountvalue').hide();
-	} else if (jQuery('select[name="promotionRewards[1].shippingDiscountType"] :selected').val() == 'amount') {
-		jQuery('.shippingpercentageofftitle').hide();
-		jQuery('.shippingpercentageoffvalue').hide();
-		jQuery('.shippingamountofftitle').hide();
-		jQuery('.shippingamountoffvalue').hide();
-		jQuery('.shippingamounttitle').show();
-		jQuery('.shippingamountvalue').show();
+function updateDiscountType() {
+	var discountType = jQuery('.discounttypefield').filter(':visible').val();
+	if(discountType == 'percentageOff') {
+		jQuery('.percentageofftitle').show();
+		jQuery('.percentageoffvalue').show();
+		jQuery('.amountofftitle').hide();
+		jQuery('.amountoffvalue').hide();
+		jQuery('.amounttitle').hide();
+		jQuery('.amountvalue').hide();
+	} else if (discountType == 'amountOff') {
+		jQuery('.percentageofftitle').hide();
+		jQuery('.percentageoffvalue').hide();
+		jQuery('.amountofftitle').show();
+		jQuery('.amountoffvalue').show();
+		jQuery('.amounttitle').hide();
+		jQuery('.amountvalue').hide();
+	} else if (discountType == 'amount') {
+		jQuery('.percentageofftitle').hide();
+		jQuery('.percentageoffvalue').hide();
+		jQuery('.amountofftitle').hide();
+		jQuery('.amountoffvalue').hide();
+		jQuery('.amounttitle').show();
+		jQuery('.amountvalue').show();
 	}
 }

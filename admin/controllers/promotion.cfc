@@ -56,6 +56,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
 		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
 		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
+		rc.promotionRewardOrder = getPromotionService().getPromotionRewardOrder(rc.promotionRewardID, true);
 		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
@@ -86,6 +87,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionRewardID" default="";
 		param name="rc.savePromotionRewardProduct" default="false";
 		param name="rc.savePromotionRewardShipping" default="false";
+		param name="rc.savePromotionRewardOrder" default="false";
 		
 		detail(rc);
 		// Call the promotion service save method (this is standard)
@@ -94,7 +96,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		// If no errors, then redirect to the list page, otherwise go back to edit
 		if(!rc.promotion.hasErrors()) {
 			rc.message="admin.promotion.save_success";
-			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping) {
+			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping || rc.savePromotionRewardOrder) {
 				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()#",preserve="message");	
 			} else {
 				getFW().redirect(action="admin:promotion.list",preserve="message");

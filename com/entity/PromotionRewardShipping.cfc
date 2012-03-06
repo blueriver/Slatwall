@@ -40,9 +40,6 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 	
 	// Persistent Properties
 	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="shippingPercentageOff" ormType="big_decimal";
-	property name="shippingAmountOff" ormType="big_decimal";
-	property name="shippingAmount" ormType="big_decimal";
 	
 	// Related Entities
 	property name="shippingMethods" singularname="shippingMethod" cfc="ShippingMethod" fieldtype="many-to-many" linktable="SlatwallPromotionRewardShippingShippingMethod" fkcolumn="promotionRewardID" inversejoincolumn="shippingMethodID";
@@ -107,50 +104,7 @@ component displayname="Promotion Reward Shipping" entityname="SlatwallPromotionR
 		}
 		return shippingMethodIDs;
 	}
-	
-	public array function getShippingDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
-		];
-	}
-	
-	public string function getShippingDiscountType() {
-		if(isNull(variables.shippingDiscountType)) {
-			if(!isNull(getShippingPercentageOff()) && isNull(getShippingAmountOff()) && isNull(getShippingAmount())) {
-				variables.shippingDiscountType = "percentageOff";
-			} else if (!isNull(getShippingAmountOff()) && isNull(getShippingPercentageOff()) && isNull(getShippingAmount())) {
-				variables.shippingDiscountType = "amountOff";
-			} else if (!isNull(getShippingAmount()) && isNull(getShippingPercentageOff()) && isNull( getShippingAmountOff())) {
-				variables.shippingDiscountType = "amount";
-			} else {
-				variables.shippingDiscountType = "percentageOff";
-			}
-		}
-		return variables.shippingDiscountType;
-	}
-	
-	public boolean function hasValidShippingPercentageOffValue() {
-		if(getShippingDiscountType() == "percentageOff" && (isNull(getShippingPercentageOff()) || !isNumeric(getShippingPercentageOff()) || getShippingPercentageOff() > 100 || getShippingPercentageOff() < 0) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidShippingAmountOffValue() {
-		if(getShippingDiscountType() == "amountOff" && ( isNull(getShippingAmountOff()) || !isNumeric(getShippingAmountOff()) ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidShippingAmountValue() {
-		if(getShippingDiscountType() == "amount" && ( isNull(getShippingAmount()) || !isNumeric(getShippingAmount()) ) ) {
-			return false;
-		}
-		return true;
-	}
+
 
 	// ============ START: Non-Persistent Property Methods =================
 	

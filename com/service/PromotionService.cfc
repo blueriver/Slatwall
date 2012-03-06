@@ -246,12 +246,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var discountAmount = 0;
 		var roundedFinalAmount = 0;
 		
-		if(!isNull(reward.getItemAmount())) {
-			discountAmountPreRounding = arguments.originalAmount - reward.getItemAmount();
-		} else if( !isNull(reward.getItemAmountOff()) ) {
-			discountAmountPreRounding = reward.getItemAmountOff();
-		} else if( !isNull(reward.getItemPercentageOff()) ) {
-			discountAmountPreRounding = arguments.originalAmount * (reward.getItemPercentageOff()/100);
+		if(!isNull(reward.getAmount())) {
+			discountAmountPreRounding = arguments.originalAmount - reward.getAmount();
+		} else if( !isNull(reward.getAmountOff()) ) {
+			discountAmountPreRounding = reward.getAmountOff();
+		} else if( !isNull(reward.getPercentageOff()) ) {
+			discountAmountPreRounding = arguments.originalAmount * (reward.getPercentageOff()/100);
 		}
 		
 		if(!isNull(reward.getRoundingRule())) {
