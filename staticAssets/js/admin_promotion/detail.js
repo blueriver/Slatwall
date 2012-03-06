@@ -96,20 +96,26 @@ function updateDiscountType() {
 		jQuery('.percentageoffvalue').show();
 		jQuery('.amountofftitle').hide();
 		jQuery('.amountoffvalue').hide();
+		jQuery('.amountofffield').val('');
 		jQuery('.amounttitle').hide();
 		jQuery('.amountvalue').hide();
+		jQuery('.amountfield').val('');
 	} else if (discountType == 'amountOff') {
 		jQuery('.percentageofftitle').hide();
 		jQuery('.percentageoffvalue').hide();
+		jQuery('.percentageofffield').val('');
 		jQuery('.amountofftitle').show();
 		jQuery('.amountoffvalue').show();
 		jQuery('.amounttitle').hide();
 		jQuery('.amountvalue').hide();
+		jQuery('.amountfield').val('');
 	} else if (discountType == 'amount') {
 		jQuery('.percentageofftitle').hide();
 		jQuery('.percentageoffvalue').hide();
+		jQuery('.percentageofffield').val('');
 		jQuery('.amountofftitle').hide();
 		jQuery('.amountoffvalue').hide();
+		jQuery('.amountofffield').val('');
 		jQuery('.amounttitle').show();
 		jQuery('.amountvalue').show();
 	}
