@@ -49,10 +49,12 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	property name="primaryEmailAddress" cfc="AccountEmailAddress" fieldtype="many-to-one" fkcolumn="primaryEmailAddressID";
 	property name="primaryPhoneNumber" cfc="AccountPhoneNumber" fieldtype="many-to-one" fkcolumn="primaryPhoneNumberID";
 	property name="primaryAddress" cfc="AccountAddress" fieldtype="many-to-one" fkcolumn="primaryAddressID";
+	property name="primaryAccountPaymentMethod" cfc="AccountPaymentMethod" fieldtype="many-to-one" fkcolumn="primaryAccountPaymentMethodID";
 	
 	// Related Object Properties (one-to-many)
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
+	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="AccountAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="AccountAttributeValue" fieldtype="one-to-many" fkcolumn="accountID" cascade="all-delete-orphan" inverse="true";
@@ -210,6 +212,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}    
 	public void function removeAccountEmailAddress(required any accountEmailAddress) {    
 		arguments.accountEmailAddress.removeAccount( this );    
+	}
+	
+	// Account Payment Methods (one-to-many)    
+	public void function addAccountPaymentMethod(required any accountPaymentMethod) {    
+		arguments.accountPaymentMethod.setAccount( this );    
+	}    
+	public void function removeAccountPaymentMethod(required any accountPaymentMethod) {    
+		arguments.accountPaymentMethod.removeAccount( this );    
 	}
 	
 	// Account Phone Numbers (one-to-many)    
