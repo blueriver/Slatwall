@@ -112,6 +112,8 @@ Notes:
 									<cfelse>
 										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
 									</cfif>
+								<cfelseif local.thisPromotionReward.getRewardType() eq "order">
+									<cfset local.itemName = $.Slatwall.rbKey("define.na") />
 								</cfif>
 								#local.itemName#
 							</td>
