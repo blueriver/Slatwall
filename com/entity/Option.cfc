@@ -61,6 +61,7 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="optionID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductOption" fkcolumn="optionID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionOption" fkcolumn="optionID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
 	
 	public Option function init(){
 		// set default collections for association management methods
@@ -72,7 +73,10 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 		}
 		if(isNull(variables.promotionQualifiers)) {
 			variables.promotionQualifiers = [];
-	   }		
+	    }
+		if(isNull(variables.promotionRewardExclusions)) {
+			variables.promotionRewardExclusions = [];
+		}		
 		return Super.init();
     }
     
@@ -125,6 +129,15 @@ component displayname="Option" entityname="SlatwallOption" table="SlatwallOption
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 	   arguments.promotionQualifier.removeOption(this);
+	}
+	
+	// promotionRewardExclusions (many-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.addOption(this);
+	}
+	
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.removeOption(this);
 	}
     
     /************   END Association Management Methods   *******************/

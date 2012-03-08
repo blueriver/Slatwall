@@ -54,7 +54,7 @@ component displayname="Promotion Reward Product Content" entityname="SlatwallPro
 		
 	// ============= START: Bidirectional Helper Methods ===================
 
-	// Product (many-to-one)
+	// Promotion Reward (many-to-one)
 	
 	public void function setPromotionReward(required any promotionReward) {
 	   variables.promotionReward = arguments.promotionReward;

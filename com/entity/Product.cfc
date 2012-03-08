@@ -86,6 +86,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	// Related Object Properties (many-to-many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProduct" fkcolumn="productID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="productID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 
 	// Remote Properties
@@ -137,6 +138,9 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   }
 	   if(isNull(variables.promotionQualifiers)) {
 	       variables.promotionQualifiers = [];
+	   }
+	   if(isNull(variables.promotionRewardExclusions)) {
+	       variables.promotionRewardExclusions = [];
 	   }
 	   if(isNull(variables.productRelationships)) {
 	       variables.productRelationships = [];
@@ -403,6 +407,15 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 	   arguments.promotionQualifier.removeProduct(this);
+	}
+	
+	// promotionRewardExclusions (many-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.addProduct(this);
+	}
+	
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.removeProduct(this);
 	}
 	
 	// priceGroupRates (many-to-many)

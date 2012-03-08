@@ -63,6 +63,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID";
@@ -74,6 +75,9 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   }
  	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
+	   }
+ 	   if(isNull(variables.promotionRewardExclusions)) {
+	       variables.promotionRewardExclusions = [];
 	   }
  	   if(isNull(variables.promotionQualifiers)) {
 	       variables.promotionQualifiers = [];
@@ -110,6 +114,15 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeBrand( this );
+	}
+
+	// promotionRewardExclusions (many-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.addBrand(this);
+	}
+	
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.removeBrand(this);
 	}
 	
     /************   END Association Management Methods   *******************/

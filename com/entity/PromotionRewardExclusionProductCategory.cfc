@@ -36,16 +36,16 @@
 Notes:
 
 */
-component displayname="Promotion Reward Product Category" entityname="SlatwallPromotionRewardProductProductCategory" table="SlatwallPromotionRewardProductProductCategory" persistent=true output=false accessors=true extends="BaseEntity" {
+component displayname="Promotion Reward Exclusion Product Category" entityname="SlatwallPromotionRewardExclusionProductCategory" table="SlatwallPromotionRewardExclusionProductCategory" persistent=true output=false accessors=true extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="promotionRewardProductCategoryID" ormtype="string" length="35" fieldtype="id" generator="uuid";
+	property name="promotionRewardExclusionProductCategoryID" ormtype="string" length="35" fieldtype="id" generator="uuid";
 	property name="categoryID" ormtype="string" length="35";
 	property name="categoryPath" ormtype="string";
 	
 	// Related Object Properties
 	//property name="content" cfc="Content" fieldtype="many-to-one" hint="Mura Content ID" fkcolumn="contentID";
-	property name="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-one" fkcolumn="promotionRewardID";
+	property name="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-one" fkcolumn="promotionRewardExclusionID";
 
 
 	// ============ START: Non-Persistent Property Methods =================
@@ -54,24 +54,24 @@ component displayname="Promotion Reward Product Category" entityname="SlatwallPr
 		
 	// ============= START: Bidirectional Helper Methods ===================
 
-	// Promotion Reward (many-to-one)
+	// Promotion Reward Exclusion (many-to-one)
 	
-	public void function setPromotionReward(required any promotionReward) {
-	   variables.promotionReward = arguments.promotionReward;
-	   if(isNew() || !arguments.promotionReward.hasProductCategory(this)) {
-	       arrayAppend(arguments.promotionReward.getProductCategories(),this);
+	public void function setPromotionRewardExclusion(required any promotionRewardExclusion) {
+	   variables.promotionRewardExclusion = arguments.promotionRewardExclusion;
+	   if(isNew() || !arguments.promotionRewardExclusion.hasProductCategory(this)) {
+	       arrayAppend(arguments.promotionRewardExclusion.getProductCategories(),this);
 	   }
 	}
 	
-	public void function removePromotionReward(any promotionReward) {
-		if(!structKeyExists(arguments, 'promotionReward')) {
-			arguments.promotionReward = variables.promotionReward;
+	public void function removePromotionRewardExclusion(any promotionRewardExclusion) {
+		if(!structKeyExists(arguments, 'promotionRewardExclusion')) {
+			arguments.promotionRewardExclusion = variables.promotionRewardExclusion;
 		}
-		var index = arrayFind(arguments.promotionReward.getProductCategories(),this);
+		var index = arrayFind(arguments.promotionRewardExclusion.getProductCategories(),this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.promotionReward.getProductCategories(),index);
+			arrayDeleteAt(arguments.promotionRewardExclusion.getProductCategories(),index);
 		}    
-		structDelete(variables, "promotionReward");
+		structDelete(variables, "promotionRewardExclusion");
     }
 	
 	// =============  END:  Bidirectional Helper Methods ===================

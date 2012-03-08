@@ -74,6 +74,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionSku" fkcolumn="skuID" inversejoincolumn="PromotionRewardExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	
 	// Remote properties
@@ -104,6 +105,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	   }
  	   if(isNull(variables.promotionQualifiers)) {
 	       variables.promotionQualifiers = [];
+	   }
+ 	   if(isNull(variables.promotionRewardExclusions)) {
+	       variables.promotionRewardExclusions = [];
 	   }
 	   if(isNull(variables.priceGroupRates)) {
 	   	   variables.priceGroupRates = [];
@@ -426,7 +430,16 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	public void function removePromotionReward(required any promotionReward) {
 		arguments.promotionReward.removeSku( this );
 	}
+		
+	// Promotion Reward Exclusions (one-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+		arguments.promotionRewardExclusion.addSku( this );
+	}
 	
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+		arguments.promotionRewardExclusion.removeSku( this );
+	}
+
 	// Promotion Qualifiers (one-to-many)
 	public void function addPromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.addSku( this );
