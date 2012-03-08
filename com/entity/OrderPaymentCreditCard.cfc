@@ -49,7 +49,7 @@ component displayname="Order Payment Credit Card" entityname="SlatwallOrderPayme
 	property name="expirationYear" ormType="string";
 	
 	// Related Properties
-	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" inverse="true";
+	property name="billingAddress" cfc="Address" fieldtype="many-to-one" fkcolumn="billingAddressID" cascade="all-delete-orphan";
 	property name="creditCardTransactions" singularname="creditCardTransaction" cfc="CreditCardTransaction" fieldtype="one-to-many" fkcolumn="orderPaymentID" cascade="all" inverse="true" orderby="createdDateTime DESC" ;
 	
 	// Non-Persistent properties
