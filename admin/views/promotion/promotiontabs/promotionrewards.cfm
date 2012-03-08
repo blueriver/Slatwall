@@ -89,6 +89,18 @@ Notes:
 										<cfset local.itemName &= local.thisPromotionReward.displayOptionNames() />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
+									<cfif arrayLen(local.thisPromotionReward.getProductContent())>
+										<cfset local.itemName &= "<p>" />
+										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionRewardProduct.productContent') & ": " />
+										<cfset local.itemName &= local.thisPromotionReward.displayProductPageNames() />
+										<cfset local.itemName &= "</p>" />
+									</cfif>
+									<cfif arrayLen(local.thisPromotionReward.getProductCategories())>
+										<cfset local.itemName &= "<p>" />
+										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionRewardProduct.productCategories') & ": " />
+										<cfset local.itemName &= local.thisPromotionReward.displayProductCategoryNames() />
+										<cfset local.itemName &= "</p>" />
+									</cfif>
 									<cfif not len(local.itemName)>
 										<cfset local.itemName &= "<p>" />
 										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
@@ -199,7 +211,8 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="brands" fieldName="promotionRewards[1].brands" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productTypes" fieldName="promotionRewards[1].productTypes" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="products" fieldName="promotionRewards[1].products" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productContent" fieldType="multiSelect" fieldName="promotionRewards[1].productContent" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productContent" value="#rc.promotionRewardProduct.getContentPaths()#" fieldType="multiSelect" fieldName="promotionRewards[1].productContent" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="productCategories" value="#rc.promotionRewardProduct.getCategoryPaths()#" fieldType="multiSelect" fieldName="promotionRewards[1].productCategories" edit="true" />
 				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="skus" fieldName="promotionRewards[1].skus" edit="true" /> --->
 				<!--- <cf_SlatwallPropertyDisplay object="#rc.promotionRewardProduct#" property="options" fieldName="promotionRewards[1].options" edit="true" /> --->
 			</dl>

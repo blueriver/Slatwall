@@ -55,6 +55,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID";
 	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID";
 	property name="productContent" cfc="PromotionRewardProductProductContent" fieldtype="one-to-many" fkcolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="productCategory" cfc="PromotionRewardProductProductCategory" fieldtype="one-to-many" fkcolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
 	
 	public any function init() {
 
@@ -73,7 +74,12 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		if(isNull(variables.productTypes)) {
 			variables.productTypes = [];
 		}
-
+		if(isNull(variables.productContent)) {
+			variables.productContent = [];
+		}
+		if(isNull(variables.productCategories)) {
+			variables.productCategories = [];
+		}
 		return super.init();
 	}
 	
@@ -213,6 +219,26 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	   }
     }
     
+	// ProductContent (one-to-many)    
+
+	public void function addProductContent(required any productContent) {    
+	   arguments.productContent.setPromotionReward(this);    
+	}    
+	    
+	public void function removeProductContent(required any productContent) {    
+	   arguments.productContent.removePromotionReward(this);    
+	}
+	
+	// productCategory (one-to-many)
+
+	public void function addProductCategory(required any productCategory) {
+	   arguments.productCategory.setPromotionReward(this);
+	}
+	
+	public void function removeProductCategory(required any productCategory) {
+	   arguments.productCategory.removePromotionReward(this);
+	}
+    
     /************   END Association Management Methods   *******************/
 
 	public any function getProductsOptions() {
@@ -233,9 +259,22 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		
 		while( productPages.hasNext() ) {
 			local.thisProductPage = productPages.next();
-			arrayAppend( productContentOptions, {name=local.thisProductPage.getTitle(),value=local.thisProductPage.getContentID()} );
+			arrayAppend( productContentOptions, {name=local.thisProductPage.getTitle(),value=listChangeDelims(local.thisProductPage.getPath(),' ')} );
 		}
 		return productContentOptions;
+	}
+	
+	public array function getProductCategoriesOptions() {
+		var productCategoriesOptions = [];
+		// get mura categories
+		var categories = getService("productService").getMuraCategories(siteID=$.event('siteid'), parentID=$.slatwall.setting("product_rootProductCategory"));
+		
+		for( var i=1;i<=categories.recordCount;i++ ) {
+			local.thisCategoryPath = replace(categories.path[i],"'","","all");
+			local.thisCategoryPath = replace(local.thisCategoryPath,","," ","all");
+			arrayAppend( productCategoriesOptions, {name=categories.name[i],value=local.thisCategoryPath} );
+		}
+		return productCategoriesOptions;
 	}
 	
 	public string function displayBrandNames() {
@@ -278,6 +317,24 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		return skuCodes;
 	}
 
+	public string function displayProductCategoryNames() {
+		var names = "";
+		for( var i=1; i<=arrayLen(this.getProductCategories());i++ ) {
+			local.thisCategoryName = $.getBean("category").loadBy( categoryID=getProductCategories()[i].getCategoryID() ).getName();
+			names = listAppend(names,local.thisCategoryName);
+		}
+		return names;
+	}
+	
+	public string function displayProductPageNames() {
+		var names = "";
+		for( var i=1; i<=arrayLen(this.getProductContent());i++ ) {
+			local.thisPageTitle = $.getBean("content").loadBy( contentID=getProductContent()[i].getContentID() ).getTitle();
+			names = listAppend(names,local.thisPageTitle);
+		}
+		return names;
+	}
+
 	public string function getProductTypeIDs() {
 		var productTypeIDs = "";
 		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
@@ -300,6 +357,22 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
 		}
 		return skuIDs;
+	}
+	
+	public string function getCategoryPaths() {
+		var paths = "";
+		for( var i=1; i<=arrayLen(this.getProductCategories());i++ ) {
+			paths = listAppend(paths,replace( this.getProductCategories()[i].getCategoryPath(),","," ","all"));
+		}
+		return paths;
+	}
+	
+	public string function getContentPaths() {
+		var paths = "";
+		for( var i=1; i<=arrayLen(this.getProductContent());i++ ) {
+			paths = listAppend(paths,replace( this.getProductContent()[i].getContentPath(),","," ","all"));
+		}
+		return paths;
 	}
 	
 	// ============ START: Non-Persistent Property Methods =================

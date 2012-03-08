@@ -42,7 +42,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="utilityService" type="any";
 	
 	public any function savePromotion(required any promotion, struct data={}) {
-		
+		//writeDump(var=arguments.data,abort=true,top=3);
 		// Turn off sub-property populating because it will be managed manually in this method.
 		arguments.data.populateSubProperties = false;
 		
@@ -75,6 +75,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			// Populate that product reward
 			prProduct.populate(arguments.data.promotionRewards[1]);
+			
+			// assign any product pages/categories to reward
+			assignProductContentToReward( prProduct,arguments.data.promotionRewards[1].productContent );						
+			assignProductCategoriesToReward( prProduct,arguments.data.promotionRewards[1].productCategories );
 			
 			// Validate the product reward
 			prProduct.validate();
@@ -113,6 +117,38 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
         }
 		
 		return arguments.promotion;
+	}
+	
+	private void function assignProductContentToReward( required any promotionReward, required string contentPaths ) {	
+		// Remove Existing product Content
+		for(var i=arrayLen(arguments.promotionReward.getProductContent()); i >= 1; i--) {
+			arguments.promotionReward.getProductContent()[i].removePromotionReward();
+		}
+		
+		// Assign all new product Content
+		for(var i=1; i<=listLen(arguments.contentPaths); i++) {
+			var thisPath = listGetAt(arguments.contentPaths, i);
+			var thisProductContent = this.newPromotionRewardProductProductContent();
+			thisProductContent.setPromotionReward(arguments.promotionReward);
+			thisProductContent.setContentID(listLast(thisPath, " "));
+			thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
+		}
+	}
+	
+	private void function assignProductCategoriesToReward( required any promotionReward, required string categoryPaths ) {	
+		// Remove Existing product categories
+		for(var i=arrayLen(arguments.promotionReward.getProductCategories()); i >= 1; i--) {
+			arguments.promotionReward.getProductCategories()[i].removePromotionReward();
+		}
+		
+		// Assign all new product categories
+		for(var i=1; i<=listLen(arguments.categoryPaths); i++) {
+			var thisPath = listGetAt(arguments.categoryPaths, i);
+			var thisProductCategory = this.newPromotionRewardProductProductCategory();
+			thisProductCategory.setPromotionReward(arguments.promotionReward);
+			thisProductCategory.setCategoryID(listLast(thisPath, " "));
+			thisProductCategory.setCategoryPath(listChangeDelims(thisPath,","," "));
+		}
 	}
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
