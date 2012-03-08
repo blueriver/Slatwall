@@ -845,7 +845,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint Private helper function to get a bean for the underlying CMS (mura for now)
 	private any function getCMSBean( required any beanName ) {
-		application.serviceFactory.getBean( argumnets.beanName );
+		return application.serviceFactory.getBean( arguments.beanName );
 	} 
 	
 	// =========================  END:  DELIGATION HELPERS ==========================================

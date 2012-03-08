@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Subscription Usage Benefit Account" entityname="SubscriptionUsageBenefitAccount" table="SubscriptionUsageBenefitAccount" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Subscription Usage Benefit Account" entityname="SlatwallSubscriptionUsageBenefitAccount" table="SlatwallSubscriptionUsageBenefitAccount" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="subscriptionUsageBenefitAccountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

@@ -41,7 +41,7 @@ component displayname="Page" entityname="SlatwallPage" table="SlatwallPage" pers
 	// Persistent Properties
 	property name="pageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="pageName" ormtype="string";
-	property name="pageType" ormtype="boolean";
+	property name="pageType" ormtype="string";
 	property name="cmsPageID" ormtype="string";
 	property name="cmsPageIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";

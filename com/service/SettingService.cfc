@@ -445,7 +445,7 @@ component extends="BaseService" output="false" accessors="true"  {
 		for(var j=1; j<=pageQuery.recordcount; j++) {
 			// should move to DAO and add it using sql for performance
 			var page = getService("pageService").getPageByCmsPageID(pageQuery.contentID[j],true);
-			if(content.isNew()){
+			if(page.isNew()){
 				page.setCmsSiteID(pageQuery.siteID[j]);
 				page.setCmsPageID(pageQuery.contentID[j]);
 				page.setCmsPageIDPath(pageQuery.path[j]);
@@ -465,13 +465,13 @@ component extends="BaseService" output="false" accessors="true"  {
 			var categoryQuery = getCategoryManager().getCategoriesBySiteID(siteID=assignedSites["siteID"][i]);
 			for(var j=1; j<=categoryQuery.recordcount; j++) {
 				// should move to DAO and add it using sql for performance
-				var category = getService("contentService").getCategoryByCmsCategoryID(categoryQuery.categoryID[j],true);
+				var category = getService("pageService").getCategoryByCmsCategoryID(categoryQuery.categoryID[j],true);
 				if(category.isNew()){
 					category.setCmsSiteID(categoryQuery.siteID[j]);
 					category.setCmsCategoryID(categoryQuery.categoryID[j]);
 					category.setCmsCategoryIDPath(categoryQuery.path[j]);
 					category.setCategoryName(categoryQuery.name[j]);
-					category = getService("contentService").saveCategory(category);
+					category = getService("pageService").saveCategory(category);
 				}
 			}
 		}

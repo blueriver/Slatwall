@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Subscription Usage Benefit" entityname="SubscriptionUsageBenefit" table="SubscriptionUsageBenefit" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Subscription Usage Benefit" entityname="SlatwallSubscriptionUsageBenefit" table="SlatwallSubscriptionUsageBenefit" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="subscriptionUsageBenefitID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -52,10 +52,10 @@ component displayname="Subscription Usage Benefit" entityname="SubscriptionUsage
 	// Related Object Properties (one-to-many)
 	
 	// Related Object Properties (many-to-many)
-	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPriceGroup" fkcolumn="subscriptionBenefitID" inversejoincolumn="priceGroupID" cascade="all";
-	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitPromotion" fkcolumn="subscriptionBenefitID" inversejoincolumn="promotionID" cascade="all";
-	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitCategory" fkcolumn="subscriptionBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionBenefitContent" fkcolumn="subscriptionBenefitID" inversejoincolumn="contentID" cascade="all";
+	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID" cascade="all";
+	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID" cascade="all";
+	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
+	property name="pages" singularname="page" cfc="Page" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPage" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="pageID" cascade="all";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";

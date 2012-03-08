@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Access Code" entityname="AccessCode" table="AccessCode" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Access Code" entityname="SlatwallAccessCode" table="SlatwallAccessCode" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
 	property name="accessCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
