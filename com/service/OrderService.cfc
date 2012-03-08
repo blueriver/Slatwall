@@ -553,7 +553,7 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 		for(var orderFulfillment in order.getOrderFulfillments()) {
 			if(orderFulfillment.getFulfillmentMethod().getFulfillmentMethodID() == "shipping") {
 				if(!isNull(orderFulfillment.getAccountAddress())) {
-					orderFulfillment.setShippingAddress(orderFulfillment.getAccountAddress().getAddress());
+					orderFulfillment.setShippingAddress( orderFulfillment.getAccountAddress().getAddress().copyAddress() );
 					orderFulfillment.removeAccountAddress();
 					getDAO().save(orderFulfillment);
 				}

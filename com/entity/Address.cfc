@@ -69,7 +69,11 @@ component displayname="Address" entityname="SlatwallAddress" table="SlatwallAddr
 		
 		return super.init();
 	}
-		
+	
+	public any function copyAddress() {
+		return getService("addressService").copyAddress( this );
+	}
+
 	public string function getFullAddress(string delimiter = ", ") {
 		var address = "";
 		address = listAppend(address,getCompany());
