@@ -103,7 +103,7 @@ Notes:
 									</cfif>
 									<cfif not len(local.itemName)>
 										<cfset local.itemName &= "<p>" />
-										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
+										<cfset local.itemName &= $.Slatwall.rbKey("define.all") />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
 								<cfelseif local.thisPromotionReward.getRewardType() eq "shipping">

@@ -59,7 +59,7 @@ component displayname="Promotion Qualifier Fulfillment" entityname="SlatwallProm
 		}
 		
 		if(isNull(variables.addressZones)) {
-			variables.shippingMethods = [];
+			variables.addressZones = [];
 		}
 
 		return super.init();
@@ -135,6 +135,23 @@ component displayname="Promotion Qualifier Fulfillment" entityname="SlatwallProm
 			arrayAppend( fulfillmentMethodsOptions, {name=rbKey("admin.setting.fulfillmentmethod.#local.thisID#"),value=local.thisID} );
 		}
 		return fulfillmentMethodsOptions;
+	}
+
+	public string function displayFulfillmentMethodNames() {
+		var fulfillmentMethodNames = "";
+		for( var i=1; i<=arrayLen(this.getFulfillmentMethods());i++ ) {
+			fulfillmentMethodNames = listAppend(fulfillmentMethodNames,rbKey("admin.setting.fulfillmentmethod.#this.getFulfillmentMethods()[i].getFulfillmentMethodID()#"));
+		}
+		return fulfillmentMethodNames;
+	}
+	
+	
+	public string function getFulfillmentMethodIDs() {
+		var fulfillmentMethodIDs = "";
+		for( var i=1; i<=arrayLen(this.getFulfillmentMethods());i++ ) {
+			fulfillmentMethodIDs = listAppend(fulfillmentMethodIDs,this.getFulfillmentMethods()[i].getFulfillmentMethodID());
+		}
+		return fulfillmentMethodIDs;
 	}
 
 	public string function displayShippingMethodNames() {

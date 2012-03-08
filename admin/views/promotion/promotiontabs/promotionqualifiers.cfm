@@ -55,7 +55,7 @@ Notes:
 				<cfloop array="#rc.promotion.getPromotionQualifiers()#" index="local.thisPromotionQualifier">
 					<cfif not local.thisPromotionQualifier.hasErrors()>
 						<tr>
-							<td>#$.Slatwall.rbKey('entity.promotionQualifier.promotionQualifierType.' & local.thisPromotionQualifier.getQualifierType())#</td>
+							<td>#$.Slatwall.rbKey('entity.promotionQualifier.qualifierType.' & local.thisPromotionQualifier.getQualifierType())#</td>
 							<td class="varWidth">
 								<cfset local.itemName = "" />
 								<cfif local.thisPromotionQualifier.getQualifierType() eq "product">
@@ -89,9 +89,21 @@ Notes:
 										<cfset local.itemName &= local.thisPromotionQualifier.displayOptionNames() />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
+									<cfif arrayLen(local.thisPromotionQualifier.getProductContent())>
+										<cfset local.itemName &= "<p>" />
+										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierProduct.productContent') & ": " />
+										<cfset local.itemName &= local.thisPromotionQualifier.displayProductPageNames() />
+										<cfset local.itemName &= "</p>" />
+									</cfif>
+									<cfif arrayLen(local.thisPromotionQualifier.getProductCategories())>
+										<cfset local.itemName &= "<p>" />
+										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierProduct.productCategories') & ": " />
+										<cfset local.itemName &= local.thisPromotionQualifier.displayProductCategoryNames() />
+										<cfset local.itemName &= "</p>" />
+									</cfif>
 									<cfif not len(local.itemName)>
 										<cfset local.itemName &= "<p>" />
-										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
+										<cfset local.itemName &= $.Slatwall.rbKey("define.all") />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
 								<cfelseif local.thisPromotionQualifier.getQualifierType() eq "fulfillment">
@@ -100,16 +112,24 @@ Notes:
 										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierFulfillment.fulfillmentMethods') & ": " />
 										<cfset local.itemName &= thisPromotionQualifier.displayFulfillmentMethodNames() />
 										<cfset local.itemName &= "</p>" />
-									</cfif>
+ 									</cfif>
 									<cfif arrayLen(thisPromotionQualifier.getShippingMethods())>
 										<cfset local.itemName &= "<p>" />
 										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierFulfillment.shippingMethods') & ": " />
-										<cfset local.itemName = thisPromotionQualifier.displayShippingMethodNames() />
+										<cfset local.itemName &= thisPromotionQualifier.displayShippingMethodNames() />
+										<cfset local.itemName &= "</p>" />
+									</cfif>
+									<cfif arrayLen(thisPromotionQualifier.getAddressZones())>
+										<cfset local.itemName &= "<p>" />
+										<cfset local.itemName &= $.Slatwall.rbKey('entity.promotionQualifierFulfillment.addressZones') & ": " />
+										<cfset local.itemName &= thisPromotionQualifier.displayAddressZoneNames() />
 										<cfset local.itemName &= "</p>" />
 									</cfif>
 									<cfif not len(local.itemName)>
 										<cfset local.itemName = $.Slatwall.rbKey("define.all") />
 									</cfif>
+								<cfelseif local.thisPromotionQualifier.getQualifierType() eq "order">
+									<cfset local.itemName = $.Slatwall.rbKey("define.na") />
 								</cfif>
 								#local.itemName#
 							</td>
@@ -123,7 +143,7 @@ Notes:
 								#local.thisPromotionQualifier.getMaximumPrice()#
 							</td>
 							<td>
-								local.thisPromotionQualifier.getQualifierType() eq "fulfillment" ? local.thisPromotionQualifier.getMaximumFulfillmentWeight() : $.Slatwall.rbKey("define.na")
+								#local.thisPromotionQualifier.getQualifierType() eq "fulfillment" ? local.thisPromotionQualifier.getMaximumFulfillmentWeight() : $.Slatwall.rbKey("define.na")#
 							</td>
 							<td class="administration">
 								<ul class="two">
@@ -186,7 +206,8 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="brands" fieldName="promotionQualifiers[1].brands" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productTypes" fieldName="promotionQualifiers[1].productTypes" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="products" fieldName="promotionQualifiers[1].products" edit="true" />
-				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productContent" fieldType="multiSelect" fieldName="promotionQualifiers[1].productContent" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productContent" value="#rc.promotionQualifierProduct.getContentPaths()#"  fieldType="multiSelect" fieldName="promotionQualifiers[1].productContent" edit="true" />
+				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierProduct#" property="productCategories" value="#rc.promotionQualifierProduct.getCategoryPaths()#"  fieldType="multiSelect" fieldName="promotionQualifiers[1].productCategories" edit="true" />
 			</dl>
 			<input type="hidden" name="promotionQualifiers[1].promotionQualifierID" value="#rc.promotionQualifierProduct.getPromotionQualifierID()#"/>
 		</div>

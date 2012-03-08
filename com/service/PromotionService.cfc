@@ -141,43 +141,58 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	}
 	
 	public void function updatePromotionQualifier( required any promotion,required struct data ) {
-		// Check to see if we are going to update or editing any rewards (TPC) 
-/*		if(structKeyExists(arguments.data, "savePromotionRewardProduct") && arguments.data.savePromotionRewardProduct) {
-			// Get product reward, and return a new one if not found
-			var prProduct = this.getPromotionRewardProduct(arguments.data.promotionRewards[1].promotionRewardID, true);
+		// Check to see if we are going to update or editing any qualifier (TPC) 
+		if(structKeyExists(arguments.data, "savePromotionQualifierProduct") && arguments.data.savePromotionQualifierProduct) {
+			// Get product qualifier, and return a new one if not found
+			var pqProduct = this.getPromotionQualifierProduct(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
 			
-			// Populate that product reward
-			prProduct.populate(arguments.data.promotionRewards[1]);
+			// Populate that product qualifier
+			pqProduct.populate(arguments.data.promotionQualifiers[1]);
 			
-			// assign any product pages/categories to reward
-			assignProductContentToReward( prProduct,arguments.data.promotionRewards[1].productContent );						
-			assignProductCategoriesToReward( prProduct,arguments.data.promotionRewards[1].productCategories );
+			// assign any product pages/categories to qualifier
+			assignProductContentToQualifier( pqProduct,arguments.data.promotionQualifiers[1].productContent );						
+			assignProductCategoriesToQualifier( pqProduct,arguments.data.promotionQualifiers[1].productCategories );
 			
-			// Validate the product reward
-			prProduct.validate();
+			// Validate the product qualifier
+			pqProduct.validate();
 			
 			// Add the promotion reward to the promotion
-			arguments.promotion.addPromotionReward(prProduct);
+			arguments.promotion.addPromotionQualifier(pqProduct);
 			
 			// add to the sub items populated so that we can validate on parent
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
 			
-		} else if (structKeyExists(arguments.data, "savePromotionRewardShipping") && arguments.data.savePromotionRewardShipping) {
-			// Get shipping reward, and return a new one if not found
-			var prShipping = this.getPromotionRewardShipping(arguments.data.promotionRewards[1].promotionRewardID, true);
+		} else if (structKeyExists(arguments.data, "savePromotionQualifierFulfillment") && arguments.data.savePromotionQualifierFulfillment) {
+			// Get fulfillment qualifier, and return a new one if not found
+			var pqFulfillment = this.getPromotionQualifierFulfillment(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
 			
-			// Get shipping reward, and return a new one if not found
-			prShipping.populate(arguments.data.promotionRewards[1]);
+			// Get fulfillment qualifier, and return a new one if not found
+			pqFulfillment.populate(arguments.data.promotionQualifiers[1]);
 			
-			// Validate the shipping reward
-			prShipping.validate();
+			// Validate the fulfillment qualifier
+			pqFulfillment.validate();
 			
-			// Add the promotion reward to the promotion
-			arguments.promotion.addPromotionReward(prShipping);
+			// Add the promotion qualifier to the promotion
+			arguments.promotion.addPromotionQualifier(pqFulfillment);
 			
 			// add to the sub items populated so that the parent validate method checks for errors in the children
-			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
-		}*/		
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
+		} else if (structKeyExists(arguments.data, "savePromotionQualifierOrder") && arguments.data.savePromotionQualifierOrder) {
+			// Get order qualifier, and return a new one if not found
+			var pqOrder = this.getPromotionQualifierOrder(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
+			
+			// Get shipping qualifier, and return a new one if not found
+			pqOrder.populate(arguments.data.promotionQualifiers[1]);
+			
+			// Validate the shipping qualifier
+			pqOrder.validate();
+			
+			// Add the promotion qualifier to the promotion
+			arguments.promotion.addPromotionQualifier(pqOrder);
+			
+			// add to the sub items populated so that the parent validate method checks for errors in the children
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
+		}
 	}
 	
 	private void function assignProductContentToReward( required any promotionReward, required string contentPaths ) {	
@@ -207,6 +222,38 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			var thisPath = listGetAt(arguments.categoryPaths, i);
 			var thisProductCategory = this.newPromotionRewardProductProductCategory();
 			thisProductCategory.setPromotionReward(arguments.promotionReward);
+			thisProductCategory.setCategoryID(listLast(thisPath, " "));
+			thisProductCategory.setCategoryPath(listChangeDelims(thisPath,","," "));
+		}
+	}
+
+	private void function assignProductContentToQualifier( required any promotionQualifier, required string contentPaths ) {	
+		// Remove Existing product Content
+		for(var i=arrayLen(arguments.promotionQualifier.getProductContent()); i >= 1; i--) {
+			arguments.promotionQualifier.getProductContent()[i].removePromotionQualifier();
+		}
+		
+		// Assign all new product Content
+		for(var i=1; i<=listLen(arguments.contentPaths); i++) {
+			var thisPath = listGetAt(arguments.contentPaths, i);
+			var thisProductContent = this.newPromotionQualifierProductProductContent();
+			thisProductContent.setPromotionQualifier(arguments.promotionQualifier);
+			thisProductContent.setContentID(listLast(thisPath, " "));
+			thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
+		}
+	}
+	
+	private void function assignProductCategoriesToQualifier( required any promotionQualifier, required string categoryPaths ) {	
+		// Remove Existing product categories
+		for(var i=arrayLen(arguments.promotionQualifier.getProductCategories()); i >= 1; i--) {
+			arguments.promotionQualifier.getProductCategories()[i].removePromotionQualifier();
+		}
+		
+		// Assign all new product categories
+		for(var i=1; i<=listLen(arguments.categoryPaths); i++) {
+			var thisPath = listGetAt(arguments.categoryPaths, i);
+			var thisProductCategory = this.newPromotionQualifierProductProductCategory();
+			thisProductCategory.setPromotionQualifier(arguments.promotionQualifier);
 			thisProductCategory.setCategoryID(listLast(thisPath, " "));
 			thisProductCategory.setCategoryPath(listChangeDelims(thisPath,","," "));
 		}
