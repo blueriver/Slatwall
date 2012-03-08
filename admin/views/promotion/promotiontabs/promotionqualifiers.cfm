@@ -195,7 +195,7 @@ Notes:
 			<dl class="twoColumn">
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierFulfillment#" property="minimumQuantity" fieldName="promotionQualifiers[1].minimumQuantity" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierFulfillment#" property="maximumFulfillmentWeight" fieldName="promotionQualifiers[1].maximumFulfillmentWeight" edit="true" />				
-<!---				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierFulfillment#" property="fulfillmentMethods" valueOptions="#rc.promotionQualifierFulfillment.getFulfillmentMethodOptions()#" fieldName="promotionQualifiers[1].fulfillmentMethods" edit="true" />--->
+				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierFulfillment#" property="fulfillmentMethods" fieldName="promotionQualifiers[1].fulfillmentMethods" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierFulfillment#" property="shippingMethods" fieldName="promotionQualifiers[1].shippingMethods" edit="true" />
 				<cf_SlatwallPropertyDisplay object="#rc.promotionQualifierFulfillment#" property="addressZones" fieldName="promotionQualifiers[1].addressZones" edit="true" />
 			</dl>
