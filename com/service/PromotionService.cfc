@@ -70,13 +70,15 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		// update/add promotion reward / qualifier / exclusion
 		updatePromotionReward( arguments.promotion,arguments.data );
 		updatePromotionQualifier( arguments.promotion,arguments.data );
+		updatePromotionRewardExclusion( arguments.promotion,arguments.data );
 		
 
 		// Validate the promotion, this will also check any sub-entities that got populated 
-		arguments.promotion.validate();
+		arguments.promotion.validate();		
 		
 		// If the object passed validation then call save in the DAO, otherwise set the errors flag
 		if(!arguments.promotion.hasErrors()) {
+			//writeDump( var=arguments.promotion, top=3, abort=true );
 			arguments.promotion = getDAO().save(target=arguments.promotion);
 		} else {
 			getService("requestCacheService").setValue("ormHasErrors", true);
@@ -95,8 +97,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			prProduct.populate(arguments.data.promotionRewards[1]);
 			
 			// assign any product pages/categories to reward
-			assignProductContentToReward( prProduct,arguments.data.promotionRewards[1].productContent );						
-			assignProductCategoriesToReward( prProduct,arguments.data.promotionRewards[1].productCategories );
+			assignProductContent( prProduct,arguments.data.promotionRewards[1].productContent, "PromotionRewardProductProductContent" );						
+			assignProductCategories( prProduct,arguments.data.promotionRewards[1].productCategories, "PromotionRewardProductProductCategory" );
 			
 			// Validate the product reward
 			prProduct.validate();
@@ -150,8 +152,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			pqProduct.populate(arguments.data.promotionQualifiers[1]);
 			
 			// assign any product pages/categories to qualifier
-			assignProductContentToQualifier( pqProduct,arguments.data.promotionQualifiers[1].productContent );						
-			assignProductCategoriesToQualifier( pqProduct,arguments.data.promotionQualifiers[1].productCategories );
+			assignProductContent( pqProduct,arguments.data.promotionQualifiers[1].productContent,"PromotionQualifierProductProductContent" );						
+			assignProductCategories( pqProduct,arguments.data.promotionQualifiers[1].productCategories,"PromotionQualifierProductProductCategory" );
 			
 			// Validate the product qualifier
 			pqProduct.validate();
@@ -194,70 +196,63 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
 		}
 	}
-	
-	private void function assignProductContentToReward( required any promotionReward, required string contentPaths ) {	
+
+	public void function updatePromotionRewardExclusion( required any promotion,required struct data ) {
+		// Check to see if we are going to update or editing any exclusions
+		if(structKeyExists(arguments.data, "savePromotionRewardExclusion") && arguments.data.savePromotionRewardExclusion) {
+			// Get exclusion, and return a new one if not found
+			var prExclusion = this.getPromotionRewardExclusion(arguments.data.PromotionRewardExclusions[1].promotionRewardExclusionID, true);
+			
+			// Populate that exclusion
+			prExclusion.populate(arguments.data.promotionRewardExclusions[1]);
+			
+			// assign any product pages/categories to exclusion
+			assignProductContent( prExclusion,arguments.data.PromotionRewardExclusions[1].productContent,"PromotionRewardExclusionProductContent" );						
+			assignProductCategories( prExclusion,arguments.data.PromotionRewardExclusions[1].productCategories,"PromotionRewardExclusionProductCategory" );
+			
+			// Validate the product exclusion
+			prExclusion.validate();
+			
+			// Add the promotion reward to the promotion
+			arguments.promotion.addPromotionRewardExclusion(prExclusion);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewardExclusions");		
+		} 
+	}
+
+	private void function assignProductContent( required any entity, required string contentPaths, required string linkingEntity ) {	
 		// Remove Existing product Content
-		for(var i=arrayLen(arguments.promotionReward.getProductContent()); i >= 1; i--) {
-			arguments.promotionReward.getProductContent()[i].removePromotionReward();
+		for(var i=arrayLen(arguments.entity.getProductContent()); i >= 1; i--) {
+			arguments.entity.removeProductContent( arguments.entity.getProductContent()[i] );
 		}
 		
 		// Assign all new product Content
 		for(var i=1; i<=listLen(arguments.contentPaths); i++) {
 			var thisPath = listGetAt(arguments.contentPaths, i);
-			var thisProductContent = this.newPromotionRewardProductProductContent();
-			thisProductContent.setPromotionReward(arguments.promotionReward);
+			var thisProductContent = invokeMethod( "new" & arguments.linkingEntity );
 			thisProductContent.setContentID(listLast(thisPath, " "));
 			thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
+			arguments.entity.addProductContent( thisProductContent );
 		}
 	}
 	
-	private void function assignProductCategoriesToReward( required any promotionReward, required string categoryPaths ) {	
+	private void function assignProductCategories( required any entity, required string categoryPaths, required string linkingEntity ) {	
 		// Remove Existing product categories
-		for(var i=arrayLen(arguments.promotionReward.getProductCategories()); i >= 1; i--) {
-			arguments.promotionReward.getProductCategories()[i].removePromotionReward();
+		for(var i=arrayLen(arguments.entity.getProductCategories()); i >= 1; i--) {
+			arguments.entity.removeProductCategory( arguments.entity.getProductCategories()[i] );
 		}
 		
 		// Assign all new product categories
 		for(var i=1; i<=listLen(arguments.categoryPaths); i++) {
 			var thisPath = listGetAt(arguments.categoryPaths, i);
-			var thisProductCategory = this.newPromotionRewardProductProductCategory();
-			thisProductCategory.setPromotionReward(arguments.promotionReward);
+			var thisProductCategory = invokeMethod( "new" & arguments.linkingEntity );
 			thisProductCategory.setCategoryID(listLast(thisPath, " "));
 			thisProductCategory.setCategoryPath(listChangeDelims(thisPath,","," "));
+			arguments.entity.addProductCategory( thisProductCategory );
 		}
 	}
 
-	private void function assignProductContentToQualifier( required any promotionQualifier, required string contentPaths ) {	
-		// Remove Existing product Content
-		for(var i=arrayLen(arguments.promotionQualifier.getProductContent()); i >= 1; i--) {
-			arguments.promotionQualifier.getProductContent()[i].removePromotionQualifier();
-		}
-		
-		// Assign all new product Content
-		for(var i=1; i<=listLen(arguments.contentPaths); i++) {
-			var thisPath = listGetAt(arguments.contentPaths, i);
-			var thisProductContent = this.newPromotionQualifierProductProductContent();
-			thisProductContent.setPromotionQualifier(arguments.promotionQualifier);
-			thisProductContent.setContentID(listLast(thisPath, " "));
-			thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
-		}
-	}
-	
-	private void function assignProductCategoriesToQualifier( required any promotionQualifier, required string categoryPaths ) {	
-		// Remove Existing product categories
-		for(var i=arrayLen(arguments.promotionQualifier.getProductCategories()); i >= 1; i--) {
-			arguments.promotionQualifier.getProductCategories()[i].removePromotionQualifier();
-		}
-		
-		// Assign all new product categories
-		for(var i=1; i<=listLen(arguments.categoryPaths); i++) {
-			var thisPath = listGetAt(arguments.categoryPaths, i);
-			var thisProductCategory = this.newPromotionQualifierProductProductCategory();
-			thisProductCategory.setPromotionQualifier(arguments.promotionQualifier);
-			thisProductCategory.setCategoryID(listLast(thisPath, " "));
-			thisProductCategory.setCategoryPath(listChangeDelims(thisPath,","," "));
-		}
-	}
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
 	public void function updateOrderAmountsWithPromotions(required any order) {

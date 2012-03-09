@@ -19,13 +19,20 @@ jQuery(function() {
 		jQuery(this).remove();
 		return false;
 	});
+
+	jQuery('#addPromotionRewardExclusionButton').click(function(){
+		jQuery('#savePromotionRewardExclusionHidden').val('true');
+		jQuery('#promotionRewardExclusionInputs').fadeIn(400);
+		jQuery(this).remove();
+		return false;
+	});
 	
 	jQuery('#promotionRewardType').change(function(){
 		if( jQuery(this).val() == "product" ) {
 			jQuery('#savePromotionRewardProductHidden').val('true');
 			jQuery('#savePromotionRewardShippingHidden').val('false');
 			jQuery('#savePromotionRewardOrderHidden').val('false');
-			jQuery('#promotionRewardProductInputs').hide();
+			jQuery('#promotionRewardOrderInputs').hide();
 			jQuery('#promotionRewardShippingInputs').hide();
 			jQuery('#promotionRewardProductInputs').fadeIn(400);
 		}

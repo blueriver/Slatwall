@@ -54,6 +54,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	// property name="promotionPeriods" singularname="promotionPeriod" cfc="PromotionPeriod" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
@@ -72,6 +73,9 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		   variables.promotionCodes = [];
 		}
 		if(isNull(variables.promotionRewards)) {
+			variables.promotionRewards = [];
+		}
+		if(isNull(variables.promotionRewardExclusions)) {
 			variables.promotionRewards = [];
 		}
 		if(isNull(variables.promotionQualifiers)) {
@@ -116,6 +120,16 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	public void function removePromotionReward(required any promotionReward) {
 		arguments.promotionReward.removePromotion(this);
+	}
+	
+	// PromotionRewardExclusion (one-to-many)
+
+	public void function addPromotionRewardExclusion(required any PromotionRewardExclusion) {
+	   arguments.PromotionRewardExclusion.setPromotion(this);
+	}
+	
+	public void function removePromotionRewardExclusion(required any PromotionRewardExclusion) {
+	   arguments.PromotionRewardExclusion.removePromotion(this);
 	}
 	
 	// promotionQualifiers (one-to-many)    

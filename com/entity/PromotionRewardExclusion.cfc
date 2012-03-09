@@ -45,13 +45,13 @@ component displayname="Promotion Reward Exclusion" entityname="SlatwallPromotion
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Related Object Properties (many-to-many)
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID";
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID";
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID";
-	property name="productContent" cfc="PromotionRewardExclusionProductContent" fieldtype="one-to-many" fkcolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
-	property name="productCategories" singularname="productCategory" cfc="PromotionRewardExclusionProductCategory" fieldtype="one-to-many" fkcolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionBrand" fkcolumn="promotionRewardExclusionID" inversejoincolumn="brandID";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionOption" fkcolumn="promotionRewardExclusionID" inversejoincolumn="optionID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionSku" fkcolumn="promotionRewardExclusionID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="promotionRewardExclusionID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProductType" fkcolumn="promotionRewardExclusionID" inversejoincolumn="productTypeID";
+	property name="productContent" cfc="PromotionRewardExclusionProductContent" fieldtype="one-to-many" fkcolumn="promotionRewardExclusionID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="productCategory" cfc="PromotionRewardExclusionProductCategory" fieldtype="one-to-many" fkcolumn="promotionRewardExclusionID" cascade="all-delete-orphan" inverse="true";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -263,7 +263,140 @@ component displayname="Promotion Reward Exclusion" entityname="SlatwallPromotion
 
     
    // ============   END Association Management Methods   =================
+	
+	public any function getProductsOptions() {
+		if(!structKeyExists(variables, "productsOptions")) {
+			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProduct");
+			smartList.addSelect(propertyIdentifier="productName", alias="name");
+			smartList.addSelect(propertyIdentifier="productID", alias="value");
+			smartList.addFilter(propertyIdentifier="activeFlag", value=1);
+			smartList.addOrder("productName|ASC");
+			variables.productsOptions = smartList.getRecords();
+		}
+		return variables.productsOptions;
+	}
+	
+	public array function getProductContentOptions() {
+		var productContentOptions = [];
+		var productPages = getService("productService").getProductPages(siteID=$.event('siteid'));
+		
+		while( productPages.hasNext() ) {
+			local.thisProductPage = productPages.next();
+			arrayAppend( productContentOptions, {name=local.thisProductPage.getTitle(),value=listChangeDelims(local.thisProductPage.getPath(),' ')} );
+		}
+		return productContentOptions;
+	}
+	
+	public array function getProductCategoriesOptions() {
+		var productCategoriesOptions = [];
+		// get mura categories
+		var categories = getService("productService").getMuraCategories(siteID=$.event('siteid'), parentID=$.slatwall.setting("product_rootProductCategory"));
+		
+		for( var i=1;i<=categories.recordCount;i++ ) {
+			local.thisCategoryPath = replace(categories.path[i],"'","","all");
+			local.thisCategoryPath = replace(local.thisCategoryPath,","," ","all");
+			arrayAppend( productCategoriesOptions, {name=categories.name[i],value=local.thisCategoryPath} );
+		}
+		return productCategoriesOptions;
+	}
 
+	public string function displayBrandNames() {
+		var brandNames = "";
+		for( var i=1; i<=arrayLen(this.getBrands());i++ ) {
+			brandNames = listAppend(brandNames, " " & this.getBrands()[i].getBrandName());
+		}
+		return brandNames;
+	}
+	
+	public string function displayOptionNames() {
+		var optionNames = "";
+		for( var i=1; i<=arrayLen(this.getOptions());i++ ) {
+			optionNames = listAppend(optionNames, " " & this.getOptions()[i].getOptionName());
+		}
+		return optionNames;
+	}
+	
+	public string function displayProductTypeNames() {
+		var productTypeNames = "";
+		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
+			productTypeNames = listAppend(productTypeNames, " " & this.getProductTypes()[i].getProductTypeName());
+		}
+		return productTypeNames;
+	}
+
+	public string function displayProductNames() {
+		var productNames = "";
+		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
+			productNames = listAppend(productNames, " " & this.getProducts()[i].getProductName());
+		}
+		return productNames;
+	}
+	
+	public string function displaySkuCodes() {
+		var skuCodes = "";
+		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
+			skuCodes = listAppend(skuCodes, " " & this.getSkus()[i].getSkuCode());
+		}
+		return skuCodes;
+	}
+
+	public string function displayProductCategoryNames() {
+		var names = "";
+		for( var i=1; i<=arrayLen(this.getProductCategories());i++ ) {
+			local.thisCategoryName = $.getBean("category").loadBy( categoryID=getProductCategories()[i].getCategoryID() ).getName();
+			names = listAppend(names,local.thisCategoryName);
+		}
+		return names;
+	}
+	
+	public string function displayProductPageNames() {
+		var names = "";
+		for( var i=1; i<=arrayLen(this.getProductContent());i++ ) {
+			local.thisPageTitle = $.getBean("content").loadBy( contentID=getProductContent()[i].getContentID() ).getTitle();
+			names = listAppend(names,local.thisPageTitle);
+		}
+		return names;
+	}
+
+	public string function getProductTypeIDs() {
+		var productTypeIDs = "";
+		for( var i=1; i<=arrayLen(this.getProductTypes());i++ ) {
+			productTypeIDs = listAppend(productTypeIDs,this.getProductTypes()[i].getProductTypeID());
+		}
+		return productTypeIDs;
+	}
+	
+	public string function getProductIDs() {
+		var productIDs = "";
+		for( var i=1; i<=arrayLen(this.getProducts());i++ ) {
+			productIDs = listAppend(productIDs,this.getProducts()[i].getProductID());
+		}
+		return productIDs;
+	}
+	
+	public string function getSkuIDs() {
+		var skuIDs = "";
+		for( var i=1; i<=arrayLen(this.getSkus());i++ ) {
+			skuIDs = listAppend(skuIDs,this.getSkus()[i].getSkuID());
+		}
+		return skuIDs;
+	}
+	
+	public string function getCategoryPaths() {
+		var paths = "";
+		for( var i=1; i<=arrayLen(this.getProductCategories());i++ ) {
+			paths = listAppend(paths,replace( this.getProductCategories()[i].getCategoryPath(),","," ","all"));
+		}
+		return paths;
+	}
+	
+	public string function getContentPaths() {
+		var paths = "";
+		for( var i=1; i<=arrayLen(this.getProductContent());i++ ) {
+			paths = listAppend(paths,replace( this.getProductContent()[i].getContentPath(),","," ","all"));
+		}
+		return paths;
+	}
 
 	// ============ START: Non-Persistent Property Methods =================
 	

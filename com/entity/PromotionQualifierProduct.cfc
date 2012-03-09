@@ -216,11 +216,11 @@ component displayname="Promotion Qualifier Product" entityname="SlatwallPromotio
 	// ProductContent (one-to-many)
 
 	public void function addProductContent(required any productContent) {
-	   arguments.productContent.setProductQualifier(this);
+	   arguments.productContent.setPromotionQualifier(this);
 	}
 	
 	public void function removeProductContent(required any productContent) {
-	   arguments.productContent.removeProductQualifier(this);
+	   arguments.productContent.removePromotionQualifier(this);
 	}
 	
 	// ProductCategory (one-to-many)
