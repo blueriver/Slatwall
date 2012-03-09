@@ -228,6 +228,16 @@ component extends="BaseService" output="false" accessors="true"  {
 			
 			local.thisSiteID = assignedSites["siteID"][i];
 			
+			// Confirm that there is a Slatwall subtype
+			local.productPageSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
+			local.productPageSubType.set( {
+				type = "Page",
+				subType = "Slatwall",
+				siteID = local.thisSiteID
+			} );
+			local.productPageSubType.load();
+			local.productPageSubType.save();
+			
 			// Confirm that there is a SlatwallProductTemplate subtype
 			local.productPageSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
 			local.productPageSubType.set( {
@@ -313,6 +323,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				shoppingCartPage.setParentID("00000000000000000000000000000000001");
 				shoppingCartPage.setFilename("shopping-cart");
 				shoppingCartPage.setSiteID(thisSiteID);
+				shoppingCartPage.setSubType("Slatwall");
 				shoppingCartPage.save();
 			}
 			
@@ -330,6 +341,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				orderStatusPage.setParentID("00000000000000000000000000000000001");
 				orderStatusPage.setFilename("order-status");
 				orderStatusPage.setSiteID(thisSiteID);
+				orderStatusPage.setSubType("Slatwall");
 				orderStatusPage.save();
 			}
 			
@@ -347,6 +359,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				orderConfirmationPage.setParentID("00000000000000000000000000000000001");
 				orderConfirmationPage.setFilename("order-confirmation");
 				orderConfirmationPage.setSiteID(thisSiteID);
+				orderConfirmationPage.setSubType("Slatwall");
 				orderConfirmationPage.save();
 			}
 			
@@ -364,9 +377,43 @@ component extends="BaseService" output="false" accessors="true"  {
 				myAccountPage.setParentID("00000000000000000000000000000000001");
 				myAccountPage.setFilename("my-account");
 				myAccountPage.setSiteID(thisSiteID);
+				myAccountPage.setSubType("Slatwall");
 				myAccountPage.save();
 			}
 			
+			// Setup Edit Account Page
+			var editAccountPage = getContentManager().getActiveContentByFilename(filename="edit-account", siteid=local.thisSiteID);
+			if(editAccountPage.getIsNew()) {
+				editAccountPage.setDisplayTitle("Edit Account");
+				editAccountPage.setHTMLTitle("Edit Account");
+				editAccountPage.setMenuTitle("Edit Account");
+				editAccountPage.setIsNav(1);
+				editAccountPage.setActive(1);
+				editAccountPage.setApproved(1);
+				editAccountPage.setIsLocked(1);
+				editAccountPage.setParentID("00000000000000000000000000000000001");
+				editAccountPage.setFilename("edit-account");
+				editAccountPage.setSiteID(thisSiteID);
+				editAccountPage.setSubType("Slatwall");
+				editAccountPage.save();
+			}
+			
+			// Setup Create Account Page
+			var createAccountPage = getContentManager().getActiveContentByFilename(filename="create-account", siteid=local.thisSiteID);
+			if(createAccountPage.getIsNew()) {
+				createAccountPage.setDisplayTitle("Create Account");
+				createAccountPage.setHTMLTitle("Create Account");
+				createAccountPage.setMenuTitle("Create Account");
+				createAccountPage.setIsNav(1);
+				createAccountPage.setActive(1);
+				createAccountPage.setApproved(1);
+				createAccountPage.setIsLocked(1);
+				createAccountPage.setParentID("00000000000000000000000000000000001");
+				createAccountPage.setFilename("create-account");
+				createAccountPage.setSiteID(thisSiteID);
+				createAccountPage.setSubType("Slatwall");
+				createAccountPage.save();
+			}
 			
 			// Setup Checkout Page
 			var checkoutPage = getContentManager().getActiveContentByFilename(filename="checkout", siteid=local.thisSiteID);
@@ -381,6 +428,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				checkoutPage.setParentID("00000000000000000000000000000000001");
 				checkoutPage.setFilename("checkout");
 				checkoutPage.setSiteID(thisSiteID);
+				checkoutPage.setSubType("Slatwall");
 				checkoutPage.save();
 			}
 			
@@ -424,6 +472,11 @@ component extends="BaseService" output="false" accessors="true"  {
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			getService("logService").logMessage("Pull mura page For Site ID: #assignedSites["siteID"][i]#");
+			
+			// save all the listing pages
+			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
+			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="Slatwall", dataType="varchar" );
+			createPage(pageFeed,"generic");
 			
 			// save all the listing pages
 			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });

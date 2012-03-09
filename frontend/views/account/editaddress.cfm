@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,21 +36,19 @@
 Notes:
 
 --->
+<cfparam name="rc.account" type="any" />
+<cfparam name="rc.accountAddress" type="any" />
 <cfoutput>
-<ul id="accountNav">
-	<cfif request.action neq "frontend:account.detail">
-	<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
-	</cfif>
-<cfif arrayLen($.slatwall.account().getOrders()) and request.action neq "frontend:account.listorder">
-	<li><a href="?slatAction=frontend:account.listorder">View Orders</a></li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=addresses')#">View Addresses</a></li>
-<cfif request.action neq "frontend:account.edit">
-	<li>
-		<a href="?slatAction=frontend:account.edit">Edit Profile</a>
-	</li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=editLogin')#">Edit Login</a></li>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=paymentMethods')#">View Payment Methods</a></li>
-</ul>
+<div class="accountAddressDetails">
+	<form name="accountAddress" method="post">
+		<h4>Address Details</h4>
+
+		<cf_SlatwallPropertyDisplay object="#rc.accountAddress#" fieldname="accountAddressName" property="accountAddressName" edit="true">
+		<cf_SlatwallAddressDisplay address="#rc.accountAddress.getAddress()#" fieldNamePrefix="address." edit="true">
+		
+		<input type="hidden" name="slatAction" value="frontend:account.saveAddress" />
+		<button type="submit">Save</button>
+	</form>
+</div>
 </cfoutput>
+

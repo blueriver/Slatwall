@@ -107,9 +107,45 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			} else if (rc.$.content('filename') == 'checkout') {
 				rc.$.event("slatAction", "frontend:checkout.detail");
 				
+			// Checks for create-Account page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "create") {
+				rc.$.event("slatAction", "frontend:account.create");
+				
+			// Checks for edit-Account page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "edit") {
+				rc.$.event("slatAction", "frontend:account.edit");
+				
+			// Checks for edit-Account page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "editLogin") {
+				rc.$.event("slatAction", "frontend:account.editlogin");
+				
+			// Checks for list address page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "addresses") {
+				rc.$.event("slatAction", "frontend:account.listaddress");
+				
+			// Checks for edit address page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "editAddress") {
+				rc.$.event("slatAction", "frontend:account.editaddress");
+				
+			// Checks for list address page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "paymentMethods") {
+				rc.$.event("slatAction", "frontend:account.listpaymentmethod");
+				
+			// Checks for edit address page
+			} else if (rc.$.content('filename') == 'my-account' && rc.$.event("show") == "editPaymentMethod") {
+				rc.$.event("slatAction", "frontend:account.editpaymentmethod");
+				
 			// Checks for My-Account page
 			} else if (rc.$.content('filename') == 'my-account') {
 				rc.$.event("slatAction", "frontend:account.detail");
+				
+			// Checks for edit-Account page
+			} else if (rc.$.content('filename') == 'edit-account') {
+				rc.$.event("slatAction", "frontend:account.edit");
+				
+			// Checks for create-Account page
+			} else if (rc.$.content('filename') == 'create-account') {
+				rc.$.event("slatAction", "frontend:account.create");
 				
 			// Checks for Order Status page
 			} else if (rc.$.content('filename') == 'order-status') {

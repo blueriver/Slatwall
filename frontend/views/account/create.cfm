@@ -41,11 +41,31 @@ Notes:
 	<form name="account" method="post">
 		<h4>Account Details</h4>
 		<dl>
+			<!--- login info --->
+			<dt class="spdemailaddress">
+				<label for="emailAddress" class="required">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label>
+			</dt>
+			<dd id="spdemailaddress">
+				<cfset emailValue = "" />
+				<cfif not isNull(rc.account.getPrimaryEmailAddress()) and not isNull(rc.account.getPrimaryEmailAddress().getEmailAddress())>
+					<cfset emailValue = rc.account.getPrimaryEmailAddress().getEmailAddress() />	
+				</cfif>
+				<input type="text" name="emailAddress" value="#emailValue#" />
+				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryEmailAddress" for="emailAddress" />
+			</dd>
+			<dt class="spdpassword">
+				<label for="password">Password</label>
+			</dt>
+			<dd id="spdpassword">
+				<input type="password" name="password" value="" />
+				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="password" for="password" />
+			</dd>
+			<!--- account info --->
 			<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="firstName" property="firstName" edit="true">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="lastName" property="lastName" edit="true">
 			<cf_SlatwallPropertyDisplay object="#rc.account#" fieldname="company" property="company" edit="true">
 			<dt class="spdphonenumber">
-				<label for="account.phoneNumber" class="required">#$.slatwall.rbKey('entity.accountPhoneNumber.phoneNumber')#</label>
+				<label for="phoneNumber" class="required">#$.slatwall.rbKey('entity.accountPhoneNumber.phoneNumber')#</label>
 			</dt>
 			<dd id="spdphonenumber">
 				<cfset phoneValue = "" />
@@ -53,8 +73,9 @@ Notes:
 					<cfset phoneValue = rc.account.getPrimaryPhoneNumber().getPhoneNumber() />	
 				</cfif>
 				<input type="text" name="phoneNumber" value="#phoneValue#" />
-				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryPhoneNumber" for="phoneNumber" />
+				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="phoneNumber" for="phoneNumber" />
 			</dd>
+			<!--- extended attribute --->
 			<cfset attributeValueIndex = 0 />
 			<cfloop array="#rc.attributeSets#" index="local.attributeSet">
 				<cfloop array="#local.attributeSet.getAttributes()#" index="local.attribute">
@@ -73,7 +94,7 @@ Notes:
 				</cfloop>
 			</cfloop> 
 		</dl>
-		<input type="hidden" name="slatAction" value="frontend:account.save" />
+		<input type="hidden" name="slatAction" value="frontend:account.savenew" />
 		<button type="submit">Save</button>
 	</form>
 </div>

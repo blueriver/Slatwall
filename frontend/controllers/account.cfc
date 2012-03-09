@@ -41,10 +41,55 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="accountService" type="any";
 	property name="orderService" type="any";
 	property name="userUtility" type="any";
+	property name="paymentService" type="any";
+	
+	public void function create(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		if(!rc.account.isNew()){
+			getFW().redirectExact("/my-account");
+		} else {
+			prepareEditData(rc);
+			getFW().setView("frontend:account.create");
+		}
+	}
+	
+	public void function edit(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		prepareEditData(rc);
+		getFW().setView("frontend:account.edit");
+	}
+	
+	public void function editLogin(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		prepareEditData(rc);
+		getFW().setView("frontend:account.editlogin");
+	}
+	
+	public void function prepareEditData(required struct rc) {
+		rc.attributeSets = rc.account.getAttributeSets(["astAccount"]);
+	}
+	
+	public void function savenew(required struct rc) {
+		if(!rc.$.slatwall.getCurrentAccount().isNew()){
+			getFW().redirectExact("/my-account");
+		} else {
+			save(rc);
+		}
+	}
 	
 	public void function save(required struct rc) {
-		getAccountService().saveAccount(account=rc.$.Slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
-		getFW().setView("frontend:account.detail");
+		var wasNew = rc.$.slatwall.getCurrentAccount().isNew();
+		var currentAction = "frontend:account.edit";
+		if(wasNew){
+			currentAction = "frontend:account.create";
+		}
+		rc.account = getAccountService().saveAccount(account=rc.$.slatwall.getCurrentAccount(), data=rc, siteID=rc.$.event('siteID'));
+		if(rc.account.hasErrors()) {
+			prepareEditData(rc);
+			getFW().setView(currentAction);
+		} else {
+			getFW().setView("frontend:account.detail");
+		}
 	}
 	
 	public void function login(required struct rc) {
@@ -69,17 +114,77 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		getFW().setView("frontend:account.detail");
 	}
 	
+	public void function listAddress(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		getFW().setView("frontend:account.listaddress");
+	}
+	
+	public void function editAddress(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		rc.accountAddress = getAccountService().getAccountAddress(rc.accountAddressID);
+		// make sure address belongs to this account
+		if(rc.account.hasAccountAddress(rc.accountAddress)){
+			getFW().setView("frontend:account.editaddress");
+		} else {
+			getFW().redirectExact("/my-account");
+		}
+	}
+	
+	public void function saveAddress(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		rc.accountAddress = getAccountService().getAccountAddress(rc.accountAddressID);
+		// make sure address belongs to this account
+		if(rc.account.hasAccountAddress(rc.accountAddress) || rc.accountAddress.isNew()){
+			rc.accountAddress.setAccount(rc.account);
+			rc.accountAddress = getAccountService().saveAccountAddress(accountAddress=rc.accountAddress, data=rc);
+			if(rc.accountAddress.hasErrors()) {
+				getFW().setView("frontend:account.editaddress");
+			} else {
+				getFW().setView("frontend:account.listaddress");
+			}
+		} else {
+			getFW().redirectExact("/my-account");
+		}
+	}
+	
+	public void function listPaymentMethod(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		rc.paymentMethodTypes = getPaymentService().listPaymentMethod()[1].getPaymentMethodTypeOptions();
+		getFW().setView("frontend:account.listpaymentmethod");
+	}
+	
+	public void function editPaymentMethod(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		rc.accountPaymentMethod = getAccountService().getAccountPaymentMethod(rc.accountPaymentMethodID);
+		// make sure PaymentMethod belongs to this account
+		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod)){
+			getFW().setView("frontend:account.editpaymentmethod");
+		} else {
+			getFW().redirectExact("/my-account");
+		}
+	}
+	
+	public void function savePaymentMethod(required struct rc) {
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		rc.accountPaymentMethod = getAccountService().getAccountPaymentMethod(rc.accountPaymentMethodID);
+		// make sure PaymentMethod belongs to this account
+		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod) || rc.accountPaymentMethod.isNew()){
+			rc.accountPaymentMethod.setAccount(rc.account);
+			rc.accountPaymentMethod = getAccountService().saveAccountPaymentMethod(accountPaymentMethod=rc.accountPaymentMethod, data=rc);
+			if(rc.accountPaymentMethod.hasErrors()) {
+				getFW().setView("frontend:account.editpaymentmethod");
+			} else {
+				getFW().setView("frontend:account.listpaymentmethod");
+			}
+		} else {
+			getFW().redirectExact("/my-account");
+		}
+	}
+	
 	// Special account specific logic to require a user to be logged in
 	public void function after(required struct rc) {
-		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.detail") {
-			var loginURL = rc.$.createHREF(filename=rc.$.siteConfig().getLoginURL());
-			if(find("?",loginURL)) {
-				loginURL &= "&";	
-			} else {
-				loginURL &= "?";
-			}
-			//loginURL &= "returnURL=" & URLEncodedFormat(getFW().buildURL(action=rc.slatAction, queryString=cgi.query_string));
-			location(url=rc.$.siteConfig().getLoginURL(), addtoken=false);
+		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.create" && rc.slatAction != "frontend:account.savenew") {
+			getFW().setView("frontend:account.login");
 		}
 	}
 }

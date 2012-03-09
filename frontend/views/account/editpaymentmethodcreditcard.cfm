@@ -1,4 +1,4 @@
-<!---
+﻿<!---
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,21 +36,9 @@
 Notes:
 
 --->
-<cfoutput>
-<ul id="accountNav">
-	<cfif request.action neq "frontend:account.detail">
-	<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
-	</cfif>
-<cfif arrayLen($.slatwall.account().getOrders()) and request.action neq "frontend:account.listorder">
-	<li><a href="?slatAction=frontend:account.listorder">View Orders</a></li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=addresses')#">View Addresses</a></li>
-<cfif request.action neq "frontend:account.edit">
-	<li>
-		<a href="?slatAction=frontend:account.edit">Edit Profile</a>
-	</li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=editLogin')#">Edit Login</a></li>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=paymentMethods')#">View Payment Methods</a></li>
-</ul>
-</cfoutput>
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="nameOnCreditCard" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="creditCardType" property="creditCardType" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="creditCardNumber" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="expirationMonth" edit="true">
+<cf_SlatwallPropertyDisplay object="#rc.accountPaymentMethod#" fieldname="nameOnCreditCard" property="expirationYear" edit="true">
+

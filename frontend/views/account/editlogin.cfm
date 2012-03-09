@@ -37,20 +37,33 @@ Notes:
 
 --->
 <cfoutput>
-<ul id="accountNav">
-	<cfif request.action neq "frontend:account.detail">
-	<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
-	</cfif>
-<cfif arrayLen($.slatwall.account().getOrders()) and request.action neq "frontend:account.listorder">
-	<li><a href="?slatAction=frontend:account.listorder">View Orders</a></li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=addresses')#">View Addresses</a></li>
-<cfif request.action neq "frontend:account.edit">
-	<li>
-		<a href="?slatAction=frontend:account.edit">Edit Profile</a>
-	</li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=editLogin')#">Edit Login</a></li>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=paymentMethods')#">View Payment Methods</a></li>
-</ul>
+<div class="accountDetails">
+	<form name="account" method="post">
+		<h4>Login Details</h4>
+		<dl>
+			<!--- login info --->
+			<dt class="spdemailaddress">
+				<label for="emailAddress" class="required">#$.slatwall.rbKey('entity.accountEmailAddress.emailAddress')#</label>
+			</dt>
+			<dd id="spdemailaddress">
+				<cfset emailValue = "" />
+				<cfif not isNull(rc.account.getPrimaryEmailAddress()) and not isNull(rc.account.getPrimaryEmailAddress().getEmailAddress())>
+					<cfset emailValue = rc.account.getPrimaryEmailAddress().getEmailAddress() />	
+				</cfif>
+				<input type="text" name="emailAddress" value="#emailValue#" />
+				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="primaryEmailAddress" for="emailAddress" />
+			</dd>
+			<dt class="spdpassword">
+				<label for="password">Password</label>
+			</dt>
+			<dd id="spdpassword">
+				<input type="password" name="password" value="" />
+				<cf_SlatwallErrorDisplay object="#rc.account#" errorName="password" for="password" />
+			</dd>
+		</dl>
+		<input type="hidden" name="slatAction" value="frontend:account.save" />
+		<button type="submit">Save</button>
+	</form>
+</div>
 </cfoutput>
+
