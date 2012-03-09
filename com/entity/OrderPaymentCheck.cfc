@@ -41,6 +41,14 @@ component displayname="Order Payment Paypal Check" entityname="SlatwallOrderPaym
 	// Persistent Properties
 	property name="orderPaymentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
+	
+	public any function init(){
+		// Set Defaults
+		setPaymentMethodID("check");
+		
+		return super.init();
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

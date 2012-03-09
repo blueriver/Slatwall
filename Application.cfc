@@ -60,14 +60,19 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function verifyApplicationSetup() {
+		
+		if(structKeyExists(url, variables.framework.reload)) {
+			application.slatwall.initialized = false;
+		}
+		
 		// Check to see if out application stuff is initialized
-		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized || structKeyExists(url, variables.framework.reload)) {
+		if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 			
 			// If not, lock the application until this is finished
 			lock scope="Application" timeout="120"  {
 				
 				// Check again so that the qued requests don't back up
-				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized || structKeyExists(url, variables.framework.reload)) {
+				if(!structKeyExists(application, "slatwall") || !structKeyExists(application.slatwall, "initialized") || !application.slatwall.initialized) {
 					
 					// Log that the application is starting it's setup
 					writeLog(file="Slatwall", text="Application Setup Started");
@@ -84,10 +89,7 @@ component extends="org.fw1.framework" output="false" {
 					}
 					
 					// This sets up the Plugin Config for later use
-					if ( not structKeyExists(request,"pluginConfig") or request.pluginConfig.getPackage() neq variables.framework.applicationKey){
-				  		include "plugin/config.cfm";
-					}
-					setPluginConfig(request.PluginConfig);
+					setPluginConfig( application.pluginManager.getConfig(listLast(listGetat(getDirectoryFromPath(getCurrentTemplatePath()), listLen(getDirectoryFromPath(getCurrentTemplatePath()), application.configBean.getFileDelim())-1, application.configBean.getFileDelim()), "_")) );
 					
 					// Make sure the correct version is in the plugin config
 					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
@@ -97,9 +99,6 @@ component extends="org.fw1.framework" output="false" {
 					
 					// Set this in the application scope to be used on the frontend
 					getPluginConfig().getApplication().setValue( "fw", this);
-					
-					// Set the setup confirmed as false
-					getPluginConfig().getApplication().setValue('applicationSetupConfirmed', false);
 					
 					// Set vfs root for slatwall
 					getPluginConfig().getApplication().setValue('slatwallVfsRoot', slatwallVfsRoot);
@@ -184,9 +183,6 @@ component extends="org.fw1.framework" output="false" {
 					
 					// Reload All Integrations
 					getBeanFactory().getBean("integrationService").updateIntegrationsFromDirectory();
-					
-					// Set the first request to True so that it runs
-					getPluginConfig().getApplication().setValue("firstRequestOfApplication", true);
 					
 					// Set the frameworks baseURL to be used by the buildURL() method
 					variables.framework.baseURL = "#application.configBean.getContext()#/plugins/Slatwall/";
