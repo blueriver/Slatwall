@@ -71,6 +71,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		updatePromotionReward( arguments.promotion,arguments.data );
 		updatePromotionQualifier( arguments.promotion,arguments.data );
 		updatePromotionRewardExclusion( arguments.promotion,arguments.data );
+		updatePromotionQualifierExclusion( arguments.promotion,arguments.data );
 		
 
 		// Validate the promotion, this will also check any sub-entities that got populated 
@@ -210,14 +211,38 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			assignProductContent( prExclusion,arguments.data.PromotionRewardExclusions[1].productContent,"PromotionRewardExclusionProductContent" );						
 			assignProductCategories( prExclusion,arguments.data.PromotionRewardExclusions[1].productCategories,"PromotionRewardExclusionProductCategory" );
 			
-			// Validate the product exclusion
+			// Validate the exclusion
 			prExclusion.validate();
 			
-			// Add the promotion reward to the promotion
+			// Add the exclusion to the promotion
 			arguments.promotion.addPromotionRewardExclusion(prExclusion);
 			
 			// add to the sub items populated so that we can validate on parent
 			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewardExclusions");		
+		} 
+	}
+	
+	public void function updatePromotionQualifierExclusion( required any promotion,required struct data ) {
+		// Check to see if we are going to update or editing any exclusions
+		if(structKeyExists(arguments.data, "savePromotionQualifierExclusion") && arguments.data.savePromotionQualifierExclusion) {
+			// Get exclusion, and return a new one if not found
+			var pqExclusion = this.getPromotionQualifierExclusion(arguments.data.PromotionQualifierExclusions[1].promotionQualifierExclusionID, true);
+			
+			// Populate that exclusion
+			pqExclusion.populate(arguments.data.promotionQualifierExclusions[1]);
+			
+			// assign any product pages/categories to exclusion
+			assignProductContent( pqExclusion,arguments.data.PromotionQualifierExclusions[1].productContent,"PromotionQualifierExclusionProductContent" );						
+			assignProductCategories( pqExclusion,arguments.data.PromotionQualifierExclusions[1].productCategories,"PromotionQualifierExclusionProductCategory" );
+			
+			// Validate the exclusion
+			pqExclusion.validate();
+			
+			// Add the qualifier exclusion to the promotion
+			arguments.promotion.addPromotionQualifierExclusion(pqExclusion);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifierExclusions");		
 		} 
 	}
 

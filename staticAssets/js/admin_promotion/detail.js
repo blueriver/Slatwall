@@ -27,6 +27,13 @@ jQuery(function() {
 		return false;
 	});
 	
+	jQuery('#addPromotionQualifierExclusionButton').click(function(){
+		jQuery('#savePromotionQualifierExclusionHidden').val('true');
+		jQuery('#promotionQualifierExclusionInputs').fadeIn(400);
+		jQuery(this).remove();
+		return false;
+	});
+	
 	jQuery('#promotionRewardType').change(function(){
 		if( jQuery(this).val() == "product" ) {
 			jQuery('#savePromotionRewardProductHidden').val('true');

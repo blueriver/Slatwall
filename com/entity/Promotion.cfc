@@ -56,6 +56,7 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
 	// Remote Properties
@@ -79,6 +80,9 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 			variables.promotionRewards = [];
 		}
 		if(isNull(variables.promotionQualifiers)) {
+			variables.promotionQualifiers = [];
+		}
+		if(isNull(variables.promotionQualifierExclusions)) {
 			variables.promotionQualifiers = [];
 		}
 		if(isNull(variables.startDateTime)) {
@@ -138,6 +142,16 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	}    
 	public void function removePromotionQualifier(required any promotionQualifier) {    
 		arguments.PromotionQualifier.removePromotion( this );    
+	}
+	
+	// PromotionQualifierExclusion (one-to-many)
+
+	public void function addPromotionQualifierExclusion(required any PromotionQualifierExclusion) {
+	   arguments.PromotionQualifierExclusion.setPromotion(this);
+	}
+	
+	public void function removePromotionQualifierExclusion(required any PromotionQualifierExclusion) {
+	   arguments.PromotionQualifierExclusion.removePromotion(this);
 	}
 	
 	// appliedPromotions (one-to-many)

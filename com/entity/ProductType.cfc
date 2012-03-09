@@ -84,6 +84,7 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 
 	// Non-Persistent Properties
@@ -110,6 +111,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		}
 		if(isNull(variables.promotionRewardExclusions)) {
 			variables.promotionRewardExclusions = [];
+		}
+		if(isNull(variables.promotionQualifierExclusions)) {
+			variables.promotionQualifierExclusions = [];
 		}
 		if(isNull(variables.priceGroupRates)) {
 			variables.priceGroupRates = [];
@@ -312,6 +316,15 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
 	   arguments.promotionRewardExclusion.removeProductType(this);
+	}
+	
+	// promotionQualifierExclusions (many-to-many)
+	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
+	   arguments.promotionQualifierExclusion.addProductType(this);
+	}
+	
+	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
+	   arguments.promotionQualifierExclusion.removeProductType(this);
 	}
 	
 	// priceGroupRates (many-to-many)

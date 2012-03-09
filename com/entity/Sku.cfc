@@ -75,6 +75,7 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
 	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionSku" fkcolumn="skuID" inversejoincolumn="PromotionRewardExclusionID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionSku" fkcolumn="skuID" inversejoincolumn="PromotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	
 	// Remote properties
@@ -108,6 +109,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	   }
  	   if(isNull(variables.promotionRewardExclusions)) {
 	       variables.promotionRewardExclusions = [];
+	   }
+ 	   if(isNull(variables.promotionQualifierExclusions)) {
+	       variables.promotionQualifierExclusions = [];
 	   }
 	   if(isNull(variables.priceGroupRates)) {
 	   	   variables.priceGroupRates = [];
@@ -447,6 +451,15 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	
 	public void function removePromotionQualifier(required any promotionQualifier) {
 		arguments.promotionQualifier.removeSku( this );
+	}
+	
+	// Promotion Qualifier Exclusions (one-to-many)
+	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
+		arguments.promotionQualifierExclusion.addSku( this );
+	}
+	
+	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
+		arguments.promotionQualifierExclusion.removeSku( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

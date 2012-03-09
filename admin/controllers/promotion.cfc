@@ -52,6 +52,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionRewardID" default="";
 		param name="rc.promotionQualifierID" default="";
 		param name="rc.promotionRewardExclusionID" default="";
+		param name="rc.promotionQualifierExclusionID" default="";
 		param name="rc.edit" default="false";
 		
 		// Get the promotion from the DB, and return a new promotion if necessary
@@ -63,6 +64,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.promotionQualifierFulfillment = getPromotionService().getPromotionQualifierFulfillment(rc.promotionQualifierID, true);
 		rc.promotionQualifierOrder = getPromotionService().getPromotionQualifierOrder(rc.promotionQualifierID, true);
 		rc.PromotionRewardExclusion = getPromotionService().getPromotionRewardExclusion(rc.promotionRewardExclusionID, true);
+		rc.PromotionQualifierExclusion = getPromotionService().getPromotionQualifierExclusion(rc.promotionQualifierExclusionID, true);
 		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
@@ -79,6 +81,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		param name="rc.promotionRewardID" default="";
 		param name="rc.promotionQualifierID" default="";
 		param name="rc.promotionRewardExclusionID" default="";
+		param name="rc.promotionQualifierExclusionID" default="";
 		
 		detail(rc);
 		rc.edit = true;
@@ -116,6 +119,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifiers",preserve="message");	
 			} else if ( rc.savePromotionRewardExclusion ) {
 				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionRewardExclusions",preserve="message");	
+			} else if ( rc.savePromotionQualifierExclusion ) {
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifierExclusions",preserve="message");	
 			} else {
 				getFW().redirect(action="admin:promotion.list",preserve="message");
 			}
@@ -219,6 +224,23 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		
 		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionQualifiers",preserve="message,messagetype");
+	}
+	
+	public void function deletePromotionQualifierExclusion(required struct rc) {
+		
+		var promotionQualifierExclusion = getPromotionService().getPromotionQualifierExclusion(rc.promotionQualifierExclusionID);
+		rc.promotionID = promotionQualifierExclusion.getPromotion().getPromotionID();
+		
+		var deleteOK = getPromotionService().deletePromotionQualifierExclusion(promotionQualifierExclusion);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.promotion.deletePromotionQualifierExclusion_success");
+		} else {
+			rc.message = rbKey("admin.promotion.deletePromotionQualifierExclusion_error");
+			rc.messagetype = "error";
+		}
+		
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionQualifierExclusions",preserve="message,messagetype");
 	}
 	
 }

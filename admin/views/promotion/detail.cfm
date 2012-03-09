@@ -86,7 +86,7 @@ Notes:
 						#view("promotion/promotiontabs/promotionqualifiers")#
 					</div>
 					<div id="tabPromotionQualifierExclusions">
-						<!---#view("promotion/promotiontabs/promotionqualifierexclusions")#--->
+						#view("promotion/promotiontabs/promotionqualifierexclusions")#
 					</div>
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#
