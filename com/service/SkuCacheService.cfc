@@ -246,10 +246,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	// This method is private on purpose... don't change it.
 	private void function updateSkuCache() {
 		
-		lock timeout="60" scope="Application" {
-			var skusForThread = duplicate(variables.skusToUpdate);
-			variables.skusToUpdate = [];
-		}
+		var skusForThread = duplicate(variables.skusToUpdate);
+		variables.skusToUpdate = [];
 		
 		thread action="run" name="updateSkuCache-#createUUID()#" updatingSkus="#skusForThread#" {
 			logSlatwall("Thread for Sku Cache Update Started with #arrayLen(updatingSkus)# skus to update", true);
@@ -331,12 +329,8 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	// This method is private on purpose... don't change it.
 	private void function updateProductCache() {
 		
-		var productsForThread = [];
-		
-		lock timeout="60" scope="Application" {
-			var productsForThread = variables.productsToUpdate;
-			variables.productsToUpdate = [];
-		}
+		var productsForThread = duplicate(variables.productsToUpdate);
+		variables.productsToUpdate = [];
 		
 		thread action="run" name="updateProductCache-#createUUID()#" updatingProducts="#productsForThread#" {
 			logSlatwall("Thread for Product Cache Update Started with #arrayLen(updatingProducts)# products to update", true);
