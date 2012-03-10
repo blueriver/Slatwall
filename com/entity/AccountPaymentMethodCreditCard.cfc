@@ -36,7 +36,7 @@
 Notes:
 
 */
-component displayname="Account Payment Method Credit Card" entityname="SlatwallAccountPaymentMethodCreditCard" table="SlatwallAccountPaymentMethodCreditCard" persistent="true" accessors="true" extends="BaseEntity" discriminatorvalue="creditCard"  {
+component displayname="Account Payment Method Credit Card" entityname="SlatwallAccountPaymentMethodCreditCard" table="SlatwallAccountPaymentMethod" persistent="true" accessors="true" extends="AccountPaymentMethod" discriminatorvalue="creditCard"  {
 	
 	// Persistent Properties
 	property name="accountPaymentMethodID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
@@ -55,18 +55,15 @@ component displayname="Account Payment Method Credit Card" entityname="SlatwallA
 	
 	// Related Object Properties (Many-to-Many)
 	
-	// Remote Properties
-	property name="remoteID" ormtype="string";
-	
 	// Audit Properties
-	property name="createdDateTime" ormtype="timestamp";
-	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
-	property name="modifiedDateTime" ormtype="timestamp";
-	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
 	
 	// Non-Persistent Properties
 	property name="creditCardNumber" persistent="false";
 
+	public any function init() {
+		setPaymentMethodType("creditCard");
+		super.init();	
+	}
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

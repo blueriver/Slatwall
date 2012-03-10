@@ -37,13 +37,15 @@ Notes:
 
 --->
 <cfparam name="rc.account" type="any" />
-<cfparam name="rc.paymentMethodTypes" type="any" />
+<cfparam name="rc.paymentMethods" type="any" />
 
 <cfoutput>
 	<div class="svoaccountlistpaymentmethod">
-		<cfloop array="#rc.paymentMethodTypes#" index="local.paymentMethodType">
-			<cfif fileExists(getDirectoryFromPath(GetCurrentTemplatePath()) & "/listpaymentmethod#local.paymentMethodType.value#.cfm")>
-				<cfinclude template="listpaymentmethod#local.paymentMethodType.value#.cfm" />
+		<cfset local.params = {} />
+		<cfloop array="#rc.paymentMethods#" index="local.paymentMethod">
+			<cfset params.paymentMethod = local.paymentMethod />
+			<cfif !isNull(local.paymentMethod.getAllowSaveFlag()) && local.paymentMethod.getAllowSaveFlag() && !isNull(local.paymentMethod.getActiveFlag()) && local.paymentMethod.getActiveFlag()>
+				#view("frontend:account/listpaymentmethod#local.paymentMethod.getPaymentMethodType()#",params)#
 			</cfif>
 		</cfloop>
 	</div>

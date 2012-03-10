@@ -39,18 +39,22 @@ Notes:
 <cfoutput>
 <ul id="accountNav">
 	<cfif request.action neq "frontend:account.detail">
-	<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
+		<li><a href="#$.createHREF(filename='my-account')#">Account Overview</a></li>
 	</cfif>
-<cfif arrayLen($.slatwall.account().getOrders()) and request.action neq "frontend:account.listorder">
-	<li><a href="?slatAction=frontend:account.listorder">View Orders</a></li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=addresses')#">View Addresses</a></li>
-<cfif request.action neq "frontend:account.edit">
-	<li>
-		<a href="?slatAction=frontend:account.edit">Edit Profile</a>
-	</li>
-</cfif>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=editLogin')#">Edit Login</a></li>
-	<li><a href="#$.createHREF(filename='my-account', queryString='show=paymentMethods')#">View Payment Methods</a></li>
+	<cfif request.action neq "frontend:account.edit">
+		<li><a href="#$.createHREF(filename='edit-account')#">Edit Profile</a></li>
+	</cfif>
+	<cfif request.item neq "editlogin">
+		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=editLogin')#">Edit Login</a></li>
+	</cfif>
+	<cfif arrayLen($.slatwall.account().getOrders()) and request.action neq "frontend:account.listorder">
+		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listorder')#">View Orders</a></li>
+	</cfif>
+	<cfif request.item neq "listaddress">
+		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listaddress')#">View Addresses</a></li>
+	</cfif>
+	<cfif request.item neq "listpaymentmethod">
+		<li><a href="#$.createHREF(filename='my-account', queryString='showitem=listpaymentmethod')#">View Payment Methods</a></li>
+	</cfif>
 </ul>
 </cfoutput>

@@ -43,6 +43,7 @@ component displayname="Payment Method" entityname="SlatwallPaymentMethod" table=
 	property name="paymentMethodName" ormtype="string";
 	property name="paymentMethodType" ormtype="string";
 	property name="providerGateway" ormtype="string";
+	property name="allowSaveFlag" ormtype="boolean" default="false";
 	property name="activeFlag" ormtype="boolean" default="false";
 		
 	// Remote Properties

@@ -94,7 +94,7 @@ Notes:
 				</cfloop>
 			</cfloop> 
 		</dl>
-		<input type="hidden" name="slatAction" value="frontend:account.savenew" />
+		<input type="hidden" name="slatAction" value="frontend:account.save" />
 		<button type="submit">Save</button>
 	</form>
 </div>

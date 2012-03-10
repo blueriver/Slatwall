@@ -58,7 +58,7 @@ Notes:
 					<td>#Local.accountAddress.getAddress().getCity()#</td>
 					<td>#Local.accountAddress.getAddress().getStateCode()#</td>
 					<td>#Local.accountAddress.getAddress().getPostalCode()#</td>
-					<td><a href="#$.createHREF(filename='my-account', queryString='show=editAddress&accountAddressID=#local.accountAddress.getAccountAddressID()#')#">Edit Address</a></td>
+					<td><a href="#$.createHREF(filename='my-account', queryString='showitem=editAddress&accountAddressID=#local.accountAddress.getAccountAddressID()#')#">Edit Address</a></td>
 				</tr>
 			</cfloop>
 		</table>

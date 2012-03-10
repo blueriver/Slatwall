@@ -46,7 +46,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	public void function create(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
 		if(!rc.account.isNew()){
-			getFW().redirectExact("/my-account");
+			redirectToOverview();
 		} else {
 			prepareEditData(rc);
 			getFW().setView("frontend:account.create");
@@ -67,14 +67,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	
 	public void function prepareEditData(required struct rc) {
 		rc.attributeSets = rc.account.getAttributeSets(["astAccount"]);
-	}
-	
-	public void function savenew(required struct rc) {
-		if(!rc.$.slatwall.getCurrentAccount().isNew()){
-			getFW().redirectExact("/my-account");
-		} else {
-			save(rc);
-		}
 	}
 	
 	public void function save(required struct rc) {
@@ -126,7 +118,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.account.hasAccountAddress(rc.accountAddress)){
 			getFW().setView("frontend:account.editaddress");
 		} else {
-			getFW().redirectExact("/my-account");
+			redirectToOverview();
 		}
 	}
 	
@@ -143,13 +135,13 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				getFW().setView("frontend:account.listaddress");
 			}
 		} else {
-			getFW().redirectExact("/my-account");
+			redirectToOverview();
 		}
 	}
 	
 	public void function listPaymentMethod(required struct rc) {
 		rc.account = rc.$.slatwall.getCurrentAccount();
-		rc.paymentMethodTypes = getPaymentService().listPaymentMethod()[1].getPaymentMethodTypeOptions();
+		rc.paymentMethods = getPaymentService().listPaymentMethod();
 		getFW().setView("frontend:account.listpaymentmethod");
 	}
 	
@@ -160,8 +152,21 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(rc.account.hasAccountPaymentMethod(rc.accountPaymentMethod)){
 			getFW().setView("frontend:account.editpaymentmethod");
 		} else {
-			getFW().redirectExact("/my-account");
+			redirectToOverview();
 		}
+	}
+	
+	public void function createPaymentMethod(required struct rc) {
+		// if no payment method ID passed redirect to overview
+		if(rc.$.event("paymentMethodID") == ""){
+			redirectToOverview();
+		}
+		rc.accountPaymentMethodID = "";
+		rc.account = rc.$.slatwall.getCurrentAccount();
+		rc.paymentMethod = getPaymentService().getPaymentMethod(rc.$.event("paymentMethodID"));
+		rc.accountPaymentMethod = getAccountService().new("SlatwallAccountPaymentMethod#rc.paymentMethod.getPaymentMethodType()#");
+		rc.accountPaymentMethod.setPaymentMethod(rc.paymentMethod);
+		getFW().setView("frontend:account.editpaymentmethod");
 	}
 	
 	public void function savePaymentMethod(required struct rc) {
@@ -177,13 +182,17 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				getFW().setView("frontend:account.listpaymentmethod");
 			}
 		} else {
-			getFW().redirectExact("/my-account");
+			redirectToOverview();
 		}
+	}
+	
+	private void function redirectToOverview() {
+		getFW().redirectExact("/my-account");
 	}
 	
 	// Special account specific logic to require a user to be logged in
 	public void function after(required struct rc) {
-		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.create" && rc.slatAction != "frontend:account.savenew") {
+		if(!rc.$.currentUser().isLoggedIn() && rc.slatAction != "frontend:account.create" && rc.slatAction != "frontend:account.save") {
 			getFW().setView("frontend:account.login");
 		}
 	}

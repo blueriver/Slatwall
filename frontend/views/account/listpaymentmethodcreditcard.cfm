@@ -37,28 +37,35 @@ Notes:
 
 --->
 <cfparam name="rc.account" type="any" />
+<cfparam name="local.paymentMethod" type="any" />
+<cfset local.accountPaymentMethodSmartList = rc.account.getAccountPaymentMethodsSmartList() />
+<cfset local.accountPaymentMethodSmartList.addFilter(propertyIdentifier="paymentMethod_paymentMethodType", value="creditCard")/>
+<cfset local.accountPaymentMethods = local.accountPaymentMethodSmartList.getRecords() />
 
 <cfoutput>
 	<div class="svoaccountlistpaymentmethodcreditcard">
-		<table>
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.nameOnCreditCard")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.creditCardType")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.creditCardLastFour")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.expirationMonth")#</th>
-				<th>&nbsp</th>
-			</tr>
-			<cfloop array="#rc.account.getAccountPaymentMethods()#" index="local.accountPaymentMethod">
-				<cfif local.accountPaymentMethod.getPaymentMethodType() EQ "creditCard">
+		<cfif arrayLen(local.accountPaymentMethods)>
+			<table>
+				<tr>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.nameOnCreditCard")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.creditCardType")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.creditCardLastFour")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.accountPaymentMethodCreditCard.expirationMonth")#</th>
+					<th>&nbsp</th>
+				</tr>
+				<cfloop array="#local.accountPaymentMethods#" index="local.accountPaymentMethod">
 					<tr>
 						<td>#Local.accountPaymentMethod.getNameOnCreditCard()#</td>
 						<td>#Local.accountPaymentMethod.getCreditCardType()#</td>
 						<td>#Local.accountPaymentMethod.getCreditCardLastFour()#</td>
 						<td>#Local.accountPaymentMethod.getExpirationMonth()# / #Local.accountPaymentMethod.getExpirationYear()#</td>
-						<td><a href="#$.createHREF(filename='my-account', queryString='show=editPaymentMethod&accountPaymentMethodID=#local.accountPaymentMethod.getAccountPaymentMethodID()#')#">Edit Payment Method</a></td>
+						<td><a href="#$.createHREF(filename='my-account', queryString='showitem=editPaymentMethod&accountPaymentMethodID=#local.accountPaymentMethod.getAccountPaymentMethodID()#')#">Edit Payment Method</a></td>
 					</tr>
-				</cfif>
-			</cfloop>
-		</table>
+				</cfloop>
+			</table>
+		</cfif>
+	</div>
+	<div class="svoaccountcreatepaymentmethodcreditcard">
+		<a href="#$.createHREF(filename='my-account', queryString='showitem=createPaymentMethod&paymentMethodID=#local.paymentMethod.getPaymentMethodID()#')#">Add Payment Method</a>
 	</div>
 </cfoutput>
