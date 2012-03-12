@@ -89,6 +89,7 @@ Notes:
 		<li><a href="##tabProductSettings" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productsettings")#</span></a></li>
 		<li><a href="##tabProductPages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productpages")#</span></a></li>
 		<li><a href="##tabProductCategories" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productCategoryAssignment")#</span></a></li>
+		<li><a href="##tabRelatedProducts" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.relatedproducts")#</span></a></li>
 		<li><a href="##tabAlternateImages" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.alternateimages")#</span></a></li>
 		<li><a href="##tabProductReviews" onclick="return false;"><span>#rc.$.Slatwall.rbKey("admin.product.detail.tab.productreviews")#</span></a></li>
 		<cfloop array="#rc.attributeSets#" index="local.attributeSet">
@@ -110,6 +111,9 @@ Notes:
 	</div>
 	<div id="tabProductCategories">
 		#view("product/producttabs/productcategories")#
+	</div>
+	<div id="tabRelatedProducts">
+		#view("product/producttabs/relatedproducts")#
 	</div>
 	<div id="tabAlternateImages">
 		#view("product/producttabs/alternateimages")#
