@@ -134,8 +134,8 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
 	   }
-	   if(isNull(variables.productRelationships)) {
-	       variables.productRelationships = [];
+	   if(isNull(variables.relatedProducts)) {
+	       variables.relatedProducts = [];
 	   }
 	   if(isNull(variables.productReviews)) {
 	       variables.productReviews = [];
