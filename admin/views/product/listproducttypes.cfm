@@ -40,7 +40,7 @@ Notes:
 
 <cfoutput>
 <ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:product.createproducttype" type="list">
+    <!--- <cf_SlatwallActionCaller action="admin:product.createproducttype" type="list"> --->
 </ul>
 
 <table class="listing-grid stripe" id="productTypes">
