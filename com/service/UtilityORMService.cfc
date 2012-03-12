@@ -38,73 +38,21 @@ Notes:
 */
 component extends="BaseService" accessors="true" {
 
+	property name="entityServiceMapping" type="struct";
+
 	// @hint returns the correct service on a given entityName.  This is very useful for creating abstract code
 	public any function getServiceByEntityName( required string entityName ) {
 		
-		// This adds the Slatwall Prefix to the entityName when needed.
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
+		// This removes the Slatwall Prefix to the entityName when needed.
+		if(left(arguments.entityName, 8) == "Slatwall") {
+			arguments.entityName = right(arguments.entityName, len(arguments.entityName) - 8);
 		}
 		
-		// Set the default service name as base service
-		var serviceName = "baseService";
-		
-		// Run lookups to see if a given entity should be handeled by a specific service
-		if ( left(arguments.entityName, len("SlatwallAccount")) == "SlatwallAccount" ) {
-			serviceName = "accountService";
-				
-		} else if ( left(arguments.entityName, len("SlatwallAddress")) == "SlatwallAddress" ) {
-			serviceName = "addressService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallAttribute")) == "SlatwallAttribute" ) {
-			serviceName = "attributeService";
-		
-		} else if ( left(arguments.entityName, len("SlatwallBrand")) == "SlatwallBrand" ) {
-			serviceName = "brandService";
-
-		} else if ( left(arguments.entityName, len("SlatwallFulfillment")) == "SlatwallFulfillment" ) {
-			serviceName = "fulfillmentService";
-
-		} else if ( left(arguments.entityName, len("SlatwallOrder")) == "SlatwallOrder" ) {
-			serviceName = "orderService";
-		
-		} else if ( left(arguments.entityName, len("SlatwallOption")) == "SlatwallOption" ) {
-			serviceName = "optionService";
-		
-		} else if ( left(arguments.entityName, len("SlatwallPayment")) == "SlatwallPayment" || listFindNoCase("SlatwallCreditCardTransaction", arguments.entityName)  )  {
-			serviceName = "paymentService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallPriceGroupRate")) == "SlatwallPriceGroupRate")  {
-			serviceName = "priceGroupService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallProduct")) == "SlatwallProduct" ) {
-			serviceName = "productService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallPromotion")) == "SlatwallPromotion" )  {
-			serviceName = "promotionService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallSku")) == "SlatwallSku" || listFindNoCase("SlatwallAlternateSkuCode", arguments.entityName) )  {
-			serviceName = "skuService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallVendorAddress")) == "SlatwallVendorAddress")  {
-			serviceName = "vendorService";	
-				
-		} else if ( left(arguments.entityName, len("SlatwallVendorOrderItem")) == "SlatwallVendorOrderItem")  {
-			serviceName = "vendorOrderService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallStockAdjustmentDelivery")) == "SlatwallStockAdjustmentDelivery"
-		|| left(arguments.entityName, len("SlatwallStockAdjustmentDeliveryItem")) == "SlatwallStockAdjustmentDeliveryItem")  {
-			serviceName = "stockService";
-			
-		} else if ( left(arguments.entityName, len("SlatwallStockReceiverItem")) == "SlatwallStockReceiverItem"
-		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrder")) == "SlatwallStockReceiverVendorOrder"
-		|| left(arguments.entityName, len("SlatwallStockReceiverVendorOrderItem")) == "SlatwallStockReceiverVendorOrderItem")  {
-			serviceName = "stockService";
-					
+		if(structKeyExists(getEntityServiceMapping(), arguments.entityName)) {
+			return getService( getEntityServiceMapping()[ arguments.entityName ] );
 		}
 		
-		// Return the actual service
-		return getService( serviceName );
+		throw("You have requested the service for the entity of '#arguments.entityName#' and that entity was not defined in the coldspring config.xml so please add it, and the appropriate service it should use.")
 	}
 	
 	// @hint returns the primary id property name of a given entityName

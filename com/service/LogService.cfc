@@ -57,28 +57,11 @@ Notes:
 				<cfset logDetail = left(arguments.exception.stackTrace, 4000) />
 			</cfif>
 			
-			<cfset logMessage(messageCode = logCode, messageType="Exception", message = logMsg, logType="Error", detailLogOnly = false) />
+			<cfset logMessage(messageCode = logCode, messageType="Exception", message = logMsg, logType="Error", generalLog = true) />
 			
-			<cfif setting("advanced_logExceptionsToDatabaseFlag")>
-				<cfquery name="log" datasource="#application.configBean.getDatasource()#"  username="#application.configBean.getDBUsername()#" password="#application.configBean.getDBPassword()#">
-					INSERT INTO SlatwallLog	(
-						logID,
-						logDateTime,
-						logType,
-						logCode,
-						logMessage,
-						logDetail
-					  ) VALUES (
-					  	<cfqueryparam value="#lcase(replace(createUUID(),"-","","all"))#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam value="#now()#" cfsqltype="cf_sql_timestamp" />,
-						<cfqueryparam value="exception" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam value="#logCode#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam value="#logMsg#" cfsqltype="cf_sql_varchar" />,
-						<cfqueryparam value="#logDetail#" cfsqltype="cf_sql_varchar" />
-					)
-				</cfquery>
-			</cfif>
-			<cfcatch></cfcatch>
+			<cfcatch>
+				<cflog file="Slatwall" text="Log Exception Error" />
+			</cfcatch>
 		</cftry>   
 	</cffunction>
 	
