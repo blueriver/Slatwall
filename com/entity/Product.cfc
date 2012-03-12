@@ -78,7 +78,6 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="productImages" type="array" cfc="ProductImage" singularname="ProductImage" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeValues" singularname="attributeValue" cfc="ProductAttributeValue" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="attributeSetAssignments" singularname="attributeSetAssignment" cfc="ProductAttributeSetAssignment" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
-	property name="productRelationships" singlularname="productRelationship" cfc="ProductRelationship" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	property name="productReviews" singlularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="productID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many)
@@ -87,6 +86,7 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="productID" inversejoincolumn="promotionRewardID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProduct" fkcolumn="productID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
+	property name="relatedProducts" singularname="relatedProduct" cfc="Product" type="array" fieldtype="many-to-many" linktable="SlatwallRelatedProduct" fkcolumn="productID" inversejoincolumn="relatedProductID";
 
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -135,14 +135,17 @@ component displayname="Product" entityname="SlatwallProduct" table="SlatwallProd
 	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
 	   }
-	   if(isNull(variables.productRelationships)) {
-	       variables.productRelationships = [];
+	   if(isNull(variables.relatedProducts)) {
+	       variables.relatedProducts = [];
 	   }
 	   if(isNull(variables.productReviews)) {
 	       variables.productReviews = [];
 	   }
 	   if(isNull(variables.productImages)) {
 	       variables.productImages = [];
+	   }
+	   if(isNull(variables.eligibleFulfillmentMethods)) {
+	       variables.eligibleFulfillmentMethods = [];
 	   }
 	   return Super.init();
 	}

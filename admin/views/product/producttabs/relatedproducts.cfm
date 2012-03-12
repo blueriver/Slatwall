@@ -1,0 +1,1 @@
+<cf_SlatwallPropertyDisplay object="#rc.product#" property="relatedProducts" edit="#rc.edit#" />
