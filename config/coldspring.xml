@@ -167,7 +167,7 @@
 				<entry key="VendorPhoneNumber"><value>vendorService</value></entry>
 				<entry key="VendorSkuStock"><value>vendorService</value></entry>
 			</map>
-		</property>  
+		</property>
 	</bean>
 	<bean id="utilityTagService" class="Slatwall.com.service.UtilityTagService" />
 	<bean id="utilityEmailService" class="Slatwall.com.service.UtilityEmailService">
