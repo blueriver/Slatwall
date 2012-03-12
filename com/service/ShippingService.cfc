@@ -141,14 +141,14 @@ component extends="BaseService" persistent="false" accessors="true" output="fals
 			// TODO: Add this method so that we can populate from the location where the inventory will be shipping from: ratesRequestBean.setShipFromWithAddress(?);
 						
 			// Query the shipping provider service API to get the rates
-			getService("logService").logMessage(message="Shipping Rates Request - Started", generalLog=true);
+			logSlatwall("Shipping Rates Request - Started", true);
 			try {
 				var ratesResponseBean = providerService.getRates(ratesRequestBean);
 			} catch (any e) {
 				var ratesResponseBean = new Slatwall.com.utility.fulfillment.ShippingRatesResponseBean();
 				ratesResponseBean.addError('processing', "An Unexpected Error Ocurred");
 			}
-			getService("logService").logMessage(message="Shipping Rates Request - Finished", generalLog=true);
+			logSlatwall("Shipping Rates Request - Finished", true);
 			
 			// Loop Over Shipping Methods
 			if(!ratesResponseBean.hasErrors()) {

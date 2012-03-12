@@ -9,18 +9,17 @@
 	<bean id="baseDAO" class="Slatwall.com.dao.BaseDAO" />
 	<bean id="brandDAO" class="Slatwall.com.dao.BrandDAO" />
 	<bean id="commentDAO" class="Slatwall.com.dao.CommentDAO" />
+	<bean id="contentDAO" class="Slatwall.com.dao.contentDAO" />
 	<bean id="dataDAO" class="Slatwall.com.dao.DataDAO" />
 	<bean id="fulfillmentDAO" class="Slatwall.com.dao.FulfillmentDAO" />
 	<bean id="integrationDAO" class="Slatwall.com.dao.IntegrationDAO" />
 	<bean id="inventoryDAO" class="Slatwall.com.dao.InventoryDAO" />
-	<bean id="logDAO" class="Slatwall.com.dao.LogDAO" />
 	<bean id="locationDAO" class="Slatwall.com.dao.LocationDAO" />
 	<bean id="productDAO" class="Slatwall.com.dao.ProductDAO" />
 	<bean id="productTypeDAO" class="Slatwall.com.dao.ProductTypeDAO" />
 	<bean id="reportDAO" class="Slatwall.com.dao.ReportDAO" />
 	<bean id="sessionDAO" class="Slatwall.com.dao.SessionDAO" />
 	<bean id="orderDAO" class="Slatwall.com.dao.OrderDAO" />
-	<bean id="pageDAO" class="Slatwall.com.dao.PageDAO" />
 	<bean id="settingDAO" class="Slatwall.com.dao.SettingDAO" />
 	<bean id="skuDAO" class="Slatwall.com.dao.SkuDAO" />
 	<bean id="skuCacheDAO" class="Slatwall.com.dao.SkuCacheDAO" />
@@ -43,129 +42,130 @@
 	<bean id="utilityService" class="Slatwall.com.service.UtilityService" />
 	<bean id="utilityFileService" class="Slatwall.com.service.UtilityFileService" />
 	<bean id="utilityFormService" class="Slatwall.com.service.UtilityFormService" />
+	<bean id="utilityLogService" class="Slatwall.com.service.UtilityLogService" />
 	<bean id="utilityORMService" class="Slatwall.com.service.UtilityORMService">
 		<property name="entityServiceMapping">
 			<map>
-				<entry key="Access" value="securityService" />
-				<entry key="Account" value="accountService" />
-				<entry key="AccountAddress" value="accountService" />
-				<entry key="AccountAttributeSetAssignment" value="accountService" />
-				<entry key="AccountAttributeValue" value="attributeService" />
-				<entry key="AccountCustomizedAttributeSet" value="attributeService" />
-				<entry key="AccountEmailAddress" value="accountService" />
-				<entry key="AccountPaymentMethod" value="accountService" />
-				<entry key="AccountPaymentMethodCreditCard" value="accountService" />
-				<entry key="AccountPhoneNumber" value="accountService" />
-				<entry key="Address" value="addressService" />
-				<entry key="AddressZone" value="addressService" />
-				<entry key="AlternateSkuCode" value="skuService" />
-				<entry key="Attribute" value="attributeService" />
-				<entry key="AttributeOption" value="attributeService" />
-				<entry key="AttributeSet" value="attributeService" />
-				<entry key="AttributeSetAssignment" value="attributeService" />
-				<entry key="AttributeValue" value="attributeService" />
-				<entry key="BaseEntity" value="baseService" />
-				<entry key="Brand" value="brandService" />
-				<entry key="BrandProductType" value="brandService" />
-				<entry key="Category" value="categoryService" />
-				<entry key="Comment" value="commentService" />
-				<entry key="CommentRelationship" value="commentService" />
-				<entry key="Country" value="addressService" />
-				<entry key="CreditCardTransaction" value="paymentService" />
-				<entry key="FulfillmentMethod" value="fufillmentService" />
-				<entry key="Image" value="?" />
-				<entry key="Integration" value="integrationService" />
-				<entry key="Inventory" value="inventoryService" />
-				<entry key="Location" value="locationService" />
-				<entry key="LocationAddress" value="locationService" />
-				<entry key="MeasurmentUnit" value="?" />
-				<entry key="Option" value="optionService" />
-				<entry key="OptionGroup" value="optionService" />
-				<entry key="Order" value="orderService" />
-				<entry key="OrderDelivery" value="orderService" />
-				<entry key="OrderDeliveryItem" value="orderService" />
-				<entry key="OrderDeliveryPickup" value="orderService" />
-				<entry key="OrderDeliveryShipping" value="orderService" />
-				<entry key="OrderFulfillment" value="orderService" />
-				<entry key="OrderFulfillmentPickup" value="orderService" />
-				<entry key="OrderFulfillmentShipping" value="orderService" />
-				<entry key="OrderItem" value="orderService" />
-				<entry key="OrderItemAppliedPromotion" value="promotionService" />
-				<entry key="OrderItemAppliedTax" value="taxService" />
-				<entry key="OrderItemAttributeValue" value="orderService" />
-				<entry key="OrderItemStatusAction" value="orderService" />
-				<entry key="OrderItemStatusActionAbstract" value="orderService" />
-				<entry key="OrderItemStatusActionProduct" value="orderService" />
-				<entry key="OrderItemStatusActionProductType" value="orderService" />
-				<entry key="OrderPayment" value="orderService" />
-				<entry key="OrderPaymentCash" value="orderService" />
-				<entry key="OrderPaymentCheck" value="orderService" />
-				<entry key="OrderPaymentCreditCard" value="orderService" />
-				<entry key="OrderPaymentGiftCard" value="orderService" />
-				<entry key="OrderReturn" value="orderService" />
-				<entry key="OrderShippingMethodOption" value="orderService" />
-				<entry key="OrderStatusAction" value="orderService" />
-				<entry key="Page" value="?" />
-				<entry key="PaymentMethod" value="paymentService" />
-				<entry key="PostalCode" value="addressService" />
-				<entry key="PriceGroup" value="priceGroupService" />
-				<entry key="PriceGroupRate" value="priceGroupService" />
-				<entry key="Product" value="productService" />
-				<entry key="ProductAttributeSetAssignment" value="attributeService" />
-				<entry key="ProductAttributeValue" value="attributeService" />
-				<entry key="ProductCache" value="skuCacheService" />
-				<entry key="ProductCustomization" value="productService" />
-				<entry key="ProductImage" value="?" />
-				<entry key="ProductReview" value="productService" />
-				<entry key="ProductType" value="productService" />
-				<entry key="ProductTypeAttributeSetAssignment" value="" />
-				<entry key="Promotion" value="promotionService" />
-				<entry key="PromotionApplied" value="promotionService" />
-				<entry key="PromotionCode" value="promotionService" />
-				<entry key="PromotionImage" value="promotionService" />
-				<entry key="PromotionReward" value="promotionService" />
-				<entry key="PromotionRewardOrder" value="promotionService" />
-				<entry key="PromotionRewardProduct" value="promotionService" />
-				<entry key="PromotionRewardShipping" value="promotionService" />
-				<entry key="RoundingRule" value="roundingRuleService" />
-				<entry key="Session" value="sessionService" />
-				<entry key="Setting" value="settingService" />
-				<entry key="ShippingMethod" value="shippingService" />
-				<entry key="ShippingRate" value="shippingService" />
-				<entry key="Sku" value="skuService" />
-				<entry key="SkuCache" value="skuCacheService" />
-				<entry key="State" value="addressService" />
-				<entry key="Stock" value="stockService" />
-				<entry key="StockAdjustment" value="stockService" />
-				<entry key="StockAdjustmentDelivery" value="stockService" />
-				<entry key="StockAdjustmentDeliveryItem" value="stockService" />
-				<entry key="StockAdjustmentItem" value="stockService" />
-				<entry key="StockHold" value="stockService" />
-				<entry key="StockReceiver" value="stockService" />
-				<entry key="StockReceiverItem" value="stockService" />
-				<entry key="StockReceiverOrder" value="stockService" />
-				<entry key="StockReceiverStockAdjustment" value="stockService" />
-				<entry key="StockReceiverVendorOrder" value="stockService" />
-				<entry key="SubscriptionBenefit" value="subscriptionService" />
-				<entry key="SubscriptionOrder" value="subscriptionService" />
-				<entry key="SubscriptionTerm" value="subscriptionService" />
-				<entry key="SubscriptionUsage" value="subscriptionService" />
-				<entry key="SubscriptionUsageBenefit" value="subscriptionService" />
-				<entry key="SubscriptionUsageBenefitAccount" value="subscriptionService" />
-				<entry key="TaxApplied" value="taxService" />
-				<entry key="TaxCategory" value="taxService" />
-				<entry key="TaxCategoryRate" value="taxService" />
-				<entry key="Term" value="termService" />
-				<entry key="Type" value="typeService" />
-				<entry key="UpdateScript" value="updateService" />
-				<entry key="Vendor" value="vendorService" />
-				<entry key="VendorAccount" value="vendorService" />
-				<entry key="VendorAddress" value="vendorService" />
-				<entry key="VendorEmailAddress" value="vendorService" />
-				<entry key="VendorOrder" value="vendorOrderService" />
-				<entry key="VendorOrderItem" value="vendorOrderService" />
-				<entry key="VendorPhoneNumber" value="vendorService" />
-				<entry key="VendorSkuStock" value="vendorService" />
+				<entry key="Access"><value>securityService</value></entry>
+				<entry key="Account"><value>accountService</value></entry>
+				<entry key="AccountAddress"><value>accountService</value></entry>
+				<entry key="AccountAttributeSetAssignment"><value>accountService</value></entry>
+				<entry key="AccountAttributeValue"><value>attributeService</value></entry>
+				<entry key="AccountCustomizedAttributeSet"><value>attributeService</value></entry>
+				<entry key="AccountEmailAddress"><value>accountService</value></entry>
+				<entry key="AccountPaymentMethod"><value>accountService</value></entry>
+				<entry key="AccountPaymentMethodCreditCard"><value>accountService</value></entry>
+				<entry key="AccountPhoneNumber"><value>accountService</value></entry>
+				<entry key="Address"><value>addressService</value></entry>
+				<entry key="AddressZone"><value>addressService</value></entry>
+				<entry key="AlternateSkuCode"><value>skuService</value></entry>
+				<entry key="Attribute"><value>attributeService</value></entry>
+				<entry key="AttributeOption"><value>attributeService</value></entry>
+				<entry key="AttributeSet"><value>attributeService</value></entry>
+				<entry key="AttributeSetAssignment"><value>attributeService</value></entry>
+				<entry key="AttributeValue"><value>attributeService</value></entry>
+				<entry key="BaseEntity"><value>baseService</value></entry>
+				<entry key="Brand"><value>brandService</value></entry>
+				<entry key="BrandProductType"><value>brandService</value></entry>
+				<entry key="Category"><value>categoryService</value></entry>
+				<entry key="Comment"><value>commentService</value></entry>
+				<entry key="CommentRelationship"><value>commentService</value></entry>
+				<entry key="Content"><value>contentService</value></entry>
+				<entry key="Country"><value>addressService</value></entry>
+				<entry key="CreditCardTransaction"><value>paymentService</value></entry>
+				<entry key="FulfillmentMethod"><value>fufillmentService</value></entry>
+				<entry key="Image"><value>?</value></entry>
+				<entry key="Integration"><value>integrationService</value></entry>
+				<entry key="Inventory"><value>inventoryService</value></entry>
+				<entry key="Location"><value>locationService</value></entry>
+				<entry key="LocationAddress"><value>locationService</value></entry>
+				<entry key="MeasurmentUnit"><value>?</value></entry>
+				<entry key="Option"><value>optionService</value></entry>
+				<entry key="OptionGroup"><value>optionService</value></entry>
+				<entry key="Order"><value>orderService</value></entry>
+				<entry key="OrderDelivery"><value>orderService</value></entry>
+				<entry key="OrderDeliveryItem"><value>orderService</value></entry>
+				<entry key="OrderDeliveryPickup"><value>orderService</value></entry>
+				<entry key="OrderDeliveryShipping"><value>orderService</value></entry>
+				<entry key="OrderFulfillment"><value>orderService</value></entry>
+				<entry key="OrderFulfillmentPickup"><value>orderService</value></entry>
+				<entry key="OrderFulfillmentShipping"><value>orderService</value></entry>
+				<entry key="OrderItem"><value>orderService</value></entry>
+				<entry key="OrderItemAppliedPromotion"><value>promotionService</value></entry>
+				<entry key="OrderItemAppliedTax"><value>taxService</value></entry>
+				<entry key="OrderItemAttributeValue"><value>orderService</value></entry>
+				<entry key="OrderItemStatusAction"><value>orderService</value></entry>
+				<entry key="OrderItemStatusActionAbstract"><value>orderService</value></entry>
+				<entry key="OrderItemStatusActionProduct"><value>orderService</value></entry>
+				<entry key="OrderItemStatusActionProductType"><value>orderService</value></entry>
+				<entry key="OrderPayment"><value>orderService</value></entry>
+				<entry key="OrderPaymentCash"><value>orderService</value></entry>
+				<entry key="OrderPaymentCheck"><value>orderService</value></entry>
+				<entry key="OrderPaymentCreditCard"><value>orderService</value></entry>
+				<entry key="OrderPaymentGiftCard"><value>orderService</value></entry>
+				<entry key="OrderReturn"><value>orderService</value></entry>
+				<entry key="OrderShippingMethodOption"><value>orderService</value></entry>
+				<entry key="OrderStatusAction"><value>orderService</value></entry>
+				<entry key="PaymentMethod"><value>paymentService</value></entry>
+				<entry key="PostalCode"><value>addressService</value></entry>
+				<entry key="PriceGroup"><value>priceGroupService</value></entry>
+				<entry key="PriceGroupRate"><value>priceGroupService</value></entry>
+				<entry key="Product"><value>productService</value></entry>
+				<entry key="ProductAttributeSetAssignment"><value>attributeService</value></entry>
+				<entry key="ProductAttributeValue"><value>attributeService</value></entry>
+				<entry key="ProductCache"><value>skuCacheService</value></entry>
+				<entry key="ProductCustomization"><value>productService</value></entry>
+				<entry key="ProductImage"><value>?</value></entry>
+				<entry key="ProductReview"><value>productService</value></entry>
+				<entry key="ProductType"><value>productService</value></entry>
+				<entry key="ProductTypeAttributeSetAssignment"><value></value></entry>
+				<entry key="Promotion"><value>promotionService</value></entry>
+				<entry key="PromotionApplied"><value>promotionService</value></entry>
+				<entry key="PromotionCode"><value>promotionService</value></entry>
+				<entry key="PromotionImage"><value>promotionService</value></entry>
+				<entry key="PromotionReward"><value>promotionService</value></entry>
+				<entry key="PromotionRewardOrder"><value>promotionService</value></entry>
+				<entry key="PromotionRewardProduct"><value>promotionService</value></entry>
+				<entry key="PromotionRewardShipping"><value>promotionService</value></entry>
+				<entry key="RoundingRule"><value>roundingRuleService</value></entry>
+				<entry key="Session"><value>sessionService</value></entry>
+				<entry key="Setting"><value>settingService</value></entry>
+				<entry key="ShippingMethod"><value>shippingService</value></entry>
+				<entry key="ShippingRate"><value>shippingService</value></entry>
+				<entry key="Sku"><value>skuService</value></entry>
+				<entry key="SkuCache"><value>skuCacheService</value></entry>
+				<entry key="State"><value>addressService</value></entry>
+				<entry key="Stock"><value>stockService</value></entry>
+				<entry key="StockAdjustment"><value>stockService</value></entry>
+				<entry key="StockAdjustmentDelivery"><value>stockService</value></entry>
+				<entry key="StockAdjustmentDeliveryItem"><value>stockService</value></entry>
+				<entry key="StockAdjustmentItem"><value>stockService</value></entry>
+				<entry key="StockHold"><value>stockService</value></entry>
+				<entry key="StockReceiver"><value>stockService</value></entry>
+				<entry key="StockReceiverItem"><value>stockService</value></entry>
+				<entry key="StockReceiverOrder"><value>stockService</value></entry>
+				<entry key="StockReceiverStockAdjustment"><value>stockService</value></entry>
+				<entry key="StockReceiverVendorOrder"><value>stockService</value></entry>
+				<entry key="SubscriptionBenefit"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionOrder"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionTerm"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionUsage"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionUsageBenefit"><value>subscriptionService</value></entry>
+				<entry key="SubscriptionUsageBenefitAccount"><value>subscriptionService</value></entry>
+				<entry key="TaxApplied"><value>taxService</value></entry>
+				<entry key="TaxCategory"><value>taxService</value></entry>
+				<entry key="TaxCategoryRate"><value>taxService</value></entry>
+				<entry key="Term"><value>termService</value></entry>
+				<entry key="Type"><value>typeService</value></entry>
+				<entry key="UpdateScript"><value>updateService</value></entry>
+				<entry key="Vendor"><value>vendorService</value></entry>
+				<entry key="VendorAccount"><value>vendorService</value></entry>
+				<entry key="VendorAddress"><value>vendorService</value></entry>
+				<entry key="VendorEmailAddress"><value>vendorService</value></entry>
+				<entry key="VendorOrder"><value>vendorOrderService</value></entry>
+				<entry key="VendorOrderItem"><value>vendorOrderService</value></entry>
+				<entry key="VendorPhoneNumber"><value>vendorService</value></entry>
+				<entry key="VendorSkuStock"><value>vendorService</value></entry>
 			</map>
 		</property>  
 	</bean>
@@ -201,8 +201,8 @@
 	<bean id="commentService" parent="parentService" class="Slatwall.com.service.CommentService">
         <property name="DAO"><ref bean="commentDAO" /></property>
 	</bean>
-	<bean id="pageService" parent="parentService" class="Slatwall.com.service.PageService">
-        <property name="DAO"><ref bean="pageDAO" /></property>
+	<bean id="contentService" parent="parentService" class="Slatwall.com.service.ContentService">
+        <property name="DAO"><ref bean="contentDAO" /></property>
 	</bean>
 	<bean id="dataService" parent="parentService" class="Slatwall.com.service.DataService">
         <property name="DAO"><ref bean="dataDAO" /></property>
@@ -217,9 +217,6 @@
 	<bean id="inventoryService" parent="parentService" class="Slatwall.com.service.InventoryService">
         <property name="DAO"><ref bean="inventoryDAO" /></property>
     </bean>
-	<bean id="logService" parent="parentService" class="Slatwall.com.service.LogService">
-        <property name="DAO"><ref bean="logDAO" /></property>
-	</bean>
 	<bean id="locationService" parent="parentService" class="Slatwall.com.service.LocationService">
         <property name="DAO"><ref bean="locationDAO" /></property>
 	</bean>
@@ -253,7 +250,7 @@
 		<property name="skuDAO"><ref bean="skuDAO" /></property>
 		<property name="productTypeDAO"><ref bean="productTypeDAO" /></property>
 		<property name="dataService"><ref bean="dataService" /></property>
-		<property name="pageService"><ref bean="pageService" /></property>
+		<property name="contentService"><ref bean="contentService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>

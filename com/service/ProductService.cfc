@@ -43,7 +43,7 @@ component extends="BaseService" accessors="true" {
 	property name="productTypeDAO" type="any";
 	
 	property name="dataService" type="any";  
-	property name="pageService" type="any";
+	property name="contentService" type="any";
 	property name="skuService" type="any";
 	
 	property name="utilityFileService" type="any";

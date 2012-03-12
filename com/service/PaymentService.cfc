@@ -105,9 +105,9 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					try {
 						
 						// Get Response Bean from provider service
-						getService("logService").logMessage(message="Payment Processing Request - Started", generalLog=true);
+						logSlatwall("Payment Processing Request - Started", true);
 						var response = providerService.processCreditCard(requestBean);
-						getService("logService").logMessage(message="Payment Processing Request - Finished", generalLog=true);
+						logSlatwall("Payment Processing Request - Finished", true);
 						
 						// Populate the Credit Card Transaction with the details of this process
 						transaction.setProviderTransactionID(response.getTransactionID());
@@ -131,8 +131,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 					} catch (any e) {
 						// Populate the orderPayment with the processing error
 						arguments.orderPayment.addError('processing', "An Unexpected Error Ocurred", true);
+						
 						// Log the exception
-						getService("logService").logException(e);
+						logSlatwallException(e);
+						
 						rethrow;
 					}
 				}

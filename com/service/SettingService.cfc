@@ -210,21 +210,21 @@ component extends="BaseService" output="false" accessors="true"  {
 	
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
-		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Started", generalLog=true);
+		logSlatwall("Setting Service - verifyMuraRequirements - Started", true);
 		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
 		verifyMuraFrontendViews();
 		pullMuraPage();
 		pullMuraCategory();
-		getService("logService").logMessage(message="Setting Service - verifyMuraRequirements - Finished", generalLog=true);
+		logSlatwall("Setting Service - verifyMuraRequirements - Finished", true);
 	}
 	
 	private void function verifyMuraClassExtension() {
-		getService("logService").logMessage("Setting Service - verifyMuraClassExtension - Started");
+		logSlatwall("Setting Service - verifyMuraClassExtension - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Verify Mura Class Extension For Site ID: #assignedSites["siteID"][i]#");
+			logSlatwall("Verify Mura Class Extension For Site ID: #assignedSites["siteID"][i]#");
 			
 			local.thisSiteID = assignedSites["siteID"][i];
 			
@@ -299,15 +299,15 @@ component extends="BaseService" output="false" accessors="true"  {
 			});
 			local.thisAttribute.save();
 		}
-		getService("logService").logMessage("Setting Service - verifyMuraClassExtension - Finished");
+		logSlatwall("Setting Service - verifyMuraClassExtension - Finished");
 	}
 	
 	private void function verifyMuraRequiredPages() {
-		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Started");
+		logSlatwall("Setting Service - verifyMuraRequiredPages - Started");
 		
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#");
+			logSlatwall("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#");
 			var thisSiteID = assignedSites["siteID"][i];
 			
 			// Setup Shopping Cart Page
@@ -450,28 +450,28 @@ component extends="BaseService" output="false" accessors="true"  {
 			}
 			
 		}
-		getService("logService").logMessage("Setting Service - verifyMuraRequiredPages - Finished");
+		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished");
 	}
 	
 	private void function verifyMuraFrontendViews() {
-		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Started");
+		logSlatwall("Setting Service - verifyMuraFrontendViews - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
+			logSlatwall("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
 			
 			var baseSlatwallPath = getDirectoryFromPath(expandPath("/muraWRM/plugins/Slatwall/frontend/views/")); 
 			var baseSitePath = getDirectoryFromPath(expandPath("/muraWRM/#assignedSites["siteID"][i]#/includes/display_objects/custom/slatwall/"));
 			
 			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
-		getService("logService").logMessage("Setting Service - verifyMuraFrontendViews - Finished");
+		logSlatwall("Setting Service - verifyMuraFrontendViews - Finished");
 	}
 	
 	private void function pullMuraPage() {
-		getService("logService").logMessage("Setting Service - pullMuraPage - Started");
+		logSlatwall("Setting Service - pullMuraPage - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Pull mura page For Site ID: #assignedSites["siteID"][i]#");
+			logSlatwall("Pull mura page For Site ID: #assignedSites["siteID"][i]#");
 			
 			// save all the listing pages
 			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
@@ -489,7 +489,7 @@ component extends="BaseService" output="false" accessors="true"  {
 			createPage(pageFeed,"detailTemplate");
 			
 		}
-		getService("logService").logMessage("Setting Service - pullMuraPage - Finished");
+		logSlatwall("Setting Service - pullMuraPage - Finished");
 		
 	}
 
@@ -510,10 +510,10 @@ component extends="BaseService" output="false" accessors="true"  {
 	}
 	
 	private void function pullMuraCategory() {
-		getService("logService").logMessage("Setting Service - pullMuraCategory - Started");
+		logSlatwall("Setting Service - pullMuraCategory - Started");
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			getService("logService").logMessage("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
+			logSlatwall("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
 			
 			var categoryQuery = getCategoryManager().getCategoriesBySiteID(siteID=assignedSites["siteID"][i]);
 			for(var j=1; j<=categoryQuery.recordcount; j++) {
@@ -528,7 +528,7 @@ component extends="BaseService" output="false" accessors="true"  {
 				}
 			}
 		}
-		getService("logService").logMessage("Setting Service - pullMuraCategory - Finished");
+		logSlatwall("Setting Service - pullMuraCategory - Finished");
 		
 	}
 

@@ -840,7 +840,12 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint Private helper function for using the Slatwall Log service.
 	private void function logSlatwall(required string message, boolean generalLog=false){
-		getService("logService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
+		getService("utilityLogService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
+	}
+	
+	// @hint Private helper function for using the Slatwall Log Exception service.
+	private void function logSlatwallException(required any exception){
+		getService("utilityLogService").logException(exception=arguments.exception);		
 	}
 	
 	// @hint Private helper function to get a bean for the underlying CMS (mura for now)

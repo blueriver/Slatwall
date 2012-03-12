@@ -94,7 +94,7 @@ Notes:
 				#arguments.body#
 			</cfmail>
 			<cfcatch type="any">
-				<cfset getService("logService").logException(cfcatch) />
+				<cfset logSlatwallException(cfcatch) />
 			</cfcatch>
 		</cftry>
 

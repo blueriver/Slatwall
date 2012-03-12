@@ -131,7 +131,8 @@ component displayname="Utility - File Service" persistent="false" extends="BaseS
 				}
 				catch(any e) {
 					// log the error
-					getService("logService").logException(e);
+					logSlatwallException(e);
+					
 					// return the "missing image" image
 					arguments.imagePath = "#getSlatwallRootPath()#/staticAssets/images/missingimage.jpg";
 					return getResizedImagePath(argumentCollection=arguments);
