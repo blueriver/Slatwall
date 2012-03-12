@@ -41,23 +41,19 @@ component extends="BaseService" accessors="true" {
 	// Slatwall Service Injection
 	property name="skuDAO" type="any";
 	property name="productTypeDAO" type="any";
-	property name="skuService" type="any";
+	
 	property name="dataService" type="any";  
+	property name="pageService" type="any";
+	property name="skuService" type="any";
+	
 	property name="utilityFileService" type="any";
 	property name="utilityTagService" type="any";
-	
-	/*
-	// Mura Service Injection
-	property name="categoryManager" type="any";
-	property name="contentManager" type="any";
-	property name="feedManager" type="any";
-	*/
 	
 	// Cached Properties
 	property name="productTypeTree" type="any";
 	
 	public array function getProductTemplates(required string siteID) {
-		var productTemplates = getService("contentService").listTemplate(date={templateType="Product",siteID=arguments.siteID});
+		var productTemplates = getPageService().listTemplate(date={templateType="Product",siteID=arguments.siteID});
 		var returnArray = [];
 		for(var template in productTemplates) {
 			arrayAppend(returnArray, {name=template.getTemplateName(), value=template.getCmsUrlTitle()});

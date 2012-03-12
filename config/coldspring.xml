@@ -43,9 +43,134 @@
 	<bean id="utilityService" class="Slatwall.com.service.UtilityService" />
 	<bean id="utilityFileService" class="Slatwall.com.service.UtilityFileService" />
 	<bean id="utilityFormService" class="Slatwall.com.service.UtilityFormService" />
-	<bean id="utilityORMService" class="Slatwall.com.service.UtilityORMService" />
+	<bean id="utilityORMService" class="Slatwall.com.service.UtilityORMService">
+		<property name="entityServiceMapping">
+			<map>
+				<entry key="Access.cfc" value="securityService" />
+				<entry key="Account.cfc" value="accountService" />
+				<entry key="AccountAddress.cfc" value="accountService" />
+				<entry key="AccountAttributeSetAssignment.cfc" value="accountService" />
+				<entry key="AccountAttributeValue.cfc" value="attributeService" />
+				<entry key="AccountCustomizedAttributeSet.cfc" value="attributeService" />
+				<entry key="AccountEmailAddress.cfc" value="accountService" />
+				<entry key="AccountPaymentMethod.cfc" value="accountService" />
+				<entry key="AccountPaymentMethodCreditCard.cfc" value="accountService" />
+				<entry key="AccountPhoneNumber.cfc" value="accountService" />
+				<entry key="Address.cfc" value="addressService" />
+				<entry key="AddressZone.cfc" value="addressService" />
+				<entry key="AlternateSkuCode.cfc" value="skuService" />
+				<entry key="Attribute.cfc" value="attributeService" />
+				<entry key="AttributeOption.cfc" value="attributeService" />
+				<entry key="AttributeSet.cfc" value="attributeService" />
+				<entry key="AttributeSetAssignment.cfc" value="attributeService" />
+				<entry key="AttributeValue.cfc" value="attributeService" />
+				<entry key="BaseEntity.cfc" value="baseService" />
+				<entry key="Brand.cfc" value="brandService" />
+				<entry key="BrandProductType.cfc" value="brandService" />
+				<entry key="Category.cfc" value="categoryService" />
+				<entry key="Comment.cfc" value="" />
+				<entry key="CommentRelationship.cfc" value="" />
+				<entry key="Country.cfc" value="" />
+				<entry key="CreditCardTransaction.cfc" value="" />
+				<entry key="FulfillmentMethod.cfc" value="" />
+				<entry key="Image.cfc" value="" />
+				<entry key="Integration.cfc" value="" />
+				<entry key="Inventory.cfc" value="" />
+				<entry key="Location.cfc" value="" />
+				<entry key="LocationAddress.cfc" value="" />
+				<entry key="Log.cfc" value="" />
+				<entry key="MeasurmentUnit.cfc" value="" />
+				<entry key="Option.cfc" value="" />
+				<entry key="OptionGroup.cfc" value="" />
+				<entry key="Order.cfc" value="" />
+				<entry key="OrderDelivery.cfc" value="" />
+				<entry key="OrderDeliveryItem.cfc" value="" />
+				<entry key="OrderDeliveryPickup.cfc" value="" />
+				<entry key="OrderDeliveryShipping.cfc" value="" />
+				<entry key="OrderFulfillment.cfc" value="" />
+				<entry key="OrderFulfillmentPickup.cfc" value="" />
+				<entry key="OrderFulfillmentShipping.cfc" value="" />
+				<entry key="OrderItem.cfc" value="" />
+				<entry key="OrderItemAppliedPromotion.cfc" value="" />
+				<entry key="OrderItemAppliedTax.cfc" value="" />
+				<entry key="OrderItemAttributeValue.cfc" value="" />
+				<entry key="OrderItemStatusAction.cfc" value="" />
+				<entry key="OrderItemStatusActionAbstract.cfc" value="" />
+				<entry key="OrderItemStatusActionProduct.cfc" value="" />
+				<entry key="OrderItemStatusActionProductType.cfc" value="" />
+				<entry key="OrderPayment.cfc" value="" />
+				<entry key="OrderPaymentCash.cfc" value="" />
+				<entry key="OrderPaymentCheck.cfc" value="" />
+				<entry key="OrderPaymentCreditCard.cfc" value="" />
+				<entry key="OrderPaymentGiftCard.cfc" value="" />
+				<entry key="OrderReturn.cfc" value="" />
+				<entry key="OrderShippingMethodOption.cfc" value="" />
+				<entry key="OrderStatusAction.cfc" value="" />
+				<entry key="Page.cfc" value="" />
+				<entry key="PaymentMethod.cfc" value="" />
+				<entry key="PostalCode.cfc" value="" />
+				<entry key="PriceGroup.cfc" value="" />
+				<entry key="PriceGroupRate.cfc" value="" />
+				<entry key="Product.cfc" value="" />
+				<entry key="ProductAttributeSetAssignment.cfc" value="" />
+				<entry key="ProductAttributeValue.cfc" value="" />
+				<entry key="ProductCache.cfc" value="" />
+				<entry key="ProductCustomization.cfc" value="" />
+				<entry key="ProductImage.cfc" value="" />
+				<entry key="ProductReview.cfc" value="" />
+				<entry key="ProductType.cfc" value="" />
+				<entry key="ProductTypeAttributeSetAssignment.cfc" value="" />
+				<entry key="Promotion.cfc" value="" />
+				<entry key="PromotionApplied.cfc" value="" />
+				<entry key="PromotionCode.cfc" value="" />
+				<entry key="PromotionImage.cfc" value="" />
+				<entry key="PromotionReward.cfc" value="" />
+				<entry key="PromotionRewardOrder.cfc" value="" />
+				<entry key="PromotionRewardProduct.cfc" value="" />
+				<entry key="PromotionRewardShipping.cfc" value="" />
+				<entry key="RoundingRule.cfc" value="" />
+				<entry key="Session.cfc" value="" />
+				<entry key="Setting.cfc" value="" />
+				<entry key="ShippingMethod.cfc" value="" />
+				<entry key="ShippingRate.cfc" value="" />
+				<entry key="Sku.cfc" value="" />
+				<entry key="SkuCache.cfc" value="" />
+				<entry key="State.cfc" value="" />
+				<entry key="Stock.cfc" value="" />
+				<entry key="StockAdjustment.cfc" value="" />
+				<entry key="StockAdjustmentDelivery.cfc" value="" />
+				<entry key="StockAdjustmentDeliveryItem.cfc" value="" />
+				<entry key="StockAdjustmentItem.cfc" value="" />
+				<entry key="StockHold.cfc" value="" />
+				<entry key="StockReceiver.cfc" value="" />
+				<entry key="StockReceiverItem.cfc" value="" />
+				<entry key="StockReceiverOrder.cfc" value="" />
+				<entry key="StockReceiverStockAdjustment.cfc" value="" />
+				<entry key="StockReceiverVendorOrder.cfc" value="" />
+				<entry key="SubscriptionBenefit.cfc" value="" />
+				<entry key="SubscriptionOrder.cfc" value="" />
+				<entry key="SubscriptionTerm.cfc" value="" />
+				<entry key="SubscriptionUsage.cfc" value="" />
+				<entry key="SubscriptionUsageBenefit.cfc" value="" />
+				<entry key="SubscriptionUsageBenefitAccount.cfc" value="" />
+				<entry key="TaxApplied.cfc" value="" />
+				<entry key="TaxCategory.cfc" value="" />
+				<entry key="TaxCategoryRate.cfc" value="" />
+				<entry key="Term.cfc" value="" />
+				<entry key="Type.cfc" value="" />
+				<entry key="UpdateScript.cfc" value="" />
+				<entry key="Vendor.cfc" value="" />
+				<entry key="VendorAccount.cfc" value="" />
+				<entry key="VendorAddress.cfc" value="" />
+				<entry key="VendorEmailAddress.cfc" value="" />
+				<entry key="VendorOrder.cfc" value="" />
+				<entry key="VendorOrderItem.cfc" value="" />
+				<entry key="VendorPhoneNumber.cfc" value="" />
+				<entry key="VendorSkuStock.cfc" value="" />
+			</map>
+		</property>  
+	</bean>
 	<bean id="utilityTagService" class="Slatwall.com.service.UtilityTagService" />
-	
 	<bean id="utilityEmailService" class="Slatwall.com.service.UtilityEmailService">
 		<property name="utilityService"><ref bean="utilityService" /></property>
 	</bean>
@@ -129,6 +254,7 @@
 		<property name="skuDAO"><ref bean="skuDAO" /></property>
 		<property name="productTypeDAO"><ref bean="productTypeDAO" /></property>
 		<property name="dataService"><ref bean="dataService" /></property>
+		<property name="pageService"><ref bean="pageService" /></property>
 		<property name="skuService"><ref bean="skuService" /></property>
 		<property name="utilityFileService"><ref bean="utilityFileService" /></property>  
         <property name="utilityTagService"><ref bean="utilityTagService" /></property>

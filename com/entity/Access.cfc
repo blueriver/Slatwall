@@ -36,10 +36,10 @@
 Notes:
 
 */
-component displayname="Access Code" entityname="SlatwallAccessCode" table="SlatwallAccessCode" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Access" entityname="SlatwallAccess" table="SlatwallAccess" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="accessCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="accessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="accessCode" ormtype="string";
 	
 	// Related Object Properties (many-to-one)
