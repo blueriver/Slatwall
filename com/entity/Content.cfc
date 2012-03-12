@@ -36,15 +36,21 @@
 Notes:
 
 */
-component displayname="Page" entityname="SlatwallPage" table="SlatwallPage" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="pageID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="pageName" ormtype="string";
-	property name="pageType" ormtype="string";
-	property name="cmsPageID" ormtype="string";
-	property name="cmsPageIDPath" ormtype="string";
+	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="title" ormtype="string";
+	property name="cmsContentID" ormtype="string";
+	property name="cmsContentIDPath" ormtype="string";
 	property name="cmsSiteID" ormtype="string";
+	property name="allowPurchaseFlag" ormtype="boolean";
+	property name="restrictAccessFlag" ormtype="boolean";
+	property name="templateFlag" ormtype="boolean";
+	property name="productListingFlag" ormtype="boolean";
+	property name="defaultProductsPerPage" ormtype="integer";
+	property name="showProductInSubPagesFlag" ormtype="boolean";
+	property name="disableProductAssignmentFlag" ormtype="boolean";
 	
 	// Related Object Properties (many-to-one)
 	
