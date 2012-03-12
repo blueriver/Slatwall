@@ -76,7 +76,7 @@ Notes:
 		<cfelse>
 			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="productType" edit="false" valueLink="#buildURL(action='admin:product.detailProductType', queryString='productTypeID=#rc.product.getProductType().getProductTypeID()#')#">
 		</cfif>
-		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="urlTitle" edit="#rc.edit#">
+		<cf_SlatwallPropertyDisplay object="#rc.Product#" property="urlTitle" edit="#rc.edit#" valueLink="#rc.product.getProductURL()#">
 		<cfif $.slatwall.setting('advanced_showRemoteIDFields')>
 			<cf_SlatwallPropertyDisplay object="#rc.Product#" property="remoteID" edit="#rc.edit#">	
 		</cfif>
