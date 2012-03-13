@@ -46,7 +46,7 @@
 	<bean id="utilityORMService" class="Slatwall.com.service.UtilityORMService">
 		<property name="entityServiceMapping">
 			<map>
-				<entry key="Access"><value>securityService</value></entry>
+				<entry key="Access"><value>accessService</value></entry>
 				<entry key="Account"><value>accountService</value></entry>
 				<entry key="AccountAddress"><value>accountService</value></entry>
 				<entry key="AccountAttributeSetAssignment"><value>accountService</value></entry>

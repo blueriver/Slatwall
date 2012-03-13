@@ -44,6 +44,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="accountService" type="any";
 	property name="sessionService" type="any";
 	property name="requestCacheService" type="any";
+	property name="utilityFormService" type="any";
 	
 	
 	// Mura Service Injection
@@ -145,22 +146,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 	}
 	
-	public void function onAfterPageSlatwallProductListingSave(required any rc) {
-		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
-		content.setCmsSiteID(rc.$.event('siteID'));
-		content.setCmsContentID(rc.$.content("contentID"));
-		content.setCmsContentIDPath(rc.$.content("path"));
-		content.setContentName(rc.$.content("title"));
-		content = getContentService().saveContent(content);
-	}
-	
-	public void function onAfterPageSlatwallProductListingDelete(required any rc) {
-		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
-		if(!content.isNew()) {
-			getContentService().deleteContent(content);
-		}
-	}
-	
 	public void function onAfterCategoryUpdate(required any rc) {
 		var category = getContentService().getCategoryByCmsCategoryID(rc.$.event("categoryID"),true);
 		category.setCmsSiteID(rc.$.event('siteID'));
@@ -177,4 +162,83 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 	}
 	
+	public void function onAfterContentSave(required any rc) {
+		getUtilityFormService().buildFormCollections(rc);
+		var slatwallData = rc.slatwall;
+		// loop through all the struct key and see if any value is set
+		var saveAsSlatwallPage = false;
+		for(var key in slatwallData) {
+			// if any flag is set to 1, save this content in slatwall 
+			if(lcase(key).endsWith("flag") && slatwallData[key] == 1) {
+				saveAsSlatwallPage = true;
+				break;
+			}
+		}
+		if(saveAsSlatwallPage) {
+			saveSlatwallPage(rc);
+		} else {
+			deleteSlatwallPage(rc);
+		}
+		if(slatwallData.allowPurchaseFlag) {
+			saveSlatwallProduct(rc);
+		} else {
+			deleteSlatwallProduct(rc);
+		}
+		
+	}
+	
+	public void function onAfterContentDelete(required any rc) {
+		deleteSlatwallPage(rc);
+		deleteSlatwallProduct(rc);
+	}
+	
+	private void function saveSlatwallPage(required any rc) {
+		var slatwallData = rc.slatwall;
+		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		content.setCmsSiteID(rc.$.event('siteID'));
+		content.setCmsContentID(rc.$.content("contentID"));
+		content.setCmsContentIDPath(rc.$.content("path"));
+		content.setTitle(rc.$.content("title"));
+		content = getContentService().saveContent(content,slatwallData);
+		ormflush();
+	}
+	
+	private void function deleteSlatwallPage(required any rc) {
+		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		if(!content.isNew()) {
+			getContentService().deleteContent(content);
+			ormflush();
+		}
+	}
+	
+	private void function saveSlatwallProduct(required any rc) {
+		var slatwallData = rc.slatwall;
+		var content = $.event('contentBean');
+		var data = {};
+		data.remoteID = content.getContentID();
+		data.productCode = createUUID();
+		data.productName = content.getTitle();
+		data.activeFlag = 1;
+		data.publishedFlag = content.getApproved();
+		if(structKeyExists(slatwallData,"product")){
+			structAppend(data,slatwallData.product);
+		}
+		var product = getService("ProductService").getProductByRemoteID(data.remoteID, true);
+		getService("ProductService").saveProduct( product, data );
+		ormflush();
+	}
+	
+	private void function deleteSlatwallProduct(required any rc) {
+		var product = getService("ProductService").getProductByRemoteID(rc.$.content("contentID"), true);
+		if(!product.isNew()) {
+			if(product.isDeletable()) {
+				getService("ProductService").deleteProduct(product);
+			} else {
+				product.setActiveFlag(0);
+				getService("ProductService").saveProduct(product);
+			}
+			ormflush();
+		}
+	}
+
 }

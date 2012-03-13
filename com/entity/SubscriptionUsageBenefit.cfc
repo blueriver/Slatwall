@@ -55,7 +55,7 @@ component displayname="Subscription Usage Benefit" entityname="SlatwallSubscript
 	property name="priceGroups" singularname="priceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPriceGroup" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="priceGroupID" cascade="all";
 	property name="promotions" singularname="promotion" cfc="Promotion" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPromotion" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="promotionID" cascade="all";
 	property name="categories" singularname="category" cfc="Category" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitCategory" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="categoryID" cascade="all";
-	property name="pages" singularname="page" cfc="Page" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitPage" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="pageID" cascade="all";
+	property name="content" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSubscriptionUsageBenefitContent" fkcolumn="subscriptionUsageBenefitID" inversejoincolumn="contentID" cascade="all";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";

@@ -89,7 +89,7 @@ component extends="org.fw1.framework" output="false" {
 					}
 					
 					// This sets up the Plugin Config for later use
-					setPluginConfig( application.pluginManager.getConfig(listLast(listGetat(getDirectoryFromPath(getCurrentTemplatePath()), listLen(getDirectoryFromPath(getCurrentTemplatePath()), application.configBean.getFileDelim())-1, application.configBean.getFileDelim()), "_")) );
+					setPluginConfig( application.pluginManager.getConfig(listLast(getDirectoryFromPath(getCurrentTemplatePath()), application.configBean.getFileDelim())));
 					
 					// Make sure the correct version is in the plugin config
 					var versionFile = getDirectoryFromPath(getCurrentTemplatePath()) & "version.txt";
