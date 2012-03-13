@@ -211,250 +211,14 @@ component extends="BaseService" output="false" accessors="true"  {
 	// -------------- Start Mura Setup Functions
 	public any function verifyMuraRequirements() {
 		logSlatwall("Setting Service - verifyMuraRequirements - Started", true);
-		verifyMuraClassExtension();
 		verifyMuraRequiredPages();
 		verifyMuraFrontendViews();
-		pullMuraPage();
 		pullMuraCategory();
 		logSlatwall("Setting Service - verifyMuraRequirements - Finished", true);
 	}
 	
-	private void function verifyMuraClassExtension() {
-		logSlatwall("Setting Service - verifyMuraClassExtension - Started");
-		var assignedSites = getPluginConfig().getAssignedSites();
-		
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Verify Mura Class Extension For Site ID: #assignedSites["siteID"][i]#");
-			
-			local.thisSiteID = assignedSites["siteID"][i];
-			
-			// Confirm that there is a Slatwall subtype
-			local.productPageSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
-			local.productPageSubType.set( {
-				type = "Page",
-				subType = "Slatwall",
-				siteID = local.thisSiteID
-			} );
-			local.productPageSubType.load();
-			local.productPageSubType.save();
-			
-			// Confirm that there is a SlatwallProductTemplate subtype
-			local.productPageSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
-			local.productPageSubType.set( {
-				type = "Page",
-				subType = "SlatwallProductTemplate",
-				siteID = local.thisSiteID
-			} );
-			local.productPageSubType.load();
-			local.productPageSubType.save();
-			
-			// Confirm that there is SlatwallProductListing subtype
-			local.thisSubType = getConfigBean().getClassExtensionManager().getSubTypeBean();
-			local.thisSubType.set( {
-				type = "Page",
-				subType = "SlatwallProductListing",
-				siteID = local.thisSiteID
-			} );
-			local.thisSubType.load();
-			local.thisSubType.save();
-						
-			// get the extend set for SlatwallProductListing, One is created if it doesn't already exist
-			local.thisExtendSet = local.thisSubType.getExtendSetByName( "Slatwall Product Listing Attributes" );
-			local.thisExtendSet.setSubTypeID(local.thisSubType.getSubTypeID());
-			local.thisExtendSet.save();
-			// create a new attribute for the extend set
-			// getAttributeBy Name will look for it and if not found give me a new bean to use 
-			// TODO: Internationalize attribute labels and hints
-			local.thisAttribute = local.thisExtendSet.getAttributeByName("productsPerPage");
-			local.thisAttribute.set({
-				label = "Products Per Page",
-				type = "TextBox",
-				validation = "numeric",
-				defaultValue = "10",
-				orderNo = "1"
-			});
-			local.thisAttribute.save();
-			
-			local.thisAttribute = local.thisExtendSet.getAttributeByName("showSubPageProducts");
-			local.thisAttribute.set({
-				label = "Show Products Assigned to Sub Pages",
-				hint = "If this is enabled, products assigned to any sub pages will also show up in this page.",
-				type = "RadioGroup",
-				defaultValue = "1",
-				optionList="0^1",
-				optionLabelList="No^Yes",
-				orderNo="2"
-			});
-			local.thisAttribute.save();
-			
-			local.thisAttribute = local.thisExtendSet.getAttributeByName("excludefromAssignment");
-			local.thisAttribute.set({
-				label = "Exclude from Product Assignment",
-				hint = "If this is enabled, products cannot be assigned directly to this page. This can be used to set up parent product listing pages but enforce assignment of products to subpages.",
-				type = "RadioGroup",
-				defaultValue = "0",
-				optionList="0^1",
-				optionLabelList="No^Yes",
-				orderNo="3"
-			});
-			local.thisAttribute.save();
-		}
-		logSlatwall("Setting Service - verifyMuraClassExtension - Finished");
-	}
-	
-	private void function verifyMuraRequiredPages() {
-		logSlatwall("Setting Service - verifyMuraRequiredPages - Started");
-		
-		var assignedSites = getPluginConfig().getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#");
-			var thisSiteID = assignedSites["siteID"][i];
-			
-			// Setup Shopping Cart Page
-			var shoppingCartPage = getContentManager().getActiveContentByFilename(filename="shopping-cart", siteid=local.thisSiteID);
-			if(shoppingCartPage.getIsNew()) {
-				shoppingCartPage.setDisplayTitle("Shopping Cart");
-				shoppingCartPage.setHTMLTitle("Shopping Cart");
-				shoppingCartPage.setMenuTitle("Shopping Cart");
-				shoppingCartPage.setIsNav(1);
-				shoppingCartPage.setActive(1);
-				shoppingCartPage.setApproved(1);
-				shoppingCartPage.setIsLocked(1);
-				shoppingCartPage.setParentID("00000000000000000000000000000000001");
-				shoppingCartPage.setFilename("shopping-cart");
-				shoppingCartPage.setSiteID(thisSiteID);
-				shoppingCartPage.setSubType("Slatwall");
-				shoppingCartPage.save();
-			}
-			
-			
-			// Setup Order Status Page
-			var orderStatusPage = getContentManager().getActiveContentByFilename(filename="order-status", siteid=local.thisSiteID);
-			if(orderStatusPage.getIsNew()) {
-				orderStatusPage.setDisplayTitle("Order Status");
-				orderStatusPage.setHTMLTitle("Order Status");
-				orderStatusPage.setMenuTitle("Order Status");
-				orderStatusPage.setIsNav(1);
-				orderStatusPage.setActive(1);
-				orderStatusPage.setApproved(1);
-				orderStatusPage.setIsLocked(1);
-				orderStatusPage.setParentID("00000000000000000000000000000000001");
-				orderStatusPage.setFilename("order-status");
-				orderStatusPage.setSiteID(thisSiteID);
-				orderStatusPage.setSubType("Slatwall");
-				orderStatusPage.save();
-			}
-			
-			
-			// Setup Order Confirmation
-			var orderConfirmationPage = getContentManager().getActiveContentByFilename(filename="order-confirmation", siteid=local.thisSiteID);
-			if(orderConfirmationPage.getIsNew()) {
-				orderConfirmationPage.setDisplayTitle("Order Confirmation");
-				orderConfirmationPage.setHTMLTitle("Order Confirmation");
-				orderConfirmationPage.setMenuTitle("Order Confirmation");
-				orderConfirmationPage.setIsNav(0);
-				orderConfirmationPage.setActive(1);
-				orderConfirmationPage.setApproved(1);
-				orderConfirmationPage.setIsLocked(1);
-				orderConfirmationPage.setParentID("00000000000000000000000000000000001");
-				orderConfirmationPage.setFilename("order-confirmation");
-				orderConfirmationPage.setSiteID(thisSiteID);
-				orderConfirmationPage.setSubType("Slatwall");
-				orderConfirmationPage.save();
-			}
-			
-			// Setup My Account Page
-			var myAccountPage = getContentManager().getActiveContentByFilename(filename="my-account", siteid=local.thisSiteID);
-			if(myAccountPage.getIsNew()) {
-				myAccountPage.setDisplayTitle("My Account");
-				myAccountPage.setHTMLTitle("My Account");
-				myAccountPage.setMenuTitle("My Account");
-				myAccountPage.setIsNav(1);
-				myAccountPage.setActive(1);
-				myAccountPage.setApproved(1);
-				myAccountPage.setIsLocked(1);
-				//myAccountPage.setRestricted(1); This was disabled because we are going to manage login via the view
-				myAccountPage.setParentID("00000000000000000000000000000000001");
-				myAccountPage.setFilename("my-account");
-				myAccountPage.setSiteID(thisSiteID);
-				myAccountPage.setSubType("Slatwall");
-				myAccountPage.save();
-			}
-			
-			// Setup Edit Account Page
-			var editAccountPage = getContentManager().getActiveContentByFilename(filename="edit-account", siteid=local.thisSiteID);
-			if(editAccountPage.getIsNew()) {
-				editAccountPage.setDisplayTitle("Edit Account");
-				editAccountPage.setHTMLTitle("Edit Account");
-				editAccountPage.setMenuTitle("Edit Account");
-				editAccountPage.setIsNav(1);
-				editAccountPage.setActive(1);
-				editAccountPage.setApproved(1);
-				editAccountPage.setIsLocked(1);
-				editAccountPage.setParentID("00000000000000000000000000000000001");
-				editAccountPage.setFilename("edit-account");
-				editAccountPage.setSiteID(thisSiteID);
-				editAccountPage.setSubType("Slatwall");
-				editAccountPage.save();
-			}
-			
-			// Setup Create Account Page
-			var createAccountPage = getContentManager().getActiveContentByFilename(filename="create-account", siteid=local.thisSiteID);
-			if(createAccountPage.getIsNew()) {
-				createAccountPage.setDisplayTitle("Create Account");
-				createAccountPage.setHTMLTitle("Create Account");
-				createAccountPage.setMenuTitle("Create Account");
-				createAccountPage.setIsNav(1);
-				createAccountPage.setActive(1);
-				createAccountPage.setApproved(1);
-				createAccountPage.setIsLocked(1);
-				createAccountPage.setParentID("00000000000000000000000000000000001");
-				createAccountPage.setFilename("create-account");
-				createAccountPage.setSiteID(thisSiteID);
-				createAccountPage.setSubType("Slatwall");
-				createAccountPage.save();
-			}
-			
-			// Setup Checkout Page
-			var checkoutPage = getContentManager().getActiveContentByFilename(filename="checkout", siteid=local.thisSiteID);
-			if(checkoutPage.getIsNew()) {
-				checkoutPage.setDisplayTitle("Checkout");
-				checkoutPage.setHTMLTitle("Checkout");
-				checkoutPage.setMenuTitle("Checkout");
-				checkoutPage.setIsNav(1);
-				checkoutPage.setActive(1);
-				checkoutPage.setApproved(1);
-				checkoutPage.setIsLocked(1);
-				checkoutPage.setParentID("00000000000000000000000000000000001");
-				checkoutPage.setFilename("checkout");
-				checkoutPage.setSiteID(thisSiteID);
-				checkoutPage.setSubType("Slatwall");
-				checkoutPage.save();
-			}
-			
-			// Setup Product Templates Page
-			var productTemplate = getContentManager().getActiveContentByFilename(filename="default-product-template", siteid=local.thisSiteID);
-			if(productTemplate.getIsNew()) {
-				productTemplate.setDisplayTitle("Default Product Template");
-				productTemplate.setHTMLTitle("Default Product Template");
-				productTemplate.setMenuTitle("Default Product Template");
-				productTemplate.setIsNav(0);
-				productTemplate.setActive(1);
-				productTemplate.setApproved(1);
-				productTemplate.setIsLocked(0);
-				productTemplate.setParentID("00000000000000000000000000000000001");
-				productTemplate.setFilename("default-product-template");
-				productTemplate.setSiteID(thisSiteID);
-				productTemplate.setSubType("SlatwallProductTemplate");
-				productTemplate.save();
-			}
-			
-		}
-		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished");
-	}
-	
 	private void function verifyMuraFrontendViews() {
-		logSlatwall("Setting Service - verifyMuraFrontendViews - Started");
+		logSlatwall("Setting Service - verifyMuraFrontendViews - Started", true);
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			logSlatwall("Verify Mura Frontend Views For Site ID: #assignedSites["siteID"][i]#");
@@ -464,72 +228,98 @@ component extends="BaseService" output="false" accessors="true"  {
 			
 			getService("utilityFileService").duplicateDirectory(baseSlatwallPath,baseSitePath,false,true,".svn");
 		}
-		logSlatwall("Setting Service - verifyMuraFrontendViews - Finished");
-	}
-	
-	private void function pullMuraPage() {
-		logSlatwall("Setting Service - pullMuraPage - Started");
-		var assignedSites = getPluginConfig().getAssignedSites();
-		for( var i=1; i<=assignedSites.recordCount; i++ ) {
-			logSlatwall("Pull mura page For Site ID: #assignedSites["siteID"][i]#");
-			
-			// save all the listing pages
-			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
-			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="Slatwall", dataType="varchar" );
-			createPage(pageFeed,"generic");
-			
-			// save all the listing pages
-			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
-			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductListing", dataType="varchar" );
-			createPage(pageFeed,"listingTemplate");
-			
-			// save detail pages
-			var pageFeed = getFeedManager().getBean().set({ siteID=assignedSites["siteID"][i],sortBy="title",sortDirection="asc",maxItems=0,showNavOnly=0 });
-			pageFeed.addParam( relationship="AND", field="tcontent.subType", criteria="SlatwallProductTemplate", dataType="varchar" );
-			createPage(pageFeed,"detailTemplate");
-			
-		}
-		logSlatwall("Setting Service - pullMuraPage - Finished");
-		
+		logSlatwall("Setting Service - verifyMuraFrontendViews - Finished", true);
 	}
 
-	private void function createPage(required any pageFeed, required string pageType) {
-		var pageQuery = arguments.pageFeed.getQuery();
-		for(var j=1; j<=pageQuery.recordcount; j++) {
-			// should move to DAO and add it using sql for performance
-			var page = getService("pageService").getPageByCmsPageID(pageQuery.contentID[j],true);
-			if(page.isNew()){
-				page.setCmsSiteID(pageQuery.siteID[j]);
-				page.setCmsPageID(pageQuery.contentID[j]);
-				page.setCmsPageIDPath(pageQuery.path[j]);
-				page.setPageName(pageQuery.title[j]);
-				page.setPageType(arguments.pageType);
-				page = getService("pageService").savePage(page);
+	private void function verifyMuraRequiredPages() {
+		logSlatwall("Setting Service - verifyMuraRequiredPages - Started", true);
+		
+		var requiredMuraPages = [
+			{settingName="page_shoppingCart",title="Shopping Cart",fileName="shopping-cart",isNav="1",isLocked="1"},
+			{settingName="page_orderStatus",title="Order Status",fileName="order-status",isNav="1",isLocked="1"},
+			{settingName="page_orderConfirmation",title="Order Confirmation",fileName="order-confirmation",isNav="0",isLocked="1"},
+			{settingName="page_myAccount",title="My Account",fileName="my-account",isNav="1",isLocked="1"},
+			{settingName="page_editAccount",title="Edit Account",fileName="edit-account",isNav="1",isLocked="1"},
+			{settingName="page_createAccount",title="Create Account",fileName="create-account",isNav="1",isLocked="1"},
+			{settingName="page_checkout",title="Checkout",fileName="checkout",isNav="1",isLocked="1"},
+			{title="Default Product Template",fileName="default-product-template",isNav="0",isLocked="0",templateFlag="1"}
+		];
+		
+		var assignedSites = getPluginConfig().getAssignedSites();
+		for( var i=1; i<=assignedSites.recordCount; i++ ) {
+			logSlatwall("Verify Mura Required Pages For Site ID: #assignedSites["siteID"][i]#", true);
+			var thisSiteID = assignedSites["siteID"][i];
+			
+			for(var page in requiredMuraPages) {
+				if(structKeyExists(page,"settingName")) {
+					createMuraPageAndSetting(page,thisSiteID);
+				} else {
+					var muraPage = createMuraPage(page,thisSiteID);
+					createSlatwallPage(muraPage,page);
+				}
 			}
+		}
+		logSlatwall("Setting Service - verifyMuraRequiredPages - Finished", true);
+	}
+	
+	private void function createMuraPageAndSetting(required struct page,required any siteID) {
+		var setting = getBySettingName(arguments.page.settingName);
+		if(setting.isNew() || setting.getSettingValue() == ""){
+			var muraPage = createMuraPage(arguments.page,arguments.siteID);
+			setting.setSettingValue(arguments.page.fileName);
+			this.saveSetting(setting);
+		}
+	}
+	
+	private any function createMuraPage(required struct page,required any siteID) {
+		// Setup Mura Page
+		var thisPage = getContentManager().getActiveContentByFilename(filename=arguments.page.fileName, siteid=arguments.siteID);
+		if(thisPage.getIsNew()) {
+			thisPage.setDisplayTitle(arguments.page.title);
+			thisPage.setHTMLTitle(arguments.page.title);
+			thisPage.setMenuTitle(arguments.page.title);
+			thisPage.setIsNav(arguments.page.isNav);
+			thisPage.setActive(1);
+			thisPage.setApproved(1);
+			thisPage.setIsLocked(arguments.page.isLocked);
+			thisPage.setParentID("00000000000000000000000000000000001");
+			thisPage.setFilename(arguments.page.fileName);
+			thisPage.setSiteID(arguments.siteID);
+			thisPage.save();
+		}
+		return thisPage;
+	}
+	
+	private void function createSlatwallPage(required any muraPage, required struct pageAttributes) {
+		var thisPage = getService("contentService").getcontentByCmsContentID(arguments.muraPage.getContentID(),true);
+		if(thisPage.isNew()){
+			thisPage.setCmsSiteID(arguments.muraPage.getSiteID());
+			thisPage.setCmsContentID(arguments.muraPage.getContentID());
+			thisPage.setCmsContentIDPath(arguments.muraPage.getPath());
+			thisPage.setTitle(arguments.muraPage.getTitle());
+			thisPage = getService("contentService").saveContent(thisPage,arguments.pageAttributes);
 		}
 	}
 	
 	private void function pullMuraCategory() {
-		logSlatwall("Setting Service - pullMuraCategory - Started");
+		logSlatwall("Setting Service - pullMuraCategory - Started", true);
 		var assignedSites = getPluginConfig().getAssignedSites();
 		for( var i=1; i<=assignedSites.recordCount; i++ ) {
 			logSlatwall("Pull mura category For Site ID: #assignedSites["siteID"][i]#");
 			
 			var categoryQuery = getCategoryManager().getCategoriesBySiteID(siteID=assignedSites["siteID"][i]);
 			for(var j=1; j<=categoryQuery.recordcount; j++) {
-				// should move to DAO and add it using sql for performance
-				var category = getService("pageService").getCategoryByCmsCategoryID(categoryQuery.categoryID[j],true);
+				var category = getService("contentService").getCategoryByCmsCategoryID(categoryQuery.categoryID[j],true);
 				if(category.isNew()){
 					category.setCmsSiteID(categoryQuery.siteID[j]);
 					category.setCmsCategoryID(categoryQuery.categoryID[j]);
 					category.setCmsCategoryIDPath(categoryQuery.path[j]);
 					category.setCategoryName(categoryQuery.name[j]);
-					category = getService("pageService").saveCategory(category);
+					category = getService("contentService").saveCategory(category);
 				}
 			}
 		}
-		logSlatwall("Setting Service - pullMuraCategory - Finished");
-		
+		logSlatwall("Setting Service - pullMuraCategory - Finished", true);
 	}
 
 
