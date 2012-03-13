@@ -54,6 +54,11 @@ Notes:
 		<cfreturn '<li><a href="' & application.configBean.getContext() & '/plugins/Slatwall">Slatwall</a></li>' />
 	</cffunction>
 	
+	<cffunction name="onContentEdit">
+		<cfargument name="$" />
+		<cfinclude template="plugin/contentEdit.cfm" />
+	</cffunction>
+	
 	<cffunction name="onRenderStart">
 		<cfargument name="$" />
 

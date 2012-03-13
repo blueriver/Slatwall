@@ -79,10 +79,11 @@ Notes:
 	<eventHandler event="onSiteRequestStart" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onRenderStart" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onRenderEnd" component="fw1EventAdapter" persist="false"/>
-	<eventHandler event="onAfterPageSlatwallProductListingSave" component="fw1EventAdapter" persist="false"/>	
-	<eventHandler event="onAfterPageSlatwallProductListingDelete" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onAfterCategoryUpdate" component="fw1EventAdapter" persist="false"/>	
 	<eventHandler event="onAfterCategoryDelete" component="fw1EventAdapter" persist="false"/>
+	<eventHandler event="onContentEdit" component="fw1EventAdapter" persist="false"/>
+	<eventHandler event="onAfterContentSave" component="fw1EventAdapter" persist="false"/>	
+	<eventHandler event="onAfterContentDelete" component="fw1EventAdapter" persist="false"/>
 	<eventHandler event="onAdminModuleNav" component="fw1EventAdapter" persist="false"/>
 </eventHandlers>
 <displayobjects location="global">

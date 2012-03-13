@@ -53,10 +53,10 @@ component extends="BaseService" accessors="true" {
 	property name="productTypeTree" type="any";
 	
 	public array function getProductTemplates(required string siteID) {
-		var productTemplates = getPageService().listTemplate(date={templateType="Product",siteID=arguments.siteID});
+		var productTemplates = getContentService().listContent(date={templateFlag="1",siteID=arguments.siteID});
 		var returnArray = [];
 		for(var template in productTemplates) {
-			arrayAppend(returnArray, {name=template.getTemplateName(), value=template.getCmsUrlTitle()});
+			arrayAppend(returnArray, {name=template.getTitle(), value=template.getContentID()});
 		}
 		return returnArray;
 		/*
