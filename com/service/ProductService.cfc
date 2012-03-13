@@ -106,7 +106,6 @@ component extends="BaseService" accessors="true" {
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
 		smartList.joinRelatedProperty("SlatwallProduct","productType");
 		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
@@ -142,7 +141,6 @@ component extends="BaseService" accessors="true" {
 		smartList.addKeywordProperty(propertyIdentifier="productCode", weight=9);
 		smartList.addKeywordProperty(propertyIdentifier="productName", weight=3);
 		smartList.addKeywordProperty(propertyIdentifier="productDescription", weight=1);
-		smartList.addKeywordProperty(propertyIdentifier="brand_brandName", weight=3);
 		
 		smartList.joinRelatedProperty("SlatwallProduct","defaultSku");
 		

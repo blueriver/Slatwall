@@ -41,16 +41,14 @@ Notes:
 
 <cfoutput>
 <form method="post" action="#rc.$.slatwall.getSlatwallRootPath()#/">
-	<fieldset class="control-group">
 	<input type="hidden" name="slatAction" value="admin:product.saveproduct" />
 	<dl class="dl-horizontal">
 		<cf_SlatwallPropertyDisplay object="#rc.product#" property="productType" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.product#" first="true" property="productName" edit="true">
-	    <cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true" toggle="true">
-		<cf_SlatwallPropertyDisplay object="#rc.product#" property="brand" edit="true">
-		<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true" tooltip="true">
+		<cf_SlatwallPropertyDisplay object="#rc.product#" property="productName" edit="true">
+	    <cf_SlatwallPropertyDisplay object="#rc.product#" property="productCode" edit="true">
+		<cf_SlatwallPropertyDisplay object="#rc.product#" property="price" edit="true">
 	</dl>
-	
+	<!---
 	<!--- list option groups --->
 	<div>
 	    <h4>#rc.$.Slatwall.rbKey("admin.product.selectoptions")#</h4>
@@ -104,6 +102,6 @@ Notes:
 		<cf_SlatwallActionCaller action="admin:product.list" type="link" class="btn" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
 		<cf_SlatwallActionCaller action="admin:product.save" type="button" submit="true" text="#rc.$.Slatwall.rbKey('admin.product.create.next')#" />
 	</div>
-	</fieldset>
+	--->
 </form>
 </cfoutput>

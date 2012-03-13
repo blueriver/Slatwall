@@ -36,21 +36,15 @@
 Notes:
 
 --->
-<cfparam name="rc.section" default="Slatwall" />
-<cfparam name="rc.activeTab" default=0 />
-<cfparam name="rc.activePanel" default=0 />
-<cfparam name="rc.message" type="string" default="" />
-<cfparam name="rc.messagetype" type="string" default="info" />
-
 <cfoutput>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
+		<title>#rc.$.slatwall.rbKey(replace(rc.slatAction,":",".","all"))# &##124; Slatwall</title>
 		
-		<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
-		<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
+		<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
+		<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="#$.slatwall.getSlatwallRootPath()#/org/bootstrap/css/bootstrap.css" rel="stylesheet">
 	</head>
@@ -59,7 +53,7 @@ Notes:
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<ul class="nav">
-						<a href="##" class="brand">Slatwall</a>
+						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
 					</ul>
 				</div>
 			</div>
