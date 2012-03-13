@@ -58,10 +58,10 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:product.list");
+		getFW().redirect(action="admin:product.listproducts");
 	}
 
-    public void function create(required struct rc) {
+    public void function createProduct(required struct rc) {
 		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
 			rc.product = getProductService().newProduct();
 		}
@@ -69,7 +69,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.subscriptionTerms = getSubscriptionService().listSubscriptionTerm();
     }
 	
-	public void function detail(required struct rc) {
+	public void function detailproduct(required struct rc) {
 		param name="rc.edit" default="false";
 		rc.product = getProductService().getProduct(rc.productID);
 		if(!isNull(rc.product) ) {
@@ -77,7 +77,7 @@ component extends="BaseController" output=false accessors=true {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
 		} else {
-			getFW().redirect("admin:product.list");
+			getFW().redirect("admin:product.listproducts");
 		}
 		//rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		//rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
@@ -90,24 +90,24 @@ component extends="BaseController" output=false accessors=true {
 		rc.subscriptionTerms = getSubscriptionService().listSubscriptionTerm();
 	}
 	
-	public void function edit(required struct rc) {
-		detail(rc);
+	public void function editproduct(required struct rc) {
+		detailProduct(rc);
 		
 		rc.priceGroupDataJSON = getPriceGroupService().getPriceGroupDataJSON();
 		
 		getFW().setView("admin:product.detail");
 		rc.edit = true;
-		param name="rc.Image" default="#getProductService().newImage()#";
+		param name="rc.image" default="#getProductService().newImage()#";
 	}
 
-	public void function list(required struct rc) {
+	public void function listproducts(required struct rc) {
 		if(!structKeyExists(rc, "orderBy")) {
 			rc.orderBy = "productType_productTypeName|ASC,brand_brandName|ASC,productName|ASC";
 		}
 		rc.productSmartList = getProductService().getProductSmartList(data=rc);
 	}
 	
-	public void function save(required struct rc) {
+	public void function saveproduct(required struct rc) {
 		param name="rc.productID" default="";
 		
 		// We are going to be flushing ORM, so we need to check if the product was new before that flush
@@ -127,18 +127,20 @@ component extends="BaseController" output=false accessors=true {
 		// If the product doesn't have any errors then redirect to detail or list
 		if(!rc.product.hasErrors()) {
 			if( productWasNew ) {
-				getFW().redirect(action="admin:product.edit",queryString="productID=#rc.product.getProductID()#");
+				getFW().redirect(action="admin:product.editproduct",queryString="productID=#rc.product.getProductID()#");
 			} else {
-				getFW().redirect(action="admin:product.list");
+				getFW().redirect(action="admin:product.listproducts");
 			}
 		}
 		
 		// This logic only runs if the product has errors.  If it was a new product show the create page, otherwise show the edit page
 		if( productWasNew ) {
-			create( rc );
-			getFW().setView(action="admin:product.create");
+			createProduct( rc );
+			rc.slatAction="admin:product.createproduct";
+			getFW().setView(action="admin:product.createproduct");
 		} else {
-			edit( rc );
+			editProduct( rc );
+			rc.slatAction="admin:product.editproduct";
 		}
 	}
 	

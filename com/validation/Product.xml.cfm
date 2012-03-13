@@ -13,9 +13,6 @@
 				<param name="methodName" value="hasUniqueProductCode" />
 			</rule>
 		</property>
-		<property name="brand">
-			<rule type="required" contexts="save" />
-		</property>
 		<property name="productType">
 			<rule type="required" contexts="save" />
 		</property>

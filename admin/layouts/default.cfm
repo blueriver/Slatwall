@@ -44,6 +44,61 @@ Notes:
 
 <cfoutput>
 <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
+		
+		<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
+		<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="#$.slatwall.getSlatwallRootPath()#/org/bootstrap/css/bootstrap.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<ul class="nav">
+						<a href="##" class="brand">Slatwall</a>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+			<div class="row-fluid" style="margin-top:40px;">
+				#body#
+			</div>
+		</div>
+		<div class="navbar navbar-fixed-bottom">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<ul class="nav">
+						<form class="navbar-form pull-left">
+  							<input type="text" class="span2">
+						</form>
+						<cf_SlatwallActionCaller action="admin:main" type="list" icon="home icon-white">
+						<cf_SlatwallActionCaller action="admin:product" type="list" icon="pencil icon-white">
+						<cf_SlatwallActionCaller action="admin:pricing" type="list" icon="tags icon-white">
+						<cf_SlatwallActionCaller action="admin:order" type="list" icon="inbox icon-white">
+						<cf_SlatwallActionCaller action="admin:account" type="list" icon="user icon-white">
+						<cf_SlatwallActionCaller action="admin:vendor" type="list" icon="list-alt icon-white">
+						<cf_SlatwallActionCaller action="admin:inventory" type="list" icon="barcode icon-white">
+						<cf_SlatwallActionCaller action="admin:integration" type="list" icon="random icon-white">
+						<cf_SlatwallActionCaller action="admin:report" type="list" icon="th-list icon-white">
+						<cf_SlatwallActionCaller action="admin:setting" type="list" icon="user icon-white">
+						<cf_SlatwallActionCaller action="admin:help" type="list" icon="user icon-white">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="#$.slatwall.getSlatwallRootPath()#/staticAssets/js/tools/jquery/jquery-1.7.1.js"></script>
+    	<script src="#$.slatwall.getSlatwallRootPath()#/org/bootstrap/js/bootstrap.js"></script>
+	</body>
+</html>
+</cfoutput>
+
+
+<!---
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
 <head>
     <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
@@ -75,4 +130,4 @@ Notes:
 	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 </body>
 </html>
-</cfoutput>
+--->

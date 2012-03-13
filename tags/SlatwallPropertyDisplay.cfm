@@ -91,8 +91,6 @@ Notes:
 	plain
 --->
 
-
-
 <cfif thisTag.executionMode is "start">
 	
 	<cfsilent>

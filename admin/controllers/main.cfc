@@ -39,15 +39,36 @@ Notes:
 component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
-	property name="productService" type="Slatwall.com.service.ProductService";
-	property name="orderService" type="Slatwall.com.service.OrderService";
+	property name="productService" type="any";
+	property name="orderService" type="any";
+	property name="vendorService" type="any";
 	
 	public void function default(required struct rc) {
-		rc.productSmartList = getProductService().getProductSmartList(data=arguments.rc);
+		
+		rc.productSmartList = getProductService().getProductSmartList();
 		rc.productSmartList.addOrder("modifiedDateTime|DESC");
-		rc.orderSmartList = getOrderService().getOrderSmartList(data=arguments.rc);
-		rc.orderSmartList.addFilter("orderStatusType_systemCode", "ostNew");
+		rc.productSmartList.setPageRecordsShow(10);
+		
+		rc.orderSmartList = getOrderService().getOrderSmartList();
+		rc.orderSmartList.addFilter("orderStatusType.systemCode", "ostNew");
 		rc.orderSmartList.addOrder("orderOpenDateTime|DESC");
+		rc.orderSmartList.setPageRecordsShow(10);
+		
+		rc.productReviewSmartList = getProductService().getProductReviewSmartList();
+		rc.productReviewSmartList.addFilter("activeFlag", 0);
+		rc.productReviewSmartList.setPageRecordsShow(10);
+		
+		rc.vendorSmartList = getVendorService().getVendorSmartList();
+		rc.vendorSmartList.addOrder("modifiedDateTime|DESC");
+		rc.vendorSmartList.setPageRecordsShow(10);
+		
+		rc.vendorOrderSmartList = getVendorService().getVendorOrderSmartList();
+		rc.vendorOrderSmartList.addOrder("modifiedDateTime|DESC");
+		rc.vendorOrderSmartList.setPageRecordsShow(10);
+		
+		rc.stockReceiverSmartList = getVendorService().getVendorOrderSmartList();
+		rc.stockReceiverSmartList.addOrder("modifiedDateTime|DESC");
+		rc.stockReceiverSmartList.setPageRecordsShow(10);
 	}
 	
 	public function error(required struct rc) {

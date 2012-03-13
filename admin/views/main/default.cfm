@@ -36,68 +36,157 @@
 Notes:
 
 --->
-<cfparam name="rc.productSmartList" type="any" />
 <cfparam name="rc.orderSmartList" type="any" />
+<cfparam name="rc.productSmartList" type="any" />
+<cfparam name="rc.productReviewSmartList" type="any" />
+<cfparam name="rc.stockReceiverSmartList" type="any" />
+<cfparam name="rc.vendorSmartList" type="any" />
+<cfparam name="rc.vendorOrderSmartList" type="any" />
 
 <cfoutput>
-<div class="svoadminmaindefault">
-	<div class="products dashboardSection">
-		<h3>Recently Updated Products</h3>
-		<table id="orderList" class="listing-grid stripe">
+<div class="row-fluid">
+	<div class="span4">
+		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.neworders")#</h3>
+		<table class="table table-stripe table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.account.fullname")#</th>
+					<th>&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
+					<tr>
+						<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#local.order.getOrderNumber()#</a></td>
+						<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#DateFormat(local.order.getOrderOpenDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.order.getOrderOpenDateTime(), "short")#</a></td>
+						<cfif !isNull(local.order.getAccount())>
+							<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='accountID=#local.order.getAccount().getAccountID()#')#">#local.order.getAccount().getFullName()#</a></td>
+						<cfelse>
+							<td class="varWidth"></td>
+						</cfif>
+						<td class="administration">
+							<ul class="one">
+							  <cf_SlatwallActionCaller action="admin:order.detailorder" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
+							</ul>
+						</td>
+					</tr>
+				</cfloop>
+			</tbody>
+		</table>
+		<div class="btn-group">
+			<cf_SlatwallActionCaller action="admin:order.listorders" class="btn btn-mini" />
+		</div>
+	</div>
+	<div class="span4">
+		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductupdates")#</h3>
+		<table class="table table-stripe table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
+					<th class="administration">&nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.productSmartList.getPageRecords()#" index="local.Product">
+					<tr>
+						<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
+						<td><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
+						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
+						<td></td>
+						<td class="administration">
+							<ul class="one">
+							  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
+							</ul>     						
+						</td>
+					</tr>
+				</cfloop>
+			</tbody>
+		</table>
+		<div class="btn-group">
+			<cf_SlatwallActionCaller action="admin:product.listproducts" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:product.createproduct" class="btn btn-mini" />
+		</div>
+	</div>
+	<div class="span4">
+		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductreviews")#</h3>
+		<table class="table table-stripe table-bordered table-condensed">
 			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.modifiedDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewerName")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewTitle")#</th>
 				<th class="administration">&nbsp;</th>
 			</tr>	
-			<cfloop array="#rc.productSmartList.getPageRecords()#" index="local.Product">
+			<cfloop array="#rc.productReviewSmartList.getPageRecords()#" index="local.productReview">
 				<tr>
 					<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
 					<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 					<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
-					<td class="administration">
-						<ul class="one">
+					<td>
+						<ul class="btn-group">
 						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
 						</ul>     						
 					</td>
 				</tr>
 			</cfloop>
 		</table>
-		<cf_SlatwallActionCaller action="admin:product.list" />
+		<div class="btn-group">
+			<cf_SlatwallActionCaller action="admin:product.listproductreviews" class="btn btn-mini" />
+		</div>
 	</div>
-	<div class="orders dashboardSection">
-		<h3>New Orders</h3>
-		<table id="orderList" class="listing-grid stripe">
+</div>
+<br />
+<br />
+<div class="row-fluid">
+	<div class="span4">
+		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendorupdates")#</h3>
+		<table class="table table-stripe table-bordered table-condensed">
 			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderNumber")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.order.orderOpenDateTime")#</th>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.account.fullname")#</th>
+				<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
+				<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
 				<th>&nbsp;</th>
-			</tr>	
-			<cfloop array="#rc.orderSmartList.getPageRecords()#" index="local.order">
+			</tr>
+			<cfloop array="#rc.vendorSmartList.getPageRecords()#" index="local.vendor">
 				<tr>
-					<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#local.order.getOrderNumber()#</a></td>
-					<td><a href="#buildURL(action='admin:order.detail', queryString='orderID=#local.order.getOrderID()#')#">#DateFormat(local.order.getOrderOpenDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.order.getOrderOpenDateTime(), "short")#</a></td>
-					<cfif !isNull(local.order.getAccount())>
-						<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='accountID=#local.order.getAccount().getAccountID()#')#">#local.order.getAccount().getFullName()#</a></td>
-					<cfelse>
-						<td class="varWidth"></td>
-					</cfif>
-					<td class="administration">
-						<ul class="one">
-						  <cf_SlatwallActionCaller action="admin:order.detail" querystring="orderID=#local.order.getOrderID()#" class="detail" type="list">
-						</ul>     						
-					</td>
+					<td><cf_SlatwallActionCaller action="admin:vendor.detailvendor" querystring="vendorID=#local.vendor.getVendorID()#" text="#local.vendor.getVendorName()#" /></td>
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</cfloop>
 		</table>
-		<cf_SlatwallActionCaller action="admin:order.list" />
+		<div class="btn-group">
+			<cf_SlatwallActionCaller action="admin:vendor.listvendors" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:vendor.createvendor" class="btn btn-mini" />
+		</div>
 	</div>
-	<div class="started dashboardSection">
-		<h3>Getting Started</h3>
-		<p>Welcome to the Slatwall administation panel.  From here you can manage every aspect of your Online Store, and much more.</p>
-		<p>The first thing you'll want to do is farmiliarize yourself with the toolbar below.  It will provide access to every aspect of your administation panel.  In addition by clicking the "Website" link you can be taken directly to the front-end of your website where the toolbar will remain</p>
-		<p>Just as a quick tip, you can quickly access the toolbars Main Menu quickly by presing "ctrl + M" go ahead and try it right now.  Once the menu has opend you can close it by hitting the "esc" key</p>
+	<div class="span4">
+		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendororderupdates")#</h3>
+		<table class="table table-stripe table-bordered table-condensed">
+			<tr>
+				<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
+				<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
+				<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
+				<th>&nbsp;</th>
+			</tr>
+			<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
+				<tr>
+					<td><cf_SlatwallActionCaller action="admin:vendor.detailvendororder" querystring="vendorOrderID=#local.vendor.getVendorOrderID()#" text="#local.vendor.getVendorOrderNumber()#" /></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</cfloop>
+		</table>
+		<div class="btn-group">
+			<cf_SlatwallActionCaller action="admin:vendor.listvendororders" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:vendor.createvendororder" class="btn btn-mini" />
+		</div>
 	</div>
 </div>
 </cfoutput>

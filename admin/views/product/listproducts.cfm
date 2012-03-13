@@ -40,17 +40,8 @@ Notes:
 <cfparam name="rc.productSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:product.create" type="list">
-</ul>
-
 <div class="svoadminproductlist">
 
-	<form method="get">
-		<input name="Keyword" value="#rc.Keyword#" />
-		<input type="hidden" name="slatAction" value="admin:product.list" />
-		<button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
-	</form>
 <cfif rc.productSmartList.getRecordsCount()>
 	<table id="ProductList" class="listing-grid stripe">
 		<tr>

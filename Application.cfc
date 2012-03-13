@@ -293,6 +293,7 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupResponse() {
+		/*
 		// Add the CSS and JS to the header if this isn't a frontend request, or if it is a frontend but the user is logged in
 		if( !listFind("frontend", getSubsystem(request.action)) || (request.action == "frontend:event.onRenderEnd" && secureDisplay("admin:main.default"))) {
 			// Make sure that there is supposed to be a layout
@@ -301,7 +302,7 @@ component extends="org.fw1.framework" output="false" {
 				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );	
 			}
 		}		
-		
+		*/
 		endSlatwallLifecycle();
 	}
 	
