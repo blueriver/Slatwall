@@ -40,9 +40,6 @@ Notes:
 <cfparam name="rc.productSmartList" type="any" />
 
 <cfoutput>
-<cfdump var="#rc.productSmartList.getHQL()#" />
-<cfset test = ormExecuteQuery("SELECT DISTINCT aslatwallproduct FROM SlatwallProduct as aslatwallproduct inner join fetch aslatwallproduct.productType as aslatwallproducttype inner join fetch aslatwallproduct.brand as aslatwallbrand inner join fetch aslatwallproduct.defaultSku as aslatwallsku ORDER BY aslatwallproduct.productName") />
-<Cfdump var="#test#" top="2" />
 <cfif rc.productSmartList.getRecordsCount()>
 	<table id="ProductList" class="listing-grid stripe">
 		<tr>
@@ -76,6 +73,5 @@ Notes:
 <cfelse>
 	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
 </cfif>
-</div>
 </cfoutput>
 

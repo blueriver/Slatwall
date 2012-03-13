@@ -84,7 +84,6 @@ Notes:
 		<table class="table table-stripe table-bordered table-condensed">
 			<thead>
 				<tr>
-					<th>#rc.$.Slatwall.rbKey("entity.brand")#</th>
 					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
 					<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
 					<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
@@ -94,7 +93,6 @@ Notes:
 			<tbody>
 				<cfloop array="#rc.productSmartList.getPageRecords()#" index="local.Product">
 					<tr>
-						<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
 						<td><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 						<td></td>
