@@ -47,20 +47,23 @@ Notes:
 		<input type="hidden" name="slatAction" value="admin:product.savebrand" />
 		<input type="hidden" name="BrandID" value="#rc.Brand.getBrandID()#" />
 </cfif>
-
+		<div class="btn-toolbar well">
+			<div class="btn-group pull-right">
+				<cf_SlatwallActionCaller action="admin:product.listbrands" text="#rc.$.Slatwall.rbKey('define.cancel')#" class="btn">
+				<cfif !rc.brand.isNew() and !rc.brand.hasProduct()>
+					<cf_SlatwallActionCaller action="admin:product.deletebrand" querystring="brandid=#rc.brand.getBrandID()#" text="#rc.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" confirmrequired="true">
+				</cfif>
+				<cf_SlatwallActionCaller action="admin:product.savebrand" text="#rc.$.Slatwall.rbKey('define.save')#" class="btn btn-success" submit="true">
+			</div>
+		</div>
+		
 		<dl class="dl-horizontal">
 			<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#" class="first">
 			<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
 		</dl>
 
 <cfif rc.edit>
-		<div class="btn-group">
-			<cf_SlatwallActionCaller action="admin:product.listbrands" text="#rc.$.Slatwall.rbKey('define.cancel')#" class="btn">
-			<cfif !rc.brand.isNew() and !rc.brand.hasProduct()>
-				<cf_SlatwallActionCaller action="admin:product.deletebrand" querystring="brandid=#rc.brand.getBrandID()#" text="#rc.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" confirmrequired="true">
-			</cfif>
-			<cf_SlatwallActionCaller action="admin:product.savebrand" text="#rc.$.Slatwall.rbKey('define.save')#" class="btn btn-success" submit="true">
-		</div>
+		
 	</form>
 </cfif>
 	
