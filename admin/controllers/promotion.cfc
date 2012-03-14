@@ -49,12 +49,22 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 
 	public void function detail(required struct rc) {
 		param name="rc.promotionID" default="";
+		param name="rc.promotionRewardID" default="";
+		param name="rc.promotionQualifierID" default="";
+		param name="rc.promotionRewardExclusionID" default="";
+		param name="rc.promotionQualifierExclusionID" default="";
 		param name="rc.edit" default="false";
 		
 		// Get the promotion from the DB, and return a new promotion if necessary
 		rc.promotion = getPromotionService().getPromotion(rc.promotionID, true);
 		rc.promotionRewardProduct = getPromotionService().getPromotionRewardProduct(rc.promotionRewardID, true);
 		rc.promotionRewardShipping = getPromotionService().getPromotionRewardShipping(rc.promotionRewardID, true);
+		rc.promotionRewardOrder = getPromotionService().getPromotionRewardOrder(rc.promotionRewardID, true);
+		rc.promotionQualifierProduct = getPromotionService().getPromotionQualifierProduct(rc.promotionQualifierID, true);
+		rc.promotionQualifierFulfillment = getPromotionService().getPromotionQualifierFulfillment(rc.promotionQualifierID, true);
+		rc.promotionQualifierOrder = getPromotionService().getPromotionQualifierOrder(rc.promotionQualifierID, true);
+		rc.PromotionRewardExclusion = getPromotionService().getPromotionRewardExclusion(rc.promotionRewardExclusionID, true);
+		rc.PromotionQualifierExclusion = getPromotionService().getPromotionQualifierExclusion(rc.promotionQualifierExclusionID, true);
 		
 		if(!rc.promotion.isNew()) {
 			rc.itemTitle &= ": " & rc.promotion.getPromotionName();
@@ -69,6 +79,9 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function edit(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
+		param name="rc.promotionQualifierID" default="";
+		param name="rc.promotionRewardExclusionID" default="";
+		param name="rc.promotionQualifierExclusionID" default="";
 		
 		detail(rc);
 		rc.edit = true;
@@ -83,8 +96,15 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	public void function save(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
+		param name="rc.promotionRewardExclusionID" default="";
 		param name="rc.savePromotionRewardProduct" default="false";
 		param name="rc.savePromotionRewardShipping" default="false";
+		param name="rc.savePromotionRewardOrder" default="false";
+		param name="rc.savePromotionQualifierProduct" default="false";
+		param name="rc.savePromotionQualifierFulfillment" default="false";
+		param name="rc.savePromotionQualifierOrder" default="false";
+		param name="rc.savePromotionRewardExclusion" default="false";
+		param name="rc.savePromotionQualifierExclusion" default="false";
 		
 		detail(rc);
 		// Call the promotion service save method (this is standard)
@@ -93,8 +113,14 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		// If no errors, then redirect to the list page, otherwise go back to edit
 		if(!rc.promotion.hasErrors()) {
 			rc.message="admin.promotion.save_success";
-			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping) {
+			if(rc.savePromotionRewardProduct || rc.savePromotionRewardShipping || rc.savePromotionRewardOrder) {
 				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()#",preserve="message");	
+			} else if ( rc.savePromotionQualifierProduct || rc.savePromotionQualifierFulfillment || rc.savePromotionQualifierOrder ) {
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifiers",preserve="message");	
+			} else if ( rc.savePromotionRewardExclusion ) {
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionRewardExclusions",preserve="message");	
+			} else if ( rc.savePromotionQualifierExclusion ) {
+				getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotion.getPromotionID()###tabPromotionQualifierExclusions",preserve="message");	
 			} else {
 				getFW().redirect(action="admin:promotion.list",preserve="message");
 			}
@@ -111,7 +137,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 				}
 			}
 			rc.edit = true;
-			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.createPromotion") : rc.$.Slatwall.rbKey("admin.promotion.editPromotion") & ": #rc.promotion.getPromotionName()#";
+			rc.itemTitle = rc.promotion.isNew() ? rc.$.Slatwall.rbKey("admin.promotion.create") : rc.$.Slatwall.rbKey("admin.promotion.edit") & ": #rc.promotion.getPromotionName()#";
 			getFW().setView(action="admin:promotion.detail");
 		}
 	}
@@ -164,6 +190,57 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 		
 		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID#",preserve="message,messagetype");
+	}
+	
+	public void function deletePromotionRewardExclusion(required struct rc) {
+		
+		var promotionRewardExclusion = getPromotionService().getPromotionRewardExclusion(rc.promotionRewardExclusionID);
+		rc.promotionID = promotionRewardExclusion.getPromotion().getPromotionID();
+		
+		var deleteOK = getPromotionService().deletePromotionRewardExclusion(promotionRewardExclusion);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.promotion.deletePromotionRewardExclusion_success");
+		} else {
+			rc.message = rbKey("admin.promotion.deletePromotionRewardExclusion_error");
+			rc.messagetype = "error";
+		}
+		
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionRewardExclusions",preserve="message,messagetype");
+	}
+	
+	public void function deletePromotionQualifier(required struct rc) {
+		
+		var promotionQualifier = getPromotionService().getPromotionQualifier(rc.promotionQualifierID);
+		rc.promotionID = promotionQualifier.getPromotion().getPromotionID();
+		
+		var deleteOK = getPromotionService().deletePromotionQualifier(promotionQualifier);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.promotion.deletePromotionQualifier_success");
+		} else {
+			rc.message = rbKey("admin.promotion.deletePromotionQualifier_error");
+			rc.messagetype = "error";
+		}
+		
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionQualifiers",preserve="message,messagetype");
+	}
+	
+	public void function deletePromotionQualifierExclusion(required struct rc) {
+		
+		var promotionQualifierExclusion = getPromotionService().getPromotionQualifierExclusion(rc.promotionQualifierExclusionID);
+		rc.promotionID = promotionQualifierExclusion.getPromotion().getPromotionID();
+		
+		var deleteOK = getPromotionService().deletePromotionQualifierExclusion(promotionQualifierExclusion);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.promotion.deletePromotionQualifierExclusion_success");
+		} else {
+			rc.message = rbKey("admin.promotion.deletePromotionQualifierExclusion_error");
+			rc.messagetype = "error";
+		}
+		
+		getFW().redirect(action="admin:promotion.edit",querystring="promotionID=#rc.promotionID###tabPromotionQualifierExclusions",preserve="message,messagetype");
 	}
 	
 }

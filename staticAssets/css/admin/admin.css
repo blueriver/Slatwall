@@ -876,7 +876,7 @@ a.tooltip:hover span {
 }
 
 .ui-widget-content {
-    background: url("images/admin.ui.bg_flat_ffffff.png") repeat-x scroll 50% 50% #FFFFFF;
+    background: url("../../images/admin.ui.bg_flat_ffffff.png") repeat-x scroll 50% 50% #FFFFFF;
     border: 0 solid #DBDBDB;
     color: #000000;
 }

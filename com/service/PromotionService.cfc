@@ -42,7 +42,6 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	property name="utilityService" type="any";
 	
 	public any function savePromotion(required any promotion, struct data={}) {
-		
 		// Turn off sub-property populating because it will be managed manually in this method.
 		arguments.data.populateSubProperties = false;
 		
@@ -68,6 +67,28 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			}
 		}
 		
+		// update/add promotion reward / qualifier / exclusion
+		updatePromotionReward( arguments.promotion,arguments.data );
+		updatePromotionQualifier( arguments.promotion,arguments.data );
+		updatePromotionRewardExclusion( arguments.promotion,arguments.data );
+		updatePromotionQualifierExclusion( arguments.promotion,arguments.data );
+		
+
+		// Validate the promotion, this will also check any sub-entities that got populated 
+		arguments.promotion.validate();		
+		
+		// If the object passed validation then call save in the DAO, otherwise set the errors flag
+		if(!arguments.promotion.hasErrors()) {
+			//writeDump( var=arguments.promotion, top=3, abort=true );
+			arguments.promotion = getDAO().save(target=arguments.promotion);
+		} else {
+			getService("requestCacheService").setValue("ormHasErrors", true);
+        }
+		
+		return arguments.promotion;
+	}
+	
+	public void function updatePromotionReward( required any promotion,required struct data ) {
 		// Check to see if we are going to update or editing any rewards (TPC) 
 		if(structKeyExists(arguments.data, "savePromotionRewardProduct") && arguments.data.savePromotionRewardProduct) {
 			// Get product reward, and return a new one if not found
@@ -75,6 +96,10 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			// Populate that product reward
 			prProduct.populate(arguments.data.promotionRewards[1]);
+			
+			// assign any product pages/categories to reward
+			assignProductContent( prProduct,arguments.data.promotionRewards[1].productContent, "PromotionRewardProductProductContent" );						
+			assignProductCategories( prProduct,arguments.data.promotionRewards[1].productCategories, "PromotionRewardProductProductCategory" );
 			
 			// Validate the product reward
 			prProduct.validate();
@@ -100,20 +125,159 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 			
 			// add to the sub items populated so that the parent validate method checks for errors in the children
 			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
+		} else if (structKeyExists(arguments.data, "savePromotionRewardOrder") && arguments.data.savePromotionRewardOrder) {
+			// Get order reward, and return a new one if not found
+			var prOrder = this.getPromotionRewardOrder(arguments.data.promotionRewards[1].promotionRewardID, true);
+			
+			// Get shipping reward, and return a new one if not found
+			prOrder.populate(arguments.data.promotionRewards[1]);
+			
+			// Validate the shipping reward
+			prOrder.validate();
+			
+			// Add the promotion reward to the promotion
+			arguments.promotion.addPromotionReward(prOrder);
+			
+			// add to the sub items populated so that the parent validate method checks for errors in the children
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewards");
 		}
-
-		// Validate the promotion, this will also check any sub-entities that got populated 
-		arguments.promotion.validate();
-		
-		// If the object passed validation then call save in the DAO, otherwise set the errors flag
-		if(!arguments.promotion.hasErrors()) {
-			arguments.promotion = getDAO().save(target=arguments.promotion);
-		} else {
-			getService("requestCacheService").setValue("ormHasErrors", true);
-        }
-		
-		return arguments.promotion;
 	}
+	
+	public void function updatePromotionQualifier( required any promotion,required struct data ) {
+		// Check to see if we are going to update or editing any qualifier (TPC) 
+		if(structKeyExists(arguments.data, "savePromotionQualifierProduct") && arguments.data.savePromotionQualifierProduct) {
+			// Get product qualifier, and return a new one if not found
+			var pqProduct = this.getPromotionQualifierProduct(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
+			
+			// Populate that product qualifier
+			pqProduct.populate(arguments.data.promotionQualifiers[1]);
+			
+			// assign any product pages/categories to qualifier
+			assignProductContent( pqProduct,arguments.data.promotionQualifiers[1].productContent,"PromotionQualifierProductProductContent" );						
+			assignProductCategories( pqProduct,arguments.data.promotionQualifiers[1].productCategories,"PromotionQualifierProductProductCategory" );
+			
+			// Validate the product qualifier
+			pqProduct.validate();
+			
+			// Add the promotion reward to the promotion
+			arguments.promotion.addPromotionQualifier(pqProduct);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
+			
+		} else if (structKeyExists(arguments.data, "savePromotionQualifierFulfillment") && arguments.data.savePromotionQualifierFulfillment) {
+			// Get fulfillment qualifier, and return a new one if not found
+			var pqFulfillment = this.getPromotionQualifierFulfillment(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
+			
+			// Get fulfillment qualifier, and return a new one if not found
+			pqFulfillment.populate(arguments.data.promotionQualifiers[1]);
+			
+			// Validate the fulfillment qualifier
+			pqFulfillment.validate();
+			
+			// Add the promotion qualifier to the promotion
+			arguments.promotion.addPromotionQualifier(pqFulfillment);
+			
+			// add to the sub items populated so that the parent validate method checks for errors in the children
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
+		} else if (structKeyExists(arguments.data, "savePromotionQualifierOrder") && arguments.data.savePromotionQualifierOrder) {
+			// Get order qualifier, and return a new one if not found
+			var pqOrder = this.getPromotionQualifierOrder(arguments.data.promotionQualifiers[1].promotionQualifierID, true);
+			
+			// Get shipping qualifier, and return a new one if not found
+			pqOrder.populate(arguments.data.promotionQualifiers[1]);
+			
+			// Validate the shipping qualifier
+			pqOrder.validate();
+			
+			// Add the promotion qualifier to the promotion
+			arguments.promotion.addPromotionQualifier(pqOrder);
+			
+			// add to the sub items populated so that the parent validate method checks for errors in the children
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifiers");
+		}
+	}
+
+	public void function updatePromotionRewardExclusion( required any promotion,required struct data ) {
+		// Check to see if we are going to update or editing any exclusions
+		if(structKeyExists(arguments.data, "savePromotionRewardExclusion") && arguments.data.savePromotionRewardExclusion) {
+			// Get exclusion, and return a new one if not found
+			var prExclusion = this.getPromotionRewardExclusion(arguments.data.PromotionRewardExclusions[1].promotionRewardExclusionID, true);
+			
+			// Populate that exclusion
+			prExclusion.populate(arguments.data.promotionRewardExclusions[1]);
+			
+			// assign any product pages/categories to exclusion
+			assignProductContent( prExclusion,arguments.data.PromotionRewardExclusions[1].productContent,"PromotionRewardExclusionProductContent" );						
+			assignProductCategories( prExclusion,arguments.data.PromotionRewardExclusions[1].productCategories,"PromotionRewardExclusionProductCategory" );
+			
+			// Validate the exclusion
+			prExclusion.validate();
+			
+			// Add the exclusion to the promotion
+			arguments.promotion.addPromotionRewardExclusion(prExclusion);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionRewardExclusions");		
+		} 
+	}
+	
+	public void function updatePromotionQualifierExclusion( required any promotion,required struct data ) {
+		// Check to see if we are going to update or editing any exclusions
+		if(structKeyExists(arguments.data, "savePromotionQualifierExclusion") && arguments.data.savePromotionQualifierExclusion) {
+			// Get exclusion, and return a new one if not found
+			var pqExclusion = this.getPromotionQualifierExclusion(arguments.data.PromotionQualifierExclusions[1].promotionQualifierExclusionID, true);
+			
+			// Populate that exclusion
+			pqExclusion.populate(arguments.data.promotionQualifierExclusions[1]);
+			
+			// assign any product pages/categories to exclusion
+			assignProductContent( pqExclusion,arguments.data.PromotionQualifierExclusions[1].productContent,"PromotionQualifierExclusionProductContent" );						
+			assignProductCategories( pqExclusion,arguments.data.PromotionQualifierExclusions[1].productCategories,"PromotionQualifierExclusionProductCategory" );
+			
+			// Validate the exclusion
+			pqExclusion.validate();
+			
+			// Add the qualifier exclusion to the promotion
+			arguments.promotion.addPromotionQualifierExclusion(pqExclusion);
+			
+			// add to the sub items populated so that we can validate on parent
+			arrayAppend(arguments.promotion.getPopulatedSubProperties(), "promotionQualifierExclusions");		
+		} 
+	}
+
+	private void function assignProductContent( required any entity, required string contentPaths, required string linkingEntity ) {	
+		// Remove Existing product Content
+		for(var i=arrayLen(arguments.entity.getProductContent()); i >= 1; i--) {
+			arguments.entity.removeProductContent( arguments.entity.getProductContent()[i] );
+		}
+		
+		// Assign all new product Content
+		for(var i=1; i<=listLen(arguments.contentPaths); i++) {
+			var thisPath = listGetAt(arguments.contentPaths, i);
+			var thisProductContent = invokeMethod( "new" & arguments.linkingEntity );
+			thisProductContent.setContentID(listLast(thisPath, " "));
+			thisProductContent.setContentPath(listChangeDelims(thisPath,","," "));
+			arguments.entity.addProductContent( thisProductContent );
+		}
+	}
+	
+	private void function assignProductCategories( required any entity, required string categoryPaths, required string linkingEntity ) {	
+		// Remove Existing product categories
+		for(var i=arrayLen(arguments.entity.getProductCategories()); i >= 1; i--) {
+			arguments.entity.removeProductCategory( arguments.entity.getProductCategories()[i] );
+		}
+		
+		// Assign all new product categories
+		for(var i=1; i<=listLen(arguments.categoryPaths); i++) {
+			var thisPath = listGetAt(arguments.categoryPaths, i);
+			var thisProductCategory = invokeMethod( "new" & arguments.linkingEntity );
+			thisProductCategory.setCategoryID(listLast(thisPath, " "));
+			thisProductCategory.setCategoryPath(listChangeDelims(thisPath,","," "));
+			arguments.entity.addProductCategory( thisProductCategory );
+		}
+	}
+
 		
 	// ----------------- START: Apply Promotion Logic ------------------------- 
 	public void function updateOrderAmountsWithPromotions(required any order) {
@@ -246,12 +410,12 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 		var discountAmount = 0;
 		var roundedFinalAmount = 0;
 		
-		if(!isNull(reward.getItemAmount())) {
-			discountAmountPreRounding = arguments.originalAmount - reward.getItemAmount();
-		} else if( !isNull(reward.getItemAmountOff()) ) {
-			discountAmountPreRounding = reward.getItemAmountOff();
-		} else if( !isNull(reward.getItemPercentageOff()) ) {
-			discountAmountPreRounding = arguments.originalAmount * (reward.getItemPercentageOff()/100);
+		if(!isNull(reward.getAmount())) {
+			discountAmountPreRounding = arguments.originalAmount - reward.getAmount();
+		} else if( !isNull(reward.getAmountOff()) ) {
+			discountAmountPreRounding = reward.getAmountOff();
+		} else if( !isNull(reward.getPercentageOff()) ) {
+			discountAmountPreRounding = arguments.originalAmount * (reward.getPercentageOff()/100);
 		}
 		
 		if(!isNull(reward.getRoundingRule())) {

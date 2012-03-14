@@ -116,6 +116,56 @@ component displayname="Price Group Rate" entityname="SlatwallPriceGroupRate" tab
        }
        structDelete(variables,"priceGroup");
     }
+    
+	// Products (many-to-many)	
+	public void function addProduct(required any product) {
+		if(arguments.product.isNew() || !hasProduct(arguments.product)) {
+			// first add product to this priceGroup
+			arrayAppend(this.getProducts(),arguments.product);
+			//add this priceGroupRate to the product
+			arrayAppend(arguments.product.getPriceGroupRates(),this);
+		}
+	}
+    
+    public void function removeProduct(required any product) {
+       // first remove the product from this priceGroupRate
+       if(this.hasProduct(arguments.product)) {
+	       var index = arrayFind(this.getProducts(),arguments.product);
+	       if(index>0) {
+	           arrayDeleteAt(this.getProducts(),index);
+	       }
+	      // then remove this priceGroupRate from the product
+	       var index = arrayFind(arguments.product.getPriceGroups(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.product.getPriceGroups(),index);
+	       }
+	   }
+    }
+    
+	// ProductTypes (many-to-many)	
+	public void function addProductType(required any productType) {
+		if(arguments.productType.isNew() || !hasProductType(arguments.productType)) {
+			// first add productType to this priceGroupRate
+			arrayAppend(this.getProductTypes(),arguments.productType);
+			//add this priceGroupRate to the productType
+			arrayAppend(arguments.productType.getPriceGroupRates(),this);
+		}
+	}
+    
+    public void function removeProductType(required any productType) {
+       // first remove the productType from this priceGroupRate
+       if(this.hasProductType(arguments.productType)) {
+	       var index = arrayFind(this.getProductTypes(),arguments.productType);
+	       if(index>0) {
+	           arrayDeleteAt(this.getProductTypes(),index);
+	       }
+	      // then remove this priceGroupRate from the ProductType
+	       var index = arrayFind(arguments.productType.getPriceGroups(),this);
+	       if(index > 0) {
+	           arrayDeleteAt(arguments.productType.getPriceGroups(),index);
+	       }
+	   }
+    }
 	
     /************   END Association Management Methods   *******************/
     

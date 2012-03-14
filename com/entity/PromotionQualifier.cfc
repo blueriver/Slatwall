@@ -36,19 +36,19 @@
 Notes:
 
 */
-component displayname="Promotion Reward" entityname="SlatwallPromotionReward" table="SlatwallPromotionReward" persistent="true" extends="BaseEntity" discriminatorColumn="rewardType" {
+component displayname="Promotion Qualifier" entityname="SlatwallPromotionQualifier" table="SlatwallPromotionQualifier" persistent="true" extends="BaseEntity" discriminatorColumn="qualifierType" {
 	
 	// Persistent Properties
-	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="percentageOff" ormType="big_decimal";
-	property name="amountOff" ormType="big_decimal";
-	property name="amount" ormType="big_decimal" hint="can't apply to order rewards";
+	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="minimumQuantity" ormtype="integer" hint="can apply to product, order,or shipping qualifiers";
+	property name="minimumPrice" ormtype="big_decimal";
+	property name="maximumPrice" ormtype="big_decimal"; 
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Special Related Discriminator Property
-	property name="rewardType" length="255" insert="false" update="false";
+	property name="qualifierType" length="255" insert="false" update="false";
 	
 	// Remote Properties
 	property name="remoteID" ormtype="string";
@@ -62,14 +62,14 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	// Non-persistent entities
 	property name="discountType" persistent="false";
 	
-	/******* Association management methods for bidirectional relationships **************/
+	// ============ Association management methods for bidirectional relationships =================
 	
 	// Promotion (many-to-one)
 	
 	public void function setPromotion(required Promotion promotion) {
 		variables.promotion = arguments.promotion;
-		if(!arguments.promotion.hasPromotionReward(this)) {
-			arrayAppend(arguments.promotion.getPromotionRewards(),this);
+		if(isNew() || !arguments.promotion.hasPromotionQualifier(this)) {
+			arrayAppend(arguments.promotion.getPromotionQualifiers(),this);
 		}
 	}
 	
@@ -77,67 +77,23 @@ component displayname="Promotion Reward" entityname="SlatwallPromotionReward" ta
 	   if(!structKeyExists(arguments,"promotion")) {
 	   		arguments.promotion = variables.promotion;
 	   }
-       var index = arrayFind(arguments.promotion.getPromotionRewards(),this);
+       var index = arrayFind(arguments.promotion.getPromotionQualifiers(),this);
        if(index > 0) {
-           arrayDeleteAt(arguments.promotion.getPromotionRewards(), index);
+           arrayDeleteAt(arguments.promotion.getPromotionQualifiers(), index);
        }
        structDelete(variables,"promotion");
     }
     
-    /************   END Association Management Methods   *******************/
-
-	public boolean function hasValidPercentageOffValue() {
-		if(getDiscountType() == "percentageOff" && ( isNull(getPercentageOff()) || !isNumeric(getPercentageOff()) || getPercentageOff() > 100 || getPercentageOff() < 0 ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidAmountOffValue() {
-		if(getDiscountType() == "amountOff" && ( isNull(getAmountOff()) || !isNumeric(getAmountOff()) ) ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean function hasValidAmountValue() {
-		if(getDiscountType() == "amount" && ( isNull(getAmount()) || !isNumeric(getAmount()) ) ) {
-			return false;
-		}
-		return true;
-	}
+    // ============   END Association Management Methods   =================
 
 	// ============ START: Non-Persistent Property Methods =================
 
-	
-	public string function getDiscountType() {
-		if(isNull(variables.DiscountType)) {
-			if(!isNull(getPercentageOff()) && isNull(getAmountOff()) && isNull(getAmount())) {
-				variables.DiscountType = "percentageOff";
-			} else if (!isNull(getAmountOff()) && isNull(getPercentageOff()) && isNull(getAmount())) {
-				variables.DiscountType = "amountOff";
-			} else if (!isNull(getAmount()) && isNull(getPercentageOff()) && isNull( getAmountOff())) {
-				variables.DiscountType = "amount";
-			} else {
-				variables.DiscountType = "percentageOff";
-			}
-		}
-		return variables.DiscountType;
-	}
 	
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
-
-	public array function getDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amount"), value="amount"}
-		];
-	}
 	
 	// =================== START: ORM Event Hooks  =========================
 	

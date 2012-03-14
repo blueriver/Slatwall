@@ -35,10 +35,10 @@
 	
 Notes:
 	
-	IMPORANT TO UNDERSTAN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	IMPORANT TO UNDERSTAND !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
 	The SkuCache service & entity play an important role in allowing for productListing to be performant.
-	Any time an entity is saved that impacts quantity, price, or settings or a given sku, there is a corisponding
+	Any time an entity is saved that impacts quantity, price, or settings or a given sku, there is a corresponding
 	skuCache entity that needs to be updated.  The Entities that affect skuCache are as follows:
 	
 	Sku
@@ -71,7 +71,7 @@ component extends="Slatwall.com.service.BaseService" persistent="false" accessor
 	variables.productsToUpdate = [];
 	variables.nextSalePriceExpirationDateTime = "";
 	
-	// These two methods get called from the settings controler when you want to rebuild the entire cache
+	// These two methods get called from the settings controller when you want to rebuild the entire cache
 	public void function updateAllSkus() {
 		var skuQuery = getDAO().getSkuQuery();
 		for(var i=1; i<=skuQuery.recordCount; i++) {

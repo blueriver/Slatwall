@@ -112,6 +112,123 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	}
 	
 	public boolean function isGuestAccount() {
+		if(isNull(getMuraUserID())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public string function getGravatarURL(numeric size=80) {
+		if(cgi.server_port eq 443) {
+			return "https://secure.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";
+		} else {
+			return "http://www.gravatar.com/avatar/#lcase(hash(lcase(getEmailAddress()), "MD5" ))#?s=#arguments.size#";	
+		}
+	}
+		
+	// get all the assigned attribute sets
+	public array function getAttributeSets(array attributeSetTypeCode){
+		var smartList = getService("attributeService").getAttributeSetSmartList();
+		
+		smartList.addFilter("attributeSetType_systemCode","astAccount");
+		
+		return smartList.getRecords();
+	}
+	
+	//get attribute value
+	public any function getAttributeValue(required string attribute, returnEntity=false){
+		var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallAccountAttributeValue");
+		
+		smartList.addFilter("account_accountID",getAccountID(),1);
+		smartList.addFilter("attribute_attributeID",attribute,1);
+		
+		smartList.addFilter("account_accountID",getAccountID(),2);
+		smartList.addFilter("attribute_attributeCode",attribute,2);
+		
+		var attributeValue = smartList.getRecords();
+		
+		if(arrayLen(attributeValue)){
+			if(returnEntity) {
+				return attributeValue[1];	
+			} else {
+				return attributeValue[1].getAttributeValue();
+			}
+		}else{
+			if(returnEntity) {
+				return getService("ProductService").newAccountAttributeValue();	
+			} else {
+				return "";
+			}
+		}
+	}
+	
+	public boolean function isPriceGroupAssigned(required string  priceGroupId) {
+		return structKeyExists(this.getPriceGroupsStruct(), arguments.priceGroupID);	
+	}
+	
+	// ============ START: Non-Persistent Property Methods =================
+	
+	public string function getPhoneNumber() {
+		if(!isNull(getPrimaryPhoneNumber()) && !isNull(getPrimaryPhoneNumber().getPhoneNumber())) {
+			return getPrimaryPhoneNumber().getPhoneNumber();
+		}
+		return "";
+	}
+	
+	public string function getEmailAddress() {
+		if(!isNull(getPrimaryEmailAddress()) && !isNull(getPrimaryEmailAddress().getEmailAddress())) {
+			return getPrimaryEmailAddress().getEmailAddress();
+		}
+		return "";
+	}
+	
+	public string function getAddress() {
+		if(!isNull(getPrimaryAddress()) && !isNull(getPrimaryAddress().getAddress())) {
+			return getPrimaryAddress().getAddress();
+		} else {
+			return getService("addressService").newAddress();
+		}
+	}
+	
+	public string function getFullName() {
+		return "#getFirstName()# #getLastName()#";
+	}
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
+	
+	// Account Addresses (one-to-many)
+	public void function addAccountAddress(required any accountAddress) {
+		arguments.accountAddress.setAccount( this );
+	}
+	public void function removeAccountAddress(required any accountAddress) {
+		arguments.accountAddress.removeAccount( this );
+	}
+	
+	// Account Email Addresses (one-to-many)
+	public void function addAccountEmailAddress(required any accountEmailAddress) {    
+		arguments.accountEmailAddress.setAccount( this );    
+	}    
+	public void function removeAccountEmailAddress(required any accountEmailAddress) {    
+		arguments.accountEmailAddress.removeAccount( this );    
+	}
+	
+	// Account Phone Numbers (one-to-many)    
+	public void function addAccountPhoneNumber(required any accountPhoneNumber) {    
+		arguments.accountPhoneNumber.setAccount( this );    
+	}    
+	public void function removeAccountPhoneNumber(required any accountPhoneNumber) {    
+		arguments.accountPhoneNumber.removeAccount( this );    
+	}
+
+	// Account Promotions (one-to-many)
+	public void function addAccountPromotion(required any AccountPromotion) {
+		arguments.AccountPromotion.setAccount( this );
+	}
+	
+	public boolean function isGuestAccount() {
 		if(isNull(getCmsAccountID())) {
 			return true;
 		} else {
@@ -239,6 +356,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		arguments.accountPhoneNumber.removeAccount( this );    
 	}
 	
+	// Account Promotions (one-to-many)
+	public void function addAccountPromotion(required any AccountPromotion) {
+		arguments.AccountPromotion.setAccount( this );
+	}
+	public void function removeAccountPromotion(required any AccountPromotion) {
+		arguments.AccountPromotion.removeAccount( this );
+	}
+	
 	// Account Attribute Sets (one-to-many)
 	public void function addAccountAttributeSet(required any accountAttributeSet) {
 		arguments.accountAttributeSet.setAccount( this );
@@ -271,7 +396,6 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		arguments.productReview.removeAccount(this);
 	}
 	
-
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// ================== START: Overridden Methods ========================
@@ -281,4 +405,5 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	// =================== START: ORM Event Hooks  =========================
 	
 	// ===================  END:  ORM Event Hooks  =========================
+
 }

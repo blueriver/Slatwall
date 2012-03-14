@@ -63,7 +63,6 @@ component displayname="Promotion Applied" entityname="SlatwallPromotionApplied" 
 	orderItem 			| OrderItemAppliedPromotion.cfc
 	orderFulfillment 	| OrderFulfillmentAppliedPromotion.cfc
 	order 				| OrderAppliedPromotion.cfc
-	orderPromotionCode 	| OrderAppliedPromotionCode.cfc
 	
 	*/
 	

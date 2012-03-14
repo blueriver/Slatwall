@@ -36,60 +36,69 @@
 Notes:
 
 */
-component displayname="Promotion Code" entityname="SlatwallPromotionCode" table="SlatwallPromotionCode" persistent="true" extends="BaseEntity" {
+component displayname="Promotion Account" entityname="SlatwallPromotionAccount" table="SlatwallPromotionAccount" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="promotionCodeID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="promotionCode" ormtype="string";
+	property name="promotionAccountID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
-	property name="maximumUseCount" ormtype="integer";
-	property name="maximumAccountUseCount" ormtype="integer";	
 	
 	// Related Entities
 	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
+	//property name="promotionPeriod" cfc="PromotionPeriod" fieldtype="many-to-one" fkcolumn="promotionPeriodID";   
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
 	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
 	property name="modifiedDateTime" ormtype="timestamp";
 	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+ 
+
+	// ============= START: Bidirectional Helper Methods ===================
 	
-	// Related Object Properties (Many-To-Many)
-	property name="orders" singularname="order" cfc="Order" fieldtype="many-to-many" linktable="SlatwallOrderPromotionCode" fkcolumn="promotionCodeID" inversejoincolumn="orderID";
-	
-	/******* Association management methods for bidirectional relationships **************/
-	
-    // Promotion (many-to-one)
-	public void function setPromotion(required any promotion) {
-		variables.promotion = arguments.promotion;
-		
-		if(isNew() or !arguments.promotion.hasPromotionCode(this)) {
-			arrayAppend(arguments.Promotion.getPromotionCodes(),this);
+
+	// Account (many-to-one)
+	public void function setAccount(required any account) {
+		variables.account = arguments.account;
+		if(isNew() or !arguments.account.hasAccountPromotion( this )) {
+			arrayAppend(arguments.account.getAccountPromotions(), this);
 		}
 	}
-	
-	public void function removePromotion(any promotion) {
-		if(!structKeyExists(arguments, 'promotion')) {
-			arguments.promotion = variables.promotion;
+	public void function removeAccount(any account) {
+		if(!structKeyExists(arguments, "account")) {
+			arguments.account = variables.account;
 		}
-		var index = arrayFind(arguments.promotion.getPromotionCodes(),this);
-		
+		var index = arrayFind(arguments.account.getAccountPromotions(), this);
 		if(index > 0) {
-			arrayDeleteAt(arguments.promotion.getPromotionCodes(),index);
+			arrayDeleteAt(arguments.account.getAccountPromotions(), index);
 		}
-		structDelete(variables, "promotion");
-    }
+		structDelete(variables, "account");
+	}
 	
-    /************   END Association Management Methods   *******************/
-    
-    // Override the preInsert method to set a promotion code
-    public void function preInsert() {
-		if(isNull(getPromotionCode()) || getPromotionCode() == ""){
-			setPromotionCode(createUUID());
-		}
-		super.preInsert();
-    }
+	// Promotion (many-to-one)    	
+	public void function setPromotion(required any promotion) {    
+		variables.promotion = arguments.promotion;    
+		if(isNew() or !arguments.promotion.hasPromotionAccount( this )) {    
+			arrayAppend(arguments.promotion.getPromotionAccounts(), this);    
+		}    
+	}  
+	 
+	public void function removePromotion(any promotion) {    
+		if(!structKeyExists(arguments, "promotion")) {    
+			arguments.promotion = variables.promotion;    
+		}    
+		var index = arrayFind(arguments.promotion.getPromotionAccounts(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getPromotionAccounts(), index);    
+		}    
+		structDelete(variables, "promotion");    
+	}
+	
+	
+   // =============  END:  Bidirectional Helper Methods ===================
+
+
 
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -101,5 +110,7 @@ component displayname="Promotion Code" entityname="SlatwallPromotionCode" table=
 	
 	// =================== START: ORM Event Hooks  =========================
 	
-	// ===================  END:  ORM Event Hooks  =========================   
+	// ===================  END:  ORM Event Hooks  =========================
+	
+	
 }

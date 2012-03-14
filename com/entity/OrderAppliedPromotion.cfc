@@ -36,39 +36,44 @@
 Notes:
 
 */
-component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewardOrder" table="SlatwallPromotionReward" persistent="true" extends="PromotionReward" discriminatorValue="order" {
+component displayname="Order Applied Promotion" entityname="SlatwallOrderAppliedPromotion" table="SlatwallPromotionApplied" persistent="true" extends="PromotionApplied" discriminatorValue="order" {
 	
 	// Persistent Properties
-	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
-
+	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Entities
+	property name="order" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID";
+	
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-
-	public string function getDiscountType() {
-		if(isNull(variables.DiscountType)) {
-			if( !isNull(getPercentageOff()) && isNull(getAmountOff()) ) {
-				variables.DiscountType = "percentageOff";
-			} else if ( !isNull(getAmountOff()) && isNull(getPercentageOff()) ) {
-				variables.DiscountType = "amountOff";
-			} else {
-				variables.DiscountType = "percentageOff";
-			}
-		}
-		return variables.DiscountType;
-	}
-	
+		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// =============  END:  Bidirectional Helper Methods ===================
-
-	public array function getDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"}
-		];
+	// Order Item (many-to-one)
+	public void function setOrder(required any Order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.order.getAppliedPromotions(), this);
+		}
 	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getAppliedPromotions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getAppliedPromotions(), index);
+		}
+		structDelete(variables, "order");
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

@@ -45,12 +45,18 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	property name="promotionDescription" ormtype="string" length="4000";
 	property name="startDateTime" ormtype="timestamp";
 	property name="endDateTime" ormtype="timestamp";
+	property name="maximumUseCount" ormtype="integer" default="0" dbdefault="0";
+	property name="maximumAccountUseCount" ormtype="integer" default="0" dbdefault="0";
 	property name="activeFlag" ormtype="boolean";
 	
 	// Related Entities
 	property name="defaultImage" cfc="PromotionImage" fieldtype="many-to-one" fkcolumn="defaultImageID";
+	// property name="promotionPeriods" singularname="promotionPeriod" cfc="PromotionPeriod" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionCodes" singularname="promotionCode" cfc="PromotionCode" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";    
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionReward" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifier" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all-delete-orphan" inverse="true";
 	property name="appliedPromotions" singularname="appliedPromotion" cfc="PromotionApplied" fieldtype="one-to-many" fkcolumn="promotionID" cascade="all" inverse="true";
 	
 	// Remote Properties
@@ -70,6 +76,15 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 		if(isNull(variables.promotionRewards)) {
 			variables.promotionRewards = [];
 		}
+		if(isNull(variables.promotionRewardExclusions)) {
+			variables.promotionRewards = [];
+		}
+		if(isNull(variables.promotionQualifiers)) {
+			variables.promotionQualifiers = [];
+		}
+		if(isNull(variables.promotionQualifierExclusions)) {
+			variables.promotionQualifiers = [];
+		}
 		if(isNull(variables.startDateTime)) {
 			variables.startDateTime = now();
 		}
@@ -84,6 +99,14 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
  
 
 	/******* Association management methods for bidirectional relationships **************/
+
+	// promotionPeriods (one-to-many)
+/*	public void function addPromotionPeriod(required any PromotionPeriod) {
+		arguments.PromotionPeriod.setPromotion( this );
+	}
+	public void function removePromotionPeriod(required any PromotionPeriod) {
+		arguments.PromotionPeriod.removePromotion( this );
+	}*/
 	
 	// promotionCodes (one-to-many)
 	public void function addPromotionCode(required any promotionCode) {
@@ -101,6 +124,34 @@ component displayname="Promotion" entityname="SlatwallPromotion" table="Slatwall
 	
 	public void function removePromotionReward(required any promotionReward) {
 		arguments.promotionReward.removePromotion(this);
+	}
+	
+	// PromotionRewardExclusion (one-to-many)
+
+	public void function addPromotionRewardExclusion(required any PromotionRewardExclusion) {
+	   arguments.PromotionRewardExclusion.setPromotion(this);
+	}
+	
+	public void function removePromotionRewardExclusion(required any PromotionRewardExclusion) {
+	   arguments.PromotionRewardExclusion.removePromotion(this);
+	}
+	
+	// promotionQualifiers (one-to-many)    
+	public void function addPromotionQualifier(required any promotionQualifier) {    
+		arguments.promotionQualifier.setPromotion( this );    
+	}    
+	public void function removePromotionQualifier(required any promotionQualifier) {    
+		arguments.PromotionQualifier.removePromotion( this );    
+	}
+	
+	// PromotionQualifierExclusion (one-to-many)
+
+	public void function addPromotionQualifierExclusion(required any PromotionQualifierExclusion) {
+	   arguments.PromotionQualifierExclusion.setPromotion(this);
+	}
+	
+	public void function removePromotionQualifierExclusion(required any PromotionQualifierExclusion) {
+	   arguments.PromotionQualifierExclusion.removePromotion(this);
 	}
 	
 	// appliedPromotions (one-to-many)

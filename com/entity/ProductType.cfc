@@ -83,6 +83,9 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	
 	// Related Object Properties (Many-To-Many)
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionProductType" fkcolumn="productTypeID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateProductType" fkcolumn="productTypeID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID"; 
 
@@ -105,7 +108,16 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 		if(isNull(variables.promotionRewards)) {
 			variables.promotionRewards = [];
 		}
-		if(isNull(variables.promotionRewards)) {
+		if(isNull(variables.promotionRewardExclusions)) {
+			variables.promotionRewardExclusions = [];
+		}
+		if(isNull(variables.promotionQualifiers)) {
+			variables.promotionQualifiers = [];
+		}
+		if(isNull(variables.promotionQualifierExclusions)) {
+ 			variables.promotionQualifierExclusions = [];
+ 		}
+		if(isNull(variables.priceGroupRates)) {
 			variables.priceGroupRates = [];
 		}
 		
@@ -287,6 +299,46 @@ component displayname="Product Type" entityname="SlatwallProductType" table="Sla
 	}
 	public void function removeAttributeSetAssignment(required any attributeSetAssignment) {
 		arguments.attributeSetAssignment.removeProductType( this );
+	}
+
+	// Promotion Rewards (many-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+		arguments.promotionReward.addProductType( this );
+	}
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removeProductType( this );
+	}
+	
+	// Promotion Qualifiers (many-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addProductType( this );
+	}
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeProductType( this );
+	}
+	
+	// Promotion Reward Exclusions (many-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+		arguments.promotionRewardExclusion.addProductType( this );
+	}
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+		arguments.promotionRewardExclusion.removeProductType( this );
+	}
+	
+	// Promotion Qualifier Exclusions (many-to-many)
+	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
+		arguments.promotionQualifierExclusion.addProductType(this);
+	}
+	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
+		arguments.promotionQualifierExclusion.removeProductType(this);
+	}
+	
+	// priceGroupRates (many-to-many)
+	public void function addPriceGroupRate(required any priceGroupRate) {
+		arguments.priceGroupRate.addProductType( this );
+	}
+	public void function removePriceGroupRate(required any priceGroupRate) {
+		arguments.priceGroupRate.removeProductType( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

@@ -36,39 +36,19 @@
 Notes:
 
 */
-component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewardOrder" table="SlatwallPromotionReward" persistent="true" extends="PromotionReward" discriminatorValue="order" {
+component displayname="Promotion Qualifier Order" entityname="SlatwallPromotionQualifierOrder" table="SlatwallPromotionQualifier" persistent="true" extends="PromotionQualifier" discriminatorValue="order" {
 	
 	// Persistent Properties
-	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="promotionQualifierID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 
 
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-
-	public string function getDiscountType() {
-		if(isNull(variables.DiscountType)) {
-			if( !isNull(getPercentageOff()) && isNull(getAmountOff()) ) {
-				variables.DiscountType = "percentageOff";
-			} else if ( !isNull(getAmountOff()) && isNull(getPercentageOff()) ) {
-				variables.DiscountType = "amountOff";
-			} else {
-				variables.DiscountType = "percentageOff";
-			}
-		}
-		return variables.DiscountType;
-	}
 	
 	// ============= START: Bidirectional Helper Methods ===================
 	
 	// =============  END:  Bidirectional Helper Methods ===================
-
-	public array function getDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"}
-		];
-	}
 	
 	// =================== START: ORM Event Hooks  =========================
 	

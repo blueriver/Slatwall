@@ -75,6 +75,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	// Related Object Properties (Many-to-Many)
 	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallSkuOption" fkcolumn="skuID" inversejoincolumn="optionID"; 
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="skuID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductSku" fkcolumn="skuID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionSku" fkcolumn="skuID" inversejoincolumn="PromotionRewardExclusionID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionSku" fkcolumn="skuID" inversejoincolumn="PromotionQualifierExclusionID" inverse="true";
 	property name="priceGroupRates" singularname="priceGroupRate" cfc="PriceGroupRate" fieldtype="many-to-many" linktable="SlatwallPriceGroupRateSku" fkcolumn="skuID" inversejoincolumn="priceGroupRateID" inverse="true";
 	property name="eligibleFulfillmentMethods" singularname="eligibleFulfillmentMethod" cfc="FulfillmentMethod" fieldtype="many-to-many" linktable="SlatwallSkuEligibleFulfillmentMethod" fkcolumn="skuID" inversejoincolumn="fulfillmentMethodID";
 	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="skuID" inversejoincolumn="contentID"; 
@@ -105,7 +108,18 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
  	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
 	   }
-
+ 	   if(isNull(variables.promotionQualifiers)) {
+	       variables.promotionQualifiers = [];
+	   }
+ 	   if(isNull(variables.promotionRewardExclusions)) {
+	       variables.promotionRewardExclusions = [];
+	   }
+ 	   if(isNull(variables.promotionQualifierExclusions)) {
+	       variables.promotionQualifierExclusions = [];
+	   }
+	   if(isNull(variables.priceGroupRates)) {
+	   	   variables.priceGroupRates = [];
+	   }
        return super.init();
     }
     
@@ -419,6 +433,42 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	}
 	public void function removeAlternateSkuCode(required any alternateSkuCode) {
 		arguments.alternateSkuCode.removeSku( this );
+	}
+
+	// Promotion Rewards (one-to-many)
+	public void function addPromotionReward(required any promotionReward) {
+		arguments.promotionReward.addSku( this );
+	}
+	
+	public void function removePromotionReward(required any promotionReward) {
+		arguments.promotionReward.removeSku( this );
+	}
+		
+	// Promotion Reward Exclusions (one-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+		arguments.promotionRewardExclusion.addSku( this );
+	}
+	
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+		arguments.promotionRewardExclusion.removeSku( this );
+	}
+
+	// Promotion Qualifiers (one-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addSku( this );
+	}
+	
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeSku( this );
+	}
+	
+	// Promotion Qualifier Exclusions (one-to-many)
+	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
+		arguments.promotionQualifierExclusion.addSku( this );
+	}
+	
+	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
+		arguments.promotionQualifierExclusion.removeSku( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================

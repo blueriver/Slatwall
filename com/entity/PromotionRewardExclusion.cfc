@@ -36,27 +36,32 @@
 Notes:
 
 */
-component displayname="Promotion Reward Product" entityname="SlatwallPromotionRewardProduct" table="SlatwallPromotionReward" persistent="true" extends="PromotionReward" discriminatorValue="product" {
+component displayname="Promotion Reward Exclusion" entityname="SlatwallPromotionRewardExclusion" table="SlatwallPromotionRewardExclusion" persistent="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="itemRewardQuantity" ormType="integer" hint="the quantity of items this reward applies to per instance of qualifier satisfied";
-	property name="maximumOrderRewardQuantity" ormtype="integer" hint="the maximum quantity of items this reward can apply to per order";
-	property name="rewardCanApplyToQualifierFlag" ormtype="boolean" default="0" dbdefault="0" hint="when true, qualifier is not excluded from reward (if qualifier and reward can be the same item)";
-	
-	// Related Object Properties (many-to-one)
-	property name="roundingRule" cfc="RoundingRule" fieldtype="many-to-one" fkcolumn="roundingRuleID";
+	property name="promotionRewardExclusionID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+
+	// Related Entities
+	property name="promotion" cfc="Promotion" fieldtype="many-to-one" fkcolumn="promotionID";
 	
 	// Related Object Properties (many-to-many)
-	property name="eligiblePriceGroups" singularname="eligiblePriceGroup" cfc="PriceGroup" type="array" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductEligiblePriceGroup" fkcolumn="promotionRewardID" inversejoincolumn="priceGroupID";
-	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="promotionRewardID" inversejoincolumn="brandID";
-	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductOption" fkcolumn="promotionRewardID" inversejoincolumn="optionID";
-	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductSku" fkcolumn="promotionRewardID" inversejoincolumn="skuID";
-	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProduct" fkcolumn="promotionRewardID" inversejoincolumn="productID";
-	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductProductType" fkcolumn="promotionRewardID" inversejoincolumn="productTypeID";
-	property name="productContent" cfc="PromotionRewardProductProductContent" fieldtype="one-to-many" fkcolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
-	property name="productCategories" singularname="productCategory" cfc="PromotionRewardProductProductCategory" fieldtype="one-to-many" fkcolumn="promotionRewardID" cascade="all-delete-orphan" inverse="true";
+	property name="brands" singularname="brand" cfc="Brand" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionBrand" fkcolumn="promotionRewardExclusionID" inversejoincolumn="brandID";
+	property name="options" singularname="option" cfc="Option" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionOption" fkcolumn="promotionRewardExclusionID" inversejoincolumn="optionID";
+	property name="skus" singularname="sku" cfc="Sku" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionSku" fkcolumn="promotionRewardExclusionID" inversejoincolumn="skuID";
+	property name="products" singularname="product" cfc="Product" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProduct" fkcolumn="promotionRewardExclusionID" inversejoincolumn="productID";
+	property name="productTypes" singularname="productType" cfc="ProductType" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionProductType" fkcolumn="promotionRewardExclusionID" inversejoincolumn="productTypeID";
+	property name="productContent" cfc="PromotionRewardExclusionProductContent" fieldtype="one-to-many" fkcolumn="promotionRewardExclusionID" cascade="all-delete-orphan" inverse="true";
+	property name="productCategories" singularname="productCategory" cfc="PromotionRewardExclusionProductCategory" fieldtype="one-to-many" fkcolumn="promotionRewardExclusionID" cascade="all-delete-orphan" inverse="true";
 	
+	// Remote Properties
+	property name="remoteID" ormtype="string";
+	
+	// Audit properties
+	property name="createdDateTime" ormtype="timestamp";
+	property name="createdByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="createdByAccountID";
+	property name="modifiedDateTime" ormtype="timestamp";
+	property name="modifiedByAccount" cfc="Account" fieldtype="many-to-one" fkcolumn="modifiedByAccountID";
+
 	public any function init() {
 
 		if(isNull(variables.brands)) {
@@ -80,15 +85,32 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		if(isNull(variables.productCategories)) {
 			variables.productCategories = [];
 		}
-		return super.init();
+		return Super.init();
+	}
+
+	
+	// ========= Association management methods for bidirectional relationships ============
+	
+	// Promotion (many-to-one)
+	
+	public void function setPromotion(required Promotion promotion) {
+		variables.promotion = arguments.promotion;
+		if(!arguments.promotion.hasPromotionReward(this)) {
+			arrayAppend(arguments.promotion.getPromotionRewards(),this);
+		}
 	}
 	
-	public string function getRewardType() {
-		return "product";
-	}
-		
-	/******* Association management methods for bidirectional relationships **************/
-
+	public void function removePromotion(Promotion promotion) {
+	   if(!structKeyExists(arguments,"promotion")) {
+	   		arguments.promotion = variables.promotion;
+	   }
+       var index = arrayFind(arguments.promotion.getPromotionRewards(),this);
+       if(index > 0) {
+           arrayDeleteAt(arguments.promotion.getPromotionRewards(), index);
+       }
+       structDelete(variables,"promotion");
+    }
+    
 	// brand (many-to-many)
 	
 	public void function addBrand(required any Brand) {
@@ -96,7 +118,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			// first add brand to this reward
 			arrayAppend(this.getBrands(),arguments.Brand);
 			//add this reward to the brand
-			arrayAppend(arguments.Brand.getPromotionRewards(),this);
+			arrayAppend(arguments.Brand.getPromotionRewardExclusions(),this);
 		}
 	}
     
@@ -108,9 +130,9 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	           arrayDeleteAt(this.getBrands(),index);
 	       }
 	      // then remove this reward from the brand
-	       var index = arrayFind(arguments.Brand.getPromotionRewards(),this);
+	       var index = arrayFind(arguments.Brand.getPromotionRewardExclusions(),this);
 	       if(index > 0) {
-	           arrayDeleteAt(arguments.Brand.getPromotionRewards(),index);
+	           arrayDeleteAt(arguments.Brand.getPromotionRewardExclusions(),index);
 	       }
 	   }
     }	
@@ -122,7 +144,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			// first add option to this reward
 			arrayAppend(this.getOptions(),arguments.Option);
 			//add this reward to the option
-			arrayAppend(arguments.Option.getPromotionRewards(),this);
+			arrayAppend(arguments.Option.getPromotionRewardExclusions(),this);
 		}
 	}
     
@@ -134,9 +156,9 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	           arrayDeleteAt(this.getOptions(),index);
 	       }
 	      // then remove this reward from the option
-	       var index = arrayFind(arguments.Option.getPromotionRewards(),this);
+	       var index = arrayFind(arguments.Option.getPromotionRewardExclusions(),this);
 	       if(index > 0) {
-	           arrayDeleteAt(arguments.Option.getPromotionRewards(),index);
+	           arrayDeleteAt(arguments.Option.getPromotionRewardExclusions(),index);
 	       }
 	   }
     }
@@ -148,7 +170,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			// first add sku to this reward
 			arrayAppend(this.getSkus(),arguments.Sku);
 			//add this reward to the sku
-			arrayAppend(arguments.sku.getPromotionRewards(),this);
+			arrayAppend(arguments.sku.getPromotionRewardExclusions(),this);
 		}
 	}
     
@@ -160,9 +182,9 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	           arrayDeleteAt(this.getSkus(),index);
 	       }
 	      // then remove this reward from the sku
-	       var index = arrayFind(arguments.sku.getPromotionRewards(),this);
+	       var index = arrayFind(arguments.sku.getPromotionRewardExclusions(),this);
 	       if(index > 0) {
-	           arrayDeleteAt(arguments.sku.getPromotionRewards(),index);
+	           arrayDeleteAt(arguments.sku.getPromotionRewardExclusions(),index);
 	       }
 	   }
     }
@@ -174,7 +196,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			// first add product to this reward
 			arrayAppend(this.getProducts(),arguments.product);
 			//add this reward to the product
-			arrayAppend(arguments.product.getPromotionRewards(),this);
+			arrayAppend(arguments.product.getPromotionRewardExclusions(),this);
 		}
 	}
     
@@ -186,9 +208,9 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	           arrayDeleteAt(this.getProducts(),index);
 	       }
 	      // then remove this reward from the product
-	       var index = arrayFind(arguments.product.getPromotionRewards(),this);
+	       var index = arrayFind(arguments.product.getPromotionRewardExclusions(),this);
 	       if(index > 0) {
-	           arrayDeleteAt(arguments.product.getPromotionRewards(),index);
+	           arrayDeleteAt(arguments.product.getPromotionRewardExclusions(),index);
 	       }
 	   }
     }
@@ -200,7 +222,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 			// first add productType to this reward
 			arrayAppend(this.getProductTypes(),arguments.ProductType);
 			//add this reward to the productType
-			arrayAppend(arguments.ProductType.getPromotionRewards(),this);
+			arrayAppend(arguments.ProductType.getPromotionRewardExclusions(),this);
 		}
 	}
     
@@ -212,9 +234,9 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	           arrayDeleteAt(this.getProductTypes(),index);
 	       }
 	      // then remove this reward from the productType
-	       var index = arrayFind(arguments.ProductType.getPromotionRewards(),this);
+	       var index = arrayFind(arguments.ProductType.getPromotionRewardExclusions(),this);
 	       if(index > 0) {
-	           arrayDeleteAt(arguments.ProductType.getPromotionRewards(),index);
+	           arrayDeleteAt(arguments.ProductType.getPromotionRewardExclusions(),index);
 	       }
 	   }
     }
@@ -222,25 +244,26 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	// ProductContent (one-to-many)    
 
 	public void function addProductContent(required any productContent) {    
-	   arguments.productContent.setPromotionReward(this);    
+	   arguments.productContent.setPromotionRewardExclusion(this);    
 	}    
 	    
 	public void function removeProductContent(required any productContent) {    
-	   arguments.productContent.removePromotionReward(this);    
+	   arguments.productContent.removePromotionRewardExclusion(this);    
 	}
 	
 	// productCategory (one-to-many)
 
 	public void function addProductCategory(required any productCategory) {
-	   arguments.productCategory.setPromotionReward(this);
+	   arguments.productCategory.setPromotionRewardExclusion(this);
 	}
 	
 	public void function removeProductCategory(required any productCategory) {
-	   arguments.productCategory.removePromotionReward(this);
+	   arguments.productCategory.removePromotionRewardExclusion(this);
 	}
-    
-    /************   END Association Management Methods   *******************/
 
+    
+   // ============   END Association Management Methods   =================
+	
 	public any function getProductsOptions() {
 		if(!structKeyExists(variables, "productsOptions")) {
 			var smartList = new Slatwall.org.entitySmartList.SmartList(entityName="SlatwallProduct");
@@ -276,7 +299,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		}
 		return productCategoriesOptions;
 	}
-	
+
 	public string function displayBrandNames() {
 		var brandNames = "";
 		for( var i=1; i<=arrayLen(this.getBrands());i++ ) {
@@ -374,7 +397,7 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 		}
 		return paths;
 	}
-	
+
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
@@ -384,16 +407,6 @@ component displayname="Promotion Reward Product" entityname="SlatwallPromotionRe
 	// =============  END:  Bidirectional Helper Methods ===================
 	
 	// =================== START: ORM Event Hooks  =========================
-	
-	public void function preInsert(){
-		super.preInsert();
-		getService("skuCacheService").updateFromPromotionRewardProduct( this );
-	}
-	
-	public void function preUpdate(struct oldData){
-		super.preUpdate(argumentcollection=arguments);
-		getService("skuCacheService").updateFromPromotionRewardProduct( this );
-	}
 	
 	// ===================  END:  ORM Event Hooks  =========================
 }

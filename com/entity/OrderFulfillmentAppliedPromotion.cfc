@@ -36,39 +36,45 @@
 Notes:
 
 */
-component displayname="Promotion Reward Order" entityname="SlatwallPromotionRewardOrder" table="SlatwallPromotionReward" persistent="true" extends="PromotionReward" discriminatorValue="order" {
+component displayname="Order Fulfillment Applied Promotion" entityname="SlatwallOrderFulfillmentAppliedPromotion" table="SlatwallPromotionApplied" persistent="true" extends="PromotionApplied" discriminatorValue="orderFulfillment" {
 	
 	// Persistent Properties
-	property name="promotionRewardID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-
-
+	property name="promotionAppliedID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	
+	// Related Entities
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderfulfillmentID";
+	
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================
-
-	public string function getDiscountType() {
-		if(isNull(variables.DiscountType)) {
-			if( !isNull(getPercentageOff()) && isNull(getAmountOff()) ) {
-				variables.DiscountType = "percentageOff";
-			} else if ( !isNull(getAmountOff()) && isNull(getPercentageOff()) ) {
-				variables.DiscountType = "amountOff";
-			} else {
-				variables.DiscountType = "percentageOff";
-			}
-		}
-		return variables.DiscountType;
-	}
-	
+		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// =============  END:  Bidirectional Helper Methods ===================
-
-	public array function getDiscountTypeOptions() {
-		return [
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.percentageOff"), value="percentageOff"},
-			{name=rbKey("admin.promotion.promotionRewardShipping.discountType.amountOff"), value="amountOff"}
-		];
+	// Order Fulfillment (many-to-one)
+	
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasAppliedPromotion( this )) {
+			arrayAppend(arguments.orderFulfillment.getAppliedPromotions(), this);
+		}
 	}
+	public void function removeOrderFulfillment(any orderFulfillment) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
+		}
+		var index = arrayFind(arguments.orderFulfillment.getAppliedPromotions(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.account.getAppliedPromotions(), index);
+		}
+		structDelete(variables, "orderFulfillment");
+	}
+	
+	// =============  END:  Bidirectional Helper Methods ===================
+	
+	// ================== START: Overridden Methods ========================
+	
+	// ==================  END:  Overridden Methods ========================
 	
 	// =================== START: ORM Event Hooks  =========================
 	

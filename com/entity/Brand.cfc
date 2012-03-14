@@ -44,7 +44,7 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	property name="urlTitle" ormtype="string" hint="This is the name that is used in the URL string";
 	property name="brandName" ormtype="string" hint="This is the common name that the brand goes by.";
 	property name="brandWebsite" ormtype="string" hint="This is the Website of the brand";
-
+	
 	// Persistent Properties - Inheritence Settings
 	property name="brandDisplayTemplate" ormtype="string";
 	
@@ -62,6 +62,9 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	//property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="one-to-many" fkcolumn="brandID" inverse="true" cascade="all";    
 	//property name="brandVendors" singularname="brandVendor" cfc="VendorBrand" fieldtype="one-to-many" fkcolumn="brandID" lazy="extra" inverse="true" cascade="all";
 	property name="promotionRewards" singularname="promotionReward" cfc="PromotionRewardProduct" fieldtype="many-to-many" linktable="SlatwallPromotionRewardProductBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardID" inverse="true";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierProduct" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierProductBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierID" inverse="true";
+	property name="promotionRewardExclusions" singularname="promotionRewardExclusion" cfc="PromotionRewardExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionRewardExclusionBrand" fkcolumn="brandID" inversejoincolumn="promotionRewardExclusionID" inverse="true";
+	property name="promotionQualifierExclusions" singularname="promotionQualifierExclusion" cfc="PromotionQualifierExclusion" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierExclusionBrand" fkcolumn="brandID" inversejoincolumn="promotionQualifierExclusionID" inverse="true";
 	
 	// Related Object Properties (many-to-many)
 	property name="vendors" singularname="vendor" cfc="Vendor" fieldtype="many-to-many" linktable="SlatwallVendorBrand" fkcolumn="brandID" inversejoincolumn="vendorID";
@@ -71,11 +74,26 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   if(isNull(variables.products)) {
 	   	   variables.products = [];
 	   }
-	   
+ 	   if(isNull(variables.promotionRewards)) {
+	       variables.promotionRewards = [];
+	   }
+ 	   if(isNull(variables.promotionRewardExclusions)) {
+	       variables.promotionRewardExclusions = [];
+	   }
+ 	   if(isNull(variables.promotionQualifiers)) {
+	       variables.promotionQualifiers = [];
+	   }
+ 	   if(isNull(variables.promotionQualifierExclusions)) {
+	       variables.promotionQualifierExclusions = [];
+	   }   
 	   return super.init();
 	}
- 
- /******* Association management methods for bidirectional relationships **************/
+
+	// ============ START: Non-Persistent Property Methods =================
+	
+	// ============  END:  Non-Persistent Property Methods =================
+	
+	// ============= START: Bidirectional Helper Methods ===================
 	
 	// Products (one-to-many)
 	
@@ -97,13 +115,32 @@ component displayname="Brand" entityname="SlatwallBrand" table="SlatwallBrand" p
 	   arguments.promotionReward.removeBrand(this);
 	}
 	
-    /************   END Association Management Methods   *******************/
+	// promotionQualifiers (many-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addBrand( this );
+	}
 	
-	// ============ START: Non-Persistent Property Methods =================
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeBrand( this );
+	}
+
+	// promotionRewardExclusions (many-to-many)
+	public void function addPromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.addBrand(this);
+	}
 	
-	// ============  END:  Non-Persistent Property Methods =================
+	public void function removePromotionRewardExclusion(required any promotionRewardExclusion) {
+	   arguments.promotionRewardExclusion.removeBrand(this);
+	}
 	
-	// ============= START: Bidirectional Helper Methods ===================
+	// promotionQualifierExclusions (many-to-many)
+	public void function addPromotionQualifierExclusion(required any promotionQualifierExclusion) {
+	   arguments.promotionQualifierExclusion.addBrand(this);
+	}
+	
+	public void function removePromotionQualifierExclusion(required any promotionQualifierExclusion) {
+	   arguments.promotionQualifierExclusion.removeBrand(this);
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 	

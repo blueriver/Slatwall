@@ -49,6 +49,7 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	
 	// Related Object Properties (Many-To-Many)
 	property name="addressZoneLocations" singularname="addressZoneLocation" cfc="Address" fieldtype="many-to-many" linktable="SlatwallAddressZoneLocation" fkcolumn="addressZoneID" inversejoincolumn="addressID" cascade="all-delete-orphan";
+	property name="promotionQualifiers" singularname="promotionQualifier" cfc="PromotionQualifierFulfillment" fieldtype="many-to-many" linktable="SlatwallPromotionQualifierFulfillmentAddressZone" fkcolumn="addressZoneID" inversejoincolumn="promotionQualifierID" inverse="true";
 	
 	// Audit properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -92,6 +93,14 @@ component displayname="Address Zone" entityname="SlatwallAddressZone" table="Sla
 	}
 	public void function removeTaxCategoryRate(required any taxCategoryRate) {
 		arguments.taxCategoryRate.removeAddressZone( this );
+	}
+	
+	// Promotion Qualifiers (one-to-many)
+	public void function addPromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.addAddressZone( this );
+	}
+	public void function removePromotionQualifier(required any promotionQualifier) {
+		arguments.promotionQualifier.removeAddressZone( this );
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
