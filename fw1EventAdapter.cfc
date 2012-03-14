@@ -56,7 +56,7 @@ Notes:
 	
 	<cffunction name="onContentEdit">
 		<cfargument name="$" />
-		<cfinclude template="plugin/contentEdit.cfm" />
+		<cfinclude template="plugin/onContentEdit.cfm" />
 	</cffunction>
 	
 	<cffunction name="onRenderStart">

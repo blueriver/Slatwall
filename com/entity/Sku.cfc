@@ -105,6 +105,9 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
  	   if(isNull(variables.promotionRewards)) {
 	       variables.promotionRewards = [];
 	   }
+ 	   if(isNull(variables.accessContents)) {
+	       variables.accessContents = [];
+	   }
 
        return super.init();
     }
@@ -161,8 +164,13 @@ component displayname="Sku" entityname="SlatwallSku" table="SlatwallSku" persist
 	//@hint this method generated sku code based on assigned options
 	public any function generateSkuCode () {
 		var newSkuCode = getProduct().getProductCode();
-		for(var option in getOptions() ) {
-			newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
+		if(arrayLen(getOptions())) {
+			for(var option in getOptions() ) {
+				newSkuCode = listAppend(newSkuCode,option.getOptionCode(),"-");
+			}
+		} else {
+			// if no options then generate code based on count
+			newSkuCode = newSkuCode & "-" & arrayLen(getProduct().getSkus());
 		}
 		return newSkuCode;
 	}

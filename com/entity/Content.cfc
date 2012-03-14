@@ -71,6 +71,15 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Non-Persistent Properties
 
 
+	public any function init() {
+       // set default collections for association management methods
+ 	   if(isNull(variables.skus)) {
+	       variables.skus = [];
+	   }
+
+       return super.init();
+    }
+    
 
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -78,15 +87,6 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
-	// products (many-to-many)
-	public void function addProduct(required any product) {
-	   arguments.product.addContent(this);
-	}
-	
-	public void function removeProduct(required any product) {
-	   arguments.product.removeContent(this);
-	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 
