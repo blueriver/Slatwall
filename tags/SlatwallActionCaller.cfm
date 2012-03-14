@@ -43,11 +43,11 @@ Notes:
 <cfparam name="attributes.title" type="string" default="">
 <cfparam name="attributes.class" type="string" default="">
 <cfparam name="attributes.icon" type="string" default="">
+<cfparam name="attributes.iconOnly" type="boolean" default="false">
 <cfparam name="attributes.submit" type="boolean" default="false">
-<cfparam name="attributes.confirmrequired" type="boolean" default="false" />
-<cfparam name="attributes.confirmtext" type="string" default="" />
+<cfparam name="attributes.confirm" type="boolean" default="false" />
 <cfparam name="attributes.disabled" type="boolean" default="false" />
-<cfparam name="attributes.disabledtext" type="string" default="" />
+
 
 <cfset variables.fw = caller.this />
 
@@ -61,7 +61,7 @@ Notes:
 	<cfset attributes.icon = '<i class="icon-#attributes.icon#"></i> ' />
 </cfif>
 
-<cfif attributes.text eq "">
+<cfif attributes.text eq "" and not attributes.iconOnly>
 	<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_nav") />
 	<cfif right(attributes.text, 8) eq "_missing" >
 		<cfset attributes.text = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#") />
@@ -75,27 +75,23 @@ Notes:
 	</cfif>
 </cfif>
 
-<cfif attributes.disabled is true>
-    <cfif trim(attributes.disabledtext) eq "">
-       <cfset attributes.disabledtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
-	</cfif>
-	<cfset attributes.class &= "Off" />
+<cfif attributes.disabled>
+    <cfset attributes.disabledtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_disabled") />
+	<cfset attributes.class &= " disabled" />
 </cfif>
 
-<cfif attributes.confirmrequired is true>
-    <cfif trim(attributes.confirmtext) eq "">
-       <cfset attributes.confirmtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
-	</cfif>
+<cfif attributes.confirm>
+    <cfset attributes.confirmtext = request.customMuraScopeKeys.slatwall.rbKey("#Replace(attributes.action, ":", ".", "all")#_confirm") />
 </cfif>
 
 <cfif thisTag.executionMode is "start">
 	<cfif variables.fw.secureDisplay(action=attributes.action)>
 		<cfif attributes.type eq "link">
-			<cfoutput><a href="#variables.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.text#</a></cfoutput>
+			<cfoutput><a href="#variables.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirm> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.icon##attributes.text#</a></cfoutput>
 		<cfelseif attributes.type eq "list">
-			<cfoutput><li class="#attributes.class#"><a href="#variables.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
+			<cfoutput><li class="#attributes.class#"><a href="#variables.fw.buildURL(action=attributes.action,querystring=attributes.querystring)#" title="#attributes.title#" class="#attributes.class#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirm> onclick="return confirmDialog('#attributes.confirmtext#',this.href);"</cfif>>#attributes.icon##attributes.text#</a></li></cfoutput> 
 		<cfelseif attributes.type eq "button">
-			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirmrequired> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif> <cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
+			<cfoutput><button class="btn #attributes.class#" title="#attributes.title#"<cfif attributes.disabled> onclick="return alertDialog('#attributes.disabledtext#');"<cfelseif attributes.confirm> onclick="return btnConfirmDialog('#attributes.confirmtext#',this);"</cfif> <cfif attributes.submit>type="submit"</cfif>>#attributes.icon##attributes.text#</button></cfoutput>
 		<cfelseif attributes.type eq "submit">
 			<cfoutput>This action caller type has been discontinued</cfoutput>
 		</cfif>

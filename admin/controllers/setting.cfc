@@ -40,24 +40,21 @@ component extends="BaseController" output="false" accessors="true" {
 	
 	// Slatwall Service Injection		
 	property name="addressService" type="any";
-	property name="integrationService" type="any";
+	property name="attributeService" type="any";
+	property name="dataService" type="any";
 	property name="fulfillmentService" type="any";
+	property name="integrationService" type="any";
+	property name="locationService" type="any";
 	property name="productService" type="any";
 	property name="paymentService" type="any";
+	property name="roundingRuleService" type="any";
 	property name="settingService" type="any";
 	property name="shippingService" type="any";
 	property name="skuCacheService" type="any";
 	property name="taxService" type="any";
-	property name="dataService" type="any";
+	property name="updateService" type="any";
 	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
-	property name="updateService" type="any";
-	property name="attributeService" type="any";
-	
-	
-	// Mura Service Injection
-	property name="userManager" type="any";
-	property name="categoryManager" type="any";
 	
 	public void function default() {
 		getFW().redirect(action="admin:setting.detail");
@@ -76,7 +73,7 @@ component extends="BaseController" output="false" accessors="true" {
 		if(rootCategoryID == "0") {
 			rc.rootCategory = rc.$.slatwall.rbKey("define.all");
 		} else {
-			rc.rootCategory = getCategoryManager().read(categoryID=rootCategoryID).getName();
+			rc.rootCategory = getCMSBean("categoryManager").read(categoryID=rootCategoryID).getName();
 		}
 	}
 	
@@ -105,7 +102,7 @@ component extends="BaseController" output="false" accessors="true" {
 		param name="rc.edit" default="false";
 		
 		// TODO: remove direct reference to mura userManager 
-		rc.cmsUserGroups = getUserManager().getUserGroups();
+		rc.cmsUserGroups = getCMSBean("userManager").getUserGroups();
 		rc.permissionActions = getSettingService().getPermissionActions();
 		rc.permissionSettings = getSettingService().getPermissions();
 	}
@@ -662,6 +659,130 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		getFW().redirect(action="admin:attribute.editAttributeSet", queryString="attributeSetID=#rc.attributeSetID#&attributeID=#rc.attributeID#", preserve="message,messagetype");
+	}
+	
+	
+	public void function listLocations(required struct rc) {
+        param name="rc.orderBy" default="locationId|ASC";
+        
+        rc.locationSmartList = getLocationService().getLocationSmartList(data=arguments.rc);  
+    }
+    
+    public void function detailLocation(required struct rc) {
+    	param name="rc.locationID" default="";
+    	param name="rc.edit" default="false";
+    	
+    	rc.location = getLocationService().getLocation(rc.locationID);
+    	
+    	if(isNull(rc.location)) {
+    		getFW().redirect(action="admin:location.listLocations");
+    	}
+    }
+    
+    public void function createLocation(required struct rc) {
+    	editLocation(rc);
+	}
+    
+    public void function editLocation(required struct rc) {
+    	param name="rc.locationID" default="";
+    	param name="rc.locationRateID" default="";
+    	
+    	rc.location = getLocationService().getLocation(rc.locationID, true);
+    	
+    	rc.edit = true; 
+    	getFW().setView("admin:location.detaillocation");  
+	}
+	
+
+	public void function saveLocation(required struct rc) {
+		editLocation(rc);
+
+		var wasNew = rc.Location.isNew();
+
+		
+		// this does an RC -> Entity population, and flags the entities to be saved.
+		rc.location = getLocationService().saveLocation(rc.location, rc);
+
+		if(!rc.location.hasErrors()) {
+			// If added or edited a Price Group Rate
+			rc.message=rbKey("admin.location.savelocation_success");
+			getFW().redirect(action="admin:location.listLocations", querystring="locationID=#rc.location.getLocationID()#", preserve="message");		
+		} 
+		else { 			
+			rc.edit = true;
+			rc.itemTitle = rc.Location.isNew() ? rc.$.Slatwall.rbKey("admin.location.createLocation") : rc.$.Slatwall.rbKey("admin.location.editLocation") & ": #rc.location.getLocationName()#";
+			getFW().setView(action="admin:location.detaillocation");
+		}	
+	}
+	
+	public void function deleteLocation(required struct rc) {
+		var location = getLocationService().getLocation(rc.locationId);
+		var deleteOK = getLocationService().deleteLocation(location);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.location.deleteLocation_success");
+		} else {
+			rc.message = rbKey("admin.location.deleteLocation_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:location.listLocations", preserve="message,messagetype");
+	}
+	
+	public void function detailroundingrule(required struct rc) {
+		param name="rc.roundingRuleID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.roundingRule = getRoundingRuleService().getRoundingRule(rc.roundingRuleID,true);	
+	}
+
+
+    public void function createroundingrule(required struct rc) {
+		edit(rc);
+    }
+
+	public void function editroundingrule(required struct rc) {
+		detail(rc);
+		getFW().setView("admin:roundingrule.detail");
+		rc.edit = true;
+	}
+	
+	 
+    public void function listroundingrules(required struct rc) {	
+		rc.roundingRules = getRoundingRuleService().listRoundingRule();
+    }
+
+	public void function saveroundingrule(required struct rc) {
+		// Populate RoundingRule and RoundingRuleRate in the rc.
+		detail(rc);
+		
+		rc.roundingRule = getRoundingRuleService().saveRoundingRule(rc.roundingRule, rc);
+		
+		// If the rounding rule doesn't have any errors then redirect to detail or list
+		if(!rc.roundingRule.hasErrors()) {
+			getFW().redirect(action="admin:roundingrule.list",queryString="message=admin.roundingrule.save_success");
+		}
+		
+		// This logic only runs if the entity has errors.  If it was a new entity show the create page, otherwise show the edit page
+   		rc.edit = true;
+		rc.itemTitle = rc.roundingRule.isNew() ? rc.$.Slatwall.rbKey("admin.roundingRule.create") : rc.$.Slatwall.rbKey("admin.roundingRule.edit") & ": #rc.roundingRule.getBrandName()#";
+   		getFW().setView(action="admin:roundingrule.detail");
+	}
+	
+	public void function deleteroundingrule(required struct rc) {
+		
+		detail(rc);
+		
+		var deleteOK = getRoundingRuleService().deleteRoundingRule(rc.roundingRule);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.roundingrule.delete_success");
+		} else {
+			rc.message = rbKey("admin.roundingrule.delete_error");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:roundingrule.list", preserve="message,messagetype");
 	}
 	
 }

@@ -39,18 +39,21 @@ Notes:
 component extends="BaseController" output=false accessors=true {
 
 	// fw1 Auto-Injected Service Properties
-	property name="attributeService" type="Slatwall.com.service.AttributeService";
-	property name="brandService" type="Slatwall.com.service.BrandService";
-	property name="contentService" type="Slatwall.com.service.ContentService";
-	property name="productService" type="Slatwall.com.service.ProductService";
-	property name="skuService" type="Slatwall.com.service.SkuService";
-	property name="locationService" type="Slatwall.com.service.LocationService";
-	property name="priceGroupService" type="Slatwall.com.service.PriceGroupService";
-	property name="subscriptionService" type="Slatwall.com.service.SubscriptionService";
-	property name="requestCacheService" type="Slatwall.com.service.RequestCacheService";
-	property name="utilityTagService" type="Slatwall.com.service.UtilityTagService";
-	property name="utilityORMService" type="Slatwall.com.service.UtilityORMService";
+	property name="attributeService" type="any";
+	property name="brandService" type="any";
+	property name="contentService" type="any";
+	property name="locationService" type="any";
+	property name="optionService" type="any";
+	property name="productService" type="any";
+	property name="priceGroupService" type="any";
+	property name="requestCacheService" type="any";
+	property name="skuService" type="any";
+	property name="subscriptionService" type="any";
+	property name="utilityTagService" type="any";
+	property name="utilityORMService" type="any";
 		
+		
+	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
 		param name="rc.keyword" default="";
@@ -95,7 +98,7 @@ component extends="BaseController" output=false accessors=true {
 		
 		rc.priceGroupDataJSON = getPriceGroupService().getPriceGroupDataJSON();
 		
-		getFW().setView("admin:product.detail");
+		getFW().setView("admin:product.detailproduct");
 		rc.edit = true;
 		param name="rc.image" default="#getProductService().newImage()#";
 	}
@@ -287,6 +290,165 @@ component extends="BaseController" output=false accessors=true {
 		}
 		
 		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messageType");
+	}
+
+
+	public void function detailbrand(required struct rc) {
+		param name="rc.brandID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.brand = getBrandService().getBrand(rc.brandID, true);
+	}
+
+    public void function createbrand(required struct rc) {
+		detailbrand(arguments.rc);
+		getFW().setView("admin:product.detailbrand");
+		rc.edit = true;
+    }
+
+	public void function editbrand(required struct rc) {
+		detailbrand(arguments.rc);
+		getFW().setView("admin:product.detailbrand");
+		rc.edit = true;
+	}
+	 
+    public void function listbrands(required struct rc) {
+		rc.brands = getBrandService().listBrandOrderByBrandName();
+    }
+
+	public void function savebrand(required struct rc) {
+	   detailbrand(arguments.rc);
+	   
+	   rc.brand = getBrandService().saveBrand(rc.brand, rc);
+	   
+	   if(!rc.brand.hasErrors()) {
+	   		getFW().redirect(action="admin:product.detailbrand",querystring="message=admin.brand.save_success");
+		} else {
+			rc.itemTitle = rc.brand.isNew() ? rc.$.Slatwall.rbKey("admin.brand.create") : rc.$.Slatwall.rbKey("admin.brand.edit") & ": #rc.brand.getBrandName()#";
+	   		getFW().setView(action="admin:product.detailbrand");
+	   		rc.edit = true;
+		}
+	}
+	
+	public void function deletebrand(required struct rc) {
+		
+		var brand = getBrandService().getBrand(rc.brandID);
+		
+		var deleteOK = getBrandService().deleteBrand(brand);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.brand.delete_success");
+		} else {
+			rc.message = rbKey("admin.brand.delete_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
+	}
+	
+	public void function listOptionGroups(required struct rc) {
+        param name="rc.orderBy" default="sortOrder|ASC";
+        
+        rc.optionGroupSmartList = getOptionService().getOptionGroupSmartList(data=arguments.rc);
+        
+    }
+    
+    public void function detailOptionGroup(required struct rc) {
+    	param name="rc.optionGroupID" default="";
+    	param name="rc.edit" default="false";
+    	
+    	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+    	
+    	if(isNull(rc.optionGroup)) {
+    		getFW().redirect(action="admin:option.listOptionGroups");
+    	}
+    }
+    
+    public void function createOptionGroup(required struct rc) {
+    	editOptionGroup(rc);
+	}
+    
+    public void function editOptionGroup(required struct rc) {
+    	param name="rc.optionGroupID" default="";
+    	param name="rc.optionID" default="";
+    	
+    	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID, true);
+    	rc.option = getOptionService().getOption(rc.optionID, true);
+    	
+    	rc.edit = true;
+    	getFW().setView("admin:product.detailoptiongroup"); 
+    }
+    
+    public void function saveOptionGroup(required struct rc) {
+		editOptionGroup(rc);
+		
+		rc.optionGroup = getOptionService().saveOptionGroup(rc.optionGroup, rc);
+		
+		if(!rc.optionGroup.hasErrors()) {
+			rc.message="admin.product.saveoptiongroup_success";
+			if(rc.populateSubProperties) {
+				getFW().redirect(action="admin:option.editOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
+			} else {
+				getFW().redirect(action="admin:option.listOptionGroups",preserve="message");
+			}
+		} else {
+			// If one of the sub-options had the error, then find out which one and populate it
+			if(rc.optionGroup.hasError("options")) {
+				for(var i=1; i<=arrayLen(rc.optionGroup.getOptions()); i++) {
+					if(rc.optionGroup.getOptions()[i].hasErrors()) {
+						rc.option = rc.optionGroup.getOptions()[i];
+					}
+				}
+			}
+			rc.edit = true;
+			rc.itemTitle = rc.OptionGroup.isNew() ? rc.$.Slatwall.rbKey("admin.option.createOptionGroup") : rc.$.Slatwall.rbKey("admin.option.editOptionGroup") & ": #rc.optionGroup.getOptionGroupName()#";
+			getFW().setView(action="admin:product.detailoptiongroup");
+		}
+	}
+	public void function deleteOptionGroup(required struct rc) {
+		param name="rc.optionGroupID" default="";
+		
+		var optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
+		
+		var deleteOK = getOptionService().deleteOptionGroup(optionGroup);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.product.deleteoptiongroup_success");
+		} else {
+			rc.message = rbKey("admin.optionGroup.deleteoptiongroup_failure");
+		}
+		
+		getFW().redirect(action="admin:product.listOptionGroups", preserve="message");
+	}
+	
+	public void function deleteOption(required struct rc) {
+		
+		var option = getOptionService().getOption(rc.optionid);
+		var optionGroupID = option.getOptionGroup().getOptionGroupID();
+		var deleteOK = getOptionService().deleteOption(option);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.option.delete_success");
+		} else {
+			rc.message = rbKey("admin.option.delete_failure");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:product.editOptionGroup", querystring="optiongroupid=#optionGroupID#",preserve="message,messagetype");
+	}
+	
+	public void function saveOptionGroupSort(required struct rc) {
+		param name="rc.optionGroupIDs" default="";
+		
+		getOptionService().saveOptionGroupSort(rc.optionGroupIDs);
+		getFW().redirect("admin:product.listoptiongroups");
+	}
+	
+	public void function saveOptionSort(required struct rc) {
+		param name="rc.optionIDs" default="";
+		
+		getOptionService().saveOptionSort(rc.optionIDs);
+		getFW().redirect("admin:product.listoptiongroups");
 	}
 
 	public void function searchProductsByType(required struct rc) {

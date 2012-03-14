@@ -45,7 +45,7 @@ Notes:
 
 <cfoutput>
 <div class="row-fluid">
-	<div class="span4">
+	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.neworders")#</h3>
 		<table class="table table-stripe table-bordered table-condensed">
 			<thead>
@@ -79,7 +79,7 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:order.listorders" class="btn btn-mini" />
 		</div>
 	</div>
-	<div class="span4">
+	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductupdates")#</h3>
 		<table class="table table-stripe table-bordered table-condensed">
 			<thead>
@@ -96,10 +96,11 @@ Notes:
 						<td><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 						<td></td>
-						<td class="administration">
-							<ul class="one">
-							  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
-							</ul>     						
+						<td>
+							<div class="btn-group">
+								<cf_SlatwallActionCaller action="admin:product.editproduct" querystring="productID=#local.product.getProductID()#" icon="edit" iconOnly="true" class="btn btn-mini">
+								<cf_SlatwallActionCaller action="admin:product.deleteproduct" querystring="productID=#local.product.getProductID()#" icon="remove" iconOnly="true" class="btn btn-mini">
+							</div>     						
 						</td>
 					</tr>
 				</cfloop>
@@ -110,60 +111,72 @@ Notes:
 			<cf_SlatwallActionCaller action="admin:product.createproduct" class="btn btn-mini" />
 		</div>
 	</div>
-	<div class="span4">
+</div>
+<br />
+<br />
+<div class="row-fluid">
+	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductreviews")#</h3>
 		<table class="table table-stripe table-bordered table-condensed">
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewerName")#</th>
-				<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewTitle")#</th>
-				<th class="administration">&nbsp;</th>
-			</tr>	
-			<cfloop array="#rc.productReviewSmartList.getPageRecords()#" index="local.productReview">
+			<thead>
 				<tr>
-					<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
-					<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
-					<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
-					<td>
-						<ul class="btn-group">
-						  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
-						</ul>     						
-					</td>
+					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewerName")#</th>
+					<th>#rc.$.Slatwall.rbKey("entity.productReview.reviewTitle")#</th>
+					<th class="administration">&nbsp;</th>
 				</tr>
-			</cfloop>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.productReviewSmartList.getPageRecords()#" index="local.productReview">
+					<tr>
+						<td><a href="#buildURL(action='admin:brand.detail', querystring='brandID=#local.Product.getBrand().getBrandID()#')#">#local.Product.getBrand().getBrandName()#</a></td>
+						<td class="varWidth"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
+						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
+						<td>
+							<ul class="btn-group">
+							  <cf_SlatwallActionCaller action="admin:product.detail" querystring="productID=#local.product.getProductID()#" class="detail" type="list">
+							</ul>     						
+						</td>
+					</tr>
+				</cfloop>
+			</tbody>
 		</table>
 		<div class="btn-group">
 			<cf_SlatwallActionCaller action="admin:product.listproductreviews" class="btn btn-mini" />
 		</div>
 	</div>
-</div>
-<br />
-<br />
-<div class="row-fluid">
-	<div class="span4">
+	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendorupdates")#</h3>
 		<table class="table table-stripe table-bordered table-condensed">
-			<tr>
-				<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
-				<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
-				<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
-				<th>&nbsp;</th>
-			</tr>
-			<cfloop array="#rc.vendorSmartList.getPageRecords()#" index="local.vendor">
+			<thead>
 				<tr>
-					<td><cf_SlatwallActionCaller action="admin:vendor.detailvendor" querystring="vendorID=#local.vendor.getVendorID()#" text="#local.vendor.getVendorName()#" /></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
+					<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
+					<th>&nbsp;</th>
 				</tr>
-			</cfloop>
+			</thead>
+			<tbody>
+				<cfloop array="#rc.vendorSmartList.getPageRecords()#" index="local.vendor">
+					<tr>
+						<td><cf_SlatwallActionCaller action="admin:vendor.detailvendor" querystring="vendorID=#local.vendor.getVendorID()#" text="#local.vendor.getVendorName()#" /></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</cfloop>
+			</tbody>
 		</table>
 		<div class="btn-group">
 			<cf_SlatwallActionCaller action="admin:vendor.listvendors" class="btn btn-mini" />
 			<cf_SlatwallActionCaller action="admin:vendor.createvendor" class="btn btn-mini" />
 		</div>
 	</div>
-	<div class="span4">
+</div>
+<br />
+<br />
+<div class="row-fluid">
+	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendororderupdates")#</h3>
 		<table class="table table-stripe table-bordered table-condensed">
 			<tr>

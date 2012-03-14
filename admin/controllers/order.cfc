@@ -43,16 +43,11 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="paymentService" type="any";
 	property name="LocationService" type="any";
 	
-	public void function before(required struct rc) {
-		param name="rc.orderID" default="";
-		param name="rc.keyword" default="";
-	}
-	
 	public void function default(required struct rc) {
-		getFW().redirect("admin:order.list");
+		getFW().redirect("admin:order.listorders");
 	}
 
-    public void function list(required struct rc) {
+    public void function listorders(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
 		param name="rc.statusCode" default="ostNew,ostProcessing";
 		param name="rc.orderDateStart" default="";
@@ -65,7 +60,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.orderStatusOptions = getOrderService().getOrderStatusOptions();
     }    
 	
-	public void function detail(required struct rc) {
+	public void function detailorder(required struct rc) {
 		rc.order = getOrderService().getOrder(rc.orderID);
 		rc.shippingServices = getService("settingService").getShippingServices();
 		if(!isNull(rc.order) and !rc.order.isNew()) {

@@ -36,6 +36,8 @@
 Notes:
 
 --->
+<cfparam name="rc.messages" type="array" default="#arrayNew(1)#" />
+
 <cfoutput>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,7 +61,13 @@ Notes:
 			</div>
 		</div>
 		<div class="container-fluid">
-			<div class="row-fluid" style="margin-top:40px;">
+			<div class="row-fluid" style="margin-top:60px;">
+				<cfloop array="#rc.messages#" index="local.message">
+					<div class="alert alert-#local.message.messageType#">
+						<a class="close" data-dismiss="alert">x</a>
+						#local.message.message#
+					</div>
+				</cfloop>
 				#body#
 			</div>
 		</div>
@@ -76,7 +84,7 @@ Notes:
 						<cf_SlatwallActionCaller action="admin:order" type="list" icon="inbox icon-white">
 						<cf_SlatwallActionCaller action="admin:account" type="list" icon="user icon-white">
 						<cf_SlatwallActionCaller action="admin:vendor" type="list" icon="list-alt icon-white">
-						<cf_SlatwallActionCaller action="admin:inventory" type="list" icon="barcode icon-white">
+						<cf_SlatwallActionCaller action="admin:warehouse" type="list" icon="barcode icon-white">
 						<cf_SlatwallActionCaller action="admin:integration" type="list" icon="random icon-white">
 						<cf_SlatwallActionCaller action="admin:report" type="list" icon="th-list icon-white">
 						<cf_SlatwallActionCaller action="admin:setting" type="list" icon="user icon-white">

@@ -41,6 +41,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	property name="fw" type="any";
 	property name="integrationService" type="any";
 	
+	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
 		
@@ -51,16 +52,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		
 		// If user is not logged in redirect to front end otherwise If the user does not have access to this, then display a page that shows "No Access"
 		if (!structKeyExists(session, "mura") || !len(rc.$.currentUser().getMemberships())) {
-			/*
-			var loginURL = rc.$.createHREF(filename=rc.$.siteConfig().getLoginURL());
-			if(find("?",loginURL)) {
-				loginURL &= "&";	
-			} else {
-				loginURL &= "?";
-			}
-			loginURL &= "returnURL=" & URLEncodedFormat(getFW().buildURL(action=rc.slatAction, queryString=cgi.query_string));
-			location(url=loginURL, addtoken=false);
-			*/
 			if(left(rc.$.siteConfig().getLoginURL(), 1) eq "/") {
 				location(url=rc.$.siteConfig().getLoginURL(), addtoken=false);
 			} else {
@@ -70,22 +61,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().setView("admin:main.noaccess");
 		}
 		
-		if( listFind("admin,frontend",getFW().getSubsystem(rc.slatAction))) {
-			// Set default section title and default item title 
-			rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#_title");
-			if(right(rc.sectionTitle, 8) == "_missing") {
-				rc.sectionTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#");
-			}
-			rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#_title");
-			if(right(rc.itemTitle, 8) == "_missing") {
-				rc.itemTitle = rc.$.Slatwall.rbKey("#request.subsystem#.#request.section#.#request.item#");	
-			}	
-		} else {
-			rc.sectionTitle = "Integration";
-			rc.itemTitle = getIntegrationService().getIntegrationByIntegrationPackage(getFW().getSubsystem(rc.slatAction)).getIntegrationName();
-		}
-		
-		
-		
 	}
+
 }
