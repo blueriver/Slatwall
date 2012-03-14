@@ -807,7 +807,13 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// @hint Private helper function for returning the Validate This Facade Object
 	private any function getCFStatic() {
-		return getPluginConfig().getApplication().getValue('cfStatic');
+		if(!structKeyExists(application.slatwall, "cfstatic")) {
+			application.slatwall.cfstatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
+				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
+				staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
+				minifyMode = 'package');
+		}
+		return application.slatwall.cfstatic;
 	}
 	
 	// @hint Private helper function for returning a new API key for a specific resource for this session

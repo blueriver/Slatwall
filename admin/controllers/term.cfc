@@ -54,7 +54,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.term = getTermService().getTerm(rc.termID,true);	
 	}
 
-
     public void function create(required struct rc) {
 		edit(rc);
     }
@@ -65,7 +64,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.edit = true;
 	}
 	
-	 
     public void function list(required struct rc) {	
 		rc.terms = getTermService().listTerm();
     }

@@ -41,12 +41,12 @@ Notes:
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>#rc.$.slatwall.rbKey(replace(rc.slatAction,":",".","all"))# &##124; Slatwall</title>
+		<title>#$.slatwall.rbKey(replace(rc.slatAction,":",".","all"))# &##124; Slatwall</title>
 		
 		<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/assets/images/favicon.png" type="image/png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href="#$.slatwall.getSlatwallRootPath()#/org/bootstrap/css/bootstrap.css" rel="stylesheet">
+		#$.slatwall.getCFStatic().renderIncludes("css")#
 	</head>
 	<body>
 		<div class="navbar navbar-fixed-top">
@@ -54,6 +54,13 @@ Notes:
 				<div class="container-fluid">
 					<ul class="nav">
 						<a href="#buildURL(action='admin:main.default')#" class="brand"><img src="#$.slatwall.getSlatwallRootPath()#/assets/images/admin.logo.png" title="Slatwall" /></a>
+						<li class="dropdown">
+							<a href="##" class="dropdown-toggle"	data-toggle="dropdown">Reload<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="#$.slatwall.getSlatwallRootPath()#/?reload=true" />Slatwall</a></li>
+								<li><a href="/admin/index.cfm?appreload&reload=appreload" />Mura</a></li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -85,8 +92,9 @@ Notes:
 				</div>
 			</div>
 		</div>
-		<script src="#$.slatwall.getSlatwallRootPath()#/staticAssets/js/tools/jquery/jquery-1.7.1.js"></script>
-    	<script src="#$.slatwall.getSlatwallRootPath()#/org/bootstrap/js/bootstrap.js"></script>
+		#$.slatwall.getCFStatic().renderIncludes("js")#
+		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
+		<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
 	</body>
 </html>
 </cfoutput>

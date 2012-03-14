@@ -135,21 +135,6 @@ component extends="org.fw1.framework" output="false" {
 					
 					//========================= END: Coldsping Setup =========================
 					
-					//========================= CFStatic Setup =========================
-					
-					// Create The cfStatic object (Can set to minifyMode = 'none' or 'package' to control minification).
-					var cfStatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
-						staticDirectory = expandPath( '/plugins/Slatwall/staticAssets/' ),
-						staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/staticAssets/",
-						minifyMode = 'none',
-						checkForUpdates = true
-					);
-					
-					// Place the validation facade object in the plugin config application scope
-					getPluginConfig().getApplication().setValue("cfStatic", cfStatic);
-					
-					//========================= END: CFStatic Setup =========================
-					
 					//========================= ValidateThis Setup =========================
 					
 					// Setup the ValidateThis Framework
