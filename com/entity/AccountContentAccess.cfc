@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     Slatwall - An e-commerce plugin for Mura CMS
     Copyright (C) 2011 ten24, LLC
@@ -36,31 +36,22 @@
 Notes:
 
 */
-component displayname="Content" entityname="SlatwallContent" table="SlatwallContent" persistent="true" accessors="true" extends="BaseEntity" {
+component displayname="Account Content Access" entityname="SlatwallAccountContentAccess" table="SlatwallAccountContentAccess" persistent="true" accessors="true" extends="BaseEntity" {
 	
 	// Persistent Properties
-	property name="contentID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	property name="title" ormtype="string";
-	property name="cmsContentID" ormtype="string";
-	property name="cmsContentIDPath" ormtype="string";
-	property name="cmsSiteID" ormtype="string";
-	property name="allowPurchaseFlag" ormtype="boolean";
-	property name="restrictAccessFlag" ormtype="boolean";
-	property name="templateFlag" ormtype="boolean";
-	property name="productListingFlag" ormtype="boolean";
-	property name="defaultProductsPerPage" ormtype="integer";
-	property name="showProductInSubPagesFlag" ormtype="boolean";
-	property name="disableProductAssignmentFlag" ormtype="boolean";
+	property name="accountContentAccessID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	
-	// Related Object Properties (many-to-one)
+	// Related Object Properties (Many-to-One)
+	property name="orderItem" cfc="OrderItem" fieldtype="many-to-one" fkcolumn="orderItemID";
+	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
-	// Related Object Properties (one-to-many)
+	// Related Object Properties (One-to-Many)
 	
-	// Related Object Properties (many-to-many)
-	property name="skus" singularname="sku" cfc="Sku" type="array" fieldtype="many-to-many" linktable="SlatwallSkuAccessContent" fkcolumn="contentID" inversejoincolumn="skuID" inverse="true";
+	// Related Object Properties (Many-to-Many)
+	property name="accessContents" singularname="accessContent" cfc="Content" type="array" fieldtype="many-to-many" linktable="AccountContentAccessContent" fkcolumn="accountContentAccessID" inversejoincolumn="contentID";
 	
-	// Remote properties
-	property name="remoteID" ormtype="string" hint="Only used when integrated with a remote system";
+	// Remote Properties
+	property name="remoteID" ormtype="string";
 	
 	// Audit Properties
 	property name="createdDateTime" ormtype="timestamp";
@@ -71,7 +62,6 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 	// Non-Persistent Properties
 
 
-
 	
 	// ============ START: Non-Persistent Property Methods =================
 	
@@ -79,13 +69,22 @@ component displayname="Content" entityname="SlatwallContent" table="SlatwallCont
 		
 	// ============= START: Bidirectional Helper Methods ===================
 	
-	// products (many-to-many)
-	public void function addProduct(required any product) {
-	   arguments.product.addContent(this);
-	}
-	
-	public void function removeProduct(required any product) {
-	   arguments.product.removeContent(this);
+	// Account (many-to-one)    
+	public void function setAccount(required any account) {    
+		variables.account = arguments.account;    
+		if(isNew() or !arguments.account.hasAccountContentAccess( this )) {    
+			arrayAppend(arguments.account.getAccountContentAccesses(), this);    
+		}    
+	}    
+	public void function removeAccount(any account) {    
+		if(!structKeyExists(arguments, "account")) {    
+			arguments.account = variables.account;    
+		}    
+		var index = arrayFind(arguments.account.getAccountContentAccesses(), this);    
+		if(index > 0) {    
+			arrayDeleteAt(arguments.account.getAccountContentAccesses(), index);    
+		}    
+		structDelete(variables, "account");    
 	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
