@@ -53,6 +53,7 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 	
 	// Related Object Properties (one-to-many)
 	property name="accountAddresses" singularname="accountAddress" fieldType="one-to-many" type="array" fkColumn="accountID" cfc="AccountAddress" inverse="true" cascade="all-delete-orphan";
+	property name="accountContentAccesses" singularname="accountContentAccess" cfc="AccountContentAccess" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan";
 	property name="accountEmailAddresses" singularname="accountEmailAddress" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountEmailAddress" cascade="all-delete-orphan" inverse="true";
 	property name="accountPaymentMethods" singularname="accountPaymentMethod" cfc="AccountPaymentMethod" type="array" fieldtype="one-to-many" fkcolumn="accountID" inverse="true" cascade="all-delete-orphan" orderby="paymentMethodType" ;
 	property name="accountPhoneNumbers" singularname="accountPhoneNumber" type="array" fieldtype="one-to-many" fkcolumn="accountID" cfc="AccountPhoneNumber" cascade="all-delete-orphan" inverse="true";
@@ -206,6 +207,14 @@ component displayname="Account" entityname="SlatwallAccount" table="SlatwallAcco
 		arguments.accountAddress.removeAccount( this );
 	}
 	
+	// Account Content Accesses (one-to-many)
+	public void function addAccountContentAccess(required any accountContentAccess) {
+		arguments.accountContentAccess.setAccount( this );
+	}
+	public void function removeAccountContentAccess(required any accountContentAccess) {
+		arguments.accountContentAccess.removeAccount( this );
+	}
+		
 	// Account Email Addresses (one-to-many)
 	public void function addAccountEmailAddress(required any accountEmailAddress) {    
 		arguments.accountEmailAddress.setAccount( this );    
