@@ -36,31 +36,6 @@
 Notes:
 
 --->
-<cfparam name="attributes.smartList" type="any" />
-<cfparam name="attributes.showValue" default="" />
-<cfparam name="attributes.showOptions" default="10,25,50,100,250,1000,ALL" />
-
-<cfif attributes.showValue eq "">
-	<cfset attributes.showValue = attributes.smartList.getPageRecordsShow() />
-</cfif>
-
 <cfif thisTag.executionMode is "start">
-	<cfoutput>
-		<div class="pagination">
-			<cfif attributes.smartList.getTotalPages() gt 1>
-				<ul>
-					<cfif attributes.smartList.getCurrentPage() gt 1>
-						<li><a href="#attributes.smartList.buildURL('P:Current=#attributes.smartList.getCurrentPage() - 1#')#">Prev</a></li>
-					</cfif>
-					<cfloop from="1" to="#attributes.smartList.getTotalPages()#" step="1" index="i">
-						<cfset currentPage = attributes.smartList.getCurrentPage() />
-						<li <cfif currentPage eq i>class="active"</cfif>><a href="#attributes.smartList.buildURL('P:Current=#i#')#">#i#</a></li>
-					</cfloop>
-					<cfif attributes.smartList.getCurrentPage() lt attributes.smartList.getTotalPages()>
-						<li><a href="#attributes.smartList.buildURL('P:Current=#attributes.smartList.getCurrentPage() + 1#')#">Next</a></li>
-					</cfif>
-				</ul>
-			</cfif>
-		</div>
-	</cfoutput>
+	<cfassociate basetag="cf_SlatwallListingDisplay" datacollection="columns">
 </cfif>

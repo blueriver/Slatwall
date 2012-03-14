@@ -42,6 +42,13 @@ Notes:
 	
 <cf_SlatwallActionBar type="listing" object="#rc.brandSmartList#" rc="#rc#" />
 
+<cf_SlatwallListingDisplay smartList="#rc.brandSmartList#" rc="#rc#">
+	<cf_SlatwallListingColumn primary="true" propertyName="brandName" />
+	<cf_SlatwallListingColumn propertyName="brandWebsite" />
+</cf_SlatwallListingDisplay>
+
+
+<!---
 <cfif rc.brandSmartList.getRecordsCount()>
 	<table id="ProductBrands" class="table table-striped table-bordered">
 		<thead>
@@ -85,8 +92,10 @@ Notes:
 	</table>
 	<cf_SlatwallSmartListPager smartList="#rc.brandSmartList#" />
 <cfelse>
-	<em>#rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#</em>
+	<em>#rc.$.Slatwall.rbKey("admin.brand.listbrand.norecords")#</em>
 </cfif>
+
+--->
 
 
 </cfoutput>
