@@ -811,7 +811,9 @@ component displayname="Base Object" accessors="true" output="false" {
 			application.slatwall.cfstatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
 				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
 				staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
-				minifyMode = 'package');
+				minifyMode = 'package',
+				checkforupdates = false
+				);
 		}
 		return application.slatwall.cfstatic;
 	}

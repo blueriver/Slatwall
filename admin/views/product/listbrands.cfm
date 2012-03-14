@@ -36,35 +36,88 @@
 Notes:
 
 --->
-<cfparam name="rc.brands" type="any" />
+<cfparam name="rc.brandSmartList" type="any" />
 
 <cfoutput>
-	<ul id="navTask">
-    	<cf_SlatwallActionCaller action="admin:brand.create" type="list">
-	</ul>
-<div class="svoadminbrandlist">
-<cfif arrayLen(rc.brands) gt 0>
-	<table id="ProductBrands" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.brand.brandName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.brand.brandWebsite")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.brands#" index="Local.Brand">
-			<tr>
-				<td class="varWidth">#local.Brand.getBrandName()#</td>
-				<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
-				<td class="administration">
-					<ul class="three">
-						<cf_SlatwallActionCaller action="admin:brand.edit" querystring="brandID=#local.brand.getBrandID()#" class="edit" type="list">            
-						<cf_SlatwallActionCaller action="admin:brand.detail" querystring="brandID=#local.brand.getBrandID()#" class="detail" type="list">
-					</ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#</em>
-</cfif>
+
+<div class="actionnav well well-small">
+	<div class="row-fluid">
+		<div class="span4"><h1>#$.slatwall.rbKey(replace(rc.slatAction,':','.','all'))#</h1></div>
+		<div class="span8">
+			<div class="btn-toolbar">
+				<div class="btn-group">
+					<button class="btn dropdown-toggle" data-toggle="dropdown">#$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="">10</a></li>
+						<li><a href="">25</a></li>
+						<li><a href="">50</a></li>
+						<li><a href="">100</a></li>
+						<li><a href="">500</a></li>
+						<li><a href="">ALL</a></li>
+					</ul>
+				</div>
+				<div class="btn-group">
+					<button class="btn dropdown-toggle" data-toggle="dropdown">#$.slatwall.rbKey('define.exportlist')# <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<cf_SlatwallActionCaller action="admin:export.listfiltered" type="list">
+						<cf_SlatwallActionCaller action="admin:export.list" type="list">
+					</ul>
+				</div>
+				<div class="btn-group">
+					<cf_SlatwallActionCaller action="admin:product.createbrand" class="btn btn-primary">
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
+<cf_SlatwallMessageDisplay />
+
+<cfif rc.brandSmartList.getRecordsCount()>
+	<table id="ProductBrands" class="table table-striped table-bordered">
+		<thead>
+			<tr>
+				<th>
+					<div class="dropdown">
+						<a href="##" class="dropdown-toggle" data-toggle="dropdown">#rc.$.Slatwall.rbKey("entity.brand.brandName")# <span class="caret"></span> </a>
+						<ul class="dropdown-menu">
+							<li><a href="">Sort Ascending</a></li>
+							<li><a href="">Sort Decending</a></li>
+							<li class="divider"></li>
+						</ul>
+					</div>
+				</th>
+				<th>
+					<div class="dropdown">
+						<a href="##" class="dropdown-toggle" data-toggle="dropdown">#rc.$.Slatwall.rbKey("entity.brand.brandWebsite")# <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="">Sort Ascending</a></li>
+							<li><a href="">Sort Decending</a></li>
+							<li class="divider"></li>
+						</ul>
+					</div>
+				</th>
+				<th>
+					&nbsp;
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<cfloop array="#rc.brandSmartList.getPageRecords()#" index="Local.Brand">
+				<tr>
+					<td class="primary"><cf_SlatwallActionCaller action="admin:product.detailbrand" querystring="brandID=#local.brand.getBrandID()#" text="#local.Brand.getBrandName()#"></td>
+					<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
+					<td class="administration">
+						<cf_SlatwallActionCaller action="admin:product.editbrand" querystring="brandID=#local.brand.getBrandID()#" class="btn btn-mini" icon="edit">            
+					</td>
+				</tr>
+			</cfloop>
+		</tbody>
+	</table>
+	<cf_SlatwallSmartListPager smartList="#rc.brandSmartList#" />
+<cfelse>
+	<em>#rc.$.Slatwall.rbKey("admin.brand.nobrandsdefined")#</em>
+</cfif>
+
+
 </cfoutput>

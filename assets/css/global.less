@@ -4,17 +4,43 @@
  * 
  */
 
-.well-tight {
-	padding:8px, 0px;
-}
 .actionnav {
-	padding:0px;
 	h1 {
 		font-size:14px;
+		padding:5px;
+		margin:0px;
+	}
+	.btn-toolbar {
+		text-align:right;
+		* {
+			text-align:left;
+		}
 	}
 }
-.actionnav-fixed {
-	.actionnav;
-	poisiton:fiexd;
-	top:40px;
+
+.table {
+	th, td {
+		white-space:nowrap;
+		div.btn-group {
+			width:auto;
+			height:13px;
+		}
+	}
+	th.primary, td.primary {
+		width:100%;
+	}
+	th.wrap, td.wrap {
+		white-space:normal;
+	}
+	th {
+		div.dropdown {
+			a.dropdown-toggle {
+				padding:5px 5px 5px 0px;
+			}
+			a.dropdown-toggle:hover {
+				text-decoration:none;
+			}
+		}
+	}
+	
 }

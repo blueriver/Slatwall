@@ -81,26 +81,23 @@ Notes:
 	</div>
 	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductupdates")#</h3>
-		<table class="table table-stripe table-bordered table-condensed">
+		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
 					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
 					<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>
 					<th>#rc.$.Slatwall.rbKey("define.modifiedByAccount")#</th>
-					<th class="administration">&nbsp;</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				<cfloop array="#rc.productSmartList.getPageRecords()#" index="local.Product">
 					<tr>
-						<td><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
+						<td class="primary"><a href="#buildURL(action='admin:product.detail', querystring='productID=#local.Product.getProductID()#')#">#local.Product.getProductName()#</a></td>
 						<td>#DateFormat(local.product.getModifiedDateTime(), "MM/DD/YYYY")# - #TimeFormat(local.product.getModifiedDateTime(), "HH:MM:SS")#</td>
 						<td></td>
 						<td>
-							<div class="btn-group">
-								<cf_SlatwallActionCaller action="admin:product.editproduct" querystring="productID=#local.product.getProductID()#" icon="edit" iconOnly="true" class="btn btn-mini">
-								<cf_SlatwallActionCaller action="admin:product.deleteproduct" querystring="productID=#local.product.getProductID()#" icon="remove" iconOnly="true" class="btn btn-mini">
-							</div>     						
+							<cf_SlatwallActionCaller action="admin:product.editproduct" querystring="productID=#local.product.getProductID()#" icon="edit" iconOnly="true" class="btn btn-mini">
 						</td>
 					</tr>
 				</cfloop>
@@ -117,7 +114,7 @@ Notes:
 <div class="row-fluid">
 	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentproductreviews")#</h3>
-		<table class="table table-stripe table-bordered table-condensed">
+		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
 					<th>#rc.$.Slatwall.rbKey("entity.product.productName")#</th>
@@ -147,7 +144,7 @@ Notes:
 	</div>
 	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendorupdates")#</h3>
-		<table class="table table-stripe table-bordered table-condensed">
+		<table class="table table-striped table-bordered table-condensed">
 			<thead>
 				<tr>
 					<th>#rc.$.Slatwall.rbKey("entity.vendor.vendorName")#</th>
@@ -178,7 +175,7 @@ Notes:
 <div class="row-fluid">
 	<div class="span6">
 		<h3>#rc.$.Slatwall.rbKey("admin.main.dashboard.recentvendororderupdates")#</h3>
-		<table class="table table-stripe table-bordered table-condensed">
+		<table class="table table-striped table-bordered table-condensed">
 			<tr>
 				<th>#rc.$.Slatwall.rbKey("entity.vendorOrder.vendorOrderNumber")#</th>
 				<th>#rc.$.Slatwall.rbKey("define.modifiedDateTime")#</th>

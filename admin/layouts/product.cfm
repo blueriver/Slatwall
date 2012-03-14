@@ -36,16 +36,8 @@
 Notes:
 
 --->
-<cfparam name="rc.messages" type="array" default="#arrayNew(1)#" />
-
 <cfoutput>
 	<div class="span10">
-		<cfloop array="#rc.messages#" index="local.message">
-			<div class="alert alert-#local.message.messageType#">
-				<a class="close" data-dismiss="alert">x</a>
-				#local.message.message#
-			</div>
-		</cfloop>
 		#body#
 	</div>
 	<div class="span2">
@@ -61,8 +53,8 @@ Notes:
 				<cf_SlatwallActionCaller action="admin:product.listoptiongroups" type="list">
 				<cf_SlatwallActionCaller action="admin:product.createoptiongroup" type="list">
 				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:product.createbrand" type="list">
 				<cf_SlatwallActionCaller action="admin:product.listbrands" type="list">
+				<cf_SlatwallActionCaller action="admin:product.createbrand" type="list">
 			</ul>
 		</div>
 	</div>

@@ -61,6 +61,24 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			getFW().setView("admin:main.noaccess");
 		}
 		
+		// Check to see if any message keys were passed via the URL
+		if(structKeyExists(rc, "messageKeys")) {
+			var messageKeys = listToArray(rc.messageKeys);
+			for(var i=1; i<=arrayLen(messageKeys); i++) {
+				showMessageKey(messageKeys[i]);
+			}
+		}
+	}
+	
+	private void function showMessageKey(required any messageKey) {
+		showMessage(message=rbKey(arguments.messageKey), messageType=listLast(messageKey, "_"));
+	}
+	
+	private void function showMessage(string message="", string messageType="info") {
+		if(!structKeyExists(request.context, "messages")) {
+			request.context.messages = [];
+		}
+		arrayAppend(request.context.messages, arguments);
 	}
 
 }

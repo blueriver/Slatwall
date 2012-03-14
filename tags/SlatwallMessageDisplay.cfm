@@ -36,20 +36,15 @@
 Notes:
 
 --->
-<cfoutput>
-	<div class="span10">
-		#body#
-	</div>
-	<div class="span2">
-		<div class="well" style="padding:8px 0;">
-			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.warehouse')#</li>
-				<cf_SlatwallActionCaller action="admin:warehouse.liststockreceivers" type="list">
-				<cf_SlatwallActionCaller action="admin:warehouse.createstockreceiver" type="list">
-				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:warehouse.liststockadjustments" type="list">
-				<cf_SlatwallActionCaller action="admin:warehouse.createstockadjustment" type="list">
-			</ul>
-		</div>
-	</div>
-</cfoutput>
+<cfparam name="request.context.messages" default="#arrayNew(1)#" >
+
+<cfif thisTag.executionMode is "start">
+	<cfloop array="#request.context.messages#" index="message">
+		<cfoutput>
+			<div class="alert alert-#message.messageType#">
+				<a class="close" data-dismiss="alert">x</a>
+				#message.message#
+			</div>
+		</cfoutput>
+	</cfloop>
+</cfif>

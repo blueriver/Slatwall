@@ -36,16 +36,8 @@
 Notes:
 
 --->
-<cfparam name="rc.messages" type="array" default="#arrayNew(1)#" />
-
 <cfoutput>
 	<div class="span10">
-		<cfloop array="#rc.messages#" index="local.message">
-			<div class="alert alert-#local.message.messageType#">
-				<a class="close" data-dismiss="alert">x</a>
-				#local.message.message#
-			</div>
-		</cfloop>
 		#body#
 	</div>
 	<div class="span2">

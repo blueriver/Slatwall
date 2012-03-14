@@ -51,8 +51,6 @@ component extends="BaseController" output=false accessors=true {
 	property name="subscriptionService" type="any";
 	property name="utilityTagService" type="any";
 	property name="utilityORMService" type="any";
-		
-		
 	
 	public void function before(required struct rc) {
 		param name="rc.productID" default="";
@@ -313,20 +311,32 @@ component extends="BaseController" output=false accessors=true {
 	}
 	 
     public void function listbrands(required struct rc) {
-		rc.brands = getBrandService().listBrandOrderByBrandName();
+    	param name="rc.orderBy" default="brandName|ASC";
+    	
+		rc.brandSmartList = getBrandService().getBrandSmartList(data=rc);
     }
 
 	public void function savebrand(required struct rc) {
-	   detailbrand(arguments.rc);
+		param name="rc.brandID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.brand = getBrandService().getBrand(rc.brandID, true);
 	   
-	   rc.brand = getBrandService().saveBrand(rc.brand, rc);
 	   
-	   if(!rc.brand.hasErrors()) {
-	   		getFW().redirect(action="admin:product.detailbrand",querystring="message=admin.brand.save_success");
+		rc.brand = getBrandService().saveBrand(rc.brand, rc);
+		
+		if(!rc.brand.hasErrors()) {
+			rc.slatAction = "admin:product.detailbrand";
+			showMessageKey("admin.product.savebrand_success");
+			getFW().setView(action="admin:product.detailbrand");
 		} else {
-			rc.itemTitle = rc.brand.isNew() ? rc.$.Slatwall.rbKey("admin.brand.create") : rc.$.Slatwall.rbKey("admin.brand.edit") & ": #rc.brand.getBrandName()#";
-	   		getFW().setView(action="admin:product.detailbrand");
-	   		rc.edit = true;
+			if(rc.brand.isNew()) {
+				rc.slatAction = "admin:product.createbrand";
+			} else {
+				rc.slatAction = "admin:product.editbrand";	
+			}
+			getFW().setView(action="admin:product.detailbrand");
+			rc.edit = true;
 		}
 	}
 	
@@ -337,13 +347,10 @@ component extends="BaseController" output=false accessors=true {
 		var deleteOK = getBrandService().deleteBrand(brand);
 		
 		if( deleteOK ) {
-			rc.message = rbKey("admin.brand.delete_success");
+			getFW().redirect(action="admin:product.listbrands", querystring="messagekeys=admin.product.deletebrand_success");
 		} else {
-			rc.message = rbKey("admin.brand.delete_failure");
-			rc.messagetype="error";
+			getFW().redirect(action="admin:product.listbrands", querystring="messagekeys=admin.product.deletebrand_failure");
 		}
-		
-		getFW().redirect(action="admin:brand.list",preserve="message,messagetype");
 	}
 	
 	public void function listOptionGroups(required struct rc) {
