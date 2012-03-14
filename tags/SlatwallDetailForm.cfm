@@ -43,9 +43,11 @@ Notes:
 
 <cfif thisTag.executionMode is "start">
 	<cfif attributes.edit>
+		<cfoutput>
 		<form method="post" action="?update=1">
 			<input type="hidden" name="slatAction" value="#attributes.action#" />
-			<input type="hidden" name="#attributes.primaryKey#" value="#attributes.promaryID#" />
+			<input type="hidden" name="#attributes.primaryKey#" value="#attributes.primaryID#" />
+		</cfoutput>
 	</cfif>
 <cfelse>
 	<cfif attributes.edit>

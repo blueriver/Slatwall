@@ -81,8 +81,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		} else if (left(itemCoreName, 4) == "save") {
 			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
 			currentActionType = "save";
-		} else if (left(itemCoreName, 5) == "detail") {
-			itemCoreName = right(itemCoreName, len(itemCoreName)-5);
+		} else if (left(itemCoreName, 6) == "detail") {
+			itemCoreName = right(itemCoreName, len(itemCoreName)-6);
 			currentActionType = "detail";
 		} else if (left(itemCoreName, 6) == "create") {
 			itemCoreName = right(itemCoreName, len(itemCoreName)-6);

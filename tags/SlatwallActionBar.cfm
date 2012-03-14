@@ -44,9 +44,10 @@ Notes:
 	<cfoutput>
 		<div class="actionnav well well-small">
 			<div class="row-fluid">
-				<div class="span4"><h1>#attributes.rc.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all'))#</h1></div>
+				<div class="span4"><h1>#attributes.rc.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all'))#<cfif attributes.type eq "detail" and not attributes.object.isNew()> - #attributes.object.getSimpleRepresentation()#</cfif></h1></div>
 				<div class="span8">
 					<div class="btn-toolbar">
+						
 						<cfif attributes.type eq "listing" >
 							<div class="btn-group">
 								<button class="btn dropdown-toggle" data-toggle="dropdown">#attributes.rc.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
@@ -75,7 +76,7 @@ Notes:
 	<cfoutput>
 						<cfif attributes.type eq "detail">
 							<div class="btn-group">
-								<cf_SlatwallActionCaller action="#attributes.rc.listAction#" class="btn">
+								<cf_SlatwallActionCaller action="#attributes.rc.listAction#" text="#attributes.rc.$.Slatwall.rbKey('define.backtolist')#" class="btn">
 							</div>
 							<div class="btn-group">
 								<cfif attributes.rc.edit>
@@ -88,6 +89,7 @@ Notes:
 								</cfif>
 							</div>
 						</cfif>
+						
 					</div>
 				</div>
 			</div>
