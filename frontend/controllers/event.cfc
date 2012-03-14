@@ -44,8 +44,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	property name="accountService" type="any";
 	property name="sessionService" type="any";
 	property name="requestCacheService" type="any";
-	property name="utilityFormService" type="any";
-	
 	
 	// Mura Service Injection
 	property name="contentManager" type="any";
@@ -163,13 +161,11 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	public void function onAfterContentSave(required any rc) {
-		getUtilityFormService().buildFormCollections(rc);
-		var slatwallData = rc.slatwall;
 		// loop through all the struct key and see if any value is set
 		var saveAsSlatwallPage = false;
-		for(var key in slatwallData) {
+		for(var key in rc.slatwallData) {
 			// if any flag is set to 1, save this content in slatwall 
-			if(lcase(key).endsWith("flag") && slatwallData[key] == 1) {
+			if(lcase(key).endsWith("flag") && rc.slatwallData[key] == 1) {
 				saveAsSlatwallPage = true;
 				break;
 			}
@@ -182,7 +178,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		if(slatwallData.allowPurchaseFlag) {
 			saveSlatwallProduct(rc);
 		} else {
-			deleteSlatwallProduct(rc);
+			deleteContentSkus(rc);
 		}
 		
 	}
@@ -193,52 +189,62 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 	}
 	
 	private void function saveSlatwallPage(required any rc) {
-		var slatwallData = rc.slatwall;
 		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
 		content.setCmsSiteID(rc.$.event('siteID'));
 		content.setCmsContentID(rc.$.content("contentID"));
 		content.setCmsContentIDPath(rc.$.content("path"));
 		content.setTitle(rc.$.content("title"));
-		content = getContentService().saveContent(content,slatwallData);
-		ormflush();
+		content = getContentService().saveContent(content,rc.slatwallData);
 	}
 	
 	private void function deleteSlatwallPage(required any rc) {
 		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
 		if(!content.isNew()) {
 			getContentService().deleteContent(content);
-			ormflush();
 		}
 	}
 	
 	private void function saveSlatwallProduct(required any rc) {
-		var slatwallData = rc.slatwall;
 		var content = $.event('contentBean');
-		var data = {};
-		data.remoteID = content.getContentID();
-		data.productCode = createUUID();
-		data.productName = content.getTitle();
-		data.activeFlag = 1;
-		data.publishedFlag = content.getApproved();
-		if(structKeyExists(slatwallData,"product")){
-			structAppend(data,slatwallData.product);
+		var slatwallContent = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		// if sku is selected, related sku to content
+		if(rc.slatwallData.product.sku.skuID != "") {
+			var sku = getService("SkuService").getSku(rc.slatwallData.product.sku.skuID, true);
+			if(!sku.hasAccessContent(slatwallContent)){
+				sku.addAccessContent(slatwallContent);
+			}
+		} else {
+			var product = getProductService().getProduct(rc.slatwallData.product.productID, true);
+			product.setProductName(content.getTitle());
+			product.setPublishedFlag(content.getApproved());
+			if(product.isNew()){
+				// if new product set up required properties
+				var productType = getProductService().getProductTypeBySystemCode("contentAccess");
+				product.setProductType(productType);
+				product.setProductCode(createUUID());
+				product.setActiveFlag(1);
+			} else {
+				// if exsiting product, create new sku
+				var sku = getService("SkuService").newSku();
+				sku.setProduct(product);
+				sku.setPrice(rc.slatwallData.product.price);
+			}
+			product = getProductService().saveProduct( product, rc.slatwallData.product );
+			var sku = product.getDefaultSku();
+			if(!sku.hasAccessContent(slatwallContent)){
+				sku.addAccessContent(slatwallContent);
+			}
+			getService("SkuService").saveSkus(sku);
 		}
-		var product = getService("ProductService").getProductByRemoteID(data.remoteID, true);
-		getService("ProductService").saveProduct( product, data );
-		ormflush();
+		
 	}
 	
-	private void function deleteSlatwallProduct(required any rc) {
-		var product = getService("ProductService").getProductByRemoteID(rc.$.content("contentID"), true);
-		if(!product.isNew()) {
-			if(product.isDeletable()) {
-				getService("ProductService").deleteProduct(product);
-			} else {
-				product.setActiveFlag(0);
-				getService("ProductService").saveProduct(product);
-			}
-			ormflush();
+	private void function deleteContentSkus(required any rc) {
+		var content = getContentService().getContentByCmsContentID(rc.$.content("contentID"),true);
+		while(arrayLen(content.getSkus())){
+			content.removeSku(content.getSkus()[1]);
 		}
+		getContentService().saveContent(content);
 	}
 
 }
