@@ -1,6 +1,5 @@
 <cfoutput>
 	<div class="span10">
-		<cfset rc.messages = [{messageType="success", message="The product that you saved was successful"}] />
 		<cfloop array="#rc.messages#" index="local.message">
 			<div class="alert alert-#local.message.messageType#">
 				<a class="close" data-dismiss="alert">x</a>
@@ -25,7 +24,6 @@
 				<cf_SlatwallActionCaller action="admin:product.createbrand" type="list">
 				<cf_SlatwallActionCaller action="admin:product.listbrands" type="list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.setting')#</li>
-				
 			</ul>
 		</div>
 	</div>
