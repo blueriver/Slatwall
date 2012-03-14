@@ -39,10 +39,7 @@ Notes:
 <cfparam name="rc.promotions" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:promotion.create" type="list">
-</ul>
-
+	
 <div class="svoadminpromotionlist">
 <cfif arrayLen(rc.promotions) gt 0>
 	<table id="Promotions" class="listing-grid stripe">
@@ -70,7 +67,7 @@ Notes:
 		</cfloop>
 	</table>
 <cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.promotion.nopromotionsdefined")#</em>
+<em>#rc.$.Slatwall.rbKey("admin.pricing.nopromotionsdefined")#</em>
 </cfif>
 </div>
 </cfoutput>

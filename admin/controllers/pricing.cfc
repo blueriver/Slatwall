@@ -44,7 +44,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="productService" type="any";
 	
 	public void function default(required struct rc) {
-		getFW().redirect("admin:pricing.listpromotion");
+		getFW().redirect("admin:pricing.listpromotions");
 	}
 	
 	public void function detailpromotion(required struct rc) {
@@ -76,7 +76,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
     	edit( rc );
     }
 
-	public void function edit(required struct rc) {
+	public void function editpromotion(required struct rc) {
 		param name="rc.promotionID" default="";
 		param name="rc.promotionRewardID" default="";
 		param name="rc.promotionQualifierID" default="";
@@ -89,7 +89,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		
 	}
 	 
-    public void function listpromotion(required struct rc) {
+    public void function listpromotions(required struct rc) {
 		rc.promotions = getPromotionService().listPromotion();
     }
 

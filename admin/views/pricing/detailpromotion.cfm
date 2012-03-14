@@ -63,16 +63,30 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="promotionName" edit="#rc.edit#" first="true">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="startDateTime" value="#dateFormat(rc.promotion.getStartDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getStartDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
 				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="endDateTime" value="#dateFormat(rc.promotion.getEndDateTime(),"MM/DD/YYYY")# #timeFormat(rc.promotion.getEndDateTime(),$.Slatwall.setting('advanced_timeFormat'))#" edit="#rc.edit#" class="dateTime">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumUseCount" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Promotion#" property="maximumAccountUseCount" edit="#rc.edit#">
 				
 				<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 					<ul>
 						<li><a href="##tabPromotionRewards" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewards')#</span></a></li>
+						<li><a href="##tabPromotionRewardExclusions" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionRewardExclusions')#</span></a></li>
+						<li><a href="##tabPromotionQualifiers" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionQualifiers')#</span></a></li>
+						<li><a href="##tabPromotionQualifierExclusions" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionQualifierExclusions')#</span></a></li>
 						<li><a href="##tabPromotionCodes" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabPromotionCodes')#</span></a></li>
 						<li><a href="##tabDescription" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabDescription')#</span></a></li>
 						<li><a href="##tabSummary" onclick="return false;"><span>#rc.$.Slatwall.rbKey('admin.promotion.detail.tabSummary')#</span></a></li>
 					</ul>
 					<div id="tabPromotionRewards">
 						#view("promotion/promotiontabs/promotionrewards")#
+					</div>
+					<div id="tabPromotionRewardExclusions">
+						#view("promotion/promotiontabs/promotionrewardexclusions")#
+					</div>
+					<div id="tabPromotionQualifiers">
+						#view("promotion/promotiontabs/promotionqualifiers")#
+					</div>
+					<div id="tabPromotionQualifierExclusions">
+						#view("promotion/promotiontabs/promotionqualifierexclusions")#
 					</div>
 					<div id="tabPromotionCodes">
 						#view("promotion/promotiontabs/promotioncodes")#

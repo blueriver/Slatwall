@@ -36,8 +36,6 @@
 Notes:
 
 --->
-<cfparam name="rc.messages" type="array" default="#arrayNew(1)#" />
-
 <cfoutput>
 <!DOCTYPE html>
 <html lang="en">
