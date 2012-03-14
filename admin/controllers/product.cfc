@@ -59,7 +59,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 	
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:product.listproducts");
+		getFW().redirect(action="admin:product.listproduct");
 	}
 
     public void function createProduct(required struct rc) {
@@ -78,7 +78,7 @@ component extends="BaseController" output=false accessors=true {
 				rc.itemTitle &= ": #rc.product.getProductName()#";
 			}
 		} else {
-			getFW().redirect("admin:product.listproducts");
+			getFW().redirect("admin:product.listproduct");
 		}
 		//rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
 		//rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
@@ -101,7 +101,7 @@ component extends="BaseController" output=false accessors=true {
 		param name="rc.image" default="#getProductService().newImage()#";
 	}
 
-	public void function listproducts(required struct rc) {
+	public void function listproduct(required struct rc) {
 		if(!structKeyExists(rc, "orderBy")) {
 			rc.orderBy = "productType_productTypeName|ASC,brand_brandName|ASC,productName|ASC";
 		}
@@ -181,7 +181,7 @@ component extends="BaseController" output=false accessors=true {
 			rc.messagetype="error";
 		}
 		
-		getFW().redirect(action="admin:product.list",preserve="message,messageType");
+		getFW().redirect(action="admin:product.listproduct",preserve="message,messageType");
 	}
 	
 	// SKU actions
@@ -238,11 +238,11 @@ component extends="BaseController" output=false accessors=true {
 		   	rc.itemTitle &= ": " & rc.productType.getProductTypeName();
 		   	getFW().setView("admin:product.detailproducttype");
 	   	} else {
-           	getFW().redirect("admin:product.listproducttypes");
+           	getFW().redirect("admin:product.listproducttype");
 		}
 	}
 	
-	public void function listProductTypes(required struct rc) {
+	public void function listProductType(required struct rc) {
        rc.productTypes = getProductService().getProductTypeTree();
 	}
 	
@@ -250,7 +250,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.productType = getProductService().getProductType(rc.productTypeID);
 		rc.attributeSets = getAttributeService().getAttributeSets(["astProduct","astProductCustomization"]);
 		if(isNull(rc.productType)) {
-			getFW().redirect("admin:product.listProductTypes");
+			getFW().redirect("admin:product.listProductType");
 		} else {
 			rc.itemTitle &= ": " & rc.productType.getProductTypeName();
 		}
@@ -266,7 +266,7 @@ component extends="BaseController" output=false accessors=true {
 		if(!rc.productType.hasErrors()) {
 			// no errors, redirect to list with success message
 			rc.message = "admin.product.saveproducttype_success";
-		  	getFW().redirect(action="admin:product.listproducttypes",preserve="message");
+		  	getFW().redirect(action="admin:product.listproducttype",preserve="message");
 		} else {
 			// errors, so show edit view again
 		  rc.edit = true;
@@ -287,7 +287,7 @@ component extends="BaseController" output=false accessors=true {
 			rc.messageType="error";
 		}
 		
-		getFW().redirect(action="admin:product.listproducttypes",preserve="message,messageType");
+		getFW().redirect(action="admin:product.listproducttype",preserve="message,messageType");
 	}
 
 
@@ -310,7 +310,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.edit = true;
 	}
 	 
-    public void function listbrands(required struct rc) {
+    public void function listbrand(required struct rc) {
     	param name="rc.orderBy" default="brandName|ASC";
     	
 		rc.brandSmartList = getBrandService().getBrandSmartList(data=rc);
@@ -321,7 +321,6 @@ component extends="BaseController" output=false accessors=true {
 		param name="rc.edit" default="false";
 		
 		rc.brand = getBrandService().getBrand(rc.brandID, true);
-	   
 	   
 		rc.brand = getBrandService().saveBrand(rc.brand, rc);
 		
@@ -347,13 +346,13 @@ component extends="BaseController" output=false accessors=true {
 		var deleteOK = getBrandService().deleteBrand(brand);
 		
 		if( deleteOK ) {
-			getFW().redirect(action="admin:product.listbrands", querystring="messagekeys=admin.product.deletebrand_success");
+			getFW().redirect(action="admin:product.listbrand", querystring="messagekeys=admin.product.deletebrand_success");
 		} else {
-			getFW().redirect(action="admin:product.listbrands", querystring="messagekeys=admin.product.deletebrand_failure");
+			getFW().redirect(action="admin:product.listbrand", querystring="messagekeys=admin.product.deletebrand_failure");
 		}
 	}
 	
-	public void function listOptionGroups(required struct rc) {
+	public void function listOptionGroup(required struct rc) {
         param name="rc.orderBy" default="sortOrder|ASC";
         
         rc.optionGroupSmartList = getOptionService().getOptionGroupSmartList(data=arguments.rc);
@@ -367,7 +366,7 @@ component extends="BaseController" output=false accessors=true {
     	rc.optionGroup = getOptionService().getOptionGroup(rc.optionGroupID);
     	
     	if(isNull(rc.optionGroup)) {
-    		getFW().redirect(action="admin:option.listOptionGroups");
+    		getFW().redirect(action="admin:option.listOptionGroup");
     	}
     }
     
@@ -396,7 +395,7 @@ component extends="BaseController" output=false accessors=true {
 			if(rc.populateSubProperties) {
 				getFW().redirect(action="admin:option.editOptionGroup",querystring="optiongroupid=#rc.optionGroup.getOptionGroupID()#",preserve="message");	
 			} else {
-				getFW().redirect(action="admin:option.listOptionGroups",preserve="message");
+				getFW().redirect(action="admin:option.listOptionGroup",preserve="message");
 			}
 		} else {
 			// If one of the sub-options had the error, then find out which one and populate it
@@ -425,7 +424,7 @@ component extends="BaseController" output=false accessors=true {
 			rc.message = rbKey("admin.optionGroup.deleteoptiongroup_failure");
 		}
 		
-		getFW().redirect(action="admin:product.listOptionGroups", preserve="message");
+		getFW().redirect(action="admin:product.listOptionGroup", preserve="message");
 	}
 	
 	public void function deleteOption(required struct rc) {
@@ -448,14 +447,14 @@ component extends="BaseController" output=false accessors=true {
 		param name="rc.optionGroupIDs" default="";
 		
 		getOptionService().saveOptionGroupSort(rc.optionGroupIDs);
-		getFW().redirect("admin:product.listoptiongroups");
+		getFW().redirect("admin:product.listoptiongroup");
 	}
 	
 	public void function saveOptionSort(required struct rc) {
 		param name="rc.optionIDs" default="";
 		
 		getOptionService().saveOptionSort(rc.optionIDs);
-		getFW().redirect("admin:product.listoptiongroups");
+		getFW().redirect("admin:product.listoptiongroup");
 	}
 
 	public void function searchProductsByType(required struct rc) {

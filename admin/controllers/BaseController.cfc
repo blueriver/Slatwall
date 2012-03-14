@@ -68,6 +68,39 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 				showMessageKey(messageKeys[i]);
 			}
 		}
+		
+		var itemCoreName = listLast(rc.slatAction, ".");
+		var currentActionType = "";
+		
+		if(left(itemCoreName, 4) == "list") {
+			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
+			currentActionType = "list";
+		} else if (left(itemCoreName, 4) == "edit") {
+			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
+			currentActionType = "edit";
+		} else if (left(itemCoreName, 4) == "save") {
+			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
+			currentActionType = "save";
+		} else if (left(itemCoreName, 5) == "detail") {
+			itemCoreName = right(itemCoreName, len(itemCoreName)-5);
+			currentActionType = "detail";
+		} else if (left(itemCoreName, 6) == "create") {
+			itemCoreName = right(itemCoreName, len(itemCoreName)-6);
+			currentActionType = "create";
+		}
+		
+		rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#itemCoreName#"; 
+		rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#itemCoreName#";
+		rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#itemCoreName#";		
+		rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#itemCoreName#";
+		rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#itemCoreName#";
+		rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#itemCoreName#";
+		
+		if(currentActionType eq "edit") {
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.detail#itemCoreName#";	
+		} else {
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#itemCoreName#";
+		}
 	}
 	
 	private void function showMessageKey(required any messageKey) {

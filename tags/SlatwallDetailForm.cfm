@@ -36,19 +36,19 @@
 Notes:
 
 --->
-<cfoutput>
-	<div class="span10">
-		#body#
-	</div>
-	<div class="span2">
-		<div class="well" style="padding:8px 0;">
-			<ul class="nav nav-list">
-				<li class="nav-header">#rc.$.slatwall.rbKey('admin.product')#</li>
-				<cf_SlatwallActionCaller action="admin:product.listproduct" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listproducttype" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listoptiongroup" type="list">
-				<cf_SlatwallActionCaller action="admin:product.listbrand" type="list">
-			</ul>
-		</div>
-	</div>
-</cfoutput>
+<cfparam name="attributes.action" type="string" />
+<cfparam name="attributes.primaryKey" type="string" />
+<cfparam name="attributes.primaryID" type="string" />
+<cfparam name="attributes.edit" type="boolean" default="false" />
+
+<cfif thisTag.executionMode is "start">
+	<cfif attributes.edit>
+		<form method="post" action="?update=1">
+			<input type="hidden" name="slatAction" value="#attributes.action#" />
+			<input type="hidden" name="#attributes.primaryKey#" value="#attributes.promaryID#" />
+	</cfif>
+<cfelse>
+	<cfif attributes.edit>
+		</form>
+	</cfif>
+</cfif>

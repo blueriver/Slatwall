@@ -273,5 +273,13 @@ component accessors="true" output="false" extends="BaseObject" {
 	public any function getValidateThis() {
 		return super.getValidateThis(argumentcollection=arguments);
 	}
+	
+	public any function buildURL() {
+		return super.buildURL(argumentcollection=arguments);
+	}
+	
+	public any function secureDisplay() {
+		return super.secureDisplay(argumentcollection=arguments);
+	}
 	// END: Public methods that expose some of the base objects private methods
 }
