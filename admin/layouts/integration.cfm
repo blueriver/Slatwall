@@ -44,7 +44,7 @@ Notes:
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.integration')#</li>
-				<cf_SlatwallActionCaller action="admin:product.listintegrations" type="list">
+				<cf_SlatwallActionCaller action="admin:product.listintegration" type="list">
 			</ul>
 		</div>
 	</div>

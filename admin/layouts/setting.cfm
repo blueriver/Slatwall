@@ -44,19 +44,18 @@ Notes:
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.setting')#</li>
-				<cf_SlatwallActionCaller action="admin:setting.detail" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.permissions" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.detailsetting" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.detailpermissions" type="list">
 				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethods" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listpaymentmethods" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listtaxcategories" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listaddresszones" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listlocations" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listroundingrules" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.listterms" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listfulfillmentmethod" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listpaymentmethod" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listtaxcategorie" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listaddresszone" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listlocation" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listroundingrule" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listterm" type="list">
 				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:setting.listattributesets" type="list">
-				<cf_SlatwallActionCaller action="admin:setting.createattributeset" type="list">
+				<cf_SlatwallActionCaller action="admin:setting.listattributeset" type="list">
 			</ul>
 		</div>
 	</div>

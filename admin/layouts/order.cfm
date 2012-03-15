@@ -44,9 +44,9 @@ Notes:
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.order')#</li>
-				<cf_SlatwallActionCaller action="admin:order.listorders" type="list">
-				<cf_SlatwallActionCaller action="admin:order.listorderfulfillments" type="list">
-				<cf_SlatwallActionCaller action="admin:order.listcarts" type="list">
+				<cf_SlatwallActionCaller action="admin:order.listorder" type="list">
+				<cf_SlatwallActionCaller action="admin:order.listorderfulfillment" type="list">
+				<cf_SlatwallActionCaller action="admin:order.listcart" type="list">
 			</ul>
 		</div>
 	</div>

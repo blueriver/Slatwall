@@ -44,8 +44,8 @@ Notes:
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.pricing')#</li>
-				<cf_SlatwallActionCaller action="admin:pricing.listpromotions" type="list">
-				<cf_SlatwallActionCaller action="admin:pricing.listpricegroups" type="list">
+				<cf_SlatwallActionCaller action="admin:pricing.listpromotion" type="list">
+				<cf_SlatwallActionCaller action="admin:pricing.listpricegroup" type="list">
 			</ul>
 		</div>
 	</div>

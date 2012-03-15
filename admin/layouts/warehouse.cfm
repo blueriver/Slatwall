@@ -44,11 +44,8 @@ Notes:
 		<div class="well" style="padding:8px 0;">
 			<ul class="nav nav-list">
 				<li class="nav-header">#rc.$.slatwall.rbKey('admin.warehouse')#</li>
-				<cf_SlatwallActionCaller action="admin:warehouse.liststockreceivers" type="list">
-				<cf_SlatwallActionCaller action="admin:warehouse.createstockreceiver" type="list">
-				<li class="divider"></li>
-				<cf_SlatwallActionCaller action="admin:warehouse.liststockadjustments" type="list">
-				<cf_SlatwallActionCaller action="admin:warehouse.createstockadjustment" type="list">
+				<cf_SlatwallActionCaller action="admin:warehouse.liststockreceiver" type="list">
+				<cf_SlatwallActionCaller action="admin:warehouse.liststockadjustment" type="list">
 			</ul>
 		</div>
 	</div>
