@@ -38,6 +38,7 @@ Notes:
 --->
 <cfparam name="attributes.smartList" type="any" />
 <cfparam name="attributes.rc" type="any" />
+<cfparam name="attributes.recordEditAction" type="string" default="" />
 
 <cfif thisTag.executionMode eq "end">
 	<cfoutput>
@@ -57,6 +58,9 @@ Notes:
 								</div>
 							</th>
 						</cfloop>
+						<cfif attributes.recordEditAction neq "">
+							<th>&nbsp;</th>
+						</cfif>
 					</tr>
 				</thead>
 				<tbody>
@@ -65,6 +69,11 @@ Notes:
 							<cfloop array="#thistag.columns#" index="column">
 								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( column.propertyIdentifier )#</td>
 							</cfloop>
+							<cfif attributes.recordEditAction neq "">
+								<td>
+									<cf_SlatwallActionCaller action="#attributes.recordEditAction#" queryString="#record.getPrimaryIDPropertyName()#=#record.getPrimaryIDValue()#" class="btn btn-mini" icon="edit" iconOnly="true" />
+								</td>
+							</cfif>
 						</tr>
 					</cfloop>
 				</tbody>
