@@ -110,10 +110,38 @@ Notes:
 	</dl>
 </cfoutput>
 
-
 <!--- remove this when slatwall scope is available in $ --->
 <cffunction name="getService" access="private">
 	<cfargument name="serviceName" /> 
 	<cfreturn application.slatwall.pluginconfig.getApplication().getValue("serviceFactory").getBean(serviceName) />
 </cffunction> 
 
+<cfoutput>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery('select[name="slatwallData.product.productID"]').change(function() {
+		
+		var postData = {
+			apiKey: '#getService("sessionService").getAPIKey("sku", "get")#',
+		};
+		jQuery.ajax({
+			type: 'get',
+			url: '/plugins/Slatwall/api/index.cfm/sku/smartlist/?F:product_productID='+jQuery('select[name="slatwallData.product.productID"]').val(),
+			data: postData,
+			dataType: "json",
+			success: function(r) {
+				jQuery('select[name="slatwallData.product.sku.skuID"]').html('');
+				jQuery('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
+				if(r.RECORDSCOUNT > 0){
+					jQuery.each(r.PAGERECORDS,function(index,value){
+						var option = '<option value="'+value.skuID+'">$'+value.price+' - '+value.skuCode+'</option>';
+						jQuery('select[name="slatwallData.product.sku.skuID"]').append(option);
+					});
+				}
+			}
+		});
+		
+	});
+});
+</script>
+</cfoutput>

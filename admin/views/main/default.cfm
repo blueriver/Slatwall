@@ -184,7 +184,7 @@ Notes:
 			</tr>
 			<cfloop array="#rc.vendorOrderSmartList.getPageRecords()#" index="local.vendorOrder">
 				<tr>
-					<td><cf_SlatwallActionCaller action="admin:vendor.detailvendororder" querystring="vendorOrderID=#local.vendor.getVendorOrderID()#" text="#local.vendor.getVendorOrderNumber()#" /></td>
+					<td><cf_SlatwallActionCaller action="admin:vendor.detailvendororder" querystring="vendorOrderID=#local.vendorOrder.getVendorOrderID()#" text="#local.vendorOrder.getVendorOrderNumber()#" /></td>
 					<td></td>
 					<td></td>
 					<td></td>
