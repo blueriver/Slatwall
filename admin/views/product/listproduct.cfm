@@ -36,10 +36,24 @@
 Notes:
 
 --->
-<cfparam name="rc.$" type="any" />
 <cfparam name="rc.productSmartList" type="any" />
 
 <cfoutput>
+	
+	<cf_SlatwallActionBar type="listing" object="#rc.productSmartList#" rc="#rc#" />
+	
+	<cf_SlatwallListingDisplay smartList="#rc.productSmartList#" rc="#rc#">
+		<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="productName" />
+		<cf_SlatwallListingColumn propertyIdentifier="productCode" />
+		<cf_SlatwallListingColumn propertyIdentifier="productType.productTypeName" />
+		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
+		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
+		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" />
+	</cf_SlatwallListingDisplay>
+
+</cfoutput>
+
+<!---
 <cfif rc.productSmartList.getRecordsCount()>
 	<table id="ProductList" class="listing-grid stripe">
 		<tr>
@@ -73,5 +87,4 @@ Notes:
 <cfelse>
 	<em>#rc.$.Slatwall.rbKey("admin.product.noProductsDefined")#</em>
 </cfif>
-</cfoutput>
-
+--->

@@ -43,8 +43,8 @@ Notes:
 <cf_SlatwallActionBar type="listing" object="#rc.brandSmartList#" rc="#rc#" />
 
 <cf_SlatwallListingDisplay smartList="#rc.brandSmartList#" rc="#rc#">
-	<cf_SlatwallListingColumn primary="true" propertyName="brandName" />
-	<cf_SlatwallListingColumn propertyName="brandWebsite" />
+	<cf_SlatwallListingColumn tdclass="true" propertyIdentifier="brandName" />
+	<cf_SlatwallListingColumn propertyIdentifier="brandWebsite" />
 </cf_SlatwallListingDisplay>
 
 

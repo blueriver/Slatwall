@@ -48,57 +48,24 @@ Notes:
 						<cfloop array="#thistag.columns#" index="column">
 							<th>
 								<div class="dropdown">
-									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.propertyName# <span class="caret"></span> </a>
+									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.propertyIdentifier# <span class="caret"></span> </a>
 									<ul class="dropdown-menu">
-										<li><a href="">Sort Ascending</a></li>
-										<li><a href="">Sort Decending</a></li>
+										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#">Sort Ascending</a></li>
+										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|DESC')#">Sort Decending</a></li>
 										<li class="divider"></li>
 									</ul>
 								</div>
 							</th>
 						</cfloop>
 					</tr>
-						<!---
-						<th>
-							<div class="dropdown">
-								<a href="##" class="dropdown-toggle" data-toggle="dropdown">#rc.$.Slatwall.rbKey("entity.brand.brandName")# <span class="caret"></span> </a>
-								<ul class="dropdown-menu">
-									<li><a href="">Sort Ascending</a></li>
-									<li><a href="">Sort Decending</a></li>
-									<li class="divider"></li>
-								</ul>
-							</div>
-						</th>
-						<th>
-							<div class="dropdown">
-								<a href="##" class="dropdown-toggle" data-toggle="dropdown">#rc.$.Slatwall.rbKey("entity.brand.brandWebsite")# <span class="caret"></span></a>
-								<ul class="dropdown-menu">
-									<li><a href="">Sort Ascending</a></li>
-									<li><a href="">Sort Decending</a></li>
-									<li class="divider"></li>
-								</ul>
-							</div>
-						</th>
-						--->
-						
-					
 				</thead>
 				<tbody>
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 						<tr>
 							<cfloop array="#thistag.columns#" index="column">
-								<td>#column.propertyName#</td>
+								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( column.propertyIdentifier )#</td>
 							</cfloop>
 						</tr>
-						<!---
-						<tr>
-							<td class="primary"><cf_SlatwallActionCaller action="admin:product.detailbrand" querystring="brandID=#local.brand.getBrandID()#" text="#local.Brand.getBrandName()#"></td>
-							<td><a href="#Local.Brand.getBrandWebsite()#" target="_blank">#local.Brand.getBrandWebsite()#</a></td>
-							<td class="administration">
-								<cf_SlatwallActionCaller action="admin:product.editbrand" querystring="brandID=#local.brand.getBrandID()#" class="btn btn-mini" icon="edit" iconOnly="true">            
-							</td>
-						</tr>
-						--->
 					</cfloop>
 				</tbody>
 			</table>

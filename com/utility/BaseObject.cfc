@@ -438,7 +438,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	public any function getValueByPropertyIdentifier(required string propertyIdentifier) {
 		var value = javaCast("null", "");
 		var arrayValue = arrayNew(1);
-		var pa = listToArray(propertyIdentifier, "._");
+		var pa = listToArray(arguments.propertyIdentifier, "._");
 		
 		for(var i=1; i<=arrayLen(pa); i++) {
 			try {
@@ -812,7 +812,7 @@ component displayname="Base Object" accessors="true" output="false" {
 				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
 				staticUrl = "#application.configBean.getContext()#/plugins/Slatwall/assets/",
 				minifyMode = 'package',
-				checkforupdates = false
+				checkforupdates = true
 				);
 		}
 		return application.slatwall.cfstatic;

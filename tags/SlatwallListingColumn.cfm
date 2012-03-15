@@ -37,5 +37,8 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "start">
+	<cfparam name="attributes.propertyIdentifier" type="string" />
+	<cfparam name="attributes.tdclass" type="string" default="" />
+	
 	<cfassociate basetag="cf_SlatwallListingDisplay" datacollection="columns">
 </cfif>
