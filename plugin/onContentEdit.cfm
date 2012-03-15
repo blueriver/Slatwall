@@ -118,30 +118,76 @@ Notes:
 
 <cfoutput>
 <script type="text/javascript">
-jQuery(document).ready(function(){
-	jQuery('select[name="slatwallData.product.productID"]').change(function() {
+var $ = jQuery;
+$(document).ready(function(){
+	
+	$('input[name="slatwallData.templateFlag"]').change(function(){
+		if($(this).val() == 1){
+			$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+		}
+	});
+	
+	$('input[name="slatwallData.productListingFlag"]').change(function(){
+		if($(this).val() == 1){
+			$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('.productListingFlagRelated').show();
+		} else {
+			$('input[name="slatwallData.showProductInSubPagesFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('input[name="slatwallData.disableProductAssignmentFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('input[name="slatwallData.defaultProductsPerPage"]').val('');
+			$('.productListingFlagRelated').hide();
+		}
+	});
+	
+	$('input[name="slatwallData.restrictAccessFlag"]').change(function(){
+		if($(this).val() == 1){
+			$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('.restrictAccessFlagRelated').show();
+		} else {
+			$('input[name="slatwallData.allowPurchaseFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
+			$('.restrictAccessFlagRelated').hide();
+		}
+	});
+	
+	$('input[name="slatwallData.allowPurchaseFlag"]').change(function(){
+		if($(this).val() == 1){
+			$('.allowPurchaseFlagRelated').show();
+		} else {
+			$('.allowPurchaseFlagRelated').hide();
+		}
+	});
+	
+	$('select[name="slatwallData.product.productID"]').change(function() {
 		
 		var postData = {
 			apiKey: '#getService("sessionService").getAPIKey("sku", "get")#',
 		};
-		jQuery.ajax({
+		$.ajax({
 			type: 'get',
-			url: '/plugins/Slatwall/api/index.cfm/sku/smartlist/?F:product_productID='+jQuery('select[name="slatwallData.product.productID"]').val(),
+			url: '/plugins/Slatwall/api/index.cfm/sku/smartlist/?F:product_productID='+$('select[name="slatwallData.product.productID"]').val(),
 			data: postData,
 			dataType: "json",
 			success: function(r) {
-				jQuery('select[name="slatwallData.product.sku.skuID"]').html('');
-				jQuery('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
+				$('select[name="slatwallData.product.sku.skuID"]').html('');
+				$('select[name="slatwallData.product.sku.skuID"]').append('<option value="">New Sku</option>');
 				if(r.RECORDSCOUNT > 0){
-					jQuery.each(r.PAGERECORDS,function(index,value){
+					$.each(r.PAGERECORDS,function(index,value){
 						var option = '<option value="'+value.skuID+'">$'+value.price+' - '+value.skuCode+'</option>';
-						jQuery('select[name="slatwallData.product.sku.skuID"]').append(option);
+						$('select[name="slatwallData.product.sku.skuID"]').append(option);
 					});
 				}
 			}
 		});
 		
 	});
+	
+	$('input[name="slatwallData.productListingFlag"]').trigger('change');
+	$('input[name="slatwallData.restrictAccessFlag"]').trigger('change');
+	$('input[name="slatwallData.allowPurchaseFlag"]').trigger('change');
+	
 });
 </script>
 </cfoutput>
