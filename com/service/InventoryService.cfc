@@ -94,7 +94,7 @@ component extends="BaseService" accessors="true" output="false" {
 		
 	}
 	
-	public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
+	public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID, string groupBy) {
 		return getDAO().getQOH(argumentCollection=arguments);
 	}
 	

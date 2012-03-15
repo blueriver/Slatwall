@@ -41,7 +41,7 @@ Notes:
 	<cfscript>
 		
 		// Quantity on hand. Physically at any location
-		public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID) {
+		public numeric function getQOH(string stockID, string skuID, string productID, string stockRemoteID, string skuRemoteID, string productRemoteID, string groupBy) {
 			var params = [];
 			var hql = "SELECT coalesce( sum(inventory.quantityIn), 0 ) - coalesce( sum(inventory.quantityOut), 0 ) FROM SlatwallInventory inventory WHERE ";
 			
@@ -233,5 +233,32 @@ Notes:
 			return 0;
 		}
 	</cfscript>
+	
+	<cffunction name="getProductQuantityDetailsQuery">
+		<cfargument name ="productID" />
+		<cfargument name ="remoteProductID" />
+		<cfargument name ="groupBy" default="productID" />
+		
+		<cfset var rs = "" />
+		
+		<cfquery name="rs">
+			SELECT
+				astock.stockID,
+				asku.skuID,
+				aproduct.productID,
+				COALESCE( sum(inventory.quantityIn), 0 ) - COALESE( sum(inventory.quantityOut) ) as 'qoh'
+			FROM
+				SlatwallStock
+			  INNER JOIN
+			  	SlatwallSku on astock.skuID = asku.skuID
+			  INNER JOIN
+			  	SlatwallProduct on asku.productID = aproduct.productID
+			  LEFT JOIN
+			  	SlatwallInventory on SlatwallProduct.
+			WHERE
+				aproduct.productID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#arguments.productID#">
+		</cfquery>
+		
+	</cffunction>
 	
 </cfcomponent>
