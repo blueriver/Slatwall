@@ -52,16 +52,17 @@ component extends="BaseController" output="false" accessors="true" {
 	property name="shippingService" type="any";
 	property name="skuCacheService" type="any";
 	property name="taxService" type="any";
+	property name="termService" type="any";
 	property name="updateService" type="any";
 	property name="utilityFormService" type="any";
 	property name="utilityFileService" type="any";
 	
 	public void function default() {
-		getFW().redirect(action="admin:setting.detail");
+		getFW().redirect(action="admin:setting.detailsetting");
 	}
 	
 	// Global Settings
-	public void function detail(required struct rc) {
+	public void function detailsetting(required struct rc) {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
 		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
@@ -77,13 +78,13 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 	}
 	
-	public void function edit(required struct rc) {
+	public void function editsetting(required struct rc) {
 		detail(rc);
-		getFW().setView("admin:setting.detail");
+		getFW().setView("admin:setting.detailsetting");
 		rc.edit = true;
 	}
 	
-	public void function save(required struct rc) {
+	public void function savesetting(required struct rc) {
 		for(var item in rc) {
 			if(!isObject(item)) {
 				var setting = getSettingService().getBySettingName(item);
@@ -783,6 +784,63 @@ component extends="BaseController" output="false" accessors="true" {
 		}
 		
 		getFW().redirect(action="admin:roundingrule.list", preserve="message,messagetype");
+	}
+	
+
+
+	// Common functionalty of Add/Edit/View
+	public void function detailterm(required struct rc) {
+		param name="rc.termID" default="";
+		param name="rc.edit" default="false";
+		
+		rc.term = getTermService().getTerm(rc.termID,true);	
+	}
+
+    public void function createterm(required struct rc) {
+		edit(rc);
+    }
+
+	public void function editterm(required struct rc) {
+		detail(rc);
+		getFW().setView("admin:term.detail");
+		rc.edit = true;
+	}
+	
+    public void function listterm(required struct rc) {	
+		rc.terms = getTermService().listTerm();
+    }
+
+	public void function saveterm(required struct rc) {
+		// Populate Term in the rc.
+		detail(rc);
+		
+		rc.term = getTermService().saveTerm(rc.term, rc);
+		
+		// If the term doesn't have any errors then redirect to detail or list
+		if(!rc.term.hasErrors()) {
+			getFW().redirect(action="admin:term.list",queryString="message=admin.term.save_success");
+		}
+		
+		// This logic only runs if the entity has errors.  If it was a new entity show the create page, otherwise show the edit page
+   		rc.edit = true;
+		rc.itemTitle = rc.term.isNew() ? rc.$.Slatwall.rbKey("admin.term.create") : rc.$.Slatwall.rbKey("admin.term.edit") & ": #rc.term.getTermName()#";
+   		getFW().setView(action="admin:term.detail");
+	}
+	
+	public void function deleteterm(required struct rc) {
+		
+		detail(rc);
+		
+		var deleteOK = getTermService().deleteTerm(rc.term);
+		
+		if( deleteOK ) {
+			rc.message = rbKey("admin.term.delete_success");
+		} else {
+			rc.message = rbKey("admin.term.delete_error");
+			rc.messagetype="error";
+		}
+		
+		getFW().redirect(action="admin:term.list", preserve="message,messagetype");
 	}
 	
 }
