@@ -51,8 +51,8 @@ Notes:
 								<div class="dropdown">
 									<a href="##" class="dropdown-toggle" data-toggle="dropdown">#column.propertyIdentifier# <span class="caret"></span> </a>
 									<ul class="dropdown-menu">
-										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#">Sort Ascending</a></li>
-										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|DESC')#">Sort Decending</a></li>
+										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|ASC')#"><i class="icon-arrow-down"></i> Sort Ascending</a></li>
+										<li><a href="#attributes.smartList.buildURL('orderBy=#column.propertyIdentifier#|DESC')#"><i class="icon-arrow-up"></i> Sort Decending</a></li>
 										<li class="divider"></li>
 									</ul>
 								</div>
