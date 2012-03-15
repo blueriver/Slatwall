@@ -80,9 +80,6 @@ component extends="org.fw1.framework" output="false" {
 					application.slatwall = structNew();
 					application.slatwall.initialized = false;
 					
-					// This insures that the required session values are setup
-					setupMuraSessionRequirements();
-					
 					// This will force the Taffy API to reload on next request
 					if(structKeyExists(application, "_taffy")){
 						structDelete(application,"_taffy");	
@@ -230,7 +227,7 @@ component extends="org.fw1.framework" output="false" {
 		getBeanFactory().getBean("requestCacheService").setValue(key="muraScope", value=request.context.$);
 		
 		// Confirm Session Setup
-		getBeanFactory().getBean("SessionService").confirmSession();
+		getBeanFactory().getBean("sessionService").confirmSession();
 		
 		// Setup structured Data
 		var structuredData = getBeanFactory().getBean("utilityFormService").buildFormCollections(request.context);
@@ -254,40 +251,9 @@ component extends="org.fw1.framework" output="false" {
 		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
 		}
-		
-		// If the current subsystem isn't frontend, then include all of the default css & js
-		if( getSubsystem(request.context.slatAction) != "frontend") {
-
-			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin/");
-			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin/");
-			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
-			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
-	
-			// If this subsystem is admin, then also include a section of assets if it applied 
-			if(getSubsystem(request.context.slatAction) == "admin") {
-				getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_#getSection(request.context.slatAction)#/");
-				getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_#getSection(request.context.slatAction)#/");
-			}
-			
-		// If the current subsytem IS frontend, then only include the admin toolbar
-		} else {
-			getPluginConfig().getApplication().getValue("cfStatic").include("/css/admin_toolbar/");
-			getPluginConfig().getApplication().getValue("cfStatic").include("/js/admin_toolbar/");
-		}
-		
 	}
 	
 	public void function setupResponse() {
-		/*
-		// Add the CSS and JS to the header if this isn't a frontend request, or if it is a frontend but the user is logged in
-		if( !listFind("frontend", getSubsystem(request.action)) || (request.action == "frontend:event.onRenderEnd" && secureDisplay("admin:main.default"))) {
-			// Make sure that there is supposed to be a layout
-			if(!structKeyExists(request,"layout") || request.layout) {
-				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("js") );
-				getBeanFactory().getBean("utilityTagService").cfhtmlhead( getPluginConfig().getApplication().getValue("cfStatic").renderIncludes("css") );	
-			}
-		}		
-		*/
 		endSlatwallLifecycle();
 	}
 	
@@ -303,7 +269,7 @@ component extends="org.fw1.framework" output="false" {
 		}
 	}
 
-	/********************** APPLICATION HELPER FUNCTIONS ***************************/
+	// ===================== APPLICATION HELPER FUNCTIONS =============================
 	
 	// Checks if the request is an admin request or not
 	public boolean function isAdminRequest() {
@@ -338,15 +304,6 @@ component extends="org.fw1.framework" output="false" {
 			}
 		}
 		return hasAccess;
-	}
-	
-	// Sets default mura session variables when needed
-	private void function setupMuraSessionRequirements() {
-		param name="session.rb" default="en";
-		param name="session.locale" default="en";
-		param name="session.dtLocale" default="en-US";
-		param name="session.siteid" default="default";
-		param name="session.dashboardSpan" default="30";
 	}
 	
 	// Allows for integration services to have a seperate directory structure
