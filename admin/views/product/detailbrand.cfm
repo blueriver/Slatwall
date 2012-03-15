@@ -43,9 +43,42 @@ Notes:
 	<cf_SlatwallDetailForm action="admin:product.savebrand" primaryKey="brandID" primaryID="#rc.Brand.getBrandID()#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.brand#" rc="#rc#" />
 		
-		<dl class="dl-horizontal">
-			<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#" class="first">
-			<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
-		</dl>
+		<div class="row-fluid">
+			<dl class="dl-horizontal">
+				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#" class="first">
+				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
+			</dl>
+		</div>
+		
+		<div class="tabbable tabs-left">
+			<div class="span2">
+				<ul class="nav nav-tabs">
+					<li><a href="##2" data-toggle="tab">Description</a></li>
+					<li><a href="##2" data-toggle="tab">Reviews</a></li>
+					<li class="active dropdown">
+						<a href="##" class="dropdown-toggle" data-toggle="dropdown">Skus <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="##1" data-toggle="tab"><i class="icon-barcode"></i> Inventory</a>
+								<a href="##1" data-toggle="tab"><i class="icon-picture"></i> Images</a>
+								<a href="##1" data-toggle="tab"><i class="icon-tag"></i> Price</a>
+							</li>
+						</ul>
+					</li>
+					
+				</ul>
+		  	</div>
+			<div class="span10">
+		  <div class="tab-content">
+		    <div class="tab-pane active" id="1">
+		      <p>I'm in Section 1.</p>
+		    </div>
+		    <div class="tab-pane" id="2">
+		      <p>Howdy, I'm in Section 2.</p>
+		    </div>
+		  </div>
+		  </div>
+		</div>
+		
 	</cf_SlatwallDetailForm>
 </cfoutput>
