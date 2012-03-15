@@ -134,16 +134,6 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 		}
 	}
 	
-	public void function onRenderEnd(required any rc) {
-		
-		// Add necessary html to the header
-		if( getFW().secureDisplay("admin:main.default") ){
-			var oldContent = rc.$.event( "__MuraResponse__" );
-			var newContent = Replace(oldContent, "</head>", "#getFW().view("admin:toolbar/menu")#</head>");
-			rc.$.event("__MuraResponse__", newContent);
-		}
-	}
-	
 	public void function onAfterCategoryUpdate(required any rc) {
 		var category = getContentService().getCategoryByCmsCategoryID(rc.$.event("categoryID"),true);
 		category.setCmsSiteID(rc.$.event('siteID'));

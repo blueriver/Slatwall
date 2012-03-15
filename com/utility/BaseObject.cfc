@@ -829,10 +829,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	}
 	
 	// @hint Private helper function to return the RB Key from RB Factory in any component
-	private string function rbKey(required string key, string local) {
-		if( !structKeyExists(arguments, "local") ) {
-			arguments.local = session.rb;
-		}
+	private string function rbKey(required string key, string local="us") {
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 	

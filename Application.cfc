@@ -193,9 +193,6 @@ component extends="org.fw1.framework" output="false" {
 		// Run Sku Cache & Product Cache Update Threads if needed
 		getBeanFactory().getBean("skuCacheService").executeSkuCacheUpdates();
 		
-		// This verifies that all mura session variables are setup
-		setupMuraSessionRequirements();
-		
 		if(!getBeanFactory().getBean("requestCacheService").keyExists(key="ormHasErrors")) {
 			getBeanFactory().getBean("requestCacheService").setValue(key="ormHasErrors", value=false);
 		}
