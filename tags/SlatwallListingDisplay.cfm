@@ -67,7 +67,7 @@ Notes:
 					<cfloop array="#attributes.smartList.getPageRecords()#" index="record">
 						<tr>
 							<cfloop array="#thistag.columns#" index="column">
-								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( column.propertyIdentifier )#</td>
+								<td class="#column.tdclass#">#record.getValueByPropertyIdentifier( propertyIdentifier=column.propertyIdentifier, formatValue=true )#</td>
 							</cfloop>
 							<cfif attributes.recordEditAction neq "">
 								<td>

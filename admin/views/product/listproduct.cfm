@@ -49,6 +49,7 @@ Notes:
 		<cf_SlatwallListingColumn propertyIdentifier="brand.brandName" />
 		<cf_SlatwallListingColumn propertyIdentifier="activeFlag" />
 		<cf_SlatwallListingColumn propertyIdentifier="publishedFlag" />
+		<cf_SlatwallListingColumn propertyIdentifier="price" />
 	</cf_SlatwallListingDisplay>
 
 </cfoutput>

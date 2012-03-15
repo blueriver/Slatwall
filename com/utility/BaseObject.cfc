@@ -435,7 +435,7 @@ component displayname="Base Object" accessors="true" output="false" {
 	// =========================== START: UTILITY METHODS ===========================================
 	
 	// @hint Public method to retrieve a value based on a propertyIdentifier string format
-	public any function getValueByPropertyIdentifier(required string propertyIdentifier) {
+	public any function getValueByPropertyIdentifier(required string propertyIdentifier, boolean formatValue=false) {
 		var value = javaCast("null", "");
 		var arrayValue = arrayNew(1);
 		var pa = listToArray(arguments.propertyIdentifier, "._");
@@ -446,7 +446,7 @@ component displayname="Base Object" accessors="true" output="false" {
 					value = evaluate("this.get#pa[i]#()");
 				} else if(isArray(value)) {
 					for(var ii=1; ii<=arrayLen(value); ii++) {
-						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i]));
+						arrayAppend(arrayValue, value[ii].getPropertyValueByIdentifier(pa[i], arguments.formatValue));
 					}
 					return arrayValue;
 				} else {
@@ -459,6 +459,11 @@ component displayname="Base Object" accessors="true" output="false" {
 		if(isNull(value)) {
 			return "";
 		}
+		
+		if(isSimpleValue(value) && arguments.formatValue) {
+			return this.formatValue(value, getPropertyFormatType(pa[1]));
+		}
+		
 		return value;
 	}
 
