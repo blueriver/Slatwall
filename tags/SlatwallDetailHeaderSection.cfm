@@ -38,7 +38,7 @@ Notes:
 --->
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
-		<div class="span6">
+		<div class="span4">
 			<dl class="dl-horizontal">
 	</cfoutput>
 <cfelse>

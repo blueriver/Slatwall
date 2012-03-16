@@ -48,8 +48,6 @@ Notes:
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="activeFlag" edit="#rc.edit#" title="#$.slatwall.rbkey('define.active')#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandName" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandWebsite" edit="#rc.edit#">
-			</cf_SlatwallDetailHeaderSection>
-			<cf_SlatwallDetailHeaderSection>
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="urlTitle" edit="#rc.edit#">
 				<cf_SlatwallPropertyDisplay object="#rc.Brand#" property="brandDisplayTemplate" edit="#rc.edit#">
 			</cf_SlatwallDetailHeaderSection>
