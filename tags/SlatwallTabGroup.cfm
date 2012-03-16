@@ -54,7 +54,7 @@ Notes:
 				<div class="tab-content">
 					<cfloop array="#thistag.tabs#" index="tab">
 						<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
-							#request.context.$.slatwall.getFW().view(tab.view)#
+							#request.context.$.slatwall.getFW().view(tab.view, {rc=request.context})#
 						</div>
 					</cfloop>
 				</div>

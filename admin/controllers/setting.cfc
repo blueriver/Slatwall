@@ -66,7 +66,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = false;
 		rc.allSettings = getSettingService().getSettings();
 		rc.productTemplateOptions = getProductService().getProductTemplates(siteID=rc.$.event('siteid'));
-		rc.muraCategories = getProductService().getMuraCategories(siteID=rc.$.event('siteID'),parentID=0);
+		
 		rc.shippingWeightUnitCodeOptions = getSettingService().getMeaurementUnitOptions(measurementType="weight");
 		rc.customIntegrations = getIntegrationService().listIntegrationFilterByCustomActiveFlag(1);
 		
@@ -319,6 +319,7 @@ component extends="BaseController" output="false" accessors="true" {
 		
 	// Integrations Services
 	
+	/*
 	// Address Zones
 	public void function listAddressZones(required struct rc) {
 		rc.addressZones = getSettingService().listAddressZone();
@@ -406,7 +407,7 @@ component extends="BaseController" output="false" accessors="true" {
 		rc.edit = true;
 		getFW().setView("admin:setting.detailaddresszone");
 	}
-	
+	*/
 	// Frontend Views
 	public void function updateFrontendViews(required struct rc) {
 		

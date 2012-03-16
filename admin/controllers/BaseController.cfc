@@ -238,6 +238,8 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	}
 	
 	public void function genericSaveMethod(required string entityName, required struct rc) {
+		
+		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
@@ -252,6 +254,9 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			rc.edit = false;
 		} else {
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_failure");
+			for(var i=1; i<=arrayLen(rc[ arguments.entityName ].getErrors()); i++) {
+				showMessage(rc[ arguments.entityName ].getErrors()[i], "failure");
+			}
 			if(rc[ arguments.entityName ].isNew()) {
 				rc.slatAction = rc.createAction;
 			} else {

@@ -36,6 +36,28 @@
 Notes:
 
 --->
+<cfparam name="rc.addressZone" type="any">
+<cfparam name="rc.edit" type="boolean">
+
+<cfoutput>
+	<cf_SlatwallDetailForm object="#rc.addressZone#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.addressZone#" edit="#rc.edit#" />
+		
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.addressZone#" property="addressZoneName" edit="#rc.edit#">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
+		
+		<cf_SlatwallTabGroup>
+			<cf_SlatwallTab view="admin:setting/addresszonetabs/locations" />
+		</cf_SlatwallTabGroup>
+		
+	</cf_SlatwallDetailForm>
+</cfoutput>
+
+<!---
+
 <cfparam name="rc.addressZone" type="any" />
 <cfparam name="rc.newAddress" type="any" />
 <cfparam name="rc.edit" type="boolean" /> 
@@ -106,3 +128,5 @@ Notes:
 		</cfif>
 	</div>
 </cfoutput>
+
+--->
