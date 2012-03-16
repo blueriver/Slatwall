@@ -787,7 +787,7 @@ component extends="BaseController" output="false" accessors="true" {
 	}
 	
 
-
+	/*
 	// Common functionalty of Add/Edit/View
 	public void function detailterm(required struct rc) {
 		param name="rc.termID" default="";
@@ -842,5 +842,5 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		getFW().redirect(action="admin:term.list", preserve="message,messagetype");
 	}
-	
+	*/
 }
