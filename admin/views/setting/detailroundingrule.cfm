@@ -39,32 +39,17 @@ Notes:
 <cfparam name="rc.roundingRule" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:roundingrule.list" type="list">
-	<cfif !rc.edit>
-		<cf_SlatwallActionCaller action="admin:roundingrule.edit" queryString="roundingRuleID=#rc.roundingRule.getRoundingRuleID()#" type="list">
-	</cfif>
-</ul>
-
 <cfoutput>
-	<div class="svoadminroundingruledetail">
-		<cfif rc.edit>
-			<form name="RoundingRuleEdit" action="#buildURL('admin:roundingrule.save')#" method="post">
-				<input type="hidden" name="RoundingRuleID" value="#rc.RoundingRule.getRoundingRuleID()#" />
-		</cfif>
+	<cf_SlatwallDetailForm action="admin:setting.saveroundingRule" primaryKey="roundingRuleID" primaryID="#rc.roundingRule.getRoundingRuleID()#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.roundingRule#" rc="#rc#" />
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.RoundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
-		</dl>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleExpression" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.roundingRule#" property="roundingRuleDirection" edit="#rc.edit#" fieldType="select">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
 		
-		<cfif rc.edit>
-				<cf_SlatwallActionCaller action="admin:roundingrule.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:roundingrule.save" type="submit" class="button">
-			</form>
-		</cfif>
-		
-	</div>	
-		
+	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -36,48 +36,19 @@
 Notes:
 
 --->
-<cfparam name="rc.edit" type="boolean">
 <cfparam name="rc.location" type="any">
-
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:location.listLocations" type="list">
-	<cfif !rc.edit>
-		<cf_SlatwallActionCaller action="admin:location.editLocation" queryString="locationID=#rc.location.getLocationID()#" type="list">
-	</cfif>
-</ul>
+<cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<div class="svoadminlocationdetail">
-		<cfif rc.edit>
-			
-			#$.slatwall.getValidateThis().getValidationScript(theObject=rc.location, formName="LocationEdit")#
-			
-			<form name="LocationEdit" id="LocationEdit" action="#buildURL('admin:location.saveLocation')#" method="post">
-				<input type="hidden" name="LocationID" value="#rc.Location.getLocationID()#" />
-		</cfif>
+	<cf_SlatwallDetailForm action="admin:setting.savelocation" primaryKey="locationID" primaryID="#rc.location.getLocationID()#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.location#" rc="#rc#" />
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.Location#" property="locationName" edit="#rc.edit#" first="true">
-			
-			<cfif not isNull(rc.location.getPrimaryAddress())>
-				<input type="hidden" name="primaryAddress.LocationAddressID" value="#rc.location.getPrimaryAddress().getLocationAddressID()#" />
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.location#" property="locationName" edit="#rc.edit#">
 				<cf_SlatwallAddressDisplay address="#rc.location.getPrimaryAddress().getAddress()#" showName="false" showCompany="false" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
-				<!---<cf_SlatwallPropertyDisplay object="#rc.location.getPrimaryAddress()#" property="Address" fieldName="primaryAddress.Address" edit="#rc.edit#" valueLink="mailto:#rc.location.getAddress()#">--->
-			<cfelse>
-				<cfset newLocationAddress = $.slatwall.getService("addressService").newAddress() />
-				<input type="hidden" name="primaryAddress.LocationAddressID" value="" />
-				<cf_SlatwallAddressDisplay address="#newLocationAddress#" showName="false" showCompany="false" edit="#rc.edit#" fieldNamePrefix="primaryAddress.address."  />
-				<!---<cf_SlatwallPropertyDisplay object="#newlocationEmail#" property="Address" fieldName="primaryAddress.Address" edit="#rc.edit#" valueLink="">--->
-			</cfif>
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
 
-			<!---<cf_SlatwallAddressDisplay address="#rc.locationAddress.getAddress()#" edit="#rc.edit#" fieldNamePrefix="locationAddresses[1].address." />--->
-		</dl>
-		
-		<cfif rc.edit>
-			<cf_SlatwallActionCaller action="admin:location.listlocations" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cf_SlatwallActionCaller action="admin:location.savelocation" type="submit" class="button">
-			</form>
-		</cfif>
-		
-	</div>		
+	</cf_SlatwallDetailForm>
 </cfoutput>

@@ -63,6 +63,14 @@ component displayname="Location" entityname="SlatwallLocation" table="SlatwallLo
 		return !(getService("LocationService").isLocationBeingUsed(this) || getService("LocationService").getLocationCount() == 1);
 	}
 	
+	public any function getPrimaryAddress() {
+		if(isNull(variables.primaryAddress)) {
+			return getService("locationService").newLocationAddress();
+		} else {
+			return variables.primaryAddress;
+		}
+	}
+	
 	// ============ START: Non-Persistent Property Methods =================
 	
 	// ============  END:  Non-Persistent Property Methods =================

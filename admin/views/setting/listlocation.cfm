@@ -39,32 +39,11 @@ Notes:
 <cfparam name="rc.locationSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:location.createlocation" type="list">
-</ul>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.locationSmartList#" rc="#rc#" />
 
-<div class="svoadminlocationlist">
-<cfif arrayLen(rc.locationSmartList.getPageRecords()) gt 0>
-	<table id="Locations" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.location.locationName")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.locationSmartList.getPageRecords()#" index="local.Location">
-			<tr>
-				<td class="varWidth">#local.Location.getLocationName()#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:location.editlocation" querystring="locationID=#local.location.getLocationID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:location.detaillocation" querystring="locationID=#local.location.getLocationID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:location.deletelocation" querystring="locationID=#local.location.getLocationID()#" class="delete" type="list" disabled="#NOT local.location.isDeletable()#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-<cfelse>
-	<em>#rc.$.Slatwall.rbKey("admin.location.nolocationsdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallListingDisplay smartList="#rc.locationSmartList#" rc="#rc#" recordEditAction="admin:setting.editlocation">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="locationName" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

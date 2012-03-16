@@ -61,7 +61,14 @@ component displayname="Location Address" entityname="SlatwallLocationAddress" ta
 	// Non-Persistent Properties
 
 
-
+	public any function getAddress() {
+		if(isNull(variables.address)) {
+			return getService("addressService").newAddress();
+		} else {
+			return variables.address;
+		}
+	}
+	
 	
 	// ============ START: Non-Persistent Property Methods =================
 	

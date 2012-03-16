@@ -662,7 +662,7 @@ component extends="BaseController" output="false" accessors="true" {
 		getFW().redirect(action="admin:attribute.editAttributeSet", queryString="attributeSetID=#rc.attributeSetID#&attributeID=#rc.attributeID#", preserve="message,messagetype");
 	}
 	
-	
+	/*
 	public void function listLocations(required struct rc) {
         param name="rc.orderBy" default="locationId|ASC";
         
@@ -729,7 +729,8 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		getFW().redirect(action="admin:location.listLocations", preserve="message,messagetype");
 	}
-	
+	*/
+	/*
 	public void function detailroundingrule(required struct rc) {
 		param name="rc.roundingRuleID" default="";
 		param name="rc.edit" default="false";
@@ -785,7 +786,7 @@ component extends="BaseController" output="false" accessors="true" {
 		
 		getFW().redirect(action="admin:roundingrule.list", preserve="message,messagetype");
 	}
-	
+	*/
 
 	/*
 	// Common functionalty of Add/Edit/View

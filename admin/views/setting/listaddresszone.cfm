@@ -36,32 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.addressZones" type="array" />
-
+<cfparam name="rc.addresszoneSmartList" type="any" />
 
 <cfoutput>
-	<div class="svoadminsettinglistshippingzones">
-		<ul id="navTask">
-	    	<cf_SlatwallActionCaller action="admin:setting.createaddresszone" type="list">
-		</ul>
-		
-		<table class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#rc.$.slatwall.rbKey("entity.addresszone.addresszonename")#</th>
-				<th class="administration">&nbsp;</th>
-			</tr>
-			<cfloop array="#rc.addressZones#" index="local.addressZone">
-				<tr>
-					<td class="varWidth">#local.addressZone.getAddressZoneName()#</td>
-					<td class="administration">
-						<ul class="three">
-							<cf_SlatwallActionCaller action="admin:setting.detailaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="detail" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.editaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="edit" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.deleteaddresszone" querystring="addressZoneID=#local.addressZone.getAddressZoneID()#" class="delete" type="list" disabled="#local.addressZone.isNotDeletable()#" disabledText="#rc.$.Slatwall.rbKey('entity.addressZone.delete_validateIsDeletable')#" confirmRequired="true">
-						</ul>
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.addresszoneSmartList#" rc="#rc#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.addresszoneSmartList#" rc="#rc#" recordEditAction="admin:setting.editaddresszone">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="addresszoneName" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

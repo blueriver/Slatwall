@@ -39,34 +39,19 @@ Notes:
 <cfparam name="rc.term" type="any">
 <cfparam name="rc.edit" type="boolean">
 
-<ul id="navTask">
-	<cf_SlatwallActionCaller action="admin:term.list" type="list">
-	<cfif !rc.edit>
-		<cf_SlatwallActionCaller action="admin:term.edit" queryString="termID=#rc.term.getTermID()#" type="list">
-	</cfif>
-</ul>
-
 <cfoutput>
-	<div class="svoadmintermdetail">
-		<cfif rc.edit>
-			<form name="TermEdit" action="#buildURL('admin:term.save')#" method="post">
-				<input type="hidden" name="TermID" value="#rc.Term.getTermID()#" />
-		</cfif>
+	<cf_SlatwallDetailForm action="admin:setting.saveterm" primaryKey="termID" primaryID="#rc.Term.getTermID()#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.Term#" rc="#rc#" />
 		
-		<dl class="twoColumn">
-			<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termName" edit="#rc.edit#" first="true">
-			<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termDays" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit#">
-			<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit#">
-		</dl>
+		<cf_SlatwallDetailHeader>
+			<cf_SlatwallDetailHeaderSection>
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termName" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termHours" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termDays" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termMonths" edit="#rc.edit#">
+				<cf_SlatwallPropertyDisplay object="#rc.Term#" property="termYears" edit="#rc.edit#">
+			</cf_SlatwallDetailHeaderSection>
+		</cf_SlatwallDetailHeader>
 		
-		<cfif rc.edit>
-				<cf_SlatwallActionCaller action="admin:term.list" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:term.save" type="submit" class="button">
-			</form>
-		</cfif>
-		
-	</div>	
-		
+	</cf_SlatwallDetailForm>
 </cfoutput>

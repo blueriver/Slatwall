@@ -36,39 +36,16 @@
 Notes:
 
 --->
-<cfparam name="rc.roundingrules" type="any" />
+<cfparam name="rc.roundingruleSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:roundingrule.create" type="list">
-</ul>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.roundingruleSmartList#" rc="#rc#" />
 
-<div class="svoadminroundingrulelist">
-<cfif arrayLen(rc.roundingrules) gt 0>
-	<table id="RoundingRules" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleName")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleExpression")#</th>
-			<th>#rc.$.Slatwall.rbKey("entity.roundingrule.roundingRuleDirection")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.roundingrules#" index="local.RoundingRule">
-			<tr>
-				<td class="varWidth">#local.RoundingRule.getRoundingRuleName()#</td>
-				<td>#local.RoundingRule.getRoundingRuleExpression()#</td>
-				<td>#local.RoundingRule.getRoundingRuleDirection()#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:roundingrule.edit" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:roundingrule.detail" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:roundingrule.delete" querystring="roundingRuleId=#local.roundingrule.getRoundingRuleID()#" class="delete" type="list" disabled="#local.roundingrule.isNotDeletable()#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.roundingrule.noroundingrulesdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallListingDisplay smartList="#rc.roundingruleSmartList#" rc="#rc#" recordEditAction="admin:setting.editroundingrule">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="roundingruleName" />
+	<cf_SlatwallListingColumn propertyIdentifier="roundingRuleExpression" />
+	<cf_SlatwallListingColumn propertyIdentifier="roundingRuleDirection" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>

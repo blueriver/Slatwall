@@ -36,33 +36,14 @@
 Notes:
 
 --->
-
-<cfparam name="rc.taxCategories" type="any" />
+<cfparam name="rc.taxCategorySmartList" type="any" />
 
 <cfoutput>
-	<div class="svoadminlisttaxcategories">
-		<ul id="navTask">
-	    	<cf_SlatwallActionCaller action="admin:setting.listTaxCategories" type="list">
-			<cf_SlatwallActionCaller action="admin:setting.listAddressZones" type="list">
-		</ul>
-		
-		<table id="taxCategories" class="listing-grid stripe">
-			<tr>
-				<th class="varWidth">#rc.$.Slatwall.rbKey("entity.taxCategory.taxCategoryName")#</th>
-				<th>&nbsp;</th>
-			</tr>
-				
-			<cfloop array="#rc.taxCategories#" index="local.taxCategory">
-				<tr>
-					<td class="varWidth">#local.taxCategory.getTaxCategoryName()#</td>
-					<td class="administration">
-						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:setting.detailTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="detail" type="list">
-							<cf_SlatwallActionCaller action="admin:setting.editTaxCategory" querystring="taxCategoryID=#local.taxCategory.getTaxCategoryID()#" class="edit" type="list">
-						</ul> 						
-					</td>
-				</tr>
-			</cfloop>
-		</table>
-	</div>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.taxCategorySmartList#" rc="#rc#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.taxCategorySmartList#" rc="#rc#" recordEditAction="admin:setting.editTaxCategory">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="taxCategoryName" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>
