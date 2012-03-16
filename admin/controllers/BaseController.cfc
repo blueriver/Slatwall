@@ -152,21 +152,21 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	// Implicet onMissingMethod() to handle standard CRUD
 	public void function onMissingMethod() {
 		if( left(arguments.missingMethodName, 4) == "list" ) {
-			onMissingListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			genericListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		} else if ( left(arguments.missingMethodName, 4) == "edit" ) {
-			onMissingEditMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			genericEditMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		} else if ( left(arguments.missingMethodName, 4) == "save" ) {
-			onMissingSaveMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			genericSaveMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		} else if ( left(arguments.missingMethodName, 6) == "detail" ) {
-			onMissingDetailMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			genericDetailMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		} else if ( left(arguments.missingMethodName, 6) == "delete" ) {
-			onMissingDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			genericDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		} else if ( left(arguments.missingMethodName, 6) == "create" ) {
-			onMissingCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+			genericCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
 		}
 	}
 	
-	public void function onMissingListMethod(required string entityName, required struct rc) {
+	public void function genericListMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		var savedStateKey = lcase( "list#arguments.entityName#smartlistsavedstateid" );
@@ -180,7 +180,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		getSessionService().setValue( savedStateKey, rc["#arguments.entityName#smartList"].getSavedStateID() );
 	}
 	
-	public void function onMissingCreateMethod(required string entityName, required struct rc) {
+	public void function genericCreateMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		
 		rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
@@ -188,7 +188,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		getFW().setView(rc.detailAction);
 	}
 	
-	public void function onMissingEditMethod(required string entityName, required struct rc) {
+	public void function genericEditMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
@@ -197,16 +197,28 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		getFW().setView(rc.detailAction);
 	}
 	
-	public void function onMissingDetailMethod(required string entityName, required struct rc) {
+	public void function genericDetailMethod(required string entityName, required struct rc) {
 		param name="rc.edit" default="false";
 		
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
-		rc["#arguments.entityName#"] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		// If no ID was passed in, redirect to list
+		if(!structKeyExists(rc, entityPrimaryID)) {
+			getFW().redirect(action=rc.listaction);
+		}
+		
+		var entity = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		
+		// If ID was passed but there is no entity for that id, redirect to list
+		if(isNull(entity)) {
+			getFW().redirect(action=rc.listaction);
+		}
+		
+		rc["#arguments.entityName#"] = entity;
 	}
 	
-	public void function onMissingDeleteMethod(required string entityName, required struct rc) {
+	public void function genericDeleteMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
@@ -225,7 +237,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_failure");
 	}
 	
-	public void function onMissingSaveMethod(required string entityName, required struct rc) {
+	public void function genericSaveMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
 		
