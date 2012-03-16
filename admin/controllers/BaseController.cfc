@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	
 	property name="fw" type="any";
 	property name="integrationService" type="any";
+	property name="sessionService" type="any";
 	property name="utilityORMService" type="any";
 	
 	public any function init(required any fw) {
@@ -168,7 +169,15 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	public void function onMissingListMethod(required string entityName, required struct rc) {
 		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
 		
-		rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {data=rc} );
+		var savedStateKey = lcase( "list#arguments.entityName#smartlistsavedstateid" );
+		
+		if(getSessionService().hasValue( savedStateKey )) {
+			rc.savedStateID = getSessionService().getValue( savedStateKey );
+		}
+		
+		rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {1=rc} );
+		
+		getSessionService().setValue( savedStateKey, rc["#arguments.entityName#smartList"].getSavedStateID() );
 	}
 	
 	public void function onMissingCreateMethod(required string entityName, required struct rc) {
