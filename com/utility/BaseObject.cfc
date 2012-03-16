@@ -765,53 +765,53 @@ component displayname="Base Object" accessors="true" output="false" {
 	
 	// ========================= START: DELIGATION HELPERS ==========================================
 	
-	// @hint helper rounding function
-	private string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
+	// @hint  rounding function
+	public string function round(required any value, string roundingExpression="0.00", string roundingDirection="Closest") {
 		return getService("roundingRuleService").roundValue(argumentcollection=arguments);
 	}
 	
-	// @hint helper function for returning the any of the services in the application
+	// @hint  function for returning the any of the services in the application
 	public any function getService(required string serviceName) {
 		return getPluginConfig().getApplication().getValue("serviceFactory").getBean(arguments.serviceName);
 	}
 	
-	// @hint Private helper function absolute url path from site root
-	private string function getSlatwallRootPath() {
+	// @hint  helper function absolute url path from site root
+	public string function getSlatwallRootPath() {
 		return "#application.configBean.getContext()#/plugins/Slatwall";
 	}
 	
-	// @hint Private helper function the file system directory
-	private string function getSlatwallRootDirectory() {
+	// @hint  helper function the file system directory
+	public string function getSlatwallRootDirectory() {
 		return expandPath("/plugins/Slatwall");
 	}
 	
-	// @hint Private helper function to get the database type
-	private string function getDBType() {
+	// @hint  helper function to get the database type
+	public string function getDBType() {
 		return application.configbean.getDBType();
 	}
 	
-	// @hint Private helper function to return the Slatwall RB Factory in any component
-	private any function getRBFactory() {
+	// @hint  helper function to return the Slatwall RB Factory in any component
+	public any function getRBFactory() {
 		return getPluginConfig().getApplication().getValue("rbFactory");
 	}
 	
-	// @hint Private helper function for returning the plugin config inside of any component in the application
-	private any function getPluginConfig() {
+	// @hint  helper function for returning the plugin config inside of any component in the application
+	public any function getPluginConfig() {
 		return application.slatwall.pluginConfig;
 	}
 	
-	// @hint Private helper function for returning the fw
-	private any function getFW() {
+	// @hint  helper function for returning the fw
+	public any function getFW() {
 		return getPluginConfig().getApplication().getValue('fw');
 	}
 	
-	// @hint Private helper function for returning the Validate This Facade Object
-	private any function getValidateThis() {
+	// @hint  helper function for returning the Validate This Facade Object
+	public any function getValidateThis() {
 		return getPluginConfig().getApplication().getValue('validateThis');
 	}
 	
-	// @hint Private helper function for returning the Validate This Facade Object
-	private any function getCFStatic() {
+	// @hint  helper function for returning the Validate This Facade Object
+	public any function getCFStatic() {
 		if(!structKeyExists(application.slatwall, "cfstatic")) {
 			application.slatwall.cfstatic = createObject("component", "muraWRM.requirements.org.cfstatic.CfStatic").init(
 				staticDirectory = expandPath( '/plugins/Slatwall/assets/' ),
@@ -823,43 +823,43 @@ component displayname="Base Object" accessors="true" output="false" {
 		return application.slatwall.cfstatic;
 	}
 	
-	// @hint Private helper function for returning a new API key for a specific resource for this session
-	private string function getAPIKey(required string resource, required string verb) {
+	// @hint  helper function for returning a new API key for a specific resource for this session
+	public string function getAPIKey(required string resource, required string verb) {
 		return getService("sessionService").getAPIKey(argumentcollection=arguments);
 	}
 	
-	// @hint Private helper function to return the RB Key from RB Factory in any component
-	private string function rbKey(required string key, string local="us") {
+	// @hint  helper function to return the RB Key from RB Factory in any component
+	public string function rbKey(required string key, string local="us") {
 		return getRBFactory().getKeyValue(arguments.local, arguments.key);
 	}
 	
-	// @hint Private helper function to return a Setting
-	private any function setting(required string settingName) {
+	// @hint  helper function to return a Setting
+	public any function setting(required string settingName) {
 		return getService("settingService").getSettingValue(arguments.settingName);
 	}
 	
-	// @hint Private helper function for building URL's
-	private string function buildURL() {
+	// @hint  helper function for building URL's
+	public string function buildURL() {
 		return getFW().buildURL(argumentCollection = arguments);
 	}
 	
-	// @hint Private helper function for getting checking security
-	private boolean function secureDisplay() {
+	// @hint  helper function for getting checking security
+	public boolean function secureDisplay() {
 		return getFW().secureDisplay(argumentCollection = arguments);
 	}
 	
-	// @hint Private helper function for using the Slatwall Log service.
-	private void function logSlatwall(required string message, boolean generalLog=false){
+	// @hint  helper function for using the Slatwall Log service.
+	public void function logSlatwall(required string message, boolean generalLog=false){
 		getService("utilityLogService").logMessage(message=arguments.message, generalLog=arguments.generalLog);		
 	}
 	
-	// @hint Private helper function for using the Slatwall Log Exception service.
-	private void function logSlatwallException(required any exception){
+	// @hint  helper function for using the Slatwall Log Exception service.
+	public void function logSlatwallException(required any exception){
 		getService("utilityLogService").logException(exception=arguments.exception);		
 	}
 	
-	// @hint Private helper function to get a bean for the underlying CMS (mura for now)
-	private any function getCMSBean( required any beanName ) {
+	// @hint  helper function to get a bean for the underlying CMS (mura for now)
+	public any function getCMSBean( required any beanName ) {
 		return application.serviceFactory.getBean( arguments.beanName );
 	} 
 	

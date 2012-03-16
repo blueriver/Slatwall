@@ -240,7 +240,7 @@ component accessors="true" output="false" extends="BaseObject" {
 	}
 	
 	
-	
+	/*
 	// Public methods that expose some of the base objects private methods
 	public string function rbKey(required string key, string local) {
 		return super.rbKey(argumentCollection=arguments);
@@ -282,4 +282,5 @@ component accessors="true" output="false" extends="BaseObject" {
 		return super.secureDisplay(argumentcollection=arguments);
 	}
 	// END: Public methods that expose some of the base objects private methods
+	*/
 }

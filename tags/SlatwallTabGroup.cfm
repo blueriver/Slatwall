@@ -42,28 +42,21 @@ Notes:
 	</cfoutput>
 <cfelse>
 	<cfoutput>
+			<cfset activeTab = thistag.tabs[1].view />
 			<div class="span2">
 				<ul class="nav nav-tabs">
-					<li><a href="##2" data-toggle="tab">Description</a></li>
-					<li><a href="##2" data-toggle="tab">Reviews</a></li>
-					<li class="active dropdown">
-						<a href="##" class="dropdown-toggle" data-toggle="dropdown">Skus <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="##1" data-toggle="tab"><i class="icon-barcode"></i> Inventory</a></li>
-							<li><a href="##1" data-toggle="tab"><i class="icon-picture"></i> Images</a></li>
-							<li><a href="##1" data-toggle="tab"><i class="icon-tag"></i> Price</a></li>
-						</ul>
-					</li>
+					<cfloop array="#thistag.tabs#" index="tab">
+						<li <cfif activeTab eq tab.view>class="active"</cfif>><a href="##tab#listLast(tab.view, '/')#" data-toggle="tab">#request.context.$.slatwall.rbKey( replace( replace(tab.view, '/', '.', 'all') ,':','.','all' ) )#</a></li>
+					</cfloop>
 				</ul>
 			</div>
 			<div class="span10">
 				<div class="tab-content">
-					<div class="tab-pane active" id="1">
-						<p>I'm in Section 1.</p>
-					</div>
-					<div class="tab-pane" id="2">
-						<p>Howdy, I'm in Section 2.</p>
-					</div>
+					<cfloop array="#thistag.tabs#" index="tab">
+						<div <cfif activeTab eq tab.view>class="tab-pane active"<cfelse>class="tab-pane"</cfif> id="tab#listLast(tab.view, '/')#">
+							#request.context.$.slatwall.getFW().view(tab.view)#
+						</div>
+					</cfloop>
 				</div>
 			</div>
 		</div>

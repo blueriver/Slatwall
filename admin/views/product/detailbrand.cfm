@@ -56,7 +56,8 @@ Notes:
 		</cf_SlatwallDetailHeader>
 		
 		<cf_SlatwallTabGroup>
-			<cf_SlatwallTab view="product/brandtabs/product" />
+			<cf_SlatwallTab view="admin:product/brandtabs/products" />
+			<cf_SlatwallTab view="admin:product/brandtabs/vendors" />
 		</cf_SlatwallTabGroup>
 		
 	</cf_SlatwallDetailForm>

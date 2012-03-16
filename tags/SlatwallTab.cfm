@@ -37,11 +37,7 @@ Notes:
 
 --->
 <cfif thisTag.executionMode is "start">
-	<cfoutput>
-		
-	</cfoutput>
-<cfelse>
-	<cfoutput>
-		
-	</cfoutput>
+	<cfparam name="attributes.view" type="string" />
+	
+	<cfassociate basetag="cf_SlatwallTabGroup" datacollection="tabs">
 </cfif>
