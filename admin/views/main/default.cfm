@@ -76,7 +76,7 @@ Notes:
 			</tbody>
 		</table>
 		<div class="btn-group">
-			<cf_SlatwallActionCaller action="admin:order.listorders" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:order.listorder" class="btn btn-mini" />
 		</div>
 	</div>
 	<div class="span6">
@@ -104,7 +104,7 @@ Notes:
 			</tbody>
 		</table>
 		<div class="btn-group">
-			<cf_SlatwallActionCaller action="admin:product.listproducts" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:product.listproduct" class="btn btn-mini" />
 			<cf_SlatwallActionCaller action="admin:product.createproduct" class="btn btn-mini" />
 		</div>
 	</div>
@@ -139,7 +139,7 @@ Notes:
 			</tbody>
 		</table>
 		<div class="btn-group">
-			<cf_SlatwallActionCaller action="admin:product.listproductreviews" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:product.listproductreview" class="btn btn-mini" />
 		</div>
 	</div>
 	<div class="span6">
@@ -165,7 +165,7 @@ Notes:
 			</tbody>
 		</table>
 		<div class="btn-group">
-			<cf_SlatwallActionCaller action="admin:vendor.listvendors" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:vendor.listvendor" class="btn btn-mini" />
 			<cf_SlatwallActionCaller action="admin:vendor.createvendor" class="btn btn-mini" />
 		</div>
 	</div>
@@ -192,7 +192,7 @@ Notes:
 			</cfloop>
 		</table>
 		<div class="btn-group">
-			<cf_SlatwallActionCaller action="admin:vendor.listvendororders" class="btn btn-mini" />
+			<cf_SlatwallActionCaller action="admin:vendor.listvendororder" class="btn btn-mini" />
 			<cf_SlatwallActionCaller action="admin:vendor.createvendororder" class="btn btn-mini" />
 		</div>
 	</div>
