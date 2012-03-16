@@ -63,9 +63,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 
     public void function createProduct(required struct rc) {
-		if(!structKeyExists(rc,"product") or !isObject(rc.product) or !rc.product.isNew()) {
-			rc.product = getProductService().newProduct();
-		}
+    	genericCreateMethod(entityName="product", rc=rc);
+    	
 		rc.optionGroups = getProductService().listOptionGroupOrderBySortOrder();
 		rc.subscriptionTerms = getSubscriptionService().listSubscriptionTerm();
     }
@@ -80,8 +79,6 @@ component extends="BaseController" output=false accessors=true {
 		} else {
 			getFW().redirect("admin:product.listproduct");
 		}
-		//rc.productPages = getProductService().getProductPages(siteID=rc.$.event('siteid'), returnFormat="nestedIterator");
-		//rc.categories = getProductService().getMuraCategories(siteID=rc.$.event('siteid'), parentID=rc.$.slatwall.setting("product_rootProductCategory"));
 		rc.productPages = getContentService().listContent(data={siteID=rc.$.event('siteid')});
 		rc.categories = getContentService().listCategory(data={siteID=rc.$.event('siteid')});
 		
