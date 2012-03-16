@@ -244,6 +244,12 @@ component extends="org.fw1.framework" output="false" {
 	}
 	
 	public void function setupView() {
+		
+		var httpRequestData = getHTTPRequestData();
+		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+			setupResponse();
+		}
+		
 		// If this is an integration subsystem, then apply add the default layout to the request.layout
 		if( !listFind("admin,frontend", getSubsystem(request.context.slatAction)) && (!structKeyExists(request,"layout") || request.layout)) {
 			arrayAppend(request.layouts, "/Slatwall/admin/layouts/default.cfm");
@@ -252,6 +258,11 @@ component extends="org.fw1.framework" output="false" {
 	
 	public void function setupResponse() {
 		endSlatwallLifecycle();
+		var httpRequestData = getHTTPRequestData();
+		if(structKeyExists(httpRequestData.headers, "Content-Type") and httpRequestData.headers["content-type"] eq "application/json") {
+			writeOutput( serializeJSON(request.context) );
+			abort;
+		}
 	}
 	
 	// End: Standard Application Functions. These are also called from the fw1EventAdapter.

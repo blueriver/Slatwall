@@ -41,7 +41,6 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	property name="fw" type="any";
 	property name="integrationService" type="any";
 	
-	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
 		
@@ -113,5 +112,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		}
 		arrayAppend(request.context.messages, arguments);
 	}
+	
+	
 
 }
