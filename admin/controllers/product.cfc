@@ -290,6 +290,8 @@ component extends="BaseController" output=false accessors=true {
 	}
 
 
+	/*
+
 	public void function detailbrand(required struct rc) {
 		param name="rc.brandID" default="";
 		param name="rc.edit" default="false";
@@ -350,6 +352,7 @@ component extends="BaseController" output=false accessors=true {
 			getFW().redirect(action="admin:product.listbrand", querystring="messagekeys=admin.product.deletebrand_failure");
 		}
 	}
+	*/
 	
 	public void function listOptionGroup(required struct rc) {
         param name="rc.orderBy" default="sortOrder|ASC";

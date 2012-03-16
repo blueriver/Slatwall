@@ -58,10 +58,7 @@ component extends="BaseService" accessors="true" {
 	// @hint returns the primary id property name of a given entityName
 	public string function getPrimaryIDPropertyNameByEntityName( required string entityName ) {
 		
-		// This adds the Slatwall Prefix to the entityName when needed.
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
-		}
+		arguments.entityName = getProperlyCasedFullEntityName ( arguments.entityName );
 		
 		var idColumnNames = getIdentifierColumnNamesByEntityName( arguments.entityName );
 		
@@ -75,13 +72,32 @@ component extends="BaseService" accessors="true" {
 	// @hint returns an array of ID columns based on the entityName
 	public array function getIdentifierColumnNamesByEntityName( required string entityName ) {
 		
-		// This adds the Slatwall Prefix to the entityName when needed.
-		if(left(arguments.entityName,8) != "Slatwall") {
-			arguments.entityName = "Slatwall#arguments.entityName#";
+		arguments.entityName = getProperlyCasedFullEntityName ( arguments.entityName );
+		
+		if( !listFindNoCase("SlatwallSetting,SlatwallContent,SlatwallCategory", arguments.entityName)) {
+			getProperlyCasedFullEntityName( arguments.entityName );
 		}
 		
-		return ormGetSessionFactory().getClassMetadata( arguments.entityName ).getIdentifierColumnNames();
+		var returnVal = ormGetSessionFactory().getClassMetadata( arguments.entityName ).getIdentifierColumnNames();
 		
+		return returnVal;
+		
+	}
+	
+	public string function getProperlyCasedFullEntityName( required string entityName ) {
+		var shortEntityName = arguments.entityName;
+		
+		if(left(shortEntityName, 8) == "Slatwall") {
+			shortEntityName = right(shortEntityName, len(shortEntityName)-8);
+		}
+		
+		if( structKeyExists(getEntityServiceMapping(), shortEntityName) ) {
+			var keyList = StructKeyList(getEntityServiceMapping());
+			var keyIndex = listFindNoCase(keyList, shortEntityName);
+			return "Slatwall#listGetAt(keyList, keyIndex)#";
+		}
+		
+		throw("The entity name that you have requested: #arguments.entityname# is not in the ORM Library of entity names that is setup in coldsrping.  Please add #entityShortName# to the list of entity mappings in coldspring.");
 	}
 
 }

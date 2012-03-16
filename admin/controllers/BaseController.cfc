@@ -40,6 +40,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 	
 	property name="fw" type="any";
 	property name="integrationService" type="any";
+	property name="utilityORMService" type="any";
 	
 	public any function init(required any fw) {
 		setFW(arguments.fw);
@@ -68,38 +69,72 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 			}
 		}
 		
-		var itemCoreName = listLast(rc.slatAction, ".");
-		var currentActionType = "";
+		var itemName = getFW().getItem( rc.slatAction );
 		
-		if(left(itemCoreName, 4) == "list") {
-			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
-			currentActionType = "list";
-		} else if (left(itemCoreName, 4) == "edit") {
-			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
-			currentActionType = "edit";
-		} else if (left(itemCoreName, 4) == "save") {
-			itemCoreName = right(itemCoreName, len(itemCoreName)-4);
-			currentActionType = "save";
-		} else if (left(itemCoreName, 6) == "detail") {
-			itemCoreName = right(itemCoreName, len(itemCoreName)-6);
-			currentActionType = "detail";
-		} else if (left(itemCoreName, 6) == "create") {
-			itemCoreName = right(itemCoreName, len(itemCoreName)-6);
-			currentActionType = "create";
+		rc.itemEntityName = "";
+		rc.listAction = rc.slatAction; 
+		rc.saveAction = rc.slatAction;
+		rc.detailAction = rc.slatAction;		
+		rc.deleteAction = rc.slatAction;
+		rc.editAction = rc.slatAction;
+		rc.createAction = rc.slatAction;
+		
+		if(left(itemName, 4) == "list") {
+			rc.itemEntityName = right(itemName, len(itemName)-4);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
+		} else if (left(itemName, 4) == "edit") {
+			rc.itemEntityName = right(itemName, len(itemName)-4);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";	
+		} else if (left(itemName, 4) == "save") {
+			rc.itemEntityName = right(itemName, len(itemName)-4);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
+		} else if (left(itemName, 6) == "detail") {
+			rc.itemEntityName = right(itemName, len(itemName)-6);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
+		} else if (left(itemName, 6) == "delete") {
+			rc.itemEntityName = right(itemName, len(itemName)-6);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
+		} else if (left(itemName, 6) == "create") {
+			rc.itemEntityName = right(itemName, len(itemName)-6);
+			rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#"; 
+			rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#rc.itemEntityName#";
+			rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#rc.itemEntityName#";		
+			rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#rc.itemEntityName#";
+			rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#rc.itemEntityName#";
+			rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#rc.itemEntityName#";
+			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#rc.itemEntityName#";
 		}
 		
-		rc.listAction = "admin:#getFW().getSection(rc.slatAction)#.list#itemCoreName#"; 
-		rc.saveAction = "admin:#getFW().getSection(rc.slatAction)#.save#itemCoreName#";
-		rc.detailAction = "admin:#getFW().getSection(rc.slatAction)#.detail#itemCoreName#";		
-		rc.deleteAction = "admin:#getFW().getSection(rc.slatAction)#.delete#itemCoreName#";
-		rc.editAction = "admin:#getFW().getSection(rc.slatAction)#.edit#itemCoreName#";
-		rc.createAction = "admin:#getFW().getSection(rc.slatAction)#.create#itemCoreName#";
-		
-		if(currentActionType eq "edit") {
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.detail#itemCoreName#";	
-		} else {
-			rc.cancelAction = "admin:#getFW().getSection(rc.slatAction)#.list#itemCoreName#";
-		}
 	}
 	
 	private void function showMessageKey(required any messageKey) {
@@ -113,6 +148,96 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		arrayAppend(request.context.messages, arguments);
 	}
 	
+	// Implicet onMissingMethod() to handle standard CRUD
+	public void function onMissingMethod() {
+		if( left(arguments.missingMethodName, 4) == "list" ) {
+			onMissingListMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		} else if ( left(arguments.missingMethodName, 4) == "edit" ) {
+			onMissingEditMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		} else if ( left(arguments.missingMethodName, 4) == "save" ) {
+			onMissingSaveMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		} else if ( left(arguments.missingMethodName, 6) == "detail" ) {
+			onMissingDetailMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		} else if ( left(arguments.missingMethodName, 6) == "delete" ) {
+			onMissingDeleteMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		} else if ( left(arguments.missingMethodName, 6) == "create" ) {
+			onMissingCreateMethod(entityName=arguments.missingMethodArguments.rc.itemEntityName, rc=arguments.missingMethodArguments.rc);
+		}
+	}
 	
-
+	public void function onMissingListMethod(required string entityName, required struct rc) {
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		
+		rc["#arguments.entityName#smartList"] = entityService.invokeMethod( "get#arguments.entityName#SmartList", {data=rc} );
+	}
+	
+	public void function onMissingCreateMethod(required string entityName, required struct rc) {
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		
+		rc["#arguments.entityName#"] = entityService.invokeMethod( "new#arguments.entityName#" );
+		rc.edit = true;
+		getFW().setView(rc.detailAction);
+	}
+	
+	public void function onMissingEditMethod(required string entityName, required struct rc) {
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		rc["#arguments.entityName#"] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+		rc.edit = true;
+		getFW().setView(rc.detailAction);
+	}
+	
+	public void function onMissingDetailMethod(required string entityName, required struct rc) {
+		param name="rc.edit" default="false";
+		
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		rc["#arguments.entityName#"] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ], 2=true} );
+	}
+	
+	public void function onMissingDeleteMethod(required string entityName, required struct rc) {
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		var entity = entityService.invokeMethod( "get#rc.itemEntityName#", {1=rc[ entityPrimaryID ]} );
+		
+		if(isNull(entity)) {
+			getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_failure");
+		}
+		
+		var deleteOK = entityService.invokeMethod("delete#arguments.entityName#", {1=entity});
+		
+		if (deleteOK) {
+			getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_success");
+		}
+		
+		getFW().redirect(action=rc.listAction, querystring="messagekeys=#replace(rc.slatAction, ':', '.', 'all')#_failure");
+	}
+	
+	public void function onMissingSaveMethod(required string entityName, required struct rc) {
+		var entityService = getUtilityORMService().getServiceByEntityName( entityName=arguments.entityName );
+		var entityPrimaryID = getUtilityORMService().getPrimaryIDPropertyNameByEntityName( entityName=arguments.entityName );
+		
+		rc[ arguments.entityName ] = entityService.invokeMethod( "get#arguments.entityName#", {1=rc[ entityPrimaryID ]} );
+		
+		rc[ arguments.entityName ] = entityService.invokeMethod( "save#arguments.entityName#", {1=rc[ arguments.entityName ], 2=rc} );
+		
+		getFW().setView(action=rc.detailAction);
+		
+		if(!rc[ arguments.entityName ].hasErrors()) {
+			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_success");
+			rc.slatAction = rc.detailAction;
+		} else {
+			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_failure");
+			if(rc[ arguments.entityName ].isNew()) {
+				rc.slatAction = rc.createAction;
+			} else {
+				rc.slatAction = rc.editAction;
+			}
+			rc.edit = true;
+		}
+	}
+	
 }
