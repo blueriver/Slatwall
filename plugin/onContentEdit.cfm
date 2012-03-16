@@ -44,11 +44,11 @@ Notes:
 	<dl class="oneColumn">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="templateFlag" fieldName="slatwallData.templateFlag" edit="true">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="productListingFlag" fieldName="slatwallData.productListingFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="showProductInSubPagesFlag" fieldName="slatwallData.showProductInSubPagesFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="defaultProductsPerPage" fieldName="slatwallData.defaultProductsPerPage" edit="true">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="showProductInSubPagesFlag" fieldName="slatwallData.showProductInSubPagesFlag" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="disableProductAssignmentFlag" fieldName="slatwallData.disableProductAssignmentFlag" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="defaultProductsPerPage" fieldName="slatwallData.defaultProductsPerPage" edit="true" titleClass="productListingFlagRelated" valueClass="productListingFlagRelated">
 		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="restrictAccessFlag" fieldName="slatwallData.restrictAccessFlag" edit="true">
-		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true">
+		<cf_SlatwallPropertyDisplay object="#slatwallContent#" property="allowPurchaseFlag" fieldName="slatwallData.allowPurchaseFlag" edit="true" titleClass="restrictAccessFlagRelated" valueClass="restrictAccessFlagRelated">
 		
 		<!--- show all the skus for this content --->
 		<cfif arrayLen(slatwallContent.getSkus())>
@@ -73,40 +73,48 @@ Notes:
 					</cfloop>
 				</table>
 			</dd>
+			<input type="hidden" name="slatwallData.addSku" value="0" />
+			<dt>Add Another Sku <a href="##" id="allowPurchaseFlagRelatedLink" onclick="toggleDisplay('allowPurchaseFlagRelated','Expand','Close');return setupAddSku();return false;">[Expand]</a></dt>
+		<cfelse>
+			<input type="hidden" name="slatwallData.addSku" value="1" />
 		</cfif>
 		
 		<!--- add new sku --->
-		<dt>
-			<label for="slatwallData.product.productID">Sell Access through an existing or new Product</label>
-		</dt>
-		<dd>
-			<div>
-				Product: 
+		<div class="allowPurchaseFlagRelated" id="allowPurchaseFlagRelated">
+			<dt>
+				<label for="slatwallData.product.productID">Sell Access through an existing or new Product </label>
+			</dt>
+			<dd>
 				<div>
-					<select name="slatwallData.product.productID">
-						<option value="">New Product</option>
-						<cfloop array="#slatwallProducts#" index="product">
-							<option value="#product.getProductID()#">#product.getProductName()#</option>
-						</cfloop>
-					</select>
+					Product: 
+					<div>
+						<select name="slatwallData.product.productID">
+							<option value="">New Product</option>
+							<cfloop array="#slatwallProducts#" index="product">
+								<option value="#product.getProductID()#">#product.getProductName()#</option>
+							</cfloop>
+						</select>
+					</div>
 				</div>
-			</div>
-			</br>
-			<div>
-				Sku:
+				</br>
 				<div>
-					<select name="slatwallData.product.sku.skuID">
-						<option value="">New Sku</option>
-					</select>
-				</div>	
+					Sku:
+					<div>
+						<select name="slatwallData.product.sku.skuID">
+							<option value="">New Sku</option>
+						</select>
+					</div>	
+				</div>
+			</dd>
+			<div class="skuRelated">
+				<dt>
+					<label for="slatwallData.product.price">Price</label>
+				</dt>
+				<dd>
+					<input name="slatwallData.product.price" value="" />
+				</dd>
 			</div>
-		</dd>
-		<dt>
-			<label for="slatwallData.product.price">Price</label>
-		</dt>
-		<dd>
-			<input name="slatwallData.product.price" value="" />
-		</dd>
+		</div>
 	</dl>
 </cfoutput>
 
@@ -119,44 +127,86 @@ Notes:
 <cfoutput>
 <script type="text/javascript">
 var $ = jQuery;
+function setupTemplateFlagDisplay() {
+	var selectedValue = $('input[name="slatwallData.templateFlag"]:checked').val();
+	if(selectedValue == 1){
+		$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
+	}
+}
+
+function setupProductListingFlagDisplay() {
+	var selectedValue = $('input[name="slatwallData.productListingFlag"]:checked').val();
+	if(selectedValue == 1){
+		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('.productListingFlagRelated').show();
+	} else {
+		$('input[name="slatwallData.showProductInSubPagesFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.disableProductAssignmentFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.defaultProductsPerPage"]').val('');
+		$('.productListingFlagRelated').hide();
+	}
+}
+
+function setupRestrictAccessFlagDisplay() {
+	var selectedValue = $('input[name="slatwallData.restrictAccessFlag"]:checked').val();
+	if(selectedValue == 1){
+		$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('.restrictAccessFlagRelated').show();
+		setupAllowPurchaseFlagDisplay();
+	} else {
+		$('input[name="slatwallData.allowPurchaseFlag"]').filter('[value=0]').prop('checked', true).change();
+		$('.restrictAccessFlagRelated').hide();
+	}
+}
+
+function setupAllowPurchaseFlagDisplay() {
+	var selectedValue = $('input[name="slatwallData.allowPurchaseFlag"]:checked').val();
+	if(selectedValue == 1 && $('input[name="slatwallData.addSku"]').val() == 1){
+		$('.allowPurchaseFlagRelated').show();
+	} else {
+		$('.allowPurchaseFlagRelated').hide();
+	}
+}
+
+function setupAddSku() {
+	if ($('.allowPurchaseFlagRelated').is(':visible')) {
+		$('input[name="slatwallData.addSku"]').val(1);
+	} else {
+		$('input[name="slatwallData.addSku"]').val(0);
+	}
+	console.log($('input[name="slatwallData.addSku"]').val());
+}
+	
 $(document).ready(function(){
 	
 	$('input[name="slatwallData.templateFlag"]').change(function(){
-		if($(this).val() == 1){
-			$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-		}
+		setupTemplateFlagDisplay();
 	});
 	
 	$('input[name="slatwallData.productListingFlag"]').change(function(){
-		if($(this).val() == 1){
-			$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('input[name="slatwallData.restrictAccessFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('.productListingFlagRelated').show();
-		} else {
-			$('input[name="slatwallData.showProductInSubPagesFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('input[name="slatwallData.disableProductAssignmentFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('input[name="slatwallData.defaultProductsPerPage"]').val('');
-			$('.productListingFlagRelated').hide();
-		}
+		setupProductListingFlagDisplay();
 	});
 	
 	$('input[name="slatwallData.restrictAccessFlag"]').change(function(){
-		if($(this).val() == 1){
-			$('input[name="slatwallData.templateFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('input[name="slatwallData.productListingFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('.restrictAccessFlagRelated').show();
-		} else {
-			$('input[name="slatwallData.allowPurchaseFlag"]').filter('[value=0]').prop('checked', true).trigger('change');
-			$('.restrictAccessFlagRelated').hide();
-		}
+		setupRestrictAccessFlagDisplay();
+	});
+	
+	$('input[name="slatwallData.addSku"]').change(function(){
+		$('.allowPurchaseFlagRelated').show();
 	});
 	
 	$('input[name="slatwallData.allowPurchaseFlag"]').change(function(){
-		if($(this).val() == 1){
-			$('.allowPurchaseFlagRelated').show();
+		setupAllowPurchaseFlagDisplay();
+	});
+
+	$('select[name="slatwallData.product.sku.skuID"]').change(function() {
+		if($(this).val() != ""){
+			$('.skuRelated').hide();
 		} else {
-			$('.allowPurchaseFlagRelated').hide();
+			$('.skuRelated').show();
 		}
 	});
 	
@@ -184,9 +234,9 @@ $(document).ready(function(){
 		
 	});
 	
-	$('input[name="slatwallData.productListingFlag"]').trigger('change');
-	$('input[name="slatwallData.restrictAccessFlag"]').trigger('change');
-	$('input[name="slatwallData.allowPurchaseFlag"]').trigger('change');
+	setupTemplateFlagDisplay();
+	setupProductListingFlagDisplay();
+	setupRestrictAccessFlagDisplay();
 	
 });
 </script>
