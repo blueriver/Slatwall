@@ -166,7 +166,9 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 			deleteSlatwallPage(rc);
 		}
 		if(slatwallData.allowPurchaseFlag) {
-			saveSlatwallProduct(rc);
+			if(slatwallData.addSku){
+				saveSlatwallProduct(rc);
+			}
 		} else {
 			deleteContentSkus(rc);
 		}
@@ -217,7 +219,7 @@ component persistent="false" accessors="true" output="false" extends="BaseContro
 				// if exsiting product, create new sku
 				var sku = getService("SkuService").newSku();
 				sku.setProduct(product);
-				sku.setPrice(rc.slatwallData.product.price);
+				sku.setPrice(val(rc.slatwallData.product.price));
 			}
 			product = getProductService().saveProduct( product, rc.slatwallData.product );
 			var sku = product.getDefaultSku();

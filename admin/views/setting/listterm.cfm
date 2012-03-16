@@ -36,35 +36,14 @@
 Notes:
 
 --->
-<cfparam name="rc.terms" type="any" />
+<cfparam name="rc.termSmartList" type="any" />
 
 <cfoutput>
-<ul id="navTask">
-    <cf_SlatwallActionCaller action="admin:term.create" type="list">
-</ul>
+	
+<cf_SlatwallActionBar type="listing" object="#rc.termSmartList#" rc="#rc#" />
 
-<div class="svoadmintermlist">
-<cfif arrayLen(rc.terms) gt 0>
-	<table id="Terms" class="listing-grid stripe">
-		<tr>
-			<th class="varWidth">#rc.$.Slatwall.rbKey("entity.term.termName")#</th>
-			<th>&nbsp;</th>
-		</tr>
-		<cfloop array="#rc.terms#" index="local.Term">
-			<tr>
-				<td class="varWidth">#local.Term.getTermName()#</td>
-				<td class="administration">
-		          <ul class="three">
-                      <cf_SlatwallActionCaller action="admin:term.edit" querystring="termId=#local.term.getTermID()#" class="edit" type="list">            
-					  <cf_SlatwallActionCaller action="admin:term.detail" querystring="termId=#local.term.getTermID()#" class="detail" type="list">
-					  <cf_SlatwallActionCaller action="admin:term.delete" querystring="termId=#local.term.getTermID()#" class="delete" type="list" disabled="#local.term.isNotDeletable()#" confirmrequired="true">
-		          </ul>     						
-				</td>
-			</tr>
-		</cfloop>
-	</table>
-<cfelse>
-<em>#rc.$.Slatwall.rbKey("admin.term.notermsdefined")#</em>
-</cfif>
-</div>
+<cf_SlatwallListingDisplay smartList="#rc.termSmartList#" rc="#rc#" recordEditAction="admin:setting.editterm">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="termName" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>
