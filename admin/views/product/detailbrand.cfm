@@ -40,8 +40,8 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm action="admin:product.savebrand" primaryKey="brandID" primaryID="#rc.Brand.getBrandID()#" edit="#rc.edit#">
-		<cf_SlatwallActionBar type="detail" object="#rc.brand#" rc="#rc#" />
+	<cf_SlatwallDetailForm object="#rc.brand#" edit="#rc.edit#">
+		<cf_SlatwallActionBar type="detail" object="#rc.brand#" edit="#rc.edit#" />
 		
 		<cf_SlatwallDetailHeader>
 			<cf_SlatwallDetailHeaderSection>

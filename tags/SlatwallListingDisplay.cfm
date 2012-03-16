@@ -37,7 +37,6 @@ Notes:
 
 --->
 <cfparam name="attributes.smartList" type="any" />
-<cfparam name="attributes.rc" type="any" />
 <cfparam name="attributes.recordEditAction" type="string" default="" />
 
 <cfif thisTag.executionMode eq "end">
@@ -80,7 +79,7 @@ Notes:
 			</table>
 			<cf_SlatwallSmartListPager smartList="#attributes.smartList#" />
 		<cfelse>
-			<em>#rc.$.Slatwall.rbKey("admin.brand.listbrand.norecords")#</em>
+			<em>#request.context.$.Slatwall.rbKey("entity.#replace(attributes.smartList.getBaseEntityName(), 'Slatwall', '', 'all')#.norecords")#</em>
 		</cfif>
 	</cfoutput>
 </cfif>

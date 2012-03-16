@@ -38,19 +38,19 @@ Notes:
 --->
 <cfparam name="attributes.type" type="string" />
 <cfparam name="attributes.object" type="any" />
-<cfparam name="attributes.rc" type="struct" />
+<cfparam name="attributes.edit" type="boolean" default="false" />
 
 <cfif thisTag.executionMode is "start">
 	<cfoutput>
 		<div class="actionnav well well-small">
 			<div class="row-fluid">
-				<div class="span4"><h1>#attributes.rc.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all'))#<cfif attributes.type eq "detail" and not attributes.object.isNew()> - #attributes.object.getSimpleRepresentation()#</cfif></h1></div>
+				<div class="span4"><h1>#request.context.$.slatwall.rbKey(replace(request.context.slatAction,':','.','all'))#<cfif attributes.type eq "detail" and not attributes.object.isNew()> - #attributes.object.getSimpleRepresentation()#</cfif></h1></div>
 				<div class="span8">
 					<div class="btn-toolbar">
 						
 						<cfif attributes.type eq "listing" >
 							<div class="btn-group">
-								<button class="btn dropdown-toggle" data-toggle="dropdown">#attributes.rc.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
+								<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.show')# <span class="caret"></span></button>
 								<ul class="dropdown-menu">
 									<li><a href="">10</a></li>
 									<li><a href="">25</a></li>
@@ -61,14 +61,14 @@ Notes:
 								</ul>
 							</div>
 							<div class="btn-group">
-								<button class="btn dropdown-toggle" data-toggle="dropdown">#attributes.rc.$.slatwall.rbKey('define.exportlist')# <span class="caret"></span></button>
+								<button class="btn dropdown-toggle" data-toggle="dropdown">#request.context.$.slatwall.rbKey('define.exportlist')# <span class="caret"></span></button>
 								<ul class="dropdown-menu">
 									<cf_SlatwallActionCaller action="admin:export.listfiltered" type="list">
 									<cf_SlatwallActionCaller action="admin:export.list" type="list">
 								</ul>
 							</div>
 							<div class="btn-group">
-								<cf_SlatwallActionCaller action="#attributes.rc.createAction#" class="btn btn-primary">
+								<cf_SlatwallActionCaller action="#request.context.createAction#" class="btn btn-primary">
 							</div>
 						</cfif>
 	</cfoutput>
@@ -76,16 +76,16 @@ Notes:
 	<cfoutput>
 						<cfif attributes.type eq "detail">
 							<div class="btn-group">
-								<cf_SlatwallActionCaller action="#attributes.rc.listAction#" text="#attributes.rc.$.Slatwall.rbKey('define.backtolist')#" class="btn">
+								<cf_SlatwallActionCaller action="#request.context.listAction#" text="#request.context.$.Slatwall.rbKey('define.backtolist')#" class="btn">
 							</div>
 							<div class="btn-group">
-								<cfif attributes.rc.edit>
-									<cf_SlatwallActionCaller action="#attributes.rc.cancelAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#attributes.rc.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse">
-									<cf_SlatwallActionCaller action="#attributes.rc.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#attributes.rc.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" confirm="true" disabled="#attributes.object.isNotDeletable()#">
-									<cf_SlatwallActionCaller action="#attributes.rc.saveAction#" text="#attributes.rc.$.Slatwall.rbKey('define.save')#" class="btn btn-success" type="button" submit="true">
+								<cfif request.context.edit>
+									<cf_SlatwallActionCaller action="#request.context.cancelAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.cancel')#" class="btn btn-inverse">
+									<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" confirm="true" disabled="#attributes.object.isNotDeletable()#">
+									<cf_SlatwallActionCaller action="#request.context.saveAction#" text="#request.context.$.Slatwall.rbKey('define.save')#" class="btn btn-success" type="button" submit="true">
 								<cfelse>
-									<cf_SlatwallActionCaller action="#attributes.rc.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#attributes.rc.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" confirm="true" disabled="#attributes.object.isNotDeletable()#">
-									<cf_SlatwallActionCaller action="#attributes.rc.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#attributes.rc.$.Slatwall.rbKey('define.edit')#" class="btn btn-primary" submit="true">
+									<cf_SlatwallActionCaller action="#request.context.deleteAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.slatwall.rbKey('define.delete')#" class="btn btn-danger" confirm="true" disabled="#attributes.object.isNotDeletable()#">
+									<cf_SlatwallActionCaller action="#request.context.editAction#" querystring="#attributes.object.getPrimaryIDPropertyName()#=#attributes.object.getPrimaryIDValue()#" text="#request.context.$.Slatwall.rbKey('define.edit')#" class="btn btn-primary" submit="true">
 								</cfif>
 							</div>
 						</cfif>

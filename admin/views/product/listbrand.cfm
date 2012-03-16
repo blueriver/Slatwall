@@ -40,11 +40,12 @@ Notes:
 
 <cfoutput>
 	
-<cf_SlatwallActionBar type="listing" object="#rc.brandSmartList#" rc="#rc#" />
+<cf_SlatwallActionBar type="listing" object="#rc.brandSmartList#" />
 
-<cf_SlatwallListingDisplay smartList="#rc.brandSmartList#" rc="#rc#" recordEditAction="admin:product.editbrand">
+<cf_SlatwallListingDisplay smartList="#rc.brandSmartList#" recordEditAction="admin:product.editbrand">
 	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="brandName" />
 	<cf_SlatwallListingColumn propertyIdentifier="brandWebsite" />
+	<cf_SlatwallListingColumn propertyIdentifier="productCount" />
 </cf_SlatwallListingDisplay>
 
 </cfoutput>

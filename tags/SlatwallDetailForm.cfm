@@ -36,17 +36,15 @@
 Notes:
 
 --->
-<cfparam name="attributes.action" type="string" />
-<cfparam name="attributes.primaryKey" type="string" />
-<cfparam name="attributes.primaryID" type="string" />
+<cfparam name="attributes.object" type="any" />
 <cfparam name="attributes.edit" type="boolean" default="false" />
 
 <cfif thisTag.executionMode is "start">
 	<cfif attributes.edit>
 		<cfoutput>
 		<form method="post" action="?update=1">
-			<input type="hidden" name="slatAction" value="#attributes.action#" />
-			<input type="hidden" name="#attributes.primaryKey#" value="#attributes.primaryID#" />
+			<input type="hidden" name="slatAction" value="#request.context.saveaction#" />
+			<input type="hidden" name="#attributes.object.getPrimaryIDPropertyName()#" value="#attributes.object.getPrimaryIDValue()#" />
 		</cfoutput>
 	</cfif>
 <cfelse>
