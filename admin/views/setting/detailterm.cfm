@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm action="admin:setting.saveterm" primaryKey="termID" primaryID="#rc.Term.getTermID()#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.Term#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.Term#" rc="#rc#" />
 		
 		<cf_SlatwallDetailHeader>

@@ -40,7 +40,7 @@ Notes:
 <cfparam name="rc.edit" type="boolean">
 
 <cfoutput>
-	<cf_SlatwallDetailForm action="admin:setting.savelocation" primaryKey="locationID" primaryID="#rc.location.getLocationID()#" edit="#rc.edit#">
+	<cf_SlatwallDetailForm object="#rc.location#" edit="#rc.edit#">
 		<cf_SlatwallActionBar type="detail" object="#rc.location#" rc="#rc#" />
 		
 		<cf_SlatwallDetailHeader>
