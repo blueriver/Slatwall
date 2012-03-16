@@ -249,6 +249,7 @@ component persistent="false" accessors="true" output="false" extends="Slatwall.c
 		if(!rc[ arguments.entityName ].hasErrors()) {
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_success");
 			rc.slatAction = rc.detailAction;
+			rc.edit = false;
 		} else {
 			showMessageKey("#replace(rc.slatAction, ':', '.', 'all')#_failure");
 			if(rc[ arguments.entityName ].isNew()) {
