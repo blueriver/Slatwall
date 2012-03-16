@@ -98,38 +98,3 @@ Notes:
 	</body>
 </html>
 </cfoutput>
-
-
-<!---
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-US">
-<head>
-    <title>#rc.sectionTitle# - #rc.itemTitle# &##124; Slatwall</title>
-	<link rel="icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
-	<link rel="shortcut icon" href="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/favicon.png" type="image/png" />
-	<script type="text/javascript">
-		var dtLocale = "#session.dtLocale#";
-	</script>
-</head>
-<body>
-	<!---#application.pluginManager.renderAdminToolbar(jsLib="jquery", jsLibLoaded=true)#--->
-	#view("admin:toolbar/menu")#
-	<div id="header">
-		<a href="#buildURL('admin:main')#"><img class="slatwallLogo" src="#$.slatwall.getSlatwallRootPath()#/staticAssets/images/admin.default.slatwall_logo.png" height="16" width="100" alt="Slatwall Ecommerce" /></a>
-		<p id="currentSite"><cf_SlatwallActionCaller text="#rc.sectionTitle#" action="#request.subsystem#:#request.section#" type="link"> &rarr; #rc.itemTitle#</p>
-	</div>
-	
-	<div id="admincontainer">
-		#view("admin:includes/message")#
-		#body#
-		<br class="clear" />
-		<br class="clear" />
-	</div>
-	
-	<div id="alertDialog" title="Alert" style="display:none">
-	    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><span id="alertDialogMessage"></span></p>
-	</div>
-	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/ckeditor.js"></script>
-	<script type="text/javascript" src="#$.slatwall.getSlatwallRootPath()#/org/ckeditor/adapters/jquery.js"></script>
-</body>
-</html>
---->

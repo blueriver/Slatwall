@@ -44,7 +44,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="productService" type="any";
 	
 	public void function default(required struct rc) {
-		getFW().redirect("admin:pricing.listpromotions");
+		getFW().redirect("admin:pricing.listpromotion");
 	}
 	
 	public void function detailpromotion(required struct rc) {
