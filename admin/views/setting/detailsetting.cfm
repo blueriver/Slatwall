@@ -49,20 +49,40 @@ Notes:
 </cfsilent>
 
 <cfoutput>
-	<div class="svoadminsettingdetail">
+	<cfif rc.edit>
+		<form action="#buildURL(action='admin:setting.savesetting')#" method="post">
+	</cfif>
+	
+		<div class="actionnav well well-small">
+			<div class="row-fluid">
+				<div class="span4"><h1>#rc.$.slatwall.rbKey('admin.setting.detailsetting')#</h1></div>
+				<div class="span8">
+					<div class="btn-toolbar">
+						<div class="btn-group">
+							<cfif rc.edit>
+							<a href="#buildURL(action='admin:setting.detailsetting')#" class="btn btn-inverse">Cancel</a>
+							<button class="btn btn-success" type="submit">Save</button>
+							<cfelse>
+								<a href="#buildURL(action='admin:setting.editsetting')#" class="btn btn-primary">Edit</a>
+							</cfif>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		
-		<ul id="navTask">
-			<cfif rc.edit>
-				<cf_SlatwallActionCaller action="admin:setting.detail" type="list" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-			<cfelse>
-				<cf_SlatwallActionCaller action="admin:setting.edit" type="list">
-			</cfif>
-        </ul>
+		<cf_SlatwallTabGroup>
+			<cf_SlatwallTab view="admin:setting/settingtabs/product" />
+			<cf_SlatwallTab view="admin:setting/settingtabs/order" />
+			<cf_SlatwallTab view="admin:setting/settingtabs/advanced" />
+		</cf_SlatwallTabGroup>
 		
-		<cfif rc.edit>
-			<form action="#buildURL(action='admin:setting.save')#" method="post">
-		</cfif>
-		
+	<cfif rc.edit>
+		</form>
+	</cfif>
+</cfoutput>
+
+<!---
 		<div class="tabs initActiveTab ui-tabs ui-widget ui-widget-content ui-corner-all">
 			<ul>
 				<li><a href="##tabProduct" onclick="return false;"><span>#rc.$.Slatwall.rbKey('setting.product')#</span></a></li>	
@@ -219,13 +239,4 @@ Notes:
 				</table>
 			</div>
 		</div>
-		
-		<cfif rc.edit eq true>
-			<div id="actionButtons" class="clearfix">
-				<cf_SlatwallActionCaller action="admin:setting.detail" type="link" class="button" text="#rc.$.Slatwall.rbKey('sitemanager.cancel')#">
-				<cf_SlatwallActionCaller action="admin:setting.save" type="submit" class="button">
-			</div>
-		</form>
-		</cfif>
-	</div>
-</cfoutput>
+		--->
