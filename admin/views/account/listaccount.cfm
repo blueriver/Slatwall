@@ -36,40 +36,17 @@
 Notes:
 
 --->
+<cfparam name="rc.accountSmartList" type="any" />
+
 <cfoutput>
-<div class="svoadminaccountlist">
-	<ul id="navTask">
-    	<cf_SlatwallActionCaller action="admin:account.create" type="list">
-	</ul>
 	
-	<form method="post">
-		<input name="Keyword" value="#rc.Keyword#" /> <button type="submit">#rc.$.Slatwall.rbKey("admin.product.search")#</button>
-	</form>
-	<table class="listing-grid stripe">
-		<thead>
-			<tr>
-				<th class="varWidth">Name</th>
-				<th>Primary Email</th>
-				<th class="administration">&nbsp;</th>
-			</tr>
-		</thead>
-		<tbody>
-			<cfloop array="#rc.accountSmartList.getPageRecords()#" index="local.account">
-				<tr>
-					<td class="varWidth"><a href="#buildURL(action='admin:account.detail', queryString='AccountID=#local.account.getAccountID()#')#">#local.account.getFirstName()# #local.account.getLastName()#</a></td>
-					<td>
-						<a href="mailto:#local.account.getEmailAddress()#" title="Email #local.account.getFirstName()# #local.account.getLastName()# (#local.account.getEmailAddress()#)">#local.account.getEmailAddress()#</a>
-					</td>
-					<td class="administration">
-						<ul class="two">
-							<cf_SlatwallActionCaller action="admin:account.detail" querystring="accountID=#local.account.getAccountID()#" class="detail" type="list">
-							<cf_SlatwallActionCaller action="admin:account.edit" querystring="accountID=#local.account.getAccountID()#" class="edit" type="list">
-						</ul>
-					</td>
-				</tr>
-			</cfloop>
-		</tbody>
-	</table>
-	<cf_SlatwallSmartListPager smartList="#rc.accountSmartList#">
-</div>
+<cf_SlatwallActionBar type="listing" object="#rc.accountSmartList#" />
+
+<cf_SlatwallListingDisplay smartList="#rc.accountSmartList#" recordEditAction="admin:account.editaccount">
+	<cf_SlatwallListingColumn tdclass="primary" propertyIdentifier="firstName" />
+	<cf_SlatwallListingColumn propertyIdentifier="lastName" />
+	<cf_SlatwallListingColumn propertyIdentifier="primaryEmailAddress.emailAddress" />
+	<cf_SlatwallListingColumn propertyIdentifier="primaryPhoneNumber.phoneNumber" />
+</cf_SlatwallListingDisplay>
+
 </cfoutput>
