@@ -44,8 +44,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="LocationService" type="any";
 	
 	public void function default(required struct rc) {
-		getFW().redirect("admin:order.listorders");
+		getFW().redirect("admin:order.listorder");
 	}
+	
+	/*
 
     public void function listorders(required struct rc) {
 		param name="rc.orderby" default="orderOpenDateTime|DESC";
@@ -222,7 +224,6 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}
 	}
 	
-	/****** Order Fulfillments *****/
 	
 	public void function listOrderFulfillments(required struct rc) {
 		param name="rc['F:order_orderstatustype_systemcode']" default="ostNew,ostProcessing";
@@ -268,5 +269,5 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 			getFW().setView("admin:order.detailorderfulfillment");			
 		}
 	}
-
+	*/
 }

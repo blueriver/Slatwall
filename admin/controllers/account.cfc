@@ -42,7 +42,7 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="priceGroupService";
 	
 	public void function default(required struct rc) {
-		getFW().redirect(action="admin:account.listaccounts");
+		getFW().redirect(action="admin:account.listaccount");
 	}
 	/*
 	public void function detail(required struct rc) {

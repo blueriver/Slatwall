@@ -47,6 +47,10 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="vendorOrderService" type="any";
 	
 	public void function default(required struct rc) {
+		getFW().redirect(action="admin:warehouse.liststockreceiver");
+	}
+	
+	public void function default(required struct rc) {
 		
 	}
 	

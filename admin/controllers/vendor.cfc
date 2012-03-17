@@ -48,15 +48,19 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 	property name="vendorService";
 	property name="vendorOrderService" type="any";
 	
+	
+	public void function default(required struct rc) {
+		getFW().redirect(action="admin:vendor.listvendor");
+	}
+	
+	/*
 	public void function listVendors(required struct rc) {
         param name="rc.orderBy" default="vendorId|ASC";
         
         rc.vendorSmartList = getVendorService().getVendorSmartList(data=arguments.rc);  
     }
 	
-	public void function default(required struct rc) {
-		getFW().redirect(action="admin:vendor.listvendors");
-	}
+	
 	
 	public void function initVendor(required struct rc) {
 		param name="rc.vendorID" default="";
@@ -266,9 +270,8 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		}	
 	}
 	
-	/*
-		Handlers for the "Add product to vendor order" dialog
-	*/
+	
+	// Handlers for the "Add product to vendor order" dialog
 	public void function editVendorOrderItems(required struct rc) {
     	param name="rc.vendorOrderID" default="";
     	param name="rc.productID" default="";
@@ -350,5 +353,5 @@ component extends="BaseController" persistent="false" accessors="true" output="f
 		rc.message=rbKey("admin.vendorOrder.savevendorOrderItems_success");
 		getFW().redirect(action="admin:vendorOrder.detailVendorOrder", querystring="vendorOrderID=#vendorOrder.getVendorOrderID()#", preserve="message");
 	}
-	
+	*/
 }

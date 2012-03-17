@@ -52,16 +52,19 @@ component extends="BaseController" output=false accessors=true {
 	property name="utilityTagService" type="any";
 	property name="utilityORMService" type="any";
 	
-	public void function before(required struct rc) {
-		param name="rc.productID" default="";
-		param name="rc.keyword" default="";
-		param name="rc.edit" default="false";
-	}
+	
 	
 	public void function default(required struct rc) {
 		getFW().redirect(action="admin:product.listproduct");
 	}
 
+/*
+public void function before(required struct rc) {
+		param name="rc.productID" default="";
+		param name="rc.keyword" default="";
+		param name="rc.edit" default="false";
+	}
+	
     public void function createProduct(required struct rc) {
     	genericCreateMethod(entityName="product", rc=rc);
     	
@@ -287,7 +290,7 @@ component extends="BaseController" output=false accessors=true {
 	}
 
 
-	/*
+	
 
 	public void function detailbrand(required struct rc) {
 		param name="rc.brandID" default="";
@@ -349,7 +352,7 @@ component extends="BaseController" output=false accessors=true {
 			getFW().redirect(action="admin:product.listbrand", querystring="messagekeys=admin.product.deletebrand_failure");
 		}
 	}
-	*/
+	
 	
 	public void function listOptionGroup(required struct rc) {
         param name="rc.orderBy" default="sortOrder|ASC";
@@ -607,7 +610,7 @@ component extends="BaseController" output=false accessors=true {
 		rc.message = rbKey("admin.sku.updateallweights_success");
 		getFW().redirect(action="admin:product.edit", querystring="productID=#rc.productId#", preserve="message");
 	}
-		
+		*/
 }
 
 
